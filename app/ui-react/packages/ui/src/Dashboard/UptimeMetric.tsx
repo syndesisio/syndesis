@@ -6,22 +6,33 @@ export interface IUptimeMetricProps {
   start: number;
   uptimeDuration: string;
   i18nTitle: string;
+  i18nSince: string;
 }
 
-export class UptimeMetric extends React.PureComponent<IUptimeMetricProps> {
-  public render() {
-    const startAsDate = new Date(this.props.start);
-    const startAsHuman = startAsDate.toLocaleString();
-    return (
-      <Card className="metrics-uptime aggregate-status">
+export const UptimeMetric: React.FunctionComponent<IUptimeMetricProps> = ({
+  i18nSince,
+  i18nTitle,
+  start,
+  uptimeDuration,
+}) => {
+  const startAsDate = new Date(start);
+  const startAsHuman = startAsDate.toLocaleString();
+  return (
+    <Card
+      data-testid={'dashboard-page-metrics-uptime'}
+      className="metrics-uptime aggregate-status"
+    >
+      <CardBody>
         <Title size="md" className="metrics-uptime__header">
-          <div>{this.props.i18nTitle}</div>
-          <div className="metrics-uptime__uptime">since {startAsHuman}</div>
+          <div>{i18nTitle}</div>
+          <div className="metrics-uptime__uptime">
+            {i18nSince} {startAsHuman}
+          </div>
         </Title>
-        <CardBody>
-          <span>{this.props.uptimeDuration}</span>
-        </CardBody>
-      </Card>
-    );
-  }
-}
+      </CardBody>
+      <CardBody>
+        <span>{uptimeDuration}</span>
+      </CardBody>
+    </Card>
+  );
+};

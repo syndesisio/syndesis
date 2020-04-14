@@ -1,6 +1,13 @@
-import { Card, CardBody, CardFooter, CardHeader, Form, Title } from '@patternfly/react-core';
+import {
+  Alert,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Form,
+  Title,
+} from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { Alert } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, Container, Loader, PageSection } from '../../Layout';
 
@@ -16,6 +23,7 @@ export interface IIntegrationEditorFormProps {
    * The callback fired when submitting the form.
    * @param e
    */
+  isBackAllowed: boolean;
   isValid: boolean;
   isLoading: boolean;
   error?: string;
@@ -31,64 +39,71 @@ export interface IIntegrationEditorFormProps {
  * @see [i18nTitle]{@link IIntegrationEditorFormProps#i18nTitle}
  * @see [i18nSubtitle]{@link IIntegrationEditorFormProps#i18nSubtitle}
  */
-export class IntegrationEditorForm extends React.Component<
-  IIntegrationEditorFormProps
-> {
-  public render() {
-    return (
-      <PageSection>
-        <Container>
-          <div className="row row-cards-pf">
-            <Card>
-              {this.props.i18nFormTitle && (
-                <CardHeader>
-                  <Title className="syn-card__title" headingLevel="h2" size="md">{this.props.i18nFormTitle}</Title>
-                </CardHeader>
+export const IntegrationEditorForm: React.FunctionComponent<IIntegrationEditorFormProps> = ({
+  isValid,
+  i18nNext,
+  handleSubmit,
+  i18nFormTitle,
+  backActionHref,
+  children,
+  error,
+  i18nBackAction,
+  isBackAllowed,
+  isLoading,
+  submitForm,
+}) => {
+  return (
+    <PageSection>
+      <Container>
+        <div className="row row-cards-pf">
+          <Card>
+            {i18nFormTitle && (
+              <CardHeader>
+                <Title className="syn-card__title" headingLevel="h2" size="md">
+                  {i18nFormTitle}
+                </Title>
+              </CardHeader>
+            )}
+            <CardBody>
+              <Container>
+                <Form isHorizontal={true} onSubmit={handleSubmit}>
+                  {error && (
+                    <Alert isInline={true} variant={'warning'} title={error} />
+                  )}
+                  {children}
+                </Form>
+              </Container>
+            </CardBody>
+            <CardFooter className="syn-card__footer">
+              {backActionHref && isBackAllowed && (
+                <>
+                  <ButtonLink
+                    id={'integration-editor-form-back-button'}
+                    href={backActionHref}
+                  >
+                    <i className={'fa fa-chevron-left'} /> {i18nBackAction}
+                  </ButtonLink>
+                  &nbsp;
+                </>
               )}
-              {this.props.error ? (
-                <Alert type={'warning'}>
-                  <span>{this.props.error}</span>
-                </Alert>
-              ) : null}
-              <CardBody>
-                <Container>
-                  <Form isHorizontal={true} onSubmit={this.props.handleSubmit}>
-                    {this.props.children}
-                  </Form>
-                </Container>
-              </CardBody>
-              <CardFooter className="syn-card__footer">
-                {this.props.backActionHref && (
+              <ButtonLink
+                id={'integration-editor-form-next-button'}
+                onClick={submitForm}
+                disabled={!isValid || isLoading}
+                as={'primary'}
+              >
+                {i18nNext}
+                {isLoading && (
                   <>
-                    <ButtonLink
-                      id={'integration-editor-form-back-button'}
-                      href={this.props.backActionHref}
-                    >
-                      <i className={'fa fa-chevron-left'} />{' '}
-                      {this.props.i18nBackAction}
-                    </ButtonLink>
-                    &nbsp;
+                    &nbsp;&nbsp;
+                    <Loader inline={true} size={'xs'} />
                   </>
                 )}
-                <ButtonLink
-                  id={'integration-editor-form-next-button'}
-                  onClick={this.props.submitForm}
-                  disabled={!this.props.isValid || this.props.isLoading}
-                  as={'primary'}
-                >
-                  {this.props.i18nNext}
-                  {this.props.isLoading ? (
-                    <>
-                      &nbsp;&nbsp;
-                      <Loader inline={true} size={'xs'} />
-                    </>
-                  ) : null}
-                </ButtonLink>
-              </CardFooter>
-            </Card>
-          </div>
-        </Container>
-      </PageSection>
-    );
-  }
-}
+              </ButtonLink>
+            </CardFooter>
+          </Card>
+        </div>
+      </Container>
+    </PageSection>
+  );
+};

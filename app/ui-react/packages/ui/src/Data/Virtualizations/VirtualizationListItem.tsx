@@ -1,23 +1,17 @@
-import * as H from '@syndesis/history';
 import {
-  DropdownKebab,
-  Icon,
-  ListView,
-  ListViewIcon,
-  ListViewInfoItem,
-  ListViewItem,
-  MenuItem,
-  OverlayTrigger,
+  DataListAction,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
   Tooltip,
-} from 'patternfly-react';
+} from '@patternfly/react-core';
+import { CubeIcon } from '@patternfly/react-icons';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons';
+import * as H from '@syndesis/history';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
 import { ButtonLink } from '../../Layout';
-import {
-  ConfirmationButtonStyle,
-  ConfirmationDialog,
-  ConfirmationIconType,
-} from '../../Shared';
 import {
   FAILED,
   NOTFOUND,
@@ -32,9 +26,6 @@ export interface IVirtualizationListItemProps {
    * `true` if a publish step is in progress
    */
   isProgressWithLink: boolean;
-  i18nDeleteInProgressText: string;
-  i18nPublishInProgressText: string;
-  i18nStopInProgressText: string;
   /**
    * The text to use for the label.
    */
@@ -49,38 +40,15 @@ export interface IVirtualizationListItemProps {
   currentPublishedState: VirtualizationPublishState;
   currentPublishedVersion?: number;
   detailsPageLink: H.LocationDescriptor;
-  hasViews: boolean;
-  i18nCancelText: string;
-  i18nDelete: string;
-  i18nDeleteModalMessage: string;
-  i18nDeleteModalTitle: string;
+  dropdownActions: JSX.Element;
   i18nEdit: string;
   i18nEditTip?: string;
   i18nInUseText: string;
-  i18nPublish: string;
   i18nPublishLogUrlText: string;
   i18nViewODataUrlText: string;
-  i18nStop: string;
-  i18nStopModalMessage: string;
-  i18nStopModalTitle: string;
   icon?: string;
   modified: boolean;
   odataUrl?: string;
-
-  /**
-   * @param virtualizationName the name of the virtualization being deleted
-   */
-  onDelete: (virtualizationName: string) => Promise<void>;
-
-  /**
-   * @param virtualizationName the name of the virtualization being published
-   */
-  onPublish: (virtualizationName: string, hasViews: boolean) => Promise<void>;
-
-  /**
-   * @param virtualizationName the name of the virtualization being stopped (unpublished)
-   */
-  onStop: (virtualizationName: string) => Promise<void>;
   publishingCurrentStep?: number;
   publishingLogUrl?: string;
   publishingTotalSteps?: number;
@@ -90,15 +58,13 @@ export interface IVirtualizationListItemProps {
   virtualizationDescription: string;
 }
 
-export const VirtualizationListItem: React.FunctionComponent<IVirtualizationListItemProps> = props => {
-  const [showConfirmationDialog, setShowConfirmationDialog] = React.useState(
-    false
-  );
+export const VirtualizationListItem: React.FunctionComponent<
+  IVirtualizationListItemProps
+> = props => {
   const [labelType, setLabelType] = React.useState(props.labelType);
   const [publishStateText, setPublishStateText] = React.useState(
     props.i18nPublishState
   );
-  const [working, setWorking] = React.useState(false);
 
   React.useEffect(() => {
     let changeText = true;
@@ -117,126 +83,78 @@ export const VirtualizationListItem: React.FunctionComponent<IVirtualizationList
       setPublishStateText(props.i18nPublishState);
     }
 
-    setWorking(
-      props.currentPublishedState !== NOTFOUND &&
-        props.currentPublishedState !== RUNNING &&
-        props.currentPublishedState !== FAILED
-    );
   }, [props.i18nPublishState, props.currentPublishedState]);
 
   React.useEffect(() => {
     setLabelType(props.labelType);
   }, [props.labelType]);
 
-  const doCancel = () => {
-    setShowConfirmationDialog(false);
-  };
-
-  const getEditTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="detailsTip">
-        {props.i18nEditTip ? props.i18nEditTip : props.i18nEdit}
-      </Tooltip>
-    );
-  };
-
-  const doDelete = async () => {
-    setWorking(true);
-    const saveText = publishStateText;
-    const saveLabelType = labelType;
-    setLabelType('default');
-    setPublishStateText(props.i18nDeleteInProgressText);
-    setShowConfirmationDialog(false);
-    await props.onDelete(props.virtualizationName).catch(() => {
-      // restore previous values
-      setPublishStateText(saveText);
-      setLabelType(saveLabelType);
-    });
-    setWorking(false);
-  };
-
-  const doPublish = async () => {
-    setWorking(true);
-    const saveText = publishStateText;
-    const saveLabelType = labelType;
-    setLabelType('default');
-    setPublishStateText(props.i18nPublishInProgressText);
-    await props.onPublish(props.virtualizationName, props.hasViews).catch(() => {
-        // restore previous values
-        setPublishStateText(saveText);
-        setLabelType(saveLabelType);
-      });
-    setWorking(false);
-  };
-
-  const doStop = async () => {
-    setWorking(true);
-    const saveText = publishStateText;
-    const saveLabelType = labelType;
-    setLabelType('default');
-    setPublishStateText(props.i18nStopInProgressText);
-    setShowConfirmationDialog(false);
-    await props.onStop(props.virtualizationName).catch(() => {
-      // restore previous values
-      setPublishStateText(saveText);
-      setLabelType(saveLabelType);
-    });
-    setWorking(false);
-  };
-
-  const showConfirmDialog = () => {
-    if (props.usedBy.length < 1) {
-      setShowConfirmationDialog(true);
-    }
-  };
-
-  // Determine if virtualization is running
-  const isRunning = props.currentPublishedState === RUNNING;
-
-  const shouldDisablePublish =
-    working ||
-    props.isProgressWithLink ||
-    !props.virtualizationName ||
-    (!props.modified && isRunning);
-
-  const shouldDisableStop =
-    props.usedBy.length > 0 ||
-    working ||
-    !isRunning ||
-    !props.virtualizationName;
-
-  const shouldDisableDelete =
-    props.usedBy.length > 0 || working || props.isProgressWithLink || isRunning;
-
   return (
-    <>
-      <ConfirmationDialog
-        buttonStyle={
-          isRunning
-            ? ConfirmationButtonStyle.WARNING
-            : ConfirmationButtonStyle.DANGER
-        }
-        i18nCancelButtonText={props.i18nCancelText}
-        i18nConfirmButtonText={isRunning ? props.i18nStop : props.i18nDelete}
-        i18nConfirmationMessage={
-          isRunning ? props.i18nStopModalMessage : props.i18nDeleteModalMessage
-        }
-        i18nTitle={
-          isRunning ? props.i18nStopModalTitle : props.i18nDeleteModalTitle
-        }
-        icon={
-          isRunning ? ConfirmationIconType.WARNING : ConfirmationIconType.DANGER
-        }
-        showDialog={showConfirmationDialog}
-        onCancel={doCancel}
-        onConfirm={isRunning ? doStop : doDelete}
-      />
-      <ListViewItem
+      <DataListItem
+        aria-labelledby={'single-action-item1'}
         data-testid={`virtualization-list-item-${toValidHtmlId(
           props.virtualizationName
         )}-list-item`}
-        actions={
-          <div className="form-group">
+        className={'virtualization-list-item'}
+      >
+        <DataListItemRow>
+          <DataListItemCells
+            dataListCells={[
+              <DataListCell width={1} key={0}>
+                {props.icon ? (
+                  <div className={'virtualization-list-item__icon-wrapper'}>
+                    <img
+                      src={props.icon}
+                      alt={props.virtualizationName}
+                      width={46}
+                    />
+                  </div>
+                ) : (
+                  <CubeIcon size={'lg'} />
+                )}
+              </DataListCell>,
+              <DataListCell key={'primary content'} width={4}>
+                <div className={'virtualization-list-item__text-wrapper'}>
+                  <b>{props.virtualizationName}</b>
+                  <br />
+                  {props.virtualizationDescription
+                    ? props.virtualizationDescription
+                    : ''}
+                </div>
+              </DataListCell>,
+              <DataListCell key={'used-by content'} width={4}>
+                <div className={'virtualization-list-item__used-by'}>
+                  {props.usedBy.length > 0 ? (
+                    props.i18nInUseText
+                  ) : (
+                    <span className={'virtualization-list-item__usedby-text'} />
+                  )}
+                </div>
+              </DataListCell>,
+              <DataListCell key={'odata_content'} width={4}>
+                {props.odataUrl && (
+                  <span className={'virtualization-list-item__odata-span'}>
+                    <a
+                      className={'virtualization-list-item__odata-anchor'}
+                      data-testid={'virtualization-list-item-odataUrl'}
+                      target="_blank"
+                      href={props.odataUrl}
+                    >
+                      {props.i18nViewODataUrlText}
+                      <ExternalLinkAltIcon
+                        className={'virtualization-list-item-odata-link-icon'}
+                      />
+                    </a>
+                  </span>
+                )}
+              </DataListCell>,
+            ]}
+          />
+          <DataListAction
+            aria-labelledby={'actions'}
+            id={'actions'}
+            aria-label={'Actions'}
+          >
             <PublishStatusWithProgress
               isProgressWithLink={props.isProgressWithLink}
               inListView={true}
@@ -250,7 +168,15 @@ export const VirtualizationListItem: React.FunctionComponent<IVirtualizationList
               publishingTotalSteps={props.publishingTotalSteps}
               publishingStepText={props.publishingStepText}
             />
-            <OverlayTrigger overlay={getEditTooltip()} placement="top">
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={
+                <div id={'editTip'}>
+                  {props.i18nEditTip ? props.i18nEditTip : props.i18nEdit}
+                </div>
+              }
+            >
               <ButtonLink
                 data-testid={'virtualization-list-item-edit-button'}
                 href={props.detailsPageLink}
@@ -258,84 +184,10 @@ export const VirtualizationListItem: React.FunctionComponent<IVirtualizationList
               >
                 {props.i18nEdit}
               </ButtonLink>
-            </OverlayTrigger>
-            <DropdownKebab
-              id={`virtualization-${props.virtualizationName}-action-menu`}
-              pullRight={true}
-              data-testid={`virtualization-list-item-${props.virtualizationName}-dropdown-kebab`}
-            >
-              <MenuItem
-                className={'virtualization-list-item__menuItem'}
-                onClick={doPublish}
-                disabled={shouldDisablePublish}
-                data-testid={`virtualization-list-item-${props.virtualizationName}-publish`}
-              >
-                {props.i18nPublish}
-              </MenuItem>
-              <MenuItem
-                className={'virtualization-list-item__menuItem'}
-                onClick={doStop}
-                disabled={shouldDisableStop}
-                data-testid={`virtualization-list-item-${props.virtualizationName}-stop`}
-              >
-                {props.i18nStop}
-              </MenuItem>
-              <MenuItem
-                className={'virtualization-list-item__menuItem'}
-                onClick={showConfirmDialog}
-                disabled={shouldDisableDelete}
-                data-testid={`virtualization-list-item-${props.virtualizationName}-delete`}
-              >
-                {props.i18nDelete}
-              </MenuItem>
-            </DropdownKebab>
-          </div>
-        }
-        heading={props.virtualizationName}
-        description={
-          props.virtualizationDescription ? props.virtualizationDescription : ''
-        }
-        additionalInfo={[
-          <ListViewInfoItem key={1} stacked={true}>
-            {props.usedBy.length > 0 ? (
-              props.i18nInUseText
-            ) : (
-              <span className={'virtualization-list-item__usedby-text'} />
-            )}
-          </ListViewInfoItem>,
-          <ListViewInfoItem key={2} stacked={true}>
-            {props.odataUrl && (
-              <span className={'virtualization-list-item__odata-span'}>
-                <a
-                  className={'virtualization-list-item__odata-anchor'}
-                  data-testid={'virtualization-list-item-odataUrl'}
-                  target="_blank"
-                  href={props.odataUrl}
-                >
-                  {props.i18nViewODataUrlText}
-                  <Icon
-                    className={'virtualization-list-item-odata-link-icon'}
-                    name={'external-link'}
-                  />
-                </a>
-              </span>
-            )}
-          </ListViewInfoItem>,
-        ]}
-        hideCloseIcon={true}
-        leftContent={
-          props.icon ? (
-            <div className="blank-slate-pf-icon">
-              <img src={props.icon} alt={props.virtualizationName} width={46} />
-            </div>
-          ) : (
-            <ListViewIcon name={'cube'} />
-          )
-        }
-        stacked={true}
-      >
-        {props.children ? <ListView>{props.children}</ListView> : null}
-      </ListViewItem>
-    </>
+            </Tooltip>
+            {props.dropdownActions}
+          </DataListAction>
+        </DataListItemRow>
+      </DataListItem>
   );
 };

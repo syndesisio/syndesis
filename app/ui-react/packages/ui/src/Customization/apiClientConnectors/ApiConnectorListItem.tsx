@@ -1,12 +1,14 @@
-import * as H from '@syndesis/history';
 import {
-  Button,
-  ListViewInfoItem,
-  ListViewItem,
-  OverlayTrigger,
-  Tooltip,
-} from 'patternfly-react';
+  DataListAction,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+  Tooltip
+} from '@patternfly/react-core';
+import * as H from '@syndesis/history';
 import * as React from 'react';
+import { useState } from 'react';
 import { toValidHtmlId } from '../../helpers';
 import { ButtonLink } from '../../Layout';
 import {
@@ -14,6 +16,7 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../../Shared';
+import './ApiConnectorListItem.css';
 
 export interface IApiConnectorListItemProps {
   apiConnectorDescription?: string;
@@ -33,137 +36,140 @@ export interface IApiConnectorListItemProps {
   usedBy: number;
 }
 
-export interface IApiConnectorListItemState {
-  showDeleteDialog: boolean;
-}
+export const ApiConnectorListItem: React.FC<
+  IApiConnectorListItemProps
+> = (
+  {
+    apiConnectorDescription,
+    apiConnectorId,
+    apiConnectorIcon,
+    apiConnectorName,
+    detailsPageLink,
+    i18nCancelLabel,
+    i18nDelete,
+    i18nDeleteModalMessage,
+    i18nDeleteModalTitle,
+    i18nDeleteTip,
+    i18nDetails,
+    i18nDetailsTip,
+    i18nUsedByMessage,
+    onDelete,
+    usedBy
+  }) => {
+  // initial visibility of delete dialog
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-export class ApiConnectorListItem extends React.Component<
-  IApiConnectorListItemProps,
-  IApiConnectorListItemState
-> {
-  public constructor(props: IApiConnectorListItemProps) {
-    super(props);
+  const doCancel = () => {
+    setShowDeleteDialog(false);
+  };
 
-    this.state = {
-      showDeleteDialog: false, // initial visibility of delete dialog
-    };
-
-    this.doCancel = this.doCancel.bind(this);
-    this.doDelete = this.doDelete.bind(this);
-    this.showDeleteDialog = this.showDeleteDialog.bind(this);
-  }
-
-  public doCancel() {
-    this.setState({
-      showDeleteDialog: false, // hide dialog
-    });
-  }
-
-  public doDelete() {
-    this.setState({
-      showDeleteDialog: false, // hide dialog
-    });
+  const doDelete = () => {
+    setShowDeleteDialog(false);
 
     // TODO: disable components while delete is processing
-    this.props.onDelete(this.props.apiConnectorId);
-  }
+    onDelete(apiConnectorId);
+  };
 
-  public getDeleteTooltip() {
-    return (
-      <Tooltip id="deleteTip">
-        {this.props.i18nDeleteTip
-          ? this.props.i18nDeleteTip
-          : this.props.i18nDelete}
-      </Tooltip>
-    );
-  }
+  const showDeleteDialogAction = () => {
+    setShowDeleteDialog(true);
+  };
 
-  public getDetailsTooltip() {
-    return (
-      <Tooltip id="detailsTip">
-        {this.props.i18nDetailsTip
-          ? this.props.i18nDetailsTip
-          : this.props.i18nDetails}
-      </Tooltip>
-    );
-  }
-
-  public showDeleteDialog() {
-    this.setState({
-      showDeleteDialog: true,
-    });
-  }
-
-  public render() {
-    return (
-      <>
-        <ConfirmationDialog
-          buttonStyle={ConfirmationButtonStyle.DANGER}
-          i18nCancelButtonText={this.props.i18nCancelLabel}
-          i18nConfirmButtonText={this.props.i18nDelete}
-          i18nConfirmationMessage={this.props.i18nDeleteModalMessage}
-          i18nTitle={this.props.i18nDeleteModalTitle}
-          icon={ConfirmationIconType.DANGER}
-          showDialog={this.state.showDeleteDialog}
-          onCancel={this.doCancel}
-          onConfirm={this.doDelete}
-        />
-        <ListViewItem
-          data-testid={`api-connector-list-item-${toValidHtmlId(
-            this.props.apiConnectorName
-          )}-list-item`}
-          actions={
-            <>
-              <OverlayTrigger
-                overlay={this.getDetailsTooltip()}
-                placement="top"
+  return (
+    <>
+      <ConfirmationDialog
+        buttonStyle={ConfirmationButtonStyle.DANGER}
+        i18nCancelButtonText={i18nCancelLabel}
+        i18nConfirmButtonText={i18nDelete}
+        i18nConfirmationMessage={i18nDeleteModalMessage}
+        i18nTitle={i18nDeleteModalTitle}
+        icon={ConfirmationIconType.DANGER}
+        showDialog={showDeleteDialog}
+        onCancel={doCancel}
+        onConfirm={doDelete}
+      />
+      <DataListItem aria-labelledby={'single-action-item1'}
+                    data-testid={`api-connector-list-item-${toValidHtmlId(apiConnectorName)}-list-item`}
+                    className={'api-connector-list-item'}
+      >
+        <DataListItemRow>
+          <DataListItemCells
+            dataListCells={[
+              <DataListCell width={1} key={0}>
+                {apiConnectorIcon ? (
+                  <div className={'api-connector-list-item__icon-wrapper'}>
+                    <img
+                      src={apiConnectorIcon}
+                      alt={apiConnectorName}
+                      width={46}
+                    />
+                  </div>
+                ) : null}
+              </DataListCell>,
+              <DataListCell key={'primary content'} width={4}>
+                <div className={'api-connector-list-item__text-wrapper'}>
+                  <b>{apiConnectorName}</b><br/>
+                  {
+                    apiConnectorDescription
+                      ? apiConnectorDescription
+                      : ''
+                  }
+                </div>
+              </DataListCell>,
+              <DataListCell key={'secondary content'} width={4}>
+                <div className={'api-connector-list-item__used-by'}>
+                  {i18nUsedByMessage}
+                </div>
+              </DataListCell>
+            ]}
+          />
+          <DataListAction
+            aria-labelledby={'single-action-item1 single-action-action1'}
+            id={'single-action-action1'}
+            aria-label={'Actions'}
+          >
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={
+                <div id={'detailsTip'}>
+                  {i18nDetailsTip
+                    ? i18nDetailsTip
+                    : i18nDetails}
+                </div>
+              }
+            >
+              <ButtonLink
+                data-testid={'api-connector-list-item-details-button'}
+                href={detailsPageLink}
+                as={'default'}
               >
-                <ButtonLink
-                  data-testid={'api-connector-list-item-details-button'}
-                  href={this.props.detailsPageLink}
-                  as={'default'}
-                >
-                  {this.props.i18nDetails}
-                </ButtonLink>
-              </OverlayTrigger>
-              <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
-                <Button
-                  data-testid={'api-connector-list-item-delete-button'}
-                  bsStyle="default"
-                  disabled={this.props.usedBy !== 0}
-                  onClick={this.showDeleteDialog}
-                >
-                  {this.props.i18nDelete}
-                </Button>
-              </OverlayTrigger>
-            </>
-          }
-          additionalInfo={[
-            <ListViewInfoItem key={1}>
-              {this.props.i18nUsedByMessage}
-            </ListViewInfoItem>,
-          ]}
-          description={
-            this.props.apiConnectorDescription
-              ? this.props.apiConnectorDescription
-              : ''
-          }
-          heading={this.props.apiConnectorName}
-          hideCloseIcon={true}
-          leftContent={
-            this.props.apiConnectorIcon ? (
-              <div className="blank-slate-pf-icon">
-                <img
-                  src={this.props.apiConnectorIcon}
-                  alt={this.props.apiConnectorName}
-                  width={46}
-                />
-              </div>
-            ) : null
-          }
-          stacked={true}
-        />
-      </>
-    );
-  }
-}
+                {i18nDetails}
+              </ButtonLink>
+            </Tooltip>
+
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={
+                <div id={'deleteTip'}>
+                  {i18nDeleteTip
+                    ?i18nDeleteTip
+                    : i18nDelete}
+                </div>
+              }
+            >
+              <ButtonLink
+                data-testid={'api-connector-list-item-delete-button'}
+                disabled={usedBy !== 0}
+                onClick={showDeleteDialogAction}
+              >
+                {i18nDelete}
+              </ButtonLink>
+            </Tooltip>
+          </DataListAction>
+        </DataListItemRow>
+      </DataListItem>
+    </>
+  );
+
+};

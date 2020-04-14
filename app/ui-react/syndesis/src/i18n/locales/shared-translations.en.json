@@ -39,16 +39,19 @@
       "Extension": "Extension",
       "Extensions": "Extensions",
       "filterByNamePlaceholder": "Filter by Name",
+      "fieldRequired": "{{field}} is required",
       "Home": "Home",
       "ID": "ID",
       "Import": "Import",
       "Integrations": "Integrations",
       "Library": "Library",
-      "linkCreateConnection": "Create Connection",
+      "Loading": "Loading...",
+      "CreateConnection": "Create Connection",
       "linkCreateIntegration": "Create Integration",
       "Name": "Name",
       "NameYourView": "Name your view",
       "nameFilterPlaceholder": "Filter by Name...",
+      "NoDescriptionAvailable": "No description available.",
       "Next": "Next",
       "Pending": "Pending",
       "Publish": "Publish",
@@ -92,7 +95,7 @@
       },
       "project": {
         "name": "Syndesis",
-        "version": "7.6"
+        "version": "7.5"
       },
       "error": {
         "title": "Something is wrong",

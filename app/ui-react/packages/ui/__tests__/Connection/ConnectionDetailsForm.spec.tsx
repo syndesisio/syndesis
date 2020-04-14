@@ -1,5 +1,5 @@
 import * as React from 'react';
-import 'jest-dom/extend-expect';
+import '@testing-library/jest-dom/extend-expect';
 import { cleanup, render } from '@testing-library/react';
 import {
   ConnectionDetailsForm,
@@ -15,6 +15,7 @@ export default describe('ConnectionDetailsForm', () => {
 
   const props = {
     handleSubmit: jest.fn(),
+    hasProperties: true,
     i18nCancelLabel: 'Cancel',
     i18nEditLabel: 'Edit',
     i18nSaveLabel: 'Save',

@@ -2,7 +2,10 @@ import { WithConnectors } from '@syndesis/api';
 import { IConnector } from '@syndesis/models';
 import {
   ConnectionCard,
+  ConnectionCreatorBreadcrumb,
+  ConnectionCreatorBreadSteps,
   ConnectionCreatorLayout,
+  ConnectionCreatorToggleList,
   ConnectionsGrid,
   ConnectionsGridCell,
   ConnectionSkeleton,
@@ -10,15 +13,12 @@ import {
   IFilterType,
   ISortType,
   ListViewToolbar,
-  PageSection,
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import i18n from '../../../../i18n';
 import { ApiError, EntityIcon, PageTitle } from '../../../../shared';
-import { ConnectionCreatorBreadSteps } from '../../components';
-import { ConnectionCreatorBreadcrumb } from '../../components/ConnectionCreatorBreadcrumb';
 import resolvers from '../../resolvers';
 
 function getFilteredAndSortedConnectors(
@@ -74,23 +74,48 @@ export class ConnectorsPage extends React.Component {
                 <PageTitle title={t('connections:create:connector:title')} />
                 <ConnectionCreatorBreadcrumb
                   cancelHref={resolvers.connections()}
+                  connectionsHref={resolvers.connections()}
+                  i18nCancel={t('shared:Cancel')}
+                  i18nConnections={t('shared:Connections')}
+                  i18nCreateConnection={t('shared:CreateConnection')}
                 />
                 <ConnectionCreatorLayout
-                  header={<ConnectionCreatorBreadSteps step={1} />}
+                  toggle={
+                    <ConnectionCreatorToggleList
+                      step={1}
+                      i18nSelectConnector={t(
+                        'connections:create:connector:title'
+                      )}
+                      i18nConfigureConnection={t(
+                        'connections:create:configure:title'
+                      )}
+                      i18nNameConnection={t('connections:create:review:title')}
+                    />
+                  }
+                  navigation={
+                    <ConnectionCreatorBreadSteps
+                      step={1}
+                      i18nSelectConnector={t(
+                        'connections:create:connector:title'
+                      )}
+                      i18nConfigureConnection={t(
+                        'connections:create:configure:title'
+                      )}
+                      i18nNameConnection={t('connections:create:review:title')}
+                    />
+                  }
                   content={
                     <WithLoader
                       error={error}
                       loading={!hasData}
                       loaderChildren={
-                        <PageSection>
-                          <ConnectionsGrid>
-                            {new Array(5).fill(0).map((_, index) => (
-                              <ConnectionsGridCell key={index}>
-                                <ConnectionSkeleton />
-                              </ConnectionsGridCell>
-                            ))}
-                          </ConnectionsGrid>
-                        </PageSection>
+                        <ConnectionsGrid>
+                          {new Array(5).fill(0).map((_, index) => (
+                            <ConnectionsGridCell key={index}>
+                              <ConnectionSkeleton />
+                            </ConnectionsGridCell>
+                          ))}
+                        </ConnectionsGrid>
                       }
                       errorChildren={<ApiError error={errorMessage!} />}
                     >
@@ -108,71 +133,65 @@ export class ConnectorsPage extends React.Component {
                             );
                             return (
                               <>
-                                <PageSection noPadding={true} variant={'light'}>
-                                  <ListViewToolbar
-                                    filterTypes={filterTypes}
-                                    sortTypes={sortTypes}
-                                    resultsCount={
-                                      filteredAndSortedConnectors.length
+                                <ListViewToolbar
+                                  filterTypes={filterTypes}
+                                  sortTypes={sortTypes}
+                                  resultsCount={
+                                    filteredAndSortedConnectors.length
+                                  }
+                                  {...helpers}
+                                  i18nResultsCount={t('shared:resultsCount', {
+                                    count: filteredAndSortedConnectors.length,
+                                  })}
+                                />
+                                <ConnectionsGrid>
+                                  {filteredAndSortedConnectors.map(
+                                    (connector, index) => {
+                                      return (
+                                        <ConnectionsGridCell key={index}>
+                                          <ConnectionCard
+                                            name={connector.name}
+                                            description={
+                                              connector.description || ''
+                                            }
+                                            i18nCannotDelete={t('cannotDelete')}
+                                            i18nConfigRequired={t(
+                                              'configurationRequired'
+                                            )}
+                                            i18nTechPreview={t(
+                                              'shared:techPreview'
+                                            )}
+                                            icon={
+                                              <EntityIcon
+                                                entity={connector}
+                                                alt={connector.name}
+                                                width={46}
+                                              />
+                                            }
+                                            isConfigRequired={false}
+                                            isTechPreview={
+                                              connector.isTechPreview
+                                            }
+                                            href={resolvers.create.configureConnector(
+                                              {
+                                                connector,
+                                              }
+                                            )}
+                                            techPreviewPopoverHtml={
+                                              <span
+                                                dangerouslySetInnerHTML={{
+                                                  __html: t(
+                                                    'shared:techPreviewPopoverHtml'
+                                                  ),
+                                                }}
+                                              />
+                                            }
+                                          />
+                                        </ConnectionsGridCell>
+                                      );
                                     }
-                                    {...helpers}
-                                    i18nResultsCount={t('shared:resultsCount', {
-                                      count: filteredAndSortedConnectors.length,
-                                    })}
-                                  />
-                                </PageSection>
-                                <PageSection>
-                                  <ConnectionsGrid>
-                                    {filteredAndSortedConnectors.map(
-                                      (connector, index) => {
-                                        return (
-                                          <ConnectionsGridCell key={index}>
-                                            <ConnectionCard
-                                              name={connector.name}
-                                              description={
-                                                connector.description || ''
-                                              }
-                                              i18nCannotDelete={t(
-                                                'cannotDelete'
-                                              )}
-                                              i18nConfigRequired={t(
-                                                'configurationRequired'
-                                              )}
-                                              i18nTechPreview={t(
-                                                'shared:techPreview'
-                                              )}
-                                              icon={
-                                                <EntityIcon
-                                                  entity={connector}
-                                                  alt={connector.name}
-                                                  width={46}
-                                                />
-                                              }
-                                              isConfigRequired={false}
-                                              isTechPreview={
-                                                connector.isTechPreview
-                                              }
-                                              href={resolvers.create.configureConnector(
-                                                {
-                                                  connector,
-                                                }
-                                              )}
-                                              techPreviewPopoverHtml={
-                                                <span
-                                                  dangerouslySetInnerHTML={{
-                                                    __html: t(
-                                                      'shared:techPreviewPopoverHtml'
-                                                    ),
-                                                  }}
-                                                />
-                                              }
-                                            />
-                                          </ConnectionsGridCell>
-                                        );
-                                      }
-                                    )}
-                                  </ConnectionsGrid>
-                                </PageSection>
+                                  )}
+                                </ConnectionsGrid>
                               </>
                             );
                           }}

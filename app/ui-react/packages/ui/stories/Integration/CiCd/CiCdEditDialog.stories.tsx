@@ -1,6 +1,6 @@
+import { Button, ButtonVariant } from '@patternfly/react-core';
 import { text, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
-import { Button } from 'patternfly-react';
 import * as React from 'react';
 import { CiCdEditDialog, TagNameValidationError } from '../../../src';
 
@@ -56,63 +56,48 @@ interface ICiCdDialogStoryProps {
   i18nNameInUseError: string;
 }
 
-interface ICiCdDialogStoryState {
-  showDialog: boolean;
-  nameValidationError: TagNameValidationError;
-}
+export const CiCdDialogStory: React.FunctionComponent<ICiCdDialogStoryProps> = props => {
+  const [nameValidationError, setNameValidationError] = React.useState(
+    TagNameValidationError.NoErrors
+  );
+  const [showDialog, setShowDialog] = React.useState(true);
 
-class CiCdDialogStory extends React.Component<
-  ICiCdDialogStoryProps,
-  ICiCdDialogStoryState
-> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      nameValidationError: TagNameValidationError.NoErrors,
-      showDialog: true,
-    };
-    this.openDialog = this.openDialog.bind(this);
-    this.closeDialog = this.closeDialog.bind(this);
-    this.handleNameValidation = this.handleNameValidation.bind(this);
-  }
-  public openDialog() {
-    this.setState({ showDialog: true });
-  }
-  public closeDialog() {
-    this.setState({ showDialog: false });
-  }
-  public handleNameValidation(name: string) {
+  const openDialog = () => {
+    setShowDialog(true);
+  };
+  const closeDialog = () => {
+    setShowDialog(false);
+  };
+  const handleNameValidation = (name: string) => {
     if (!name || name === '') {
-      this.setState({ nameValidationError: TagNameValidationError.NoName });
+      setNameValidationError(TagNameValidationError.NoName);
     } else if (name === 'UsedTag') {
-      this.setState({ nameValidationError: TagNameValidationError.NameInUse });
+      setNameValidationError(TagNameValidationError.NameInUse);
     } else {
-      this.setState({ nameValidationError: TagNameValidationError.NoErrors });
+      setNameValidationError(TagNameValidationError.NoErrors);
     }
-  }
-  public render() {
-    return (
-      <>
-        {this.state.showDialog && (
-          <CiCdEditDialog
-            i18nTitle={this.props.i18nTitle}
-            i18nDescription={this.props.i18nDescription}
-            i18nCancelButtonText={this.props.i18nCancelButtonText}
-            i18nInputLabel={this.props.i18nInputLabel}
-            i18nSaveButtonText={this.props.i18nSaveButtonText}
-            i18nNoNameError={this.props.i18nNoNameError}
-            i18nNameInUseError={this.props.i18nNameInUseError}
-            tagName={this.props.tagName}
-            validationError={this.state.nameValidationError}
-            onValidate={this.handleNameValidation}
-            onSave={this.closeDialog}
-            onHide={this.closeDialog}
-          />
-        )}
-        <Button className="btn btn-primary" onClick={this.openDialog}>
-          Open Dialog
-        </Button>
-      </>
-    );
-  }
-}
+  };
+  return (
+    <>
+      {showDialog && (
+        <CiCdEditDialog
+          i18nTitle={props.i18nTitle}
+          i18nDescription={props.i18nDescription}
+          i18nCancelButtonText={props.i18nCancelButtonText}
+          i18nInputLabel={props.i18nInputLabel}
+          i18nSaveButtonText={props.i18nSaveButtonText}
+          i18nNoNameError={props.i18nNoNameError}
+          i18nNameInUseError={props.i18nNameInUseError}
+          tagName={props.tagName}
+          validationError={nameValidationError}
+          onValidate={handleNameValidation}
+          onSave={closeDialog}
+          onHide={closeDialog}
+        />
+      )}
+      <Button variant={ButtonVariant.primary} onClick={openDialog}>
+        Open Dialog
+      </Button>
+    </>
+  );
+};

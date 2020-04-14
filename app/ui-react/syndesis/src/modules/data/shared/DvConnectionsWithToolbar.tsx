@@ -143,7 +143,7 @@ export const DvConnectionsWithToolbar: React.FunctionComponent<
                 sortTypes={sortTypes}
                 resultsCount={filteredAndSortedConnections.length}
                 {...helpers}
-                i18nLinkCreateConnection={t('shared:linkCreateConnection')}
+                i18nLinkCreateConnection={t('shared:CreateConnection')}
                 i18nResultsCount={t('shared:resultsCount', {
                   count: filteredAndSortedConnections.length,
                 })}

@@ -24,6 +24,7 @@ import {
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import {
@@ -35,7 +36,8 @@ import {
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
 
-export interface ISelectChoiceConfigModePageProps extends IPageWithEditorBreadcrumb {
+export interface ISelectChoiceConfigModePageProps
+  extends IPageWithEditorBreadcrumb {
   cancelHref: (
     p: ISelectConfigModeRouteParams,
     s: ISelectConfigModeRouteState
@@ -58,89 +60,99 @@ export interface ISelectChoiceConfigModePageProps extends IPageWithEditorBreadcr
  * **Warning:** this component will throw an exception if the route state is
  * undefined.
  */
-export class SelectChoiceConfigModePage extends React.Component<ISelectChoiceConfigModePageProps> {
-  public render() {
-    return (
-      <WithRouteData<ISelectConfigModeRouteParams, ISelectConfigModeRouteState>>
-        {(params, state) => {
-          const positionAsNumber = parseInt(params.position, 10);
-          const options = [
-            {
-              description: 'Provides preselected properties and condition operators for simple expressions.',
-              mode: 'basic',
-              name: 'Basic expression builder',
-            },
-            {
-              description: 'User provides condition language expressions for more advanced use cases.',
-              mode: 'advanced',
-              name: 'Advanced expression builder',
-            }
-          ];
-          return (
-            <>
-              <PageTitle title={'Configure Conditional Flows'} />
-              <IntegrationEditorLayout
-                title={'Configure Conditional Flows'}
-                description={
-                  'Choose how to configure the conditional flows step.'
-                }
-                toolbar={this.props.getBreadcrumb(
-                  'Configure Conditional Flows',
-                  params,
-                  state
-                )}
-                sidebar={this.props.sidebar({
-                  activeIndex: positionAsNumber,
-                  activeStep: toUIStep(state.step),
-                  steps: toUIStepCollection(
-                    getSteps(
-                      state.integration,
-                      params.flowId
-                    )
-                  ),
-                })}
-                content={
-                  <IntegrationEditorChooseAction>
-                    {options
-                      .map((option, idx) => (
-                        <IntegrationEditorActionsListItem
-                          key={idx}
-                          integrationName={option.name}
-                          integrationDescription={
-                            option.description || 'No description available.'
-                          }
-                          actions={
-                            <ButtonLink
-                              data-testid={
-                                'select-action-page-select-button'
-                              }
-                              href={this.props.selectHref(
-                                {
-                                  ...params,
-                                  configMode: option.mode
-                                } as IChoiceStepRouteParams,
-                                {
-                                  ...state,
-                                  step: {
-                                    ...state.step,
-                                    configuredProperties: undefined
-                                  }
-                                } as IChoiceStepRouteState
-                              )}
-                            >
-                              Select
-                            </ButtonLink>
-                          }
-                        />
-                      ))}
-                  </IntegrationEditorChooseAction>
-                }
-                cancelHref={this.props.cancelHref(params, state)}
-              />
-            </>
-          );
-        }}
-      </WithRouteData>
-    );
-  }
-}
+export const SelectChoiceConfigModePage: React.FunctionComponent<ISelectChoiceConfigModePageProps> = ({
+  getBreadcrumb,
+  cancelHref,
+  sidebar,
+  selectHref,
+}) => {
+  const { t } = useTranslation(['integrations', 'shared']);
+  return (
+    <WithRouteData<ISelectConfigModeRouteParams, ISelectConfigModeRouteState>>
+      {(params, state) => {
+        const positionAsNumber = parseInt(params.position, 10);
+        const options = [
+          {
+            description: t(
+              'integrations:editor:selectChoiceMode:basicDescription'
+            ),
+            mode: 'basic',
+            name: t('integrations:editor:selectChoiceMode:basicName'),
+          },
+          {
+            description: t(
+              'integrations:editor:selectChoiceMode:advancedDescription'
+            ),
+            mode: 'advanced',
+            name: t('integrations:editor:selectChoiceMode:advancedName'),
+          },
+        ];
+        return (
+          <>
+            <PageTitle
+              title={t(
+                'integrations:editor:selectChoiceMode:ConfigureConditionalFlows'
+              )}
+            />
+            <IntegrationEditorLayout
+              title={t(
+                'integrations:editor:selectChoiceMode:ConfigureConditionalFlows'
+              )}
+              description={t(
+                'integrations:editor:selectChoiceMode:ConfigureConditionalFlows'
+              )}
+              toolbar={getBreadcrumb(
+                t(
+                  'integrations:editor:selectChoiceMode:ConfigureConditionalFlows'
+                ),
+                params,
+                state
+              )}
+              sidebar={sidebar({
+                activeIndex: positionAsNumber,
+                activeStep: toUIStep(state.step),
+                steps: toUIStepCollection(
+                  getSteps(state.integration, params.flowId)
+                ),
+              })}
+              content={
+                <IntegrationEditorChooseAction>
+                  {options.map((option, idx) => (
+                    <IntegrationEditorActionsListItem
+                      key={idx}
+                      name={option.name}
+                      description={
+                        option.description || t('shared:NoDescriptionAvailable')
+                      }
+                      actions={
+                        <ButtonLink
+                          data-testid={'select-action-page-select-button'}
+                          href={selectHref(
+                            {
+                              ...params,
+                              configMode: option.mode,
+                            } as IChoiceStepRouteParams,
+                            {
+                              ...state,
+                              step: {
+                                ...state.step,
+                                configuredProperties: undefined,
+                              },
+                            } as IChoiceStepRouteState
+                          )}
+                        >
+                          {t('shared:Select')}
+                        </ButtonLink>
+                      }
+                    />
+                  ))}
+                </IntegrationEditorChooseAction>
+              }
+              cancelHref={cancelHref(params, state)}
+            />
+          </>
+        );
+      }}
+    </WithRouteData>
+  );
+};

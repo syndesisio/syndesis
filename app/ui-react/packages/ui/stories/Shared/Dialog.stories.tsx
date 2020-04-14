@@ -1,4 +1,4 @@
-import { Button } from 'patternfly-react';
+import { Button } from '@patternfly/react-core';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { Dialog } from '../../src';

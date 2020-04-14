@@ -1,4 +1,19 @@
-import { ListView, Overlay, Popover } from 'patternfly-react';
+import {
+  DataListAction,
+  DataListCell,
+  DataListContent,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+  DataListToggle,
+  Popover,
+  Split,
+  SplitItem,
+  Stack,
+  StackItem,
+} from '@patternfly/react-core';
+import { WarningTriangleIcon } from '@patternfly/react-icons';
+import { global_warning_color_100 } from '@patternfly/react-tokens';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
 import { ButtonLink } from '../../Layout';
@@ -18,67 +33,118 @@ export interface IIntegrationEditorStepsListItemProps {
   icon: React.ReactNode;
 }
 
-export const IntegrationEditorStepsListItem: React.FunctionComponent<
-  IIntegrationEditorStepsListItemProps
-> = props => {
+export const IntegrationEditorStepsListItem: React.FunctionComponent<IIntegrationEditorStepsListItemProps> = ({
+  action,
+  children,
+  stepName,
+  stepDescription,
+  shape,
+  showWarning,
+  i18nWarningTitle,
+  i18nWarningMessage,
+  actions,
+  icon,
+}) => {
+  const hasExpander = typeof children !== 'undefined';
+  const [expanded, setExpanded] = React.useState(hasExpander);
   const [showWarningPopover, setShowWarningPopover] = React.useState(false);
   const toggleWarningPopover = () => setShowWarningPopover(!showWarningPopover);
-  const itemRef = React.useRef(null);
-
+  const id = toValidHtmlId(stepName);
   return (
-    <ListView.Item
-      data-testid={`integration-editor-steps-list-item-${toValidHtmlId(
-        props.stepName
-      )}-list-item`}
-      actions={props.actions}
-      heading={props.stepName}
-      children={props.children}
-      className={'integration-editor-steps-list-item__list-item'}
-      initExpanded={typeof props.children !== 'undefined'}
-      description={props.stepDescription}
-      additionalInfo={[
-        <React.Fragment key={0}>
-          <div>
-            <p>
-              <strong>Action:</strong>&nbsp;
-              <span>{props.action}</span>
-            </p>
-            <p>
-              <strong>Data Type:</strong>&nbsp;
-              <span>
-                {props.shape}
-                {props.showWarning && (
-                  <ButtonLink
-                    data-testid={
-                      'integration-editor-steps-list-item-warning-button'
-                    }
-                    as={'link'}
-                    onClick={toggleWarningPopover}
-                    ref={itemRef}
-                  >
-                    <i className={'pficon pficon-warning-triangle-o'} />
-                  </ButtonLink>
-                )}
-              </span>
-              <Overlay
-                placement={'top'}
-                show={showWarningPopover}
-                target={itemRef.current}
-              >
-                <Popover
-                  id={'iedsli-shape-warning'}
-                  title={props.i18nWarningTitle}
-                >
-                  {props.i18nWarningMessage}
-                </Popover>
-              </Overlay>
-            </p>
-          </div>
-        </React.Fragment>,
-      ]}
-      leftContent={props.icon}
-      stacked={true}
-      hideCloseIcon={true}
-    />
+    <DataListItem
+      aria-labelledby={id}
+      data-testid={`integration-editor-steps-list-item-${id}-list-item`}
+      isExpanded={expanded}
+    >
+      <DataListItemRow>
+        {hasExpander && (
+          <DataListToggle
+            onClick={() => setExpanded(!expanded)}
+            isExpanded={expanded}
+            id={`integration-editor-steps-list-item-${id}-expander`}
+          />
+        )}
+        <DataListItemCells
+          dataListCells={[
+            <DataListCell
+              key={'icon'}
+              width={1}
+              aria-label={'editor steps list item icon'}
+            >
+              {icon}
+            </DataListCell>,
+            <DataListCell
+              key={0}
+              width={3}
+              aria-label={'editor steps list item name'}
+            >
+              <Stack>
+                <StackItem>
+                  <b id={id}>{stepName}</b>
+                </StackItem>
+                <StackItem>{stepDescription}</StackItem>
+              </Stack>
+            </DataListCell>,
+            <DataListCell
+              key={2}
+              width={3}
+              aria-label={'editor steps list item additional info'}
+            >
+              <Split>
+                <SplitItem isFilled={true}>
+                  <Stack>
+                    <StackItem>
+                      <strong>Action:</strong>&nbsp;
+                      <span>{action}</span>
+                    </StackItem>
+                    <StackItem>
+                      <strong>Data Type:</strong>&nbsp;
+                      <span>{shape}</span>
+                    </StackItem>
+                  </Stack>
+                </SplitItem>
+                <SplitItem>
+                  {showWarning && (
+                    <Popover
+                      position={'auto'}
+                      isVisible={showWarningPopover}
+                      shouldClose={() => setShowWarningPopover(false)}
+                      headerContent={i18nWarningTitle}
+                      bodyContent={i18nWarningMessage}
+                    >
+                      <ButtonLink
+                        data-testid={`integration-editor-steps-list-item-${id}-warning-button`}
+                        as={'link'}
+                        onClick={toggleWarningPopover}
+                      >
+                        <WarningTriangleIcon
+                          color={global_warning_color_100.value}
+                          size={'md'}
+                        />
+                      </ButtonLink>
+                    </Popover>
+                  )}
+                </SplitItem>
+              </Split>
+            </DataListCell>,
+          ]}
+        />
+        <DataListAction
+          id={`${id}-actions`}
+          aria-labelledby={id}
+          aria-label={`${stepName} actions`}
+        >
+          {actions}
+        </DataListAction>
+      </DataListItemRow>
+      <DataListContent
+        aria-label={`${stepName} content`}
+        id={`${id}-content`}
+        isHidden={!expanded}
+        noPadding={true}
+      >
+        <div style={{ margin: '10px' }}>{children}</div>
+      </DataListContent>
+    </DataListItem>
   );
 };

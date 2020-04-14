@@ -1,7 +1,19 @@
 import {
-  Split, SplitItem, Title, Tooltip
+  DataList,
+  DataListAction,
+  DataListCell,
+  DataListContent,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+  DataListToggle,
+  Label, 
+  Split, 
+  SplitItem, 
+  Title, 
+  Tooltip,
 } from '@patternfly/react-core';
-import { Label, ListView, ListViewItem } from 'patternfly-react';
+import { global_active_color_100, global_danger_color_100 } from '@patternfly/react-tokens';
 import * as React from 'react';
 import { toValidHtmlId } from '../../../helpers';
 import { ConnectionStatus } from '../../DvConnection/DvConnectionCard';
@@ -19,35 +31,60 @@ export interface IConnectionSchemaListItemProps {
 }
 
 export const ConnectionSchemaListItem: React.FunctionComponent<IConnectionSchemaListItemProps> = props => {
+
+  const [isExpanded, setExpanded] = React.useState(props.haveSelectedSource);
+
   return (
-    <>
-      <ListViewItem
-        data-testid={`connection-schema-list-item-${toValidHtmlId(
-          props.connectionName
-        )}-list-item`}
-        heading={props.connectionName}
-        description={
-          props.connectionDescription ? props.connectionDescription : ''
+    <DataListItem
+      aria-labelledby={'connection schema list item'}
+      data-testid={`connection-schema-list-item-${toValidHtmlId(
+        props.connectionName
+      )}-list-item`}
+      className={'connection-schema-list-item'}
+      isExpanded={isExpanded}
+    >
+      <DataListItemRow>
+        {(props.children && React.Children.toArray(props.children).length > 0) &&
+        <DataListToggle
+          isExpanded={isExpanded}
+          id="connection-schema-list-item-expand"
+          aria-controls="connection-schema-list-item-expand"
+          onClick={() => setExpanded(!isExpanded)}
+        />
         }
-        hideCloseIcon={true}
-        leftContent={
-          <span>
-            {props.icon}
-            <Tooltip content={props.dvStatusTooltip} position={'bottom'}>
-              <Label
-                className="connection-schema-list-item__status"
-                type={
-                  props.dvStatus === ConnectionStatus.ACTIVE
-                    ? 'success'
-                    : 'danger'
-                }
-              >
-                {props.dvStatus}
-              </Label>
-            </Tooltip>
-          </span>
-        }
-        actions={
+        <DataListItemCells
+          dataListCells={[
+            <DataListCell width={1} key={0}>
+              <span>
+                {props.icon}
+                <Tooltip content={props.dvStatusTooltip} position={'bottom'}>
+                  <Label
+                    className="connection-schema-list-item__status"
+                    style={
+                      props.dvStatus === ConnectionStatus.ACTIVE
+                        ? { background: global_active_color_100.value }
+                        : { background: global_danger_color_100.value }
+                    }
+                  >
+                    {props.dvStatus}
+                  </Label>
+                </Tooltip>
+              </span>
+            </DataListCell>,
+            <DataListCell key={'primary content'} width={4}>
+              <div className={'connection-schema-list-item__text-wrapper'}>
+                <b>{props.connectionName}</b>
+                <br />
+                {props.connectionDescription ? props.connectionDescription : ''}
+              </div>
+            </DataListCell>,
+          ]}
+        />
+        <DataListAction
+          aria-labelledby={'connection schema list actions'}
+          id={'connection-schema-list-actions'}
+          aria-label={'Actions'}
+        >
           <Split>
             <SplitItem>
               {props.loading ? (
@@ -57,14 +94,19 @@ export const ConnectionSchemaListItem: React.FunctionComponent<IConnectionSchema
               )}
             </SplitItem>
           </Split>
-        }
-        initExpanded={props.haveSelectedSource}
-        stacked={false}
-      >
-        {props.children && props.dvStatus === ConnectionStatus.ACTIVE ? (
-          <ListView>{props.children}</ListView>
-        ) : null}
-      </ListViewItem>
-    </>
+        </DataListAction>
+      </DataListItemRow>
+      {props.children && props.dvStatus === ConnectionStatus.ACTIVE ? (
+        <DataListContent
+          aria-label="Primary Content Details"
+          id="connection-schema-content"
+          isHidden={!isExpanded}
+        >
+          <DataList aria-label={'connection schema list content'}>
+            {props.children}
+          </DataList>
+        </DataListContent>
+      ) : null}
+    </DataListItem>
   );
 };

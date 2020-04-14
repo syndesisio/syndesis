@@ -1,4 +1,4 @@
-import { Alert, ExpandCollapse } from 'patternfly-react';
+import { Alert, Expandable } from '@patternfly/react-core';
 import * as React from 'react';
 
 export enum SyndesisAlertLevel {
@@ -11,33 +11,46 @@ export interface ISyndesisAlertProps {
   level: SyndesisAlertLevel;
   message: string;
   detail?: string;
-  i18nTextExpanded: string;
-  i18nTextCollapsed: string;
+  i18nTextExpanded?: string;
+  i18nTextCollapsed?: string;
 }
 
-export class SyndesisAlert extends React.Component<
-  ISyndesisAlertProps
-> {
-  public render() {
-    return (
-      <Alert type={this.props.level}>
-        <span
-          dangerouslySetInnerHTML={{
-            __html: this.props.message,
-          }}
-        />
-        {this.props.detail && (
-          <ExpandCollapse
-            align="left"
-            bordered={false}
-            expanded={false}
-            textExpanded={this.props.i18nTextExpanded}
-            textCollapsed={this.props.i18nTextCollapsed}
-          >
-            <pre>{this.props.detail}</pre>
-          </ExpandCollapse>
-        )}
-      </Alert>
-    );
+function mapLevel(incoming: SyndesisAlertLevel) {
+  switch (incoming) {
+    case SyndesisAlertLevel.ERROR:
+      return 'danger';
+    default:
+      return incoming;
   }
 }
+
+export const SyndesisAlert: React.FunctionComponent<ISyndesisAlertProps> = ({
+  level,
+  message,
+  detail,
+  i18nTextExpanded,
+  i18nTextCollapsed,
+}) => {
+  return (
+    <Alert
+      isInline={true}
+      variant={mapLevel(level)}
+      title={
+        <span
+          dangerouslySetInnerHTML={{
+            __html: message,
+          }}
+        />
+      }
+    >
+      {detail && (
+        <Expandable
+          toggleTextExpanded={i18nTextExpanded}
+          toggleTextCollapsed={i18nTextCollapsed}
+        >
+          <pre>{detail}</pre>
+        </Expandable>
+      )}
+    </Alert>
+  );
+};

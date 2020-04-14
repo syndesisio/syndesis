@@ -1,4 +1,7 @@
-import { Button, ListView } from 'patternfly-react';
+import {
+  Button,
+  DataList
+} from '@patternfly/react-core';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, PageSection } from '../../Layout';
@@ -12,41 +15,39 @@ export interface IIntegrationDetailActivityProps {
   onRefresh: () => void;
 }
 
-export class IntegrationDetailActivity extends React.Component<
+export const IntegrationDetailActivity: React.FC<
   IIntegrationDetailActivityProps
-> {
-  public render() {
-    return (
-      <PageSection>
-        <Container>
-          <div className="integration-detail-activity-toolbar pull-right">
-            {this.props.linkToOpenShiftLog && (
-              <>
-                <Link
-                  data-testid={'integration-detail-activity-view-log-link'}
-                  to={this.props.linkToOpenShiftLog}
-                >
-                  {this.props.i18nViewLogOpenShift}
-                </Link>
-                &nbsp;|&nbsp;
-              </>
-            )}
-            <span className="integration-detail-activity-toolbar-last-refresh">
-              {this.props.i18nLastRefresh}
+> = ( props ) => {
+  return (
+    <PageSection>
+      <Container>
+        <div className={'integration-detail-activity-toolbar pull-right'}>
+          {props.linkToOpenShiftLog && (
+            <>
+              <Link
+                data-testid={'integration-detail-activity-view-log-link'}
+                to={props.linkToOpenShiftLog}
+              >
+                {props.i18nViewLogOpenShift}
+              </Link>
+              &nbsp;|&nbsp;
+            </>
+          )}
+          <span className={'integration-detail-activity-toolbar-last-refresh'}>
+              {props.i18nLastRefresh}
             </span>
-            &nbsp;&nbsp;
-            <Button
-              data-testid={'integration-detail-activity-refresh-button'}
-              onClick={this.props.onRefresh}
-            >
-              {this.props.i18nBtnRefresh}
-            </Button>
-          </div>
-        </Container>
-        {this.props.children ? (
-          <ListView>{this.props.children}</ListView>
-        ) : null}
-      </PageSection>
-    );
-  }
-}
+          &nbsp;&nbsp;
+          <Button
+            data-testid={'integration-detail-activity-refresh-button'}
+            onClick={props.onRefresh}
+          >
+            {props.i18nBtnRefresh}
+          </Button>
+        </div>
+      </Container>
+      {props.children ? (
+        <DataList aria-label={'integration detail activity list'}>{props.children}</DataList>
+      ) : null}
+    </PageSection>
+  );
+};

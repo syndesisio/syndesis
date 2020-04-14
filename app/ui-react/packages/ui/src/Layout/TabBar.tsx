@@ -1,4 +1,4 @@
-import { Nav } from 'patternfly-react';
+import { Nav, NavList, NavVariants } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface ITabBarProps {
@@ -9,7 +9,7 @@ export const TabBar: React.FunctionComponent<ITabBarProps> = ({
   children,
   ...props
 }) => (
-  <Nav bsClass="nav nav-tabs nav-tabs-pf" {...props}>
-    {children}
+  <Nav {...props}>
+    <NavList variant={NavVariants.tertiary}>{children}</NavList>
   </Nav>
 );

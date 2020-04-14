@@ -1,5 +1,9 @@
 export * from './ConnectionCard';
 export * from './ConnectionCreatorLayout';
+export * from './ConnectionCreatorBreadcrumb';
+export * from './ConnectionCreatorBreadSteps';
+export * from './ConnectionCreatorFooter';
+export * from './ConnectionCreatorToggleList';
 export * from './ConnectionDetailsForm';
 export * from './ConnectionDetailsHeader';
 export * from './ConnectionDetailsOauthCard';
@@ -8,5 +12,6 @@ export * from './ConnectionsGridCell';
 export * from './ConnectionSkeleton';
 export * from './ConnectionsListView';
 export * from './ConnectorAuthorization';
+export * from './ConnectorNothingToConfigureAlert';
 export * from './ConnectorConfigurationForm';
 export * from './ConnectionSetupOAuthCard';

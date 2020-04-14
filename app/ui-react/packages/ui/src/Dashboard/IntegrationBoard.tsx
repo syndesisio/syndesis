@@ -1,5 +1,12 @@
-import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
-import { DonutChart, patternfly } from 'patternfly-react';
+import { ChartDonut } from '@patternfly/react-charts';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Grid,
+  GridItem,
+  Title,
+} from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IIntegrationBoardProps {
@@ -11,58 +18,86 @@ export interface IIntegrationBoardProps {
   i18nIntegrationStateStopped: string;
   i18nIntegrations: string;
   i18nTitle: string;
-  i18nTotal: string;
 }
 
-export class IntegrationBoard extends React.PureComponent<
-  IIntegrationBoardProps
-> {
-  public render() {
-    const data = {
-      colors: {
-        Pending: patternfly.pfPaletteColors.black200,
-        Published: patternfly.pfPaletteColors.blue400,
-        Stopped: patternfly.pfPaletteColors.black300,
-      },
-      columns: [
-        [
-          this.props.i18nIntegrationStateRunning,
-          this.props.runningIntegrations,
-        ],
-        [
-          this.props.i18nIntegrationStateStopped,
-          this.props.stoppedIntegrations,
-        ],
-        [
-          this.props.i18nIntegrationStatePending,
-          this.props.pendingIntegrations,
-        ],
-      ],
-      type: 'donut',
-    };
+export const IntegrationBoard: React.FunctionComponent<IIntegrationBoardProps> = ({
+  pendingIntegrations,
+  runningIntegrations,
+  stoppedIntegrations,
+  i18nIntegrationStatePending,
+  i18nIntegrationStateRunning,
+  i18nIntegrationStateStopped,
+  i18nIntegrations,
+  i18nTitle,
+}) => {
+  const data = [
+    {
+      x: i18nIntegrationStateRunning,
+      y: runningIntegrations,
+    },
+    {
+      x: i18nIntegrationStateStopped,
+      y: stoppedIntegrations,
+    },
+    {
+      x: i18nIntegrationStatePending,
+      y: pendingIntegrations,
+    },
+  ];
+  const legendData = [
+    {
+      name: `${i18nIntegrationStateRunning}: ${runningIntegrations}`,
+    },
+    {
+      name: `${i18nIntegrationStateStopped}: ${stoppedIntegrations}`,
+    },
+    {
+      name: `${i18nIntegrationStatePending}: ${pendingIntegrations}`,
+    },
+  ];
+  const total = `${runningIntegrations +
+    stoppedIntegrations +
+    pendingIntegrations}`;
 
-    return (
-      <Card data-testid={'dashboard-integration-board'}>
-        <CardHeader>
-          <Title size={'md'}>{this.props.i18nTitle}</Title>
-        </CardHeader>
-        <CardBody>
-          <DonutChart
-            id="integration-board"
-            size={{ height: 120 }}
-            data={data}
-            tooltip={{
-              contents: patternfly.pfDonutTooltipContents,
-              show: true,
-            }}
-            title={{
-              secondary: this.props.i18nIntegrations,
-              type: this.props.i18nTotal,
-            }}
-            legend={{ show: true, position: 'right' }}
-          />
-        </CardBody>
-      </Card>
-    );
-  }
-}
+  return (
+    <Card data-testid={'dashboard-integration-board'}>
+      <CardHeader>
+        <Title size={'md'}>{i18nTitle}</Title>
+      </CardHeader>
+      <CardBody>
+        <Grid>
+          <GridItem span={6} offset={3}>
+            <div
+              style={{
+                // these values are tied to how the chart figures out it's
+                // sizing, best to leave them here
+                height: '150px',
+                width: '275px',
+              }}
+            >
+              <ChartDonut
+                data-test-id="integration-board"
+                constrainToVisibleArea={true}
+                data={data}
+                subTitle={i18nIntegrations}
+                title={total}
+                labels={({ datum }) => `${datum.x}: ${datum.y}`}
+                legendData={legendData}
+                legendOrientation="vertical"
+                legendPosition="right"
+                padding={{
+                  bottom: 20,
+                  left: 20,
+                  right: 145, // Adjusted to accommodate legend
+                  top: 20,
+                }}
+                height={150}
+                width={275}
+              />
+            </div>
+          </GridItem>
+        </Grid>
+      </CardBody>
+    </Card>
+  );
+};

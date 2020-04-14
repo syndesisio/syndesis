@@ -26,6 +26,7 @@ import { IWithConfigurationFormProps } from './WithConfigurationForm';
 export interface IConfigurationFormProps
   extends Pick<IWithConfigurationFormProps, 'configurationPage'>,
     Pick<IWithConfigurationFormProps, 'initialValue'>,
+    Pick<IWithConfigurationFormProps, 'isBackAllowed'>,
     Pick<IWithConfigurationFormProps, 'oldAction'>,
     Pick<IWithConfigurationFormProps, 'onUpdatedIntegration'>,
     Pick<IWithConfigurationFormProps, 'chooseActionHref'> {
@@ -33,6 +34,7 @@ export interface IConfigurationFormProps
   descriptor: ActionDescriptor;
   definitionOverride?: IConfigurationProperties;
   children: any;
+  isBackAllowed: boolean;
 }
 
 export const ConfigurationForm: React.FunctionComponent<
@@ -42,6 +44,7 @@ export const ConfigurationForm: React.FunctionComponent<
   configurationPage,
   descriptor,
   definitionOverride,
+  isBackAllowed,
   initialValue,
   oldAction,
   chooseActionHref,
@@ -106,12 +109,14 @@ export const ConfigurationForm: React.FunctionComponent<
         validateInitial={validator}
         key={key}
       >
-        {({ fields, handleSubmit, isValid, isSubmitting, submitForm }) => (
+        {({ fields, handleSubmit, isValid, isSubmitting, submitForm }) => {
+          return (
           <>
             <IntegrationEditorForm
               i18nFormTitle={formTitle}
               i18nBackAction={'Choose Action'}
               i18nNext={'Next'}
+              isBackAllowed={isBackAllowed}
               isValid={isValid}
               isLoading={isSubmitting}
               submitForm={() => {
@@ -125,7 +130,8 @@ export const ConfigurationForm: React.FunctionComponent<
               {fields}
             </IntegrationEditorForm>
           </>
-        )}
+          )
+        }}
       </AutoForm>
     );
   } catch (e) {

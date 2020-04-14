@@ -1,10 +1,6 @@
-/* pf3 modules */
-@import url('~patternfly/dist/css/patternfly.css');
-@import url('~patternfly/dist/css/patternfly-additions.css');
-@import url('~patternfly-react/dist/css/patternfly-react.css');
-
 /* pf4 base styles */
 /* @import url('~@patternfly/react-core/dist/styles/base.css'); */
+@import url('~@fortawesome/fontawesome-free/css/all.css');
 @import url('~@patternfly/patternfly/patternfly-variables.css');
 @import url('~@patternfly/patternfly/patternfly-shield-noninheritable.css');
 @import url('~@patternfly/patternfly/patternfly-common.css');

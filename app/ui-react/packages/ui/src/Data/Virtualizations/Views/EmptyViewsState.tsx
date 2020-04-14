@@ -1,5 +1,6 @@
+import { EmptyState, EmptyStateBody, EmptyStateIcon, EmptyStateVariant, Title, Tooltip } from '@patternfly/react-core';
+import { AddCircleOIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
-import { EmptyState, OverlayTrigger, Tooltip } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../../../Layout';
 import './EmptyViewsState.css';
@@ -19,33 +20,24 @@ export const EmptyViewsState: React.FunctionComponent<
   IEmptyViewsStateProps
 > = props => {
 
-  const getCreateViewTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="editTip">
-        {props.i18nCreateViewTip ? props.i18nCreateViewTip : props.i18nCreateView}
-      </Tooltip>
-    );
-  }
-
-  const getImportViewsTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="importViewsTip">
-        {props.i18nImportViewsTip
-          ? props.i18nImportViewsTip
-          : props.i18nImportViews}
-      </Tooltip>
-    );
-  }
-
   return (
-    <EmptyState>
-      <EmptyState.Icon />
-      <EmptyState.Title>{props.i18nEmptyStateTitle}</EmptyState.Title>
-      <EmptyState.Info>{props.i18nEmptyStateInfo}</EmptyState.Info>
-      <EmptyState.Action>
-        <OverlayTrigger
-          overlay={getImportViewsTooltip()}
-          placement="top"
+    <EmptyState variant={EmptyStateVariant.full}>
+      <EmptyStateIcon icon={AddCircleOIcon} />
+      <Title headingLevel="h5" size="lg">
+        {props.i18nEmptyStateTitle}
+      </Title>
+      <EmptyStateBody>{props.i18nEmptyStateInfo}</EmptyStateBody>
+      <>
+        <Tooltip
+          position={'top'}
+          enableFlip={true}
+          content={
+            <div id={'importViewsTip'}>
+              {props.i18nImportViewsTip
+                ? props.i18nImportViewsTip
+                : props.i18nImportViews}
+            </div>
+          }
         >
           <ButtonLink
             data-testid={'empty-views-state-import-views-button'}
@@ -55,8 +47,18 @@ export const EmptyViewsState: React.FunctionComponent<
           >
             {props.i18nImportViews}
           </ButtonLink>
-        </OverlayTrigger>
-        <OverlayTrigger overlay={getCreateViewTooltip()} placement="top">
+        </Tooltip>
+        <Tooltip
+          position={'top'}
+          enableFlip={true}
+          content={
+            <div id={'createViewTip'}>
+              {props.i18nCreateViewTip
+                ? props.i18nCreateViewTip
+                : props.i18nCreateView}
+            </div>
+          }
+        >
           <ButtonLink
             data-testid={'empty-views-state-create-view-button'}
             href={props.linkCreateViewHRef}
@@ -64,8 +66,8 @@ export const EmptyViewsState: React.FunctionComponent<
           >
             {props.i18nCreateView}
           </ButtonLink>
-        </OverlayTrigger>
-      </EmptyState.Action>
+        </Tooltip>
+      </>
     </EmptyState>
   );
 }

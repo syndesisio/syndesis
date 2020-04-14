@@ -1,4 +1,5 @@
-import { Icon, ProgressBar } from 'patternfly-react';
+import { Progress } from '@patternfly/react-core';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import * as React from 'react';
 import './ProgressWithLink.css';
 
@@ -32,16 +33,13 @@ export class ProgressWithLink extends React.PureComponent<
                 href={this.props.logUrl}
               >
                 {this.props.i18nLogUrlText}{' '}
-                <Icon
-                  className="progress-link__link-icon"
-                  name={'external-link'}
-                />
+                <ExternalLinkAltIcon className="progress-link__link-icon" />
               </a>
             </span>
           )}
         </div>
-        <ProgressBar
-          now={this.props.currentStep}
+        <Progress
+          value={this.props.currentStep}
           max={this.props.totalSteps}
           style={{
             height: 6,

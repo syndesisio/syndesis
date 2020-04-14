@@ -1,10 +1,18 @@
-import { Text } from '@patternfly/react-core';
-import { Table } from 'patternfly-react';
+import { Flex, FlexItem, Text } from '@patternfly/react-core';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableVariant
+} from '@patternfly/react-table';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
 
 export interface IExtensionIntegration {
-  id: string; // used to create link to integration details page
+  /**
+   * ID param is used to create link to Integration Details page
+   */
+  id: string;
   name: string;
   description: string;
 }
@@ -17,79 +25,89 @@ export interface IExtensionIntegrationsTableProps {
   data: IExtensionIntegration[];
 }
 
+/**
+ * Extension Integrations Table
+ * You can view see this component in the Extension detail page
+ * when an extension has been used at least once in an existing integration.
+ * @param props
+ * @constructor
+ */
 export const ExtensionIntegrationsTable: React.FunctionComponent<
   IExtensionIntegrationsTableProps
-> = props => {
-  const getColumns = () => {
-    const headerFormat = (value: string) => (
-      <Table.Heading>{value}</Table.Heading>
-    );
+  > = props => {
 
-    const clickableValueFormat = (
-      value: string,
-      { rowData }: { rowData: any }
-    ) => {
-      // rowData is an Integration type so 'name' property is what makes the integration unique
-      const onClick = () => onIntegrationSelected(rowData.id);
-      return (
-        <Table.Cell>
-          <a
-            data-testid={`extension-integrations-table-${toValidHtmlId(
-              rowData.name
-            )}-integration-link`}
-            href="javascript:void(0)"
-            onClick={onClick}
-          >
-            {value}
-          </a>
-        </Table.Cell>
-      );
+  const rows = () => {
+    const onIntegrationSelected = (integrationId: string) => {
+      props.onSelectIntegration(integrationId);
     };
 
-    // Creates 2 columns:
-    // 1. first column is integration name
-    // 2. second column is optional integration description.
-    return [
-      {
-        cell: {
-          formatters: [clickableValueFormat],
-        },
-        header: {
-          formatters: [headerFormat],
-          label: props.i18nName,
-        },
-        property: 'name', // must match the name of the IntegrationOverview.name property
-      },
-      {
-        cell: {
-          formatters: [(value: string) => <Table.Cell>{value}</Table.Cell>],
-        },
-        header: {
-          formatters: [headerFormat],
-          label: props.i18nDescription,
-        },
-        property: 'description', // must match the name of the IntegrationOverview.description property
-      },
-    ];
+    const newRows = props.data.map((integration, integrationIndex) => {
+      /**
+       * Necessary to pass event due to the following issue:
+       * https://github.com/facebook/react/issues/16382#issuecomment-530911232
+       * @param e
+       */
+      const onClick = (e: any) => {
+        e.preventDefault();
+        onIntegrationSelected(integration.id);
+        return false;
+      };
+
+      return [
+        {
+          cells: [
+            {
+              title: (
+                <Flex>
+                  <FlexItem key={integrationIndex + '-name'}>
+                    <a
+                      data-testid={`extension-integrations-table-${toValidHtmlId(
+                        integration.name
+                      )}-integration-link`}
+                      href={'#'}
+                      onClick={onClick}
+                    >
+                      {integration.name}
+                    </a>
+                  </FlexItem>
+                </Flex>
+              )
+            },
+            {
+              title: (
+                <Flex>
+                  <FlexItem key={integrationIndex + '-description'}>
+                    <span>{integration.description}</span>
+                  </FlexItem>
+                </Flex>
+              )
+            }
+          ],
+        }
+      ];
+    });
+
+    return newRows.reduce((a, b) => a.concat(b), []);
   };
 
-  const onIntegrationSelected = (integrationId: string) => {
-    props.onSelectIntegration(integrationId);
-  };
+  const columns = [
+    props.i18nName,
+    props.i18nDescription
+  ];
 
   return (
-    <div className="extension-group">
+    <div className={'extension-group'}>
       <Text>{props.i18nUsageMessage}</Text>
       {props.data.length !== 0 ? (
-        <Table.PfProvider
-          striped={true}
-          bordered={true}
-          hover={true}
-          columns={getColumns()}
+        <Table
+          aria-label={'extension-integrations-table'}
+          cells={columns}
+          rows={rows()}
+          variant={TableVariant.compact}
         >
-          <Table.Header />
-          <Table.Body rows={props.data} rowKey="name" />
-        </Table.PfProvider>
+          <TableHeader />
+          <TableBody />
+        </Table>
       ) : null}
     </div>
   );

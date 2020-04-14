@@ -1,4 +1,25 @@
-import { Icon, MessageDialog } from 'patternfly-react';
+import {
+  Button,
+  Modal,
+  Split,
+  SplitItem,
+  Stack,
+  StackItem,
+  Text,
+  Title,
+} from '@patternfly/react-core';
+import {
+  ErrorCircleOIcon,
+  InfoIcon,
+  OkIcon,
+  WarningTriangleIcon,
+} from '@patternfly/react-icons';
+import {
+  global_danger_color_100,
+  global_info_color_100,
+  global_success_color_100,
+  global_warning_color_100,
+} from '@patternfly/react-tokens';
 import * as React from 'react';
 
 /**
@@ -81,38 +102,98 @@ export interface IConfirmationDialogProps {
 /**
  * A modal dialog to display when an object is being deleted.
  */
-export class ConfirmationDialog extends React.Component<
-  IConfirmationDialogProps
-> {
-  public render() {
-    return (
-      <MessageDialog
-        accessibleName="deleteConfirmationDialog"
-        accessibleDescription="deleteConfirmationDialogContent"
-        icon={
-          this.props.icon !== ConfirmationIconType.NONE && (
-            <Icon type="pf" name={this.props.icon} />
-          )
-        }
-        onHide={this.props.onCancel}
-        primaryAction={this.props.onConfirm}
-        primaryActionButtonContent={this.props.i18nConfirmButtonText}
-        primaryActionButtonBsStyle={this.props.buttonStyle}
-        primaryContent={
-          <p className="lead">{this.props.i18nConfirmationMessage}</p>
-        }
-        secondaryAction={this.props.onCancel}
-        secondaryActionButtonContent={this.props.i18nCancelButtonText}
-        secondaryContent={
-          this.props.i18nDetailsMessage ? (
-            <p>{this.props.i18nDetailsMessage}</p>
-          ) : (
-            undefined
-          )
-        }
-        show={this.props.showDialog}
-        title={this.props.i18nTitle}
-      />
-    );
+export const ConfirmationDialog: React.FunctionComponent<IConfirmationDialogProps> = ({
+  buttonStyle,
+  i18nCancelButtonText,
+  i18nConfirmButtonText,
+  i18nConfirmationMessage,
+  i18nDetailsMessage,
+  i18nTitle,
+  icon,
+  onCancel,
+  onConfirm,
+  showDialog,
+}) => {
+  let iconFragment: React.ReactNode | null = null;
+  switch (icon) {
+    case ConfirmationIconType.DANGER:
+      iconFragment = (
+        <ErrorCircleOIcon size={'lg'} color={global_danger_color_100.value} />
+      );
+      break;
+    case ConfirmationIconType.WARNING:
+      iconFragment = (
+        <WarningTriangleIcon
+          size={'lg'}
+          color={global_warning_color_100.value}
+        />
+      );
+      break;
+    case ConfirmationIconType.INFO:
+      iconFragment = (
+        <InfoIcon size={'lg'} color={global_info_color_100.value} />
+      );
+      break;
+    case ConfirmationIconType.OK:
+      iconFragment = (
+        <OkIcon size={'lg'} color={global_success_color_100.value} />
+      );
+      break;
+    default:
+    // No icon
   }
-}
+  let buttonStyleMapped:
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'danger'
+    | 'link'
+    | 'plain'
+    | 'control' = 'primary';
+  switch (buttonStyle) {
+    case 'danger':
+      buttonStyleMapped = 'danger';
+      break;
+    case 'info':
+      buttonStyleMapped = 'secondary';
+      break;
+    case 'link':
+      buttonStyleMapped = 'link';
+      break;
+    default:
+  }
+  return (
+    <Modal
+      title={i18nTitle}
+      isOpen={showDialog}
+      onClose={onCancel}
+      actions={[
+        <Button key="confirm" variant={buttonStyleMapped} onClick={onConfirm}>
+          {i18nConfirmButtonText}
+        </Button>,
+        <Button key="cancel" variant="link" onClick={onCancel}>
+          {i18nCancelButtonText}
+        </Button>,
+      ]}
+      width={'50%'}
+      isFooterLeftAligned={true}
+      hideTitle={true}
+    >
+      <Stack gutter={'lg'}>
+        <StackItem>
+          <Split gutter={'sm'}>
+            {iconFragment && <SplitItem>{iconFragment}</SplitItem>}
+            <SplitItem isFilled={true}>
+              <Title size={'lg'}>{i18nConfirmationMessage}</Title>
+            </SplitItem>
+          </Split>
+        </StackItem>
+        {i18nDetailsMessage && (
+          <StackItem>
+            <Text>{i18nDetailsMessage}</Text>
+          </StackItem>
+        )}
+      </Stack>
+    </Modal>
+  );
+};

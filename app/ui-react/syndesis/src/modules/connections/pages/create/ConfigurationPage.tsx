@@ -2,12 +2,16 @@ import { useConnector, useConnectorCredentials } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { IConnector } from '@syndesis/models';
 import {
+  ConnectionCreatorBreadcrumb,
+  ConnectionCreatorBreadSteps,
+  ConnectionCreatorFooter,
   ConnectionCreatorLayout,
+  ConnectionCreatorToggleList,
   ConnectionSetupOAuthCard,
   ConnectorAuthorization,
   ConnectorConfigurationForm,
+  ConnectorNothingToConfigureAlert,
   PageLoader,
-  PageSection,
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -15,11 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { ApiError, PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
 import globalRoutes from '../../../routes';
-import {
-  ConnectionCreatorBreadSteps,
-  WithConnectorForm,
-} from '../../components';
-import { ConnectionCreatorBreadcrumb } from '../../components/ConnectionCreatorBreadcrumb';
+import { WithConnectorForm } from '../../components';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
 import { useOAuthFlow } from '../../useOAuthFlow';
@@ -164,92 +164,139 @@ export const ConfigurationPage: React.FunctionComponent = () => {
       {() => (
         <>
           <PageTitle title={t('connections:create:configure:title')} />
-          <ConnectionCreatorBreadcrumb cancelHref={resolvers.connections()} />
-          <ConnectionCreatorLayout
-            header={<ConnectionCreatorBreadSteps step={2} />}
-            content={
-              <PageSection>
-                <WithLoader
-                  error={(errorConnector || errorCredentials) !== false}
-                  loading={!hasData || loadingCredentials}
-                  loaderChildren={<PageLoader />}
-                  errorChildren={
-                    <ApiError
-                      error={(errorConnector || errorCredentials) as Error}
-                    />
-                  }
-                >
-                  {() => {
-                    if (configuredForOAuth) {
-                      return (
-                        <OAuthFlow
-                          connectorId={connector.id!}
-                          connectorName={connector.name}
-                          onSuccess={onOAuthSuccess}
-                        />
-                      );
-                    }
-
-                    if (supportsOAuth) {
-                      return (
-                        <ConnectionSetupOAuthCard
-                          i18nTitle={t(
-                            'connections:create:configure:configurationTitle',
-                            {
-                              name: connector.name,
-                            }
-                          )}
-                          i18nDescription={t(
-                            'connections:oauth:settingsMissing'
-                          )}
-                          i18nOAuthSettingsButton={t('shared:Settings')}
-                          backHref={resolvers.create.selectConnector()}
-                          oauthSettingsHref={
-                            globalRoutes.settings.oauthApps.root
-                          }
-                        />
-                      );
-                    }
-
-                    return (
-                      <WithConnectorForm connector={connector} onSave={onSave}>
-                        {({
-                          fields,
-                          handleSubmit,
-                          validationResults,
-                          submitForm,
-                          isSubmitting,
-                          isValid,
-                          isValidating,
-                          validateForm,
-                        }) => (
-                          <ConnectorConfigurationForm
-                            i18nFormTitle={connector.name}
-                            handleSubmit={handleSubmit}
-                            backHref={resolvers.create.selectConnector()}
-                            onNext={submitForm}
-                            isNextDisabled={isSubmitting || !isValid}
-                            isNextLoading={isSubmitting}
-                            isValidating={isValidating}
-                            onValidate={(ev: React.FormEvent) => {
-                              ev.preventDefault();
-                              validateForm();
-                            }}
-                            validationResults={validationResults}
-                            isLastStep={false}
-                            i18nSave={t('shared:Save')}
-                            i18nNext={t('shared:Next')}
-                          >
-                            {fields}
-                          </ConnectorConfigurationForm>
-                        )}
-                      </WithConnectorForm>
-                    );
-                  }}
-                </WithLoader>
-              </PageSection>
-            }
+          <ConnectionCreatorBreadcrumb
+            connectionsHref={resolvers.connections()}
+            i18nCancel={t('shared:Cancel')}
+            i18nConnections={t('shared:Connections')}
+            i18nCreateConnection={t('shared:CreateConnection')}
           />
+          <WithConnectorForm connector={connector} onSave={onSave}>
+            {({
+              fields,
+              handleSubmit,
+              hasProperties,
+              validationResults,
+              submitForm,
+              isSubmitting,
+              isValid,
+              isValidating,
+              validateForm,
+            }) => (
+              <ConnectionCreatorLayout
+                toggle={
+                  <ConnectionCreatorToggleList
+                    step={2}
+                    i18nSelectConnector={t(
+                      'connections:create:connector:title'
+                    )}
+                    i18nConfigureConnection={t(
+                      'connections:create:configure:title'
+                    )}
+                    i18nNameConnection={t('connections:create:review:title')}
+                  />
+                }
+                navigation={
+                  <ConnectionCreatorBreadSteps
+                    step={2}
+                    i18nSelectConnector={t(
+                      'connections:create:connector:title'
+                    )}
+                    i18nConfigureConnection={t(
+                      'connections:create:configure:title'
+                    )}
+                    i18nNameConnection={t('connections:create:review:title')}
+                  />
+                }
+                footer={
+                  <ConnectionCreatorFooter
+                    cancelHref={resolvers.connections()}
+                    backHref={resolvers.create.selectConnector()}
+                    onNext={submitForm}
+                    isNextDisabled={isSubmitting || !isValid}
+                    isNextLoading={isSubmitting}
+                    isLastStep={false}
+                    i18nBack={t('shared:Back')}
+                    i18nCancel={t('shared:Cancel')}
+                    i18nSave={t('shared:Save')}
+                    i18nNext={t('shared:Next')}
+                  />
+                }
+                content={
+                  <WithLoader
+                    error={(errorConnector || errorCredentials) !== false}
+                    loading={!hasData || loadingCredentials}
+                    loaderChildren={<PageLoader />}
+                    errorChildren={
+                      <ApiError
+                        error={(errorConnector || errorCredentials) as Error}
+                      />
+                    }
+                  >
+                    {() => {
+                      if (configuredForOAuth) {
+                        return (
+                          <OAuthFlow
+                            connectorId={connector.id!}
+                            connectorName={connector.name}
+                            onSuccess={onOAuthSuccess}
+                          />
+                        );
+                      }
+
+                      if (supportsOAuth) {
+                        return (
+                          <ConnectionSetupOAuthCard
+                            i18nTitle={t(
+                              'connections:create:configure:configurationTitle',
+                              {
+                                name: connector.name,
+                              }
+                            )}
+                            i18nDescription={t(
+                              'connections:oauth:settingsMissing'
+                            )}
+                            i18nOAuthSettingsButton={t('shared:Settings')}
+                            backHref={resolvers.create.selectConnector()}
+                            oauthSettingsHref={
+                              globalRoutes.settings.oauthApps.root
+                            }
+                          />
+                        );
+                      }
+
+                      return (
+                        <ConnectorConfigurationForm
+                          i18nFormTitle={connector.name}
+                          i18nValidate={t('shared:Validate')}
+                          isNextDisabled={isSubmitting || !isValid}
+                          isNextLoading={isSubmitting}
+                          isValidating={isValidating}
+                          onValidate={(ev: React.FormEvent) => {
+                            ev.preventDefault();
+                            validateForm();
+                          }}
+                          handleSubmit={handleSubmit}
+                          validationResults={validationResults}
+                        >
+                          <>
+                            {hasProperties ? (
+                              fields
+                            ) : (
+                              <ConnectorNothingToConfigureAlert
+                                i18nAlert={
+                                  'There are no properties to configure'
+                                }
+                              />
+                            )}
+                          </>
+                        </ConnectorConfigurationForm>
+                      );
+                    }}
+                  </WithLoader>
+                }
+              />
+            )}
+          </WithConnectorForm>
         </>
       )}
     </WithLeaveConfirmation>

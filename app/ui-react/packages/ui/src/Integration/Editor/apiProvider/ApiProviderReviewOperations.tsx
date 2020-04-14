@@ -1,18 +1,15 @@
-import { PageSection } from '@patternfly/react-core';
-import { ListView } from 'patternfly-react';
+import { DataList, PageSection } from '@patternfly/react-core';
 import * as React from 'react';
 import { IListViewToolbarProps, ListViewToolbar } from '../../../Shared';
 
-export class ApiProviderReviewOperations extends React.Component<
-  IListViewToolbarProps
-> {
-  public render() {
-    const { children, ...props } = this.props;
-    return (
-      <PageSection>
-        <ListViewToolbar {...props} />
-        <ListView>{children}</ListView>
-      </PageSection>
-    );
-  }
-}
+export const ApiProviderReviewOperations: React.FunctionComponent<IListViewToolbarProps> = ({
+  children,
+  ...props
+}) => (
+  <PageSection>
+    <ListViewToolbar {...props} />
+    <DataList aria-label={'api provider review operations list'}>
+      {children}
+    </DataList>
+  </PageSection>
+);

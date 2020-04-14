@@ -4,11 +4,13 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Label,
+  Spinner,
   Text,
   Title,
   Tooltip
 } from '@patternfly/react-core';
-import { Label, Spinner } from 'patternfly-react';
+import { global_active_color_100, global_danger_color_100 } from '@patternfly/react-tokens';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
 import './DvConnectionCard.css';
@@ -50,15 +52,17 @@ export const DvConnectionCard: React.FunctionComponent<
     >
       <CardHeader>
         {props.loading && props.dvStatus !== ConnectionStatus.ACTIVE ? (
-          <Spinner loading={true} inline={true} />
+          <Spinner size={'lg'} />
         ) : (
           <></>
         )}
         <Tooltip content={props.dvStatusTooltip} position={'bottom'}>
           <Label
             className="dv-connection-card__status"
-            type={
-              props.dvStatus === ConnectionStatus.ACTIVE ? 'success' : 'danger'
+            style={
+              props.dvStatus === ConnectionStatus.ACTIVE
+                ? { background: global_active_color_100.value }
+                : { background: global_danger_color_100.value }
             }
           >
             {props.dvStatus}

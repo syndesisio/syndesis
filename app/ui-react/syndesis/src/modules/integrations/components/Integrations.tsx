@@ -36,25 +36,27 @@ export class Integrations extends React.Component<IIntegrationsProps> {
         {t => (
           <AppContext.Consumer>
             {({ getPodLogUrl }) => (
-              <IntegrationsList>
+              <IntegrationsList
+                i18nAriaLabel={t('integrations:integrationsListAriaLabel')}
+              >
                 {!this.props.loading &&
-                !this.props.error &&
-                this.props.integrations.length === 0 && (
-                  <IntegrationsEmptyState
-                    i18nCreateIntegration={t('shared:linkCreateIntegration')}
-                    i18nCreateIntegrationTip={t(
-                      'integrationsEmptyState.createTip'
-                    )}
-                    i18nEmptyStateInfo={t('integrationsEmptyState.info')}
-                    i18nEmptyStateTitle={t('integrationsEmptyState.title')}
-                    linkCreateIntegration={resolvers.create.start.selectStep()}
-                  />
-                )}
+                  !this.props.error &&
+                  this.props.integrations.length === 0 && (
+                    <IntegrationsEmptyState
+                      i18nCreateIntegration={t('shared:linkCreateIntegration')}
+                      i18nCreateIntegrationTip={t(
+                        'integrationsEmptyState.createTip'
+                      )}
+                      i18nEmptyStateInfo={t('integrationsEmptyState.info')}
+                      i18nEmptyStateTitle={t('integrationsEmptyState.title')}
+                      linkCreateIntegration={resolvers.create.start.selectStep()}
+                    />
+                  )}
                 <WithLoader
                   error={this.props.error}
                   loading={this.props.loading}
-                  loaderChildren={<IntegrationsListSkeleton/>}
-                  errorChildren={<ApiError error={this.props.errorMessage!}/>}
+                  loaderChildren={<IntegrationsListSkeleton />}
+                  errorChildren={<ApiError error={this.props.errorMessage!} />}
                 >
                   {() =>
                     this.props.integrations.map(
@@ -117,7 +119,7 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                                       mi.monitoring &&
                                       t(
                                         'integrations:' +
-                                        mi.monitoring.detailedState.value
+                                          mi.monitoring.detailedState.value
                                       )
                                     }
                                     monitoringCurrentStep={
@@ -128,7 +130,9 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                                       mi.monitoring &&
                                       mi.monitoring.detailedState.totalSteps
                                     }
-                                    monitoringLogUrl={getPodLogUrl(mi.monitoring)}
+                                    monitoringLogUrl={getPodLogUrl(
+                                      mi.monitoring
+                                    )}
                                     startConnectionIcon={startIcon}
                                     finishConnectionIcon={endIcon}
                                     actions={
@@ -141,8 +145,8 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                                           }
                                         )}
                                         editHref={editAction.href}
-                                        i18nEditBtn={'Edit'}
-                                        i18nViewBtn={'View'}
+                                        i18nEditBtn={t('integrations:Edit')}
+                                        i18nViewBtn={t('integrations:View')}
                                       />
                                     }
                                     i18nConfigurationRequired={t(
@@ -160,7 +164,7 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                                     )}
                                     i18nLogUrlText={t('shared:viewLogs')}
                                   />
-                                )
+                                );
                               }}
                             </WithIntegrationActions>
                           );

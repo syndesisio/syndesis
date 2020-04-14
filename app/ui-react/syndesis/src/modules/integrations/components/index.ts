@@ -7,5 +7,4 @@ export * from './IntegrationEditorBreadcrumbs';
 export * from './IntegrationEditorStepAdder';
 export * from './editor/EditorSteps';
 export * from './editor/EditorStepsWithToolbar';
-export * from './IntegrationExposeVia';
 export * from './WithIntegrationActions';

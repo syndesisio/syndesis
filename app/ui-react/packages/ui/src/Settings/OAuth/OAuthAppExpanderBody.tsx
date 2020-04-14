@@ -1,5 +1,4 @@
-import { Form } from '@patternfly/react-core';
-import { Alert, Button, Col, Row } from 'patternfly-react';
+import { Alert, Button, Form, Stack, StackItem } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IOAuthAppExpanderBodyProps {
@@ -15,52 +14,53 @@ export interface IOAuthAppExpanderBodyProps {
   i18nAlertDetail: string;
 }
 
-export class OAuthAppExpanderBody extends React.Component<
+export const OAuthAppExpanderBody: React.FC<
   IOAuthAppExpanderBodyProps
-> {
-  constructor(props: IOAuthAppExpanderBodyProps) {
-    super(props);
-  }
-  public render() {
-    return (
-      <>
-        {this.props.showSuccess && (
-          <Row>
-            <Col xs={11}>
-              <Alert type={'success'}>
-                <strong>{this.props.i18nAlertTitle}</strong>&nbsp;
-                {this.props.i18nAlertDetail}
-              </Alert>
-            </Col>
-          </Row>
-        )}
-        <Row>
-          <Col xs={12} md={8}>
-            <Form isHorizontal={true}>{this.props.children}</Form>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12} md={8}>
-            <>
-              <Button
-                data-testid={'o-auth-app-expander-body-save-button'}
-                bsStyle="primary"
-                onClick={this.props.onSave}
-                disabled={this.props.disableSave}
-              >
-                {this.props.i18nSaveButtonText}
-              </Button>{' '}
-              <Button
-                data-testid={'o-auth-app-expander-body-remove-button'}
-                onClick={this.props.onRemove}
-                disabled={this.props.disableRemove}
-              >
-                {this.props.i18nRemoveButtonText}
-              </Button>
-            </>
-          </Col>
-        </Row>
-      </>
-    );
-  }
-}
+> = (
+  {
+    children,
+    disableRemove,
+    disableSave,
+    i18nAlertDetail,
+    i18nAlertTitle,
+    i18nRemoveButtonText,
+    i18nSaveButtonText,
+    onRemove,
+    onSave,
+    showSuccess
+  }) => {
+  return (
+    <Stack gutter={'md'}>
+      {showSuccess && (
+        <StackItem>
+          <Alert variant={'success'}
+                 title={i18nAlertTitle}>
+            {i18nAlertDetail}
+          </Alert>
+        </StackItem>
+      )}
+      <StackItem>
+        <Form isHorizontal={true}>{children}</Form>
+      </StackItem>
+      <StackItem>
+        <div>
+          <Button
+            data-testid={'o-auth-app-expander-body-save-button'}
+            variant={'primary'}
+            onClick={onSave}
+            disabled={disableSave}
+          >
+            {i18nSaveButtonText}
+          </Button>{' '}
+          <Button
+            data-testid={'o-auth-app-expander-body-remove-button'}
+            onClick={onRemove}
+            disabled={disableRemove}
+          >
+            {i18nRemoveButtonText}
+          </Button>
+        </div>
+      </StackItem>
+    </Stack>
+  );
+};

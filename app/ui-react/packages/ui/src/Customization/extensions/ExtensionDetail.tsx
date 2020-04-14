@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardBody,
   Level,
@@ -8,16 +9,11 @@ import {
   TextContent,
   Title,
   TitleLevel,
+  Tooltip,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import {
-  Button,
-  OverlayTrigger,
-  Tooltip,
-} from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink } from '../../Layout';
-import { Container } from '../../Layout/Container';
+import { ButtonLink, Container } from '../../Layout';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
@@ -133,22 +129,6 @@ export const ExtensionDetail: React.FunctionComponent<
     props.onDelete();
   };
 
-  const getDeleteTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="deleteTip">
-        {props.i18nDeleteTip ? props.i18nDeleteTip : props.i18nDelete}
-      </Tooltip>
-    );
-  };
-
-  const getUpdateTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="updateTip">
-        {props.i18nUpdateTip ? props.i18nUpdateTip : props.i18nUpdate}
-      </Tooltip>
-    );
-  };
-
   const showConfirmationDialog = () => {
     setShowDeleteDialog(true);
   };
@@ -170,35 +150,47 @@ export const ExtensionDetail: React.FunctionComponent<
         <Level gutter={'sm'}>
           <TextContent>
             <Title
-              size="xl"
+              size={'xl'}
               headingLevel={TitleLevel.h1}
-              className="extension-detail__extensionTitle"
+              className={'extension-detail__extensionTitle'}
             >
               {props.extensionName}
             </Title>
-            <Text className="extension-detail__extensionId">
+            <Text className={'extension-detail__extensionId'}>
               {props.i18nIdMessage}
             </Text>
           </TextContent>
-          <LevelItem className="extension-detail__titleButtons">
-            <OverlayTrigger overlay={getUpdateTooltip()} placement="top">
-              <ButtonLink
-                data-testid={'extension-detail-update-button'}
-                href={props.linkUpdateExtension}
-                as={'primary'}
-              >
+          <LevelItem className={'extension-detail__titleButtons'}>
+            <Tooltip
+              id={'updateTip'}
+              position={'top'}
+              content={
+                props.i18nUpdateTip ? props.i18nUpdateTip : props.i18nUpdate
+              }
+              enableFlip={true}
+            >
+              <ButtonLink data-testid={'extension-detail-update-button'}
+                          href={props.linkUpdateExtension}
+                          as={'primary'}>
                 {props.i18nUpdate}
               </ButtonLink>
-            </OverlayTrigger>
-            <OverlayTrigger overlay={getDeleteTooltip()} placement="top">
+            </Tooltip>
+            <Tooltip
+              id={'deleteTip'}
+              position={'top'}
+              content={
+                props.i18nDeleteTip ? props.i18nDeleteTip : props.i18nDelete
+              }
+              enableFlip={true}
+            >
               <Button
-                bsStyle="default"
+                variant={'tertiary'}
                 disabled={props.extensionUses !== 0}
                 onClick={showConfirmationDialog}
               >
                 {props.i18nDelete}
               </Button>
-            </OverlayTrigger>
+            </Tooltip>
           </LevelItem>
         </Level>
       </PageSection>
@@ -207,27 +199,27 @@ export const ExtensionDetail: React.FunctionComponent<
           <CardBody>
             <TextContent>
               <Title
-                headingLevel="h5"
-                size="md"
-                className="customization-details__heading"
+                headingLevel={'h5'}
+                size={'md'}
+                className={'customization-details__heading'}
               >
                 {props.i18nOverviewSectionTitle}
               </Title>
               <Container>{props.overviewSection}</Container>
 
               <Title
-                headingLevel="h5"
-                size="md"
-                className="customization-details__heading"
+                headingLevel={'h5'}
+                size={'md'}
+                className={'customization-details__heading'}
               >
                 {props.i18nSupportsSectionTitle}
               </Title>
               <Container>{props.supportsSection}</Container>
 
               <Title
-                headingLevel="h5"
-                size="md"
-                className="customization-details__heading"
+                headingLevel={'h5'}
+                size={'md'}
+                className={'customization-details__heading'}
               >
                 {props.i18nUsageSectionTitle}
               </Title>

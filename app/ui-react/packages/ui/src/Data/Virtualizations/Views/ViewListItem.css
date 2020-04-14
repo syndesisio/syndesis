@@ -1,3 +1,12 @@
-.view-list-item__invalidView {
+.view-list-item .view-list-item__icon-wrapper {
+  width: 7em;
+}
+
+.view-list-item .view-list-item__text-wrapper {
+  margin-top: 7px;
+}
+
+.view-list-item .view-list-item__invalid-view {
   color: red;
 }
+

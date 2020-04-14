@@ -5,6 +5,7 @@ import {
   EmptyState,
   EmptyStateBody,
   EmptyStateVariant,
+  Spinner,
   Split,
   SplitItem,
   Stack,
@@ -21,7 +22,6 @@ import {
   TableBody,
   TableHeader,
 } from '@patternfly/react-table';
-import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import './VirtualizationVersionsTable.css';
 
@@ -56,7 +56,7 @@ const getPublishIcon = (publishState: string) => {
   } else if (publishState === 'FAILED') {
     return <ErrorCircleOIcon key="icon" color="red" />;
   } else if (publishState === 'IN_PROGRESS') {
-    return <Spinner loading={true} inline={true} />;
+    return <Spinner size={'lg'} />;
   }
   return null;
 };

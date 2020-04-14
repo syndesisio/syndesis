@@ -1,5 +1,5 @@
-import { Text } from '@patternfly/react-core';
 import * as React from 'react';
+import { SyndesisAlert, SyndesisAlertLevel } from '../../Shared';
 
 export interface IIntegrationEditorNothingToConfigureAlertProps {
   i18nAlert: string;
@@ -7,9 +7,4 @@ export interface IIntegrationEditorNothingToConfigureAlertProps {
 
 export const IntegrationEditorNothingToConfigureAlert: React.FunctionComponent<IIntegrationEditorNothingToConfigureAlertProps> = ({
   i18nAlert,
-}) => (
-  <Text className="alert alert-info">
-    <span className="pficon pficon-info" />
-    {i18nAlert}
-  </Text>
-);
+}) => <SyndesisAlert level={SyndesisAlertLevel.INFO} message={i18nAlert} />;

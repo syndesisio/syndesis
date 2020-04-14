@@ -1,14 +1,19 @@
 // tslint:disable react-unused-props-and-state
 // remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
-import classnames from 'classnames';
 import {
-  FormControl,
+  Button,
+  ButtonVariant,
   FormGroup,
-  HelpBlock,
-  Icon,
-  InlineEdit,
   InputGroup,
-} from 'patternfly-react';
+  TextArea,
+  TextInput,
+} from '@patternfly/react-core';
+import { OkIcon, PencilAltIcon, TimesIcon } from '@patternfly/react-icons';
+import {
+  global_danger_color_100,
+  global_success_color_100,
+} from '@patternfly/react-tokens';
+import classnames from 'classnames';
 import * as React from 'react';
 import { Omit } from 'react-router';
 import { Loader } from '../Layout';
@@ -33,17 +38,13 @@ const ReadWidget: React.FunctionComponent<IReadWidget> = ({
   >
     {value}
     {allowEditing ? (
-      <Icon
-        className="inline-text-editIcon"
-        name="edit"
-        onClick={onEdit}
-        type="pf"
-      />
+      <PencilAltIcon className="inline-text-editIcon" onClick={onEdit} />
     ) : null}
   </span>
 );
 
-interface IEditWidget extends React.InputHTMLAttributes<HTMLInputElement> {
+interface IEditWidget
+  extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   className?: string;
   value: string;
   valid: boolean;
@@ -69,58 +70,77 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
     {asTextarea ? (
       <>
         <FormGroup
-          controlId="textarea"
-          validationState={valid ? 'success' : 'error'}
+          fieldId="inline-edit-textarea"
+          isValid={valid}
+          helperTextInvalid={errorMsg}
         >
-          <FormControl
-            componentClass="textarea"
-            disabled={saving}
-            onChange={onChange}
-            placeholder={placeholder}
-            value={value}
-          />
-          {saving ? (
-            <span className="btn">
-              <Loader inline={true} loading={saving} size={'sm'} />
-            </span>
-          ) : (
-            <InlineEdit.ConfirmButton
-              disabled={saving || !valid}
-              onClick={onConfirm}
+          <InputGroup>
+            <TextArea
+              id={'inline-edit-textarea'}
+              disabled={saving}
+              onChange={(val, event) => onChange && onChange(event as any)}
+              placeholder={placeholder}
+              value={value}
             />
-          )}
-          <InlineEdit.CancelButton disabled={saving} onClick={onCancel} />
+            <Button
+              variant={ButtonVariant.control}
+              isDisabled={saving || !valid}
+              onClick={onConfirm}
+            >
+              {saving ? (
+                <span className="btn">
+                  <Loader inline={true} size={'sm'} />
+                </span>
+              ) : (
+                <OkIcon size={'sm'} color={global_success_color_100.value} />
+              )}
+            </Button>
+            <Button
+              variant={ButtonVariant.control}
+              isDisabled={saving}
+              onClick={onCancel}
+            >
+              <TimesIcon size={'sm'} color={global_danger_color_100.value} />
+            </Button>
+          </InputGroup>
         </FormGroup>
-        {errorMsg && <HelpBlock>{errorMsg}</HelpBlock>}
       </>
     ) : (
       <>
-        <FormGroup validationState={valid ? 'success' : 'error'}>
+        <FormGroup
+          fieldId={'inline-edit-input'}
+          isValid={valid}
+          helperTextInvalid={errorMsg}
+        >
           <InputGroup>
-            <FormControl
-              disabled={saving}
-              onChange={onChange}
+            <TextInput
+              isDisabled={saving}
+              onChange={(val, event) => onChange && onChange(event as any)}
               placeholder={placeholder}
               type="text"
               value={value}
             />
-            <InputGroup.Button>
+            <Button
+              variant={ButtonVariant.control}
+              isDisabled={saving || !valid}
+              onClick={onConfirm}
+            >
               {saving ? (
                 <span className="btn">
-                  <Loader inline={true} loading={saving} size={'sm'} />
+                  <Loader inline={true} size={'sm'} />
                 </span>
               ) : (
-                <InlineEdit.ConfirmButton
-                  disabled={saving || !valid}
-                  onClick={onConfirm}
-                />
+                <OkIcon size={'sm'} color={global_success_color_100.value} />
               )}
-            </InputGroup.Button>
-            <InputGroup.Button>
-              <InlineEdit.CancelButton disabled={saving} onClick={onCancel} />
-            </InputGroup.Button>
+            </Button>
+            <Button
+              variant={ButtonVariant.control}
+              isDisabled={saving}
+              onClick={onCancel}
+            >
+              <TimesIcon size={'sm'} color={global_danger_color_100.value} />
+            </Button>
           </InputGroup>
-          {errorMsg && <HelpBlock>{errorMsg}</HelpBlock>}
         </FormGroup>
       </>
     )}
@@ -179,7 +199,6 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
     errorMsg: '',
     valid: true,
   });
-
   const validate = async (valueToValidate: string) => {
     if (onValidate) {
       const result = await onValidate(valueToValidate);
@@ -201,7 +220,6 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
       });
     }
   };
-
   const handleConfirm = async () => {
     if (valid) {
       setSaving(true);
@@ -212,22 +230,18 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
       setSaving(false);
     }
   };
-
   const handleChange = (e: any) => {
     setCurrentValue(e.target.value);
     validate(e.target.value);
   };
-
   const onEdit = () => {
     setEditing(true);
     validate(currentValue);
   };
-
   const onCancel = () => {
     setEditing(false);
     setCurrentValue(value);
   };
-
   const renderValue = (v: string) => (
     <ReadWidget
       className={className}
@@ -236,7 +250,6 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
       onEdit={onEdit}
     />
   );
-
   const renderEdit = (v: string) => (
     <EditWidget
       {...attrs}
@@ -250,16 +263,5 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
       onCancel={onCancel}
     />
   );
-
-  const isEditing = () => editing;
-
-  return (
-    <InlineEdit
-      className={className}
-      value={value}
-      isEditing={isEditing}
-      renderValue={renderValue}
-      renderEdit={renderEdit}
-    />
-  );
+  return <>{editing ? <>{renderEdit(value)}</> : <>{renderValue(value)}</>}</>;
 };

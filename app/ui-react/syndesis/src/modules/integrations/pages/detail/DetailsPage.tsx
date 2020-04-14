@@ -1,6 +1,8 @@
 import {
   getApiProviderFlows,
   isIntegrationApiProvider,
+  PENDING,
+  UNPUBLISHED,
   useIntegrationHelpers,
   WithMonitoredIntegration,
 } from '@syndesis/api';
@@ -12,12 +14,13 @@ import {
   IntegrationDetailHistoryListViewItem,
   IntegrationDetailHistoryListViewItemActions,
   IntegrationExposedURL,
+  IntegrationExposeVia,
   PageLoader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import {AppContext, UIContext} from '../../../../app';
+import { AppContext, UIContext } from '../../../../app';
 import { ApiError, PageTitle } from '../../../../shared';
 import {
   IntegrationDetailApiProviderSteps,
@@ -25,7 +28,6 @@ import {
   IntegrationDetailSteps,
   WithIntegrationActions,
 } from '../../components';
-import { IntegrationExposeVia } from '../../components/IntegrationExposeVia';
 import { WithDeploymentActions } from '../../components/WithDeploymentActions';
 import resolvers from '../../resolvers';
 import { IDetailsRouteParams, IDetailsRouteState } from './interfaces';
@@ -37,7 +39,6 @@ import { IDetailsRouteParams, IDetailsRouteState } from './interfaces';
  * or an integration object set via the state.
  *
  */
-
 export const DetailsPage: React.FunctionComponent = () => {
   const { getPodLogUrl } = React.useContext(AppContext);
   const { setAttributes, deployIntegration } = useIntegrationHelpers();
@@ -98,7 +99,9 @@ export const DetailsPage: React.FunctionComponent = () => {
                               />
                               {isIntegrationApiProvider(data.integration) ? (
                                 <IntegrationDetailApiProviderSteps
-                                  flowCount={getApiProviderFlows(data.integration).length}
+                                  flowCount={
+                                    getApiProviderFlows(data.integration).length
+                                  }
                                 />
                               ) : (
                                 <IntegrationDetailSteps
@@ -110,19 +113,29 @@ export const DetailsPage: React.FunctionComponent = () => {
                               />
                               <UIContext.Consumer>
                                 {({ pushNotification }) => {
-                                  const handleChange = async (exposure: string) => {
+                                  const handleChange = async (
+                                    exposure: string
+                                  ) => {
                                     try {
-                                      await setAttributes(data.integration.id!, {
-                                        exposure,
-                                      });
+                                      await setAttributes(
+                                        data.integration.id!,
+                                        {
+                                          exposure,
+                                        }
+                                      );
                                     } catch (err) {
                                       return false;
                                     }
 
-                                    if (data.integration.currentState !== 'Unpublished') {
+                                    if (
+                                      data.integration.currentState !==
+                                      'Unpublished'
+                                    ) {
                                       try {
                                         pushNotification(
-                                          t('integrations:PublishingIntegrationMessage'),
+                                          t(
+                                            'integrations:PublishingIntegrationMessage'
+                                          ),
                                           'info'
                                         );
                                         await deployIntegration(
@@ -152,7 +165,42 @@ export const DetailsPage: React.FunctionComponent = () => {
 
                                   return (
                                     <IntegrationExposeVia
-                                      integration={data.integration} onChange={handleChange}
+                                      exposure={data.integration.exposure || ''}
+                                      exposureMeans={
+                                        data.integration.exposureMeans || []
+                                      }
+                                      isUnpublished={
+                                        data.integration.currentState ===
+                                        UNPUBLISHED
+                                      }
+                                      isPending={
+                                        data.integration.currentState ===
+                                        PENDING
+                                      }
+                                      i18nDisableDiscovery={t(
+                                        'integrations:exposeVia:disableDiscovery'
+                                      )}
+                                      i18nDisableDiscoveryConfirm={t(
+                                        'integrations:exposeVia:disableDiscoveryConfirm'
+                                      )}
+                                      i18nDiscoveryDescription={t(
+                                        'integrations:exposeVia:discoveryDescription'
+                                      )}
+                                      i18nEnableDiscovery={t(
+                                        'integrations:exposeVia:enableDiscovery'
+                                      )}
+                                      i18nEnableDiscoveryConfirm={t(
+                                        'integrations:exposeVia:enableDiscoveryConfirm'
+                                      )}
+                                      i18nNo={t('shared:No')}
+                                      i18nNo3ScaleConfigured={t(
+                                        'integrations:exposeVia:no3scaleConfigured'
+                                      )}
+                                      i18nRepublish={t(
+                                        'integrations:exposeVia:republish'
+                                      )}
+                                      i18nYes={t('shared:Yes')}
+                                      onChange={handleChange}
                                     />
                                   );
                                 }}
@@ -247,6 +295,7 @@ export const DetailsPage: React.FunctionComponent = () => {
                                               currentState={
                                                 deployment.currentState!
                                               }
+                                              i18nRunning={t('shared:Published')}
                                               i18nTextLastPublished={t(
                                                 'integrations:detail:lastPublished'
                                               )}

@@ -1,5 +1,6 @@
+import { Label } from '@patternfly/react-core';
+import { global_active_color_100, global_danger_color_100, global_default_color_100 } from '@patternfly/react-tokens';
 import classnames from 'classnames';
-import { Label } from 'patternfly-react';
 import * as React from 'react';
 import {
   ERROR,
@@ -29,22 +30,26 @@ export class IntegrationStatus extends React.Component<
         ? 'primary'
         : 'default';
     let label = PENDING; // it's a parachute
+    let style:any = { background: global_default_color_100.value };
     switch (this.props.currentState) {
       case PUBLISHED:
         label = this.props.i18nPublished;
+        style = { background: global_active_color_100.value };
         break;
       case UNPUBLISHED:
         label = this.props.i18nUnpublished;
         break;
       case ERROR:
         label = this.props.i18nError;
+        style = { background: global_danger_color_100 };
         break;
     }
     return (
       <Label
         data-testid={'integration-status-status-label'}
-        className={classnames('', this.props.className)}
-        type={labelType}>
+        style={style}
+        className={classnames('', labelType, this.props.className)}
+      >
         {label}
       </Label>
     );

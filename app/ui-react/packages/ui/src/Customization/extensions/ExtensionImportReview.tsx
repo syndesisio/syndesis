@@ -1,6 +1,8 @@
 import {
+  Button,
   Card,
   CardBody,
+  GridItem,
   Stack,
   TextContent,
   TextList,
@@ -10,7 +12,6 @@ import {
   Title,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { Button, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../../Layout';
 import './ExtensionImportReview.css';
@@ -118,12 +119,12 @@ export const ExtensionImportReview: React.FunctionComponent<
 > = props => {
   const getActions = (): JSX.Element => {
     if (!props.actions) {
-      return <Grid.Col />;
+      return <GridItem />;
     }
 
     return (
       <TextContent>
-        <TextList className="extension-import-review__actions-list">
+        <TextList className={'extension-import-review__actions-list'}>
           {props.actions
             ? props.actions.map((action, index) => (
                 <TextListItem
@@ -147,13 +148,13 @@ export const ExtensionImportReview: React.FunctionComponent<
   };
 
   return (
-    <Card className="extension-import-review">
+    <Card className={'extension-import-review'}>
       <CardBody>
-        <Stack gutter="md">
+        <Stack gutter={'md'}>
           <Title
-            headingLevel="h1"
-            size="xl"
-            className="extension-import-review__title"
+            headingLevel={'h1'}
+            size={'xl'}
+            className={'extension-import-review__title'}
           >
             {props.i18nTitle}
           </Title>
@@ -161,55 +162,55 @@ export const ExtensionImportReview: React.FunctionComponent<
             <TextList component={TextListVariants.dl}>
               <TextListItem
                 component={TextListItemVariants.dt}
-                className="extension-import-review__propertyLabel"
+                className={'extension-import-review__propertyLabel'}
               >
                 {props.i18nIdLabel}
               </TextListItem>
               <TextListItem
                 component={TextListItemVariants.dd}
-                className="extension-import-review__propertyValue"
+                className={'extension-import-review__propertyValue'}
               >
                 {props.extensionId}
               </TextListItem>
               <TextListItem
                 component={TextListItemVariants.dt}
-                className="extension-import-review__propertyLabel"
+                className={'extension-import-review__propertyLabel'}
               >
                 {props.i18nNameLabel}
               </TextListItem>
               <TextListItem
                 component={TextListItemVariants.dd}
-                className="extension-import-review__propertyValue"
+                className={'extension-import-review__propertyValue'}
               >
                 {props.extensionName}
               </TextListItem>
               <TextListItem
                 component={TextListItemVariants.dt}
-                className="extension-import-review__propertyLabel"
+                className={'extension-import-review__propertyLabel'}
               >
                 {props.i18nDescriptionLabel}
               </TextListItem>
               <TextListItem
                 component={TextListItemVariants.dd}
-                className="extension-import-review__propertyValue"
+                className={'extension-import-review__propertyValue'}
               >
                 {props.extensionDescription ? props.extensionDescription : null}
               </TextListItem>
               <TextListItem
                 component={TextListItemVariants.dt}
-                className="extension-import-review__propertyLabel"
+                className={'extension-import-review__propertyLabel'}
               >
                 {props.i18nTypeLabel}
               </TextListItem>
               <TextListItem
                 component={TextListItemVariants.dd}
-                className="extension-import-review__propertyValue"
+                className={'extension-import-review__propertyValue'}
               >
                 {props.i18nExtensionTypeMessage}
               </TextListItem>
               <TextListItem
                 component={TextListItemVariants.dt}
-                className="extension-import-review__propertyLabel"
+                className={'extension-import-review__propertyLabel'}
               >
                 {props.i18nActionsLabel}
               </TextListItem>
@@ -218,13 +219,13 @@ export const ExtensionImportReview: React.FunctionComponent<
               </TextListItem>
             </TextList>
           </TextContent>
-          <div className="extension-import-review__buttonBar">
-            <Button bsStyle="primary" onClick={handleImport}>
+          <div className={'extension-import-review__buttonBar'}>
+            <Button variant={'primary'} onClick={handleImport}>
               {props.i18nImport}
             </Button>
             <ButtonLink
               data-testid={'extension-import-review-cancel-button'}
-              className="extension-import-review__cancelButton"
+              className={'extension-import-review__cancelButton'}
               href={props.cancelLink}
               as={'default'}
             >

@@ -1,5 +1,13 @@
+import {
+  DataListAction,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+  Stack,
+  StackItem,
+} from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../../../Layout';
 import { HttpMethodColors } from '../../../Shared';
@@ -16,36 +24,50 @@ export interface IApiProviderReviewOperationsItemProps {
   operationPath: string;
 }
 
-export class ApiProviderReviewOperationsItem extends React.Component<
-  IApiProviderReviewOperationsItemProps
-> {
-  public render() {
-    return (
-      <ListView.Item
-        actions={
-          <ButtonLink
-            data-testid={'api-provider-operations-create-flow'}
-            onClick={this.props.onCreateFlow}
-            href={this.props.createFlowHref}
-            as={this.props.createAsPrimary ? 'primary' : 'default'}
-          >
-            {this.props.i18nCreateFlow}
-          </ButtonLink>
-        }
-        additionalInfo={[
-          <ListView.InfoItem key={1} className={'item__additional-info'}>
-            {this.props.operationDescription}
-          </ListView.InfoItem>,
+export const ApiProviderReviewOperationsItem: React.FunctionComponent<IApiProviderReviewOperationsItemProps> = ({
+  createAsPrimary,
+  createFlowHref,
+  i18nCreateFlow,
+  onCreateFlow,
+  operationDescription,
+  operationHttpMethod,
+  operationPath,
+}) => (
+  <DataListItem
+    aria-labelledby={'method'}
+    className={'api-provider-review-operations-item'}
+  >
+    <DataListItemRow>
+      <DataListItemCells
+        dataListCells={[
+          <DataListCell key={0}>
+            <Stack id={'method'}>
+              <StackItem>
+                <HttpMethodColors method={operationHttpMethod} />
+              </StackItem>
+              <StackItem>
+                <div className={'item__operation-path'}>{operationPath}</div>
+              </StackItem>
+            </Stack>
+          </DataListCell>,
+          <DataListCell key={1}>{operationDescription}</DataListCell>,
         ]}
-        className={'api-provider-review-operations-item'}
-        description={
-          <div className={'item__operation-path'}>
-            {this.props.operationPath}
-          </div>
-        }
-        heading={<HttpMethodColors method={this.props.operationHttpMethod} />}
-        stacked={false}
       />
-    );
-  }
-}
+      <DataListAction
+        aria-label={'method actions'}
+        aria-labelledby={'open-flow-button'}
+        id={'method-actions'}
+      >
+        <ButtonLink
+          data-testid={'api-provider-operations-create-flow'}
+          onClick={onCreateFlow}
+          href={createFlowHref}
+          id={'open-flow-button'}
+          as={createAsPrimary ? 'primary' : 'default'}
+        >
+          {i18nCreateFlow}
+        </ButtonLink>
+      </DataListAction>
+    </DataListItemRow>
+  </DataListItem>
+);

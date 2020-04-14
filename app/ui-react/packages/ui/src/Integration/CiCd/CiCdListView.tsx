@@ -1,4 +1,4 @@
-import { Button } from 'patternfly-react';
+import { Button, ButtonVariant } from '@patternfly/react-core';
 import * as React from 'react';
 import { PageSection } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
@@ -8,25 +8,23 @@ export interface ICiCdListViewProps extends IListViewToolbarProps {
   onAddNew: () => void;
 }
 
-export class CiCdListView extends React.Component<ICiCdListViewProps> {
-  public render() {
-    return (
-      <PageSection>
-        <ListViewToolbar {...this.props}>
-          <div className="form-group">
-            {this.props.resultsCount !== 0 && (
-              <Button
-                data-testid={'cicd-list-view-add-new-button'}
-                className="btn btn-primary"
-                onClick={this.props.onAddNew}
-              >
-                {this.props.i18nAddNewButtonText}
-              </Button>
-            )}
-          </div>
-        </ListViewToolbar>
-        {this.props.children}
-      </PageSection>
-    );
-  }
-}
+export const CiCdListView: React.FunctionComponent<ICiCdListViewProps> = props => {
+  return (
+    <PageSection>
+      <ListViewToolbar {...props}>
+        <div className="form-group">
+          {props.resultsCount !== 0 && (
+            <Button
+              data-testid={'cicd-list-view-add-new-button'}
+              variant={ButtonVariant.primary}
+              onClick={props.onAddNew}
+            >
+              {props.i18nAddNewButtonText}
+            </Button>
+          )}
+        </div>
+      </ListViewToolbar>
+      {props.children}
+    </PageSection>
+  );
+};

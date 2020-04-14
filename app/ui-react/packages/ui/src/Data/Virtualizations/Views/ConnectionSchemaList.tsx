@@ -1,4 +1,5 @@
 import {
+  DataList,
   EmptyState,
   EmptyStateBody,
   EmptyStateVariant,
@@ -7,11 +8,9 @@ import {
   Title,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../../../Layout';
 import './ConnectionSchemaList.css';
-import { ConnectionSchemaListSkeleton } from './ConnectionSchemaListSkeleton';
 
 export interface IConnectionSchemaListProps {
   hasListData: boolean;
@@ -26,9 +25,7 @@ export const ConnectionSchemaList: React.FunctionComponent<IConnectionSchemaList
   return (
     <>
       {props.loading ? (
-        <ListView>
-          <ConnectionSchemaListSkeleton width={800} />
-        </ListView>
+        <DataList aria-label={'connection schema list'}>{props.children}</DataList>
       ) : props.hasListData ? (
         <Flex
           breakpointMods={[{ modifier: 'column', breakpoint: 'md' }]}
@@ -59,7 +56,7 @@ export const ConnectionSchemaList: React.FunctionComponent<IConnectionSchemaList
           </FlexItem>
           <FlexItem className={'connection-schema-list_contentSection'}>
             <div className={'connection-schema-list'}>
-              <ListView>{props.children}</ListView>
+              <DataList aria-label={'connection schema list'}>{props.children}</DataList>
             </div>
           </FlexItem>
         </Flex>

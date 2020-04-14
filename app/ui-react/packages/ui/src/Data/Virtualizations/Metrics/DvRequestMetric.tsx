@@ -1,13 +1,13 @@
 import {
   CardBody,
   CardHeader,
+  Spinner,
   Split,
   SplitItem,
   Text,
   TextContent,
   TextVariants,
 } from '@patternfly/react-core';
-import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import './DvMetricsContainer.css';
 import './DvRequestMetric.css';
@@ -41,7 +41,7 @@ export const DvRequestMetric: React.FunctionComponent<
       </CardHeader>
       <CardBody>
         {props.loading ? (
-          <Spinner loading={true} inline={false} />
+          <Spinner size={'lg'} />
         ) : props.requestCount &&
           props.i18nRequestText &&
           props.i18nRequestText.length > 0 ? (

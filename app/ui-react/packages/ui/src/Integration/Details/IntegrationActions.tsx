@@ -1,5 +1,10 @@
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownPosition,
+  KebabToggle
+} from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { toValidHtmlId } from '../../helpers';
@@ -8,7 +13,7 @@ import './IntegrationActions.css';
 
 export interface IIntegrationAction {
   href?: H.LocationDescriptor;
-  onClick?: (e: React.MouseEvent<any>) => any;
+  onClick?: (event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent) => void;
   label: string | JSX.Element;
 }
 
@@ -21,64 +26,82 @@ export interface IIntegrationActionsProps {
   editHref?: H.LocationDescriptor;
 }
 
-export class IntegrationActions extends React.Component<
-  IIntegrationActionsProps
-> {
-  public render() {
+export const actionItem = (a: IIntegrationAction, idx: number, baseIdString: string) => {
+  if (a.href) {
     return (
-      <>
-        <ButtonLink
-          data-testid={'integration-actions-edit-button'}
-          className={'edit-integration-btn'}
-          href={this.props.editHref}
-          as={'default'}
+      <li role={'menuitem'} key={idx}>
+        <Link to={a.href}
+              data-testid={baseIdString + `-${toValidHtmlId(a.label.toString())}`}
+              onClick={a.onClick}
+              tabIndex={idx + 1}
+              className={'pf-c-dropdown__menu-item'}
         >
-          {this.props.i18nEditBtn}
-        </ButtonLink>
-        <ButtonLink
-          data-testid={'integration-actions-view-button'}
-          className={'view-integration-btn'}
-          href={this.props.detailsHref}
-          as={'default'}
-        >
-          {this.props.i18nViewBtn}
-        </ButtonLink>
-        <DropdownKebab
-          className={'integration-actions__dropdown-kebab'}
-          id={`integration-${this.props.integrationId}-action-menu`}
-          pullRight={true}
-        >
-          {this.props.actions.map((a, idx) => (
-            <li role={'presentation'} key={idx}>
-              {a.href ? (
-                <Link
-                  data-testid={`integration-actions-${toValidHtmlId(
-                    a.label.toString()
-                  )}`}
-                  to={a.href}
-                  onClick={a.onClick}
-                  role={'menuitem'}
-                  tabIndex={idx + 1}
-                >
-                  {a.label}
-                </Link>
-              ) : (
-                <a
-                  data-testid={`integration-actions-${toValidHtmlId(
-                    a.label.toString()
-                  )}`}
-                  href={'javascript:void(0)'}
-                  onClick={a.onClick}
-                  role={'menuitem'}
-                  tabIndex={idx + 1}
-                >
-                  {a.label}
-                </a>
-              )}
-            </li>
-          ))}
-        </DropdownKebab>
-      </>
+          {a.label}
+        </Link>
+      </li>
+    )
+  } else {
+    return (
+      <DropdownItem key={idx}
+                    data-testid={baseIdString + `integration-actions-${toValidHtmlId(a.label.toString())}`}
+                    onClick={a.onClick}
+                    tabIndex={idx + 1}
+                    role={'menuitem'}
+      >
+        {a.label}
+      </DropdownItem>
     );
   }
-}
+};
+
+export const IntegrationActions: React.FunctionComponent<IIntegrationActionsProps> = (
+  {
+    actions,
+    detailsHref,
+    editHref,
+    i18nEditBtn,
+    i18nViewBtn,
+    integrationId
+  }) => {
+  const [showDropdown, setShowDropdown] = React.useState(false);
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+
+  const baseIdString = 'integration-actions';
+
+  return (
+    <>
+      <ButtonLink
+        data-testid={baseIdString + '-edit-button'}
+        className={'edit-integration-btn'}
+        href={editHref}
+        as={'default'}
+      >
+        {i18nEditBtn}
+      </ButtonLink>
+      <ButtonLink
+        data-testid={baseIdString + '-view-button'}
+        className={'view-integration-btn'}
+        href={detailsHref}
+        as={'default'}
+      >
+        {i18nViewBtn}
+      </ButtonLink>
+
+      <Dropdown
+        toggle={<KebabToggle onToggle={toggleDropdown} id="toggle-dropdown"/>}
+        isOpen={showDropdown}
+        isPlain={true}
+        role={'presentation'}
+        dropdownItems={actions.map((a, idx) => {
+          return actionItem(a, idx, 'integration-actions')
+        })}
+        position={DropdownPosition.right}
+        className={baseIdString + '__dropdown-kebab'}
+        id={`integration-${integrationId}-action-menu`}
+      />
+    </>
+  );
+};

@@ -1,19 +1,24 @@
 // tslint:disable:no-console
-import { Card, CardBody } from '@patternfly/react-core';
 import {
-  Col,
-  FormControl,
-  FormGroup,
-  Grid,
+  Card,
+  CardBody,
   Radio,
-  Row,
-} from 'patternfly-react';
+  Split,
+  SplitItem,
+  Stack,
+  StackItem,
+  TextInput,
+} from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink } from '../Layout';
 import { DndFileChooser } from './DndFileChooser';
 import './OpenApiSelectMethod.css';
 
 export type Method = 'file' | 'url' | 'scratch2x' | 'scratch3x';
+const FILE = 'file';
+const URL = 'url';
+const SCRATCH_2X = 'scratch2x';
+const SCRATCH_3X = 'scratch3x';
 
 export interface IOpenApiSelectMethodProps {
   allowFromScratch?: boolean;
@@ -35,60 +40,36 @@ export interface IOpenApiSelectMethodProps {
   i18nUploadFailedMessage?: string;
   i18nUploadSuccessMessage?: string;
   i18nUrlNote: string;
-
   /**
    * The action fired when the user presses the Next button
    */
   onNext(method?: Method, specification?: string): void;
 }
 
-export interface IOpenApiSelectMethodState {
-  disableDropzone: boolean;
-  /**
-   * The method selected by the user to provide the OpenAPI
-   * specification
-   */
-  method?: Method;
-  specification?: string;
-  url?: string;
-  /**
-   * Used to handle D&D upload success/fail messages
-   */
-  uploadFailedMessage?: string;
-  uploadSuccessMessage?: string;
-  /**
-   * The `valid` prop here determines whether or not
-   * to allow the user to proceed to the next step in the wizard
-   */
-  valid?: boolean;
-}
-
-export class OpenApiSelectMethod extends React.Component<
-  IOpenApiSelectMethodProps,
-  IOpenApiSelectMethodState
-> {
-  public static defaultProps = {
-    allowFromScratch: true,
-  };
-
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      disableDropzone: false,
-      method: 'file',
-      specification: '',
-      url: '',
-      valid: false,
-    };
-
-    this.buildUploadMessage = this.buildUploadMessage.bind(this);
-    this.onAddUrlSpecification = this.onAddUrlSpecification.bind(this);
-    this.onSelectMethod = this.onSelectMethod.bind(this);
-    this.onUploadAccepted = this.onUploadAccepted.bind(this);
-    this.onUploadRejected = this.onUploadRejected.bind(this);
-    this.handleClickNext = this.handleClickNext.bind(this);
-  }
-
+export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodProps> = ({
+  allowFromScratch = true,
+  disableDropzone,
+  fileExtensions,
+  i18nBtnNext,
+  i18nHelpMessage,
+  i18nInstructions,
+  i18nMethodFromFile,
+  i18nMethodFromUrl,
+  i18nMethodFromScratch2x,
+  i18nMethodFromScratch3x,
+  i18nNoFileSelectedMessage,
+  i18nSelectedFileLabel,
+  i18nUploadFailedMessage,
+  i18nUploadSuccessMessage,
+  i18nUrlNote,
+  onNext,
+}) => {
+  const [method, setMethod] = React.useState(FILE);
+  const [specification, setSpecification] = React.useState('');
+  const [url, setUrl] = React.useState('');
+  const [valid, setValid] = React.useState(false);
+  const [uploadSuccessMessage, setUploadSuccessMessage] = React.useState('');
+  const [uploadFailedMessage, setUploadFailedMessage] = React.useState('');
   /**
    * Helper function used to build the D&D upload success/fail
    * messages, which are subsequently set in the UI state
@@ -96,207 +77,197 @@ export class OpenApiSelectMethod extends React.Component<
    * @param succeeded - Boolean value that specifies whether or not the
    * upload was successful.
    */
-  public buildUploadMessage(fileName: string, succeeded: boolean): void {
+  const buildUploadMessage = (fileName: string, succeeded: boolean): void => {
     if (succeeded && fileName) {
-      this.setState({
-        uploadSuccessMessage:
-          this.props.i18nUploadSuccessMessage + "'" + fileName + "'",
-      });
+      setUploadSuccessMessage(i18nUploadSuccessMessage + "'" + fileName + "'");
     } else {
-      this.setState({
-        uploadFailedMessage:
-          "'" + fileName + "'" + this.props.i18nUploadFailedMessage,
-      });
+      setUploadFailedMessage("'" + fileName + "'" + i18nUploadFailedMessage);
     }
-  }
-
-  public checkValidUrl(url: string): boolean {
+  };
+  const checkValidUrl = (toCheck: string): boolean => {
     const regexp = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-    return regexp.test(url);
-  }
-
+    return regexp.test(toCheck);
+  };
   /**
    * User has added a specification via a string URL, which will be
    * checked if is a valid HTTP/HTTPS string.
    * @param e
    */
-  public onAddUrlSpecification(e: React.FormEvent<HTMLInputElement>) {
-    this.setState({ url: e.currentTarget.value });
-
-    if (
-      this.state.method === 'url' &&
-      this.checkValidUrl(e.currentTarget.value)
-    ) {
-      this.setState({ valid: true });
+  const onAddUrlSpecification = (e: React.FormEvent<HTMLInputElement>) => {
+    const newUrl = e.currentTarget.value;
+    setUrl(newUrl);
+    if (method === URL && checkValidUrl(newUrl)) {
+      setValid(true);
     } else {
-      this.setState({ valid: false });
+      setValid(false);
     }
-  }
-
+  };
   /**
    * The action fired when the user selects the method
    * to provide an OpenAPI specification.
    * @param newMethod
    */
-  public onSelectMethod(newMethod: Method) {
-    this.setState({
-      method: newMethod,
-      specification: '',
-      uploadFailedMessage: '',
-      uploadSuccessMessage: '',
-      valid: newMethod === 'scratch2x' || newMethod === 'scratch3x',
-    });
-  }
-
+  const onSelectMethod = (newMethod: Method) => {
+    setMethod(newMethod);
+    setSpecification('');
+    setUploadFailedMessage('');
+    setUploadSuccessMessage('');
+    setValid(newMethod === SCRATCH_2X || newMethod === SCRATCH_3X);
+  };
   /**
    * Callback for when one or more file uploads have been accepted.
    */
-  public onUploadAccepted(files: File[]): void {
+  const onUploadAccepted = (files: File[]): void => {
     const reader = new FileReader();
     reader.readAsText(files[0]);
-
-    this.buildUploadMessage(files[0].name, true);
-
+    buildUploadMessage(files[0].name, true);
     reader.onload = () => {
-      this.setState({
-        specification: reader.result as string,
-        valid: true,
-      });
+      setSpecification(reader.result as string);
+      setValid(true);
     };
-  }
-
+  };
   /**
    * Obtains the localized text (may include HTML tags) that appears when the file upload was rejected. This
    * will occur when a DnD of a file with the wrong extension is dropped. This message is presented
    * as a timed toast notification.
    * @param fileName - Name of file that failed to be uploaded
    */
-  public onUploadRejected(fileName: string): string {
-    this.buildUploadMessage(fileName, false);
-
-    this.setState({
-      specification: '',
-      valid: false,
-    });
-
-    return (
-      '<span>File <strong>' +
-      fileName +
-      '</strong> could not be uploaded</span>'
-    );
-  }
-
-  public handleClickNext() {
-    if (this.state.method === 'url') {
-      this.props.onNext(this.state.method, this.state.url);
+  const onUploadRejected = (fileName: string): string => {
+    buildUploadMessage(fileName, false);
+    setSpecification('');
+    setValid(false);
+    return `<span>File <strong>${fileName}</strong> could not be uploaded</span>`;
+  };
+  const handleClickNext = () => {
+    if (method === URL) {
+      onNext(method, url);
     } else {
-      this.props.onNext(this.state.method, this.state.specification);
+      onNext(method as 'file', specification);
     }
-  }
-
-  public render() {
-    return (
-      <Card className={'open-api-review-actions'}>
-        <CardBody>
-          <Grid fluid={true} className={'open-api-select-method'}>
-            <Row>
-              <Col>
-                <FormGroup controlId={'method'} disabled={false}>
-                  <div>
+  };
+  return (
+    <Card className={'open-api-review-actions'}>
+      <CardBody>
+        <Stack>
+          <StackItem>
+            <Split onClick={() => onSelectMethod(FILE)}>
+              <SplitItem>
+                <Radio
+                  aria-label={'From File'}
+                  id={'method-file'}
+                  data-testid={'method-file'}
+                  name={'method'}
+                  onClick={() => onSelectMethod(FILE)}
+                  isChecked={method === FILE}
+                  readOnly={true}
+                />
+              </SplitItem>
+              <SplitItem>
+                <div>{i18nMethodFromFile}</div>
+                <div className="open-api-select-method__dnd-container">
+                  <DndFileChooser
+                    allowMultiple={false}
+                    disableDropzone={disableDropzone || method !== FILE}
+                    fileExtensions={fileExtensions}
+                    i18nHelpMessage={i18nHelpMessage}
+                    i18nInstructions={i18nInstructions}
+                    i18nNoFileSelectedMessage={i18nNoFileSelectedMessage}
+                    i18nSelectedFileLabel={i18nSelectedFileLabel}
+                    i18nUploadFailedMessage={uploadFailedMessage}
+                    i18nUploadSuccessMessage={uploadSuccessMessage}
+                    onUploadAccepted={onUploadAccepted}
+                    onUploadRejected={onUploadRejected}
+                  />
+                </div>
+              </SplitItem>
+            </Split>
+          </StackItem>
+          <StackItem>
+            <Split onClick={() => onSelectMethod(URL)}>
+              <SplitItem>
+                <Radio
+                  aria-label={'from url radio'}
+                  id={'method-url'}
+                  data-testid={'method-url'}
+                  name={'method'}
+                  label={<></>}
+                  isChecked={method === URL}
+                  onClick={() => onSelectMethod(URL)}
+                  readOnly={true}
+                />
+              </SplitItem>
+              <SplitItem>
+                <div>{i18nMethodFromUrl}</div>
+                <div className={'open-api-select-method__url-container'}>
+                  <TextInput
+                    aria-label={'method url text input'}
+                    id={'method-url-text-input'}
+                    data-testid={'method-url-text-input'}
+                    type={'text'}
+                    isDisabled={method !== URL}
+                    value={url}
+                    onChange={(val, evt) => onAddUrlSpecification(evt)}
+                  />
+                  <br />
+                  <span className={'url-note'}>{i18nUrlNote}</span>
+                </div>
+              </SplitItem>
+            </Split>
+          </StackItem>
+          {allowFromScratch && (
+            <>
+              <StackItem>
+                <Split onClick={() => onSelectMethod(SCRATCH_3X)}>
+                  <SplitItem>
                     <Radio
-                      id={'method-file'}
+                      aria-label={'from scratch 3.x radio'}
+                      id={'method-scratch-3x'}
+                      data-testid={'method-scratch-3x'}
                       name={'method'}
-                      onClick={() => this.onSelectMethod('file')}
-                      checked={this.state.method === 'file'}
+                      isChecked={method === SCRATCH_3X}
+                      onClick={() => onSelectMethod(SCRATCH_3X)}
                       readOnly={true}
-                    >
-                      <div>{this.props.i18nMethodFromFile}</div>
-                      <div className="open-api-select-method__dnd-container">
-                        <DndFileChooser
-                          allowMultiple={false}
-                          disableDropzone={
-                            this.props.disableDropzone ||
-                            this.state.method !== 'file'
-                          }
-                          fileExtensions={this.props.fileExtensions}
-                          i18nHelpMessage={this.props.i18nHelpMessage}
-                          i18nInstructions={this.props.i18nInstructions}
-                          i18nNoFileSelectedMessage={
-                            this.props.i18nNoFileSelectedMessage
-                          }
-                          i18nSelectedFileLabel={
-                            this.props.i18nSelectedFileLabel
-                          }
-                          i18nUploadFailedMessage={
-                            this.state.uploadFailedMessage
-                          }
-                          i18nUploadSuccessMessage={
-                            this.state.uploadSuccessMessage
-                          }
-                          onUploadAccepted={this.onUploadAccepted}
-                          onUploadRejected={this.onUploadRejected}
-                        />
-                      </div>
-                    </Radio>
+                    />
+                  </SplitItem>
+                  <SplitItem>
+                    <div>{i18nMethodFromScratch3x}</div>
+                  </SplitItem>
+                </Split>
+              </StackItem>
 
+              <StackItem>
+                <Split onClick={() => onSelectMethod(SCRATCH_3X)}>
+                  <SplitItem>
                     <Radio
-                      id={'method-url'}
+                      aria-label={'from scratch 2.x radio'}
+                      id={'method-scratch-2x'}
+                      data-testid={'method-scratch-2x'}
                       name={'method'}
-                      onClick={() => this.onSelectMethod('url')}
+                      isChecked={method === SCRATCH_2X}
+                      onClick={() => onSelectMethod(SCRATCH_2X)}
                       readOnly={true}
-                    >
-                      <div>{this.props.i18nMethodFromUrl}</div>
-                      <div className={'open-api-select-method__url-container'}>
-                        <FormControl
-                          type={'text'}
-                          disabled={this.state.method !== 'url'}
-                          value={this.state.url}
-
-                          onChange={this.onAddUrlSpecification}
-                        />
-                        <br />
-                        <span className={'url-note'}>
-                          {this.props.i18nUrlNote}
-                        </span>
-                      </div>
-                    </Radio>
-
-                    {this.props.allowFromScratch && (
-                      <>
-                        <Radio
-                          id={'method-scratch-3x'}
-                          name={'method'}
-                          onClick={() => this.onSelectMethod('scratch3x')}
-                          readOnly={true}
-                        >
-                          <div>{this.props.i18nMethodFromScratch3x}</div>
-                        </Radio>
-
-                        <Radio
-                          id={'method-scratch-2x'}
-                          name={'method'}
-                          onClick={() => this.onSelectMethod('scratch2x')}
-                          readOnly={true}
-                        >
-                          <div>{this.props.i18nMethodFromScratch2x}</div>
-                        </Radio>
-                      </>
-                    )}
-                  </div>
-                </FormGroup>
-              </Col>
-
-              <ButtonLink
-                disabled={!this.state.valid}
-                as={'primary'}
-                onClick={this.handleClickNext}
-              >
-                {this.props.i18nBtnNext}
-              </ButtonLink>
-            </Row>
-          </Grid>
-        </CardBody>
-      </Card>
-    );
-  }
-}
+                    />
+                  </SplitItem>
+                  <SplitItem>
+                    <div>{i18nMethodFromScratch2x}</div>
+                  </SplitItem>
+                </Split>
+              </StackItem>
+            </>
+          )}
+          <StackItem>
+            <ButtonLink
+              id={'button-next'}
+              data-testid={'button-next'}
+              disabled={!valid}
+              as={'primary'}
+              onClick={handleClickNext}
+            >
+              {i18nBtnNext}
+            </ButtonLink>
+          </StackItem>
+        </Stack>
+      </CardBody>
+    </Card>
+  );
+};

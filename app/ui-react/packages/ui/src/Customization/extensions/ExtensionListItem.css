@@ -1,0 +1,15 @@
+.extension-list-item .extension-list-item__icon-wrapper {
+  width: 7em;
+}
+
+.extension-list-item .extension-list-item__text-wrapper {
+  margin-top: 7px;
+}
+
+.extension-list-item .extension-list-item__type, .extension-list-item .extension-list-item__used-by {
+  margin-top: 16px;
+}
+
+.extension-list-item .extension-list-item__actions {
+  margin-top: 10px;
+}

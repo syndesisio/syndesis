@@ -1,4 +1,10 @@
-import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Grid,
+  Title,
+} from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IRecentUpdatesProps {
@@ -14,7 +20,10 @@ export class RecentUpdatesCard extends React.Component<IRecentUpdatesProps> {
             {this.props.i18nTitle}
           </Title>
         </CardHeader>
-        <CardBody>{this.props.children}</CardBody>
+        <CardBody>
+          <br/>
+          <Grid gutter={'md'}>{this.props.children}</Grid>
+        </CardBody>
       </Card>
     );
   }

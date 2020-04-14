@@ -7,4 +7,5 @@ export * from './IntegrationDetailHistoryListView';
 export * from './IntegrationDetailHistoryListViewItem';
 export * from './IntegrationDetailHistoryListViewItemActions';
 export * from './IntegrationDetailInfo';
+export * from './IntegrationExposeVia';
 export * from './IntegrationExposedURL';

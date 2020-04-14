@@ -62,7 +62,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
               </Link>
             </StackItem>
 
-            <StackItem className="dashboard__metrics" isFilled={false}>
+            <StackItem className="dashboard__metrics" isFilled={true}>
               <Grid md={6} xl={3} gutter={'sm'}>
                 <GridItem>{this.props.integrationsOverview}</GridItem>
                 <GridItem>{this.props.connectionsOverview}</GridItem>
