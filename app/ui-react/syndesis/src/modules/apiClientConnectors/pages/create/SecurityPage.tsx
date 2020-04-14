@@ -1,9 +1,9 @@
 import * as H from '@syndesis/history';
 import { APISummary } from '@syndesis/models';
 import {
+  ApiClientConnectorCreateSecurity,
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
-  ApiClientConnectorCreateSecurity,
   ApiConnectorCreatorLayout,
   ApiConnectorCreatorToggleList
 } from '@syndesis/ui';
@@ -92,8 +92,8 @@ export const SecurityPage: React.FunctionComponent = () => {
                 cancelHref={resolvers.list()}
                 connectorsHref={resolvers.list()}
                 i18nCancel={t('shared:Cancel')}
-                i18nConnectors={t('shared:Connections')}
-                i18nCreateConnection={t('shared:CreateConnection')}
+                i18nConnectors={t('apiClientConnectors:apiConnectorsPageTitle')}
+                i18nCreateConnection={t('apiClientConnectors:CreateApiConnector')}
               />
               <ApiConnectorCreatorLayout
                 content={

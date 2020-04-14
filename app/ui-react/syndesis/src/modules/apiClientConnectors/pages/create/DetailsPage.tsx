@@ -82,8 +82,8 @@ export const DetailsPage: React.FunctionComponent = () => {
               cancelHref={resolvers.list()}
               connectorsHref={resolvers.list()}
               i18nCancel={t('shared:Cancel')}
-              i18nConnectors={t('shared:Connections')}
-              i18nCreateConnection={t('shared:CreateConnection')}
+              i18nConnectors={t('apiClientConnectors:apiConnectorsPageTitle')}
+              i18nCreateConnection={t('apiClientConnectors:CreateApiConnector')}
             />
             <ApiConnectorCreatorLayout
               content={
