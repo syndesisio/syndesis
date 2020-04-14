@@ -20,6 +20,7 @@ IMAGE_BUILD_MODE="$(readopt    --image-build        auto)"
 SOURCE_GEN="$(readopt          --source-gen         on)"
 GO_BUILD_OPTIONS="$(readopt    --go-options         '')"
 GO_PROXY_URL="$(readopt        --go-proxy           https://proxy.golang.org)"
+PRODUCTIZED="$(readopt         --productized        false)"
 
 if [[ -n "$(readopt --help)" ]] ; then
 	cat <<ENDHELP
@@ -36,13 +37,17 @@ where options are:
   --s2i-stream-name <name>                s2i image stream name (default: syndesis-operator)
   --go-options <name>                     additional build options to pass to the go build
   --go-proxy <url>                        proxy url for finding go dependencies (default: https://proxy.golang.org)
+  --productized <true|false>              activate settings only for product builds (default: false)
 
 ENDHELP
 	exit 0
 fi
 
 if [ $OPERATOR_BUILD_MODE != "skip" ] ; then
-  build_operator $OPERATOR_BUILD_MODE "$SOURCE_GEN" "$GO_PROXY_URL" -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=$OPERATOR_IMAGE_NAME -X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorTag=$OPERATOR_IMAGE_TAG" $GO_BUILD_OPTIONS
+  LDFLAGS="-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=$OPERATOR_IMAGE_NAME"
+  LDFLAGS=$LDFLAGS" -X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorTag=$OPERATOR_IMAGE_TAG"
+  LDFLAGS=$LDFLAGS" -X github.com/syndesisio/syndesis/install/operator/pkg.Productized=$PRODUCTIZED"
+  build_operator $OPERATOR_BUILD_MODE "$SOURCE_GEN" "$GO_PROXY_URL" -ldflags "$LDFLAGS" $GO_BUILD_OPTIONS
 fi
 
 if [ $IMAGE_BUILD_MODE != "skip" ] ; then

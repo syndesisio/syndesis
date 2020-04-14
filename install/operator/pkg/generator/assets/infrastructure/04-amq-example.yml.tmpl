@@ -53,6 +53,12 @@
       metadata:
         labels:
           app: syndesis
+{{if .Productized}}
+          com.redhat.component-name: broker-amq
+          com.redhat.component-version: "{{.Tag}}"
+          com.redhat.product-name: "Red_Hat_Fuse"
+          com.redhat.product-version: "{{.ProductVersion}}"
+{{end}}
           syndesis.io/app: syndesis
           syndesis.io/example: broker-amq
         name: broker-amq

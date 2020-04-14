@@ -9,6 +9,13 @@
       syndesis.io/component: jaeger
     name: syndesis-jaeger
   spec:
+{{if .Productized}}
+    labels:
+      com.redhat.component-name: syndesis-jaeger
+      com.redhat.component-version: "{{.Tag}}"
+      com.redhat.product-name: "Red_Hat_Fuse"
+      com.redhat.product-version: "{{.ProductVersion}}"
+{{end}}
     strategy: allInOne
     allInOne:
       image: '{{ .Syndesis.Addons.Jaeger.ImageAllInOne }}'

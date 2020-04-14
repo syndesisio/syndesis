@@ -108,6 +108,12 @@
         creationTimestamp: null
         labels:
           app: syndesis
+{{if .Productized}}
+          com.redhat.component-name: todo
+          com.redhat.component-version: "{{.Tag}}"
+          com.redhat.product-name: "Red_Hat_Fuse"
+          com.redhat.product-version: "{{.ProductVersion}}"
+{{end}}
           syndesis.io/app: todo
           syndesis.io/component: todo
       spec:

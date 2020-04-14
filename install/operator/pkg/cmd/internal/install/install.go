@@ -20,8 +20,10 @@ package install
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 
+	"github.com/prometheus/common/log"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 
@@ -48,6 +50,7 @@ type Install struct {
 	addons         string
 	customResource string
 	devSupport     bool
+	productized    bool
 	databaseImage  string
 	templateName   string
 
@@ -190,14 +193,16 @@ func (o *Install) Println(a ...interface{}) (int, error) {
 }
 
 type RenderScope struct {
-	Image         string
-	Tag           string
-	Namespace     string
-	DevSupport    bool
-	Role          string
-	Kind          string
-	EnabledAddons []string
-	DatabaseImage string
+	Image          string
+	Tag            string
+	Namespace      string
+	DevSupport     bool
+	Productized    bool
+	Role           string
+	ProductVersion string
+	Kind           string
+	EnabledAddons  []string
+	DatabaseImage  string
 }
 
 func (o *Install) install(action string, resources []unstructured.Unstructured) error {
@@ -245,16 +250,23 @@ func (o *Install) render(fromFile string) ([]unstructured.Unstructured, error) {
 	if o.addons != "" {
 		addons = strings.Split(o.addons, ",")
 	}
-
+	productized, err := strconv.ParseBool(pkg.Productized)
+	if err != nil {
+		log.Info("productized", "Unable to determine PRODUCTIZED parameter, setting as false. Err: ", err)
+		productized = false
+	}
+	productVersion := configuration.ProductVersionOfTag(pkg.DefaultOperatorTag)
 	resources, err := generator.Render(fromFile, RenderScope{
-		Namespace:     o.Namespace,
-		Image:         o.image,
-		Tag:           o.tag,
-		DevSupport:    o.devSupport,
-		Role:          RoleName,
-		Kind:          "Role",
-		EnabledAddons: addons,
-		DatabaseImage: o.databaseImage,
+		Namespace:      o.Namespace,
+		Image:          o.image,
+		Tag:            o.tag,
+		DevSupport:     o.devSupport,
+		Role:           RoleName,
+		Kind:           "Role",
+		Productized:    productized,
+		ProductVersion: productVersion,
+		EnabledAddons:  addons,
+		DatabaseImage:  o.databaseImage,
 	})
 	return resources, err
 }

@@ -44,6 +44,7 @@ require (
 
 require (
 	github.com/operator-framework/operator-sdk v0.16.0
+	github.com/prometheus/common v0.7.0
 	sigs.k8s.io/controller-runtime v0.4.0
 )
 

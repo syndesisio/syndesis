@@ -43,6 +43,12 @@
       metadata:
         labels:
           app: syndesis
+{{if .Productized}}
+          com.redhat.component-name: syndesis-server
+          com.redhat.component-version: "{{.Tag}}"
+          com.redhat.product-name: "Red_Hat_Fuse"
+          com.redhat.product-version: "{{.ProductVersion}}"
+{{end}}
           syndesis.io/app: syndesis
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-server

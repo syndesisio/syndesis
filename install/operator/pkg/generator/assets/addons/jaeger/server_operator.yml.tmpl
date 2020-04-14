@@ -19,6 +19,12 @@
       metadata:
         labels:
           name: jaeger-operator
+{{if .Productized}}
+          com.redhat.component-name: jaeger-operator
+          com.redhat.component-version: "{{.Tag}}"
+          com.redhat.product-name: "Red_Hat_Fuse"
+          com.redhat.product-version: "{{.ProductVersion}}"
+{{end}}
       spec:
         serviceAccountName: jaeger-operator
         containers:

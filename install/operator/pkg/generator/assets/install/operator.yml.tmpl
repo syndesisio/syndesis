@@ -68,6 +68,12 @@
       metadata:
         labels:
           name: syndesis-operator
+{{if .Productized}}
+          com.redhat.component-name: syndesis-operator
+          com.redhat.component-version: "{{.Tag}}"
+          com.redhat.product-name: "Red_Hat_Fuse"
+          com.redhat.product-version: "{{.ProductVersion}}"
+{{end}}
           syndesis.io/app: syndesis
           syndesis.io/type: operator
           syndesis.io/component: syndesis-operator

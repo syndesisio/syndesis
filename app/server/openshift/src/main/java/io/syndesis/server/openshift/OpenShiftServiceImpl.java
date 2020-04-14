@@ -29,9 +29,6 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.ContainerPort;
@@ -62,6 +59,8 @@ import io.fabric8.openshift.api.model.UserBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention", "PMD.GodClass"})
 public class OpenShiftServiceImpl implements OpenShiftService {
@@ -75,10 +74,21 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     private final NamespacedOpenShiftClient openShiftClient;
     private final OpenShiftConfigurationProperties config;
+    private Map<String, String> productizedLabelsTemplate = new HashMap<>();
 
     public OpenShiftServiceImpl(NamespacedOpenShiftClient openShiftClient, OpenShiftConfigurationProperties config) {
         this.openShiftClient = openShiftClient;
         this.config = config;
+        // retrieve the productized labels: com.redhat, they exists only when syndesis-operator is built with productized=true
+        DeploymentConfig dc = openShiftClient.deploymentConfigs() != null  ?
+            openShiftClient.deploymentConfigs().withName("syndesis-server").get() : null;
+        if (dc != null) {
+            Map<String, String> labels = dc.getSpec().getTemplate().getMetadata().getLabels();
+            productizedLabelsTemplate = Collections.unmodifiableMap(
+                labels.entrySet().stream()
+                    .filter(entry -> entry.getKey().contains("com.redhat"))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        }
     }
 
     @Override
@@ -237,7 +247,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return openShiftClient.imageStreams().withName(name).delete();
     }
 
-    @SuppressWarnings("PMD.ExcessiveMethodLength")
+    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.NPathComplexity"})
     protected void ensureDeploymentConfig(String name, DeploymentData deploymentData) {
         // check if deployment config exists
         final DoneableDeploymentConfig deploymentConfig;
@@ -245,6 +255,11 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         String jaegerCollectorUri = System.getenv("JAEGER_ENDPOINT");
         if (jaegerCollectorUri == null) {
             jaegerCollectorUri = "http://syndesis-jaeger-collector:14268/api/traces";
+        }
+        Map<String, String> productizedLabels = new HashMap<>(4);
+        if (!productizedLabelsTemplate.isEmpty()) {
+            productizedLabels.putAll(productizedLabelsTemplate);
+            productizedLabels.put("com.redhat.component-name", name);
         }
         if (oldConfig != null) {
             // make sure replicas is set to at least 1 or restore the previous replica count if present
@@ -305,6 +320,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                                 .addToLabels(COMPONENT_LABEL, "integration")
                                 .addToLabels(INTEGRATION_DEFAULT_LABELS)
                                 .addToLabels(deploymentData.getLabels())
+                                .addToLabels(productizedLabels)
                                 .addToAnnotations(deploymentData.getAnnotations())
                                 .addToAnnotations("prometheus.io/scrape", "true")
                                 .addToAnnotations("prometheus.io/port", "9779")
@@ -377,6 +393,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                                 .addToLabels(COMPONENT_LABEL, "integration")
                                 .addToLabels(INTEGRATION_DEFAULT_LABELS)
                                 .addToLabels(deploymentData.getLabels())
+                                .addToLabels(productizedLabels)
                                 .addToAnnotations(deploymentData.getAnnotations())
                                 .addToAnnotations("prometheus.io/scrape", "true")
                                 .addToAnnotations("prometheus.io/port", "9779")
