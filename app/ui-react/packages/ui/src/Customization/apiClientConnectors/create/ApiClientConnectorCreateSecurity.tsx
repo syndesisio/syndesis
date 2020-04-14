@@ -1,12 +1,10 @@
 import {
   Alert,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
   Form,
   FormGroup,
   Radio,
+  Stack,
+  StackItem,
   TextInput,
   Title,
 } from '@patternfly/react-core';
@@ -106,11 +104,11 @@ export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClien
     setValid(isValid(selectedType, authUrl, newUrl));
   };
   return (
-    <Card style={{ maxWidth: '600px', margin: ' auto' }}>
-      <CardHeader>
+    <Stack style={{ maxWidth: '600px', margin: ' auto' }} gutter="md">
+      <StackItem>
         <Title size="2xl">{i18nTitle}</Title>
-      </CardHeader>
-      <CardBody>
+      </StackItem>
+      <StackItem>
         <Form data-testid={`api-client-connector-auth-type-form`}>
           <Alert type={'info'} title={i18nDescription} isInline={true} />
           <FormGroup fieldId={'authenticationType'}>
@@ -118,7 +116,9 @@ export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClien
               <Radio
                 key={authType.value + '-' + idx}
                 id={'authenticationType'}
-                data-testid={`api-client-connector-auth-type-${toValidHtmlId(authType!.value)}`}
+                data-testid={`api-client-connector-auth-type-${toValidHtmlId(
+                  authType!.value
+                )}`}
                 aria-label={authType.label || i18nNoSecurity}
                 label={authType.label || i18nNoSecurity}
                 isChecked={selectedType === authType.value}
@@ -153,8 +153,8 @@ export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClien
             </>
           )}
         </Form>
-      </CardBody>
-      <CardFooter>
+      </StackItem>
+      <StackItem>
         <div>
           <ButtonLink href={backHref}>{i18nBtnBack}</ButtonLink>
           &nbsp;
@@ -166,7 +166,7 @@ export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClien
             {i18nBtnNext}
           </ButtonLink>
         </div>
-      </CardFooter>
-    </Card>
+      </StackItem>
+    </Stack>
   );
 };

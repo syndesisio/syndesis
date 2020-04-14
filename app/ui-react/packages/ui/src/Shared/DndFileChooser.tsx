@@ -10,7 +10,7 @@ import {
 import { ErrorCircleOIcon, OkIcon  } from '@patternfly/react-icons';
 import * as React from 'react';
 import { toValidHtmlId } from '../helpers';
-import { Container } from '../Layout/Container';
+import { Container } from '../Layout';
 import './DndFileChooser.css';
 import { INotification, INotificationType } from './Notifications';
 import { WithDropzone } from './WithDropzone';

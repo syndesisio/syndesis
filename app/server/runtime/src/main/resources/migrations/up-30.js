@@ -18,11 +18,11 @@
 // Helpers
 //
 var migrate = function(type, path, consumer) {
-    console.log("Start " + type + " migration")
+    console.log("Start " + type + " migration");
 
-    var migrated  = 0;
+    var migrated = 0;
     var inspected = 0;
-    var elements  = jsondb.get(path);
+    var elements = jsondb.get(path);
 
     if (elements) {
         Object.keys(elements).forEach(function(elementId) {
@@ -39,24 +39,24 @@ var migrate = function(type, path, consumer) {
     }
 
     console.log(type + ": migrated " + migrated + " out of " + inspected);
-}
+};
 
 //
 // Migration
 //
 
-var KeyGenerator = Java.type('io.syndesis.common.util.KeyGenerator')
+var KeyGenerator = Java.type("io.syndesis.common.util.KeyGenerator");
 
 console.log("Migration to schema 30 ...");
 migrate("integrations", "/integrations", function(integration) {
     var changed = false;
     if (integration.flows) {
-        integration.flows.forEach(function (flow) {
+        integration.flows.forEach(function(flow) {
             var parts = /.+:flows:(.+)/.exec(flow.id);
             if (parts && parts.length > 1) {
                 var operationId = parts[1];
-                flow.id = KeyGenerator.createKey()
-                flow.metadata['openapi-operationid'] = operationId;
+                flow.id = KeyGenerator.createKey();
+                flow.metadata["openapi-operationid"] = operationId;
 
                 changed = true;
             }
