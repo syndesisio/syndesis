@@ -1,4 +1,4 @@
-import { Card, CardBody, CardFooter, CardHeader, Form, Title } from '@patternfly/react-core';
+import { Form, Stack, StackItem, Title } from '@patternfly/react-core';
 import * as React from 'react';
 import './ApiConnectorDetailsForm.css';
 
@@ -44,15 +44,15 @@ export class ApiConnectorDetailsForm extends React.Component<
 > {
   public render() {
     return (
-      <Card className="api-connector-details-form__card">
+      <Stack className="api-connector-details-form__card" gutter={'md'}>
         {this.props.apiConnectorName && (
-          <CardHeader>
+          <StackItem>
             <Title size="lg" className="api-connector-details-form__title">
               {this.props.apiConnectorName}
             </Title>
-          </CardHeader>
+          </StackItem>
         )}
-        <CardBody className="api-connector-details-form__body">
+        <StackItem className="api-connector-details-form__body">
           <Form isHorizontal={true} onSubmit={this.props.handleSubmit}>
             <fieldset disabled={!this.props.isEditing}>
               <div className="form-group api-connector-details-form__iconContainer">
@@ -81,9 +81,9 @@ export class ApiConnectorDetailsForm extends React.Component<
             </fieldset>
             {this.props.fields}
           </Form>
-        </CardBody>
-        <CardFooter>{this.props.footer}</CardFooter>
-      </Card>
+        </StackItem>
+        <StackItem>{this.props.footer}</StackItem>
+      </Stack>
     );
   }
 }

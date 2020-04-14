@@ -1,7 +1,7 @@
 import {
-  Card,
-  CardBody,
   Label,
+  Stack,
+  StackItem,
   Text,
   TextContent,
   TextList,
@@ -16,7 +16,7 @@ import {
   global_warning_color_100,
 } from '@patternfly/react-tokens';
 import * as React from 'react';
-import { Container } from '../Layout';
+//import { Container } from '../Layout';
 
 import './OpenApiReviewActions.css';
 
@@ -43,8 +43,8 @@ export class OpenApiReviewActions extends React.Component<
 > {
   public render() {
     return (
-      <Card className={'open-api-review-actions'}>
-        <CardBody>
+      <Stack className={'open-api-review-actions'}>
+        <StackItem>
           {this.props.i18nValidationFallbackMessage ? (
             <h5 className={'review-actions__validationFallbackMessage'}>
               {this.props.i18nValidationFallbackMessage}
@@ -59,7 +59,7 @@ export class OpenApiReviewActions extends React.Component<
               >
                 {this.props.i18nApiDefinitionHeading}
               </Title>
-              <Container className={'review-actions__name-description'}>
+              <div className={'review-actions__name-description'}>
                 <TextList component={TextListVariants.dl}>
                   <TextListItem component={TextListItemVariants.dt}>
                     {this.props.i18nNameLabel}
@@ -74,7 +74,7 @@ export class OpenApiReviewActions extends React.Component<
                     {this.props.apiProviderDescription}
                   </TextListItem>
                 </TextList>
-              </Container>
+              </div>
               <Title
                 headingLevel={'h5'}
                 size={'md'}
@@ -82,14 +82,14 @@ export class OpenApiReviewActions extends React.Component<
               >
                 {this.props.i18nImportedHeading}
               </Title>
-              <Container>
+              <div>
                 <Text
                   component={TextVariants.p}
                   dangerouslySetInnerHTML={{
                     __html: this.props.i18nOperationsHtmlMessage,
                   }}
                 />
-              </Container>
+              </div>
 
               {/* tagged messages */}
               {this.props.i18nOperationTagHtmlMessages && (
@@ -122,7 +122,7 @@ export class OpenApiReviewActions extends React.Component<
                   </Label>
                 </Title>
               )}
-              <Container className={'review-actions__errors'}>
+              <div className={'review-actions__errors'}>
                 {this.props.errorMessages
                   ? this.props.errorMessages.map(
                       (errorMsg: string, index: number) => (
@@ -132,7 +132,7 @@ export class OpenApiReviewActions extends React.Component<
                       )
                     )
                   : null}
-              </Container>
+              </div>
 
               {/* warning messages */}
               {this.props.i18nWarningsHeading && this.props.warningMessages && (
@@ -151,7 +151,7 @@ export class OpenApiReviewActions extends React.Component<
                   </Label>
                 </Title>
               )}
-              <Container className={'review-actions__warnings'}>
+              <div className={'review-actions__warnings'}>
                 {this.props.warningMessages
                   ? this.props.warningMessages.map(
                       (warningMsg: string, index: number) => (
@@ -161,7 +161,7 @@ export class OpenApiReviewActions extends React.Component<
                       )
                     )
                   : null}
-              </Container>
+              </div>
             </TextContent>
           )}
           {this.props.actions && (
@@ -170,8 +170,8 @@ export class OpenApiReviewActions extends React.Component<
               {this.props.actions}
             </>
           )}
-        </CardBody>
-      </Card>
+        </StackItem>
+      </Stack>
     );
   }
 }
