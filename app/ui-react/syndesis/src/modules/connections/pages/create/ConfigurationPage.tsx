@@ -4,6 +4,7 @@ import { IConnector } from '@syndesis/models';
 import {
   ConnectionCreatorBreadcrumb,
   ConnectionCreatorBreadSteps,
+  ConnectionCreatorFooter,
   ConnectionCreatorLayout,
   ConnectionCreatorToggleList,
   ConnectionSetupOAuthCard,
@@ -204,6 +205,20 @@ export const ConfigurationPage: React.FunctionComponent = () => {
                       'connections:create:configure:title'
                     )}
                     i18nNameConnection={t('connections:create:review:title')}
+                  />
+                }
+                footer={
+                  <ConnectionCreatorFooter
+                    cancelHref={resolvers.connections()}
+                    backHref={resolvers.create.selectConnector()}
+                    onNext={submitForm}
+                    isNextDisabled={isSubmitting || !isValid}
+                    isNextLoading={isSubmitting}
+                    isLastStep={false}
+                    i18nBack={t('shared:Back')}
+                    i18nCancel={t('shared:Cancel')}
+                    i18nSave={t('shared:Save')}
+                    i18nNext={t('shared:Next')}
                   />
                 }
                 content={
