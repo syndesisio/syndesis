@@ -2597,7 +2597,7 @@
       <dependency>
         <groupId>io.apicurio</groupId>
         <artifactId>apicurio-data-models</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.2</version>
       </dependency>
 
       <dependency>
