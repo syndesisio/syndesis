@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -40,6 +39,7 @@ import io.syndesis.test.container.dockerfile.SyndesisDockerfileBuilder;
 import io.syndesis.test.container.s2i.S2iProjectBuilder;
 import io.syndesis.test.integration.customizer.IntegrationCustomizer;
 import io.syndesis.test.integration.customizer.JsonPathIntegrationCustomizer;
+import io.syndesis.test.integration.project.Project;
 import io.syndesis.test.integration.project.ProjectBuilder;
 import io.syndesis.test.integration.source.CustomizedIntegrationSource;
 import io.syndesis.test.integration.source.IntegrationExportSource;
@@ -84,7 +84,10 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
                                                 Map<String, String> envProperties, String runCommand, boolean deleteOnExit) {
         super(new SyndesisDockerfileBuilder(integrationName, deleteOnExit)
                 .from("syndesis/syndesis-s2i", imageTag)
-                .project("projectDir", SyndesisTestEnvironment.getProjectMountPath(), projectDir.toAbsolutePath())
+                .projectSource("projectDir")
+                .projectDestination(SyndesisTestEnvironment.getProjectMountPath())
+                .projectPath(projectDir.toAbsolutePath())
+                .extensionsSource("extensions")
                 .env(envProperties)
                 .cmd(runCommand)
                 .build());
@@ -102,11 +105,15 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
      * @param runCommand
      * @param deleteOnExit
      */
-    protected SyndesisIntegrationRuntimeContainer(String imageTag, String integrationName, File projectJar,
+    protected SyndesisIntegrationRuntimeContainer(String imageTag, String integrationName, Path projectDir, File projectJar,
                                                 Map<String, String> envProperties, String runCommand, boolean deleteOnExit) {
         super(new SyndesisDockerfileBuilder(integrationName, deleteOnExit)
                 .from("syndesis/syndesis-s2i", imageTag)
-                .project("integration-runtime.jar", "/deployments/integration-runtime.jar", projectJar.toPath().toAbsolutePath())
+                .projectSource("integration-runtime.jar")
+                .projectDestination("/deployments/integration-runtime.jar")
+                .projectPath(projectDir.toAbsolutePath())
+                .projectFatJar(projectJar.toPath())
+                .extensionsSource("extensions")
                 .env(envProperties)
                 .cmd(runCommand)
                 .build());
@@ -133,18 +140,9 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
 
         public SyndesisIntegrationRuntimeContainer build() {
             CustomizedIntegrationSource source = new CustomizedIntegrationSource(integrationSource, customizers);
-            Path projectPath = getProjectBuilder().build(source);
+            Project project = getProjectBuilder().build(source);
 
-            SyndesisIntegrationRuntimeContainer container;
-            if (Files.isDirectory(projectPath)) {
-                //Run directly from project source directory
-                container = new SyndesisIntegrationRuntimeContainer(imageTag, name, projectPath, getEnvProperties(),
-                        getMavenCommandLine(), deleteOnExit);
-            } else {
-                //Run project fat jar
-                container = new SyndesisIntegrationRuntimeContainer(imageTag, name, projectPath.toFile(), getEnvProperties(),
-                        getS2iRunCommandLine(), deleteOnExit);
-            }
+            SyndesisIntegrationRuntimeContainer container = getContainer(project);
 
             if (enableLogging) {
                 container.withLogConsumer(new Slf4jLogConsumer(LoggerFactory.getLogger("INTEGRATION_RUNTIME_CONTAINER")));
@@ -159,6 +157,18 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
             container.waitingFor(SyndesisTestEnvironment.getIntegrationRuntime().getReadinessProbe().withStartupTimeout(startupTimeout));
 
             return container;
+        }
+
+        private SyndesisIntegrationRuntimeContainer getContainer(Project project) {
+            if (project.isProjectDir()) {
+                //Run directly from project source directory
+                return new SyndesisIntegrationRuntimeContainer(imageTag, name, project.getProjectPath(), getEnvProperties(),
+                    getMavenCommandLine(), deleteOnExit);
+            } else {
+                //Run project fat jar
+                return new SyndesisIntegrationRuntimeContainer(imageTag, name, project.getProjectPath(), project.getFatJarPath().get().toFile(), getEnvProperties(),
+                    getS2iRunCommandLine(), deleteOnExit);
+            }
         }
 
         public Builder name(String name) {
@@ -228,13 +238,13 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
 
         public Builder fromFatJar(Path pathToJar) {
             this.integrationSource = () -> null;
-            this.projectBuilder = (integration) -> pathToJar;
+            this.projectBuilder = (integration) -> new Project.Builder().fatJarPath(pathToJar).build();
             return this;
         }
 
         public Builder fromProjectDir(Path pathToProject) {
             this.integrationSource = () -> null;
-            this.projectBuilder = (integration) -> pathToProject;
+            this.projectBuilder = (integration) -> new Project.Builder().projectPath(pathToProject).build();
             return this;
         }
 
@@ -302,10 +312,10 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
             Map<String, String> envProps = new HashMap<>();
 
             envProps.put("SYNDESIS_VERSION", SyndesisTestEnvironment.getSyndesisVersion());
-
             if (enableDebug) {
                 envProps.put("JAVA_OPTIONS", getDebugAgentOption());
             }
+            envProps.put("LOADER_HOME", "/deployments/data/syndesis/loader");
 
             return envProps;
         }
