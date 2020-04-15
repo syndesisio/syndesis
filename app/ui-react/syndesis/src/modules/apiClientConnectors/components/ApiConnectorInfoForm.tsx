@@ -131,7 +131,7 @@ export const ApiConnectorInfoForm: React.FunctionComponent<
       onSave={onSave}
     >
       {({ fields, handleSubmit, isSubmitting, submitForm }) => (
-        <>
+        <div style={{ maxWidth: '600px' }}>
           <ApiConnectorDetailsForm
             apiConnectorIcon={icon}
             apiConnectorName={props.name}
@@ -146,7 +146,7 @@ export const ApiConnectorInfoForm: React.FunctionComponent<
               submitForm,
             })}
           />
-        </>
+        </div>
       )}
     </AutoForm>
   );

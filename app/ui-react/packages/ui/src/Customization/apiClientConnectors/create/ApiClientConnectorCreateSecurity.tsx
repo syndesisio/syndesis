@@ -104,7 +104,7 @@ export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClien
     setValid(isValid(selectedType, authUrl, newUrl));
   };
   return (
-    <Stack style={{ maxWidth: '600px', margin: ' auto' }} gutter="md">
+    <Stack style={{ maxWidth: '600px' }} gutter="md">
       <StackItem>
         <Title size="2xl">{i18nTitle}</Title>
       </StackItem>
