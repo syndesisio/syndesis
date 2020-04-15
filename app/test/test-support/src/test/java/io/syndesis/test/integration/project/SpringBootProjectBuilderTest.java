@@ -28,6 +28,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.test.SyndesisTestEnvironment;
+import io.syndesis.test.container.s2i.S2iProjectBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -83,14 +84,27 @@ public class SpringBootProjectBuilderTest {
             .build();
 
     @Test
-    public void shouldBuildProject() {
+    public void shouldBuildProjectDir() {
         SpringBootProjectBuilder projectBuilder = new SpringBootProjectBuilder("test-project", SyndesisTestEnvironment.getSyndesisVersion())
                                                         .withOutputDirectory(SyndesisTestEnvironment.getOutputDirectory());
+        Project project = projectBuilder.build(() -> integration);
+        Path projectDir = project.getProjectPath();
 
-        Path projectDir = projectBuilder.build(() -> integration);
+        Assert.assertFalse(project.getFatJarPath().isPresent());
         Assert.assertNotNull(projectDir.resolve("pom.xml"));
         Assert.assertNotNull(projectDir.resolve("src").resolve("main").resolve("resources").resolve("application.properties"));
         Assert.assertNotNull(projectDir.resolve("src").resolve("main").resolve("resources").resolve("syndesis").resolve("integration").resolve("integration.json"));
+    }
+
+    @Test
+    public void shouldBuildS2IProject() {
+        SpringBootProjectBuilder projectBuilder = new SpringBootProjectBuilder("test-project", SyndesisTestEnvironment.getSyndesisVersion())
+            .withOutputDirectory(SyndesisTestEnvironment.getOutputDirectory());
+        S2iProjectBuilder projectBuilderS2I = new S2iProjectBuilder(projectBuilder, SyndesisTestEnvironment.getSyndesisImageTag());
+
+        Project project = projectBuilderS2I.build(() -> integration);
+
+        Assert.assertTrue(project.getFatJarPath().isPresent());
     }
 
 }

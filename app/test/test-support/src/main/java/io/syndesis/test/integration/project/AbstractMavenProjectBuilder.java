@@ -16,6 +16,8 @@
 
 package io.syndesis.test.integration.project;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -40,6 +42,7 @@ import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.integration.source.IntegrationSource;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +68,7 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
     }
 
     @Override
-    public Path build(IntegrationSource source) {
+    public Project build(IntegrationSource source) {
         try {
             Path projectDir = Files.createTempDirectory(outputDir, name);
 
@@ -100,7 +103,7 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
             // auto add secrets and other integration test settings to application properties
             Files.write(projectDir.resolve("src").resolve("main").resolve("resources").resolve("application.properties"),
                     getApplicationProperties(source).getBytes(Charset.forName("utf-8")), StandardOpenOption.APPEND);
-            return projectDir;
+            return new Project.Builder().projectPath(projectDir).build();
         } catch (IOException e) {
             throw new IllegalStateException("Failed to create integration project", e);
         }
@@ -171,7 +174,7 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
 
         @Override
         public Optional<Extension> loadExtension(String id) {
-            return Optional.empty();
+            return Optional.of(new Extension.Builder().id(id).build());
         }
 
         @Override
@@ -181,7 +184,14 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
 
         @Override
         public Optional<InputStream> loadExtensionBLOB(String id) {
-            return Optional.empty();
+            InputStream is = null;
+            LOG.info("Uploading extension BLOB from file {}", id);
+            try {
+                is = new ByteArrayInputStream(IOUtils.toByteArray(new FileInputStream(id)));
+            } catch (Exception e) {
+                LOG.error("Error while uploading extension BLOB", e);
+            }
+            return Optional.ofNullable(is);
         }
 
         @Override
