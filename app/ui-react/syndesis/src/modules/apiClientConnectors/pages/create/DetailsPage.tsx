@@ -4,10 +4,11 @@ import { APISummary } from '@syndesis/models';
 import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
+  ApiConnectorCreatorFooter,
   ApiConnectorCreatorLayout,
   ApiConnectorCreatorToggleList,
-  ButtonLink,
-  Loader
+  //ButtonLink,
+  //Loader
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -85,17 +86,17 @@ export const DetailsPage: React.FunctionComponent = () => {
               i18nConnectors={t('apiClientConnectors:apiConnectorsPageTitle')}
               i18nCreateConnection={t('apiClientConnectors:CreateApiConnector')}
             />
-            <ApiConnectorCreatorLayout
-              content={
-                <ApiConnectorInfoForm
-                  name={state.specification.name}
-                  description={state.specification.description}
-                  isEditing={true}
-                  handleSubmit={handleSubmit}
-                >
-                  {({ submitForm, isSubmitting, isUploadingImage }) => (
+            <ApiConnectorInfoForm
+              name={state.specification.name}
+              description={state.specification.description}
+              isEditing={true}
+              handleSubmit={handleSubmit}
+            >
+              {({ submitForm, isSubmitting, isUploadingImage }) => (
+                <ApiConnectorCreatorLayout
+                  content={
                     <>
-                      <ButtonLink
+                      {/*<ButtonLink
                         data-testid={
                           'api-connector-details-form-cancel-button'
                         }
@@ -115,30 +116,40 @@ export const DetailsPage: React.FunctionComponent = () => {
                           <Loader size={'sm'} inline={true} />
                         )}
                         {t('shared:Save')}
-                      </ButtonLink>
+                      </ButtonLink>*/}
                     </>
-                  )}
-                </ApiConnectorInfoForm>
-              }
-              navigation={
-                <ApiConnectorCreatorBreadSteps
-                  step={4}
-                  i18nDetails={t('apiClientConnectors:create:details:title')}
-                  i18nReview={t('apiClientConnectors:create:review:title')}
-                  i18nSecurity={t('apiClientConnectors:create:security:title')}
-                  i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                  }
+                  footer={
+                    <ApiConnectorCreatorFooter
+                      backHref={resolvers.create.security(state)}
+                      onNext={submitForm}
+                      i18nBack={t('shared:Back')}
+                      i18nNext={t('shared:Save')}
+                      isNextLoading={isSubmitting || isUploadingImage}
+                      isNextDisabled={isSubmitting || isUploadingImage}
+                    />
+                  }
+                  navigation={
+                    <ApiConnectorCreatorBreadSteps
+                      step={4}
+                      i18nDetails={t('apiClientConnectors:create:details:title')}
+                      i18nReview={t('apiClientConnectors:create:review:title')}
+                      i18nSecurity={t('apiClientConnectors:create:security:title')}
+                      i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                    />
+                  }
+                  toggle={
+                    <ApiConnectorCreatorToggleList
+                      step={1}
+                      i18nDetails={t('apiClientConnectors:create:details:title')}
+                      i18nReview={t('apiClientConnectors:create:review:title')}
+                      i18nSecurity={t('apiClientConnectors:create:security:title')}
+                      i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                    />
+                  }
                 />
-              }
-              toggle={
-                <ApiConnectorCreatorToggleList
-                  step={1}
-                  i18nDetails={t('apiClientConnectors:create:details:title')}
-                  i18nReview={t('apiClientConnectors:create:review:title')}
-                  i18nSecurity={t('apiClientConnectors:create:security:title')}
-                  i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
-                />
-              }
-            />
+              )}
+            </ApiConnectorInfoForm>
           </>
         );
       }}
