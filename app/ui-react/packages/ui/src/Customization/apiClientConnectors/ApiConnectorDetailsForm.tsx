@@ -12,6 +12,13 @@ export interface IApiConnectorDetailsFormProps {
    * The name of the API client connector whose details are being shown.
    */
   apiConnectorName?: string;
+  fields: React.ReactNode;
+
+  /**
+   * The callback fired when submitting the form.
+   * @param e
+   */
+  handleSubmit: (e?: any) => void;
 
   /**
    * The localized text for the icon label.
@@ -24,19 +31,10 @@ export interface IApiConnectorDetailsFormProps {
   isEditing: boolean;
 
   /**
-   * The callback fired when submitting the form.
-   * @param e
-   */
-  handleSubmit: (e?: any) => void;
-
-  /**
    * The callback for when an icon file was selected from the file system.
    * @param event the event whose target contains the file being uploaded
    */
   onUploadImage: (event: any) => void;
-
-  fields: React.ReactNode;
-  footer: React.ReactNode;
 }
 
 export const ApiConnectorDetailsForm: React.FunctionComponent<
@@ -46,7 +44,6 @@ export const ApiConnectorDetailsForm: React.FunctionComponent<
     apiConnectorIcon,
     apiConnectorName,
     fields,
-    footer,
     handleSubmit,
     i18nIconLabel,
     isEditing,
@@ -91,7 +88,6 @@ export const ApiConnectorDetailsForm: React.FunctionComponent<
           {fields}
         </Form>
       </StackItem>
-      <StackItem>{footer}</StackItem>
     </Stack>
   );
 }

@@ -7,8 +7,7 @@ import {
   ApiConnectorCreatorFooter,
   ApiConnectorCreatorLayout,
   ApiConnectorCreatorToggleList,
-  //ButtonLink,
-  //Loader
+  ApiConnectorDetailsForm
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -92,37 +91,33 @@ export const DetailsPage: React.FunctionComponent = () => {
               isEditing={true}
               handleSubmit={handleSubmit}
             >
-              {({ submitForm, isSubmitting, isUploadingImage }) => (
+              {({
+                  fields,
+                  handleSubmit,
+                  icon,
+                  isSubmitting,
+                  isUploadingImage,
+                  name,
+                  onUploadImage
+              }) => (
                 <ApiConnectorCreatorLayout
                   content={
-                    <>
-                      {/*<ButtonLink
-                        data-testid={
-                          'api-connector-details-form-cancel-button'
-                        }
-                        className="api-connector-details-form__editButton"
-                        href={resolvers.create.security(state)}
-                      >
-                        {t('shared:Back')}
-                      </ButtonLink>
-                      <ButtonLink
-                        data-testid={'api-connector-details-form-save-button'}
-                        as={'primary'}
-                        className={'api-connector-details-form__editButton'}
-                        disabled={isSubmitting || isUploadingImage}
-                        onClick={submitForm}
-                      >
-                        {(isSubmitting || isUploadingImage) && (
-                          <Loader size={'sm'} inline={true} />
-                        )}
-                        {t('shared:Save')}
-                      </ButtonLink>*/}
-                    </>
+                    <div style={{ maxWidth: '600px' }}>
+                      <ApiConnectorDetailsForm
+                        apiConnectorIcon={icon}
+                        apiConnectorName={name}
+                        i18nIconLabel={t('ConnectorIcon')}
+                        handleSubmit={handleSubmit}
+                        onUploadImage={onUploadImage}
+                        isEditing={true}
+                        fields={fields}
+                      />
+                    </div>
                   }
                   footer={
                     <ApiConnectorCreatorFooter
                       backHref={resolvers.create.security(state)}
-                      onNext={submitForm}
+                      onNext={handleSubmit}
                       i18nBack={t('shared:Back')}
                       i18nNext={t('shared:Save')}
                       isNextLoading={isSubmitting || isUploadingImage}
