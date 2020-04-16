@@ -214,7 +214,6 @@
       <plugin>
         <groupId>io.swagger.core.v3</groupId>
         <artifactId>swagger-maven-plugin</artifactId>
-        <version>${swagger.version}</version>
         <configuration>
           <prettyPrint>true</prettyPrint>
           <outputFormat>JSONANDYAML</outputFormat>
@@ -717,19 +716,6 @@
     <dependency>
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-models</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.github.kongchen</groupId>
-      <artifactId>swagger-maven-plugin</artifactId>
-      <version>${swagger-maven-plugin.version}</version>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>*</groupId>
-          <artifactId>*</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
