@@ -84,6 +84,7 @@ export const IntegrationsListItem: React.FunctionComponent<IIntegrationsListItem
               <div
                 id={`integration-list-item-${id}-title`}
                 className={'integration-list-item__text-wrapper'}
+                data-testid={'integration-name'}
               >
                 {integrationName}
               </div>
