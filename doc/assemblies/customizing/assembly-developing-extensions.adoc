@@ -1,29 +1,14 @@
-:experimental:
-include::attributes.adoc[]
+// This assembly is included in the following assemblies:
+// as_customizing.adoc
 
-:prodname: Syndesis
-:prodversion: 7.5
-:prodnameinurl: fuse-ignite
-:productpkg: red_hat_fuse
-:version: 7.5
-:location: upstream
-:parent-context: extensions
-:context: extensions
-
-// This master.adoc file is only upstream. 
-// The doc/assemblies/customizing/as_developing-extensions.adoc 
-// file duplicates this content. 
-// As of September 2019, we do not publish user doc on the 
-// Syndesis community site. We expect to do this in the future. 
-// When we do, this file can be the toplevel file for a guide for
-// developing extensions. 
-
+:context: custom
 [id='developing-extensions_{context}']
 = Developing {prodname} extensions
+:context: extensions
 
 If {prodname} does not provide a feature that is needed to create an
 integration, then an expert developer 
-can code an extension that provides the needed behavior. The Syndesis 
+can code an extension that provides the needed behavior.  The Syndesis 
 extension repository, 
 link:https://github.com/syndesisio/syndesis-extensions[], 
 contains examples of extensions. 
@@ -39,7 +24,7 @@ that helps you develop a step extension or a connector extension. It is
 a matter of personal preference whether you choose to develop a step
 extension or a connector extension in Developer Studio or in some other
 IDE. For information about using the Developer Studio plugin, see 
-link:{LinkToolingUserGuide}#igniteextension[Developing extensions for {prodname} integrations].
+link:{LinkToolingUserGuide}#FuseOnlineExtension[Developing extensions for {prodname} integrations].
 
 In this document, the following topics outline the 
 procedure, describe the requirements, and provide additional examples for
@@ -57,26 +42,26 @@ developing extensions in an IDE that you choose.
 * xref:develop-library-extensions_{context}[]
 * xref:creating-jdbc-driver-library-extensions_{context}[]
 
-include::modules/customizing/proc-developing-extensions.adoc[leveloffset=+1]
+include::../../modules/customizing/proc-developing-extensions.adoc[leveloffset=+1]
 
-include::modules/customizing/con-description-kinds-extensions.adoc[leveloffset=+1]
+include::../../modules/customizing/con-description-kinds-extensions.adoc[leveloffset=+1]
 
-include::modules/customizing/con-overview-extension-content-structure.adoc[leveloffset=+1]
+include::../../modules/customizing/con-overview-extension-content-structure.adoc[leveloffset=+1]
 
-include::modules/customizing/con-about-extension-definitions.adoc[leveloffset=+1]
+include::../../modules/customizing/con-about-extension-definitions.adoc[leveloffset=+1]
 
-include::modules/customizing/ref-descriptions-of-user-interface-properties-in-extension-definitions.adoc[leveloffset=+1]
+include::../../modules/customizing/ref-descriptions-of-user-interface-properties-in-extension-definitions.adoc[leveloffset=+1]
 
-include::modules/customizing/proc-using-maven-to-generate-extension-definitions.adoc[leveloffset=+1]
+include::../../modules/customizing/proc-using-maven-to-generate-extension-definitions.adoc[leveloffset=+1]
 
-include::modules/customizing/ref-how-to-specify-data-shapes.adoc[leveloffset=+1]
+include::../../modules/customizing/ref-how-to-specify-data-shapes.adoc[leveloffset=+1]
 
-include::assemblies/customizing/assembly-develop-step-extensions.adoc[leveloffset=+1]
+include::assembly-develop-step-extensions.adoc[leveloffset=+1]
 
-include::modules/customizing/ref-develop-connector-extensions.adoc[leveloffset=+1]
+include::../../modules/customizing/ref-develop-connector-extensions.adoc[leveloffset=+1]
 
-include::modules/customizing/ref-develop-library-extensions.adoc[leveloffset=+1]
+include::../../modules/customizing/ref-develop-library-extensions.adoc[leveloffset=+1]
 
-include::modules/customizing/proc-creating-jdbc-driver-library-extensions.adoc[leveloffset=+1]
+include::../../modules/customizing/proc-creating-jdbc-driver-library-extensions.adoc[leveloffset=+1]
 
-:context: extensions
+:context: custom
