@@ -130,6 +130,7 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
         private boolean deleteOnExit = true;
         private boolean enableLogging = SyndesisTestEnvironment.isLoggingEnabled();
         private boolean enableDebug = SyndesisTestEnvironment.isDebugEnabled();
+        private boolean enableS2IBuild = SyndesisTestEnvironment.isS2iBuildEnabled();
 
         private Duration startupTimeout = Duration.ofSeconds(SyndesisTestEnvironment.getContainerStartupTimeout());
 
@@ -290,6 +291,16 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
             return this;
         }
 
+        public Builder disableDebug() {
+            this.enableDebug = false;
+            return this;
+        }
+
+        public Builder enableS2IBuild() {
+            this.enableS2IBuild = true;
+            return this;
+        }
+
         public Builder startupTimeout(Duration startupTimeout) {
             this.startupTimeout = startupTimeout;
             return this;
@@ -301,7 +312,7 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
             }
 
             ProjectBuilder builder = SyndesisTestEnvironment.getIntegrationRuntime().getProjectBuilder(name, syndesisVersion);
-            if (SyndesisTestEnvironment.isS2iBuildEnabled()) {
+            if (enableS2IBuild) {
                 return new S2iProjectBuilder(builder, imageTag);
             } else {
                 return builder;
