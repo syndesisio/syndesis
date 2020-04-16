@@ -39,9 +39,6 @@ public class IntegrationDependencies_IT extends SyndesisIntegrationTestSupport {
 
     @Test
     public void shouldVerifyDependecyClasspath() throws URISyntaxException {
-        // We need an S2I to load extensions in classpath
-        System.setProperty("syndesis.s2i.build.enabled", "true");
-        System.setProperty("syndesis.debug.enabled", "false");
 
         Dependency integrationLibraryExtension = Dependency.libraryTag(
             this.getClass().getResource("syndesis-library-test-driver-1.0.0.jar").getFile()
@@ -49,6 +46,9 @@ public class IntegrationDependencies_IT extends SyndesisIntegrationTestSupport {
 
         SyndesisIntegrationRuntimeContainer.Builder integrationContainerBuilder = new SyndesisIntegrationRuntimeContainer.Builder()
             .name("bean-to-log")
+            .disableDebug()
+            // We need an S2I to load extensions in classpath
+            .enableS2IBuild()
             .fromIntegration(
                 new Integration.Builder()
                     .id("test-integration")
