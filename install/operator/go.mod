@@ -19,7 +19,6 @@ require (
 	github.com/imdario/mergo v0.3.8
 	github.com/lib/pq v1.3.0
 	github.com/openshift/api v3.9.1-0.20190927182313-d4a64ec2cbd8+incompatible
-	github.com/operator-framework/operator-sdk v0.15.0
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/prometheus/client_golang v1.2.1
@@ -39,8 +38,12 @@ require (
 	k8s.io/gengo v0.0.0-20191010091904-7fa3014cb28f
 	k8s.io/kube-openapi v0.0.0-20191107075043-30be4d16710a
 	k8s.io/kubectl v0.0.0
-	sigs.k8s.io/controller-runtime v0.4.0
 	sigs.k8s.io/yaml v1.1.0
+)
+
+require (
+	github.com/operator-framework/operator-sdk v0.16.0
+	sigs.k8s.io/controller-runtime v0.4.0
 )
 
 // Pinned to kubernetes-1.16.2, this is a requirement for operator-sdk 0.14.0
@@ -69,14 +72,12 @@ replace (
 )
 
 // Required by operator-sdk 0.14.0
-replace (
-	github.com/docker/docker => github.com/moby/moby v0.7.3-0.20190826074503-38ab9da00309 // Required by Helm
-	k8s.io/helm => k8s.io/helm v2.16.1+incompatible
-)
+replace k8s.io/helm => k8s.io/helm v2.16.1+incompatible
 
 //	github.com/coreos/prometheus-operator => github.com/coreos/prometheus-operator v0.29.0
-replace github.com/prometheus/prometheus => github.com/prometheus/prometheus v0.0.0-20190424153033-d3245f150225
-
-replace git.apache.org/thrift.git => github.com/apache/thrift v0.0.0-20180902110319-2566ecd5d999
+replace (
+	github.com/docker/docker => github.com/moby/moby v0.7.3-0.20190826074503-38ab9da00309 // Required by Helm
+	github.com/openshift/api => github.com/openshift/api v0.0.0-20190924102528-32369d4db2ad // Required until https://github.com/operator-framework/operator-lifecycle-manager/pull/1241 is resolved
+)
 
 go 1.13

@@ -41,6 +41,10 @@ func TestInstallResourcesRender(t *testing.T) {
 			continue // skip these.. Not testing the grant resource rendering..
 		}
 
+		if strings.Compare(f.Name(), "deployment.yml.tmpl") == 0 {
+			continue // skip these.. Not testing the deployment..
+		}
+
 		o := Install{
 			Options: &internal.Options{
 				Namespace: "syndesis",

@@ -76,7 +76,7 @@
       sourceStrategy:
         from:
           kind: DockerImage
-          name: 'docker.io/centos/php-71-centos7'
+          name: {{ dockerImageFromComponent .Syndesis.Addons.Todo.Image .Syndesis.SHA }}
       type: Source
     triggers:
       - type: ConfigChange

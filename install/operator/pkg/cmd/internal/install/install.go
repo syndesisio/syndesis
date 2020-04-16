@@ -49,6 +49,7 @@ type Install struct {
 	customResource string
 	devSupport     bool
 	databaseImage  string
+	templateName   string
 
 	// processing state
 	ejectedResources []unstructured.Unstructured
@@ -113,6 +114,7 @@ func New(parent *internal.Options) *cobra.Command {
 		},
 	}
 	forge.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a coma separated list of addons that should be enabled")
+	forge.PersistentFlags().StringVarP(&o.templateName, "template-name", "", "", "the name of the template")
 	cmd.AddCommand(forge)
 
 	cmd.PersistentFlags().StringVarP(&o.eject, "eject", "e", "", "eject configuration that would be applied to the cluster in the specified format instead of installing the configuration. One of: json|yaml")
@@ -151,7 +153,7 @@ func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 	o.databaseImage = defaultDatabaseImage
 	config, err := configuration.GetProperties(configuration.TemplateConfig, o.Context, nil, &v1beta1.Syndesis{})
 	if err == nil {
-		o.databaseImage = config.Syndesis.Components.Database.Image
+		o.databaseImage = config.Syndesis.Components.Database.Image.Get(config.Syndesis.SHA)
 	}
 
 	return nil

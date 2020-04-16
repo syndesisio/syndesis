@@ -193,7 +193,7 @@ github.com/opencontainers/image-spec/specs-go/v1
 # github.com/opencontainers/runc v1.0.0-rc2.0.20190611121236-6cc515888830
 github.com/opencontainers/runc/libcontainer/system
 github.com/opencontainers/runc/libcontainer/user
-# github.com/openshift/api v3.9.1-0.20190927182313-d4a64ec2cbd8+incompatible
+# github.com/openshift/api v3.9.1-0.20190927182313-d4a64ec2cbd8+incompatible => github.com/openshift/api v0.0.0-20190924102528-32369d4db2ad
 github.com/openshift/api/apps/v1
 github.com/openshift/api/authorization/v1
 github.com/openshift/api/build/v1
@@ -204,7 +204,7 @@ github.com/openshift/api/oauth/v1
 github.com/openshift/api/pkg/serialization
 github.com/openshift/api/route/v1
 github.com/openshift/api/template/v1
-# github.com/operator-framework/operator-sdk v0.15.0
+# github.com/operator-framework/operator-sdk v0.16.0
 github.com/operator-framework/operator-sdk/pkg/k8sutil
 github.com/operator-framework/operator-sdk/pkg/kube-metrics
 github.com/operator-framework/operator-sdk/pkg/leader
