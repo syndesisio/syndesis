@@ -91,9 +91,6 @@ public class TimerToLog_IT extends SyndesisIntegrationTestSupport {
             integrationContainer.waitingFor(
                 Wait.forLogMessage(".*\"message\":\"Hello Syndesis!\".*\\s", 2));
             integrationContainer.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
         }
     }
     @Test
