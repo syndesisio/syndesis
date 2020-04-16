@@ -108,6 +108,7 @@ export class OpenApiReviewActions extends React.Component<
               {/* error messages */}
               {this.props.i18nErrorsHeading && this.props.errorMessages && (
                 <Title
+                  data-testid={'api-provider-error-heading'}
                   headingLevel={'h5'}
                   size={'md'}
                   className={'review-actions__heading'}
@@ -136,6 +137,7 @@ export class OpenApiReviewActions extends React.Component<
               {/* warning messages */}
               {this.props.i18nWarningsHeading && this.props.warningMessages && (
                 <Title
+                  data-testid={'api-provider-warning-heading'}
                   headingLevel={'h5'}
                   size={'md'}
                   className={'review-actions__heading'}
