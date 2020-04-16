@@ -25,13 +25,7 @@ export const ConnectionSchemaList: React.FunctionComponent<IConnectionSchemaList
   return (
     <>
       {props.loading ? (
-<<<<<<< HEAD
         <DataList aria-label={'connection schema list'}>{props.children}</DataList>
-=======
-        <ListView>
-          {props.children}
-        </ListView>
->>>>>>> 98cd96262d... Fix: showing error msg for API failed in connectionschemalist
       ) : props.hasListData ? (
         <Flex
           breakpointMods={[{ modifier: 'column', breakpoint: 'md' }]}
