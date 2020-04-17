@@ -265,7 +265,7 @@ public class ExtensionHandler extends BaseHandler implements Getter<Extension>, 
         @ApiImplicitParam(
             name = "query", value = "The search query to filter results on", paramType = "query", dataType = "string")
     })
-    public ListResult<Extension> list(@Context UriInfo uriInfo, @ApiParam(required = false) @QueryParam("extensionType") String extensionType) {
+    public ListResult<Extension> list(@Context UriInfo uriInfo, @ApiParam(required = false) @QueryParam("extensionType") Extension.Type extensionType) {
         // Defaulting to display only Installed extensions
         String query = uriInfo.getQueryParameters().getFirst("query");
         if (query == null) {
@@ -276,7 +276,7 @@ public class ExtensionHandler extends BaseHandler implements Getter<Extension>, 
             Extension.class,
             new ReflectiveFilterer<>(Extension.class, FilterOptionsParser.fromString(query)),
             new PredicateFilter<>(
-                extension -> extensionType == null || extension.getExtensionType().equals(Extension.Type.valueOf(extensionType))
+                extension -> extensionType == null || extension.getExtensionType().equals(extensionType)
             ),
             new ReflectiveSorter<>(Extension.class, new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
