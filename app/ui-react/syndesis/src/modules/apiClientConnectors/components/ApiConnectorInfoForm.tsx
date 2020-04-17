@@ -16,16 +16,12 @@ export interface IConnectorValues extends IFormValues {
 }
 
 export interface IApiConnectorInfoFormChildrenProps {
+  connectorName?: string;
   /**
    * the form (embedded in the right UI elements)
    */
   fields: JSX.Element;
 
-  /**
-   * the callback to handle submitting the form.
-   * @param e
-   */
-  handleSubmit: (e?: any) => void;
   icon?: string | undefined;
 
   /**
@@ -39,13 +35,22 @@ export interface IApiConnectorInfoFormChildrenProps {
    * Used to enable/disable the submit button.
    */
   isUploadingImage: boolean;
-  name?: string;
 
   /**
    * The callback for when an icon file was selected from the file system.
    * @param event the event whose target contains the file being uploaded
    */
   onUploadImage: (event: any) => void;
+  /**
+   * the callback to trigger to submit the form.
+   */
+  submitForm(): any;
+  /**
+   * The callback fired when submitting the form.
+   * @param e the changed properties
+   * @param actions used to set isSubmitting on the form
+   */
+  handleSubmit: (e?: any) => void;
 }
 
 export interface IApiConnectorInfoFormProps {
@@ -63,7 +68,6 @@ export interface IApiConnectorInfoFormProps {
    * `true` when the connection details are being edited.
    */
   isEditing: boolean;
-
 
   /**
    * the render prop that will receive the ready-to-be-rendered form and some
@@ -169,15 +173,18 @@ export const ApiConnectorInfoForm: React.FunctionComponent<
           fields,
           handleSubmit,
           isSubmitting,
+          submitForm
       }) => {
+        const connectorName = props.name;
         return props.children({
+          connectorName,
           fields,
           handleSubmit,
           icon,
           isUploadingImage,
           isSubmitting,
-          name,
-          onUploadImage
+          onUploadImage,
+          submitForm
         });
       }}
     </AutoForm>
