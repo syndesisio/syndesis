@@ -8,7 +8,6 @@ import {
   TextInput,
   Title,
 } from '@patternfly/react-core';
-import * as H from '@syndesis/history';
 import * as React from 'react';
 import { toValidHtmlId } from '../../../helpers';
 import { ButtonLink } from '../../../Layout';
@@ -19,6 +18,23 @@ export interface IAuthenticationTypes {
 }
 
 export interface IApiClientConnectorCreateSecurityProps {
+  /**
+   * The list of available authentication types for this specification.
+   */
+  authenticationTypes?: IAuthenticationTypes[];
+  authUrl?: string;
+  extractAuthType(authType?: string): string;
+  handleChangeAuthUrl: (any: string) => void;
+  handleChangeSelectedType: (any: string) => void;
+  handleChangeTokenUrl: (any: string) => void;
+  i18nAccessTokenUrl: string;
+  i18nAuthorizationUrl: string;
+  i18nDescription: string;
+  /**
+   * Locale string for when no security is specified
+   */
+  i18nNoSecurity: string;
+  i18nTitle: string;
   /**
    * Access token, required for OAuth 2.0.
    */
@@ -32,77 +48,26 @@ export interface IApiClientConnectorCreateSecurityProps {
    * Authorization URL, required for OAuth 2.0.
    */
   initialAuthorizationUrl?: string;
-  /**
-   * The list of available authentication types for this specification.
-   */
-  authenticationTypes?: IAuthenticationTypes[];
-  backHref: H.LocationDescriptor;
-  i18nAccessTokenUrl: string;
-  i18nAuthorizationUrl: string;
-  i18nBtnBack: string;
-  i18nBtnNext: string;
-  /**
-   * Locale string for when no security is specified
-   */
-  i18nNoSecurity: string;
-  i18nTitle: string;
-  i18nDescription: string;
-
-  extractAuthType(authType?: string): string;
-
-  isValid(
-    authenticationType?: string,
-    authorizationUrl?: string,
-    tokenUrl?: string
-  ): boolean;
-
-  /**
-   * The action fired when the user presses the Next button
-   */
-  onNext(
-    authenticationType?: string,
-    authorizationUrl?: string,
-    tokenUrl?: string
-  ): void;
+  selectedType?: string;
+  tokenUrl?: string;
 }
 
-export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClientConnectorCreateSecurityProps> = ({
-  backHref,
-  extractAuthType,
-  initialAccessTokenUrl,
-  initialAuthorizationUrl,
-  initialAuthenticationType,
-  authenticationTypes,
-  i18nTitle,
-  i18nAccessTokenUrl,
-  i18nAuthorizationUrl,
-  i18nBtnBack,
-  i18nBtnNext,
-  i18nDescription,
-  i18nNoSecurity,
-  onNext,
-  isValid,
-}) => {
-  const [tokenUrl, setTokenUrl] = React.useState(initialAccessTokenUrl);
-  const [authUrl, setAuthUrl] = React.useState(initialAuthorizationUrl);
-  const [selectedType, setSelectedType] = React.useState(
-    initialAuthenticationType
-  );
-  const [valid, setValid] = React.useState(
-    isValid(selectedType, authUrl, tokenUrl)
-  );
-  const handleChangeSelectedType = (newType: string) => {
-    setSelectedType(newType);
-    setValid(isValid(newType, authUrl, tokenUrl));
-  };
-  const handleChangeAuthUrl = (newUrl: string) => {
-    setAuthUrl(newUrl);
-    setValid(isValid(selectedType, newUrl, tokenUrl));
-  };
-  const handleChangeTokenUrl = (newUrl: string) => {
-    setTokenUrl(newUrl);
-    setValid(isValid(selectedType, authUrl, newUrl));
-  };
+export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClientConnectorCreateSecurityProps> = (
+  {
+    authenticationTypes,
+    authUrl,
+    extractAuthType,
+    handleChangeAuthUrl,
+    handleChangeSelectedType,
+    handleChangeTokenUrl,
+    i18nTitle,
+    i18nAccessTokenUrl,
+    i18nAuthorizationUrl,
+    i18nDescription,
+    i18nNoSecurity,
+    selectedType,
+    tokenUrl
+  }) => {
   return (
     <Stack style={{ maxWidth: '600px' }} gutter="md">
       <StackItem>
@@ -110,7 +75,7 @@ export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClien
       </StackItem>
       <StackItem>
         <Form>
-          <Alert type={'info'} title={i18nDescription} isInline={true} />
+          <Alert type={'info'} title={i18nDescription} isInline={true}/>
           <FormGroup fieldId={'authenticationType'}>
             {authenticationTypes!.map((authType: IAuthenticationTypes, idx) => (
               <Radio
@@ -151,19 +116,6 @@ export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClien
             </>
           )}
         </Form>
-      </StackItem>
-      <StackItem>
-        <div>
-          <ButtonLink href={backHref}>{i18nBtnBack}</ButtonLink>
-          &nbsp;
-          <ButtonLink
-            onClick={() => onNext(selectedType, authUrl, tokenUrl)}
-            as={'primary'}
-            disabled={!valid}
-          >
-            {i18nBtnNext}
-          </ButtonLink>
-        </div>
       </StackItem>
     </Stack>
   );
