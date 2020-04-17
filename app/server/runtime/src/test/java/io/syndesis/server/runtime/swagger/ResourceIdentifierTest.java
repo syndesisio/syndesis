@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.common.model;
+package io.syndesis.server.runtime.swagger;
 
 import java.util.Map;
 
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.core.converter.ResolvedSchema;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.util.json.JsonUtils;
 
 import org.junit.Test;
