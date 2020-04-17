@@ -43,8 +43,12 @@
 }
 
 .view-create-layout__grid {
-  height: 100%;
-  min-height: 350px;
+  flex-grow: 8;
+  border-bottom: 2px solid #e1e1e1;
+}
+
+.view-create-layout__grid_withDataPreview {
+  max-height: 500px;
 }
 
 .view-create-layout__header {
@@ -53,16 +57,28 @@
 .view-create-layout_connection {
   border-right: 2px solid #e1e1e1;
   padding-top: 10px;
-  overflow-y: auto;
 }
 
-.view-create-layout_previewSection {
+.view-create-layout_previewSection{
+  padding: 10px 25px;
+}
+
+.view-create-layout_previewSection table{
+  border: 1px solid #e1e1e1;
+}
+
+.view-create-layout_tableSelected {
   padding: 10px;
-  overflow-y: auto;
 }
 
-.hidePreview {
-  display: none;
+.view-create-layout_expandable button{
+ float: right;
+ margin-top: -40px;
+ outline: none;
+}
+
+.view-create-layout__previewData{
+  flex-grow: 1;
 }
 
 .view-create-layout__contentOuter .toolbar-pf {

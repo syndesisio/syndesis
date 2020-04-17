@@ -1,10 +1,11 @@
 import { useVirtualizationConnectionStatuses } from '@syndesis/api';
 import { Virtualization } from '@syndesis/models';
-import { ViewsImportLayout } from '@syndesis/ui';
+import { ViewsImportLayout, ViewWizardHeader } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import resolvers from '../../../resolvers';
-import { DvConnectionsWithToolbar, ViewsImportSteps } from '../../shared';
+import { DvConnectionsWithToolbar } from '../../shared';
 
 /**
  * @param virtualizationId - the ID of the virtualization for the wizard
@@ -33,6 +34,8 @@ export const SelectConnectionPage: React.FunctionComponent<
     ISelectConnectionRouteState
   >();
 
+  const { t } = useTranslation(['data', 'shared']);
+
   const connectionId = props.selectedConnection;
   const virtualization = state.virtualization;
   const {
@@ -43,7 +46,27 @@ export const SelectConnectionPage: React.FunctionComponent<
 
   return (
     <ViewsImportLayout
-      header={<ViewsImportSteps step={1} />}
+      header={
+        <ViewWizardHeader
+          step={1}
+          cancelHref={resolvers.data.virtualizations.views.root({
+            virtualization,
+          })}
+          nextHref={resolvers.data.virtualizations.views.importSource.selectViews({
+            connectionId,
+            virtualization,
+          })}
+          isNextDisabled={props.selectedConnection.length < 1}
+          isNextLoading={false}
+          isLastStep={false}
+          i18nStep1Text={t('data:importDataSourceWizardStep1')}
+          i18nStep2Text={t('data:importDataSourceWizardStep2')}
+          i18nBack={t('shared:Back')}
+          i18nDone={t('shared:Done')}
+          i18nNext={t('shared:Next')}
+          i18nCancel={t('shared:Cancel')}
+        />
+      }
       content={
         <DvConnectionsWithToolbar
           error={connectionStatusesError !== false}
@@ -58,16 +81,6 @@ export const SelectConnectionPage: React.FunctionComponent<
           selectedConnection={props.selectedConnection}
         />
       }
-      cancelHref={resolvers.data.virtualizations.views.root({
-        virtualization,
-      })}
-      nextHref={resolvers.data.virtualizations.views.importSource.selectViews({
-        connectionId,
-        virtualization,
-      })}
-      isNextDisabled={props.selectedConnection.length < 1}
-      isNextLoading={false}
-      isLastStep={false}
     />
   );
 };

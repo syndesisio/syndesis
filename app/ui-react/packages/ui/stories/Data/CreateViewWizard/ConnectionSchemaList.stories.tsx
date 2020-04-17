@@ -11,7 +11,7 @@ import {
   SchemaNodeListItem,
 } from '../../../src';
 
-const stories = storiesOf('Data/Views/ConnectionSchemaList', module);
+const stories = storiesOf('Data/CreateViewWizard/ConnectionSchemaList', module);
 
 const connectionName1 = 'Connection_1';
 const connectionDescription1 = 'Connection 1 description';
@@ -69,10 +69,18 @@ const connectionItems = [
     connectionDescription={connectionDescription1}
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
-    dvStatusTooltip={'The connection is active'}
-    i18nRefreshInProgress={text('i18nRefreshInProgress', 'Refresh in progress...')}
+    dvStatusMessage={'The connection is active'}
+    i18nLastUpdatedMessage={text('i18nLastUpdatedMessage', 'Last updated: xx.yy.zz')}
+    i18nRefresh={text('i18nRefresh', 'Refresh')}
+    i18nRefreshInProgress={text(
+      'i18nRefreshInProgress',
+      'Refresh in progress...'
+    )}
+    i18nStatusErrorPopoverTitle={'Connection Problem'}
+    i18nStatusErrorPopoverLink={'Show connection problem'}
     icon={<div />}
     loading={false}
+    refreshConnectionSchema={action('refreshConnectionSchema')}
   />,
   <ConnectionSchemaListItem
     key="connectionListItem2"
@@ -81,10 +89,18 @@ const connectionItems = [
     children={conn2NodeItems}
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
-    dvStatusTooltip={'The connection is active'}
-    i18nRefreshInProgress={text('i18nRefreshInProgress', 'Refresh in progress...')}
+    dvStatusMessage={'The connection is active'}
+    i18nLastUpdatedMessage={text('i18nLastUpdatedMessage', 'Last updated: xx.yy.zz')}
+    i18nRefresh={text('i18nRefresh', 'Refresh')}
+    i18nRefreshInProgress={text(
+      'i18nRefreshInProgress',
+      'Refresh in progress...'
+    )}
+    i18nStatusErrorPopoverTitle={'Connection Problem'}
+    i18nStatusErrorPopoverLink={'Show connection problem'}
     icon={<div />}
     loading={false}
+    refreshConnectionSchema={action('refreshConnectionSchema')}
   />,
   <ConnectionSchemaListItem
     key="connectionListItem3"
@@ -93,10 +109,18 @@ const connectionItems = [
     children={conn3NodeItems}
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
-    dvStatusTooltip={'The connection is active'}
-    i18nRefreshInProgress={text('i18nRefreshInProgress', 'Refresh in progress...')}
+    dvStatusMessage={'The connection is active'}
+    i18nLastUpdatedMessage={text('i18nLastUpdatedMessage', 'Last updated: xx.yy.zz')}
+    i18nRefresh={text('i18nRefresh', 'Refresh')}
+    i18nRefreshInProgress={text(
+      'i18nRefreshInProgress',
+      'Refresh in progress...'
+    )}
+    i18nStatusErrorPopoverTitle={'Connection Problem'}
+    i18nStatusErrorPopoverLink={'Show connection problem'}
     icon={<div />}
     loading={false}
+    refreshConnectionSchema={action('refreshConnectionSchema')}
   />,
 ];
 
@@ -118,7 +142,7 @@ stories
         children={[]}
         hasListData={false}
         loading={false}
-        linkToConnectionCreate={action('route to create connection')}
+        linkToConnectionCreate={'/connections/create'}
       />
     </Router>
   ))
@@ -135,7 +159,7 @@ stories
         children={connectionItems}
         hasListData={true}
         loading={false}
-        linkToConnectionCreate={action('route to create connection')}
+        linkToConnectionCreate={'/connections/create'}
       />
     </Router>
   ));

@@ -16,6 +16,7 @@
 package io.syndesis.dv.server.endpoint;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -54,10 +55,12 @@ public final class RestSyndesisSourceStatus implements V1Constants {
     }
 
     private String sourceName;
+    private String teiidName;
     private List< String > errors;
     private EntityState schemaState = EntityState.MISSING;
     private String id;
     private boolean loading;
+    private Date lastLoad;
 
     /**
      * Constructor for use in deserialization.
@@ -88,6 +91,7 @@ public final class RestSyndesisSourceStatus implements V1Constants {
         final RestSyndesisSourceStatus that = ( RestSyndesisSourceStatus )obj;
 
         return Objects.equals( this.sourceName, that.sourceName )
+               && Objects.equals( this.teiidName, that.teiidName )
                && Objects.equals( this.errors, that.errors )
                && Objects.equals( this.id, that.id )
                && Objects.equals(  this.schemaState, that.schemaState )
@@ -99,6 +103,13 @@ public final class RestSyndesisSourceStatus implements V1Constants {
      */
     public String getSourceName() {
         return this.sourceName;
+    }
+
+    /**
+     * @return the teiid name (can be empty)
+     */
+    public String getTeiidName() {
+        return this.teiidName;
     }
 
     /**
@@ -130,6 +141,7 @@ public final class RestSyndesisSourceStatus implements V1Constants {
     @Override
     public int hashCode() {
         return Objects.hash( this.sourceName,
+                             this.teiidName,
                              this.errors,
                              this.id,
                              this.schemaState,
@@ -141,6 +153,13 @@ public final class RestSyndesisSourceStatus implements V1Constants {
      */
     public void setSourceName( final String sourceName ) {
         this.sourceName = sourceName;
+    }
+
+    /**
+     * @param teiidName the teiid name (can be empty)
+     */
+    public void setTeiidName( final String teiidName ) {
+        this.teiidName = teiidName;
     }
 
     /**
@@ -167,6 +186,14 @@ public final class RestSyndesisSourceStatus implements V1Constants {
 
     public boolean isLoading() {
         return loading;
+    }
+
+    public void setLastLoad(Date lastLoad) {
+        this.lastLoad = lastLoad;
+    }
+
+    public Date getLastLoad() {
+        return lastLoad;
     }
 
 }

@@ -115,15 +115,17 @@
 
     <!-- Common dependencies -->
     <version.springfox>2.9.2</version.springfox>
+    <shrinkwrap.version>3.1.4</shrinkwrap.version>
 
     <version.com.fasterxml.jackson.databind>2.9.10.1</version.com.fasterxml.jackson.databind>
+    <version.com.fasterxml.jackson>2.9.10</version.com.fasterxml.jackson>
     <version.io.fabric8.kubernetes-api>3.0.12</version.io.fabric8.kubernetes-api>
 
     <!-- DO NOT CHANGE VERSION PROPETY NAMES, THESE ARE USED IN CODE At s2i -->
     <!-- this is simply a version no dependencies involved right now -->
     <version.springboot.teiid>1.3.0</version.springboot.teiid>
     <version.mysql>8.0.17</version.mysql>
-    <version.postgresql>42.1.4</version.postgresql>
+    <version.postgresql>42.2.9</version.postgresql>
     <!-- DO NOT CHANGE VERSION PROPETY NAMES, THESE ARE USED IN CODE -->
   </properties>
 
@@ -180,6 +182,12 @@
         </includes>
       </resource>
     </resources>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>true</filtering>
+      </testResource>
+    </testResources>
 
     <pluginManagement>
       <plugins>
@@ -199,6 +207,15 @@
     </pluginManagement>
 
     <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <delimiters>
+            <delimiter>@</delimiter>
+          </delimiters>
+          <escapeString>\</escapeString>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -225,6 +242,26 @@
   <!-- Common dependencies -->
   <dependencyManagement>
     <dependencies>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <version>${spring-boot.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
 
       <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -338,12 +375,12 @@
       <dependency>
         <groupId>com.fasterxml.jackson.dataformat</groupId>
         <artifactId>jackson-dataformat-yaml</artifactId>
-        <version>${jackson.version}</version>
+        <version>${version.com.fasterxml.jackson}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
-        <version>${jackson.version}</version>
+        <version>${version.com.fasterxml.jackson}</version>
       </dependency>
       <dependency>
         <groupId>mysql</groupId>
@@ -400,6 +437,20 @@
     <dependency>
         <groupId>org.teiid</groupId>
         <artifactId>teiid-runtime</artifactId>
+        <exclusions>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+          </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
       <groupId>org.teiid.connectors</groupId>
@@ -440,8 +491,8 @@
       <artifactId>jackson-dataformat-yaml</artifactId>
     </dependency>
     <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
     </dependency>
     <dependency>
         <groupId>org.apache.commons</groupId>
@@ -519,6 +570,12 @@
     <dependency>
       <groupId>org.teiid</groupId>
       <artifactId>spring-data-salesforce</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.teiid</groupId>

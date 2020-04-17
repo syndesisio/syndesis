@@ -1,12 +1,12 @@
-.create_view_header__header-space{
+.view_wizard_header__header-space{
     background-color: #fff;
     padding: 20px !important;
 }
 
-.create_view_header__Notselected{
+.view_wizard_header__Notselected{
     color: #c6c6c6;
 }
 
-.create_view_header__Wizard-step{
+.view_wizard_header__Wizard-step{
     margin: 0 20px;
 }

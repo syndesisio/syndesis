@@ -59,6 +59,8 @@ export class WithLoader extends React.PureComponent<
     minWait: 500,
   };
 
+  public isCompMounted = false;
+
   protected waitTimeout?: number;
 
   constructor(props: IWithLoaderProps) {
@@ -75,9 +77,14 @@ export class WithLoader extends React.PureComponent<
   }
 
   public componentDidUpdate(prevProps: IWithLoaderProps) {
+    this.isCompMounted = true;
     if (!this.props.loading && !this.waitTimeout) {
       this.setTimeout();
     }
+  }
+
+  public componentWillUnmount() {
+    this.isCompMounted = false;
   }
 
   public render() {
@@ -93,9 +100,11 @@ export class WithLoader extends React.PureComponent<
   protected setTimeout() {
     this.clearTimeout();
     this.waitTimeout = window.setTimeout(() => {
-      this.setState({
-        loaded: true,
-      });
+      if (this.isCompMounted) {
+        this.setState({
+          loaded: true,
+        });
+      }
     }, this.props.minWait!);
   }
 

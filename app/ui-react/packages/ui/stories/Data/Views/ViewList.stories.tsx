@@ -163,8 +163,8 @@ stories
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}
-          linkCreateViewHRef={action('/data/create')}
-          linkImportViewsHRef={action('/data/import')}
+          linkCreateViewHRef={'/data/create'}
+          linkImportViewsHRef={'/data/import'}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}
@@ -217,8 +217,8 @@ stories
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}
-          linkCreateViewHRef={action('/data/create')}
-          linkImportViewsHRef={action('/data/import')}
+          linkCreateViewHRef={'/data/create'}
+          linkImportViewsHRef={'/data/import'}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}

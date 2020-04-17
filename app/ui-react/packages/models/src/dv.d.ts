@@ -58,6 +58,11 @@ export interface SchemaNode {
   children: SchemaNode[];
 }
 
+export interface TableInfo {
+  connectionName: string;
+  tableName: string;
+}
+
 export interface ViewInfo {
   connectionName: string;
   isUpdate: boolean;
@@ -81,6 +86,8 @@ export interface VirtualizationSourceStatus {
   loading: boolean;
   schemaState: 'ACTIVE' | 'MISSING' | 'FAILED';
   sourceName: string;
+  teiidName: string;
+  lastLoad: number;
 }
 
 export interface ViewDefinitionDescriptor {

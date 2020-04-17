@@ -98,7 +98,7 @@ public abstract class BaseIntegrationController implements BackendController {
         scheduler = Executors.newScheduledThreadPool(2, Threads.newThreadFactory("Integration Controller Scheduler"));
 
         scheduler.scheduleAtFixedRate(this::scanIntegrationsForWork, 0, properties.getIntegrationStateCheckInterval(), TimeUnit.SECONDS);
-        eventBus.subscribe(EVENT_BUS_ID, getChangeEventSubscription());
+        eventBus.subscribe(EVENT_BUS_ID, this::onChangeEvent);
     }
 
     protected void doStop() {
@@ -120,29 +120,6 @@ public abstract class BaseIntegrationController implements BackendController {
         }
     }
 
-    private EventBus.Subscription getChangeEventSubscription() {
-        return (event, data) -> {
-            // Never do anything that could block in this callback!
-            if (EventBus.Type.CHANGE_EVENT.equals(event)) {
-                try {
-                    ChangeEvent changeEvent = JsonUtils.reader().forType(ChangeEvent.class).readValue(data);
-                    if (changeEvent != null) {
-                        changeEvent.getId().ifPresent(id -> {
-                            changeEvent.getKind()
-                                       .map(Kind::from)
-                                       .filter(k -> k == Kind.IntegrationDeployment)
-                                       .ifPresent(k -> {
-                                           checkIntegrationStatusIfNotAlreadyInProgress(id);
-                                       });
-                        });
-                    }
-                } catch (IOException e) {
-                    LOG.error("Error while subscribing to change-event {}", data, e);
-                }
-            }
-        };
-    }
-
     protected void checkIntegrationStatusIfNotAlreadyInProgress(String id) {
         executor.execute(() -> {
             IntegrationDeployment integrationDeployment = dataManager.fetch(IntegrationDeployment.class, id);
@@ -160,6 +137,27 @@ public abstract class BaseIntegrationController implements BackendController {
                 LOG.debug("No IntegrationDeployment with id: {}", id);
             }
         });
+    }
+
+    private void onChangeEvent(final String event, final String data) {
+        // Never do anything that could block in this callback!
+        if (EventBus.Type.CHANGE_EVENT.equals(event)) {
+            try {
+                ChangeEvent changeEvent = JsonUtils.reader().forType(ChangeEvent.class).readValue(data);
+                if (changeEvent != null) {
+                    changeEvent.getId().ifPresent(id -> {
+                        changeEvent.getKind()
+                                   .map(Kind::from)
+                                   .filter(k -> k == Kind.IntegrationDeployment)
+                                   .ifPresent(k -> {
+                                       checkIntegrationStatusIfNotAlreadyInProgress(id);
+                                   });
+                    });
+                }
+            } catch (IOException e) {
+                LOG.error("Error while subscribing to change-event {}", data, e);
+            }
+        }
     }
 
     private void scanIntegrationsForWork() {

@@ -93,3 +93,16 @@ export function toShortDateAndTimeString(timestamp: number): string {
 
   return moment(timestamp).format('MMM Do HH:mm');
 }
+
+/***
+ *
+ * @param timestamp - Date to be formatted
+ * @return string - Formatted date as, for example, Jan 1st 23:42:11
+ */
+export function toDateAndTimeString(timestamp: number): string {
+  if (!timestamp) {
+    return 'NaN';
+  }
+
+  return moment(timestamp).format('MMM Do HH:mm:ss');
+}
