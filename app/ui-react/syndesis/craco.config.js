@@ -16,5 +16,12 @@ module.exports = function({ env, paths }) {
         },
       }),
     },
+    jest: {
+      configure: (jestConfig, { env, paths, resolve, rootDir }) => ({
+        ...jestConfig,
+
+        moduleFileExtensions: ['ts', 'tsx', 'js'],
+      }),
+    },
   };
 };
