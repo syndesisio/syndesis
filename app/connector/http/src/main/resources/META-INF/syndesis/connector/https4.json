@@ -174,7 +174,7 @@
           }
         ]
       },
-      "id": "@project.groupId@:@project.artifactId@:ttps4-periodic-invoke-url",
+      "id": "@project.groupId@:@project.artifactId@:https4-periodic-invoke-url",
       "name": "Periodic invoke URL",
       "pattern": "From"
     }
