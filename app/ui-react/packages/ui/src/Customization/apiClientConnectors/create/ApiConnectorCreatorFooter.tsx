@@ -9,10 +9,8 @@ export interface IApiConnectorCreatorFooterProps {
   i18nNext: string;
   isNextDisabled: boolean;
   isNextLoading: boolean;
-  onNext: (e: React.MouseEvent<any>) => void;
+  onNext?: (e: React.MouseEvent<any>) => void;
   reviewEditHref?: H.LocationDescriptor;
-  //testIdBack?: string;
-  //testIdNext?: string;
 }
 
 export const ApiConnectorCreatorFooter: React.FunctionComponent<IApiConnectorCreatorFooterProps> = (
@@ -24,9 +22,7 @@ export const ApiConnectorCreatorFooter: React.FunctionComponent<IApiConnectorCre
     isNextLoading,
     isNextDisabled,
     onNext,
-    reviewEditHref,
-    //testIdBack,
-    //testIdNext,
+    reviewEditHref
   }) => (
   <>
     <div>
@@ -50,7 +46,7 @@ export const ApiConnectorCreatorFooter: React.FunctionComponent<IApiConnectorCre
       <ButtonLink
         as={'primary'}
         disabled={isNextDisabled}
-        href={onNext}
+        onClick={onNext}
         data-testid={'api-connector-details-form-save-button'}
       >
         {(isNextLoading) && (

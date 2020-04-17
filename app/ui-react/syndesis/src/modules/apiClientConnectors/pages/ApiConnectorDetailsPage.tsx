@@ -215,7 +215,7 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                                 handleSubmit={handleSubmit}
                                               >
                                                 {({
-                                                  submitForm,
+                                                  handleSubmit,
                                                   isSubmitting,
                                                   isUploadingImage,
                                                 }) =>
@@ -244,7 +244,7 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                                           isSubmitting ||
                                                           isUploadingImage
                                                         }
-                                                        onClick={submitForm}
+                                                        onClick={handleSubmit}
                                                       >
                                                         {(isSubmitting ||
                                                           isUploadingImage) && (

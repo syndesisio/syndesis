@@ -92,20 +92,21 @@ export const DetailsPage: React.FunctionComponent = () => {
               handleSubmit={handleSubmit}
             >
               {({
+                  connectorName,
                   fields,
                   handleSubmit,
                   icon,
                   isSubmitting,
                   isUploadingImage,
-                  name,
-                  onUploadImage
+                  onUploadImage,
+                  submitForm
               }) => (
                 <ApiConnectorCreatorLayout
                   content={
                     <div style={{ maxWidth: '600px' }}>
                       <ApiConnectorDetailsForm
                         apiConnectorIcon={icon}
-                        apiConnectorName={name}
+                        apiConnectorName={connectorName}
                         i18nIconLabel={t('ConnectorIcon')}
                         handleSubmit={handleSubmit}
                         onUploadImage={onUploadImage}
@@ -117,7 +118,7 @@ export const DetailsPage: React.FunctionComponent = () => {
                   footer={
                     <ApiConnectorCreatorFooter
                       backHref={resolvers.create.security(state)}
-                      onNext={handleSubmit}
+                      onNext={submitForm}
                       i18nBack={t('shared:Back')}
                       i18nNext={t('shared:Save')}
                       isNextLoading={isSubmitting || isUploadingImage}
