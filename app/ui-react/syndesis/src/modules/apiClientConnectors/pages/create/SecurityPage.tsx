@@ -104,11 +104,7 @@ export const SecurityPage: React.FunctionComponent = () => {
                   (properties!.authorizationEndpoint &&
                     properties!.authorizationEndpoint.defaultValue)
                 }
-                //backHref={backHref}
-                //i18nBtnBack={t('Back')}
-                //i18nBtnNext={t('Next')}
                 isValid={isValid}
-                //onNext={onNext}
               >
                 {({
                     authUrl,

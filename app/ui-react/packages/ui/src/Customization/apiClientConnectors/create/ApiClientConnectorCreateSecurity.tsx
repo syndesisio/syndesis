@@ -35,19 +35,6 @@ export interface IApiClientConnectorCreateSecurityProps {
    */
   i18nNoSecurity: string;
   i18nTitle: string;
-  /**
-   * Access token, required for OAuth 2.0.
-   */
-  initialAccessTokenUrl?: string;
-  /**
-   * Used specifically for determining the default type, mostly used
-   * for None and Basic types.
-   */
-  initialAuthenticationType?: string;
-  /**
-   * Authorization URL, required for OAuth 2.0.
-   */
-  initialAuthorizationUrl?: string;
   selectedType?: string;
   tokenUrl?: string;
 }
