@@ -23,14 +23,7 @@ import java.net.URLStreamHandler;
 
 final class DummyStreamHandler extends URLStreamHandler {
 
-    static final URL DUMMY_URL;
-    static {
-        try {
-            DUMMY_URL = new URL("dummy", null, 0, "part", new DummyStreamHandler());
-        } catch (final MalformedURLException e) {
-            throw new ExceptionInInitializerError(e);
-        }
-    }
+    static final URL DUMMY_URL = createDummyUrl();
 
     private DummyStreamHandler() {
         // only needed for `DUMMY_URL`
@@ -39,5 +32,13 @@ final class DummyStreamHandler extends URLStreamHandler {
     @Override
     protected URLConnection openConnection(final URL url) throws IOException {
         return null;
+    }
+
+    private static URL createDummyUrl() {
+        try {
+            return new URL("dummy", null, 0, "part", new DummyStreamHandler());
+        } catch (final MalformedURLException e) {
+            throw new ExceptionInInitializerError(e);
+        }
     }
 }

@@ -154,6 +154,9 @@ export const VirtualizationVersionsPage: React.FunctionComponent = () => {
       routeParams={params}
       routeState={state}
       virtualization={virtualization}
+      items={[VirtualizationActionId.Stop, VirtualizationActionId.Delete]}
+      actions={[VirtualizationActionId.Publish]}
+      publishActionCustomProps={{ as: 'default' }}
     >
       <PageSection>
         <WithLoader

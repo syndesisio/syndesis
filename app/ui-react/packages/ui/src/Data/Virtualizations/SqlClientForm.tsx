@@ -34,15 +34,16 @@ export const SqlClientForm: React.FunctionComponent<
         </Card>
       </StackItem>
       <StackItem isFilled={false}>
-        <Button
-          data-testid={'sql-client-form-submit-button'}
-          className={'sql-client-form__submitButton'}
-          isDisabled={false}
-          variant={ButtonVariant.primary}
-          onClick={props.handleSubmit}
-        >
-          {props.i18nSubmit}
-        </Button>
+        <div className={'sql-client-form__submitButton'}>
+          <Button
+            data-testid={'sql-client-form-submit-button'}
+            isDisabled={false}
+            variant={ButtonVariant.primary}
+            onClick={props.handleSubmit}
+          >
+            {props.i18nSubmit}
+          </Button>
+        </div>
       </StackItem>
     </Stack>
   );

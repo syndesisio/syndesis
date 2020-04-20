@@ -35,13 +35,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 public class DataShapeCustomizerTest extends SalesforceTestSupport {
-    private static final Processor BEFORE_PROCESSOR = exchange -> {
-        // nop
-    };
+    private static final Processor BEFORE_PROCESSOR = DataShapeCustomizerTest::nop;
 
-    private static final Processor AFTER_PROCESSOR = exchange -> {
-        // nop
-    };
+    private static final Processor AFTER_PROCESSOR = DataShapeCustomizerTest::nop;
 
     // ********************
     //
@@ -191,5 +187,9 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
         component.getAfterProducer().process(exchange);
 
         Assertions.assertThat(out.getBody()).isInstanceOf(AbstractDTOBase.class);
+    }
+
+    private static void nop(final Exchange exchange) {
+      // do nothing
     }
 }

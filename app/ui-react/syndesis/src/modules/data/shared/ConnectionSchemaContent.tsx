@@ -1,4 +1,4 @@
-import { useVirtualizationConnectionSchema } from '@syndesis/api';
+import { useVirtualizationConnectionSchema, useVirtualizationHelpers } from '@syndesis/api';
 import {
   Connection,
   SchemaNode,
@@ -14,11 +14,13 @@ import {
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { UIContext } from '../../../app';
 import { ApiError, EntityIcon } from '../../../shared';
 import resolvers from '../../resolvers';
 import {
   generateDvConnections,
   generateSchemaNodeInfos,
+  getDateAndTimeDisplay,
   getDvConnectionStatus,
   getDvConnectionStatusMessage,
   isDvConnectionLoading,
@@ -50,12 +52,17 @@ function getSchemaNodeInfos(schemaNodes: SchemaNode[], connName: string) {
   return schemaNodeInfos;
 }
 
+export interface ILastRefreshMessage {
+  connectionName: string;
+  message: string;
+}
+
 export interface IConnectionSchemaContentProps {
+  connections: Connection[];
+  dvSourceStatuses: VirtualizationSourceStatus[];
   error: boolean;
   errorMessage?: string;
   loading: boolean;
-  dvSourceStatuses: VirtualizationSourceStatus[];
-  connections: Connection[];
   onNodeSelected: (
     connectionName: string,
     name: string,
@@ -68,6 +75,12 @@ export interface IConnectionSchemaContentProps {
 
 export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaContentProps> = props => {
   const { t } = useTranslation(['data']);
+
+  /**
+   * Context that broadcasts global notifications.
+   */
+  const { pushNotification } = React.useContext(UIContext);
+  const [lastSchemaRefresh, setLastSchemaRefresh] = React.useState(0);
 
   const handleSourceSelectionChange = async (
     connectionName: string,
@@ -111,7 +124,12 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
     resource: schema,
     hasData: hasSchema,
     error,
+    read,
   } = useVirtualizationConnectionSchema();
+  
+  const {
+    refreshConnectionSchema,
+  } = useVirtualizationHelpers();
 
   // Root nodes of the response contain the connection names
   const sortedConns = getSortedConnections(
@@ -119,6 +137,77 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
     props.dvSourceStatuses,
     true
   );
+
+  /**
+   * Callback that triggers refresh of the connection schema
+   * @param connectionName the name of the connection
+   */
+  const handleRefreshSchema = async (connectionName: string) => {
+    const srcStatus = props.dvSourceStatuses.find(
+      status => status.sourceName === connectionName
+    );
+    if (srcStatus) {
+      try {
+        pushNotification(
+          t('refreshConnectionSchemaStarted', {
+            name: connectionName,
+          }),
+          'info'
+        );
+        await refreshConnectionSchema(srcStatus.teiidName);
+      } catch (error) {
+        const details = error.message ? error.message : '';
+        // inform user of error
+        pushNotification(
+          t('refreshConnectionSchemaFailed', {
+            details,
+            name: connectionName,
+          }),
+          'error'
+        );
+      }
+    } else {
+      const details = t('connectionNotFound');
+      // connection not found
+      pushNotification(
+        t('refreshConnectionSchemaFailed', {
+          details,
+          name: connectionName,
+        }),
+        'error'
+      );
+    }
+  };
+
+  React.useEffect(() => {
+    // If any connection lastLoad is more recent than lastRefresh - reload schema
+    for (const dvSrcStatus of props.dvSourceStatuses) {
+      const connLastLoad = dvSrcStatus.lastLoad;
+      if (connLastLoad > lastSchemaRefresh) {
+        read();
+        setLastSchemaRefresh(connLastLoad);
+      }
+    }
+  }, [props.dvSourceStatuses, lastSchemaRefresh, read, setLastSchemaRefresh]);
+
+  const getConnectionLastRefreshMessage = (connName: string) => {
+    const status = props.dvSourceStatuses.find(
+      srcStatus => srcStatus.sourceName === connName
+    );
+    if (status) {
+      return t('schemaLastRefresh', {
+        refreshTime: getDateAndTimeDisplay(status.lastLoad),
+      });
+    }
+    return '';
+  };
+
+  const getConnectionTeiidName = (connName: string) => {
+    const status = props.dvSourceStatuses.find(
+      srcStatus => srcStatus.sourceName === connName
+    );
+    return status ? status.teiidName : '';
+  };
 
   return (
     <ConnectionSchemaList
@@ -140,22 +229,27 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
         {() =>
           sortedConns.map((c, index) => {
             // get schema nodes for the connection
-            const srcInfos = getSchemaNodeInfos(schema, c.name);
+            const srcInfos = getSchemaNodeInfos(schema, getConnectionTeiidName(c.name));
             return (
               <ConnectionSchemaListItem
                 key={index}
                 connectionName={c.name}
-                connectionDescription={''}
+                connectionDescription={c.description}
                 dvStatus={getDvConnectionStatus(c)}
-                dvStatusTooltip={getDvConnectionStatusMessage(c)}
+                dvStatusMessage={getDvConnectionStatusMessage(c)}
                 haveSelectedSource={
                   props.selectedSchemaNodes[0]
                     ? isConnectionSelected(c.name)
                     : false
-                }
+                }                
+                i18nLastUpdatedMessage={getConnectionLastRefreshMessage(c.name)}
+                i18nRefresh={t('Refresh')}
                 i18nRefreshInProgress={t('refreshInProgress')}
+                i18nStatusErrorPopoverLink={t('connectionStatusPopoverLink')}
+                i18nStatusErrorPopoverTitle={t('connectionStatusPopoverTitle')}
                 icon={<EntityIcon entity={c} alt={c.name} width={23} />}
                 loading={isDvConnectionLoading(c)}
+                refreshConnectionSchema={handleRefreshSchema}
                 // tslint:disable-next-line: no-shadowed-variable
                 children={srcInfos.map((info, index) => (
                   <SchemaNodeListItem

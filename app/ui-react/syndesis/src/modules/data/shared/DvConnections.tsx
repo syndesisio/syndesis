@@ -5,6 +5,7 @@ import {
   DvConnectionsGridCell,
 } from '@syndesis/ui';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { EntityIcon } from '../../../shared';
 import {
   getDvConnectionStatus,
@@ -21,6 +22,9 @@ export interface IDvConnectionsProps {
 export const DvConnections: React.FunctionComponent<
   IDvConnectionsProps
 > = props => {
+
+  const { t } = useTranslation(['data']);
+
   const handleConnSourceSelectionChanged = (
     name: string,
     isSelected: boolean
@@ -36,7 +40,10 @@ export const DvConnections: React.FunctionComponent<
             name={c.name}
             description={c.description || ''}
             dvStatus={getDvConnectionStatus(c)}
-            dvStatusTooltip={getDvConnectionStatusMessage(c)}
+            dvStatusMessage={getDvConnectionStatusMessage(c)}
+            i18nRefreshInProgress={t('refreshInProgress')}
+            i18nStatusErrorPopoverLink={t('connectionStatusPopoverLink')}
+            i18nStatusErrorPopoverTitle={t('connectionStatusPopoverTitle')}
             icon={<EntityIcon entity={c} alt={c.name} width={46} />}
             loading={isDvConnectionLoading(c)}
             selected={props.initialSelection === c.name}

@@ -1,4 +1,6 @@
 import {
+  Button,
+  ButtonVariant,
   DataList,
   DataListAction,
   DataListCell,
@@ -7,32 +9,41 @@ import {
   DataListItemCells,
   DataListItemRow,
   DataListToggle,
-  Label, 
+  Grid,
+  GridItem,
   Split, 
-  SplitItem, 
-  Title, 
-  Tooltip,
+  SplitItem,
 } from '@patternfly/react-core';
-import { global_active_color_100, global_danger_color_100 } from '@patternfly/react-tokens';
+import { SyncIcon } from '@patternfly/react-icons';
 import * as React from 'react';
 import { toValidHtmlId } from '../../../helpers';
 import { ConnectionStatus } from '../../DvConnection/DvConnectionCard';
+import { DvConnectionStatus } from '../../DvConnection/DvConnectionStatus';
 import './ConnectionSchemaListItem.css';
 
 export interface IConnectionSchemaListItemProps {
   connectionName: string;
-  connectionDescription: string;
-  dvStatusTooltip: string;
+  connectionDescription?: string;
+  dvStatusMessage?: string;
   dvStatus: string;
   haveSelectedSource: boolean;
+  i18nLastUpdatedMessage: string;
+  i18nRefresh: string;
   i18nRefreshInProgress: string;
+  i18nStatusErrorPopoverTitle: string;
+  i18nStatusErrorPopoverLink: string;
   icon: React.ReactNode;
   loading: boolean;
+  refreshConnectionSchema: (connectionName: string) => void;
 }
 
 export const ConnectionSchemaListItem: React.FunctionComponent<IConnectionSchemaListItemProps> = props => {
 
   const [isExpanded, setExpanded] = React.useState(props.haveSelectedSource);
+
+  const handleRefreshClick = () => {
+    props.refreshConnectionSchema(props.connectionName);
+  };
 
   return (
     <DataListItem
@@ -44,39 +55,34 @@ export const ConnectionSchemaListItem: React.FunctionComponent<IConnectionSchema
       isExpanded={isExpanded}
     >
       <DataListItemRow>
-        {(props.children && React.Children.toArray(props.children).length > 0) &&
-        <DataListToggle
-          isExpanded={isExpanded}
-          id="connection-schema-list-item-expand"
-          aria-controls="connection-schema-list-item-expand"
-          onClick={() => setExpanded(!isExpanded)}
-        />
-        }
+        {props.children &&
+          React.Children.toArray(props.children).length > 0 && (
+            <DataListToggle
+              isExpanded={isExpanded}
+              id="connection-schema-list-item-expand"
+              aria-controls="connection-schema-list-item-expand"
+              onClick={() => setExpanded(!isExpanded)}
+            />
+          )}
         <DataListItemCells
           dataListCells={[
-            <DataListCell width={1} key={0}>
-              <span>
-                {props.icon}
-                <Tooltip content={props.dvStatusTooltip} position={'bottom'}>
-                  <Label
-                    className="connection-schema-list-item__status"
-                    style={
-                      props.dvStatus === ConnectionStatus.ACTIVE
-                        ? { background: global_active_color_100.value }
-                        : { background: global_danger_color_100.value }
-                    }
-                  >
-                    {props.dvStatus}
-                  </Label>
-                </Tooltip>
-              </span>
-            </DataListCell>,
             <DataListCell key={'primary content'} width={4}>
-              <div className={'connection-schema-list-item__text-wrapper'}>
-                <b>{props.connectionName}</b>
-                <br />
-                {props.connectionDescription ? props.connectionDescription : ''}
-              </div>
+              <Split>
+                <SplitItem>
+                  <div className={'connection-schema-list-item__icon-wrapper'}>
+                    {props.icon}
+                  </div>
+                </SplitItem>
+                <SplitItem>
+                  <div>
+                    <b>{props.connectionName}</b>
+                    <br />
+                    {props.connectionDescription
+                      ? props.connectionDescription
+                      : ''}
+                  </div>
+                </SplitItem>
+              </Split>
             </DataListCell>,
           ]}
         />
@@ -85,15 +91,30 @@ export const ConnectionSchemaListItem: React.FunctionComponent<IConnectionSchema
           id={'connection-schema-list-actions'}
           aria-label={'Actions'}
         >
-          <Split>
-            <SplitItem>
-              {props.loading ? (
-                <Title size="md">{props.i18nRefreshInProgress}</Title>
-              ) : (
-                <></>
-              )}
-            </SplitItem>
-          </Split>
+          <Grid>
+            <GridItem span={6}>{props.i18nLastUpdatedMessage}</GridItem>
+            <GridItem span={4}>
+              <DvConnectionStatus
+                dvStatus={props.dvStatus}
+                dvStatusMessage={props.dvStatusMessage}
+                i18nRefreshInProgress={props.i18nRefreshInProgress}
+                i18nStatusErrorPopoverTitle={props.i18nStatusErrorPopoverTitle}
+                i18nStatusErrorPopoverLink={props.i18nStatusErrorPopoverLink}
+                loading={props.loading}
+              />
+            </GridItem>
+            <GridItem span={2}>
+              <Button
+                data-testid={'connection-schema-list-item__refresh-button'}
+                variant={ButtonVariant.secondary}
+                onClick={handleRefreshClick}
+                isDisabled={props.loading}
+              >
+                {props.i18nRefresh}&nbsp;
+                {<SyncIcon />}
+              </Button>
+            </GridItem>
+          </Grid>
         </DataListAction>
       </DataListItemRow>
       {props.children && props.dvStatus === ConnectionStatus.ACTIVE ? (

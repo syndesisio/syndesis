@@ -4,7 +4,6 @@ import {
   VirtualizationPublishingDetails,
 } from '@syndesis/models';
 import {
-  IVirtualizationAction,
   PageSection,
   VirtualizationBreadcrumb,
   VirtualizationDetailsHeader,
@@ -49,12 +48,12 @@ export interface IVirtualizationEditorPageProps {
    */
   actions?: VirtualizationActionId[];
 
-  deleteActionCustomProps?: IVirtualizationAction;
-  exportActionCustomProps?: IVirtualizationAction;
-  publishActionCustomProps?: IVirtualizationAction;
-  saveActionCustomProps?: IVirtualizationAction;
-  startActionCustomProps?: IVirtualizationAction;
-  stopActionCustomProps?: IVirtualizationAction;
+  deleteActionCustomProps?: any;
+  exportActionCustomProps?: any;
+  publishActionCustomProps?: any;
+  saveActionCustomProps?: any;
+  startActionCustomProps?: any;
+  stopActionCustomProps?: any;
 
   /**
    * The breadcrumb kebab menu items. Leave `undefined` if default kebab menu items are wanted.

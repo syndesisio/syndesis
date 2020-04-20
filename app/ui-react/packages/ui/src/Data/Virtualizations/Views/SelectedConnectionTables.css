@@ -14,4 +14,6 @@
 
 .selected-connection-tables_contentSection {
   flex-grow: 1;
+  height: 350px;
+  overflow-y: auto;
 }

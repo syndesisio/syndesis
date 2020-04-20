@@ -24,6 +24,9 @@ import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
 import resolvers from '../../resolvers';
 import {
+  VirtualizationActionId,
+} from '../shared/VirtualizationActionContainer';
+import {
   IVirtualizationEditorPageRouteParams,
   IVirtualizationEditorPageRouteState,
   VirtualizationEditorPage,
@@ -155,6 +158,9 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
       routeParams={params}
       routeState={state}
       virtualization={virtualization}
+      items={[VirtualizationActionId.Stop, VirtualizationActionId.Delete]}
+      actions={[VirtualizationActionId.Publish]}
+      publishActionCustomProps={{ as: 'default' }}
     >
       <WithListViewToolbarHelpers
         defaultFilterType={filterByName}
@@ -170,7 +176,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
             <>
               <WithLoader
                 error={viewDefinitionDescriptorsError !== false}
-                loading={!hasViewDefinitionDescriptors}
+                loading={virtualization.name === "" || !hasViewDefinitionDescriptors}
                 loaderChildren={<ViewListSkeleton width={800} />}
                 errorChildren={
                   <ApiError error={viewDefinitionDescriptorsError as Error} />

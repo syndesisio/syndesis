@@ -135,7 +135,7 @@ public interface V1Constants extends StringConstants {
     /**
      * syndesis source summaries segment
      */
-    String SYNDESIS_SOURCE_STATUSES = "syndesisSourceStatuses"; //$NON-NLS-1$
+    String SOURCE_STATUSES = "sourceStatuses"; //$NON-NLS-1$
 
     /**
      * The view editor state of the user profile

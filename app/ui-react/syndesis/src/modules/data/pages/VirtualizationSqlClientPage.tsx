@@ -7,6 +7,7 @@ import * as React from 'react';
 import { ApiError } from '../../../shared';
 import resolvers from '../../resolvers';
 import { 
+  VirtualizationActionId,
   WithVirtualizationSqlClientForm 
 } from '../shared';
 import {
@@ -47,6 +48,9 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
       routeParams={params}
       routeState={state}
       virtualization={virtualization}
+      items={[VirtualizationActionId.Stop, VirtualizationActionId.Delete]}
+      actions={[VirtualizationActionId.Publish]}
+      publishActionCustomProps={{ as: 'default' }}
     >
       <WithLoader
         error={error !== false}

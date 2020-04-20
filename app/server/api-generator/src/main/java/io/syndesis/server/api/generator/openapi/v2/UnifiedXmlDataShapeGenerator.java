@@ -30,7 +30,6 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
-import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
 import io.syndesis.server.api.generator.openapi.UnifiedXmlDataShapeSupport;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.openapi.util.XmlSchemaHelper;
@@ -39,7 +38,7 @@ import org.dom4j.Element;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
-class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas20Document, Oas20Operation, Oas20Response> implements DataShapeGenerator<Oas20Document, Oas20Operation> {
+class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas20Document, Oas20Operation, Oas20Response> {
 
     @Override
     protected OasSchema dereference(OasSchema property, Oas20Document openApiDoc) {

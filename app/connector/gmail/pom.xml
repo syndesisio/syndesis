@@ -43,6 +43,10 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava-jdk5</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
     </dependencies>
@@ -88,7 +92,7 @@
     </dependency>
     <dependency>
       <groupId>com.sun.mail</groupId>
-      <artifactId>javax.mail</artifactId>
+      <artifactId>jakarta.mail</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

@@ -11,6 +11,7 @@ import {
   VirtualizationSourceStatus,
 } from '@syndesis/models';
 import { ITableInfo } from '@syndesis/ui';
+import { toDateAndTimeString, toShortDateAndTimeString } from '@syndesis/utils';
 import i18n from '../../../i18n';
 
 interface IColumn {
@@ -23,6 +24,30 @@ export enum DvConnectionStatus {
   FAILED = 'FAILED',
   INACTIVE = 'INACTIVE',
 }
+
+/**
+ * Get the date and time display
+ * @param numericTimestamp the numeric timestamp
+ * @returns the formatted date as, for example, Jan 1st 23:42:11
+ */
+export function getDateAndTimeDisplay(numericTimestamp: number): string {
+  if(numericTimestamp > 0) {
+    return toDateAndTimeString(numericTimestamp);
+  }
+  return 'Unknown';
+};
+
+/**
+ * Get the short date and time display (without secs)
+ * @param numericTimestamp the numeric timestamp
+ * @returns the formatted date as, for example, Jan 1st 23:42
+ */
+export function getShortDateAndTimeDisplay(numericTimestamp: number): string {
+  if(numericTimestamp > 0) {
+    return toShortDateAndTimeString(numericTimestamp);
+  }
+  return 'Unknown';
+};
 
 /**
  * Recursively flattens the tree structure of SchemaNodes,
@@ -149,7 +174,7 @@ export function generateSchemaNodeInfos(
       schemaNodeInfos.push(view);
     }
     // Update path for next level
-    if (schemaNode.type !== 'root') {
+    if (schemaNode.type !== 'teiidSource') {
       sourcePath.push(schemaNode.name);
     }
     // Process this nodes children
@@ -250,6 +275,7 @@ export function generateDvConnections(
     // If defined, a corresponding virtualization source was found
     if (virtSrcStatus) {
       let connStatus = DvConnectionStatus.INACTIVE;
+      let lastSchemaLoad = String(0);
       let schemaLoading = String(false);
       let selectionState = String(false);
       // status (ACTIVE, FAILED, INACTIVE)
@@ -266,6 +292,8 @@ export function generateDvConnections(
         default:
           break;
       }
+      // last schema load
+      lastSchemaLoad = String(virtSrcStatus.lastLoad);
       // loading (true/false)
       schemaLoading = String(virtSrcStatus.loading);
       // selection
@@ -273,6 +301,7 @@ export function generateDvConnections(
         selectionState = String(true);
       }
       conn.options = {
+        dvLastSchemaLoad: lastSchemaLoad,
         dvLoading: schemaLoading,
         dvSelected: selectionState,
         dvSourceError: virtSrcStatus.errors[0],
@@ -308,6 +337,16 @@ export function getDvConnectionStatus(conn: Connection): string {
   return conn.options && conn.options.dvStatus
     ? conn.options.dvStatus
     : DvConnectionStatus.INACTIVE;
+}
+
+/**
+ * Get the last schema load timestamp
+ * @param connection the connection
+ */
+export function getDvConnectionLastSchemaLoad(conn: Connection) {
+  return conn.options && conn.options.dvLastSchemaLoad
+    ? Number(conn.options.dvLastSchemaLoad)
+    : 0;
 }
 
 /**
@@ -506,11 +545,11 @@ export function isStateOperationInProgress(
 
 /**
  * Generate preview SQL for the specified view definition
- * @param viewDefinition the ViewDefinition
+ * @param viewDefinitionName the viewDefinitionName
  */
-export function getPreviewSql(viewDefinition: ViewDefinition): string {
+export function getPreviewSql(viewDefinitionName: string): string {
   // replace any double quotes in name with 2 double quotes and wrap in double quotes
-  return 'SELECT * FROM "' + viewDefinition.name.replace(/"/g, '""') + '"';
+  return 'SELECT * FROM "' + viewDefinitionName.replace(/"/g, '""') + '"';
 }
 
 /**

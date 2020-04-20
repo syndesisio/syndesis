@@ -85,7 +85,7 @@ export const PublishStatusWithProgress: React.FunctionComponent<IPublishStatusWi
           color={'#49B720'}
           height={'1.25rem'}
           width={'1.25rem'}
-          className={'publish-status-with-progress-margin10'}
+          className={'publish-status-with-progress-ok-icon'}
         />
       )}
       <span className={'publish-status-with-progress_text'}>

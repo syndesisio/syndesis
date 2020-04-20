@@ -42,15 +42,15 @@ export const ApiProviderReviewOperationsItem: React.FunctionComponent<IApiProvid
         dataListCells={[
           <DataListCell key={0}>
             <Stack id={'method'}>
-              <StackItem>
+              <StackItem data-testid={'operation-method'}>
                 <HttpMethodColors method={operationHttpMethod} />
               </StackItem>
               <StackItem>
-                <div className={'item__operation-path'}>{operationPath}</div>
+                <div data-testid={'operation-path'} className={'item__operation-path'}>{operationPath}</div>
               </StackItem>
             </Stack>
           </DataListCell>,
-          <DataListCell key={1}>{operationDescription}</DataListCell>,
+          <DataListCell data-testid={'operation-description'} key={1}>{operationDescription}</DataListCell>,
         ]}
       />
       <DataListAction

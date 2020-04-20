@@ -28,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.SSLContext;
@@ -56,17 +55,9 @@ import okhttp3.logging.HttpLoggingInterceptor;
 // This class is copied from the Kubernetes client to send a custom httpClientBuilder in constructor
 public class HttpClientUtils {
 
-  private static Pattern VALID_IPV4_PATTERN = null;
-  public static final String ipv4Pattern = "(http:\\/\\/|https:\\/\\/)?(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])(\\/[0-9]\\d|1[0-9]\\d|2[0-9]\\d|3[0-2]\\d)?";
-  private static final Logger logger = LoggerFactory.getLogger(HttpClientUtils.class);
+  private static Pattern VALID_IPV4_PATTERN = Pattern.compile("(http:\\/\\/|https:\\/\\/)?(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])(\\/[0-9]\\d|1[0-9]\\d|2[0-9]\\d|3[0-2]\\d)?", Pattern.CASE_INSENSITIVE);
 
-  static {
-    try {
-      VALID_IPV4_PATTERN = Pattern.compile(ipv4Pattern, Pattern.CASE_INSENSITIVE);
-    } catch (PatternSyntaxException e) {
-      throw KubernetesClientException.launderThrowable("Unable to compile ipv4address pattern.", e);
-    }
-  }
+  private static final Logger logger = LoggerFactory.getLogger(HttpClientUtils.class);
 
   public static OkHttpClient createHttpClient(final Config config, OkHttpClient.Builder httpClientBuilder) {
       return createHttpClient(config, (b) -> {}, httpClientBuilder);

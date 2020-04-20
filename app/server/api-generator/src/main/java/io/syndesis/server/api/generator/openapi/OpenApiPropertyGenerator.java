@@ -47,12 +47,6 @@ public abstract class OpenApiPropertyGenerator<T extends OasDocument, S extends 
 
     private final Map<String, PropertyGenerator> propertyGenerators = new HashMap<>();
 
-    private static final Function<ConfigurationProperty, ConfigurationProperty> NO_SECURITY = template -> new ConfigurationProperty.Builder()
-        .createFrom(template)
-        .defaultValue("none")
-        .addEnum(ConfigurationProperty.PropertyValue.Builder.of("none", "No Security"))
-        .build();
-
     protected OpenApiPropertyGenerator() {
         propertyGenerators.put("accessToken", this::ifHasOAuthSecurityDefinition);
         propertyGenerators.put("accessTokenExpiresAt", this::ifHasOAuthSecurityDefinition);
@@ -203,7 +197,7 @@ public abstract class OpenApiPropertyGenerator<T extends OasDocument, S extends 
     private Optional<ConfigurationProperty> authenticationTypeProperty(OpenApiModelInfo info, ConfigurationProperty template) {
         final Collection<S> securityDefinitions = getSecuritySchemes(info);
         if (securityDefinitions.isEmpty()) {
-            return Optional.of(NO_SECURITY.apply(template));
+            return Optional.of(noSecurity(template));
         }
 
         final ConfigurationProperty.PropertyValue[] enums = securityDefinitions.stream()
@@ -212,7 +206,7 @@ public abstract class OpenApiPropertyGenerator<T extends OasDocument, S extends 
             .toArray(ConfigurationProperty.PropertyValue[]::new);
 
         if (enums.length == 0) {
-            return Optional.of(NO_SECURITY.apply(template));
+            return Optional.of(noSecurity(template));
         }
 
         final ConfigurationProperty.Builder authenticationType = new ConfigurationProperty.Builder()
@@ -335,4 +329,13 @@ public abstract class OpenApiPropertyGenerator<T extends OasDocument, S extends 
         return (info, template, settings) -> Optional
             .of(new ConfigurationProperty.Builder().createFrom(template).defaultValue(defaultValueExtractor.apply(info)).build());
     }
+
+    static ConfigurationProperty noSecurity(final ConfigurationProperty template) {
+        return new ConfigurationProperty.Builder()
+            .createFrom(template)
+            .defaultValue("none")
+            .addEnum(ConfigurationProperty.PropertyValue.Builder.of("none", "No Security"))
+            .build();
+    }
+
 }

@@ -16,15 +16,7 @@
 
 package io.syndesis.server.api.generator.openapi.v2;
 
-import java.io.IOException;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.core.load.configuration.LoadingConfiguration;
 import com.github.fge.jsonschema.main.JsonSchema;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import io.syndesis.common.util.Resources;
-import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.openapi.OpenApiSchemaValidator;
 
 /**
@@ -32,24 +24,7 @@ import io.syndesis.server.api.generator.openapi.OpenApiSchemaValidator;
  */
 public final class Oas20SchemaValidator implements OpenApiSchemaValidator {
 
-    private static final JsonSchema SWAGGER_2_0_SCHEMA;
-
-    private static final String SWAGGER_2_0_SCHEMA_FILE = "schema/swagger-2.0-schema.json";
-
-    private static final String SWAGGER_IO_V2_SCHEMA_URI = "http://swagger.io/v2/schema.json#";
-
-    static {
-        try {
-            final JsonNode swagger20Schema = JsonUtils.reader().readTree(Resources.getResourceAsText(SWAGGER_2_0_SCHEMA_FILE));
-            final LoadingConfiguration loadingConfiguration = LoadingConfiguration.newBuilder()
-                .preloadSchema(SWAGGER_IO_V2_SCHEMA_URI, swagger20Schema)
-                .freeze();
-            SWAGGER_2_0_SCHEMA = JsonSchemaFactory.newBuilder().setLoadingConfiguration(loadingConfiguration).freeze().getJsonSchema(SWAGGER_IO_V2_SCHEMA_URI);
-        } catch (final ProcessingException | IOException ex) {
-            throw new IllegalStateException("Unable to load the schema file embedded in the artifact", ex);
-        }
-    }
-
+    private static final JsonSchema SWAGGER_2_0_SCHEMA = OpenApiSchemaValidator.loadSchema("schema/swagger-2.0-schema.json", "http://swagger.io/v2/schema.json#");
 
     @Override
     public JsonSchema getSchema() {

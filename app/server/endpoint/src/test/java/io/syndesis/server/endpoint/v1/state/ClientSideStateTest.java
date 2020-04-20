@@ -23,10 +23,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.LongSupplier;
-import java.util.function.Supplier;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -70,16 +66,6 @@ public class ClientSideStateTest {
         }
     };
 
-    private static final Supplier<byte[]> RFC_IV_SOURCE = () -> new byte[] {(byte) 0xb4, (byte) 0xbd, (byte) 0xe5, 0x24,
-        (byte) 0xf7, (byte) 0xf6, (byte) 0x9d, 0x44, (byte) 0x85, 0x30, (byte) 0xde, (byte) 0x9d, (byte) 0xb5, 0x55,
-        (byte) 0xc9, 0x4f};
-
-    private static final LongSupplier RFC_TIME = () -> 1347265955L;
-
-    private static final BiFunction<Class<?>, byte[], Object> SIMPLE_DESERIALIZATION = (t, v) -> new String(v, StandardCharsets.UTF_8);
-
-    private static final Function<Object, byte[]> SIMPLE_SERIALIZATION = o -> ((String) o).getBytes(StandardCharsets.UTF_8);
-
     @Immutable
     @ImmutablesStyle
     @JsonDeserialize(builder = ImmutableData.Builder.class)
@@ -118,8 +104,8 @@ public class ClientSideStateTest {
 
     @Test
     public void shouldPersistAsInRfcErrata() {
-        final ClientSideState clientSideState = new ClientSideState(RFC_EDITION, RFC_TIME, RFC_IV_SOURCE,
-            SIMPLE_SERIALIZATION, SIMPLE_DESERIALIZATION, ClientSideState.DEFAULT_TIMEOUT);
+        final ClientSideState clientSideState = new ClientSideState(RFC_EDITION, ClientSideStateTest::rfcTime, ClientSideStateTest::rfcIV,
+            ClientSideStateTest::serialize, ClientSideStateTest::deserialize, ClientSideState.DEFAULT_TIMEOUT);
 
         final NewCookie cookie = clientSideState.persist("id", "/path", "a state string");
 
@@ -184,5 +170,23 @@ public class ClientSideStateTest {
                 return RFC_EDITION.keySource();
             }
         };
+    }
+
+    private static byte[] rfcIV() {
+        return new byte[] {(byte) 0xb4, (byte) 0xbd, (byte) 0xe5, 0x24,
+            (byte) 0xf7, (byte) 0xf6, (byte) 0x9d, 0x44, (byte) 0x85, 0x30, (byte) 0xde, (byte) 0x9d, (byte) 0xb5, 0x55,
+            (byte) 0xc9, 0x4f};
+    }
+
+    private static long rfcTime() {
+        return 1347265955L;
+    }
+
+    private static Object deserialize(final Class<?> type, final byte[] value) {
+        return new String(value, StandardCharsets.UTF_8);
+    }
+
+    private static byte[] serialize(Object object) {
+        return ((String) object).getBytes(StandardCharsets.UTF_8);
     }
 }

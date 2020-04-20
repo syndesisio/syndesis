@@ -1,9 +1,6 @@
-.connection-schema-list-item .connection-schema-list-item__status {
-  margin-left: 8px;
-}
-
-.connection-schema-list-item .connection-schema-list-item__text-wrapper {
-  margin-top: 7px;
+.connection-schema-list-item .connection-schema-list-item__icon-wrapper {
+  margin-top: 4px;
+  width: 4em;
 }
 
 .connection-schema-list-item .pf-c-data-list__item-control {
