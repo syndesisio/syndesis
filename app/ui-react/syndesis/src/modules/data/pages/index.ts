@@ -6,3 +6,4 @@ export * from './VirtualizationVersionsPage';
 export * from './VirtualizationsPage';
 export * from './VirtualizationSqlClientPage';
 export * from './VirtualizationViewsPage';
+export * from './VirtualizationDataPermissionPage';

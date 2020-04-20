@@ -7,6 +7,7 @@ export default include('/data', {
     import: 'import',
     list: '',
     virtualization: include(':virtualizationId', {
+      dataPermission: 'dataPermission',
       metrics: 'metrics',
       root: '',
       sqlClient: 'sqlClient',
