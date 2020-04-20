@@ -98,6 +98,7 @@ export const ApiConnectorListItem: React.FC<
                 {apiConnectorIcon ? (
                   <div className={'api-connector-list-item__icon-wrapper'}>
                     <img
+                      data-testid={'api-connector-icon'}
                       src={apiConnectorIcon}
                       alt={apiConnectorName}
                       width={46}
@@ -107,16 +108,19 @@ export const ApiConnectorListItem: React.FC<
               </DataListCell>,
               <DataListCell key={'primary content'} width={4}>
                 <div className={'api-connector-list-item__text-wrapper'}>
-                  <b>{apiConnectorName}</b><br/>
-                  {
+                  <b data-testid={'api-connector-name'}>{apiConnectorName}</b><br/>
+                  <span data-testid={'api-connector-description'}>{
                     apiConnectorDescription
                       ? apiConnectorDescription
                       : ''
-                  }
+                  }</span>
                 </div>
               </DataListCell>,
               <DataListCell key={'secondary content'} width={4}>
-                <div className={'api-connector-list-item__used-by'}>
+                <div 
+                  className={'api-connector-list-item__used-by'}
+                  data-testid={'api-connector-used-by'}
+                >
                   {i18nUsedByMessage}
                 </div>
               </DataListCell>
