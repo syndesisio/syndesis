@@ -2,6 +2,8 @@
   "activeConnectionsEmptyStateInfo": "There are no active connections available. Click Create Connection for a new connection.",
   "activeConnectionsEmptyStateTitle": "No Active Connections",
   "actionsColumnA11yMessage": "Version action menu column",
+  "addNewRole": "Add new role",
+  "allAccess": "All Access",
   "buildStatus": {
     "BUILDING": "Building",
     "CANCELLED": "Cancelled",
@@ -86,6 +88,14 @@
   "metricsResultSetCacheTitle": "Result set cache",
   "metricsUptimeSince": "Since {{sinceTime}}",
   "metricsUptimeTitle": "DV pod uptime",
+  "permissions": "Permissions",
+  "permissionClear": "Clear permission",
+  "permissionRole":"Role",
+  "permissionSelectNone": "Select none",
+  "permissionSelectPage": "Select page ({{pageListLenght}} items)",
+  "permissionSelectAll": "Select all ({{allListLength}} items)",
+  "permissionSet": "Set permission",
+  "permissionSeletedViews": "Set permission for the selected Views:",
   "preview": {
     "hidePreview": "Hide preview",
     "loadingQueryResults": "Loading query results...",

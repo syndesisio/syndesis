@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router';
 import {
   VirtualizationCreatePage,
+  VirtualizationDataPermissionPage,
   VirtualizationImportPage,
   VirtualizationMetricsPage,
   VirtualizationsPage,
@@ -76,6 +77,11 @@ export class DataModule extends React.Component {
             path={routes.virtualizations.virtualization.metrics}
             exact={true}
             component={VirtualizationMetricsPage}
+          />
+          <Route
+            path={routes.virtualizations.virtualization.dataPermission}
+            exact={true}
+            component={VirtualizationDataPermissionPage}
           />
         </Switch>
       </>
