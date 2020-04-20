@@ -45,15 +45,6 @@ export interface IApiConnectorSecurityFormProps {
     authorizationUrl?: string,
     tokenUrl?: string
   ): boolean;
-
-  /**
-   * The action fired when the user presses the Next button
-   */
-  /*onNext(
-    authenticationType?: string,
-    authorizationUrl?: string,
-    tokenUrl?: string
-  ): void;*/
 }
 
 export const ApiConnectorSecurityForm: React.FunctionComponent<
