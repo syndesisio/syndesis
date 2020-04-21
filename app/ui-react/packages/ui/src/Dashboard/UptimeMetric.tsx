@@ -25,13 +25,13 @@ export const UptimeMetric: React.FunctionComponent<IUptimeMetricProps> = ({
       <CardBody>
         <Title size="md" className="metrics-uptime__header">
           <div>{i18nTitle}</div>
-          <div className="metrics-uptime__uptime">
+          <div className="metrics-uptime__uptime" data-testid={'dashboard-page-metrics-uptime-since'}>
             {i18nSince} {startAsHuman}
           </div>
         </Title>
       </CardBody>
       <CardBody>
-        <span>{uptimeDuration}</span>
+        <span data-testid={'dashboard-page-metrics-uptime-duration'}>{uptimeDuration}</span>
       </CardBody>
     </Card>
   );
