@@ -38,15 +38,15 @@ public class ApiProviderOnExceptionHandler implements Processor, Properties {
 
     @Override
     public void process(Exchange exchange) {
+        Exception cause = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class);
         ErrorStatusInfo statusInfo =
-                ErrorMapper.mapError(exchange.getException(), errorResponseCodeMappings, httpResponseStatus);
+                ErrorMapper.mapError(cause, errorResponseCodeMappings, httpResponseStatus);
         exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, statusInfo.getResponseCode());
         if (isReturnBody) {
             exchange.getIn().setBody(statusInfo.toJson());
         } else {
             exchange.getIn().setBody("");
         }
-        exchange.setProperty(Exchange.ERRORHANDLER_HANDLED, Boolean.TRUE);
     }
 
     @Override
