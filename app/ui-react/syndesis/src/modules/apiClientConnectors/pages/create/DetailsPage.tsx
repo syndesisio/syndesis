@@ -48,7 +48,7 @@ export const DetailsPage: React.FunctionComponent = () => {
       }}
     >
       {({ allowNavigation }) => {
-        const handleSubmit = async (values: IConnectorValues, actions: any) => {
+        const onSubmit = async (values: IConnectorValues, actions: any) => {
           actions.setSubmitting(true);
           try {
             // tslint:disable-next-line
@@ -88,8 +88,7 @@ export const DetailsPage: React.FunctionComponent = () => {
             <ApiConnectorInfoForm
               name={state.specification.name}
               description={state.specification.description}
-              isEditing={true}
-              handleSubmit={handleSubmit}
+              handleSubmit={onSubmit}
             >
               {({
                   connectorName,

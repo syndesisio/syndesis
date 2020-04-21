@@ -41,16 +41,18 @@ export interface IApiConnectorInfoFormChildrenProps {
    * @param event the event whose target contains the file being uploaded
    */
   onUploadImage: (event: any) => void;
-  /**
-   * the callback to trigger to submit the form.
-   */
-  submitForm(): any;
+
   /**
    * The callback fired when submitting the form.
    * @param e the changed properties
    * @param actions used to set isSubmitting on the form
    */
   handleSubmit: (e?: any) => void;
+
+  /**
+   * the callback to trigger to submit the form.
+   */
+  submitForm(): any;
 }
 
 export interface IApiConnectorInfoFormProps {
@@ -65,9 +67,11 @@ export interface IApiConnectorInfoFormProps {
   apiConnectorIcon?: string;
 
   /**
-   * `true` when the connection details are being edited.
+   * The callback fired when submitting the form.
+   * @param e the changed properties
+   * @param actions used to set isSubmitting on the form
    */
-  isEditing: boolean;
+  handleSubmit: (e: IConnectorValues, actions?: any) => void;
 
   /**
    * the render prop that will receive the ready-to-be-rendered form and some
@@ -76,13 +80,6 @@ export interface IApiConnectorInfoFormProps {
    * @see [onSubmit]{@link IApiConnectorInfoFormChildrenProps#submitForm}
    */
   children(props: IApiConnectorInfoFormChildrenProps): any;
-
-  /**
-   * The callback fired when submitting the form.
-   * @param e the changed properties
-   * @param actions used to set isSubmitting on the form
-   */
-  handleSubmit: (e: IConnectorValues, actions?: any) => void;
 }
 
 export const ApiConnectorInfoForm: React.FunctionComponent<

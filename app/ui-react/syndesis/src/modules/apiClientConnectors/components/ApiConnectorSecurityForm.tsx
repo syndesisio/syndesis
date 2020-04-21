@@ -2,9 +2,9 @@ import * as React from 'react';
 
 export interface IApiConnectorSecurityFormChildrenProps {
   authUrl?: string;
-  handleChangeAuthUrl: (any: string) => void;
-  handleChangeSelectedType: (any: string) => void;
-  handleChangeTokenUrl: (any: string) => void;
+  handleChangeAuthUrl: (params: string) => void;
+  handleChangeSelectedType: (params: string) => void;
+  handleChangeTokenUrl: (params: string) => void;
 
   /**
    * Access token, required for OAuth 2.0.
@@ -25,7 +25,6 @@ export interface IApiConnectorSecurityFormChildrenProps {
 }
 
 export interface IApiConnectorSecurityFormProps {
-  children(props: IApiConnectorSecurityFormChildrenProps): any;
   /**
    * Access token, required for OAuth 2.0.
    */
@@ -39,6 +38,8 @@ export interface IApiConnectorSecurityFormProps {
    * Authorization URL, required for OAuth 2.0.
    */
   initialAuthorizationUrl?: string;
+
+  children(props: IApiConnectorSecurityFormChildrenProps): any;
 
   isValid(
     authenticationType?: string,
