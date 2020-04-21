@@ -1,7 +1,6 @@
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { toValidHtmlId } from '../helpers';
 
 import './ConditionsDropdownItem.css';
 
@@ -17,7 +16,7 @@ export const ConditionsDropdownItem: React.FunctionComponent<
 > = ({ condition, description, link, name, isCurrent }) => (
   <li>
     <Link
-      data-testid={`conditions-dropdown-item-${toValidHtmlId(condition)}-link`}
+      data-testid={`conditions-dropdown-item-link`}
       className="pf-c-dropdown__menu-item"
       to={link}
     >
