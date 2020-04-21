@@ -57,7 +57,10 @@ export const ApiConnectorListView: React.FunctionComponent<IApiConnectorListView
         />
       )}
       {children ? (
-        <DataList aria-label={'api connector list'}>{children}</DataList>
+        <DataList data-testid={'api-connector-list'} 
+                  aria-label={'api connector list'}>
+            {children}
+        </DataList>
       ) : (
         <EmptyState variant={EmptyStateVariant.full}>
           <EmptyStateIcon icon={AddCircleOIcon}/>

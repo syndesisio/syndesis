@@ -15,7 +15,7 @@ export const FormLabelHintComponent: React.FunctionComponent<IFormLabelHintCompo
       bodyContent={labelHint}
       className={'form-label-hint__popover'}
     >
-      <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
+      <OutlinedQuestionCircleIcon className="pf-u-ml-xs" data-testid={'tooltip'}/>
     </Popover>
   )
 };
