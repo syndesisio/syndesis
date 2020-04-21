@@ -31,6 +31,7 @@ export const TagIntegrationListItem: React.FunctionComponent<ITagIntegrationList
         <DataListCheck
           aria-labelledby="tag-integration-list-item-check"
           name="tag-integration-list-item-check"
+          data-testid={`tag-integration-list-item-check`}
           checked={itemSelected}
           // tslint:disable-next-line: jsx-no-lambda
           onChange={(checked, event) => {setItemSelected(checked); props.onChange(props.name, checked)}}
@@ -38,7 +39,10 @@ export const TagIntegrationListItem: React.FunctionComponent<ITagIntegrationList
         <DataListItemCells
           dataListCells={[
             <DataListCell key={'primary content'} width={2}>
-              <div className={'tag-integration-list-item__text-wrapper'}>
+              <div 
+                className={'tag-integration-list-item__text-wrapper'}
+                data-testid={`tag-integration-list-item-text`}
+              >
                 <b>{props.name}</b>
               </div>
             </DataListCell>,
