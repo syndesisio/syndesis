@@ -23,10 +23,9 @@ export interface IApiClientConnectorCreateSecurityProps {
    */
   authenticationTypes?: IAuthenticationTypes[];
   authUrl?: string;
-  extractAuthType(authType?: string): string;
-  handleChangeAuthUrl: (any: string) => void;
-  handleChangeSelectedType: (any: string) => void;
-  handleChangeTokenUrl: (any: string) => void;
+  handleChangeAuthUrl: (params: string) => void;
+  handleChangeSelectedType: (params: string) => void;
+  handleChangeTokenUrl: (params: string) => void;
   i18nAccessTokenUrl: string;
   i18nAuthorizationUrl: string;
   i18nDescription: string;
@@ -37,6 +36,7 @@ export interface IApiClientConnectorCreateSecurityProps {
   i18nTitle: string;
   selectedType?: string;
   tokenUrl?: string;
+  extractAuthType(authType?: string): string;
 }
 
 export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClientConnectorCreateSecurityProps> = (
