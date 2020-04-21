@@ -70,6 +70,7 @@ export const IntegrationEditorStepsListItem: React.FunctionComponent<IIntegratio
               key={'icon'}
               width={1}
               aria-label={'editor steps list item icon'}
+              data-testid={'editor-step-icon'}
             >
               {icon}
             </DataListCell>,
@@ -79,27 +80,30 @@ export const IntegrationEditorStepsListItem: React.FunctionComponent<IIntegratio
               aria-label={'editor steps list item name'}
             >
               <Stack>
-                <StackItem>
+                <StackItem data-testid={'editor-step-name'}>
                   <b id={id}>{stepName}</b>
                 </StackItem>
-                <StackItem>{stepDescription}</StackItem>
+                <StackItem data-testid={'editor-step-description'}>
+                  {stepDescription}
+                </StackItem>
               </Stack>
             </DataListCell>,
             <DataListCell
               key={2}
               width={3}
               aria-label={'editor steps list item additional info'}
+              data-testid={'editor-step-info'}
             >
               <Split>
                 <SplitItem isFilled={true}>
                   <Stack>
                     <StackItem>
                       <strong>Action:</strong>&nbsp;
-                      <span>{action}</span>
+                      <span data-testid={'editor-step-action'}>{action}</span>
                     </StackItem>
                     <StackItem>
                       <strong>Data Type:</strong>&nbsp;
-                      <span>{shape}</span>
+                      <span data-testid={'editor-step-datashape'}>{shape}</span>
                     </StackItem>
                   </Stack>
                 </SplitItem>
