@@ -2,10 +2,10 @@ import { WithApiConnector, WithApiConnectorHelpers } from '@syndesis/api';
 import { Connector } from '@syndesis/models';
 import {
   ApiConnectorDetailCard,
+  ApiConnectorDetailsForm,
   ApiConnectorReview,
   Breadcrumb,
   ButtonLink,
-  Container,
   Loader,
   PageLoader,
   PageSection,
@@ -187,14 +187,12 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                             </span>
                                           </Breadcrumb>
                                           <PageSection>
-                                            <Container className="col-sm-4">
-                                              <ApiConnectorDetailCard
-                                                description={data.description}
-                                                icon={data.icon}
-                                                name={data.name}
-                                              />
-                                            </Container>
-                                            <Container className="col-sm-8">
+                                            <ApiConnectorDetailCard
+                                              description={data.description}
+                                              icon={data.icon}
+                                              name={data.name}
+                                            />
+                                            <>
                                               <ApiConnectorInfoForm
                                                 name={data.name}
                                                 description={data.description}
@@ -215,12 +213,23 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                                 handleSubmit={handleSubmit}
                                               >
                                                 {({
-                                                  handleSubmit,
-                                                  isSubmitting,
-                                                  isUploadingImage,
+                                                    fields,
+                                                    handleSubmit,
+                                                    isSubmitting,
+                                                    isUploadingImage,
+                                                    onUploadImage
                                                 }) =>
                                                   this.props.edit ? (
                                                     <>
+                                                      <ApiConnectorDetailsForm
+                                                        apiConnectorIcon={data.icon}
+                                                        apiConnectorName={data.name}
+                                                        i18nIconLabel={t('ConnectorIcon')}
+                                                        handleSubmit={handleSubmit}
+                                                        onUploadImage={onUploadImage}
+                                                        isEditing={true}
+                                                        fields={fields}
+                                                      />
                                                       <ButtonLink
                                                         data-testid={
                                                           'api-connector-details-form-cancel-button'
@@ -343,7 +352,7 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                                   )}
                                                 />
                                               )}
-                                            </Container>
+                                            </>
                                           </PageSection>
                                         </>
                                       );
