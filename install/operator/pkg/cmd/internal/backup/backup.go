@@ -20,7 +20,6 @@ import (
 	"errors"
 
 	"github.com/operator-framework/operator-sdk/pkg/log/zap"
-	"github.com/operator-framework/operator-sdk/pkg/restmapper"
 	"github.com/spf13/cobra"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
@@ -55,8 +54,7 @@ func NewBackup(parent *internal.Options) *cobra.Command {
 
 func (o *Backup) prepare() (*v1beta1.Syndesis, client.Client, error) {
 	mgr, err := manager.New(o.GetClientConfig(), manager.Options{
-		Namespace:      o.Namespace,
-		MapperProvider: restmapper.NewDynamicRESTMapper,
+		Namespace: o.Namespace,
 	})
 	if err != nil {
 		return nil, nil, err
