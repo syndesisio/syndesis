@@ -294,6 +294,10 @@ func GetProperties(file string, ctx context.Context, client client.Client, synde
 	}
 
 	if client == nil || len(syndesis.Spec.Components.Database.ExternalDbURL) > 0 {
+		if err := configuration.externalDatabase(ctx, client, syndesis); err != nil {
+			return nil, err
+		}
+
 		return configuration, nil
 	}
 
@@ -422,7 +426,7 @@ func (config *Config) SetRoute(ctx context.Context, client client.Client, syndes
 }
 
 // When an external database is defined, reset connection parameters
-func (config *Config) ExternalDatabase(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis) error {
+func (config *Config) externalDatabase(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis) error {
 	// Handle an external database being defined
 	if syndesis.Spec.Components.Database.ExternalDbURL != "" {
 
