@@ -16,7 +16,7 @@ require (
 	github.com/go-logr/logr v0.1.0
 	github.com/go-openapi/spec v0.19.5
 	github.com/google/go-cmp v0.3.2-0.20191028172631-481baca67f93 // indirect
-	github.com/imdario/mergo v0.3.8
+	github.com/imdario/mergo v0.3.9
 	github.com/lib/pq v1.3.0
 	github.com/openshift/api v3.9.1-0.20190927182313-d4a64ec2cbd8+incompatible
 	github.com/pkg/errors v0.9.1
