@@ -218,8 +218,8 @@ build_image()
         echo Building image with S2I
         echo ======================================================
         if [ -z "$(oc get bc -o name | grep ${S2I_STREAM_NAME})" ]; then
-            echo "Creating BuildConfig ${S2I_STREAM_NAME}"
-            oc new-build --strategy=docker --binary=true --name ${S2I_STREAM_NAME}
+            echo "Creating BuildConfig ${S2I_STREAM_NAME} with tag ${OPERATOR_IMAGE_TAG}"
+            oc new-build --strategy=docker --binary=true --to=${OPERATOR_IMAGE_NAME}:${OPERATOR_IMAGE_TAG} --name ${S2I_STREAM_NAME}
         fi
         local arch="$(mktemp -t ${S2I_STREAM_NAME}-dockerXXX).tar"
         echo $arch

@@ -19,6 +19,7 @@ package util
 import (
 	"database/sql"
 	"fmt"
+	"net/url"
 	"regexp"
 	"strconv"
 
@@ -28,9 +29,15 @@ import (
 var versionMatch = regexp.MustCompile(`^\d+\.\d+`)
 
 // PostgreSQLVersionAt determines the version of a PotgreSQL database running at hostname and port
-func PostgreSQLVersionAt(username string, password string, database string, hostname string, port int) (float64, error) {
-	log.Info(fmt.Sprintf("Connecting to PostgreSQL server running at %s:%d", hostname, port))
-	db, err := sql.Open("postgres", fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable", username, password, hostname, port, database))
+func PostgreSQLVersionAt(username string, password string, database string, dbUrl string) (float64, error) {
+	log.Info(fmt.Sprintf("Connecting to PostgreSQL server running at %s", dbUrl))
+
+	dbUrlObj, err := url.Parse(dbUrl)
+	if err != nil {
+		return 0, err
+	}
+
+	db, err := sql.Open("postgres", fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", username, password, dbUrlObj.Hostname(), dbUrlObj.Port(), database))
 	if err != nil {
 		return 0, err
 	}
