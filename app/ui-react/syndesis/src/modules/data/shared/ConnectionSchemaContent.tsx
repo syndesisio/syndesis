@@ -213,7 +213,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
     <ConnectionSchemaList
       i18nEmptyStateInfo={t('activeConnectionsEmptyStateInfo')}
       i18nEmptyStateTitle={t('activeConnectionsEmptyStateTitle')}
-      i18nLinkCreateConnection={t('shared:linkCreateConnection')}
+      i18nLinkCreateConnection={t('shared:CreateConnection')}
       hasListData={sortedConns.length > 0}
       linkToConnectionCreate={resolvers.connections.create.selectConnector()}
       loading={props.loading}

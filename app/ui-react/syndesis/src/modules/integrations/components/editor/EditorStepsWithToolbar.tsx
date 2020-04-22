@@ -90,7 +90,7 @@ export class EditorStepsWithToolbar extends React.Component<
                   sortTypes={sortTypes}
                   resultsCount={filteredAndSortedEditorSteps.length}
                   {...helpers}
-                  i18nLinkCreateConnection={t('shared:linkCreateConnection')}
+                  i18nLinkCreateConnection={t('shared:CreateConnection')}
                   i18nResultsCount={t('shared:resultsCount', {
                     count: filteredAndSortedEditorSteps.length,
                   })}
