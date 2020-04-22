@@ -296,7 +296,7 @@ export default () => (
                       }
                       i18nConnections={t('shared:Connections')}
                       i18nLinkCreateConnection={t(
-                        'shared:CreateConnection'
+                        'shared:linkCreateConnection'
                       )}
                       i18nLinkCreateIntegration={t(
                         'shared:linkCreateIntegration'

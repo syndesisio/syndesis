@@ -77,7 +77,7 @@ export class ConnectorsPage extends React.Component {
                   connectionsHref={resolvers.connections()}
                   i18nCancel={t('shared:Cancel')}
                   i18nConnections={t('shared:Connections')}
-                  i18nCreateConnection={t('shared:CreateConnection')}
+                  i18nCreateConnection={t('shared:linkCreateConnection')}
                 />
                 <ConnectionCreatorLayout
                   toggle={
