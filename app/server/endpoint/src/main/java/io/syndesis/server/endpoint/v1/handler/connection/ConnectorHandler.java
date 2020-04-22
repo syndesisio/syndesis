@@ -39,8 +39,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -69,11 +69,12 @@ import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import io.syndesis.server.verifier.Verifier;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Path("/connectors")
-@Api(value = "connectors")
+@Tag(name = "connectors")
 @Component
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector>, Updater<Connector>, Deleter<Connector> {
 
@@ -85,12 +86,20 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     private final Inspectors inspectors;
     private final ClientSideState state;
     private final Verifier verifier;
-    private final MetadataConfigurationProperties config;
+    private final ConnectorPropertiesHandler connectorPropertiesHandler;
 
     @SuppressWarnings("PMD.ExcessiveParameterList")
+    @Autowired
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials, final Inspectors inspectors,
                             final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext,
                             final IconDao iconDao, final FileDataManager extensionDataManager, final MetadataConfigurationProperties config) {
+        this(dataMgr, verifier, credentials, inspectors, state, encryptionComponent, applicationContext, iconDao, extensionDataManager, new ConnectorPropertiesHandler(config));
+    }
+
+    @SuppressWarnings("PMD.ExcessiveParameterList")
+    ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials, final Inspectors inspectors,
+                            final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext,
+                            final IconDao iconDao, final FileDataManager extensionDataManager, final ConnectorPropertiesHandler propertiesHandler) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;
@@ -100,7 +109,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         this.applicationContext = applicationContext;
         this.iconDao = iconDao;
         this.extensionDataManager = extensionDataManager;
-        this.config = config;
+        this.connectorPropertiesHandler = propertiesHandler;
     }
 
     @Path("/{id}/credentials")
@@ -149,10 +158,9 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
      */
     Connector enrichConnectorWithDynamicProperties(Connector connector) {
         final String connectorId = connector.getId().get();
-        final ConnectorPropertiesHandler propertiesHandler = properties(connectorId);
         final Map<String, ConfigurationProperty> dynamicProperties = enrichConfigurationPropertiesWithDynamicProperties(
             connector.getProperties(),
-            propertiesHandler.dynamicConnectionProperties(connectorId)
+            connectorPropertiesHandler.dynamicConnectionProperties(connectorId)
         );
         if (!dynamicProperties.isEmpty()) {
             return connector.builder().putAllProperties(dynamicProperties).build();
@@ -185,8 +193,8 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         return dynamicProperties;
     }
 
-    @Path("/{id}/actions")
-    public ConnectorActionHandler getActions(@PathParam("id") final String connectorId) {
+    @Path("/{connectorId}/actions")
+    public ConnectorActionHandler getActions(@PathParam("connectorId") final String connectorId) {
         return new ConnectorActionHandler(getDataManager(), connectorId);
     }
 
@@ -197,15 +205,15 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     }
 
     @Path("/{id}/properties")
-    public ConnectorPropertiesHandler properties(@NotNull @PathParam("id") final String connectorId) {
-        return new ConnectorPropertiesHandler(config);
+    public ConnectorPropertiesHandler properties() {
+        return connectorPropertiesHandler;
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path(value = "/{connectorId}/actions/{actionId}/filters/options")
-    public FilterOptions getFilterOptions(@PathParam("connectorId") @ApiParam(required = true) final String connectorId,
-                                          @PathParam("actionId") @ApiParam(required = true) final String actionId) {
+    @Path(value = "/{id}/actions/{actionId}/filters/options")
+    public FilterOptions getFilterOptions(@PathParam("id") @Parameter(required = true) final String connectorId,
+                                          @PathParam("actionId") @Parameter(required = true) final String actionId) {
         final FilterOptions.Builder builder = new FilterOptions.Builder().addOps(Op.DEFAULT_OPTS);
         final Connector connector = getDataManager().fetch(Connector.class, connectorId);
 
@@ -273,7 +281,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @PUT
     @Path(value = "/{id}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public void update(@NotNull @PathParam("id") @ApiParam(required = true) String id, @MultipartForm ConnectorFormData connectorFormData) {
+    public void update(@MultipartForm ConnectorFormData connectorFormData) {
         if (connectorFormData.getConnector() == null) {
             throw new IllegalArgumentException("Missing connector parameter");
         }

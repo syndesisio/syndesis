@@ -28,11 +28,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.StepAction;
@@ -45,7 +47,7 @@ import io.syndesis.server.endpoint.v1.dto.Meta;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import org.springframework.stereotype.Component;
 
-@Api(value = "steps")
+@Tag(name = "steps")
 @Path("/steps")
 @Component
 public class StepActionHandler extends BaseHandler {
@@ -61,11 +63,10 @@ public class StepActionHandler extends BaseHandler {
     @POST
     @Path("/descriptor")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation("Retrieves enriched step definitions, that is a list of steps where each step has adapted input/output data shapes " +
+    @Operation(description = "Retrieves enriched step definitions, that is a list of steps where each step has adapted input/output data shapes " +
                     "defined with respect to the given shape variants")
-    @ApiResponses(@ApiResponse(code = 200, reference = "#/definitions/Step",
-        responseContainer = "List",
-        message = "List of enriched steps"))
+    @ApiResponse(responseCode = "200", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Step.class))),
+        description = "List of enriched steps")
     public Response enrichStepMetadata(List<Step> steps) {
         List<Step> enriched = new ArrayList<>(steps.size());
 
@@ -101,12 +102,12 @@ public class StepActionHandler extends BaseHandler {
     @POST
     @Path("/{kind}/descriptor")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation("Retrieves enriched step definition, that is an step descriptor that has input/output data shapes " +
+    @Operation(description = "Retrieves enriched step definition, that is an step descriptor that has input/output data shapes " +
                     "defined with respect to the given shape variants")
-    @ApiResponses(@ApiResponse(code = 200, reference = "#/definitions/StepDescriptor",
-        message = "Enriched step descriptor"))
+    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = StepDescriptor.class)),
+        description = "Enriched step descriptor")
     public Response enrichStepMetadata(
-        @PathParam("kind") @ApiParam(required = true) final String kind,
+        @PathParam("kind") @Parameter(required = true) final String kind,
         DynamicActionMetadata metadata) {
 
         final Optional<StepMetadataHandler> metadataHandler = findStepMetadataHandler(StepKind.valueOf(kind));

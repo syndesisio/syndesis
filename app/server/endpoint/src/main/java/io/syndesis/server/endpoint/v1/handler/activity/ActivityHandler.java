@@ -27,7 +27,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -36,7 +37,7 @@ import org.springframework.stereotype.Component;
  * Provides an REST api to an optional ActivityTrackingService.
  */
 @Path("/activity")
-@Api(value = "activity")
+@Tag(name = "activity")
 @Component
 public class ActivityHandler {
 

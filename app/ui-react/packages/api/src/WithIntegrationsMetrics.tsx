@@ -23,7 +23,7 @@ export class WithIntegrationsMetrics extends React.Component<
           lastProcessed: undefined, // date-time
           messages: 0, // int64
           metricsProvider: 'null',
-          start: `${Date.now()}`, // date-time
+          start: Date.now(), // date-time
           topIntegrations: {},
           uptimeDuration: 0, // int64
         }}

@@ -31,10 +31,9 @@ import javax.ws.rs.core.StreamingOutput;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.file.IconDao;
@@ -52,7 +51,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
-@Api(tags = {"connector", "connector-icon"})
+@Tag(name = "connector")
+@Tag(name = "connector-icon")
 public final class ConnectorIconHandler extends BaseHandler {
 
     private final Connector connector;
@@ -68,8 +68,8 @@ public final class ConnectorIconHandler extends BaseHandler {
     }
 
     @POST
-    @ApiOperation("Updates the connector icon for the specified connector and returns the updated connector")
-    @ApiResponses(@ApiResponse(code = 200, response = Connector.class, message = "Updated Connector icon"))
+    @Operation(description = "Updates the connector icon for the specified connector and returns the updated connector")
+    @ApiResponse(responseCode = "200", description = "Updated Connector icon")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @SuppressWarnings("PMD.CyclomaticComplexity")

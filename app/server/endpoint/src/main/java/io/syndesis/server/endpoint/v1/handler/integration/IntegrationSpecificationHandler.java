@@ -31,14 +31,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.ResponseHeader;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.integration.api.IntegrationResourceManager;
@@ -51,7 +51,7 @@ import io.syndesis.server.endpoint.v1.handler.api.ApiHandler;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.springframework.stereotype.Component;
 
-@Api("integrations")
+@Tag(name = "integrations")
 @Path("/integrations/{id}/specification")
 @Component
 public final class IntegrationSpecificationHandler {
@@ -91,17 +91,15 @@ public final class IntegrationSpecificationHandler {
     }
 
     @GET
-    @ApiOperation("Responds with specification that defines this integration")
-    @ApiResponses({
-        @ApiResponse(code = 404, message = "No specification resource defines this integration"),
-        @ApiResponse(code = 204, message = "Empty specification provided when definining this integration"),
-        @ApiResponse(code = 200, message = "Specification resource follows", responseHeaders = {
-            @ResponseHeader(name = "Content-Type", description = "The content type of the specification, e.g. `application/vnd.oai.openapi+json`"),
-            @ResponseHeader(name = "Content-Disposition", description = "Contains the `filename` parameter"),
-        })
+    @Operation(description = "Responds with specification that defines this integration")
+    @ApiResponse(responseCode = "404", description = "No specification resource defines this integration")
+    @ApiResponse(responseCode = "204", description = "Empty specification provided when definining this integration")
+    @ApiResponse(responseCode = "200", description = "Specification resource follows", headers = {
+        @Header(name = "Content-Type", description = "The content type of the specification, e.g. `application/vnd.oai.openapi+json`"),
+        @Header(name = "Content-Disposition", description = "Contains the `filename` parameter")
     })
     public Response
-        fetch(@NotNull @PathParam("id") @ApiParam(required = true, example = "integration-id", value = "The ID of the integration") final String id) {
+        fetch(@NotNull @PathParam("id") @Parameter(required = true, example = "integration-id", description = "The ID of the integration") final String id) {
         final Integration integration = integrationHandler.getIntegration(id);
 
         return ApiGeneratorHelper.specificationFrom(resourceManager, integration)
@@ -111,10 +109,9 @@ public final class IntegrationSpecificationHandler {
 
     @PUT
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @ApiOperation("For an integration that is generated from a specification updates it so it conforms to the updated specification")
-    @ApiImplicitParams(value = {
-        @ApiImplicitParam(dataType = "file", name = "specification", required = true, paramType = "form", value = "Next revision of the specification")})
-    public void update(@NotNull @PathParam("id") @ApiParam(required = true, example = "integration-id", value = "The ID of the integration") final String id,
+    @Operation(description = "For an integration that is generated from a specification updates it so it conforms to the updated specification")
+    @RequestBody(content = @Content(mediaType = "multipart/form-data", schema = @Schema(implementation = ApiHandler.APIFormData.class)), description = "Next revision of the specification")
+    public void update(@NotNull @PathParam("id") @Parameter(required = true, example = "integration-id", description = "The ID of the integration") final String id,
         @NotNull @MultipartForm final ApiHandler.APIFormData apiFormData) {
         final Integration existing = integrationHandler.getIntegration(id);
 

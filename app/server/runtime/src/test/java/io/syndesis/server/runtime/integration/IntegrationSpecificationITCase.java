@@ -18,9 +18,9 @@ package io.syndesis.server.runtime.integration;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import io.swagger.util.Json;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.runtime.BaseITCase;
 
 import org.junit.Test;
@@ -86,7 +86,7 @@ public class IntegrationSpecificationITCase extends BaseITCase {
         final String receivedJson = new String(specificationResponse.getBody().getByteArray(), StandardCharsets.UTF_8);
 
         final Object givenYamlObject = new Yaml(new SafeConstructor()).load(givenYaml);
-        final String givenJson = Json.mapper().writer().writeValueAsString(givenYamlObject);
+        final String givenJson = JsonUtils.toString(givenYamlObject);
 
         assertThatJson(receivedJson).whenIgnoringPaths("$..operationId").isEqualTo(givenJson);
     }

@@ -15,10 +15,9 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.dao.file.IconDao;
@@ -42,7 +41,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
 
-@Api(tags = {"custom-connector", "connector-template"})
+@Tag(name = "custom-connector")
+@Tag(name = "connector-template")
 public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler {
 
     private final IconDao iconDao;
@@ -56,8 +56,8 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation("Creates a new Connector based on the ConnectorTemplate identified by the provided `id`  and the data given in `connectorSettings`")
-    @ApiResponses(@ApiResponse(code = 200, response = Connector.class, message = "Newly created Connector"))
+    @Operation(description = "Creates a new Connector based on the ConnectorTemplate identified by the provided `id`  and the data given in `connectorSettings`")
+    @ApiResponse(responseCode = "200", description = "Newly created Connector")
     public Connector create(final ConnectorSettings connectorSettings) {
 
         final Connector connector = withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(),
@@ -70,8 +70,8 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @ApiOperation("Creates a new Connector based on the ConnectorTemplate identified by the provided `id` and the data given in `connectorSettings` multipart part, plus optional `icon` file")
-    @ApiResponses(@ApiResponse(code = 200, response = Connector.class, message = "Newly created Connector"))
+    @Operation(description = "Creates a new Connector based on the ConnectorTemplate identified by the provided `id` and the data given in `connectorSettings` multipart part, plus optional `icon` file")
+    @ApiResponse(responseCode = "200", description = "Newly created Connector")
     public Connector create(@MultipartForm CustomConnectorFormData customConnectorFormData) throws IOException {
         final ConnectorSettings connectorSettings = customConnectorFormData.getConnectorSettings();
         if (connectorSettings == null) {
@@ -121,7 +121,7 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
     @Path("/info")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation("Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
+    @Operation(description = "Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
     public APISummary info(final ConnectorSettings connectorSettings) {
         return withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(),
             (generator, template) -> generator.info(template, connectorSettings));
@@ -131,7 +131,7 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
     @Path("/info")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @ApiOperation("Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
+    @Operation(description = "Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
     public APISummary info(@MultipartForm final CustomConnectorFormData connectorFormData) {
         try {
             final String specification;

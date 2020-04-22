@@ -28,7 +28,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.server.credential.AcquisitionFlow;
 import io.syndesis.server.credential.AcquisitionMethod;
 import io.syndesis.server.credential.AcquisitionRequest;
@@ -41,7 +41,7 @@ import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import static io.syndesis.server.endpoint.v1.util.Urls.absoluteTo;
 import static io.syndesis.server.endpoint.v1.util.Urls.apiBase;
 
-@Api(value = "credentials")
+@Tag(name = "credentials")
 public class ConnectorCredentialHandler {
 
     private final String connectorId;
