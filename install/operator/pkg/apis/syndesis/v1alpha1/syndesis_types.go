@@ -25,7 +25,7 @@ import (
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
 // SyndesisSpec defines the desired state of Syndesis
-// +k8s:openapi-gen=true
+// +k8s:openapi-gen=false
 type SyndesisSpec struct {
 	RouteHostname        string          `json:"routeHostname,omitempty"`
 	DemoData             *bool           `json:"demoData,omitempty"`
@@ -50,7 +50,7 @@ type SyndesisSpec struct {
 }
 
 // SyndesisStatus defines the observed state of Syndesis
-// +k8s:openapi-gen=true
+// +k8s:openapi-gen=false
 type SyndesisStatus struct {
 	Phase              SyndesisPhase        `json:"phase,omitempty"`
 	UpgradeAttempts    int32                `json:"upgradeAttempts,omitempty"`
