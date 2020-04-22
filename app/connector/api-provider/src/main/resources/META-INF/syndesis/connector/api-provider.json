@@ -48,6 +48,10 @@
         "componentScheme": "bean",
         "standardizedErrors": [
           {
+            "name": "TRANSIENT_DATA_ACCESS_ERROR",
+            "displayName": "TransientDataAccessError"
+          },
+          {
             "name": "SERVER_ERROR",
             "displayName": "ServerError"
           }

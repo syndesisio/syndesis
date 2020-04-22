@@ -72,16 +72,16 @@
               ],
               "standardizedErrors": [
                 {
-                  "displayName": "SqlDataAccessError",
-                  "name": "SQL_DATA_ACCESS_ERROR"
+                  "displayName": "DataAccessError",
+                  "name": "DATA_ACCESS_ERROR"
                 },
                 {
-                  "displayName": "SqlEntityNotFoundError",
-                  "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                  "displayName": "EntityNotFoundError",
+                  "name": "ENTITY_NOT_FOUND_ERROR"
                 },
                 {
-                  "displayName": "SqlConnectorError",
-                  "name": "SQL_CONNECTOR_ERROR"
+                  "displayName": "ConnectorError",
+                  "name": "CONNECTOR_ERROR"
                 }
               ]
             },
@@ -772,16 +772,16 @@
             ],
             "standardizedErrors": [
               {
-                "displayName": "SqlDataAccessError",
-                "name": "SQL_DATA_ACCESS_ERROR"
+                "displayName": "DataAccessError",
+                "name": "DATA_ACCESS_ERROR"
               },
               {
-                "displayName": "SqlEntityNotFoundError",
-                "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                "displayName": "EntityNotFoundError",
+                "name": "ENTITY_NOT_FOUND_ERROR"
               },
               {
-                "displayName": "SqlConnectorError",
-                "name": "SQL_CONNECTOR_ERROR"
+                "displayName": "ConnectorError",
+                "name": "CONNECTOR_ERROR"
               }
             ]
           },
@@ -1392,16 +1392,16 @@
                   ],
                   "standardizedErrors": [
                     {
-                      "displayName": "SqlDataAccessError",
-                      "name": "SQL_DATA_ACCESS_ERROR"
+                      "displayName": "DataAccessError",
+                      "name": "DATA_ACCESS_ERROR"
                     },
                     {
-                      "displayName": "SqlEntityNotFoundError",
-                      "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                      "displayName": "EntityNotFoundError",
+                      "name": "ENTITY_NOT_FOUND_ERROR"
                     },
                     {
-                      "displayName": "SqlConnectorError",
-                      "name": "SQL_CONNECTOR_ERROR"
+                      "displayName": "ConnectorError",
+                      "name": "CONNECTOR_ERROR"
                     }
                   ]
                 },
@@ -1489,16 +1489,16 @@
                         ],
                         "standardizedErrors": [
                           {
-                            "displayName": "SqlDataAccessError",
-                            "name": "SQL_DATA_ACCESS_ERROR"
+                            "displayName": "DataAccessError",
+                            "name": "DATA_ACCESS_ERROR"
                           },
                           {
-                            "displayName": "SqlEntityNotFoundError",
-                            "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                            "displayName": "EntityNotFoundError",
+                            "name": "ENTITY_NOT_FOUND_ERROR"
                           },
                           {
-                            "displayName": "SqlConnectorError",
-                            "name": "SQL_CONNECTOR_ERROR"
+                            "displayName": "ConnectorError",
+                            "name": "CONNECTOR_ERROR"
                           }
                         ]
                       },
@@ -2496,16 +2496,16 @@
                   ],
                   "standardizedErrors": [
                     {
-                      "displayName": "SqlDataAccessError",
-                      "name": "SQL_DATA_ACCESS_ERROR"
+                      "displayName": "DataAccessError",
+                      "name": "DATA_ACCESS_ERROR"
                     },
                     {
-                      "displayName": "SqlEntityNotFoundError",
-                      "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                      "displayName": "EntityNotFoundError",
+                      "name": "ENTITY_NOT_FOUND_ERROR"
                     },
                     {
-                      "displayName": "SqlConnectorError",
-                      "name": "SQL_CONNECTOR_ERROR"
+                      "displayName": "ConnectorError",
+                      "name": "CONNECTOR_ERROR"
                     }
                   ]
                 },
@@ -2593,16 +2593,16 @@
                         ],
                         "standardizedErrors": [
                           {
-                            "displayName": "SqlDataAccessError",
-                            "name": "SQL_DATA_ACCESS_ERROR"
+                            "displayName": "DataAccessError",
+                            "name": "DATA_ACCESS_ERROR"
                           },
                           {
-                            "displayName": "SqlEntityNotFoundError",
-                            "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                            "displayName": "EntityNotFoundError",
+                            "name": "ENTITY_NOT_FOUND_ERROR"
                           },
                           {
-                            "displayName": "SqlConnectorError",
-                            "name": "SQL_CONNECTOR_ERROR"
+                            "displayName": "ConnectorError",
+                            "name": "CONNECTOR_ERROR"
                           }
                         ]
                       },
@@ -3600,16 +3600,16 @@
                   ],
                   "standardizedErrors": [
                     {
-                      "displayName": "SqlDataAccessError",
-                      "name": "SQL_DATA_ACCESS_ERROR"
+                      "displayName": "DataAccessError",
+                      "name": "DATA_ACCESS_ERROR"
                     },
                     {
-                      "displayName": "SqlEntityNotFoundError",
-                      "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                      "displayName": "EntityNotFoundError",
+                      "name": "ENTITY_NOT_FOUND_ERROR"
                     },
                     {
-                      "displayName": "SqlConnectorError",
-                      "name": "SQL_CONNECTOR_ERROR"
+                      "displayName": "ConnectorError",
+                      "name": "CONNECTOR_ERROR"
                     }
                   ]
                 },
@@ -3697,16 +3697,16 @@
                         ],
                         "standardizedErrors": [
                           {
-                            "displayName": "SqlDataAccessError",
-                            "name": "SQL_DATA_ACCESS_ERROR"
+                            "displayName": "DataAccessError",
+                            "name": "DATA_ACCESS_ERROR"
                           },
                           {
-                            "displayName": "SqlEntityNotFoundError",
-                            "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                            "displayName": "EntityNotFoundError",
+                            "name": "ENTITY_NOT_FOUND_ERROR"
                           },
                           {
-                            "displayName": "SqlConnectorError",
-                            "name": "SQL_CONNECTOR_ERROR"
+                            "displayName": "ConnectorError",
+                            "name": "CONNECTOR_ERROR"
                           }
                         ]
                       },
@@ -4146,7 +4146,7 @@
                 ]
               },
               "configuredProperties": {
-                "errorResponseCodes": "{\"SQL_ENTITY_NOT_FOUND_ERROR\":\"404\"}",
+                "errorResponseCodes": "{\"ENTITY_NOT_FOUND_ERROR\":\"404\"}",
                 "httpResponseCode": "200",
                 "returnBody": "false"
               },
@@ -4702,16 +4702,16 @@
                   ],
                   "standardizedErrors": [
                     {
-                      "displayName": "SqlDataAccessError",
-                      "name": "SQL_DATA_ACCESS_ERROR"
+                      "displayName": "DataAccessError",
+                      "name": "DATA_ACCESS_ERROR"
                     },
                     {
-                      "displayName": "SqlEntityNotFoundError",
-                      "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                      "displayName": "EntityNotFoundError",
+                      "name": "ENTITY_NOT_FOUND_ERROR"
                     },
                     {
-                      "displayName": "SqlConnectorError",
-                      "name": "SQL_CONNECTOR_ERROR"
+                      "displayName": "ConnectorError",
+                      "name": "CONNECTOR_ERROR"
                     }
                   ]
                 },
@@ -4799,16 +4799,16 @@
                         ],
                         "standardizedErrors": [
                           {
-                            "displayName": "SqlDataAccessError",
-                            "name": "SQL_DATA_ACCESS_ERROR"
+                            "displayName": "DataAccessError",
+                            "name": "DATA_ACCESS_ERROR"
                           },
                           {
-                            "displayName": "SqlEntityNotFoundError",
-                            "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                            "displayName": "EntityNotFoundError",
+                            "name": "ENTITY_NOT_FOUND_ERROR"
                           },
                           {
-                            "displayName": "SqlConnectorError",
-                            "name": "SQL_CONNECTOR_ERROR"
+                            "displayName": "ConnectorError",
+                            "name": "CONNECTOR_ERROR"
                           }
                         ]
                       },
@@ -5800,16 +5800,16 @@
                   ],
                   "standardizedErrors": [
                     {
-                      "displayName": "SqlDataAccessError",
-                      "name": "SQL_DATA_ACCESS_ERROR"
+                      "displayName": "DataAccessError",
+                      "name": "DATA_ACCESS_ERROR"
                     },
                     {
-                      "displayName": "SqlEntityNotFoundError",
-                      "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                      "displayName": "EntityNotFoundError",
+                      "name": "ENTITY_NOT_FOUND_ERROR"
                     },
                     {
-                      "displayName": "SqlConnectorError",
-                      "name": "SQL_CONNECTOR_ERROR"
+                      "displayName": "ConnectorError",
+                      "name": "CONNECTOR_ERROR"
                     }
                   ]
                 },
@@ -5897,16 +5897,16 @@
                         ],
                         "standardizedErrors": [
                           {
-                            "displayName": "SqlDataAccessError",
-                            "name": "SQL_DATA_ACCESS_ERROR"
+                            "displayName": "DataAccessError",
+                            "name": "DATA_ACCESS_ERROR"
                           },
                           {
-                            "displayName": "SqlEntityNotFoundError",
-                            "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                            "displayName": "EntityNotFoundError",
+                            "name": "ENTITY_NOT_FOUND_ERROR"
                           },
                           {
-                            "displayName": "SqlConnectorError",
-                            "name": "SQL_CONNECTOR_ERROR"
+                            "displayName": "ConnectorError",
+                            "name": "CONNECTOR_ERROR"
                           }
                         ]
                       },

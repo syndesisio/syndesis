@@ -24,7 +24,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import io.syndesis.connector.sql.common.DbMetaDataHelper;
-
+import io.syndesis.common.util.ErrorCategory;
 import io.syndesis.common.util.SyndesisConnectorException;
 
 import io.syndesis.connector.sql.common.JSONBeanUtil;
@@ -68,7 +68,7 @@ public final class SqlStartConnectorCustomizer implements ComponentProxyCustomiz
     private void doAfterProducer(Exchange exchange) {
         Exception e = exchange.getException();
         if (e != null) {
-            throw SyndesisConnectorException.wrap(SqlErrorCategory.SQL_CONNECTOR_ERROR, e);
+            throw SyndesisConnectorException.wrap(ErrorCategory.CONNECTOR_ERROR, e);
         }
         final Message in = exchange.getIn();
         List<String> list = null;

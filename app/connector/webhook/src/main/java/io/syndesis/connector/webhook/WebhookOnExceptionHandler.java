@@ -32,7 +32,7 @@ public class WebhookOnExceptionHandler implements Processor, Properties {
     private static final String HTTP_ERROR_RESPONSE_CODES_PROPERTY = "errorResponseCodes";
     private static final String ERROR_RESPONSE_BODY                = "returnBody";
 
-    Map<String, String> errorResponseCodeMappings;
+    Map<String, Integer> errorResponseCodeMappings;
     Boolean isReturnBody;
     Integer httpResponseStatus;
 
@@ -41,7 +41,7 @@ public class WebhookOnExceptionHandler implements Processor, Properties {
         ErrorStatusInfo statusInfo =
                 ErrorMapper.mapError(exchange.getException(), errorResponseCodeMappings, httpResponseStatus);
         exchange.getOut().removeHeaders("*");
-        exchange.getOut().setHeader(Exchange.HTTP_RESPONSE_CODE, statusInfo.getResponseCode());
+        exchange.getOut().setHeader(Exchange.HTTP_RESPONSE_CODE, statusInfo.getHttpResponseCode());
         if (isReturnBody) {
             exchange.getOut().setBody(statusInfo.toJson());
         } else {

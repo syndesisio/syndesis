@@ -35,7 +35,7 @@ public class OnExceptionHandlerTest {
     private static final String ERROR_RESPONSE_BODY                = "returnBody";
 
 
-    static final String ERROR_RESPONSE_CODES = "{\"SQL_CONNECTOR_ERROR\":\"500\",\"SERVER_ERROR\":\"500\",\"SQL_DATA_ACCESS_ERROR\":\"400\",\"SQL_ENTITY_NOT_FOUND_ERROR\":\"404\"}";
+    static final String ERROR_RESPONSE_CODES = "{\"CONNECTOR_ERROR\":\"500\",\"SERVER_ERROR\":\"500\",\"DATA_ACCESS_ERROR\":\"400\",\"ENTITY_NOT_FOUND_ERROR\":\"404\"}";
 
     @Test
     public void testEmptyResponseBodyOnError() {
@@ -46,7 +46,7 @@ public class OnExceptionHandlerTest {
         configuredProperties.put(ERROR_RESPONSE_BODY               , "false");
 
         Exception e = new SyndesisConnectorException(
-                "SQL_CONNECTOR_ERROR", "error msg test");
+                "CONNECTOR_ERROR", "error msg test");
 
         CamelContext context = new DefaultCamelContext();
         Exchange exchange = new ExchangeBuilder(context).build();
@@ -64,7 +64,7 @@ public class OnExceptionHandlerTest {
     @Test
     public void testErrorStatusInfoResponse() {
  
-        String expectedBody = "{\"responseCode\":404,\"category\":\"SQL_ENTITY_NOT_FOUND_ERROR\",\"message\":\"entity not found\"}";
+        String expectedBody = "{\"httpResponseCode\":404,\"category\":\"ENTITY_NOT_FOUND_ERROR\",\"message\":\"entity not found\",\"error\":\"syndesis_connector_error\"}";
 
         Map<String,String> configuredProperties = new HashMap<>();
         configuredProperties.put(HTTP_RESPONSE_CODE_PROPERTY       , "200");
@@ -72,7 +72,7 @@ public class OnExceptionHandlerTest {
         configuredProperties.put(ERROR_RESPONSE_BODY               , "true");
 
         Exception e = new SyndesisConnectorException(
-                "SQL_ENTITY_NOT_FOUND_ERROR", "entity not found");
+                "ENTITY_NOT_FOUND_ERROR", "entity not found");
 
         Exchange exchange = new ExchangeBuilder(new DefaultCamelContext()).build();
         exchange.setException(e);

@@ -35,7 +35,7 @@ public class ApiProviderOnExceptionHandler implements Processor, Properties {
     private static final String ERROR_RESPONSE_BODY                = "returnBody";
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiProviderOnExceptionHandler.class);
 
-    Map<String, String> errorResponseCodeMappings;
+    Map<String, Integer> errorResponseCodeMappings;
     Boolean isReturnBody;
     Integer httpResponseStatus;
 
