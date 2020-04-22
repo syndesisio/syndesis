@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.sql.customizer;
+package io.syndesis.common.util;
 
-public final class SqlErrorCategory {
+public final class CamelCase {
 
-    public static final String SQL_CONNECTOR_ERROR        = "SQL_CONNECTOR_ERROR";
-    public static final String SQL_DATA_ACCESS_ERROR      = "SQL_DATA_ACCESS_ERROR";
-    public static final String SQL_ENTITY_NOT_FOUND_ERROR = "SQL_ENTITY_NOT_FOUND_ERROR";
+    private CamelCase() {}
 
-    private SqlErrorCategory() {
-        // holds constants
+    /** Convert CamelCase to Underscore
+     * for example 'MyCoolName' becomes 'my_cool_name'
+     * @param text containing the string using Camel Case
+     * @return text using an underscore for each Camel Case
+     */
+    public static String toUnderscore(final String text) {
+        return text.replaceAll("([^_A-Z])([A-Z])", "$1_$2");
     }
 }

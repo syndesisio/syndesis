@@ -164,10 +164,14 @@
     }
   },
   "errorKeys": {
-    "SqlEntityNotFoundError": "SQL Entity Not Found",
-    "SqlDataAccessError": "SQL Data Access Error",
-    "SqlConnectorError": "SQL Connector Error",
-    "ServerError": "Server Error"
+    "ServerError": "Server Error",
+    "ConnectorError": "Connector Error",
+    "EntityNotFoundError": "Entity Not Found Error",
+    "DataAccessError": "Data Access Error",
+    "NonTransientDataAccessError": "Non Transient Error",
+    "DataIntegrityViolationError": " Data Integrity Violation Error",
+    "DuplicateKeyError": "Duplicate Key Error",
+    "TransientDataAccessError": "Retryable Error"
   },
   "apiProvider": {
     "editSpecification": {
