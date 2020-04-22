@@ -34,7 +34,7 @@ require (
 	k8s.io/api v0.18.1
 	k8s.io/apimachinery v0.18.1
 	k8s.io/client-go v12.0.0+incompatible
-	k8s.io/code-generator v0.18.1
+	k8s.io/code-generator v0.18.2
 	k8s.io/gengo v0.0.0-20191010091904-7fa3014cb28f
 	k8s.io/kube-openapi v0.0.0-20191107075043-30be4d16710a
 	k8s.io/kubectl v0.0.0
