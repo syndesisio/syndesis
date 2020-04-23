@@ -2,6 +2,7 @@ package generator_test
 
 import (
 	"context"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -190,6 +191,33 @@ func TestDockerImagesSHAorTag(t *testing.T) {
 			}
 			assert.True(t, checks == len(tt.args.imageableResources), "checks missing", "got", checks, "want", len(tt.args.imageableResources))
 		})
+	}
+}
+
+// Run test related with Ops addon
+func TestOpsAddon(t *testing.T) {
+	syndesis := &v1beta1.Syndesis{}
+	baseDir := "./addons/ops/"
+
+	conf, err := configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), nil, syndesis)
+	if err != nil {
+
+	}
+	for _, file := range []string{"addon-ops-db-alerting-rules.yml", "addon-ops-db-dashboard.yml"} {
+		resources, err := generator.Render(filepath.Join(baseDir, file), conf)
+		require.NoError(t, err)
+		assert.True(t, len(resources) != 0, "Monitoring resources for database should be created when no external db url is defined")
+	}
+
+	syndesis.Spec.Components.Database.ExternalDbURL = "1234"
+	conf, err = configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), nil, syndesis)
+	if err != nil {
+
+	}
+	for _, file := range []string{"addon-ops-db-alerting-rules.yml", "addon-ops-db-dashboard.yml"} {
+		resources, err := generator.Render(filepath.Join(baseDir, file), conf)
+		require.NoError(t, err)
+		assert.True(t, len(resources) == 0, "Monitoring resources for database should not be created when there is a external db url defined")
 	}
 }
 

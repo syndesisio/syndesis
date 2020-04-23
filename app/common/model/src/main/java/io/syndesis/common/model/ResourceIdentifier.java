@@ -19,8 +19,6 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Optional;
 
-import io.syndesis.common.util.json.StringTrimmingConverter;
-
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -39,7 +37,6 @@ public interface ResourceIdentifier extends WithId<ResourceIdentifier>, Serializ
     /**
      * Refers to the "target" resource kind.
      */
-    @JsonDeserialize(contentConverter = StringTrimmingConverter.class)
     @JsonIgnore(false)
     @Override
     Kind getKind();

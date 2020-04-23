@@ -43,52 +43,52 @@ public class APIDocsITCase extends BaseITCase {
     public String text;
 
     @Test
-    public void testSwaggerDocsIndex() {
+    public void testOpenApiDocsIndex() {
         final ResponseEntity<String> response = restTemplate().getForEntity("/api/v1" + path + "index.html", String.class);
-        assertThat(response.getStatusCode()).as("swagger docs index.html response code").isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().length()).as("swagger index.html length").isPositive();
-        assertThat(response.getBody()).as("swagger index.html example path").contains(text);
+        assertThat(response.getStatusCode()).as("OpenAPI docs index.html response code").isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().length()).as("OpenAPI index.html length").isPositive();
+        assertThat(response.getBody()).as("OpenAPI index.html example path").contains(text);
     }
 
     @Test
-    public void testSwaggerDocsIndexWithToken() {
+    public void testOpenAPIDocsIndexWithToken() {
         final ResponseEntity<String> response = get("/api/v1" + path + "index.html", String.class);
-        assertThat(response.getStatusCode()).as("swagger docs index.html response code").isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().length()).as("swagger index.html length").isPositive();
-        assertThat(response.getBody()).as("swagger index.html example path").contains(text);
+        assertThat(response.getStatusCode()).as("OpenAPI docs index.html response code").isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().length()).as("OpenAPI index.html length").isPositive();
+        assertThat(response.getBody()).as("OpenAPI index.html example path").contains(text);
     }
 
     @Test
-    public void testSwaggerJson() {
-        final ResponseEntity<JsonNode> response = restTemplate().getForEntity("/api/v1" + path + "swagger.json", JsonNode.class);
-        assertThat(response.getStatusCode()).as("swagger json response code").isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().get("paths").size()).as("swagger json number of paths").isPositive();
+    public void testOpenAPIJson() {
+        final ResponseEntity<JsonNode> response = restTemplate().getForEntity("/api/v1" + path + "openapi.json", JsonNode.class);
+        assertThat(response.getStatusCode()).as("OpenAPI json response code").isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().get("paths").size()).as("OpenAPI json number of paths").isPositive();
     }
 
     @Test
-    public void testSwaggerJsonWithToken() {
-        final ResponseEntity<JsonNode> response = get("/api/v1" + path + "swagger.json", JsonNode.class);
-        assertThat(response.getStatusCode()).as("swagger json response code").isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().get("paths").size()).as("swagger json number of paths").isPositive();
+    public void testOpenAPIJsonWithToken() {
+        final ResponseEntity<JsonNode> response = get("/api/v1" + path + "openapi.json", JsonNode.class);
+        assertThat(response.getStatusCode()).as("OpenAPI json response code").isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().get("paths").size()).as("OpenAPI json number of paths").isPositive();
     }
 
     @Test
-    public void testSwaggerYaml() {
-        final ResponseEntity<Map<String, Map<?, ?>>> response = restTemplate().getForEntity("/api/v1" + path + "swagger.json", TYPE);
-        assertThat(response.getStatusCode()).as("swagger yaml response code").isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().get("paths").size()).as("swagger json number of paths").isPositive();
+    public void testOpenAPIYaml() {
+        final ResponseEntity<Map<String, Map<?, ?>>> response = restTemplate().getForEntity("/api/v1" + path + "openapi.json", TYPE);
+        assertThat(response.getStatusCode()).as("OpenAPI yaml response code").isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().get("paths").size()).as("OpenAPI json number of paths").isPositive();
     }
 
     @Test
-    public void testSwaggerYamlWithToken() {
-        final ResponseEntity<Map<String, Map<?, ?>>> response = get("/api/v1" + path + "swagger.yaml", TYPE);
-        assertThat(response.getStatusCode()).as("swagger yaml response code").isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody().get("paths").size()).as("swagger json number of paths").isPositive();
+    public void testOpenAPIYamlWithToken() {
+        final ResponseEntity<Map<String, Map<?, ?>>> response = get("/api/v1" + path + "openapi.yaml", TYPE);
+        assertThat(response.getStatusCode()).as("OpenAPI yaml response code").isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody().get("paths").size()).as("OpenAPI json number of paths").isPositive();
     }
 
     @Parameters(name = "{index}: {0}")
     public static Iterable<Object[]> data() {
-        return Arrays.asList(new Object[][] {{"/internal/", "Syndesis API"}, {"/", "Syndesis Supported API"}});
+        return Arrays.asList(new Object[][] {{"/internal/", "Syndesis Internal API"}, {"/", "Syndesis Supported API"}});
     }
 
 }

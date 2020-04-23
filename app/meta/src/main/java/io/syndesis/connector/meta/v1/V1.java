@@ -15,34 +15,23 @@
  */
 package io.syndesis.connector.meta.v1;
 
-import java.util.Collections;
-import java.util.Set;
-
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import io.swagger.jaxrs.config.BeanConfig;
+import io.swagger.v3.jaxrs2.integration.resources.OpenApiResource;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-/**
- * @author roland
- * @since 28/03/2017
- */
 @ApplicationPath("/api/v1")
 @Component
+@Configuration
 @SuppressWarnings("PMD.ShortClassName")
 public class V1 extends Application {
 
-    public V1() {
-        BeanConfig beanConfig = new BeanConfig() {
-            @Override
-            public Set<Class<?>> classes() {
-                return Collections.singleton(V1.class);
-            }
-        };
-        beanConfig.setVersion("v1");
-        beanConfig.setSchemes(new String[]{"http", "https"});
-        beanConfig.setBasePath("/api/v1");
-        beanConfig.setScan(true);
+    @Bean
+    public OpenApiResource openApiResource() {
+        return new OpenApiResource();
     }
 }

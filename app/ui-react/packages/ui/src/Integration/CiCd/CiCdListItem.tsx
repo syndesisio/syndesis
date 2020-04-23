@@ -48,12 +48,14 @@ export const CiCdListItem: React.FC<ICiCdListItemProps> = ({
         <DataListItemCells
           dataListCells={[
             <DataListCell key={'primary content'} width={2}>
-              <div className={'cicd-list-item__text-wrapper'}>
+              <div className={'cicd-list-item__text-wrapper'} data-testid={`cicd-list-item-name`}>
                 <b>{name}</b>
               </div>
             </DataListCell>,
             <DataListCell key={'secondary content'} width={4}>
-              <div className={'cicd-list-item__uses-text'}>{i18nUsesText}</div>
+              <div className={'cicd-list-item__uses-text'} data-testid={`cicd-list-item-usage`}>
+                {i18nUsesText}
+              </div>
             </DataListCell>,
           ]}
         />

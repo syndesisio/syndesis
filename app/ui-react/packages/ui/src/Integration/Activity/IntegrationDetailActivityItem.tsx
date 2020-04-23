@@ -113,27 +113,33 @@ export const IntegrationDetailActivityItem: React.FC<
   ];
 
   return (
-    <DataListItem aria-labelledby="activity item" isExpanded={rowExpanded} className={'integration-detail-activity-item'}>
+    <DataListItem 
+      aria-labelledby="activity item" 
+      isExpanded={rowExpanded} 
+      className={'integration-detail-activity-item'}
+      data-testid={'integration-detail-activity-item'}
+    >
       <DataListItemRow>
         <DataListToggle
           onClick={doExpand}
           isExpanded={rowExpanded}
           id="activity-item-toggle"
+          data-testid={'integration-detail-activity-item-toggle'}
         />
         <DataListItemCells
           dataListCells={[
-            <DataListCell id="activity-date" key="date">
+            <DataListCell id="activity-date" data-testid={'integration-detail-activity-item-date'} key="date">
               {date}
             </DataListCell>,
-            <DataListCell id="activity-time" key="time">
+            <DataListCell id="activity-time" data-testid={'integration-detail-activity-item-time'} key="time">
               {time}
             </DataListCell>,
-            <DataListCell id="activity-version" key="version">
+            <DataListCell id="activity-version" data-testid={'integration-detail-activity-item-version'} key="version">
               {i18nVersion}
               &nbsp;
               {version}
             </DataListCell>,
-            <DataListCell id="activity-errors" key="errors">
+            <DataListCell id="activity-errors" data-testid={'integration-detail-activity-item-errors'} key="errors">
               <div className={'integration-detail-activity-item__status-item'}>
                 {errorCount > 0 ? (
                   <>

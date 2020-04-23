@@ -26,16 +26,16 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.monitoring.IntegrationDeploymentStateDetails;
 import io.syndesis.server.endpoint.monitoring.MonitoringProvider;
 import io.syndesis.server.endpoint.v1.operations.Resource;
 
 @Path("/monitoring/integrations")
-@Api(value = "integration-monitoring")
+@Tag(name = "integration-monitoring")
 @ComponentScan("io.syndesis.server.endpoint.monitoring")
 @Component
 public class IntegrationDeploymentStateDetailsHandler implements Resource {
@@ -55,13 +55,13 @@ public class IntegrationDeploymentStateDetailsHandler implements Resource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{integrationId}")
-    public IntegrationDeploymentStateDetails get(@NotNull @PathParam("integrationId") @ApiParam(required = true) String integrationId) {
+    public IntegrationDeploymentStateDetails get(@NotNull @PathParam("integrationId") @Parameter(required = true) String integrationId) {
         return metricsProvider.getIntegrationStateDetails(integrationId);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation("Retrieves monitoring state details for all integrations")
+    @Operation(description = "Retrieves monitoring state details for all integrations")
     public List<IntegrationDeploymentStateDetails> get() {
         return metricsProvider.getAllIntegrationStateDetails();
     }
