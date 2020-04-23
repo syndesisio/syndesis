@@ -73,6 +73,8 @@
 {{if .DevSupport}}
           - name: JAVA_DEBUG
             value: "true"
+          - name: ENDPOINTS_TEST_SUPPORT_ENABLED
+            value: '{{ .Syndesis.Components.Server.Features.TestSupport }}'
 {{end}}
 {{if .DevSupport}}
           image: ' '

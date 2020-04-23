@@ -22,16 +22,9 @@ import org.springframework.web.server.ResponseStatusException;
 import io.syndesis.dv.RepositoryManager;
 import io.syndesis.dv.utils.KLog;
 /**
- * A Komodo service implementation.
+ * A DV service implementation.
  */
 public abstract class DvService implements V1Constants {
-
-    /**
-     * System user for transactions to be executed internally
-     */
-    public static final String SYSTEM_USER_NAME = "SYSTEM";
-
-    public static final String ENCRYPTED_PREFIX = "ENCRYPTED-";
 
     protected static final KLog LOGGER = KLog.getLogger();
 
