@@ -52,7 +52,7 @@ export const IntegrationDetailMetrics: React.FunctionComponent<IIntegrationDetai
             </CardHeader>
             <CardBody>
               <br />
-              <Title size={'xl'}>
+              <Title size={'xl'} data-testid={'integration-detail-metrics-total-errors'}>
                 <ErrorCircleOIcon color={global_danger_color_100.value} />
                 &nbsp;{errors}
               </Title>
@@ -69,6 +69,7 @@ export const IntegrationDetailMetrics: React.FunctionComponent<IIntegrationDetai
               <Title
                 size={'xl'}
                 className="integration-detail-metrics__last-processed"
+                data-testid={'integration-detail-metrics-last-processed'}
               >
                 {lastProcessed ? lastProcessed : i18nNoDataAvailable}
               </Title>
