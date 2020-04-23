@@ -6,9 +6,8 @@ import (
 
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 
-	"k8s.io/client-go/kubernetes"
-
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
@@ -18,9 +17,9 @@ type checkUpdatesAction struct {
 	operatorVersion string
 }
 
-func newCheckUpdatesAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
+func newCheckUpdatesAction(mgr manager.Manager, clientTools *clienttools.ClientTools) SyndesisOperatorAction {
 	return checkUpdatesAction{
-		newBaseAction(mgr, api, "check-updates"),
+		newBaseAction(mgr, clientTools, "check-updates"),
 		"",
 	}
 }
@@ -59,7 +58,8 @@ func (a checkUpdatesAction) setPhaseToUpgrading(ctx context.Context, syndesis *v
 	target.Status.UpgradeAttempts = 0
 	target.Status.ForceUpgrade = false
 
-	err = a.client.Update(ctx, target)
+	client, _ := a.clientTools.RuntimeClient()
+	err = client.Update(ctx, target)
 	time.Sleep(3 * time.Second)
 	return
 }

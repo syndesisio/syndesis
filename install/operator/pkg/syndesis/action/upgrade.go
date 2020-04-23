@@ -4,11 +4,11 @@ import (
 	"context"
 	"time"
 
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/upgrade"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/kubernetes"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
@@ -27,9 +27,9 @@ type upgradeAction struct {
 	operatorVersion string
 }
 
-func newUpgradeAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
+func newUpgradeAction(mgr manager.Manager, clientTools *clienttools.ClientTools) SyndesisOperatorAction {
 	return &upgradeAction{
-		newBaseAction(mgr, api, "upgrade"),
+		newBaseAction(mgr, clientTools, "upgrade"),
 		"",
 	}
 }
@@ -53,7 +53,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		// the whole upgrade / rollback process
 		if u == nil {
 			var err error
-			u, err = upgrade.Build(ctx, a.log, syndesis, a.client)
+			u, err = upgrade.Build(ctx, a.log, syndesis, a.clientTools)
 			if err != nil {
 				return err
 			}
@@ -116,7 +116,8 @@ func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *v1beta1.S
 	target.Status.UpgradeAttempts = 0
 	target.Status.ForceUpgrade = false
 
-	err = a.client.Update(ctx, target)
+	rtClient, _ := a.clientTools.RuntimeClient()
+	err = rtClient.Update(ctx, target)
 	time.Sleep(3 * time.Second)
 	return
 }
@@ -127,7 +128,8 @@ func (a *upgradeAction) setPhaseToRun(ctx context.Context, syndesis *v1beta1.Syn
 	target.Status.Reason = v1beta1.SyndesisStatusReasonPostUpgradeRun
 	target.Status.Description = "Perform the first install run after syndesis resource was upgraded"
 
-	err = a.client.Update(ctx, target)
+	rtClient, _ := a.clientTools.RuntimeClient()
+	err = rtClient.Update(ctx, target)
 	time.Sleep(3 * time.Second)
 	return
 }
@@ -142,7 +144,8 @@ func (a *upgradeAction) setPhaseToFailureBackoff(ctx context.Context, syndesis *
 	}
 	target.Status.UpgradeAttempts = target.Status.UpgradeAttempts + 1
 
-	err = a.client.Update(ctx, target)
+	rtClient, _ := a.clientTools.RuntimeClient()
+	err = rtClient.Update(ctx, target)
 	time.Sleep(3 * time.Second)
 	return
 }

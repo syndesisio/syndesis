@@ -43,7 +43,7 @@ func TestGrant(t *testing.T) {
 
 	// Create a fake client to mock API calls and pass it to the cmd
 	cl := fake.NewFakeClientWithScheme(scheme.Scheme)
-	g.Client = &cl
+	g.ClientTools().SetRuntimeClient(cl)
 
 	t.Logf("\tTest: When running `operator grant --user user`, it should create the role %s and bind it to the user %s", RoleName, user)
 	if err := g.grant(); err != nil {
