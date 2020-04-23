@@ -119,7 +119,7 @@ export const ViewListItem: React.FC<IViewListItemProps> = ({
                 </div>
               </DataListCell>,
               <DataListCell key={'secondary content'} width={4}>
-                <div className={'view-list-item__invalid-view'}>
+                <div className={'view-list-item__invalid-view'} data-testid={'view-list-item-invalid-view'}>
                   {isValid ? '' : i18nInvalid}
                 </div>
               </DataListCell>,
