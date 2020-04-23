@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.endpoint.v1.handler.tests;
 
+import java.io.IOException;
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,6 +41,8 @@ import io.syndesis.common.util.cache.CacheManager;
 import io.syndesis.server.dao.manager.DataAccessObject;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
@@ -86,6 +89,8 @@ public class TestSupportHandler {
         deleteAllDBEntities();
         startControllers();
         dataMgr.resetDeploymentData();
+        resetDv();
+
         LOG.warn("user {} reset the DB", user);
     }
 
@@ -129,6 +134,18 @@ public class TestSupportHandler {
             return null;
         });
         cacheManager.evictAll();
+    }
+
+    private static void resetDv() {
+        final OkHttpClient httpClient = new OkHttpClient();
+        try (okhttp3.Response dvResponse = httpClient.newCall(new Request.Builder().get().url("http://syndesis-dv/dv/v1/test-support/reset-db").build()).execute()) {
+            if (!dvResponse.isSuccessful()) {
+                LOG.info("cannot reset dv - code {}", dvResponse.code());
+            }
+        } catch (IOException e) {
+            //more than likely it's not enabled
+            LOG.info("cannot reset dv", e);
+        }
     }
 
     private void startControllers() {
