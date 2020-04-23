@@ -10,7 +10,6 @@ import {
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { toValidHtmlId } from '../../../helpers';
-import { ButtonLink } from '../../../Layout';
 
 export interface IAuthenticationTypes {
   value?: string;
