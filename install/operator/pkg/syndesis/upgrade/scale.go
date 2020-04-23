@@ -95,18 +95,23 @@ func (s *scale) scale() (err error) {
 		replicas = 1
 	}
 
+	rtClient, err := s.clientTools.RuntimeClient()
+	if err != nil {
+		return err
+	}
+
 	// Scale up or down
 	s.log.Info("scale DeploymentConfig", "direction", dirToS(s.dir), "deployments", dcs)
 	for _, dn := range dcs {
 		dc := &appsv1.DeploymentConfig{}
-		if err = s.client.Get(s.context, types.NamespacedName{Namespace: s.namespace, Name: dn}, dc); err != nil {
+		if err = rtClient.Get(s.context, types.NamespacedName{Namespace: s.namespace, Name: dn}, dc); err != nil {
 			return err
 		}
 
 		if dc.Spec.Replicas != replicas {
 			s.log.Info("scaling DeploymentConfigs", "name", dn, "desired replicas", replicas, "replicas", dc.Spec.Replicas)
 			dc.Spec.Replicas = replicas
-			if err = s.client.Update(s.context, dc); err != nil {
+			if err = rtClient.Update(s.context, dc); err != nil {
 				return err
 			}
 		}
@@ -117,7 +122,7 @@ func (s *scale) scale() (err error) {
 	err = wait.Poll(s.interval, s.timeout, func() (done bool, err error) {
 		for i, dn := range dcs {
 			dc := &appsv1.DeploymentConfig{}
-			if err = s.client.Get(s.context, types.NamespacedName{Namespace: s.namespace, Name: dn}, dc); err != nil {
+			if err = rtClient.Get(s.context, types.NamespacedName{Namespace: s.namespace, Name: dn}, dc); err != nil {
 				return false, err
 			}
 

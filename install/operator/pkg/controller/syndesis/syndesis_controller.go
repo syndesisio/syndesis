@@ -8,9 +8,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/kubernetes"
 
-	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -20,6 +18,7 @@ import (
 
 	syndesisv1beta1 "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 )
 
 var log = logf.Log.WithName("controller")
@@ -40,14 +39,13 @@ func Add(mgr manager.Manager) error {
 
 // newReconciler returns a new reconcile.Reconciler
 func newReconciler(mgr manager.Manager) (*ReconcileSyndesis, error) {
-	clientset, err := kubernetes.NewForConfig(mgr.GetConfig())
-	if err != nil {
-		return nil, err
-	}
+
+	clientTools := &clienttools.ClientTools{}
+	clientTools.SetRuntimeClient(mgr.GetClient())
+
 	return &ReconcileSyndesis{
-		apis:   clientset,
-		client: mgr.GetClient(),
-		scheme: mgr.GetScheme(),
+		clientTools: clientTools,
+		scheme:    mgr.GetScheme(),
 	}, nil
 }
 
@@ -65,7 +63,7 @@ func add(mgr manager.Manager, r *ReconcileSyndesis) error {
 		return err
 	}
 
-	actions = action.NewOperatorActions(mgr, r.apis)
+	actions = action.NewOperatorActions(mgr, r.clientTools)
 	return nil
 }
 
@@ -73,11 +71,10 @@ var _ reconcile.Reconciler = &ReconcileSyndesis{}
 
 // ReconcileSyndesis reconciles a Syndesis object
 type ReconcileSyndesis struct {
-	// This client, initialized using mgr.Client() above, is a split client
+	// This client kit contains a split client, initialized using mgr.Client() above,
 	// that reads objects from the cache and writes to the apiserver
-	client client.Client
-	apis   kubernetes.Interface
-	scheme *runtime.Scheme
+	clientTools *clienttools.ClientTools
+	scheme    *runtime.Scheme
 }
 
 // Reconcile the state of the Syndesis infrastructure elements
@@ -93,7 +90,8 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 
 	ctx := context.TODO()
 
-	err := r.client.Get(ctx, request.NamespacedName, syndesis)
+	client, _ := r.clientTools.RuntimeClient()
+	err := client.Get(ctx, request.NamespacedName, syndesis)
 	if err != nil {
 		if errors.IsNotFound(err) {
 			// Request object not found, could have been deleted after reconcile request.
@@ -141,7 +139,8 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 
 func (r *ReconcileSyndesis) isLatestVersion(ctx context.Context, syndesis *syndesisv1beta1.Syndesis) (bool, error) {
 	refreshed := syndesis.DeepCopy()
-	if err := r.client.Get(ctx, types.NamespacedName{Name: refreshed.Name, Namespace: refreshed.Namespace}, refreshed); err != nil {
+	client, _ := r.clientTools.RuntimeClient()
+	if err := client.Get(ctx, types.NamespacedName{Name: refreshed.Name, Namespace: refreshed.Namespace}, refreshed); err != nil {
 		return false, err
 	}
 	return refreshed.ResourceVersion == syndesis.ResourceVersion, nil

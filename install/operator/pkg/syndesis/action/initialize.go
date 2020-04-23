@@ -5,9 +5,8 @@ import (
 
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 
-	"k8s.io/client-go/kubernetes"
-
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
@@ -17,9 +16,9 @@ type initializeAction struct {
 	baseAction
 }
 
-func newInitializeAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
+func newInitializeAction(mgr manager.Manager, clientTools *clienttools.ClientTools) SyndesisOperatorAction {
 	return &initializeAction{
-		newBaseAction(mgr, api, "initialize"),
+		newBaseAction(mgr, clientTools, "initialize"),
 	}
 }
 
@@ -31,7 +30,8 @@ func (a *initializeAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
 
 func (a *initializeAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis) error {
 	list := v1beta1.SyndesisList{}
-	err := a.client.List(ctx, &list, &client.ListOptions{Namespace: syndesis.Namespace})
+	rtClient, _ := a.clientTools.RuntimeClient()
+	err := rtClient.List(ctx, &list, &client.ListOptions{Namespace: syndesis.Namespace})
 	if err != nil {
 		return err
 	}
@@ -53,5 +53,5 @@ func (a *initializeAction) Execute(ctx context.Context, syndesis *v1beta1.Syndes
 		a.log.Info("Syndesis resource initialized", "name", syndesis.Name, "version", syndesisVersion)
 	}
 
-	return a.client.Update(ctx, target)
+	return rtClient.Update(ctx, target)
 }

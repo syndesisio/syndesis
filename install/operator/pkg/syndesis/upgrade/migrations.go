@@ -125,7 +125,7 @@ func (m *migration) rollback() (err error) {
 
 func (m *migration) dbMigration() (err error) {
 	// Load configuration to to use as context for generator pkg
-	config, err := configuration.GetProperties(configuration.TemplateConfig, m.context, m.client, m.syndesis)
+	config, err := configuration.GetProperties(m.context, configuration.TemplateConfig, m.clientTools, m.syndesis)
 	if err != nil {
 		return err
 	}
@@ -136,10 +136,15 @@ func (m *migration) dbMigration() (err error) {
 		return err
 	}
 
+	client, err := m.clientTools.RuntimeClient()
+	if err != nil {
+		return err
+	}
+
 	// install the resources
 	for _, res := range resources {
 		operation.SetNamespaceAndOwnerReference(res, m.syndesis)
-		_, _, err := util.CreateOrUpdate(m.context, m.client, &res)
+		_, _, err := util.CreateOrUpdate(m.context, client, &res)
 		if err != nil {
 			return err
 		}
@@ -148,7 +153,7 @@ func (m *migration) dbMigration() (err error) {
 	// Wait for migration Job to correctly finish
 	err = wait.Poll(m.interval, m.timeout, func() (done bool, err error) {
 		j := &batchv1.Job{}
-		if err = m.client.Get(m.context, types.NamespacedName{Namespace: m.namespace, Name: m.jobName}, j); err != nil {
+		if err = client.Get(m.context, types.NamespacedName{Namespace: m.namespace, Name: m.jobName}, j); err != nil {
 			return false, err
 		}
 

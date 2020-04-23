@@ -173,7 +173,7 @@ func (o *Install) installForge() error {
 	// be filled with parameters placeholder values
 	//
 	syndesis, _ := v1beta1.NewSyndesis(convertToParam(string(EnvOpenShiftProject)))
-	configuration, err := conf.GetProperties(conf.TemplateConfig, o.Context, nil, syndesis)
+	configuration, err := conf.GetProperties(o.Context, conf.TemplateConfig, o.ClientTools(), syndesis)
 	if err != nil {
 		return err
 	}

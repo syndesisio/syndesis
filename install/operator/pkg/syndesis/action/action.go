@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-logr/logr"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -25,11 +26,10 @@ type Client struct {
 }
 
 type baseAction struct {
-	log    logr.Logger
-	client client.Client
-	scheme *runtime.Scheme
-	api    kubernetes.Interface
-	mgr    manager.Manager
+	log       logr.Logger
+	clientTools *clienttools.ClientTools
+	scheme    *runtime.Scheme
+	mgr       manager.Manager
 }
 
 var actionLog = logf.Log.WithName("action")
@@ -39,24 +39,23 @@ type SyndesisOperatorAction interface {
 	Execute(ctx context.Context, syndesis *v1beta1.Syndesis) error
 }
 
-func NewOperatorActions(mgr manager.Manager, api kubernetes.Interface) []SyndesisOperatorAction {
+func NewOperatorActions(mgr manager.Manager, clientTools *clienttools.ClientTools) []SyndesisOperatorAction {
 	return []SyndesisOperatorAction{
-		newCheckUpdatesAction(mgr, api),
-		newUpgradeAction(mgr, api),
-		newUpgradeBackoffAction(mgr, api),
-		newInitializeAction(mgr, api),
-		newInstallAction(mgr, api),
-		newBackupAction(mgr, api),
-		newStartupAction(mgr, api),
+		newCheckUpdatesAction(mgr, clientTools),
+		newUpgradeAction(mgr, clientTools),
+		newUpgradeBackoffAction(mgr, clientTools),
+		newInitializeAction(mgr, clientTools),
+		newInstallAction(mgr, clientTools),
+		newBackupAction(mgr, clientTools),
+		newStartupAction(mgr, clientTools),
 	}
 }
 
-func newBaseAction(mgr manager.Manager, api kubernetes.Interface, typeS string) baseAction {
+func newBaseAction(mgr manager.Manager, clientTools *clienttools.ClientTools, typeS string) baseAction {
 	return baseAction{
 		actionLog.WithValues("type", typeS),
-		mgr.GetClient(),
+		clientTools,
 		mgr.GetScheme(),
-		api,
 		mgr,
 	}
 }

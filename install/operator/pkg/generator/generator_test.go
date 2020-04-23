@@ -6,43 +6,15 @@ import (
 	"strings"
 	"testing"
 
-	osappsv1 "github.com/openshift/api/apps/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
-	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/client-go/kubernetes/scheme"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/client/fake"
+
+	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
 )
-
-//
-// Registers the DeploymentConfig type and adds in a
-// mock syndesis-db deployment config runtime object
-//
-func fakeClient() client.Client {
-	s := scheme.Scheme
-	osappsv1.AddToScheme(s)
-
-	synDbDeployment := &osappsv1.DeploymentConfig{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: "syndesis-db",
-		},
-		Spec: osappsv1.DeploymentConfigSpec{
-			Template: &corev1.PodTemplateSpec{
-				Spec: corev1.PodSpec{
-					Containers: []corev1.Container{},
-				},
-			},
-		},
-	}
-
-	return fake.NewFakeClientWithScheme(s, synDbDeployment)
-}
 
 func TestGenerator(t *testing.T) {
 	syndesis := &v1beta1.Syndesis{
@@ -107,7 +79,8 @@ func TestGenerator(t *testing.T) {
 		},
 	}
 
-	configuration, err := configuration.GetProperties("../../build/conf/config.yaml", context.TODO(), fakeClient(), syndesis)
+	clientTools := syntesting.FakeClientTools()
+	configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config.yaml", clientTools, syndesis)
 	require.NoError(t, err)
 
 	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure/", configuration)
@@ -186,9 +159,10 @@ func TestDockerImagesSHAorTag(t *testing.T) {
 			},
 		},
 	}
+	clientTools := syntesting.FakeClientTools()
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			conf, err := configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), nil, &v1beta1.Syndesis{})
+			conf, err := configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", clientTools, &v1beta1.Syndesis{})
 			require.NoError(t, err)
 
 			conf.Syndesis.SHA = tt.args.sha
@@ -228,7 +202,8 @@ func TestOpsAddon(t *testing.T) {
 	syndesis := &v1beta1.Syndesis{}
 	baseDir := "./addons/ops/"
 
-	conf, err := configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), nil, syndesis)
+	clientTools := syntesting.FakeClientTools()
+	conf, err := configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", clientTools, syndesis)
 	if err != nil {
 
 	}
@@ -239,7 +214,7 @@ func TestOpsAddon(t *testing.T) {
 	}
 
 	syndesis.Spec.Components.Database.ExternalDbURL = "1234"
-	conf, err = configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), nil, syndesis)
+	conf, err = configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", clientTools, syndesis)
 	if err != nil {
 
 	}
@@ -390,7 +365,9 @@ func assertPropStr(t *testing.T, resource map[string]interface{}, expected strin
 }
 
 func loadDBResource(t *testing.T, syndesis *v1beta1.Syndesis) []unstructured.Unstructured {
-	configuration, err := configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), fakeClient(), syndesis)
+
+	clientTools := syntesting.FakeClientTools()
+	configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", clientTools, syndesis)
 	require.NoError(t, err)
 
 	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./database/", configuration)

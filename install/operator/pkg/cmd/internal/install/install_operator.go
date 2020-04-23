@@ -29,7 +29,7 @@ func (o *Install) installOperatorResources() error {
 			return err
 		}
 
-		client, err := o.GetDynamicClient()
+		client, err := o.ClientTools().DynamicClient()
 		if err != nil {
 			return err
 		}

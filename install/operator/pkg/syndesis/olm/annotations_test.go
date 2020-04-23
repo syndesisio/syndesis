@@ -22,12 +22,14 @@ import (
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_annotation_build(t *testing.T) {
-	conf, err := configuration.GetProperties("../../../build/conf/config-test.yaml", context.TODO(), nil, &v1beta1.Syndesis{})
+	clientTools := syntesting.FakeClientTools()
+	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &v1beta1.Syndesis{})
 	assert.NoError(t, err)
 
 	a := &annotation{config: conf}

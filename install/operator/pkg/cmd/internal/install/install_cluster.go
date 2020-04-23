@@ -30,7 +30,7 @@ func (o *Install) installClusterResources() error {
 		if len(crds) == 0 {
 			o.Println("shared resources were previously installed")
 		} else {
-			return util.RunAsMinishiftAdminIfPossible(o.GetClientConfig(), func() error {
+			return util.RunAsMinishiftAdminIfPossible(o.ClientTools().RestConfig(), func() error {
 				err := o.install("cluster resources were", resources)
 				if err != nil {
 					return err
@@ -103,7 +103,7 @@ func (o *Install) removeInstalledCRDs(crds map[v1.GroupVersionKind]bool) error {
 
 // IsCRDInstalled check if the given CRD kind is installed
 func (o *Install) IsCRDInstalled(crd v1.GroupVersionKind) (bool, error) {
-	api, err := o.NewApiClient()
+	api, err := o.ClientTools().ApiClient()
 	if err != nil {
 		return false, err
 	}

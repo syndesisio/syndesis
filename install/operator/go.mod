@@ -15,6 +15,7 @@ require (
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/go-logr/logr v0.1.0
 	github.com/go-openapi/spec v0.19.5
+	github.com/gorilla/mux v1.7.3 // indirect
 	github.com/imdario/mergo v0.3.9
 	github.com/lib/pq v1.3.0
 	github.com/openshift/api v3.9.1-0.20190927182313-d4a64ec2cbd8+incompatible
@@ -33,7 +34,6 @@ require (
 	k8s.io/api v0.17.4
 	k8s.io/apimachinery v0.17.4
 	k8s.io/client-go v12.0.0+incompatible
-	k8s.io/code-generator v0.17.4
 	k8s.io/gengo v0.0.0-20200114144118-36b2048a9120
 	k8s.io/kube-openapi v0.0.0-20200121204235-bf4fb3bd569c
 	k8s.io/kubectl v0.17.4
@@ -42,6 +42,7 @@ require (
 
 require (
 	github.com/operator-framework/operator-sdk v0.17.0
+	k8s.io/code-generator v0.17.4
 	sigs.k8s.io/controller-runtime v0.5.2
 )
 

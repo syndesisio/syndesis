@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
-	"k8s.io/client-go/kubernetes"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
@@ -22,9 +22,9 @@ type upgradeBackoffAction struct {
 	operatorVersion string
 }
 
-func newUpgradeBackoffAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
+func newUpgradeBackoffAction(mgr manager.Manager, clientTools *clienttools.ClientTools) SyndesisOperatorAction {
 	return &upgradeBackoffAction{
-		newBaseAction(mgr, api, "upgrade-backoff"),
+		newBaseAction(mgr, clientTools, "upgrade-backoff"),
 		"",
 	}
 }
@@ -34,6 +34,7 @@ func (a *upgradeBackoffAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
 }
 
 func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis) error {
+	rtClient, _ := a.clientTools.RuntimeClient()
 
 	// Check number of attempts to fail fast
 	if syndesis.Status.UpgradeAttempts >= UpgradeMaxAttempts {
@@ -45,7 +46,7 @@ func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *v1beta1.Sy
 		target.Status.Description = "Upgrade failed too many times and will not be retried"
 		target.Status.ForceUpgrade = false
 
-		return a.client.Update(ctx, target)
+		return rtClient.Update(ctx, target)
 	}
 
 	now := time.Now()
@@ -84,7 +85,7 @@ func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *v1beta1.Sy
 		target.Status.Description = "Upgrading from " + currentVersion + " to " + targetVersion + " (attempt " + currentAttemptStr + ")"
 		target.Status.ForceUpgrade = true
 
-		return a.client.Update(ctx, target)
+		return rtClient.Update(ctx, target)
 	} else {
 		remaining := math.Round(nextAttempt.Sub(now).Seconds())
 		a.log.Info("Upgrade of Syndesis resource will be retried", "name", syndesis.Name, "retryAfterSeconds", remaining)

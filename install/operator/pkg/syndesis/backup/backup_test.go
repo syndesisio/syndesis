@@ -8,6 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -22,10 +23,13 @@ func TestBackupInit(t *testing.T) {
 	ns := "syndesis"
 	s, _ := v1beta1.NewSyndesis(ns)
 
+	ct := &clienttools.ClientTools{}
+	ct.SetRuntimeClient(cl)
+
 	b1 := &Backup{
-		context:  ctx,
-		client:   cl,
-		syndesis: s,
+		context:     ctx,
+		clientTools: ct,
+		syndesis:    s,
 	}
 
 	err := b1.SetDelete(true)
@@ -33,7 +37,7 @@ func TestBackupInit(t *testing.T) {
 	// b has not been correctly inited using NewBackup
 	assert.Error(t, err)
 
-	b2, err := NewBackup(ctx, cl, s, "")
+	b2, err := NewBackup(ctx, ct, s, "")
 	assert.NoError(t, err)
 
 	// Using factory method Backup correctly inited
@@ -48,6 +52,9 @@ func TestValidate(t *testing.T) {
 	ns := "syndesis"
 	s, _ := v1beta1.NewSyndesis(ns)
 
+	ct := &clienttools.ClientTools{}
+	ct.SetRuntimeClient(cl)
+
 	var tests = []struct {
 		description string
 		directory   string
@@ -60,7 +67,7 @@ func TestValidate(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.description, func(t *testing.T) {
-			b, err := NewBackup(ctx, cl, s, test.directory)
+			b, err := NewBackup(ctx, ct, s, test.directory)
 			assert.NoError(t, err)
 
 			err = b.Validate()
@@ -80,7 +87,10 @@ func TestBackupBuildDir(t *testing.T) {
 	ns := "syndesis"
 	s, _ := v1beta1.NewSyndesis(ns)
 
-	b, err := NewBackup(ctx, cl, s, "testdata")
+	ct := &clienttools.ClientTools{}
+	ct.SetRuntimeClient(cl)
+
+	b, err := NewBackup(ctx, ct, s, "testdata")
 	assert.NoError(t, err)
 
 	r, err := b.BuildBackupDir("latest")
@@ -124,7 +134,10 @@ func TestBackupPodFromJob(t *testing.T) {
 	cl := fake.NewFakeClient(objs...)
 	s, _ := v1beta1.NewSyndesis(ns)
 
-	b, err := NewBackup(ctx, cl, s, "/foo")
+	ct := &clienttools.ClientTools{}
+	ct.SetRuntimeClient(cl)
+
+	b, err := NewBackup(ctx, ct, s, "/foo")
 	assert.NoError(t, err)
 
 	pod, err := b.podInJob(job)

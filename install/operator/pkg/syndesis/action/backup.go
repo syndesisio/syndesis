@@ -21,12 +21,12 @@ import (
 	"fmt"
 	"strings"
 
-	"k8s.io/client-go/kubernetes"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 
 	cron "github.com/robfig/cron/v3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/backup"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 )
 
 var c = cron.New()
@@ -36,9 +36,9 @@ type backupAction struct {
 	baseAction
 }
 
-func newBackupAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
+func newBackupAction(mgr manager.Manager, clientTools *clienttools.ClientTools) SyndesisOperatorAction {
 	return &backupAction{
-		newBaseAction(mgr, api, "backup"),
+		newBaseAction(mgr, clientTools, "backup"),
 	}
 }
 
@@ -56,7 +56,7 @@ func (a *backupAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis) 
 		if len(entries) == 0 {
 			a.log.Info("scheduling backup job", "frequency", string(s))
 			c.AddFunc(strings.Join([]string{"@", string(s)}, ""), func() {
-				b, err := backup.NewBackup(ctx, a.client, syndesis, "/tmp/foo")
+				b, err := backup.NewBackup(ctx, a.clientTools, syndesis, "/tmp/foo")
 				if err != nil {
 					a.log.Error(err, "backup initialisation failed with error")
 					return
@@ -71,7 +71,8 @@ func (a *backupAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis) 
 			syndesis.Status.Backup.Next = entries[0].Next.String()
 			syndesis.Status.Backup.Previous = entries[0].Prev.String()
 
-			return a.client.Update(ctx, syndesis)
+			client, _ := a.clientTools.RuntimeClient()
+			return client.Update(ctx, syndesis)
 		} else {
 			return fmt.Errorf("unsopported number of entries for cron instance, cron %v", c)
 		}

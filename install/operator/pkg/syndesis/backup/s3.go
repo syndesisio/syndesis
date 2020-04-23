@@ -45,7 +45,7 @@ type S3 struct {
 }
 
 func (s *S3) Enabled() (result bool) {
-	api, err := s.apiClient()
+	api, err := s.Backup.clientTools.ApiClient()
 	if err != nil {
 		return false
 	}
@@ -88,7 +88,7 @@ func (s *S3) credentials(unset bool) (err error) {
 		os.Unsetenv("AWS_SECRET_ACCESS_KEY")
 	}
 
-	api, err := s.apiClient()
+	api, err := s.Backup.clientTools.ApiClient()
 	if err != nil {
 		return
 	}

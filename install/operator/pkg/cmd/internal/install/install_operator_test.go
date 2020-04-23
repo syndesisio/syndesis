@@ -23,6 +23,7 @@ import (
 	v12 "github.com/openshift/api/image/v1"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
+
 	v1 "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	dynfake "k8s.io/client-go/dynamic/fake"
@@ -54,11 +55,11 @@ func TestInstallOperator(t *testing.T) {
 	// Create a fake client to mock API calls and pass it to the cmd
 	objs := []runtime.Object{}
 	cl := clfake.NewFakeClient(objs...)
-	i.Client = &cl
+	i.ClientTools().SetRuntimeClient(cl)
 
 	scheme := runtime.NewScheme()
 	dyncl := dynfake.NewSimpleDynamicClient(scheme)
-	i.DynamicClient = dyncl
+	i.ClientTools().SetDynamicClient(dyncl)
 
 	t.Logf("\tTest: When running `operator install --tag`, it should create the role %s", RoleName)
 	if err := i.installOperatorResources(); err != nil {

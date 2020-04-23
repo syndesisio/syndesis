@@ -50,7 +50,7 @@ func New(parent *internal.Options) *cobra.Command {
 }
 
 func (o *Olm) generate() (err error) {
-	conf, err := configuration.GetProperties(configuration.TemplateConfig, context.TODO(), nil, &v1beta1.Syndesis{})
+	conf, err := configuration.GetProperties(context.TODO(), configuration.TemplateConfig, o.ClientTools(), &v1beta1.Syndesis{})
 	if err != nil {
 		return err
 	}

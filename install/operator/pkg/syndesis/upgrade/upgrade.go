@@ -28,11 +28,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 
 	sbackup "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/backup"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 
 	"github.com/go-logr/logr"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 // Interface to be used top perform upgrades
@@ -50,12 +50,12 @@ type Upgrader interface {
 }
 
 type step struct {
-	name      string
-	log       logr.Logger
-	executed  bool
-	namespace string
-	context   context.Context
-	client    client.Client
+	name        string
+	log         logr.Logger
+	executed    bool
+	namespace   string
+	context     context.Context
+	clientTools *clienttools.ClientTools
 }
 
 type stepRunner interface {
@@ -83,13 +83,13 @@ type result interface {
 }
 
 type upgrade struct {
-	log      logr.Logger
-	steps    []stepRunner
-	backup   sbackup.Runner
-	attempts []result
-	ctx      context.Context
-	syndesis *v1beta1.Syndesis
-	client   client.Client
+	log         logr.Logger
+	steps       []stepRunner
+	backup      sbackup.Runner
+	attempts    []result
+	ctx         context.Context
+	syndesis    *v1beta1.Syndesis
+	clientTools *clienttools.ClientTools
 }
 
 // Run the upgrade
@@ -145,16 +145,16 @@ func (u *upgrade) InstallFailed() (count int) {
 }
 
 // build the upgrade struct
-func Build(log logr.Logger, syndesis *v1beta1.Syndesis, client client.Client, ctx context.Context) (Upgrader, error) {
+func Build(log logr.Logger, syndesis *v1beta1.Syndesis, clientTools *clienttools.ClientTools, ctx context.Context) (Upgrader, error) {
 	base := step{
-		log:       log,
-		executed:  false,
-		client:    client,
-		context:   ctx,
-		namespace: syndesis.Namespace,
+		log:         log,
+		executed:    false,
+		clientTools: clientTools,
+		context:     ctx,
+		namespace:   syndesis.Namespace,
 	}
 
-	bkp, err := sbackup.NewBackup(ctx, client, syndesis,
+	bkp, err := sbackup.NewBackup(ctx, clientTools, syndesis,
 		strings.Join([]string{"/tmp/", strconv.FormatInt(time.Now().Unix(), 10)}, ""))
 	if err != nil {
 		return nil, err
@@ -162,13 +162,13 @@ func Build(log logr.Logger, syndesis *v1beta1.Syndesis, client client.Client, ct
 	bkp.SetLocalOnly(true)
 
 	u := &upgrade{
-		log:      log,
-		steps:    nil,
-		backup:   bkp,
-		attempts: []result{},
-		ctx:      ctx,
-		syndesis: syndesis,
-		client:   client,
+		log:         log,
+		steps:       nil,
+		backup:      bkp,
+		attempts:    []result{},
+		ctx:         ctx,
+		syndesis:    syndesis,
+		clientTools: clientTools,
 	}
 
 	bbkp, err := newBackup(base, u.syndesis)
