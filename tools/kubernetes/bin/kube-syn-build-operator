@@ -111,7 +111,7 @@ docker --tlscacert ~/.minikube/ca.crt push ${DOCKER_OP_IMAGE}
 #
 # Check the image is present in the registry
 #
-regsta=$(curl -k https://${DOCKER_REG}/v2/_catalog/${OP_NAME}/tags/list)
+regsta=$(curl -k https://${DOCKER_REG}/v2/${OP_NAME}/tags/list)
 if [ -z "${regsta##*errors*}" ] ;then
   echo "Image not successfully pushed to registry"
   exit 1

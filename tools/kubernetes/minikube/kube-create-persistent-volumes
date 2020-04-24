@@ -1,0 +1,54 @@
+#!/bin/bash
+
+###
+#
+# * Creates the persistent volumes necessary for
+#   installation of syndesis
+#
+###
+
+KUBECTL="kubectl"
+
+#
+# Assumes minikube is up n running
+#
+
+ADMIN="minikube"
+
+#
+# Creates the generic persistent volumes
+#
+for i in $(seq -f "%04g" 1 9)
+do
+  pv="pv$i"
+
+  minikube ssh "sudo mkdir /mnt/${pv}"
+
+  cat <<"EOT" | sed -e "s/<PVNAME>/${pv}/" | ${KUBECTL} --user=${ADMIN} apply -f -
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: syndesis-<PVNAME>
+  labels:
+    type: local
+spec:
+  storageClassName: standard
+  persistentVolumeReclaimPolicy: Delete
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/<PVNAME>"
+EOT
+
+done
+
+sleep 3
+
+#
+# Ensure all the newly create directories are writeable
+# by users. Without this, we get a rather ugly "permission denied"
+# error message when spinning up the containers
+#
+minikube ssh "sudo chmod 777 /mnt/*"

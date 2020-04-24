@@ -177,6 +177,7 @@ run() {
 }
 
 source "$(basedir)/commands/util/common_funcs"
+source "$(basedir)/commands/util/client_funcs"
 
 ERROR_FILE="$(mktemp /tmp/syndesis-output.XXXXXX)"
 trap "print_error $ERROR_FILE" EXIT
@@ -185,5 +186,25 @@ if [ $(hasflag --verbose) ]; then
     export PS4='+($(basename ${BASH_SOURCE[0]}):${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
     set -x
 fi
+
+#
+# Set up the location of grep
+#
+gnugrep
+
+#
+# First task is try and determine the platform we'll be connecting to
+#
+determine_platform
+
+#
+# Choose which kube binary to use
+#
+setup_client_binary
+
+echo ==== Global Properties ====
+echo "Openshift : $IS_OPENSHIFT"
+echo "Kubectl   : $KUBE"
+echo
 
 run "$@"

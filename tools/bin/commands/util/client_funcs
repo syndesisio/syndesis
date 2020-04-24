@@ -1,0 +1,243 @@
+#!/bin/bash
+
+KUBE="kubectl"
+
+source "$(basedir)/commands/util/openshift_funcs"
+source "$(basedir)/commands/util/kube_funcs"
+
+setup_client_binary() {
+    if [ ${IS_OPENSHIFT} == true ]; then
+        #
+        # Determine location of oc
+        #
+        setup_oc KUBE
+    else
+        #
+        # Check for installation of kubectl
+        #
+        setup_kube KUBE
+    fi
+}
+
+get_current_user() {
+    if [ ${IS_OPENSHIFT} == true ]; then
+        echo $(get_oc_user)
+    else
+        echo $(get_kube_user)
+    fi
+}
+
+is_cluster_admin() {
+    ${KUBE} get clusterrolebindings > /dev/null 2>&1
+    status=$?
+    if [ ${status} -ne 0 ]; then
+      echo "ERROR: Not successfully logged in as cluster-admin"
+      return
+    fi
+
+    # Seems some implementations will allow the above
+    ${KUBE} get namespaces > /dev/null 2>&1
+    status=$?
+    if [ ${status} -ne 0 ]; then
+        echo "ERROR: Not successfully logged in as cluster-admin"
+        return
+    fi
+
+    echo "OK"
+}
+
+get_current_namespace() {
+  if [ ${IS_OPENSHIFT} == true ]; then
+      echo $(get_oc_project)
+  else
+      echo $(get_kube_namespace)
+  fi
+}
+
+has_namespace() {
+    if [ -z "${1:-}" ]; then
+        check_error "ERROR: no namespace specified"
+    fi
+
+    if [ ${IS_OPENSHIFT} == true ]; then
+        status=$(get_oc_project "$1")
+    else
+        status=$(get_kube_namespace "$1")
+    fi
+
+    if has_error $status; then
+        echo "${status}"
+    else
+        echo "OK"
+    fi
+}
+
+delete_namespace() {
+    if [ -z "${1:-}" ]; then
+        check_error "ERROR: no namespace specified"
+    fi
+
+    if [ ${IS_OPENSHIFT} == true ]; then
+        status=$(delete_oc_project "$1")
+    else
+        status=$(delete_kube_namespace "$1")
+    fi
+}
+
+create_namespace() {
+    if [ -z "${1:-}" ]; then
+        check_error "ERROR: no namespace specified"
+    fi
+
+    if [ ${IS_OPENSHIFT} == true ]; then
+        status=$(create_oc_project "$1")
+    else
+        status=$(create_kube_namespace "$1")
+    fi
+}
+
+switch_namespace() {
+    if [ -z "${1:-}" ]; then
+        check_error "ERROR: no namespace specified"
+    fi
+
+    if [ ${IS_OPENSHIFT} == true ]; then
+        status=$(switch_oc_project "$1")
+    else
+        status=$(switch_kube_namespace "$1")
+    fi
+}
+
+recreate_namespace() {
+    local project=$1
+    local dont_ask=${2:-false}
+
+    if [ -z "$project" ]; then
+        check_error "ERROR: No project given"
+    fi
+
+    # Delete project if existing
+    if [ "$(has_namespace "${project}")" == "OK" ]; then
+        if [ $dont_ask != "true" ]; then
+            echo =============== WARNING -- Going to delete project ${project}
+            ${KUBE} get all -n $project
+            echo ============================================================
+            read -p "Do you really want to delete the existing project $project ? yes/[no] : " choice
+            echo
+            if [ "$choice" != "yes" ] && [ "$choice" != "y" ]; then
+                check_error "ERROR: Aborting on user's request"
+            fi
+        fi
+        echo "Deleting project ${project}"
+        delete_namespace "${project}"
+    fi
+
+    # Create project afresh
+    echo "Creating project ${project}"
+    for i in {1..10}; do
+        if [ $(create_namespace "${project}") == "OK" ]; then
+            break
+        fi
+        echo "Project still exists. Sleeping 10s ..."
+        sleep 10
+    done
+    switch_namespace "${project}"
+}
+
+create_maven_mirror() {
+    if [ ${IS_OPENSHIFT} == true ]; then
+        install_maven_mirror
+    else
+        echo "This option is not available in kubernetes."
+    fi
+}
+
+execute_pre_tasks() {
+    if [ ${IS_OPENSHIFT} == true ]; then
+        #
+        # Nothing required to do
+        #
+        return
+    else
+        execute_pre_kube_tasks
+    fi
+}
+
+get_custom_resource() {
+    cr="${1:-}"
+
+    if [ ${IS_OPENSHIFT} == true ]; then
+        #
+        # OS uses the internal default cr
+        # or the one given on the cli
+        #
+        echo ${cr}
+    else
+        #
+        # kube requires the cr generated with
+        # a route hostname
+        #
+        if [ -n "${cr}" ]; then
+            #
+            # Prioritise the cli
+            #
+            echo ${cr}
+            return
+        fi
+
+        if [ -f "$(basedir)/commands/share/kube-cr.yml" ]; then
+            echo "$(basedir)/commands/share/kube-cr.yml"
+        fi
+
+        echo ""
+    fi
+}
+
+scale_deployments() {
+    local replicas=$1
+    shift
+    local dcs="$@"
+    for dc in $dcs; do
+        ${KUBE} scale dc $dc --replicas=$replicas
+    done
+    wait_for_deployments $replicas $dcs
+}
+
+wait_for_deployments() {
+    local replicas_desired=$1
+    shift
+    local dcs="$@"
+
+    ${KUBE} get pods -w &
+    watch_pid=$!
+    for dc in $dcs; do
+        echo "Waiting for $dc to be scaled to ${replicas_desired}"
+        local replicas=$(get_replicas $dc)
+        while [ -z "$replicas" ] || [ "$replicas" -ne $replicas_desired ]; do
+            echo "Sleeping 10s ..."
+            sleep 10
+            replicas=$(get_replicas $dc)
+        done
+    done
+    kill $watch_pid
+}
+
+get_replicas() {
+    local dc=${1}
+    local hasDc=$(${KUBE} get deployment -o name | ${GREP} $dc)
+    if [ -z "$hasDc" ]; then
+        echo "0"
+        return
+    fi
+    ${KUBE} get deployment $dc -o jsonpath="{.status.availableReplicas}"
+}
+
+pod() {
+    local dc=${1}
+    local ret=$(${KUBE} get pod -o name | ${GREP} "$dc" | sed -e "s/^pods\///")
+    local nr_pods=$(echo $ret | wc -l | awk '$1=$1')
+    if [ $nr_pods != "1" ]; then
+        echo "ERROR: More than 1 pod found for $dc ($nr_pods found)"
+    fi
+    echo $ret
+}

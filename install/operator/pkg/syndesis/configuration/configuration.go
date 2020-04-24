@@ -409,19 +409,18 @@ func (config *Config) CheckOAuthCredentialSecret(ctx context.Context, rtClient c
  - Users might define fields using the syndesis custom resource
 */
 func GetProperties(ctx context.Context, file string, clientTools *clienttools.ClientTools, syndesis *v1beta1.Syndesis) (*Config, error) {
-	var apiClient kubernetes.Interface
-	var rtClient client.Client
-	var err error
-	if clientTools != nil {
-		apiClient, err = clientTools.ApiClient()
-		if err != nil {
-			return nil, err
-		}
+	if clientTools == nil {
+		return nil, errors.New("configuration.GetProperties: clientTools cannot be nil")
+	}
 
-		rtClient, err = clientTools.RuntimeClient()
-		if err != nil {
-			return nil, err
-		}
+	apiClient, err := clientTools.ApiClient()
+	if err != nil {
+		return nil, err
+	}
+
+	rtClient, err := clientTools.RuntimeClient()
+	if err != nil {
+		return nil, err
 	}
 
 	configuration := &Config{}

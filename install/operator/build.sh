@@ -10,8 +10,10 @@ cd -P $(dirname "${BASH_SOURCE[0]}")
 source "$(pwd)/../../tools/bin/commands/util/common_funcs"
 source "$(pwd)/../../tools/bin/commands/util/operator_funcs"
 source "$(pwd)/../../tools/bin/commands/util/openshift_funcs"
+source "$(pwd)/../../tools/bin/commands/util/kube_funcs"
 source "./.lib.sh"
 
+DOCKER_REGISTRY="$(readopt 		 --registry           '')"
 OPERATOR_IMAGE_NAME="$(readopt --image-name         docker.io/syndesis/syndesis-operator)"
 OPERATOR_IMAGE_TAG="$(readopt  --image-tag          latest)"
 S2I_STREAM_NAME="$(readopt     --s2i-stream-name    syndesis-operator)"
@@ -31,6 +33,7 @@ where options are:
   --source-gen <on|skip|verify-none>      should the source generators be run (default: on)
   --operator-build <auto|docker|go|skip>  how to build the operator executable (default: auto)
   --image-build <auto|docker|s2i|skip>    how to build the image (default: auto)
+	--registry <registry host[:port]>       custom docker registry to locate the image
   --image-name <name>                     docker image name (default: syndesis/syndesis-operator)
   --image-tag  <tag>                      docker image tag (default: latest)
   --s2i-stream-name <name>                s2i image stream name (default: syndesis-operator)
@@ -41,10 +44,20 @@ ENDHELP
 	exit 0
 fi
 
+#
+# Custom registry needs to be injected into the operator so that
+# the image coordinate in the operator resource can be rendered
+# pointing to the registry
+#
+FULL_OPERATOR_IMAGE_NAME=$OPERATOR_IMAGE_NAME
+if [ -n "$DOCKER_REGISTRY" ]; then
+	FULL_OPERATOR_IMAGE_NAME="$DOCKER_REGISTRY/$OPERATOR_IMAGE_NAME"
+fi
+
 if [ $OPERATOR_BUILD_MODE != "skip" ] ; then
-  build_operator $OPERATOR_BUILD_MODE "$SOURCE_GEN" "$GO_PROXY_URL" -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=$OPERATOR_IMAGE_NAME -X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorTag=$OPERATOR_IMAGE_TAG" $GO_BUILD_OPTIONS
+  build_operator $OPERATOR_BUILD_MODE "$SOURCE_GEN" "$GO_PROXY_URL" -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=$FULL_OPERATOR_IMAGE_NAME -X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorTag=$OPERATOR_IMAGE_TAG" $GO_BUILD_OPTIONS
 fi
 
 if [ $IMAGE_BUILD_MODE != "skip" ] ; then
-  build_image $IMAGE_BUILD_MODE $OPERATOR_IMAGE_NAME $OPERATOR_IMAGE_TAG $S2I_STREAM_NAME
+  build_image $IMAGE_BUILD_MODE $OPERATOR_IMAGE_NAME $OPERATOR_IMAGE_TAG $S2I_STREAM_NAME $DOCKER_REGISTRY
 fi

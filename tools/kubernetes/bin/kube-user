@@ -88,7 +88,9 @@ create_user() {
   ${KUBECTL} get namespace "${nm}" 2> /dev/null
   if [ $? -eq 1 ]; then
     ${KUBECTL} create namespace "${nm}"
+  fi
 
+  if [ current_user != admin_user ]; then
     # Apply the admin role to the namespace
     apply_namespace_role "${nm}"
   fi

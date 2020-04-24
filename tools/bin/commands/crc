@@ -48,7 +48,7 @@ EOT
 
 
 crc::run() {
-    source "$(basedir)/commands/util/openshift_funcs"
+    source "$(basedir)/commands/util/client_funcs"
     source "$(basedir)/commands/util/camel_k_funcs"
     source "$(basedir)/commands/util/operator_funcs"
 
@@ -99,7 +99,7 @@ crc::run() {
         local original_project="$(oc project -q)"
         local project=$(readopt --project -p)
         if [ -n "${project}" ]; then
-            recreate_project $project "$(hasflag --yes -y)"
+            recreate_namespace $project "$(hasflag --yes -y)"
         else
             local project="$original_project"
         fi
@@ -114,7 +114,7 @@ crc::run() {
         oc project $project
 
         # Install Syndesis CRD
-        if ! $(oc get crd | grep "syndesises.syndesis.io" >/dev/null 2>&1); then
+        if ! $(oc get crd | ${GREP} "syndesises.syndesis.io" >/dev/null 2>&1); then
             echo "Installing Syndesis CRD"
             local result=$($OPERATOR_BINARY install cluster)
             check_error "$result"
@@ -159,7 +159,7 @@ crc::run() {
     fi
 
     if [ $(hasflag --open -o) ]; then
-        while ! (oc get routes | grep syndesis >/dev/null 2>&1); do
+        while ! (oc get routes | ${GREP} syndesis >/dev/null 2>&1); do
             echo "Sleeping 5s ..."
             sleep 5
         done
@@ -192,7 +192,7 @@ extract_current_token() {
 
 is_crc_running() {
     set +e
-    crc status 2>&1 | grep -q "Running"
+    crc status 2>&1 | ${GREP} -q "Running"
     local stat=$?
     set -e
     if [ $stat -eq 0 ]; then

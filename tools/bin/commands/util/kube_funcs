@@ -1,0 +1,322 @@
+#!/bin/bash
+
+KUBECTL="kubectl"
+
+#
+# Download `kubectl` binary
+#
+get_kube_bin() {
+    check_error $(check_for_command "curl")
+
+    local version=`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`
+
+    check_error $(check_for_command "mkdir")
+    check_error $(check_for_command "mktemp")
+    check_error $(check_for_command "rm")
+    check_error $(check_for_command "mv")
+
+    local os=""
+    local binary="kubectl"
+    if $(isMacOs); then
+        os="darwin"
+    elif $(isWindows); then
+        os="windows"
+        binary="${binary}.exe"
+    else
+        os="linux"
+    fi
+
+    #
+    # If its already downloaded, skip download
+    #
+    local config_dir=$(syndesis_config_dir)
+    [ -d ${config_dir}/bin ] || mkdir -p ${config_dir}/bin
+
+    local kube_command="${config_dir}/bin/${binary}"
+    if [ -e ${kube_command} ]; then
+        echo ${kube_command}
+        return
+    fi
+
+    #
+    # Download from site
+    #
+    local download_url="https://storage.googleapis.com/kubernetes-release/release/$version/bin/${os}/amd64/${binary}"
+    curl -sL --fail -o ${kube_command} ${download_url} 2>/dev/null || { check_error "ERROR: Could not download ${KUBECTL} from ${download_url}"; }
+
+    #
+    # Check binary has downloaded correctly
+    #
+    if [ ! -f ${kube_command} ]; then
+        check_error "ERROR: Failed to download ${binary} to ${kube_command}"
+    fi
+
+    # Make kubectl executable
+    chmod 755 $kube_command
+    echo $kube_command
+}
+
+setup_kube() {
+    local  __kubevar=$1
+
+    if [ "$(check_for_command ${KUBECTL})" == "OK" ]; then
+      # TODO
+      # Maybe at some point we'll need to check the kubectl version??
+      #
+
+      #
+      # If a kubevar name was specified then set it
+      #
+      if [ -n "$__kubevar" ]; then
+          eval $__kubevar="${KUBECTL}"
+      fi
+
+      return
+    fi
+
+    #
+    # Try downloading kubectl
+    #
+    local kube_binary=$(get_kube_bin)
+    check_error "${kube_binary}"
+
+    #
+    # If a kubevar name was specified then set it
+    #
+    if [ -n "$__kubevar" ]; then
+        eval $__kubevar="${kube_binary}"
+    fi
+}
+
+current_context() {
+    echo $(${KUBECTL} config current-context)
+}
+
+get_kube_user() {
+    local cur_ctx
+
+    cur_ctx="$(current_context)" || check_error "ERROR: getting current kube context"
+    kube_user="$(${KUBECTL} config view -o=jsonpath="{.contexts[?(@.name==\"${cur_ctx}\")].context.user}")" \
+     || check_error "ERROR: getting current kube user"
+
+    if [[ -z "${kube_user}" ]]; then
+        check_error "ERROR: Cannot find current kube user"
+    else
+        echo "${kube_user}"
+    fi
+}
+
+get_kube_namespace() {
+    nm="${1:-}"
+
+    if [ -n "${nm}" ]; then
+        echo $(${KUBECTL} get namespace "${nm}" -o=jsonpath="{.metadata.name}" 2>&1)
+    else
+        local cur_ctx
+
+        cur_ctx="$(current_context)" || { echo "ERROR: getting current context"; return; }
+        ns="$(${KUBECTL} config view -o=jsonpath="{.contexts[?(@.name==\"${cur_ctx}\")].context.namespace}")"
+
+        if [[ -z "${ns}" ]]; then
+            echo "ERROR: Cannot find current kube namespace"
+        else
+            echo "${ns}"
+        fi
+    fi
+}
+
+get_kube_cluster() {
+    cur_ctx="$(current_context)" || { echo "ERROR: getting current context"; return; }
+    cluster="$(${KUBECTL} config view -o=jsonpath="{.contexts[?(@.name==\"${cur_ctx}\")].context.cluster}")"
+
+    if [[ -z "${cluster}" ]]; then
+        echo "ERROR: Cannot find current kube cluster"
+    else
+        echo "${cluster}"
+    fi
+}
+
+delete_kube_namespace() {
+    ns="${1:-}"
+    if [ -z "${ns}" ]; then
+        check_error "ERROR: No namespace specified to delete."
+    fi
+
+    echo $(${KUBECTL} delete namespace "${ns}" 2>&1)
+}
+
+create_kube_namespace() {
+    ns="${1:-}"
+    if [ -z "${ns}" ]; then
+        check_error "ERROR: No namespace specified to delete."
+    fi
+
+    if [ "$(get_kube_namespace "${project}")" == "OK" ]; then
+        check_error "ERROR: Cannot create namespace. Namespace exists."
+    fi
+
+    echo $(${KUBECTL} create namespace "${ns}" 2>&1)
+}
+
+set_context() {
+  local nm="${1:-$(get_kube_namespace)}"
+  local kube_user="${2:-$(get_kube_user)}"
+  local cluster="${3:-$(get_kube_cluster)}"
+
+  check_error "${nm}"
+  check_error "${kube_user}"
+  check_error "${curr_cluster}"
+
+  local ctx_name="${nm}/${cluster}/${kube_user}"
+  ${KUBECTL} config set-context "${ctx_name}" --namespace "${nm}" --user="${kube_user}" --cluster="${cluster}" > /dev/null
+  if [ $? -eq 1 ]; then
+    check_error "ERROR: failed to set the context of kubectl"
+  fi
+
+  echo ${ctx_name}
+}
+
+use_context() {
+  local ctx_name="$1"
+  if [ -z "${ctx_name}" ]; then
+    exit_err "ERROR: context name not specified"
+  fi
+
+  ${KUBECTL} config use-context "${ctx_name}"
+}
+
+switch_kube_namespace() {
+    nm="${1:-}"
+    if [ -z "${nm}" ]; then
+        check_error "ERROR: No namespace specified."
+    fi
+
+    user=$(get_kube_user)
+    check_error "${user}"
+
+    # Set the new context & creates it in config if not already there
+    context=$(set_context "${nm}" "${user}")
+
+    # Use the new context
+    use_context "${context}"
+}
+
+create_credentials_secret() {
+  #
+  # Creates the syndesis credentials secret
+  #
+  credsec="$(basedir)/commands/share/templates/kube-oauth-credentials.yml.tmpl"
+  if [ -f "${credsec}" ]; then
+
+    read -p 'Please input the Authentication Provider Id, eg. github: ' provider
+    if [ -z "${provider}" ]; then
+      check_error "ERROR: provider not specified"
+    fi
+
+    read -p 'Please input the Authentication Client Id (id received from provider): ' client_id
+    if [ -z "${client_id}" ]; then
+      exit_err "ERROR: client id not specified"
+    fi
+
+    read -p 'Please input the Authentication Client Secret (secret received from provider): ' client_secret
+    if [ -z "${client_secret}" ]; then
+      exit_err "ERROR: provider not specified"
+    fi
+
+    cat ${credsec} | sed -e "s/<PROVIDER>/${provider}/" -e "s/<CLIENT-ID>/${client_id}/" -e "s/<CLIENT-SECRET>/${client_secret}/" | $KUBECTL apply -f -
+
+    ${KUBECTL} get secret syndesis-oauth-credentials > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        check_error "ERROR: Failed to create the authenticaion credentials secrect"
+    fi
+
+  else
+    check_error "ERROR: Cannot find the authentication credentials secret template: ${credsec}"
+  fi
+}
+
+create_comms_secret() {
+    SHARE_DIR="$(basedir)/commands/share"
+    OAUTH_DIR="${SHARE_DIR}/oauth-certificate"
+    TMPL_DIR="${SHARE_DIR}/templates"
+
+    check_for_command base64
+    check_for_command sed
+
+    BASE64="base64 -w0"
+
+    #
+    # Create the syndesis comms secret
+    #
+    commsec="${TMPL_DIR}/kube-oauth-comms.yml.tmpl"
+    if [ -f ${commsec} ]; then
+
+        # Generate the signed certificate
+        read -p 'Host name for external access to syndesis, eg. syndesis.dash: ' external_host
+        if [ -z "${external_host}" ]; then
+            check_error "ERROR: host not specified"
+        fi
+
+        #
+        # Call the create signed certificate script
+        #
+        pushd ${OAUTH_DIR} >/dev/null
+        ${OAUTH_DIR}/create-signed-oauth-proxy-cert -h ${external_host} > /dev/null
+        popd >/dev/null
+
+        if [ ! -d ${OAUTH_DIR}/${external_host} ]; then
+            check_error "ERROR: Failed to create a self-signed certificate for the authentication secret."
+        fi
+
+        # Extract the certificate and key encoded as base64
+        oauth_cert=$(cat ${OAUTH_DIR}/${external_host}/certs/${external_host}.cert.pem | ${BASE64})
+        oauth_key=$(cat ${OAUTH_DIR}/${external_host}/private/${external_host}.key.pem | ${BASE64})
+
+        cat ${commsec} | sed -e "s/<TLS-CERT>/${oauth_cert}/" -e "s/<TLS-KEY>/${oauth_key}/" | $KUBECTL apply -f -
+
+        #
+        # Ensure the hostname is inserted in the Custom Resource
+        #
+        cr="${SHARE_DIR}/kube-cr.yml"
+        crtmpl="${TMPL_DIR}/kube-cr.yml.tmpl"
+
+        cat ${crtmpl} | sed -e "s/<EXTERNAL_HOSTNAME>/${external_host}/" > "${cr}"
+        if [ ! -f "${cr}" ]; then
+            check_error "ERROR: Failed to create the syndesis custom resource"
+        else
+            echo
+            echo "*************************************"
+            echo "*"
+            echo "* The syndesis custom resource has been created at ${cr}"
+            echo "*"
+            echo "*************************************"
+        fi
+
+        ${KUBECTL} get secret syndesis-oauth-comms > /dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            check_error "ERROR: Failed to create the authenticaion comms secret"
+        fi
+
+    else
+        check_error "ERROR: Cannot find the authentication comms secret template: ${commsec}"
+    fi
+}
+
+execute_pre_kube_tasks() {
+
+    #
+    # Need to create the oauth-proxy secrets
+    #
+    set +e
+    ${KUBECTL} get secret syndesis-oauth-credentials > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        create_credentials_secret
+    fi
+
+    echo "Checking comms secret"
+    ${KUBECTL} get secret syndesis-oauth-comms > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        create_comms_secret
+    fi
+    set -e
+}

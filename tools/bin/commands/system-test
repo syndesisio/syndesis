@@ -73,7 +73,7 @@ base64_decode_option() {
 find_secret() {
     local project=$1
     local service_account=$2
-    oc get sa $service_account -n $project -o yaml | grep "${service_account}-token-" | awk -F ": " '{print $2}'
+    oc get sa $service_account -n $project -o yaml | ${GREP} "${service_account}-token-" | awk -F ": " '{print $2}'
 }
 
 read_token() {
@@ -81,7 +81,7 @@ read_token() {
     local project=$2
     base64_opt=$(base64_decode_option)
     check_error $base64_opt
-    oc get secret $secret -n $project -o yaml | grep token: | awk -F ": " '{print $2}' | base64 $base64_opt
+    oc get secret $secret -n $project -o yaml | ${GREP} token: | awk -F ": " '{print $2}' | base64 $base64_opt
 }
 
 read_token_of_sa() {
@@ -102,7 +102,7 @@ create_pool() {
         pool="syndesis-ci"
     fi
 
-    for p in $(oc get projects | grep $prefix | awk -F " " '{print $1}'); do
+    for p in $(oc get projects | ${GREP} $prefix | awk -F " " '{print $1}'); do
         echo "Creating a secret lock for project $p"
         local secret=$(find_secret $p "default")
         echo "Found secret: $secret"
@@ -167,7 +167,7 @@ calc_test_id() {
 lock_project() {
     local test_id=$1
     local pool=$2
-    for lock in $(oc get secret -o name -n $pool | grep "project-lock-" ); do
+    for lock in $(oc get secret -o name -n $pool | ${GREP} "project-lock-" ); do
         local status=$(project_lock_data "$lock" "$pool")
         local project=$(echo $status | awk -F "~" '{print $1}')
         local version=$(echo $status | awk -F "~" '{print $2}')
@@ -197,7 +197,7 @@ lock_project() {
 check_project_status() {
     local pool=$1
     # Checking active status of pool project
-    local pool_status=$(oc get projects | grep $pool | awk -F " " '{print $2}')
+    local pool_status=$(oc get projects | ${GREP} $pool | awk -F " " '{print $2}')
     if [ "$pool_status" != "Active" ]; then
         echo "ERROR: No active project $pool: $pool_status"
         exit 1
@@ -266,7 +266,7 @@ release_project_lock() {
 
 list_pool() {
     local pool=$1
-    for lock in $(oc get secret -o name -n $pool | grep "project-lock-" ); do
+    for lock in $(oc get secret -o name -n $pool | ${GREP} "project-lock-" ); do
         local status=$(project_lock_data "$lock" "$pool")
         local project=$(echo $status | awk -F "~" '{print $1}')
         local version=$(echo $status | awk -F "~" '{print $2}')
@@ -281,7 +281,7 @@ release_project() {
     local test_id=$2
 
     oc project $pool
-    for lock in $(oc get secret -o name -n $pool | grep "project-lock-" ); do
+    for lock in $(oc get secret -o name -n $pool | ${GREP} "project-lock-" ); do
         local status=$(project_lock_data "$lock" "$pool")
         local project=$(echo $status | awk -F "~" '{print $1}')
         local version=$(echo $status | awk -F "~" '{print $2}')
@@ -297,7 +297,7 @@ release_project() {
 is_minishift() {
     if [ -x "$(command -v foo)" ]; then
         local minishift_ip=$(minishift ip)
-        local server_url=$(oc version | grep Server | cut -d' ' -f 2)
+        local server_url=$(oc version | ${GREP} Server | cut -d' ' -f 2)
         if [ "https://$minishift_ip:8443" == "$server_url"]; then
             echo "true"
         fi

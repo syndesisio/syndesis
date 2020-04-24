@@ -20,8 +20,6 @@ install::usage() {
                               version from master is installed
     --force                   Override an existing "Syndesis" if present
 -w  --watch                   Wait until cluster is up
-    --local                   install from local Git repo when using. By default the resource descriptor is
-                              downloaded from GitHub remotely.
 -f  --force-binary-download   By default if the binary cli is present in the expected path, it will
                               be used. With this option enabled, the binary will be removed and downloaded,
                               ensuring it is the latest version
@@ -39,9 +37,54 @@ install::usage() {
 EOT
 }
 
+#
+# Checks where the syndesis-installer role has been grant to the project
+#
+is_role_granted() {
+    local user=$(get_current_user)
+
+    ${KUBE} get rolebinding syndesis-installer-${user} > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        # Have a role binding for this user so return
+        echo "OK"
+        return
+    fi
+
+    ${KUBE} get clusterrolebinding syndesis-installer-${user} > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        # Have a cluster role binding for this user so return
+        echo "OK"
+        return
+    fi
+
+    echo "ERROR: The user '${user}' does not have the 'syndesis-installer' role. Please execute '... --grant' as a cluster-admin first."
+}
+
+grant_role() {
+  local user_to_prepare="$1"
+  if [ -z "$user_to_prepare" ]; then
+    check_error "ERROR: Cannot perform grant as no user specified"
+  fi
+
+  echo "Grant syndesis-installer role to user $user_to_prepare"
+
+  #
+  # Check that the user calling --grant is a cluster-admin
+  #
+  if [ $(is_cluster_admin) != "OK" ]; then
+    check_error "ERROR: Can only execute --grant as cluster-admin."
+  fi
+
+  if [ $(hasflag --cluster) ]; then
+      result=$($OPERATOR_BINARY grant --user $user_to_prepare --cluster)
+  else
+      result=$($OPERATOR_BINARY grant --user $user_to_prepare)
+  fi
+  check_error "$result"
+}
 
 install::run() {
-    source "$(basedir)/commands/util/openshift_funcs"
+    source "$(basedir)/commands/util/client_funcs"
     source "$(basedir)/commands/util/camel_k_funcs"
     source "$(basedir)/commands/util/operator_funcs"
 
@@ -53,15 +96,35 @@ install::run() {
     fi
     download_operator_binary || print_error_and_exit "unable to download the operator binary, exit"
 
+    #
+    # If a project is given, only a cluster-admin
+    # can create it new or recreate it
+    #
+    project=$(readopt --project -p)
+    if [ -n "${project}" ]; then
+        if [ "$(is_cluster_admin)" == "OK" ]; then
+            recreate_namespace $project
+        else
+            check_error "ERROR: It is not possible to install into a new (or recreated) project without being a cluster-admin since artifacts required by the install cannot be (re)created."
+        fi
+    fi
+
     local prep_only="false"
     if [[ $(hasflag -s --setup) ]]; then
         echo "Installing Syndesis CRD"
+
+        #
+        # Need to be a cluster admin for this to happen
+        #
+        result=$(is_cluster_admin)
+        check_error "${result}"
+
         result=$($OPERATOR_BINARY install cluster)
         check_error "$result"
         if [ $(hasflag --camel-k) ]; then
-          echo "Installing Camel-K CRDs"
-          result=$(install_camel_k_crds "$(readopt --camel-k)")
-          check_error "$result"
+            echo "Installing Camel-K CRDs"
+            result=$(install_camel_k_crds "$(readopt --camel-k)")
+            check_error "$result"
         fi
         prep_only="true"
     fi
@@ -69,13 +132,14 @@ install::run() {
     local user_to_prepare="$(readopt -u --grant)"
     if [ -n  "$user_to_prepare" ]; then
         echo "Grant permission to create Syndesis to user $user_to_prepare"
-        if [ $(hasflag --cluster) ]; then
-            result=$($OPERATOR_BINARY grant --user $user_to_prepare --cluster)
-        else
-            result=$($OPERATOR_BINARY grant --user $user_to_prepare)
 
-        fi
-        check_error "$result"
+        #
+        # Need to be a cluster admin for this to happen
+        #
+        result=$(is_cluster_admin)
+        check_error "${result}"
+
+        grant_role "${user_to_prepare}"
         prep_only="true"
     fi
 
@@ -91,24 +155,36 @@ install::run() {
         fi
     fi
 
-    # If a project is given, create it new or recreate it
-    local project=$(readopt --project -p)
-    if [ -n "${project}" ]; then
-        recreate_project $project "$(hasflag --yes -y)"
+    #
+    # If a cluster-admin and the role has not yet been granted
+    # then ensure it is by granting it to the current user
+    #
+    if [ "$(is_cluster_admin)" == "OK" ]; then
+      if [ "$(is_role_granted)" != "OK" ]; then
+        echo "No syndesis-installer role has been granted so installing now"
+        grant_role "$(get_current_user)"
+      fi
     fi
 
-    # Setup oc
-    setup_oc
+    #
+    # Check that user has syndesis-installer role available
+    #
+    result=$(is_role_granted)
+    check_error "$result"
 
-    # Check for the proper setup
-    set +e
-    oc get syndesis >/dev/null 2>&1
+    #
+    # Check Syndesis CRD installed
+    #
+    ${KUBE} get syndesis >/dev/null 2>&1
     if [ $? -ne 0 ]; then
         check_error "ERROR: No CRD Syndesis installed or not enough permissions to read them. Please run --setup and/or --grant as cluster-admin. See 'syndesis install --help' for more information."
     fi
 
+    #
+    # If using camel-k, check CRD installed
+    #
     if [ $(hasflag --camel-k) ]; then
-        oc get integration >/dev/null 2>&1
+        ${KUBE} get integration >/dev/null 2>&1
         if [ $? -ne 0 ]; then
             check_error "ERROR: Camel-K installation requested but no Camel-K CRDs accessible. Please run --setup --camel-k to register the proper CRDs."
         fi
@@ -116,8 +192,14 @@ install::run() {
     set -e
 
     if [ $(hasflag --maven-mirror) ]; then
-        install_maven_mirror
+        create_maven_mirror
     fi
+
+    #
+    # Execute any preparatory tasks before installing the operator
+    #
+    execute_pre_tasks
+
 
     # Deploy operator and wait until its up
     echo "Deploying Syndesis operator"
@@ -126,7 +208,7 @@ install::run() {
 
     if [ $(hasflag --camel-k) ]; then
         echo "Deploying Camel-K operator"
-        result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(oc project -q)" "$(readopt --camel-k-options)")
+        result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(${KUBE} project -q)" "$(readopt --camel-k-options)")
         check_error "$result"
     fi
 
@@ -138,8 +220,7 @@ install::run() {
         exit 0
     else
         # Deploying syndesis app
-        local customcr=$(readopt --custom-resource)
-
+        local customcr=$(get_custom_resource $(readopt --custom-resource))
         if [ -n "${customcr}" ]; then
             echo "Deploying syndesis app with custom resource ${customcr}"
             app_options=$app_options" --custom-resource ${customcr}"
@@ -157,10 +238,10 @@ install::run() {
     fi
 
     if [ $(hasflag --open -o) ]; then
-        while ! (oc get routes | grep syndesis >/dev/null 2>&1); do
+        while ! (${KUBE} get routes | ${GREP} syndesis >/dev/null 2>&1); do
             echo "Sleeping 5s ..."
             sleep 5
         done
-        open_url "https://$(oc get routes syndesis --template "{{.spec.host}}")"
+        open_url "https://$(${KUBE} get routes syndesis --template "{{.spec.host}}")"
     fi
 }

@@ -1,7 +1,8 @@
 #!/bin/bash
 
 OPERATOR_GO_PACKAGE="github.com/syndesisio/syndesis/install/operator"
-OPERATOR_BINARY=$HOME/.syndesis/bin/syndesis-operator
+OPERATOR="syndesis-operator"
+OPERATOR_BINARY=$HOME/.syndesis/bin/${OPERATOR}
 
 operatorsdk_is_available() {
     set +e
@@ -46,21 +47,10 @@ prepare_operator_binary_path() {
     fi
 }
 
-# check that a given binary is in $PATH
-check_for_command() {
-    local cmd=${1:-curl}
-
-    if $(which ${cmd} >/dev/null 2>&1); then
-        return 0
-    else
-        return 1
-    fi
-}
-
 # check that the operator binary is in place
 check_operator_binary() {
     if [[ -x ${OPERATOR_BINARY} ]]; then
-        if [[ $(${OPERATOR_BINARY} -h | grep 'syndesis') ]]; then
+        if [[ $(${OPERATOR_BINARY} -h | ${GREP} 'syndesis') ]]; then
             return 0
         fi
     fi
@@ -93,15 +83,15 @@ download_operator_binary() {
         if [[ -n "$release_tag" ]]; then
             release_uri="https://api.github.com/repos/syndesisio/syndesis/releases/tags/${release_tag}"
             url=$(curl -s $release_uri \
-                | grep browser_download_url \
-                | grep ${pattern} \
+                | ${GREP} browser_download_url \
+                | ${GREP} ${pattern} \
                 | cut -d '"' -f 4)
         else
             # retrieve the last 40 releases and get the latest 2.0 release
             url=$(curl -s "https://api.github.com/repos/syndesisio/syndesis/releases?per_page=40" \
-                | grep "download/2" \
-                | grep browser_download_url \
-                | grep ${pattern} \
+                | ${GREP} "download/2" \
+                | ${GREP} browser_download_url \
+                | ${GREP} ${pattern} \
                 | cut -d '"' -f 4 \
                 | sort -nr \
                 | head -1)
@@ -134,6 +124,40 @@ download_operator_binary() {
         echo "Unknown platform [ ${OSTYPE} ], "
         return 1
     fi
+}
+
+install_built_operator() {
+    local opdir="$1"
+
+    if [ ! -d "${opdir}" ]; then
+        echo "ERROR: Cannot copy built operator to ${OPERATOR_BINARY}. Directory ${opdir} does not exist."
+        return
+    fi
+
+    case "$OSTYPE" in
+        darwin*)  pattern="darwin-amd64" ;;
+        linux*)   pattern="linux-amd64" ;;
+        msys*)    pattern="windows-amd64" ;;  #using mingw64 on windows
+        *)        pattern="unknown" ;;
+    esac
+
+    if [[ "${pattern}" == "unknown" ]]; then
+        echo "ERROR: Cannot copy built operator to ${OPERATOR_BINARY}. Cannot identify operating system."
+        return
+    fi
+
+    local srcop="${opdir}/dist/${pattern}/${OPERATOR}"
+    if [ ! -f "${srcop}" ]; then
+        echo "ERROR: Cannot copy built operator to ${OPERATOR_BINARY}. Appears to be no built operator."
+        return
+    fi
+
+    cp -rf "${srcop}" "${OPERATOR_BINARY}"
+    if [ ! -f "${OPERATOR_BINARY}" ]; then
+        echo "ERROR: Failed to copy built operator to ${OPERATOR_BINARY}."
+    fi
+
+    echo "OK"
 }
 
 print_error_and_exit() {

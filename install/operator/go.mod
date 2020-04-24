@@ -42,7 +42,12 @@ require (
 	sigs.k8s.io/yaml v1.2.0
 )
 
-require github.com/operator-framework/operator-sdk v0.17.0
+require (
+	github.com/kr/pretty v0.2.0 // indirect
+	github.com/kr/text v0.2.0 // indirect
+	github.com/operator-framework/operator-sdk v0.17.0
+	golang.org/x/sys v0.0.0-20200217220822-9197077df867 // indirect
+)
 
 replace k8s.io/client-go => k8s.io/client-go v0.17.4 // Required by prometheus-operator
 
