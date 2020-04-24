@@ -1,0 +1,425 @@
+#!/bin/bash
+
+KUBECTL="kubectl"
+
+#
+# Download `kubectl` binary
+#
+get_kube_bin() {
+    check_error $(check_for_command "curl")
+
+    local version=`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`
+
+    check_error $(check_for_command "mkdir")
+    check_error $(check_for_command "mktemp")
+    check_error $(check_for_command "rm")
+    check_error $(check_for_command "mv")
+
+    local os=""
+    local binary="kubectl"
+    if $(isMacOs); then
+        os="darwin"
+    elif $(isWindows); then
+        os="windows"
+        binary="${binary}.exe"
+    else
+        os="linux"
+    fi
+
+    #
+    # If its already downloaded, skip download
+    #
+    local config_dir=$(syndesis_config_dir)
+    [ -d ${config_dir}/bin ] || mkdir -p ${config_dir}/bin
+
+    local kube_command="${config_dir}/bin/${binary}"
+    if [ -e ${kube_command} ]; then
+        echo ${kube_command}
+        return
+    fi
+
+    #
+    # Download from site
+    #
+    local download_url="https://storage.googleapis.com/kubernetes-release/release/$version/bin/${os}/amd64/${binary}"
+    curl -sL --fail -o ${kube_command} ${download_url} 2>/dev/null || { check_error "ERROR: Could not download ${KUBECTL} from ${download_url}"; }
+
+    #
+    # Check binary has downloaded correctly
+    #
+    if [ ! -f ${kube_command} ]; then
+        check_error "ERROR: Failed to download ${binary} to ${kube_command}"
+    fi
+
+    # Make kubectl executable
+    chmod 755 $kube_command
+    echo $kube_command
+}
+
+setup_kube() {
+    local  __kubevar=$1
+
+    if [ "$(check_for_command ${KUBECTL})" == "OK" ]; then
+      # TODO
+      # Maybe at some point we'll need to check the kubectl version??
+      #
+
+      #
+      # If a kubevar name was specified then set it
+      #
+      if [ -n "$__kubevar" ]; then
+          eval $__kubevar="${KUBECTL}"
+      fi
+
+      return
+    fi
+
+    #
+    # Try downloading kubectl
+    #
+    local kube_binary=$(get_kube_bin)
+    check_error "${kube_binary}"
+
+    #
+    # If a kubevar name was specified then set it
+    #
+    if [ -n "$__kubevar" ]; then
+        eval $__kubevar="${kube_binary}"
+    fi
+}
+
+login_kube_as_admin() {
+    local ctx=$(current_context)
+
+    local admin=$(get_admin_user)
+    local admin_ctx=$(set_context "default" "${admin}")
+    local use_ctx=$(use_context "${admin_ctx}")
+    check_error "${use_ctx}"
+
+    echo "use_context ${ctx}"
+}
+
+get_kube_user() {
+    local cur_ctx
+
+    cur_ctx="$(current_context)" || check_error "ERROR: getting current kube context"
+    kube_user="$(${KUBECTL} config view -o=jsonpath="{.contexts[?(@.name==\"${cur_ctx}\")].context.user}")" \
+     || check_error "ERROR: getting current kube user"
+
+    if [[ -z "${kube_user}" ]]; then
+        check_error "ERROR: Cannot find current kube user"
+    else
+        echo "${kube_user}"
+    fi
+}
+
+create_kube_user() {
+    check_error $(check_for_command "mktemp")
+
+    local kuser="${1:-}"
+    if [ -z "${kuser}" ]; then
+        check_error "ERROR: A user name is required to create a new user."
+    fi
+
+    local nm="${2:-$(get_kube_namespace)}"
+    check_error "${nm}"
+    local cluster=$(get_kube_cluster)
+
+    local have_user=$(${KUBECTL} config view -o=jsonpath="{.users[?(@.name==\"${kuser}\")].name}")
+    echo "Changing to user \"$kuser\" with namespace \"${nm}\" on current cluster \"$cluster\""
+
+    if [ -z "${have_user}" ]; then
+        # Change to the admin user
+        local revert_login=$(login_as_admin)
+
+        # Create the key and certficate for the new user
+        local key=$(mktemp --tmpdir --suffix=.key ${kuser}-XXXX)
+        local csr=$(mktemp --tmpdir --suffix=.csr ${kuser}-XXXX)
+        local cert=$(mktemp --tmpdir --suffix=.crt ${kuser}-XXXX)
+
+        # Get the ca certificate from the cli
+        local cacert=$(readopt --cacert)
+        if [ -z "${cacert}" ]; then
+            $revert_login
+            check_error "ERROR: A Certificate Authority certificate is required to create a new user."
+        fi
+
+        # Get the ca key from the cli
+        local cakey=$(readopt --cakey)
+        if [ -z "${cakey}" ]; then
+            $revert_login
+            check_error "ERROR: A Certificate Authority key is required to create a new user."
+        fi
+
+        # Create a key for the user
+        openssl genrsa -out "${key}" 2048
+
+        # Create a certificate signing request for the user
+        openssl req -new -key "${key}" -out "${csr}" -subj "/CN=${kuser}/O=syndesis"
+
+        # Create the certificate by signing it with the certificate authority
+        openssl x509 -req -in "${csr}" -CA "${cacert}" -CAkey "${cakey}" -CAcreateserial -out "${cert}" -days 375
+
+        # Set the credentials
+        ${KUBECTL} config set-credentials ${kuser} --client-certificate="${cert}"  --client-key="${key}" --embed-certs=true
+    fi
+
+    # Create the namespace if it doesn't exist
+    if [ "$(has_namespace "${nm}")" == "OK" ]; then
+        switch_kube_namespace "${nm}" "${kuser}"
+    else
+        create_kube_namespace "${nm}" "${kuser}"
+    fi
+}
+
+get_kube_namespace() {
+    nm="${1:-}"
+
+    if [ -n "${nm}" ]; then
+        echo $(${KUBECTL} get namespace "${nm}" -o=jsonpath="{.metadata.name}" 2>&1)
+    else
+        local cur_ctx
+
+        cur_ctx="$(current_context)" || { echo "ERROR: getting current context"; return; }
+        nm="$(${KUBECTL} config view -o=jsonpath="{.contexts[?(@.name==\"${cur_ctx}\")].context.namespace}")"
+
+        if [[ -z "${nm}" ]]; then
+            echo "ERROR: Cannot find current kube namespace"
+        else
+            echo "${nm}"
+        fi
+    fi
+}
+
+get_kube_namespaces() {
+    local revert_login=$(login_as_admin)
+
+    ${KUBECTL} get namespaces -o=jsonpath='{range .items[*].metadata.name}{@}{"\n"}{end}'
+
+    # Return to the original context
+    $revert_login
+}
+
+list_kube_namespaces() {
+    local yellow darkbg normal
+    yellow=$(tput setaf 3 || true)
+    darkbg=$(tput setab 0 || true)
+    normal=$(tput sgr0 || true)
+
+    local cur_ctx_fg cur_ctx_bg
+    cur_ctx_fg=${KUBECTX_CURRENT_FGCOLOR:-$yellow}
+    cur_ctx_bg=${KUBECTX_CURRENT_BGCOLOR:-$darkbg}
+
+    local nm="$(get_kube_namespace)"
+    check_error "${nm}"
+    local nm_list=$(get_kube_namespaces)
+    check_error "${nm_list}"
+
+    for c in $nm_list; do
+        if [[ -n "${_KUBECTX_FORCE_COLOR:-}" || -t 1 && -z "${NO_COLOR:-}" ]]; then
+            # colored output mode
+            if [[ "${c}" = "${nm}" ]]; then
+                echo "${cur_ctx_bg}${cur_ctx_fg}${c}${normal}"
+            else
+                echo "${c}"
+            fi
+        else
+            echo "${c}"
+        fi
+    done
+}
+
+delete_kube_namespace() {
+    local nm="${1:-}"
+    local kuser=$(get_kube_user)
+
+    if [ -z "${nm}" ]; then
+        check_error "ERROR: No namespace specified to delete."
+    fi
+
+    # Change to the admin user
+    local revert_login=$(login_as_admin)
+
+    local status=$(${KUBECTL} delete namespace "${nm}" 2>&1)
+    check_error "${status}"
+
+    # Set the new context & create it in config if not already there
+    context=$(set_context "default" "${kuser}")
+
+    # Use the new context
+    use_context "${context}"
+}
+
+switch_kube_namespace() {
+    local nm="${1:-}"
+    local kuser="${2:-$(get_kube_user)}"
+    check_error "${kuser}"
+
+    if [ -z "${nm}" ]; then
+        check_error "ERROR: No namespace specified."
+    fi
+
+    # Set the new context & creates it in config if not already there
+    context=$(set_context "${nm}" "${kuser}")
+
+    # Use the new context
+    use_context "${context}"
+}
+
+apply_namespace_role() {
+    local kuser="${1:-}"
+    if [ -z "${kuser}" ]; then
+        check_error "ERROR: no user specified while applying namespace admin role"
+    fi
+
+    local nm="${2:-}"
+    if [ -z "${nm}" ]; then
+        check_error "ERROR: no namespace specified while applying namespace admin role"
+    fi
+
+    local admintemplate=$(mktemp --tmpdir --suffix=.yml admin-role-${kuser}-XXXX)
+    trap "rm -f '${admintemplate}'" EXIT
+
+    cat << EOT > ${admintemplate}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: ${kuser}-admin
+  namespace: ${nm}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: admin
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: User
+  name: ${kuser}
+EOT
+
+    local apply=$(cat ${admintemplate} | ${KUBECTL} apply -f - 2>&1)
+    check_error "${apply}"
+}
+
+create_kube_namespace() {
+    local nm="${1:-}"
+    local kuser="${2:-$(get_kube_user)}"
+
+    if [ -z "${nm}" ]; then
+        check_error "ERROR: No namespace specified to create."
+    fi
+
+    if [ "$(get_kube_namespace "${nm}")" == "OK" ]; then
+        check_error "ERROR: Cannot create namespace. Namespace exists."
+    fi
+
+    # Change to the admin user
+    local revert_login=$(login_as_admin)
+
+    status=$(${KUBECTL} create namespace "${nm}" 2>&1)
+    check_error "${status}"
+
+    #
+    # Give the user of the namespace admin rights
+    #
+    if [ "${kuser}" != "$(get_admin_user)" ]; then
+        # Apply the admin role to the namespace
+        apply_namespace_role "${kuser}" "${nm}"
+    fi
+
+    # Set the new context & create it in config if not already there
+    context=$(set_context "${nm}" "${kuser}")
+
+    # Use the new context
+    use_context "${context}"
+}
+
+get_kube_cluster() {
+    cur_ctx="$(current_context)" || { echo "ERROR: getting current context"; return; }
+    cluster="$(${KUBECTL} config view -o=jsonpath="{.contexts[?(@.name==\"${cur_ctx}\")].context.cluster}")"
+
+    if [[ -z "${cluster}" ]]; then
+        echo "ERROR: Cannot find current kube cluster"
+    else
+        echo "${cluster}"
+    fi
+}
+
+get_kube_cluster_address() {
+  cluster_name=$(get_kube_cluster)
+  if [ -z "${cluster_name}" ]; then
+    check_error "ERROR: Cannot find current cluster"
+  fi
+
+  cluster="$(${KUBECTL} config view -o=jsonpath="{.clusters[?(@.name==\"${cluster_name}\")].cluster.server}")" \
+        || check_error "ERROR: getting current cluster address"
+
+  if [[ -z "${cluster}" ]]; then
+    echo "Cannot find cluster address"
+  else
+    echo "${cluster}"
+  fi
+}
+
+current_context() {
+    echo $(${KUBECTL} config current-context)
+}
+
+get_kube_contexts() {
+  ${KUBECTL} config get-contexts -o=name | sort -n
+}
+
+list_kube_contexts() {
+    set -u pipefail
+    local cur ctx_list
+    cur="$(current_context)" || check_error "ERROR: getting current context"
+    ctx_list=$(get_kube_contexts) || check_error "ERROR: getting context list"
+
+    local yellow darkbg normal
+    yellow=$(tput setaf 3 || true)
+    darkbg=$(tput setab 0 || true)
+    normal=$(tput sgr0 || true)
+
+    local cur_ctx_fg cur_ctx_bg
+    cur_ctx_fg=${KUBECTX_CURRENT_FGCOLOR:-$yellow}
+    cur_ctx_bg=${KUBECTX_CURRENT_BGCOLOR:-$darkbg}
+
+    for c in $ctx_list; do
+        if [[ -n "${_KUBECTX_FORCE_COLOR:-}" || -t 1 && -z "${NO_COLOR:-}" ]]; then
+            # colored output mode
+            if [[ "${c}" = "${cur}" ]]; then
+                echo "${cur_ctx_bg}${cur_ctx_fg}${c}${normal}"
+            else
+                echo "${c}"
+            fi
+        else
+            echo "${c}"
+        fi
+    done
+}
+
+set_context() {
+    local nm="${1:-$(get_kube_namespace)}"
+    local kube_user="${2:-$(get_kube_user)}"
+    local cluster="${3:-$(get_kube_cluster)}"
+
+    check_error "${nm}"
+    check_error "${kube_user}"
+    check_error "${cluster}"
+
+    local ctx_name="${nm}/${cluster}/${kube_user}"
+    ${KUBECTL} config set-context "${ctx_name}" --namespace "${nm}" --user="${kube_user}" --cluster="${cluster}" 2>&1 > /dev/null
+    if [ $? -eq 1 ]; then
+        check_error "ERROR: failed to set the context of kubectl"
+    fi
+
+    echo ${ctx_name}
+}
+
+use_context() {
+  local ctx_name="$1"
+  if [ -z "${ctx_name}" ]; then
+    check_error "ERROR: context name not specified"
+  fi
+
+  ${KUBECTL} config use-context "${ctx_name}" 2>&1 > /dev/null
+}

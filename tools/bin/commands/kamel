@@ -19,13 +19,26 @@ kamel::usage() {
 EOT
 }
 
-
-kamel::run() {
-    source "$(basedir)/commands/util/openshift_funcs"
+kamel::init() {
+    source "$(basedir)/commands/util/client_funcs"
     source "$(basedir)/commands/util/camel_k_funcs"
 
-    # Require oc
-    command -v oc > /dev/null 2>&1 || { echo >&2 "ERROR: Command 'oc' not found. Please install it before proceeding.'"; exit 1; }
+    #
+    # Determine the platform we'll be connecting to
+    #
+    determine_platform
+    check_error "${IS_OPENSHIFT}"
+
+    #
+    # Configure client binary
+    #
+    setup_client_binary
+}
+
+kamel::run() {
+
+    # Require kube command
+    command -v ${KUBE} > /dev/null 2>&1 || { echo >&2 "ERROR: Command '${KUBE}' not found. Please install it before proceeding.'"; exit 1; }
 
     if [ $(hasflag --sync-runtime) ]; then
         sync_runtime
@@ -71,16 +84,17 @@ sync_lib() {
         clean_lib=$(echo $lib | tr "." "/" | sed 's#/*$##;s#^/*##')
         parent_dir=$(echo $clean_lib | rev | cut -d'/' -f 2- | rev)
 
-        oc exec $operator_pod -- mkdir -p $OPERATOR_MAVEN_REPOSITORY/$parent_dir
+        ${KUBE} exec $operator_pod -- mkdir -p $OPERATOR_MAVEN_REPOSITORY/$parent_dir
+        // TODO - command not valid under kube
         oc rsync ~/.m2/repository/$clean_lib $operator_pod:$OPERATOR_MAVEN_REPOSITORY/$parent_dir
     done
 }
 
 get_camel_k_operator_pod() {
-    oc get pod -l camel.apache.org/component=operator -o=jsonpath='{.items[0].metadata.name}' --ignore-not-found
+    ${KUBE} get pod -l camel.apache.org/component=operator -o=jsonpath='{.items[0].metadata.name}' --ignore-not-found
 }
 
 reset_camel_k() {
-    oc delete integrationcontext --all
-    oc delete integration --all
+    ${KUBE} delete integrationcontext --all
+    ${KUBE} delete integration --all
 }

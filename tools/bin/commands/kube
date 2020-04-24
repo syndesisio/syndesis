@@ -1,0 +1,368 @@
+#!/bin/bash
+
+kube::description() {
+    echo "Provides helpful kubernetes functions"
+}
+
+kube::usage() {
+    cat <<"EOT"
+user                         Execute user-related functions, eg. creating and/or switching
+    User Related Switches:
+    <user>                       Specify user-name to change current user. If it doesn't exist, the user will be created.
+        --cacert                 Creating a new user, required to specify the certificate-authority certificate.
+        --cakey                  Creating a new user, required to specify the certificate-authority key.
+    -n --namespace               Specify the namespace to use (otherwise will use current namespace)
+
+nm                           Execute namespace-related functions
+    Namespace Related Switches:
+    <namespace>                  Specify namespace to change current namespace. If it doesn't exist, the namespace will be created.
+    -f --freshen                 Remove the given namespace and recreate it.
+cluster                      Execute cluster-related functions
+    Cluster Related Switches:
+    -a --address                 Display the address of the cluster rather than its name
+contexts                     List the configured contexts.
+context <ctx name>           Switch context to the give context.
+secrets                      Generates the secrets and minimum example custom resource required to install app
+registry
+    Registry Switches:
+    --build                    Build a docker secure registry for use with minikube
+    --start                    Start a built docker secure registry for use with minikube
+
+EOT
+}
+
+user_functions() {
+
+    local newuser="${1:-$(get_kube_user)}"
+    local kuser="$(get_kube_user)"
+    local newnm="$(readopt -n --namespace)"
+    local nm="$(get_kube_namespace)"
+    if [ -z "${newnm}" ]; then
+        newnm="${nm}"
+    fi
+
+    if [ "${newuser}" == "${kuser}" ] && [ "${newnm}" == "${nm}" ]; then
+        #
+        # User is already the same so just display it
+        #
+        echo "${kuser}"
+        exit 0
+    fi
+
+    #
+    # Will create the user if required
+    # Will create the namespace if required
+    # Will apply the admin role to the namespace if required
+    #
+    create_kube_user "${newuser}" "${newnm}"
+}
+
+nm_functions() {
+
+    local newnm="${1:-$(get_kube_namespace)}"
+    local nm="$(get_kube_namespace)"
+
+    if [[ $(hasflag -f --freshen) ]]; then
+        #
+        # Recreate the namespace if it exists or not
+        #
+        recreate_namespace "${newnm}" true
+
+    elif [ "${newnm}" == "${nm}" ]; then
+        #
+        # Already switched to this namespace so just display its name
+        #
+        echo "${nm}"
+    else
+        #
+        # Switch to namespace or create it
+        #
+        if [ "$(has_namespace "${newnm}")" == "OK" ]; then
+            switch_kube_namespace "${newnm}"
+        else
+            create_kube_namespace "${newnm}"
+        fi
+    fi
+}
+
+cluster_functions() {
+    local cluster="$(get_kube_cluster)"
+
+    #
+    # Already switched to this cluster so just display it
+    #
+    if [[ $(hasflag -a --address) ]]; then
+        get_kube_cluster_address
+    else
+        echo "${cluster}"
+    fi
+}
+
+context_functions() {
+    local ctx="${1:-$(current_context)}"
+
+    if [ "${ctx}" == "$(current_context)" ]; then
+        #
+        # Already switched to this context so just display its name
+        #
+        echo "${ctx}"
+    else
+        #
+        # Switch to new context
+        #
+        use_context "${ctx}"
+    fi
+}
+
+#
+# Creates the secrets necessary for oauth communication of syndesis app
+# in a kubernetes platform environment
+#
+# * Asks for credentials of oauth provider, ie. github, client-id, client-secret
+# * Generates the oauth-client-secret
+# * Asks for certificate-authority certificate and key
+# * Generates a new signed certificate (if not already exists)
+# * Generates the oauth-comms-secret
+# * Generates a customised CR
+#
+create_secrets_and_cr() {
+
+    source "$(basedir)/commands/util/certificate_funcs"
+
+    check_error $(check_for_command "base64")
+
+    BASE64="base64 -w0"
+
+    #
+    # Creates the syndesis credentials secret
+    #
+    read -p 'Provider Id, eg. github: ' provider
+    echo
+    if [ -z "${provider}" ]; then
+        check_error "ERROR: provider not specified"
+    fi
+
+    read -p 'Client Id (id received from provider): ' client_id
+    echo
+    if [ -z "${client_id}" ]; then
+        check_error "ERROR: client id not specified"
+    fi
+
+    read -p 'Client Secret (secret received from provider): ' client_secret
+    echo
+    if [ -z "${client_secret}" ]; then
+        check_error "ERROR: provider not specified"
+    fi
+
+    local cls_file=$(mktemp --tmpdir --suffix=.yml client-secret-XXXX)
+    cat << EOT > ${cls_file}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: syndesis-oauth-credentials
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: infrastructure
+stringData:
+  OAUTH2_PROXY_PROVIDER: "${provider}"
+  OAUTH2_PROXY_CLIENT_ID: "${client_id}"
+  OAUTH2_PROXY_CLIENT_SECRET: "${client_secret}"
+EOT
+
+    if [ "$(has_secret "syndesis-oauth-credentials")" == "true" ]; then
+        local delsec=$(delete_secret "syndesis-oauth-credentials")
+        check_error "${delsec}"
+    fi
+
+    local applycls=$(cat "${cls_file}" | ${KUBECTL} apply -f - 2>&1)
+    check_error "${applycls}"
+    rm -f "${cls_file}"
+
+    #
+    # Process for creating the comms secret
+    # * Generate a signed certificate with key
+    # * Create a secret and import
+    #
+
+    #
+    # Generate the signed certificate
+    #
+    read -p 'Host name for external access to syndesis, eg. syndesis.dash: ' external_host
+    echo
+    if [ -z "${external_host}" ]; then
+        check_error "ERROR: host not specified"
+    fi
+
+    local oauth_dir=$(create_certificate_cache "oauth")
+    check_error "${oauth_dir}"
+
+    create_signed_certificate "${oauth_dir}" "${external_host}" "syndesis-oauthproxy.syndesis.svc"
+    local cert_file="${oauth_dir}/certs/${external_host}.cert.pem"
+    local key_file="${oauth_dir}/private/${external_host}.key.pem"
+    if [ ! -f "${cert_file}" ]; then
+        check_error "ERROR: No certificate was generated"
+    fi
+
+    #
+    # Extract the certificate and key encoded as base64
+    #
+    oauth_cert=$(cat ${cert_file} | ${BASE64})
+    oauth_key=$(cat ${key_file} | ${BASE64})
+
+    #
+    # Create the syndesis comms secret
+    #
+    local nm="$(get_kube_namespace)"
+    local cos_file=$(mktemp --tmpdir --suffix=.yml comms-secret-XXXX)
+    cat << EOT > ${cos_file}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: syndesis-oauth-comms
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: infrastructure
+type: kubernetes.io/tls
+data:
+  tls.key: ${oauth_key}
+  tls.crt: ${oauth_cert}
+EOT
+
+    if [ "$(has_secret "syndesis-oauth-comms")" == "true" ]; then
+        local delsec=$(delete_secret "syndesis-oauth-comms")
+        check_error "${delsec}"
+    fi
+
+    local applycos=$(cat "${cos_file}" | ${KUBECTL} apply -f - 2>&1)
+    check_error "${applycos}"
+    rm -f "${cos_file}"
+
+    #
+    # Create a customised Custom Resource complete with the external hostname
+    #
+    local share_dir=$(create_share_dir)
+    local cr_dir="${share_dir}/custom-resources"
+    mkdir -p "${cr_dir}"
+
+    local cr_file="${cr_dir}/${external_host}-cr.yml"
+    cat << EOT > ${cr_file}
+apiVersion: syndesis.io/v1alpha1
+kind: Syndesis
+metadata:
+  name: app
+spec:
+  #
+  # Route hostname is required for the accessing ingress
+  #
+  routeHostname: ${external_host}
+  components:
+    oauth:
+      #
+      # Secrets are required for oauth authorisation and authentication
+      #
+      credentialsSecret: syndesis-oauth-credentials
+      cryptoCommsSecret: syndesis-oauth-comms
+EOT
+
+    if [ ! -f "${cr_file}" ]; then
+        check_error "ERROR: Failed to create custom resource"
+    fi
+
+    echo
+    echo "*************************************"
+    echo "*"
+    echo "* The syndesis custom resource has been created at:"
+    echo "* ${cr_file}"
+    echo "*"
+    echo "*************************************"
+}
+
+#
+# Start a registry container for use with minikube's docker.
+# Since docker images provide registries which are by default insecure,
+# this container runs by providing it with a TLS certificate and key
+# signed by the required Certificate Authority
+#
+start_registry() {
+
+    source "$(basedir)/commands/util/certificate_funcs"
+
+    check_error $(check_for_command "docker")
+
+    #
+    # Specify the host name used to access the registry
+    #
+    read -p 'Specify the hostname to identify the registry, eg. "my.host.org" in https://my.host.org:5000: ' host
+    echo
+    if [ -z "${host}" ]; then
+        check_error "ERROT: No hostname has been specified for building the regsitry image"
+    fi
+
+    local registry_dir=$(create_certificate_cache "registry")
+    check_error "${registry_dir}"
+
+    create_signed_certificate "${registry_dir}" "${host}"
+
+    local cert_file="certs/${host}.cert.pem"
+    local key_file="private/${host}.key.pem"
+    if [ ! -f "${registry_dir}/${cert_file}" ]; then
+        check_error "ERROR: No certificate was generated"
+    fi
+
+    #
+    # Start docker container of the registry
+    #
+    docker run -d \
+      --restart=always \
+      --name syndesis-registry \
+      -v "${registry_dir}":/registry \
+      --hostname="${host}" \
+      -e REGISTRY_HTTP_ADDR=0.0.0.0:5000 \
+      -e REGISTRY_HTTP_TLS_CERTIFICATE=/registry/${cert_file} \
+      -e REGISTRY_HTTP_TLS_KEY=/registry/${key_file} \
+      -p 5000:5000 \
+      registry:2
+}
+
+kube::init() {
+    source "$(basedir)/commands/util/client_funcs"
+
+    #
+    # Determine the platform we'll be connecting to
+    #
+    determine_platform
+    check_error "${IS_OPENSHIFT}"
+
+    #
+    # Configure client binary
+    #
+    setup_client_binary
+}
+
+kube::run() {
+
+    if [[ $(hasflag user) ]]; then
+        local kuser=$(readopt user)
+        user_functions "${kuser}"
+    elif [[ $(hasflag nm) ]]; then
+        local nm=$(readopt nm)
+        nm_functions "${nm}"
+    elif [[ $(hasflag namespaces) ]]; then
+        list_kube_namespaces
+    elif [[ $(hasflag cluster) ]]; then
+        cluster_functions
+    elif [[ $(hasflag contexts) ]]; then
+        list_kube_contexts
+    elif [[ $(hasflag context) ]]; then
+        local ctx=$(readopt context)
+        context_functions "${ctx}"
+    elif [[ $(hasflag secrets) ]]; then
+        create_secrets_and_cr
+    elif [[ $(hasflag registry) ]]; then
+        start_registry
+    else
+        kube::usage
+    fi
+}

@@ -30,11 +30,12 @@ dev::usage() {
     --update-manifest <name>  Updates the json manifest for the given connector
     --install-maven-mirror    Install Maven Nexus app as mirror to current cluster.
     --version                 Show running version of cluster
+    --flush-pv-refs           Flush stale persistent volume claim references
 EOT
 }
 
 extract_and_escape() {
-    local variable=$(grep  -E name=\"$1\" $2 | grep -Po '(?<=value=")[^"]+' )
+    local variable=$(${GREP}  -E name=\"$1\" $2 | ${GREP} -Po '(?<=value=")[^"]+' )
     variable="$(dev::xml_unescape $variable)"
     echo "$variable"
 }
@@ -52,7 +53,7 @@ create_api_cookie() {
     touch "$cookie_cached"
 
     local syndesis_url="$(oc get route syndesis  --template={{.spec.host}})"
-    local openshift_ip_and_port="$(oc status | grep "In project" | grep  -Po --color=never '(?<=server https://).*' )"
+    local openshift_ip_and_port="$(oc status | ${GREP} "In project" | ${GREP}  -Po --color=never '(?<=server https://).*' )"
     # first invocation is needed just to get the redierect url and to define a csrf token
     local redirect_url="$(curl --write-out "%{url_effective}\n" --location --silent --show-error --output /dev/null --insecure --cookie-jar  "$cookie_cached" -v "https://$syndesis_url" 2>/dev/null )"
 
@@ -60,8 +61,8 @@ create_api_cookie() {
     # split on question mark, so we are sure the first part is always the correct url
     local login_url="$(echo $redirect_url | sed -e 's/?/\n/g' | head -n1)"
     # split on question marks or ampersend, than filter on the specific param we are interested into
-    local then_url="$(echo $redirect_url | sed -e 's/[?&]/\n/g' | grep "then=" | sed -e 's/then=//' )"
-    local csrf=$(cat "$cookie_cached"  | grep -Po '(?<=\scsrf).*' | awk '{$1=$1;print}')
+    local then_url="$(echo $redirect_url | sed -e 's/[?&]/\n/g' | ${GREP} "then=" | sed -e 's/then=//' )"
+    local csrf=$(cat "$cookie_cached"  | ${GREP} -Po '(?<=\scsrf).*' | awk '{$1=$1;print}')
 
     # login on OpenShift and save output to delegate_permissions_form location
     local delegate_permissions_form="$(mktemp /tmp/syndesis_permissions.XXX.html)"
@@ -86,7 +87,7 @@ create_api_cookie() {
     local user_name=$(extract_and_escape "user_name" $delegate_permissions_form )
     local redirect_uri=$(extract_and_escape "redirect_uri" $delegate_permissions_form )
 
-    local scopes=$(grep -Po '(?<=name="scope").*' $delegate_permissions_form | grep -Po '(?<=value=")[^"]+')
+    local scopes=$(${GREP} -Po '(?<=name="scope").*' $delegate_permissions_form | ${GREP} -Po '(?<=value=")[^"]+')
     local joined_scopes=""
 
     scopes=(${scopes// / })
@@ -124,7 +125,7 @@ update_connector_manifest() {
     fi
 
     if [ -d "$manifest_dir" ]; then
-        files=$(ls $manifest_dir | grep ".json")
+        files=$(ls $manifest_dir | ${GREP} ".json")
         if [ -z "$files" ]; then
             echo "No manifest files found in $manifest_dir"
             exit 1
@@ -219,16 +220,28 @@ bump_syndesis_version() {
     cd -
 }
 
+dev::init() {
+    source "$(basedir)/commands/util/client_funcs"
+
+    #
+    # Determine the platform we'll be connecting to
+    #
+    determine_platform
+    check_error "${IS_OPENSHIFT}"
+
+    #
+    # Configure client binary
+    #
+    setup_client_binary
+}
+
 dev::run() {
-    source "$(basedir)/commands/util/openshift_funcs"
 
     if [ $(hasflag --debug) ]; then
         local name=$(readopt --debug)
         if [ -z "${name}" ]; then
             name="server"
         fi
-
-        setup_oc
 
         local pod=$(oc get -o name pod -l syndesis.io/component=syndesis-${name})
         oc port-forward ${pod//*\//} 5005:5005
@@ -273,8 +286,8 @@ dev::run() {
         # the following block retrieves the full image address to remove it
         if [[ $prune_output == *"error deleting blob"* ]]; then
             echo "There were errors trying to prune images, forcing their removal."
-            local imgs=`echo $prune_output|grep 'error deleting blob' | awk '{print $4}'  ORS='|' | sed 's/|$//g'`
-            oc --as system:admin get images --show-kind=true|awk '{print $1}'|grep -E "$imgs" | xargs oc --as system:admin delete
+            local imgs=`echo $prune_output|${GREP} 'error deleting blob' | awk '{print $4}'  ORS='|' | sed 's/|$//g'`
+            oc --as system:admin get images --show-kind=true|awk '{print $1}'|${GREP} -E "$imgs" | xargs oc --as system:admin delete
         fi
         eval $(minishift docker-env)
         docker login -u $(oc whoami) -p $(oc whoami -t) $(minishift openshift registry) >/dev/null 2>&1
@@ -291,7 +304,7 @@ dev::run() {
             # restart syndesis-server pod
             oc delete $(oc get pod -l 'syndesis.io/component=syndesis-server' -o name)
             # delete all syndesis and datavirt deployed objects
-            oc delete $(oc get all -o name |grep -E '^[^/]+/(i-|dv-)')
+            oc delete $(oc get all -o name |${GREP} -E '^[^/]+/(i-|dv-)')
         fi
 
         echo done
@@ -319,5 +332,10 @@ dev::run() {
             exit 1
         fi
         bump_syndesis_version $syndesis_version
+    elif [ $(hasflag --flush-pv-refs flush-pv-refs) ]; then
+        flush_pv_refs
+    elif [ $(hasflag --rsh rsh) ]; then
+        local pod=$(readopt --rsh rsh)
+        rsh "${pod}"
     fi
 }

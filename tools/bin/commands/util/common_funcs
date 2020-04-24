@@ -3,15 +3,24 @@
 # Minimal version for GO
 GO_MIN_VERSION=1.12
 
+# Version of the platform detect binary
+PLATFORM_DETECT_VERSION="0.1.0"
+
+# Var to hold result of detecting platform is openshift
+IS_OPENSHIFT=""
+
+# Commands that may have alternatives
+GREP="grep"
+
 # Checks if a flag is present in the arguments.
 hasflag() {
     filters="$@"
     for var in "${ARGS[@]}"; do
         for filter in $filters; do
-          if [ "$var" = "$filter" ]; then
-              echo 'true'
-              return
-          fi
+            if [ "$var" = "$filter" ]; then
+                echo 'true'
+                return
+            fi
         done
     done
 }
@@ -48,12 +57,12 @@ readopt() {
         if $next; then
             local value="${var##-}"
             if [ "$value" != "$var" ]; then
-               # Next is already also option, so we haven't
-               # specified a value.
-               return
+                # Next is already also option, so we haven't
+                # specified a value.
+                return
             fi
             echo $var
-            break;
+            break
         fi
         for filter in $filters; do
             if [[ "$var" = ${filter}* ]]; then
@@ -84,9 +93,10 @@ contains_error() {
 check_error() {
     local msg="$*"
     if [ "$(contains_error "$msg")" == "YES" ]; then
-        if [ -n "${ERROR_FILE:-}" ] && [ -f "$ERROR_FILE" ] && ! grep "$msg" $ERROR_FILE; then
+        if [ -n "${ERROR_FILE:-}" ] && [ -f "$ERROR_FILE" ] && ! ${GREP} "$msg" $ERROR_FILE; then
             local tmp=$(mktemp /tmp/error-XXXX)
             echo ${msg} >>$tmp
+            #printf "       (Note. If the function required an admin user then that account may still be logged in)\n" >> $tmp
             if [ $(wc -c <$ERROR_FILE) -ne 0 ]; then
                 echo >>$tmp
                 echo "===============================================================" >>$tmp
@@ -125,69 +135,195 @@ open_url() {
     exec $cmd $url
 }
 
+# check that a given binary is in $PATH
+check_for_command() {
+    local cmd=$1
+    if [ -z "$cmd" ]; then
+        echo "ERROR: command not specified to check_for_command"
+        return
+    fi
+
+    if $(command -v $cmd >/dev/null 2>&1); then
+        echo "OK"
+        return
+    fi
+
+    echo "ERROR: command '$cmd' is required but not available on PATH"
+}
+
 probe_commands() {
     for cmd in $@; do
-      local ret=$(which $cmd 2>/dev/null)
-      if [ $? -eq 0 ]; then
-          echo $ret
-          return
-      fi
+        local ret=$(which $cmd 2>/dev/null)
+        if [ $? -eq 0 ]; then
+            echo $ret
+            return
+        fi
     done
 }
 
 # Syndesis config dir holding state across builds
 syndesis_config_dir() {
-  local dir="$HOME/.syndesis";
-  [ -d $dir ] || mkdir $dir;
-  echo $dir
+    local dir="$HOME/.syndesis"
+    [ -d $dir ] || mkdir $dir
+    echo $dir
+}
+
+# Share directory for caching useful files
+create_share_dir() {
+  local share_dir="$(syndesis_config_dir)/share"
+  if [ ! -d "${share_dir}" ]; then
+      mkdir -p "${share_dir}"
+  fi
+
+  echo "${share_dir}"
 }
 
 # ======================================================
 # Git update functions
 git_rebase_upstream() {
-  echo "git fetch upstream master"
-  git fetch upstream master
-  echo -n "git rebase upstream/master"
-  if ! git rebase upstream/master; then
-    echo " (failed)"
-    echo "git stash"
-    git stash
-    echo "git rebase upstream/master"
-    git rebase upstream/master
-    echo "git stash pop"
-    git stash pop
-  else
-    echo
-  fi
+    echo "git fetch upstream master"
+    git fetch upstream master
+    echo -n "git rebase upstream/master"
+    if ! git rebase upstream/master; then
+        echo " (failed)"
+        echo "git stash"
+        git stash
+        echo "git rebase upstream/master"
+        git rebase upstream/master
+        echo "git stash pop"
+        git stash pop
+    else
+        echo
+    fi
 }
 
 # returns `"true"` if subtree path has changes
 has_changes() {
-  local subtree_path="${1:-}"
-  local ref="${2:-master}"
-  local hash="${CIRCLE_SHA1:-$(git rev-parse HEAD)}"
+    local subtree_path="${1:-}"
+    local ref="${2:-master}"
+    local hash="${CIRCLE_SHA1:-$(git rev-parse HEAD)}"
 
-  local changed_paths="$(git diff ..${ref} --name-only | tr '\n' ' ') $(git status --porcelain=v1 | cut -c 4- | tr '\n' ' ')"
+    local changed_paths="$(git diff ..${ref} --name-only | tr '\n' ' ') $(git status --porcelain=v1 | cut -c 4- | tr '\n' ' ')"
 
-  # when on `master` on CircleCI, compute changed paths for the commit being built
-  if [ "master" == "${CIRCLE_BRANCH:-}" ]; then
-    changed_paths="$changed_paths $(git log $hash^..$hash --name-only --pretty='format:' | tr '\n' ' ')"
-  fi
-  if [[ " $changed_paths" == *" ${subtree_path}"* ]]; then
-    echo "true"
-  fi
+    # when on `master` on CircleCI, compute changed paths for the commit being built
+    if [ "master" == "${CIRCLE_BRANCH:-}" ]; then
+        changed_paths="$changed_paths $(git log $hash^..$hash --name-only --pretty='format:' | tr '\n' ' ')"
+    fi
+    if [[ " $changed_paths" == *" ${subtree_path}"* ]]; then
+        echo "true"
+    fi
+}
+
+#
+# Download `platform-detect` binary
+#
+get_platform_detect_bin() {
+    local version=${1:-$PLATFORM_DETECT_VERSION}
+    local bin_name="platform-detect"
+    local binary="${bin_name}-${version}"
+
+    check_error $(check_for_command "mktemp")
+    check_error $(check_for_command "mkdir")
+    check_error $(check_for_command "curl")
+    check_error $(check_for_command "tar")
+    check_error $(check_for_command "rm")
+    check_error $(check_for_command "mv")
+
+    #
+    # If its already downloaded, skip download
+    #
+    local config_dir=$(syndesis_config_dir)
+    [ -d ${config_dir}/bin ] || mkdir -p ${config_dir}/bin
+
+    local detect_command="${config_dir}/bin/${binary}"
+    if [ -e ${detect_command} ]; then
+        echo ${detect_command}
+        return
+    fi
+
+    #
+    # Check for proper operating system
+    #
+    local os="linux"
+    if $(isMacOs); then
+        os="mac"
+    elif $(isWindows); then
+        os="windows"
+    fi
+
+    #
+    # Download from site
+    #
+    local base_url="https://github.com/syndesisio/syndesis/releases/download/$version"
+    local download_url="${base_url}/platform-detect-$version-$os-amd64.tar.gz"
+    local archive=$(mktemp ${config_dir}/platform-detect-${version}.tar-XXXX)
+    curl -sL --fail -o ${archive} ${download_url} 2>/dev/null || { check_error "ERROR: Could not download ${binary} from ${download_url}"; }
+
+    #
+    # Extract binary and move to correct name
+    #
+    local tmp_dir=$(mktemp -d ${config_dir}/platform-detect-${version}-XXXX)
+    pushd ${tmp_dir} >/dev/null
+
+    tar xf ${archive} >/dev/null
+    rm ${archive}
+
+    if [ ! -f ./${bin_name} ]; then
+        check_error "ERROR: Failed to extract ${bin_name} to ${tmp_dir}/"
+    fi
+
+    mv ./${bin_name} ${detect_command}
+
+    popd >/dev/null
+
+    #
+    # Clean up temporary directories
+    #
+    [ -n "$tmp_dir" ] && [ -d "$tmp_dir" ] && rm -rf $tmp_dir
+    echo $detect_command
+}
+
+#
+# Due to use of IS_OPENSHIFT, should not be
+# called from a subshell
+#
+determine_platform() {
+    if [ ! -z "${IS_OPENSHIFT}" ]; then
+        return
+    fi
+
+    local detect=$(get_platform_detect_bin)
+    if [ "$(contains_error "${detect}")" == "YES" ]; then
+        IS_OPENSHIFT="${detect}"
+        return
+    fi
+
+    local result=$($detect)
+    if [ "$(contains_error "${result}")" == "YES" ]; then
+        IS_OPENSHIFT="${result}"
+    else
+        local is=$(echo "$result" | ${GREP} Imagestreams | awk '{print $2}')
+        if [ "$is" == "true" ]; then
+            #
+            # Imagestreams are an openshift feature
+            #
+            IS_OPENSHIFT="YES"
+        else
+            IS_OPENSHIFT="NO"
+        fi
+    fi
 }
 
 docker_is_available() {
     set +e
-    which docker &>/dev/null
-    if [ $? -ne 0 ]; then
+
+    if [ $(check_for_command "docker") != "OK" ]; then
         set -e
         echo "ERROR: 'docker' command not installed"
         return
     fi
 
-    if docker info > /dev/null 2> /dev/null ; then
+    if docker info >/dev/null 2>&1; then
         echo "OK"
     else
         echo "ERROR: the 'docker' command is not connected to a server"
@@ -198,8 +334,8 @@ docker_is_available() {
 
 go_is_available() {
     set +e
-    which go &>/dev/null
-    if [ $? -ne 0 ]; then
+
+    if [ $(check_for_command "go") != "OK" ]; then
         set -e
         echo "ERROR: 'go' command not installed"
         return
@@ -212,7 +348,7 @@ go_is_available() {
     fi
 
     gocompare=$(compare_version $test $GO_MIN_VERSION \"go\")
-    if [[ "$gocompare" != "OK" ]] ; then
+    if [[ "$gocompare" != "OK" ]]; then
         set -e
         echo "ERROR: 'go' command ($test) does not meet the minimum version of $GO_MIN_VERSION"
         return
@@ -223,43 +359,33 @@ go_is_available() {
     echo "OK"
 }
 
-set_gnugrep() {
+gnugrep() {
+    check_error $(check_for_command "which")
+
     if $(isMacOs); then
-        if [ $(ggrep_is_available_on_osx) == "OK" ]; then
-            gnugrep=`which ggrep`
-        else
-            echo "ERROR: 'Please install ggrep on OSX'"
-            return
-        fi
+
+      if $(check_for_command "ggrep") -ne "OK" ]; then
+        check_error "ERROR: Please install ggrep on OSX usimg 'brew install grep'"
+      else
+        GREP=$(which ggrep)
+      fi
+
     else
-      gnugrep=`which grep`
+        GREP=$(which grep)
     fi
-}
-
-ggrep_is_available_on_osx() {
-    set +e
-    which ggrep &>/dev/null
-    if [ $? -ne 0 ]; then
-        set -e
-        echo "Please install GNU grep using: brew install grep"
-        return
-    fi
-    set -e
-
-    echo "OK"
 }
 
 compare_version_part() {
     local test=$1
     local min=$2
 
-    test=`expr $test`
-    min=`expr $min`
+    test=$(expr $test)
+    min=$(expr $min)
 
     if [ $test -eq $min ]; then
-        echo 0;
+        echo 0
     elif [ $test -gt $min ]; then
-        echo 1;
+        echo 1
     else
         # $test -lt $min
         echo -1
@@ -270,12 +396,11 @@ compare_version() {
     local test=$1
     local min=$2
 
-    testparts=( ${test//./ } )
-    minparts=( ${min//./ } )
+    testparts=(${test//./ })
+    minparts=(${min//./ })
 
     local i=0
-    while [ $i -lt ${#minparts[@]} ]
-    do
+    while [ $i -lt ${#minparts[@]} ]; do
         local testpart=${testparts[$i]}
         local minpart=${minparts[$i]}
 
@@ -306,7 +431,7 @@ compare_version() {
         # Only if the version part is equal will the loop continue
         # with further parts.
         #
-        i=`expr $i + 1`
+        i=$(expr $i + 1)
     done
 
     echo "OK"

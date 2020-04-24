@@ -1,0 +1,200 @@
+#!/bin/bash
+
+minikube::description() {
+    echo "Provides helpful minikube functions"
+}
+
+minikube::usage() {
+    cat <<"EOT"
+volumes                      Create volumes for syndesis installation
+start                        Start a new instance of minikube
+      Start Switches:
+       --reset                   Remove any old instance of minikube before starting
+       --driver                  The driver to use for accessing the VM (kvm2 by default)
+       --disk                    The size of disk to allocated in GB (60GB by default)
+       --memory                  The size of memory to allocate GB (12GB by default)
+       --cpus                    The number of CPUs to allocate (4 by default)
+       --registries              A file listing any registries the cluster should have access to
+EOT
+}
+
+#
+# * Creates the persistent volumes necessary for
+#   installation of syndesis
+#
+volumes() {
+
+    check_error $(check_for_command "chmod")
+    check_error $(check_for_command "minikube")
+
+    local status=$(minikube status)
+    if [[ "${status}" == *"Stopped"* ]]; then
+        check_error "ERROR: minikube appears to be stopped"
+    fi
+
+    # Save the current context
+    local ctx=$(current_context)
+
+    # Change to the admin user
+    local admin=$(get_admin_user)
+    local admin_ctx=$(set_context "default" "${admin}")
+    local use_ctx=$(use_context "${admin_ctx}")
+    check_error "${use_ctx}"
+
+    #
+    # Creates the generic persistent volumes
+    #
+    for i in $(seq -f "%04g" 1 9)
+    do
+        local pv="pv$i"
+
+        # Create the directory inside the minikube VM
+        minikube ssh "sudo mkdir -p /mnt/${pv}"
+
+        # Create a PV in cluster
+        local pvtemplate=$(mktemp --tmpdir --suffix=.yml syndesis-${pv}-XXXX)
+        trap "rm -f '${pvtemplate}'" EXIT
+
+        cat << EOT > ${pvtemplate}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: syndesis-${pv}
+  labels:
+    type: local
+spec:
+  storageClassName: standard
+  persistentVolumeReclaimPolicy: Retain
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/${pv}"
+EOT
+
+        local apply=$(cat ${pvtemplate} | ${KUBECTL} apply -f - 2>&1)
+        check_error "${apply}"
+
+    done
+
+    sleep 3
+
+    # Return to the original context
+    use_context "${ctx}"
+
+    #
+    # Ensure all the newly create directories are writeable
+    # by users. Without this, we get a rather ugly "permission denied"
+    # error message when spinning up the containers
+    #
+    minikube ssh "sudo chmod 777 /mnt/*"
+}
+
+#
+# Start minikube by providing a few useful extra properties
+# * Add -f to completely delete minikube install and start again
+#
+start() {
+
+    local driver=$(readopt --driver)    # Modify to suit Operating System
+    local disk=$(readopt   --disk)      # Modify to suit hdd size
+    local memory=$(readopt 	--memory)   # Modify to suit physical installed RAM
+    local cpus=$(readopt 		--cpus)     # Modify to suit number of CPUs
+
+    if [ -z "${driver}" ]; then
+        driver="kvm2"
+    fi
+    if [ -z "${disk}" ]; then
+        disk="60GB"
+    fi
+    if [ -z "${memory}" ]; then
+        memory="12GB"
+    fi
+    if [ -z "${cpus}" ]; then
+        cpus=4
+    fi
+
+    if [[ $(hasflag --reset) ]]; then
+        echo "Resetting minikube configuration ... "
+        echo "Warning this deletes the ${HOME}/.minikube & $(syndesis_config_dir)/share directories ..."
+        echo ============================================================
+        read -p "Do you really want to continue ? yes/[no] : " choice
+        echo
+        if [ "${choice}" != "yes" ] && [ "${choice}" != "y" ]; then
+            check_error "ERROR: Aborting on user's request"
+        fi
+
+        minikube delete --purge=true
+        rm -f "$(syndesis_config_dir)/share"
+    fi
+
+    local options="--bootstrapper=kubeadm --driver ${driver} --disk-size ${disk} --memory ${memory} --cpus ${cpus}"
+
+    if [[ $(hasflag --registries) ]]; then
+        reg_file=$(readopt --registries)
+        if [ ! -f "${reg_file}" ]; then
+            check_error "ERROR: The registry list file ${reg_file} does not exist"
+        fi
+
+        while IFS= read -r line
+        do
+            options="${options} --insecure-registry ${line}"
+        done < "$reg_file"
+    fi
+
+    local status=$(minikube status)
+    if [[ "${status}" == *"Stopped"* ]]; then
+        # Start minikube (unsurprisingly!)
+        minikube start ${options}
+    fi
+
+    #
+    # Wait until everything is up and running
+    #
+    local done=false
+    while [ ! ${done} ]
+    do
+        local status=$(minikube status)
+        if [[ "${status}" != *"Stopped"* ]]; then
+            done=true
+        fi
+
+        sleep 5
+    done
+
+    #
+    # Ensure all volume mount directories are writeable
+    # by users. Without this, we get a rather ugly "permission denied"
+    # error message when spinning up the containers
+    #
+
+    echo "Performing work-around for persistent volume permissions"
+    minikube ssh "sudo chmod 777 /mnt/*"
+}
+
+minikube::init() {
+    source "$(basedir)/commands/util/client_funcs"
+
+    #
+    # minikube may not be running yet so override the 'determine platform'
+    # as minikube is, by definition, kubernetes
+    #
+    IS_OPENSHIFT="NO"
+
+    #
+    # Configure client binary
+    #
+    setup_client_binary
+}
+
+minikube::run() {
+
+    if [[ $(hasflag start) ]]; then
+        start
+    elif [[ $(hasflag volumes) ]]; then
+        volumes
+    else
+        minikube::usage
+    fi
+}

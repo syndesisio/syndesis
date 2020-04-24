@@ -73,7 +73,7 @@ release::run() {
     if [ $(readopt --log) ]; then
         local logfile=$(readopt --log)
         touch $logfile
-        tail -f $logfile > >(grep ^====) &
+        tail -f $logfile > >(${GREP} ^====) &
         local tail_pid=$!
         trap "kill $tail_pid" EXIT
 
@@ -179,12 +179,12 @@ create_moving_tag_release() {
 
 calc_timestamp_version() {
     local topdir=$1
-    local pom_version=$(grep -oPm2 "(?<=<version>)[^<]+" "$topdir/app/pom.xml"| tail -1| sed -e 's/\([0-9]*\.[0-9]*\).*/\1/')
+    local pom_version=$(${GREP} -oPm2 "(?<=<version>)[^<]+" "$topdir/app/pom.xml"| tail -1| sed -e 's/\([0-9]*\.[0-9]*\).*/\1/')
     if [ -z "${pom_version}" ]; then
         echo "ERROR: Cannot extract version from app/pom.xml"
         return 1
     fi
-    local patch_level=$(git tag | grep ^$pom_version | grep -v '-' | grep '[0-9]*\.[0-9]*\.' | sed -e s/${pom_version}.// | sort -n -r | head -1)
+    local patch_level=$(git tag | ${GREP} ^$pom_version | ${GREP} -v '-' | ${GREP} '[0-9]*\.[0-9]*\.' | sed -e s/${pom_version}.// | sort -n -r | head -1)
     if [ -z "${patch_level}" ]; then
       # without the patch level, i.e. for X.Y-SNAPSHOT in POMs we set
       # the patch level to -1 to have it evaluate to X.Y.0-YYYYMMDD
@@ -568,7 +568,7 @@ git_commit() {
     check_error $release_version
 
     if [ ! $(hasflag --dry-run -n) ]; then
-        git ls-files --modified | grep $pattern | xargs git commit -m "[$release_version]: $message"
+        git ls-files --modified | ${GREP} $pattern | xargs git commit -m "[$release_version]: $message"
     fi
 }
 

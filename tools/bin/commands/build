@@ -18,9 +18,10 @@ build::usage() {
     --skip-tests               Skip unit, integration and system test execution
     --skip-checks              Disable all checks
 -f  --flash                    Skip checks and tests execution (fastest mode)
--i  --image                    Build Docker via s2i images, too (for those modules creating images)
-    --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
+-i  --image                    Build Docker via s2i images (openshift only), too (for those modules creating images)
+    --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub (assumed if not using openshift)
     --operator-tag             The tag to use for the operator image
+    --registry                 Registry to push the built images (used in conjunction with --docker)
 -p  --project <project>        Specifies the project / namespace to create images
 -g  --goals <g1>,<g2>, ..      Use custom Maven goals to execute for the build. Default goal is `install`
 -s  --settings <path>          Path to Maven settings.xml
@@ -42,16 +43,29 @@ EOT
 
 }
 
-build::run() {
-
+build::init() {
     # Maven helper funcs
     source "$(basedir)/commands/util/maven_funcs"
 
     # For OpenShift based builds
-    source "$(basedir)/commands/util/openshift_funcs"
+    source "$(basedir)/commands/util/client_funcs"
 
     # For operator building
     source "$(basedir)/commands/util/operator_funcs"
+
+    #
+    # Determine the platform we'll be connecting to
+    #
+    determine_platform
+    check_error "${IS_OPENSHIFT}"
+
+    #
+    # Configure client binary
+    #
+    setup_client_binary
+}
+
+build::run() {
 
     local modules="$(extract_modules)"
     local top_dir="$(appdir .)"
@@ -120,14 +134,46 @@ maven_args() {
         args="$args --batch-mode"
     fi
 
-    if [ $(hasflag --image -i --all-images --app-images --infra-images --docker) ]; then
+    if [ $(hasflag --image -i --all-images --app-images --infra-images --docker --registry) ]; then
         #Build images
-        args="$args -Pimage"
-        if [ $(hasflag --docker) ]; then
-            args="$args -Dfabric8.mode=kubernetes"
+
+        # Default profile for image building
+        profiles="image"
+
+        local mode=""
+        if [ "${IS_OPENSHIFT}" == "YES" ]; then
+            #
+            # By default use fabric8's openshift mode to build
+            # which employs s2i.
+            #
+            mode="openshift"
+
+            if [ $(hasflag --docker) ]; then
+                #
+                # On the rare occasion we want to use docker for building
+                # with openshift then the mode needs to be changed back to
+                # kubernetes
+                #
+                mode="kubernetes"
+            fi
         else
-            args="$args -Dfabric8.mode=openshift"
+            mode="kubernetes"
         fi
+
+        #
+        # If building to kubernetes we normally need a registry to push
+        # the images to (unless using the default of docker.io)
+        #
+        local regarg=""
+        if [ "${mode}" == "kubernetes" ] && [ $(hasflag --registry) ]; then
+          local registry=$(readopt --registry)
+          profiles="${profiles},image-push"
+          regarg="-Ddocker.push.registry=${registry}"
+          #args="$args -Dimage.push=true -Ddocker.push.registry=${registry}"
+        fi
+
+        args="${args} -P ${profiles} -Dfabric8.mode=${mode} ${regarg}"
+
     fi
 
     if [ $(hasflag --camel-snapshot) ]; then
@@ -200,10 +246,30 @@ do_operator() {
     fi
 
     if [ $(hasflag -i --image --docker) ]; then
-        ./build.sh $args --image-build=docker --image-name="${image}" --image-tag="$tag"
-    else
-        ./build.sh $args --image-build=s2i --image-name="${image}" --image-tag="$tag"
+        local BUILD_ARGS=" --image-name=${image} --image-tag=${tag}"
+        local image_build="s2i"
+
+        if [[ ${IS_OPENSHIFT} != true || $(hasflag --docker) ]]; then
+            image_build="docker"
+            #
+            # If building to kubernetes we normally need a registry to push
+            # the images to (unless using the default of docker.io)
+            #
+            if [ $(hasflag --registry) ]; then
+                local registry=$(readopt --registry)
+                BUILD_ARGS="${BUILD_ARGS} --registry ${registry}"
+            fi
+        fi
+
+        ./build.sh ${args} --image-build="${image_build}" ${BUILD_ARGS}
+
+        check_error $(install_built_operator "${top_dir}/install/operator")
+
+        echo "=============================================================================="
+        echo "Built operator copied to ${OPERATOR_BINARY}."
+        echo "=============================================================================="
     fi
+
     popd >/dev/null
 }
 
@@ -229,35 +295,6 @@ do_upgrade_pod() {
     echo "Creating image syndesis/syndesis-upgrade:latest"
     docker build --build-arg version=latest -t syndesis/syndesis-upgrade:latest ${build_dir}
 }
-
-is_minishift_docker_daemon() {
-    if [ -n "${DOCKER_CERT_PATH:-}" ] && [ "${DOCKER_CERT_PATH//minishift/}" != "$DOCKER_CERT_PATH" ]; then
-        echo "true"
-    else
-        echo "false"
-    fi
-}
-
-mkdir_on_minishift() {
-    local dirs="$@"
-    for dir in $dirs; do
-        minishift ssh "sudo su -c '[ -d $dir ] || (mkdir -p $dir && chown -R docker $dir)'"
-    done
-}
-
-rsync_binary_from_minishift() {
-    local operator_bin=${1}
-    local local_target_dir=${2}
-
-    echo "Rsync compiled $operator_bin back to $local_target_dir"
-
-    rsync -az \
-          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes -o PasswordAuthentication=no -i ~/.minishift/machines/minishift/id_rsa"\
-          --progress \
-          docker@$(minishift ip):${operator_bin} \
-          $local_target_dir
-}
-
 
 # All modules, in the right build order
 ALL_MODULES="common extension integration connector meta server s2i ui-react test operator upgrade dv"

@@ -8,6 +8,9 @@
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-oauthproxy
     annotations:
+      #
+      # Annotation for auto-generating the tls self-signed certificate
+      #
       service.alpha.openshift.io/serving-cert-secret-name: syndesis-oauthproxy-tls
     name: syndesis-oauthproxy
   spec:
@@ -50,7 +53,7 @@
           image: '{{ .Syndesis.Components.Oauth.Image }}'
           args:
             - --provider=openshift
-            - --client-id=system:serviceaccount:{{.OpenShiftProject}}:syndesis-oauth-client
+            - --cookie-name=oauth_proxy
             - --upstream=http://syndesis-server/api/
             - --upstream=http://syndesis-server/mapper/
             - --upstream=http://syndesis-ui/
@@ -69,9 +72,9 @@
             - --skip-auth-preflight
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-{{ if (not .Syndesis.Components.Oauth.DisableSarCheck) }}
+          {{ if (not .Syndesis.Components.Oauth.DisableSarCheck) }}
             - --openshift-sar={"namespace":"{{.Syndesis.Components.Oauth.SarNamespace}}","resource":"pods","verb":"get"}
-{{ end }}
+          {{ end }}
             # Disabled for now: --pass-user-bearer-token as this requires extra permission which only
             # can be given by a cluster-admin
           env:
@@ -80,6 +83,8 @@
               secretKeyRef:
                 name: syndesis-global-config
                 key: OAUTH_COOKIE_SECRET
+          - name: OAUTH2_PROXY_CLIENT_ID
+            value: system:serviceaccount:{{.OpenShiftProject}}:syndesis-oauth-client
           - name: OAUTH2_PROXY_CLIENT_SECRET
             valueFrom:
               secretKeyRef:

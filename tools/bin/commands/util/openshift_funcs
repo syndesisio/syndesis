@@ -1,23 +1,24 @@
 #!/bin/bash
 
+# Binary for openshift kubectl
+OC="oc"
+
 # Minimal version for OC
 OC_MIN_VERSION=3.9.0
 
 # Constant for signal to configure oc via minishift
 SETUP_MINISHIFT="setup-minishift"
 
-check_oc_version()
-{
+check_oc_version() {
     local minimum=${OC_MIN_VERSION}
     #
     # Removes any lines containing kubernetes or server
     # Extracts any version number of the format dd.dd.dd, eg. 3.10.0 or 4.1.0
     #
-    set_gnugrep
 
-    local test=$(oc version | $gnugrep -Eiv 'ubernetes|erver' | $gnugrep -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\?')
+    local test=$(${OC} version | ${GREP} -Eiv 'ubernetes|erver' | ${GREP} -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\?')
     if [ -z "${test}" ]; then
-        test=$(oc version | $gnugrep 'lient' | $gnugrep -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\?')
+        test=$(${OC} version | ${GREP} 'lient' | ${GREP} -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\?')
     fi
 
     if [ -z "$test" ]; then
@@ -28,17 +29,59 @@ check_oc_version()
     echo $(compare_version $test $minimum)
 }
 
+get_oc_user() {
+    echo $(${OC} whoami)
+}
+
+extract_current_token() {
+    local token=$(oc whoami -t 2>/dev/null)
+    if [ $? == 0 ]; then
+        echo $token
+    fi
+}
+
+login_oc_as_admin() {
+    local user=$(oc whoami)
+    local token=$(extract_current_token)
+
+    read -p "Please enter the user-name of a cluster-admin account?: " admin_user
+    echo
+    if [ -z "$admin_user" ]; then
+        check_error "Error: No admin account user-name was entered. Aborting."
+    fi
+
+    read -p -s "Please enter the password for ${admin_user}?: " password
+    echo
+    if [ -z "$password" ]; then
+        check_error "Error: No password for ${admin_user} was entered. Aborting."
+    fi
+
+    # Login in as admin
+    local result=$(oc login -u "$admin_user" -p "${password}" 2>&1)
+    check_error "$result"
+
+    # Return the command to use to revert to the initial user
+    if [ -n "${token}" ]; then
+        echo "oc login --token ${token}"
+    else
+        echo "oc login -u ${user}"
+    fi
+}
+
 is_minishift_available() {
+
+    check_error $(check_for_command "sed")
+
     # Check for minishift
     set +e
-    which minishift &>/dev/null
-    if [ $? -ne 0 ]; then
+
+    if [ $(check_for_command "minishift") != "OK" ]; then
         set -e
         echo "ERROR: 'minishift is not installed so cannot use for 'oc'"
         return
     fi
 
-    local running=$(minishift status | grep Minishift | sed 's/Minishift:\( \)*//g')
+    local running=$(minishift status | ${GREP} Minishift | sed 's/Minishift:\( \)*//g')
     if [ "$running" != "Running" ]; then
       echo "ERROR: minishift is not running"
       return
@@ -47,33 +90,115 @@ is_minishift_available() {
     echo "OK"
 }
 
+#
+# Download `oc` binary
+#
+get_oc_bin() {
+
+    local version="v3.11.0"
+    local snapshot="${version}-0cbc58b"
+
+    check_error $(check_for_command "curl")
+    check_error $(check_for_command "mkdir")
+    check_error $(check_for_command "mktemp")
+    check_error $(check_for_command "rm")
+    check_error $(check_for_command "mv")
+
+    local extract_tool=""
+    local ext=""
+    local os=""
+    if $(isMacOs); then
+        check_error $(check_for_command "unzip")
+        extract_tool="unzip"
+        os="mac"
+        ext="zip"
+    elif $(isWindows); then
+        check_error $(check_for_command "unzip")
+        extract_tool="unzip"
+        os="windows"
+        ext="zip"
+    else
+        check_error $(check_for_command "tar")
+        extract_tool="tar xf"
+        os="linux-64bit"
+        ext="tar.gz"
+    fi
+
+    #
+    # If its already downloaded, skip download
+    #
+    local config_dir=$(syndesis_config_dir)
+    [ -d ${config_dir}/bin ] || mkdir -p ${config_dir}/bin
+
+    local oc_command="${config_dir}/bin/${OC}"
+    if [ -e ${oc_command} ]; then
+        echo ${oc_command}
+        return
+    fi
+
+    #
+    # Download from site
+    #
+    local oc_dir="openshift-origin-client-tools-${snapshot}-${os}"
+    local base_url="https://github.com/openshift/origin/releases/download/$version"
+    local download_url="${base_url}/${oc_dir}.${ext}"
+
+    local archive=$(mktemp ${config_dir}/${oc_dir}-XXXX)
+    curl -sL --fail -o ${archive} ${download_url} 2>/dev/null || { check_error "ERROR: Could not download ${OC} from ${download_url}"; }
+
+    #
+    # Extract binary and move to correct name
+    #
+    local tmp_dir=$(mktemp -d ${config_dir}/oc-${version}-XXXX)
+    pushd ${tmp_dir} >/dev/null
+
+    ${extract_tool} ${archive} >/dev/null 2>&1
+    rm ${archive}
+
+    if [ ! -f ./${oc_dir}/${OC} ]; then
+        check_error "ERROR: Failed to extract ${OC} to ${tmp_dir}/"
+    fi
+
+    mv ./${oc_dir}/${OC} ${oc_command}
+
+    popd >/dev/null
+
+    #
+    # Clean up temporary directories
+    #
+    [ -n "$tmp_dir" ] && [ -d "$tmp_dir" ] && rm -rf $tmp_dir
+    echo $oc_command
+}
+
 setup_oc() {
+    local  __kubevar=$1
 
-    # Check path first if it already exists
-    set +e
-    which oc &>/dev/null
-    if [ $? -eq 0 ]; then
-      set -e
+    if [ "$(check_for_command ${OC})" == "OK" ]; then
       err=$(check_oc_version)
       check_error $err
+
+      #
+      # If a kubevar name was specified then set it
+      #
+      if [ -n "$__kubevar" ]; then
+          eval $__kubevar="${OC}"
+      fi
+
       return
     fi
 
-    # Check for minishift
-    hasminishift=$(is_minishift_available)
-    if [ "$hasminishift" == "OK" ]; then
-      set -e
-      eval $(minishift oc-env)
-      err=$(check_oc_version)
-      check_error $err
-      return
+    #
+    # Try downloading oc
+    #
+    local oc_binary=$(get_oc_bin)
+    check_error "${oc_binary}"
+
+    #
+    # If a kubevar name was specified then set it
+    #
+    if [ -n "$__kubevar" ]; then
+        eval $__kubevar="${oc_binary}"
     fi
-
-    set -e
-
-    # Error, no oc found
-    echo "ERROR: No 'oc' binary found in path. Please install the client tools from https://github.com/openshift/origin/releases/tag/v3.9.0 (or newer)"
-    exit 1
 }
 
 setup_minishift_oc() {
@@ -89,7 +214,7 @@ is_oc_available() {
 
     # Check path first if it already exists
     set +e
-    which oc &>/dev/null
+    which ${OC} &>/dev/null
     if [ $? -eq 0 ]; then
       set -e
       echo $(check_oc_version)
@@ -118,63 +243,66 @@ is_oc_available() {
     echo "ERROR: No 'oc' binary found in path. Please install the client tools from https://github.com/openshift/origin/releases/tag/v3.9.0 (or newer)"
 }
 
-recreate_project() {
-    local project=$1
-    local dont_ask=${2:-false}
+get_oc_project() {
+    nm="$1"
 
-    if [ -z "$project" ]; then
-        echo "No project given"
-        exit 1
+    if [ -n "${nm}" ]; then
+        echo $(${OC} get project "${nm}" 2>&1)
+    else
+        echo $(${OC} get project 2>&1)
+    fi
+}
+
+delete_oc_project() {
+    project="${1:-}"
+    if [ -z "${project}" ]; then
+        check_error "ERROR: No project specified to delete."
     fi
 
-    # Delete project if existing
-    if oc get project "${project}" >/dev/null 2>&1 ; then
-        if [ $dont_ask != "true" ]; then
-            echo =============== WARNING -- Going to delete project ${project}
-            oc get all -n $project
-            echo ============================================================
-            read -p "Do you really want to delete the existing project $project ? yes/[no] : " choice
-            echo
-            if [ "$choice" != "yes" ] && [ "$choice" != "y" ]; then
-                echo "Aborting on user's request"
-                exit 1
-            fi
-        fi
-        echo "Deleting project ${project}"
-        oc delete project "${project}"
+    echo $(${OC} delete project "${project}" 2>&1)
+}
+
+create_oc_project() {
+    project="${1:-}"
+    if [ -z "${project}" ]; then
+        check_error "ERROR: No project specified to create."
     fi
 
-    # Create project afresh
-    echo "Creating project ${project}"
-    for i in {1..10}; do
-        if oc new-project "${project}" >/dev/null 2>&1 ; then
-            break
-        fi
-        echo "Project still exists. Sleeping 10s ..."
-        sleep 10
-    done
-    oc project "${project}"
+    if [ "$(get_oc_project "${project}")" == "OK" ]; then
+        check_error "ERROR: Cannot create project. Project exists."
+    fi
+
+    echo $(${OC} new-project "${project}" 2>&1)
+}
+
+switch_oc_project() {
+    project="${1:-}"
+    if [ -z "${project}" ]; then
+        check_error "ERROR: No project specified."
+    fi
+
+    echo $(${OC} project "${project}" 2>&1)
 }
 
 # Install maven mirror
 install_maven_mirror() {
-    local project=$(oc project --short=true)
-    recreate_project "nexus"
+    local project=$(${OC} project --short=true)
+    recreate_namespace "nexus"
 
-    oc new-app sonatype/nexus >/dev/null 2>&1
-    oc expose svc/nexus >/dev/null 2>&1
+    ${OC} new-app sonatype/nexus >/dev/null 2>&1
+    ${OC} expose svc/nexus >/dev/null 2>&1
 
-    oc set probe dc/nexus \
+    ${OC} set probe dc/nexus \
         --liveness \
         --failure-threshold 3 \
         --initial-delay-seconds 30 \
         -- echo ok >/dev/null 2>&1
-	oc set probe dc/nexus \
+	${OC} set probe dc/nexus \
         --readiness \
         --failure-threshold 3 \
         --initial-delay-seconds 30 \
         --get-url=http://:8081/nexus/content/groups/public >/dev/null 2>&1
-    oc set volume dc/nexus --add \
+    ${OC} set volume dc/nexus --add \
         --name 'nexus-volume-1' \
         --type 'pvc' \
         --mount-path '/sonatype-work/' \
@@ -184,7 +312,7 @@ install_maven_mirror() {
 
     wait_for_deployments 1 nexus
 
-    nexus_host=$(oc get routes nexus -o=jsonpath='{.spec.host}')
+    nexus_host=$(${OC} get routes nexus -o=jsonpath='{.spec.host}')
 
     echo "Setting up jboss-ea and redhat-ga proxies..."
 
@@ -238,7 +366,7 @@ install_maven_mirror() {
         {"id":"redhat-ga"},{"id":"atlassian-public"}]}}' \
         >/dev/null 2>&1
 
-    oc project "${project}"
+    ${OC} project "${project}"
 
     echo "Optionally set MAVEN_MIRROR_URL with:"
     echo "export MAVEN_MIRROR_URL=\"http://${nexus_host}/nexus/content/groups/public/\""
@@ -248,11 +376,11 @@ install_maven_mirror() {
 maven_mirror_url() {
     local maven_mirror="${MAVEN_MIRROR_URL:-unknown}"
     if [ "${maven_mirror}" == "unknown" ]; then
-        project=$(oc project --short=true)
-        if oc get project "nexus" >/dev/null 2>&1 ; then
-            oc project "nexus" >/dev/null 2>&1
-            nexus_host=$(oc get routes nexus -o=jsonpath='{.spec.host}')
-            oc project "${project}" >/dev/null 2>&1
+        project=$(${OC} project --short=true)
+        if ${OC} get project "nexus" >/dev/null 2>&1 ; then
+            ${OC} project "nexus" >/dev/null 2>&1
+            nexus_host=$(${OC} get routes nexus -o=jsonpath='{.spec.host}')
+            ${OC} project "${project}" >/dev/null 2>&1
             echo "http://${nexus_host}/nexus/content/groups/public/"
             return
         fi
@@ -284,19 +412,19 @@ create_or_delete_openshift_resource() {
     if [ -n "$use_local_resource" ]; then
         local template="tee"
         if [ -n "$parameters" ]; then
-          template="oc process -f - -p $parameters"
+          template="${OC} process -f - -p $parameters"
         fi
 
         if [ -n "$tag" ]; then
             pushd $(appdir) >/dev/null
             git fetch --tags
-            result=$(git show $tag:${resource} | $template | oc $what -f - >$ERROR_FILE 2>&1)
+            result=$(git show $tag:${resource} | $template | ${OC} $what -f - >$ERROR_FILE 2>&1)
             if [ $? -ne 0 ]; then
                 echo "ERROR: Cannot create $resource (tag: $tag)"
             fi
             popd >/dev/null
         else
-            result=$(cat $(appdir)/../$resource | $template | oc $what -f - >$ERROR_FILE 2>&1)
+            result=$(cat $(appdir)/../$resource | $template | ${OC} $what -f - >$ERROR_FILE 2>&1)
             if [ $? -ne 0 ]; then
                 echo "ERROR: Cannot create local $(appdir)/../$resource"
             fi
@@ -305,9 +433,9 @@ create_or_delete_openshift_resource() {
         local url="https://raw.githubusercontent.com/syndesisio/syndesis/${tag:-master}/${resource}"
 
         if [ -z "$parameters" ]; then
-            result=$(oc $what -f $url >$ERROR_FILE 2>&1)
+            result=$(${OC} $what -f $url >$ERROR_FILE 2>&1)
         else
-            result=$(oc process -f $url -p $parameters | oc $what -f - >$ERROR_FILE 2>&1)
+            result=$(${OC} process -f $url -p $parameters | ${OC} $what -f - >$ERROR_FILE 2>&1)
         fi
         if [ $? -ne 0 ]; then
             echo "ERROR: Cannot create remote resource $url"
@@ -316,60 +444,11 @@ create_or_delete_openshift_resource() {
     set -e
 }
 
-scale_deployments() {
-  local replicas=$1
-  shift
-  local dcs="$@"
-  for dc in $dcs; do
-    oc scale dc $dc --replicas=$replicas
-  done
-  wait_for_deployments $replicas $dcs
-}
-
-wait_for_deployments() {
-  local replicas_desired=$1
-  shift
-  local dcs="$@"
-
-  oc get pods -w &
-  watch_pid=$!
-  for dc in $dcs; do
-      echo "Waiting for $dc to be scaled to ${replicas_desired}"
-      local replicas=$(get_replicas $dc)
-      while [ -z "$replicas" ] || [ "$replicas" -ne $replicas_desired ]; do
-          echo "Sleeping 10s ..."
-          sleep 10
-          replicas=$(get_replicas $dc)
-      done
-  done
-  kill $watch_pid
-}
-
-get_replicas() {
-  local dc=${1}
-  local hasDc=$(oc get dc -o name | grep $dc)
-  if [ -z "$hasDc" ]; then
-      echo "0"
-      return
-  fi
-  oc get dc $dc -o jsonpath="{.status.availableReplicas}"
-}
-
-pod() {
-  local dc=${1}
-  local ret=$(oc get pod -o name | grep "$dc" | sed -e "s/^pods\///")
-  local nr_pods=$(echo $ret | wc -l | awk '$1=$1')
-  if [ $nr_pods != "1" ]; then
-      echo "ERROR: More than 1 pod found for $dc ($nr_pods found)"
-  fi
-  echo $ret
-}
-
 get_route() {
   local name="${1}"
-  oc get route $name -o jsonpath="{.spec.host}"
+  ${OC} get route $name -o jsonpath="{.spec.host}"
 }
 
 syndesis_deployments() {
-  oc get dc -l syndesis.io/app=syndesis -o name | sed -e "s/^deploymentconfigs\///"
+  ${OC} get dc -l syndesis.io/app=syndesis -o name | sed -e "s/^deploymentconfigs\///"
 }

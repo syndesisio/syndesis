@@ -21,8 +21,6 @@ import (
 
 	"k8s.io/client-go/kubernetes"
 
-	v1 "github.com/openshift/api/route/v1"
-
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
@@ -101,6 +99,20 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		return err
 	}
 
+	//
+	// Check for presence of route hostname as required for k8
+	//
+	if err := config.CheckRouteHostname(); err != nil {
+		return err
+	}
+
+	//
+	// Check for oauth secrets as required for k8
+	//
+	if err := config.CheckOAuthCredentialSecret(ctx, rtClient, syndesis); err != nil {
+		return err
+	}
+
 	// Check if an image secret exists, to be used to connect to registries that require authentication
 	secret := &corev1.Secret{}
 	err = rtClient.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: SyndesisPullSecret}, secret)
@@ -142,11 +154,11 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		return nil
 	}
 
-	if err := config.SetRoute(ctx, rtClient, syndesis); err != nil {
+	if err := config.SetRoute(ctx, syndesisRoute.Host()); err != nil {
 		return err
 	}
 
-	resourcesThatShouldExist[syndesisRoute.GetUID()] = true
+	resourcesThatShouldExist[syndesisRoute.Meta().GetUID()] = true
 
 	// Render the remaining syndesis resources...
 	all, err = generator.RenderDir("./infrastructure/", config)
@@ -403,59 +415,56 @@ func newSyndesisServiceAccount() *corev1.ServiceAccount {
 	return &sa
 }
 
-func addRouteAnnotation(syndesis *v1beta1.Syndesis, route *v1.Route) {
+func addRouteAnnotation(syndesis *v1beta1.Syndesis, route Conduit) {
 	annotations := syndesis.ObjectMeta.Annotations
 	if annotations == nil {
 		annotations = make(map[string]string)
 		syndesis.ObjectMeta.Annotations = annotations
 	}
-	annotations["syndesis.io/applicationUrl"] = extractApplicationURL(route)
+	annotations["syndesis.io/applicationUrl"] = route.ExtractApplicationUrl()
 }
 
-func extractApplicationURL(route *v1.Route) string {
-	scheme := "http"
-	if route.Spec.TLS != nil {
-		scheme = "https"
-	}
-	return scheme + "://" + route.Spec.Host
-}
-
-func installSyndesisRoute(ctx context.Context, cl client.Client, syndesis *v1beta1.Syndesis, objects []runtime.Object) (*v1.Route, error) {
-	route, err := findSyndesisRoute(objects)
+func installSyndesisRoute(ctx context.Context, cl client.Client, syndesis *v1beta1.Syndesis, objects []runtime.Object) (Conduit, error) {
+	conduit, err := findSyndesisRoute(objects)
 	if err != nil {
 		return nil, err
 	}
 
-	operation.SetNamespaceAndOwnerReference(route, syndesis)
+	ct := conduit.Target()
+	cm := conduit.Meta()
+
+	operation.SetNamespaceAndOwnerReference(ct, syndesis)
 
 	// We don't replace the route if already present, to let OpenShift generate its host
-	o, _, err := util.CreateOrUpdate(ctx, cl, route)
+	o, _, err := util.CreateOrUpdate(ctx, cl, ct)
 	if err != nil {
 		return nil, err
 	}
-	route.SetUID(o.GetUID())
+	cm.SetUID(o.GetUID())
 
-	if route.Spec.Host != "" {
-		return route, nil
+	if len(conduit.Host()) > 0 {
+		return conduit, nil
 	}
 
-	// Let's try to get the route from OpenShift to check the host field
+	// Let's try to get the route from cluster to check the host field
 	var key client.ObjectKey
-	if key, err = client.ObjectKeyFromObject(route); err != nil {
+	if key, err = client.ObjectKeyFromObject(ct); err != nil {
 		return nil, err
 	}
-	err = cl.Get(ctx, key, route)
+
+	err = cl.Get(ctx, key, ct)
 	if err != nil {
 		return nil, err
 	}
 
-	if route.Spec.Host == "" {
+	if len(conduit.Host()) == 0 {
 		return nil, errors.New("hostname still not present on syndesis route")
 	}
-	return route, nil
+
+	return conduit, nil
 }
 
-func findSyndesisRoute(resources []runtime.Object) (*v1.Route, error) {
+func findSyndesisRoute(resources []runtime.Object) (Conduit, error) {
 	for _, res := range resources {
 		if route, ok := isSyndesisRoute(res); ok {
 			return route, nil
@@ -464,13 +473,8 @@ func findSyndesisRoute(resources []runtime.Object) (*v1.Route, error) {
 	return nil, errors.New("syndesis route not found")
 }
 
-func isSyndesisRoute(resource runtime.Object) (*v1.Route, bool) {
-	if route, ok := resource.(*v1.Route); ok {
-		if route.Name == SyndesisRouteName {
-			return route, true
-		}
-	}
-	return nil, false
+func isSyndesisRoute(resource runtime.Object) (Conduit, bool) {
+	return ConduitWithName(resource, SyndesisRouteName)
 }
 
 func linkImageSecretToServiceAccounts(ctx context.Context, cl client.Client, syndesis *v1beta1.Syndesis, secret *corev1.Secret) error {

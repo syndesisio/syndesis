@@ -1,0 +1,129 @@
+{{ if not .ApiServer.EmbeddedProvider }}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-oauthproxy
+    annotations:
+    name: syndesis-oauthproxy
+  spec:
+    ports:
+    - port: 8443
+      protocol: TCP
+      targetPort: 8443
+    selector:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-oauthproxy
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-oauthproxy
+    name: syndesis-oauthproxy
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: syndesis
+        syndesis.io/app: syndesis
+        syndesis.io/component: syndesis-oauthproxy
+    strategy:
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: syndesis
+          syndesis.io/app: syndesis
+          syndesis.io/type: infrastructure
+          syndesis.io/component: syndesis-oauthproxy
+      spec:
+        containers:
+        - name: oauthproxy
+          image: '{{ .Syndesis.Components.Oauth.NonEmbeddedImage }}'
+          args:
+            - --cookie-name=oauth_proxy
+            - --upstream=http://syndesis-server/api/
+            - --upstream=http://syndesis-server/mapper/
+            - --upstream=http://syndesis-ui/
+            - --upstream=http://syndesis-dv/dv/
+            - --tls-cert-file=/etc/tls/private/tls.crt
+            - --tls-key-file=/etc/tls/private/tls.key
+            - --pass-access-token
+            - --skip-provider-button
+            - --skip-auth-regex=/logout
+            - --skip-auth-regex=/[^/]+\.(png|jpg|eot|svg|ttf|woff|woff2)
+            - --skip-auth-regex=/api/v1/swagger.*
+            - --skip-auth-regex=/api/v1/index.html
+            - --skip-auth-regex=/api/v1/credentials/callback
+            - --skip-auth-regex=/api/v1/version
+            - --skip-auth-regex=/config.json
+            - --skip-auth-preflight
+            - --email-domain=*
+            - --https-address=:8443
+            # Disabled for now: --pass-user-bearer-token as this requires extra permission which only
+            # can be given by a cluster-admin
+          #
+          # All of these env vars must be fetched from the syndesis-global-config and
+          # {{.Syndesis.Components.Oauth.CredentialsSecret}} secrets
+          # which should be loaded prior to the installation of the operator
+          #
+          env:
+          - name: OAUTH2_PROXY_PROVIDER
+            valueFrom:
+              secretKeyRef:
+                name: {{.Syndesis.Components.Oauth.CredentialsSecret}}
+                key: OAUTH_PROVIDER
+          - name: OAUTH2_PROXY_COOKIE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: syndesis-global-config
+                key: OAUTH_COOKIE_SECRET
+          - name: OAUTH2_PROXY_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: {{.Syndesis.Components.Oauth.CredentialsSecret}}
+                key: OAUTH_CLIENT_ID
+          - name: OAUTH2_PROXY_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: {{.Syndesis.Components.Oauth.CredentialsSecret}}
+                key: OAUTH_CLIENT_SECRET
+          ports:
+          - containerPort: 8443
+            name: public
+            protocol: TCP
+          readinessProbe:
+            httpGet:
+              port: 8443
+              path: /oauth/healthz
+              scheme: HTTPS
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
+          livenessProbe:
+            httpGet:
+              port: 8443
+              path: /oauth/healthz
+              scheme: HTTPS
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
+          volumeMounts:
+          - mountPath: /etc/tls/private
+            name: syndesis-oauthproxy-tls
+          resources:
+            limits:
+              memory: 200Mi
+            requests:
+              memory: 20Mi
+        serviceAccountName: syndesis-oauth-client
+        volumes:
+        - name: syndesis-oauthproxy-tls
+          secret:
+            secretName: {{.Syndesis.Components.Oauth.CryptoCommsSecret}}
+{{ end }}

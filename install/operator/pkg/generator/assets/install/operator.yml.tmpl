@@ -74,20 +74,14 @@
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
-    {{- if .ApiServer.ImageStreams}}
+    {{- if and .DevSupport .ApiServer.ImageStreams }}
     annotations:
       #
       # Sets a trigger on this deployment to overwrite
       # the template.spec.image property and point to
       # the syndesis-operator image stream.
       #
-      # If in dev mode, modify the tag accordingly.
-      #
-      {{if .DevSupport}}
-      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"syndesis-operator:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"syndesis-operator\")].image"}]'
-      {{else}}
       image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"syndesis-operator:{{.Tag}}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"syndesis-operator\")].image"}]'
-      {{end}}
     {{end}}
     name: syndesis-operator
     labels:
@@ -120,6 +114,8 @@
           # In kubernetes this would remain the case even when developing
           #  -- Developer provides a registry/image combination for .Image
           # In openshift this would be overwritten by the trigger annotation
+          #  -- Requires DevSupport = true
+          #  -- Requires imagePullPolicy = Always (otherwise annotation does nothing)
           #  -- Developer provides a new image in the associated imagestream
           #
           image: {{.Image}}:{{.Tag}}

@@ -197,6 +197,7 @@ build_image()
     local OPERATOR_IMAGE_NAME="$2"
     local OPERATOR_IMAGE_TAG="$3"
     local S2I_STREAM_NAME="$4"
+    local REGISTRY="$5"
 
     local hasdocker=$(docker_is_available)
     local hasoc=$(is_oc_available)
@@ -219,8 +220,7 @@ build_image()
         if [ "$hasoc" == "$SETUP_MINISHIFT" ]; then
             setup_minishift_oc > /dev/null
         elif [ "$hasoc" != "OK" ]; then
-            echo "$hasoc"
-            exit 1
+            check_error "$hasoc"
         fi
 
         echo ======================================================
@@ -245,17 +245,61 @@ build_image()
     ;;
     "docker")
         if [ "$hasdocker" != "OK" ]; then
-            echo "$hasdocker"
-            exit 1
+            check_error "$hasdocker"
+        fi
+
+        FULL_OPERATOR_IMAGE_NAME=${OPERATOR_IMAGE_NAME}
+        if [ -n "${REGISTRY}" ]; then
+            #
+            # Need to apply the registry to the image name so that the
+            # operator is built with the correct image location
+            #
+            FULL_OPERATOR_IMAGE_NAME=${REGISTRY}/${OPERATOR_IMAGE_NAME}
         fi
 
         echo ======================================================
         echo Building image with Docker
         echo ======================================================
-        docker build -f "build/Dockerfile" -t "${OPERATOR_IMAGE_NAME}:${OPERATOR_IMAGE_TAG}" .
+        docker build -f "build/Dockerfile" -t "${FULL_OPERATOR_IMAGE_NAME}:${OPERATOR_IMAGE_TAG}" .
         echo ======================================================
         echo "Operator Image Built: ${OPERATOR_IMAGE_NAME}"
         echo ======================================================
+
+        if [ -n "${REGISTRY}" ]; then
+            #
+            # If registry defined then push image to docker registry
+            #
+            echo ======================================================
+            echo Tagging and Pushing image to docker registry
+            echo ======================================================
+
+            #
+            # Checks the docker image has been built
+            # and available to be pushed.
+            #
+            image_id=$(docker images --filter reference=${FULL_OPERATOR_IMAGE_NAME}:${OPERATOR_IMAGE_TAG} | grep -v IMAGE | awk '{print $3}' | uniq)
+            if [ -z ${image_id} ]; then
+                check_error "ERROR: Cannot find newly-built docker image of ${FULL_OPERATOR_IMAGE_NAME}:${OPERATOR_IMAGE_TAG}"
+            fi
+
+            #
+            # Push to the registry
+            #
+            docker push ${FULL_OPERATOR_IMAGE_NAME}
+
+            #
+            # Check the image is present in the registry
+            #
+            status=$(curl -sLk https://${REGISTRY}/v2/${OPERATOR_IMAGE_NAME}/tags/list)
+            if [ -z "${status##*errors*}" ] ;then
+                check_error "ERROR: Cannot verify image has been pushed to registry."
+            else
+                echo ======================================================
+                echo "Operator Image Pushed to Regsitry: ${REGISTRY}"
+                echo ======================================================
+            fi
+        fi
+
     ;;
     *)
         echo invalid build strategy: $1

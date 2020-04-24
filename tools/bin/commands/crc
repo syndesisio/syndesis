@@ -46,11 +46,24 @@ crc::usage() {
 EOT
 }
 
-
-crc::run() {
-    source "$(basedir)/commands/util/openshift_funcs"
+crc::init() {
+    source "$(basedir)/commands/util/client_funcs"
     source "$(basedir)/commands/util/camel_k_funcs"
     source "$(basedir)/commands/util/operator_funcs"
+
+    #
+    # crc may not be running yet so override the 'determine platform'
+    # as crc is, by definition, openshift
+    #
+    IS_OPENSHIFT="YES"
+
+    #
+    # Configure client binary
+    #
+    setup_client_binary
+}
+
+crc::run() {
 
     release_tag="$(readopt --tag)"
     if [[ $(hasflag -f --force-binary-download) ]] || [[ -n "$release_tag" ]] || [[ $(hasflag --full-reset) ]]; then
@@ -99,7 +112,7 @@ crc::run() {
         local original_project="$(oc project -q)"
         local project=$(readopt --project -p)
         if [ -n "${project}" ]; then
-            recreate_project $project "$(hasflag --yes -y)"
+            recreate_namespace $project "$(hasflag --yes -y)"
         else
             local project="$original_project"
         fi
@@ -118,7 +131,7 @@ crc::run() {
         local revert_login=$(login_as_admin)
 
         # Install Syndesis CRD
-        if ! $(oc get crd | grep "syndesises.syndesis.io" >/dev/null 2>&1); then
+        if ! $(oc get crd | ${GREP} "syndesises.syndesis.io" >/dev/null 2>&1); then
             echo "Installing Syndesis CRD"
             local result=$($OPERATOR_BINARY install cluster)
             check_error "$result"
@@ -170,7 +183,7 @@ crc::run() {
     fi
 
     if [ $(hasflag --open -o) ]; then
-        while ! (oc get routes | grep syndesis >/dev/null 2>&1); do
+        while ! (oc get routes | ${GREP} syndesis >/dev/null 2>&1); do
             echo "Sleeping 5s ..."
             sleep 5
         done
@@ -178,44 +191,9 @@ crc::run() {
     fi
 }
 
-login_as_admin() {
-    local user=$(oc whoami)
-    local token=$(extract_current_token)
-
-    read -p "Please enter the user-name of a cluster-admin account?: " admin_user
-    echo
-    if [ -z "$admin_user" ]; then
-        check_error "Error: No admin account user-name was entered. Aborting."
-    fi
-
-    read -p "Please enter the password for ${admin_user}?: " password
-    echo
-    if [ -z "$password" ]; then
-        check_error "Error: No password for ${admin_user} was entered. Aborting."
-    fi
-
-    # Login in as admin
-    local result=$(oc login -u "$admin_user" -p "${password}" 2>&1)
-    check_error "$result"
-
-    # Return the command to use to revert to the initial user
-    if [ -n "${token}" ]; then
-        echo "oc login --token ${token}"
-    else
-        echo "oc login -u ${user}"
-    fi
-}
-
-extract_current_token() {
-    local token=$(oc whoami -t 2>/dev/null)
-    if [ $? == 0 ]; then
-        echo $token
-    fi
-}
-
 is_crc_running() {
     set +e
-    crc status 2>&1 | grep -q "Running"
+    crc status 2>&1 | ${GREP} -q "Running"
     local stat=$?
     set -e
     if [ $stat -eq 0 ]; then
