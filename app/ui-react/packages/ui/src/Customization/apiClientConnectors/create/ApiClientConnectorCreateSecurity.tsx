@@ -12,6 +12,7 @@ import {
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
+import { toValidHtmlId } from '../../../helpers';
 import { ButtonLink } from '../../../Layout';
 
 export interface IAuthenticationTypes {
@@ -117,6 +118,7 @@ export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClien
               <Radio
                 key={authType.value + '-' + idx}
                 id={'authenticationType'}
+                data-testid={`api-client-connector-auth-type-${toValidHtmlId(authType!.value)}`}
                 aria-label={authType.label || i18nNoSecurity}
                 label={authType.label || i18nNoSecurity}
                 isChecked={selectedType === authType.value}
