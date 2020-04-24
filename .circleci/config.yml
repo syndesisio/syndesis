@@ -70,10 +70,11 @@ push_images: &push_images
         for image in ${IMAGES_TO_PUSH} ; do
           docker push syndesis/${image}:latest | cat -
         done
-      elif [ -n "${CIRCLE_PR_NUMBER}" ]; then
+      elif [ -n "${CI_PULL_REQUEST}" ]; then
         for image in ${IMAGES_TO_PUSH} ; do
-          docker tag syndesis/${image}:latest syndesis/${image}:${CIRCLE_PR_NUMBER}-${CIRCLE_SHA1}
-          docker save syndesis/${image}:${CIRCLE_PR_NUMBER}-${CIRCLE_SHA1} | gzip > ${CIRCLE_WORKING_DIRECTORY}/${image}.tar.gz
+          PR_NUMBER=${CI_PULL_REQUEST/*\/}
+          docker tag syndesis/${image}:latest syndesis/${image}:${PR_NUMBER}-${CIRCLE_SHA1}
+          docker save syndesis/${image}:${PR_NUMBER}-${CIRCLE_SHA1} | gzip > ${CIRCLE_WORKING_DIRECTORY}/${image}.tar.gz
         done
       elif [[ "${CIRCLE_TAG}" =~ ^[0-9]+(\.[0-9]+){2} ]]; then
         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
