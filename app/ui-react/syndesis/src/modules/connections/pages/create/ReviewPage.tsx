@@ -156,7 +156,7 @@ export const ReviewPage: React.FunctionComponent = () => {
                       connectionsHref={resolvers.connections()}
                       i18nCancel={t('shared:Cancel')}
                       i18nConnections={t('shared:Connections')}
-                      i18nCreateConnection={t('shared:linkCreateConnection')}
+                      i18nCreateConnection={t('shared:CreateConnection')}
                     />
                     <ConnectionCreatorLayout
                       toggle={
