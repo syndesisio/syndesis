@@ -70,6 +70,7 @@ export const PublishStatusWithProgress: React.FunctionComponent<IPublishStatusWi
         <Label
           className={'publish-status-with-progress_Label'}
           style={getLabelClass()}
+          data-testid={'virtualization-publish-status-with-progress'}
         >
           {props.i18nPublishState}
         </Label>
@@ -91,6 +92,7 @@ export const PublishStatusWithProgress: React.FunctionComponent<IPublishStatusWi
       <span className={'publish-status-with-progress_text'}>
         <Label
           className={'publish-status-with-progress_Label'}
+          data-testid={'virtualization-publish-status-with-progress'}
           style={getLabelClass()}
         >
           {props.i18nPublishState}

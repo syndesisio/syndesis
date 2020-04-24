@@ -115,15 +115,17 @@ export const VirtualizationListItem: React.FunctionComponent<
               </DataListCell>,
               <DataListCell key={'primary content'} width={4}>
                 <div className={'virtualization-list-item__text-wrapper'}>
-                  <b>{props.virtualizationName}</b>
+                  <b data-testid={'virtualization-list-item-name'}>{props.virtualizationName}</b>
                   <br />
-                  {props.virtualizationDescription
-                    ? props.virtualizationDescription
-                    : ''}
+                  <p data-testid={'virtualization-list-item-description'}>
+                    {props.virtualizationDescription
+                      ? props.virtualizationDescription
+                      : ''}
+                  </p>
                 </div>
               </DataListCell>,
               <DataListCell key={'used-by content'} width={4}>
-                <div className={'virtualization-list-item__used-by'}>
+                <div className={'virtualization-list-item__used-by'} data-testid={'virtualization-list-item__used-by'}>
                   {props.usedBy.length > 0 ? (
                     props.i18nInUseText
                   ) : (
