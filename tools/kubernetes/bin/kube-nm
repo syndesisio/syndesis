@@ -1,0 +1,160 @@
+#!/bin/bash
+
+###
+#
+# * Change namespace
+# * Re/create namespace
+# * List all namespaces
+#
+###
+
+#
+# Finds the calling script location so that it can then find
+# the companion share directory relative to its parent directory
+#
+pushd . > /dev/null
+SCRIPT_PATH="${BASH_SOURCE[0]}"
+if ([ -h "${SCRIPT_PATH}" ]); then
+  while([ -h "${SCRIPT_PATH}" ]); do cd `dirname "$SCRIPT_PATH"`;
+  SCRIPT_PATH=`readlink "${SCRIPT_PATH}"`; done
+fi
+cd `dirname ${SCRIPT_PATH}` > /dev/null
+SCRIPT_PATH=`pwd`;
+popd  > /dev/null
+
+#
+# Check we have a share directory
+#
+SHARE_DIR="$SCRIPT_PATH/../share"
+if [ ! -d "$SHARE_DIR" ]; then
+  echo "ERROR: Cannot find share directory $SHARE_DIR relative to $SCRIPT_DIR"
+fi
+
+KUBE_DIR="$SHARE_DIR/kube"
+if [ ! -d "$KUBE_DIR" ]; then
+  echo "ERROR: Cannot find kube data directory $KUBE_DIR relative to $SHARE_DIR"
+fi
+
+if [ -f "$KUBE_DIR/kube-common" ]; then
+   . $KUBE_DIR/kube-common
+else
+  echo "Error: Cannot source kube common functions ... exiting"
+  exit 1
+fi
+
+switch_namespace() {
+  local nm="$1"|| exit_err "error no namespace provided"
+  ${KUBECTL} config set-context --current --namespace="${nm}" > /dev/null
+}
+
+recreate_namespace() {
+  nm="$1"
+  curr_user=$(current_user)
+
+  # Login as admin user
+  set_context "default" ${CLUSTER} "admin"
+
+  if ${KUBECTL} get namespace | grep "${nm}"; then
+
+    ${KUBECTL} delete namespace "${nm}"
+
+    while ${KUBECTL} get namespace | grep "${nm}"
+    do
+      sleep 3
+    done
+
+    sleep 5
+  fi
+
+  sleep 5
+
+  if [ ! -f $KUBE_DIR/admin-role-project.yaml ]; then
+    exit_err "error cannot find admin role data configuration file"
+  fi
+
+  PROJECT=0
+  while [ $PROJECT == 0 ];
+  do
+    ${KUBECTL} create namespace "${nm}"
+    if [ $? -ne 0 ]; then
+      exit_err "error Failed to create namespace"
+    fi
+
+    cat $KUBE_DIR/admin-role-project.yaml | sed -e "s/\${NAMESPACE}/${nm}/" -e "s/\${KUSER}/${curr_user}/" | ${KUBECTL} apply -f -
+    if [ $? -eq 0 ]; then
+      # Login again as original user
+      set_context "${nm}" ${CLUSTER} "${curr_user}"
+      PROJECT=1
+    fi
+
+    sleep 3
+  done
+}
+
+list_namespaces() {
+  local yellow darkbg normal
+  yellow=$(tput setaf 3 || true)
+  darkbg=$(tput setab 0 || true)
+  normal=$(tput sgr0 || true)
+
+  local cur_ctx_fg cur_ctx_bg
+  cur_ctx_fg=${KUBECTX_CURRENT_FGCOLOR:-$yellow}
+  cur_ctx_bg=${KUBECTX_CURRENT_BGCOLOR:-$darkbg}
+
+  local cur ns_list
+  cur="$(current_namespace)" || exit_err "error getting current namespace"
+  ns_list=$(get_namespaces) || exit_err "error getting namespace list"
+
+  for c in $ns_list; do
+  if [[ -n "${_KUBECTX_FORCE_COLOR:-}" || \
+       -t 1 && -z "${NO_COLOR:-}" ]]; then
+    # colored output mode
+    if [[ "${c}" = "${cur}" ]]; then
+      echo "${cur_ctx_bg}${cur_ctx_fg}${c}${normal}"
+    else
+      echo "${c}"
+    fi
+  else
+    echo "${c}"
+  fi
+  done
+}
+
+function help() {
+  local bin=$(basename $0)
+  echo "  $bin"
+  echo "    Display current namespace"
+  echo
+  echo "  $bin -n <namespace>"
+  echo "    Switch to the given namespace"
+  echo
+  echo "  $bin -r <namespace>"
+  echo "    Create or recreate the given namespace"
+  echo
+  echo "  $bin -l"
+  echo "    List all the available namespaces"
+  exit 0
+}
+
+while getopts :ln:r: option
+do
+  case "${option}"
+  in
+    l) LIST=1;;
+    n) NAMESPACE=$OPTARG;;
+    r) NEW_NAMESPACE=$OPTARG;;
+    \?) help;;
+  esac
+done
+shift $((OPTIND -1))
+
+if [ -n "$NAMESPACE" ]; then
+  switch_namespace "${NAMESPACE}"
+elif [ -n "$NEW_NAMESPACE" ]; then
+  recreate_namespace "${NEW_NAMESPACE}"
+elif [ -n "$LIST" ]; then
+  list_namespaces
+  exit 0
+fi
+
+echo "$(current_namespace)"

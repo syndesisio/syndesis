@@ -1,4 +1,12 @@
 {{ if .ApiServer.Routes }}
+#
+# Ingress / Route used for Openshift
+# + Automatically sets the Syndesis.RouteHostname when created
+#   so no need to specify the RouteHostname in the CR.
+# + Also supports re-encryption whilst ingress does not.
+#
+# See https://www.openshift.com/blog/kubernetes-ingress-vs-openshift-route
+#
 - apiVersion: route.openshift.io/v1
   kind: Route
   metadata:

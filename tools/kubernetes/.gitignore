@@ -1,0 +1,22 @@
+.
+./.gitignore
+
+# cr
+cr/*
+
+# share
+openssl.cnf
+share/syndesis/oauth-certificate/*/certs/*
+share/syndesis/oauth-certificate/*/csr/*
+share/syndesis/oauth-certificate/*/private/*
+
+# registry
+index.txt.old
+registry/src/*/private/*
+registry/src/*/csr/*
+registry/src/*/certs/*
+serial.old
+index.txt
+index.txt.attr
+serial
+registry/src/openssl.cnf

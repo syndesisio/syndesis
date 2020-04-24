@@ -1,0 +1,77 @@
+#!/bin/bash
+
+##################################################
+#
+# Builds a registry image for use with minikube's docker.
+# Since docker images provide registries which are by default insecure,
+# this secure the image by providing it with a TLS certificate and key
+# signed by the minikube Certificate Authority
+#
+##################################################
+
+while getopts :h: option
+do
+  case "${option}"
+  in
+    h) HOST=$OPTARG;;
+    \?) echo "Usage: $0 -h <hostname>"; exit ;;
+  esac
+done
+shift $((OPTIND -1))
+
+#
+# Specify the domain name which will be inserted into the new TLS certificate
+#
+if [ -z "${HOST}" ]; then
+  echo "Error: No hostname has been specified for building the regsitry image"
+  exit 1
+fi
+
+#
+# Specify the Certificate Authority (CA) private key for use with signing the TLS certificate
+#
+CA_KEY="${HOME}/.minikube/ca.key"
+
+#
+# Specify the Certificate Authority (CA) certificate for use with signing the TLS certificate
+#
+CA_CERT="${HOME}/.minikube/ca.crt"
+
+if [ ! -f "${CA_KEY}" ]; then
+  echo "Error: Cannot find the minikube Certificate Authority Key"
+  exit 1
+fi
+
+if [ ! -f "${CA_CERT}" ]; then
+  echo "Error: Cannot find the minikube Certificate Authority Certificate"
+  exit 1
+fi
+
+CERT_CREATE="./create-signed-cert"
+
+if [ ! -d "${HOST}" ]; then
+
+  IP=$(minikube ip)
+  if [ $? -ne 0 ]; then
+    echo "Error minikube is not running"
+    exit 1
+  fi
+
+  ${CERT_CREATE} -h ${HOST} -i ${IP} -k ${CA_KEY} -c ${CA_CERT}
+fi
+
+#
+# Sets minikube's docker repository to local, allowing the
+# newly built image to be deposited directly into it
+#
+eval $(minikube docker-env)
+
+docker build \
+  -t syndesis/registry \
+  --build-arg HOST=${HOST} \
+  .
+
+#
+# Unset the docker repostiory
+#
+eval $(minikube docker-env -u)

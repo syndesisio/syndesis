@@ -37,7 +37,6 @@ import (
 	k8errors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 
-	routev1 "github.com/openshift/api/route/v1"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -65,7 +64,6 @@ type Config struct {
 	Productized                bool
 	Version                    string         // Syndesis version
 	DevSupport                 bool           // If set to true, pull docker images from imagetag instead of upstream source
-	Openshift                  bool           // Set to true if the API server is determined to support Openshift API libraries
 	Scheduled                  bool           // Legacy parameter to set scheduled:true in the imagestreams, but we dont use many imagestreams nowadays
 	ProductName                string         // Usually syndesis or fuse-online
 	PrometheusRules            string         // If some extra rules for prometheus need to be specified, they are defined here
@@ -136,9 +134,11 @@ type AMQConfiguration struct {
 
 type OauthConfiguration struct {
 	Image
-	CookieSecret    string // Secret to use to encrypt oauth cookies
-	DisableSarCheck bool   // Enable or disable SAR checks all together
-	SarNamespace    string // The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation
+	CookieSecret      string // Secret to use to encrypt oauth cookies
+	DisableSarCheck   bool   // Enable or disable SAR checks all together
+	SarNamespace      string // The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation
+	CredentialsSecret string // The name of the secret used to store provider credentials
+	CryptoCommsSecret string // The name of the secret used to provide the TLS certificate for secure communication
 }
 
 type UIConfiguration struct {
@@ -307,9 +307,6 @@ func GetAddons(configuration Config) []AddonInstance {
 	}
 }
 
-/*
- * For testing if the giving platform is Openshift
- */
 func ApiCapabilities(apiClient kubernetes.Interface) (*ApiServerSpec, error) {
 	if apiClient == nil {
 		return nil, errors.New("No api client. Cannot determine api capabilities")
@@ -346,6 +343,62 @@ func ApiCapabilities(apiClient kubernetes.Interface) (*ApiServerSpec, error) {
 	return &apiSpec, nil
 }
 
+func (config *Config) CheckRouteHostname() error {
+	if config.ApiServer.Routes {
+		//
+		// Route resources set the RouteHostname if not defined by the CR
+		// but ingresses will not so check the CR has provided one
+		//
+		return nil
+	}
+
+	if len(config.Syndesis.RouteHostname) == 0 {
+		return errors.New("The operator configuration requires a route hostname be defined.")
+	}
+
+	return nil
+}
+
+func findSecret(ctx context.Context, rtClient client.Client, secretName string, namespace string) error {
+	if len(secretName) == 0 {
+		return fmt.Errorf("The operator is expecting a name of a secret but none has not been specified.")
+	}
+
+	secret := &corev1.Secret{}
+	err := rtClient.Get(ctx, types.NamespacedName{Namespace: namespace, Name: secretName}, secret)
+	if err != nil {
+		if k8serrors.IsNotFound(err) {
+			return fmt.Errorf("The authentication secret %s has not been installed", secretName)
+		} else {
+			return err
+		}
+	}
+	return nil
+}
+
+func (config *Config) CheckOAuthCredentialSecret(ctx context.Context, rtClient client.Client, syndesis *v1beta1.Syndesis) error {
+	if config.ApiServer.EmbeddedProvider {
+		//
+		// If provider is embedded then the OAuth credentials set to the internal
+		// authentication server so no provider is required. Therefore,
+		// no provider, clientId or clientSecret is required.
+		//
+		return nil
+	}
+
+	// Check credentials secret is present
+	if err := findSecret(ctx, rtClient, config.Syndesis.Components.Oauth.CredentialsSecret, syndesis.Namespace); err != nil {
+		return errs.Wrap(err, "Failed to find the oauth credentials secret")
+	}
+
+	// Check crypto tls secret is present
+	if err := findSecret(ctx, rtClient, config.Syndesis.Components.Oauth.CryptoCommsSecret, syndesis.Namespace); err != nil {
+		return errs.Wrap(err, "Failed to find the oauth TLS secret")
+	}
+
+	return nil
+}
+
 /*
 / Returns all processed configurations for Syndesis
 
@@ -356,11 +409,6 @@ func ApiCapabilities(apiClient kubernetes.Interface) (*ApiServerSpec, error) {
  - Users might define fields using the syndesis custom resource
 */
 func GetProperties(ctx context.Context, file string, clientTools *clienttools.ClientTools, syndesis *v1beta1.Syndesis) (*Config, error) {
-	configuration := &Config{}
-	if err := configuration.loadFromFile(file); err != nil {
-		return nil, err
-	}
-
 	var apiClient kubernetes.Interface
 	var rtClient client.Client
 	var err error
@@ -376,10 +424,16 @@ func GetProperties(ctx context.Context, file string, clientTools *clienttools.Cl
 		}
 	}
 
+	configuration := &Config{}
+
 	if ac, err := ApiCapabilities(apiClient); err != nil {
 		return nil, err
 	} else {
 		configuration.ApiServer = *ac
+	}
+
+	if err := configuration.loadFromFile(file); err != nil {
+		return nil, err
 	}
 
 	configuration.OpenShiftProject = syndesis.Namespace
@@ -398,6 +452,16 @@ func GetProperties(ctx context.Context, file string, clientTools *clienttools.Cl
 
 	if err := configuration.setSyndesisFromCustomResource(syndesis); err != nil {
 		return nil, err
+	}
+
+	if err := configuration.CheckRouteHostname(); err != nil {
+		return nil, err
+	}
+
+	if rtClient != nil {
+		if err := configuration.CheckOAuthCredentialSecret(ctx, rtClient, syndesis); err != nil {
+			return nil, err
+		}
 	}
 
 	//
@@ -533,18 +597,12 @@ func (config *Config) loadFromFile(file string) error {
 
 // Set Config.RouteHostname based on the Spec.Host property of the syndesis route
 // If an environment variable is set to overwrite the route, take that instead
-func (config *Config) SetRoute(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis) error {
+func (config *Config) SetRoute(ctx context.Context, specRouteHostname string) error {
 	if os.Getenv("ROUTE_HOSTNAME") == "" {
-		syndesisRoute := &routev1.Route{}
-
-		if err := client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis"}, syndesisRoute); err != nil {
-			if k8serrors.IsNotFound(err) {
-				return nil
-			} else {
-				return err
-			}
+		config.Syndesis.RouteHostname = specRouteHostname
+		if err := config.CheckRouteHostname(); err != nil {
+			return err
 		}
-		config.Syndesis.RouteHostname = syndesisRoute.Spec.Host
 	} else {
 		config.Syndesis.RouteHostname = os.Getenv("ROUTE_HOSTNAME")
 	}

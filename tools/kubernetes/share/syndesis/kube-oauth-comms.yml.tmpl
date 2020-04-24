@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: syndesis-oauth-comms
+  namespace: syndesis
+type: kubernetes.io/tls
+data:
+  tls.key: <TLS-KEY>
+  tls.crt: <TLS-CERT>

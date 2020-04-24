@@ -27,8 +27,6 @@ import (
 
 	"k8s.io/apimachinery/pkg/version"
 
-	"sigs.k8s.io/controller-runtime/pkg/client"
-
 	v1 "k8s.io/api/core/v1"
 	gofake "k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/rest"
@@ -553,9 +551,8 @@ func Test_setBoolFromEnv(t *testing.T) {
 
 func TestConfig_SetRoute(t *testing.T) {
 	type args struct {
-		ctx      context.Context
-		client   client.Client
-		syndesis *v1beta1.Syndesis
+		ctx           context.Context
+		routeHostname string
 	}
 	tests := []struct {
 		name    string
@@ -565,14 +562,23 @@ func TestConfig_SetRoute(t *testing.T) {
 		want    string
 	}{
 		{
+			name: "ROUTE_HOSTNAME environment variable NOT set, config.RouteHostname should take the value as given",
+			args: args{
+				ctx:           context.TODO(),
+				routeHostname: "my_route_name",
+			},
+			env:     map[string]string{},
+			wantErr: false,
+			want:    "my_route_name",
+		},
+		{
 			name: "If ROUTE_HOSTNAME environment variable is set, config.RouteHostname should take that value",
 			args: args{
-				ctx:      context.TODO(),
-				client:   nil,
-				syndesis: nil,
+				ctx:           context.TODO(),
+				routeHostname: "my_route_name",
 			},
-			wantErr: false,
 			env:     map[string]string{"ROUTE_HOSTNAME": "some_value"},
+			wantErr: false,
 			want:    "some_value",
 		},
 	}
@@ -583,7 +589,7 @@ func TestConfig_SetRoute(t *testing.T) {
 			}
 
 			config := getConfigLiteral()
-			if err := config.SetRoute(tt.args.ctx, tt.args.client, tt.args.syndesis); (err != nil) != tt.wantErr {
+			if err := config.SetRoute(tt.args.ctx, tt.args.routeHostname); (err != nil) != tt.wantErr {
 				t.Errorf("SetRoute() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			assert.Equal(t, config.Syndesis.RouteHostname, tt.want)

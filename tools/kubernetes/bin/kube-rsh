@@ -1,0 +1,18 @@
+#!/bin/bash
+
+###
+#
+# * Try to remote shell into a kubernetes pod using bash
+# TODO: Consider alternative shells such as /bin/sh
+#
+###
+
+KUBECTL="kubectl"
+
+if [ -z "$1" ]; then
+  echo "Usage: $0 <pod>"
+  echo "Try to remove shell into the given pod"
+  exit 1
+fi
+
+${KUBECTL} exec -it "$1" -- /bin/bash

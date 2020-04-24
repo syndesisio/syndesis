@@ -37,6 +37,10 @@ Syndesis:
             DisableSarCheck: false
     Components:
         Oauth:
+            #
+            # Oauth image tailored specifically to openshift's authentication provider
+            # Currently overridden in configuration.go if platform is not openshift
+            #
             Tag: "quay.io/openshift/origin-oauth-proxy:v4.0.0"
             DisableSarCheck: false
         UI:

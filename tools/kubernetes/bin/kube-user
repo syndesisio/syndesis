@@ -1,0 +1,175 @@
+#!/bin/bash
+
+###
+#
+# * Change user and/or namespace
+# * Create new user and add certificate to ~/.kube/config
+# * Get the admin user for the current install (needs work!)
+# * Display all configured contexts in ~/.kube/config
+# * Display the current user
+#
+###
+
+#
+# Finds the calling script location so that it can then find
+# the companion share directory relative to its parent directory
+#
+pushd . > /dev/null
+SCRIPT_PATH="${BASH_SOURCE[0]}"
+if ([ -h "${SCRIPT_PATH}" ]); then
+  while([ -h "${SCRIPT_PATH}" ]); do cd `dirname "$SCRIPT_PATH"`;
+  SCRIPT_PATH=`readlink "${SCRIPT_PATH}"`; done
+fi
+cd `dirname ${SCRIPT_PATH}` > /dev/null
+SCRIPT_PATH=`pwd`;
+popd  > /dev/null
+
+#
+# Check we have a share directory
+#
+SHARE_DIR="$SCRIPT_PATH/../share"
+if [ ! -d "$SHARE_DIR" ]; then
+  echo "ERROR: Cannot find share directory $SHARE_DIR relative to $SCRIPT_DIR"
+fi
+
+KUBE_DIR="$SHARE_DIR/kube"
+if [ ! -d "$KUBE_DIR" ]; then
+  echo "ERROR: Cannot find kube data directory $KUBE_DIR relative to $SHARE_DIR"
+fi
+
+if [ -f "$KUBE_DIR/kube-common" ]; then
+   . $KUBE_DIR/kube-common
+else
+  echo "Error: Cannot source kube common functions ... exiting"
+  exit 1
+fi
+
+create_user() {
+  local user="$1"
+  local nm="$2"
+
+  if [ -z "${nm}" ]; then
+    nm=$(current_namespace) # if no namespace then default to current namespace
+  fi
+
+  local have_user=$(${KUBECTL} config view -o=jsonpath="{.users[?(@.name==\"${user}\")].name}")
+  local cluster=$(current_cluster)
+  local admin=$(admin_user)
+  echo "Changing to user \"$user\" with namespace \"${nm}\" on current cluster \"$cluster\""
+
+  admin_ctx=$(set_context "default" ${cluster} "${admin}")
+  use_context "${admin_ctx}" > /dev/null
+
+  # Create the users directory if not already
+  CLUSTER_HOME=$(cluster_home)
+  USERDIR="${CLUSTER_HOME}/users"
+  mkdir -p ${USERDIR}
+
+  KEY="${USERDIR}/${user}.key"
+  CSR="${USERDIR}/${user}.csr"
+  CERT="${USERDIR}/${user}.crt"
+  if [ ! -f ${KEY} ]; then
+    # Create a key for the user
+    openssl genrsa -out "${KEY}" 2048
+
+    # Create a certificate signing request for the user
+    openssl req -new -key "${KEY}" -out "${CSR}" -subj "/CN=${user}/O=syndesis"
+
+    # Create the certificate by signing it with the certificate authority
+    openssl x509 -req -in "${CSR}" -CA "${CLUSTER_HOME}/ca.crt" -CAkey "${CLUSTER_HOME}/ca.key" -CAcreateserial -out "${CERT}" -days 500
+  fi
+
+  if [ -z "${have_user}" ]; then
+    # Set the credentials
+    ${KUBECTL} config set-credentials ${user} --client-certificate="${CERT}"  --client-key="${KEY}"
+  fi
+
+  # Create the namespace
+  ${KUBECTL} get namespace "${nm}" 2> /dev/null
+  if [ $? -eq 1 ]; then
+    ${KUBECTL} create namespace "${nm}"
+
+    # Apply the admin role to the namespace
+    apply_namespace_role "${nm}"
+  fi
+
+  # Set the new context & creates it in config if not already there
+  context=$(set_context "${nm}" "${cluster}" "${user}")
+
+  # Use the new context
+  use_context "${context}"
+
+  exit 0
+}
+
+list_contexts() {
+  set -u pipefail
+  local cur ctx_list
+  cur="$(current_context)" || exit_err "error getting current context"
+  ctx_list=$(get_contexts) || exit_err "error getting context list"
+
+  local yellow darkbg normal
+  yellow=$(tput setaf 3 || true)
+  darkbg=$(tput setab 0 || true)
+  normal=$(tput sgr0 || true)
+
+  local cur_ctx_fg cur_ctx_bg
+  cur_ctx_fg=${KUBECTX_CURRENT_FGCOLOR:-$yellow}
+  cur_ctx_bg=${KUBECTX_CURRENT_BGCOLOR:-$darkbg}
+
+  for c in $ctx_list; do
+  if [[ -n "${_KUBECTX_FORCE_COLOR:-}" || \
+       -t 1 && -z "${NO_COLOR:-}" ]]; then
+    # colored output mode
+    if [[ "${c}" = "${cur}" ]]; then
+      echo "${cur_ctx_bg}${cur_ctx_fg}${c}${normal}"
+    else
+      echo "${c}"
+    fi
+  else
+    echo "${c}"
+  fi
+  done
+}
+
+function help() {
+  local bin=$(basename $0)
+  echo "  $bin"
+  echo "    Display current user"
+  echo
+  echo "  $bin -u user (-n namespace)"
+  echo "    Change to or create a user with option of creating/switching to the namespace"
+  echo
+  echo "  $bin -l"
+  echo "    List all the contexts configured in kube-config"
+  echo
+  echo "  $bin -a"
+  echo "    Display the admin user for the kube system (experimental!)"
+  exit 0
+}
+
+while getopts :aln:u: option
+do
+  case "${option}"
+  in
+    a) ADMIN=1;;
+    n) NM=$OPTARG;;
+    l) LIST=1;;
+    u) KUSER=$OPTARG;;
+    \?) help;;
+  esac
+done
+shift $((OPTIND -1))
+
+# CREATE is the same as SWITCH
+if [ -n "${KUSER}" ]; then
+  create_user "${KUSER}" "${NM}"
+  echo "$(current_user)"
+elif [ -n "${ADMIN}" ]; then
+  echo "$(admin_user)"
+elif [ -n "${LIST}" ]; then
+  list_contexts
+else
+ # Display current user if no switches
+ echo "$(current_user)"
+fi

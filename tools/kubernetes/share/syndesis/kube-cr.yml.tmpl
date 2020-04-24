@@ -1,0 +1,13 @@
+apiVersion: syndesis.io/v1alpha1
+kind: Syndesis
+metadata:
+  name: app
+spec:
+  routeHostname: <EXTERNAL_HOSTNAME>
+  components:
+    oauth:
+      credentialsSecret: syndesis-oauth-credentials
+      cryptoCommsSecret: syndesis-oauth-comms
+    database:
+      resources:
+        volumeStorageClass: syndesisdb

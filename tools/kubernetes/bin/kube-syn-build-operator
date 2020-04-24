@@ -1,0 +1,197 @@
+#!/bin/bash
+
+###
+#
+# Build the syndesis operator using docker and push it to the private kubernetes regsitry
+#
+# * If -d is specified then dev support is turned on ensuring that pull polcy of images is Always
+#
+###
+
+KUBECTL="kubectl"
+
+while getopts :dh: option
+do
+  case "${option}"
+  in
+    d) DEVSUPPORT=1;;
+    h) HOST=$OPTARG;;
+  esac
+done
+
+if [ -z "${HOST}" ]; then
+  echo "Error: No image host specified. This should be the hostname of the minikube docker registry"
+  exit 1
+fi
+
+if [ -z "$GOPATH" ]; then
+  echo "To compile syndesis using go, the syndesis project should be located in the following location:"
+  echo "\$GOPATH/src/github.com/src/syndesisio/syndesis"
+  echo "The GOPATH env variable should be set according to conform to the location above"
+  exit 1
+fi
+
+#
+# Exit handler. This function is called anytime an EXIT signal is received.
+# Will return to the original directory regardless of whether the script failed.
+#
+function _trap_exit () {
+    popd &> /dev/null
+}
+trap _trap_exit EXIT
+
+pushd $GOPATH/src/github.com/syndesisio/syndesis/install/operator >/dev/null
+
+#
+# Check we can find some commands
+#
+command -v ${KUBECTL} >/dev/null 2>&1 || { echo >&2 "${KUBECTL} is required but it's not available on the PATH. Aborting."; exit 1; }
+command -v kube-user >/dev/null 2>&1 || { echo >&2 "kube-user is required but it's not available on the PATH. Aborting."; exit 1; }
+command -v docker >/dev/null 2>&1 || { echo >&2 "docker is required but it's not available on the PATH. Aborting."; exit 1; }
+command -v curl >/dev/null 2>&1 || { echo >&2 "curl is required but it's not available on the PATH. Aborting."; exit 1; }
+
+#
+# Cannot build as s2i since this is not available in kubernetes
+# If we build with docker instead then we load the image into the docker registry
+# which is unknown to kubernetes cluster.
+#
+# Therefore after building the image we need to manually push the image over
+# to the kubernetes cluster in some manner. This depends on the implementation
+# of kubernetes.
+#
+# In the case of minikube, we push the image to a secure registry running in a
+# separate container in minikube's docker repository.
+#
+IMG_HOST="${HOST}"
+OP_NAME="syndesis-operator"
+DOCKER_REG="${IMG_HOST}:5000"
+DOCKER_OP_IMAGE="${DOCKER_REG}/${OP_NAME}"
+DOCKER_OP_TAG="latest"
+
+#
+# Finds any previously built "old" images and removes them,
+# ensuring the most recent changes are always pushed.
+#
+IMGS=$(docker images | grep ${OP_NAME} | awk '{print $3}')
+if [ -n "${IMGS}" ]; then
+  docker rmi ${IMGS}
+fi
+
+#
+# Need to override the image name and tag so that it can be
+# located by kubernetes. This is necessary to allow for our
+# very developed changes to be available rather than using the
+# publicly released version
+#
+BUILD_OPTIONS="--image-build docker --image-name ${DOCKER_OP_IMAGE} --image-tag ${DOCKER_OP_TAG}"
+
+#
+# Calls operator build script as usual
+#
+./build.sh ${BUILD_OPTIONS}
+
+#
+# Checks the docker image has been built
+# and available to be pushed.
+#
+OPID=$(docker images --filter reference=${DOCKER_OP_IMAGE}:${DOCKER_OP_TAG} | grep -v IMAGE | awk '{print $3}' | uniq)
+if [ -z ${OPID} ]; then
+  echo "Cannot find newly built docker image of ${OP_NAME}"
+  exit 1
+else
+  echo "Found docker build with id: ${OPID}"
+fi
+
+#
+# Tag the image and push to the minikube registry
+#
+docker tag ${OPID} ${DOCKER_OP_IMAGE}:${DOCKER_OP_TAG}
+docker --tlscacert ~/.minikube/ca.crt push ${DOCKER_OP_IMAGE}
+
+#
+# Check the image is present in the registry
+#
+regsta=$(curl -k https://${DOCKER_REG}/v2/_catalog/${OP_NAME}/tags/list)
+if [ -z "${regsta##*errors*}" ] ;then
+  echo "Image not successfully pushed to registry"
+  exit 1
+fi
+
+#
+# Prepare to execute the operator
+#
+OPERATOR_BINARY=./dist/linux-amd64/${OP_NAME}
+if [ ! -f "$OPERATOR_BINARY" ]; then
+  echo "Cannot find operator binary"
+  exit 1
+fi
+
+#
+# Record the current user to change back to
+#
+myuser=$(kube-user)
+echo "Current user: ${myuser}"
+
+#
+# Change to admin user and check that user
+# is qualified to do admin-type tasks
+#
+kube-user -u $(kube-user -a)
+${KUBECTL} get clusterrolebindings > /dev/null 2>&1
+status=$?
+if [ ${status} -ne 0 ]; then
+  echo "Not successfully logged in as cluster-admin ... exiting"
+  exit 1
+fi
+
+#
+# Install the CRDs and grant the appropriate permissions to the user
+#
+${OPERATOR_BINARY} install cluster
+${OPERATOR_BINARY} grant --user ${myuser}
+
+#
+# Return to original user
+#
+kube-user -u ${myuser}
+if [ "$(kube-user)" != "${myuser}" ]; then
+  echo "Logged in as alternative user to that which has been granted syndesis permissions"
+  exit 1
+fi
+
+${KUBECTL} get deployment/${OP_NAME} > /dev/null
+if [ $? -eq 0 ]; then
+  #
+  # Remove existing operator deployment
+  #
+  ${KUBECTL} delete deployment/${OP_NAME}
+  while true;
+  do
+    echo "Waiting for ${OP_NAME} config to be removed ..."
+    ${KUBECTL} get deployment/${OP_NAME}
+    if [ $? -ne 0 ]; then
+      break
+    fi
+  done
+fi
+
+INSTALL_OPTIONS=""
+if [ -n "${DEVSUPPORT}" ]; then
+  INSTALL_OPTIONS=" --dev"
+fi
+
+${OPERATOR_BINARY} install operator ${INSTALL_OPTIONS}
+
+#
+# Wait for the operator deployment
+#
+sleep 2
+while true;
+do
+  echo "Waiting for ${OP_NAME} config ..."
+  ${KUBECTL} get deployment/${OP_NAME}
+  if [ $? -eq 0 ]; then
+    echo "${OP_NAME} is present."
+    break
+  fi
+done

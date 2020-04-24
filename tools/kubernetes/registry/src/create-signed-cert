@@ -1,0 +1,259 @@
+#!/bin/bash
+
+while getopts :h:i:k:c: option
+do
+  case "${option}"
+  in
+    h) HOST=$OPTARG;;
+    i) IP=$OPTARG;;
+    k) CA_KEY=$OPTARG;;
+    c) CA_CERT=$OPTARG;;
+    \?) echo "Usage: $0 -h <hostname> -i <ip> -k <ca key> -c <ca certificate>"; exit ;;
+  esac
+done
+shift $((OPTIND -1))
+
+if [ -z "${HOST}" ]; then
+  echo "Error: No host specified"
+  exit 1
+fi
+echo "Host: ${HOST}"
+
+if [ -z "${IP}" ]; then
+  echo "Error: No ip specified"
+  exit 1
+fi
+echo "IP: ${IP}"
+
+if [ -z "${CA_KEY}" ]; then
+  echo "Error: No ca key specified"
+  exit 1
+fi
+echo "CA Key: ${CA_KEY}"
+
+if [ -z "${CA_CERT}" ]; then
+  echo "Error: No ca certificate specified"
+  exit 1
+fi
+echo "CA Certificate: ${CA_KEY}"
+
+### BUILT-IN VARS ####
+OPENSSL_CNF="openssl.cnf"
+PRIVATE="${HOST}/private"
+CSR="${HOST}/csr"
+CERTS="${HOST}/certs"
+HOST_CN="${HOST}"
+IP_CN="${IP}"
+##################
+
+
+create_openssl_config() {
+  #
+  # Create openssl.cnf
+  #
+  cat <<EOT > ${OPENSSL_CNF}
+
+####################################################################
+[ ca ]
+default_ca = CA_default            # The default ca section
+
+####################################################################
+[ CA_default ]
+dir = ${HOST}                                                   # top dir
+database = \$dir/index.txt              # index file.
+new_certs_dir = \$dir/certs             # new certs dir
+certificate = ${CA_CERT}                  # The CA cert
+serial = \$dir/serial                           # serial no file
+private_key = ${CA_KEY}                 # CA private key
+RANDFILE = \$dir/private/.rand    # random number file
+email_in_dn             = no                 # Add email to cert DN
+
+x509_extensions	= usr_cert		# The extensions to add to the cert
+# Allows for the inclusion of alternative subject names
+copy_extensions = copy
+
+default_days   = 365                   # how long to certify for
+default_crl_days= 30                   # how long before next CRL
+default_md     = md5                   # md to use
+
+policy         = policy_any            # default policy
+
+[ policy_any ]
+countryName            = optional
+stateOrProvinceName    = optional
+organizationName       = optional
+organizationalUnitName = optional
+commonName             = supplied
+emailAddress           = optional
+
+####################################################################
+[ req ]
+default_bits		= 2048
+default_md		= sha256
+default_keyfile 	= privkey.pem
+distinguished_name	= req_distinguished_name
+x509_extensions	= v3_ca	# The extensions to add to the self signed cert
+
+string_mask = utf8only
+
+req_extensions = v3_req # The extensions to add to a certificate request
+
+####################################################################
+[ req_distinguished_name ]
+commonName			= Common Name (eg, your name or your server\'s hostname)
+commonName_max			= 64
+
+####################################################################
+[ v3_req ]
+# Extensions to add to a certificate request
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+extendedKeyUsage = clientAuth, serverAuth, emailProtection
+
+####################################################################
+[ usr_cert ]
+# These extensions are added when 'ca' signs a request.
+# This goes against PKIX guidelines but some CAs do it and some software
+# requires this to avoid interpreting an end user certificate as a CA.
+basicConstraints=CA:FALSE
+
+# and for everything including object signing:
+nsCertType = client, server, objsign
+
+# This is typical in keyUsage for a client certificate.
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+
+# PKIX recommendations harmless if included in all certificates.
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer:always
+
+keyUsage = critical, digitalSignature, keyEncipherment
+
+# This is required for TSA certificates.
+#extendedKeyUsage = critical,timeStamping
+extendedKeyUsage = clientAuth, serverAuth, emailProtection
+
+EOT
+}
+
+
+mkdir -p ${PRIVATE}
+mkdir -p ${CSR}
+mkdir -p ${CERTS}
+
+if [ ! -f ${HOST}/index.txt ]; then
+  touch ${HOST}/index.txt
+fi
+
+if [ ! -f ${HOST}/serial ]; then
+  echo 1000 > ${HOST}/serial
+fi
+
+create_openssl_config
+
+if [ ! -f ${OPENSSL_CNF} ]; then
+  echo "Failed to create openssl.cnf file"
+  exit 1
+fi
+
+#
+# Create the domain key
+#
+echo "=== Generating private key for host ${HOST} ==="
+
+KEY_FILE="${PRIVATE}/${HOST}.key.pem"
+if [ -f "${KEY_FILE}" ]; then
+  echo "Skipping key generation"
+else
+  echo "Creating key with no passphrase"
+  openssl genrsa -out ${KEY_FILE} 2048
+  chmod 400 ${KEY_FILE}
+fi
+
+if [ ! -f "${KEY_FILE}" ]; then
+  echo "Key failed to generate ... exiting"
+  exit 1
+fi
+
+#
+# Create certificate request for the domain
+#
+echo "=== Generating CSR from key ==="
+
+CSR_FILE="${CSR}/${HOST}.csr.pem"
+if [ -f "${CSR_FILE}" ]; then
+  echo "Skipping csr generation"
+else
+  echo "COMMONNAME: ${HOST_CN}"
+  
+  openssl req \
+    -key ${KEY_FILE} \
+    -new -sha256 \
+    -out ${CSR_FILE} \
+    -subj "/CN=${HOST_CN}" \
+    -addext "subjectAltName =  DNS:${HOST_CN}, IP:${IP_CN}, DNS:localhost"
+fi
+
+if [ ! -f "${CSR_FILE}" ]; then
+  echo "CSR failed to generate ... exiting"
+  exit 1
+fi
+
+#
+# Generate the certificate by signing the CSR with the ca key
+#
+CERT_FILE="${CERTS}/${HOST}.cert.pem"
+echo "=== Generating signed certificate from CSR ==="
+if [ -f "${CERT_FILE}" ]; then
+  if openssl x509 -checkend 86400 -noout -in "${CERT_FILE}"; then
+    echo "Have a valid certificate so skipping generation"
+    skip=1;
+  else
+    echo "Certificate has expired or will do so within 24 hours! Removing ..."
+
+    rm -f ${CERT_FILE}
+    if [ -f ${CERT_FILE} ]; then
+      echo "Failed to remove old certificate ... exiting"
+      exit 1
+    fi
+
+    skip=0;
+  fi
+fi
+
+if [ "${skip}" == "1" ]; then
+  echo "Skipping certificate generation"
+else
+  openssl ca \
+    -batch \
+    -config ${OPENSSL_CNF} \
+    -key ${CA_KEY} \
+    -cert ${CA_CERT} \
+    -days 375 -notext -md sha256 \
+    -extensions v3_req \
+    -in ${CSR_FILE} \
+    -out ${CERT_FILE}
+fi
+
+if [ ! -f "${CERT_FILE}" ]; then
+  echo "Certificate failed to generate ... exiting"
+  exit 1
+fi
+
+chmod 444 ${CERT_FILE}
+
+#
+# Verify the certificate
+#
+echo "=== Verifying certificate ==="
+openssl x509 -noout -text \
+  -in ${CERT_FILE}
+
+echo "=== Verify purpose ==="
+openssl x509 -purpose -in ${CERT_FILE} -inform PEM
+
+#
+# Clean up and remove openssl.cnf
+#
+rm -f ${OPENSSL_CNF}
+

@@ -1,0 +1,67 @@
+#!/bin/bash
+
+###
+#
+# Begin the install of syndesis components by applying a CR
+# * Run without any arguments to install the default CR
+# * Use -c to specify a particular CR file
+# * Use -e to display the CR to be installed as a dry-run
+#
+###
+
+while getopts :c:e option
+do
+  case "${option}"
+  in
+    c) CR=$OPTARG
+    ;;
+    e) EJECT=1
+    ;;
+    :)
+      echo "Invalid option: $OPTARG requires an argument" 1>&2
+      exit 1
+      ;;
+    \?)
+      echo "Invalid Option: -$OPTARG" 1>&2
+      exit 1
+      ;;
+  esac
+done
+shift $((OPTIND -1))
+
+if [ -z "${GOPATH}" ]; then
+  echo "To compile syndesis using go, the syndesis project should be located in the following location:"
+  echo "\$GOPATH/src/github.com/src/syndesisio/syndesis"
+  echo "The GOPATH env variable should be set according to conform to the location above"
+  exit 1
+fi
+
+OPERATOR_DIR="${GOPATH}/src/github.com/syndesisio/syndesis/install/operator"
+if [ ! -d "${OPERATOR_DIR}" ]; then
+  echo "Cannot find operator directory at '${OPERATOR_DIR}'"
+  exit 1
+fi
+
+OPERATOR_BINARY=${OPERATOR_DIR}/dist/linux-amd64/syndesis-operator
+if [ ! -f "${OPERATOR_BINARY}" ]; then
+  echo "Cannot find the operator binary"
+  exit 1
+fi
+
+OPTIONS="app"
+if [ -n "${CR}" ]; then
+  echo "Executing with custom CR from file ${CR}"
+  if [ ! -f "${CR}" ]; then
+    echo "Custom resource does not exist ... exiting"
+    exit 1
+  fi
+
+  OPTIONS="${OPTIONS} --custom-resource ${CR}"
+fi
+
+if [ -n "${EJECT}" ]; then
+  echo "Executing with eject ..."
+  OPTIONS="${OPTIONS} -e yaml"
+fi
+
+${OPERATOR_BINARY} install ${OPTIONS}

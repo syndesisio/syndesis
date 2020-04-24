@@ -1,0 +1,129 @@
+#!/bin/bash
+
+KUBECTL="kubectl"
+CLUSTER="mini-kube"
+ADMIN_ROLE_TEMPLATE="admin-role-project.yml.tmpl"
+
+exit_err() {
+   echo >&2 "${1}"
+   exit 1
+}
+
+current_context() {
+  ${KUBECTL} config current-context
+}
+
+admin_user() {
+  local cluster=$(current_cluster)
+
+  if [ "${cluster}" == "minikube" ]; then
+    echo "minikube"
+  else
+    echo "admin"
+  fi
+}
+
+set_context() {
+  local nm="$1"
+  local cluster="$2"
+  local kube_user="$3"
+
+  if [ -z "${nm}" ]; then
+    exit_err "ERROR: namespace not specified"
+  fi
+
+  if [ -z "${cluster}" ]; then
+    exit_err "ERROR: cluster not specified"
+  fi
+
+  if [ -z "${kube_user}" ]; then
+    exit_err "ERROR: user not specified"
+  fi
+
+  local ctx_name="${nm}/${cluster}/${kube_user}"
+  ${KUBECTL} config set-context "${ctx_name}" --namespace "${nm}" --user="${kube_user}" --cluster="${cluster}" > /dev/null
+  if [ $? -eq 1 ]; then
+    exit_err "ERROR: failed to set the context of kubectl"
+  fi
+
+  echo ${ctx_name}
+}
+
+use_context() {
+  local ctx_name="$1"
+  if [ -z "${ctx_name}" ]; then
+    exit_err "ERROR: context name not specified"
+  fi
+
+  ${KUBECTL} config use-context "${ctx_name}"
+}
+
+get_contexts() {
+  ${KUBECTL} config get-contexts -o=name | sort -n
+}
+
+current_namespace() {
+  local cur_ctx
+
+  cur_ctx="$(current_context)" || exit_err "ERROR: getting current context"
+  ns="$(${KUBECTL} config view -o=jsonpath="{.contexts[?(@.name==\"${cur_ctx}\")].context.namespace}")" \
+     || exit_err "ERROR: getting current namespace"
+
+  if [[ -z "${ns}" ]]; then
+    echo "default"
+  else
+    echo "${ns}"
+  fi
+}
+
+get_namespaces() {
+  ${KUBECTL} get namespaces -o=jsonpath='{range .items[*].metadata.name}{@}{"\n"}{end}'
+}
+
+current_user() {
+  local cur_ctx
+
+  cur_ctx="$(current_context)" || exit_err "ERROR: getting current context"
+  kube_user="$(${KUBECTL} config view -o=jsonpath="{.contexts[?(@.name==\"${cur_ctx}\")].context.user}")" \
+     || exit_err "ERROR: getting current user"
+
+  if [[ -z "${kube_user}" ]]; then
+    echo "Cannot find user"
+  else
+    echo "${kube_user}"
+  fi
+}
+
+current_cluster() {
+  ${KUBECTL} config get-contexts | grep '*' | awk {'print $3'}
+}
+
+cluster_home() {
+  local cluster=$(current_cluster)
+
+  if [ "${cluster}" == "minikube" ]; then
+    echo "${HOME}/.minikube"
+  elif "${cluster}" == "microk8s" ]; then
+    echo "${HOME}/.microk8s"
+  else
+    echo "cluster_home() unsupported by this cluster \"${cluster}\""
+    exit 1
+  fi
+}
+
+apply_namespace_role() {
+  local nm="$1"
+  if [ -z "${nm}" ]; then
+    exit_err "ERROR: no namespace specified"
+  fi
+
+  # Configure the admin role for the user in the namespace
+  if [ ! -f $KUBE_DIR/${ADMIN_ROLE_TEMPLATE} ]; then
+    exit_err "ERROR: cannot find admin role data configuration file"
+  fi
+
+  cat $KUBE_DIR/${ADMIN_ROLE_TEMPLATE}| sed -e "s/\${NAMESPACE}/${nm}/" -e "s/\${KUSER}/${user}/" | ${KUBECTL} apply -f -
+  if [ $? -eq 1 ]; then
+    exit_err "ERROR: failed to apply admin role on namespace \"${nm}\""
+  fi
+}

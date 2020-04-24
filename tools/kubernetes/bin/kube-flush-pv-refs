@@ -1,0 +1,40 @@
+#!/bin/bash
+
+###
+#
+# When a pod is deleted rather than gracefully shut down, its persistent volume claim is not
+# always tidied up and therefore the associated persistent volume can acquire a 'Failed' state
+# This either
+# * loops through all persistent volumes and patches the failed ones to remove the claim references
+# * patches the named persistent volume
+#
+###
+
+KUBECTL="kubectl"
+
+function patch() {
+  local pv="$1"
+
+  ${KUBECTL} get pv/$pv | grep Fail
+  if [ "$?" == "1" ]; then
+    echo "$pv has not failed ... skipping"
+    return
+  fi
+
+  echo "Patching $pv to remove claim reference"
+  ${KUBECTL} patch pv/$pv --type json -p '[{ "op": "remove", "path": "/spec/claimRef" }]'
+}
+
+if [ -n "$1" ]; then
+  patch "$1"
+  exit 0
+fi
+
+pvs=$(${KUBECTL} get pv | grep -v NAME | awk {'print $1'})
+if [ $? -eq 0 ]; then
+  for pv in ${pvs}
+  do
+    echo $pv
+    patch "$pv"
+  done
+fi

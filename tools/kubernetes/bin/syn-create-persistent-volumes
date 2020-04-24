@@ -1,0 +1,86 @@
+#!/bin/bash
+
+###
+#
+# * Creates the persistent volumes necessary for
+#   installation of syndesis
+#
+###
+
+#
+# Finds the calling script location so that it can then find
+# the companion share directory relative to its parent directory
+#
+# Assumes minikube is up n running
+#
+pushd . > /dev/null
+SCRIPT_PATH="${BASH_SOURCE[0]}"
+if ([ -h "${SCRIPT_PATH}" ]); then
+  while([ -h "${SCRIPT_PATH}" ]); do cd `dirname "$SCRIPT_PATH"`;
+  SCRIPT_PATH=`readlink "${SCRIPT_PATH}"`; done
+fi
+cd `dirname ${SCRIPT_PATH}` > /dev/null
+SCRIPT_PATH=`pwd`;
+popd  > /dev/null
+
+#
+# Check we have a share directory
+#
+SHARE_DIR="$SCRIPT_PATH/../share"
+if [ ! -d "$SHARE_DIR" ]; then
+  echo "ERROR: Cannot find share directory $SHARE_DIR relative to $SCRIPT_DIR"
+fi
+
+KUBE_DIR="$SHARE_DIR/kube"
+if [ ! -d "$KUBE_DIR" ]; then
+  echo "ERROR: Cannot find kube data directory $KUBE_DIR relative to $SHARE_DIR"
+fi
+
+if [ -f "$KUBE_DIR/kube-common" ]; then
+   . $KUBE_DIR/kube-common
+else
+  echo "Error: Cannot source kube common functions ... exiting"
+  exit 1
+fi
+
+SYN_DIR="$SHARE_DIR/syndesis"
+if [ ! -d "$SYN_DIR" ]; then
+  echo "ERROR: Cannot find syndesis data directory $SYN_DIR relative to $SHARE_DIR"
+fi
+
+ADMIN=$(admin_user)
+
+#
+# Creates the syndesis-db persistent volume
+#
+dbpv="kube-db-persistent-volume.yml"
+if [ -f ${SYN_DIR}/${dbpv} ]; then
+  ${KUBECTL} --user=${ADMIN} apply -f ${SYN_DIR}/${dbpv}
+  minikube ssh "sudo mkdir /mnt/syndesisdb"
+else
+  echo "Warning: cannot find ${dbpv}"
+fi
+
+#
+# Creates the generic persistent volumes
+#
+for i in $(seq -f "%04g" 1 9)
+do
+  pv="pv$i"
+  kpv="kube-persistent-volumes.yml.tmpl"
+  if [ -f ${SYN_DIR}/${dbpv} ]; then
+    minikube ssh "sudo mkdir /mnt/${pv}"
+    cat ${SYN_DIR}/${kpv} | sed -e "s/<PVNAME>/${pv}/" | $KUBECTL --user=${ADMIN} apply -f -
+  else
+    echo "Warning: cannot find ${kpv}"
+  fi
+done
+
+sleep 3
+
+#
+# Ensure all the newly create directories are writeable
+# by users. Without this, we get a rather ugly "permission denied"
+# error message when spinning up the containers
+#
+minikube ssh "sudo chmod 777 /mnt/*"

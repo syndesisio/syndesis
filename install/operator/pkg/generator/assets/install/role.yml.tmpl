@@ -64,11 +64,13 @@
     verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
   - apiGroups:
     - extensions
+    - networking.k8s.io
     resources:
     - daemonsets
     - deployments
     - deployments/scale
     - ingresses
+    - ingresses/status
     - networkpolicies
     - replicasets
     - replicasets/scale

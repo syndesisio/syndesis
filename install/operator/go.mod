@@ -34,17 +34,15 @@ require (
 	k8s.io/api v0.17.4
 	k8s.io/apimachinery v0.17.4
 	k8s.io/client-go v12.0.0+incompatible
+	k8s.io/code-generator v0.18.0
 	k8s.io/gengo v0.0.0-20200114144118-36b2048a9120
 	k8s.io/kube-openapi v0.0.0-20200121204235-bf4fb3bd569c
 	k8s.io/kubectl v0.17.4
+	sigs.k8s.io/controller-runtime v0.5.2
 	sigs.k8s.io/yaml v1.2.0
 )
 
-require (
-	github.com/operator-framework/operator-sdk v0.17.0
-	k8s.io/code-generator v0.17.4
-	sigs.k8s.io/controller-runtime v0.5.2
-)
+require github.com/operator-framework/operator-sdk v0.17.0
 
 replace k8s.io/client-go => k8s.io/client-go v0.17.4 // Required by prometheus-operator
 
