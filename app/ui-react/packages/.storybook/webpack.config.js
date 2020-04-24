@@ -1,5 +1,6 @@
 const path = require('path');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 module.exports = ({ config, mode }) => {
   config.module.rules.push({
     test: /\.tsx?$/,
@@ -24,5 +25,8 @@ module.exports = ({ config, mode }) => {
   config.node = {
     fs: 'empty',
   };
+  config.optimization.minimizer = [ new TerserPlugin({
+    parallel: 1
+  })];
   return config;
 };
