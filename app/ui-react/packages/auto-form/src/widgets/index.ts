@@ -8,5 +8,4 @@ export * from './FormTypeaheadComponent';
 export * from './FormCheckboxComponent';
 export * from './FormHiddenComponent';
 export * from './FormDurationComponent';
-export * from './TextButton';
 export * from './helpers';

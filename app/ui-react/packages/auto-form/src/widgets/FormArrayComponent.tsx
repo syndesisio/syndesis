@@ -1,9 +1,9 @@
+import { Button } from '@patternfly/react-core';
 import * as React from 'react';
 import { IFormArrayControlProps, IFormArrayDefinitionOptions } from '../models';
 import { useFormBuilder } from '../useFormBuilder';
 import { getNewArrayRow } from '../utils';
 import { toValidHtmlId } from './helpers';
-import { TextButton } from './TextButton';
 
 import './FormArrayComponent.css';
 
@@ -80,37 +80,41 @@ export const FormArrayComponent: React.FunctionComponent<
               >
                 {options.showSortControls && (
                   <>
-                    <TextButton
+                    <Button
+                      variant={'link'}
                       onClick={() => {
                         props.move(index, index - 1);
                       }}
-                      enable={index > 0}
+                      isDisabled={!(index > 0)}
                     >
-                      <i className="fa fa-arrow-circle-o-up" />
-                    </TextButton>
-                    <TextButton
+                      <i className="fa fa-arrow-alt-circle-up" />
+                    </Button>
+                    <Button
+                      variant={'link'}
                       onClick={() => {
                         props.move(index, index + 1);
                       }}
-                      enable={index < values.length - 1}
+                      isDisabled={!(index < values.length - 1)}
                     >
-                      <i className="fa fa-arrow-circle-o-down" />
-                    </TextButton>
+                      <i className="fa fa-arrow-alt-circle-down" />
+                    </Button>
                   </>
                 )}
-                <TextButton
+                <Button
+                  variant={'link'}
                   onClick={() => props.remove(index)}
-                  enable={values.length > minElements}
+                  isDisabled={!(values.length > minElements)}
                 >
-                  <i className="fa fa-trash-o" />
-                </TextButton>
+                  <i className="fa fa-trash" />
+                </Button>
               </div>
             </div>
           </section>
         );
       })}
       <div className={'form-array-control__array-add'}>
-        <TextButton
+        <Button
+          variant={'link'}
           data-testid="form-array-control-add-another-item-button"
           onClick={() => props.push(getNewArrayRow(definition))}>
           <>
@@ -118,7 +122,7 @@ export const FormArrayComponent: React.FunctionComponent<
             &nbsp;
             {options.i18nAddElementText || 'Add Another'}
           </>
-        </TextButton>
+        </Button>
       </div>
     </div>
   );
