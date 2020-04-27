@@ -208,6 +208,11 @@ check_git_clean() {
        git status
        exit 1
     fi
+
+    # we need to remove tags removed at origin so we can push tags that have been
+    # removed, root cause is when we do `git push` an error is reported
+    # `fatal: remote part of refspec is not a valid name in :...`
+    git fetch --tags --prune
 }
 
 update_pom_versions() {
