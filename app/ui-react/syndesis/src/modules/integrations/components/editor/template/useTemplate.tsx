@@ -134,8 +134,15 @@ export function useTemplate(props: IUseTemplateProps) {
   };
 
   const formatAnnotation = (a: any) => {
-    a.message = t(`integrations:linter:${a.message}`, a.messageContext);
-    return a;
+    const messageContext = (a.messageContext || []) as string[];
+    const message = t(`integrations:linter:${a.message}`, {
+      ...messageContext,
+      interpolation: {
+        prefix: '__',
+        suffix: '__'
+      }
+    });
+    return { ...a, message };
   };
 
   const template = (
