@@ -190,6 +190,7 @@ const FlowsDropdown: React.FunctionComponent<IFlowsDropdownProps> = ({
     <BreadcrumbItem>
       <span>Flow&nbsp;&nbsp;</span>
       <BreadcrumbDropdown
+        testId={'dropdown-breadcrumb-toggle flows-dropdown'}
         body={
           <ConditionsDropdownBody
             description={currentFlow.description!}
@@ -197,7 +198,7 @@ const FlowsDropdown: React.FunctionComponent<IFlowsDropdownProps> = ({
           />
         }
       >
-        <>
+        <div data-testid={'dropdown-breadcrumb-body flows-dropdown-body'}>
           {!isPrimary && (
             <EditorToolbarDropdownBackButtonItem
               title={
@@ -231,7 +232,7 @@ const FlowsDropdown: React.FunctionComponent<IFlowsDropdownProps> = ({
               ))}
             </ConditionsDropdownHeader>
           ))}
-        </>
+        </div>
       </BreadcrumbDropdown>
     </BreadcrumbItem>
   ) : null;
