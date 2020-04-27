@@ -27,8 +27,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.openapi.OpenApi;
@@ -43,7 +43,7 @@ import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.springframework.stereotype.Component;
 
 @Path("/apis")
-@Api(value = "apis")
+@Tag(name = "apis")
 @Component
 public class ApiHandler extends BaseHandler {
 
@@ -88,7 +88,7 @@ public class ApiHandler extends BaseHandler {
     @Path("/generator")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @ApiOperation("Provides a integration from a API specification. Does not store it in the database")
+    @Operation(description = "Provides a integration from a API specification. Does not store it in the database")
     public Integration createIntegrationFromAPI(@MultipartForm final APIFormData apiFormData) {
         final APIIntegration apiIntegration = ApiGeneratorHelper.generateIntegrationFrom(apiFormData, getDataManager(), apiGenerator);
 
@@ -106,7 +106,7 @@ public class ApiHandler extends BaseHandler {
     @Path("/info")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @ApiOperation("Validates the API and provides a summary of the operations")
+    @Operation(description = "Validates the API and provides a summary of the operations")
     public APISummary info(@MultipartForm final APIFormData apiFormData) {
         final String spec = ApiGeneratorHelper.getSpec(apiFormData);
         return apiGenerator.info(spec, APIValidationContext.PROVIDED_API);
@@ -116,7 +116,7 @@ public class ApiHandler extends BaseHandler {
     @Path("/generator")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @ApiOperation("Update the provided integration from a API specification. Does not store it in the database")
+    @Operation(description = "Update the provided integration from a API specification. Does not store it in the database")
     public Response updateIntegrationFromSpecification(@MultipartForm final APIUpdateFormData apiUpdateFormData) {
         final DataManager dataManager = getDataManager();
         final Integration existing = apiUpdateFormData.integration;

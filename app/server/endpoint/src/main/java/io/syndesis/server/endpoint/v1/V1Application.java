@@ -18,21 +18,10 @@ package io.syndesis.server.endpoint.v1;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import io.swagger.jaxrs.config.BeanConfig;
 import org.springframework.stereotype.Component;
 
 @Component
 @ApplicationPath("/api/v1")
 public class V1Application extends Application {
-
-    public V1Application() {
-        BeanConfig beanConfig = new BeanConfig();
-        beanConfig.setVersion("v1");
-        beanConfig.setTitle("Syndesis Rest API");
-        beanConfig.setSchemes(new String[]{"http", "https"});
-        beanConfig.setBasePath("/api/v1");
-        beanConfig.setResourcePackage(getClass().getPackage().getName());
-        beanConfig.setScan(true);
-    }
 
 }

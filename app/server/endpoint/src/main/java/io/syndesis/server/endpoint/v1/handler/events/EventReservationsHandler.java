@@ -25,11 +25,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
 import io.syndesis.common.model.EventMessage;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.stereotype.Component;
 
 @Path("/event/reservations")
-@Api(value = "events")
+@Tag(name = "events")
 @Component
 public class EventReservationsHandler {
 

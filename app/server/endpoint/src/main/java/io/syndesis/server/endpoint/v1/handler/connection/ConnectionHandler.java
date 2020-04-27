@@ -36,8 +36,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.bulletin.ConnectionBulletinBoard;
@@ -62,7 +62,7 @@ import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Path("/connections")
-@Api(value = "connections")
+@Tag(name = "connections")
 @Component
 public class ConnectionHandler
         extends BaseHandler
@@ -220,14 +220,14 @@ public class ConnectionHandler
     }
 
     @Path("/{id}/actions")
-    public ConnectionActionHandler metadata(@NotNull @PathParam("id") @ApiParam(required = true, example = "my-connection") final String connectionId) {
+    public ConnectionActionHandler metadata(@NotNull @PathParam("id") @Parameter(required = true, example = "my-connection") final String connectionId) {
         return new ConnectionActionHandler(get(connectionId), config, encryptionComponent);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}/bulletins")
-    public ConnectionBulletinBoard getBulletins(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
+    public ConnectionBulletinBoard getBulletins(@NotNull @PathParam("id") @Parameter(required = true) String id) {
         ConnectionBulletinBoard result = getDataManager().fetch(ConnectionBulletinBoard.class, id);
         if( result == null ) {
             result = new ConnectionBulletinBoard.Builder().build();

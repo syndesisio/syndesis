@@ -26,45 +26,47 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.stereotype.Component;
 
 @CacheFor(value = 1, unit = HOURS)
 @Path("/")
 @Component
+@Tag(name = "documentation")
 public class ApiDocumentationEndpoint {
 
     private static final MediaType YAML_TYPE = MediaType.valueOf("application/yaml");
 
     @GET
     @Produces("text/html")
-    @ApiOperation(value = "Get the REST API documentation")
+    @Operation(description = "Get the REST API documentation")
     @Path("/internal/index.html")
     public InputStream internalDocumentation() {
         return resource("/static/internal/index.html");
     }
 
     @GET
-    @ApiOperation(value = "Get the REST API documentation")
-    @Path("/internal/swagger.{type:json|yaml}")
+    @Operation(description = "Get the REST API documentation")
+    @Path("/internal/openapi.{type:json|yaml}")
     public Response internalSwagger(@PathParam("type") final String type) {
-        return Response.ok(resource("/static/internal/swagger." + type), mediaTypeFor(type)).build();
+        return Response.ok(resource("/static/internal/openapi." + type), mediaTypeFor(type)).build();
     }
 
     @GET
     @Produces("text/html")
-    @ApiOperation(value = "Get the Supported REST API documentation")
+    @Operation(description = "Get the Supported REST API documentation")
     @Path("/index.html")
     public InputStream supportedDocumentation() {
         return resource("/static/index.html");
     }
 
     @GET
-    @ApiOperation(value = "Get the REST API documentation")
-    @Path("/swagger.{type:json|yaml}")
+    @Operation(description = "Get the REST API documentation")
+    @Path("/openapi.{type:json|yaml}")
     public Response supportedSwagger(@PathParam("type") final String type) {
-        return Response.ok(resource("/static/swagger." + type), mediaTypeFor(type)).build();
+        return Response.ok(resource("/static/openapi." + type), mediaTypeFor(type)).build();
     }
 
     private static MediaType mediaTypeFor(final String type) {

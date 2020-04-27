@@ -23,7 +23,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.syndesis.server.dao.manager.WithDataManager;
 import io.syndesis.common.model.WithId;
 
@@ -32,7 +32,7 @@ public interface Getter<T extends WithId<T>> extends Resource, WithDataManager {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}")
-    default T get(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
+    default T get(@NotNull @PathParam("id") @Parameter(required = true) String id) {
         Class<T> modelClass = resourceKind().getModelClass();
         T result = getDataManager().fetch(modelClass, id);
         if( result == null ) {

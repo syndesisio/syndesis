@@ -23,8 +23,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.integration.api.IntegrationResourceManager;
@@ -32,7 +32,7 @@ import io.syndesis.integration.api.IntegrationResourceManager;
 import org.springframework.stereotype.Component;
 
 @Path("/resources")
-@Api(value = "resources")
+@Tag(name = "resources")
 @Component
 public class ResourceHandler {
 
@@ -45,7 +45,7 @@ public class ResourceHandler {
 
     @GET
     @Path(value = "/{kind}/{id}")
-    public Response get(@NotNull @PathParam("kind") @ApiParam(required = true) Kind kind, @NotNull @PathParam("id") @ApiParam(required = true) String id) {
+    public Response get(@NotNull @PathParam("kind") @Parameter(required = true) Kind kind, @NotNull @PathParam("id") @Parameter(required = true) String id) {
         if (kind == Kind.OpenApi) {
             Optional<OpenApi> maybeOpenApi = resourceManager.loadOpenApiDefinition(id);
 

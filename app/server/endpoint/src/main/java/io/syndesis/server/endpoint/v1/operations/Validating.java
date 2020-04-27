@@ -28,8 +28,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.validation.AllValidations;
@@ -42,11 +44,8 @@ public interface Validating<T extends WithId<T>> extends Resource {
     @Path(value = "/validation")
     @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiResponses({//
-        @ApiResponse(code = 204, message = "All validations pass"), //
-        @ApiResponse(code = 400, message = "Found violations in validation", responseContainer = "Set",
-            response = Violation.class)//
-    })
+    @ApiResponse(responseCode = "204", description = "All validations pass")
+    @ApiResponse(responseCode = "400", description = "Found violations in validation", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Violation.class))))
     default Response validate(@NotNull final T obj) {
         final Set<ConstraintViolation<T>> constraintViolations = getValidator().validate(obj, AllValidations.class);
 

@@ -21,14 +21,14 @@ import io.syndesis.common.model.user.Role;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import io.syndesis.server.endpoint.v1.operations.Getter;
 import io.syndesis.server.endpoint.v1.operations.Lister;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.Path;
 
 @Path("/roles")
-@Api(value = "roles")
+@Tag(name = "roles")
 @Component
 public class RoleHandler extends BaseHandler implements Lister<Role>, Getter<Role> {
 

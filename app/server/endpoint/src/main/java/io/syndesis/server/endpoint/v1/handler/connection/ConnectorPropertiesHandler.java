@@ -26,12 +26,12 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 
-@Api(value = "properties")
+@Tag(name = "properties")
 public class ConnectorPropertiesHandler {
     private final String metaPropertiesUrl;
 
