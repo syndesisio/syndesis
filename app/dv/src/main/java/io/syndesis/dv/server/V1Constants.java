@@ -176,4 +176,6 @@ public interface V1Constants extends StringConstants {
 
     String REVERT = "revert"; //$NON-NLS-1$
 
+    String TEST_SUPPORT = "test-support"; //$NON-NLS-1$
+
 }
