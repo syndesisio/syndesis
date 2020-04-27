@@ -1,0 +1,84 @@
+AllowLocalHost: false
+Productized: true
+DevSupport: false
+Scheduled: true
+ProductName: fuse-ignite
+Syndesis:
+    DemoData: false
+    ImageStreamNamespace: ""
+    Addons:
+        Jaeger:
+            Enabled: false
+            SamplerType: "const"
+            SamplerParam: "0"
+            ImageAgent: "registry.redhat.io/distributed-tracing/jaeger-agent-rhel7:1.13"
+            ImageAllInOne: "registry.redhat.io/distributed-tracing/jaeger-all-in-one-rhel7:1.13"
+            ImageOperator: "registry.redhat.io/distributed-tracing/jaeger-rhel7-operator:1.13"
+        Ops:
+            Enabled: false
+        Todo:
+            Enabled: false
+        Knative:
+            Enabled: false
+        DV:
+            Enabled: false
+            Image: "registry.redhat.io/fuse7-tech-preview/fuse-dv-rhel7:1.6"
+            Resources:
+                Memory: "1024Mi"
+        CamelK:
+            Enabled: false
+            Image: "fabric8/s2i-java"
+            CamelVersion: "2.23.2.fuse-760017"
+            CamelKRuntime: "0.3.4.fuse-740008"
+        PublicApi:
+            Enabled: false
+            DisableSarCheck: false
+    Components:
+        Oauth:
+            Image: "registry.redhat.io/openshift4/ose-oauth-proxy:4.2"
+            DisableSarCheck: false
+        UI:
+            Image: "registry.redhat.io/fuse7/fuse-ignite-ui:SHAREPLACE"
+        S2I:
+            Image: "registry.redhat.io/fuse7/fuse-ignite-s2i:SHAREPLACE"
+        Prometheus:
+            Rules: ""
+            Image: "registry.redhat.io/openshift3/prometheus:v3.9"
+            Resources:
+                Memory: "512Mi"
+                VolumeCapacity: "1Gi"
+        Upgrade:
+            Image: "registry.redhat.io/fuse7/fuse-ignite-upgrade:SHAREPLACE"
+            Resources:
+                VolumeCapacity: "1Gi"
+        Meta:
+            Image: "registry.redhat.io/fuse7/fuse-ignite-meta:SHAREPLACE"
+            Resources:
+                Memory: "512Mi"
+                VolumeCapacity: "1Gi"
+        Database:
+            Name: "syndesis"
+            User: "syndesis"
+            URL: "postgresql://syndesis-db:5432/syndesis?sslmode=disable"
+            Image: "registry.redhat.io/rhscl/postgresql-96-rhel7:latest"
+            Exporter:
+                Image: "registry.redhat.io/fuse7-tech-preview/fuse-postgres-exporter:SHAREPLACE"
+            Resources:
+                Memory: "255Mi"
+                VolumeCapacity: "1Gi"
+                VolumeAccessMode: "ReadWriteOnce"
+        Server:
+            Image: "registry.redhat.io/fuse7/fuse-ignite-server:SHAREPLACE"
+            Resources:
+                Memory: "800Mi"
+            Features:
+                IntegrationLimit: 0
+                IntegrationStateCheckInterval: 60
+                DeployIntegrations: true
+                TestSupport: false
+                OpenShiftMaster: "https://localhost:8443"
+                ManagementUrlFor3scale: ""
+                MavenRepositories:
+                    central: "https://repo.maven.apache.org/maven2/"
+                    repo-02-redhat-ga: "https://maven.repository.redhat.com/ga/"
+                    repo-03-jboss-ea: "https://repository.jboss.org/nexus/content/groups/ea/"
