@@ -1,0 +1,795 @@
+{
+  "connections": {
+    ":webhook": {
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Start an integration from a Webhook",
+            "descriptor": {
+              "componentScheme": "servlet",
+              "configuredProperties": {
+                "headerFilterStrategy": "syndesisHeaderStrategy",
+                "httpMethodRestrict": "GET,POST"
+              },
+              "connectorCustomizers": [
+                "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+              ],
+              "exceptionHandler": "io.syndesis.connector.webhook.WebhookOnExceptionHandler",
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "any"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Webhook Configuration",
+                  "name": "configuration",
+                  "properties": {
+                    "contextPath": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "description": "The Webhook token that will be set as final part of the URL",
+                      "displayName": "Webhook Token",
+                      "generator": "alphanum:50",
+                      "javaType": "String",
+                      "kind": "parameter",
+                      "order": 0,
+                      "required": true,
+                      "secret": false,
+                      "tags": [
+                        "context-path"
+                      ],
+                      "type": "string"
+                    },
+                    "defaultResponse": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Default Response",
+                      "javaType": "String",
+                      "kind": "parameter",
+                      "order": 1,
+                      "required": false,
+                      "secret": false,
+                      "type": "legend"
+                    },
+                    "errorHandling": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Error Handling",
+                      "javaType": "String",
+                      "kind": "parameter",
+                      "order": 3,
+                      "required": false,
+                      "secret": false,
+                      "type": "legend"
+                    },
+                    "errorResponseCodes": {
+                      "componentProperty": false,
+                      "defaultValue": "{}",
+                      "deprecated": false,
+                      "description": "The return code to set according to different error situations",
+                      "displayName": "Error Response Codes",
+                      "extendedProperties": "{ \"mapsetValueDefinition\": {   \"enum\" : [{\"label\":\"400 Bad Request\",\"value\":\"400\"},{\"label\":\"404 Not Found\",\"value\":\"404\"},{\"label\":\"405 Method Not Allowed\",\"value\":\"405\"},{\"label\":\"409 Conflict\",\"value\":\"409\"},{\"label\":\"500 Server Error\",\"value\":\"500\"},{\"label\":\"501 Not Implemented\",\"value\":\"501\"},{\"label\":\"503 Service Unavailable\",\"value\":\"503\"}],    \"type\" : \"select\" },\"mapsetOptions\": {    \"i18nKeyColumnTitle\": \"When the error message is\",    \"i18nValueColumnTitle\": \"Return this HTTP response code\" }}",
+                      "javaType": "Map",
+                      "kind": "parameter",
+                      "order": 5,
+                      "required": false,
+                      "secret": false,
+                      "type": "mapset"
+                    },
+                    "httpResponseCode": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "description": "The return code to set in the HTTP response",
+                      "displayName": "Return Code",
+                      "enum": [
+                        {
+                          "label": "200 OK",
+                          "value": "200"
+                        },
+                        {
+                          "label": "201 Created",
+                          "value": "201"
+                        },
+                        {
+                          "label": "202 Accepted",
+                          "value": "202"
+                        },
+                        {
+                          "label": "204 No Content",
+                          "value": "204"
+                        }
+                      ],
+                      "javaType": "String",
+                      "kind": "parameter",
+                      "order": 2,
+                      "required": true,
+                      "secret": false,
+                      "type": "select"
+                    },
+                    "returnBody": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Include error message in the return body",
+                      "javaType": "Boolean",
+                      "kind": "parameter",
+                      "order": 4,
+                      "required": false,
+                      "secret": false,
+                      "type": "boolean"
+                    }
+                  }
+                }
+              ],
+              "standardizedErrors": [
+                {
+                  "displayName": "ServerError",
+                  "name": "SERVER_ERROR"
+                }
+              ]
+            },
+            "id": "io.syndesis:webhook-incoming",
+            "metadata": {
+              "serverBasePath": "/webhook"
+            },
+            "name": "Incoming Webhook",
+            "pattern": "From",
+            "tags": [
+              "expose"
+            ]
+          }
+        ],
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-webhook:2.0-SNAPSHOT",
+            "type": "MAVEN"
+          }
+        ],
+        "description": "Create direct connections with external systems through Webhooks",
+        "icon": "assets:webhook.svg",
+        "id": "webhook",
+        "metadata": {
+          "hide-from-connection-pages": "true"
+        },
+        "name": "Webhook",
+        "version": 16
+      },
+      "connectorId": "webhook",
+      "description": "Create direct connections with external systems through Webhooks",
+      "icon": "assets:webhook.svg",
+      "id": "webhook",
+      "isDerived": false,
+      "metadata": {
+        "hide-from-connection-pages": "true"
+      },
+      "name": "Webhook",
+      "uses": 0
+    }
+  },
+  "connectors": {
+    ":webhook": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Start an integration from a Webhook",
+          "descriptor": {
+            "componentScheme": "servlet",
+            "configuredProperties": {
+              "headerFilterStrategy": "syndesisHeaderStrategy",
+              "httpMethodRestrict": "GET,POST"
+            },
+            "connectorCustomizers": [
+              "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+            ],
+            "exceptionHandler": "io.syndesis.connector.webhook.WebhookOnExceptionHandler",
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "any"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Webhook Configuration",
+                "name": "configuration",
+                "properties": {
+                  "contextPath": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "description": "The Webhook token that will be set as final part of the URL",
+                    "displayName": "Webhook Token",
+                    "generator": "alphanum:50",
+                    "javaType": "String",
+                    "kind": "parameter",
+                    "order": 0,
+                    "required": true,
+                    "secret": false,
+                    "tags": [
+                      "context-path"
+                    ],
+                    "type": "string"
+                  },
+                  "defaultResponse": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Default Response",
+                    "javaType": "String",
+                    "kind": "parameter",
+                    "order": 1,
+                    "required": false,
+                    "secret": false,
+                    "type": "legend"
+                  },
+                  "errorHandling": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Error Handling",
+                    "javaType": "String",
+                    "kind": "parameter",
+                    "order": 3,
+                    "required": false,
+                    "secret": false,
+                    "type": "legend"
+                  },
+                  "errorResponseCodes": {
+                    "componentProperty": false,
+                    "defaultValue": "{}",
+                    "deprecated": false,
+                    "description": "The return code to set according to different error situations",
+                    "displayName": "Error Response Codes",
+                    "extendedProperties": "{ \"mapsetValueDefinition\": {   \"enum\" : [{\"label\":\"400 Bad Request\",\"value\":\"400\"},{\"label\":\"404 Not Found\",\"value\":\"404\"},{\"label\":\"405 Method Not Allowed\",\"value\":\"405\"},{\"label\":\"409 Conflict\",\"value\":\"409\"},{\"label\":\"500 Server Error\",\"value\":\"500\"},{\"label\":\"501 Not Implemented\",\"value\":\"501\"},{\"label\":\"503 Service Unavailable\",\"value\":\"503\"}],    \"type\" : \"select\" },\"mapsetOptions\": {    \"i18nKeyColumnTitle\": \"When the error message is\",    \"i18nValueColumnTitle\": \"Return this HTTP response code\" }}",
+                    "javaType": "Map",
+                    "kind": "parameter",
+                    "order": 5,
+                    "required": false,
+                    "secret": false,
+                    "type": "mapset"
+                  },
+                  "httpResponseCode": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "description": "The return code to set in the HTTP response",
+                    "displayName": "Return Code",
+                    "enum": [
+                      {
+                        "label": "200 OK",
+                        "value": "200"
+                      },
+                      {
+                        "label": "201 Created",
+                        "value": "201"
+                      },
+                      {
+                        "label": "202 Accepted",
+                        "value": "202"
+                      },
+                      {
+                        "label": "204 No Content",
+                        "value": "204"
+                      }
+                    ],
+                    "javaType": "String",
+                    "kind": "parameter",
+                    "order": 2,
+                    "required": true,
+                    "secret": false,
+                    "type": "select"
+                  },
+                  "returnBody": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Include error message in the return body",
+                    "javaType": "Boolean",
+                    "kind": "parameter",
+                    "order": 4,
+                    "required": false,
+                    "secret": false,
+                    "type": "boolean"
+                  }
+                }
+              }
+            ],
+            "standardizedErrors": [
+              {
+                "displayName": "ServerError",
+                "name": "SERVER_ERROR"
+              }
+            ]
+          },
+          "id": "io.syndesis:webhook-incoming",
+          "metadata": {
+            "serverBasePath": "/webhook"
+          },
+          "name": "Incoming Webhook",
+          "pattern": "From",
+          "tags": [
+            "expose"
+          ]
+        }
+      ],
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-webhook:2.0-SNAPSHOT",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Create direct connections with external systems through Webhooks",
+      "icon": "assets:webhook.svg",
+      "id": "webhook",
+      "metadata": {
+        "hide-from-connection-pages": "true"
+      },
+      "name": "Webhook",
+      "version": 16
+    }
+  },
+  "integrations": {
+    ":i-M4yEs28lCY5ii3d0hYGz": {
+      "createdAt": 1586961023177,
+      "flows": [
+        {
+          "id": "-M4yDz8Hqo1w5KT5YvY7",
+          "steps": [
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Start an integration from a Webhook",
+                "descriptor": {
+                  "componentScheme": "servlet",
+                  "configuredProperties": {
+                    "headerFilterStrategy": "syndesisHeaderStrategy",
+                    "httpMethodRestrict": "GET,POST"
+                  },
+                  "connectorCustomizers": [
+                    "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+                  ],
+                  "exceptionHandler": "io.syndesis.connector.webhook.WebhookOnExceptionHandler",
+                  "inputDataShape": {
+                    "kind": "none"
+                  },
+                  "outputDataShape": {
+                    "kind": "json-instance",
+                    "metadata": {
+                      "userDefined": "true"
+                    },
+                    "name": "BoringStrings",
+                    "specification": "{\n \"astring\": \"something\",\n \"anotherstring\": \"whatever\"\n }"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "description": "Webhook Configuration",
+                      "name": "configuration",
+                      "properties": {
+                        "contextPath": {
+                          "componentProperty": false,
+                          "defaultValue": "xuKmVUQJzrtoCTRHz5qbTv9MqP2A7NempJBtEN9TAYUHK9ABHc",
+                          "deprecated": false,
+                          "description": "The Webhook token that will be set as final part of the URL",
+                          "displayName": "Webhook Token",
+                          "generator": "alphanum:50",
+                          "javaType": "String",
+                          "kind": "parameter",
+                          "order": 0,
+                          "required": true,
+                          "secret": false,
+                          "tags": [
+                            "context-path"
+                          ],
+                          "type": "string"
+                        },
+                        "defaultResponse": {
+                          "componentProperty": false,
+                          "deprecated": false,
+                          "displayName": "Default Response",
+                          "javaType": "String",
+                          "kind": "parameter",
+                          "order": 1,
+                          "required": false,
+                          "secret": false,
+                          "type": "legend"
+                        },
+                        "errorHandling": {
+                          "componentProperty": false,
+                          "deprecated": false,
+                          "displayName": "Error Handling",
+                          "javaType": "String",
+                          "kind": "parameter",
+                          "order": 3,
+                          "required": false,
+                          "secret": false,
+                          "type": "legend"
+                        },
+                        "errorResponseCodes": {
+                          "componentProperty": false,
+                          "defaultValue": "{}",
+                          "deprecated": false,
+                          "description": "The return code to set according to different error situations",
+                          "displayName": "Error Response Codes",
+                          "extendedProperties": "{ \"mapsetValueDefinition\": {   \"enum\" : [{\"label\":\"400 Bad Request\",\"value\":\"400\"},{\"label\":\"404 Not Found\",\"value\":\"404\"},{\"label\":\"405 Method Not Allowed\",\"value\":\"405\"},{\"label\":\"409 Conflict\",\"value\":\"409\"},{\"label\":\"500 Server Error\",\"value\":\"500\"},{\"label\":\"501 Not Implemented\",\"value\":\"501\"},{\"label\":\"503 Service Unavailable\",\"value\":\"503\"}],    \"type\" : \"select\" },\"mapsetOptions\": {    \"i18nKeyColumnTitle\": \"When the error message is\",    \"i18nValueColumnTitle\": \"Return this HTTP response code\" }}",
+                          "javaType": "Map",
+                          "kind": "parameter",
+                          "order": 5,
+                          "required": false,
+                          "secret": false,
+                          "type": "mapset"
+                        },
+                        "httpResponseCode": {
+                          "componentProperty": false,
+                          "deprecated": false,
+                          "description": "The return code to set in the HTTP response",
+                          "displayName": "Return Code",
+                          "enum": [
+                            {
+                              "label": "200 OK",
+                              "value": "200"
+                            },
+                            {
+                              "label": "201 Created",
+                              "value": "201"
+                            },
+                            {
+                              "label": "202 Accepted",
+                              "value": "202"
+                            },
+                            {
+                              "label": "204 No Content",
+                              "value": "204"
+                            }
+                          ],
+                          "javaType": "String",
+                          "kind": "parameter",
+                          "order": 2,
+                          "required": true,
+                          "secret": false,
+                          "type": "select"
+                        },
+                        "returnBody": {
+                          "componentProperty": false,
+                          "deprecated": false,
+                          "displayName": "Include error message in the return body",
+                          "javaType": "Boolean",
+                          "kind": "parameter",
+                          "order": 4,
+                          "required": false,
+                          "secret": false,
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ],
+                  "standardizedErrors": [
+                    {
+                      "displayName": "ServerError",
+                      "name": "SERVER_ERROR"
+                    }
+                  ]
+                },
+                "id": "io.syndesis:webhook-incoming",
+                "metadata": {
+                  "serverBasePath": "/webhook"
+                },
+                "name": "Incoming Webhook",
+                "pattern": "From",
+                "tags": [
+                  "expose"
+                ]
+              },
+              "configuredProperties": {
+                "contextPath": "why-do-you-fail",
+                "errorResponseCodes": "{}",
+                "httpResponseCode": "200",
+                "returnBody": "true"
+              },
+              "connection": {
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Start an integration from a Webhook",
+                      "descriptor": {
+                        "componentScheme": "servlet",
+                        "configuredProperties": {
+                          "headerFilterStrategy": "syndesisHeaderStrategy",
+                          "httpMethodRestrict": "GET,POST"
+                        },
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+                        ],
+                        "exceptionHandler": "io.syndesis.connector.webhook.WebhookOnExceptionHandler",
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "any"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Webhook Configuration",
+                            "name": "configuration",
+                            "properties": {
+                              "contextPath": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "The Webhook token that will be set as final part of the URL",
+                                "displayName": "Webhook Token",
+                                "generator": "alphanum:50",
+                                "javaType": "String",
+                                "kind": "parameter",
+                                "order": 0,
+                                "required": true,
+                                "secret": false,
+                                "tags": [
+                                  "context-path"
+                                ],
+                                "type": "string"
+                              },
+                              "defaultResponse": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Default Response",
+                                "javaType": "String",
+                                "kind": "parameter",
+                                "order": 1,
+                                "required": false,
+                                "secret": false,
+                                "type": "legend"
+                              },
+                              "errorHandling": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Error Handling",
+                                "javaType": "String",
+                                "kind": "parameter",
+                                "order": 3,
+                                "required": false,
+                                "secret": false,
+                                "type": "legend"
+                              },
+                              "errorResponseCodes": {
+                                "componentProperty": false,
+                                "defaultValue": "{}",
+                                "deprecated": false,
+                                "description": "The return code to set according to different error situations",
+                                "displayName": "Error Response Codes",
+                                "extendedProperties": "{ \"mapsetValueDefinition\": {   \"enum\" : [{\"label\":\"400 Bad Request\",\"value\":\"400\"},{\"label\":\"404 Not Found\",\"value\":\"404\"},{\"label\":\"405 Method Not Allowed\",\"value\":\"405\"},{\"label\":\"409 Conflict\",\"value\":\"409\"},{\"label\":\"500 Server Error\",\"value\":\"500\"},{\"label\":\"501 Not Implemented\",\"value\":\"501\"},{\"label\":\"503 Service Unavailable\",\"value\":\"503\"}],    \"type\" : \"select\" },\"mapsetOptions\": {    \"i18nKeyColumnTitle\": \"When the error message is\",    \"i18nValueColumnTitle\": \"Return this HTTP response code\" }}",
+                                "javaType": "Map",
+                                "kind": "parameter",
+                                "order": 5,
+                                "required": false,
+                                "secret": false,
+                                "type": "mapset"
+                              },
+                              "httpResponseCode": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "The return code to set in the HTTP response",
+                                "displayName": "Return Code",
+                                "enum": [
+                                  {
+                                    "label": "200 OK",
+                                    "value": "200"
+                                  },
+                                  {
+                                    "label": "201 Created",
+                                    "value": "201"
+                                  },
+                                  {
+                                    "label": "202 Accepted",
+                                    "value": "202"
+                                  },
+                                  {
+                                    "label": "204 No Content",
+                                    "value": "204"
+                                  }
+                                ],
+                                "javaType": "String",
+                                "kind": "parameter",
+                                "order": 2,
+                                "required": true,
+                                "secret": false,
+                                "type": "select"
+                              },
+                              "returnBody": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Include error message in the return body",
+                                "javaType": "Boolean",
+                                "kind": "parameter",
+                                "order": 4,
+                                "required": false,
+                                "secret": false,
+                                "type": "boolean"
+                              }
+                            }
+                          }
+                        ],
+                        "standardizedErrors": [
+                          {
+                            "displayName": "ServerError",
+                            "name": "SERVER_ERROR"
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis:webhook-incoming",
+                      "metadata": {
+                        "serverBasePath": "/webhook"
+                      },
+                      "name": "Incoming Webhook",
+                      "pattern": "From",
+                      "tags": [
+                        "expose"
+                      ]
+                    }
+                  ],
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-webhook:2.0-SNAPSHOT",
+                      "type": "MAVEN"
+                    }
+                  ],
+                  "description": "Create direct connections with external systems through Webhooks",
+                  "icon": "assets:webhook.svg",
+                  "id": "webhook",
+                  "metadata": {
+                    "hide-from-connection-pages": "true"
+                  },
+                  "name": "Webhook",
+                  "version": 16
+                },
+                "connectorId": "webhook",
+                "description": "Create direct connections with external systems through Webhooks",
+                "icon": "assets:webhook.svg",
+                "id": "webhook",
+                "isDerived": false,
+                "metadata": {
+                  "hide-from-connection-pages": "true"
+                },
+                "name": "Webhook",
+                "uses": 0
+              },
+              "id": "-M4yE00lqo1w5KT5YvY7",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "any",
+                    "name": "All preceding outputs"
+                  },
+                  "outputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Template JSON Schema",
+                    "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"type\":\"object\",\"properties\":{\"stringa\":{\"description\":\"Identifier for the symbol stringa\",\"type\":\"string\"},\"stringb\":{\"description\":\"Identifier for the symbol stringb\",\"type\":\"string\"}}}"
+                  }
+                }
+              },
+              "configuredProperties": {
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4yE00lqo1w5KT5YvY7\",\"uri\":\"atlas:json:-M4yE00lqo1w5KT5YvY7\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4yEf-jqo1w5KT5YvY7\",\"uri\":\"atlas:json:-M4yEf-jqo1w5KT5YvY7\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.776601\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"anotherstring\",\"path\":\"/anotherstring\",\"fieldType\":\"STRING\",\"docId\":\"-M4yE00lqo1w5KT5YvY7\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"stringa\",\"path\":\"/stringa\",\"fieldType\":\"STRING\",\"docId\":\"-M4yEf-jqo1w5KT5YvY7\",\"userCreated\":false}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.171748\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"astring\",\"path\":\"/astring\",\"fieldType\":\"STRING\",\"docId\":\"-M4yE00lqo1w5KT5YvY7\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"stringb\",\"path\":\"/stringb\",\"fieldType\":\"STRING\",\"docId\":\"-M4yEf-jqo1w5KT5YvY7\",\"userCreated\":false}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+              },
+              "id": "-M4yEkUwqo1w5KT5YvY7",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Data Mapper",
+              "stepKind": "mapper"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Template JSON Schema",
+                    "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"type\":\"object\",\"properties\":{\"stringa\":{\"description\":\"Identifier for the symbol stringa\",\"type\":\"string\"},\"stringb\":{\"description\":\"Identifier for the symbol stringb\",\"type\":\"string\"}}}"
+                  },
+                  "outputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Template JSON Schema",
+                    "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"type\":\"object\",\"properties\":{\"message\":{\"description\":\"Identifier for the symbol message\",\"type\":\"string\"}}}"
+                  }
+                },
+                "id": "-M4yEf-iqo1w5KT5YvY7",
+                "name": "Template"
+              },
+              "configuredProperties": {
+                "language": "mustache",
+                "template": "Try to get {{stringa}} and {{stringb}}."
+              },
+              "id": "-M4yEf-jqo1w5KT5YvY7",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Template",
+              "stepKind": "template"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "any",
+                    "name": "All preceding outputs"
+                  },
+                  "outputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Template JSON Schema",
+                    "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"type\":\"object\",\"properties\":{\"fillme\":{\"description\":\"Identifier for the symbol fillme\",\"type\":\"string\"}}}"
+                  }
+                }
+              },
+              "configuredProperties": {
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4yE00lqo1w5KT5YvY7\",\"uri\":\"atlas:json:-M4yE00lqo1w5KT5YvY7\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4yEkUwqo1w5KT5YvY7\",\"uri\":\"atlas:json:-M4yEkUwqo1w5KT5YvY7\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4yEf-jqo1w5KT5YvY7\",\"uri\":\"atlas:json:-M4yEf-jqo1w5KT5YvY7\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4yEkU8qo1w5KT5YvY7\",\"uri\":\"atlas:json:-M4yEkU8qo1w5KT5YvY7\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.797244\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"anotherstring\",\"path\":\"/anotherstring\",\"fieldType\":\"STRING\",\"docId\":\"-M4yE00lqo1w5KT5YvY7\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"fillme\",\"path\":\"/fillme\",\"fieldType\":\"STRING\",\"docId\":\"-M4yEkU8qo1w5KT5YvY7\",\"userCreated\":false}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+              },
+              "id": "-M4yEme7qo1w5KT5YvY7",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Data Mapper",
+              "stepKind": "mapper"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Template JSON Schema",
+                    "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"type\":\"object\",\"properties\":{\"fillme\":{\"description\":\"Identifier for the symbol fillme\",\"type\":\"string\"}}}"
+                  },
+                  "outputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Template JSON Schema",
+                    "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"type\":\"object\",\"properties\":{\"message\":{\"description\":\"Identifier for the symbol message\",\"type\":\"string\"}}}"
+                  }
+                },
+                "id": "-M4yEkU7qo1w5KT5YvY7",
+                "name": "Template"
+              },
+              "configuredProperties": {
+                "language": "mustache",
+                "template": "Are you sure you can use previous strings?  {{fillme}}"
+              },
+              "id": "-M4yEkU8qo1w5KT5YvY7",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Template",
+              "stepKind": "template"
+            },
+            {
+              "configuredProperties": {
+                "bodyLoggingEnabled": "true",
+                "contextLoggingEnabled": "true"
+              },
+              "id": "-M4yE1J6qo1w5KT5YvY7",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Log",
+              "stepKind": "log"
+            }
+          ],
+          "tags": [
+            "timer",
+            "webhook"
+          ],
+          "type": "PRIMARY"
+        }
+      ],
+      "id": "i-M4yEs28lCY5ii3d0hYGz",
+      "name": "why-do-you-fail",
+      "tags": [
+        "webhook"
+      ],
+      "updatedAt": 0,
+      "version": 1
+    }
+  }
+}

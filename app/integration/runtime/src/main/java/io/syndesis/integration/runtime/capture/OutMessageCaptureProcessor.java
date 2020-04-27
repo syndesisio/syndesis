@@ -17,11 +17,11 @@ package io.syndesis.integration.runtime.capture;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
+import org.apache.camel.converter.stream.InputStreamCache;
 import org.apache.camel.support.MessageSupport;
 
 /**
@@ -42,6 +42,13 @@ public class OutMessageCaptureProcessor implements Processor {
             Map<String, Message> outMessagesMap = getCapturedMessageMap(exchange);
             if (copy instanceof MessageSupport && copy.getExchange() == null) {
                 ((MessageSupport) copy).setExchange(message.getExchange());
+            }
+
+            //If it is a stream cache, it can only be read once
+            //We are going to read it more than once
+            //to reuse variables from previous steps
+            if(copy.getBody() instanceof InputStreamCache) {
+                copy.setBody(copy.getBody(String.class));
             }
 
             outMessagesMap.put(id, copy);
