@@ -39,7 +39,7 @@
     <deploy.archives>false</deploy.archives>
 
     <!-- Atlasmap version -->
-    <atlasmap.version>1.44.0-M1</atlasmap.version>
+    <atlasmap.version>1.44.0-M2</atlasmap.version>
 
     <!-- Image names -->
     <image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
@@ -70,7 +70,7 @@
 
     <okhttp3.version>3.12.1</okhttp3.version>
 
-    <swagger.version>1.6.0</swagger.version>
+    <swagger.version>2.1.2</swagger.version>
     <swagger-maven-plugin.version>3.1.8</swagger-maven-plugin.version>
 
     <activemq.version>5.15.9</activemq.version>
@@ -94,7 +94,7 @@
 
     <!-- Global camel version used everywhere -->
     <camel.version>3.1.0</camel.version>
-    <camel-k-runtime.version>1.0.9</camel-k-runtime.version>
+    <camel-k-runtime.version>1.1.0</camel-k-runtime.version>
 
     <!-- CXF version, to be kept in sync with the one referenced by camel version above -->
     <cxf.version>3.3.5</cxf.version>
@@ -116,7 +116,7 @@
     -->
     <dep.pmd.version>6.17.0</dep.pmd.version>
     <!-- TODO: revisit when we upgrade basepom version -->
-    <dep.plugin.git-commit-id.version>3.0.1</dep.plugin.git-commit-id.version>
+    <dep.plugin.git-commit-id.version>4.0.0</dep.plugin.git-commit-id.version>
 
     <!-- UI dependencies -->
     <iltorb-version>2.4.1</iltorb-version>
@@ -130,7 +130,7 @@
     <json-schema-validator.version>2.2.10</json-schema-validator.version>
     <junit.version>4.13</junit.version>
     <junit5.version>5.6.0</junit5.version>
-    <powermock.version>2.0.4</powermock.version>
+    <powermock.version>2.0.7</powermock.version>
     <testcontainers.version>1.12.5</testcontainers.version>
     <citrus.version>3.0.0-M1</citrus.version>
     <mockito.version>2.19.0</mockito.version>
@@ -138,7 +138,7 @@
 
     <greenmail.version>1.5.11</greenmail.version>
 
-    <spring-security.version>5.3.0.RELEASE</spring-security.version>
+    <spring-security.version>5.3.1.RELEASE</spring-security.version>
     <resteasy.version>4.4.2.Final</resteasy.version>
     <resteasy-spring-boot-starter.version>4.4.0.Final</resteasy-spring-boot-starter.version>
 
@@ -994,6 +994,12 @@
                 </packages>
               </exception>
               <exception>
+                <!-- https://github.com/swagger-api/swagger-core/issues/3412 -->
+                <packages>
+                    <package>io.swagger.v3.jaxrs2.integration</package>
+                </packages>
+              </exception>
+              <exception>
                 <conflictingDependencies>
                   <dependency>
                     <groupId>org.immutables</groupId>
@@ -1087,9 +1093,9 @@
         </plugin>
 
         <plugin>
-          <groupId>com.github.kongchen</groupId>
+          <groupId>io.swagger.core.v3</groupId>
           <artifactId>swagger-maven-plugin</artifactId>
-          <version>${swagger-maven-plugin.version}</version>
+          <version>${swagger.version}</version>
         </plugin>
 
         <plugin>
@@ -2597,11 +2603,11 @@
       <dependency>
         <groupId>io.apicurio</groupId>
         <artifactId>apicurio-data-models</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.2</version>
       </dependency>
 
       <dependency>
-        <groupId>io.swagger</groupId>
+        <groupId>io.swagger.core.v3</groupId>
         <artifactId>swagger-core</artifactId>
         <version>${swagger.version}</version>
         <exclusions>
@@ -2609,30 +2615,28 @@
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
 
       <dependency>
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-parser</artifactId>
-        <version>1.0.34</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.swagger</groupId>
+        <groupId>io.swagger.core.v3</groupId>
         <artifactId>swagger-models</artifactId>
         <version>${swagger.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.swagger</groupId>
+        <groupId>io.swagger.core.v3</groupId>
         <artifactId>swagger-annotations</artifactId>
         <version>${swagger.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-jaxrs</artifactId>
+        <groupId>io.swagger.core.v3</groupId>
+        <artifactId>swagger-jaxrs2</artifactId>
         <version>${swagger.version}</version>
         <exclusions>
           <exclusion>
@@ -3406,63 +3410,5 @@
     <system>github</system>
     <url>https://github.com/syndesisio/syndesis.io/issues</url>
   </issueManagement>
-
-  <repositories>
-    <repository>
-      <id>asf-snapshots</id>
-      <name>ASF Snapshots</name>
-      <url>https://repository.apache.org/content/groups/snapshots/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </repository>
-    <repository>
-      <id>central</id>
-      <name>Maven Central</name>
-      <url>https://repo.maven.apache.org/maven2/</url>
-    </repository>
-    <repository>
-      <id>jboss-ea</id>
-      <name>JBoss Early Access</name>
-      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-    </repository>
-    <repository>
-      <id>redhat-ga</id>
-      <name>Red Hat General Availability Repository</name>
-      <url>https://maven.repository.redhat.com/ga/</url>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>asf-snapshots</id>
-      <name>ASF Snapshots</name>
-      <url>https://repository.apache.org/content/groups/snapshots/</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </pluginRepository>
-    <pluginRepository>
-      <id>central</id>
-      <name>Maven Central</name>
-      <url>https://repo.maven.apache.org/maven2/</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>jboss-ea</id>
-      <name>JBoss Early Access</name>
-      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>redhat-ga</id>
-      <name>Red Hat General Availability Repository</name>
-      <url>https://maven.repository.redhat.com/ga/</url>
-    </pluginRepository>
-  </pluginRepositories>
 
 </project>

@@ -5,6 +5,7 @@ Productized: false
 DevSupport: false
 Scheduled: true
 Syndesis:
+    SHA: false
     Addons:
         Jaeger:
             Enabled: false
@@ -17,41 +18,50 @@ Syndesis:
             Enabled: false
         Todo:
             Enabled: false
-            Image: "docker.io/centos/php-71-centos7"
+            Tag: "docker.io/centos/php-71-centos7"
+            SHA: "docker.io/centos/php-71-centos7@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9"
         Knative:
             Enabled: false
         DV:
             Enabled: false
-            Image: "docker.io/teiid/syndesis-dv:latest"
+            Tag: "docker.io/teiid/syndesis-dv:latest"
+            SHA: "docker.io/teiid/syndesis-dv@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9"
             Resources:
                 Memory: "1024Mi"
         CamelK:
             Enabled: false
-            Image: "fabric8/s2i-java:3.0-java8"
-            CamelVersion: "2.23.2.fuse-760024"
-            CamelKRuntime: "0.3.4.fuse-740008"
+            Tag: "fabric8/s2i-java:3.0-java8"
+            SHA: "fabric8/s2i-java:3.0-java8@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9"
+            CamelVersion: "3.1.0"
+            CamelKRuntime: "1.1.0"
         PublicApi:
             Enabled: true
             RouteHostname: "mypublichost.com"
     Components:
         Oauth:
-            Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0"
+            Tag: "quay.io/openshift/origin-oauth-proxy:v4.0.0"
+            SHA: "quay.io/openshift/origin-oauth-proxy@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9"
         UI:
-            Image: "docker.io/syndesis/syndesis-ui:latest"
+            Tag: "docker.io/syndesis/syndesis-ui:latest"
+            SHA: "docker.io/syndesis/syndesis-ui@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9"
         S2I:
-            Image: "docker.io/syndesis/syndesis-s2i:latest"
+            Tag: "docker.io/syndesis/syndesis-s2i:latest"
+            SHA: "docker.io/syndesis/syndesis-s2i@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9"
         Prometheus:
             Rules: ""
-            Image: "docker.io/prom/prometheus:v2.1.0"
+            Tag: "docker.io/prom/prometheus:v2.1.0"
+            SHA: "docker.io/prom/prometheus@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9"
             Resources:
                 Memory: "512Mi"
                 VolumeCapacity: "1Gi"
         Upgrade:
-            Image: "docker.io/syndesis/syndesis-upgrade:latest"
+            Tag: "docker.io/syndesis/syndesis-upgrade:latest"
+            SHA: "docker.io/syndesis/syndesis-upgrade@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9"
             Resources:
                 VolumeCapacity: "1Gi"
         Meta:
-            Image: "docker.io/syndesis/syndesis-meta:latest"
+            Tag: "docker.io/syndesis/syndesis-meta:latest"
+            SHA: "docker.io/syndesis/syndesis-meta@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9"
             Resources:
                 Memory: "512Mi"
                 VolumeCapacity: "1Gi"
@@ -59,15 +69,18 @@ Syndesis:
             Name: "syndesis"
             User: "syndesis"
             URL: "postgresql://syndesis-db:5432/syndesis?sslmode=disable"
-            Image: "postgresql:9.6"
+            Tag: "postgresql:9.6"
+            SHA: "postgresql@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9"
             Exporter:
-                Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"
+                Tag: "docker.io/wrouesnel/postgres_exporter:v0.4.7"
+                SHA: "docker.io/wrouesnel/postgres_exporter@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9"
             Resources:
                 Memory: "255Mi"
                 VolumeCapacity: "1Gi"
                 VolumeAccessMode: "ReadWriteOnce"
         Server:
-            Image: "docker.io/syndesis/syndesis-server:latest"
+            Tag: "docker.io/syndesis/syndesis-server:latest"
+            SHA: "docker.io/syndesis/syndesis-server@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9"
             Resources:
                 Memory: "800Mi"
             Features:
@@ -83,4 +96,5 @@ Syndesis:
                     repo-02-redhat-ga: "https://maven.repository.redhat.com/ga/"
                     repo-03-jboss-ea: "https://repository.jboss.org/nexus/content/groups/ea/"
         AMQ:
-            Image: "registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.3"
+            Tag: "registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.3"
+            SHA: "registry.access.redhat.com/jboss-amq-6/amq63-openshift@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9"

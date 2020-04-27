@@ -1,0 +1,36 @@
+// This assembly is included in this assembly:
+// assemblies/integrating-applications/as_creating-integrations.adoc
+
+:context: create
+[id='evaluating-integration-data-to-determine-execution-flow_{context}']
+= Evaluating integration data to determine the execution flow
+:context: condition
+
+In a flow, a *Conditional Flows* step evaluates integration data 
+against conditions that you specify. For each specified condition, 
+you add connections and other steps to the flow associated with 
+that condition. During execution, a *Conditional Flows* step 
+evaluates incoming data to determine which flow to execute. 
+
+The following topics provide details: 
+
+* xref:behavior-of-conditional-flows-step_{context}[]
+* xref:example-of-a-conditional-flows-step_{context}[]
+* xref:general-procedure-for-configuring-conditional-flows-step_{context}[]
+* xref:using-basic-expression-builder_{context}[]
+* xref:using-advanced-expression-builder_{context}[]
+* xref:adding-steps-to-conditional-flows_{context}[]
+
+include::../../modules/integrating-applications/con-behavior-of-conditional-flows-step.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/ref-example-of-a-conditional-flows-step.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/ref-general-procedure-for-configuring-conditional-flows-step.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/proc-using-basic-expression-builder.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/proc-using-advanced-expression-builder.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/proc-adding-steps-to-conditional-flows.adoc[leveloffset=+1]
+
+:context: create

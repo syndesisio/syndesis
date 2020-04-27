@@ -29,10 +29,10 @@ import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Path("/tags")
-@Api(value = "tags")
+@Tag(name = "tags")
 @Component
 public class TagHandler extends BaseHandler {
 

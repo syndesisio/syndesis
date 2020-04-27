@@ -15,14 +15,12 @@
  */
 package io.syndesis.common.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import io.syndesis.common.util.json.StringTrimmingConverter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public interface WithId<T extends WithId<T>> extends WithResourceId, WithKind {
 
-    @JsonDeserialize(contentConverter = StringTrimmingConverter.class)
     @Override
+    @JsonIgnore
     T withId(String id);
 
 }

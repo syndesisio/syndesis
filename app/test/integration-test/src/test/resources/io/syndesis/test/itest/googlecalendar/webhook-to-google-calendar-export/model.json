@@ -522,7 +522,7 @@
                 },
                 "dependencies": [
                     {
-                        "id": "io.syndesis.connector:connector-google-calendar:1.9-SNAPSHOT",
+                        "id": "io.syndesis.connector:connector-google-calendar:${project.version}",
                         "type": "MAVEN"
                     }
                 ],
@@ -757,7 +757,7 @@
                 ],
                 "dependencies": [
                     {
-                        "id": "io.syndesis.connector:connector-webhook:1.9-SNAPSHOT",
+                        "id": "io.syndesis.connector:connector-webhook:${project.version}",
                         "type": "MAVEN"
                     }
                 ],
@@ -1292,7 +1292,7 @@
             },
             "dependencies": [
                 {
-                    "id": "io.syndesis.connector:connector-google-calendar:1.9-SNAPSHOT",
+                    "id": "io.syndesis.connector:connector-google-calendar:${project.version}",
                     "type": "MAVEN"
                 }
             ],
@@ -1515,7 +1515,7 @@
             ],
             "dependencies": [
                 {
-                    "id": "io.syndesis.connector:connector-webhook:1.9-SNAPSHOT",
+                    "id": "io.syndesis.connector:connector-webhook:${project.version}",
                     "type": "MAVEN"
                 }
             ],
@@ -1655,7 +1655,7 @@
                                     ],
                                     "dependencies": [
                                         {
-                                            "id": "io.syndesis.connector:connector-webhook:1.9-SNAPSHOT",
+                                            "id": "io.syndesis.connector:connector-webhook:${project.version}",
                                             "type": "MAVEN"
                                         }
                                     ],
@@ -2396,7 +2396,7 @@
                                     },
                                     "dependencies": [
                                         {
-                                            "id": "io.syndesis.connector:connector-google-calendar:1.9-SNAPSHOT",
+                                            "id": "io.syndesis.connector:connector-google-calendar:${project.version}",
                                             "type": "MAVEN"
                                         }
                                     ],

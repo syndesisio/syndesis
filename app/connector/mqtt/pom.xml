@@ -28,17 +28,6 @@
   <name>Connector :: MQTT</name>
   <packaging>jar</packaging>
 
-  <repositories>
-    <repository>
-      <id>eclipse-paho</id>
-      <name>eclipse-paho</name>
-      <url>https://repo.eclipse.org/content/repositories/paho-releases</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
   <dependencies>
     <dependency>
       <groupId>org.springframework</groupId>

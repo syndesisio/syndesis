@@ -58,7 +58,7 @@
 {{if .DevSupport}}
           image: ' '
 {{else}}
-          image: '{{ .Syndesis.Components.UI.Image }}'
+          image: '{{ dockerImageFromComponent .Syndesis.Components.UI.Image .Syndesis.SHA }}'
 {{end}}
           env:
 # We need a config value to change to trigger a new deployment which switching the DevSupport flag.

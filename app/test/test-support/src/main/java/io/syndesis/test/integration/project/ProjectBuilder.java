@@ -28,11 +28,11 @@ import io.syndesis.test.integration.source.IntegrationSource;
 public interface ProjectBuilder {
 
     /**
-     * Builds the integration project sources and provides the path to that project dir.
+     * Builds the integration project sources.
      * @param integrationSource
      * @return
      */
-    Path build(IntegrationSource integrationSource);
+    Project build(IntegrationSource integrationSource);
 
     /**
      * @param source

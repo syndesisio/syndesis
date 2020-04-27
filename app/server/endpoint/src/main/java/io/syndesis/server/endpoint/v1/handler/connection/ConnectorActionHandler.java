@@ -19,7 +19,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -33,7 +33,7 @@ import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParam
 import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.util.PredicateFilter;
 
-@Api(value = "actions")
+@Tag(name = "actions")
 public class ConnectorActionHandler extends BaseHandler implements Lister<ConnectorAction>, Getter<ConnectorAction> {
 
     private final String connectorId;

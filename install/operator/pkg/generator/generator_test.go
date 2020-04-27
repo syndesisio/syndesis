@@ -2,6 +2,7 @@ package generator_test
 
 import (
 	"context"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -118,6 +119,108 @@ func TestGenerator(t *testing.T) {
 	assert.True(t, checks >= 1)
 }
 
+func TestDockerImagesSHAorTag(t *testing.T) {
+	type args struct {
+		sha                bool
+		imageableResources map[string]string
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		{
+			name: "Check image when using tag",
+			args: args{
+				sha: false,
+				imageableResources: map[string]string{
+					"syndesis-server":     "docker.io/syndesis/syndesis-server:latest",
+					"syndesis-meta":       "docker.io/syndesis/syndesis-meta:latest",
+					"syndesis-ui":         "docker.io/syndesis/syndesis-ui:latest",
+					"syndesis-oauthproxy": "quay.io/openshift/origin-oauth-proxy:v4.0.0",
+					"syndesis-prometheus": "docker.io/prom/prometheus:v2.1.0",
+					"syndesis-dv":         "docker.io/teiid/syndesis-dv:latest",
+				},
+			},
+		},
+		{
+			name: "Check image when using sha",
+			args: args{
+				sha: true,
+				imageableResources: map[string]string{
+					"syndesis-server":     "docker.io/syndesis/syndesis-server@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					"syndesis-meta":       "docker.io/syndesis/syndesis-meta@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					"syndesis-ui":         "docker.io/syndesis/syndesis-ui@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					"syndesis-oauthproxy": "quay.io/openshift/origin-oauth-proxy@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					"syndesis-prometheus": "docker.io/prom/prometheus@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					"syndesis-dv":         "docker.io/teiid/syndesis-dv@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			conf, err := configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), nil, &v1beta1.Syndesis{})
+			require.NoError(t, err)
+
+			conf.Syndesis.SHA = tt.args.sha
+
+			// Check image tag for ./infrastructure
+			resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure/", conf)
+			require.NoError(t, err)
+			assert.True(t, len(resources) > 0)
+
+			addons := configuration.GetAddons(*conf)
+			for _, addon := range addons {
+				addonDir := "./addons/" + addon.Name + "/"
+
+				a, err := generator.RenderDir(addonDir, conf)
+				assert.NoError(t, err)
+
+				resources = append(resources, a...)
+			}
+
+			checks := 0
+			for _, resource := range resources {
+				if image, ok := tt.args.imageableResources[resource.GetName()]; ok {
+					container := sliceProperty(resource, "spec", "template", "spec", "containers")
+					if container != nil {
+						assert.Equal(t, container["image"], image)
+						checks = checks + 1
+					}
+				}
+			}
+			assert.True(t, checks == len(tt.args.imageableResources), "checks missing", "got", checks, "want", len(tt.args.imageableResources))
+		})
+	}
+}
+
+// Run test related with Ops addon
+func TestOpsAddon(t *testing.T) {
+	syndesis := &v1beta1.Syndesis{}
+	baseDir := "./addons/ops/"
+
+	conf, err := configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), nil, syndesis)
+	if err != nil {
+
+	}
+	for _, file := range []string{"addon-ops-db-alerting-rules.yml", "addon-ops-db-dashboard.yml"} {
+		resources, err := generator.Render(filepath.Join(baseDir, file), conf)
+		require.NoError(t, err)
+		assert.True(t, len(resources) != 0, "Monitoring resources for database should be created when no external db url is defined")
+	}
+
+	syndesis.Spec.Components.Database.ExternalDbURL = "1234"
+	conf, err = configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), nil, syndesis)
+	if err != nil {
+
+	}
+	for _, file := range []string{"addon-ops-db-alerting-rules.yml", "addon-ops-db-dashboard.yml"} {
+		resources, err := generator.Render(filepath.Join(baseDir, file), conf)
+		require.NoError(t, err)
+		assert.True(t, len(resources) == 0, "Monitoring resources for database should not be created when there is a external db url defined")
+	}
+}
+
 //
 // Checks syndesis-meta resources have had syndesis
 // object values correctly applied
@@ -229,19 +332,6 @@ func checkSynOAuthProxy(t *testing.T, resource unstructured.Unstructured, syndes
 	return 1
 }
 
-func assertNameValueMap(t *testing.T, m map[string]interface{}, name string, expected interface{}) int {
-	field, ok := m["name"]
-	if !ok || field != name {
-		// Not found the correct map yet
-		return 0
-	}
-
-	field, ok = m["value"]
-	assert.True(t, ok, "Should be a value field mapped")
-	assert.Equal(t, expected, field, "rendering should be applied correctly")
-	return 1
-}
-
 func sliceProperty(resource unstructured.Unstructured, resourcePath ...string) map[string]interface{} {
 	v, exists, _ := unstructured.NestedSlice(resource.UnstructuredContent(), resourcePath...)
 	if !exists {
@@ -261,13 +351,6 @@ func sliceProperty(resource unstructured.Unstructured, resourcePath ...string) m
 
 func assertResourcePropertyStr(t *testing.T, resource unstructured.Unstructured, expected string, resourcePath ...string) {
 	assertPropStr(t, resource.UnstructuredContent(), expected, resourcePath...)
-}
-
-func assertPropertyBool(t *testing.T, resource map[string]interface{}, expected bool, resourcePath ...string) {
-	value, exists, _ := unstructured.NestedBool(resource, resourcePath...)
-	if exists {
-		assert.Equal(t, expected, value, "rendering should be applied correctly")
-	}
 }
 
 func assertPropStr(t *testing.T, resource map[string]interface{}, expected string, resourcePath ...string) {

@@ -1,7 +1,5 @@
 // tslint:disable:no-console
 import {
-  Card,
-  CardBody,
   Radio,
   Split,
   SplitItem,
@@ -146,128 +144,124 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
     }
   };
   return (
-    <Card className={'open-api-review-actions'}>
-      <CardBody>
-        <Stack>
+    <Stack>
+      <StackItem>
+        <Split onClick={() => onSelectMethod(FILE)}>
+          <SplitItem>
+            <Radio
+              aria-label={'From File'}
+              id={'method-file'}
+              data-testid={'method-file'}
+              name={'method'}
+              onClick={() => onSelectMethod(FILE)}
+              isChecked={method === FILE}
+              readOnly={true}
+            />
+          </SplitItem>
+          <SplitItem>
+            <div>{i18nMethodFromFile}</div>
+            <div className="open-api-select-method__dnd-container">
+              <DndFileChooser
+                allowMultiple={false}
+                disableDropzone={disableDropzone || method !== FILE}
+                fileExtensions={fileExtensions}
+                i18nHelpMessage={i18nHelpMessage}
+                i18nInstructions={i18nInstructions}
+                i18nNoFileSelectedMessage={i18nNoFileSelectedMessage}
+                i18nSelectedFileLabel={i18nSelectedFileLabel}
+                i18nUploadFailedMessage={uploadFailedMessage}
+                i18nUploadSuccessMessage={uploadSuccessMessage}
+                onUploadAccepted={onUploadAccepted}
+                onUploadRejected={onUploadRejected}
+              />
+            </div>
+          </SplitItem>
+        </Split>
+      </StackItem>
+      <StackItem>
+        <Split onClick={() => onSelectMethod(URL)}>
+          <SplitItem>
+            <Radio
+              aria-label={'from url radio'}
+              id={'method-url'}
+              data-testid={'method-url'}
+              name={'method'}
+              label={<></>}
+              isChecked={method === URL}
+              onClick={() => onSelectMethod(URL)}
+              readOnly={true}
+            />
+          </SplitItem>
+          <SplitItem>
+            <div>{i18nMethodFromUrl}</div>
+            <div className={'open-api-select-method__url-container'}>
+              <TextInput
+                aria-label={'method url text input'}
+                id={'method-url-text-input'}
+                data-testid={'method-url-text-input'}
+                type={'text'}
+                isDisabled={method !== URL}
+                value={url}
+                onChange={(val, evt) => onAddUrlSpecification(evt)}
+              />
+              <br />
+              <span className={'url-note'}>{i18nUrlNote}</span>
+            </div>
+          </SplitItem>
+        </Split>
+      </StackItem>
+      {allowFromScratch && (
+        <>
           <StackItem>
-            <Split onClick={() => onSelectMethod(FILE)}>
+            <Split onClick={() => onSelectMethod(SCRATCH_3X)}>
               <SplitItem>
                 <Radio
-                  aria-label={'From File'}
-                  id={'method-file'}
-                  data-testid={'method-file'}
+                  aria-label={'from scratch 3.x radio'}
+                  id={'method-scratch-3x'}
+                  data-testid={'method-scratch-3x'}
                   name={'method'}
-                  onClick={() => onSelectMethod(FILE)}
-                  isChecked={method === FILE}
+                  isChecked={method === SCRATCH_3X}
+                  onClick={() => onSelectMethod(SCRATCH_3X)}
                   readOnly={true}
                 />
               </SplitItem>
               <SplitItem>
-                <div>{i18nMethodFromFile}</div>
-                <div className="open-api-select-method__dnd-container">
-                  <DndFileChooser
-                    allowMultiple={false}
-                    disableDropzone={disableDropzone || method !== FILE}
-                    fileExtensions={fileExtensions}
-                    i18nHelpMessage={i18nHelpMessage}
-                    i18nInstructions={i18nInstructions}
-                    i18nNoFileSelectedMessage={i18nNoFileSelectedMessage}
-                    i18nSelectedFileLabel={i18nSelectedFileLabel}
-                    i18nUploadFailedMessage={uploadFailedMessage}
-                    i18nUploadSuccessMessage={uploadSuccessMessage}
-                    onUploadAccepted={onUploadAccepted}
-                    onUploadRejected={onUploadRejected}
-                  />
-                </div>
+                <div>{i18nMethodFromScratch3x}</div>
               </SplitItem>
             </Split>
           </StackItem>
-          <StackItem>
-            <Split onClick={() => onSelectMethod(URL)}>
-              <SplitItem>
-                <Radio
-                  aria-label={'from url radio'}
-                  id={'method-url'}
-                  data-testid={'method-url'}
-                  name={'method'}
-                  label={<></>}
-                  isChecked={method === URL}
-                  onClick={() => onSelectMethod(URL)}
-                  readOnly={true}
-                />
-              </SplitItem>
-              <SplitItem>
-                <div>{i18nMethodFromUrl}</div>
-                <div className={'open-api-select-method__url-container'}>
-                  <TextInput
-                    aria-label={'method url text input'}
-                    id={'method-url-text-input'}
-                    data-testid={'method-url-text-input'}
-                    type={'text'}
-                    isDisabled={method !== URL}
-                    value={url}
-                    onChange={(val, evt) => onAddUrlSpecification(evt)}
-                  />
-                  <br />
-                  <span className={'url-note'}>{i18nUrlNote}</span>
-                </div>
-              </SplitItem>
-            </Split>
-          </StackItem>
-          {allowFromScratch && (
-            <>
-              <StackItem>
-                <Split onClick={() => onSelectMethod(SCRATCH_3X)}>
-                  <SplitItem>
-                    <Radio
-                      aria-label={'from scratch 3.x radio'}
-                      id={'method-scratch-3x'}
-                      data-testid={'method-scratch-3x'}
-                      name={'method'}
-                      isChecked={method === SCRATCH_3X}
-                      onClick={() => onSelectMethod(SCRATCH_3X)}
-                      readOnly={true}
-                    />
-                  </SplitItem>
-                  <SplitItem>
-                    <div>{i18nMethodFromScratch3x}</div>
-                  </SplitItem>
-                </Split>
-              </StackItem>
 
-              <StackItem>
-                <Split onClick={() => onSelectMethod(SCRATCH_3X)}>
-                  <SplitItem>
-                    <Radio
-                      aria-label={'from scratch 2.x radio'}
-                      id={'method-scratch-2x'}
-                      data-testid={'method-scratch-2x'}
-                      name={'method'}
-                      isChecked={method === SCRATCH_2X}
-                      onClick={() => onSelectMethod(SCRATCH_2X)}
-                      readOnly={true}
-                    />
-                  </SplitItem>
-                  <SplitItem>
-                    <div>{i18nMethodFromScratch2x}</div>
-                  </SplitItem>
-                </Split>
-              </StackItem>
-            </>
-          )}
           <StackItem>
-            <ButtonLink
-              id={'button-next'}
-              data-testid={'button-next'}
-              disabled={!valid}
-              as={'primary'}
-              onClick={handleClickNext}
-            >
-              {i18nBtnNext}
-            </ButtonLink>
+            <Split onClick={() => onSelectMethod(SCRATCH_3X)}>
+              <SplitItem>
+                <Radio
+                  aria-label={'from scratch 2.x radio'}
+                  id={'method-scratch-2x'}
+                  data-testid={'method-scratch-2x'}
+                  name={'method'}
+                  isChecked={method === SCRATCH_2X}
+                  onClick={() => onSelectMethod(SCRATCH_2X)}
+                  readOnly={true}
+                />
+              </SplitItem>
+              <SplitItem>
+                <div>{i18nMethodFromScratch2x}</div>
+              </SplitItem>
+            </Split>
           </StackItem>
-        </Stack>
-      </CardBody>
-    </Card>
+        </>
+      )}
+      <StackItem>
+        <ButtonLink
+          id={'button-next'}
+          data-testid={'button-next'}
+          disabled={!valid}
+          as={'primary'}
+          onClick={handleClickNext}
+        >
+          {i18nBtnNext}
+        </ButtonLink>
+      </StackItem>
+    </Stack>
   );
 };

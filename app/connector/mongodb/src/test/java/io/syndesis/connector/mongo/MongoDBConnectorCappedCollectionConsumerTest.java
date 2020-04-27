@@ -18,6 +18,7 @@ package io.syndesis.connector.mongo;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -30,28 +31,21 @@ import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnectorTestSupport {
 
-    private final static Logger LOG = LoggerFactory.getLogger(MongoDBConnectorCappedCollectionConsumerTest.class);
     private final static String COLLECTION = "cappedCollection";
-    private static int globalId = 0;
 
     protected MongoCollection<Document> collection;
-
     @Autowired
     private MongoDatabase database;
 
-    // JUnit will execute this method after the @BeforeClass of the superclass
     @BeforeClass
     public static void doCollectionSetup() {
         // The feature only works with capped collections!
         CreateCollectionOptions opts = new CreateCollectionOptions().capped(true).sizeInBytes(1024 * 1024);
         EmbedMongoConfiguration.getDB().createCollection(COLLECTION, opts);
-        LOG.debug("Created a capped collection named {}", COLLECTION);
     }
     @Override
     protected List<Step> createSteps() {
@@ -59,43 +53,44 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
             "id");
     }
 
+    @Test
     public void mongoTest() throws Exception {
-        // When
-        String unique = UUID.randomUUID().toString();
-        int id = globalId++;
+        collection = database.getCollection(COLLECTION);
+
+        String unique1 = UUID.randomUUID().toString();
+        int id1 = 1;
+        String unique2 = UUID.randomUUID().toString();
+        int id2 = 2;
         MockEndpoint mock = getMockEndpoint("mock:result");
-        // We just retain last message
-        mock.setRetainLast(1);
-        mock.expectedMessageCount(1);
-        mock.expectedMessagesMatches((Exchange e) -> {
-            try {
-                @SuppressWarnings("unchecked")
-                List<String> doc = e.getMessage().getBody(List.class);
-                JsonNode jsonNode = MAPPER.readTree(doc.get(0));
-                Assertions.assertThat(jsonNode.get("unique").asText()).isEqualTo(unique);
-                Assertions.assertThat(jsonNode.get("id").asInt()).isEqualTo(id);
-                return true;
-            } catch (IOException ex) {
-                return false;
-            }
-        });
-        // Given
-        Document doc = new Document();
-        doc.append("id", id);
-        doc.append("unique", unique);
-        collection.insertOne(doc);
-        // Then
+        mock.expectedMessageCount(2);
+        mock.expectedMessagesMatches(
+            exchange -> validateDocument(exchange, unique1, id1),
+            exchange -> validateDocument(exchange, unique2, id2)
+        );
+
+        Document doc1 = new Document();
+        doc1.append("id", id1);
+        doc1.append("unique", unique1);
+        collection.insertOne(doc1);
+        Document doc2 = new Document();
+        doc2.append("id", id2);
+        doc2.append("unique", unique2);
+        collection.insertOne(doc2);
+
         mock.assertIsSatisfied();
     }
 
-    @Test
-    public void repeatedMongoTest() throws Exception {
-        LOG.debug("Created a capped collection named {}", COLLECTION);
-        collection = database.getCollection(COLLECTION);
-
-        mongoTest();
-        // As we are tracking id, any new insert should trigger the new document only
-        mongoTest();
+    private static boolean validateDocument(Exchange e, String unique, int id) {
+        try {
+            @SuppressWarnings("unchecked")
+            List<String> doc = e.getMessage().getBody(List.class);
+            JsonNode jsonNode = MAPPER.readTree(doc.get(0));
+            Assertions.assertThat(jsonNode.get("unique").asText()).isEqualTo(unique);
+            Assertions.assertThat(jsonNode.get("id").asInt()).isEqualTo(id);
+        } catch (IOException ex) {
+            return false;
+        }
+        return true;
     }
 
 }

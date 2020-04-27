@@ -15,7 +15,7 @@
  */
 package io.syndesis.server.endpoint.v1.handler.support;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import org.apache.commons.io.FileUtils;
@@ -42,7 +42,7 @@ import java.util.Map;
 
 
 @Path("/support")
-@Api(value = "support")
+@Tag(name = "support")
 @Component
 @ConditionalOnBean(SupportUtil.class)
 public class SupportHandler extends BaseHandler {

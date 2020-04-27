@@ -29,7 +29,7 @@
   <properties>
     <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
     <camel.version>3.1.0</camel.version>
-    <atlasmap.version>1.44.0-M1</atlasmap.version>
+    <atlasmap.version>1.44.0-M2</atlasmap.version>
     <jackson.databind.version>2.9.10.3</jackson.databind.version>
     <mongodb.version>3.9.0</mongodb.version>
   </properties>
@@ -80,46 +80,6 @@
     <system>github</system>
     <url>https://github.com/syndesisio/syndesis.io/issues</url>
   </issueManagement>
-
-  <repositories>
-    <repository>
-      <id>central</id>
-      <name>Maven Central</name>
-      <url>https://repo.maven.apache.org/maven2/</url>
-    </repository>
-    <repository>
-      <id>jboss-ea</id>
-      <name>JBoss Early Access</name>
-      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-    </repository>
-    <repository>
-      <id>redhat-ga</id>
-      <name>Red Hat General Availability Repository</name>
-      <url>https://maven.repository.redhat.com/ga/</url>
-    </repository>
-    <repository>
-      <id>atlassian-public</id>
-      <url>https://packages.atlassian.com/maven-external</url>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>central</id>
-      <name>Maven Central</name>
-      <url>https://repo.maven.apache.org/maven2/</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>jboss-ea</id>
-      <name>JBoss Early Access</name>
-      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>redhat-ga</id>
-      <name>Red Hat General Availability Repository</name>
-      <url>https://maven.repository.redhat.com/ga/</url>
-    </pluginRepository>
-  </pluginRepositories>
 
   <dependencyManagement>
     <dependencies>

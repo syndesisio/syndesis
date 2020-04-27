@@ -23,10 +23,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"path/filepath"
 	"reflect"
 	"sort"
 	"strings"
 	"text/template"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 
 	"github.com/pkg/errors"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -76,7 +79,16 @@ var templateFunctions = template.FuncMap{
 			return false, nil
 		}
 	},
-	"tagOf": util.TagOf,
+	"tagOf": func(image string) string {
+		splits := strings.Split(image, ":")
+		if len(splits) == 1 {
+			return "latest"
+		}
+		return splits[len(splits)-1]
+	},
+	"dockerImageFromComponent": func(i configuration.Imageable, sha bool) (image string) {
+		return i.Get(sha)
+	},
 }
 
 func RenderFSDir(assets http.FileSystem, directory string, context interface{}) ([]unstructured.Unstructured, error) {
@@ -120,14 +132,16 @@ func Render(filePath string, context interface{}) ([]unstructured.Unstructured, 
 
 	// We can load plain yml files..
 	if strings.HasSuffix(filePath, ".yml") || strings.HasSuffix(filePath, ".yaml") {
-		fileData, err := AssetAsBytes(filePath)
-		if err != nil {
-			return nil, err
-		}
+		if !skipFile(filePath, context) {
+			fileData, err := AssetAsBytes(filePath)
+			if err != nil {
+				return nil, err
+			}
 
-		err = util.UnmarshalYaml(fileData, &obj)
-		if err != nil {
-			return nil, errors.Errorf("%s:\n%s\n", err, string(fileData))
+			err = util.UnmarshalYaml(fileData, &obj)
+			if err != nil {
+				return nil, errors.Errorf("%s:\n%s\n", err, string(fileData))
+			}
 		}
 	}
 
@@ -179,4 +193,19 @@ func Render(filePath string, context interface{}) ([]unstructured.Unstructured, 
 	}
 
 	return response, nil
+}
+
+// Skip file if conditions are met
+func skipFile(file string, config interface{}) bool {
+	if x, ok := config.(*configuration.Config); ok {
+		if x.Syndesis.Components.Database.ExternalDbURL != "" {
+			for _, wfile := range []string{"addon-ops-db-alerting-rules.yml", "addon-ops-db-dashboard.yml"} {
+				if wfile == filepath.Base(file) {
+					return true
+				}
+			}
+		}
+	}
+
+	return false
 }

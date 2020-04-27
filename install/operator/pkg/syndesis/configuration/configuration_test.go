@@ -92,21 +92,21 @@ func Test_setConfigFromEnv(t *testing.T) {
 					Addons: AddonsSpec{
 						DV: DvConfiguration{
 							Enabled: true,
-							Image:   "DV_IMAGE",
+							Image:   Image{Tag: "DV_IMAGE"},
 						},
-						CamelK: CamelKConfiguration{Image: "CAMELK_IMAGE"},
-						Todo:   TodoConfiguration{Image: "TODO_IMAGE"},
+						CamelK: CamelKConfiguration{Image: Image{Tag: "CAMELK_IMAGE"}},
+						Todo:   TodoConfiguration{Image: Image{Tag: "TODO_IMAGE"}},
 					},
 					Components: ComponentsSpec{
-						Oauth:      OauthConfiguration{Image: "OAUTH_IMAGE"},
-						UI:         UIConfiguration{Image: "UI_IMAGE"},
-						S2I:        S2IConfiguration{Image: "S2I_IMAGE"},
-						Prometheus: PrometheusConfiguration{Image: "PROMETHEUS_IMAGE"},
-						Upgrade:    UpgradeConfiguration{Image: "UPGRADE_IMAGE"},
-						Meta:       MetaConfiguration{Image: "META_IMAGE"},
+						Oauth:      OauthConfiguration{Image: Image{Tag: "OAUTH_IMAGE"}},
+						UI:         UIConfiguration{Image: Image{Tag: "UI_IMAGE"}},
+						S2I:        S2IConfiguration{Image: Image{Tag: "S2I_IMAGE"}},
+						Prometheus: PrometheusConfiguration{Image: Image{Tag: "PROMETHEUS_IMAGE"}},
+						Upgrade:    UpgradeConfiguration{Image: Image{Tag: "UPGRADE_IMAGE"}},
+						Meta:       MetaConfiguration{Image: Image{Tag: "META_IMAGE"}},
 						Database: DatabaseConfiguration{
-							Image:    "DATABASE_IMAGE",
-							Exporter: ExporterConfiguration{Image: "PSQL_EXPORTER_IMAGE"},
+							Image:    Image{Tag: "DATABASE_IMAGE"},
+							Exporter: ExporterConfiguration{Image: Image{Tag: "PSQL_EXPORTER_IMAGE"}},
 							Resources: ResourcesWithPersistentVolume{
 								VolumeAccessMode:   "ReadWriteOnce",
 								VolumeStorageClass: "nfs-storage-class1",
@@ -114,12 +114,12 @@ func Test_setConfigFromEnv(t *testing.T) {
 							},
 						},
 						Server: ServerConfiguration{
-							Image: "SERVER_IMAGE",
+							Image: Image{Tag: "SERVER_IMAGE"},
 							Features: ServerFeatures{
 								TestSupport: false,
 							},
 						},
-						AMQ: AMQConfiguration{Image: "AMQ_IMAGE"},
+						AMQ: AMQConfiguration{Image: Image{Tag: "AMQ_IMAGE"}},
 					},
 				},
 			},
@@ -132,25 +132,25 @@ func Test_setConfigFromEnv(t *testing.T) {
 					Addons: AddonsSpec{
 						DV: DvConfiguration{
 							Enabled: true,
-							Image:   "docker.io/teiid/syndesis-dv:latest",
+							Image:   Image{Tag: "docker.io/teiid/syndesis-dv:latest"},
 						},
 					},
 					Components: ComponentsSpec{
-						Oauth:      OauthConfiguration{Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0"},
-						UI:         UIConfiguration{Image: "docker.io/syndesis/syndesis-ui:latest"},
-						S2I:        S2IConfiguration{Image: "docker.io/syndesis/syndesis-s2i:latest"},
-						Prometheus: PrometheusConfiguration{Image: "docker.io/prom/prometheus:v2.1.0"},
-						Upgrade:    UpgradeConfiguration{Image: "docker.io/syndesis/syndesis-upgrade:latest"},
-						Meta:       MetaConfiguration{Image: "docker.io/syndesis/syndesis-meta:latest"},
+						Oauth:      OauthConfiguration{Image: Image{Tag: "quay.io/openshift/origin-oauth-proxy:v4.0.0"}},
+						UI:         UIConfiguration{Image: Image{Tag: "docker.io/syndesis/syndesis-ui:latest"}},
+						S2I:        S2IConfiguration{Image: Image{Tag: "docker.io/syndesis/syndesis-s2i:latest"}},
+						Prometheus: PrometheusConfiguration{Image: Image{Tag: "docker.io/prom/prometheus:v2.1.0"}},
+						Upgrade:    UpgradeConfiguration{Image: Image{Tag: "docker.io/syndesis/syndesis-upgrade:latest"}},
+						Meta:       MetaConfiguration{Image: Image{Tag: "docker.io/syndesis/syndesis-meta:latest"}},
 						Database: DatabaseConfiguration{
-							Exporter: ExporterConfiguration{Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"},
+							Exporter: ExporterConfiguration{Image: Image{Tag: "docker.io/wrouesnel/postgres_exporter:v0.4.7"}},
 							Resources: ResourcesWithPersistentVolume{
 								VolumeAccessMode:   "ReadWriteMany",
 								VolumeStorageClass: "nfs-storage-class",
 								VolumeName:         "nfs0001",
 							},
 						},
-						Server: ServerConfiguration{Image: "docker.io/syndesis/syndesis-server:latest"},
+						Server: ServerConfiguration{Image: Image{Tag: "docker.io/syndesis/syndesis-server:latest"}},
 					},
 				},
 			},
@@ -251,19 +251,28 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 						Ops: AddonConfiguration{Enabled: false},
 						Todo: TodoConfiguration{
 							Enabled: true,
-							Image:   "docker.io/centos/php-71-centos7",
+							Image: Image{
+								Tag: "docker.io/centos/php-71-centos7",
+								SHA: "docker.io/centos/php-71-centos7@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+							},
 						},
 						Knative: AddonConfiguration{Enabled: false},
 						DV: DvConfiguration{
 							Enabled:   true,
 							Resources: Resources{Memory: "1024Mi"},
-							Image:     "docker.io/teiid/syndesis-dv:latest",
+							Image: Image{
+								Tag: "docker.io/teiid/syndesis-dv:latest",
+								SHA: "docker.io/teiid/syndesis-dv@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+							},
 						},
 						CamelK: CamelKConfiguration{
-							Enabled:       true,
-							Image:         "fabric8/s2i-java:3.0-java8",
-							CamelVersion:  "2.23.2.fuse-760024",
-							CamelKRuntime: "0.3.4.fuse-740008",
+							Enabled: true,
+							Image: Image{
+								Tag: "fabric8/s2i-java:3.0-java8",
+								SHA: "fabric8/s2i-java:3.0-java8@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+							},
+							CamelVersion:  "3.1.0",
+							CamelKRuntime: "1.1.0",
 						},
 						PublicApi: PublicApiConfiguration{
 							Enabled:       true,
@@ -354,6 +363,7 @@ func getConfigLiteral() *Config {
 		OpenShiftConsoleUrl:        "",
 		Syndesis: SyndesisConfig{
 			RouteHostname: "",
+			SHA:           false,
 			Addons: AddonsSpec{
 				Jaeger: JaegerConfiguration{
 					Enabled:       false,
@@ -366,18 +376,27 @@ func getConfigLiteral() *Config {
 				Ops: AddonConfiguration{Enabled: false},
 				Todo: TodoConfiguration{
 					Enabled: false,
-					Image:   "docker.io/centos/php-71-centos7",
+					Image: Image{
+						Tag: "docker.io/centos/php-71-centos7",
+						SHA: "docker.io/centos/php-71-centos7@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					},
 				},
 				DV: DvConfiguration{
-					Enabled:   false,
-					Image:     "docker.io/teiid/syndesis-dv:latest",
+					Enabled: false,
+					Image: Image{
+						Tag: "docker.io/teiid/syndesis-dv:latest",
+						SHA: "docker.io/teiid/syndesis-dv@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					},
 					Resources: Resources{Memory: "1024Mi"},
 				},
 				CamelK: CamelKConfiguration{
 					Enabled:       false,
-					CamelVersion:  "2.23.2.fuse-760024",
-					CamelKRuntime: "0.3.4.fuse-740008",
-					Image:         "fabric8/s2i-java:3.0-java8",
+					CamelVersion:  "3.1.0",
+					CamelKRuntime: "1.1.0",
+					Image: Image{
+						Tag: "fabric8/s2i-java:3.0-java8",
+						SHA: "fabric8/s2i-java:3.0-java8@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					},
 				},
 				PublicApi: PublicApiConfiguration{
 					Enabled:       true,
@@ -385,11 +404,29 @@ func getConfigLiteral() *Config {
 				},
 			},
 			Components: ComponentsSpec{
-				Oauth: OauthConfiguration{Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0"},
-				UI:    UIConfiguration{Image: "docker.io/syndesis/syndesis-ui:latest"},
-				S2I:   S2IConfiguration{Image: "docker.io/syndesis/syndesis-s2i:latest"},
+				Oauth: OauthConfiguration{
+					Image: Image{
+						Tag: "quay.io/openshift/origin-oauth-proxy:v4.0.0",
+						SHA: "quay.io/openshift/origin-oauth-proxy@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					},
+				},
+				UI: UIConfiguration{
+					Image: Image{
+						Tag: "docker.io/syndesis/syndesis-ui:latest",
+						SHA: "docker.io/syndesis/syndesis-ui@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					},
+				},
+				S2I: S2IConfiguration{
+					Image: Image{
+						Tag: "docker.io/syndesis/syndesis-s2i:latest",
+						SHA: "docker.io/syndesis/syndesis-s2i@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					},
+				},
 				Server: ServerConfiguration{
-					Image:     "docker.io/syndesis/syndesis-server:latest",
+					Image: Image{
+						Tag: "docker.io/syndesis/syndesis-server:latest",
+						SHA: "docker.io/syndesis/syndesis-server@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					},
 					Resources: Resources{Memory: "800Mi"},
 					Features: ServerFeatures{
 						IntegrationLimit:              0,
@@ -405,18 +442,29 @@ func getConfigLiteral() *Config {
 					},
 				},
 				Meta: MetaConfiguration{
-					Image: "docker.io/syndesis/syndesis-meta:latest",
+					Image: Image{
+						Tag: "docker.io/syndesis/syndesis-meta:latest",
+						SHA: "docker.io/syndesis/syndesis-meta@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					},
 					Resources: ResourcesWithVolume{
 						Memory:         "512Mi",
 						VolumeCapacity: "1Gi",
 					},
 				},
 				Database: DatabaseConfiguration{
-					Image:    "postgresql:9.6",
-					User:     "syndesis",
-					Name:     "syndesis",
-					URL:      "postgresql://syndesis-db:5432/syndesis?sslmode=disable",
-					Exporter: ExporterConfiguration{Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"},
+					Image: Image{
+						Tag: "postgresql:9.6",
+						SHA: "postgresql@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					},
+					User: "syndesis",
+					Name: "syndesis",
+					URL:  "postgresql://syndesis-db:5432/syndesis?sslmode=disable",
+					Exporter: ExporterConfiguration{
+						Image: Image{
+							Tag: "docker.io/wrouesnel/postgres_exporter:v0.4.7",
+							SHA: "docker.io/wrouesnel/postgres_exporter@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+						},
+					},
 					Resources: ResourcesWithPersistentVolume{
 						Memory:           "255Mi",
 						VolumeCapacity:   "1Gi",
@@ -424,17 +472,28 @@ func getConfigLiteral() *Config {
 					},
 				},
 				Prometheus: PrometheusConfiguration{
-					Image: "docker.io/prom/prometheus:v2.1.0",
+					Image: Image{
+						Tag: "docker.io/prom/prometheus:v2.1.0",
+						SHA: "docker.io/prom/prometheus@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					},
 					Resources: ResourcesWithVolume{
 						Memory:         "512Mi",
 						VolumeCapacity: "1Gi",
 					},
 				},
 				Upgrade: UpgradeConfiguration{
-					Image:     "docker.io/syndesis/syndesis-upgrade:latest",
+					Image: Image{
+						Tag: "docker.io/syndesis/syndesis-upgrade:latest",
+						SHA: "docker.io/syndesis/syndesis-upgrade@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					},
 					Resources: VolumeOnlyResources{VolumeCapacity: "1Gi"},
 				},
-				AMQ: AMQConfiguration{Image: "registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.3"},
+				AMQ: AMQConfiguration{
+					Image: Image{
+						Tag: "registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.3",
+						SHA: "registry.access.redhat.com/jboss-amq-6/amq63-openshift@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
+					},
+				},
 			},
 		},
 	}

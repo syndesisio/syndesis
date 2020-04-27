@@ -275,7 +275,9 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
           setSourceTableColumns(
             generateTableColumns(results as ViewSourceInfo)
           );
-          setSourceInfo(results.schemas);
+          if (sourceInfo.length === 0) {
+            setSourceInfo(results.schemas);
+          }
         } catch (error) {
           pushNotification(error.message, 'error');
         }

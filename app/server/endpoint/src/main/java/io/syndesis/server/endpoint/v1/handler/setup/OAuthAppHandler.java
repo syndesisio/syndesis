@@ -34,10 +34,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
@@ -56,7 +56,7 @@ import org.springframework.stereotype.Component;
  * This rest endpoint handles working with global oauth settings.
  */
 @Path("/setup/oauth-apps")
-@Api(value = "oauth-apps")
+@Tag(name = "oauth-apps")
 @Component
 public class OAuthAppHandler {
 
@@ -69,7 +69,7 @@ public class OAuthAppHandler {
     @DELETE
     @Consumes("application/json")
     @Path(value = "/{id}")
-    public void delete(@NotNull @PathParam("id") @ApiParam(required = true) final String id) {
+    public void delete(@NotNull @PathParam("id") @Parameter(required = true) final String id) {
         final Connector connector = dataMgr.fetch(Connector.class, id);
 
         update(id, OAuthApp.fromConnector(connector).clearValues());
@@ -78,7 +78,7 @@ public class OAuthAppHandler {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{id}")
-    public OAuthApp get(@NotNull @PathParam("id") @ApiParam(required = true) final String id) {
+    public OAuthApp get(@NotNull @PathParam("id") @Parameter(required = true) final String id) {
 
         final Connector connector = dataMgr.fetch(Connector.class, id);
         if (connector == null || !isOauthConnector(connector)) {
@@ -90,18 +90,11 @@ public class OAuthAppHandler {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiImplicitParams({
-        @ApiImplicitParam(name = "sort", value = "Sort the result list according to the given field value", paramType = "query",
-            dataType = "string"),
-        @ApiImplicitParam(name = "direction",
-            value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " + "(ascending) or 'desc' (descending)",
-            paramType = "query", dataType = "string"),
-        @ApiImplicitParam(name = "page", value = "Page number to return", paramType = "query", dataType = "integer", defaultValue = "1"),
-        @ApiImplicitParam(name = "per_page", value = "Number of records per page", paramType = "query", dataType = "integer",
-            defaultValue = "20"),
-        @ApiImplicitParam(name = "query", value = "The search query to filter results on", paramType = "query", dataType = "string"),
-
-    })
+    @Parameter(name = "sort", in = ParameterIn.QUERY, schema = @Schema(type = "string"), description = "Sort the result list according to the given field value")
+    @Parameter(name = "direction", in = ParameterIn.QUERY, schema = @Schema(type = "string", allowableValues = {"asc", "desc"}), description = "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)")
+    @Parameter(name = "page", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "1"), description = "Page number to return")
+    @Parameter(name = "per_page", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "20"), description = "Number of records per page")
+    @Parameter(name = "query", in = ParameterIn.QUERY, schema = @Schema(type = "string"), description = "The search query to filter results on")
     public ListResult<OAuthApp> list(@Context final UriInfo uriInfo) {
         final List<Connector> oauthConnectors = dataMgr.fetchAll(Connector.class, //
             OAuthConnectorFilter.INSTANCE,

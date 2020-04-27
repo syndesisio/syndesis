@@ -5,12 +5,12 @@
   "typings": "dist/index.d.ts",
   "devDependencies": {
     "cpr": "^3.0.1",
-    "npm-run-all": "^4.1.5",
-    "sw2dts": "^2.6.1"
+    "dtsgenerator": "^2.4.0",
+    "npm-run-all": "^4.1.5"
   },
   "scripts": {
-    "build:swagger-internal": "sw2dts swagger.internal.json > src/models-internal.d.ts",
-    "build:swagger": "sw2dts swagger.json > src/models.d.ts",
+    "build:openapi-internal": "dtsgen --namespace \"\" --out src/models-internal.d.ts openapi.internal.json",
+    "build:openapi": "dtsgen --namespace \"\" --out src/models.d.ts openapi.json",
     "build:types": "cpr src dist -d",
     "build": "npm-run-all build:*",
     "dev": "yarn build"

@@ -83,16 +83,16 @@ public class TimerToLog_IT extends SyndesisIntegrationTestSupport {
 
     @Test
     public void timeToLogExportTest() {
-        SyndesisIntegrationRuntimeContainer.Builder integrationContainerBuilder = new SyndesisIntegrationRuntimeContainer.Builder()
-                .name("timer-to-log-export")
-                 .fromSource(new JsonIntegrationSource(TimerToLog_IT.class.getResourceAsStream("model-info.json")));
-
-        try (SyndesisIntegrationRuntimeContainer integrationContainer = integrationContainerBuilder.build()
-                .waitingFor(Wait.forLogMessage(".*\"message\":\"Hello Syndesis!\".*\\s", 2))) {
+        try(SyndesisIntegrationRuntimeContainer integrationContainer =
+                new SyndesisIntegrationRuntimeContainer.Builder()
+                    .name("timer-to-log-export")
+                    .fromExport(TimerToLog_IT.class.getResourceAsStream("TimerToLog-export.zip"))
+                    .build()) {
+            integrationContainer.waitingFor(
+                Wait.forLogMessage(".*\"message\":\"Hello Syndesis!\".*\\s", 2));
             integrationContainer.start();
         }
     }
-
     @Test
     public void timeToLogJsonTest() {
         SyndesisIntegrationRuntimeContainer.Builder integrationContainerBuilder = new SyndesisIntegrationRuntimeContainer.Builder()

@@ -68,6 +68,8 @@ public class FtpSplitToDB_IT extends FtpTestSupport {
     @Test
     @CitrusTest
     public void testFtpSplitToDB(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.given(receive()
                 .endpoint(ftpTestServer)
                 .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())

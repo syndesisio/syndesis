@@ -23,8 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-import com.consol.citrus.container.BeforeTest;
-import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.client.FtpEndpointConfiguration;
 import com.consol.citrus.ftp.server.FtpServer;
@@ -99,17 +98,6 @@ public abstract class FtpTestSupport extends SyndesisIntegrationTestSupport {
 
             return ftpServer;
         }
-
-        @Bean
-        public BeforeTest beforeTest(DataSource sampleDb) {
-            SequenceBeforeTest actions = new SequenceBeforeTest();
-            actions.addTestAction(
-                sql(sampleDb)
-                    .dataSource(sampleDb)
-                    .statement("delete from todo")
-            );
-            return actions;
-        }
     }
 
     @BeforeClass
@@ -138,5 +126,11 @@ public abstract class FtpTestSupport extends SyndesisIntegrationTestSupport {
 
     public static Path getFtpUserHome() {
         return Paths.get("target/ftp/user/syndesis");
+    }
+
+    protected void cleanupDatabase(TestCaseRunner runner) {
+        runner.given(sql(sampleDb)
+            .dataSource(sampleDb)
+            .statement("delete from todo"));
     }
 }

@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import io.fabric8.kubernetes.client.KubernetesClientException;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -63,7 +63,7 @@ import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
 
 @Path("/integrations")
-@Api(value = "integrations")
+@Tag(name = "integrations")
 @Component
 public class IntegrationHandler extends BaseHandler implements Lister<IntegrationOverview>, Getter<IntegrationOverview>,
     Creator<Integration>, Deleter<Integration>, Updater<Integration>, Validating<Integration> {

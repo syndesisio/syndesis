@@ -23,12 +23,12 @@ import io.syndesis.common.model.user.Permission;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import io.syndesis.server.endpoint.v1.operations.Getter;
 import io.syndesis.server.endpoint.v1.operations.Lister;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.stereotype.Component;
 
 @Path("/permissions")
-@Api(value = "permissions")
+@Tag(name = "permissions")
 @Component
 public class PermissionHandler extends BaseHandler implements Lister<Permission>, Getter<Permission> {
 

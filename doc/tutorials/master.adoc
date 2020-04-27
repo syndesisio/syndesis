@@ -27,10 +27,10 @@ can help you decide which of these integrations to create first:
 
 See also: link:{LinkFuseOnlineIntegrationGuide}[{NameOfFuseOnlineIntegrationGuide}]
 
-include::modules/tutorials/r_comparison-of-sample-integrations.adoc[leveloffset=+1]
+include::modules/tutorials/ref-comparison-of-sample-integrations.adoc[leveloffset=+1]
 
-include::assemblies/tutorials/as_t2sf-intro.adoc[leveloffset=+1]
+include::assemblies/tutorials/assembly-t2sf-intro.adoc[leveloffset=+1]
 
-include::assemblies/tutorials/as_sf2db-intro.adoc[leveloffset=+1]
+include::assemblies/tutorials/assembly-sf2db-intro.adoc[leveloffset=+1]
 
-include::assemblies/tutorials/as_amq2api-intro.adoc[leveloffset=+1]
+include::assemblies/tutorials/assembly-amq2api-intro.adoc[leveloffset=+1]

@@ -8,7 +8,7 @@
 
 A flexible and customizable, open source platform that provides core integration capabilities as a service.
 
-All developer related documentation can be found at the [Syndesis Developer Handbook](https://doc.syndesis.io).
+All developer related documentation can be found at the [Development QuickStart](https://syndesis.io/docs/development_quickstart/), read indepth about the tooling to help with development in the [`syndesis` CLI](https://syndesis.io/docs/cli/syndesis/) documentation.
 
 ### Quickstart
 

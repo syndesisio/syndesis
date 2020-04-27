@@ -52,7 +52,7 @@
     "@syndesis/utils": "*",
     "deepmerge": "^4.2.2",
     "file-saver": "^2.0.1",
-    "immer": "^5.0.0",
+    "immer": "^6.0.3",
     "react-fast-compare": "^2.0.2"
   },
   "jest": {

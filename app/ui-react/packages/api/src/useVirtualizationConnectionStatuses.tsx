@@ -5,7 +5,7 @@ import { usePolling } from './usePolling';
 export const useVirtualizationConnectionStatuses = (disableUpdates: boolean = false) => {
   const { read, ...rest } = useApiResource<VirtualizationSourceStatus[]>({
     defaultValue: [],
-    url: 'metadata/syndesisSourceStatuses',
+    url: 'metadata/sourceStatuses',
     useDvApiUrl: true,
   });
 

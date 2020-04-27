@@ -60,6 +60,7 @@ export const ConnectionSchemaListItem: React.FunctionComponent<IConnectionSchema
             <DataListToggle
               isExpanded={isExpanded}
               id="connection-schema-list-item-expand"
+              data-testid={'connection-schema-list-item-expand'}
               aria-controls="connection-schema-list-item-expand"
               onClick={() => setExpanded(!isExpanded)}
             />

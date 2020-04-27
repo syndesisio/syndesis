@@ -19,12 +19,11 @@ package io.syndesis.test.itest.sql;
 import javax.sql.DataSource;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Collections;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.container.BeforeTest;
-import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.http.server.HttpServerBuilder;
 import io.syndesis.test.SyndesisTestEnvironment;
@@ -79,6 +78,8 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testDBToHttp(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.given(sql(sampleDb)
                 .statements(Arrays.asList("insert into contact (first_name, last_name, company) values ('Joe','Jackson','Red Hat')",
                                           "insert into contact (first_name, last_name, company) values ('Joanne','Jackson','Red Hat')")));
@@ -86,6 +87,7 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().server(httpTestServer)
                 .receive()
                 .put()
+                .selector(Collections.singletonMap("jsonPath:$.contact", "@startsWith(Joanne)@"))
                 .payload("{\"contact\":\"Joanne Jackson Red Hat\"}"));
 
         runner.then(http().server(httpTestServer)
@@ -95,6 +97,7 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().server(httpTestServer)
                 .receive()
                 .put()
+                .selector(Collections.singletonMap("jsonPath:$.contact", "@startsWith(Joe)@"))
                 .payload("{\"contact\":\"Joe Jackson Red Hat\"}"));
 
         runner.then(http().server(httpTestServer)
@@ -113,18 +116,11 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
                     .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())
                     .build();
         }
-
-        @Bean
-        public BeforeTest beforeTest(DataSource sampleDb) {
-            SequenceBeforeTest actions = new SequenceBeforeTest();
-            actions.addTestAction(
-                sql(sampleDb)
-                    .dataSource(sampleDb)
-                    .statement("delete from todo")
-            );
-            return actions;
-        }
     }
 
-
+    private void cleanupDatabase(TestCaseRunner runner) {
+        runner.given(sql(sampleDb)
+            .dataSource(sampleDb)
+            .statement("delete from contact"));
+    }
 }

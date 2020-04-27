@@ -1,4 +1,4 @@
 packageName: syndesis
 channels:
 - name: alpha
-  currentCSV: syndesisoperator.1.7.0
+  currentCSV: syndesisoperator.1.9.0

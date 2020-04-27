@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+console.log("Migrating to schema 40 ...");
+
+
 migrate("integrations", "/integrations", function(integration) {
     var changed = false;
 
     var ch = function() {
         changed = true;
-    }
+    };
 
     if (Array.isArray(integration.tags)) {
         integration.tags = integration.tags.map(change("http4", "http", ch))
@@ -73,7 +76,12 @@ migrate("integrations", "/integrations", function(integration) {
                 });
             }
         });
-    }
+     }
 
     return changed;
 });
+
+
+console.log("Migration to schema 40 completed");
+
+

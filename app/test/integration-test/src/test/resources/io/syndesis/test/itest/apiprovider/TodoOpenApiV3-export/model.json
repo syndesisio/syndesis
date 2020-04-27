@@ -285,7 +285,7 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-sql:2.0-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-sql:${project.version}",
             "type": "MAVEN"
           },
           {
@@ -512,15 +512,15 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-api-provider:2.0-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-api-provider:${project.version}",
             "type": "MAVEN"
           },
           {
-            "id": "org.apache.camel:camel-swagger-java:2.23.2.fuse-760011",
+            "id": "org.apache.camel:camel-swagger-java:${camel.version}",
             "type": "MAVEN"
           },
           {
-            "id": "org.apache.camel:camel-servlet-starter:2.23.2.fuse-760011",
+            "id": "org.apache.camel.springboot:camel-servlet-starter:${camel.version}",
             "type": "MAVEN"
           }
         ],
@@ -688,15 +688,15 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-api-provider:2.0-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-api-provider:${project.version}",
           "type": "MAVEN"
         },
         {
-          "id": "org.apache.camel:camel-swagger-java:2.23.2.fuse-760011",
+          "id": "org.apache.camel:camel-swagger-java:${camel.version}",
           "type": "MAVEN"
         },
         {
-          "id": "org.apache.camel:camel-servlet-starter:2.23.2.fuse-760011",
+          "id": "org.apache.camel.springboot:camel-servlet-starter:${camel.version}",
           "type": "MAVEN"
         }
       ],
@@ -987,7 +987,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-sql:2.0-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-sql:${project.version}",
           "type": "MAVEN"
         },
         {
@@ -1268,15 +1268,15 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-swagger-java:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-swagger-java:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-servlet-starter:2.23.2.fuse-760011",
+                      "id": "org.apache.camel.springboot:camel-servlet-starter:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -1705,7 +1705,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:${project.version}",
                       "type": "MAVEN"
                     },
                     {
@@ -2085,15 +2085,15 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-swagger-java:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-swagger-java:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-servlet-starter:2.23.2.fuse-760011",
+                      "id": "org.apache.camel.springboot:camel-servlet-starter:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -2339,15 +2339,15 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-swagger-java:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-swagger-java:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-servlet-starter:2.23.2.fuse-760011",
+                      "id": "org.apache.camel.springboot:camel-servlet-starter:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -2812,7 +2812,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:${project.version}",
                       "type": "MAVEN"
                     },
                     {
@@ -3192,15 +3192,15 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-swagger-java:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-swagger-java:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-servlet-starter:2.23.2.fuse-760011",
+                      "id": "org.apache.camel.springboot:camel-servlet-starter:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -3446,15 +3446,15 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-swagger-java:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-swagger-java:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-servlet-starter:2.23.2.fuse-760011",
+                      "id": "org.apache.camel.springboot:camel-servlet-starter:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -3919,7 +3919,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:${project.version}",
                       "type": "MAVEN"
                     },
                     {
@@ -4303,15 +4303,15 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-swagger-java:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-swagger-java:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-servlet-starter:2.23.2.fuse-760011",
+                      "id": "org.apache.camel.springboot:camel-servlet-starter:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -4557,15 +4557,15 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-swagger-java:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-swagger-java:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-servlet-starter:2.23.2.fuse-760011",
+                      "id": "org.apache.camel.springboot:camel-servlet-starter:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -5024,7 +5024,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:${project.version}",
                       "type": "MAVEN"
                     },
                     {
@@ -5404,15 +5404,15 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-swagger-java:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-swagger-java:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-servlet-starter:2.23.2.fuse-760011",
+                      "id": "org.apache.camel.springboot:camel-servlet-starter:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -5658,15 +5658,15 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-swagger-java:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-swagger-java:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-servlet-starter:2.23.2.fuse-760011",
+                      "id": "org.apache.camel.springboot:camel-servlet-starter:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -6125,7 +6125,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:${project.version}",
                       "type": "MAVEN"
                     },
                     {
@@ -6470,15 +6470,15 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-swagger-java:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-swagger-java:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-servlet-starter:2.23.2.fuse-760011",
+                      "id": "org.apache.camel.springboot:camel-servlet-starter:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],

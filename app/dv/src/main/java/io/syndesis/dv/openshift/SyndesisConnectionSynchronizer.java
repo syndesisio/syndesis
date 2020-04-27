@@ -141,7 +141,9 @@ public class SyndesisConnectionSynchronizer {
                     TeiidDataSource tds = this.metadataService.findTeiidDatasource(sds.getTeiidName());
                     if (tds != null) {
                         DefaultSyndesisDataSource existing = tds.getSyndesisDataSource();
-                        if (existing.getProperties().equals(sds.getProperties())) {
+                        if (existing.getProperties().equals(sds.getProperties())
+                                //TODO: we could preserve the metadata, but for now we'll just re-create
+                                && sds.getSyndesisName().equals(tds.getSyndesisDataSource().getSyndesisName())) {
                             create = false;
                         }
                     }
@@ -178,7 +180,7 @@ public class SyndesisConnectionSynchronizer {
             if (tds.getSyndesisId().contentEquals(sds.getSyndesisConnectionId())){
                 Object obj = tds.getConnectionFactory();
                 if (obj instanceof BaseConnectionFactory) {
-                    BaseConnection conn = (BaseConnection)((BaseConnectionFactory<?>)obj).getConnection();
+                    BaseConnection conn = ((BaseConnectionFactory<?>)obj).getConnection();
                     if (conn != null) {
                         conn.close();
                     }

@@ -35,7 +35,6 @@ import (
 	"github.com/operator-framework/operator-sdk/pkg/leader"
 	"github.com/operator-framework/operator-sdk/pkg/log/zap"
 	"github.com/operator-framework/operator-sdk/pkg/metrics"
-	"github.com/operator-framework/operator-sdk/pkg/restmapper"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
@@ -136,16 +135,16 @@ func (o *options) run() error {
 		return err
 	}
 
-	util.KnownDockerImages[config.Syndesis.Components.Server.Image] = true
-	util.KnownDockerImages[config.Syndesis.Components.Meta.Image] = true
-	util.KnownDockerImages[config.Syndesis.Components.UI.Image] = true
-	util.KnownDockerImages[config.Syndesis.Components.S2I.Image] = true
-	util.KnownDockerImages[config.Syndesis.Components.Database.Image] = true
-	util.KnownDockerImages[config.Syndesis.Components.Oauth.Image] = true
-	util.KnownDockerImages[config.Syndesis.Components.Database.Exporter.Image] = true
-	util.KnownDockerImages[config.Syndesis.Components.Prometheus.Image] = true
-	util.KnownDockerImages[config.Syndesis.Components.Upgrade.Image] = true
-	util.KnownDockerImages[config.Syndesis.Addons.DV.Image] = true
+	util.KnownDockerImages[config.Syndesis.Components.Server.Image.Get(config.Syndesis.SHA)] = true
+	util.KnownDockerImages[config.Syndesis.Components.Meta.Image.Get(config.Syndesis.SHA)] = true
+	util.KnownDockerImages[config.Syndesis.Components.UI.Image.Get(config.Syndesis.SHA)] = true
+	util.KnownDockerImages[config.Syndesis.Components.S2I.Image.Get(config.Syndesis.SHA)] = true
+	util.KnownDockerImages[config.Syndesis.Components.Database.Image.Get(config.Syndesis.SHA)] = true
+	util.KnownDockerImages[config.Syndesis.Components.Oauth.Image.Get(config.Syndesis.SHA)] = true
+	util.KnownDockerImages[config.Syndesis.Components.Database.Exporter.Image.Get(config.Syndesis.SHA)] = true
+	util.KnownDockerImages[config.Syndesis.Components.Prometheus.Image.Get(config.Syndesis.SHA)] = true
+	util.KnownDockerImages[config.Syndesis.Components.Upgrade.Image.Get(config.Syndesis.SHA)] = true
+	util.KnownDockerImages[config.Syndesis.Addons.DV.Image.Get(config.Syndesis.SHA)] = true
 
 	ctx := o.Context
 
@@ -158,7 +157,6 @@ func (o *options) run() error {
 	// Create a new Cmd to provide shared dependencies and start components
 	mgr, err := manager.New(cfg, manager.Options{
 		Namespace:          namespace,
-		MapperProvider:     restmapper.NewDynamicRESTMapper,
 		MetricsBindAddress: fmt.Sprintf("%s:%d", metricsHost, metricsPort),
 	})
 	if err != nil {

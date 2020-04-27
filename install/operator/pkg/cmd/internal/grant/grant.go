@@ -22,7 +22,7 @@ import (
 	"github.com/operator-framework/operator-sdk/pkg/log/zap"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	"github.com/syndesisio/syndesis/install/operator/pkg"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -49,10 +49,10 @@ func New(parent *internal.Options) *cobra.Command {
 	}
 
 	cmd.PersistentFlags().BoolVarP(&o.cluster, "cluster", "", false, "add the permission for all projects in the cluster(requires cluster admin privileges)")
-	cmd.PersistentFlags().StringVarP(&o.User, "user", "u", pkg.DefaultOperatorImage, "add permissions for the given User")
+	cmd.PersistentFlags().StringVarP(&o.User, "user", "u", "", "add permissions for the given User")
 	cmd.PersistentFlags().AddFlagSet(zap.FlagSet())
 	cmd.PersistentFlags().AddFlagSet(util.FlagSet)
-	cmd.MarkFlagRequired("user")
+	cobra.MarkFlagRequired(cmd.PersistentFlags(), "user")
 
 	return &cmd
 }

@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.syndesis.test.integration.project.Project;
 import io.syndesis.test.integration.project.ProjectBuilder;
 import io.syndesis.test.integration.source.IntegrationSource;
 
@@ -37,8 +38,8 @@ public class S2iProjectBuilder implements ProjectBuilder {
     }
 
     @Override
-    public Path build(IntegrationSource source) {
-        Path projectDir = delegate.build(source);
+    public Project build(IntegrationSource source) {
+        Path projectDir = delegate.build(source).getProjectPath();
 
         String integrationName = Optional.ofNullable(projectDir.getFileName())
                 .map(Objects::toString)
@@ -47,6 +48,11 @@ public class S2iProjectBuilder implements ProjectBuilder {
         SyndesisS2iAssemblyContainer syndesisS2iAssemblyContainer = new SyndesisS2iAssemblyContainer(integrationName, projectDir, imageTag);
         syndesisS2iAssemblyContainer.start();
 
-        return projectDir.resolve("target").resolve("project-0.1-SNAPSHOT.jar");
+        Path fatJar = projectDir.resolve("target").resolve("project-0.1-SNAPSHOT.jar");
+
+        return new Project.Builder()
+            .projectPath(projectDir)
+            .fatJarPath(fatJar)
+            .build();
     }
 }

@@ -21,7 +21,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.syndesis.server.dao.manager.WithDataManager;
 import io.syndesis.common.model.WithId;
 
@@ -30,7 +30,7 @@ public interface Deleter<T extends WithId<T>> extends Resource, WithDataManager 
     @DELETE
     @Consumes("application/json")
     @Path(value = "/{id}")
-    default void delete(@NotNull @PathParam("id") @ApiParam(required = true) String id) {
+    default void delete(@NotNull @PathParam("id") @Parameter(required = true) String id) {
         Class<T> modelClass = resourceKind().getModelClass();
         getDataManager().delete(modelClass, id);
     }

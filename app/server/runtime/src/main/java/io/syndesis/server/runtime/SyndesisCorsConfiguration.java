@@ -45,8 +45,8 @@ public class SyndesisCorsConfiguration {
         return new CorsFilter(request -> {
             String pathInfo = request.getPathInfo();
             if (pathInfo != null &&
-                (pathInfo.endsWith("/swagger.json") ||
-                 pathInfo.endsWith("/swagger.yaml"))) {
+                (pathInfo.endsWith("/openapi.json") ||
+                 pathInfo.endsWith("/openapi.yaml"))) {
                 return new CorsConfiguration().applyPermitDefaultValues();
             }
 

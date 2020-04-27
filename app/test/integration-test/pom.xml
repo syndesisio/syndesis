@@ -295,17 +295,6 @@
     <testResources>
       <testResource>
         <directory>src/test/resources</directory>
-        <filtering>true</filtering>
-        <excludes>
-          <exclude>**/*.zip</exclude>
-        </excludes>
-      </testResource>
-      <testResource>
-        <directory>src/test/resources</directory>
-        <filtering>false</filtering>
-        <includes>
-          <include>**/*.zip</include>
-        </includes>
       </testResource>
     </testResources>
   </build>

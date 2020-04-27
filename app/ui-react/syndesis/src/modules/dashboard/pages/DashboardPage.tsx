@@ -179,7 +179,7 @@ export default () => (
                       }
                       uptimeOverview={
                         <UptimeMetric
-                          start={parseInt(metricsData.start!, 10)}
+                          start={metricsData.start!}
                           uptimeDuration={toUptimeDurationString(
                             metricsData.uptimeDuration!,
                             t('metricsNoDataAvailable')

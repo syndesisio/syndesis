@@ -27,7 +27,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <camel.version>3.0.0</camel.version>
+    <camel.version>3.1.0</camel.version>
     <atlasmap.version>1.42.10</atlasmap.version>
     <jackson.version>2.10.3</jackson.version>
     <jackson.databind.version>2.9.9</jackson.databind.version>
@@ -82,42 +82,6 @@
     <system>github</system>
     <url>https://github.com/syndesisio/syndesis.io/issues</url>
   </issueManagement>
-
-  <repositories>
-    <repository>
-      <id>central</id>
-      <name>Maven Central</name>
-      <url>https://repo.maven.apache.org/maven2/</url>
-    </repository>
-    <repository>
-      <id>jboss-ea</id>
-      <name>JBoss Early Access</name>
-      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-    </repository>
-    <repository>
-      <id>redhat-ga</id>
-      <name>Red Hat General Availability Repository</name>
-      <url>https://maven.repository.redhat.com/ga/</url>
-    </repository>
-  </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>central</id>
-      <name>Maven Central</name>
-      <url>https://repo.maven.apache.org/maven2/</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>jboss-ea</id>
-      <name>JBoss Early Access</name>
-      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>redhat-ga</id>
-      <name>Red Hat General Availability Repository</name>
-      <url>https://maven.repository.redhat.com/ga/</url>
-    </pluginRepository>
-  </pluginRepositories>
 
   <dependencyManagement>
     <dependencies>

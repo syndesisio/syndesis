@@ -33,12 +33,15 @@ public class SyndesisDockerfileBuilder extends ImageFromDockerfile {
 
     private static final String ROOT = "0";
     private static final String JBOSS = "jboss";
+    private static final String EXTENSIONS_DEST = "/deployments/data/syndesis/loader/extensions";
 
     private String from;
     private String runCommand;
     private String projectSrc;
     private String projectDest;
+    private String extensionsSrc = "extensions";
     private Path projectPath;
+    private Path projectFatJar;
     private Map<String, String> envProperties = Collections.singletonMap("SYNDESIS_VERSION",
                                                                          SyndesisTestEnvironment.getSyndesisVersion());
 
@@ -48,17 +51,23 @@ public class SyndesisDockerfileBuilder extends ImageFromDockerfile {
 
     public SyndesisDockerfileBuilder build() {
         return (SyndesisDockerfileBuilder)
-                withFileFromPath(projectSrc, projectPath)
+                withFileFromPath(projectSrc, getProjectPathOrFatJarPath())
+                    .withFileFromPath(extensionsSrc, projectPath.resolve("extensions"))
                 .withDockerfileFromBuilder(builder -> builder.from(from)
                     .env(envProperties)
                     .user(ROOT)
                     .copy(projectSrc, projectDest)
+                    .copy(extensionsSrc, EXTENSIONS_DEST)
                     .run(fixGroupsCommand())
                     .run(fixPermissionsCommand())
                     .user(JBOSS)
                     .expose(SyndesisTestEnvironment.getDebugPort())
                     .cmd(runCommand)
                 .build());
+    }
+
+    private Path getProjectPathOrFatJarPath() {
+        return (projectFatJar != null ? projectFatJar : projectPath);
     }
 
     private String[] fixGroupsCommand() {
@@ -84,17 +93,28 @@ public class SyndesisDockerfileBuilder extends ImageFromDockerfile {
         return this;
     }
 
-    /**
-     * Adds the Syndesis integration project as directory of jar file resource.
-     * @param projectSrc the source marker as key added to the Dockerfile context.
-     * @param projectDest the destination path in the container.
-     * @param projectPath the actual path to the project sources on the host.
-     * @return
-     */
-    public SyndesisDockerfileBuilder project(String projectSrc, String projectDest, Path projectPath) {
+    public SyndesisDockerfileBuilder projectSource(String projectSrc) {
         this.projectSrc = projectSrc;
+        return this;
+    }
+
+    public SyndesisDockerfileBuilder projectDestination(String projectDest) {
         this.projectDest = projectDest;
+        return this;
+    }
+
+    public SyndesisDockerfileBuilder projectPath(Path projectPath) {
         this.projectPath = projectPath;
+        return this;
+    }
+
+    public SyndesisDockerfileBuilder projectFatJar(Path projectFatJar) {
+        this.projectFatJar = projectFatJar;
+        return this;
+    }
+
+    public SyndesisDockerfileBuilder extensionsSource(String extensionsSrc) {
+        this.extensionsSrc = extensionsSrc;
         return this;
     }
 }

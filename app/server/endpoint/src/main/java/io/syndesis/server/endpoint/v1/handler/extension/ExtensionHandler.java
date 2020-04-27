@@ -15,13 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.extension;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -41,10 +34,21 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -73,9 +77,9 @@ import io.syndesis.server.endpoint.v1.SyndesisRestException;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import io.syndesis.server.endpoint.v1.operations.Deleter;
 import io.syndesis.server.endpoint.v1.operations.Getter;
-import io.syndesis.server.endpoint.v1.operations.Lister;
 import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
+import io.syndesis.server.endpoint.v1.util.PredicateFilter;
 import okio.BufferedSink;
 import okio.Okio;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
@@ -84,10 +88,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
 @Path("/extensions")
-@Api(value = "extensions")
+@Tag(name = "extensions")
 @Component
 @ConditionalOnBean(FileDAO.class)
-public class ExtensionHandler extends BaseHandler implements Lister<Extension>, Getter<Extension>, Deleter<Extension> {
+public class ExtensionHandler extends BaseHandler implements Getter<Extension>, Deleter<Extension> {
 
     private final FileDAO fileStore;
     private final ExtensionActivator extensionActivator;
@@ -200,12 +204,8 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     @POST
     @Path("/{id}/validation")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "All blocking validations pass", responseContainer = "Set",
-            response = Violation.class),
-        @ApiResponse(code = 400, message = "Found violations in validation", responseContainer = "Set",
-            response = Violation.class)
-    })
+    @ApiResponse(responseCode = "200", description = "All blocking validations pass", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Violation.class))))
+    @ApiResponse(responseCode = "400", description = "Found violations in validation", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Violation.class))))
     public Set<Violation> validate(@NotNull @PathParam("id") final String extensionId) {
         Extension extension = getDataManager().fetch(Extension.class, extensionId);
         return doValidate(extension);
@@ -215,23 +215,16 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
     @Path(value = "/validation")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "All blocking validations pass", responseContainer = "Set",
-            response = Violation.class),
-        @ApiResponse(code = 400, message = "Found violations in validation", responseContainer = "Set",
-            response = Violation.class)
-    })
+    @ApiResponse(responseCode = "200", description = "All blocking validations pass", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Violation.class))))
+    @ApiResponse(responseCode = "400", description = "Found violations in validation", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Violation.class))))
     public Set<Violation> validate(@NotNull final Extension extension) {
         return doValidate(extension);
     }
 
     @POST
     @Path(value = "/{id}/install")
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "Installed"),
-        @ApiResponse(code = 400, message = "Found violations in validation", responseContainer = "Set",
-            response = Violation.class)
-    })
+    @ApiResponse(responseCode = "200", description = "Installed", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Violation.class))))
+    @ApiResponse(responseCode = "400", description = "Found violations in validation", content = @Content(array = @ArraySchema(schema = @Schema(implementation = Violation.class))))
     public void install(@NotNull @PathParam("id") final String id) {
         Extension extension = getDataManager().fetch(Extension.class, id);
         doValidate(extension);
@@ -246,8 +239,14 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
         return integrations(extension);
     }
 
-    @Override
-    public ListResult<Extension> list(UriInfo uriInfo) {
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Parameter(name = "sort", in = ParameterIn.QUERY, schema = @Schema(type = "string"), description = "Sort the result list according to the given field value")
+    @Parameter(name = "direction", in = ParameterIn.QUERY, schema = @Schema(type = "string", allowableValues = {"asc", "desc"}), description = "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)")
+    @Parameter(name = "page", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "1"), description = "Page number to return")
+    @Parameter(name = "per_page", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "20"), description = "Number of records per page")
+    @Parameter(name = "query", in = ParameterIn.QUERY, schema = @Schema(type = "string"), description = "The search query to filter results on")
+    public ListResult<Extension> list(@Context UriInfo uriInfo, @Parameter(required = false) @QueryParam("extensionType") Extension.Type extensionType) {
         // Defaulting to display only Installed extensions
         String query = uriInfo.getQueryParameters().getFirst("query");
         if (query == null) {
@@ -257,6 +256,9 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
         return getDataManager().fetchAll(
             Extension.class,
             new ReflectiveFilterer<>(Extension.class, FilterOptionsParser.fromString(query)),
+            new PredicateFilter<>(
+                extension -> extensionType == null || extension.getExtensionType().equals(extensionType)
+            ),
             new ReflectiveSorter<>(Extension.class, new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
         );

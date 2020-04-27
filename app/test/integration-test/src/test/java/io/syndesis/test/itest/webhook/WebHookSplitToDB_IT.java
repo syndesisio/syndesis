@@ -23,8 +23,6 @@ import java.util.stream.Stream;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.container.BeforeTest;
-import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpClientBuilder;
 import io.syndesis.test.SyndesisTestEnvironment;
@@ -73,6 +71,8 @@ public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testWebHookToDb(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.when(http().client(webHookClient)
                 .send()
                 .post()
@@ -88,6 +88,8 @@ public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testWebHookToDbBasicFilter(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.when(http().client(webHookClient)
                 .send()
                 .post()
@@ -103,6 +105,8 @@ public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testWebHookToDbAdvancedFilter(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.when(http().client(webHookClient)
                 .send()
                 .post()
@@ -139,16 +143,11 @@ public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
                     .requestUrl(String.format("http://localhost:%s/webhook/test-webhook", integrationContainer.getServerPort()))
                     .build();
         }
+    }
 
-        @Bean
-        public BeforeTest beforeTest(DataSource sampleDb) {
-            SequenceBeforeTest actions = new SequenceBeforeTest();
-            actions.addTestAction(
-                sql(sampleDb)
-                    .dataSource(sampleDb)
-                    .statement("delete from todo")
-            );
-            return actions;
-        }
+    private void cleanupDatabase(TestCaseRunner runner) {
+        runner.given(sql(sampleDb)
+            .dataSource(sampleDb)
+            .statement("delete from contact"));
     }
 }

@@ -100,6 +100,7 @@ export const ViewInfosContent: React.FunctionComponent<
    */
   const { pushNotification } = React.useContext(UIContext);
 
+  const [schemaList, setSchemaList] = React.useState<SchemaNode[]>([]);
   const [lastSchemaRefresh, setLastSchemaRefresh] = React.useState(0);
 
   const [lastSchemaRefreshMsg, setLastSchemaRefreshMsg] = React.useState(t('schemaLastRefresh', {
@@ -153,10 +154,19 @@ export const ViewInfosContent: React.FunctionComponent<
 
   const {
     resource: schema,
-    hasData: hasSchema,
+    hasData,
     error,
     read,
   } = useVirtualizationConnectionSchema(props.connectionTeiidName);
+
+  React.useEffect(()=>{
+    if (hasData) {
+      const rootNode = schema.find((node: { name: string; }) => node.name === props.connectionTeiidName);
+      if (rootNode) {
+        setSchemaList(rootNode.children);
+      }
+    }
+  },[schema, props.connectionTeiidName, hasData]);
 
   React.useEffect(() => {
     if(props.connectionLastLoad > lastSchemaRefresh) {
@@ -175,7 +185,7 @@ export const ViewInfosContent: React.FunctionComponent<
     >
       {helpers => {
         const filteredAndSorted = getFilteredAndSortedViewInfos(
-          schema,
+          schemaList,
           helpers.activeFilters,
           helpers.currentSortType,
           helpers.isSortAscending,
@@ -215,7 +225,7 @@ export const ViewInfosContent: React.FunctionComponent<
           >
             <WithLoader
               error={error !== false}
-              loading={!hasSchema}
+              loading={schemaList.length===0}
               loaderChildren={<ViewInfoListSkeleton width={800} />}
               errorChildren={<ApiError error={error as Error} />}
             >

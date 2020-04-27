@@ -28,6 +28,19 @@
                   "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
                   "name": "SQL statement",
                   "properties": {
+                    "batch": {
+                      "defaultValue": "false",
+                      "deprecated": false,
+                      "displayName": "Batch update",
+                      "group": "common",
+                      "javaType": "java.lang.Boolean",
+                      "kind": "property",
+                      "labelHint": "Use prepared statements for INSERT, UPDATE, DELETE in order to update multiple rows with batch update.",
+                      "order": 2,
+                      "required": false,
+                      "secret": false,
+                      "type": "boolean"
+                    },
                     "query": {
                       "deprecated": false,
                       "displayName": "SQL statement",
@@ -35,12 +48,44 @@
                       "javaType": "java.lang.String",
                       "kind": "path",
                       "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                      "order": 1,
                       "placeholder": "for example ':#MYPARAMNAME'",
                       "required": true,
                       "secret": false,
-                      "type": "string"
+                      "type": "dataList"
+                    },
+                    "raiseErrorOnNotFound": {
+                      "defaultValue": "false",
+                      "deprecated": false,
+                      "displayName": "Raise error when record not found",
+                      "group": "common",
+                      "javaType": "java.lang.Boolean",
+                      "kind": "property",
+                      "labelHint": "Error when no records are selected, updated or deleted",
+                      "order": 3,
+                      "required": false,
+                      "secret": false,
+                      "type": "boolean"
                     }
                   }
+                }
+              ],
+              "standardizedErrors": [
+                {
+                  "displayName": "SqlDataAccessError",
+                  "name": "SQL_DATA_ACCESS_ERROR"
+                },
+                {
+                  "displayName": "SqlEntityNotFoundError",
+                  "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                },
+                {
+                  "displayName": "SqlDuplicateKeyError",
+                  "name": "org.springframework.dao.DuplicateKeyException"
+                },
+                {
+                  "displayName": "SqlConnectorError",
+                  "name": "SQL_CONNECTOR_ERROR"
                 }
               ]
             },
@@ -67,9 +112,21 @@
               },
               "propertyDefinitionSteps": [
                 {
-                  "description": "Enter a SQL statement that returns results.",
+                  "description": "Enter a SQL statement that returns results, such as SELECT.",
                   "name": "SQL statement",
                   "properties": {
+                    "isRaiseErrorOnNotFound": {
+                      "deprecated": false,
+                      "displayName": "Raise NotFoundError",
+                      "group": "consumer",
+                      "javaType": "java.lang.Boolean",
+                      "kind": "parameter",
+                      "labelHint": "Raise NotFoundError if no records are inserted, updated, selected or deleted",
+                      "order": 3,
+                      "required": false,
+                      "secret": false,
+                      "type": "boolean"
+                    },
                     "query": {
                       "deprecated": false,
                       "displayName": "SQL statement",
@@ -80,7 +137,7 @@
                       "order": 1,
                       "required": true,
                       "secret": false,
-                      "type": "string"
+                      "type": "dataList"
                     },
                     "schedulerExpression": {
                       "defaultValue": "60000",
@@ -135,7 +192,7 @@
                       "labelHint": "Name of the stored procedure.",
                       "required": false,
                       "secret": false,
-                      "type": "string"
+                      "type": "select"
                     },
                     "template": {
                       "componentProperty": false,
@@ -189,7 +246,7 @@
                       "labelHint": "Name of the stored procedure.",
                       "required": true,
                       "secret": false,
-                      "type": "string"
+                      "type": "select"
                     },
                     "schedulerExpression": {
                       "defaultValue": "60000",
@@ -232,7 +289,7 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-sql:2.0-SNAPSHOT",
             "type": "MAVEN"
           },
           {
@@ -240,7 +297,7 @@
             "type": "EXTENSION_TAG"
           }
         ],
-        "description": "Subscribe for and publish messages.",
+        "description": "Invoke SQL to obtain, store, update, or delete data.",
         "icon": "assets:sql.svg",
         "id": "sql",
         "name": "Database",
@@ -303,7 +360,7 @@
         "tags": [
           "verifier"
         ],
-        "version": 135
+        "version": 16
       },
       "connectorId": "sql",
       "description": "Connection to SampleDB",
@@ -337,7 +394,7 @@
               "inputDataShape": {
                 "kind": "java",
                 "name": "EmailMessage",
-                "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
+                "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"FINAL\",\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
                 "type": "io.syndesis.connector.email.model.EMailMessageModel"
               },
               "outputDataShape": {
@@ -345,7 +402,7 @@
               },
               "propertyDefinitionSteps": [
                 {
-                  "description": "Specify the emails that you want to obtain.",
+                  "description": "Specify the email messages that you want to send.",
                   "name": "Send messages to Email",
                   "properties": {
                     "bcc": {
@@ -456,10 +513,7 @@
             },
             "id": "io.syndesis:email-send-connector",
             "name": "Send Email",
-            "pattern": "To",
-            "tags": [
-              "dynamic"
-            ]
+            "pattern": "To"
           }
         ],
         "componentScheme": "email-send",
@@ -468,16 +522,13 @@
         },
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-email:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-email:2.0-SNAPSHOT",
             "type": "MAVEN"
           }
         ],
         "description": "Send email messages.",
         "icon": "assets:email-send.svg",
         "id": "email-send",
-        "metadata": {
-          "tech-preview": "true"
-        },
         "name": "Send Email (smtp)",
         "properties": {
           "host": {
@@ -502,7 +553,7 @@
             "javaType": "java.lang.String",
             "kind": "parameter",
             "label": "common,security",
-            "labelHint": "Specify a password for authentication of the email service, if required.",
+            "labelHint": "Specify the password for the email account that this connection is authorized to access.",
             "order": 4,
             "required": true,
             "secret": true,
@@ -584,7 +635,7 @@
             "javaType": "java.lang.String",
             "kind": "parameter",
             "label": "common,security",
-            "labelHint": "Specify a user name for authentication of the email service url, if required.",
+            "labelHint": "Specify the user name for the email account that this connection is authorized to access.",
             "order": 3,
             "required": true,
             "secret": false,
@@ -594,14 +645,14 @@
         "tags": [
           "verifier"
         ],
-        "version": 14
+        "version": 16
       },
       "connectorId": "email-send",
       "createdDate": 1560516758048,
       "icon": "assets:email-send.svg",
       "id": "i-LhL2-ccjv5WqGyjCaVVz",
       "isDerived": false,
-      "lastUpdated": 1560516758048,
+      "lastUpdated": 1586944455246,
       "name": "SMTP",
       "userId": "developer",
       "uses": 0
@@ -621,6 +672,7 @@
               "connectorCustomizers": [
                 "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
               ],
+              "exceptionHandler": "io.syndesis.connector.webhook.WebhookOnExceptionHandler",
               "inputDataShape": {
                 "kind": "none"
               },
@@ -640,14 +692,98 @@
                       "generator": "alphanum:50",
                       "javaType": "String",
                       "kind": "parameter",
+                      "order": 0,
                       "required": true,
                       "secret": false,
                       "tags": [
                         "context-path"
                       ],
                       "type": "string"
+                    },
+                    "defaultResponse": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Default Response",
+                      "javaType": "String",
+                      "kind": "parameter",
+                      "order": 1,
+                      "required": false,
+                      "secret": false,
+                      "type": "legend"
+                    },
+                    "errorHandling": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Error Handling",
+                      "javaType": "String",
+                      "kind": "parameter",
+                      "order": 3,
+                      "required": false,
+                      "secret": false,
+                      "type": "legend"
+                    },
+                    "errorResponseCodes": {
+                      "componentProperty": false,
+                      "defaultValue": "{}",
+                      "deprecated": false,
+                      "description": "The return code to set according to different error situations",
+                      "displayName": "Error Response Codes",
+                      "extendedProperties": "{ \"mapsetValueDefinition\": {   \"enum\" : [{\"label\":\"400 Bad Request\",\"value\":\"400\"},{\"label\":\"404 Not Found\",\"value\":\"404\"},{\"label\":\"405 Method Not Allowed\",\"value\":\"405\"},{\"label\":\"409 Conflict\",\"value\":\"409\"},{\"label\":\"500 Server Error\",\"value\":\"500\"},{\"label\":\"501 Not Implemented\",\"value\":\"501\"},{\"label\":\"503 Service Unavailable\",\"value\":\"503\"}],    \"type\" : \"select\" },\"mapsetOptions\": {    \"i18nKeyColumnTitle\": \"When the error message is\",    \"i18nValueColumnTitle\": \"Return this HTTP response code\" }}",
+                      "javaType": "Map",
+                      "kind": "parameter",
+                      "order": 5,
+                      "required": false,
+                      "secret": false,
+                      "type": "mapset"
+                    },
+                    "httpResponseCode": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "description": "The return code to set in the HTTP response",
+                      "displayName": "Return Code",
+                      "enum": [
+                        {
+                          "label": "200 OK",
+                          "value": "200"
+                        },
+                        {
+                          "label": "201 Created",
+                          "value": "201"
+                        },
+                        {
+                          "label": "202 Accepted",
+                          "value": "202"
+                        },
+                        {
+                          "label": "204 No Content",
+                          "value": "204"
+                        }
+                      ],
+                      "javaType": "String",
+                      "kind": "parameter",
+                      "order": 2,
+                      "required": true,
+                      "secret": false,
+                      "type": "select"
+                    },
+                    "returnBody": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Include error message in the return body",
+                      "javaType": "Boolean",
+                      "kind": "parameter",
+                      "order": 4,
+                      "required": false,
+                      "secret": false,
+                      "type": "boolean"
                     }
                   }
+                }
+              ],
+              "standardizedErrors": [
+                {
+                  "displayName": "ServerError",
+                  "name": "SERVER_ERROR"
                 }
               ]
             },
@@ -664,7 +800,7 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-webhook:2.0-SNAPSHOT",
             "type": "MAVEN"
           }
         ],
@@ -675,7 +811,7 @@
           "hide-from-connection-pages": "true"
         },
         "name": "Webhook",
-        "version": 135
+        "version": 16
       },
       "connectorId": "webhook",
       "description": "Create direct connections with external systems through Webhooks",
@@ -703,7 +839,7 @@
             "inputDataShape": {
               "kind": "java",
               "name": "EmailMessage",
-              "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
+              "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"FINAL\",\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
               "type": "io.syndesis.connector.email.model.EMailMessageModel"
             },
             "outputDataShape": {
@@ -711,7 +847,7 @@
             },
             "propertyDefinitionSteps": [
               {
-                "description": "Specify the emails that you want to obtain.",
+                "description": "Specify the email messages that you want to send.",
                 "name": "Send messages to Email",
                 "properties": {
                   "bcc": {
@@ -822,10 +958,7 @@
           },
           "id": "io.syndesis:email-send-connector",
           "name": "Send Email",
-          "pattern": "To",
-          "tags": [
-            "dynamic"
-          ]
+          "pattern": "To"
         }
       ],
       "componentScheme": "email-send",
@@ -834,16 +967,13 @@
       },
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-email:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-email:2.0-SNAPSHOT",
           "type": "MAVEN"
         }
       ],
       "description": "Send email messages.",
       "icon": "assets:email-send.svg",
       "id": "email-send",
-      "metadata": {
-        "tech-preview": "true"
-      },
       "name": "Send Email (smtp)",
       "properties": {
         "host": {
@@ -868,7 +998,7 @@
           "javaType": "java.lang.String",
           "kind": "parameter",
           "label": "common,security",
-          "labelHint": "Specify a password for authentication of the email service, if required.",
+          "labelHint": "Specify the password for the email account that this connection is authorized to access.",
           "order": 4,
           "required": true,
           "secret": true,
@@ -950,7 +1080,7 @@
           "javaType": "java.lang.String",
           "kind": "parameter",
           "label": "common,security",
-          "labelHint": "Specify a user name for authentication of the email service url, if required.",
+          "labelHint": "Specify the user name for the email account that this connection is authorized to access.",
           "order": 3,
           "required": true,
           "secret": false,
@@ -960,7 +1090,7 @@
       "tags": [
         "verifier"
       ],
-      "version": 14
+      "version": 16
     },
     ":sql": {
       "actions": [
@@ -983,6 +1113,19 @@
                 "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
                 "name": "SQL statement",
                 "properties": {
+                  "batch": {
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "displayName": "Batch update",
+                    "group": "common",
+                    "javaType": "java.lang.Boolean",
+                    "kind": "property",
+                    "labelHint": "Use prepared statements for INSERT, UPDATE, DELETE in order to update multiple rows with batch update.",
+                    "order": 2,
+                    "required": false,
+                    "secret": false,
+                    "type": "boolean"
+                  },
                   "query": {
                     "deprecated": false,
                     "displayName": "SQL statement",
@@ -990,12 +1133,44 @@
                     "javaType": "java.lang.String",
                     "kind": "path",
                     "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                    "order": 1,
                     "placeholder": "for example ':#MYPARAMNAME'",
                     "required": true,
                     "secret": false,
-                    "type": "string"
+                    "type": "dataList"
+                  },
+                  "raiseErrorOnNotFound": {
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "displayName": "Raise error when record not found",
+                    "group": "common",
+                    "javaType": "java.lang.Boolean",
+                    "kind": "property",
+                    "labelHint": "Error when no records are selected, updated or deleted",
+                    "order": 3,
+                    "required": false,
+                    "secret": false,
+                    "type": "boolean"
                   }
                 }
+              }
+            ],
+            "standardizedErrors": [
+              {
+                "displayName": "SqlDataAccessError",
+                "name": "SQL_DATA_ACCESS_ERROR"
+              },
+              {
+                "displayName": "SqlEntityNotFoundError",
+                "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+              },
+              {
+                "displayName": "SqlDuplicateKeyError",
+                "name": "org.springframework.dao.DuplicateKeyException"
+              },
+              {
+                "displayName": "SqlConnectorError",
+                "name": "SQL_CONNECTOR_ERROR"
               }
             ]
           },
@@ -1022,9 +1197,21 @@
             },
             "propertyDefinitionSteps": [
               {
-                "description": "Enter a SQL statement that returns results.",
+                "description": "Enter a SQL statement that returns results, such as SELECT.",
                 "name": "SQL statement",
                 "properties": {
+                  "isRaiseErrorOnNotFound": {
+                    "deprecated": false,
+                    "displayName": "Raise NotFoundError",
+                    "group": "consumer",
+                    "javaType": "java.lang.Boolean",
+                    "kind": "parameter",
+                    "labelHint": "Raise NotFoundError if no records are inserted, updated, selected or deleted",
+                    "order": 3,
+                    "required": false,
+                    "secret": false,
+                    "type": "boolean"
+                  },
                   "query": {
                     "deprecated": false,
                     "displayName": "SQL statement",
@@ -1035,7 +1222,7 @@
                     "order": 1,
                     "required": true,
                     "secret": false,
-                    "type": "string"
+                    "type": "dataList"
                   },
                   "schedulerExpression": {
                     "defaultValue": "60000",
@@ -1090,7 +1277,7 @@
                     "labelHint": "Name of the stored procedure.",
                     "required": false,
                     "secret": false,
-                    "type": "string"
+                    "type": "select"
                   },
                   "template": {
                     "componentProperty": false,
@@ -1144,7 +1331,7 @@
                     "labelHint": "Name of the stored procedure.",
                     "required": true,
                     "secret": false,
-                    "type": "string"
+                    "type": "select"
                   },
                   "schedulerExpression": {
                     "defaultValue": "60000",
@@ -1187,7 +1374,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-sql:2.0-SNAPSHOT",
           "type": "MAVEN"
         },
         {
@@ -1195,7 +1382,7 @@
           "type": "EXTENSION_TAG"
         }
       ],
-      "description": "Subscribe for and publish messages.",
+      "description": "Invoke SQL to obtain, store, update, or delete data.",
       "icon": "assets:sql.svg",
       "id": "sql",
       "name": "Database",
@@ -1258,7 +1445,7 @@
       "tags": [
         "verifier"
       ],
-      "version": 135
+      "version": 16
     },
     ":webhook": {
       "actions": [
@@ -1274,6 +1461,7 @@
             "connectorCustomizers": [
               "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
             ],
+            "exceptionHandler": "io.syndesis.connector.webhook.WebhookOnExceptionHandler",
             "inputDataShape": {
               "kind": "none"
             },
@@ -1293,14 +1481,98 @@
                     "generator": "alphanum:50",
                     "javaType": "String",
                     "kind": "parameter",
+                    "order": 0,
                     "required": true,
                     "secret": false,
                     "tags": [
                       "context-path"
                     ],
                     "type": "string"
+                  },
+                  "defaultResponse": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Default Response",
+                    "javaType": "String",
+                    "kind": "parameter",
+                    "order": 1,
+                    "required": false,
+                    "secret": false,
+                    "type": "legend"
+                  },
+                  "errorHandling": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Error Handling",
+                    "javaType": "String",
+                    "kind": "parameter",
+                    "order": 3,
+                    "required": false,
+                    "secret": false,
+                    "type": "legend"
+                  },
+                  "errorResponseCodes": {
+                    "componentProperty": false,
+                    "defaultValue": "{}",
+                    "deprecated": false,
+                    "description": "The return code to set according to different error situations",
+                    "displayName": "Error Response Codes",
+                    "extendedProperties": "{ \"mapsetValueDefinition\": {   \"enum\" : [{\"label\":\"400 Bad Request\",\"value\":\"400\"},{\"label\":\"404 Not Found\",\"value\":\"404\"},{\"label\":\"405 Method Not Allowed\",\"value\":\"405\"},{\"label\":\"409 Conflict\",\"value\":\"409\"},{\"label\":\"500 Server Error\",\"value\":\"500\"},{\"label\":\"501 Not Implemented\",\"value\":\"501\"},{\"label\":\"503 Service Unavailable\",\"value\":\"503\"}],    \"type\" : \"select\" },\"mapsetOptions\": {    \"i18nKeyColumnTitle\": \"When the error message is\",    \"i18nValueColumnTitle\": \"Return this HTTP response code\" }}",
+                    "javaType": "Map",
+                    "kind": "parameter",
+                    "order": 5,
+                    "required": false,
+                    "secret": false,
+                    "type": "mapset"
+                  },
+                  "httpResponseCode": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "description": "The return code to set in the HTTP response",
+                    "displayName": "Return Code",
+                    "enum": [
+                      {
+                        "label": "200 OK",
+                        "value": "200"
+                      },
+                      {
+                        "label": "201 Created",
+                        "value": "201"
+                      },
+                      {
+                        "label": "202 Accepted",
+                        "value": "202"
+                      },
+                      {
+                        "label": "204 No Content",
+                        "value": "204"
+                      }
+                    ],
+                    "javaType": "String",
+                    "kind": "parameter",
+                    "order": 2,
+                    "required": true,
+                    "secret": false,
+                    "type": "select"
+                  },
+                  "returnBody": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Include error message in the return body",
+                    "javaType": "Boolean",
+                    "kind": "parameter",
+                    "order": 4,
+                    "required": false,
+                    "secret": false,
+                    "type": "boolean"
                   }
                 }
+              }
+            ],
+            "standardizedErrors": [
+              {
+                "displayName": "ServerError",
+                "name": "SERVER_ERROR"
               }
             ]
           },
@@ -1317,7 +1589,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-webhook:2.0-SNAPSHOT",
           "type": "MAVEN"
         }
       ],
@@ -1328,15 +1600,15 @@
         "hide-from-connection-pages": "true"
       },
       "name": "Webhook",
-      "version": 135
+      "version": 16
     }
   },
   "integrations": {
-    ":i-LhL3nkvjv5WqGyjCaVXz": {
-      "createdAt": 1560517229627,
+    ":i-M4y1EddlCY5ii3d0hYCz": {
+      "createdAt": 1586957449827,
       "flows": [
         {
-          "id": "-LhL22wB71G_Hn4CaeFQ",
+          "id": "-M4xzAiqpwlS3r3FxupD",
           "steps": [
             {
               "action": {
@@ -1351,17 +1623,17 @@
                   "connectorCustomizers": [
                     "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
                   ],
+                  "exceptionHandler": "io.syndesis.connector.webhook.WebhookOnExceptionHandler",
                   "inputDataShape": {
                     "kind": "none"
                   },
                   "outputDataShape": {
-                    "description": "A user specified data type",
                     "kind": "json-instance",
                     "metadata": {
                       "userDefined": "true"
                     },
                     "name": "Contact",
-                    "specification": "{\n  \"first_name\": \"John\",\n  \"company\": \"Red Hat\",\n  \"mail\": \"john@redhat.com\"\n}"
+                    "specification": "{\"first_name\":\"Jane Doe\",\"company\":\"Syndesis\",\"mail\":\"jdoe@syndesis.org\"}"
                   },
                   "propertyDefinitionSteps": [
                     {
@@ -1369,21 +1641,105 @@
                       "properties": {
                         "contextPath": {
                           "componentProperty": false,
-                          "defaultValue": "OKSp4hDsnERoEj8gVvzbz5ffsMbLm8HUtZG8lhCUGyMdLwyBXV",
+                          "defaultValue": "BYw3B8rjRI1jPuMSM8kiKeBSyaPID85eLg8bVMJcH8M17NIZJk",
                           "deprecated": false,
                           "description": "The Webhook token that will be set as final part of the URL",
                           "displayName": "Webhook Token",
                           "generator": "alphanum:50",
                           "javaType": "String",
                           "kind": "parameter",
+                          "order": 0,
                           "required": true,
                           "secret": false,
                           "tags": [
                             "context-path"
                           ],
                           "type": "string"
+                        },
+                        "defaultResponse": {
+                          "componentProperty": false,
+                          "deprecated": false,
+                          "displayName": "Default Response",
+                          "javaType": "String",
+                          "kind": "parameter",
+                          "order": 1,
+                          "required": false,
+                          "secret": false,
+                          "type": "legend"
+                        },
+                        "errorHandling": {
+                          "componentProperty": false,
+                          "deprecated": false,
+                          "displayName": "Error Handling",
+                          "javaType": "String",
+                          "kind": "parameter",
+                          "order": 3,
+                          "required": false,
+                          "secret": false,
+                          "type": "legend"
+                        },
+                        "errorResponseCodes": {
+                          "componentProperty": false,
+                          "defaultValue": "{}",
+                          "deprecated": false,
+                          "description": "The return code to set according to different error situations",
+                          "displayName": "Error Response Codes",
+                          "extendedProperties": "{ \"mapsetValueDefinition\": {   \"enum\" : [{\"label\":\"400 Bad Request\",\"value\":\"400\"},{\"label\":\"404 Not Found\",\"value\":\"404\"},{\"label\":\"405 Method Not Allowed\",\"value\":\"405\"},{\"label\":\"409 Conflict\",\"value\":\"409\"},{\"label\":\"500 Server Error\",\"value\":\"500\"},{\"label\":\"501 Not Implemented\",\"value\":\"501\"},{\"label\":\"503 Service Unavailable\",\"value\":\"503\"}],    \"type\" : \"select\" },\"mapsetOptions\": {    \"i18nKeyColumnTitle\": \"When the error message is\",    \"i18nValueColumnTitle\": \"Return this HTTP response code\" }}",
+                          "javaType": "Map",
+                          "kind": "parameter",
+                          "order": 5,
+                          "required": false,
+                          "secret": false,
+                          "type": "mapset"
+                        },
+                        "httpResponseCode": {
+                          "componentProperty": false,
+                          "deprecated": false,
+                          "description": "The return code to set in the HTTP response",
+                          "displayName": "Return Code",
+                          "enum": [
+                            {
+                              "label": "200 OK",
+                              "value": "200"
+                            },
+                            {
+                              "label": "201 Created",
+                              "value": "201"
+                            },
+                            {
+                              "label": "202 Accepted",
+                              "value": "202"
+                            },
+                            {
+                              "label": "204 No Content",
+                              "value": "204"
+                            }
+                          ],
+                          "javaType": "String",
+                          "kind": "parameter",
+                          "order": 2,
+                          "required": true,
+                          "secret": false,
+                          "type": "select"
+                        },
+                        "returnBody": {
+                          "componentProperty": false,
+                          "deprecated": false,
+                          "displayName": "Include error message in the return body",
+                          "javaType": "Boolean",
+                          "kind": "parameter",
+                          "order": 4,
+                          "required": false,
+                          "secret": false,
+                          "type": "boolean"
                         }
                       }
+                    }
+                  ],
+                  "standardizedErrors": [
+                    {
+                      "displayName": "ServerError",
+                      "name": "SERVER_ERROR"
                     }
                   ]
                 },
@@ -1398,7 +1754,10 @@
                 ]
               },
               "configuredProperties": {
-                "contextPath": "test-webhook"
+                "contextPath": "test-webhook",
+                "errorResponseCodes": "{}",
+                "httpResponseCode": "200",
+                "returnBody": "true"
               },
               "connection": {
                 "connector": {
@@ -1415,6 +1774,7 @@
                         "connectorCustomizers": [
                           "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
                         ],
+                        "exceptionHandler": "io.syndesis.connector.webhook.WebhookOnExceptionHandler",
                         "inputDataShape": {
                           "kind": "none"
                         },
@@ -1434,14 +1794,98 @@
                                 "generator": "alphanum:50",
                                 "javaType": "String",
                                 "kind": "parameter",
+                                "order": 0,
                                 "required": true,
                                 "secret": false,
                                 "tags": [
                                   "context-path"
                                 ],
                                 "type": "string"
+                              },
+                              "defaultResponse": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Default Response",
+                                "javaType": "String",
+                                "kind": "parameter",
+                                "order": 1,
+                                "required": false,
+                                "secret": false,
+                                "type": "legend"
+                              },
+                              "errorHandling": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Error Handling",
+                                "javaType": "String",
+                                "kind": "parameter",
+                                "order": 3,
+                                "required": false,
+                                "secret": false,
+                                "type": "legend"
+                              },
+                              "errorResponseCodes": {
+                                "componentProperty": false,
+                                "defaultValue": "{}",
+                                "deprecated": false,
+                                "description": "The return code to set according to different error situations",
+                                "displayName": "Error Response Codes",
+                                "extendedProperties": "{ \"mapsetValueDefinition\": {   \"enum\" : [{\"label\":\"400 Bad Request\",\"value\":\"400\"},{\"label\":\"404 Not Found\",\"value\":\"404\"},{\"label\":\"405 Method Not Allowed\",\"value\":\"405\"},{\"label\":\"409 Conflict\",\"value\":\"409\"},{\"label\":\"500 Server Error\",\"value\":\"500\"},{\"label\":\"501 Not Implemented\",\"value\":\"501\"},{\"label\":\"503 Service Unavailable\",\"value\":\"503\"}],    \"type\" : \"select\" },\"mapsetOptions\": {    \"i18nKeyColumnTitle\": \"When the error message is\",    \"i18nValueColumnTitle\": \"Return this HTTP response code\" }}",
+                                "javaType": "Map",
+                                "kind": "parameter",
+                                "order": 5,
+                                "required": false,
+                                "secret": false,
+                                "type": "mapset"
+                              },
+                              "httpResponseCode": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "The return code to set in the HTTP response",
+                                "displayName": "Return Code",
+                                "enum": [
+                                  {
+                                    "label": "200 OK",
+                                    "value": "200"
+                                  },
+                                  {
+                                    "label": "201 Created",
+                                    "value": "201"
+                                  },
+                                  {
+                                    "label": "202 Accepted",
+                                    "value": "202"
+                                  },
+                                  {
+                                    "label": "204 No Content",
+                                    "value": "204"
+                                  }
+                                ],
+                                "javaType": "String",
+                                "kind": "parameter",
+                                "order": 2,
+                                "required": true,
+                                "secret": false,
+                                "type": "select"
+                              },
+                              "returnBody": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Include error message in the return body",
+                                "javaType": "Boolean",
+                                "kind": "parameter",
+                                "order": 4,
+                                "required": false,
+                                "secret": false,
+                                "type": "boolean"
                               }
                             }
+                          }
+                        ],
+                        "standardizedErrors": [
+                          {
+                            "displayName": "ServerError",
+                            "name": "SERVER_ERROR"
                           }
                         ]
                       },
@@ -1458,7 +1902,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-webhook:2.0-SNAPSHOT",
                       "type": "MAVEN"
                     }
                   ],
@@ -1469,7 +1913,7 @@
                     "hide-from-connection-pages": "true"
                   },
                   "name": "Webhook",
-                  "version": 135
+                  "version": 16
                 },
                 "connectorId": "webhook",
                 "description": "Create direct connections with external systems through Webhooks",
@@ -1482,7 +1926,7 @@
                 "name": "Webhook",
                 "uses": 0
               },
-              "id": "-LhL23Q971G_Hn4CaeFQ",
+              "id": "-M4y0Svloj9AnQ4QczWE",
               "metadata": {
                 "configured": "true"
               },
@@ -1498,15 +1942,15 @@
                   },
                   "outputDataShape": {
                     "kind": "json-schema",
-                    "name": "Data Mapper (Template JSON Schema)",
-                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"first_name\":{\"description\":\"Identifier for the symbol first_name\",\"type\":\"string\"},\"company\":{\"description\":\"Identifier for the symbol company\",\"type\":\"string\"}}}"
+                    "name": "Template JSON Schema",
+                    "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"type\":\"object\",\"properties\":{\"first_name\":{\"description\":\"Identifier for the symbol first_name\",\"type\":\"string\"},\"company\":{\"description\":\"Identifier for the symbol company\",\"type\":\"string\"}}}"
                   }
                 }
               },
               "configuredProperties": {
-                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL23Q971G_Hn4CaeFQ\",\"uri\":\"atlas:json:-LhL23Q971G_Hn4CaeFQ\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL2aST71G_Hn4CaeFR\",\"uri\":\"atlas:json:-LhL2aST71G_Hn4CaeFR\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.856885\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-LhL23Q971G_Hn4CaeFQ\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-LhL2aST71G_Hn4CaeFR\",\"userCreated\":false}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.89481\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-LhL23Q971G_Hn4CaeFQ\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-LhL2aST71G_Hn4CaeFR\",\"userCreated\":false}]}]},\"name\":\"UI.258840\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4y0Svloj9AnQ4QczWE\",\"uri\":\"atlas:json:-M4y0Svloj9AnQ4QczWE\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4y0qmDoj9AnQ4QczWE\",\"uri\":\"atlas:json:-M4y0qmDoj9AnQ4QczWE\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.333045\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0Svloj9AnQ4QczWE\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0qmDoj9AnQ4QczWE\",\"userCreated\":false}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.335128\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0Svloj9AnQ4QczWE\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0qmDoj9AnQ4QczWE\",\"userCreated\":false}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
               },
-              "id": "-LhMIgmqwTVrrl0uikKQ",
+              "id": "-M4y0x8koj9AnQ4QczWF",
               "metadata": {
                 "configured": "true"
               },
@@ -1520,22 +1964,22 @@
                   "inputDataShape": {
                     "kind": "json-schema",
                     "name": "Template JSON Schema",
-                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"first_name\":{\"description\":\"Identifier for the symbol first_name\",\"type\":\"string\"},\"company\":{\"description\":\"Identifier for the symbol company\",\"type\":\"string\"}}}"
+                    "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"type\":\"object\",\"properties\":{\"first_name\":{\"description\":\"Identifier for the symbol first_name\",\"type\":\"string\"},\"company\":{\"description\":\"Identifier for the symbol company\",\"type\":\"string\"}}}"
                   },
                   "outputDataShape": {
                     "kind": "json-schema",
                     "name": "Template JSON Schema",
-                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"message\":{\"description\":\"Identifier for the symbol message\",\"type\":\"string\"}}}"
+                    "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"type\":\"object\",\"properties\":{\"message\":{\"description\":\"Identifier for the symbol message\",\"type\":\"string\"}}}"
                   }
                 },
-                "id": "-LhMBjh-wTVrrl0uikKO",
-                "name": "Templater"
+                "id": "-M4y0qmCoj9AnQ4QczWE",
+                "name": "Template"
               },
               "configuredProperties": {
                 "language": "mustache",
                 "template": "Welcome {{first_name}},\n\nhave a great start here at {{company}}!\n\nRegards,\nPeople Team"
               },
-              "id": "-LhL2aST71G_Hn4CaeFR",
+              "id": "-M4y0qmDoj9AnQ4QczWE",
               "metadata": {
                 "configured": "true"
               },
@@ -1552,16 +1996,16 @@
                   },
                   "outputDataShape": {
                     "kind": "java",
-                    "name": "Data Mapper (EmailMessage)",
-                    "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
+                    "name": "EmailMessage",
+                    "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"FINAL\",\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
                     "type": "io.syndesis.connector.email.model.EMailMessageModel"
                   }
                 }
               },
               "configuredProperties": {
-                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL23Q971G_Hn4CaeFQ\",\"uri\":\"atlas:json:-LhL23Q971G_Hn4CaeFQ\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhMIgmqwTVrrl0uikKQ\",\"uri\":\"atlas:json:-LhMIgmqwTVrrl0uikKQ\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL2aST71G_Hn4CaeFR\",\"uri\":\"atlas:json:-LhL2aST71G_Hn4CaeFR\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.v2.DataSource\",\"id\":\"-LhL2rq-71G_Hn4CaeFT\",\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"dataSourceType\":\"TARGET\"}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.696398\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"message\",\"path\":\"/message\",\"fieldType\":\"STRING\",\"docId\":\"-LhL2aST71G_Hn4CaeFR\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"name\":\"content\",\"path\":\"/content\",\"fieldType\":\"ANY\",\"docId\":\"-LhL2rq-71G_Hn4CaeFT\",\"className\":\"java.lang.Object\"}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.702522\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"mail\",\"path\":\"/mail\",\"fieldType\":\"STRING\",\"docId\":\"-LhL23Q971G_Hn4CaeFQ\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"name\":\"to\",\"path\":\"/to\",\"fieldType\":\"STRING\",\"docId\":\"-LhL2rq-71G_Hn4CaeFT\"}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.220732\",\"inputField\":[{\"jsonType\":\"io.atlasmap.v2.PropertyField\",\"name\":\"/from\",\"path\":\"/from\",\"fieldType\":\"STRING\",\"docId\":\"DOC.Properties.4693\",\"value\":\"people-team@syndesis.org\"}],\"outputField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"name\":\"from\",\"path\":\"/from\",\"fieldType\":\"STRING\",\"docId\":\"-LhL2rq-71G_Hn4CaeFT\"}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.234274\",\"inputField\":[{\"jsonType\":\"io.atlasmap.v2.PropertyField\",\"name\":\"/subject\",\"path\":\"/subject\",\"fieldType\":\"STRING\",\"docId\":\"DOC.Properties.4693\",\"value\":\"Welcome!\"}],\"outputField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"name\":\"subject\",\"path\":\"/subject\",\"fieldType\":\"STRING\",\"docId\":\"-LhL2rq-71G_Hn4CaeFT\"}]}]},\"name\":\"UI.255005\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[{\"name\":\"from\",\"value\":\"people-team@syndesis.org\",\"fieldType\":\"STRING\"},{\"name\":\"subject\",\"value\":\"Welcome!\",\"fieldType\":\"STRING\"}]}}}"
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4y0Svloj9AnQ4QczWE\",\"uri\":\"atlas:json:-M4y0Svloj9AnQ4QczWE\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4y0x8koj9AnQ4QczWF\",\"uri\":\"atlas:json:-M4y0x8koj9AnQ4QczWF\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4y0qmDoj9AnQ4QczWE\",\"uri\":\"atlas:json:-M4y0qmDoj9AnQ4QczWE\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.v2.DataSource\",\"id\":\"-M4y0kTOoj9AnQ4QczWE\",\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"dataSourceType\":\"TARGET\"}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.534354\",\"inputField\":[{\"jsonType\":\"io.atlasmap.v2.PropertyField\",\"name\":\"/subject\",\"path\":\"/subject\",\"fieldType\":\"STRING\",\"docId\":\"DOC.Properties.524275\",\"value\":\"Welcome!\"}],\"outputField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"name\":\"subject\",\"path\":\"/subject\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0kTOoj9AnQ4QczWE\"}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.198010\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"mail\",\"path\":\"/mail\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0Svloj9AnQ4QczWE\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"name\":\"to\",\"path\":\"/to\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0kTOoj9AnQ4QczWE\"}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.736649\",\"inputField\":[{\"jsonType\":\"io.atlasmap.v2.PropertyField\",\"name\":\"/from\",\"path\":\"/from\",\"fieldType\":\"STRING\",\"docId\":\"DOC.Properties.524275\",\"value\":\"people-team@syndesis.org\"}],\"outputField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"name\":\"from\",\"path\":\"/from\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0kTOoj9AnQ4QczWE\"}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.426200\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"message\",\"path\":\"/message\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0qmDoj9AnQ4QczWE\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"name\":\"content\",\"path\":\"/content\",\"fieldType\":\"ANY\",\"docId\":\"-M4y0kTOoj9AnQ4QczWE\",\"className\":\"java.lang.Object\"}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[{\"name\":\"Welcome!\",\"value\":\"Welcome!\",\"fieldType\":\"STRING\"},{\"name\":\"from\",\"value\":\"people-team@syndesis.org\",\"fieldType\":\"STRING\"},{\"name\":\"people-team@syndesis.org\",\"value\":\"people-team@syndesis.org\",\"fieldType\":\"STRING\"},{\"name\":\"subject\",\"value\":\"Welcome!\",\"fieldType\":\"STRING\"}]}}}"
               },
-              "id": "-LhMIj8_wTVrrl0uikKR",
+              "id": "-M4y2MY9qo1w5KT5YvY7",
               "metadata": {
                 "configured": "true"
               },
@@ -1580,7 +2024,7 @@
                   "inputDataShape": {
                     "kind": "java",
                     "name": "EmailMessage",
-                    "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
+                    "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"FINAL\",\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
                     "type": "io.syndesis.connector.email.model.EMailMessageModel"
                   },
                   "outputDataShape": {
@@ -1698,10 +2142,11 @@
                 },
                 "id": "io.syndesis:email-send-connector",
                 "name": "Send Email",
-                "pattern": "To",
-                "tags": [
-                  "dynamic"
-                ]
+                "pattern": "To"
+              },
+              "configuredProperties": {
+                "from": "people-team@syndesis.org",
+                "priority": "injectedData"
               },
               "connection": {
                 "configuredProperties": {
@@ -1724,7 +2169,7 @@
                         "inputDataShape": {
                           "kind": "java",
                           "name": "EmailMessage",
-                          "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
+                          "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"FINAL\",\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
                           "type": "io.syndesis.connector.email.model.EMailMessageModel"
                         },
                         "outputDataShape": {
@@ -1732,7 +2177,7 @@
                         },
                         "propertyDefinitionSteps": [
                           {
-                            "description": "Specify the emails that you want to obtain.",
+                            "description": "Specify the email messages that you want to send.",
                             "name": "Send messages to Email",
                             "properties": {
                               "bcc": {
@@ -1843,10 +2288,7 @@
                       },
                       "id": "io.syndesis:email-send-connector",
                       "name": "Send Email",
-                      "pattern": "To",
-                      "tags": [
-                        "dynamic"
-                      ]
+                      "pattern": "To"
                     }
                   ],
                   "componentScheme": "email-send",
@@ -1855,16 +2297,13 @@
                   },
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-email:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-email:2.0-SNAPSHOT",
                       "type": "MAVEN"
                     }
                   ],
                   "description": "Send email messages.",
                   "icon": "assets:email-send.svg",
                   "id": "email-send",
-                  "metadata": {
-                    "tech-preview": "true"
-                  },
                   "name": "Send Email (smtp)",
                   "properties": {
                     "host": {
@@ -1889,7 +2328,7 @@
                       "javaType": "java.lang.String",
                       "kind": "parameter",
                       "label": "common,security",
-                      "labelHint": "Specify a password for authentication of the email service, if required.",
+                      "labelHint": "Specify the password for the email account that this connection is authorized to access.",
                       "order": 4,
                       "required": true,
                       "secret": true,
@@ -1971,7 +2410,7 @@
                       "javaType": "java.lang.String",
                       "kind": "parameter",
                       "label": "common,security",
-                      "labelHint": "Specify a user name for authentication of the email service url, if required.",
+                      "labelHint": "Specify the user name for the email account that this connection is authorized to access.",
                       "order": 3,
                       "required": true,
                       "secret": false,
@@ -1981,19 +2420,19 @@
                   "tags": [
                     "verifier"
                   ],
-                  "version": 14
+                  "version": 16
                 },
                 "connectorId": "email-send",
                 "createdDate": 1560516758048,
                 "icon": "assets:email-send.svg",
                 "id": "i-LhL2-ccjv5WqGyjCaVVz",
                 "isDerived": false,
-                "lastUpdated": 1560516758048,
+                "lastUpdated": 1586944455246,
                 "name": "SMTP",
                 "userId": "developer",
                 "uses": 0
               },
-              "id": "-LhL2rq-71G_Hn4CaeFT",
+              "id": "-M4y0kTOoj9AnQ4QczWE",
               "metadata": {
                 "configured": "true"
               },
@@ -2009,15 +2448,15 @@
                   },
                   "outputDataShape": {
                     "kind": "json-schema",
-                    "name": "Data Mapper (Template JSON Schema)",
-                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"first_name\":{\"description\":\"Identifier for the symbol first_name\",\"type\":\"string\"},\"company\":{\"description\":\"Identifier for the symbol company\",\"type\":\"string\"}}}"
+                    "name": "Template JSON Schema",
+                    "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"type\":\"object\",\"properties\":{\"first_name\":{\"description\":\"Identifier for the symbol first_name\",\"type\":\"string\"},\"company\":{\"description\":\"Identifier for the symbol company\",\"type\":\"string\"}}}"
                   }
                 }
               },
               "configuredProperties": {
-                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL23Q971G_Hn4CaeFQ\",\"uri\":\"atlas:json:-LhL23Q971G_Hn4CaeFQ\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL2mUy71G_Hn4CaeFS\",\"uri\":\"atlas:json:-LhL2mUy71G_Hn4CaeFS\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL2aST71G_Hn4CaeFR\",\"uri\":\"atlas:json:-LhL2aST71G_Hn4CaeFR\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.v2.DataSource\",\"id\":\"-LhL2uXR71G_Hn4CaeFU\",\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL3Iyu71G_Hn4CaeFW\",\"uri\":\"atlas:json:-LhL3Iyu71G_Hn4CaeFW\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.542929\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-LhL23Q971G_Hn4CaeFQ\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-LhL3Iyu71G_Hn4CaeFW\",\"userCreated\":false}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.256674\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-LhL23Q971G_Hn4CaeFQ\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-LhL3Iyu71G_Hn4CaeFW\",\"userCreated\":false}]}]},\"name\":\"UI.833264\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4y0Svloj9AnQ4QczWE\",\"uri\":\"atlas:json:-M4y0Svloj9AnQ4QczWE\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4y0x8koj9AnQ4QczWF\",\"uri\":\"atlas:json:-M4y0x8koj9AnQ4QczWF\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4y0qmDoj9AnQ4QczWE\",\"uri\":\"atlas:json:-M4y0qmDoj9AnQ4QczWE\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4y0x7Qoj9AnQ4QczWF\",\"uri\":\"atlas:json:-M4y0x7Qoj9AnQ4QczWF\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.947543\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0Svloj9AnQ4QczWE\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0x7Qoj9AnQ4QczWF\",\"userCreated\":false}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.88419\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0Svloj9AnQ4QczWE\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0x7Qoj9AnQ4QczWF\",\"userCreated\":false}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
               },
-              "id": "-LhL3T3B71G_Hn4CaeFX",
+              "id": "-M4y11AXoj9AnQ4QczWG",
               "metadata": {
                 "configured": "true"
               },
@@ -2031,22 +2470,22 @@
                   "inputDataShape": {
                     "kind": "json-schema",
                     "name": "Template JSON Schema",
-                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"first_name\":{\"description\":\"Identifier for the symbol first_name\",\"type\":\"string\"},\"company\":{\"description\":\"Identifier for the symbol company\",\"type\":\"string\"}}}"
+                    "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"type\":\"object\",\"properties\":{\"first_name\":{\"description\":\"Identifier for the symbol first_name\",\"type\":\"string\"},\"company\":{\"description\":\"Identifier for the symbol company\",\"type\":\"string\"}}}"
                   },
                   "outputDataShape": {
                     "kind": "json-schema",
                     "name": "Template JSON Schema",
-                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"message\":{\"description\":\"Identifier for the symbol message\",\"type\":\"string\"}}}"
+                    "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"type\":\"object\",\"properties\":{\"message\":{\"description\":\"Identifier for the symbol message\",\"type\":\"string\"}}}"
                   }
                 },
-                "id": "-LhL3Rfq71G_Hn4CaeFW",
-                "name": "Templater"
+                "id": "-M4y0x7Poj9AnQ4QczWF",
+                "name": "Template"
               },
               "configuredProperties": {
                 "language": "mustache",
                 "template": "New hire for {{first_name}} from {{company}}"
               },
-              "id": "-LhL3Iyu71G_Hn4CaeFW",
+              "id": "-M4y0x7Qoj9AnQ4QczWF",
               "metadata": {
                 "configured": "true"
               },
@@ -2062,18 +2501,21 @@
                     "name": "All preceding outputs"
                   },
                   "outputDataShape": {
-                    "description": "Parameters of SQL [insert into todo (task) values (:#task)]",
+                    "description": "Parameters of SQL [insert into todo (task) values (:#task);]",
                     "kind": "json-schema",
-                    "name": "Data Mapper (SQL Parameter)",
-                    "specification": "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":{\"type\":\"object\",\"title\":\"SQL_PARAM_IN\",\"properties\":{\"task\":{\"type\":\"string\",\"required\":true}}}}",
+                    "metadata": {
+                      "variant": "element"
+                    },
+                    "name": "SQL Parameter",
+                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"SQL_PARAM_IN\",\"properties\":{\"task\":{\"type\":\"string\",\"required\":true}}}",
                     "type": "SQL_PARAM_IN"
                   }
                 }
               },
               "configuredProperties": {
-                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL23Q971G_Hn4CaeFQ\",\"uri\":\"atlas:json:-LhL23Q971G_Hn4CaeFQ\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL2mUy71G_Hn4CaeFS\",\"uri\":\"atlas:json:-LhL2mUy71G_Hn4CaeFS\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL2aST71G_Hn4CaeFR\",\"uri\":\"atlas:json:-LhL2aST71G_Hn4CaeFR\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.v2.DataSource\",\"id\":\"-LhL2uXR71G_Hn4CaeFU\",\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL3T3B71G_Hn4CaeFX\",\"uri\":\"atlas:json:-LhL3T3B71G_Hn4CaeFX\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL3Iyu71G_Hn4CaeFW\",\"uri\":\"atlas:json:-LhL3Iyu71G_Hn4CaeFW\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL2Sh271G_Hn4CaeFQ\",\"uri\":\"atlas:json:-LhL2Sh271G_Hn4CaeFQ\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Collection\",\"mappingType\":\"COLLECTION\",\"collectionType\":null,\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.372661\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"message\",\"path\":\"/message\",\"fieldType\":\"STRING\",\"docId\":\"-LhL3Iyu71G_Hn4CaeFW\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"task\",\"path\":\"/<>/task\",\"fieldType\":\"STRING\",\"docId\":\"-LhL2Sh271G_Hn4CaeFQ\",\"userCreated\":false}]}]}}]},\"name\":\"UI.334550\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4y0Svloj9AnQ4QczWE\",\"uri\":\"atlas:json:-M4y0Svloj9AnQ4QczWE\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4y0x8koj9AnQ4QczWF\",\"uri\":\"atlas:json:-M4y0x8koj9AnQ4QczWF\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4y0qmDoj9AnQ4QczWE\",\"uri\":\"atlas:json:-M4y0qmDoj9AnQ4QczWE\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4y0x7Qoj9AnQ4QczWF\",\"uri\":\"atlas:json:-M4y0x7Qoj9AnQ4QczWF\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M4y0fphoj9AnQ4QczWE\",\"uri\":\"atlas:json:-M4y0fphoj9AnQ4QczWE\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.760575\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"message\",\"path\":\"/message\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0x7Qoj9AnQ4QczWF\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"task\",\"path\":\"/task\",\"fieldType\":\"STRING\",\"docId\":\"-M4y0fphoj9AnQ4QczWE\",\"userCreated\":false}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
               },
-              "id": "-LhL3WN071G_Hn4CaeFY",
+              "id": "-M4y0zQDoj9AnQ4QczWG",
               "metadata": {
                 "configured": "true"
               },
@@ -2090,17 +2532,17 @@
                     "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
                   ],
                   "inputDataShape": {
-                    "description": "Parameters of SQL [insert into todo (task) values (:#task)]",
+                    "description": "Parameters of SQL [insert into todo (task) values (:#task);]",
                     "kind": "json-schema",
                     "metadata": {
-                      "variant": "collection"
+                      "variant": "element"
                     },
                     "name": "SQL Parameter",
-                    "specification": "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":{\"type\":\"object\",\"title\":\"SQL_PARAM_IN\",\"properties\":{\"task\":{\"type\":\"string\",\"required\":true}}}}",
+                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"SQL_PARAM_IN\",\"properties\":{\"task\":{\"type\":\"string\",\"required\":true}}}",
                     "type": "SQL_PARAM_IN"
                   },
                   "outputDataShape": {
-                    "description": "Result of SQL [insert into todo (task) values (:#task)]",
+                    "description": "Result of SQL [insert into todo (task) values (:#task);]",
                     "kind": "json-schema",
                     "metadata": {
                       "variant": "collection"
@@ -2113,20 +2555,68 @@
                     {
                       "name": "SQL statement",
                       "properties": {
+                        "batch": {
+                          "defaultValue": "false",
+                          "deprecated": false,
+                          "displayName": "Batch update",
+                          "group": "common",
+                          "javaType": "java.lang.Boolean",
+                          "kind": "property",
+                          "labelHint": "Use prepared statements for INSERT, UPDATE, DELETE in order to update multiple rows with batch update.",
+                          "order": 2,
+                          "required": false,
+                          "secret": false,
+                          "type": "boolean"
+                        },
                         "query": {
-                          "defaultValue": "insert into todo (task) values (:#task)",
+                          "dataList": [
+                            "insert into todo (task) values (:#task);"
+                          ],
+                          "defaultValue": "insert into todo (task) values (:#task);",
                           "deprecated": false,
                           "displayName": "SQL statement",
                           "group": "common",
                           "javaType": "java.lang.String",
                           "kind": "path",
                           "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                          "order": 1,
                           "placeholder": "for example ':#MYPARAMNAME'",
                           "required": true,
                           "secret": false,
-                          "type": "string"
+                          "type": "dataList"
+                        },
+                        "raiseErrorOnNotFound": {
+                          "defaultValue": "false",
+                          "deprecated": false,
+                          "displayName": "Raise error when record not found",
+                          "group": "common",
+                          "javaType": "java.lang.Boolean",
+                          "kind": "property",
+                          "labelHint": "Error when no records are selected, updated or deleted",
+                          "order": 3,
+                          "required": false,
+                          "secret": false,
+                          "type": "boolean"
                         }
                       }
+                    }
+                  ],
+                  "standardizedErrors": [
+                    {
+                      "displayName": "SqlDataAccessError",
+                      "name": "SQL_DATA_ACCESS_ERROR"
+                    },
+                    {
+                      "displayName": "SqlEntityNotFoundError",
+                      "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                    },
+                    {
+                      "displayName": "SqlDuplicateKeyError",
+                      "name": "org.springframework.dao.DuplicateKeyException"
+                    },
+                    {
+                      "displayName": "SqlConnectorError",
+                      "name": "SQL_CONNECTOR_ERROR"
                     }
                   ]
                 },
@@ -2138,7 +2628,9 @@
                 ]
               },
               "configuredProperties": {
-                "query": "insert into todo (task) values (:#task)"
+                "batch": "false",
+                "query": "insert into todo (task) values (:#task);",
+                "raiseErrorOnNotFound": "false"
               },
               "connection": {
                 "configuredProperties": {
@@ -2168,6 +2660,19 @@
                             "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
                             "name": "SQL statement",
                             "properties": {
+                              "batch": {
+                                "defaultValue": "false",
+                                "deprecated": false,
+                                "displayName": "Batch update",
+                                "group": "common",
+                                "javaType": "java.lang.Boolean",
+                                "kind": "property",
+                                "labelHint": "Use prepared statements for INSERT, UPDATE, DELETE in order to update multiple rows with batch update.",
+                                "order": 2,
+                                "required": false,
+                                "secret": false,
+                                "type": "boolean"
+                              },
                               "query": {
                                 "deprecated": false,
                                 "displayName": "SQL statement",
@@ -2175,12 +2680,44 @@
                                 "javaType": "java.lang.String",
                                 "kind": "path",
                                 "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                                "order": 1,
                                 "placeholder": "for example ':#MYPARAMNAME'",
                                 "required": true,
                                 "secret": false,
-                                "type": "string"
+                                "type": "dataList"
+                              },
+                              "raiseErrorOnNotFound": {
+                                "defaultValue": "false",
+                                "deprecated": false,
+                                "displayName": "Raise error when record not found",
+                                "group": "common",
+                                "javaType": "java.lang.Boolean",
+                                "kind": "property",
+                                "labelHint": "Error when no records are selected, updated or deleted",
+                                "order": 3,
+                                "required": false,
+                                "secret": false,
+                                "type": "boolean"
                               }
                             }
+                          }
+                        ],
+                        "standardizedErrors": [
+                          {
+                            "displayName": "SqlDataAccessError",
+                            "name": "SQL_DATA_ACCESS_ERROR"
+                          },
+                          {
+                            "displayName": "SqlEntityNotFoundError",
+                            "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                          },
+                          {
+                            "displayName": "SqlDuplicateKeyError",
+                            "name": "org.springframework.dao.DuplicateKeyException"
+                          },
+                          {
+                            "displayName": "SqlConnectorError",
+                            "name": "SQL_CONNECTOR_ERROR"
                           }
                         ]
                       },
@@ -2207,9 +2744,21 @@
                         },
                         "propertyDefinitionSteps": [
                           {
-                            "description": "Enter a SQL statement that returns results.",
+                            "description": "Enter a SQL statement that returns results, such as SELECT.",
                             "name": "SQL statement",
                             "properties": {
+                              "isRaiseErrorOnNotFound": {
+                                "deprecated": false,
+                                "displayName": "Raise NotFoundError",
+                                "group": "consumer",
+                                "javaType": "java.lang.Boolean",
+                                "kind": "parameter",
+                                "labelHint": "Raise NotFoundError if no records are inserted, updated, selected or deleted",
+                                "order": 3,
+                                "required": false,
+                                "secret": false,
+                                "type": "boolean"
+                              },
                               "query": {
                                 "deprecated": false,
                                 "displayName": "SQL statement",
@@ -2220,7 +2769,7 @@
                                 "order": 1,
                                 "required": true,
                                 "secret": false,
-                                "type": "string"
+                                "type": "dataList"
                               },
                               "schedulerExpression": {
                                 "defaultValue": "60000",
@@ -2275,7 +2824,7 @@
                                 "labelHint": "Name of the stored procedure.",
                                 "required": false,
                                 "secret": false,
-                                "type": "string"
+                                "type": "select"
                               },
                               "template": {
                                 "componentProperty": false,
@@ -2329,7 +2878,7 @@
                                 "labelHint": "Name of the stored procedure.",
                                 "required": true,
                                 "secret": false,
-                                "type": "string"
+                                "type": "select"
                               },
                               "schedulerExpression": {
                                 "defaultValue": "60000",
@@ -2372,7 +2921,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:2.0-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {
@@ -2380,7 +2929,7 @@
                       "type": "EXTENSION_TAG"
                     }
                   ],
-                  "description": "Subscribe for and publish messages.",
+                  "description": "Invoke SQL to obtain, store, update, or delete data.",
                   "icon": "assets:sql.svg",
                   "id": "sql",
                   "name": "Database",
@@ -2443,7 +2992,7 @@
                   "tags": [
                     "verifier"
                   ],
-                  "version": 135
+                  "version": 16
                 },
                 "connectorId": "sql",
                 "description": "Connection to SampleDB",
@@ -2456,25 +3005,30 @@
                 ],
                 "uses": 0
               },
-              "id": "-LhL2Sh271G_Hn4CaeFQ",
+              "id": "-M4y0fphoj9AnQ4QczWE",
               "metadata": {
                 "configured": "true"
               },
               "stepKind": "endpoint"
             }
           ],
+          "tags": [
+            "5",
+            "i-LhL2-ccjv5WqGyjCaVVz",
+            "webhook"
+          ],
           "type": "PRIMARY"
         }
       ],
-      "id": "i-LhL3nkvjv5WqGyjCaVXz",
+      "id": "i-M4y1EddlCY5ii3d0hYCz",
       "name": "SendMail",
       "tags": [
         "email-send",
         "sql",
         "webhook"
       ],
-      "updatedAt": 1560623259605,
-      "version": 11
+      "updatedAt": 1586961902021,
+      "version": 10
     }
   }
 }
