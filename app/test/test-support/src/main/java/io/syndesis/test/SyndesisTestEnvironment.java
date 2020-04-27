@@ -16,6 +16,7 @@
 
 package io.syndesis.test;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -142,9 +143,11 @@ public final class SyndesisTestEnvironment {
                 System.getenv(SYNDESIS_DEBUG_PORT_ENV) : SYNDESIS_DEBUG_PORT_DEFAULT));
     }
 
-    public static int getContainerStartupTimeout() {
-        return Integer.parseInt(System.getProperty(SYNDESIS_CONTAINER_STARTUP_TIMEOUT, System.getenv(SYNDESIS_CONTAINER_STARTUP_TIMEOUT_ENV) != null ?
+    public static Duration getContainerStartupTimeout() {
+        final int seconds = Integer.parseInt(System.getProperty(SYNDESIS_CONTAINER_STARTUP_TIMEOUT, System.getenv(SYNDESIS_CONTAINER_STARTUP_TIMEOUT_ENV) != null ?
                 System.getenv(SYNDESIS_CONTAINER_STARTUP_TIMEOUT_ENV) : SYNDESIS_CONTAINER_STARTUP_TIMEOUT_DEFAULT));
+
+        return Duration.ofSeconds(seconds);
     }
 
     public static String getOutputDirectory() {

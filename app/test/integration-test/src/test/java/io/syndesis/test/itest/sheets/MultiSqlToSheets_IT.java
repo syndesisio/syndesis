@@ -16,7 +16,6 @@
 
 package io.syndesis.test.itest.sheets;
 
-import java.time.Duration;
 import java.util.Arrays;
 
 import com.consol.citrus.TestCaseRunner;
@@ -52,7 +51,7 @@ public class MultiSqlToSheets_IT extends GoogleSheetsTestSupport {
                         String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, GOOGLE_SHEETS_SERVER_PORT))
             .build()
             .withNetwork(getSyndesisDb().getNetwork())
-            .waitingFor(Wait.defaultWaitStrategy().withStartupTimeout(Duration.ofSeconds(SyndesisTestEnvironment.getContainerStartupTimeout())));
+            .waitingFor(Wait.defaultWaitStrategy().withStartupTimeout(SyndesisTestEnvironment.getContainerStartupTimeout()));
 
     @Test
     @CitrusTest
