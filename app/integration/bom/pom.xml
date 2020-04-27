@@ -30,7 +30,7 @@
     <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
     <camel.version>3.1.0</camel.version>
     <atlasmap.version>1.44.0-M2</atlasmap.version>
-    <jackson.databind.version>2.9.10.3</jackson.databind.version>
+    <jackson.databind.version>2.9.10.4</jackson.databind.version>
     <mongodb.version>3.9.0</mongodb.version>
   </properties>
 
