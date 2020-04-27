@@ -3,10 +3,11 @@ import * as React from 'react';
 
 export interface IOperationsDropdownProps {
   body: React.ReactNode;
+  testId? : string;
 }
 export const BreadcrumbDropdown: React.FunctionComponent<
   IOperationsDropdownProps
-> = ({ body, children }) => {
+> = ({ body, children, testId }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const closeDropdown = () => setIsOpen(false);
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -20,6 +21,7 @@ export const BreadcrumbDropdown: React.FunctionComponent<
         </DropdownToggle>
       }
       isOpen={isOpen}
+      data-testid={testId}
     >
       {children}
     </Dropdown>
