@@ -24,8 +24,7 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.ws.rs.core.UriInfo;
-
+import com.google.common.collect.ImmutableMap;
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.ConfigMapList;
 import io.fabric8.kubernetes.api.model.DoneableConfigMap;
@@ -53,15 +52,12 @@ import io.syndesis.common.model.EmptyListResult;
 import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSupportHandler;
-
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import com.google.common.collect.ImmutableMap;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -112,17 +108,15 @@ public class SupportUtilTest {
         when(client.imageStreamTags()).thenReturn(ist);
 
         final IntegrationHandler integrationHandler = mock(IntegrationHandler.class);
-        when(integrationHandler.list(any())).thenReturn(new EmptyListResult<IntegrationOverview>());
+        when(integrationHandler.list(anyInt(), anyInt())).thenReturn(new EmptyListResult<IntegrationOverview>());
         final IntegrationSupportHandler integrationSupportHandler = mock(IntegrationSupportHandler.class);
 
         final Logger log = mock(Logger.class);
         final SupportUtil supportUtil = new SupportUtil(client, integrationHandler, integrationSupportHandler, log);
 
-        final UriInfo uriInfo = mock(UriInfo.class);
-
         final Map<String, Boolean> configurationMap = new HashMap<>(ImmutableMap.of("int1", true, "int2", true));
 
-        final File output = supportUtil.createSupportZipFile(configurationMap, uriInfo);
+        final File output = supportUtil.createSupportZipFile(configurationMap, 1, 20);
 
         try (final ZipFile zip = new ZipFile(output)) {
             final ZipEntry imageStreamTag1 = zip.getEntry("descriptors/ImageStreamTag/ImageStreamTag1.YAML");

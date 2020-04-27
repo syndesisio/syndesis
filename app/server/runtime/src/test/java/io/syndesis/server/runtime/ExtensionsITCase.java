@@ -83,7 +83,7 @@ public class ExtensionsITCase extends BaseITCase {
         assertThat(got.getBody().getName()).isEqualTo(created.getBody().getName());
 
         // LIST
-        final ResponseEntity<ListResult<Extension>> list = get("/api/v1/extensions?query=status=" + Extension.Status.Draft,
+        final ResponseEntity<ListResult<Extension>> list = get("/api/v1/extensions?status=" + Extension.Status.Draft,
             new ParameterizedTypeReference<ListResult<Extension>>() {
             }, tokenRule.validToken(), HttpStatus.OK);
 

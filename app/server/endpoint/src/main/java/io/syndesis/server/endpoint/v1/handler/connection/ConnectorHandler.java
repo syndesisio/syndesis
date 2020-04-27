@@ -17,6 +17,7 @@ package io.syndesis.server.endpoint.v1.handler.connection;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -24,8 +25,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,8 +40,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -59,12 +60,14 @@ import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.file.IconDao;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
+import io.syndesis.server.endpoint.util.PaginationFilter;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import io.syndesis.server.endpoint.v1.operations.Deleter;
 import io.syndesis.server.endpoint.v1.operations.Getter;
-import io.syndesis.server.endpoint.v1.operations.Lister;
+import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.operations.Updater;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
+import io.syndesis.server.endpoint.v1.util.PredicateFilter;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import io.syndesis.server.verifier.Verifier;
@@ -76,7 +79,7 @@ import org.springframework.stereotype.Component;
 @Path("/connectors")
 @Tag(name = "connectors")
 @Component
-public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector>, Updater<Connector>, Deleter<Connector> {
+public class ConnectorHandler extends BaseHandler implements Getter<Connector>, Updater<Connector>, Deleter<Connector> {
 
     private final ApplicationContext applicationContext;
     private final IconDao iconDao;
@@ -231,12 +234,37 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         return builder.build();
     }
 
-    @Override
-    public ListResult<Connector> list(final UriInfo uriInfo) {
-        final List<Connector> connectors = Lister.super.list(uriInfo).getItems().stream()
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public ListResult<Connector> list(
+        @Parameter(required = false, description = "Filter by connector's name")
+        @QueryParam("name") String name,
+        @Parameter(required = false, description = "Filter by connector's group id")
+        @QueryParam("connectorGroupId") String connectorGroupId,
+        @Parameter(required = false, description = "Page number to return")
+        @QueryParam("page") @DefaultValue("1") int page,
+        @Parameter(required = false, description = "Number of records per page")
+        @QueryParam("per_page") @DefaultValue("20") int perPage
+    ) {
+
+        ListResult<Connector> listResult = getDataManager().fetchAll(
+            Connector.class,
+            new PredicateFilter<>(connector -> name == null || connector.getName().equalsIgnoreCase(name)),
+            new PredicateFilter<>(connector ->
+                connectorGroupId == null || (connector.getConnectorGroupId().isPresent()
+                    && connector.getConnectorGroupId().get().equals(connectorGroupId))
+            ),
+            new PaginationFilter<>(new PaginationOptionsFromQueryParams(page, perPage))
+        );
+
+        return augmentedList(listResult);
+    }
+
+    private ListResult<Connector> augmentedList(ListResult<Connector> list) {
+        final List<Connector> connectors = list.getItems().stream()
             .map(c -> {
                 final APISummary summary = APISummary.Builder.createFrom(c).build();
-
                 return c.builder().actionsSummary(summary.getActionsSummary()).build();
             })
             .collect(Collectors.toList());

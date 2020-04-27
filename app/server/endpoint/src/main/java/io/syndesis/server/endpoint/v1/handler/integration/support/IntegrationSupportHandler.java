@@ -49,6 +49,7 @@ import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
 import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.slf4j.Logger;
@@ -154,7 +155,8 @@ public class IntegrationSupportHandler {
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/overviews")
     public ListResult<IntegrationOverview> getOverviews(@Context  UriInfo uriInfo) {
-        return integrationHandler.list(uriInfo);
+        PaginationOptionsFromQueryParams paginationOptions = new PaginationOptionsFromQueryParams(uriInfo);
+        return integrationHandler.list(paginationOptions.getPage(), paginationOptions.getPerPage());
     }
 
     @POST
