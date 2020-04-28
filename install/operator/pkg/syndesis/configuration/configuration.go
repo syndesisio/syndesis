@@ -34,6 +34,7 @@ import (
 
 	"github.com/imdario/mergo"
 
+	k8errors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/types"
 
 	routev1 "github.com/openshift/api/route/v1"
@@ -329,47 +330,84 @@ func GetProperties(file string, ctx context.Context, client client.Client, synde
 		return nil, err
 	}
 
-	if client == nil || len(syndesis.Spec.Components.Database.ExternalDbURL) > 0 {
-		return configuration, nil
+	//
+	// If an external database has been defined then reset properties appropriately
+	//
+	if client != nil && len(syndesis.Spec.Components.Database.ExternalDbURL) > 0 {
+		if err := configuration.externalDatabase(ctx, client, syndesis); err != nil {
+			return nil, err
+		}
 	}
 
-	databaseDeployment := &appsv1.DeploymentConfig{}
-	if err := client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, databaseDeployment); err == nil {
-		for _, c := range databaseDeployment.Spec.Template.Spec.Containers {
-			if c.Name == "postgresql" {
+	//
+	// Only required if not using an external database and need to check
+	// on whether the deployment config is already is upgrade mode
+	//
+	if client != nil && len(syndesis.Spec.Components.Database.ExternalDbURL) <= 0 {
+		databaseDeployment := &appsv1.DeploymentConfig{}
+		if err := client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, databaseDeployment); err != nil {
+			//
+			// If not found then unnecessary to log the error
+			//
+			if !k8errors.IsNotFound(err) {
+				return nil, err
+			}
+		} else {
+			//
+			// No error and db deployment found
+			//
+			for _, c := range databaseDeployment.Spec.Template.Spec.Containers {
+				if configuration.DatabaseNeedsUpgrade {
+					break // Already true so no need to do any more
+				}
+
+				if c.Name != "postgresql" {
+					continue
+				}
+
 				//
-				// Does deploment config already contain UPGRADE Env Var?
+				// Does deployment config already contain UPGRADE Env Var?
 				// if it does then DO NOT remove it.
 				//
 				for _, env := range c.Env {
 					if env.Name == "POSTGRESQL_UPGRADE" {
 						configuration.DatabaseNeedsUpgrade = true
-						return configuration, nil
+						break
 					}
 				}
 			}
 		}
 	}
 
-	// Determine if the PostgreSQL database running in syndesis-db pod needs upgrading, first fetch the version currently running
-	currentPostgreSQLVersion, err := util.PostgreSQLVersionAt("syndesis", configuration.Syndesis.Components.Database.Password, syndesis.Spec.Components.Database.Name, "syndesis-db", 5432)
-	if err != nil {
-		// log.Error(err, "Unable to determine current version of PostgreSQL running in syndesis-db pod")
-		return configuration, nil
-	}
+	if !configuration.DatabaseNeedsUpgrade {
+		//
+		// Determine if the PostgreSQL database needs upgrading
+		// by extracting its version and comparing it with the
+		// version extracted from the operator's init pod
+		//
+		currentPostgreSQLVersion, err := util.PostgreSQLVersionAt(
+			configuration.Syndesis.Components.Database.User,
+			configuration.Syndesis.Components.Database.Password,
+			configuration.Syndesis.Components.Database.Name,
+			configuration.Syndesis.Components.Database.URL)
+		if err != nil {
+			// log.Error(err, "Unable to determine current version of PostgreSQL running in syndesis-db pod")
+			return configuration, nil
+		}
 
-	goC, err := goClient()
-	if err != nil {
-		return nil, err
-	}
-	wantedPostgreSQLVersion, err := postgreSQLVersionFromInitPod(goC, syndesis)
-	if err != nil {
-		log.Error(err, "Unable to determine next version of PostgreSQL from the operator init container")
-		return configuration, nil
-	}
+		goC, err := goClient()
+		if err != nil {
+			return nil, err
+		}
+		wantedPostgreSQLVersion, err := postgreSQLVersionFromInitPod(goC, syndesis)
+		if err != nil {
+			log.Error(err, "Unable to determine next version of PostgreSQL from the operator init container")
+			return configuration, nil
+		}
 
-	configuration.DatabaseNeedsUpgrade = currentPostgreSQLVersion < wantedPostgreSQLVersion
-	log.Info("PostgreSQL upgrade summary", "source-postgres-version", strconv.FormatFloat(currentPostgreSQLVersion, 'f', 2, 64), "target-postgres-version", strconv.FormatFloat(wantedPostgreSQLVersion, 'f', 2, 64), "perform-upgrade", strconv.FormatBool(configuration.DatabaseNeedsUpgrade))
+		configuration.DatabaseNeedsUpgrade = currentPostgreSQLVersion < wantedPostgreSQLVersion
+		log.Info("PostgreSQL upgrade summary", "source-postgres-version", strconv.FormatFloat(currentPostgreSQLVersion, 'f', 2, 64), "target-postgres-version", strconv.FormatFloat(wantedPostgreSQLVersion, 'f', 2, 64), "perform-upgrade", strconv.FormatBool(configuration.DatabaseNeedsUpgrade))
+	}
 
 	return configuration, nil
 }
@@ -458,7 +496,7 @@ func (config *Config) SetRoute(ctx context.Context, client client.Client, syndes
 }
 
 // When an external database is defined, reset connection parameters
-func (config *Config) ExternalDatabase(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis) error {
+func (config *Config) externalDatabase(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis) error {
 	// Handle an external database being defined
 	if syndesis.Spec.Components.Database.ExternalDbURL != "" {
 
