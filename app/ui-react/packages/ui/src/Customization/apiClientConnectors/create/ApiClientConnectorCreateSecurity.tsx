@@ -60,7 +60,7 @@ export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClien
         <Title size="2xl">{i18nTitle}</Title>
       </StackItem>
       <StackItem>
-        <Form>
+        <Form data-testid={`api-client-connector-auth-type-form`}>
           <Alert type={'info'} title={i18nDescription} isInline={true}/>
           <FormGroup fieldId={'authenticationType'}>
             {authenticationTypes!.map((authType: IAuthenticationTypes, idx) => (
