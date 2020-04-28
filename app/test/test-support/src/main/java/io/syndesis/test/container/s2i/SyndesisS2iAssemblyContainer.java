@@ -17,13 +17,13 @@
 package io.syndesis.test.container.s2i;
 
 import java.nio.file.Path;
-import java.time.Duration;
 
 import io.syndesis.test.SyndesisTestEnvironment;
-import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
+import org.testcontainers.containers.wait.strategy.WaitStrategy;
 import org.testcontainers.images.builder.ImageFromDockerfile;
+import org.testcontainers.images.builder.dockerfile.statement.MultiArgsStatement;
 
 /**
  * Syndesis S2i container that performs assemble step on a give project directory. The project sources are assembled to
@@ -41,13 +41,16 @@ public class SyndesisS2iAssemblyContainer extends GenericContainer<SyndesisS2iAs
 
     public SyndesisS2iAssemblyContainer(String integrationName, Path projectDir, String imageTag) {
         super(new ImageFromDockerfile(integrationName + "-s2i", true)
-                .withDockerfileFromBuilder(builder -> builder.from(String.format("syndesis/syndesis-s2i:%s", imageTag))
-                        .cmd(S2I_ASSEMBLE_SCRIPT)
-                        .build()));
+            .withFileFromPath(SRC_DIR, projectDir)
+            .withDockerfileFromBuilder(builder -> builder.from(String.format("syndesis/syndesis-s2i:%s", imageTag))
+                .withStatement(new MultiArgsStatement("ADD --chown=1000", SRC_DIR, SRC_DIR))
+                .cmd(S2I_ASSEMBLE_SCRIPT)
+                .build()));
 
-        withFileSystemBind(projectDir.toAbsolutePath().toString(), SRC_DIR, BindMode.READ_WRITE);
+        final WaitStrategy onLogDone = new LogMessageWaitStrategy()
+            .withRegEx(".*\\.\\.\\. done.*\\s")
+            .withStartupTimeout(SyndesisTestEnvironment.getContainerStartupTimeout());
 
-        waitingFor(new LogMessageWaitStrategy().withRegEx(".*\\.\\.\\. done.*\\s")
-                                               .withStartupTimeout(Duration.ofSeconds(SyndesisTestEnvironment.getContainerStartupTimeout())));
+        setWaitStrategy(onLogDone);
     }
 }
