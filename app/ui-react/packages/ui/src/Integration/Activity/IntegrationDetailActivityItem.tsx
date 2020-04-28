@@ -8,10 +8,11 @@ import {
 } from '@patternfly/react-core';
 import { ErrorCircleOIcon, OkIcon } from '@patternfly/react-icons';
 import {
+  cellWidth,
   Table,
   TableBody,
   TableHeader,
-  TableVariant
+  TableVariant,
 } from '@patternfly/react-table';
 import {
   global_danger_color_100,
@@ -105,17 +106,32 @@ export const IntegrationDetailActivityItem: React.FC<
   };
 
   const columns = [
-    i18nHeaderStep,
-    i18nHeaderTime,
-    i18nHeaderDuration,
-    i18nHeaderStatus,
-    i18nHeaderOutput
+    {
+      columnTransforms: [cellWidth(10)],
+      title: i18nHeaderStep,
+    },
+    {
+      columnTransforms: [cellWidth(15)],
+      title: i18nHeaderTime,
+    },
+    {
+      columnTransforms: [cellWidth(7)],
+      title: i18nHeaderDuration,
+    },
+    {
+      columnTransforms: [cellWidth(10)],
+      title: i18nHeaderStatus,
+    },
+    {
+      columnTransforms: [() => ({ className: 'integration-detail-activity-item__output-step-data'}), cellWidth('max') ],
+      title: i18nHeaderOutput,
+    }
   ];
 
   return (
-    <DataListItem 
-      aria-labelledby="activity item" 
-      isExpanded={rowExpanded} 
+    <DataListItem
+      aria-labelledby="activity item"
+      isExpanded={rowExpanded}
       className={'integration-detail-activity-item'}
       data-testid={'integration-detail-activity-item'}
     >
