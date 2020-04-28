@@ -39,7 +39,7 @@
     <deploy.archives>false</deploy.archives>
 
     <!-- Atlasmap version -->
-    <atlasmap.version>1.44.0-M2</atlasmap.version>
+    <atlasmap.version>2.0.0-M.2</atlasmap.version>
 
     <!-- Image names -->
     <image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
