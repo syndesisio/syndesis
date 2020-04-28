@@ -13,11 +13,7 @@ import produce from 'immer';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
-import {
-  API_PROVIDER_END_ACTION_ID,
-  PUBLISHED,
-  UNPUBLISHED,
-} from './constants';
+import { API_PROVIDER_END_ACTION_ID, PUBLISHED, UNPUBLISHED, } from './constants';
 import {
   createStep,
   getStep,
@@ -474,6 +470,20 @@ export const useIntegrationHelpers = () => {
     });
   };
 
+  const getExtensions = async () => {
+    const response = await callFetch({
+      headers: apiContext.headers,
+      method: 'GET',
+      url: `${apiContext.apiUri}/extensions?extensionType=Libraries`,
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return response.json();
+  }
+
   return {
     addConnection,
     addStep,
@@ -483,6 +493,7 @@ export const useIntegrationHelpers = () => {
     exportIntegration,
     getActionDescriptor,
     getDeployment,
+    getExtensions,
     importIntegration,
     removeStep,
     replaceDraft,

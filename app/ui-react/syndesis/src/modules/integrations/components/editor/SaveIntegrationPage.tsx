@@ -1,11 +1,12 @@
 import {
   setIntegrationProperties,
-  WithIntegrationHelpers,
+  WithIntegrationHelpers
 } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import * as H from '@syndesis/history';
 import { ErrorResponse, IntegrationSaveErrorResponse } from '@syndesis/models';
 import {
+  IntegrationEditorExtensionList,
   IntegrationEditorLayout,
   IntegrationSaveForm,
   SyndesisAlert,
@@ -31,6 +32,13 @@ import {
 export interface ISaveIntegrationForm {
   name: string;
   description?: string;
+}
+
+interface IExtensionProps {
+  description: string;
+  lastUpdated: string;
+  name: string;
+  selected?: boolean;
 }
 
 export interface ISaveIntegrationPageProps
@@ -59,32 +67,41 @@ export interface ISaveIntegrationPageProps
  * @todo toast notifications.
  * @todo redirect to the integration detail page once available.
  */
-export const SaveIntegrationPage: React.FunctionComponent<
-  ISaveIntegrationPageProps
-> = ({
-  postPublishHref,
-  postSaveHref,
-  getBreadcrumb,
-  cancelHref,
-  ...props
-}) => {
-  const [error, setError] = React.useState<
-    false | ErrorResponse | IntegrationSaveErrorResponse
-  >(false);
+export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPageProps> = (
+  {
+    postPublishHref,
+    postSaveHref,
+    getBreadcrumb,
+    cancelHref,
+    ...props
+  }) => {
+  const [error, setError] = React.useState<false | ErrorResponse | IntegrationSaveErrorResponse>(false);
+
   const { t } = useTranslation('shared');
+
+  const [selectedExtensions, setSelectedExtensions] = React.useState<IExtensionProps[]>([]);
+  const [extensions, setExtensions] = React.useState<IExtensionProps[]>([]);
+
   return (
     <WithLeaveConfirmation {...props}>
       {({ allowNavigation }) => (
         <UIContext.Consumer>
           {({ pushNotification }) => (
-            <WithRouteData<
-              ISaveIntegrationRouteParams,
-              ISaveIntegrationRouteState
-            >>
+            <WithRouteData<ISaveIntegrationRouteParams,
+                ISaveIntegrationRouteState>>
               {(params, state, { history }) => (
                 <WithIntegrationHelpers>
-                  {({ deployIntegration, saveIntegration }) => {
+                  {({ deployIntegration, getExtensions, saveIntegration }) => {
                     let shouldPublish = false;
+
+                    getExtensions().then((data) => {
+                      if(data.items.length === extensions.length) {
+                        return;
+                      } else {
+                        setExtensions(data.items);
+                      }
+                    });
+
                     const onSave = async (
                       { name, description }: ISaveIntegrationForm,
                       actions: any
@@ -149,6 +166,7 @@ export const SaveIntegrationPage: React.FunctionComponent<
                       }
                       actions.setSubmitting(false);
                     };
+
                     const definition: IFormDefinition = {
                       description: {
                         defaultValue: '',
@@ -164,94 +182,161 @@ export const SaveIntegrationPage: React.FunctionComponent<
                         type: 'string',
                       },
                     };
+
                     const validator = (values: ISaveIntegrationForm) =>
                       validateRequiredProperties(
                         definition,
                         (name: string) => `${name} is required`,
                         values
                       );
+
+                    const handleSelectExtension = (extension: IExtensionProps) => {
+                      const currentlySelected = selectedExtensions.slice();
+                      currentlySelected.push(extension);
+                      setSelectedExtensions(currentlySelected);
+                    };
+
+                    const handleDeselectExtension = (extensionName: string) => {
+                      const currentlySelected = selectedExtensions.slice();
+                      const index = currentlySelected.findIndex(
+                        extension => extension.name === extensionName
+                      );
+
+                      if (index !== -1) {
+                        currentlySelected.splice(index, 1);
+                      }
+
+                      setSelectedExtensions(currentlySelected);
+                    };
+
+                    const clearExtensionSelection = () => {
+                      setSelectedExtensions([]);
+                    };
+
+                    const handleSelectAll = (
+                      isSelected: boolean,
+                      extensionList?: IExtensionProps[]
+                    ) => {
+                      if (isSelected && extensionList) {
+                        setSelectedExtensions(extensionList);
+                      } else {
+                        clearExtensionSelection();
+                      }
+                    };
+
+                    const getSelectedExtensionName = (selectedExtensionsList: IExtensionProps[]): string[] => {
+                      return selectedExtensionsList.map(extension => extension.name);
+                    };
+
+                    const selectedExtensionNames: string[] = getSelectedExtensionName(selectedExtensions);
+
+                    const onSelect = (extensionName: string, selected: boolean) => {
+                      if (selected) {
+                        for (const extensionInfo of extensions) {
+                        if (extensionInfo.name === extensionName) {
+                            handleSelectExtension(extensionInfo);
+                          }
+                        }
+                      } else {
+                        handleDeselectExtension(extensionName);
+                      }
+                    };
+
                     return (
-                      <AutoForm<ISaveIntegrationForm>
-                        i18nRequiredProperty={t('shared:requiredFieldMessage')}
-                        definition={definition}
-                        initialValue={{
-                          description: state.integration.description,
-                          name: state.integration.name,
-                        }}
-                        validate={validator}
-                        validateInitial={validator}
-                        onSave={onSave}
-                      >
-                        {({
-                          fields,
-                          handleSubmit,
-                          isSubmitting,
-                          isValid,
-                          submitForm,
-                        }) => (
-                          <>
-                            <PageTitle
-                              title={t('integrations:editor:save:title')}
-                            />
-                            <IntegrationEditorLayout
-                              title={t('integrations:editor:save:title')}
-                              description={t(
-                                'integrations:editor:save:description'
-                              )}
-                              toolbar={getBreadcrumb(
-                                t('integrations:editor:save:title'),
-                                params,
-                                state
-                              )}
-                              content={
-                                <IntegrationSaveForm
-                                  handleSubmit={handleSubmit}
-                                  onSave={submitForm}
-                                  isSaveDisabled={!isValid}
-                                  isSaveLoading={isSubmitting}
-                                  onPublish={async () => {
-                                    shouldPublish = true;
-                                    await submitForm();
-                                  }}
-                                  isPublishDisabled={!isValid}
-                                  isPublishLoading={isSubmitting}
-                                  i18nSave={t('shared:Save')}
-                                  i18nSaveAndPublish={t(
-                                    'integrations:editor:save:saveAndPublish'
-                                  )}
-                                >
-                                  <>
-                                    {error && (
-                                      <SyndesisAlert
-                                        level={SyndesisAlertLevel.ERROR}
-                                        message={
-                                          (error as ErrorResponse).userMsg ||
-                                          (error as IntegrationSaveErrorResponse)
-                                            .message
-                                        }
-                                        detail={
-                                          (error as ErrorResponse)
-                                            .developerMsg ||
-                                          (error as IntegrationSaveErrorResponse)
-                                            .error
-                                        }
-                                        i18nTextExpanded={t(
-                                          'shared:HideDetails'
-                                        )}
-                                        i18nTextCollapsed={t(
-                                          'shared:ShowDetails'
-                                        )}
-                                      />
+                      <>
+                        <AutoForm<ISaveIntegrationForm>
+                          i18nRequiredProperty={t('shared:requiredFieldMessage')}
+                          definition={definition}
+                          initialValue={{
+                            description: state.integration.description,
+                            name: state.integration.name,
+                          }}
+                          validate={validator}
+                          validateInitial={validator}
+                          onSave={onSave}
+                        >
+                          {({
+                              fields,
+                              handleSubmit,
+                              isSubmitting,
+                              isValid,
+                              submitForm,
+                            }) => (
+                            <>
+                              <PageTitle
+                                title={t('integrations:editor:save:title')}
+                              />
+                              <IntegrationEditorLayout
+                                title={t('integrations:editor:save:title')}
+                                description={t(
+                                  'integrations:editor:save:description'
+                                )}
+                                toolbar={getBreadcrumb(
+                                  t('integrations:editor:save:title'),
+                                  params,
+                                  state
+                                )}
+                                content={
+                                  <IntegrationSaveForm
+                                    handleSubmit={handleSubmit}
+                                    onSave={submitForm}
+                                    isSaveDisabled={!isValid}
+                                    isSaveLoading={isSubmitting}
+                                    onPublish={async () => {
+                                      shouldPublish = true;
+                                      await submitForm();
+                                    }}
+                                    isPublishDisabled={!isValid}
+                                    isPublishLoading={isSubmitting}
+                                    i18nSave={t('shared:Save')}
+                                    i18nSaveAndPublish={t(
+                                      'integrations:editor:save:saveAndPublish'
                                     )}
-                                    {fields}
-                                  </>
-                                </IntegrationSaveForm>
-                              }
-                              cancelHref={cancelHref(params, state)}
-                            />
-                          </>
-                        )}
-                      </AutoForm>
+                                  >
+                                    <>
+                                      {error && (
+                                        <SyndesisAlert
+                                          level={SyndesisAlertLevel.ERROR}
+                                          message={
+                                            (error as ErrorResponse).userMsg ||
+                                            (error as IntegrationSaveErrorResponse)
+                                              .message
+                                          }
+                                          detail={
+                                            (error as ErrorResponse)
+                                              .developerMsg ||
+                                            (error as IntegrationSaveErrorResponse)
+                                              .error
+                                          }
+                                          i18nTextExpanded={t(
+                                            'shared:HideDetails'
+                                          )}
+                                          i18nTextCollapsed={t(
+                                            'shared:ShowDetails'
+                                          )}
+                                        />
+                                      )}
+                                      {fields}
+                                      <IntegrationEditorExtensionList
+                                        extensionsAvailable={extensions}
+                                        extensionNamesSelected={selectedExtensionNames}
+                                        handleSelectAll={handleSelectAll}
+                                        i18nHeaderDescription={t('integrations:editor:extensions:description')}
+                                        i18nHeaderLastUpdated={t('integrations:editor:extensions:lastUpdated')}
+                                        i18nHeaderName={t('integrations:editor:extensions:name')}
+                                        i18nTableDescription={t('integrations:editor:extensions:tableDescription')}
+                                        i18nTableName={t('integrations:editor:extensions:tableName')}
+                                        onSelect={onSelect}
+                                      />
+                                    </>
+                                  </IntegrationSaveForm>
+                                }
+                                cancelHref={cancelHref(params, state)}
+                              />
+                            </>
+                          )}
+                        </AutoForm>
+                      </>
                     );
                   }}
                 </WithIntegrationHelpers>
