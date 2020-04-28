@@ -5,6 +5,7 @@ export * from './template';
 export * from './endpoint';
 export * from './IntegrationEditorActionsListItem';
 export * from './IntegrationEditorChooseAction';
+export * from './IntegrationEditorExtensionList';
 export * from './IntegrationEditorForm';
 export * from './IntegrationEditorLayout';
 export * from './IntegrationEditorNothingToConfigure';
