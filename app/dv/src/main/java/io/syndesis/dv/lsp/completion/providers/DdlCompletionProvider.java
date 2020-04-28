@@ -67,8 +67,8 @@ public class DdlCompletionProvider extends CompletionItemBuilder implements DdlC
                                 items.addAll(generateCompletionItems(words));
                                 break;
                             case VIEW:
-                            	// TODO:  A View should already be named for our primary use-case
-                            	// Not sure if we'll have any items here to return
+                                // TODO:  A View should already be named for our primary use-case
+                                // Not sure if we'll have any items here to return
                                 break;
                             case ID:
                                 items.add(generateCompletionItem(DdlCompletionConstants.getLabel(LPAREN, false), null,  null,  null));
@@ -108,21 +108,21 @@ public class DdlCompletionProvider extends CompletionItemBuilder implements DdlC
                         items.addAll(getItemLoader().getQueryExpressionKeywordItems());
                     } break;
                     case FROM_CLAUSE: {
-                    	// TODO:  Add symbols for applicable database schema symbols here
+                        // TODO:  Add symbols for applicable database schema symbols here
                         items.addAll(getItemLoader().getQueryExpressionKeywordItems());
                     } break;
                     case WHERE_CLAUSE: {
-                    	// TODO:  Add symbols for applicable database schema symbols here
-                    	items.addAll(getItemLoader().getQueryExpressionKeywordItems());
+                        // TODO:  Add symbols for applicable database schema symbols here
+                        items.addAll(getItemLoader().getQueryExpressionKeywordItems());
                     } break;
                     case NONE_FOUND:
                     default: // RETURN ALL KEYWORDS
                 }
             } else {
-            	Token targetTkn = analyzer.getTokenFor(position);
-            	if( targetTkn == null || createStatement.getTokenIndex(targetTkn) < 3) {
-                	items.addAll(getItemLoader().getCreateStatementTemplateCompletionItems());
-            	}
+                Token targetTkn = analyzer.getTokenFor(position);
+                if( targetTkn == null || createStatement.getTokenIndex(targetTkn) < 3) {
+                    items.addAll(getItemLoader().getCreateStatementTemplateCompletionItems());
+                }
             }
 
             if( doPrintToConsole ) {
@@ -138,7 +138,7 @@ public class DdlCompletionProvider extends CompletionItemBuilder implements DdlC
 
     private void systemPrint(String str) {
         if( doPrintToConsole ) {
-        	System.out.print(str);
+            System.out.print(str);
         }
     }
 

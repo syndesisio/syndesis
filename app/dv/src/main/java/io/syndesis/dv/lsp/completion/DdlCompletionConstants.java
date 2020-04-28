@@ -142,7 +142,7 @@ public interface DdlCompletionConstants extends DdlAnalyzerConstants {
             getLabel(SELECT, true), // String insertText;
     };
 
-    public static final Map<String, String[]> KEYWORDS_ITEM_DATA = Collections
+    static final Map<String, String[]> KEYWORDS_ITEM_DATA = Collections
             .unmodifiableMap(new HashMap<String, String[]>() {
                 private static final long serialVersionUID = 1L;
 
@@ -406,7 +406,7 @@ public interface DdlCompletionConstants extends DdlAnalyzerConstants {
                 }
             });
 
-     public static String getLabel(int keywordId, boolean upperCase) {
+     static String getLabel(int keywordId, boolean upperCase) {
          return DdlAnalyzerConstants.getLabel(keywordId, upperCase);
      }
 

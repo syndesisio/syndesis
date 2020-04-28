@@ -76,7 +76,7 @@ public class TokenContext implements DdlAnalyzerConstants {
         if( token != null ) {
             sb.append(token.image);
         } else {
-        	sb.append(" NONE ");
+            sb.append(" NONE ");
         }
         sb.append(" at (")
             .append(position.getLine())

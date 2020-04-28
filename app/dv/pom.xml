@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
    Copyright (C) 2016 Red Hat, Inc.
-
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
-
        http://www.apache.org/licenses/LICENSE-2.0
-
    Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -116,6 +113,8 @@
     <!-- Common dependencies -->
     <version.springfox>2.9.2</version.springfox>
     <shrinkwrap.version>3.1.4</shrinkwrap.version>
+
+    <version.tomcat>9.0.31</version.tomcat>
 
     <version.com.fasterxml.jackson.databind>2.9.10.1</version.com.fasterxml.jackson.databind>
     <version.com.fasterxml.jackson>2.9.10</version.com.fasterxml.jackson>
@@ -497,9 +496,23 @@
     </dependency>
     <!-- for servlet api -->
     <dependency>
-        <groupId> org.apache.tomcat.embed</groupId>
-        <artifactId>tomcat-embed-core</artifactId>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-core</artifactId>
+      <!-- 
+      see https://github.com/spring-projects/spring-framework/issues/22131 
+      -->
+      <version>${version.tomcat}</version>
     </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-websocket</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-websocket</artifactId>
+      <version>${version.tomcat}</version>
+    </dependency>
+
     <dependency>
       <groupId>io.opentracing.contrib</groupId>
       <artifactId>opentracing-spring-jaeger-web-starter</artifactId>
@@ -548,6 +561,35 @@
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
     </dependency>
+<<<<<<< HEAD
+=======
+    <dependency>
+        <groupId>org.eclipse.lsp4j</groupId>
+        <artifactId>org.eclipse.lsp4j</artifactId>
+        <version>0.8.1</version>
+    </dependency>
+    <dependency>
+        <groupId>org.eclipse.lsp4j</groupId>
+        <artifactId>org.eclipse.lsp4j.jsonrpc</artifactId>
+        <version>0.8.1</version>
+    </dependency>
+    <dependency>
+        <groupId>org.eclipse.lsp4j</groupId>
+        <artifactId>org.eclipse.lsp4j.websocket</artifactId>
+        <version>0.8.1</version>
+    </dependency>
+    <dependency>
+        <groupId>org.glassfish.tyrus</groupId>
+        <artifactId>tyrus-server</artifactId>
+        <version>1.15</version>
+    </dependency>
+    <dependency>
+    <groupId>org.glassfish.tyrus</groupId>
+        <artifactId>tyrus-container-grizzly-server</artifactId>
+        <version>1.15</version>
+    </dependency>
+    <!-- data source driver dependencies -->
+>>>>>>> update pom.xml for dv changes and fix lint warnings
     <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>

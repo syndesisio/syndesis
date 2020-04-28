@@ -73,7 +73,7 @@ public class TableElementCompletionProvider extends CompletionItemBuilder implem
                     }
                         break;
                     default: {
-                    	items.addAll(getRemainingItems(targetToken));
+                        items.addAll(getRemainingItems(targetToken));
                         return items;
                     }
                 }
@@ -103,55 +103,55 @@ public class TableElementCompletionProvider extends CompletionItemBuilder implem
     }
 
     private TableElement getTableElement(Token token) {
-    	if( statement.getTableBody() != null && statement.getTableBody().getTableElements() != null) {
-    		for( TableElement element: statement.getTableBody().getTableElements() ) {
-    			if( element.isTokenInObject(token)) {
-    				return element;
-    			}
-    		}
-    	}
-    	return null;
+        if( statement.getTableBody() != null && statement.getTableBody().getTableElements() != null) {
+            for( TableElement element: statement.getTableBody().getTableElements() ) {
+                if( element.isTokenInObject(token)) {
+                    return element;
+                }
+            }
+        }
+        return null;
     }
 
     private List<CompletionItem> getRemainingItems(Token targetToken) {
-    	List<CompletionItem> remainingItems = new ArrayList<CompletionItem>();
-    	List<CompletionItem> allItems = getItemLoader().getTableElementCompletionItems();
-    	TableElement element = getTableElement(targetToken);
+        List<CompletionItem> remainingItems = new ArrayList<CompletionItem>();
+        List<CompletionItem> allItems = getItemLoader().getTableElementCompletionItems();
+        TableElement element = getTableElement(targetToken);
 
-    	if( element != null ) {
-	    	for( CompletionItem item: allItems ) {
-	    		if( item.getLabel().equalsIgnoreCase(getLabel(NOT)) && element.getNotNullTokens() == null) {
-	    			remainingItems.add(item);
-	    		}
-	    		if( item.getLabel().equalsIgnoreCase(getLabel(NULL)) && element.getNotNullTokens() == null) {
-	    			remainingItems.add(item);
-	    		}
-	    		if( item.getLabel().equalsIgnoreCase(getLabel(PRIMARY)) && !statement.getTableBody().hasPrimaryKey()) {
-	    			remainingItems.add(item);
-	    		}
-	    		if( item.getLabel().equalsIgnoreCase(getLabel(KEY)) && !statement.getTableBody().hasPrimaryKey()) {
-	    			remainingItems.add(item);
-	    		}
-	    		if( item.getLabel().equalsIgnoreCase("PRIMARY KEY") && !statement.getTableBody().hasPrimaryKey()) {
-	    			remainingItems.add(item);
-	    		}
-	    		if( item.getLabel().equalsIgnoreCase(getLabel(AUTO_INCREMENT)) && element.getAutoIncrementToken() == null) {
-	    			remainingItems.add(item);
-	    		}
-	    		if( item.getLabel().equalsIgnoreCase(getLabel(DEFAULT)) && element.getDatatypeTokens() == null) {
-	    			remainingItems.add(item);
-	    		}
-	    		if( item.getLabel().equalsIgnoreCase(getLabel(INDEX)) && element.getIndexToken() == null) {
-	    			remainingItems.add(item);
-	    		}
-	    		if( item.getLabel().equalsIgnoreCase(getLabel(UNIQUE)) && element.getUniqueToken() == null) {
-	    			remainingItems.add(item);
-	    		}
-	    		if( item.getLabel().equalsIgnoreCase(getLabel(OPTIONS)) && element.getOptionClause() == null) {
-	    			remainingItems.add(item);
-	    		}
-	    	}
-    	}
-    	return remainingItems;
+        if( element != null ) {
+            for( CompletionItem item: allItems ) {
+                if( item.getLabel().equalsIgnoreCase(getLabel(NOT)) && element.getNotNullTokens() == null) {
+                    remainingItems.add(item);
+                }
+                if( item.getLabel().equalsIgnoreCase(getLabel(NULL)) && element.getNotNullTokens() == null) {
+                    remainingItems.add(item);
+                }
+                if( item.getLabel().equalsIgnoreCase(getLabel(PRIMARY)) && !statement.getTableBody().hasPrimaryKey()) {
+                    remainingItems.add(item);
+                }
+                if( item.getLabel().equalsIgnoreCase(getLabel(KEY)) && !statement.getTableBody().hasPrimaryKey()) {
+                    remainingItems.add(item);
+                }
+                if( item.getLabel().equalsIgnoreCase("PRIMARY KEY") && !statement.getTableBody().hasPrimaryKey()) {
+                    remainingItems.add(item);
+                }
+                if( item.getLabel().equalsIgnoreCase(getLabel(AUTO_INCREMENT)) && element.getAutoIncrementToken() == null) {
+                    remainingItems.add(item);
+                }
+                if( item.getLabel().equalsIgnoreCase(getLabel(DEFAULT)) && element.getDatatypeTokens() == null) {
+                    remainingItems.add(item);
+                }
+                if( item.getLabel().equalsIgnoreCase(getLabel(INDEX)) && element.getIndexToken() == null) {
+                    remainingItems.add(item);
+                }
+                if( item.getLabel().equalsIgnoreCase(getLabel(UNIQUE)) && element.getUniqueToken() == null) {
+                    remainingItems.add(item);
+                }
+                if( item.getLabel().equalsIgnoreCase(getLabel(OPTIONS)) && element.getOptionClause() == null) {
+                    remainingItems.add(item);
+                }
+            }
+        }
+        return remainingItems;
     }
 }

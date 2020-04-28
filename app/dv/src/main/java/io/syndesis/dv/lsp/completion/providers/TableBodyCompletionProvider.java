@@ -53,8 +53,8 @@ public class TableBodyCompletionProvider extends CompletionItemBuilder implement
             default: {
                 switch (targetToken.kind) {
                     case RPAREN: {
-                    	items.add(getAs(1));
-                    	items.add(getQueryExpressionSnippet(2));
+                        items.add(getAs(1));
+                        items.add(getQueryExpressionSnippet(2));
                         String details = "OPTIONS properties are comma separated key-value pairs in the form: OPTION(...  KEY 'some value')";
                         items.add(generateCompletionItem("OPTIONS", null, details, "OPTIONS()"));
                     } break;

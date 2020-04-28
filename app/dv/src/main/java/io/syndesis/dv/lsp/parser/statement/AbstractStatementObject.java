@@ -74,8 +74,8 @@ public abstract class AbstractStatementObject implements DdlAnalyzerConstants  {
     }
 
     public boolean isTokenInObject(Token token) {
-    	int index = getTokenIndex(token);
-    	return index >= getFirstTknIndex() && index <= getLastTknIndex();
+        int index = getTokenIndex(token);
+        return index >= getFirstTknIndex() && index <= getLastTknIndex();
     }
 
     public int getTokenIndex(Token token) {
@@ -150,11 +150,11 @@ public abstract class AbstractStatementObject implements DdlAnalyzerConstants  {
     }
 
     protected boolean isReservedKeywordToken(Token tkn) {
-		return SQLConstants.isReservedWord(tkn.image.toUpperCase());
+        return SQLConstants.isReservedWord(tkn.image.toUpperCase());
     }
 
     protected boolean isNonReservedKeywordToken(Token tkn) {
-		return SQLConstants.getNonReservedWords().contains(tkn.image.toUpperCase());
+        return SQLConstants.getNonReservedWords().contains(tkn.image.toUpperCase());
     }
 
     protected void printTokens(Token[] tkns, String headerMessage) {
