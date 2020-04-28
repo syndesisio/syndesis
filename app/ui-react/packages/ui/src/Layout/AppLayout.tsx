@@ -134,6 +134,7 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
                           className="pf-u-display-none-on-lg"
                         />,
                         <DropdownItem
+                          className={'pf-u-display-none-on-lg'}
                           key={`mobile-${logoutItem.key}`}
                           onClick={logoutItem.onClick}
                         >
@@ -142,9 +143,7 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
                             role="menuitem"
                             id={`mobile-${logoutItem.id}`}
                             data-testid={`mobile-${logoutItem.id}`}
-                            className={`${
-                              logoutItem.className
-                            } pf-u-display-none-on-lg`}
+                            className={logoutItem.className}
                           >
                             {logoutItem.children}
                           </button>
