@@ -1,5 +1,5 @@
 /* tslint:disable */
-const proxy = require('http-proxy-middleware');
+const proxy = require('http-proxy-middleware').createProxyMiddleware;
 const path = require('path');
 
 function getRandomInt(min, max) {
