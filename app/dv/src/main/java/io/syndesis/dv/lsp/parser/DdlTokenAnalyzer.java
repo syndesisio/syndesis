@@ -44,7 +44,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
     }
 
     public String getStatement() {
-    	return this.statement;
+        return this.statement;
     }
 
     private void init() {
@@ -57,23 +57,23 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
         Token currentToken = token_source.getNextToken();
 
         if( currentToken != null ) {
-        	convertToken(currentToken);
+            convertToken(currentToken);
 
-        	// Add current token to simple list
+            // Add current token to simple list
             tokensList.add(currentToken);
 
             boolean done = false;
 
             while ( !done ) {
-            	// Get next token
-            	currentToken = token_source.getNextToken();
+                // Get next token
+                currentToken = token_source.getNextToken();
 
                 // Check if next token exists
                 if( currentToken != null && (currentToken.image.length() > 0) ) {
-                	convertToken(currentToken);
+                    convertToken(currentToken);
                     tokensList.add(currentToken);
                 } else {
-                	done = true;
+                    done = true;
                 }
             }
         }
@@ -82,10 +82,10 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
     }
 
     private void convertToken(Token token) {
-    	token.beginColumn--;
-    	token.endColumn--;
-    	token.beginLine--;
-    	token.endLine--;
+        token.beginColumn--;
+        token.endColumn--;
+        token.beginLine--;
+        token.endLine--;
     }
 
     public Token[] getTokens() {
@@ -93,18 +93,18 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
     }
 
     public Token getTokenFor(Position pos) {
-    	DdlTokenWalker walker = new DdlTokenWalker(this.tokens);
-    	Token token = walker.findToken(pos, this.statementType);
-    	//System.out.println("  Walker found Token = " + token + " At " + pos);
-    	return token;
+        DdlTokenWalker walker = new DdlTokenWalker(this.tokens);
+        Token token = walker.findToken(pos, this.statementType);
+        //System.out.println("  Walker found Token = " + token + " At " + pos);
+        return token;
     }
 
     protected String[] getDatatypesList() {
-    	return DATATYPE_LIST;
+        return DATATYPE_LIST;
     }
 
     public String[] getNextWordsByKind(int kind) {
-    	return getNextWordsByKind(kind, false);
+        return getNextWordsByKind(kind, false);
     }
 
     public String[] getNextWordsByKind(int kind, boolean isStatementId) {
@@ -145,9 +145,9 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
             break;
 
             case ID:
-            	if( isStatementId ) {
-            		words.add(getKeywordLabel(LPAREN, false));
-            	}
+                if( isStatementId ) {
+                    words.add(getKeywordLabel(LPAREN, false));
+                }
             break;
 
             case SELECT:
@@ -167,7 +167,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
     public STATEMENT_TYPE getStatementType() {
         // walk through start of token[] array and return the type
         if( tokens.length < 2 ) {
-        	return STATEMENT_TYPE.UNKNOWN_STATEMENT_TYPE;
+            return STATEMENT_TYPE.UNKNOWN_STATEMENT_TYPE;
         }
 
         if( isStatementType(tokens, CREATE_VIRTUAL_VIEW_STATEMENT) ) {
@@ -203,7 +203,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
             // Check each token for kind
             if( tkns[iTkn].kind == kind) {
                 if( ++iTkn == statementTokens.length) {
-                	return true;
+                    return true;
                 }
                 continue;
             };
@@ -217,7 +217,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
     }
 
     public DdlAnalyzerException checkAllParens() {
-    	return checkAllBrackets(LPAREN, RPAREN);
+        return checkAllBrackets(LPAREN, RPAREN);
     }
 
     public DdlAnalyzerException checkAllBrackets(int leftBracketKind, int rightBracketKind) {
@@ -234,9 +234,9 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
                 if( diagStartPosition == null ) {
                     diagStartPosition = new Position(token.beginLine, token.beginColumn);
                 }
-            	numUnmatchedParens++;
+                numUnmatchedParens++;
             } else if( token.kind == rightBracketKind && diagStartPosition == null ) {
-            	diagStartPosition = new Position(token.beginLine, token.beginColumn);
+                diagStartPosition = new Position(token.beginLine, token.beginColumn);
                 exception = new DdlAnalyzerException("Bracket at location " //$NON-NLS-1$
                         + getPositionString(token) + " does not properly match previous bracket"); //$NON-NLS-1$
                 exception.getDiagnostic().setMessage(exception.getMessage());
@@ -245,11 +245,11 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
             }
 
             if( exception != null ) {
-            	break;
+                break;
             }
 
             if( token.kind == rightBracketKind) {
-            	numUnmatchedParens--;
+                numUnmatchedParens--;
             }
 
             // If the ## goes < 0 throw exception because they should be correctly nested
@@ -265,7 +265,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
                 exception.getDiagnostic().setRange(new Range(diagStartPosition, diagEndPosition));
             }
             if( exception != null ) {
-            	break;
+                break;
             }
         }
 
@@ -290,22 +290,22 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
 
         for(int iTkn= 0; iTkn<tokens.length; iTkn++) {
             if( iTkn < startTokenId) {
-            	continue;
+                continue;
             }
 
             Token token = tkns[iTkn];
             if( token.kind == leftBracket) {
-            	numUnmatchedParens++;
+                numUnmatchedParens++;
             }
             if( token.kind == rightBracket) {
-            	numUnmatchedParens--;
+                numUnmatchedParens--;
             }
         }
         return numUnmatchedParens == 0;
     }
 
     public boolean parensMatch(Token[] tkns, int startTokenId) {
-    	return bracketsMatch(tkns, startTokenId, LPAREN, RPAREN);
+        return bracketsMatch(tkns, startTokenId, LPAREN, RPAREN);
     }
 
     public void addException(DdlAnalyzerException exception) {
@@ -341,11 +341,11 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
     }
 
     public void printTokens() {
-    	printTokens(this.tokens, null);
+        printTokens(this.tokens, null);
     }
 
     public Token getToken(int tokenIndex) {
-    	return this.tokens[tokenIndex];
+        return this.tokens[tokenIndex];
     }
 
     public int getTokenIndex(Token token) {
@@ -370,24 +370,24 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
     private void printTokens(Token[] tkns, String headerMessage) {
         System.out.println(headerMessage);
         for (Token token : tkns) {
-			System.out.println("  >> Token = " + token.image +
-					"\n\t   >> KIND = " + token.kind +
-					"\n\t   >> begins at ( " +
-					token.beginLine + ", " + token.beginColumn + " )" +
-					"\n\t   >> ends   at ( " +
-					token.endLine + ", " + token.endColumn + " )");
+            System.out.println("  >> Token = " + token.image +
+                    "\n\t   >> KIND = " + token.kind +
+                    "\n\t   >> begins at ( " +
+                    token.beginLine + ", " + token.beginColumn + " )" +
+                    "\n\t   >> ends   at ( " +
+                    token.endLine + ", " + token.endColumn + " )");
 
         }
     }
 
     public String[] getKeywordLabels(int[] keywordIds, boolean upperCase) {
-    	List<String> labels = new ArrayList<String>();
+        List<String> labels = new ArrayList<String>();
 
-    	for( int id: keywordIds) {
-    		labels.add(getKeywordLabel(id, upperCase));
-    	}
+        for( int id: keywordIds) {
+            labels.add(getKeywordLabel(id, upperCase));
+        }
 
-    	return labels.toArray(new String[0]);
+        return labels.toArray(new String[0]);
     }
 
     /*
@@ -398,6 +398,6 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
      * @return string without double quotes
      */
     public String getKeywordLabel(int keywordId, boolean upperCase) {
-    	return DdlCompletionConstants.getLabel(keywordId, upperCase);
+        return DdlCompletionConstants.getLabel(keywordId, upperCase);
     }
 }

@@ -39,12 +39,12 @@ public class TeiidDdlWorkspaceService implements WorkspaceService {
     @Override
     public void didChangeConfiguration(DidChangeConfigurationParams params) {
         @SuppressWarnings("unused")
-		Object settings = params.getSettings();
+        Object settings = params.getSettings();
     }
 
     @Override
     public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
         @SuppressWarnings("unused")
-		List<FileEvent> settings = params.getChanges();
+        List<FileEvent> settings = params.getChanges();
     }
 }

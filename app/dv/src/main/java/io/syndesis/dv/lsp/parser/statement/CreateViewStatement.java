@@ -72,7 +72,7 @@ public class CreateViewStatement extends AbstractStatementObject {
     @Override
     protected void parseAndValidate() {
         // Check statement
-    	boolean prefixOK = true;
+        boolean prefixOK = true;
 
         // Check view name exists
         if( numTokens == 1) {
@@ -130,10 +130,10 @@ public class CreateViewStatement extends AbstractStatementObject {
             if( token.kind == ID || token.kind == STRINGVAL ) {
                 this.viewNameToken = token;
             } else {
-            	String msg = "View name '" + viewNameToken.image + "' is invalid ";
-            	if( isReservedKeywordToken(viewNameToken) ) {
-            		msg = "View name '" + viewNameToken.image + "' is a reserved word and must be wrapped in single quotes '' ";
-            	}
+                String msg = "View name '" + viewNameToken.image + "' is invalid ";
+                if( isReservedKeywordToken(viewNameToken) ) {
+                    msg = "View name '" + viewNameToken.image + "' is a reserved word and must be wrapped in single quotes '' ";
+                }
                 this.analyzer.addException(this.viewNameToken, this.viewNameToken, msg);
             }
         }
@@ -165,22 +165,22 @@ public class CreateViewStatement extends AbstractStatementObject {
         }
 
         if( numTokens > 3) {
-        	if( getTokenValue(3).equals("(") && this.analyzer.getReport().doParensMatch() ) {
-	            parseTableBody();
-	            queryExpression.parseAndValidate();
-        	} else {
-        		// Table Body is NOT required so check for token[3] == AS
-        		if( getToken(3).kind == AS) {
-        			queryExpression.parseAndValidate();
-        		} else {
-	        		Token firstToken = getToken(3);
-	        		Token lastToken = getToken(numTokens-1);
-	                this.analyzer.addException(
-	                        firstToken,
-	                        lastToken,
-	                        "The CREATE VIEW... statement is incomplete");
-        		}
-        	}
+            if( getTokenValue(3).equals("(") && this.analyzer.getReport().doParensMatch() ) {
+                parseTableBody();
+                queryExpression.parseAndValidate();
+            } else {
+                // Table Body is NOT required so check for token[3] == AS
+                if( getToken(3).kind == AS) {
+                    queryExpression.parseAndValidate();
+                } else {
+                    Token firstToken = getToken(3);
+                    Token lastToken = getToken(numTokens-1);
+                    this.analyzer.addException(
+                            firstToken,
+                            lastToken,
+                            "The CREATE VIEW... statement is incomplete");
+                }
+            }
         }
     }
 
@@ -193,7 +193,7 @@ public class CreateViewStatement extends AbstractStatementObject {
 
     private boolean isOk(DdlAnalyzerException exception) {
         if( exception == null ) {
-        	return true;
+            return true;
         }
 
         this.analyzer.addException(exception);

@@ -156,13 +156,13 @@ public class CompletionItemBuilder implements DdlCompletionConstants {
     }
 
     public String[] getKeywordLabels(int[] keywordIds, boolean upperCase) {
-    	List<String> labels = new ArrayList<String>();
+        List<String> labels = new ArrayList<String>();
 
-    	for( int id: keywordIds) {
-    		labels.add(getKeywordLabel(id, upperCase));
-    	}
+        for( int id: keywordIds) {
+            labels.add(getKeywordLabel(id, upperCase));
+        }
 
-    	return labels.toArray(new String[0]);
+        return labels.toArray(new String[0]);
     }
 
     /**
@@ -172,14 +172,14 @@ public class CompletionItemBuilder implements DdlCompletionConstants {
      * @return string without double quotes
      */
     public String getKeywordLabel(int keywordId, boolean upperCase) {
-    	return DdlCompletionConstants.getLabel(keywordId, upperCase);
+        return DdlCompletionConstants.getLabel(keywordId, upperCase);
     }
 
     public List<CompletionItem> setItemsSortText(List<CompletionItem> items, String sortText) {
-    	for( CompletionItem item: items ) {
-    		item.setSortText(sortText);
-    	}
-    	return items;
+        for( CompletionItem item: items ) {
+            item.setSortText(sortText);
+        }
+        return items;
     }
 
     public static Either<String, MarkupContent> beautifyDocument(String raw) {

@@ -32,52 +32,52 @@ import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 import io.syndesis.dv.lsp.parser.statement.CreateViewStatement;
 
 public class DdlDiagnostics {
-	private static final Logger LOGGER = LoggerFactory.getLogger(DdlDiagnostics.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DdlDiagnostics.class);
 
-	public void clearDiagnostics(TeiidDdlLanguageServer languageServer) {
-		languageServer.getClient()
-				.publishDiagnostics(new PublishDiagnosticsParams("someURI", new ArrayList<Diagnostic>(0)));
-	}
+    public void clearDiagnostics(TeiidDdlLanguageServer languageServer) {
+        languageServer.getClient()
+                .publishDiagnostics(new PublishDiagnosticsParams("someURI", new ArrayList<Diagnostic>(0)));
+    }
 
-	public void publishDiagnostics(TextDocumentItem ddlDocument, TeiidDdlLanguageServer languageServer) {
-		try {
-			languageServer.getClient()
-				.publishDiagnostics(new PublishDiagnosticsParams(ddlDocument.getUri(), new ArrayList<Diagnostic>(0)));
-		} catch (IllegalStateException ise) {
-			LOGGER.info(" ===>>> DdlDiagnostics pusblishDiagnostics()  IllegalStateException occurred");
-			if (ise.getMessage().contains("TEXT_FULL_WRITING")) {
-				String msg = "java.lang.IllegalStateException: The remote endpoint was in state [TEXT_FULL_WRITING] which is an invalid state for called method";
-				LOGGER.error(msg);
-			} else {
-				LOGGER.error(ise.getMessage(), ise);
-			}
-		}
+    public void publishDiagnostics(TextDocumentItem ddlDocument, TeiidDdlLanguageServer languageServer) {
+        try {
+            languageServer.getClient()
+                .publishDiagnostics(new PublishDiagnosticsParams(ddlDocument.getUri(), new ArrayList<Diagnostic>(0)));
+        } catch (IllegalStateException ise) {
+            LOGGER.info(" ===>>> DdlDiagnostics pusblishDiagnostics()  IllegalStateException occurred");
+            if (ise.getMessage().contains("TEXT_FULL_WRITING")) {
+                String msg = "java.lang.IllegalStateException: The remote endpoint was in state [TEXT_FULL_WRITING] which is an invalid state for called method";
+                LOGGER.error(msg);
+            } else {
+                LOGGER.error(ise.getMessage(), ise);
+            }
+        }
 
-		List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
+        List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
 
-		try {
-			doBasicDiagnostics(ddlDocument, diagnostics);
-			languageServer.getClient()
-					.publishDiagnostics(new PublishDiagnosticsParams(ddlDocument.getUri(), diagnostics));
-		} catch (BadLocationException e) {
-			LOGGER.error("BadLocationException thrown doing doBasicDiagnostics() in DdlDiagnostics.", e);
-		}
-	}
+        try {
+            doBasicDiagnostics(ddlDocument, diagnostics);
+            languageServer.getClient()
+                    .publishDiagnostics(new PublishDiagnosticsParams(ddlDocument.getUri(), diagnostics));
+        } catch (BadLocationException e) {
+            LOGGER.error("BadLocationException thrown doing doBasicDiagnostics() in DdlDiagnostics.", e);
+        }
+    }
 
-	/**
-	 * Do basic validation to check the no XML valid.
-	 *
-	 * @param ddlDocument
-	 * @param diagnostics
-	 * @throws BadLocationException
-	 */
-	private void doBasicDiagnostics(TextDocumentItem ddlDocument, List<Diagnostic> diagnostics)
-			throws BadLocationException {
-		DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(ddlDocument.getText());
-		CreateViewStatement createStatement = new CreateViewStatement(analyzer);
-		for (DdlAnalyzerException exception : createStatement.getExceptions()) {
-			diagnostics.add(exception.getDiagnostic());
-			LOGGER.debug(diagnostics.toString());
-		}
-	}
+    /**
+     * Do basic validation to check the no XML valid.
+     *
+     * @param ddlDocument
+     * @param diagnostics
+     * @throws BadLocationException
+     */
+    private void doBasicDiagnostics(TextDocumentItem ddlDocument, List<Diagnostic> diagnostics)
+            throws BadLocationException {
+        DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(ddlDocument.getText());
+        CreateViewStatement createStatement = new CreateViewStatement(analyzer);
+        for (DdlAnalyzerException exception : createStatement.getExceptions()) {
+            diagnostics.add(exception.getDiagnostic());
+            LOGGER.debug(diagnostics.toString());
+        }
+    }
 }

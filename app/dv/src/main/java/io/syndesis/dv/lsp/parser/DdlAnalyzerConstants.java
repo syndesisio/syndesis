@@ -527,7 +527,7 @@ public interface DdlAnalyzerConstants extends SQLParserConstants {
      * @param tokenImageString string
      * @return string without double quotes
      */
-     public static String getLabel(int keywordId, boolean upperCase) {
+     static String getLabel(int keywordId, boolean upperCase) {
          String tokenImageStr = tokenImage[keywordId];
          if( upperCase ) {
              return tokenImageStr.substring(1, tokenImageStr.length()-1).toUpperCase();
