@@ -34,7 +34,7 @@ public interface Lister<T extends WithId<T>> extends Resource, WithDataManager {
     default ListResult<T> list(
         @Parameter(required = false, description = "Page number to return") @QueryParam("page") @DefaultValue("1") int page,
         @Parameter(required = false, description = "Number of records per page") @QueryParam("per_page") @DefaultValue("20") int perPage
-        ) {
+    ) {
         Class<T> clazz = resourceKind().getModelClass();
         return getDataManager().fetchAll(
             clazz,

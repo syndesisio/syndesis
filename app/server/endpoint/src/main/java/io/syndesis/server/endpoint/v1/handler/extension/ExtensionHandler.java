@@ -240,7 +240,7 @@ public class ExtensionHandler extends BaseHandler implements Getter<Extension>, 
         @Parameter(required = false, description = "Page number to return") @QueryParam("page") @DefaultValue("1") int page,
         @Parameter(required = false, description = "Number of records per page") @QueryParam("per_page") @DefaultValue("20") int perPage,
         @Parameter(required = false, description = "Status of extension you want to filter") @QueryParam("status") @DefaultValue("Installed") Extension.Status status,
-        @Parameter(required = false, description = "Type of extension you want to filter") @QueryParam("type") Extension.Type extensionType
+        @Parameter(required = false, description = "Type of extension you want to filter") @QueryParam("extensionType") Extension.Type extensionType
     ) {
         return getDataManager().fetchAll(
             Extension.class,

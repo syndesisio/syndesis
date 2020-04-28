@@ -16,6 +16,20 @@
 
 package io.syndesis.server.endpoint.v1.handler.integration.support;
 
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.ClientErrorException;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.StreamingOutput;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -33,32 +47,9 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
 
-import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
-import org.apache.commons.io.IOUtils;
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -81,6 +72,7 @@ import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.Names;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.dao.file.FileDataManager;
@@ -95,6 +87,12 @@ import io.syndesis.server.jsondb.dao.JsonDbDao;
 import io.syndesis.server.jsondb.dao.Migrator;
 import io.syndesis.server.jsondb.impl.MemorySqlJsonDB;
 import io.syndesis.server.jsondb.impl.SqlJsonDB;
+import org.apache.commons.io.IOUtils;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import static org.springframework.util.StreamUtils.nonClosing;
 
@@ -154,9 +152,11 @@ public class IntegrationSupportHandler {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/overviews")
-    public ListResult<IntegrationOverview> getOverviews(@Context  UriInfo uriInfo) {
-        PaginationOptionsFromQueryParams paginationOptions = new PaginationOptionsFromQueryParams(uriInfo);
-        return integrationHandler.list(paginationOptions.getPage(), paginationOptions.getPerPage());
+    public ListResult<IntegrationOverview> getOverviews(
+        @Parameter(required = false, description = "Page number to return") @QueryParam("page") @DefaultValue("1") int page,
+        @Parameter(required = false, description = "Number of records per page") @QueryParam("per_page") @DefaultValue("20") int perPage
+    ) {
+        return integrationHandler.list(page, perPage);
     }
 
     @POST
