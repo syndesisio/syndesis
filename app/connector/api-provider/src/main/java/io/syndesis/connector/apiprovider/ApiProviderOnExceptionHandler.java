@@ -49,7 +49,6 @@ public class ApiProviderOnExceptionHandler implements Processor, Properties {
         } else {
             exchange.getIn().setBody("");
         }
-        exchange.setProperty(Exchange.ERRORHANDLER_HANDLED, Boolean.TRUE);
         LOGGER.info("Error response: " + statusInfo.getMessage());
     }
 
