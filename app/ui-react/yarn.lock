@@ -2727,9 +2727,9 @@
   integrity sha512-ZsANYyp/AVRaSWAFBnKuoyvVoA1tMT7hh1jHpua0sQYjN4ocuN89MNcNdAJhdawt1Bh+p9OEtDgl4vfKQbJ9RQ==
 
 "@patternfly/patternfly@^2.60.1":
-  version "2.65.3"
-  resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-2.65.3.tgz#0856d6ca13d971f18b1d7889a60a73eb78cad3c8"
-  integrity sha512-pOmj1r6nOU8WOI0y6s0vfILG8dLxxhDpzBCYUtnx+i8bqq3Ci6F1tekGqs0AfjAR1+OF5lfJEb+dhixs0Z8yrg==
+  version "2.71.5"
+  resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-2.71.5.tgz#db096c07cf3478a3c05f9020e3cd16be9c098be2"
+  integrity sha512-kkPVr+B9UKDeko8F31RzO7g1ecMbp4rVVQhg6X95rrzPd9mqBC8TGuwhyXnnHCbSAyNyqsp+ldGhDMsN5yMPiw==
 
 "@patternfly/react-charts@^5.2.21":
   version "5.3.12"
