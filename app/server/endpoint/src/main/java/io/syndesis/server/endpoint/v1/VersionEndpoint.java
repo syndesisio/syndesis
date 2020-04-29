@@ -20,7 +20,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+
 import org.springframework.stereotype.Component;
 
 import static java.util.concurrent.TimeUnit.HOURS;
@@ -38,14 +39,14 @@ public class VersionEndpoint {
 
     @GET
     @Produces("text/plain")
-    @ApiOperation(value = "Get the version")
+    @Operation(description = "Get the version")
     public Response doGetPlain() {
         return Response.ok(versionService.getVersion()).build();
     }
 
     @GET
     @Produces("application/json")
-    @ApiOperation(value = "Get the version as JSON specification")
+    @Operation(description = "Get the version as JSON specification")
     public Response doGetJson() {
         return Response.ok(versionService.getDetailed()).build();
     }

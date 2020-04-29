@@ -18,7 +18,7 @@ package io.syndesis.server.endpoint.v1.handler.connection;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.UriInfo;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -30,7 +30,7 @@ import io.syndesis.server.endpoint.v1.operations.Lister;
 import org.springframework.stereotype.Component;
 
 @Path("/connector-templates")
-@Api(tags = {"connector-template"})
+@Tag(name = "connector-template")
 @Component
 public final class ConnectorTemplateHandler extends BaseHandler
     implements Lister<ConnectorTemplate>, Getter<ConnectorTemplate> {

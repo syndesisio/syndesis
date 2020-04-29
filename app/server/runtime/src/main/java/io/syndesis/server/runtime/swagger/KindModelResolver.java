@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import io.swagger.jackson.ModelResolver;
-import io.swagger.models.properties.StringProperty;
-import io.swagger.util.Json;
+import io.swagger.v3.core.jackson.ModelResolver;
+import io.swagger.v3.core.util.Json;
+import io.swagger.v3.oas.models.media.Schema;
 import io.syndesis.common.model.Kind;
 
 /**
@@ -45,9 +45,11 @@ public final class KindModelResolver extends ModelResolver {
     }
 
     @Override
-    protected void _addEnumProps(final Class<?> propClass, final StringProperty property) {
+    protected void _addEnumProps(final Class<?> propClass, @SuppressWarnings("rawtypes") final Schema property) {
         if (Kind.class.equals(propClass)) {
-            property._enum(KINDS);
+            @SuppressWarnings("unchecked")
+            final Schema<String> kindProperty = property;
+            kindProperty.setEnum(KINDS);
         } else {
             super._addEnumProps(propClass, property);
         }

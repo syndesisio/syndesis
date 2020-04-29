@@ -43,8 +43,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -75,7 +75,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Path("/connectors")
-@Api(value = "connectors")
+@Tag(name = "connectors")
 @Component
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector>, Updater<Connector>, Deleter<Connector> {
 
@@ -193,8 +193,8 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         return connector;
     }
 
-    @Path("/{id}/actions")
-    public ConnectorActionHandler getActions(@PathParam("id") final String connectorId) {
+    @Path("/{connectorId}/actions")
+    public ConnectorActionHandler getActions(@PathParam("connectorId") final String connectorId) {
         return new ConnectorActionHandler(getDataManager(), connectorId);
     }
 
@@ -204,16 +204,16 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         return new ConnectorIconHandler(getDataManager(), connector, iconDao, extensionDataManager);
     }
 
-    @Path("/{id}/properties")
-    public ConnectorPropertiesHandler properties(@NotNull @PathParam("id") final String connectorId) {
+    @Path("/{connectorId}/properties")
+    public ConnectorPropertiesHandler properties(@NotNull @PathParam("connectorId") final String connectorId) {
         return new ConnectorPropertiesHandler(config);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{connectorId}/actions/{actionId}/filters/options")
-    public FilterOptions getFilterOptions(@PathParam("connectorId") @ApiParam(required = true) final String connectorId,
-                                          @PathParam("actionId") @ApiParam(required = true) final String actionId) {
+    public FilterOptions getFilterOptions(@PathParam("connectorId") @Parameter(required = true) final String connectorId,
+                                          @PathParam("actionId") @Parameter(required = true) final String actionId) {
         final FilterOptions.Builder builder = new FilterOptions.Builder().addOps(Op.DEFAULT_OPTS);
         final Connector connector = getDataManager().fetch(Connector.class, connectorId);
 
@@ -281,7 +281,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @PUT
     @Path(value = "/{id}")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public void update(@NotNull @PathParam("id") @ApiParam(required = true) String id, @MultipartForm ConnectorFormData connectorFormData) {
+    public void update(@NotNull @PathParam("id") @Parameter(required = true) String id, @MultipartForm ConnectorFormData connectorFormData) {
         if (connectorFormData.getConnector() == null) {
             throw new IllegalArgumentException("Missing connector parameter");
         }

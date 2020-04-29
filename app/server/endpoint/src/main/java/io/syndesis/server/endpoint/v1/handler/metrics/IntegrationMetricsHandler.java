@@ -25,16 +25,16 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.ComponentScan;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.metrics.IntegrationMetricsSummary;
 import io.syndesis.server.endpoint.metrics.MetricsProvider;
 import io.syndesis.server.endpoint.v1.operations.Resource;
 
 @Path("/metrics/integrations")
-@Api(value = "integration-metrics")
+@Tag(name = "integration-metrics")
 @ComponentScan("io.syndesis.server.endpoint.metrics")
 @Component
 public class IntegrationMetricsHandler implements Resource {
@@ -54,13 +54,13 @@ public class IntegrationMetricsHandler implements Resource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path(value = "/{integrationId}")
-    public IntegrationMetricsSummary get(@NotNull @PathParam("integrationId") @ApiParam(required = true) String integrationId) {
+    public IntegrationMetricsSummary get(@NotNull @PathParam("integrationId") @Parameter(required = true) String integrationId) {
         return metricsProvider.getIntegrationMetricsSummary(integrationId);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation("Retrieves a rolled up metrics summary for all integrations over their lifetime")
+    @Operation(description = "Retrieves a rolled up metrics summary for all integrations over their lifetime")
     public IntegrationMetricsSummary get() {
         return metricsProvider.getTotalIntegrationMetricsSummary();
     }

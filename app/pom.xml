@@ -70,7 +70,7 @@
 
     <okhttp3.version>3.12.1</okhttp3.version>
 
-    <swagger.version>1.5.24</swagger.version>
+    <swagger.version>2.1.2</swagger.version>
     <swagger-maven-plugin.version>3.1.8</swagger-maven-plugin.version>
 
     <activemq.version>5.15.9</activemq.version>
@@ -903,6 +903,54 @@
                   <package>zipkin2</package>
                 </packages>
               </exception>
+              <exception>
+                <conflictingDependencies>
+                  <dependency>
+                    <groupId>javax.inject</groupId>
+                    <artifactId>javax.inject</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>org.sonatype.sisu</groupId>
+                    <artifactId>sisu-inject-bean</artifactId>
+                  </dependency>
+                </conflictingDependencies>
+                <packages>
+                  <package>javax.inject</package>
+                </packages>
+              </exception>
+              <exception>
+                <conflictingDependencies>
+                  <dependency>
+                    <groupId>org.eclipse.sisu</groupId>
+                    <artifactId>org.eclipse.sisu.inject</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>org.sonatype.sisu</groupId>
+                    <artifactId>sisu-inject-bean</artifactId>
+                  </dependency>
+                </conflictingDependencies>
+                <packages>
+                  <package>org.sonatype.inject</package>
+                </packages>
+              </exception>
+              <exception>
+                <!-- https://github.com/swagger-api/swagger-core/issues/3412 -->
+                <packages>
+                    <package>io.swagger.v3.jaxrs2.integration</package>
+                </packages>
+              </exception>
+              <exception>
+                <conflictingDependencies>
+                  <dependency>
+                    <groupId>org.immutables</groupId>
+                    <artifactId>value-annotations</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>org.immutables</groupId>
+                    <artifactId>value</artifactId>
+                  </dependency>
+                </conflictingDependencies>
+              </exception>
             </exceptions>
             <ignoredDependencies>
               <!-- spring-cloud-starter BOM excludes all wiremock dependencies, so we bring in
@@ -991,9 +1039,9 @@
         </plugin>
 
         <plugin>
-          <groupId>com.github.kongchen</groupId>
+          <groupId>io.swagger.core.v3</groupId>
           <artifactId>swagger-maven-plugin</artifactId>
-          <version>${swagger-maven-plugin.version}</version>
+          <version>${swagger.version}</version>
         </plugin>
 
         <plugin>
@@ -2215,32 +2263,36 @@
       </dependency>
 
       <dependency>
-        <groupId>io.swagger</groupId>
+        <groupId>io.swagger.core.v3</groupId>
         <artifactId>swagger-core</artifactId>
         <version>${swagger.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-parser</artifactId>
-        <version>1.0.34</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.swagger</groupId>
+        <groupId>io.swagger.core.v3</groupId>
         <artifactId>swagger-models</artifactId>
         <version>${swagger.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.swagger</groupId>
+        <groupId>io.swagger.core.v3</groupId>
         <artifactId>swagger-annotations</artifactId>
         <version>${swagger.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-jaxrs</artifactId>
+        <groupId>io.swagger.core.v3</groupId>
+        <artifactId>swagger-jaxrs2</artifactId>
         <version>${swagger.version}</version>
         <exclusions>
           <exclusion>

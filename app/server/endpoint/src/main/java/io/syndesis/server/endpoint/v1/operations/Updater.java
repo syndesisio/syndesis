@@ -27,6 +27,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.PATCH;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -34,8 +35,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import io.swagger.annotations.ApiParam;
-import io.swagger.jaxrs.PATCH;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.dao.manager.WithDataManager;
 import io.syndesis.common.model.WithId;
@@ -50,7 +50,7 @@ public interface Updater<T extends WithId<T>> extends Resource, WithDataManager 
     @PUT
     @Path(value = "/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    default void update(@NotNull @PathParam("id") @ApiParam(required = true) String id,
+    default void update(@NotNull @PathParam("id") @Parameter(required = true) String id,
         @NotNull @Valid @ConvertGroup(from = Default.class, to = AllValidations.class) T obj) {
         getDataManager().update(obj);
     }
@@ -58,7 +58,7 @@ public interface Updater<T extends WithId<T>> extends Resource, WithDataManager 
     @PATCH
     @Path(value = "/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    default void patch(@NotNull @PathParam("id") @ApiParam(required = true) String id, @NotNull JsonNode patchJson) throws IOException {
+    default void patch(@NotNull @PathParam("id") @Parameter(required = true) String id, @NotNull JsonNode patchJson) throws IOException {
         Class<T> modelClass = resourceKind().getModelClass();
         final T existing = getDataManager().fetch(modelClass, id);
         if (existing == null) {

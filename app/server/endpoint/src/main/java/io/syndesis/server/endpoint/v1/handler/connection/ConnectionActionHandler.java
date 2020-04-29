@@ -31,11 +31,13 @@ import java.util.Optional;
 
 import com.netflix.hystrix.HystrixExecutable;
 import com.netflix.hystrix.HystrixInvokableInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -50,7 +52,7 @@ import io.syndesis.server.endpoint.v1.dto.Meta;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import org.apache.commons.lang3.StringUtils;
 
-@Api(value = "actions")
+@Tag(name = "actions")
 public class ConnectionActionHandler {
     public static final DataShape ANY_SHAPE = new DataShape.Builder().kind(DataShapeKinds.ANY).build();
 
@@ -82,13 +84,13 @@ public class ConnectionActionHandler {
     }
 
     @POST
-    @Path(value = "/{id}")
+    @Path(value = "/{actionId}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation("Retrieves enriched action definition, that is an action definition that has input/output data shapes and property enums defined with respect to the given action properties")
-    @ApiResponses(@ApiResponse(code = 200, reference = "#/definitions/ConnectorDescriptor",
-        message = "A map of zero or more action property suggestions keyed by the property name"))
+    @Operation(description = "Retrieves enriched action definition, that is an action definition that has input/output data shapes and property enums defined with respect to the given action properties")
+    @ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = ConnectorDescriptor.class)),
+        description = "A map of zero or more action property suggestions keyed by the property name")
     public Response enrichWithMetadata(
-        @PathParam("id") @ApiParam(required = true, example = "io.syndesis:salesforce-create-or-update:latest") final String id,
+        @PathParam("actionId") @Parameter(required = true, example = "io.syndesis:salesforce-create-or-update:latest") final String actionId,
         final Map<String, Object> props) {
 
         final Map<String, String> properties = new HashMap<>();
@@ -110,9 +112,9 @@ public class ConnectionActionHandler {
         }
 
         final ConnectorAction action = actions.stream()//
-            .filter(a -> a.idEquals(id))//
+            .filter(a -> a.idEquals(actionId))//
             .findAny()//
-            .orElseThrow(() -> new EntityNotFoundException("Action with id: " + id));
+            .orElseThrow(() -> new EntityNotFoundException("Action with id: " + actionId));
 
         final ConnectorDescriptor originalDescriptor = action.getDescriptor();
 
