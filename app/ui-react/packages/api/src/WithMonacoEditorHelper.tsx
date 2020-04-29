@@ -11,12 +11,12 @@ import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
 
 export const LANGUAGE_SERVICE_CLIENT_CONNECTED = 'connected';
 
-export interface IWithMocanoEditorHelperProps {
+export interface IWithMonacoEditorHelperProps {
   dvApiUri: string;
-  children(props: IWithMocanoEditorHelperChildrenProps): any;
+  children(props: IWithMonacoEditorHelperChildrenProps): any;
 }
 
-export interface IWithMocanoEditorHelperChildrenProps {
+export interface IWithMonacoEditorHelperChildrenProps {
   didMountEditor: (valueGetter: any, editor: any) => void;
   willMountEditor: () => void;
 }
@@ -25,8 +25,8 @@ const LANGUAGE_ID = 'sql'; // 'teiid-ddl';
 const LANGUAGE_SERVER_ID = 'teiid-ddl-language-server';
 let webSocket: WebSocket;
 
-export class WithMocanoEditorHelper extends React.Component<
-  IWithMocanoEditorHelperProps
+export class WithMonacoEditorHelper extends React.Component<
+  IWithMonacoEditorHelperProps
 > {
 
   public state = { editorInstalled: false };
