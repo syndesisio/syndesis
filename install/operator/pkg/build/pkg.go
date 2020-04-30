@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	GO_MOD_DIRECTORY string
+	GoModDirectory string
 )
 
 func FileExists(name string) bool {
@@ -36,12 +36,12 @@ func init() {
 	for next := initialDir; current != next; next = filepath.Dir(current) {
 		current = next
 		if FileExists(filepath.Join(current, "go.mod")) && FileExists(filepath.Join(current, "go.sum")) {
-			GO_MOD_DIRECTORY = current
+			GoModDirectory = current
 			break
 		}
 	}
 
-	if GO_MOD_DIRECTORY == "" {
+	if GoModDirectory == "" {
 		panic("could not find the root module directory")
 	}
 }

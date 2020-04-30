@@ -69,7 +69,7 @@
           - name: POSTGRESQL_DATABASE
             value: {{.Syndesis.Components.Database.Name}}
           - name: OPENSHIFT_MANAGEMENT_URL_FOR3SCALE
-            value: '{{.Syndesis.Components.Server.Features.ManagementUrlFor3scale}}'
+            value: '{{.Syndesis.Components.Server.Features.ManagementURLFor3scale}}'
           - name: ENDPOINTS_TEST_SUPPORT_ENABLED
             value: '{{ .Syndesis.Components.Server.Features.TestSupport }}'
 {{if .DevSupport}}

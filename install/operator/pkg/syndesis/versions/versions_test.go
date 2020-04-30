@@ -35,7 +35,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
-func Test_syndesisApi_unstructuredToV1Alpha1(t *testing.T) {
+func Test_syndesisAPI_unstructuredToV1Alpha1(t *testing.T) {
 
 	type args struct {
 		obj unstructured.Unstructured
@@ -51,7 +51,7 @@ func Test_syndesisApi_unstructuredToV1Alpha1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			api := syndesisApi{}
+			api := syndesisAPI{}
 			gotS, err := api.unstructuredToV1Alpha1(tt.args.obj)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("unstructuredToV1Alpha1() error = %v, wantErr %v", err, tt.wantErr)
@@ -64,7 +64,7 @@ func Test_syndesisApi_unstructuredToV1Alpha1(t *testing.T) {
 	}
 }
 
-func Test_syndesisApi_unstructuredToV1Beta1(t *testing.T) {
+func Test_syndesisAPI_unstructuredToV1Beta1(t *testing.T) {
 	type args struct {
 		obj unstructured.Unstructured
 	}
@@ -97,7 +97,7 @@ func Test_syndesisApi_unstructuredToV1Beta1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			api := syndesisApi{}
+			api := syndesisAPI{}
 			gotS, err := api.unstructuredToV1Beta1(tt.args.obj)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("unstructuredToV1Beta1() error = %v, wantErr %v", err, tt.wantErr)
@@ -110,7 +110,7 @@ func Test_syndesisApi_unstructuredToV1Beta1(t *testing.T) {
 	}
 }
 
-func Test_syndesisApi_v1alpha1ToV1beta1(t *testing.T) {
+func Test_syndesisAPI_v1alpha1ToV1beta1(t *testing.T) {
 	il := 5
 	ici := 10
 	dsc := true
@@ -184,7 +184,7 @@ func Test_syndesisApi_v1alpha1ToV1beta1(t *testing.T) {
 						Components: v1alpha1.ComponentsSpec{
 							Server: v1alpha1.ServerConfiguration{
 								Features: v1alpha1.ServerFeatures{
-									ManagementUrlFor3scale: "ManagementUrlFor3scale",
+									ManagementURLFor3scale: "ManagementURLFor3scale",
 								},
 								Resources: v1alpha1.Resources{
 									ResourceRequirements: v1.ResourceRequirements{
@@ -281,7 +281,7 @@ func Test_syndesisApi_v1alpha1ToV1beta1(t *testing.T) {
 							Features: v1beta1.ServerFeatures{
 								IntegrationLimit:              il,
 								IntegrationStateCheckInterval: ici,
-								ManagementUrlFor3scale:        "ManagementUrlFor3scale",
+								ManagementURLFor3scale:        "ManagementURLFor3scale",
 								MavenRepositories: map[string]string{
 									"repo1": "repo1url",
 									"repo2": "repo2url",
@@ -300,7 +300,7 @@ func Test_syndesisApi_v1alpha1ToV1beta1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			api := syndesisApi{
+			api := syndesisAPI{
 				v1alpha1: tt.fields.v1alpha1,
 				v1beta1:  tt.fields.v1beta1,
 			}
@@ -317,7 +317,7 @@ func getRuntimeObjectAsUnstructured(obj runtime.Object) (r unstructured.Unstruct
 	s, err := util.ToUnstructured(obj)
 	if err != nil {
 		return unstructured.Unstructured{}
-	} else {
-		return *s
 	}
+
+	return *s
 }

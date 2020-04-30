@@ -17,6 +17,7 @@ import (
 var u upgrade.Upgrader
 
 const (
+	// UpgradePodPrefix is the prefix name for the upgrade Pod
 	UpgradePodPrefix = "syndesis-upgrade-"
 )
 
@@ -52,7 +53,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		// the whole upgrade / rollback process
 		if u == nil {
 			var err error
-			u, err = upgrade.Build(a.log, syndesis, a.client, ctx)
+			u, err = upgrade.Build(ctx, a.log, syndesis, a.client)
 			if err != nil {
 				return err
 			}
@@ -65,14 +66,14 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 			// run and make sure it succeed
 			a.log.Info("Syndesis resource upgraded", "name", syndesis.Name, "target version", targetVersion)
 			return a.setPhaseToRun(ctx, syndesis)
-		} else {
-			a.log.Error(nil, "Failure while upgrading Syndesis", "name", syndesis.Name, "target version", targetVersion)
-			if err := u.Rollback(); err != nil {
-				a.log.Error(nil, "Failure while rolling back Syndesis, some manual steps might be required", "name", syndesis.Name, "target version", targetVersion)
-			}
-
-			return a.setPhaseToFailureBackoff(ctx, syndesis, targetVersion)
 		}
+
+		a.log.Error(nil, "Failure while upgrading Syndesis", "name", syndesis.Name, "target version", targetVersion)
+		if err := u.Rollback(); err != nil {
+			a.log.Error(nil, "Failure while rolling back Syndesis, some manual steps might be required", "name", syndesis.Name, "target version", targetVersion)
+		}
+
+		return a.setPhaseToFailureBackoff(ctx, syndesis, targetVersion)
 	} else if syndesis.Status.Phase == v1beta1.SyndesisPhasePostUpgradeRunSucceed {
 		// We land here only if the install phase after upgrading finished correctly
 		a.log.Info("syndesis resource post upgrade ran successfully", "name", syndesis.Name, "previous version", syndesis.Status.Version, "target version", targetVersion)

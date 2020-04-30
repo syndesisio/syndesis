@@ -35,7 +35,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-// Interface to be used top perform upgrades
+// Upgrader the interface to be used top perform upgrades
 type Upgrader interface {
 	// Upgrade run all the steps performing a syndesis upgrade
 	Upgrade() (err error)
@@ -144,8 +144,8 @@ func (u *upgrade) InstallFailed() (count int) {
 	return
 }
 
-// build the upgrade struct
-func Build(log logr.Logger, syndesis *v1beta1.Syndesis, client client.Client, ctx context.Context) (Upgrader, error) {
+// Build the upgrade struct
+func Build(ctx context.Context, log logr.Logger, syndesis *v1beta1.Syndesis, client client.Client) (Upgrader, error) {
 	base := step{
 		log:       log,
 		executed:  false,

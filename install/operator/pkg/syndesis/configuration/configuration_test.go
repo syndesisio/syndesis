@@ -230,7 +230,7 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 							Enabled: true,
 						},
 						CamelK: v1beta1.AddonSpec{Enabled: true},
-						PublicApi: v1beta1.PublicApiConfiguration{
+						PublicAPI: v1beta1.PublicAPIConfiguration{
 							Enabled:       true,
 							RouteHostname: "mypublichost.com",
 						},
@@ -274,7 +274,7 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 							CamelVersion:  "3.1.0",
 							CamelKRuntime: "1.1.0",
 						},
-						PublicApi: PublicApiConfiguration{
+						PublicAPI: PublicAPIConfiguration{
 							Enabled:       true,
 							RouteHostname: "mypublichost.com",
 						},
@@ -360,7 +360,7 @@ func getConfigLiteral() *Config {
 		PrometheusRules:            "",
 		OpenShiftProject:           "",
 		OpenShiftOauthClientSecret: "",
-		OpenShiftConsoleUrl:        "",
+		OpenShiftConsoleURL:        "",
 		Syndesis: SyndesisConfig{
 			RouteHostname: "",
 			SHA:           false,
@@ -398,7 +398,7 @@ func getConfigLiteral() *Config {
 						SHA: "fabric8/s2i-java:3.0-java8@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
 					},
 				},
-				PublicApi: PublicApiConfiguration{
+				PublicAPI: PublicAPIConfiguration{
 					Enabled:       true,
 					RouteHostname: "mypublichost.com",
 				},

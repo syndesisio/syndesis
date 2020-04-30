@@ -151,7 +151,7 @@ func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 	}
 
 	o.databaseImage = defaultDatabaseImage
-	config, err := configuration.GetProperties(configuration.TemplateConfig, o.Context, nil, &v1beta1.Syndesis{})
+	config, err := configuration.GetProperties(o.Context, configuration.TemplateConfig, nil, &v1beta1.Syndesis{})
 	if err == nil {
 		o.databaseImage = config.Syndesis.Components.Database.Image.Get(config.Syndesis.SHA)
 	}
@@ -218,9 +218,9 @@ func (o *Install) install(action string, resources []unstructured.Unstructured) 
 
 			switch result {
 			case controllerutil.OperationResultUpdated:
-				createCounter += 1
+				createCounter++
 			case controllerutil.OperationResultCreated:
-				createCounter += 1
+				createCounter++
 			}
 		}
 	}

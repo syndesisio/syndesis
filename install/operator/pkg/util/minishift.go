@@ -2,10 +2,11 @@ package util
 
 import (
 	"fmt"
-	"github.com/chirino/hawtgo/sh"
-	"k8s.io/client-go/rest"
 	"path/filepath"
 	"regexp"
+
+	"github.com/chirino/hawtgo/sh"
+	"k8s.io/client-go/rest"
 )
 
 type MinishiftCluster struct {
@@ -41,24 +42,24 @@ func GetMinishiftCluster(c *rest.Config) *MinishiftCluster {
 	}
 }
 
-func (this *MinishiftCluster) MinishiftAdminLogin() error {
-	_, _, err := sh.New().LineArgs(this.oc, `login`, `-u`, `system:admin`).Output()
+func (m *MinishiftCluster) MinishiftAdminLogin() error {
+	_, _, err := sh.New().LineArgs(m.oc, `login`, `-u`, `system:admin`).Output()
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (this *MinishiftCluster) MinishiftUserLogin(username string) error {
-	_, _, err := sh.New().LineArgs(this.oc, `login`, `-u`, username, `-p`, username).Output()
+func (m *MinishiftCluster) MinishiftUserLogin(username string) error {
+	_, _, err := sh.New().LineArgs(m.oc, `login`, `-u`, username, `-p`, username).Output()
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (this *MinishiftCluster) MinishiftWhoAmI() (string, error) {
-	username, _, err := sh.New().LineArgs(this.oc, `whoami`).Output()
+func (m *MinishiftCluster) MinishiftWhoAmI() (string, error) {
+	username, _, err := sh.New().LineArgs(m.oc, `whoami`).Output()
 	if err != nil {
 		return "", err
 	}

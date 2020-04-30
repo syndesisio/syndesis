@@ -34,11 +34,13 @@ type baseAction struct {
 
 var actionLog = logf.Log.WithName("action")
 
+// SyndesisOperatorAction an action that will be executed by the operator
 type SyndesisOperatorAction interface {
 	CanExecute(syndesis *v1beta1.Syndesis) bool
 	Execute(ctx context.Context, syndesis *v1beta1.Syndesis) error
 }
 
+// NewOperatorActions gives the default set of actions operator will perform
 func NewOperatorActions(mgr manager.Manager, api kubernetes.Interface) []SyndesisOperatorAction {
 	return []SyndesisOperatorAction{
 		newCheckUpdatesAction(mgr, api),
@@ -76,19 +78,23 @@ func syndesisPhaseIs(syndesis *v1beta1.Syndesis, statuses ...v1beta1.SyndesisPha
 }
 
 func createOrReplaceForce(ctx context.Context, client client.Client, res runtime.Object, force bool) error {
-	if err := client.Create(ctx, res); err != nil && k8serrors.IsAlreadyExists(err) {
-		if force || canResourceBeReplaced(res) {
-			err = client.Delete(ctx, res)
-			if err != nil {
-				return err
-			}
-			return client.Create(ctx, res)
-		} else {
-			return nil
-		}
-	} else {
+	err := client.Create(ctx, res)
+	if err == nil {
+		return nil
+	}
+
+	if !k8serrors.IsAlreadyExists(err) {
 		return err
 	}
+
+	if force || canResourceBeReplaced(res) {
+		if err := client.Delete(ctx, res); err != nil {
+			return err
+		}
+		return client.Create(ctx, res)
+	}
+
+	return nil
 }
 
 func canResourceBeReplaced(res runtime.Object) bool {

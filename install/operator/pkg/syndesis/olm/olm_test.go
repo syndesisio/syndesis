@@ -33,7 +33,7 @@ func TestManifest_Generate(t *testing.T) {
 		t.Skip("skipping tests in short mode")
 	}
 
-	conf, err := configuration.GetProperties("../../../build/conf/config-test.yaml", context.TODO(), nil, &v1beta1.Syndesis{})
+	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", nil, &v1beta1.Syndesis{})
 	assert.NoError(t, err)
 
 	dir, err := ioutil.TempDir("/tmp", "olm-generate-test-")
@@ -65,7 +65,7 @@ func TestManifest_ensureDir(t *testing.T) {
 		t.Skip("skipping tests in short mode")
 	}
 
-	conf, err := configuration.GetProperties("../../../build/conf/config-test.yaml", context.TODO(), nil, &v1beta1.Syndesis{})
+	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", nil, &v1beta1.Syndesis{})
 	assert.NoError(t, err)
 
 	dir, err := ioutil.TempDir("/tmp", "olm-generate-test-")

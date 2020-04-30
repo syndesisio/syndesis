@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	// Number of times a syndesis upgrade will be triggered (including the first one launched by another state)
+	// UpgradeMaxAttempts number of times a syndesis upgrade will be triggered (including the first one launched by another state)
 	UpgradeMaxAttempts = 5
 )
 
@@ -85,9 +85,9 @@ func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *v1beta1.Sy
 		target.Status.ForceUpgrade = true
 
 		return a.client.Update(ctx, target)
-	} else {
-		remaining := math.Round(nextAttempt.Sub(now).Seconds())
-		a.log.Info("Upgrade of Syndesis resource will be retried", "name", syndesis.Name, "retryAfterSeconds", remaining)
-		return nil
 	}
+
+	remaining := math.Round(nextAttempt.Sub(now).Seconds())
+	a.log.Info("Upgrade of Syndesis resource will be retried", "name", syndesis.Name, "retryAfterSeconds", remaining)
+	return nil
 }

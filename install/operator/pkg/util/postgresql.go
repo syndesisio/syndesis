@@ -23,21 +23,21 @@ import (
 	"regexp"
 	"strconv"
 
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // make sure the driver loads
 )
 
 var versionMatch = regexp.MustCompile(`^\d+\.\d+`)
 
 // PostgreSQLVersionAt determines the version of a PotgreSQL database running at hostname and port
-func PostgreSQLVersionAt(username string, password string, database string, dbUrl string) (float64, error) {
-	log.Info(fmt.Sprintf("Connecting to PostgreSQL server running at %s", dbUrl))
+func PostgreSQLVersionAt(username string, password string, database string, dbURL string) (float64, error) {
+	log.Info(fmt.Sprintf("Connecting to PostgreSQL server running at %s", dbURL))
 
-	dbUrlObj, err := url.Parse(dbUrl)
+	dbURLObj, err := url.Parse(dbURL)
 	if err != nil {
 		return 0, err
 	}
 
-	db, err := sql.Open("postgres", fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", username, password, dbUrlObj.Hostname(), dbUrlObj.Port(), database))
+	db, err := sql.Open("postgres", fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", username, password, dbURLObj.Hostname(), dbURLObj.Port(), database))
 	if err != nil {
 		return 0, err
 	}

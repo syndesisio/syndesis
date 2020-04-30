@@ -24,7 +24,7 @@ func (o *Install) installApplication() error {
 		resources = append(resources, appResources...)
 
 	} else {
-		customResData, err := util.LoadJsonFromFile(o.customResource)
+		customResData, err := util.LoadJSONFromFile(o.customResource)
 		if err != nil {
 			return err
 		}

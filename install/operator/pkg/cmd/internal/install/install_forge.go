@@ -60,12 +60,12 @@ var templateParams = map[string]TemplateParam{}
 
 type SyndesisEnvVar string
 
-const EMPTY_FIELD = "<>"
+const EmptyField = "<>"
 
 const (
 	EnvRouteHostname                 SyndesisEnvVar = "ROUTE_HOSTNAME"
 	EnvOpenShiftMaster               SyndesisEnvVar = "OPENSHIFT_MASTER"
-	EnvOpenShiftConsoleUrl           SyndesisEnvVar = "OPENSHIFT_CONSOLE_URL"
+	EnvOpenShiftConsoleURL           SyndesisEnvVar = "OPENSHIFT_CONSOLE_URL"
 	EnvOpenShiftProject              SyndesisEnvVar = "OPENSHIFT_PROJECT"
 	EnvOpenShiftOauthClientSecret    SyndesisEnvVar = "OPENSHIFT_OAUTH_CLIENT_SECRET"
 	EnvPostgresqlMemoryLimit         SyndesisEnvVar = "POSTGRESQL_MEMORY_LIMIT"
@@ -94,7 +94,7 @@ const (
 	EnvDatavirtEnabled               SyndesisEnvVar = "DATAVIRT_ENABLED"
 
 	EnvUpgradeVolumeCapacity  SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
-	EnvManagementUrlFor3scale SyndesisEnvVar = "OPENSHIFT_MANAGEMENT_URL_FOR3SCALE"
+	EnvManagementURLFor3scale SyndesisEnvVar = "OPENSHIFT_MANAGEMENT_URL_FOR3SCALE"
 
 	EnvControllersIntegrationEnabled SyndesisEnvVar = "CONTROLLERS_INTEGRATION_ENABLED"
 	EnvImageStreamNamespace          SyndesisEnvVar = "IMAGE_STREAM_NAMESPACE"
@@ -117,9 +117,9 @@ const (
 var allTemplateParams = map[SyndesisEnvVar]ConfigSpec{
 	EnvRouteHostname:                 {Description: "The external hostname to access Syndesis"},
 	EnvOpenShiftMaster:               {Value: "https://localhost:8443", Required: true, Description: "Public OpenShift master address"},
-	EnvOpenShiftConsoleUrl:           {Value: "https://localhost:8443", Description: "The URL to the OpenShift console"},
+	EnvOpenShiftConsoleURL:           {Value: "https://localhost:8443", Description: "The URL to the OpenShift console"},
 	EnvOpenShiftProject:              {Required: true, Description: "The name of the OpenShift project Syndesis is being deployed into"},
-	EnvImageStreamNamespace:          {Value: EMPTY_FIELD, Description: "Namespace containing image streams"},
+	EnvImageStreamNamespace:          {Value: EmptyField, Description: "Namespace containing image streams"},
 	EnvOpenShiftOauthClientSecret:    {Generate: "expression", FromLen: 64, Required: true, Description: "OpenShift OAuth client secret"},
 	EnvPostgresqlMemoryLimit:         {Value: "255Mi", Description: "Maximum amount of memory the PostgreSQL container can use"},
 	EnvPostgresqlUser:                {Value: "syndesis", Description: "Username for PostgreSQL user that will be used for accessing the database"},
@@ -146,17 +146,17 @@ var allTemplateParams = map[SyndesisEnvVar]ConfigSpec{
 	EnvKomodoMemoryLimit:             {Value: "1024Mi", Required: true, Description: "Maximum amount of memory the data virtualization service might use"},
 	EnvDatavirtEnabled:               {Value: "0", Required: true, Description: "Set to 0 to disable data virtualization, set to 1 to enable data virtualization"},
 	EnvControllersIntegrationEnabled: {Value: "true", Description: "Should deployment of integrations be enabled?"},
-	EnvManagementUrlFor3scale:        {Value: "", Description: "Url to 3scale for exposing services"},
+	EnvManagementURLFor3scale:        {Value: "", Description: "Url to 3scale for exposing services"},
 
-	EnvFuseS2iImage:        {Value: EMPTY_FIELD, Required: true, Description: "The Fuse S2i image and tag"},
-	EnvFuseMetaImage:       {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Meta image and tag"},
-	EnvFuseServerImage:     {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Server image and tag"},
-	EnvFuseUIImage:         {Value: EMPTY_FIELD, Required: true, Description: "The Fuse UI image and tag"},
-	EnvFuseOauthImage:      {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Oauth Proxy image and tag"},
-	EnvPrometheusImage:     {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Prometheus image and tag"},
-	EnvFuseDBImage:         {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Database image and tag"},
-	EnvFuseDBExporterImage: {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Database Exporter image and tag"},
-	EnvFuseDVImage:         {Value: EMPTY_FIELD, Required: true, Description: "The Fuse DV image and tag"},
+	EnvFuseS2iImage:        {Value: EmptyField, Required: true, Description: "The Fuse S2i image and tag"},
+	EnvFuseMetaImage:       {Value: EmptyField, Required: true, Description: "The Fuse Meta image and tag"},
+	EnvFuseServerImage:     {Value: EmptyField, Required: true, Description: "The Fuse Server image and tag"},
+	EnvFuseUIImage:         {Value: EmptyField, Required: true, Description: "The Fuse UI image and tag"},
+	EnvFuseOauthImage:      {Value: EmptyField, Required: true, Description: "The Fuse Oauth Proxy image and tag"},
+	EnvPrometheusImage:     {Value: EmptyField, Required: true, Description: "The Fuse Prometheus image and tag"},
+	EnvFuseDBImage:         {Value: EmptyField, Required: true, Description: "The Fuse Database image and tag"},
+	EnvFuseDBExporterImage: {Value: EmptyField, Required: true, Description: "The Fuse Database Exporter image and tag"},
+	EnvFuseDVImage:         {Value: EmptyField, Required: true, Description: "The Fuse DV image and tag"},
 }
 
 func (cs ConfigSpec) From() string {
@@ -173,7 +173,7 @@ func (o *Install) installForge() error {
 	// be filled with parameters placeholder values
 	//
 	syndesis, _ := v1beta1.NewSyndesis(convertToParam(string(EnvOpenShiftProject)))
-	configuration, err := conf.GetProperties(conf.TemplateConfig, o.Context, nil, syndesis)
+	configuration, err := conf.GetProperties(o.Context, conf.TemplateConfig, nil, syndesis)
 	if err != nil {
 		return err
 	}
@@ -187,9 +187,9 @@ func (o *Install) installForge() error {
 	// Fix route host name
 	configuration.Syndesis.RouteHostname = convertToParam(string(EnvRouteHostname))
 
-	configuration.OpenShiftConsoleUrl = convertToParam(string(EnvOpenShiftConsoleUrl))
+	configuration.OpenShiftConsoleURL = convertToParam(string(EnvOpenShiftConsoleURL))
 	components.Server.Features.OpenShiftMaster = convertToParam(string(EnvOpenShiftMaster))
-	components.Server.Features.ManagementUrlFor3scale = convertToParam(string(EnvManagementUrlFor3scale))
+	components.Server.Features.ManagementURLFor3scale = convertToParam(string(EnvManagementURLFor3scale))
 	components.Oauth.SarNamespace = convertToParam(string(EnvSarNamespace))
 
 	components.S2I.Image.Tag = retargetImage(EnvFuseS2iImage, &components.S2I.Image.Tag)
@@ -283,7 +283,7 @@ func (o *Install) installForge() error {
 			case "knative":
 				configuration.Syndesis.Addons.Knative.Enabled = true
 			case "publicApi":
-				configuration.Syndesis.Addons.PublicApi.Enabled = true
+				configuration.Syndesis.Addons.PublicAPI.Enabled = true
 			case "todo":
 				configuration.Syndesis.Addons.Todo.Enabled = true
 			}
@@ -569,11 +569,11 @@ func processMap(content map[string]interface{}) error {
 				return err
 			}
 
-			newJson, err := json.Marshal(&jsonMap)
+			newJSON, err := json.Marshal(&jsonMap)
 			if err != nil {
 				return err
 			}
-			content[key] = string(newJson)
+			content[key] = string(newJSON)
 			continue
 		}
 
@@ -651,7 +651,7 @@ func exportTo(resources []unstructured.Unstructured, format string, templateName
 				m["description"] = spec.Description
 			}
 			if len(spec.Value) > 0 {
-				if spec.Value == EMPTY_FIELD {
+				if spec.Value == EmptyField {
 					m["value"] = ""
 				} else {
 					m["value"] = spec.Value

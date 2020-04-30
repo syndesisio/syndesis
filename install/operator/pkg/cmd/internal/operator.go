@@ -61,6 +61,6 @@ func (o *Options) NewDynamicClient() (c dynamic.Interface, err error) {
 	return dynamic.NewForConfig(o.GetClientConfig())
 }
 
-func (o *Options) NewApiClient() (*kubernetes.Clientset, error) {
+func (o *Options) NewAPIClient() (*kubernetes.Clientset, error) {
 	return kubernetes.NewForConfig(o.GetClientConfig())
 }

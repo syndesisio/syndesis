@@ -27,7 +27,7 @@ func SetNamespaceAndOwnerReference(resource interface{}, syndesis *v1beta1.Synde
 	// Adding owner in addition to controller-uid yields the same "bug"
 	//
 	if r, ok := resource.(unstructured.Unstructured); ok && r.GetKind() == "Job" {
-		setLabel(resource, pkg.ControllerUidLabel, string(syndesis.GetUID()))
+		setLabel(resource, pkg.ControllerUIDLabel, string(syndesis.GetUID()))
 	} else {
 		setLabel(resource, "owner", string(syndesis.GetUID()))
 	}

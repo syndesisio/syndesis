@@ -62,7 +62,7 @@ func TestGenerator(t *testing.T) {
 				CamelK: v1beta1.AddonSpec{
 					Enabled: true,
 				},
-				PublicApi: v1beta1.PublicApiConfiguration{
+				PublicAPI: v1beta1.PublicAPIConfiguration{
 					Enabled:       true,
 					RouteHostname: "mypublichost.com",
 				},
@@ -107,7 +107,7 @@ func TestGenerator(t *testing.T) {
 		},
 	}
 
-	configuration, err := configuration.GetProperties("../../build/conf/config.yaml", context.TODO(), fakeClient(), syndesis)
+	configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config.yaml", fakeClient(), syndesis)
 	require.NoError(t, err)
 
 	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure/", configuration)
@@ -188,7 +188,7 @@ func TestDockerImagesSHAorTag(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			conf, err := configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), nil, &v1beta1.Syndesis{})
+			conf, err := configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", nil, &v1beta1.Syndesis{})
 			require.NoError(t, err)
 
 			conf.Syndesis.SHA = tt.args.sha
@@ -228,7 +228,7 @@ func TestOpsAddon(t *testing.T) {
 	syndesis := &v1beta1.Syndesis{}
 	baseDir := "./addons/ops/"
 
-	conf, err := configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), nil, syndesis)
+	conf, err := configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", nil, syndesis)
 	if err != nil {
 
 	}
@@ -239,7 +239,7 @@ func TestOpsAddon(t *testing.T) {
 	}
 
 	syndesis.Spec.Components.Database.ExternalDbURL = "1234"
-	conf, err = configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), nil, syndesis)
+	conf, err = configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", nil, syndesis)
 	if err != nil {
 
 	}
@@ -390,7 +390,7 @@ func assertPropStr(t *testing.T, resource map[string]interface{}, expected strin
 }
 
 func loadDBResource(t *testing.T, syndesis *v1beta1.Syndesis) []unstructured.Unstructured {
-	configuration, err := configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), fakeClient(), syndesis)
+	configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", fakeClient(), syndesis)
 	require.NoError(t, err)
 
 	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./database/", configuration)

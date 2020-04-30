@@ -94,10 +94,10 @@ func TestBackupBuildDir(t *testing.T) {
 func TestBackupPodFromJob(t *testing.T) {
 	ns := v1beta1.DefaultNamespace
 	jobName := "myJob"
-	controllerUid := "Job666"
+	controllerUID := "Job666"
 	labels := map[string]string{
-		pkg.ControllerUidLabel: controllerUid,
-		pkg.JobNameLabel:       jobName,
+		pkg.ControllerUIDLabel: controllerUID,
+		jobNameLabel:           jobName,
 	}
 
 	job := &batchv1.Job{

@@ -32,7 +32,7 @@ import (
 const (
 	secret          = "syndesis-backup-s3"
 	secretAccessKey = "secret-access-key"
-	secretKeyId     = "secret-key-id"
+	secretKeyID     = "secret-key-id"
 	bucketName      = "bucket-name"
 	region          = "region"
 )
@@ -104,14 +104,14 @@ func (s *S3) credentials(unset bool) (err error) {
 
 	s.bucket = string(secret.Data[bucketName])
 	s.region = string(secret.Data[region])
-	keyId := string(secret.Data[secretKeyId])
+	keyID := string(secret.Data[secretKeyID])
 	accessKey := string(secret.Data[secretAccessKey])
 
-	if len(keyId) == 0 && len(accessKey) == 0 {
+	if len(keyID) == 0 && len(accessKey) == 0 {
 		return fmt.Errorf("one of either 'Access Key ID' or 'Secret Access Key' is empty")
 	}
 
-	os.Setenv("AWS_ACCESS_KEY_ID", keyId)
+	os.Setenv("AWS_ACCESS_KEY_ID", keyID)
 	os.Setenv("AWS_SECRET_ACCESS_KEY", accessKey)
 
 	return

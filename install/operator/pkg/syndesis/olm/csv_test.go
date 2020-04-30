@@ -26,7 +26,7 @@ import (
 )
 
 func Test_csv_build(t *testing.T) {
-	conf, err := configuration.GetProperties("../../../build/conf/config-test.yaml", context.TODO(), nil, &v1beta1.Syndesis{})
+	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", nil, &v1beta1.Syndesis{})
 	assert.NoError(t, err)
 
 	c := &csv{config: conf, operator: "operator-image"}
@@ -96,7 +96,7 @@ func Test_csv_setCommunityVariables(t *testing.T) {
 }
 
 func Test_csv_loadDeploymentFromTemplate(t *testing.T) {
-	conf, err := configuration.GetProperties("../../../build/conf/config-test.yaml", context.TODO(), nil, &v1beta1.Syndesis{})
+	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", nil, &v1beta1.Syndesis{})
 	assert.NoError(t, err)
 
 	c := &csv{config: conf, operator: ""}
@@ -106,7 +106,7 @@ func Test_csv_loadDeploymentFromTemplate(t *testing.T) {
 }
 
 func Test_csv_loadRoleFromTemplate(t *testing.T) {
-	conf, err := configuration.GetProperties("../../../build/conf/config-test.yaml", context.TODO(), nil, &v1beta1.Syndesis{})
+	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", nil, &v1beta1.Syndesis{})
 	assert.NoError(t, err)
 
 	c := &csv{config: conf, operator: ""}
