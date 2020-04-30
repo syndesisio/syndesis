@@ -183,7 +183,7 @@ github.com/jmespath/go-jmespath
 github.com/json-iterator/go
 # github.com/konsorten/go-windows-terminal-sequences v1.0.2
 github.com/konsorten/go-windows-terminal-sequences
-# github.com/lib/pq v1.3.0
+# github.com/lib/pq v1.4.0
 ## explicit
 github.com/lib/pq
 github.com/lib/pq/oid
@@ -542,7 +542,7 @@ k8s.io/client-go/util/jsonpath
 k8s.io/client-go/util/keyutil
 k8s.io/client-go/util/retry
 k8s.io/client-go/util/workqueue
-# k8s.io/code-generator v0.17.4
+# k8s.io/code-generator v0.18.2
 ## explicit
 k8s.io/code-generator/cmd/client-gen
 k8s.io/code-generator/cmd/client-gen/args
