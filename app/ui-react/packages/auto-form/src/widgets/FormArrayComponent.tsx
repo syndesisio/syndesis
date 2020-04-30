@@ -81,6 +81,7 @@ export const FormArrayComponent: React.FunctionComponent<
                 {options.showSortControls && (
                   <>
                     <Button
+                      data-testid={'condition-move-up'}
                       variant={'link'}
                       onClick={() => {
                         props.move(index, index - 1);
@@ -90,6 +91,7 @@ export const FormArrayComponent: React.FunctionComponent<
                       <i className="fa fa-arrow-alt-circle-up" />
                     </Button>
                     <Button
+                      data-testid={'condition-move-down'}
                       variant={'link'}
                       onClick={() => {
                         props.move(index, index + 1);
@@ -101,6 +103,7 @@ export const FormArrayComponent: React.FunctionComponent<
                   </>
                 )}
                 <Button
+                  data-testid={'condition-delete'}
                   variant={'link'}
                   onClick={() => props.remove(index)}
                   isDisabled={!(values.length > minElements)}
