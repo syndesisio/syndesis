@@ -132,7 +132,7 @@ public class CreateViewStatement extends AbstractStatementObject {
             } else {
                 String msg = "View name '" + viewNameToken.image + "' is invalid ";
                 if( isReservedKeywordToken(viewNameToken) ) {
-                    msg = "View name '" + viewNameToken.image + "' is a reserved word and must be wrapped in single quotes '' ";
+                    msg = "View name '" + viewNameToken.image + "' is a reserved word and must be wrapped in double quotes \"\" ";
                 }
                 this.analyzer.addException(this.viewNameToken, this.viewNameToken, msg);
             }

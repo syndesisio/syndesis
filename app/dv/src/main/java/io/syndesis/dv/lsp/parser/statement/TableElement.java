@@ -86,7 +86,7 @@ public class TableElement extends AbstractStatementObject {
                         setPKElement(true);
                     } else if( isReservedKeywordToken(tkn)) {
                         this.analyzer.addException(
-                            tkn, tkn,"Token: '" + tkn.image + "' is a reserved word and must be wrapped in single quotes '' ");
+                            tkn, tkn,"Token: '" + tkn.image + "' is a reserved word and must be wrapped in double quotes \"\" ");
                     } else if( isNonReservedKeywordToken(tkn) ) {
                         setNameToken(tkn);
                         if (getFirstTknIndex() == 0) {
