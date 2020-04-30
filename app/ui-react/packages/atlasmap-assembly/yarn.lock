@@ -223,10 +223,10 @@
   dependencies:
     tslib "^1.9.0"
 
-"@atlasmap/atlasmap-data-mapper@^1.44.0-M1":
-  version "1.44.0-M1"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap-data-mapper/-/atlasmap-data-mapper-1.44.0-M1.tgz#10fb8c5dbba6a715b89c79118319118f3d8360de"
-  integrity sha512-54E0EvhU9XOI/f06fHIp79aDmpiBaLaLs70UbN0wji+fGe+VRWZtgY9Xu8nmEpC7KW1U3iCChCbCxfJiu+IPaQ==
+"@atlasmap/atlasmap-data-mapper@^2.0.0-M.2":
+  version "2.0.0-M.2"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap-data-mapper/-/atlasmap-data-mapper-2.0.0-M.2.tgz#83a3dff4af0697e0b64bd9d3c114ab595643b28e"
+  integrity sha512-rE+zRZ6lug9wHPwm0+qgtdFGNGHiMjxD8FVPGaJUKg26IkBeNpY/xto113ikaw0XtO3wXLL3EQ4acOdDlmmtQA==
   dependencies:
     tslib "^1.9.0"
 
@@ -4850,10 +4850,10 @@ jquery-match-height@^0.7.2:
   resolved "https://registry.yarnpkg.com/jquery-match-height/-/jquery-match-height-0.7.2.tgz#f8d9f3ba5314daab109cf07408674be204be5f0e"
   integrity sha1-+NnzulMU2qsQnPB0CGdL4gS+Xw4=
 
-"jquery@>= 2.1.x", jquery@>=1.7, jquery@>=1.7.0, "jquery@>=1.7.1 <4.0.0", "jquery@^1.8.3 || ^2.0 || ^3.0", jquery@^3.3.0:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
-  integrity sha512-Ubldcmxp5np52/ENotGxlLe6aGMvmF4R8S6tZjsP6Knsaxd/xp3Zrh50cG93lR6nPXyUFwzN3ZSOQI0wRJNdGg==
+"jquery@>= 2.1.x", jquery@>=1.7, jquery@>=1.7.0, "jquery@>=1.7.1 <4.0.0", "jquery@^1.8.3 || ^2.0 || ^3.0", jquery@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.5.0.tgz#9980b97d9e4194611c36530e7dc46a58d7340fc9"
+  integrity sha512-Xb7SVYMvygPxbFMpTFQiHh1J7HClEaThguL15N/Gg37Lri/qKyhRGZYzHRyLH8Stq3Aow0LsHO2O2ci86fCrNQ==
 
 jquery@~3.2.1:
   version "3.2.1"
@@ -5847,10 +5847,10 @@ ngx-bootstrap@^3.0.1:
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-3.1.1.tgz#36ef4f6928352ee7fd186831d97731cfa571d137"
   integrity sha512-LY9ZnzkTA67MOUcQoA3i6JM4TGPCDUnjUMZctSesic0E9617bPrKDnb2VPOEU4VFTXWMhu6xbPcXsvLrc6m/lg==
 
-ngx-logger@4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/ngx-logger/-/ngx-logger-4.1.2.tgz#32cf433aa8803ee899e43e94713b669ef7b6a231"
-  integrity sha512-BVVxoAftK4QpMVQt3vnjmjyen9HaCWaI5+hHzskUWjjgIdhCYvfzRvMuR2bzFmCCBVn5gKtgeacNHbSmk5yVeA==
+ngx-logger@4.1.9:
+  version "4.1.9"
+  resolved "https://registry.yarnpkg.com/ngx-logger/-/ngx-logger-4.1.9.tgz#35b782c805343b9c8496e97a155b910086bec4bc"
+  integrity sha512-hEJDtWWi+1OSCM7Syz4J8GyFhkf+f0HBbvnMniAMRp9x9gRdtj+Q0cesXdxVV4JJmIhxJQM88NNVRR0cOtPeHQ==
   dependencies:
     tslib "^1.9.0"
     vlq "^1.0.0"
