@@ -126,6 +126,9 @@
     <version.springboot.teiid>1.3.0</version.springboot.teiid>
     <version.mysql>8.0.17</version.mysql>
     <version.postgresql>42.2.9</version.postgresql>
+    <version.mssql>7.4.1.jre8</version.mssql>
+    <version.derby>10.14.2.0</version.derby>
+    <version.mariadb>2.4.4</version.mariadb>
     <!-- DO NOT CHANGE VERSION PROPETY NAMES, THESE ARE USED IN CODE -->
   </properties>
 
@@ -361,12 +364,6 @@
         <artifactId>kubernetes-api</artifactId>
         <version>${version.io.fabric8.kubernetes-api}</version>
       </dependency>
-
-      <dependency>
-        <groupId>org.postgresql</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>${version.postgresql}</version>
-      </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
@@ -383,11 +380,6 @@
         <version>${version.com.fasterxml.jackson}</version>
       </dependency>
       <dependency>
-        <groupId>mysql</groupId>
-        <artifactId>mysql-connector-java</artifactId>
-        <version>${version.mysql}</version>
-      </dependency>
-      <dependency>
         <groupId>org.mongodb</groupId>
         <artifactId>mongo-java-driver</artifactId>
       </dependency>
@@ -401,6 +393,37 @@
         <artifactId>spring-data-salesforce</artifactId>
         <version>${version.springboot.teiid}</version>
       </dependency>
+    <!--  supported drivers -->
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mariadb.jdbc</groupId>
+      <artifactId>mariadb-java-client</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.teiid</groupId>
+      <artifactId>teiid</artifactId>
+      <classifier>jdbc</classifier>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.microsoft.sqlserver</groupId>
+      <artifactId>mssql-jdbc</artifactId>
+      <scope>runtime</scope>
+    </dependency>       
     </dependencies>
   </dependencyManagement>
 
@@ -555,17 +578,6 @@
     <dependency>
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
-    </dependency>
-    <!-- data source driver dependencies -->
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.teiid</groupId>
