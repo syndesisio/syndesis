@@ -97,7 +97,7 @@ quay_transfer: &quay_transfer
   run:
     name: Trigger image transfer to quay.io
     command: |
-      if [ -n "${CIRCLE_PR_NUMBER}" ]; then
+      if [ -n "${CI_PULL_REQUEST}" ]; then
         curl -vs "https://ci.fabric8.io/generic-webhook-trigger/invoke?token=syndesis-circleci-to-quay&build_number=$CIRCLE_BUILD_NUM"
       else
         echo "Skip transfer to quay.io for non PR build"
