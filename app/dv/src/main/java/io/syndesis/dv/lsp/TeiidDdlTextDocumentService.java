@@ -15,6 +15,7 @@
  */
 package io.syndesis.dv.lsp;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -72,6 +73,8 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
 
     private DdlCompletionProvider completionProvider = new DdlCompletionProvider();
 
+    private DdlDiagnostics diagnostics = new DdlDiagnostics();
+
     public TeiidDdlTextDocumentService(TeiidDdlLanguageServer teiidLanguageServer) {
         this.teiidLanguageServer = teiidLanguageServer;
     }
@@ -83,10 +86,22 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
         LOGGER.debug("completion: {}", uri);
         TextDocumentItem doc = openedDocuments.get(uri);
 
+        // create an empty results array
+        List<CompletionItem> emptyResults = new ArrayList<CompletionItem>();
+
+        // get applicable completion items
         List<CompletionItem> items = completionProvider.getCompletionItems(doc.getText(),
                 completionParams.getPosition());
 
-        return CompletableFuture.completedFuture(Either.forLeft(items));
+        // if items exist, return them
+        if( items != null && !items.isEmpty()) {
+            LOGGER.debug(" CompletionItems = " + items);
+            return CompletableFuture.completedFuture(Either.forLeft(items));
+        }
+
+        // if items do no exist return empty results
+        LOGGER.debug(" CompletionItems = " + emptyResults);
+        return CompletableFuture.completedFuture(Either.forLeft(emptyResults));
     }
 
     @Override
@@ -107,7 +122,8 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
         Hover hover = new Hover();
         hover.setContents(Collections.singletonList((Either.forLeft("HELLO HOVER WORLD!!!!"))));
         */
-        return CompletableFuture.completedFuture(null); // hover);
+        Hover result = null;
+        return CompletableFuture.completedFuture(result);
     }
 
     @Override
@@ -132,12 +148,12 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
     @Override
     public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(TextDocumentPositionParams position) {
         LOGGER.debug("documentHighlight: {}", position.getTextDocument());
-        return CompletableFuture.completedFuture(Collections.emptyList());
+        List<DocumentHighlight> result = new ArrayList<DocumentHighlight>();
+        return CompletableFuture.completedFuture(result);
     }
 
     @Override
     public CompletableFuture<List<ColorInformation>> documentColor(DocumentColorParams params) {
-        // TODO Auto-generated method stub
         return TextDocumentService.super.documentColor(params);
     }
 
@@ -195,7 +211,7 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
         TextDocumentItem textDocument = params.getTextDocument();
         LOGGER.debug("didOpen: {}", textDocument);
         openedDocuments.put(textDocument.getUri(), textDocument);
-        new DdlDiagnostics().publishDiagnostics(textDocument, teiidLanguageServer);
+        this.diagnostics.publishDiagnostics(textDocument, teiidLanguageServer);
     }
 
     @Override
@@ -205,7 +221,7 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
         TextDocumentItem textDocument = openedDocuments.get(params.getTextDocument().getUri());
         if (!contentChanges.isEmpty()) {
             textDocument.setText(contentChanges.get(0).getText());
-            new DdlDiagnostics().publishDiagnostics(textDocument, teiidLanguageServer);
+            this.diagnostics.publishDiagnostics(textDocument, teiidLanguageServer);
         }
     }
 
@@ -213,14 +229,19 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
     public void didClose(DidCloseTextDocumentParams params) {
         LOGGER.debug("didClose: {}", params.getTextDocument());
         String uri = params.getTextDocument().getUri();
-        openedDocuments.remove(uri);
+
         /*
          * The rule observed by VS Code servers as explained in LSP specification is to
          * clear the Diagnostic when it is related to a single file.
          * https://microsoft.github.io/language-server-protocol/specification#
          * textDocument_publishDiagnostics
+         *
+         * clear diagnostics before removing document.
          */
-        new DdlDiagnostics().clearDiagnostics(teiidLanguageServer);
+
+        this.diagnostics.clearDiagnostics(uri, teiidLanguageServer);
+
+        openedDocuments.remove(uri);
     }
 
     @Override
