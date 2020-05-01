@@ -313,10 +313,10 @@
   dependencies:
     tslib "^1.9.0"
 
-"@atlasmap/atlasmap-data-mapper@^2.0.0-M.2":
-  version "2.0.0-M.2"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap-data-mapper/-/atlasmap-data-mapper-2.0.0-M.2.tgz#83a3dff4af0697e0b64bd9d3c114ab595643b28e"
-  integrity sha512-rE+zRZ6lug9wHPwm0+qgtdFGNGHiMjxD8FVPGaJUKg26IkBeNpY/xto113ikaw0XtO3wXLL3EQ4acOdDlmmtQA==
+"@atlasmap/atlasmap-data-mapper@^2.0.0-M.3":
+  version "2.0.0-M.3"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap-data-mapper/-/atlasmap-data-mapper-2.0.0-M.3.tgz#87886d629f9d854da89d4f04d6e699152d6cddfb"
+  integrity sha512-+xUIiyAyfZBkoLlQ1lhfmDu8AdEyjrrTys7cGOOjoFFHnV+6tVoKxHqDpjbj/5/pJYHL/4+VwdHdKmB2mQvaQQ==
   dependencies:
     tslib "^1.9.0"
 
@@ -14090,7 +14090,7 @@ jquery-match-height@^0.7.2:
   resolved "https://registry.yarnpkg.com/jquery-match-height/-/jquery-match-height-0.7.2.tgz#f8d9f3ba5314daab109cf07408674be204be5f0e"
   integrity sha1-+NnzulMU2qsQnPB0CGdL4gS+Xw4=
 
-"jquery@>= 2.1.x", jquery@>=1.7, jquery@>=1.7.0, "jquery@>=1.7.1 <4.0.0", jquery@>=1.8, "jquery@^1.8.3 || ^2.0 || ^3.0", jquery@^3.3.0:
+"jquery@>= 2.1.x", jquery@>=1.7, jquery@>=1.7.0, "jquery@>=1.7.1 <4.0.0", jquery@>=1.8, "jquery@^1.8.3 || ^2.0 || ^3.0", jquery@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.5.0.tgz#9980b97d9e4194611c36530e7dc46a58d7340fc9"
   integrity sha512-Xb7SVYMvygPxbFMpTFQiHh1J7HClEaThguL15N/Gg37Lri/qKyhRGZYzHRyLH8Stq3Aow0LsHO2O2ci86fCrNQ==
