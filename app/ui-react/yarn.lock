@@ -313,10 +313,10 @@
   dependencies:
     tslib "^1.9.0"
 
-"@atlasmap/atlasmap-data-mapper@^2.0.0-M.2":
-  version "2.0.0-M.2"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap-data-mapper/-/atlasmap-data-mapper-2.0.0-M.2.tgz#83a3dff4af0697e0b64bd9d3c114ab595643b28e"
-  integrity sha512-rE+zRZ6lug9wHPwm0+qgtdFGNGHiMjxD8FVPGaJUKg26IkBeNpY/xto113ikaw0XtO3wXLL3EQ4acOdDlmmtQA==
+"@atlasmap/atlasmap-data-mapper@^2.0.0-M.3":
+  version "2.0.0-M.3"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap-data-mapper/-/atlasmap-data-mapper-2.0.0-M.3.tgz#87886d629f9d854da89d4f04d6e699152d6cddfb"
+  integrity sha512-+xUIiyAyfZBkoLlQ1lhfmDu8AdEyjrrTys7cGOOjoFFHnV+6tVoKxHqDpjbj/5/pJYHL/4+VwdHdKmB2mQvaQQ==
   dependencies:
     tslib "^1.9.0"
 
