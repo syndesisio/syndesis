@@ -39,7 +39,7 @@ final class MigrationsHelper {
 
                 items.add(item);
             } catch (final IOException e) {
-                throw new RuntimeException();
+                throw new RuntimeException(e);
             }
         });
 
