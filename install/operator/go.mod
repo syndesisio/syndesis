@@ -42,6 +42,8 @@ require (
 
 require (
 	github.com/go-logr/zapr v0.1.1
+	github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200321030439-57b580e57e88
+	github.com/operator-framework/operator-marketplace v0.0.0-20200424213926-c53c1e365d90
 	github.com/operator-framework/operator-sdk v0.17.0
 	github.com/spf13/afero v1.2.2
 	go.uber.org/zap v1.14.1
