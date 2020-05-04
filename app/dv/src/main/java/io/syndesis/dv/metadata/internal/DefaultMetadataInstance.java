@@ -482,7 +482,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
     public static AccessibleByteArrayOutputStream toBytes(VDBMetaData vdb) throws KException {
         AccessibleByteArrayOutputStream baos = new AccessibleByteArrayOutputStream();
         try {
-            VDBMetadataParser.marshell(vdb, baos);
+            VDBMetadataParser.marshall(vdb, baos);
         } catch (XMLStreamException | IOException e) {
             throw new KException(e);
         }

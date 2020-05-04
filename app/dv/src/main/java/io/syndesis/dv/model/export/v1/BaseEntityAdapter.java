@@ -24,6 +24,7 @@ import io.syndesis.dv.model.BaseEntity;
 
 public class BaseEntityAdapter<T extends BaseEntity> {
 
+    @JsonIgnore
     protected T entity;
 
     protected BaseEntityAdapter(T entity) {

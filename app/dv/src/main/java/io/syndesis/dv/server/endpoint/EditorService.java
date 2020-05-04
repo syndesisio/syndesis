@@ -48,7 +48,7 @@ import io.syndesis.dv.server.V1Constants;
 import io.syndesis.dv.utils.StringUtils;
 
 /**
- * A Komodo REST service for obtaining VDB information from the workspace.
+ * A REST service for obtaining view information.
  */
 @RestController
 @RequestMapping(value=V1Constants.APP_PATH+V1Constants.FS+V1Constants.EDITORS_SEGMENT)
