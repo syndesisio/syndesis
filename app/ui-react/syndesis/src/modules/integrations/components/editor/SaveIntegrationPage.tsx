@@ -1,7 +1,4 @@
-import {
-  setIntegrationProperties,
-  WithIntegrationHelpers
-} from '@syndesis/api';
+import { setIntegrationProperties, WithIntegrationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import * as H from '@syndesis/history';
 import { ErrorResponse, IntegrationSaveErrorResponse } from '@syndesis/models';
@@ -18,10 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import i18n from '../../../../i18n';
 import { PageTitle } from '../../../../shared';
-import {
-  IWithLeaveConfirmationBaseProps,
-  WithLeaveConfirmation,
-} from '../../../../shared/WithLeaveConfirmation';
+import { IWithLeaveConfirmationBaseProps, WithLeaveConfirmation, } from '../../../../shared/WithLeaveConfirmation';
 import {
   IPageWithEditorBreadcrumb,
   IPostPublishRouteParams,
@@ -32,13 +26,6 @@ import {
 export interface ISaveIntegrationForm {
   name: string;
   description?: string;
-}
-
-interface IExtensionProps {
-  description: string;
-  lastUpdated: string;
-  name: string;
-  selected?: boolean;
 }
 
 export interface ISaveIntegrationPageProps
@@ -79,9 +66,6 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
 
   const { t } = useTranslation('shared');
 
-  const [selectedExtensions, setSelectedExtensions] = React.useState<IExtensionProps[]>([]);
-  const [extensions, setExtensions] = React.useState<IExtensionProps[]>([]);
-
   return (
     <WithLeaveConfirmation {...props}>
       {({ allowNavigation }) => (
@@ -98,6 +82,11 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                       if(data.items.length === extensions.length) {
                         return;
                       } else {
+                        data.items.map((extItem: IExtensionProps) => {
+                          extItem.lastUpdated = extItem.lastUpdated ? new Date(extItem.lastUpdated).toLocaleString() : '';
+                          return extItem;
+                        });
+
                         setExtensions(data.items);
                       }
                     });
@@ -189,58 +178,6 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                         (name: string) => `${name} is required`,
                         values
                       );
-
-                    const handleSelectExtension = (extension: IExtensionProps) => {
-                      const currentlySelected = selectedExtensions.slice();
-                      currentlySelected.push(extension);
-                      setSelectedExtensions(currentlySelected);
-                    };
-
-                    const handleDeselectExtension = (extensionName: string) => {
-                      const currentlySelected = selectedExtensions.slice();
-                      const index = currentlySelected.findIndex(
-                        extension => extension.name === extensionName
-                      );
-
-                      if (index !== -1) {
-                        currentlySelected.splice(index, 1);
-                      }
-
-                      setSelectedExtensions(currentlySelected);
-                    };
-
-                    const clearExtensionSelection = () => {
-                      setSelectedExtensions([]);
-                    };
-
-                    const handleSelectAll = (
-                      isSelected: boolean,
-                      extensionList?: IExtensionProps[]
-                    ) => {
-                      if (isSelected && extensionList) {
-                        setSelectedExtensions(extensionList);
-                      } else {
-                        clearExtensionSelection();
-                      }
-                    };
-
-                    const getSelectedExtensionName = (selectedExtensionsList: IExtensionProps[]): string[] => {
-                      return selectedExtensionsList.map(extension => extension.name);
-                    };
-
-                    const selectedExtensionNames: string[] = getSelectedExtensionName(selectedExtensions);
-
-                    const onSelect = (extensionName: string, selected: boolean) => {
-                      if (selected) {
-                        for (const extensionInfo of extensions) {
-                        if (extensionInfo.name === extensionName) {
-                            handleSelectExtension(extensionInfo);
-                          }
-                        }
-                      } else {
-                        handleDeselectExtension(extensionName);
-                      }
-                    };
 
                     return (
                       <>

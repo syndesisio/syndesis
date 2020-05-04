@@ -7,16 +7,17 @@ import {
 } from '@patternfly/react-table';
 import * as React from 'react';
 
-export interface IIntegrationExtension {
+interface IExtensionProps {
   description: string;
   lastUpdated: string;
   name: string;
+  selected?: boolean;
 }
 
 export interface IIntegrationEditorExtensionListProps {
-  extensionsAvailable: IIntegrationExtension[];
+  extensionsAvailable: IExtensionProps[];
   extensionNamesSelected: string[];
-  handleSelectAll: (isSelected: boolean, extensionList: IIntegrationExtension[]) => void;
+  handleSelectAll: (isSelected: boolean, extensionList: IExtensionProps[]) => void;
   i18nHeaderDescription: string;
   i18nHeaderLastUpdated: string;
   i18nHeaderName: string;
@@ -29,19 +30,76 @@ export const IntegrationEditorExtensionList: React.FunctionComponent<IIntegratio
   {
     extensionsAvailable,
     extensionNamesSelected,
-    handleSelectAll,
     i18nHeaderDescription,
     i18nHeaderLastUpdated,
     i18nHeaderName,
     i18nTableDescription,
     i18nTableName,
-    onSelect
   }) => {
+  const [selectedExtensions, setSelectedExtensions] = React.useState<IExtensionProps[]>([]);
+
   const columns = [
     i18nHeaderName,
     i18nHeaderDescription,
     i18nHeaderLastUpdated,
   ];
+
+
+  const handleSelectExtension = (extension: IExtensionProps) => {
+    const currentlySelected = selectedExtensions.slice();
+    currentlySelected.push(extension);
+    setSelectedExtensions(currentlySelected);
+  };
+
+  const handleDeselectExtension = (extensionName: string) => {
+    const currentlySelected = selectedExtensions.slice();
+    const index = currentlySelected.findIndex(
+      extension => extension.name === extensionName
+    );
+
+    if (index !== -1) {
+      currentlySelected.splice(index, 1);
+    }
+
+    setSelectedExtensions(currentlySelected);
+  };
+
+  const clearExtensionSelection = () => {
+    setSelectedExtensions([]);
+  };
+
+  const handleSelectAll = (
+    isSelected: boolean,
+    extensionList?: IExtensionProps[]
+  ) => {
+    if (isSelected && extensionList) {
+      setSelectedExtensions(extensionList);
+    } else {
+      clearExtensionSelection();
+    }
+  };
+
+  /*
+  const getSelectedExtensionName = (selectedExtensionsList: IExtensionProps[]): string[] => {
+    return selectedExtensionsList.map(extension => extension.name);
+  };
+
+  const selectedExtensionNames: string[] = getSelectedExtensionName(selectedExtensions);
+
+   */
+
+  const onSelect = (extensionName: string, selected: boolean) => {
+    if (selected) {
+      for (const extensionInfo of extensionsAvailable) {
+        if (extensionInfo.name === extensionName) {
+          handleSelectExtension(extensionInfo);
+        }
+      }
+    } else {
+      handleDeselectExtension(extensionName);
+    }
+  };
+
 
   const getTableRows = () => {
     const tableRows: IRow[] = [];
