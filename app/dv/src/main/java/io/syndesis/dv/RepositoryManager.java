@@ -22,6 +22,7 @@ import java.util.concurrent.Callable;
 import io.syndesis.dv.model.DataVirtualization;
 import io.syndesis.dv.model.Edition;
 import io.syndesis.dv.model.SourceSchema;
+import io.syndesis.dv.model.TablePrivileges;
 import io.syndesis.dv.model.ViewDefinition;
 
 public interface RepositoryManager {
@@ -114,4 +115,17 @@ public interface RepositoryManager {
     byte[] findEditionExport(Edition edition);
 
     long getEditionCount(String virtualization);
+
+    /*
+     * Role related
+     */
+    List<String> findRoleNames();
+
+    boolean hasRoles(String name);
+
+    List<TablePrivileges> findAllTablePrivileges(String virtualization);
+
+    TablePrivileges createTablePrivileges(String viewId, String roleName);
+
+    TablePrivileges findTablePrivileges(String viewId, String virtualization);
 }
