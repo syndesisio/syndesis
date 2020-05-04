@@ -113,6 +113,7 @@
                 "order": 3,
                 "componentProperty": false,
                 "deprecated": false,
+                "defaultValue": "true",
                 "displayName": "Include error message in the return body",
                 "displayNameCheckBox": "Select return body preference",
                 "javaType": "Boolean",
