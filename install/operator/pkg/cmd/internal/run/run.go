@@ -130,7 +130,7 @@ func (o *options) run() error {
 
 	syndesis := &v1beta1.Syndesis{}
 	syndesis.SetNamespace(namespace)
-	config, err := configuration.GetProperties(configuration.TemplateConfig, o.Context, cli, syndesis)
+	config, err := configuration.GetProperties(o.Context, configuration.TemplateConfig, cli, syndesis)
 	if err != nil {
 		return err
 	}
@@ -171,7 +171,7 @@ func (o *options) run() error {
 
 	openshift.AddToScheme(mgr.GetScheme())
 
-	am, err := versions.ApiMigrator(cli, o.Context, namespace)
+	am, err := versions.APIMigrator(o.Context, cli, namespace)
 	if err != nil {
 		return err
 	}

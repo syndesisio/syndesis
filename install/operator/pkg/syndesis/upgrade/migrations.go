@@ -125,7 +125,7 @@ func (m *migration) rollback() (err error) {
 
 func (m *migration) dbMigration() (err error) {
 	// Load configuration to to use as context for generator pkg
-	config, err := configuration.GetProperties(configuration.TemplateConfig, m.context, m.client, m.syndesis)
+	config, err := configuration.GetProperties(m.context, configuration.TemplateConfig, m.client, m.syndesis)
 	if err != nil {
 		return err
 	}

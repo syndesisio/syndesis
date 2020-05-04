@@ -39,12 +39,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-type SyndesisApiMigrator interface {
+type SyndesisAPIMigrator interface {
 	// If Syndesis API version is v1alpha1, migrate it to v1beta1
 	Migrate() error
 }
 
-type syndesisApi struct {
+type syndesisAPI struct {
 	client           client.Client
 	context          context.Context
 	log              logr.Logger
@@ -53,8 +53,8 @@ type syndesisApi struct {
 	v1beta1          *v1beta1.Syndesis
 }
 
-// Build and return an SyndesisApiMigrator interface
-func ApiMigrator(c client.Client, ctx context.Context, n string) (r SyndesisApiMigrator, err error) {
+// APIMigrator build and return an SyndesisAPIMigrator interface
+func APIMigrator(ctx context.Context, c client.Client, n string) (r SyndesisAPIMigrator, err error) {
 	// Fetch all existing apis in an unstructured list. It is necessary to use an unstructured list
 	// because different apis might have a different structure
 	list := &unstructured.UnstructuredList{
@@ -77,7 +77,7 @@ func ApiMigrator(c client.Client, ctx context.Context, n string) (r SyndesisApiM
 		return nil, err
 	}
 
-	api := syndesisApi{
+	api := syndesisAPI{
 		client:           c,
 		context:          ctx,
 		log:              logf.Log.WithName("versions").WithValues("version from", "v1alpha1", "version to", "v1beta1"),
@@ -163,7 +163,7 @@ func ApiMigrator(c client.Client, ctx context.Context, n string) (r SyndesisApiM
 	return api, nil
 }
 
-func (api syndesisApi) Migrate() (err error) {
+func (api syndesisAPI) Migrate() (err error) {
 	if api.v1alpha1 != nil {
 		if err = api.v1alpha1ToV1beta1(); err != nil {
 			return err
@@ -178,7 +178,7 @@ func (api syndesisApi) Migrate() (err error) {
 }
 
 // Migrates from old v1alpha1 api to v1beta1. This overwrite v1alpha1
-func (api syndesisApi) v1alpha1ToV1beta1() error {
+func (api syndesisAPI) v1alpha1ToV1beta1() error {
 	// We migrate only if v1alpha1 wasn't migrated before and v1beta1 explicitly indicates to be migrated
 	if api.v1alpha1 != nil && api.v1alpha1.Status.Phase == v1alpha1.SyndesisPhaseInstalled && api.v1beta1.Spec.ForceMigration {
 		// Migrate addons
@@ -214,8 +214,8 @@ func (api syndesisApi) v1alpha1ToV1beta1() error {
 		}
 
 		// Server
-		if api.v1alpha1.Spec.Components.Server.Features.ManagementUrlFor3scale != "" {
-			api.v1beta1.Spec.Components.Server.Features.ManagementUrlFor3scale = api.v1alpha1.Spec.Components.Server.Features.ManagementUrlFor3scale
+		if api.v1alpha1.Spec.Components.Server.Features.ManagementURLFor3scale != "" {
+			api.v1beta1.Spec.Components.Server.Features.ManagementURLFor3scale = api.v1alpha1.Spec.Components.Server.Features.ManagementURLFor3scale
 		}
 		if api.v1alpha1.Spec.Components.Server.Resources.Limits != nil {
 			if m, ok := api.v1alpha1.Spec.Components.Server.Resources.Limits[v1.ResourceMemory]; ok {
@@ -301,7 +301,7 @@ func (api syndesisApi) v1alpha1ToV1beta1() error {
 }
 
 // Write back apis
-func (api syndesisApi) updateApis() error {
+func (api syndesisAPI) updateApis() error {
 	api.log.Info("updating syndesis api",
 		"from name", api.v1alpha1.Name, "from version", api.v1alpha1.Status.Version,
 		"to name", api.v1beta1.Name, "to version", api.v1beta1.Status.Version)
@@ -313,7 +313,7 @@ func (api syndesisApi) updateApis() error {
 }
 
 // Attempt to convert from unstructured to v1beta1.Syndesis
-func (api syndesisApi) unstructuredToV1Beta1(obj unstructured.Unstructured) (s *v1beta1.Syndesis, err error) {
+func (api syndesisAPI) unstructuredToV1Beta1(obj unstructured.Unstructured) (s *v1beta1.Syndesis, err error) {
 	s = &v1beta1.Syndesis{}
 
 	objM, err := json.Marshal(obj.Object)
@@ -329,7 +329,7 @@ func (api syndesisApi) unstructuredToV1Beta1(obj unstructured.Unstructured) (s *
 }
 
 // Attempt to convert from unstructured to v1alpha1.Syndesis
-func (api syndesisApi) unstructuredToV1Alpha1(obj unstructured.Unstructured) (s *v1alpha1.Syndesis, err error) {
+func (api syndesisAPI) unstructuredToV1Alpha1(obj unstructured.Unstructured) (s *v1alpha1.Syndesis, err error) {
 	s = &v1alpha1.Syndesis{}
 
 	objM, err := json.Marshal(obj.Object)

@@ -29,22 +29,22 @@ type fileInfoMappingFile struct {
 	source http.File
 }
 
-func (this *fileInfoMappingFile) Close() error {
-	return this.source.Close()
+func (f *fileInfoMappingFile) Close() error {
+	return f.source.Close()
 }
 
-func (this *fileInfoMappingFile) Read(p []byte) (n int, err error) {
-	return this.source.Read(p)
+func (f *fileInfoMappingFile) Read(p []byte) (n int, err error) {
+	return f.source.Read(p)
 }
 
-func (this *fileInfoMappingFile) Seek(offset int64, whence int) (int64, error) {
-	return this.source.Seek(offset, whence)
+func (f *fileInfoMappingFile) Seek(offset int64, whence int) (int64, error) {
+	return f.source.Seek(offset, whence)
 }
 
-func (this *fileInfoMappingFile) Readdir(count int) ([]os.FileInfo, error) {
-	infos, err := this.source.Readdir(count)
+func (f *fileInfoMappingFile) Readdir(count int) ([]os.FileInfo, error) {
+	infos, err := f.source.Readdir(count)
 	for i, info := range infos {
-		infos[i], err = this.fs.mapper(info)
+		infos[i], err = f.fs.mapper(info)
 		if err != nil {
 			return nil, err
 		}
@@ -52,10 +52,10 @@ func (this *fileInfoMappingFile) Readdir(count int) ([]os.FileInfo, error) {
 	return infos, err
 }
 
-func (this *fileInfoMappingFile) Stat() (os.FileInfo, error) {
-	info, err := this.source.Stat()
+func (f *fileInfoMappingFile) Stat() (os.FileInfo, error) {
+	info, err := f.source.Stat()
 	if err != nil {
 		return info, err
 	}
-	return this.fs.mapper(info)
+	return f.fs.mapper(info)
 }

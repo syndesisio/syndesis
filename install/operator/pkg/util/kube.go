@@ -145,7 +145,7 @@ func ListInChunks(ctx context.Context, c client.Client, options *client.ListOpti
 
 type ExecOptions struct {
 	Config    *rest.Config
-	Api       kubernetes.Interface
+	API       kubernetes.Interface
 	Namespace string
 	Pod       string
 	Container string
@@ -154,7 +154,7 @@ type ExecOptions struct {
 }
 
 func Exec(o ExecOptions) error {
-	req := o.Api.CoreV1().RESTClient().Post().
+	req := o.API.CoreV1().RESTClient().Post().
 		Resource("pods").
 		Name(o.Pod).
 		Namespace(o.Namespace).

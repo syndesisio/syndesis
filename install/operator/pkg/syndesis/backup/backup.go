@@ -66,6 +66,8 @@ const (
 	dumpFilename = "syndesis-db.dump"
 
 	resDefaultCustomOptions = "--no-password --clean --if-exists --create --verbose"
+
+	jobNameLabel = "job-name"
 )
 
 type Backup struct {
@@ -499,11 +501,11 @@ func (b *Backup) BuildBackupDir(path string) (r *Backup, err error) {
 		if len(files) != 1 {
 			// We are expecting to have only one dir inside the tag folder
 			return nil, fmt.Errorf("found more than one file or folder in %s", b.backupDir)
-		} else {
-			b.backupDir = filepath.Join(b.backupDir, files[0].Name())
-			if fr, err := os.Stat(b.backupDir); err != nil || !fr.IsDir() {
-				return nil, fmt.Errorf("%s is not a folder", b.backupDir)
-			}
+		}
+
+		b.backupDir = filepath.Join(b.backupDir, files[0].Name())
+		if fr, err := os.Stat(b.backupDir); err != nil || !fr.IsDir() {
+			return nil, fmt.Errorf("%s is not a folder", b.backupDir)
 		}
 	}
 
@@ -538,7 +540,7 @@ func (b *Backup) backupDatabase() error {
 	b.log.Info("Initiating database backup ...")
 
 	// Load configuration to to use as context for generator pkg
-	sc, err := configuration.GetProperties(configuration.TemplateConfig, b.context, b.client, b.syndesis)
+	sc, err := configuration.GetProperties(b.context, configuration.TemplateConfig, b.client, b.syndesis)
 	if err != nil {
 		return err
 	}
@@ -612,7 +614,7 @@ func (b *Backup) RestoreDb() (err error) {
 	b.log.Info("starting restore for syndesis database", "backup", path.Join(b.backupDir, dumpFilename))
 
 	// Load configuration to to use as context for generator pkg
-	sc, err := configuration.GetProperties(configuration.TemplateConfig, b.context, b.client, b.syndesis)
+	sc, err := configuration.GetProperties(b.context, configuration.TemplateConfig, b.client, b.syndesis)
 	if err != nil {
 		return err
 	}
@@ -687,9 +689,9 @@ func (b *Backup) execJob(jobTask BkpJobTask) error {
 			// Job is done and presume the backup dump was obtained
 			if b.payloadComplete {
 				return true, nil
-			} else {
-				return false, fmt.Errorf("Backup job timeout failure")
 			}
+
+			return false, fmt.Errorf("Backup job timeout failure")
 		}
 
 		//
@@ -724,13 +726,13 @@ func (b *Backup) podInJob(job *batchv1.Job) (*corev1.Pod, error) {
 		return nil, fmt.Errorf("Contoller UID cannot be extracted from job")
 	}
 
-	controllerUid := job.Spec.Selector.MatchLabels[pkg.ControllerUidLabel]
+	controllerUID := job.Spec.Selector.MatchLabels[pkg.ControllerUIDLabel]
 	podList := &corev1.PodList{}
 	err := b.client.List(b.context, podList,
 		rc.InNamespace(b.syndesis.Namespace),
 		rc.MatchingLabels{
-			pkg.ControllerUidLabel: controllerUid,
-			pkg.JobNameLabel:       job.Name,
+			pkg.ControllerUIDLabel: controllerUID,
+			jobNameLabel:           job.Name,
 		})
 
 	if err != nil {
@@ -805,7 +807,7 @@ func (b *Backup) backupTask(bkpPod *corev1.Pod) (bool, error) {
 
 		err = util.Exec(util.ExecOptions{
 			Config:    cc,
-			Api:       api,
+			API:       api,
 			Namespace: b.syndesis.Namespace,
 			Pod:       bkpPod.Name,
 			Container: loggerContainer,
@@ -891,7 +893,7 @@ func (b *Backup) restoreTask(bkpPod *corev1.Pod) (bool, error) {
 		api, _ := b.apiClient()
 		err = util.Exec(util.ExecOptions{
 			Config:    cc,
-			Api:       api,
+			API:       api,
 			Namespace: b.syndesis.Namespace,
 			Pod:       bkpPod.Name,
 			Container: "",

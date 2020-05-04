@@ -39,9 +39,9 @@ func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *v1beta1.Synde
 	if syndesis.Status.Version == a.operatorVersion {
 		// Everything fine
 		return nil
-	} else {
-		return a.setPhaseToUpgrading(ctx, syndesis)
 	}
+
+	return a.setPhaseToUpgrading(ctx, syndesis)
 }
 
 /*

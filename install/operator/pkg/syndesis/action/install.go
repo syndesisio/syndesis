@@ -33,7 +33,9 @@ import (
 )
 
 const (
-	SyndesisRouteName  = "syndesis"
+	// SyndesisRouteName the base name for the Route to access Syndesis application
+	SyndesisRouteName = "syndesis"
+	// SyndesisPullSecret name of the Secret used to pull images from image registries that require authentication
 	SyndesisPullSecret = "syndesis-pull-secret"
 )
 
@@ -70,7 +72,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 	resourcesThatShouldExist := map[types.UID]bool{}
 
 	// Load configuration to to use as context for generate pkg
-	config, err := configuration.GetProperties(configuration.TemplateConfig, ctx, a.client, syndesis)
+	config, err := configuration.GetProperties(ctx, configuration.TemplateConfig, a.client, syndesis)
 	if err != nil {
 		return err
 	}
@@ -271,6 +273,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 	return nil
 }
 
+// ListAllTypesInChunks pages through set of API types
 func ListAllTypesInChunks(ctx context.Context, api kubernetes.Interface, c client.Client, options client.ListOptions, handler func([]unstructured.Unstructured) error) error {
 	types, err := getTypes(api)
 	if err != nil {
@@ -368,10 +371,10 @@ func addRouteAnnotation(syndesis *v1beta1.Syndesis, route *v1.Route) {
 		annotations = make(map[string]string)
 		syndesis.ObjectMeta.Annotations = annotations
 	}
-	annotations["syndesis.io/applicationUrl"] = extractApplicationUrl(route)
+	annotations["syndesis.io/applicationUrl"] = extractApplicationURL(route)
 }
 
-func extractApplicationUrl(route *v1.Route) string {
+func extractApplicationURL(route *v1.Route) string {
 	scheme := "http"
 	if route.Spec.TLS != nil {
 		scheme = "https"

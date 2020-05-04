@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-//
 //go:generate go run assets/assets_generate.go
 package generator
 
@@ -75,9 +74,9 @@ var templateFunctions = template.FuncMap{
 		}
 		if x := item.MapIndex(key); x.IsValid() {
 			return true, nil
-		} else {
-			return false, nil
 		}
+
+		return false, nil
 	},
 	"tagOf": func(image string) string {
 		splits := strings.Split(image, ":")

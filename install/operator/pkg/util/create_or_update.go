@@ -166,9 +166,9 @@ func mergeValue(path string, to interface{}, from interface{}, skip map[string]b
 		toI, _ := toQ.AsInt64()
 		if fromI == toI {
 			return to
-		} else {
-			return from
 		}
+
+		return from
 	}
 
 	fromT := reflect.TypeOf(from)
@@ -177,9 +177,9 @@ func mergeValue(path string, to interface{}, from interface{}, skip map[string]b
 		from = reflect.ValueOf(from).Convert(toT).Interface()
 		if from == to {
 			return to
-		} else {
-			return from
 		}
+
+		return from
 	}
 
 	return from

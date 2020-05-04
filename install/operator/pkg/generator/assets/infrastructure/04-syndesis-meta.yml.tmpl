@@ -78,8 +78,8 @@
                 fieldPath: metadata.namespace
 {{if .Syndesis.Addons.Jaeger.Enabled}}
           - name: JAEGER_ENDPOINT
-        {{- if .Syndesis.Addons.Jaeger.CollectorUri}}
-            value: "{{.Syndesis.Addons.Jaeger.CollectorUri}}"
+        {{- if .Syndesis.Addons.Jaeger.CollectorURI}}
+            value: "{{.Syndesis.Addons.Jaeger.CollectorURI}}"
         {{- else}}
             value: "http://syndesis-jaeger-collector:14268/api/traces"
         {{- end}}

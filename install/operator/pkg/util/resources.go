@@ -109,7 +109,7 @@ func SeperateStructuredAndUnstructured(scheme *runtime.Scheme, in []unstructured
 	return runtimes, unstructureds
 }
 
-func LoadJsonFromFile(path string) ([]byte, error) {
+func LoadJSONFromFile(path string) ([]byte, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -123,7 +123,7 @@ func LoadJsonFromFile(path string) ([]byte, error) {
 }
 
 func LoadUnstructuredObjectFromFile(path string) (*unstructured.Unstructured, error) {
-	data, err := LoadJsonFromFile(path)
+	data, err := LoadJSONFromFile(path)
 	if err != nil {
 		return nil, err
 	}

@@ -37,7 +37,7 @@ type SyndesisSpec struct {
 	Registry            string         `json:"registry,omitempty"`
 	Components          ComponentsSpec `json:"components,omitempty"`
 	OpenShiftMaster     string         `json:"openshiftMaster,omitempty"`
-	OpenShiftConsoleUrl string         `json:"openshiftConsoleUrl,omitempty"`
+	OpenShiftConsoleURL string         `json:"openshiftConsoleUrl,omitempty"`
 	SarNamespace        string         `json:"sarNamespace,omitempty"`
 	Addons              AddonsSpec     `json:"addons,omitempty"`
 	// if true, then the image streams are changed to used local development builds & JAVA_DEBUG is enabled
@@ -173,7 +173,7 @@ type VolumeOnlyResources struct {
 }
 
 type ServerFeatures struct {
-	ManagementUrlFor3scale string `json:"managementUrlFor3scale,omitempty"`
+	ManagementURLFor3scale string `json:"managementUrlFor3scale,omitempty"`
 }
 
 type AddonsSpec map[string]Parameters

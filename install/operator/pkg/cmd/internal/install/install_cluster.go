@@ -91,7 +91,7 @@ func toGroupVersionKindMap(resources []unstructured.Unstructured) map[v1.GroupVe
 }
 
 func (o *Install) removeInstalledCRDs(crds map[v1.GroupVersionKind]bool) error {
-	for crd, _ := range crds {
+	for crd := range crds {
 		if found, err := o.IsCRDInstalled(crd); err != nil {
 			return err
 		} else if found {
@@ -103,7 +103,7 @@ func (o *Install) removeInstalledCRDs(crds map[v1.GroupVersionKind]bool) error {
 
 // IsCRDInstalled check if the given CRD kind is installed
 func (o *Install) IsCRDInstalled(crd v1.GroupVersionKind) (bool, error) {
-	api, err := o.NewApiClient()
+	api, err := o.NewAPIClient()
 	if err != nil {
 		return false, err
 	}

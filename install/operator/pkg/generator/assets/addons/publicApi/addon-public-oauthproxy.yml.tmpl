@@ -38,7 +38,7 @@
       console.alpha.openshift.io/overview-app-route: "true"
     name: syndesis-public-api
   spec:
-    host: {{ .Syndesis.Addons.PublicApi.RouteHostname }}
+    host: {{ .Syndesis.Addons.PublicAPI.RouteHostname }}
     port:
       targetPort: 8443
     tls:
@@ -92,7 +92,7 @@
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
             - --openshift-delegate-urls={"/api/v1/public":{"namespace":"{{.OpenShiftProject}}","resource":"pods","verb":"get"}}
-{{ if (not .Syndesis.Addons.PublicApi.DisableSarCheck) }}
+{{ if (not .Syndesis.Addons.PublicAPI.DisableSarCheck) }}
             - --openshift-sar={"namespace":"{{.Syndesis.Components.Oauth.SarNamespace}}","resource":"pods","verb":"get"}
 {{ end }}
           env:

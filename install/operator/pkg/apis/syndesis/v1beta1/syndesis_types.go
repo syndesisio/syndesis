@@ -181,7 +181,7 @@ type ServerFeatures struct {
 	MavenRepositories map[string]string `json:"mavenRepositories,omitempty"`
 
 	// 3scale management URL
-	ManagementUrlFor3scale string `json:"managementUrlFor3scale,omitempty"`
+	ManagementURLFor3scale string `json:"managementUrlFor3scale,omitempty"`
 }
 
 type AddonsSpec struct {
@@ -191,7 +191,7 @@ type AddonsSpec struct {
 	Knative   AddonSpec              `json:"knative,omitempty"`
 	DV        DvConfiguration        `json:"dv,omitempty"`
 	CamelK    AddonSpec              `json:"camelk,omitempty"`
-	PublicApi PublicApiConfiguration `json:"publicApi,omitempty"`
+	PublicAPI PublicAPIConfiguration `json:"publicApi,omitempty"`
 }
 
 type JaegerConfiguration struct {
@@ -201,8 +201,8 @@ type JaegerConfiguration struct {
 	ImageAllInOne string `json:"imageAllInOne,omitempty"`
 	ImageOperator string `json:"imageOperator,omitempty"`
 	OperatorOnly  bool   `json:"operatorOnly,omitempty"`
-	QueryUri      string `json:"queryUri,omitempty"`
-	CollectorUri  string `json:"collectorUri,omitempty"`
+	QueryURI      string `json:"queryUri,omitempty"`
+	CollectorURI  string `json:"collectorUri,omitempty"`
 	SamplerType   string `json:"samplerType,omitempty"`
 	SamplerParam  string `json:"samplerParam,omitempty"`
 }
@@ -216,7 +216,7 @@ type DvConfiguration struct {
 	Resources Resources `json:"resources,omitempty"`
 }
 
-type PublicApiConfiguration struct {
+type PublicAPIConfiguration struct {
 	Enabled bool `json:"enabled,omitempty"`
 	// Set RouteHostname to the hostname of the exposed syndesis Public API.
 	RouteHostname string `json:"routeHostname,omitempty"`

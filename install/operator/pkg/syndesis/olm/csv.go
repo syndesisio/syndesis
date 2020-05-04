@@ -48,7 +48,7 @@ type csv struct {
 }
 
 type CSVOut struct {
-	ApiVersion string
+	APIVersion string `json:"apiVersion"`
 	Kind       string
 	Metadata   Metadata
 	Spec       Spec
@@ -109,7 +109,7 @@ type Selector struct {
 
 type Link struct {
 	Name string
-	Url  string
+	URL  string `json:"url"`
 }
 
 type Image struct {
@@ -210,7 +210,7 @@ func (c *csv) build() (err error) {
 	}
 
 	co := CSVOut{
-		ApiVersion: "operators.coreos.com/v1alpha1",
+		APIVersion: "operators.coreos.com/v1alpha1",
 		Kind:       "ClusterServiceVersion",
 		Metadata: Metadata{
 			Name:      c.name + ".v" + c.version,
@@ -251,13 +251,13 @@ func (c *csv) build() (err error) {
 			Links: []Link{
 				{
 					Name: "Red Hat Fuse Online Documentation",
-					Url:  "https://access.redhat.com/documentation/en-us/red-hat-fuse",
+					URL:  "https://access.redhat.com/documentation/en-us/red-hat-fuse",
 				}, {
 					Name: "Upstream project Syndesis",
-					Url:  "https://github.com/syndesisio/syndesis",
+					URL:  "https://github.com/syndesisio/syndesis",
 				}, {
 					Name: "Upstream Syndesis Operator",
-					Url:  "https://github.com/syndesisio/syndesis/tree/master/install/operator",
+					URL:  "https://github.com/syndesisio/syndesis/tree/master/install/operator",
 				},
 			},
 			RelatedImages: []Image{
