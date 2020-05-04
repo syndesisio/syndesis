@@ -29,6 +29,7 @@ public class DataVirtualizationV1Adapter extends BaseEntityAdapter<DataVirtualiz
 
     private List<ViewDefinitionV1Adapter> views = new ArrayList<>();
     private List<SourceV1> sources = new ArrayList<>();
+    private List<TablePrivilegeV1Adapter> tablePriveleges = new ArrayList<>();
 
     public DataVirtualizationV1Adapter() {
         super(new DataVirtualization(null));
@@ -60,6 +61,15 @@ public class DataVirtualizationV1Adapter extends BaseEntityAdapter<DataVirtualiz
 
     public void setSources(List<SourceV1> sources) {
         this.sources = sources;
+    }
+
+    public List<TablePrivilegeV1Adapter> getTablePriveleges() {
+        return tablePriveleges;
+    }
+
+    public void setTablePriveleges(
+            List<TablePrivilegeV1Adapter> tablePriveleges) {
+        this.tablePriveleges = tablePriveleges;
     }
 
 }
