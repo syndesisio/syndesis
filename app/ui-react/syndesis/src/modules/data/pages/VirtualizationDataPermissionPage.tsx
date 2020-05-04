@@ -210,6 +210,12 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                         ) => (
                           <ViewPermissionListItems
                             key={index}
+                            i18nRead={t('shared:Read')}
+                            i18nEdit={t('shared:Edit')}
+                            i18nDelete={t('shared:Delete')}
+                            i18nAllAccess={t('allAccess')}
+                            i18nRole={t('permissionRole')}
+                            i18nAddNewRole={t('addNewRole')}
                             itemSelected={itemSelected}
                             viewId={viewDefinitionDescriptor.id}
                             viewName={viewDefinitionDescriptor.name}

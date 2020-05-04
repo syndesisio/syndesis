@@ -20,3 +20,4 @@ export * from './DataPermission/ViewPermissionList';
 export * from './DataPermission/ViewPermissionListItems';
 export * from './DataPermission/ViewPermissionToolbar';
 export * from './DataPermission/RolePermissionListItem';
+export * from './DataPermission/RolePermissionList';

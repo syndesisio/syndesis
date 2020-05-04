@@ -8,7 +8,6 @@ import {
 } from '@patternfly/react-core';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 import * as React from 'react';
-import './ViewPermissionListItems.css';
 
 export interface IRolePermissionListItemProps {
   index: number;

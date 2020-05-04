@@ -1,7 +1,6 @@
 import {
   Button,
   DataList,
-  DataListAction,
   DataListCell,
   DataListCheck,
   DataListItem,
@@ -12,11 +11,10 @@ import {
   Text,
   TextVariants,
 } from '@patternfly/react-core';
-import { PlusCircleIcon } from '@patternfly/react-icons';
 import * as React from 'react';
+import { RolePermissionList } from '..';
 import { PageSection } from '../../../../Layout';
 import { IListViewToolbarProps } from '../../../../Shared';
-import { RolePermissionListItem } from './RolePermissionListItem';
 import './ViewPermissionList.css';
 import { ViewPermissionToolbar } from './ViewPermissionToolbar';
 export interface IViewPermissionList extends IListViewToolbarProps {
@@ -58,12 +56,11 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
   const [isClearModalOpen, setIsClearModalOpen] = React.useState<boolean>(
     false
   );
-  const [roleRowList, setRoleRowList] = React.useState<JSX.Element[]>([]);
 
   const [showMore, setShowMore] = React.useState<boolean>(false);
 
   const handleSetModalToggle = () => {
-    setRoleRowList([]);
+    // setRoleRowList([]);
     setIsSetModalOpen(!isSetModalOpen);
   };
 
@@ -71,30 +68,12 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
     setIsClearModalOpen(!isClearModalOpen);
   };
 
-  const removeRolePermission = (index: number) => {
-    setRoleRowList([
-      ...roleRowList.slice(0, index),
-      ...roleRowList.slice(index + 1),
-    ]);
-  };
-
-  const addRolePermission = () => {
-    setRoleRowList([
-      ...roleRowList,
-      <RolePermissionListItem
-        index={roleRowList.length}
-        removeRolePermission={removeRolePermission}
-        key={`rolelist-${roleRowList.length}`}
-      />,
-    ]);
-  };
-
   React.useEffect(() => {
     if (props.i18nSelectedViews.length > 200) {
       setShowMore(true);
     }
   }, [props.i18nSelectedViews]);
-  
+
   return (
     <PageSection>
       {props.hasListData ? (
@@ -148,48 +127,14 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
                 )}
               </h3>
             </div>
-            <DataList aria-label=" and action data list example">
-              <DataListItem aria-labelledby="check-action-item1">
-                <DataListItemRow>
-                  <DataListItemCells
-                    dataListCells={[
-                      <DataListCell key="primary content">
-                        <b>{props.i18nRole}</b>
-                      </DataListCell>,
-                      <DataListCell key="secondary content 1">
-                        <b>{props.i18nRead}</b>
-                      </DataListCell>,
-                      <DataListCell key="secondary content 2">
-                        <b>{props.i18nEdit}</b>
-                      </DataListCell>,
-                      <DataListCell key="more content 1">
-                        <b>{props.i18nDelete}</b>
-                      </DataListCell>,
-                      <DataListCell key="more content 2">
-                        <b>{props.i18nAllAccess}</b>
-                      </DataListCell>,
-                    ]}
-                  />
-                  <DataListAction
-                    aria-labelledby="single-action-item1 single-action-action1"
-                    id="single-action-action1"
-                    aria-label="Actions"
-                  >
-                    ""
-                  </DataListAction>
-                </DataListItemRow>
-              </DataListItem>
-              {roleRowList.map(
-                (element: JSX.Element, index: number) => element
-              )}
-            </DataList>
-            <Button
-              variant="link"
-              icon={<PlusCircleIcon />}
-              onClick={addRolePermission}
-            >
-              {props.i18nAddNewRole}
-            </Button>
+            <RolePermissionList
+              i18nRole={props.i18nRole}
+              i18nRead={props.i18nRead}
+              i18nEdit={props.i18nEdit}
+              i18nDelete={props.i18nDelete}
+              i18nAllAccess={props.i18nAllAccess}
+              i18nAddNewRole={props.i18nAddNewRole}
+            />
           </Modal>
           <Modal
             width={'50%'}

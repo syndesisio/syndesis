@@ -10,9 +10,16 @@ import {
   DataListToggle,
 } from '@patternfly/react-core';
 import * as React from 'react';
+import { RolePermissionList } from './RolePermissionList';
 import './ViewPermissionListItems.css';
 
 export interface IViewPermissionListItemsProps {
+  i18nAddNewRole: string;
+  i18nRead: string;
+  i18nEdit: string;
+  i18nDelete: string;
+  i18nAllAccess: string;
+  i18nRole: string;
   viewId: string;
   viewName: string;
   itemSelected: string[];
@@ -109,10 +116,14 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
         id="width-ex3-expand1"
         isHidden={!show}
       >
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
+        <RolePermissionList
+          i18nRole={props.i18nRole}
+          i18nRead={props.i18nRead}
+          i18nEdit={props.i18nEdit}
+          i18nDelete={props.i18nDelete}
+          i18nAllAccess={props.i18nAllAccess}
+          i18nAddNewRole={props.i18nAddNewRole}
+        />
       </DataListContent>
     </DataListItem>
   );
