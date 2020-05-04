@@ -37,12 +37,14 @@ require (
 	k8s.io/code-generator v0.18.2
 	k8s.io/gengo v0.0.0-20200114144118-36b2048a9120
 	k8s.io/kube-openapi v0.0.0-20200121204235-bf4fb3bd569c
-	k8s.io/kubectl v0.17.4
 	sigs.k8s.io/yaml v1.2.0
 )
 
 require (
+	github.com/go-logr/zapr v0.1.1
 	github.com/operator-framework/operator-sdk v0.17.0
+	github.com/spf13/afero v1.2.2
+	go.uber.org/zap v1.14.1
 	sigs.k8s.io/controller-runtime v0.5.2
 )
 
