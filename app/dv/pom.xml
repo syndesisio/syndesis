@@ -392,38 +392,7 @@
         <groupId>org.teiid</groupId>
         <artifactId>spring-data-salesforce</artifactId>
         <version>${version.springboot.teiid}</version>
-      </dependency>
-    <!--  supported drivers -->
-    <dependency>
-      <groupId>org.apache.derby</groupId>
-      <artifactId>derby</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mariadb.jdbc</groupId>
-      <artifactId>mariadb-java-client</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.teiid</groupId>
-      <artifactId>teiid</artifactId>
-      <classifier>jdbc</classifier>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.microsoft.sqlserver</groupId>
-      <artifactId>mssql-jdbc</artifactId>
-      <scope>runtime</scope>
-    </dependency>       
+      </dependency>       
     </dependencies>
   </dependencyManagement>
 
@@ -579,6 +548,38 @@
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- supported relational data sources -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mariadb.jdbc</groupId>
+      <artifactId>mariadb-java-client</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.teiid</groupId>
+      <artifactId>teiid</artifactId>
+      <classifier>jdbc</classifier>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.microsoft.sqlserver</groupId>
+      <artifactId>mssql-jdbc</artifactId>
+      <scope>runtime</scope>
+    </dependency> 
+    <!-- supported relational data sources -->    
     <dependency>
       <groupId>org.teiid</groupId>
       <artifactId>spring-data-salesforce</artifactId>
