@@ -38,7 +38,10 @@
           memory: "256Mi"
         requests:
           memory: "20Mi"
-      type: Recreate
+      type: Rolling
+      rollingParams:
+        updatePeriodSeconds: 1
+        intervalSeconds: 1
     template:
       metadata:
         labels:
