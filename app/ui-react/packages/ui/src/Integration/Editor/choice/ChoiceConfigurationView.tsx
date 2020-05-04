@@ -42,15 +42,17 @@ export const ChoiceConfigurationView: React.FunctionComponent<IChoiceConfigurati
       const id = toValidHtmlId(item.condition);
       return (
         <DataListItem aria-labelledby={id} key={index}>
-          <DataListItemRow>
+          <DataListItemRow data-testid={'condition-row'}>
             <DataListItemCells
               dataListCells={[
                 <DataListCell key={0} aria-label={'condition list item name'}>
                   <Stack>
-                    <StackItem>
+                    <StackItem data-testid={'condition-label'}>
                       <b id={id}>{`${index + 1}. ${i18nWhen}`}</b>
                     </StackItem>
-                    <StackItem>{item.condition}</StackItem>
+                    <StackItem data-testid={'condition-expression'}>
+                      {item.condition}
+                    </StackItem>
                   </Stack>
                 </DataListCell>,
               ]}
@@ -76,15 +78,17 @@ export const ChoiceConfigurationView: React.FunctionComponent<IChoiceConfigurati
     })}
     {useDefaultFlow && (
       <DataListItem aria-labelledby={'defaultFlow'} key={'defaultFlow'}>
-        <DataListItemRow>
+        <DataListItemRow data-testid={'condition-row default-flow-row'}>
           <DataListItemCells
             dataListCells={[
               <DataListCell key={0} aria-label={'condition list item name'}>
                 <Stack>
-                  <StackItem>
+                  <StackItem data-testid={'condition-label'}>
                     <b id={'defaultFlow'}>{i18nOtherwise}</b>
                   </StackItem>
-                  <StackItem>{i18nUseDefaultFlow}</StackItem>
+                  <StackItem data-testid={'condition-expression'}>
+                    {i18nUseDefaultFlow}
+                  </StackItem>
                 </Stack>
               </DataListCell>,
             ]}
