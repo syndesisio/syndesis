@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import io.syndesis.common.util.json.JsonUtils;
 
@@ -28,11 +29,13 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import io.syndesis.common.util.CamelCase;
+import io.syndesis.common.util.ErrorCategory;
 import io.syndesis.common.util.SyndesisConnectorException;
 
 public final class ErrorMapper {
 
-    private static final TypeReference<Map<String, String>> STRING_MAP_TYPE = new TypeReference<Map<String, String>>() {
+    private static final TypeReference<Map<String, Integer>> STRING_MAP_TYPE = new TypeReference<Map<String, Integer>>() {
         // type token used when deserializing generics
     };
 
@@ -42,7 +45,7 @@ public final class ErrorMapper {
         // utility class
     }
 
-    public static Map<String, String> jsonToMap(String property) {
+    public static Map<String, Integer> jsonToMap(String property) {
 
         try {
             if (ObjectHelper.isEmpty(property)) {
@@ -55,50 +58,47 @@ public final class ErrorMapper {
         }
     }
 
-    public static ErrorStatusInfo mapError(final Exception exception, final Map<String, String> errorResponseCodeMappings,
-            final Integer responseCode) {
-        Integer errorResponseCode = responseCode;
-        final ErrorStatusInfo info;
-        if (matchByException(exception, errorResponseCodeMappings)) {
-            info = new ErrorStatusInfo(
-                    Integer.valueOf(errorResponseCodeMappings.get(exception.getClass().getName())),
-                    categoryFromClassName(exception.getClass().getSimpleName()),
-                    getMessage(exception));
+    public static ErrorStatusInfo mapError(final Exception exception, final Map<String, Integer> httpResponseCodeMappings,
+            final Integer defaultResponseCode) {
+
+        SyndesisConnectorException sce;
+        if (isOrCausedBySyndesisConnectorException(exception)) {
+            sce = extract(exception);
         } else {
-            SyndesisConnectorException sce = SyndesisConnectorException.from(exception);
-            if (matchByCategory(sce, errorResponseCodeMappings)) {
-                info = new ErrorStatusInfo(
-                        Integer.valueOf(errorResponseCodeMappings.get(sce.getCategory())),
-                        sce.getCategory(),
-                        sce.getMessage());
-            } else {
-                info = new ErrorStatusInfo(errorResponseCode, sce.getCategory(), sce.getMessage());
-            }
+            sce = fromRuntimeException(exception, httpResponseCodeMappings.keySet());
         }
-        return info;
+        if (sce == null) { //catch all server error
+            sce = SyndesisConnectorException.from(exception);
+        }
+        Integer responseCode = httpResponseCodeMappings.get(sce.getCategory()) != null ?
+                httpResponseCodeMappings.get(sce.getCategory()): defaultResponseCode;
+        return new ErrorStatusInfo(responseCode, sce.getCategory(), sce.getMessage(), deriveErrorName(sce));
     }
 
-    private static boolean matchByException(final Exception exception, final Map<String, String> errorResponseCodeMappings) {
-        return errorResponseCodeMappings.containsKey(exception.getClass().getName());
+    private static String deriveErrorName(final Throwable t) {
+        String className = (t.getCause() != null ? t.getCause().getClass() : t.getClass()).getSimpleName();
+        return CamelCase.toUnderscore(className).replace("Exception","Error").toLowerCase(Locale.US);
     }
 
-    private static boolean matchByCategory(final SyndesisConnectorException sce, final Map<String, String> errorResponseCodeMappings) {
-        return errorResponseCodeMappings.containsKey(sce.getCategory());
+    private static SyndesisConnectorException fromRuntimeException(Throwable exception, Set<String> integrationCategories) {
+        String category = ErrorCategory.getCategory(exception, integrationCategories);
+        return SyndesisConnectorException.wrap(category, exception);
     }
 
-    private static String getMessage(final Exception exception) {
-        if (exception.getCause()!=null && exception.getCause().getMessage()!=null) {
-            return exception.getCause().getMessage();
+    private static boolean isOrCausedBySyndesisConnectorException(Throwable exception) {
+        if (exception instanceof SyndesisConnectorException) {
+            return true;
         } else {
-            return exception.getMessage();
+            return (exception.getCause() != null && exception.getCause() instanceof SyndesisConnectorException);
         }
     }
 
-    private static String categoryFromClassName(final String className) {
-        return camelCaseToUnderscore(className).replace("Exception","Error").toUpperCase(Locale.US);
+    private static SyndesisConnectorException extract(Throwable exception) {
+        if (exception instanceof SyndesisConnectorException) {
+            return (SyndesisConnectorException) exception;
+        } else  {
+            return (SyndesisConnectorException) exception.getCause();
+        }
     }
 
-    public static String camelCaseToUnderscore(final String text) {
-        return text.replaceAll("([^_A-Z])([A-Z])", "$1_$2");
-    }
 }

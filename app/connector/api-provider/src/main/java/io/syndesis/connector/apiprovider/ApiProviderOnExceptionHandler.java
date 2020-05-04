@@ -32,7 +32,7 @@ public class ApiProviderOnExceptionHandler implements Processor, Properties {
     private static final String HTTP_ERROR_RESPONSE_CODES_PROPERTY = "errorResponseCodes";
     private static final String ERROR_RESPONSE_BODY                = "returnBody";
 
-    Map<String, String> errorResponseCodeMappings;
+    Map<String, Integer> errorResponseCodeMappings;
     Boolean isReturnBody;
     Integer httpResponseStatus;
 
@@ -41,7 +41,7 @@ public class ApiProviderOnExceptionHandler implements Processor, Properties {
         Exception cause = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class);
         ErrorStatusInfo statusInfo =
                 ErrorMapper.mapError(cause, errorResponseCodeMappings, httpResponseStatus);
-        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, statusInfo.getResponseCode());
+        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, statusInfo.getHttpResponseCode());
         if (isReturnBody) {
             exchange.getIn().setBody(statusInfo.toJson());
         } else {

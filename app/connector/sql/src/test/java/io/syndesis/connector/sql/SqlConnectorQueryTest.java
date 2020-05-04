@@ -105,7 +105,7 @@ public class SqlConnectorQueryTest extends SqlConnectorTestSupport {
 									private static final long serialVersionUID = 1L;
 									{
                         				put("EXCEPTION_MESSAGE", "SQL SELECT did not SELECT any records" );
-                        				put("EXCEPTION_CATEGORY", "SQL_ENTITY_NOT_FOUND_ERROR");
+                        				put("EXCEPTION_CATEGORY", ErrorCategory.ENTITY_NOT_FOUND_ERROR);
                         			}
                         		}
                         	),
