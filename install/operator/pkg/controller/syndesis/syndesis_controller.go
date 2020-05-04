@@ -1,25 +1,26 @@
 package syndesis
 
 import (
-	"context"
-	"reflect"
-	"time"
+    "context"
+    metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+    "reflect"
+    "time"
 
-	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/kubernetes"
+    "k8s.io/apimachinery/pkg/api/errors"
+    "k8s.io/apimachinery/pkg/runtime"
+    "k8s.io/apimachinery/pkg/types"
+    "k8s.io/client-go/kubernetes"
 
-	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/controller"
-	"sigs.k8s.io/controller-runtime/pkg/handler"
-	logf "sigs.k8s.io/controller-runtime/pkg/log"
-	"sigs.k8s.io/controller-runtime/pkg/manager"
-	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-	"sigs.k8s.io/controller-runtime/pkg/source"
-
-	syndesisv1beta1 "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
+    consolev1 "github.com/openshift/api/console/v1"
+    syndesisv1beta1 "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+    "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
+    "sigs.k8s.io/controller-runtime/pkg/client"
+    "sigs.k8s.io/controller-runtime/pkg/controller"
+    "sigs.k8s.io/controller-runtime/pkg/handler"
+    logf "sigs.k8s.io/controller-runtime/pkg/log"
+    "sigs.k8s.io/controller-runtime/pkg/manager"
+    "sigs.k8s.io/controller-runtime/pkg/reconcile"
+    "sigs.k8s.io/controller-runtime/pkg/source"
 )
 
 var log = logf.Log.WithName("controller")
@@ -31,6 +32,10 @@ var (
 // Add creates a new Syndesis Controller and adds it to the Manager. The Manager will set fields on the Controller
 // and Start it when the Manager is Started.
 func Add(mgr manager.Manager) error {
+    err := consolev1.Install(mgr.GetScheme())
+    if err != nil {
+        return err
+    }
 	reconciler, err := newReconciler(mgr)
 	if err != nil {
 		return err
@@ -99,6 +104,14 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 			// Request object not found, could have been deleted after reconcile request.
 			// Owned objects are automatically garbage collected. For additional cleanup logic use finalizers.
 			// Return and don't requeue
+            syndesis.ObjectMeta = metav1.ObjectMeta{
+                Name:      request.Name,
+                Namespace: request.Namespace,
+            }
+
+            //Handle removal of cluster-scope object.
+            r.removeConsoleLink(ctx, syndesis)
+
 			return reconcile.Result{}, nil
 		}
 		// Error reading the object - requeue the request.
@@ -145,4 +158,21 @@ func (r *ReconcileSyndesis) isLatestVersion(ctx context.Context, syndesis *synde
 		return false, err
 	}
 	return refreshed.ResourceVersion == syndesis.ResourceVersion, nil
+}
+
+func (r *ReconcileSyndesis) removeConsoleLink(ctx context.Context, syndesis *syndesisv1beta1.Syndesis) (request reconcile.Result, err error) {
+    consoleLinkName := syndesis.Name + "-" + syndesis.Namespace
+    consoleLink := &consolev1.ConsoleLink{}
+    err = r.client.Get(context.TODO(), types.NamespacedName{Name: consoleLinkName}, consoleLink)
+    if err != nil {
+        if !errors.IsNotFound(err) {
+            return reconcile.Result{}, err
+        }
+    } else {
+        err = r.client.Delete(context.TODO(), consoleLink)
+        if err != nil {
+            return reconcile.Result{}, err
+        }
+    }
+    return reconcile.Result{}, err
 }

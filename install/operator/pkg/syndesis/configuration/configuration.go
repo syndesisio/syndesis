@@ -21,8 +21,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
-	"math/rand"
+    consolev1 "github.com/openshift/api/console/v1"
+    "io/ioutil"
+    metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+    "math/rand"
 	"net/url"
 	"os"
 	"regexp"
@@ -738,4 +740,78 @@ func getSyndesisEnvVarsFromOpenShiftNamespace(secret *corev1.Secret) (map[string
 	}
 
 	return nil, errors.New("no configuration found")
+}
+
+
+func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis, syndesisRoute *routev1.Route) error {
+    if syndesisRoute.Spec.Host != "" {
+        consoleLinkName := consoleLinkName(syndesis)
+        consoleLink := &consolev1.ConsoleLink{}
+        err := client.Get(ctx, types.NamespacedName{Name: consoleLinkName}, consoleLink)
+        if err != nil {
+            log.Info(consoleLink.Name)
+            consoleLink = createNamespaceDashboardLink(consoleLinkName, syndesisRoute, syndesis)
+            if err := client.Create(ctx, consoleLink); err != nil {
+                log.Error(err, "error creating console link")
+                return err
+            }
+        } else if err == nil && consoleLink != nil {
+            if syndesis.DeletionTimestamp != nil {
+                if err := client.Delete(ctx, consoleLink); err != nil {
+                    log.Error(err, "Error deleting console link.")
+                }
+            }
+
+            if err := reconcileConsoleLink(ctx, syndesis, syndesisRoute, consoleLink, client); err != nil {
+                return err
+            }
+        }
+    }
+    return nil
+}
+
+func reconcileConsoleLink(ctx context.Context, syndesis *v1beta1.Syndesis, route *routev1.Route, link *consolev1.ConsoleLink, client client.Client) error {
+    updateConsoleLink := false
+    url := "https://" + route.Spec.Host
+    if link.Spec.Href != url {
+        link.Spec.Href = url
+        updateConsoleLink = true
+    }
+
+    linkText := syndesis.Name
+    if link.Spec.Text != linkText {
+        link.Spec.Text = linkText
+        updateConsoleLink = true
+    }
+
+    if updateConsoleLink {
+        if err := client.Update(ctx, link); err != nil {
+            return err
+        }
+    }
+
+    return nil
+}
+
+func consoleLinkName(syndesis *v1beta1.Syndesis) string {
+    return syndesis.Name + "-" + syndesis.Namespace
+}
+
+func createNamespaceDashboardLink(name string, route *routev1.Route, syndesis *v1beta1.Syndesis) *consolev1.ConsoleLink  {
+    return &consolev1.ConsoleLink{
+        ObjectMeta: metav1.ObjectMeta{
+            Name:   name,
+            Labels: syndesis.Labels,
+        },
+        Spec: consolev1.ConsoleLinkSpec{
+            Link: consolev1.Link{
+                Text: name,
+                Href: "https://" + route.Spec.Host,
+            },
+            Location: consolev1.NamespaceDashboard,
+            NamespaceDashboard: &consolev1.NamespaceDashboardSpec{
+                Namespaces: []string{syndesis.Namespace},
+            },
+        },
+    }
 }

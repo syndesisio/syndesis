@@ -122,7 +122,12 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		return err
 	}
 
-	resourcesThatShouldExist[syndesisRoute.GetUID()] = true
+    if err := config.SetConsoleLink(ctx, a.client, syndesis, syndesisRoute); err != nil{
+        return err
+    }
+
+
+    resourcesThatShouldExist[syndesisRoute.GetUID()] = true
 
 	// Render the remaining syndesis resources...
 	all, err = generator.RenderDir("./infrastructure/", config)
