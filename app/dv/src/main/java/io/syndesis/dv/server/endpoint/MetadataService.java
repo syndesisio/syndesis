@@ -18,7 +18,6 @@ package io.syndesis.dv.server.endpoint;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -73,7 +72,7 @@ import io.syndesis.dv.server.V1Constants;
 import io.syndesis.dv.utils.PathUtils;
 import io.syndesis.dv.utils.StringUtils;
 /**
- * A Komodo REST service for obtaining information from a metadata instance.
+ * A REST service for obtaining information from a metadata instance.
  */
 @RestController
 @RequestMapping( V1Constants.APP_PATH+V1Constants.FS+V1Constants.METADATA_SEGMENT )
