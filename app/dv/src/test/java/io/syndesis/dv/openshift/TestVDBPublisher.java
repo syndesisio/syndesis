@@ -51,7 +51,7 @@ public class TestVDBPublisher {
     @Before
     public void setup() throws Exception {
         final InputStream vdbStream = getClass().getClassLoader().getResourceAsStream("myservice-vdb.xml");
-        this.vdb = VDBMetadataParser.unmarshell(vdbStream);
+        this.vdb = VDBMetadataParser.unmarshall(vdbStream);
     }
 
     private TeiidOpenShiftClient testDataSetup() {
@@ -129,11 +129,18 @@ public class TestVDBPublisher {
     public void testGeneratePomXML() throws Exception {
         TeiidOpenShiftClient generator = testDataSetup();
 
-        String pom = generator.generatePomXml(vdb, false);
+        String pom = generator.generatePomXml(vdb, false, false);
 
         try (InputStream expected = TestVDBPublisher.class.getResourceAsStream("/generated-pom.xml")) {
             assertThat(pom).isXmlEqualTo(ObjectConverterUtil.convertToString(expected));
         }
+
+        pom = generator.generatePomXml(vdb, false, true);
+
+        try (InputStream expected = TestVDBPublisher.class.getResourceAsStream("/generated-pom-security.xml")) {
+            assertThat(pom).isXmlEqualTo(ObjectConverterUtil.convertToString(expected));
+        }
+
     }
 
     @Test
