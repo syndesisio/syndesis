@@ -32,6 +32,8 @@ export * from './useVirtualizationConnectionSchema';
 export * from './useVirtualizationConnectionStatuses';
 export * from './useVirtualizationRuntimeMetadata';
 export * from './useVirtualization';
+export * from './useDVStatus';
+export * from './useDVRoles';
 export * from './useVirtualizations';
 export * from './WithActionDescriptor';
 export * from './WithActivities';

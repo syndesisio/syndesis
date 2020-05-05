@@ -22,6 +22,8 @@ const draftText = 'Draft';
 const publishedText = 'Published';
 const publishLogUrl = 'testUrl';
 const publishLogUrlText = 'View Logs';
+const popoverHeading = 'Data permission is applied';
+const popover= 'This virtual database has one or more data permissions set.';
 const virtualizationActions: JSX.Element = <div>VirtActions</div>;
 
 const publishedVirtualizationNotes =
@@ -74,7 +76,10 @@ stories
             detailsPageLink={'/details/page/link'}
             currentPublishedState={'BUILDING'}
             publishingLogUrl={text('publishLogUrl', publishLogUrl)}
+            i18nLockPopoverHeading={popoverHeading}
+            i18nLockPopover={popover}
             usedBy={['stuff']}
+            secured={true}
           />
         </Bullseye>
       </Router>
@@ -102,7 +107,10 @@ stories
           detailsPageLink={'/details/page/link'}
           currentPublishedState={'RUNNING'}
           publishingLogUrl={text('publishLogUrl', publishLogUrl)}
+          i18nLockPopoverHeading={popoverHeading}
+          i18nLockPopover={popover}
           usedBy={[]}
+          secured={true}
         />
       </Bullseye>
     </Router>

@@ -1,4 +1,4 @@
-import { useViewDefinitionDescriptors, useVirtualization } from '@syndesis/api';
+import { useDVRoles, useDVStatus, useViewDefinitionDescriptors, useVirtualization } from '@syndesis/api';
 import { ViewDefinitionDescriptor } from '@syndesis/models';
 import {
   IFilterType,
@@ -59,6 +59,16 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
    * Hook to obtain the virtualization being edited. Also does polling to get virtualization descriptor updates.
    */
   const { model: virtualization } = useVirtualization(params.virtualizationId);
+
+  /**
+   * Hook to obtain the dv status is sso configured
+   */
+  const { resource: dvStatus  } = useDVStatus();
+
+  /**
+   * Hook to obtain the avalable roles.
+   */
+  const { resource: dvRoles  } = useDVRoles();
 
   /**
    * Hook to obtain view descriptors.
@@ -197,6 +207,8 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                     clearViewSelection={clearViewSelection}
                     selectAllViews={selectAllViews}
                     selectPageViews={selectPageViews}
+                    status={dvStatus.attributes}
+                    dvRoles={dvRoles}
                   >
                     {filteredAndSortedPerPage
                       .filter(
@@ -219,7 +231,9 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                             itemSelected={itemSelected}
                             viewId={viewDefinitionDescriptor.id}
                             viewName={viewDefinitionDescriptor.name}
+                            status={dvStatus.attributes}
                             onSelectedViewChange={onSelectedViewChange}
+                            dvRoles={dvRoles}
                           />
                         )
                       )}
