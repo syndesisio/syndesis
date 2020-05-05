@@ -771,6 +771,7 @@ public final class DataVirtualizationService extends DvService {
             } else {
                 listing.setValid(false);
             }
+            listing.setTablePrivileges(repositoryManager.findTablePrivileges(viewEditorState.getId()));
             result.add(listing);
         }
         return result;

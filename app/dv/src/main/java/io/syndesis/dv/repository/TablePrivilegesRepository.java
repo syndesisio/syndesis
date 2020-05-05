@@ -43,4 +43,6 @@ public interface TablePrivilegesRepository extends JpaRepository<TablePrivileges
 
     TablePrivileges findTablePrivilegesByViewDefinitionIdAndRoleName(String viewId, String role);
 
+    List<TablePrivileges> findTablePrivilegesByViewDefinitionId(String viewId);
+
 }

@@ -127,5 +127,7 @@ public interface RepositoryManager {
 
     TablePrivileges createTablePrivileges(String viewId, String roleName);
 
-    TablePrivileges findTablePrivileges(String viewId, String virtualization);
+    List<TablePrivileges> findTablePrivileges(String viewId);
+
+    TablePrivileges findTablePrivileges(String viewId, String roleName);
 }
