@@ -41,8 +41,6 @@ import io.syndesis.dv.server.V1Constants;
 @Api(tags = { V1Constants.STATUS })
 public class StatusService extends DvService {
 
-    private static final String SSO_CONFIGURED = "ssoConfigured"; //$NON-NLS-1$s
-    private static final String EXPOSE_VIA3SCALE = "exposeVia3scale"; //$NON-NLS-1$
     @Autowired
     private SSOConfigurationProperties ssoConfigurationProperties;
     @Autowired
@@ -68,11 +66,11 @@ public class StatusService extends DvService {
 
     @GetMapping(produces= { MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation(value = "Get the server status",
-        response = StatusObject.class)
-    public StatusObject getStatus() {
-        StatusObject result = new StatusObject();
-        result.addAttribute(EXPOSE_VIA3SCALE, String.valueOf(dvConfigurationProperties.isExposeVia3scale()));
-        result.addAttribute(SSO_CONFIGURED, String.valueOf(ssoConfigurationProperties.getAuthServerUrl() != null));
+        response = DvStatus.class)
+    public DvStatus getStatus() {
+        DvStatus result = new DvStatus();
+        result.setExposeVia3scale(dvConfigurationProperties.isExposeVia3scale());
+        result.setSsoConfigured(ssoConfigurationProperties.getAuthServerUrl() != null);
         return result;
     }
 

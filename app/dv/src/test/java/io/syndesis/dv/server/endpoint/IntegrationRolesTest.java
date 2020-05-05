@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 
 import org.junit.Test;
@@ -84,7 +85,8 @@ public class IntegrationRolesTest {
         assertEquals("[]", statusResponse.getBody().getTablePrivileges().toString());
 
         RoleInfo toGrant = new RoleInfo();
-        toGrant.getTablePrivileges().add(new TablePrivileges("x", stashStatus.getBody().getViewDefinition().getId(), Privilege.S));
+        String viewId = stashStatus.getBody().getViewDefinition().getId();
+        toGrant.getTablePrivileges().add(new TablePrivileges("x", viewId, Privilege.S));
 
         //grant a privilege
         ResponseEntity<String> grant = restTemplate.exchange(
@@ -126,12 +128,20 @@ public class IntegrationRolesTest {
         statusResponse = restTemplate.getForEntity("/v1/virtualizations/{dv}/roles", RoleInfo.class, dvName);
         assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
         assertEquals("[SELECT]", statusResponse.getBody().getTablePrivileges().get(0).getGrantPrivileges().toString());
+
+        //check the role info on the view listing
+        ResponseEntity<List> views = restTemplate.getForEntity(
+                "/v1/virtualizations/{name}/views", List.class, dvName);
+        assertEquals(HttpStatus.OK, views.getStatusCode());
+        assertEquals(1, views.getBody().size());
+        Map<?, ?> viewMap = (Map<?, ?>) views.getBody().get(0);
+        assertEquals("[{viewDefinitionId="+viewId+", roleName=x, grantPrivileges=[SELECT]}]", viewMap.get("tablePrivileges").toString());
     }
 
     @Test public void testStatus() {
-        ResponseEntity<StatusObject> statusResponse = restTemplate.getForEntity("/v1/status", StatusObject.class);
+        ResponseEntity<String> statusResponse = restTemplate.getForEntity("/v1/status", String.class);
         assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
-        assertEquals("{exposeVia3scale=false, ssoConfigured=false}", statusResponse.getBody().getAttributes().toString());
+        assertEquals("{\"ssoConfigured\":false,\"exposeVia3scale\":false}", statusResponse.getBody().toString());
     }
 
 }

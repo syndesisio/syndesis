@@ -283,4 +283,10 @@ public class RepositoryManagerImpl implements RepositoryManager {
             String role) {
         return tablePrivilegesRepository.findTablePrivilegesByViewDefinitionIdAndRoleName(viewId, role);
     }
+
+    @Override
+    public List<TablePrivileges> findTablePrivileges(String viewId) {
+        return tablePrivilegesRepository.findTablePrivilegesByViewDefinitionId(viewId);
+    }
+
 }
