@@ -155,16 +155,6 @@ public class CompletionItemBuilder implements DdlCompletionConstants {
         return result;
     }
 
-    public String[] getKeywordLabels(int[] keywordIds, boolean upperCase) {
-        List<String> labels = new ArrayList<String>();
-
-        for( int id: keywordIds) {
-            labels.add(getKeywordLabel(id, upperCase));
-        }
-
-        return labels.toArray(new String[0]);
-    }
-
     /**
      * The tokenImage[...] call is returning strings wrapped in double-quotes
      *

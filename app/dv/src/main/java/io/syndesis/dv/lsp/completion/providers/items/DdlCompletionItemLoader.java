@@ -25,6 +25,9 @@ import org.apache.tomcat.util.json.JSONParser;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.InsertTextFormat;
+import org.teiid.core.types.DataTypeManager;
+import org.teiid.language.SQLConstants;
+import org.teiid.query.parser.SQLParserConstants;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -220,7 +223,24 @@ public class DdlCompletionItemLoader extends CompletionItemBuilder {
     public List<CompletionItem> getQueryExpressionKeywordItems() {
         if (queryExpressionKeywordItems == null) {
             queryExpressionKeywordItems = new ArrayList<CompletionItem>();
-            queryExpressionKeywordItems = generateCompletionItems(getKeywordLabels(NON_DATATYPE_KEYWORDS, true));
+
+            for( int i = 0; i < SQLParserConstants.tokenImage.length; i++) {
+                String image = SQLParserConstants.tokenImage[i];
+                if (!image.startsWith("\"") || !image.endsWith("\"")) {
+                    continue;
+                }
+                image = image.substring(1, image.length()-1);
+                //newer teiid versions won't require upper
+                String upper = image.toUpperCase();
+                if (upper.equalsIgnoreCase(DataTypeManager.DefaultDataTypes.OBJECT) ||
+                        DataTypeManager.getDataTypeClass(image) != DataTypeManager.DefaultDataClasses.OBJECT
+                        || !(SQLConstants.getReservedWords().contains(upper)
+                                || SQLConstants.getNonReservedWords().contains(upper))) {
+                    //it's a datatype keyword, or not a keyword (it's a token)
+                    continue;
+                }
+                queryExpressionKeywordItems.add(createKeywordItemFromItemData(getKeywordLabel(i, true)));
+            }
         }
         return queryExpressionKeywordItems;
     }
