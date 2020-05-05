@@ -71,13 +71,11 @@ public class TestDDLTokenAnalyzer {
     
     @Test
     public void testViewName() throws Exception {
-        System.out.println(" TEST:  testViewName()");
-        
         String stmt = "CREATE VIEW \"wineList xxx\" (\n" +
                         "e1 integer primary key,\n" +
                         "e6 varchar index default 'hello')\n" +
                         "OPTIONS (CARDINALITY 12, UUID 'uuid2',  UPDATABLE 'true', FOO 'BAR', ANNOTATION 'Test Table')";
-        
+
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
         printTokens(analyzer.getTokens(), "testViewName() nTokens = " + analyzer.getTokens().length);
 
@@ -87,20 +85,17 @@ public class TestDDLTokenAnalyzer {
     
     @Test
     public void testCreateViewSimple() throws Exception {
-        System.out.println(" TEST:  testCreateViewSimple()");
         String stmt = "CREATE VIEW winelist( e4 decimal(12,3) default 12.2 options (searchable 'unsearchable') )";
-        
+
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
         printTokens(analyzer.getTokens(), "testCreateViewWithDatatypes nTokens  = " + analyzer.getTokens().length);
-        
+
         assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, analyzer.getStatementType());
         assertEquals(19, analyzer.getTokens().length);
     }
     
     @Test
     public void testCreateViewWithDatatypes() throws Exception {
-        System.out.println(" TEST:  testCreateViewWithDatatypes()");
-        
         String stmt = "CREATE VIEW winelist(\n" +
                         "e1 integer primary key,\n" +
                         "e2 varchar(10) unique,\n" +

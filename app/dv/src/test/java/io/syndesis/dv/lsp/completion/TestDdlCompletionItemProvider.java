@@ -30,12 +30,7 @@ import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 public class TestDdlCompletionItemProvider implements DdlAnalyzerConstants {
 
 	private DdlCompletionProvider itemProvider = new DdlCompletionProvider();
-	
-//	private static final int NUM_NON_DATATYPE_WORDS = 359;
-//	private static final int NUM_CREATE_WORDS = 12;
-//	private static final int NUM_VIRTUAL_WORDS = 2;
-//	private static final int NUM_VIEW_WORDS = 5;
-	
+
 	/*
     * The tokenImage[...] call is returning strings wrapped in double-quotes
     * 
@@ -47,28 +42,24 @@ public class TestDdlCompletionItemProvider implements DdlAnalyzerConstants {
 		String tokenImageStr = tokenImage[keywordId];
     	return tokenImageStr.substring(1, tokenImageStr.length()-1);
     }
-	
+
     @Test
     public void testEmptyViewCompletions() throws Exception {
-        System.out.println(" TEST:  testEmptyViewCompletions()");
-        
         //             01234567890123456789
         String stmt = "";
-        
+
         // CREATE 0, 0, expect 1 items (i.e. CREATE )
         List<CompletionItem> items = itemProvider.getCompletionItems(stmt, new Position(0, 0));
         assertEquals(3, items.size());
     }
-    
+
     @Test
     public void testViewNameCompletions() throws Exception {
-        System.out.println(" TEST:  testViewNameCompletions()");
-        
         //      01234567890123456789
         String stmt = "";
         List<CompletionItem> items = itemProvider.getCompletionItems(stmt, new Position(0, 0));
         assertEquals(3, items.size());
-        
+
         //      01234567890123456789
         stmt = "CREATE "; // VIEW ";
         items = itemProvider.getCompletionItems(stmt, new Position(0, 7));
@@ -78,24 +69,21 @@ public class TestDdlCompletionItemProvider implements DdlAnalyzerConstants {
         stmt = "CREATE VIEW ";
         items = itemProvider.getCompletionItems(stmt, new Position(0, 12));
         assertEquals(0, items.size());
-        
+
         //      01234567890123456789
         stmt = "CREATE VIEW foobar ";
         items = itemProvider.getCompletionItems(stmt, new Position(0, 19));
         assertEquals(1, items.size());
-        
+
         // looking for left parenthesis (
         //      01234567890123456789
         stmt = "CREATE VIEW foobar ()";
         items = itemProvider.getCompletionItems(stmt, new Position(0, 20));
         assertEquals(2, items.size());
-
     }
 	
     @Test
     public void testCreateViewCompletions() throws Exception {
-        System.out.println(" TEST:  testCreateViewCompletions()");
-        
         //             01234567890123456789
         String stmt = "CREATE VIEW winelist ( \n" + 
 	        		  "   wine string(255), price decimal(2, 15), vendor string(255) \n" + 
@@ -103,67 +91,61 @@ public class TestDdlCompletionItemProvider implements DdlAnalyzerConstants {
         
         List<CompletionItem> items = itemProvider.getCompletionItems(stmt, new Position(0, 0));
         assertEquals(3, items.size());
-        
+
         items = itemProvider.getCompletionItems(stmt, new Position(0, 5));
         assertEquals(3, items.size());
-        
+
         items = itemProvider.getCompletionItems(stmt, new Position(0, 7));
         assertEquals(3, items.size());
-        
+
         items = itemProvider.getCompletionItems(stmt, new Position(0, 6));
         assertEquals(3, items.size());
-        
+
         items = itemProvider.getCompletionItems(stmt, new Position(0, 7));
         assertEquals(3, items.size());
-        
+
         items = itemProvider.getCompletionItems(stmt, new Position(0, 10));
         assertEquals(3, items.size());
-        
+
         items = itemProvider.getCompletionItems(stmt, new Position(0, 11));
         assertEquals(3, items.size());
-        
+
         items = itemProvider.getCompletionItems(stmt, new Position(1, 8));
         assertEquals(45, items.size());
     }
-    
+
     @Test
     public void testTableBody() throws Exception {
-        System.out.println(" TEST:  testCreateViewCompletions()");
-        
         String stmt = 
 //               01234567890123456789012345678901234567890123456789
                 "CREATE VIEW winelist (\n" +
                 "   wine string(255),\n" + 
 //               01234567890123456789012345678901234567890123456789
                 ")\nAS SELECT * FROM winelist";
-        
-        System.out.println(" TEST:  testCreateViewCompletions() Position = " + new Position(0, 22));
+
         List<CompletionItem> items = itemProvider.getCompletionItems(stmt, new Position(0, 22));
         assertEquals(2, items.size());
-        
+
         items = itemProvider.getCompletionItems(stmt, new Position(1, 0));
         assertEquals(2, items.size());
-        
+
         // after comma in table element
         items = itemProvider.getCompletionItems(stmt, new Position(1, 20));
         assertEquals(2, items.size());
     }
-    
+
     @Test
     public void testNoTableBody() throws Exception {
-        System.out.println(" TEST:  testCreateViewCompletions()");
-        
         String stmt = 
 //               01234567890123456789012345678901234567890123456789
                 "CREATE VIEW winelist AS SELECT * FROM winelist";
-        
-        System.out.println(" TEST:  testNoTableBody() Position = " + new Position(0, 21));
+
         List<CompletionItem> items = itemProvider.getCompletionItems(stmt, new Position(0, 22));
         assertEquals(1, items.size());
-        
+
         items = itemProvider.getCompletionItems(stmt, new Position(0, 21));
         assertEquals(1, items.size());
-        
+
         // after comma in table element
         items = itemProvider.getCompletionItems(stmt, new Position(1, 31));
         assertEquals(359, items.size());

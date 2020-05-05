@@ -60,9 +60,7 @@ public class TestCreateViewStatement {
         
 
         CreateViewStatement cvs = createStatatement(stmt);
-        
-        //printTokens(cvs.analyzer.getTokens(), "testCreateViewStatement = nTokens  " + cvs.analyzer.getTokens().length);
-        
+
         assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
         assertEquals(58, cvs.analyzer.getTokens().length);
         
@@ -79,7 +77,6 @@ public class TestCreateViewStatement {
     
     @Test
     public void testMissingViewName() throws Exception {
-
         String stmt = 
 //        	     01234567890123456789012345678901234567890123456789
         		"CREATE VIEW (\n" +
@@ -92,9 +89,7 @@ public class TestCreateViewStatement {
         
 
         CreateViewStatement cvs = createStatatement(stmt);
-        
-        //printTokens(cvs.analyzer.getTokens(), "testCreateViewStatement = nTokens  " + cvs.analyzer.getTokens().length);
-        
+
         assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
         assertEquals(23, cvs.analyzer.getTokens().length);
 
@@ -103,17 +98,13 @@ public class TestCreateViewStatement {
     
     @Test
     public void testNoTableBody() throws Exception {
-
         String stmt = 
 //               01234567890123456789012345678901234567890123456789
                 "CREATE VIEW (\n" +
 //               01234567890123456789012345678901234567890123456789
                 ")\nAS SELECT * FROM winelist WHERE e1 > '10'";
-        
 
         CreateViewStatement cvs = createStatatement(stmt);
-        
-        //printTokens(cvs.analyzer.getTokens(), "testCreateViewStatement = nTokens  " + cvs.analyzer.getTokens().length);
         
         assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
         assertEquals(13, cvs.analyzer.getTokens().length);
