@@ -542,9 +542,6 @@ func (b *Backup) backupDatabase() error {
 	if err != nil {
 		return err
 	}
-	if err = sc.ExternalDatabase(b.context, b.client, b.syndesis); err != nil {
-		return err
-	}
 
 	dbURL, err := url.Parse(sc.Syndesis.Components.Database.URL)
 	if err != nil {
@@ -617,9 +614,6 @@ func (b *Backup) RestoreDb() (err error) {
 	// Load configuration to to use as context for generator pkg
 	sc, err := configuration.GetProperties(configuration.TemplateConfig, b.context, b.client, b.syndesis)
 	if err != nil {
-		return err
-	}
-	if err = sc.ExternalDatabase(b.context, b.client, b.syndesis); err != nil {
 		return err
 	}
 
