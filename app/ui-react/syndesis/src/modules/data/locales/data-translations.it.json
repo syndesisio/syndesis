@@ -2,6 +2,8 @@
   "activeConnectionsEmptyStateInfo": "Non ci sono connessioni attive disponibili. Fare clic su Crea connessione per una nuova connessione.",
   "activeConnectionsEmptyStateTitle": "Nessuna Connessione Attiva",
   "actionsColumnA11yMessage": "Colonna del menu azione versione",
+  "addNewRole": "Aggiungi nuovo ruolo",
+  "allAccess": "Tutti gli accessi",
   "buildStatus": {
     "BUILDING": "Costruzione",
     "CANCELLED": "Annullato",
@@ -88,6 +90,14 @@
   "metricsResultSetCacheTitle": "Cache del set di risultati",
   "metricsUptimeSince": "Dal {{sinceTime}}",
   "metricsUptimeTitle": "Tempo di funzionamento del pod DV",
+  "permissions": "permessi",
+  "permissionClear": "Autorizzazione chiara",
+  "permissionRole":"Ruolo",
+  "permissionSelectNone": "Non selezionare niente",
+  "permissionSelectPage": "Seleziona pagina ({{pageListLenght}} articoli)",
+  "permissionSelectAll": "Seleziona tutto ({{allListLength}} articoli)",
+  "permissionSet": "Imposta l'autorizzazione",
+  "permissionSeletedViews": "Imposta l'autorizzazione per le viste selezionate:",
   "preview": {
     "hidePreview": "Nascondi anteprima",
     "loadingQueryResults": "Caricamento dei risultati della query...",

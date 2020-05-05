@@ -2,6 +2,8 @@
   "activeConnectionsEmptyStateInfo": "Нет доступных активных соединений. Нажмите Создать соединение для нового соединения.",
   "activeConnectionsEmptyStateTitle": "Нет активных Соединений",
   "actionsColumnA11yMessage": "Колонка меню действий версии",
+  "addNewRole": "Добавить новую роль",
+  "allAccess": "Весь доступ",
   "buildStatus": {
     "BUILDING": "Сборка",
     "CANCELLED": "Отменено",
@@ -88,6 +90,14 @@
   "metricsResultSetCacheTitle": "Кеш результатов",
   "metricsUptimeSince": "С {{sinceTime}}",
   "metricsUptimeTitle": "DV pod uptime",
+  "permissions": "права доступа",
+  "permissionClear": "Четкое разрешение",
+  "permissionRole":"Роль",
+  "permissionSelectNone": "Выберите нет",
+  "permissionSelectPage": "Выберите страницу ({{pageListLenght}} пунктов)",
+  "permissionSelectAll": "Выбрать все ({{allListLength}} пунктов)",
+  "permissionSet": "Установить разрешение",
+  "permissionSeletedViews": "Установить разрешение для выбранных видов:",
   "preview": {
     "hidePreview": "Скрыть предварительный просмотр",
     "loadingQueryResults": "Загрузка результатов запроса...",

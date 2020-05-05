@@ -127,6 +127,17 @@ export default {
         },
       })
     ),
+    dataPermission: makeResolver<{ virtualization: Virtualization }>(
+      routes.virtualizations.virtualization.dataPermission,
+      ({ virtualization }) => ({
+        params: {
+          virtualizationId: virtualization.name,
+        },
+        state: {
+          virtualization,
+        },
+      })
+    ),
     sqlClient: makeResolver<{ virtualization: Virtualization }>(
       routes.virtualizations.virtualization.sqlClient,
       ({ virtualization }) => ({
