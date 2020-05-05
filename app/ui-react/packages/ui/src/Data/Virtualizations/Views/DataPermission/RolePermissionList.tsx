@@ -18,6 +18,7 @@ export interface IRolePermissionListProps {
   i18nDelete: string;
   i18nAllAccess: string;
   i18nAddNewRole: string;
+  roles: string[];
 }
 
 export const RolePermissionList: React.FunctionComponent<IRolePermissionListProps> = props => {
@@ -35,6 +36,7 @@ export const RolePermissionList: React.FunctionComponent<IRolePermissionListProp
       ...roleRowList,
       <RolePermissionListItem
         index={roleRowList.length}
+        role={props.roles}
         removeRolePermission={removeRolePermission}
         key={`rolelist-${roleRowList.length}`}
       />,

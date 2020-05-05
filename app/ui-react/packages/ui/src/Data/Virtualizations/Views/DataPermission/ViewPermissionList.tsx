@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertVariant,
   Button,
   DataList,
   DataListCell,
@@ -45,6 +47,8 @@ export interface IViewPermissionList extends IListViewToolbarProps {
   i18nSelectedViews: string;
   i18nSelectedViewsMsg: string;
   i18nSetPermission: string;
+  status: any;
+  dvRoles: string[];
 }
 
 export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = props => {
@@ -127,6 +131,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
                 )}
               </h3>
             </div>
+            {props.status.ssoConfigured === 'false' && <Alert variant={AlertVariant.warning} isInline={true} title="SSO not configured: Edited role won't be used for publishishing until sso is configured." />}
             <RolePermissionList
               i18nRole={props.i18nRole}
               i18nRead={props.i18nRead}
@@ -134,6 +139,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
               i18nDelete={props.i18nDelete}
               i18nAllAccess={props.i18nAllAccess}
               i18nAddNewRole={props.i18nAddNewRole}
+              roles={props.dvRoles}
             />
           </Modal>
           <Modal

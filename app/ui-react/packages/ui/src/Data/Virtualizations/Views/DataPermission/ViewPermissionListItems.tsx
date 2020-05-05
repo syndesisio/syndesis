@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertVariant,
   Badge,
   Button,
   DataListCell,
@@ -23,6 +25,8 @@ export interface IViewPermissionListItemsProps {
   viewId: string;
   viewName: string;
   itemSelected: string[];
+  status: any;
+  dvRoles: string[];
   onSelectedViewChange: (checked: boolean, event: any, view: string) => void;
 }
 
@@ -116,6 +120,8 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
         id="width-ex3-expand1"
         isHidden={!show}
       >
+        <>
+        {props.status.ssoConfigured === 'false' && <Alert variant={AlertVariant.warning} isInline={true} title="SSO not configured: Edited role won't be used for publishishing until sso is configured." />}
         <RolePermissionList
           i18nRole={props.i18nRole}
           i18nRead={props.i18nRead}
@@ -123,7 +129,9 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
           i18nDelete={props.i18nDelete}
           i18nAllAccess={props.i18nAllAccess}
           i18nAddNewRole={props.i18nAddNewRole}
+          roles={props.dvRoles}
         />
+        </>
       </DataListContent>
     </DataListItem>
   );

@@ -31,6 +31,7 @@ export interface Virtualization {
   publishedRevision?: number;
   serviceViewModel: string;
   description: string;
+  secured: boolean;
   usedBy: string[];
 }
 
@@ -88,6 +89,15 @@ export interface VirtualizationSourceStatus {
   sourceName: string;
   teiidName: string;
   lastLoad: number;
+}
+
+export interface DVStatusObj {
+  exposeVia3scale: string;
+  ssoConfigured: string;
+}
+
+export interface DVStatus {
+  attributes: DVStatusObj;
 }
 
 export interface ViewDefinitionDescriptor {
