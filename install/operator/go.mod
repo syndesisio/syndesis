@@ -14,7 +14,7 @@ require (
 	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/go-logr/logr v0.1.0
-	github.com/go-openapi/spec v0.19.5
+	github.com/go-openapi/spec v0.19.7
 	github.com/gorilla/mux v1.7.3 // indirect
 	github.com/imdario/mergo v0.3.9
 	github.com/lib/pq v1.4.0
