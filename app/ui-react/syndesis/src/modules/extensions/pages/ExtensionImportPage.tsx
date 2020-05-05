@@ -1,5 +1,5 @@
 import { useExtensionHelpers } from '@syndesis/api';
-import { Action } from '@syndesis/models';
+import { Action, Extension } from '@syndesis/models';
 import {
   Breadcrumb,
   ButtonLink,
@@ -34,7 +34,7 @@ export const ExtensionImportPage: React.FunctionComponent = () => {
     dndUploadSuccessMessage,
     setDndUploadSuccessMessage,
   ] = React.useState();
-  const [extension, setExtension] = React.useState();
+  const [extension, setExtension] = React.useState<Extension>();
   const [i18nAlertMessage, setI18nAlertMessage] = React.useState();
 
   /**

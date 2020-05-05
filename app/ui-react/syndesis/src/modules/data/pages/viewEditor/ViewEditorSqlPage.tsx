@@ -70,7 +70,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   >([]);
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
-  const [validationResultsTitle, setValidationResultsTitle] = React.useState(
+  const [validationResultsTitle, setValidationResultsTitle] = React.useState<string>(
     t('validationResultsTitle')
   );
   const { params, state, history } = useRouteData<
@@ -92,10 +92,10 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     state.viewDefinition
   );
   const [viewVersion, setViewVersion] = React.useState(viewDefn.version);
-  const [noResultsTitle, setNoResultsTitle] = React.useState(
+  const [noResultsTitle, setNoResultsTitle] = React.useState<string>(
     t('preview.resultsTableValidEmptyTitle')
   );
-  const [noResultsMessage, setNoResultsMessage] = React.useState(
+  const [noResultsMessage, setNoResultsMessage] = React.useState<string>(
     t('preview.resultsTableValidEmptyInfo')
   );
   const ddlHasChanges = React.useRef(false);

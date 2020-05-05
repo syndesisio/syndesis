@@ -25,7 +25,7 @@ export interface ITagIntegrationDialogState {
 export const TagIntegrationDialog: React.FunctionComponent<ITagIntegrationDialogProps> = props => {
 
   const [disableSave, setDisableSave] = React.useState(true);
-  const [draftItems, setDraftItems] = React.useState();
+  const [draftItems, setDraftItems] = React.useState<ITagIntegrationEntry[]>([]);
 
   const handleSelectionChange = (
     items: ITagIntegrationEntry[],
