@@ -12,3 +12,5 @@ jobs:
     name: Backport pull request
     steps:
     - uses: syndesisio/backport-action@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
