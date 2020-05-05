@@ -1,0 +1,2645 @@
+{
+  "connections": {
+    ":5": {
+      "configuredProperties": {
+        "password": "»ENC:87a6397edfdbad960cb6db1015eae5a3d6afa5c201d1b8fe2247c67b4b5cc348939d3632ba6ac5eee960aead34693471",
+        "schema": "sampledb",
+        "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
+        "user": "sampledb"
+      },
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Invoke SQL to obtain, store, update, or delete data.",
+            "descriptor": {
+              "componentScheme": "sql",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "json-schema"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
+                  "name": "SQL statement",
+                  "properties": {
+                    "batch": {
+                      "defaultValue": "false",
+                      "deprecated": false,
+                      "displayName": "Batch update",
+                      "group": "common",
+                      "javaType": "java.lang.Boolean",
+                      "kind": "property",
+                      "labelHint": "Use prepared statements for INSERT, UPDATE, DELETE in order to update multiple rows with batch update.",
+                      "order": 2,
+                      "required": false,
+                      "secret": false,
+                      "type": "boolean"
+                    },
+                    "query": {
+                      "deprecated": false,
+                      "displayName": "SQL statement",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                      "order": 1,
+                      "placeholder": "for example ':#MYPARAMNAME'",
+                      "required": true,
+                      "secret": false,
+                      "type": "dataList"
+                    },
+                    "raiseErrorOnNotFound": {
+                      "defaultValue": "false",
+                      "deprecated": false,
+                      "displayName": "Raise error when record not found",
+                      "group": "common",
+                      "javaType": "java.lang.Boolean",
+                      "kind": "property",
+                      "labelHint": "Error when no records are selected, updated or deleted",
+                      "order": 3,
+                      "required": false,
+                      "secret": false,
+                      "type": "boolean"
+                    }
+                  }
+                }
+              ],
+              "standardizedErrors": [
+                {
+                  "displayName": "SqlDataAccessError",
+                  "name": "SQL_DATA_ACCESS_ERROR"
+                },
+                {
+                  "displayName": "SqlEntityNotFoundError",
+                  "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                },
+                {
+                  "displayName": "SqlConnectorError",
+                  "name": "SQL_CONNECTOR_ERROR"
+                }
+              ]
+            },
+            "id": "sql-connector",
+            "name": "Invoke SQL",
+            "pattern": "To",
+            "tags": [
+              "dynamic"
+            ]
+          },
+          {
+            "actionType": "connector",
+            "description": "Periodically invoke SQL to obtain data.",
+            "descriptor": {
+              "componentScheme": "sql",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlStartConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Enter a SQL statement that returns results, such as SELECT.",
+                  "name": "SQL statement",
+                  "properties": {
+                    "isRaiseErrorOnNotFound": {
+                      "deprecated": false,
+                      "displayName": "Raise NotFoundError",
+                      "group": "consumer",
+                      "javaType": "java.lang.Boolean",
+                      "kind": "parameter",
+                      "labelHint": "Raise NotFoundError if no records are inserted, updated, selected or deleted",
+                      "order": 3,
+                      "required": false,
+                      "secret": false,
+                      "type": "boolean"
+                    },
+                    "query": {
+                      "deprecated": false,
+                      "displayName": "SQL statement",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "SQL statement to be executed.",
+                      "order": 1,
+                      "required": true,
+                      "secret": false,
+                      "type": "dataList"
+                    },
+                    "schedulerExpression": {
+                      "defaultValue": "60000",
+                      "deprecated": false,
+                      "displayName": "Period",
+                      "group": "consumer",
+                      "javaType": "long",
+                      "kind": "parameter",
+                      "labelHint": "Delay between scheduling (executing).",
+                      "order": 2,
+                      "required": false,
+                      "secret": false,
+                      "type": "duration"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-start-connector",
+            "name": "Periodic SQL invocation",
+            "pattern": "From",
+            "tags": [
+              "dynamic"
+            ]
+          },
+          {
+            "actionType": "connector",
+            "description": "Invoke a stored procedure.",
+            "descriptor": {
+              "componentScheme": "sql-stored",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlStoredConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "json-schema"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Select the stored procedure.",
+                  "name": "Procedure name",
+                  "properties": {
+                    "procedureName": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Procedure name",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "labelHint": "Name of the stored procedure.",
+                      "required": false,
+                      "secret": false,
+                      "type": "select"
+                    },
+                    "template": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Template",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "Stored procedure template to perform.",
+                      "required": false,
+                      "secret": false,
+                      "type": "hidden"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-stored-connector",
+            "name": "Invoke stored procedure",
+            "pattern": "To",
+            "tags": [
+              "dynamic"
+            ]
+          },
+          {
+            "actionType": "connector",
+            "description": "Periodically invoke a stored procedure.",
+            "descriptor": {
+              "componentScheme": "sql-stored",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlStartStoredConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Select the stored procedure.",
+                  "name": "Procedure name",
+                  "properties": {
+                    "procedureName": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Procedure name",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "Name of the stored procedure.",
+                      "required": true,
+                      "secret": false,
+                      "type": "select"
+                    },
+                    "schedulerExpression": {
+                      "defaultValue": "60000",
+                      "deprecated": false,
+                      "displayName": "Period",
+                      "group": "consumer",
+                      "javaType": "long",
+                      "kind": "parameter",
+                      "labelHint": "Delay between scheduling (executing).",
+                      "required": false,
+                      "secret": false,
+                      "type": "duration"
+                    },
+                    "template": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Template",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "Stored Procedure template to perform.",
+                      "required": true,
+                      "secret": false,
+                      "type": "hidden"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-stored-start-connector",
+            "name": "Periodic stored procedure invocation",
+            "pattern": "From",
+            "tags": [
+              "dynamic"
+            ]
+          }
+        ],
+        "connectorCustomizers": [
+          "io.syndesis.connector.sql.customizer.DataSourceCustomizer"
+        ],
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
+            "type": "MAVEN"
+          },
+          {
+            "id": "jdbc-driver",
+            "type": "EXTENSION_TAG"
+          }
+        ],
+        "description": "Invoke SQL to obtain, store, update, or delete data.",
+        "icon": "assets:sql.svg",
+        "id": "sql",
+        "name": "Database",
+        "properties": {
+          "password": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Password",
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common,security",
+            "labelHint": "Password for the database connection.",
+            "order": 3,
+            "required": true,
+            "secret": true,
+            "type": "string"
+          },
+          "schema": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Schema",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common",
+            "labelHint": "Database schema.",
+            "order": 4,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          },
+          "url": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Connection URL",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "labelHint": "JDBC URL of the database.",
+            "order": 1,
+            "required": true,
+            "secret": false,
+            "type": "string"
+          },
+          "user": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Username",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "labelHint": "Username for the database connection.",
+            "order": 2,
+            "required": true,
+            "secret": false,
+            "type": "string"
+          }
+        },
+        "tags": [
+          "verifier"
+        ],
+        "version": 11
+      },
+      "connectorId": "sql",
+      "description": "Connection to SampleDB",
+      "icon": "assets:sql.svg",
+      "id": "5",
+      "isDerived": false,
+      "name": "PostgresDB",
+      "tags": [
+        "sampledb"
+      ],
+      "uses": 0
+    },
+    ":i-M6XYBPr3ZihQPwe5Nyqz": {
+      "configuredProperties": {
+        "addTimestamp": "true",
+        "addUsernameTokenCreated": "true",
+        "addUsernameTokenNonce": "true",
+        "address": "http://localhost:9191/HelloWorld",
+        "authenticationType": "ws-security-ut",
+        "password": "»ENC:7d39f5eef58ef8897738a982cc05a2e978217d9993fed7c62d2022ff2792bc94",
+        "passwordType": "PasswordText",
+        "username": "admin"
+      },
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Invokes the operation sayHi",
+            "descriptor": {
+              "configuredProperties": {
+                "dataFormat": "PAYLOAD",
+                "defaultOperationName": "sayHi",
+                "defaultOperationNamespace": "http://camel.apache.org/cxf/wsrm"
+              },
+              "connectorId": "i-M6XXkXI3ZihQPwe5Nypz",
+              "inputDataShape": {
+                "description": "Data input for operation sayHi",
+                "kind": "xml-schema",
+                "name": "sayHi",
+                "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><import namespace=\"http://camel.apache.org/cxf/wsrm\"/><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><sequence><element ref=\"ns0:sayHi\"/></sequence></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHi\" nillable=\"true\" type=\"tns:sayHi\"/><complexType name=\"sayHi\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"arg0\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
+              },
+              "outputDataShape": {
+                "description": "Data output for operation sayHi",
+                "kind": "xml-schema",
+                "name": "sayHiResponse",
+                "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><import namespace=\"http://camel.apache.org/cxf/wsrm\"/><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><sequence><element ref=\"ns0:sayHiResponse\"/></sequence></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHiResponse\" nillable=\"true\" type=\"tns:sayHiResponse\"/><complexType name=\"sayHiResponse\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"return\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
+              }
+            },
+            "id": "i-M6XXkXI3ZihQPwe5Nypz:sayHi",
+            "name": "sayHi",
+            "pattern": "To"
+          }
+        ],
+        "actionsSummary": {
+          "actionCountByTags": {
+            "sayHi": 1
+          },
+          "totalActions": 1
+        },
+        "componentScheme": "cxf",
+        "configuredProperties": {
+          "address": "http://localhost:9191/HelloWorld",
+          "componentName": "connector-soap",
+          "portName": "HelloWorldPort",
+          "serviceName": "{http://camel.apache.org/cxf/wsrm}HelloWorldService",
+          "soapVersion": "1.1",
+          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><wsdl:definitions xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\" xmlns:ns1=\"http://schemas.xmlsoap.org/soap/http\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" name=\"HelloWorldImplService\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><wsdl:types><xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><xs:complexType name=\"sayHi\"><xs:sequence><xs:element minOccurs=\"0\" name=\"arg0\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:complexType name=\"sayHiResponse\"><xs:sequence><xs:element minOccurs=\"0\" name=\"return\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:element name=\"sayHi\" nillable=\"true\" type=\"sayHi\"/><xs:element name=\"sayHiResponse\" nillable=\"true\" type=\"sayHiResponse\"/></xs:schema></wsdl:types><wsdl:message name=\"sayHi\"><wsdl:part element=\"tns:sayHi\" name=\"parameters\"/></wsdl:message><wsdl:message name=\"sayHiResponse\"><wsdl:part element=\"tns:sayHiResponse\" name=\"parameters\"/></wsdl:message><wsdl:portType name=\"HelloWorld\"><wsdl:operation name=\"sayHi\"><wsdl:input message=\"tns:sayHi\" name=\"sayHi\"/><wsdl:output message=\"tns:sayHiResponse\" name=\"sayHiResponse\"/></wsdl:operation></wsdl:portType><wsdl:binding name=\"HelloWorldServiceSoapBinding\" type=\"tns:HelloWorld\"><soap:binding style=\"document\" transport=\"http://schemas.xmlsoap.org/soap/http\"/><wsdl:operation name=\"sayHi\"><soap:operation soapAction=\"\" style=\"document\"/><wsdl:input name=\"sayHi\"><soap:body use=\"literal\"/></wsdl:input><wsdl:output name=\"sayHiResponse\"><soap:body use=\"literal\"/></wsdl:output></wsdl:operation></wsdl:binding><wsdl:service name=\"HelloWorldService\"><wsdl:port binding=\"tns:HelloWorldServiceSoapBinding\" name=\"HelloWorldPort\"><soap:address location=\"http://localhost:9191/HelloWorld\"/><wswa:UsingAddressing xmlns:wswa=\"http://www.w3.org/2005/02/addressing/wsdl\"/></wsdl:port></wsdl:service></wsdl:definitions>"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.soap.cxf.SpecificationResourceCustomizer",
+          "io.syndesis.connector.soap.cxf.EndpointCustomizer",
+          "io.syndesis.connector.soap.cxf.auth.AuthenticationCustomizer",
+          "io.syndesis.connector.soap.cxf.payload.RequestCustomizer",
+          "io.syndesis.connector.soap.cxf.payload.ResponseCustomizer"
+        ],
+        "connectorFactory": "io.syndesis.connector.soap.cxf.ConnectorFactory",
+        "connectorGroup": {
+          "id": "soap-connector-template"
+        },
+        "connectorGroupId": "soap-connector-template",
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-soap:1.10-SNAPSHOT",
+            "type": "MAVEN"
+          },
+          {
+            "id": "org.apache.camel:camel-cxf:2.23.2.fuse-760024",
+            "type": "MAVEN"
+          }
+        ],
+        "description": "Web Services Connector for service {http://camel.apache.org/cxf/wsrm}HelloWorldImplService",
+        "icon": "data:image/svg+xml,%3Csvg%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22200%22%20r%3D%22200%22%20style%3D%22fill%3A%23fff%22%2F%3E%3Cpath%20d%3D%22m%20258%2E608%2C280%20%2D11%2E536%2C0%200%2C%2D80%2E528%20%2D95%2E648%2C0%200%2C80%2E528%20%2D11%2E424%2C0%200%2C%2D163%2E744%2011%2E424%2C0%200%2C72%2E688%2095%2E648%2C0%200%2C%2D72%2E688%2011%2E536%2C0%200%2C163%2E744%20z%22%20style%3D%22fill%3A%23fff%22%2F%3E%3C%2Fsvg%3E",
+        "id": "i-M6XXkXI3ZihQPwe5Nypz",
+        "name": "HelloWorldImplService",
+        "properties": {
+          "addTimestamp": {
+            "componentProperty": true,
+            "description": "Add a Timestamp to WS-Security header.",
+            "displayName": "Timestamp",
+            "group": "security",
+            "javaType": "java.lang.Boolean",
+            "kind": "property",
+            "label": "common,security",
+            "order": 6,
+            "relation": [
+              {
+                "action": "ENABLE",
+                "when": [
+                  {
+                    "id": "authenticationType",
+                    "value": "ws-security-ut"
+                  }
+                ]
+              }
+            ],
+            "required": false,
+            "secret": false,
+            "type": "boolean"
+          },
+          "addUsernameTokenCreated": {
+            "componentProperty": true,
+            "description": "Add Created timestamp element to WS-Security Username Token header.",
+            "displayName": "Username Token Created",
+            "group": "security",
+            "javaType": "java.lang.Boolean",
+            "kind": "property",
+            "label": "common,security",
+            "order": 8,
+            "relation": [
+              {
+                "action": "ENABLE",
+                "when": [
+                  {
+                    "id": "passwordType",
+                    "value": "PasswordText"
+                  }
+                ]
+              }
+            ],
+            "required": false,
+            "secret": false,
+            "type": "boolean"
+          },
+          "addUsernameTokenNonce": {
+            "componentProperty": true,
+            "description": "Add Nonce element to WS-Security Username Token header.",
+            "displayName": "Username Token Nonce",
+            "group": "security",
+            "javaType": "java.lang.Boolean",
+            "kind": "property",
+            "label": "common,security",
+            "order": 7,
+            "relation": [
+              {
+                "action": "ENABLE",
+                "when": [
+                  {
+                    "id": "passwordType",
+                    "value": "PasswordText"
+                  }
+                ]
+              }
+            ],
+            "required": false,
+            "secret": false,
+            "type": "boolean"
+          },
+          "address": {
+            "componentProperty": true,
+            "defaultValue": "http://localhost:9191/HelloWorld",
+            "description": "SOAP Endpoint address from WSDL SOAP Binding or user specified address.",
+            "displayName": "Address",
+            "javaType": "java.lang.String",
+            "order": 1,
+            "required": true,
+            "type": "string"
+          },
+          "authenticationType": {
+            "componentProperty": true,
+            "description": "Authentication Type to use to invoke WSDL endpoint, one of [None|Basic|WS-Security Username Token].",
+            "displayName": "Authentication Type",
+            "enum": [
+              {
+                "label": "HTTP Basic Authentication",
+                "value": "basic"
+              },
+              {
+                "label": "None",
+                "value": "none"
+              },
+              {
+                "label": "WS-Security Username Token",
+                "value": "ws-security-ut"
+              }
+            ],
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common,security",
+            "order": 2,
+            "required": true
+          },
+          "password": {
+            "componentProperty": true,
+            "description": "Authentication password.",
+            "displayName": "Password",
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common,security",
+            "order": 5,
+            "relation": [
+              {
+                "action": "DISABLE",
+                "when": [
+                  {
+                    "id": "passwordType",
+                    "value": "none"
+                  }
+                ]
+              }
+            ],
+            "required": false,
+            "secret": true,
+            "type": "string"
+          },
+          "passwordType": {
+            "componentProperty": true,
+            "description": "WS-Security Password Type.",
+            "displayName": "Password Type",
+            "enum": [
+              {
+                "label": "None",
+                "value": "PasswordNone"
+              },
+              {
+                "label": "Text",
+                "value": "PasswordText"
+              },
+              {
+                "label": "Digest",
+                "value": "PasswordDigest"
+              }
+            ],
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common,security",
+            "order": 3,
+            "relation": [
+              {
+                "action": "ENABLE",
+                "when": [
+                  {
+                    "id": "authenticationType",
+                    "value": "ws-security-ut"
+                  }
+                ]
+              }
+            ],
+            "required": false,
+            "secret": false,
+            "type": "string"
+          },
+          "portName": {
+            "componentProperty": true,
+            "description": "Target Port in WSDL.",
+            "displayName": "Port Name",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common",
+            "required": true,
+            "type": "hidden"
+          },
+          "serviceName": {
+            "componentProperty": true,
+            "description": "Target service in WSDL.",
+            "displayName": "Service Name",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common",
+            "required": true,
+            "type": "hidden"
+          },
+          "soapVersion": {
+            "componentProperty": true,
+            "description": "SOAP Binding version in WSDL.",
+            "displayName": "SOAP Version",
+            "group": "common",
+            "javaType": "java.lang.Double",
+            "kind": "property",
+            "label": "common",
+            "required": true,
+            "type": "hidden"
+          },
+          "specification": {
+            "componentProperty": true,
+            "description": "WSDL document defining the service.",
+            "displayName": "WSDL Document",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common",
+            "required": true,
+            "type": "hidden"
+          },
+          "username": {
+            "componentProperty": true,
+            "description": "Authentication username.",
+            "displayName": "Username",
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common,security",
+            "order": 4,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          }
+        },
+        "version": 2
+      },
+      "connectorId": "i-M6XXkXI3ZihQPwe5Nypz",
+      "createdDate": 1588643808867,
+      "description": "Web Services Connector for service {http://camel.apache.org/cxf/wsrm}HelloWorldImplService",
+      "icon": "data:image/svg+xml,%3Csvg%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22200%22%20r%3D%22200%22%20style%3D%22fill%3A%23fff%22%2F%3E%3Cpath%20d%3D%22m%20258%2E608%2C280%20%2D11%2E536%2C0%200%2C%2D80%2E528%20%2D95%2E648%2C0%200%2C80%2E528%20%2D11%2E424%2C0%200%2C%2D163%2E744%2011%2E424%2C0%200%2C72%2E688%2095%2E648%2C0%200%2C%2D72%2E688%2011%2E536%2C0%200%2C163%2E744%20z%22%20style%3D%22fill%3A%23fff%22%2F%3E%3C%2Fsvg%3E",
+      "id": "i-M6XYBPr3ZihQPwe5Nyqz",
+      "isDerived": false,
+      "lastUpdated": 1588789151543,
+      "name": "HelloWorldImplService",
+      "userId": "developer",
+      "uses": 0
+    },
+    ":timer": {
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Specify an amount of time and its unit to periodically trigger integration execution. ",
+            "descriptor": {
+              "componentScheme": "timer",
+              "configuredProperties": {
+                "timerName": "syndesis-timer"
+              },
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "none"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Period",
+                  "name": "Period",
+                  "properties": {
+                    "period": {
+                      "componentProperty": false,
+                      "defaultValue": "60000",
+                      "deprecated": false,
+                      "description": "Period",
+                      "displayName": "Period",
+                      "javaType": "long",
+                      "kind": "parameter",
+                      "labelHint": "Delay between each execution of the integration.",
+                      "required": true,
+                      "secret": false,
+                      "type": "duration"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis:timer-action",
+            "name": "Simple",
+            "pattern": "From"
+          },
+          {
+            "actionType": "connector",
+            "description": "Specify a cron utility expression for a more complex integration execution schedule.",
+            "descriptor": {
+              "componentScheme": "quartz2",
+              "configuredProperties": {
+                "triggerName": "syndesis-quartz"
+              },
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "none"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Cron",
+                  "name": "cron",
+                  "properties": {
+                    "cron": {
+                      "componentProperty": false,
+                      "defaultValue": "0 0/1 * * * ?",
+                      "deprecated": false,
+                      "description": "A cron expression, for example the expression for every minute is 0 0/1 * * * ?",
+                      "displayName": "Cron Expression",
+                      "javaType": "string",
+                      "kind": "parameter",
+                      "labelHint": "Delay between scheduling (executing) the integration expressed as a cron expression",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis:timer-chron",
+            "name": "Cron",
+            "pattern": "From"
+          }
+        ],
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-timer:1.10-SNAPSHOT",
+            "type": "MAVEN"
+          },
+          {
+            "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-760024",
+            "type": "MAVEN"
+          }
+        ],
+        "description": "Trigger events based on an interval or a quartz expression",
+        "icon": "assets:timer.svg",
+        "id": "timer",
+        "metadata": {
+          "hide-from-connection-pages": "true"
+        },
+        "name": "Timer",
+        "version": 11
+      },
+      "connectorId": "timer",
+      "description": "Trigger integration execution based on an interval or a cron expression",
+      "icon": "assets:timer.svg",
+      "id": "timer",
+      "isDerived": false,
+      "metadata": {
+        "hide-from-connection-pages": "true"
+      },
+      "name": "Timer",
+      "uses": 0
+    }
+  },
+  "connectors": {
+    ":i-M6XXkXI3ZihQPwe5Nypz": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Invokes the operation sayHi",
+          "descriptor": {
+            "configuredProperties": {
+              "dataFormat": "PAYLOAD",
+              "defaultOperationName": "sayHi",
+              "defaultOperationNamespace": "http://camel.apache.org/cxf/wsrm"
+            },
+            "connectorId": "i-M6XXkXI3ZihQPwe5Nypz",
+            "inputDataShape": {
+              "description": "Data input for operation sayHi",
+              "kind": "xml-schema",
+              "name": "sayHi",
+              "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><import namespace=\"http://camel.apache.org/cxf/wsrm\"/><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><sequence><element ref=\"ns0:sayHi\"/></sequence></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHi\" nillable=\"true\" type=\"tns:sayHi\"/><complexType name=\"sayHi\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"arg0\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
+            },
+            "outputDataShape": {
+              "description": "Data output for operation sayHi",
+              "kind": "xml-schema",
+              "name": "sayHiResponse",
+              "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><import namespace=\"http://camel.apache.org/cxf/wsrm\"/><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><sequence><element ref=\"ns0:sayHiResponse\"/></sequence></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHiResponse\" nillable=\"true\" type=\"tns:sayHiResponse\"/><complexType name=\"sayHiResponse\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"return\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
+            }
+          },
+          "id": "i-M6XXkXI3ZihQPwe5Nypz:sayHi",
+          "name": "sayHi",
+          "pattern": "To"
+        }
+      ],
+      "actionsSummary": {
+        "actionCountByTags": {
+          "sayHi": 1
+        },
+        "totalActions": 1
+      },
+      "componentScheme": "cxf",
+      "configuredProperties": {
+        "address": "http://localhost:9191/HelloWorld",
+        "componentName": "connector-soap",
+        "portName": "HelloWorldPort",
+        "serviceName": "{http://camel.apache.org/cxf/wsrm}HelloWorldService",
+        "soapVersion": "1.1",
+        "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><wsdl:definitions xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\" xmlns:ns1=\"http://schemas.xmlsoap.org/soap/http\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" name=\"HelloWorldImplService\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><wsdl:types><xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><xs:complexType name=\"sayHi\"><xs:sequence><xs:element minOccurs=\"0\" name=\"arg0\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:complexType name=\"sayHiResponse\"><xs:sequence><xs:element minOccurs=\"0\" name=\"return\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:element name=\"sayHi\" nillable=\"true\" type=\"sayHi\"/><xs:element name=\"sayHiResponse\" nillable=\"true\" type=\"sayHiResponse\"/></xs:schema></wsdl:types><wsdl:message name=\"sayHi\"><wsdl:part element=\"tns:sayHi\" name=\"parameters\"/></wsdl:message><wsdl:message name=\"sayHiResponse\"><wsdl:part element=\"tns:sayHiResponse\" name=\"parameters\"/></wsdl:message><wsdl:portType name=\"HelloWorld\"><wsdl:operation name=\"sayHi\"><wsdl:input message=\"tns:sayHi\" name=\"sayHi\"/><wsdl:output message=\"tns:sayHiResponse\" name=\"sayHiResponse\"/></wsdl:operation></wsdl:portType><wsdl:binding name=\"HelloWorldServiceSoapBinding\" type=\"tns:HelloWorld\"><soap:binding style=\"document\" transport=\"http://schemas.xmlsoap.org/soap/http\"/><wsdl:operation name=\"sayHi\"><soap:operation soapAction=\"\" style=\"document\"/><wsdl:input name=\"sayHi\"><soap:body use=\"literal\"/></wsdl:input><wsdl:output name=\"sayHiResponse\"><soap:body use=\"literal\"/></wsdl:output></wsdl:operation></wsdl:binding><wsdl:service name=\"HelloWorldService\"><wsdl:port binding=\"tns:HelloWorldServiceSoapBinding\" name=\"HelloWorldPort\"><soap:address location=\"http://localhost:9191/HelloWorld\"/><wswa:UsingAddressing xmlns:wswa=\"http://www.w3.org/2005/02/addressing/wsdl\"/></wsdl:port></wsdl:service></wsdl:definitions>"
+      },
+      "connectorCustomizers": [
+        "io.syndesis.connector.soap.cxf.SpecificationResourceCustomizer",
+        "io.syndesis.connector.soap.cxf.EndpointCustomizer",
+        "io.syndesis.connector.soap.cxf.auth.AuthenticationCustomizer",
+        "io.syndesis.connector.soap.cxf.payload.RequestCustomizer",
+        "io.syndesis.connector.soap.cxf.payload.ResponseCustomizer"
+      ],
+      "connectorFactory": "io.syndesis.connector.soap.cxf.ConnectorFactory",
+      "connectorGroup": {
+        "id": "soap-connector-template"
+      },
+      "connectorGroupId": "soap-connector-template",
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-soap:1.10-SNAPSHOT",
+          "type": "MAVEN"
+        },
+        {
+          "id": "org.apache.camel:camel-cxf:2.23.2.fuse-760024",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Web Services Connector for service {http://camel.apache.org/cxf/wsrm}HelloWorldImplService",
+      "icon": "data:image/svg+xml,%3Csvg%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22200%22%20r%3D%22200%22%20style%3D%22fill%3A%23fff%22%2F%3E%3Cpath%20d%3D%22m%20258%2E608%2C280%20%2D11%2E536%2C0%200%2C%2D80%2E528%20%2D95%2E648%2C0%200%2C80%2E528%20%2D11%2E424%2C0%200%2C%2D163%2E744%2011%2E424%2C0%200%2C72%2E688%2095%2E648%2C0%200%2C%2D72%2E688%2011%2E536%2C0%200%2C163%2E744%20z%22%20style%3D%22fill%3A%23fff%22%2F%3E%3C%2Fsvg%3E",
+      "id": "i-M6XXkXI3ZihQPwe5Nypz",
+      "name": "HelloWorldImplService",
+      "properties": {
+        "addTimestamp": {
+          "componentProperty": true,
+          "description": "Add a Timestamp to WS-Security header.",
+          "displayName": "Timestamp",
+          "group": "security",
+          "javaType": "java.lang.Boolean",
+          "kind": "property",
+          "label": "common,security",
+          "order": 6,
+          "relation": [
+            {
+              "action": "ENABLE",
+              "when": [
+                {
+                  "id": "authenticationType",
+                  "value": "ws-security-ut"
+                }
+              ]
+            }
+          ],
+          "required": false,
+          "secret": false,
+          "type": "boolean"
+        },
+        "addUsernameTokenCreated": {
+          "componentProperty": true,
+          "description": "Add Created timestamp element to WS-Security Username Token header.",
+          "displayName": "Username Token Created",
+          "group": "security",
+          "javaType": "java.lang.Boolean",
+          "kind": "property",
+          "label": "common,security",
+          "order": 8,
+          "relation": [
+            {
+              "action": "ENABLE",
+              "when": [
+                {
+                  "id": "passwordType",
+                  "value": "PasswordText"
+                }
+              ]
+            }
+          ],
+          "required": false,
+          "secret": false,
+          "type": "boolean"
+        },
+        "addUsernameTokenNonce": {
+          "componentProperty": true,
+          "description": "Add Nonce element to WS-Security Username Token header.",
+          "displayName": "Username Token Nonce",
+          "group": "security",
+          "javaType": "java.lang.Boolean",
+          "kind": "property",
+          "label": "common,security",
+          "order": 7,
+          "relation": [
+            {
+              "action": "ENABLE",
+              "when": [
+                {
+                  "id": "passwordType",
+                  "value": "PasswordText"
+                }
+              ]
+            }
+          ],
+          "required": false,
+          "secret": false,
+          "type": "boolean"
+        },
+        "address": {
+          "componentProperty": true,
+          "defaultValue": "http://localhost:9191/HelloWorld",
+          "description": "SOAP Endpoint address from WSDL SOAP Binding or user specified address.",
+          "displayName": "Address",
+          "javaType": "java.lang.String",
+          "order": 1,
+          "required": true,
+          "type": "string"
+        },
+        "authenticationType": {
+          "componentProperty": true,
+          "description": "Authentication Type to use to invoke WSDL endpoint, one of [None|Basic|WS-Security Username Token].",
+          "displayName": "Authentication Type",
+          "enum": [
+            {
+              "label": "HTTP Basic Authentication",
+              "value": "basic"
+            },
+            {
+              "label": "None",
+              "value": "none"
+            },
+            {
+              "label": "WS-Security Username Token",
+              "value": "ws-security-ut"
+            }
+          ],
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common,security",
+          "order": 2,
+          "required": true
+        },
+        "password": {
+          "componentProperty": true,
+          "description": "Authentication password.",
+          "displayName": "Password",
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common,security",
+          "order": 5,
+          "relation": [
+            {
+              "action": "DISABLE",
+              "when": [
+                {
+                  "id": "passwordType",
+                  "value": "none"
+                }
+              ]
+            }
+          ],
+          "required": false,
+          "secret": true,
+          "type": "string"
+        },
+        "passwordType": {
+          "componentProperty": true,
+          "description": "WS-Security Password Type.",
+          "displayName": "Password Type",
+          "enum": [
+            {
+              "label": "None",
+              "value": "PasswordNone"
+            },
+            {
+              "label": "Text",
+              "value": "PasswordText"
+            },
+            {
+              "label": "Digest",
+              "value": "PasswordDigest"
+            }
+          ],
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common,security",
+          "order": 3,
+          "relation": [
+            {
+              "action": "ENABLE",
+              "when": [
+                {
+                  "id": "authenticationType",
+                  "value": "ws-security-ut"
+                }
+              ]
+            }
+          ],
+          "required": false,
+          "secret": false,
+          "type": "string"
+        },
+        "portName": {
+          "componentProperty": true,
+          "description": "Target Port in WSDL.",
+          "displayName": "Port Name",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common",
+          "required": true,
+          "type": "hidden"
+        },
+        "serviceName": {
+          "componentProperty": true,
+          "description": "Target service in WSDL.",
+          "displayName": "Service Name",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common",
+          "required": true,
+          "type": "hidden"
+        },
+        "soapVersion": {
+          "componentProperty": true,
+          "description": "SOAP Binding version in WSDL.",
+          "displayName": "SOAP Version",
+          "group": "common",
+          "javaType": "java.lang.Double",
+          "kind": "property",
+          "label": "common",
+          "required": true,
+          "type": "hidden"
+        },
+        "specification": {
+          "componentProperty": true,
+          "description": "WSDL document defining the service.",
+          "displayName": "WSDL Document",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common",
+          "required": true,
+          "type": "hidden"
+        },
+        "username": {
+          "componentProperty": true,
+          "description": "Authentication username.",
+          "displayName": "Username",
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common,security",
+          "order": 4,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        }
+      },
+      "version": 2
+    },
+    ":sql": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Invoke SQL to obtain, store, update, or delete data.",
+          "descriptor": {
+            "componentScheme": "sql",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "json-schema"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
+                "name": "SQL statement",
+                "properties": {
+                  "batch": {
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "displayName": "Batch update",
+                    "group": "common",
+                    "javaType": "java.lang.Boolean",
+                    "kind": "property",
+                    "labelHint": "Use prepared statements for INSERT, UPDATE, DELETE in order to update multiple rows with batch update.",
+                    "order": 2,
+                    "required": false,
+                    "secret": false,
+                    "type": "boolean"
+                  },
+                  "query": {
+                    "deprecated": false,
+                    "displayName": "SQL statement",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                    "order": 1,
+                    "placeholder": "for example ':#MYPARAMNAME'",
+                    "required": true,
+                    "secret": false,
+                    "type": "dataList"
+                  },
+                  "raiseErrorOnNotFound": {
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "displayName": "Raise error when record not found",
+                    "group": "common",
+                    "javaType": "java.lang.Boolean",
+                    "kind": "property",
+                    "labelHint": "Error when no records are selected, updated or deleted",
+                    "order": 3,
+                    "required": false,
+                    "secret": false,
+                    "type": "boolean"
+                  }
+                }
+              }
+            ],
+            "standardizedErrors": [
+              {
+                "displayName": "SqlDataAccessError",
+                "name": "SQL_DATA_ACCESS_ERROR"
+              },
+              {
+                "displayName": "SqlEntityNotFoundError",
+                "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+              },
+              {
+                "displayName": "SqlConnectorError",
+                "name": "SQL_CONNECTOR_ERROR"
+              }
+            ]
+          },
+          "id": "sql-connector",
+          "name": "Invoke SQL",
+          "pattern": "To",
+          "tags": [
+            "dynamic"
+          ]
+        },
+        {
+          "actionType": "connector",
+          "description": "Periodically invoke SQL to obtain data.",
+          "descriptor": {
+            "componentScheme": "sql",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlStartConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Enter a SQL statement that returns results, such as SELECT.",
+                "name": "SQL statement",
+                "properties": {
+                  "isRaiseErrorOnNotFound": {
+                    "deprecated": false,
+                    "displayName": "Raise NotFoundError",
+                    "group": "consumer",
+                    "javaType": "java.lang.Boolean",
+                    "kind": "parameter",
+                    "labelHint": "Raise NotFoundError if no records are inserted, updated, selected or deleted",
+                    "order": 3,
+                    "required": false,
+                    "secret": false,
+                    "type": "boolean"
+                  },
+                  "query": {
+                    "deprecated": false,
+                    "displayName": "SQL statement",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "SQL statement to be executed.",
+                    "order": 1,
+                    "required": true,
+                    "secret": false,
+                    "type": "dataList"
+                  },
+                  "schedulerExpression": {
+                    "defaultValue": "60000",
+                    "deprecated": false,
+                    "displayName": "Period",
+                    "group": "consumer",
+                    "javaType": "long",
+                    "kind": "parameter",
+                    "labelHint": "Delay between scheduling (executing).",
+                    "order": 2,
+                    "required": false,
+                    "secret": false,
+                    "type": "duration"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-start-connector",
+          "name": "Periodic SQL invocation",
+          "pattern": "From",
+          "tags": [
+            "dynamic"
+          ]
+        },
+        {
+          "actionType": "connector",
+          "description": "Invoke a stored procedure.",
+          "descriptor": {
+            "componentScheme": "sql-stored",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlStoredConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "json-schema"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Select the stored procedure.",
+                "name": "Procedure name",
+                "properties": {
+                  "procedureName": {
+                    "componentProperty": true,
+                    "deprecated": false,
+                    "displayName": "Procedure name",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "property",
+                    "labelHint": "Name of the stored procedure.",
+                    "required": false,
+                    "secret": false,
+                    "type": "select"
+                  },
+                  "template": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Template",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "Stored procedure template to perform.",
+                    "required": false,
+                    "secret": false,
+                    "type": "hidden"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-stored-connector",
+          "name": "Invoke stored procedure",
+          "pattern": "To",
+          "tags": [
+            "dynamic"
+          ]
+        },
+        {
+          "actionType": "connector",
+          "description": "Periodically invoke a stored procedure.",
+          "descriptor": {
+            "componentScheme": "sql-stored",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlStartStoredConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Select the stored procedure.",
+                "name": "Procedure name",
+                "properties": {
+                  "procedureName": {
+                    "componentProperty": true,
+                    "deprecated": false,
+                    "displayName": "Procedure name",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "Name of the stored procedure.",
+                    "required": true,
+                    "secret": false,
+                    "type": "select"
+                  },
+                  "schedulerExpression": {
+                    "defaultValue": "60000",
+                    "deprecated": false,
+                    "displayName": "Period",
+                    "group": "consumer",
+                    "javaType": "long",
+                    "kind": "parameter",
+                    "labelHint": "Delay between scheduling (executing).",
+                    "required": false,
+                    "secret": false,
+                    "type": "duration"
+                  },
+                  "template": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Template",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "Stored Procedure template to perform.",
+                    "required": true,
+                    "secret": false,
+                    "type": "hidden"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-stored-start-connector",
+          "name": "Periodic stored procedure invocation",
+          "pattern": "From",
+          "tags": [
+            "dynamic"
+          ]
+        }
+      ],
+      "connectorCustomizers": [
+        "io.syndesis.connector.sql.customizer.DataSourceCustomizer"
+      ],
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
+          "type": "MAVEN"
+        },
+        {
+          "id": "jdbc-driver",
+          "type": "EXTENSION_TAG"
+        }
+      ],
+      "description": "Invoke SQL to obtain, store, update, or delete data.",
+      "icon": "assets:sql.svg",
+      "id": "sql",
+      "name": "Database",
+      "properties": {
+        "password": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Password",
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common,security",
+          "labelHint": "Password for the database connection.",
+          "order": 3,
+          "required": true,
+          "secret": true,
+          "type": "string"
+        },
+        "schema": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Schema",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common",
+          "labelHint": "Database schema.",
+          "order": 4,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        },
+        "url": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Connection URL",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "labelHint": "JDBC URL of the database.",
+          "order": 1,
+          "required": true,
+          "secret": false,
+          "type": "string"
+        },
+        "user": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Username",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "labelHint": "Username for the database connection.",
+          "order": 2,
+          "required": true,
+          "secret": false,
+          "type": "string"
+        }
+      },
+      "tags": [
+        "verifier"
+      ],
+      "version": 11
+    },
+    ":timer": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Specify an amount of time and its unit to periodically trigger integration execution. ",
+          "descriptor": {
+            "componentScheme": "timer",
+            "configuredProperties": {
+              "timerName": "syndesis-timer"
+            },
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "none"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Period",
+                "name": "Period",
+                "properties": {
+                  "period": {
+                    "componentProperty": false,
+                    "defaultValue": "60000",
+                    "deprecated": false,
+                    "description": "Period",
+                    "displayName": "Period",
+                    "javaType": "long",
+                    "kind": "parameter",
+                    "labelHint": "Delay between each execution of the integration.",
+                    "required": true,
+                    "secret": false,
+                    "type": "duration"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis:timer-action",
+          "name": "Simple",
+          "pattern": "From"
+        },
+        {
+          "actionType": "connector",
+          "description": "Specify a cron utility expression for a more complex integration execution schedule.",
+          "descriptor": {
+            "componentScheme": "quartz2",
+            "configuredProperties": {
+              "triggerName": "syndesis-quartz"
+            },
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "none"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Cron",
+                "name": "cron",
+                "properties": {
+                  "cron": {
+                    "componentProperty": false,
+                    "defaultValue": "0 0/1 * * * ?",
+                    "deprecated": false,
+                    "description": "A cron expression, for example the expression for every minute is 0 0/1 * * * ?",
+                    "displayName": "Cron Expression",
+                    "javaType": "string",
+                    "kind": "parameter",
+                    "labelHint": "Delay between scheduling (executing) the integration expressed as a cron expression",
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis:timer-chron",
+          "name": "Cron",
+          "pattern": "From"
+        }
+      ],
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-timer:1.10-SNAPSHOT",
+          "type": "MAVEN"
+        },
+        {
+          "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-760024",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Trigger events based on an interval or a quartz expression",
+      "icon": "assets:timer.svg",
+      "id": "timer",
+      "metadata": {
+        "hide-from-connection-pages": "true"
+      },
+      "name": "Timer",
+      "version": 11
+    }
+  },
+  "integrations": {
+    ":i-M6fCR2N2lJ-afJy1HTRz": {
+      "createdAt": 1588789100758,
+      "flows": [
+        {
+          "id": "-M6fAckO24U_u37weNry",
+          "steps": [
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Specify an amount of time and its unit to periodically trigger integration execution. ",
+                "descriptor": {
+                  "componentScheme": "timer",
+                  "configuredProperties": {
+                    "timerName": "syndesis-timer"
+                  },
+                  "inputDataShape": {
+                    "kind": "none"
+                  },
+                  "outputDataShape": {
+                    "kind": "none"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "name": "Period",
+                      "properties": {
+                        "period": {
+                          "componentProperty": false,
+                          "defaultValue": "60000",
+                          "deprecated": false,
+                          "description": "Period",
+                          "displayName": "Period",
+                          "javaType": "long",
+                          "kind": "parameter",
+                          "labelHint": "Delay between each execution of the integration.",
+                          "required": true,
+                          "secret": false,
+                          "type": "duration"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "id": "io.syndesis:timer-action",
+                "name": "Simple",
+                "pattern": "From"
+              },
+              "configuredProperties": {
+                "period": "5000"
+              },
+              "connection": {
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Specify an amount of time and its unit to periodically trigger integration execution. ",
+                      "descriptor": {
+                        "componentScheme": "timer",
+                        "configuredProperties": {
+                          "timerName": "syndesis-timer"
+                        },
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "none"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Period",
+                            "name": "Period",
+                            "properties": {
+                              "period": {
+                                "componentProperty": false,
+                                "defaultValue": "60000",
+                                "deprecated": false,
+                                "description": "Period",
+                                "displayName": "Period",
+                                "javaType": "long",
+                                "kind": "parameter",
+                                "labelHint": "Delay between each execution of the integration.",
+                                "required": true,
+                                "secret": false,
+                                "type": "duration"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis:timer-action",
+                      "name": "Simple",
+                      "pattern": "From"
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Specify a cron utility expression for a more complex integration execution schedule.",
+                      "descriptor": {
+                        "componentScheme": "quartz2",
+                        "configuredProperties": {
+                          "triggerName": "syndesis-quartz"
+                        },
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "none"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Cron",
+                            "name": "cron",
+                            "properties": {
+                              "cron": {
+                                "componentProperty": false,
+                                "defaultValue": "0 0/1 * * * ?",
+                                "deprecated": false,
+                                "description": "A cron expression, for example the expression for every minute is 0 0/1 * * * ?",
+                                "displayName": "Cron Expression",
+                                "javaType": "string",
+                                "kind": "parameter",
+                                "labelHint": "Delay between scheduling (executing) the integration expressed as a cron expression",
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis:timer-chron",
+                      "name": "Cron",
+                      "pattern": "From"
+                    }
+                  ],
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-timer:1.10-SNAPSHOT",
+                      "type": "MAVEN"
+                    },
+                    {
+                      "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-760024",
+                      "type": "MAVEN"
+                    }
+                  ],
+                  "description": "Trigger events based on an interval or a quartz expression",
+                  "icon": "assets:timer.svg",
+                  "id": "timer",
+                  "metadata": {
+                    "hide-from-connection-pages": "true"
+                  },
+                  "name": "Timer",
+                  "version": 11
+                },
+                "connectorId": "timer",
+                "description": "Trigger integration execution based on an interval or a cron expression",
+                "icon": "assets:timer.svg",
+                "id": "timer",
+                "isDerived": false,
+                "metadata": {
+                  "hide-from-connection-pages": "true"
+                },
+                "name": "Timer",
+                "uses": 0
+              },
+              "id": "-M6fAhb224U_u37weNry",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "any",
+                    "name": "All preceding outputs"
+                  },
+                  "outputDataShape": {
+                    "description": "Data input for operation sayHi",
+                    "kind": "xml-schema",
+                    "name": "sayHi",
+                    "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><import namespace=\"http://camel.apache.org/cxf/wsrm\"/><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><sequence><element ref=\"ns0:sayHi\"/></sequence></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHi\" nillable=\"true\" type=\"tns:sayHi\"/><complexType name=\"sayHi\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"arg0\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
+                  }
+                }
+              },
+              "configuredProperties": {
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlDataSource\",\"id\":\"-M6fBbgz24U_u37weNry\",\"uri\":\"atlas:xml:-M6fBbgz24U_u37weNry\",\"dataSourceType\":\"TARGET\",\"template\":null,\"xmlNamespaces\":{\"xmlNamespace\":[{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"},{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"}]}}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.467305\",\"inputField\":[{\"jsonType\":\"io.atlasmap.v2.ConstantField\",\"path\":\"/Hello\",\"fieldType\":\"STRING\",\"docId\":\"DOC.Constants.561679\",\"value\":\"Hello\"}],\"outputField\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlField\",\"name\":\"arg0\",\"path\":\"/tns:Envelope/tns:Body/ns1:sayHi/ns1:arg0\",\"fieldType\":\"STRING\",\"docId\":\"-M6fBbgz24U_u37weNry\",\"userCreated\":false}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[{\"name\":\"Hello\",\"value\":\"Hello\",\"fieldType\":\"STRING\"}]},\"properties\":{\"property\":[]}}}"
+              },
+              "id": "-M6fBmOG24U_u37weNry",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Data Mapper",
+              "stepKind": "mapper"
+            },
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Invokes the operation sayHi",
+                "descriptor": {
+                  "configuredProperties": {
+                    "dataFormat": "PAYLOAD",
+                    "defaultOperationName": "sayHi",
+                    "defaultOperationNamespace": "http://camel.apache.org/cxf/wsrm"
+                  },
+                  "connectorId": "i-M6XXkXI3ZihQPwe5Nypz",
+                  "inputDataShape": {
+                    "description": "Data input for operation sayHi",
+                    "kind": "xml-schema",
+                    "name": "sayHi",
+                    "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><import namespace=\"http://camel.apache.org/cxf/wsrm\"/><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><sequence><element ref=\"ns0:sayHi\"/></sequence></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHi\" nillable=\"true\" type=\"tns:sayHi\"/><complexType name=\"sayHi\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"arg0\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
+                  },
+                  "outputDataShape": {
+                    "description": "Data output for operation sayHi",
+                    "kind": "xml-schema",
+                    "name": "sayHiResponse",
+                    "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><import namespace=\"http://camel.apache.org/cxf/wsrm\"/><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><sequence><element ref=\"ns0:sayHiResponse\"/></sequence></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHiResponse\" nillable=\"true\" type=\"tns:sayHiResponse\"/><complexType name=\"sayHiResponse\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"return\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
+                  }
+                },
+                "id": "i-M6XXkXI3ZihQPwe5Nypz:sayHi",
+                "name": "sayHi",
+                "pattern": "To"
+              },
+              "connection": {
+                "configuredProperties": {
+                  "addTimestamp": "true",
+                  "addUsernameTokenCreated": "true",
+                  "addUsernameTokenNonce": "true",
+                  "address": "http://localhost:9191/HelloWorld",
+                  "authenticationType": "ws-security-ut",
+                  "password": "»ENC:7d39f5eef58ef8897738a982cc05a2e978217d9993fed7c62d2022ff2792bc94",
+                  "passwordType": "PasswordText",
+                  "username": "admin"
+                },
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Invokes the operation sayHi",
+                      "descriptor": {
+                        "configuredProperties": {
+                          "dataFormat": "PAYLOAD",
+                          "defaultOperationName": "sayHi",
+                          "defaultOperationNamespace": "http://camel.apache.org/cxf/wsrm"
+                        },
+                        "connectorId": "i-M6XXkXI3ZihQPwe5Nypz",
+                        "inputDataShape": {
+                          "description": "Data input for operation sayHi",
+                          "kind": "xml-schema",
+                          "name": "sayHi",
+                          "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><import namespace=\"http://camel.apache.org/cxf/wsrm\"/><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><sequence><element ref=\"ns0:sayHi\"/></sequence></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHi\" nillable=\"true\" type=\"tns:sayHi\"/><complexType name=\"sayHi\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"arg0\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
+                        },
+                        "outputDataShape": {
+                          "description": "Data output for operation sayHi",
+                          "kind": "xml-schema",
+                          "name": "sayHiResponse",
+                          "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><import namespace=\"http://camel.apache.org/cxf/wsrm\"/><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><sequence><element ref=\"ns0:sayHiResponse\"/></sequence></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHiResponse\" nillable=\"true\" type=\"tns:sayHiResponse\"/><complexType name=\"sayHiResponse\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"return\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
+                        }
+                      },
+                      "id": "i-M6XXkXI3ZihQPwe5Nypz:sayHi",
+                      "name": "sayHi",
+                      "pattern": "To"
+                    }
+                  ],
+                  "actionsSummary": {
+                    "actionCountByTags": {
+                      "sayHi": 1
+                    },
+                    "totalActions": 1
+                  },
+                  "componentScheme": "cxf",
+                  "configuredProperties": {
+                    "address": "http://localhost:9191/HelloWorld",
+                    "componentName": "connector-soap",
+                    "portName": "HelloWorldPort",
+                    "serviceName": "{http://camel.apache.org/cxf/wsrm}HelloWorldService",
+                    "soapVersion": "1.1",
+                    "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><wsdl:definitions xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\" xmlns:ns1=\"http://schemas.xmlsoap.org/soap/http\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" name=\"HelloWorldImplService\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><wsdl:types><xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><xs:complexType name=\"sayHi\"><xs:sequence><xs:element minOccurs=\"0\" name=\"arg0\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:complexType name=\"sayHiResponse\"><xs:sequence><xs:element minOccurs=\"0\" name=\"return\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:element name=\"sayHi\" nillable=\"true\" type=\"sayHi\"/><xs:element name=\"sayHiResponse\" nillable=\"true\" type=\"sayHiResponse\"/></xs:schema></wsdl:types><wsdl:message name=\"sayHi\"><wsdl:part element=\"tns:sayHi\" name=\"parameters\"/></wsdl:message><wsdl:message name=\"sayHiResponse\"><wsdl:part element=\"tns:sayHiResponse\" name=\"parameters\"/></wsdl:message><wsdl:portType name=\"HelloWorld\"><wsdl:operation name=\"sayHi\"><wsdl:input message=\"tns:sayHi\" name=\"sayHi\"/><wsdl:output message=\"tns:sayHiResponse\" name=\"sayHiResponse\"/></wsdl:operation></wsdl:portType><wsdl:binding name=\"HelloWorldServiceSoapBinding\" type=\"tns:HelloWorld\"><soap:binding style=\"document\" transport=\"http://schemas.xmlsoap.org/soap/http\"/><wsdl:operation name=\"sayHi\"><soap:operation soapAction=\"\" style=\"document\"/><wsdl:input name=\"sayHi\"><soap:body use=\"literal\"/></wsdl:input><wsdl:output name=\"sayHiResponse\"><soap:body use=\"literal\"/></wsdl:output></wsdl:operation></wsdl:binding><wsdl:service name=\"HelloWorldService\"><wsdl:port binding=\"tns:HelloWorldServiceSoapBinding\" name=\"HelloWorldPort\"><soap:address location=\"http://localhost:9191/HelloWorld\"/><wswa:UsingAddressing xmlns:wswa=\"http://www.w3.org/2005/02/addressing/wsdl\"/></wsdl:port></wsdl:service></wsdl:definitions>"
+                  },
+                  "connectorCustomizers": [
+                    "io.syndesis.connector.soap.cxf.SpecificationResourceCustomizer",
+                    "io.syndesis.connector.soap.cxf.EndpointCustomizer",
+                    "io.syndesis.connector.soap.cxf.auth.AuthenticationCustomizer",
+                    "io.syndesis.connector.soap.cxf.payload.RequestCustomizer",
+                    "io.syndesis.connector.soap.cxf.payload.ResponseCustomizer"
+                  ],
+                  "connectorFactory": "io.syndesis.connector.soap.cxf.ConnectorFactory",
+                  "connectorGroup": {
+                    "id": "soap-connector-template"
+                  },
+                  "connectorGroupId": "soap-connector-template",
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-soap:1.10-SNAPSHOT",
+                      "type": "MAVEN"
+                    },
+                    {
+                      "id": "org.apache.camel:camel-cxf:2.23.2.fuse-760024",
+                      "type": "MAVEN"
+                    }
+                  ],
+                  "description": "Web Services Connector for service {http://camel.apache.org/cxf/wsrm}HelloWorldImplService",
+                  "icon": "data:image/svg+xml,%3Csvg%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22200%22%20r%3D%22200%22%20style%3D%22fill%3A%23fff%22%2F%3E%3Cpath%20d%3D%22m%20258%2E608%2C280%20%2D11%2E536%2C0%200%2C%2D80%2E528%20%2D95%2E648%2C0%200%2C80%2E528%20%2D11%2E424%2C0%200%2C%2D163%2E744%2011%2E424%2C0%200%2C72%2E688%2095%2E648%2C0%200%2C%2D72%2E688%2011%2E536%2C0%200%2C163%2E744%20z%22%20style%3D%22fill%3A%23fff%22%2F%3E%3C%2Fsvg%3E",
+                  "id": "i-M6XXkXI3ZihQPwe5Nypz",
+                  "name": "HelloWorldImplService",
+                  "properties": {
+                    "addTimestamp": {
+                      "componentProperty": true,
+                      "description": "Add a Timestamp to WS-Security header.",
+                      "displayName": "Timestamp",
+                      "group": "security",
+                      "javaType": "java.lang.Boolean",
+                      "kind": "property",
+                      "label": "common,security",
+                      "order": 6,
+                      "relation": [
+                        {
+                          "action": "ENABLE",
+                          "when": [
+                            {
+                              "id": "authenticationType",
+                              "value": "ws-security-ut"
+                            }
+                          ]
+                        }
+                      ],
+                      "required": false,
+                      "secret": false,
+                      "type": "boolean"
+                    },
+                    "addUsernameTokenCreated": {
+                      "componentProperty": true,
+                      "description": "Add Created timestamp element to WS-Security Username Token header.",
+                      "displayName": "Username Token Created",
+                      "group": "security",
+                      "javaType": "java.lang.Boolean",
+                      "kind": "property",
+                      "label": "common,security",
+                      "order": 8,
+                      "relation": [
+                        {
+                          "action": "ENABLE",
+                          "when": [
+                            {
+                              "id": "passwordType",
+                              "value": "PasswordText"
+                            }
+                          ]
+                        }
+                      ],
+                      "required": false,
+                      "secret": false,
+                      "type": "boolean"
+                    },
+                    "addUsernameTokenNonce": {
+                      "componentProperty": true,
+                      "description": "Add Nonce element to WS-Security Username Token header.",
+                      "displayName": "Username Token Nonce",
+                      "group": "security",
+                      "javaType": "java.lang.Boolean",
+                      "kind": "property",
+                      "label": "common,security",
+                      "order": 7,
+                      "relation": [
+                        {
+                          "action": "ENABLE",
+                          "when": [
+                            {
+                              "id": "passwordType",
+                              "value": "PasswordText"
+                            }
+                          ]
+                        }
+                      ],
+                      "required": false,
+                      "secret": false,
+                      "type": "boolean"
+                    },
+                    "address": {
+                      "componentProperty": true,
+                      "defaultValue": "http://localhost:9191/HelloWorld",
+                      "description": "SOAP Endpoint address from WSDL SOAP Binding or user specified address.",
+                      "displayName": "Address",
+                      "javaType": "java.lang.String",
+                      "order": 1,
+                      "required": true,
+                      "type": "string"
+                    },
+                    "authenticationType": {
+                      "componentProperty": true,
+                      "description": "Authentication Type to use to invoke WSDL endpoint, one of [None|Basic|WS-Security Username Token].",
+                      "displayName": "Authentication Type",
+                      "enum": [
+                        {
+                          "label": "HTTP Basic Authentication",
+                          "value": "basic"
+                        },
+                        {
+                          "label": "None",
+                          "value": "none"
+                        },
+                        {
+                          "label": "WS-Security Username Token",
+                          "value": "ws-security-ut"
+                        }
+                      ],
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common,security",
+                      "order": 2,
+                      "required": true
+                    },
+                    "password": {
+                      "componentProperty": true,
+                      "description": "Authentication password.",
+                      "displayName": "Password",
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common,security",
+                      "order": 5,
+                      "relation": [
+                        {
+                          "action": "DISABLE",
+                          "when": [
+                            {
+                              "id": "passwordType",
+                              "value": "none"
+                            }
+                          ]
+                        }
+                      ],
+                      "required": false,
+                      "secret": true,
+                      "type": "string"
+                    },
+                    "passwordType": {
+                      "componentProperty": true,
+                      "description": "WS-Security Password Type.",
+                      "displayName": "Password Type",
+                      "enum": [
+                        {
+                          "label": "None",
+                          "value": "PasswordNone"
+                        },
+                        {
+                          "label": "Text",
+                          "value": "PasswordText"
+                        },
+                        {
+                          "label": "Digest",
+                          "value": "PasswordDigest"
+                        }
+                      ],
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common,security",
+                      "order": 3,
+                      "relation": [
+                        {
+                          "action": "ENABLE",
+                          "when": [
+                            {
+                              "id": "authenticationType",
+                              "value": "ws-security-ut"
+                            }
+                          ]
+                        }
+                      ],
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "portName": {
+                      "componentProperty": true,
+                      "description": "Target Port in WSDL.",
+                      "displayName": "Port Name",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common",
+                      "required": true,
+                      "type": "hidden"
+                    },
+                    "serviceName": {
+                      "componentProperty": true,
+                      "description": "Target service in WSDL.",
+                      "displayName": "Service Name",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common",
+                      "required": true,
+                      "type": "hidden"
+                    },
+                    "soapVersion": {
+                      "componentProperty": true,
+                      "description": "SOAP Binding version in WSDL.",
+                      "displayName": "SOAP Version",
+                      "group": "common",
+                      "javaType": "java.lang.Double",
+                      "kind": "property",
+                      "label": "common",
+                      "required": true,
+                      "type": "hidden"
+                    },
+                    "specification": {
+                      "componentProperty": true,
+                      "description": "WSDL document defining the service.",
+                      "displayName": "WSDL Document",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common",
+                      "required": true,
+                      "type": "hidden"
+                    },
+                    "username": {
+                      "componentProperty": true,
+                      "description": "Authentication username.",
+                      "displayName": "Username",
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common,security",
+                      "order": 4,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  },
+                  "version": 2
+                },
+                "connectorId": "i-M6XXkXI3ZihQPwe5Nypz",
+                "createdDate": 1588643808867,
+                "description": "Web Services Connector for service {http://camel.apache.org/cxf/wsrm}HelloWorldImplService",
+                "icon": "data:image/svg+xml,%3Csvg%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22200%22%20r%3D%22200%22%20style%3D%22fill%3A%23fff%22%2F%3E%3Cpath%20d%3D%22m%20258%2E608%2C280%20%2D11%2E536%2C0%200%2C%2D80%2E528%20%2D95%2E648%2C0%200%2C80%2E528%20%2D11%2E424%2C0%200%2C%2D163%2E744%2011%2E424%2C0%200%2C72%2E688%2095%2E648%2C0%200%2C%2D72%2E688%2011%2E536%2C0%200%2C163%2E744%20z%22%20style%3D%22fill%3A%23fff%22%2F%3E%3C%2Fsvg%3E",
+                "id": "i-M6XYBPr3ZihQPwe5Nyqz",
+                "isDerived": false,
+                "lastUpdated": 1588789151543,
+                "name": "HelloWorldImplService",
+                "userId": "developer",
+                "uses": 0
+              },
+              "id": "-M6fBbgz24U_u37weNry",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "any",
+                    "name": "All preceding outputs"
+                  },
+                  "outputDataShape": {
+                    "description": "Parameters of SQL [INSERT INTO CONTACT ( first_name ) VALUES ( :#first_name )]",
+                    "kind": "json-schema",
+                    "metadata": {
+                      "variant": "element"
+                    },
+                    "name": "SQL Parameter",
+                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"SQL_PARAM_IN\",\"properties\":{\"first_name\":{\"type\":\"string\",\"required\":true}}}",
+                    "type": "SQL_PARAM_IN"
+                  }
+                }
+              },
+              "configuredProperties": {
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlDataSource\",\"id\":\"-M6fBmOG24U_u37weNry\",\"uri\":\"atlas:xml:-M6fBmOG24U_u37weNry\",\"dataSourceType\":\"SOURCE\",\"xmlNamespaces\":{\"xmlNamespace\":[{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"},{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"}]}},{\"jsonType\":\"io.atlasmap.xml.v2.XmlDataSource\",\"id\":\"-M6fBbgz24U_u37weNry\",\"uri\":\"atlas:xml:-M6fBbgz24U_u37weNry\",\"dataSourceType\":\"SOURCE\",\"xmlNamespaces\":{\"xmlNamespace\":[{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"},{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"}]}},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M6fAm9T24U_u37weNry\",\"uri\":\"atlas:json:-M6fAm9T24U_u37weNry\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.433584\",\"inputField\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlField\",\"name\":\"return\",\"path\":\"/tns:Envelope/tns:Body/ns1:sayHiResponse/ns1:return\",\"fieldType\":\"STRING\",\"docId\":\"-M6fBbgz24U_u37weNry\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-M6fAm9T24U_u37weNry\",\"userCreated\":false}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+              },
+              "id": "-M6fBwwA24U_u37weNry",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Data Mapper",
+              "stepKind": "mapper"
+            },
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Invoke SQL to obtain, store, update, or delete data.",
+                "descriptor": {
+                  "componentScheme": "sql",
+                  "connectorCustomizers": [
+                    "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+                  ],
+                  "inputDataShape": {
+                    "description": "Parameters of SQL [INSERT INTO CONTACT ( first_name ) VALUES ( :#first_name )]",
+                    "kind": "json-schema",
+                    "metadata": {
+                      "variant": "element"
+                    },
+                    "name": "SQL Parameter",
+                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"SQL_PARAM_IN\",\"properties\":{\"first_name\":{\"type\":\"string\",\"required\":true}}}",
+                    "type": "SQL_PARAM_IN"
+                  },
+                  "outputDataShape": {
+                    "kind": "none",
+                    "type": "SQL_PARAM_OUT"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
+                      "name": "SQL statement",
+                      "properties": {
+                        "batch": {
+                          "defaultValue": "false",
+                          "deprecated": false,
+                          "displayName": "Batch update",
+                          "group": "common",
+                          "javaType": "java.lang.Boolean",
+                          "kind": "property",
+                          "labelHint": "Use prepared statements for INSERT, UPDATE, DELETE in order to update multiple rows with batch update.",
+                          "order": 2,
+                          "required": false,
+                          "secret": false,
+                          "type": "boolean"
+                        },
+                        "query": {
+                          "dataList": [
+                            "INSERT INTO CONTACT ( first_name ) VALUES ( :#first_name )"
+                          ],
+                          "defaultValue": "INSERT INTO CONTACT ( first_name ) VALUES ( :#first_name )",
+                          "deprecated": false,
+                          "displayName": "SQL statement",
+                          "group": "common",
+                          "javaType": "java.lang.String",
+                          "kind": "path",
+                          "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                          "order": 1,
+                          "placeholder": "for example ':#MYPARAMNAME'",
+                          "required": true,
+                          "secret": false,
+                          "type": "dataList"
+                        },
+                        "raiseErrorOnNotFound": {
+                          "defaultValue": "false",
+                          "deprecated": false,
+                          "displayName": "Raise error when record not found",
+                          "group": "common",
+                          "javaType": "java.lang.Boolean",
+                          "kind": "property",
+                          "labelHint": "Error when no records are selected, updated or deleted",
+                          "order": 3,
+                          "required": false,
+                          "secret": false,
+                          "type": "boolean"
+                        }
+                      }
+                    }
+                  ],
+                  "standardizedErrors": [
+                    {
+                      "displayName": "SqlDataAccessError",
+                      "name": "SQL_DATA_ACCESS_ERROR"
+                    },
+                    {
+                      "displayName": "SqlEntityNotFoundError",
+                      "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                    },
+                    {
+                      "displayName": "SqlConnectorError",
+                      "name": "SQL_CONNECTOR_ERROR"
+                    }
+                  ]
+                },
+                "id": "sql-connector",
+                "name": "Invoke SQL",
+                "pattern": "To",
+                "tags": [
+                  "dynamic"
+                ]
+              },
+              "configuredProperties": {
+                "batch": "false",
+                "query": "INSERT INTO CONTACT ( first_name ) VALUES ( :#first_name )",
+                "raiseErrorOnNotFound": "false"
+              },
+              "connection": {
+                "configuredProperties": {
+                  "password": "»ENC:87a6397edfdbad960cb6db1015eae5a3d6afa5c201d1b8fe2247c67b4b5cc348939d3632ba6ac5eee960aead34693471",
+                  "schema": "sampledb",
+                  "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
+                  "user": "sampledb"
+                },
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Invoke SQL to obtain, store, update, or delete data.",
+                      "descriptor": {
+                        "componentScheme": "sql",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
+                            "name": "SQL statement",
+                            "properties": {
+                              "batch": {
+                                "defaultValue": "false",
+                                "deprecated": false,
+                                "displayName": "Batch update",
+                                "group": "common",
+                                "javaType": "java.lang.Boolean",
+                                "kind": "property",
+                                "labelHint": "Use prepared statements for INSERT, UPDATE, DELETE in order to update multiple rows with batch update.",
+                                "order": 2,
+                                "required": false,
+                                "secret": false,
+                                "type": "boolean"
+                              },
+                              "query": {
+                                "deprecated": false,
+                                "displayName": "SQL statement",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                                "order": 1,
+                                "placeholder": "for example ':#MYPARAMNAME'",
+                                "required": true,
+                                "secret": false,
+                                "type": "dataList"
+                              },
+                              "raiseErrorOnNotFound": {
+                                "defaultValue": "false",
+                                "deprecated": false,
+                                "displayName": "Raise error when record not found",
+                                "group": "common",
+                                "javaType": "java.lang.Boolean",
+                                "kind": "property",
+                                "labelHint": "Error when no records are selected, updated or deleted",
+                                "order": 3,
+                                "required": false,
+                                "secret": false,
+                                "type": "boolean"
+                              }
+                            }
+                          }
+                        ],
+                        "standardizedErrors": [
+                          {
+                            "displayName": "SqlDataAccessError",
+                            "name": "SQL_DATA_ACCESS_ERROR"
+                          },
+                          {
+                            "displayName": "SqlEntityNotFoundError",
+                            "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                          },
+                          {
+                            "displayName": "SqlConnectorError",
+                            "name": "SQL_CONNECTOR_ERROR"
+                          }
+                        ]
+                      },
+                      "id": "sql-connector",
+                      "name": "Invoke SQL",
+                      "pattern": "To",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Periodically invoke SQL to obtain data.",
+                      "descriptor": {
+                        "componentScheme": "sql",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlStartConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Enter a SQL statement that returns results, such as SELECT.",
+                            "name": "SQL statement",
+                            "properties": {
+                              "isRaiseErrorOnNotFound": {
+                                "deprecated": false,
+                                "displayName": "Raise NotFoundError",
+                                "group": "consumer",
+                                "javaType": "java.lang.Boolean",
+                                "kind": "parameter",
+                                "labelHint": "Raise NotFoundError if no records are inserted, updated, selected or deleted",
+                                "order": 3,
+                                "required": false,
+                                "secret": false,
+                                "type": "boolean"
+                              },
+                              "query": {
+                                "deprecated": false,
+                                "displayName": "SQL statement",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "SQL statement to be executed.",
+                                "order": 1,
+                                "required": true,
+                                "secret": false,
+                                "type": "dataList"
+                              },
+                              "schedulerExpression": {
+                                "defaultValue": "60000",
+                                "deprecated": false,
+                                "displayName": "Period",
+                                "group": "consumer",
+                                "javaType": "long",
+                                "kind": "parameter",
+                                "labelHint": "Delay between scheduling (executing).",
+                                "order": 2,
+                                "required": false,
+                                "secret": false,
+                                "type": "duration"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-start-connector",
+                      "name": "Periodic SQL invocation",
+                      "pattern": "From",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Invoke a stored procedure.",
+                      "descriptor": {
+                        "componentScheme": "sql-stored",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlStoredConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Select the stored procedure.",
+                            "name": "Procedure name",
+                            "properties": {
+                              "procedureName": {
+                                "componentProperty": true,
+                                "deprecated": false,
+                                "displayName": "Procedure name",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "property",
+                                "labelHint": "Name of the stored procedure.",
+                                "required": false,
+                                "secret": false,
+                                "type": "select"
+                              },
+                              "template": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Template",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "Stored procedure template to perform.",
+                                "required": false,
+                                "secret": false,
+                                "type": "hidden"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-stored-connector",
+                      "name": "Invoke stored procedure",
+                      "pattern": "To",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Periodically invoke a stored procedure.",
+                      "descriptor": {
+                        "componentScheme": "sql-stored",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlStartStoredConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Select the stored procedure.",
+                            "name": "Procedure name",
+                            "properties": {
+                              "procedureName": {
+                                "componentProperty": true,
+                                "deprecated": false,
+                                "displayName": "Procedure name",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "Name of the stored procedure.",
+                                "required": true,
+                                "secret": false,
+                                "type": "select"
+                              },
+                              "schedulerExpression": {
+                                "defaultValue": "60000",
+                                "deprecated": false,
+                                "displayName": "Period",
+                                "group": "consumer",
+                                "javaType": "long",
+                                "kind": "parameter",
+                                "labelHint": "Delay between scheduling (executing).",
+                                "required": false,
+                                "secret": false,
+                                "type": "duration"
+                              },
+                              "template": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Template",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "Stored Procedure template to perform.",
+                                "required": true,
+                                "secret": false,
+                                "type": "hidden"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-stored-start-connector",
+                      "name": "Periodic stored procedure invocation",
+                      "pattern": "From",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    }
+                  ],
+                  "connectorCustomizers": [
+                    "io.syndesis.connector.sql.customizer.DataSourceCustomizer"
+                  ],
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
+                      "type": "MAVEN"
+                    },
+                    {
+                      "id": "jdbc-driver",
+                      "type": "EXTENSION_TAG"
+                    }
+                  ],
+                  "description": "Invoke SQL to obtain, store, update, or delete data.",
+                  "icon": "assets:sql.svg",
+                  "id": "sql",
+                  "name": "Database",
+                  "properties": {
+                    "password": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Password",
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common,security",
+                      "labelHint": "Password for the database connection.",
+                      "order": 3,
+                      "required": true,
+                      "secret": true,
+                      "type": "string"
+                    },
+                    "schema": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Schema",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common",
+                      "labelHint": "Database schema.",
+                      "order": 4,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "url": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Connection URL",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "labelHint": "JDBC URL of the database.",
+                      "order": 1,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "user": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Username",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "labelHint": "Username for the database connection.",
+                      "order": 2,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  },
+                  "tags": [
+                    "verifier"
+                  ],
+                  "version": 11
+                },
+                "connectorId": "sql",
+                "description": "Connection to SampleDB",
+                "icon": "assets:sql.svg",
+                "id": "5",
+                "isDerived": false,
+                "name": "PostgresDB",
+                "tags": [
+                  "sampledb"
+                ],
+                "uses": 0
+              },
+              "id": "-M6fAm9T24U_u37weNry",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            }
+          ],
+          "tags": [
+            "5",
+            "i-M6XYBPr3ZihQPwe5Nyqz",
+            "timer"
+          ],
+          "type": "PRIMARY"
+        }
+      ],
+      "id": "i-M6fCR2N2lJ-afJy1HTRz",
+      "name": "HelloWorldSoapClient",
+      "tags": [
+        "i-M6XXkXI3ZihQPwe5Nypz",
+        "sql",
+        "timer"
+      ],
+      "updatedAt": 1588962700977,
+      "version": 4
+    }
+  }
+}

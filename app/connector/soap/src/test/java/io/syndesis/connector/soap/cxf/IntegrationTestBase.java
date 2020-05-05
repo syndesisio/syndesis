@@ -62,7 +62,7 @@ public abstract class IntegrationTestBase {
             "</ns1:sayHi>";
     private static final String RESPONSE_PAYLOAD =
             "<ns1:sayHiResponse xmlns:ns1=\"http://camel.apache.org/cxf/wsrm\">" +
-            "   <return xmlns=\"http://camel.apache.org/cxf/wsrm/\">Hello Hello!</return>" +
+            "   <return xmlns=\"http://camel.apache.org/cxf/wsrm\">Hello Hello!</return>" +
             "</ns1:sayHiResponse>";
     protected static final String TEST_USER = "TestUser";
     protected static final String TEST_PASSWORD = "TestPassword";

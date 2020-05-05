@@ -2841,6 +2841,21 @@
         </exclusions>
       </dependency>
       <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-ws</artifactId>
+        <version>${citrus.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
         <groupId>io.fabric8</groupId>
         <artifactId>openshift-client</artifactId>
         <version>${kubernetes.client.version}</version>

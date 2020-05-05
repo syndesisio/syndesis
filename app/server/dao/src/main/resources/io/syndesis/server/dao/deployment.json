@@ -529,7 +529,7 @@
   },
   {
     "data": {
-      "componentScheme": "soap",
+      "componentScheme": "cxf",
       "connectorGroup": {
         "id": "soap-connector-template"
       },
