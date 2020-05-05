@@ -27,7 +27,7 @@ export const VirtualizationList: React.FunctionComponent<
 
   return (
     <>
-      <PageSection noPadding={true} variant={'light'}>
+      <PageSection noPadding={true}>
         <ListViewToolbar {...props}>
           <div className="form-group">
             <Tooltip
@@ -69,7 +69,7 @@ export const VirtualizationList: React.FunctionComponent<
           </div>
         </ListViewToolbar>
       </PageSection>
-      <PageSection noPadding={true} variant={'light'}>
+      <PageSection noPadding={true}>
         {props.hasListData ? (
           <DataList aria-label={'virtualization list'}>{props.children}</DataList>
         ) : (
