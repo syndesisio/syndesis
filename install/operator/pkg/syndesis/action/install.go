@@ -102,10 +102,6 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 	}
 	config.OpenShiftOauthClientSecret = token
 
-	if err := config.ExternalDatabase(ctx, a.client, syndesis); err != nil {
-		return err
-	}
-
 	// Render the route resource...
 	all, err := generator.RenderDir("./route/", config)
 	if err != nil {
@@ -253,7 +249,9 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 
 		a.log.Info("Syndesis resource installed", "name", target.Name)
 	} else if syndesis.Status.Phase == v1beta1.SyndesisPhasePostUpgradeRun {
-		a.removePostgresUpgradeTrigger(ctx, syndesis)
+		if len(syndesis.Spec.Components.Database.ExternalDbURL) <= 0 {
+			a.removePostgresUpgradeTrigger(ctx, syndesis)
+		}
 
 		// Installation completed, set the next state
 		target.Status.Phase = v1beta1.SyndesisPhasePostUpgradeRunSucceed
