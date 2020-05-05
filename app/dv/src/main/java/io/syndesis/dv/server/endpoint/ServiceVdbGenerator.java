@@ -16,7 +16,9 @@
 package io.syndesis.dv.server.endpoint;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -26,6 +28,9 @@ import java.util.regex.Pattern;
 
 import org.springframework.data.util.Pair;
 import org.teiid.adminapi.Admin.SchemaObjectType;
+import org.teiid.adminapi.DataPolicy.ResourceType;
+import org.teiid.adminapi.impl.DataPolicyMetadata;
+import org.teiid.adminapi.impl.DataPolicyMetadata.PermissionMetaData;
 import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.adminapi.impl.VDBImportMetadata;
 import org.teiid.adminapi.impl.VDBMetaData;
@@ -45,6 +50,8 @@ import io.syndesis.dv.StringConstants;
 import io.syndesis.dv.metadata.TeiidDataSource;
 import io.syndesis.dv.metadata.TeiidVdb;
 import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
+import io.syndesis.dv.model.TablePrivileges;
+import io.syndesis.dv.model.TablePrivileges.Privilege;
 import io.syndesis.dv.model.ViewDefinition;
 import io.syndesis.dv.utils.PathUtils;
 
@@ -56,6 +63,8 @@ import io.syndesis.dv.utils.PathUtils;
  *
  */
 public final class ServiceVdbGenerator implements StringConstants {
+
+    public static final String ANY_AUTHENTICATED = "any authenticated"; //$NON-NLS-1$
 
     public interface SchemaFinder {
         Schema findSchema(String connectionName) throws KException;
@@ -97,7 +106,7 @@ public final class ServiceVdbGenerator implements StringConstants {
      * Creates the service vdb - must be valid
      * @throws KException
      */
-    public VDBMetaData createServiceVdb(String virtualizationName, TeiidVdb previewVDB, List<? extends ViewDefinition> editorStates) throws KException {
+    public VDBMetaData createServiceVdb(String virtualizationName, TeiidVdb previewVDB, List<? extends ViewDefinition> editorStates, List<TablePrivileges> tablePrivileges) throws KException {
         VDBMetaData vdb = new VDBMetaData();
         vdb.addProperty("hidden-qualified", "true"); //$NON-NLS-1$ //$NON-NLS-2$
         vdb.setName(virtualizationName);
@@ -107,12 +116,16 @@ public final class ServiceVdbGenerator implements StringConstants {
         // Generate new model DDL by appending all view DDLs
         StringBuilder allViewDdl = new StringBuilder();
 
+        Map<String, String> viewMap = new HashMap<>();
+
         Schema s = previewVDB.getSchema(virtualizationName);
 
         for ( final ViewDefinition viewDef : editorStates ) {
             if( !viewDef.isComplete()) {
                 continue;
             }
+
+            viewMap.put(viewDef.getId(), viewDef.getName());
 
             String viewDdl = viewDef.getDdl();
             allViewDdl.append(viewDdl);
@@ -175,8 +188,61 @@ public final class ServiceVdbGenerator implements StringConstants {
             }
         }
 
+        addRoleInformation(vdb, tablePrivileges, viewMap);
+
         return vdb;
 
+    }
+
+    private void addRoleInformation(VDBMetaData vdb, List<TablePrivileges> tablePrivileges,
+            Map<String, String> viewMap) {
+        if (tablePrivileges == null) {
+            return;
+        }
+        //group by role - we're assuming case-sensitive names
+        Map<String, List<TablePrivileges>> roleMap = new HashMap<String, List<TablePrivileges>>();
+        for (TablePrivileges privileges : tablePrivileges) {
+            roleMap.computeIfAbsent(privileges.getRoleName(), (k)->new ArrayList<>()).add(privileges);
+        }
+        for (Map.Entry<String, List<TablePrivileges>> entry : roleMap.entrySet()) {
+            String roleName = entry.getKey();
+            DataPolicyMetadata dpm = new DataPolicyMetadata();
+            dpm.setName(roleName);
+            if (roleName.equals(ANY_AUTHENTICATED)) {
+                dpm.setAnyAuthenticated(true);
+            } else {
+                dpm.setMappedRoleNames(Arrays.asList(roleName));
+            }
+            for (TablePrivileges privileges : entry.getValue()) {
+                String tableName = viewMap.get(privileges.getViewDefinitionId());
+                if (tableName == null) {
+                    continue; // not included
+                }
+                PermissionMetaData pmd = new PermissionMetaData();
+                //add schema qualification
+                pmd.setResourceName(vdb.getName() + "." + tableName); //$NON-NLS-1$
+                pmd.setResourceType(ResourceType.TABLE);
+                for (Privilege p : privileges.getGrantPrivileges()) {
+                    switch (p) {
+                    case D:
+                        pmd.setAllowDelete(true);
+                        break;
+                    case I:
+                        pmd.setAllowCreate(true);
+                        break;
+                    case S:
+                        pmd.setAllowRead(true);
+                        break;
+                    case U:
+                        pmd.setAllowUpdate(true);
+                        break;
+                    }
+                }
+                dpm.addPermission(pmd);
+            }
+            //even if it's empty, we can still add it - for use by hasRole
+            vdb.addDataPolicy(dpm);
+        }
     }
 
     /**
