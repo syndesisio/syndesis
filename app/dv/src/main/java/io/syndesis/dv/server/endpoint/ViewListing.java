@@ -16,7 +16,11 @@
 
 package io.syndesis.dv.server.endpoint;
 
+import java.util.List;
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import io.syndesis.dv.model.TablePrivileges;
 
 /**
  * Metadata, no state, related to a view.
@@ -30,6 +34,7 @@ public class ViewListing {
     private String name;
     private String description;
     private boolean valid;
+    private List<TablePrivileges> tablePrivileges;
 
     public String getId() {
         return id;
@@ -54,5 +59,13 @@ public class ViewListing {
     }
     public void setValid(boolean valid) {
         this.valid = valid;
+    }
+
+    public List<TablePrivileges> getTablePrivileges() {
+        return tablePrivileges;
+    }
+
+    public void setTablePrivileges(List<TablePrivileges> tablePrivileges) {
+        this.tablePrivileges = tablePrivileges;
     }
 }
