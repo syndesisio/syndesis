@@ -103,7 +103,7 @@ export const ViewInfosContent: React.FunctionComponent<
   const [schemaList, setSchemaList] = React.useState<SchemaNode[]>([]);
   const [lastSchemaRefresh, setLastSchemaRefresh] = React.useState(0);
 
-  const [lastSchemaRefreshMsg, setLastSchemaRefreshMsg] = React.useState(t('schemaLastRefresh', {
+  const [lastSchemaRefreshMsg, setLastSchemaRefreshMsg] = React.useState<string>(t('schemaLastRefresh', {
     refreshTime: getDateAndTimeDisplay(props.connectionLastLoad),
   }));
 

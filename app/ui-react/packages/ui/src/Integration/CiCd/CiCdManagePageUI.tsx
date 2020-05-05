@@ -48,7 +48,7 @@ export const CiCdManagePageUI: React.FunctionComponent<ICiCdManagePageUIProps> =
   const [showAddDialog, setShowAddDialog] = React.useState(false);
   const [showEditDialog, setShowEditDialog] = React.useState(false);
   const [showRemoveDialog, setShowRemoveDialog] = React.useState(false);
-  const [currentItemName, setCurrentItemName] = React.useState();
+  const [currentItemName, setCurrentItemName] = React.useState<string | undefined>();
 
   const handleSave = (name: string) => {
     if (showEditDialog) {

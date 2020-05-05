@@ -28,8 +28,8 @@ export class WithRouteData<P, S> extends React.Component<
           if (!route.match) {
             throw new Error("Route doesn't have a match");
           }
-          const params: P = route.match.params || ({} as P);
-          const state: S = route.location.state || ({} as S);
+          const params = ((route.match.params || {}) as P);
+          const state = ((route.location.state || {}) as S);
           return this.props.children(params, state, route);
         }}
       </Route>

@@ -17,7 +17,7 @@ export interface IEditSpecificationRouteState {
 export const EditSpecificationPage: React.FunctionComponent = () => {
   const { state } = useRouteData<null, IEditSpecificationRouteState>();
 
-  const [updatedSpecification, setUpdatedSpecification] = React.useState();
+  const [updatedSpecification, setUpdatedSpecification] = React.useState<string>(state.specification);
 
   const onSpecification = (newSpec: any) => {
     setUpdatedSpecification(JSON.stringify(newSpec.spec));
@@ -81,7 +81,7 @@ export const EditSpecificationPage: React.FunctionComponent = () => {
                 </span>
               </Breadcrumb>
               <ApicurioAdapter
-                specification={updatedSpecification || state.specification!}
+                specification={updatedSpecification}
                 onSpecification={onSpecification}
               />
             </>
