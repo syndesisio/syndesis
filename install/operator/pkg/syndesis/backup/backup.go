@@ -31,13 +31,10 @@ import (
 	"github.com/go-logr/logr"
 	"github.com/pkg/errors"
 	"github.com/syndesisio/syndesis/install/operator/pkg"
-	"k8s.io/client-go/dynamic"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/rest"
-	"sigs.k8s.io/controller-runtime/pkg/client/config"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -71,18 +68,18 @@ const (
 )
 
 type Backup struct {
-	isInited        bool              // Backup correctly initialised
-	log             logr.Logger       // Logger for this object
-	backupDir       string            // Root directory of the final backup location
-	backupPath      string            // Relative path of the final backup location (needs to be joined with backupDir)
-	delete          bool              // Remove the local backup artifacts if uploading to remote location
-	localOnly       bool              // If true, backup to local location. Otherwise, upload to remote lodation
-	context         context.Context   // Context for backup
-	client          rc.Client         // Kubernetes client instance
-	syndesis        *v1beta1.Syndesis // Syndesis runtime instance
-	customOptions   string            // Custom options required for restoring
-	backupDesign    backupDesign      // The credentials for the backup/restore operation
-	payloadComplete bool              // Is uploading of the restore payload complete
+	isInited        bool                     // Backup correctly initialised
+	log             logr.Logger              // Logger for this object
+	backupDir       string                   // Root directory of the final backup location
+	backupPath      string                   // Relative path of the final backup location (needs to be joined with backupDir)
+	delete          bool                     // Remove the local backup artifacts if uploading to remote location
+	localOnly       bool                     // If true, backup to local location. Otherwise, upload to remote lodation
+	context         context.Context          // Context for backup
+	clientTools     *clienttools.ClientTools // Syndesis client toolkit
+	syndesis        *v1beta1.Syndesis        // Syndesis runtime instance
+	customOptions   string                   // Custom options required for restoring
+	backupDesign    backupDesign             // The credentials for the backup/restore operation
+	payloadComplete bool                     // Is uploading of the restore payload complete
 }
 
 type backupDesign struct {
@@ -129,38 +126,16 @@ type Downloader interface {
 	Enabled() (result bool)
 }
 
-func clientConfig() (*rest.Config, error) {
-	c, err := config.GetConfig()
-	if err != nil {
-		return nil, err
-	}
-
-	return c, err
-}
-
-func NewBackup(context context.Context, client rc.Client, syndesis *v1beta1.Syndesis, backupDir string) (*Backup, error) {
-	if client == nil {
-		cc, err := clientConfig()
-		if err != nil {
-			return nil, err
-		}
-
-		cl, err := rc.New(cc, rc.Options{})
-		if err != nil {
-			return nil, err
-		}
-		client = cl
-	}
-
+func NewBackup(context context.Context, clientTools *clienttools.ClientTools, syndesis *v1beta1.Syndesis, backupDir string) (*Backup, error) {
 	b := &Backup{
-		isInited:  true,
-		log:       backupLog.WithValues("action", "backup"),
-		backupDir: backupDir,
-		context:   context,
-		client:    client,
-		syndesis:  syndesis,
-		delete:    false,
-		localOnly: false,
+		isInited:    true,
+		log:         backupLog.WithValues("action", "backup"),
+		backupDir:   backupDir,
+		context:     context,
+		clientTools: clientTools,
+		syndesis:    syndesis,
+		delete:      false,
+		localOnly:   false,
 	}
 
 	return b, nil
@@ -172,24 +147,6 @@ func (b *Backup) inited() error {
 	}
 
 	return nil
-}
-
-func (b *Backup) dynamicClient() (c dynamic.Interface, err error) {
-	cc, err := clientConfig()
-	if err != nil {
-		return nil, err
-	}
-
-	return dynamic.NewForConfig(cc)
-}
-
-func (b *Backup) apiClient() (*kubernetes.Clientset, error) {
-	cc, err := clientConfig()
-	if err != nil {
-		return nil, err
-	}
-
-	return kubernetes.NewForConfig(cc)
 }
 
 func (b *Backup) SetDelete(delete bool) error {
@@ -379,7 +336,13 @@ func (b *Backup) backupResources() error {
 				"kind":       typeMeta.Kind,
 			},
 		}
-		err = util.ListInChunks(b.context, b.client, &options, &list, func(resources []unstructured.Unstructured) error {
+
+		client, err := b.clientTools.RuntimeClient()
+		if err != nil {
+			return err
+		}
+
+		err = util.ListInChunks(b.context, client, &options, &list, func(resources []unstructured.Unstructured) error {
 			os.MkdirAll(filepath.Join(b.backupDir, b.backupPath, "resources"), 0755)
 			for _, res := range resources {
 				data, err := yaml.Marshal(res.Object)
@@ -448,9 +411,14 @@ func (b *Backup) RestoreResources() (err error) {
 		}
 	}
 
+	client, err := b.clientTools.RuntimeClient()
+	if err != nil {
+		return err
+	}
+
 	for _, res := range resources {
 		res.SetResourceVersion("")
-		_, _, err := util.CreateOrUpdate(b.context, b.client, &res)
+		_, _, err := util.CreateOrUpdate(b.context, client, &res)
 		if err != nil {
 			b.log.Error(nil, "error while restoring resources", "resources", res.GetName(), "kind", res.GetKind())
 			return err
@@ -540,7 +508,12 @@ func (b *Backup) backupDatabase() error {
 	b.log.Info("Initiating database backup ...")
 
 	// Load configuration to to use as context for generator pkg
-	sc, err := configuration.GetProperties(b.context, configuration.TemplateConfig, b.client, b.syndesis)
+	sc, err := configuration.GetProperties(b.context, configuration.TemplateConfig, b.clientTools, b.syndesis)
+	if err != nil {
+		return err
+	}
+
+	client, err := b.clientTools.RuntimeClient()
 	if err != nil {
 		return err
 	}
@@ -577,7 +550,7 @@ func (b *Backup) backupDatabase() error {
 		// and jobs without a namespace require cluster-level privileges.
 		//
 		operation.SetNamespaceAndOwnerReference(res, b.syndesis)
-		_, _, err := util.CreateOrUpdate(b.context, b.client, &res)
+		_, _, err := util.CreateOrUpdate(b.context, client, &res)
 		if err != nil {
 			return err
 		}
@@ -614,7 +587,12 @@ func (b *Backup) RestoreDb() (err error) {
 	b.log.Info("starting restore for syndesis database", "backup", path.Join(b.backupDir, dumpFilename))
 
 	// Load configuration to to use as context for generator pkg
-	sc, err := configuration.GetProperties(b.context, configuration.TemplateConfig, b.client, b.syndesis)
+	sc, err := configuration.GetProperties(b.context, configuration.TemplateConfig, b.clientTools, b.syndesis)
+	if err != nil {
+		return err
+	}
+
+	client, err := b.clientTools.RuntimeClient()
 	if err != nil {
 		return err
 	}
@@ -659,7 +637,7 @@ func (b *Backup) RestoreDb() (err error) {
 		// complete with Name, UID & Kind.
 		//
 		operation.SetNamespaceAndOwnerReference(res, b.syndesis)
-		_, _, err := util.CreateOrUpdate(b.context, b.client, &res)
+		_, _, err := util.CreateOrUpdate(b.context, client, &res)
 		if err != nil {
 			return err
 		}
@@ -677,7 +655,13 @@ func (b *Backup) execJob(jobTask BkpJobTask) error {
 	//
 	err := wait.Poll(pollInterval, pollTimeout, func() (done bool, err error) {
 		job := &batchv1.Job{}
-		if err := b.client.Get(b.context, types.NamespacedName{Namespace: b.syndesis.Namespace, Name: b.backupDesign.Job}, job); err != nil {
+
+		client, err := b.clientTools.RuntimeClient()
+		if err != nil {
+			return false, err
+		}
+
+		if err := client.Get(b.context, types.NamespacedName{Namespace: b.syndesis.Namespace, Name: b.backupDesign.Job}, job); err != nil {
 			return false, err
 		}
 
@@ -728,7 +712,13 @@ func (b *Backup) podInJob(job *batchv1.Job) (*corev1.Pod, error) {
 
 	controllerUID := job.Spec.Selector.MatchLabels[pkg.ControllerUIDLabel]
 	podList := &corev1.PodList{}
-	err := b.client.List(b.context, podList,
+
+	client, err := b.clientTools.RuntimeClient()
+	if err != nil {
+		return nil, err
+	}
+
+	err = client.List(b.context, podList,
 		rc.InNamespace(b.syndesis.Namespace),
 		rc.MatchingLabels{
 			pkg.ControllerUIDLabel: controllerUID,
@@ -801,8 +791,12 @@ func (b *Backup) backupTask(bkpPod *corev1.Pod) (bool, error) {
 		// Execute a remote command on the container to 'cat' the dump file, convert it to base64
 		// and effectively download it to the local backup file
 		//
-		cc, _ := clientConfig()
-		api, _ := b.apiClient()
+		cc := b.clientTools.RestConfig()
+		api, err := b.clientTools.ApiClient()
+		if err != nil {
+			return false, err
+		}
+
 		catCmd := "cat " + b.backupDesign.FileDir + "/" + b.backupDesign.FileName + " | base64"
 
 		err = util.Exec(util.ExecOptions{
@@ -889,8 +883,11 @@ func (b *Backup) restoreTask(bkpPod *corev1.Pod) (bool, error) {
 			"sleep 2; " +
 			"touch /pgdata/pg-upload-complete"
 
-		cc, _ := clientConfig()
-		api, _ := b.apiClient()
+		cc := b.clientTools.RestConfig()
+		api, err := b.clientTools.ApiClient()
+		if err != nil {
+			return false, err
+		}
 		err = util.Exec(util.ExecOptions{
 			Config:    cc,
 			API:       api,

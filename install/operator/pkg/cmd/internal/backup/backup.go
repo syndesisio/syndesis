@@ -27,7 +27,6 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/backup"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
@@ -52,42 +51,42 @@ func NewBackup(parent *internal.Options) *cobra.Command {
 	return &cmd
 }
 
-func (o *Backup) prepare() (*v1beta1.Syndesis, client.Client, error) {
-	mgr, err := manager.New(o.GetClientConfig(), manager.Options{
+func (o *Backup) prepare() (*v1beta1.Syndesis, error) {
+	mgr, err := manager.New(o.ClientTools().RestConfig(), manager.Options{
 		Namespace: o.Namespace,
 	})
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	if err := apis.AddToScheme(mgr.GetScheme()); err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	cl, err := o.GetClient()
+	cl, err := o.ClientTools().RuntimeClient()
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
 	syndesis, err := v1beta1.InstalledSyndesis(o.Context, cl, o.Namespace)
 	if err != nil {
-		return nil, cl, err
+		return nil, err
 	}
 
 	if syndesis == nil {
-		return nil, cl, errors.New("No syndesis has been installed to backup its database")
+		return nil, errors.New("No syndesis has been installed to backup its database")
 	}
 
-	return syndesis, cl, nil
+	return syndesis, nil
 }
 
 func (o *Backup) Run() error {
-	syndesis, cl, err := o.prepare()
+	syndesis, err := o.prepare()
 	if err != nil {
 		return err
 	}
 
-	b, err := backup.NewBackup(o.Context, cl, syndesis, o.backupDir)
+	b, err := backup.NewBackup(o.Context, o.ClientTools(), syndesis, o.backupDir)
 	if err != nil {
 		return err
 	}

@@ -123,14 +123,9 @@ func (o *options) run() error {
 		return err
 	}
 
-	cli, err := o.GetClient()
-	if err != nil {
-		return err
-	}
-
 	syndesis := &v1beta1.Syndesis{}
 	syndesis.SetNamespace(namespace)
-	config, err := configuration.GetProperties(o.Context, configuration.TemplateConfig, cli, syndesis)
+	config, err := configuration.GetProperties(o.Context, configuration.TemplateConfig, o.ClientTools(), syndesis)
 	if err != nil {
 		return err
 	}
@@ -155,7 +150,7 @@ func (o *options) run() error {
 	}
 
 	// Create a new Cmd to provide shared dependencies and start components
-	mgr, err := manager.New(cfg, manager.Options{
+	mgr, err := manager.New(o.ClientTools().RestConfig(), manager.Options{
 		Namespace:          namespace,
 		MetricsBindAddress: fmt.Sprintf("%s:%d", metricsHost, metricsPort),
 	})
@@ -170,6 +165,11 @@ func (o *options) run() error {
 	}
 
 	openshift.AddToScheme(mgr.GetScheme())
+
+	cli, err := o.ClientTools().RuntimeClient()
+	if err != nil {
+		return err
+	}
 
 	am, err := versions.APIMigrator(o.Context, cli, namespace)
 	if err != nil {

@@ -64,7 +64,7 @@ func (o *Uninstall) uninstall() error {
 		return err
 	}
 
-	c, err := o.GetClient()
+	c, err := o.ClientTools().RuntimeClient()
 	if err != nil {
 		return err
 	}
