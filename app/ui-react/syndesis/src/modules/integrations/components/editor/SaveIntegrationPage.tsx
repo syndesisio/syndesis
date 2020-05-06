@@ -1,7 +1,15 @@
-import { setIntegrationProperties, useExtensions, WithIntegrationHelpers } from '@syndesis/api';
+import {
+  setIntegrationProperties,
+  useExtensions,
+  WithIntegrationHelpers,
+} from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import * as H from '@syndesis/history';
-import { ErrorResponse, IntegrationSaveErrorResponse } from '@syndesis/models';
+import {
+  Dependency,
+  ErrorResponse,
+  IntegrationSaveErrorResponse,
+} from '@syndesis/models';
 import {
   IntegrationEditorExtensionTable,
   IntegrationEditorLayout,
@@ -15,7 +23,10 @@ import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import i18n from '../../../../i18n';
 import { PageTitle } from '../../../../shared';
-import { IWithLeaveConfirmationBaseProps, WithLeaveConfirmation, } from '../../../../shared/WithLeaveConfirmation';
+import {
+  IWithLeaveConfirmationBaseProps,
+  WithLeaveConfirmation,
+} from '../../../../shared/WithLeaveConfirmation';
 import {
   IPageWithEditorBreadcrumb,
   IPostPublishRouteParams,
@@ -31,11 +42,6 @@ interface IExtensionProps {
   selected?: boolean;
 }
 
-export interface IDependency {
-  type: string;
-  id: string;
-}
-
 export interface ISaveIntegrationForm {
   name: string;
   description?: string;
@@ -43,7 +49,7 @@ export interface ISaveIntegrationForm {
    * Array of dependencies or
    * extensions for this integration
    */
-  dependencies?: IDependency[];
+  dependencies?: Dependency[];
 }
 
 export interface ISaveIntegrationPageProps
@@ -72,25 +78,26 @@ export interface ISaveIntegrationPageProps
  * @todo toast notifications.
  * @todo redirect to the integration detail page once available.
  */
-export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPageProps> = (
-  {
-    postPublishHref,
-    postSaveHref,
-    getBreadcrumb,
-    cancelHref,
-    ...props
-  }) => {
-  const {
-    resource: extensionsData
-  } = useExtensions(undefined, 'Libraries');
+export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPageProps> = ({
+  postPublishHref,
+  postSaveHref,
+  getBreadcrumb,
+  cancelHref,
+  ...props
+}) => {
+  const { resource: extensionsData } = useExtensions(undefined, 'Libraries');
 
-  const [currentSelectedExtensionIds, setSelectedExtensionIds] = React.useState<string[]>([]);
-  const [error, setError] = React.useState<false | ErrorResponse | IntegrationSaveErrorResponse>(false);
+  const [currentSelectedExtensionIds, setSelectedExtensionIds] = React.useState<
+    string[]
+  >([]);
+  const [error, setError] = React.useState<
+    false | ErrorResponse | IntegrationSaveErrorResponse
+  >(false);
 
   const { t } = useTranslation('shared');
 
   const extensions: IExtensionProps[] = extensionsData.items as [];
-  const dependencyList = React.useRef<IDependency[]>([]);
+  const dependencyList = React.useRef<Dependency[]>([]);
 
   /**
    * Here we will return an array of extension IDs later
@@ -101,24 +108,29 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
   /**
    * Updates the state based on changes in the UI
    */
-  const onSelect = React.useCallback((extensionIds: string[]) => {
-    setSelectedExtensionIds(extensionIds);
+  const onSelect = React.useCallback(
+    (extensionIds: string[]) => {
+      setSelectedExtensionIds(extensionIds);
 
-    dependencyList.current = extensionIds.map((extension: string) => {
-      return ({
-        id: extension,
-        type: "EXTENSION_TAG"
+      dependencyList.current = extensionIds.map((extension: string) => {
+        return {
+          id: extension,
+          type: 'EXTENSION_TAG',
+        };
       });
-    });
-  }, [dependencyList]);
+    },
+    [dependencyList]
+  );
 
   return (
     <WithLeaveConfirmation {...props}>
       {({ allowNavigation }) => (
         <UIContext.Consumer>
           {({ pushNotification }) => (
-            <WithRouteData<ISaveIntegrationRouteParams,
-                ISaveIntegrationRouteState>>
+            <WithRouteData<
+              ISaveIntegrationRouteParams,
+              ISaveIntegrationRouteState
+            >>
               {(params, state, { history }) => (
                 <WithIntegrationHelpers>
                   {({ deployIntegration, saveIntegration }) => {
@@ -129,14 +141,17 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                       actions: any
                     ) => {
                       setError(false);
+
                       try {
                         const updatedIntegration = setIntegrationProperties(
                           state.integration,
                           {
+                            dependencies: dependencyList.current,
                             description,
                             name,
                           }
                         );
+
                         const savedIntegration = await saveIntegration(
                           updatedIntegration
                         );
@@ -215,7 +230,9 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                     return (
                       <>
                         <AutoForm<ISaveIntegrationForm>
-                          i18nRequiredProperty={t('shared:requiredFieldMessage')}
+                          i18nRequiredProperty={t(
+                            'shared:requiredFieldMessage'
+                          )}
                           definition={definition}
                           initialValue={{
                             dependencies: dependencyList.current,
@@ -227,12 +244,12 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                           onSave={onSave}
                         >
                           {({
-                              fields,
-                              handleSubmit,
-                              isSubmitting,
-                              isValid,
-                              submitForm,
-                            }) => (
+                            fields,
+                            handleSubmit,
+                            isSubmitting,
+                            isValid,
+                            submitForm,
+                          }) => (
                             <>
                               <PageTitle
                                 title={t('integrations:editor:save:title')}
@@ -290,13 +307,25 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                                       {fields}
                                       <IntegrationEditorExtensionTable
                                         extensionsAvailable={extensions}
-                                        i18nHeaderDescription={t('integrations:editor:extensions:description')}
-                                        i18nHeaderLastUpdated={t('integrations:editor:extensions:lastUpdated')}
-                                        i18nHeaderName={t('integrations:editor:extensions:name')}
-                                        i18nTableDescription={t('integrations:editor:extensions:tableDescription')}
-                                        i18nTableName={t('integrations:editor:extensions:tableName')}
+                                        i18nHeaderDescription={t(
+                                          'integrations:editor:extensions:description'
+                                        )}
+                                        i18nHeaderLastUpdated={t(
+                                          'integrations:editor:extensions:lastUpdated'
+                                        )}
+                                        i18nHeaderName={t(
+                                          'integrations:editor:extensions:name'
+                                        )}
+                                        i18nTableDescription={t(
+                                          'integrations:editor:extensions:tableDescription'
+                                        )}
+                                        i18nTableName={t(
+                                          'integrations:editor:extensions:tableName'
+                                        )}
                                         onSelect={onSelect}
-                                        preSelectedExtensionIds={preSelectedExtensions}
+                                        preSelectedExtensionIds={
+                                          preSelectedExtensions
+                                        }
                                       />
                                     </>
                                   </IntegrationSaveForm>
