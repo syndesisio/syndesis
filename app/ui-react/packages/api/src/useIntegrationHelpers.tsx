@@ -13,7 +13,11 @@ import produce from 'immer';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
-import { API_PROVIDER_END_ACTION_ID, PUBLISHED, UNPUBLISHED, } from './constants';
+import {
+  API_PROVIDER_END_ACTION_ID,
+  PUBLISHED,
+  UNPUBLISHED,
+} from './constants';
 import {
   createStep,
   getStep,
@@ -241,9 +245,7 @@ export const useIntegrationHelpers = () => {
       body: configuredProperties || {},
       headers: apiContext.headers,
       method: 'POST',
-      url: `${
-        apiContext.apiUri
-      }/connections/${connectionId}/actions/${actionId}`,
+      url: `${apiContext.apiUri}/connections/${connectionId}/actions/${actionId}`,
     });
     if (!response.ok) {
       let error = response.statusText;
@@ -275,9 +277,7 @@ export const useIntegrationHelpers = () => {
       headers: apiContext.headers,
       method: isIntegrationDeployment ? 'POST' : 'PUT',
       url: isIntegrationDeployment
-        ? `${
-            apiContext.apiUri
-          }/integrations/${id}/deployments/${version}/targetState`
+        ? `${apiContext.apiUri}/integrations/${id}/deployments/${version}/targetState`
         : `${apiContext.apiUri}/integrations/${id}/deployments`,
     });
     if (!response.ok) {
@@ -305,9 +305,7 @@ export const useIntegrationHelpers = () => {
       body: { targetState: UNPUBLISHED },
       headers: apiContext.headers,
       method: 'POST',
-      url: `${
-        apiContext.apiUri
-      }/integrations/${id}/deployments/${version}/targetState`,
+      url: `${apiContext.apiUri}/integrations/${id}/deployments/${version}/targetState`,
     });
     if (!response.ok) {
       await throwStandardError(response);

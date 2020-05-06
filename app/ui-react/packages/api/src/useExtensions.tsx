@@ -8,9 +8,12 @@ export interface IExtensionsResponse {
   totalCount: number;
 }
 
-type IExtensionType = "Steps" | "Connectors" | "Libraries";
+type IExtensionType = 'Steps' | 'Connectors' | 'Libraries';
 
-export const useExtensions = (disableUpdates: boolean = false, extensionType?: IExtensionType) => {
+export const useExtensions = (
+  disableUpdates: boolean = false,
+  extensionType?: IExtensionType
+) => {
   /**
    * Here we are allowing calls to `useExtensions` to pass an optional `extensionType`
    * query param of type IExtensionType, which gets appended to the string URL when
@@ -19,9 +22,9 @@ export const useExtensions = (disableUpdates: boolean = false, extensionType?: I
    * We currently use this for listing available Integration Extensions in the final
    * step of the Integration Editor.
    */
-  let extensionUrl: string = `/extensions?per_page=50`;
+  let extensionUrl: string = '/extensions?per_page=50';
   if (extensionType) {
-    extensionUrl = extensionUrl + `&extensionType=${extensionType}`
+    extensionUrl = `${extensionUrl}&extensionType=${extensionType}`;
   }
 
   const { read, ...rest } = useApiResource<IExtensionsResponse>({
