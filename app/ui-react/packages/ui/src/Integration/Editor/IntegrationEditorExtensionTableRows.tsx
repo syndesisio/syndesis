@@ -74,8 +74,12 @@ export const IntegrationEditorExtensionTableRows: React.FunctionComponent<IInteg
       /**
        * Format date
        */
-      // const formattedDate = extension.lastUpdated.toString();
-      // const formattedDate = extension.lastUpdated ? new Date(extension.lastUpdated).toLocaleString() : ''
+      const options = { year: "numeric", month: "long", day: "numeric" };
+
+      const formattedDate = extension.lastUpdated
+        ? new Date(extension.lastUpdated).toLocaleString(undefined, options)
+        : "";
+
       /**
        * Create format for PF tables
        * Check for pre-selected extensions by their IDs.
@@ -89,7 +93,8 @@ export const IntegrationEditorExtensionTableRows: React.FunctionComponent<IInteg
        * this list separately as `selectedExtensionIds`
        */
       tableRows.push({
-        cells: [extension.name, extension.description, extension.lastUpdated],
+        cells: [extension.name, extension.description, formattedDate],
+        meta: {extensionId: extension.extensionId},
         selected: extensionIdsSelected.includes(extension.extensionId)
       });
     }
@@ -106,7 +111,6 @@ export const IntegrationEditorExtensionTableRows: React.FunctionComponent<IInteg
    * @param rowIndex
    * @param rowData
    */
-
   const onTableRowChange = (
     event: any,
     isSelected: boolean,
@@ -139,7 +143,7 @@ export const IntegrationEditorExtensionTableRows: React.FunctionComponent<IInteg
       /**
        * Handle single selection in rows
        */
-      const { id } = rowData;
+      const { meta } = rowData;
 
       rows = [...rowsList];
       rows[rowIndex].selected = isSelected;
@@ -148,7 +152,7 @@ export const IntegrationEditorExtensionTableRows: React.FunctionComponent<IInteg
        * Callback with new data to
        * eventually be POSTed to the API
        */
-      onSelect(id.title, isSelected);
+      onSelect(meta.extensionId, isSelected);
     }
   };
 
