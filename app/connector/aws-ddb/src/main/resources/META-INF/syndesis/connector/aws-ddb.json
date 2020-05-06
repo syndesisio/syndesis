@@ -60,7 +60,7 @@
     },
     {
       "actionType": "connector",
-      "description": "Insert an item into an AWS Dynamo DB",
+      "description": "Insert or update an item into an AWS Dynamo DB",
       "descriptor": {
         "componentScheme": "aws-ddb",
         "connectorCustomizers": [
@@ -83,7 +83,7 @@
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "property",
-                "labelHint": "Element to be inserted. Can contain input parameters prefixed by ':#'.",
+                "labelHint": "Element to be inserted or updated. Can contain input parameters prefixed by ':#'.",
                 "placeholder": "{\"key\" : \":#MYPARAMNAME\"}",
                 "controlHint": "{\"key\" : \":#MYPARAMNAME\"}",
                 "required": true,
