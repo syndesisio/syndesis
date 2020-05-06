@@ -31,9 +31,19 @@ interface IExtensionProps {
   selected?: boolean;
 }
 
+export interface IDependency {
+  type: string;
+  id: string;
+}
+
 export interface ISaveIntegrationForm {
   name: string;
   description?: string;
+  /**
+   * Array of dependencies or
+   * extensions for this integration
+   */
+  dependencies?: IDependency[];
 }
 
 export interface ISaveIntegrationPageProps
@@ -80,6 +90,7 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
   const { t } = useTranslation('shared');
 
   const extensions: IExtensionProps[] = extensionsData.items as [];
+  const dependencyList = React.useRef<IDependency[]>([]);
 
   /**
    * Here we will return an array of extension IDs later
@@ -88,11 +99,18 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
   const preSelectedExtensions: string[] = currentSelectedExtensionIds || [];
 
   /**
-   * Updates the state based on changes in the UI.
+   * Updates the state based on changes in the UI
    */
   const onSelect = React.useCallback((extensionIds: string[]) => {
     setSelectedExtensionIds(extensionIds);
-  }, [setSelectedExtensionIds]);
+
+    dependencyList.current = extensionIds.map((extension: string) => {
+      return ({
+        id: extension,
+        type: "EXTENSION_TAG"
+      });
+    });
+  }, [dependencyList]);
 
   return (
     <WithLeaveConfirmation {...props}>
@@ -107,7 +125,7 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                     let shouldPublish = false;
 
                     const onSave = async (
-                      { name, description }: ISaveIntegrationForm,
+                      { name, description, dependencies }: ISaveIntegrationForm,
                       actions: any
                     ) => {
                       setError(false);
@@ -200,6 +218,7 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                           i18nRequiredProperty={t('shared:requiredFieldMessage')}
                           definition={definition}
                           initialValue={{
+                            dependencies: dependencyList.current,
                             description: state.integration.description,
                             name: state.integration.name,
                           }}

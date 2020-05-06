@@ -24,10 +24,6 @@ export interface IIntegrationEditorExtensionTableRowsProps {
   /**
    * These are provided by the API, and determine
    * which rows will be selected on page load.
-   * The state of these is maintained separately
-   * from the UI's state of the rows, because the format
-   * required for PF react table is different to that
-   * expected by the API once the integration is saved.
    */
   extensionIdsSelected: string[];
   i18nHeaderDescription: string;
@@ -35,14 +31,6 @@ export interface IIntegrationEditorExtensionTableRowsProps {
   i18nHeaderName: string;
   i18nTableDescription: string;
   i18nTableName: string;
-  /**
-   * When a change is detected and a row is selected,
-   * both the UI row state and @syndesis or story component
-   * state are updated. This is the function that is
-   * called to maintain the latter.
-   * @param extensionId
-   * @param selected
-   */
   onSelect: (extensionId: string, selected: boolean) => void;
   onSelectAll: (extensionIds: string[]) => void;
 }
@@ -71,9 +59,6 @@ export const IntegrationEditorExtensionTableRows: React.FunctionComponent<IInteg
     const tableRows: IRow[] = [];
 
     for (const extension of extensionsAvailable) {
-      /**
-       * Format date
-       */
       const options = { year: "numeric", month: "long", day: "numeric" };
 
       const formattedDate = extension.lastUpdated
@@ -81,16 +66,14 @@ export const IntegrationEditorExtensionTableRows: React.FunctionComponent<IInteg
         : "";
 
       /**
-       * Create format for PF tables
-       * Check for pre-selected extensions by their IDs.
-       * The list of extensions used by the table includes `cells`
-       * and `selected`, which are not props of the extensions
-       * themselves, and only used to determine state of the
-       * row in the UI.
-       * We must also maintain a list of extension IDs that
+       * Create format for PF tables, check for pre-selected
+       * extensions by their IDs.
+       * This array includes props used to determine state of
+       * the row in the UI, irrespective of the extension itself.
+       * We must also maintain an array of extension IDs that
        * have been selected, to provide back to the API.
        * The story or @syndesis module maintains the state for
-       * this list separately as `selectedExtensionIds`
+       * this list separately.
        */
       tableRows.push({
         cells: [extension.name, extension.description, formattedDate],
@@ -134,8 +117,7 @@ export const IntegrationEditorExtensionTableRows: React.FunctionComponent<IInteg
       } else {
         newIdSelectionArray = [];
         /**
-         * Callback with new data to
-         * eventually be POSTed to the API
+         * Parent component callback with new data
          */
         onSelectAll(newIdSelectionArray);
       }
@@ -149,8 +131,7 @@ export const IntegrationEditorExtensionTableRows: React.FunctionComponent<IInteg
       rows[rowIndex].selected = isSelected;
 
       /**
-       * Callback with new data to
-       * eventually be POSTed to the API
+       * Parent component callback with new data
        */
       onSelect(meta.extensionId, isSelected);
     }
