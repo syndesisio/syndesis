@@ -10,7 +10,8 @@ metadata:
     monitoring-key: middleware
 spec:
   endpoints:
-  - targetPort: metrics
+    - port: metrics
+      path: /metrics
   selector:
     matchLabels:
       syndesis.io/app: syndesis

@@ -155,6 +155,10 @@
       port: 5432
       protocol: TCP
       targetPort: 5432
+    - port: 8181
+      name: metrics
+      targetPort: 9187
+      protocol: TCP
     selector:
       app: syndesis
       syndesis.io/app: syndesis

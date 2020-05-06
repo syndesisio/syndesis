@@ -13,6 +13,10 @@
       protocol: TCP
       targetPort: 8080
       name: http
+    - port: 8181
+      name: metrics
+      targetPort: 8181
+      protocol: TCP
     selector:
       app: syndesis
       syndesis.io/app: syndesis
