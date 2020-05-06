@@ -11,7 +11,6 @@ import {
 } from '@syndesis/ui';
 import { validateRequiredProperties, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import i18n from '../../../../i18n';
@@ -71,14 +70,29 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
     cancelHref,
     ...props
   }) => {
+  const {
+    resource: extensionsData
+  } = useExtensions(undefined, 'Libraries');
+
   const [currentSelectedExtensionIds, setSelectedExtensionIds] = React.useState<string[]>([]);
   const [error, setError] = React.useState<false | ErrorResponse | IntegrationSaveErrorResponse>(false);
 
   const { t } = useTranslation('shared');
 
-  useEffect(() => {
-    useExtensions(false, "Libraries");
-  }, [useExtensions]);
+  const extensions: IExtensionProps[] = extensionsData.items as [];
+
+  /**
+   * Here we will return an array of extension IDs later
+   * to be provided by the API
+   */
+  const preSelectedExtensions: string[] = currentSelectedExtensionIds || [];
+
+  /**
+   * Updates the state based on changes in the UI.
+   */
+  const onSelect = React.useCallback((extensionIds: string[]) => {
+    setSelectedExtensionIds(extensionIds);
+  }, [setSelectedExtensionIds]);
 
   return (
     <WithLeaveConfirmation {...props}>
@@ -91,23 +105,6 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                 <WithIntegrationHelpers>
                   {({ deployIntegration, saveIntegration }) => {
                     let shouldPublish = false;
-
-                    /**
-                     * Updates the state based on changes in the UI.
-                     */
-                    const onSelect = (extensionIds: string[]) => {
-                      // Do something here
-                      // Update state or AutoForm values..
-                      // tslint:disable-next-line:no-console
-                      console.log('Received a string of extension IDs from the UI: ' + JSON.stringify(extensionIds));
-                      setSelectedExtensionIds(extensionIds);
-                    };
-
-                    /**
-                     * Retrieved from the API
-                     */
-                    const extensions: IExtensionProps[] = [];
-                    const preSelectedExtensions: string[] = [];
 
                     const onSave = async (
                       { name, description }: ISaveIntegrationForm,

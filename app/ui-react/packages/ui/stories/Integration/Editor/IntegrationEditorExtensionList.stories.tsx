@@ -9,8 +9,7 @@ import {
   IntegrationEditorExtensionTable
 } from '../../../src';
 
-
-const preFormattedExtensions = {
+const extensions = {
   "items": [
     {
       "createdDate": 1585137219989,
@@ -52,16 +51,11 @@ const preFormattedExtensions = {
   "totalCount": 2
 };
 
-const extensions = preFormattedExtensions.items.map((extension) => {
-  extension.lastUpdated = extension.lastUpdated ? new Date(extension.lastUpdated.toLocaleString()) : '';
-  return extension;
-});
-
 const selectedExtensions = ["io.syndesis.extensions:syndesis-library-test-driver"];
 
 stories
 .add('Integration Editor Extension List', () => (
-  <IntegrationEditorExtensionTable extensionsAvailable={extensions}
+  <IntegrationEditorExtensionTable extensionsAvailable={extensions.items}
                                    i18nHeaderDescription={text('integrations:editor:extensions:description', 'Description')}
                                    i18nHeaderLastUpdated={text('integrations:editor:extensions:lastUpdated', 'Last' +
                                     ' Updated')}

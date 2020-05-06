@@ -21,7 +21,7 @@ export const useExtensions = (disableUpdates: boolean = false, extensionType?: I
    */
   let extensionUrl: string = `/extensions?per_page=50`;
   if (extensionType) {
-    extensionUrl = extensionUrl + `?extensionType=${extensionType}`
+    extensionUrl = extensionUrl + `&extensionType=${extensionType}`
   }
 
   const { read, ...rest } = useApiResource<IExtensionsResponse>({

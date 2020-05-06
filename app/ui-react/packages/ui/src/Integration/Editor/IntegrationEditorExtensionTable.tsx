@@ -53,7 +53,7 @@ export const IntegrationEditorExtensionTable: React.FunctionComponent<IIntegrati
   }) => {
   /**
    * Table state for array of IDs for selected extensions,
-   * starting with the preselected list provided by the API.
+   * starting with the preselected list
    */
   const [selectedExtensionIds, setSelectedExtensionIds] = React.useState<string[]>(
     preSelectedExtensionIds
@@ -74,27 +74,27 @@ export const IntegrationEditorExtensionTable: React.FunctionComponent<IIntegrati
   const handleDeselectExtension = (extensionId: string) => {
     /**
      * Make a shallow copy of selectedExtensions array,
-     * then find the index of the selected id.
+     * then find the index of the selected id
      */
     const tempArray = selectedExtensionIds.filter(id => id !== extensionId);
     setSelectedExtensionIds(tempArray);
   };
 
-  const onTableChange = (extensionId: string, isSelected: boolean) => {
+  const onTableChange = React.useCallback((extensionId: string, isSelected: boolean) => {
     if (isSelected) {
       handleSelectExtension(extensionId);
     } else {
       handleDeselectExtension(extensionId);
     }
-  };
+  }, [handleSelectExtension, handleDeselectExtension]);
 
-  const onTableChangeAll = (newList: string[]) => {
+  const onTableChangeAll = React.useCallback((newList: string[]) => {
     setSelectedExtensionIds(newList);
-  };
+  }, [setSelectedExtensionIds]);
 
-  const callOnSelect = React.useCallback(() => {
+  const callOnSelect = () => {
     onSelect(selectedExtensionIds);
-  }, [onSelect, selectedExtensionIds]);
+  };
 
   useEffect(() => {
     callOnSelect();
