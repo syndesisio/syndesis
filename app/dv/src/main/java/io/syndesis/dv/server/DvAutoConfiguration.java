@@ -36,9 +36,11 @@ import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 import org.teiid.runtime.EmbeddedConfiguration;
 
 import io.syndesis.dv.RepositoryManager;
+import io.syndesis.dv.lsp.websocket.TeiidDdlWebSocketEndpoint;
 import io.syndesis.dv.metadata.MetadataInstance;
 import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
 import io.syndesis.dv.metadata.internal.TeiidServer;
@@ -133,5 +135,12 @@ public class DvAutoConfiguration implements ApplicationListener<ContextRefreshed
         ThreadPoolTaskExecutor tpte = new ThreadPoolTaskExecutor();
         tpte.initialize();
         return tpte;
+    }
+
+    @Bean
+    public ServerEndpointExporter endpointExporter() {
+        ServerEndpointExporter endpointExporter = new ServerEndpointExporter();
+        endpointExporter.setAnnotatedEndpointClasses(TeiidDdlWebSocketEndpoint.class);
+        return endpointExporter;
     }
 }

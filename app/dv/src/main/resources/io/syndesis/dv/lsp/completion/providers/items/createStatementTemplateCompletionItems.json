@@ -1,0 +1,51 @@
+{
+    "name": "CreateStatementTemplateCompletionItems",
+    "version": "1.0.0",
+    "items": [
+        {
+            "label": "CREATE VIEW",
+            "kind": "KEYWORD",
+            "detail": "",
+            "documentation": "",
+            "deprecated": "false",
+            "preselect": "false",
+            "sortText": "false",
+            "insertText": "CREATE VIEW ",
+            "insertTextFormat": "",
+            "textEdit": "",
+            "additionalTextEdits": "",
+            "commitCharacters": "",
+            "category": ""
+        },
+        {
+            "label": "CREATE VIEW ...",
+            "kind": "SNIPPET",
+            "detail": "",
+            "documentation": "",
+            "deprecated": "false",
+            "preselect": "false",
+            "sortText": "false",
+            "insertText": "CREATE VIEW ${1:view_name} (\n) AS SELECT * FROM ${2:table_name};",
+            "insertTextFormat": "SNIPPET",
+            "textEdit": "",
+            "additionalTextEdits": "",
+            "commitCharacters": "",
+            "category": ""
+        },
+        {
+            "label": "CREATE VIEW ... INNER JOIN",
+            "kind": "SNIPPET",
+            "detail": "",
+            "documentation": "",
+            "deprecated": "false",
+            "preselect": "false",
+            "sortText": "false",
+            "insertText": "CREATE VIEW ${1:view_name} (\n) AS SELECT * FROM ${2:table1_name} AS A\nINNER JOIN ${3:table2_name} AS B\n\tON A.${4:column_a} = B.${5:column_b};",
+            "insertTextFormat": "SNIPPET",
+            "textEdit": "",
+            "additionalTextEdits": "",
+            "commitCharacters": "",
+            "category": ""
+        }
+    ]
+}

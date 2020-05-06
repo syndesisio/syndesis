@@ -1,4 +1,5 @@
 import {
+  MonacoContext,
   useViewDefinition,
   useVirtualization,
   useVirtualizationHelpers,
@@ -305,6 +306,8 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     return ddlHasChanges.current;
   }, [ddlHasChanges]);
 
+  const monacoContext = useContext(MonacoContext);
+
   return (
     <WithLoader
       loading={loading}
@@ -334,28 +337,30 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
                 </Link>
                 <span>{t('viewNameBreadcrumb', { name: viewDefn.name })}</span>
               </Breadcrumb>
-              <DdlEditor
-                viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
-                i18nCursorColumn={t('cursorColumn')}
-                i18nCursorLine={t('cursorLine')}
-                i18nDdlTextPlaceholder={t('ddlTextPlaceholder')}
-                i18nDoneLabel={t('shared:Done')}
-                i18nSaveLabel={t('shared:Save')}
-                i18nTitle={t('viewEditor.title')}
-                i18nMetadataTitle={t('metadataTree')}
-                i18nLoading={t('shared:Loading')}
-                previewExpanded={previewExpanded}
-                i18nValidationResultsTitle={validationResultsTitle}
-                showValidationMessage={validationMessageVisible}
-                isSaving={isSaving}
-                sourceTableInfos={sourceTableColumns}
-                sourceInfo={sourceInfo}
-                onCloseValidationMessage={handleHideValidationMessage}
-                onFinish={handleEditFinished}
-                onSave={handleSaveView}
-                setDirty={handleDirtyStateChanged}
-                validationResults={validationResults}
-              />
+                <DdlEditor
+                  viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
+                  i18nCursorColumn={t('cursorColumn')}
+                  i18nCursorLine={t('cursorLine')}
+                  i18nDdlTextPlaceholder={t('ddlTextPlaceholder')}
+                  i18nDoneLabel={t('shared:Done')}
+                  i18nSaveLabel={t('shared:Save')}
+                  i18nTitle={t('viewEditor.title')}
+                  i18nMetadataTitle={t('metadataTree')}
+                  i18nLoading={t('shared:Loading')}
+                  previewExpanded={previewExpanded}
+                  i18nValidationResultsTitle={validationResultsTitle}
+                  showValidationMessage={validationMessageVisible}
+                  isSaving={isSaving}
+                  sourceTableInfos={sourceTableColumns}
+                  sourceInfo={sourceInfo}
+                  onCloseValidationMessage={handleHideValidationMessage}
+                  onFinish={handleEditFinished}
+                  onSave={handleSaveView}
+                  setDirty={handleDirtyStateChanged}
+                  validationResults={validationResults}
+                  didmount={monacoContext.didMountEditor}
+                  willMount={monacoContext.willMountEditor}
+                />
               <ExpandablePreview
                 i18nEmptyResultsTitle={noResultsTitle}
                 i18nEmptyResultsMsg={noResultsMessage}

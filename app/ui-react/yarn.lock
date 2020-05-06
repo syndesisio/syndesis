@@ -4677,6 +4677,14 @@
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
+"@types/react@^15.x || ^16.x":
+  version "16.9.34"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.9.34.tgz#f7d5e331c468f53affed17a8a4d488cd44ea9349"
+  integrity sha512-8AJlYMOfPe1KGLKyHpflCg5z46n0b5DbRfqDksxBLBTUpB75ypDBAO9eCUcjNwE6LCUslwTz00yyG/X9gaVtow==
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^2.2.0"
+
 "@types/resolve@0.0.8":
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/@types/resolve/-/resolve-0.0.8.tgz#f26074d238e02659e323ce1a13d041eee280e194"
@@ -13422,6 +13430,20 @@ jest-docblock@^25.1.0:
   dependencies:
     detect-newline "^3.0.0"
 
+jest-dom@^3.1.3:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/jest-dom/-/jest-dom-3.5.0.tgz#715908b545c0d66a0eba9d21fc59357fac024f43"
+  integrity sha512-xHnP3Qo/29oLAo2iixaZsoDrm3XKSVrMH5Wf2ZEiLychJQBTNzOeVMPxrCygCgJiyQMbnymXltme8bPzuiGOIA==
+  dependencies:
+    chalk "^2.4.1"
+    css "^2.2.3"
+    css.escape "^1.5.1"
+    jest-diff "^24.0.0"
+    jest-matcher-utils "^24.0.0"
+    lodash "^4.17.11"
+    pretty-format "^24.0.0"
+    redent "^2.0.0"
+
 jest-each@^24.9.0:
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/jest-each/-/jest-each-24.9.0.tgz#eb2da602e2a610898dbc5f1f6df3ba86b55f8b05"
@@ -14085,7 +14107,12 @@ jquery-match-height@^0.7.2:
   resolved "https://registry.yarnpkg.com/jquery-match-height/-/jquery-match-height-0.7.2.tgz#f8d9f3ba5314daab109cf07408674be204be5f0e"
   integrity sha1-+NnzulMU2qsQnPB0CGdL4gS+Xw4=
 
-"jquery@>= 2.1.x", jquery@>=1.7, jquery@>=1.7.0, "jquery@>=1.7.1 <4.0.0", jquery@>=1.8, "jquery@^1.8.3 || ^2.0 || ^3.0", jquery@^3.5.0:
+"jquery@>= 2.1.x", jquery@>=1.7, jquery@>=1.7.0, "jquery@>=1.7.1 <4.0.0", "jquery@^1.8.3 || ^2.0 || ^3.0":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.4.1.tgz#714f1f8d9dde4bdfa55764ba37ef214630d80ef2"
+  integrity sha512-36+AdBzCL+y6qjw5Tx7HgzeGCzC81MDDgaUP8ld2zhx58HdqXGoBd+tHdrBMiyjGQs0Hxs/MLZTu/eHNJJuWPw==
+
+jquery@>=1.8, jquery@^3.5.0:
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.5.0.tgz#9980b97d9e4194611c36530e7dc46a58d7340fc9"
   integrity sha512-Xb7SVYMvygPxbFMpTFQiHh1J7HClEaThguL15N/Gg37Lri/qKyhRGZYzHRyLH8Stq3Aow0LsHO2O2ci86fCrNQ==
@@ -15777,6 +15804,33 @@ moment@2.23.0:
 moment@2.24.0, "moment@>= 2.6.0", moment@^2.10, moment@^2.10.2, moment@^2.18.1, moment@^2.19.1, moment@^2.24.0:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+
+monaco-editor-core@^0.19.3:
+  version "0.19.3"
+  resolved "https://registry.yarnpkg.com/monaco-editor-core/-/monaco-editor-core-0.19.3.tgz#6d2b36f42f0f42be6def5604810fafc288c9cc3e"
+  integrity sha512-Fd6bTTaAxDAulh3q9Hordj80DSFZFGhjKX/Z3K/kElA9xkPyNwyaOjphYp8254nhUEKCk56TKP7qfRkUjjZF3w==
+
+monaco-editor-webpack-plugin@^1.8.2:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/monaco-editor-webpack-plugin/-/monaco-editor-webpack-plugin-1.9.0.tgz#5b547281b9f404057dc5d8c5722390df9ac90be6"
+  integrity sha512-tOiiToc94E1sb50BgZ8q8WK/bxus77SRrwCqIpAB5er3cpX78SULbEBY4YPOB8kDolOzKRt30WIHG/D6gz69Ww==
+  dependencies:
+    loader-utils "^1.2.3"
+
+monaco-editor@^0.19.3:
+  version "0.19.3"
+  resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.19.3.tgz#1c994b3186c00650dbcd034d5370d46bf56c0663"
+  integrity sha512-2n1vJBVQF2Hhi7+r1mMeYsmlf18hjVb6E0v5SoMZyb4aeOmYPKun+CE3gYpiNA1KEvtSdaDHFBqH9d7Wd9vREg==
+
+monaco-languageclient@^0.10.2:
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/monaco-languageclient/-/monaco-languageclient-0.10.2.tgz#d243964737b29fc20d542deca1835fa045cd19eb"
+  integrity sha512-ZfOm4jQyJzz7rHFIBfLiSM2tfgWoWXkumarLJPSqMFYyK1swIXwS8a8f8cwVZFkJ/aUO1GHcQXaaPZ1B5YtsLQ==
+  dependencies:
+    glob-to-regexp "^0.3.0"
+    vscode-jsonrpc "^4.1.0-next"
+    vscode-languageclient "^5.3.0-next"
+    vscode-uri "^1.0.5"
 
 move-concurrently@^1.0.1:
   version "1.0.1"
@@ -19190,6 +19244,14 @@ react-loadable@^5.5.0:
   resolved "https://registry.yarnpkg.com/react-loadable/-/react-loadable-5.5.0.tgz#582251679d3da86c32aae2c8e689c59f1196d8c4"
   dependencies:
     prop-types "^15.5.0"
+
+react-monaco-editor@^0.33.0:
+  version "0.33.0"
+  resolved "https://registry.yarnpkg.com/react-monaco-editor/-/react-monaco-editor-0.33.0.tgz#822c331836ec39b1160faf22b0c722266f822460"
+  integrity sha512-zFo3A55QHCABYm4Xt0HWQMq10GI+oxhhCUGDYgzLksU1iGrdvHudUNXTDZvE43B1gM+cPyJ75jla/464kss8Iw==
+  dependencies:
+    "@types/react" "^15.x || ^16.x"
+    prop-types "^15.7.2"
 
 react-popper-tooltip@^2.8.3:
   version "2.10.1"
@@ -23436,6 +23498,49 @@ vm-browserify@^1.0.1:
 void-elements@^2.0.0, void-elements@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
+
+vscode-jsonrpc@^4.1.0-next:
+  version "4.1.0-next.3"
+  resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-4.1.0-next.3.tgz#05fe742959a2726020d4d0bfbc3d3c97873c7fde"
+  integrity sha512-Z6oxBiMks2+UADV1QHXVooSakjyhI+eHTnXzDyVvVMmegvSfkXk2w6mPEdSkaNHFBdtWW7n20H1yw2nA3A17mg==
+
+vscode-jsonrpc@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/vscode-jsonrpc/-/vscode-jsonrpc-5.0.1.tgz#9bab9c330d89f43fc8c1e8702b5c36e058a01794"
+  integrity sha512-JvONPptw3GAQGXlVV2utDcHx0BiY34FupW/kI6mZ5x06ER5DdPG/tXWMVHjTNULF5uKPOUUD0SaXg5QaubJL0A==
+
+vscode-languageclient@^5.3.0-next:
+  version "5.3.0-next.9"
+  resolved "https://registry.yarnpkg.com/vscode-languageclient/-/vscode-languageclient-5.3.0-next.9.tgz#34f58017647f15cd86015f7af45935dc750611f7"
+  integrity sha512-BFA3X1y2EI2CfsSBy0KG2Xr5BOYfd/97jTmD+doqL6oj+cY8S7AmRCOwb2f9Hbjq8GWL7YC+OJ0leZEUSPgP0A==
+  dependencies:
+    semver "^6.3.0"
+    vscode-languageserver-protocol "^3.15.0-next.8"
+
+vscode-languageserver-protocol@^3.15.0-next.8:
+  version "3.15.3"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-protocol/-/vscode-languageserver-protocol-3.15.3.tgz#3fa9a0702d742cf7883cb6182a6212fcd0a1d8bb"
+  integrity sha512-zrMuwHOAQRhjDSnflWdJG+O2ztMWss8GqUUB8dXLR/FPenwkiBNkMIJJYfSN6sgskvsF0rHAoBowNQfbyZnnvw==
+  dependencies:
+    vscode-jsonrpc "^5.0.1"
+    vscode-languageserver-types "3.15.1"
+
+vscode-languageserver-types@3.15.1:
+  version "3.15.1"
+  resolved "https://registry.yarnpkg.com/vscode-languageserver-types/-/vscode-languageserver-types-3.15.1.tgz#17be71d78d2f6236d414f0001ce1ef4d23e6b6de"
+  integrity sha512-+a9MPUQrNGRrGU630OGbYVQ+11iOIovjCkqxajPa9w57Sd5ruK8WQNsslzpa0x/QJqC8kRc2DUxWjIFwoNm4ZQ==
+
+vscode-uri@^1.0.5:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/vscode-uri/-/vscode-uri-1.0.8.tgz#9769aaececae4026fb6e22359cb38946580ded59"
+  integrity sha512-obtSWTlbJ+a+TFRYGaUumtVwb+InIUVI0Lu0VBUAPmj2cU5JutEXg3xUE0c2J5Tcy7h2DEKVJBFi+Y9ZSFzzPQ==
+
+vscode-ws-jsonrpc@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/vscode-ws-jsonrpc/-/vscode-ws-jsonrpc-0.1.1.tgz#163ff05662635b4fd161ed132e112cec4d83f126"
+  integrity sha512-1O/FUORbb8dZAvh9AFF6HViLJ0Ja0RbF+sFRnUsoqkuKIRsXDDiiJpwYwT6fmglCLefE5afGPw9NoHvDVN/5yw==
+  dependencies:
+    vscode-jsonrpc "^4.1.0-next"
 
 w3c-hr-time@^1.0.1:
   version "1.0.1"

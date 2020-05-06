@@ -29,8 +29,6 @@
   "createViewWizardStep1": "Выберите источники",
   "createViewWizardStep2": "Выберите имя",
   "createVirtualizationSuccess": "Виртуализация \"{{name}}\" создана.",
-  "cursorColumn": "колонка",
-  "cursorLine": "Линия",
   "ddlTextPlaceholder": "Введите представление DDL ...",
   "deleteInProgress": "Удаление...",
   "deleteModalMessage": "Это навсегда удалит виртуализацию \"{{name}}\".  Продолжить удаление?",
