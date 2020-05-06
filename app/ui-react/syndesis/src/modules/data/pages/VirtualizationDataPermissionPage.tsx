@@ -1,5 +1,11 @@
-import { useDVRoles, useDVStatus, useViewDefinitionDescriptors, useVirtualization } from '@syndesis/api';
-import { ViewDefinitionDescriptor } from '@syndesis/models';
+import {
+  useDVRoles,
+  useDVStatus,
+  useViewDefinitionDescriptors,
+  useVirtualization,
+  useVirtualizationHelpers,
+} from '@syndesis/api';
+import { RoleInfo, ViewDefinitionDescriptor } from '@syndesis/models';
 import {
   IFilterType,
   ISortType,
@@ -14,8 +20,10 @@ import {
 } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
+import resolvers from '../../resolvers';
 import { VirtualizationActionId } from '../shared/VirtualizationActionContainer';
 import { getFilteredAndSortedByName } from '../shared/VirtualizationUtils';
 import {
@@ -26,9 +34,19 @@ import {
 
 export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
   /**
+   * Context that broadcasts global notifications.
+   */
+  const { pushNotification } = React.useContext(UIContext);
+
+  /**
    * Hook to handle localization.
    */
   const { t } = useTranslation(['data', 'shared']);
+
+  /**
+   * Hook that provides helper methods.
+   */
+  const { updateVirtualizationRoles } = useVirtualizationHelpers();
 
   /**
    * Hook to obtain route params and history.
@@ -63,12 +81,12 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
   /**
    * Hook to obtain the dv status is sso configured
    */
-  const { resource: dvStatus  } = useDVStatus();
+  const { resource: dvStatus, read: getDVStatusUpdate } = useDVStatus();
 
   /**
    * Hook to obtain the avalable roles.
    */
-  const { resource: dvRoles  } = useDVRoles();
+  const { resource: dvRoles, read: getUpdatedRole } = useDVRoles();
 
   /**
    * Hook to obtain view descriptors.
@@ -82,7 +100,9 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
   /**
    * React useState Hook to handle state in component.
    */
-  const [itemSelected, setItemSelected] = React.useState<string[]>([]);
+  const [itemSelected, setItemSelected] = React.useState<Map<string, string>>(
+    new Map<string, string>()
+  );
   const [perPage, setPerPage] = React.useState<number>(20);
   const [page, setPage] = React.useState<number>(1);
 
@@ -91,30 +111,55 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
   /**
    * Views selection handling.
    */
-  const onSelectedViewChange = (checked: boolean, event: any, view: string) => {
-    const itemSelectedCopy = [...itemSelected];
-    itemSelectedCopy.push(view);
+  const onSelectedViewChange = (
+    checked: boolean,
+    event: any,
+    viewName: string,
+    viewId: string
+  ) => {
+    const itemSelectedCopy = new Map(itemSelected);
+    if (checked) {
+      itemSelectedCopy.set(viewId, viewName);
+    } else {
+      itemSelectedCopy.delete(viewId);
+    }
+
     setItemSelected(itemSelectedCopy);
   };
 
   const clearViewSelection = () => {
-    setItemSelected([]);
+    setItemSelected(new Map<string, string>());
   };
 
   const selectPageViews = () => {
-    const selectedViews: string[] = [];
+    const selectedViews: Map<string, string> = new Map<string, string>();
     for (const view of filteredAndSortedPerPage) {
-      selectedViews.push(view.name);
+      selectedViews.set(view.id, view.name);
     }
     setItemSelected(selectedViews);
   };
 
   const selectAllViews = () => {
-    const selectedViews: string[] = [];
+    const selectedViews: Map<string, string> = new Map<string, string>();
     for (const view of viewDefinitionDescriptors) {
-      selectedViews.push(view.name);
+      selectedViews.set(view.id, view.name);
     }
     setItemSelected(selectedViews);
+  };
+
+  const updateViewsPermissions = async (roleInfo: RoleInfo) => {
+    try {
+      await updateVirtualizationRoles(params.virtualizationId, roleInfo);
+      return true;
+    } catch {
+      pushNotification(
+        t('errorUpdatingViewPermissions', {
+          name: params.virtualizationId,
+        }),
+        'error'
+      );
+      return false;
+    }
   };
 
   /**
@@ -178,7 +223,7 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                       count: filteredAndSorted.length,
                     })}
                     hasListData={viewDefinitionDescriptors.length > 0}
-                    hasViewSelected={itemSelected.length > 0}
+                    hasViewSelected={itemSelected.size > 0}
                     i18nViewName={t('viewNameDisplay')}
                     i18nPermission={t('permissions')}
                     i18nSelectNone={t('permissionSelectNone')}
@@ -188,10 +233,17 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                     i18nSelectAll={t('permissionSelectAll', {
                       allListLength: filteredAndSorted.length,
                     })}
+                    i18nEmptyStateInfo={t('viewEmptyStateInfo')}
+                    i18nEmptyStateTitle={t('viewEmptyStateTitle')}
+                    i18nImportViews={t('importViews')}
+                    i18nImportViewsTip={t('importDataSourceTip')}
+                    i18nCreateView={t('createView')}
+                    i18nCreateViewTip={t('createViewTip')}
                     i18nCancle={t('shared:Cancel')}
                     i18nSave={t('shared:Save')}
-                    i18nRead={t('shared:Read')}
-                    i18nEdit={t('shared:Edit')}
+                    i18nSelect={t('shared:Select')}
+                    i18nInsert={t('shared:Insert')}
+                    i18nUpdate={t('shared:Update')}
                     i18nDelete={t('shared:Delete')}
                     i18nAllAccess={t('allAccess')}
                     i18nRole={t('permissionRole')}
@@ -199,7 +251,17 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                     i18nSetPermission={t('permissionSet')}
                     i18nClearPermission={t('permissionClear')}
                     i18nSelectedViewsMsg={t('permissionSeletedViews')}
-                    i18nSelectedViews={itemSelected.join(', ')}
+                    i18nSsoConfigWarning={t('permissionSsoConfig')}
+                    linkCreateViewHRef={resolvers.data.virtualizations.views.createView.selectSources(
+                      {
+                        virtualization,
+                      }
+                    )}
+                    linkImportViewsHRef={resolvers.data.virtualizations.views.importSource.selectConnection(
+                      {
+                        virtualization,
+                      }
+                    )}
                     page={page}
                     perPage={perPage}
                     setPerPage={setPerPage}
@@ -209,6 +271,10 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                     selectPageViews={selectPageViews}
                     status={dvStatus.attributes}
                     dvRoles={dvRoles}
+                    itemSelected={itemSelected}
+                    updateViewsPermissions={updateViewsPermissions}
+                    getDVStatusUpdate={getDVStatusUpdate}
+                    getUpdatedRole={getUpdatedRole}
                   >
                     {filteredAndSortedPerPage
                       .filter(
@@ -222,18 +288,22 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                         ) => (
                           <ViewPermissionListItems
                             key={index}
-                            i18nRead={t('shared:Read')}
-                            i18nEdit={t('shared:Edit')}
-                            i18nDelete={t('shared:Delete')}
-                            i18nAllAccess={t('allAccess')}
-                            i18nRole={t('permissionRole')}
-                            i18nAddNewRole={t('addNewRole')}
+                            // i18nSelect={t('shared:Select')}
+                            // i18nInsert={t('shared:Insert')}
+                            // i18nUpdate={t('shared:Update')}
+                            // i18nDelete={t('shared:Delete')}
+                            // i18nAllAccess={t('allAccess')}
+                            // i18nRole={t('permissionRole')}
+                            // i18nAddNewRole={t('addNewRole')}
                             itemSelected={itemSelected}
                             viewId={viewDefinitionDescriptor.id}
                             viewName={viewDefinitionDescriptor.name}
-                            status={dvStatus.attributes}
+                            viewRolePermissionList={
+                              viewDefinitionDescriptor.tablePrivileges
+                            }
+                            // status={dvStatus.attributes}
                             onSelectedViewChange={onSelectedViewChange}
-                            dvRoles={dvRoles}
+                            // dvRoles={dvRoles}
                           />
                         )
                       )}

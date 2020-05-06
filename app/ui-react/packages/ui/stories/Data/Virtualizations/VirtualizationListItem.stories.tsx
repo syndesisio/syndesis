@@ -57,7 +57,6 @@ stories
     'sample virtualization item',
     withNotes(publishedVirtualizationNotes)(() => (
       <Router>
-        <Bullseye>
           <VirtualizationListItem
             dropdownActions={virtualizationActions}
             isProgressWithLink={true}
@@ -78,17 +77,16 @@ stories
             publishingLogUrl={text('publishLogUrl', publishLogUrl)}
             i18nLockPopoverHeading={popoverHeading}
             i18nLockPopover={popover}
+            i18nSecuredText={'Secured'}
             usedBy={['stuff']}
             secured={true}
           />
-        </Bullseye>
       </Router>
     ))
   )
 
   .add('virtualization item with odata', () => (
     <Router>
-      <Bullseye>
         <VirtualizationListItem
           dropdownActions={virtualizationActions}
           isProgressWithLink={false}
@@ -109,9 +107,9 @@ stories
           publishingLogUrl={text('publishLogUrl', publishLogUrl)}
           i18nLockPopoverHeading={popoverHeading}
           i18nLockPopover={popover}
+          i18nSecuredText={'Secured'}
           usedBy={[]}
           secured={true}
         />
-      </Bullseye>
     </Router>
   ));

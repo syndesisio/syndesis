@@ -95,6 +95,7 @@ const virtItem = [
     publishingLogUrl=""
     i18nLockPopoverHeading={popoverHeading}
     i18nLockPopover={popover}
+    i18nSecuredText={'Secured'}
     children={viewItems}
     usedBy={['MyVirt']}
     secured={true}
@@ -121,6 +122,7 @@ const virtualizationItems = [
     publishingLogUrl=""
     i18nLockPopoverHeading={popoverHeading}
     i18nLockPopover={popover}
+    i18nSecuredText={'Secured'}
     usedBy={[]}
     secured={true}
   />,
@@ -142,6 +144,7 @@ const virtualizationItems = [
     currentPublishedState={currentStatusPublished}
     i18nLockPopoverHeading={popoverHeading}
     i18nLockPopover={popover}
+    i18nSecuredText={'Secured'}
     usedBy={[]}
     secured={true}
   />,
@@ -167,6 +170,7 @@ const virtualizationItems = [
     publishingStepText={'Building'}
     i18nLockPopoverHeading={popoverHeading}
     i18nLockPopover={popover}
+    i18nSecuredText={'Secured'}
     usedBy={[]}
     secured={true}
   />,

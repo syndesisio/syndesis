@@ -2,6 +2,18 @@
   margin-left: 5px;
 }
 
+.virtualization-list-item-lock-icon {
+  margin-right: 5px;
+}
+
+.virtualization-list-item-secured {
+  cursor: pointer;
+}
+
+.virtualization-list-item-secured-text {
+  color: var(--pf-global--info-color--100);
+}
+
 .virtualization-list-item__odata-anchor {
   word-break: break-all;
 }
