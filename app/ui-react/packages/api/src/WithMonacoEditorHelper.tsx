@@ -85,7 +85,7 @@ export class WithMonacoEditorHelper extends React.Component<
         documentSelector: [LANGUAGE_ID],
         // disable the default error handler
         errorHandler: {
-          closed: () => CloseAction.DoNotRestart,
+          closed: () => CloseAction.Restart,
           error: () => ErrorAction.Continue,
         },
       },
