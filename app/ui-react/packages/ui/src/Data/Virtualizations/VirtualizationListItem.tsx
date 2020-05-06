@@ -5,10 +5,12 @@ import {
   DataListItemCells,
   DataListItemRow,
   Popover,
+  Split,
+  SplitItem,
   Tooltip,
 } from '@patternfly/react-core';
-import { CubeIcon, LockIcon } from '@patternfly/react-icons';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
+import { CubeIcon, LockIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
@@ -59,6 +61,7 @@ export interface IVirtualizationListItemProps {
   virtualizationDescription: string;
   i18nLockPopoverHeading: string;
   i18nLockPopover: string;
+  i18nSecuredText: string;
   secured: boolean;
 }
 
@@ -158,18 +161,19 @@ export const VirtualizationListItem: React.FunctionComponent<IVirtualizationList
             </DataListCell>,
             <DataListCell key={'data_permission'} width={1}>
               {props.secured && (
-            <Popover
-              headerContent={<div>{props.i18nLockPopoverHeading}</div>}
-              bodyContent={
-                <div>
-                  {props.i18nLockPopover}
-                </div>
-              }
-            >
-              <LockIcon />
-            </Popover>
-          )}
-            </DataListCell>
+                <Popover
+                  headerContent={<div>{props.i18nLockPopoverHeading}</div>}
+                  bodyContent={<div>{props.i18nLockPopover}</div>}
+                >
+                  <Split className={'virtualization-list-item-secured'}>
+                    <SplitItem>
+                      <LockIcon className={'virtualization-list-item-lock-icon'} />
+                    </SplitItem>
+                    <SplitItem className={'virtualization-list-item-secured-text'}>{props.i18nSecuredText}</SplitItem>
+                  </Split>
+                </Popover>
+              )}
+            </DataListCell>,
           ]}
         />
         <DataListAction

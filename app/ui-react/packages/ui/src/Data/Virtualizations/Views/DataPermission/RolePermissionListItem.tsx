@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertActionCloseButton,
+  AlertVariant,
   Checkbox,
   DataListAction,
   DataListCell,
@@ -15,25 +18,83 @@ import * as React from 'react';
 export interface IRolePermissionListItemProps {
   index: number;
   role: string[];
+  selectedRole: string | undefined;
+  selectedPermissions: string[];
+  addRole: (roleName: string) => void;
+  updateRolePermissionModel: (roleName: string, permissions: string[]) => void;
   removeRolePermission: (index: number) => void;
 }
 
 export interface IRoleOption {
   value: string;
 }
-
-export const RolePermissionListItem: React.FunctionComponent<IRolePermissionListItemProps> = props => {
-  const [checkState, setCheckState] = React.useState({
+const getCheckInitial = (selectedPermissions: string[]) => {
+  const newState = {
     allAccessCheck: false,
     deleteCheck: false,
-    editCheck: false,
-    readCheck: false,
-  });
+    insertCheck: false,
+    selectCheck: false,
+    updateCheck: false,
+  };
+  for (const permission of selectedPermissions) {
+    if (permission === 'SELECT') {
+      newState.selectCheck = true;
+    } else if (permission === 'INSERT') {
+      newState.insertCheck = true;
+    } else if (permission === 'UPDATE') {
+      newState.updateCheck = true;
+    } else if (permission === 'DELETE') {
+      newState.deleteCheck = true;
+    }
+  }
+  return newState;
+};
+
+const getPermission = (permission: string): string[] => {
+  switch (permission) {
+    case 'selectCheck':
+      return ['SELECT'];
+    case 'insertCheck':
+      return ['INSERT'];
+    case 'updateCheck':
+      return ['UPDATE'];
+    case 'deleteCheck':
+      return ['DELETE'];
+    default:
+      return ['SELECT', 'INSERT', 'UPDATE', 'DELETE'];
+  }
+};
+
+const getRolePermissionsModel = (checkState: any) => {
+  let returnVal: string[] = [];
+  if (checkState.allAccessCheck) {
+    return getPermission('allAccessCheck');
+  } else {
+    if (checkState.selectCheck) {
+      returnVal = [...returnVal, ...getPermission('selectCheck')];
+    }
+    if (checkState.insertCheck) {
+      returnVal = [...returnVal, ...getPermission('insertCheck')];
+    }
+    if (checkState.updateCheck) {
+      returnVal = [...returnVal, ...getPermission('updateCheck')];
+    }
+    if (checkState.deleteCheck) {
+      returnVal = [...returnVal, ...getPermission('deleteCheck')];
+    }
+    return returnVal;
+  }
+};
+
+export const RolePermissionListItem: React.FunctionComponent<IRolePermissionListItemProps> = props => {
+  const [checkState, setCheckState] = React.useState(
+    getCheckInitial(props.selectedPermissions)
+  );
 
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
   const [selected, setSelected] = React.useState<any>(null);
-  const [options, setOptions] = React.useState<IRoleOption[]>([])
-
+  const [options, setOptions] = React.useState<IRoleOption[]>([]);
+  const [showErrorAlert, setShowErrorAlert] = React.useState<boolean>(false);
 
   // tslint:disable-next-line: no-shadowed-variable
   const onToggle = (isExpanded: boolean) => {
@@ -41,18 +102,22 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
   };
 
   const onSelect = (event: any, selection: any, isPlaceholder: any) => {
-    if (isPlaceholder){
+    if (isPlaceholder) {
       clearSelection();
-    } 
-    else {
- 
+    } else {
       setIsExpanded(false);
-      setSelected(selection)
+      setSelected(selection);
     }
   };
 
   const onCreateOption = (newValue: string) => {
-    setOptions([...options, { value: newValue }]);
+    // determine if requested rolename already exists
+    const existingOption = options.find(option => option.value === newValue);
+    if (existingOption) {
+      setShowErrorAlert(true);
+      return;
+    }
+    props.addRole(newValue);
   };
 
   const clearSelection = () => {
@@ -69,20 +134,26 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
     setCheckState(newState);
   };
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
+    // tslint:disable-next-line: no-unused-expression
+    props.selectedRole && setSelected(props.selectedRole);
+  }, [props.selectedRole]);
+
+  React.useEffect(() => {
     const roleCopy = [...props.role];
     const roleList: IRoleOption[] = [];
-    roleCopy.map(role =>{
-      roleList.push({value: role})
+    roleCopy.map(role => {
+      roleList.push({ value: role });
     });
     setOptions(roleList);
-  },[props.role])
+  }, [props.role]);
 
   React.useEffect(() => {
     const newState = { ...checkState };
     if (checkState.allAccessCheck !== null) {
-      newState.readCheck = checkState.allAccessCheck;
-      newState.editCheck = checkState.allAccessCheck;
+      newState.selectCheck = checkState.allAccessCheck;
+      newState.insertCheck = checkState.allAccessCheck;
+      newState.updateCheck = checkState.allAccessCheck;
       newState.deleteCheck = checkState.allAccessCheck;
       setCheckState(newState);
     }
@@ -91,95 +162,137 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
   React.useEffect(() => {
     const newState = { ...checkState };
     newState.allAccessCheck =
-      checkState.readCheck && checkState.editCheck && checkState.deleteCheck;
+      checkState.selectCheck &&
+      checkState.insertCheck &&
+      checkState.updateCheck &&
+      checkState.deleteCheck;
     setCheckState(newState);
-  }, [checkState.readCheck, checkState.editCheck, checkState.deleteCheck]);
+  }, [
+    checkState.selectCheck,
+    checkState.insertCheck,
+    checkState.updateCheck,
+    checkState.deleteCheck,
+  ]);
+
+  React.useEffect(() => {
+    // tslint:disable-next-line: no-unused-expression
+    selected &&
+      props.updateRolePermissionModel(
+        selected,
+        getRolePermissionsModel(checkState)
+      );
+  }, [checkState, selected]);
 
   const titleId = 'role-select-id';
 
   return (
-    <DataListItem aria-labelledby="single-action-item1">
-      <DataListItemRow>
-        <DataListItemCells
-          dataListCells={[
-            <DataListCell key="primary content">
-              <span id={titleId} hidden={true}>
-          Select a state
-        </span>
-              <Select
-          variant={SelectVariant.typeahead}
-          ariaLabelTypeAhead="Select a state"
-          onToggle={onToggle}
-          onSelect={onSelect}
-          onClear={clearSelection}
-          selections={selected}
-          isExpanded={isExpanded}
-          ariaLabelledBy={titleId}
-          placeholderText="Select a role"
-          isCreatable={true}
-          onCreateOption={onCreateOption}
-        >
-          {options.map((option, index) => (
-            <SelectOption key={index} value={option.value} />
-          ))}
-        </Select>
-            </DataListCell>,
-            <DataListCell key="secondary content 1">
-              <Checkbox
-                label=""
-                aria-label="uncontrolled checkbox example"
-                id="check-read"
-                name="readCheck"
-                isChecked={checkState.readCheck}
-                isDisabled={checkState.allAccessCheck}
-                onChange={handleChange}
-              />
-            </DataListCell>,
-            <DataListCell key="secondary content 2">
-              <Checkbox
-                label=""
-                aria-label="uncontrolled checkbox example"
-                id="check-edit"
-                name="editCheck"
-                isChecked={checkState.editCheck}
-                isDisabled={checkState.allAccessCheck}
-                onChange={handleChange}
-              />
-            </DataListCell>,
-            <DataListCell key="more content 1">
-              <Checkbox
-                label=""
-                aria-label="uncontrolled checkbox example"
-                id="check-delete"
-                name="deleteCheck"
-                isChecked={checkState.deleteCheck}
-                isDisabled={checkState.allAccessCheck}
-                onChange={handleChange}
-              />
-            </DataListCell>,
-            <DataListCell key="more content 2">
-              <Checkbox
-                label=""
-                aria-label="uncontrolled checkbox example"
-                id="check-5"
-                name="allAccessCheck"
-                isChecked={checkState.allAccessCheck}
-                onChange={handleChange}
-              />
-            </DataListCell>,
-          ]}
-        />
-        <DataListAction
-          aria-labelledby="single-action-item1 single-action-action1"
-          id="single-action-action1"
-          aria-label="Actions"
-        >
-          <MinusCircleIcon
+    <>
+      {showErrorAlert && (
+        <Alert
+          variant={AlertVariant.warning}
+          isInline={true}
+          title="A role with this name already exists - using the existing role."
+          action={
             // tslint:disable-next-line: jsx-no-lambda
-            onClick={() => props.removeRolePermission(props.index)}
+            <AlertActionCloseButton onClose={() => setShowErrorAlert(false)} />
+          }
+        />
+      )}
+      <DataListItem aria-labelledby="single-action-item1">
+        <DataListItemRow>
+          <DataListItemCells
+            dataListCells={[
+              <DataListCell key="primary content">
+                <span id={titleId} hidden={true}>
+                  Select a role
+                </span>
+                <Select
+                  variant={SelectVariant.typeahead}
+                  ariaLabelTypeAhead="Select a state"
+                  onToggle={onToggle}
+                  onSelect={onSelect}
+                  onClear={clearSelection}
+                  selections={selected}
+                  isExpanded={isExpanded}
+                  ariaLabelledBy={titleId}
+                  placeholderText="Select a role"
+                  isCreatable={true}
+                  onCreateOption={onCreateOption}
+                >
+                  {options.map((option, index) => (
+                    <SelectOption key={index} value={option.value} />
+                  ))}
+                </Select>
+              </DataListCell>,
+              <DataListCell key="secondary content 1">
+                <Checkbox
+                  label=""
+                  aria-label="uncontrolled checkbox example"
+                  id="check-select"
+                  name="selectCheck"
+                  isChecked={checkState.selectCheck}
+                  checked={checkState.selectCheck}
+                  isDisabled={checkState.allAccessCheck || !selected}
+                  onChange={handleChange}
+                />
+              </DataListCell>,
+              <DataListCell key="secondary content 2">
+                <Checkbox
+                  label=""
+                  aria-label="uncontrolled checkbox example"
+                  id="check-insert"
+                  name="insertCheck"
+                  isChecked={checkState.insertCheck}
+                  isDisabled={checkState.allAccessCheck || !selected}
+                  onChange={handleChange}
+                />
+              </DataListCell>,
+              <DataListCell key="secondary content 3">
+                <Checkbox
+                  label=""
+                  aria-label="uncontrolled checkbox example"
+                  id="check-update"
+                  name="updateCheck"
+                  isChecked={checkState.updateCheck}
+                  isDisabled={checkState.allAccessCheck || !selected}
+                  onChange={handleChange}
+                />
+              </DataListCell>,
+              <DataListCell key="more content 4">
+                <Checkbox
+                  label=""
+                  aria-label="uncontrolled checkbox example"
+                  id="check-delete"
+                  name="deleteCheck"
+                  isChecked={checkState.deleteCheck}
+                  isDisabled={checkState.allAccessCheck || !selected}
+                  onChange={handleChange}
+                />
+              </DataListCell>,
+              <DataListCell key="more content 5">
+                <Checkbox
+                  label=""
+                  aria-label="uncontrolled checkbox example"
+                  id="check-5"
+                  name="allAccessCheck"
+                  isChecked={checkState.allAccessCheck}
+                  onChange={handleChange}
+                />
+              </DataListCell>,
+            ]}
           />
-        </DataListAction>
-      </DataListItemRow>
-    </DataListItem>
+          <DataListAction
+            aria-labelledby="single-action-item1 single-action-action1"
+            id="single-action-action1"
+            aria-label="Actions"
+          >
+            <MinusCircleIcon
+              // tslint:disable-next-line: jsx-no-lambda
+              onClick={() => props.removeRolePermission(props.index)}
+            />
+          </DataListAction>
+        </DataListItemRow>
+      </DataListItem>
+    </>
   );
 };

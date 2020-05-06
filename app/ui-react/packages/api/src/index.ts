@@ -30,6 +30,7 @@ export * from './useVirtualizationMetrics';
 export * from './useVirtualizationHelpers';
 export * from './useVirtualizationConnectionSchema';
 export * from './useVirtualizationConnectionStatuses';
+export * from './useVirtualizationRoles';
 export * from './useVirtualizationRuntimeMetadata';
 export * from './useVirtualization';
 export * from './useDVStatus';

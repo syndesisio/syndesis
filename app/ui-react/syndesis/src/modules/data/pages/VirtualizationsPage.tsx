@@ -215,6 +215,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             i18nEditTip={t('editDataVirtualizationTip')}
                             i18nLockPopoverHeading={t('dataPermissionPopoverHeading')}
                             i18nLockPopover={t('dataPermissionPopover')}
+                            i18nSecuredText={t('dataPermissionSecuredText')}
                             i18nInUseText={getUsedByMessage(
                               virtualization.usedBy
                             )}

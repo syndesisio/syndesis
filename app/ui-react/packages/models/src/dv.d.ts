@@ -50,6 +50,17 @@ export interface VirtualizationMetrics {
   resultSetCacheHitRatio: number;
 }
 
+export interface RoleInfo {
+  operation: 'GRANT' | 'REVOKE';
+  tablePrivileges: TablePrivilege[];
+}
+
+export interface TablePrivilege {
+  grantPrivileges: string[];
+  roleName: string | undefined;
+  viewDefinitionIds: string[];
+}
+
 export interface SchemaNode {
   name: string;
   teiidName: string;
@@ -105,6 +116,7 @@ export interface ViewDefinitionDescriptor {
   name: string;
   description: string;
   valid: boolean;
+  tablePrivileges: TablePrivilege[]
 }
 
 export interface ViewDefinition {
