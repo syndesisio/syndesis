@@ -9,6 +9,14 @@
       syndesis.io/component: jaeger
     name: syndesis-jaeger
   spec:
+    labels:
+      com.company: Red_Hat
+      rht.prod_name: Red_Hat_Integration
+      rht.prod_ver: "{{.Version}}"
+      rht.comp: Fuse
+      rht.comp_ver: "{{.Version}}"
+      rht.subcomp: syndesis-jaeger
+      rht.subcomp_t: infrastructure
     strategy: allInOne
     allInOne:
     {{- if not .ApiServer.OlmSupport }}

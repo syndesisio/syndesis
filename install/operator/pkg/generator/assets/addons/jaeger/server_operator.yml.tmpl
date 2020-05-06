@@ -29,6 +29,13 @@
       metadata:
         labels:
           name: jaeger-operator
+          com.company: Red_Hat
+          rht.prod_name: Red_Hat_Integration
+          rht.prod_ver: "{{.Version}}"
+          rht.comp: Fuse
+          rht.comp_ver: "{{.Version}}"
+          rht.subcomp: jaeger-operator
+          rht.subcomp_t: infrastructure
       spec:
         serviceAccountName: jaeger-operator
         containers:

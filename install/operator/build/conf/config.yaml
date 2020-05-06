@@ -1,6 +1,6 @@
-Version: "1.12"
+Version: "7.8"
 AllowLocalHost: false
-Productized: false
+Productized: true
 DevSupport: false
 Scheduled: true
 ProductName: syndesis

@@ -114,6 +114,14 @@
         additionalMavenArguments: "--strict-checksums"
 {{- end}}
         integrationLivenessProbeInitialDelaySeconds: 120
+        integration-labels:
+          com.company: Red_Hat
+          rht.prod_name: Red_Hat_Integration
+          rht.prod_ver: "{{.Version}}"
+          rht.comp: Fuse
+          rht.comp_ver: "{{.Version}}"
+          rht.subcomp: application
+          rht.subcomp_t: application
       dao:
         kind: jsondb
       controllers:

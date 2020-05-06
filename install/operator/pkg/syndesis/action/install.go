@@ -108,6 +108,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis)
 	rtClient, _ := a.clientTools.RuntimeClient()
 	// Load configuration to to use as context for generate pkg
 	config, err := configuration.GetProperties(ctx, configuration.TemplateConfig, a.clientTools, syndesis)
+	config.Tag = pkg.DefaultOperatorTag
 	if err != nil {
 		a.log.Error(err, "Error occurred while initialising configuration")
 		return err

@@ -24,7 +24,9 @@ import (
 )
 
 type config struct {
-	Syndesis struct {
+	Productized bool   `yaml:"Productized"`
+	Version     string `yaml:"Version"`
+	Syndesis    struct {
 		Components struct {
 			Database struct {
 				Image string `yaml:"Image"`
@@ -49,7 +51,9 @@ func main() {
 	code := fmt.Sprintf(`package install
 
 const defaultDatabaseImage = "%s"
-`, c.Syndesis.Components.Database.Image)
+const productizedBuild = %v
+const productVersion = "%s"
+`, c.Syndesis.Components.Database.Image, c.Productized, c.Version)
 
 	err = ioutil.WriteFile("install_defaults.go", []byte(code), 0644)
 	if err != nil {

@@ -15,13 +15,13 @@
  */
 package io.syndesis.server.openshift;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.validation.annotation.Validated;
 
 import io.fabric8.openshift.client.OpenShiftConfig;
 import io.fabric8.openshift.client.OpenShiftConfigBuilder;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 @ConfigurationProperties("openshift")
 @Validated
@@ -54,6 +54,7 @@ public class OpenShiftConfigurationProperties {
     private long pollingInterval = 5000;
 
     private Map<String, String> buildNodeSelector;
+    private Map<String, String> integrationLabels = new HashMap<>();
 
     private int integrationLivenessProbeInitialDelaySeconds;
 
@@ -202,4 +203,13 @@ public class OpenShiftConfigurationProperties {
     public void setManagementUrlFor3scale(String managementUrlFor3scale) {
         this.managementUrlFor3scale = managementUrlFor3scale;
     }
+
+    public Map<String, String> getIntegrationLabels() {
+        return integrationLabels;
+    }
+
+    public void setIntegrationLabels(Map<String, String> integrationLabels) {
+        this.integrationLabels = integrationLabels;
+    }
+
 }

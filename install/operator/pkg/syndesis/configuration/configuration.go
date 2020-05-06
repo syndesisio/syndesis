@@ -73,6 +73,7 @@ type Config struct {
 	DatabaseNeedsUpgrade       bool                       // Enabled the image running the database doesn't match the operator's configured image spec
 	ApiServer                  capabilities.ApiServerSpec // Metadata of the API Server providing the application
 	Syndesis                   SyndesisConfig             // Configuration for syndesis components and addons. This fields are overwritten from environment variables and from the custom resource
+	Tag                        string                     // Operator image tag
 }
 
 type SyndesisConfig struct {
