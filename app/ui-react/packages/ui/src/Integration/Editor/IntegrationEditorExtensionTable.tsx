@@ -10,32 +10,16 @@ interface IExtensionProps {
 }
 
 export interface IIntegrationEditorExtensionTableProps {
-  /**
-   * List of extensions available as provided from
-   * the API.
-   */
   extensionsAvailable: IExtensionProps[];
   i18nHeaderDescription: string;
   i18nHeaderLastUpdated: string;
   i18nHeaderName: string;
   i18nTableDescription: string;
   i18nTableName: string;
-  /**
-   * When a change is detected and a row is selected,
-   * both the UI row state and @syndesis or story component
-   * state are updated. This is the function that is
-   * called to maintain the latter.
-   * @param extensionId
-   * @param selected
-   */
   onSelect: (extensionIds: string[]) => void;
   /**
    * These are provided by the API, and determine
    * which rows will be selected on page load.
-   * The state of these is maintained separately
-   * from the UI's state of the rows, because the format
-   * required for PF react table is different to that
-   * expected by the API once the integration is saved.
    */
   preSelectedExtensionIds: string[];
 }
