@@ -1,9 +1,9 @@
-import { setIntegrationProperties, WithIntegrationHelpers } from '@syndesis/api';
+import { setIntegrationProperties, useExtensions, WithIntegrationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import * as H from '@syndesis/history';
 import { ErrorResponse, IntegrationSaveErrorResponse } from '@syndesis/models';
 import {
-  IntegrationEditorExtensionList,
+  IntegrationEditorExtensionTable,
   IntegrationEditorLayout,
   IntegrationSaveForm,
   SyndesisAlert,
@@ -11,6 +11,7 @@ import {
 } from '@syndesis/ui';
 import { validateRequiredProperties, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import i18n from '../../../../i18n';
@@ -22,6 +23,14 @@ import {
   ISaveIntegrationRouteParams,
   ISaveIntegrationRouteState,
 } from './interfaces';
+
+interface IExtensionProps {
+  description: string;
+  extensionId: string;
+  lastUpdated: number;
+  name: string;
+  selected?: boolean;
+}
 
 export interface ISaveIntegrationForm {
   name: string;
@@ -62,9 +71,14 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
     cancelHref,
     ...props
   }) => {
+  const [currentSelectedExtensionIds, setSelectedExtensionIds] = React.useState<string[]>([]);
   const [error, setError] = React.useState<false | ErrorResponse | IntegrationSaveErrorResponse>(false);
 
   const { t } = useTranslation('shared');
+
+  useEffect(() => {
+    useExtensions(false, "Libraries");
+  }, [useExtensions]);
 
   return (
     <WithLeaveConfirmation {...props}>
@@ -75,21 +89,25 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                 ISaveIntegrationRouteState>>
               {(params, state, { history }) => (
                 <WithIntegrationHelpers>
-                  {({ deployIntegration, getExtensions, saveIntegration }) => {
+                  {({ deployIntegration, saveIntegration }) => {
                     let shouldPublish = false;
 
-                    getExtensions().then((data) => {
-                      if(data.items.length === extensions.length) {
-                        return;
-                      } else {
-                        data.items.map((extItem: IExtensionProps) => {
-                          extItem.lastUpdated = extItem.lastUpdated ? new Date(extItem.lastUpdated).toLocaleString() : '';
-                          return extItem;
-                        });
+                    /**
+                     * Updates the state based on changes in the UI.
+                     */
+                    const onSelect = (extensionIds: string[]) => {
+                      // Do something here
+                      // Update state or AutoForm values..
+                      // tslint:disable-next-line:no-console
+                      console.log('Received a string of extension IDs from the UI: ' + JSON.stringify(extensionIds));
+                      setSelectedExtensionIds(extensionIds);
+                    };
 
-                        setExtensions(data.items);
-                      }
-                    });
+                    /**
+                     * Retrieved from the API
+                     */
+                    const extensions: IExtensionProps[] = [];
+                    const preSelectedExtensions: string[] = [];
 
                     const onSave = async (
                       { name, description }: ISaveIntegrationForm,
@@ -254,16 +272,15 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                                         />
                                       )}
                                       {fields}
-                                      <IntegrationEditorExtensionList
+                                      <IntegrationEditorExtensionTable
                                         extensionsAvailable={extensions}
-                                        extensionNamesSelected={selectedExtensionNames}
-                                        handleSelectAll={handleSelectAll}
                                         i18nHeaderDescription={t('integrations:editor:extensions:description')}
                                         i18nHeaderLastUpdated={t('integrations:editor:extensions:lastUpdated')}
                                         i18nHeaderName={t('integrations:editor:extensions:name')}
                                         i18nTableDescription={t('integrations:editor:extensions:tableDescription')}
                                         i18nTableName={t('integrations:editor:extensions:tableName')}
                                         onSelect={onSelect}
+                                        preSelectedExtensionIds={preSelectedExtensions}
                                       />
                                     </>
                                   </IntegrationSaveForm>

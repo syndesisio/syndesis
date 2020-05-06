@@ -1,14 +1,16 @@
+import { action } from "@storybook/addon-actions";
+import { text } from "@storybook/addon-knobs";
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
+
 const stories = storiesOf('Integration/Editor/IntegrationEditorExtensionList', module);
 
 import {
-  IntegrationEditorExtensionList
+  IntegrationEditorExtensionTable
 } from '../../../src';
-import { action } from "@storybook/addon-actions";
-import { text } from "@storybook/addon-knobs";
 
-const extensions = {
+
+const preFormattedExtensions = {
   "items": [
     {
       "createdDate": 1585137219989,
@@ -50,18 +52,23 @@ const extensions = {
   "totalCount": 2
 };
 
-const selectedExtensionNames = ["io.syndesis.extensions:syndesis-library-test-driver"];
+const extensions = preFormattedExtensions.items.map((extension) => {
+  extension.lastUpdated = extension.lastUpdated ? new Date(extension.lastUpdated.toLocaleString()) : '';
+  return extension;
+});
+
+const selectedExtensions = ["io.syndesis.extensions:syndesis-library-test-driver"];
 
 stories
 .add('Integration Editor Extension List', () => (
-  <IntegrationEditorExtensionList extensionsAvailable={extensions.items}
-                                  extensionNamesSelected={selectedExtensionNames}
-                                  handleSelectAll={action('handleSelectAll')}
-                                  i18nHeaderDescription={text('Description', '?')}
-                                  i18nHeaderLastUpdated={text('integrations:editor:extensions:lastUpdated', '')}
-                                  i18nHeaderName={text('integrations:editor:extensions:name', '')}
-                                  i18nTableDescription={text('integrations:editor:extensions:tableDescription', '')}
-                                  i18nTableName={text('integrations:editor:extensions:tableName', '')}
-                                  onSelect={action('Selected')}
+  <IntegrationEditorExtensionTable extensionsAvailable={extensions}
+                                   i18nHeaderDescription={text('integrations:editor:extensions:description', 'Description')}
+                                   i18nHeaderLastUpdated={text('integrations:editor:extensions:lastUpdated', 'Last' +
+                                    ' Updated')}
+                                   i18nHeaderName={text('integrations:editor:extensions:name', 'Name')}
+                                   i18nTableDescription={text('integrations:editor:extensions:tableDescription', 'Description')}
+                                   i18nTableName={text('integrations:editor:extensions:tableName', 'Name')}
+                                   onSelect={action('Selected')}
+                                   preSelectedExtensionIds={selectedExtensions}
   />
 ));
