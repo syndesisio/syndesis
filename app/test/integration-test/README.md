@@ -1,8 +1,8 @@
 ## Syndesis Integration Tests
 
-This repository contains integration tests for Syndesis. The tests start integration runtimes in 
+This repository contains integration tests for Syndesis. The tests start integration runtimes in
 [Docker](https://www.docker.com/) (using [Testcontainers](https://www.testcontainers.org/)) and exchange messages with
-the running integration. The integration outcome gets consumed and validated by simulated 3rd party services and/or within 
+the running integration. The integration outcome gets consumed and validated by simulated 3rd party services and/or within
 the database.
 
 ##### Table of Contents
@@ -29,26 +29,26 @@ the database.
 
 ## Setup and preparations
 
-The integration tests in this repository use [JUnit](https://junit.org/), [Testcontainers](https://www.testcontainers.org/) 
+The integration tests in this repository use [JUnit](https://junit.org/), [Testcontainers](https://www.testcontainers.org/)
 and [Citrus](https://citrusframework.org/) as base frameworks.
 
-The frameworks are automatically downloaded for you using Maven so you do not worry about having to download or install these tools. 
+The frameworks are automatically downloaded for you using Maven so you do not worry about having to download or install these tools.
 
-Each integration test prepares and starts a group of Docker images as Testcontainers. Therefore you need [Docker](https://www.docker.com/) 
+Each integration test prepares and starts a group of Docker images as Testcontainers. Therefore you need [Docker](https://www.docker.com/)
 available on your host to run the tests.
- 
-The containers used in the integration test project represent Syndesis backend servers, Syndesis integration runtimes and infrastructure components 
+
+The containers used in the integration test project represent Syndesis backend servers, Syndesis integration runtimes and infrastructure components
 such as Postgres DB, Kafka or AMQ message brokers. In addition to that the tests prepares simulated 3rd party services with the [Citrus](https://citrusframework.org/) framework.
 
 ## Test environment
 
-The integration tests usually exchange data with Syndesis integrations. Therefore the Syndesis integration runtime is the 
+The integration tests usually exchange data with Syndesis integrations. Therefore the Syndesis integration runtime is the
 primary system under test.
 
-Each test uses a specific group of required infrastructure components and builds its very specific Syndesis integration runtime 
-as a Testcontainer. The test builds and runs all required infrastructure components and the defined Syndesis integration runtime automatically. If not 
+Each test uses a specific group of required infrastructure components and builds its very specific Syndesis integration runtime
+as a Testcontainer. The test builds and runs all required infrastructure components and the defined Syndesis integration runtime automatically. If not
 already available on your local host the integration tests will automatically load all artifacts (such as Docker images, Java libraries and Syndesis artifacts)
-using an internet connection.  
+using an internet connection.
 
 Once the test infrastructure is setup with Testcontainers the test interacts with a running Syndesis integration. Usually the test invokes/triggers
 the integration starting connection and consumes the integration output for verification.
@@ -58,18 +58,18 @@ a common Postgres database container that holds the Syndesis persistent data as 
 
 ### System properties / environment variables
 
-You can influence the test environment by setting several properties or environment variables for the test runtime. You can set these 
+You can influence the test environment by setting several properties or environment variables for the test runtime. You can set these
 as system properties in Maven and/or in your Java IDE or as environment variables on your host.
 
 The following system properties (or environment variables) are known to the project
 
 * **syndesis.version** / **SYNDESIS_VERSION**
-    * Version of Syndesis used as system under test. By default this is the latest SNAPSHOT version. You can also use tagged 
+    * Version of Syndesis used as system under test. By default this is the latest SNAPSHOT version. You can also use tagged
     release or daily build versions as listed here: [https://github.com/syndesisio/syndesis/releases](https://github.com/syndesisio/syndesis/releases)
-    Maven artifact versions are translated to Docker hub image versions. For example the Maven snapshot version `1.7-SNAPSHOT` is 
+    Maven artifact versions are translated to Docker hub image versions. For example the Maven snapshot version `1.7-SNAPSHOT` is
     translated to the Docker image tag `latest`. Specifying a Syndesis release version is very useful to run the tests with a specific release or nightly build.
 * **syndesis.image.tag** / **SYNDESIS_IMAGE_TAG**
-    * Docker image tag to use for all Syndesis images. You can use this explicit image version when automatic version translation 
+    * Docker image tag to use for all Syndesis images. You can use this explicit image version when automatic version translation
     form Maven artifact name is not working for you.
 * **syndesis.debug.port** / **SYNDESIS_DEBUG_PORT**
     * Set the debug port to use for remote debugging sessions (default=5005).
@@ -101,6 +101,12 @@ mvn verify -Dit.test=MyTestClassName
 mvn verify -Dit.test=MyTestClassName#mytestMethodName
 ```
 
+Please, notice that the integration test may have been disabled by default through the setting of the variable `skip.integration.tests` to `true`. If that is the case, ensure to override the value to `false` instead:
+
+```bash
+mvn verify ... -Dskip.integration.tests=false
+```
+
 ## Use latest snapshot versions
 
 If you do not specify anything different the integration tests will use the latest Syndesis version available. This can be the Syndesis Docker images tagged with `latest` or
@@ -130,9 +136,9 @@ After that you should see a new Docker image `syndesis/syndesis-s2i:latest`
 ```bash
 docker images
 
-REPOSITORY              TAG                 IMAGE ID                  
-syndesis/syndesis-s2i   latest              e27b19a7717d               
-syndesis/syndesis-s2i   1.6.7               e556ebf9d6b9                 
+REPOSITORY              TAG                 IMAGE ID
+syndesis/syndesis-s2i   latest              e27b19a7717d
+syndesis/syndesis-s2i   1.6.7               e556ebf9d6b9
 ```
 
 You can now run the integration tests and they will use that local Syndesis version.
@@ -152,7 +158,7 @@ You can specify the Syndesis version as system property:
 mvn clean verify -Dsyndesis.version=1.6.7
 ```
 
-The comand above runs the tests with the Syndesis release version `1.6.7`. 
+The comand above runs the tests with the Syndesis release version `1.6.7`.
 
 Here is a list of available releases: [https://github.com/syndesisio/syndesis/releases](https://github.com/syndesisio/syndesis/releases)
 
@@ -161,12 +167,12 @@ Syndesis also provides a daily release build that can be used for continuous int
 ## Syndesis integration runtime container
 
 Syndesis executes integrations with a special runtime container. The container is usually provided with a generated integration project holding all sources required to run the
-integration (such as integration.json, pom.xml, atlas-mappings, application.properties, secrets and so on). The integration runtime container usually builds from the `syndesis/syndesis-s2i:latest` 
+integration (such as integration.json, pom.xml, atlas-mappings, application.properties, secrets and so on). The integration runtime container usually builds from the `syndesis/syndesis-s2i:latest`
 Docker image that brings all required Syndesis artifacts and required 3rd party libs.
 
 The integration tests provide a Testcontainer that represents the integration runtime container. You can add the integration runtime container to your tests in following ways.
 
-First of all you can use a JUnit class rule and add the container to your test. 
+First of all you can use a JUnit class rule and add the container to your test.
 
 ```java
 @ClassRule
@@ -176,8 +182,8 @@ public static SyndesisIntegrationRuntimeContainer integrationContainer = new Syn
                 .build();
 ```
 
-This creates a new Syndesis runtime container and starts the integration from an export file `TimerToLog-export.zip`. This integration runtime container is shared for all test methods 
-in that test class. 
+This creates a new Syndesis runtime container and starts the integration from an export file `TimerToLog-export.zip`. This integration runtime container is shared for all test methods
+in that test class.
 
 In case you want the runtime container to be part of a test method you can just initialize the container and start it by yourself.
 
@@ -258,7 +264,7 @@ public static SyndesisIntegrationRuntimeContainer integrationContainer = new Syn
         .build();
 ```
 
-### From integration fat jar 
+### From integration fat jar
 
 If you have an integration project fat jar available you can build the integration runtime container directly with that project jar file.
 
@@ -270,7 +276,7 @@ public static SyndesisIntegrationRuntimeContainer integrationContainer = new Syn
                 .build();
 ```
 
-### From integration project 
+### From integration project
 
 You can build a runtime container from a Syndesis integration project folder. The project should contain all resources required to run the integration.
 The integration runtime container will use a volume mount to that directory.
@@ -283,7 +289,7 @@ public static SyndesisIntegrationRuntimeContainer integrationContainer = new Syn
                 .build();
 ```
 
-### From integration json 
+### From integration json
 
 You can also provide the integration Json model file directly.
 
@@ -295,7 +301,7 @@ public static SyndesisIntegrationRuntimeContainer integrationContainer = new Syn
                 .build();
 ```
 
-### From integration source 
+### From integration source
 
 Last not least you can provide an integration source implementation representing to build an run in the container.
 
@@ -320,7 +326,7 @@ This close to production S2i mechanism is enabled with the system property **syn
 
 By default this mechanis is disabled in order to gain some more speed in test execution. When the S2i mode is disabled the integration runtime container will
 directly execute the project with `mvn spring-boot:run`. Still the integration is run inside using the `syndesis/syndesis-s2i:latest` base image but the assemble step
-is skipped and we do not execute the fat jar with `java -jar`. Instead a the Spring Boot maven plugin is used.   
+is skipped and we do not execute the fat jar with `java -jar`. Instead a the Spring Boot maven plugin is used.
 
 ## Syndesis db container
 
@@ -371,7 +377,7 @@ public static SyndesisServerContainer syndesisServerContainer = new SyndesisServ
 ```
 
 By default the server container uses the Docker image `syndesis/syndesis-server:latest`. You can customize the image tag that should be used in order to start a different
-release version of the Syndesis backend server. The integration test will pull the Docker image if not present on your host. See the list ov available 
+release version of the Syndesis backend server. The integration test will pull the Docker image if not present on your host. See the list ov available
 [image tags for syndesis-server](https://hub.docker.com/r/syndesis/syndesis-server/tags).
 
 When building a local server version you can also provide the path to a local `syndesis-server.jar`:
@@ -412,7 +418,7 @@ Instead of building the `server-runtime.jar` on your own you can also copy the j
         </artifactItem>
       </artifactItems>
     </configuration>
-</plugin>        
+</plugin>
 ```
 
 This copies the `server-runtime.jar` with version `${syndesis.version}` to the test output directory. Now you can use the jar in your test using `withClasspathServerJar("server-runtime.jar")`.
@@ -439,7 +445,7 @@ withExposedPorts(1883);//mqtt
 withExposedPorts(8778);//jolokia
 ```
 
-In case your integration requires access to the message broker container you should add a networking to the container when building the integration runtime container. 
+In case your integration requires access to the message broker container you should add a networking to the container when building the integration runtime container.
 As usual this is done using `withNetwork(amqBrokerContainer.getNetwork())` configuration:
 
 ```java
@@ -456,7 +462,7 @@ public static SyndesisIntegrationRuntimeContainer integrationContainer = new Syn
 ## Simulate 3rd party interfaces
 
 Many integrations connect to the outside world consuming services that are provided by 3rd party vendors (such as Twitter, Google, Salesforce, etc.) When testing those
-integrations we need to simulate the 3rd party services as we do not want the integration tests to connect to the real 3rd party services. 
+integrations we need to simulate the 3rd party services as we do not want the integration tests to connect to the real 3rd party services.
 
 The integration tests use Citrus as base simulation framework for this task.
 
@@ -502,7 +508,7 @@ public static SyndesisIntegrationRuntimeContainer integrationContainer = new Syn
 As you can see we customize the integration configured properties to use the simulated Citrus service endpoint as base URL. This way the integration connects to the
 Citrus service instead of calling the real production endpoint.
 
-The Citrus components usually provide services that are used by the integrations in order to control/verify the exchanged data. You tell the Citrus components what data to expect 
+The Citrus components usually provide services that are used by the integrations in order to control/verify the exchanged data. You tell the Citrus components what data to expect
 and return with the test runner Java DSL. As the base integration test is using Citrus functionality we can just inject the test runner to the test method.
 
 ```java
@@ -543,7 +549,7 @@ public static SyndesisIntegrationRuntimeContainer integrationContainer = new Syn
         .customize("$..configuredProperties.baseUrl",
                 String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, todoServerPort))
         .customize("$..rootUrl.defaultValue",
-                String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, googleSheetsServerPort))        
+                String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, googleSheetsServerPort))
         .build();
 ```
 
@@ -555,7 +561,7 @@ The Google Sheets connection also uses encrypted user credentials and secrets in
 
 ### Encrypted secrets
 
-The integration exports may use encrypted credentials representing passwords and secrets for connections to 3rd party services. The integration test 
+The integration exports may use encrypted credentials representing passwords and secrets for connections to 3rd party services. The integration test
 automatically overwrites the encrypted values with a static secret ("secret"). This way simulated databases, infrastructure components (such as message brokers)
 and 3rd party services can use the default "secret" credential in order to word with the integration export.
 
@@ -610,7 +616,7 @@ public static SyndesisIntegrationRuntimeContainer integrationContainer = new Syn
         .fromExport(HttpToHttp_IT.class.getResourceAsStream("HttpToHttp-export.zip"))
         .enableDebug()
         .build();
-``` 
+```
 
 The only thing we have to do is to add the `enableDebug` option to the integration runtime container. The container will be suspended waiting for a client to open
 the remote debug session using the specified debug port. The debug port (default=5005) is exposed to the Docker host using the very same port. This means that you can instruct your IDE to
