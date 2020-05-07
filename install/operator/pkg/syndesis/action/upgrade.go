@@ -68,9 +68,9 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 			return a.setPhaseToRun(ctx, syndesis)
 		}
 
-		a.log.Error(nil, "Failure while upgrading Syndesis", "name", syndesis.Name, "target version", targetVersion)
+		a.log.Error(err, "Failure while upgrading Syndesis", "name", syndesis.Name, "target version", targetVersion)
 		if err := u.Rollback(); err != nil {
-			a.log.Error(nil, "Failure while rolling back Syndesis, some manual steps might be required", "name", syndesis.Name, "target version", targetVersion)
+			a.log.Error(err, "Failure while rolling back Syndesis, some manual steps might be required", "name", syndesis.Name, "target version", targetVersion)
 		}
 
 		return a.setPhaseToFailureBackoff(ctx, syndesis, targetVersion)
@@ -89,7 +89,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		} else {
 			a.log.Info("syndesis first run after upgrade failed repeatedly, attempting to rollback now")
 			if err := u.Rollback(); err != nil {
-				a.log.Error(nil, "failure while rolling back Syndesis, some manual steps might be required", "name", syndesis.Name, "target version", targetVersion)
+				a.log.Error(err, "failure while rolling back Syndesis, some manual steps might be required", "name", syndesis.Name, "target version", targetVersion)
 			} else {
 				a.log.Info("syndesis successfully rolled back", "name", syndesis.Name)
 			}
