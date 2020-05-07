@@ -349,7 +349,7 @@ func (d *deploymentConfigTracker) hasScaled() bool {
 
 // Waits at most 15min for the Deployment or DeploymentConfig to reach the desired scale
 func (u *databaseUpgrade) awaitScale(name string, tracker scaleTracker) error {
-	if err := wait.Poll(time.Second*3, time.Minute*15, func() (done bool, err error) {
+	if err := wait.PollImmediate(time.Second*3, time.Minute*15, func() (done bool, err error) {
 		if err = u.client().Get(u.context, types.NamespacedName{Namespace: u.namespace, Name: name}, tracker.obj()); err != nil {
 			return false, err
 		}
