@@ -31,6 +31,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.mysql>${version.mysql}</version.mysql>
     <version.postgresql>${version.postgresql}</version.postgresql>
+    <version.springboot>${version.springboot}</version.springboot>
     <version.mssql>${version.mssql}</version.mssql>
     <version.derby>${version.derby}</version.derby>
     <version.mariadb>${version.mariadb}</version.mariadb>    
@@ -52,7 +53,7 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>${spring-boot.version}</version>
+        <version>\${version.springboot}</version>
         <executions>
           <execution>
             <goals>
@@ -69,7 +70,7 @@
     <dependency>
       <groupId>org.teiid</groupId>
       <artifactId>teiid-spring-boot-starter</artifactId>
-      <version>${version.springboot.teiid}</version>
+      <version>\${version.springboot.teiid}</version>
     </dependency>
 	<dependency>
 	  <groupId>io.opentracing.contrib</groupId>
@@ -79,7 +80,7 @@
     <dependency>    
       <groupId>org.springframework.boot</groupId>   
       <artifactId>spring-boot-starter-actuator</artifactId>
-      <version>${spring-boot.version}</version> 
+      <version>\${version.springboot}</version>
     </dependency>
   </dependencies>
 </project>
