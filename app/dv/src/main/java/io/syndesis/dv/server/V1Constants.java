@@ -184,4 +184,6 @@ public interface V1Constants extends StringConstants {
     String ROLES = "roles"; //$NON-NLS-1$
 
     String STATUS = "status"; //$NON-NLS-1$
+
+    String DELETE_FROM = "deleteFrom"; //$NON-NLS-1$
 }
