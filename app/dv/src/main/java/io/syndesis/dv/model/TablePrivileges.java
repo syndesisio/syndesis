@@ -30,7 +30,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 class TablePrivilegesId implements Serializable {
@@ -122,8 +124,12 @@ public class TablePrivileges {
         }
     }
 
+    @JsonIgnore
     @Column(name = "view_definition_id")
     @Id private String viewDefinitionId;
+    //for bulk operations, not part of the db/import/export
+    @Transient
+    private String[] viewDefinitionIds;
     @Id private String roleName;
     @Convert(converter = PrivilegeConvertor.class)
     private Set<Privilege> grantPrivileges = new TreeSet<>();
@@ -172,6 +178,17 @@ public class TablePrivileges {
     @Override
     public String toString() {
         return String.join(" ", viewDefinitionId, roleName, grantPrivileges.toString()); //$NON-NLS-1$
+    }
+
+    public String[] getViewDefinitionIds() {
+        if (viewDefinitionIds == null) {
+            return new String[] {viewDefinitionId};
+        }
+        return viewDefinitionIds;
+    }
+
+    public void setViewDefinitionIds(String[] viewDefinitionIds) {
+        this.viewDefinitionIds = viewDefinitionIds;
     }
 
 }

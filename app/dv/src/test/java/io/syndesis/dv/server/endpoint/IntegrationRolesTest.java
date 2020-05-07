@@ -135,7 +135,21 @@ public class IntegrationRolesTest {
         assertEquals(HttpStatus.OK, views.getStatusCode());
         assertEquals(1, views.getBody().size());
         Map<?, ?> viewMap = (Map<?, ?>) views.getBody().get(0);
-        assertEquals("[{viewDefinitionId="+viewId+", roleName=x, grantPrivileges=[SELECT]}]", viewMap.get("tablePrivileges").toString());
+        assertEquals("[{viewDefinitionIds=["+viewId+"], roleName=x, grantPrivileges=[SELECT]}]", viewMap.get("tablePrivileges").toString());
+
+        //revoke across all
+        toGrant.getTablePrivileges().get(0).setRoleName(null);
+        grant = restTemplate.exchange(
+                "/v1/virtualizations/{dv}/roles", HttpMethod.PUT,
+                new HttpEntity<RoleInfo>(toGrant), String.class, dvName);
+        assertEquals(HttpStatus.OK, grant.getStatusCode());
+
+        views = restTemplate.getForEntity(
+                "/v1/virtualizations/{name}/views", List.class, dvName);
+        assertEquals(HttpStatus.OK, views.getStatusCode());
+        assertEquals(1, views.getBody().size());
+        viewMap = (Map<?, ?>) views.getBody().get(0);
+        assertEquals("[]", viewMap.get("tablePrivileges").toString());
     }
 
     @Test public void testStatus() {

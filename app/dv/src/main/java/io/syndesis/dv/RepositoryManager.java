@@ -130,4 +130,6 @@ public interface RepositoryManager {
     List<TablePrivileges> findTablePrivileges(String viewId);
 
     TablePrivileges findTablePrivileges(String viewId, String roleName);
+
+    void deleteTablePrivileges(List<String> viewIds);
 }

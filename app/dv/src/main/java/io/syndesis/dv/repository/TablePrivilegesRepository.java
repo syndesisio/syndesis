@@ -45,4 +45,6 @@ public interface TablePrivilegesRepository extends JpaRepository<TablePrivileges
 
     List<TablePrivileges> findTablePrivilegesByViewDefinitionId(String viewId);
 
+    void deleteByViewDefinitionIdIn(List<String> ids);
+
 }
