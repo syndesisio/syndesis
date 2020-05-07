@@ -108,6 +108,13 @@
         }
       }
     },
+    "extensions": {
+      "description": "Description",
+      "lastUpdated": "Last Updated",
+      "name": "Name",
+      "tableDescription": "Select extensions you want to associate with this integration. You may change your selection on the integration summary page.",
+      "tableName": "Extensions"
+    },
     "selectStep": {
       "title": "Choose a connection",
       "startDescription": "Click the connection that starts the integration. If the connection you need is not available, click Create Connection.",
