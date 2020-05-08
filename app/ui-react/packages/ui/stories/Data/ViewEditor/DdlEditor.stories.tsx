@@ -61,8 +61,6 @@ stories.add('render', () => {
   return (
     <DdlEditor
       viewDdl={viewDdl}
-      i18nCursorColumn={'cursorColumn'}
-      i18nCursorLine={'cursorLine'}
       i18nDdlTextPlaceholder={'ddlTextPlaceholder'}
       i18nDoneLabel={'Done'}
       i18nSaveLabel={'Save'}

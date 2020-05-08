@@ -27,8 +27,6 @@
   "createViewWizardStep1": "Seleziona le fonti",
   "createViewWizardStep2": "Seleziona il nome",
   "createVirtualizationSuccess": "Virtualizzazione \"{{name}}\" creata.",
-  "cursorColumn": "Colonna",
-  "cursorLine": "Linea",
   "ddlTextPlaceholder": "Digita la vista DDL ...",
   "deleteInProgress": "Eliminazione ...",
   "deleteModalMessage": "Ciò eliminerà definitivamente la virtualizzazione \"{{name}}\".  Procedere con l'eliminazione?",

@@ -1,7 +1,7 @@
+import { render } from '@testing-library/react';
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
-import { render } from '@testing-library/react';
-import { AppLayout, PfVerticalNavItem } from '../src/';
+import {AppLayout, PfVerticalNavItem } from '../src/Layout';
 
 export default describe('ConnectionCard', () => {
   const modalHandler = jest.fn();
