@@ -148,6 +148,6 @@ public class TestDdlCompletionItemProvider implements DdlAnalyzerConstants {
 
         // after comma in table element
         items = itemProvider.getCompletionItems(stmt, new Position(1, 31));
-        assertEquals(359, items.size());
+        assertEquals(363, items.size());
     }
 }
