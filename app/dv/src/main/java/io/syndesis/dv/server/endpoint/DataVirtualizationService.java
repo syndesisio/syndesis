@@ -106,6 +106,7 @@ import io.syndesis.dv.server.DvService;
 import io.syndesis.dv.server.Messages;
 import io.syndesis.dv.server.SSOConfigurationProperties;
 import io.syndesis.dv.server.V1Constants;
+import io.syndesis.dv.server.endpoint.RoleInfo.Operation;
 import io.syndesis.dv.utils.PathUtils;
 import io.syndesis.dv.utils.StringNameValidator;
 import io.syndesis.dv.utils.StringUtils;
@@ -1161,7 +1162,7 @@ public final class DataVirtualizationService extends DvService {
     @PutMapping(value = {
             VIRTUALIZATION_PLACEHOLDER + FS + ROLES }, produces = {
                     MediaType.APPLICATION_JSON_VALUE })
-    @ApiOperation(value = "Apply the role changes to the given virtualization", response = RoleInfo.class)
+    @ApiOperation(value = "Apply the role changes to the given virtualization")
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Only JSON is returned by this operation"),
             @ApiResponse(code = 403, message = "An error has occurred.") })
@@ -1174,26 +1175,34 @@ public final class DataVirtualizationService extends DvService {
             RoleInfo.Operation op = roleInfo.getOperation();
             for (TablePrivileges tablePrivileges : roleInfo
                     .getTablePrivileges()) {
-                String viewId = tablePrivileges.getViewDefinitionId();
-                TablePrivileges existing = repositoryManager
-                        .findTablePrivileges(viewId,
-                                tablePrivileges.getRoleName());
-                switch (op) {
-                case GRANT:
-                    if (existing == null) {
-                        existing = repositoryManager.createTablePrivileges(
-                                viewId, tablePrivileges.getRoleName());
+                if (tablePrivileges.getRoleName() == null) {
+                    if (op != Operation.REVOKE) {
+                        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Can only revoke / clear across all roles"); //$NON-NLS-1$
                     }
-                    existing.getGrantPrivileges()
-                            .addAll(tablePrivileges.getGrantPrivileges());
-                    break;
-                case REVOKE:
-                    if (existing != null) {
-                        existing.getGrantPrivileges().removeAll(
-                                tablePrivileges.getGrantPrivileges());
-                    } // else currently not implemented
-                      // there are no schema level permissions to remove from
-                    break;
+                    repositoryManager.deleteTablePrivileges(Arrays.asList(tablePrivileges.getViewDefinitionIds()));
+                    continue;
+                }
+                for (String viewId : tablePrivileges.getViewDefinitionIds()) {
+                    TablePrivileges existing = repositoryManager
+                            .findTablePrivileges(viewId,
+                                    tablePrivileges.getRoleName());
+                    switch (op) {
+                    case GRANT:
+                        if (existing == null) {
+                            existing = repositoryManager.createTablePrivileges(
+                                    viewId, tablePrivileges.getRoleName());
+                        }
+                        existing.getGrantPrivileges()
+                                .addAll(tablePrivileges.getGrantPrivileges());
+                        break;
+                    case REVOKE:
+                        if (existing != null) {
+                            existing.getGrantPrivileges().removeAll(
+                                    tablePrivileges.getGrantPrivileges());
+                        } // else currently not implemented
+                          // there are no schema level permissions to remove from
+                        break;
+                    }
                 }
             }
             return null;
