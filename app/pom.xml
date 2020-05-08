@@ -62,7 +62,7 @@
     <json-patch.version>1.9</json-patch.version>
     <kubernetes.client.version>4.6.1</kubernetes.client.version>
 
-    <spring.version>5.2.3.RELEASE</spring.version>
+    <spring.version>5.2.5.RELEASE</spring.version>
     <spring-boot.version>2.2.6.RELEASE</spring-boot.version>
     <spring-social.version>1.1.6.RELEASE</spring-social.version>
     <spring-social-twitter.version>1.1.2.RELEASE</spring-social-twitter.version>
@@ -151,7 +151,8 @@
     <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
     <logback.version>1.2.3</logback.version>
     <micrometer.version>1.3.3</micrometer.version>
-    <teiid.version>13.0.1</teiid.version>
+    <teiid.version>14.0.0</teiid.version>
+    <teiid.springboot.version>1.5.0</teiid.springboot.version>
     <aws-java-sdk-core.version>1.11.415</aws-java-sdk-core.version>
     <version.javax.activation>1.2.1</version.javax.activation>
 
