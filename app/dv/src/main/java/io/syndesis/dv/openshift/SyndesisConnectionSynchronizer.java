@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.teiid.spring.data.BaseConnection;
 import org.teiid.spring.data.BaseConnectionFactory;
 
 import io.syndesis.dv.KException;
@@ -182,7 +181,7 @@ public class SyndesisConnectionSynchronizer {
             if (tds.getSyndesisId().contentEquals(sds.getSyndesisConnectionId())){
                 Object obj = tds.getConnectionFactory();
                 if (obj instanceof BaseConnectionFactory) {
-                    BaseConnection conn = ((BaseConnectionFactory<?>)obj).getConnection();
+                    org.teiid.resource.api.Connection conn = ((BaseConnectionFactory<?>)obj).getConnection();
                     if (conn != null) {
                         conn.close();
                     }

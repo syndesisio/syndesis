@@ -1731,7 +1731,6 @@ public class TeiidOpenShiftClient {
                 vdbDependencies.append(StringConstants.NEW_LINE).append("<dependency>"
                         + "<groupId>org.teiid</groupId>"
                         + "<artifactId>spring-odata</artifactId>"
-                        + "<version>${version.springboot.teiid}</version>"
                         + "</dependency> ");
             }
 
@@ -1739,7 +1738,6 @@ public class TeiidOpenShiftClient {
                 vdbDependencies.append(StringConstants.NEW_LINE).append("<dependency>"
                         + "<groupId>org.teiid</groupId>"
                         + "<artifactId>spring-keycloak</artifactId>"
-                        + "<version>${version.springboot.teiid}</version>"
                         + "</dependency> ");
             }
 
