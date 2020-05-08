@@ -4548,9 +4548,10 @@
   resolved "https://registry.yarnpkg.com/@types/mustache/-/mustache-4.0.1.tgz#e4d421ed2d06d463b120621774185a5cd1b92d77"
   integrity sha512-wH6Tu9mbiOt0n5EvdoWy0VGQaJMHfLIxY/6wS0xLC7CV1taM6gESEzcYy0ZlWvxxiiljYvfDIvz4hHbUUDRlhw==
 
-"@types/node@*":
-  version "11.10.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.10.4.tgz#3f5fc4f0f322805f009e00ab35a2ff3d6b778e42"
+"@types/node@*", "@types/node@^12.0.0":
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.0.tgz#d11813b9c0ff8aaca29f04cbc12817f4c7d656e5"
+  integrity sha512-Jrb/x3HT4PTJp6a4avhmJCDEVrPdqLfl3e8GGMbpkGGdwAV5UGlIs4vVEfsHHfylZVOKZWpOqmqFH8CbfOZ6kg==
 
 "@types/node@8.10.40":
   version "8.10.40"
@@ -4561,11 +4562,6 @@
   version "11.13.10"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-11.13.10.tgz#4df59e5966b56f512bac98898bcbee5067411f0f"
   integrity sha512-leUNzbFTMX94TWaIKz8N15Chu55F9QSH+INKayQr5xpkasBQBRF3qQXfo3/dOnMU/dEIit+Y/SU8HyOjq++GwA==
-
-"@types/node@^12.0.0":
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.0.0.tgz#d11813b9c0ff8aaca29f04cbc12817f4c7d656e5"
-  integrity sha512-Jrb/x3HT4PTJp6a4avhmJCDEVrPdqLfl3e8GGMbpkGGdwAV5UGlIs4vVEfsHHfylZVOKZWpOqmqFH8CbfOZ6kg==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
@@ -20487,20 +20483,19 @@ rollup@1.25.2:
     "@types/node" "*"
     acorn "^7.1.0"
 
-rollup@^0.66.6:
-  version "0.66.6"
-  resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.66.6.tgz#ce7d6185beb7acea644ce220c25e71ae03275482"
-  integrity sha512-J7/SWanrcb83vfIHqa8+aVVGzy457GcjA6GVZEnD0x2u4OnOd0Q1pCrEoNe8yLwM6z6LZP02zBT2uW0yh5TqOw==
-  dependencies:
-    "@types/estree" "0.0.39"
-    "@types/node" "*"
-
 rollup@^0.67.3:
   version "0.67.4"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-0.67.4.tgz#8ed6b0993337f84ec8a0387f824fa6c197e833ec"
   dependencies:
     "@types/estree" "0.0.39"
     "@types/node" "*"
+
+rollup@^2.8.2:
+  version "2.8.2"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.8.2.tgz#08427a8eb118e6e4ac8d80eba22774bc1d059c81"
+  integrity sha512-LRzMcB8V1M69pSvf6uCbR+W9OPCy5FuxcIwqioWg5RKidrrqKbzjJF9pEGXceaMVkbptNFZgIVJlUokCU0sfng==
+  optionalDependencies:
+    fsevents "~2.1.2"
 
 rsvp@^4.8.4:
   version "4.8.4"
