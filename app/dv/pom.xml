@@ -117,6 +117,8 @@
     <version.springfox>2.9.2</version.springfox>
     <shrinkwrap.version>3.1.4</shrinkwrap.version>
 
+    <version.tomcat>9.0.31</version.tomcat>
+
     <version.com.fasterxml.jackson.databind>2.9.10.1</version.com.fasterxml.jackson.databind>
     <version.com.fasterxml.jackson>2.9.10</version.com.fasterxml.jackson>
     <version.io.fabric8.kubernetes-api>3.0.12</version.io.fabric8.kubernetes-api>
@@ -497,9 +499,23 @@
     </dependency>
     <!-- for servlet api -->
     <dependency>
-        <groupId> org.apache.tomcat.embed</groupId>
-        <artifactId>tomcat-embed-core</artifactId>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-core</artifactId>
+      <!-- 
+      see https://github.com/spring-projects/spring-framework/issues/22131 
+      -->
+      <version>${version.tomcat}</version>
     </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-websocket</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tomcat.embed</groupId>
+      <artifactId>tomcat-embed-websocket</artifactId>
+      <version>${version.tomcat}</version>
+    </dependency>
+
     <dependency>
       <groupId>io.opentracing.contrib</groupId>
       <artifactId>opentracing-spring-jaeger-web-starter</artifactId>
@@ -547,6 +563,31 @@
     <dependency>
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.eclipse.lsp4j</groupId>
+        <artifactId>org.eclipse.lsp4j</artifactId>
+        <version>0.8.1</version>
+    </dependency>
+    <dependency>
+        <groupId>org.eclipse.lsp4j</groupId>
+        <artifactId>org.eclipse.lsp4j.jsonrpc</artifactId>
+        <version>0.8.1</version>
+    </dependency>
+    <dependency>
+        <groupId>org.eclipse.lsp4j</groupId>
+        <artifactId>org.eclipse.lsp4j.websocket</artifactId>
+        <version>0.8.1</version>
+    </dependency>
+    <dependency>
+        <groupId>org.glassfish.tyrus</groupId>
+        <artifactId>tyrus-server</artifactId>
+        <version>1.15</version>
+    </dependency>
+    <dependency>
+    <groupId>org.glassfish.tyrus</groupId>
+        <artifactId>tyrus-container-grizzly-server</artifactId>
+        <version>1.15</version>
     </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
