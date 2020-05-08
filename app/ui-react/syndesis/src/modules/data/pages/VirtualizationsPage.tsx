@@ -213,6 +213,9 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             i18nViewODataUrlText={t('viewOData')}
                             i18nEdit={t('shared:Edit')}
                             i18nEditTip={t('editDataVirtualizationTip')}
+                            i18nLockPopoverHeading={t('dataPermissionPopoverHeading')}
+                            i18nLockPopover={t('dataPermissionPopover')}
+                            i18nSecuredText={t('dataPermissionSecuredText')}
                             i18nInUseText={getUsedByMessage(
                               virtualization.usedBy
                             )}
@@ -227,6 +230,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             publishingStepText={publishingDetails.stepText}
                             i18nPublishLogUrlText={t('shared:viewLogs')}
                             usedBy={virtualization.usedBy}
+                            secured={virtualization.secured}
                           />
                         );
                       }

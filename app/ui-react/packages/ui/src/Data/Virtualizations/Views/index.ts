@@ -16,3 +16,8 @@ export * from './ViewListItem';
 export * from './ViewListSkeleton';
 export * from './ViewsImportLayout';
 export * from './ViewWizardHeader';
+export * from './DataPermission/ViewPermissionList';
+export * from './DataPermission/ViewPermissionListItems';
+export * from './DataPermission/ViewPermissionToolbar';
+export * from './DataPermission/RolePermissionListItem';
+export * from './DataPermission/RolePermissionList';

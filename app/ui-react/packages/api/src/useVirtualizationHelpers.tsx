@@ -3,6 +3,7 @@ import {
   ImportSources,
   ImportSourcesStatus,
   QueryResults,
+  RoleInfo,
   TeiidStatus,
   ViewDefinition,
   ViewSourceInfo,
@@ -75,6 +76,28 @@ export const useVirtualizationHelpers = () => {
       headers: {},
       method: 'PUT',
       url: `${apiContext.dvApiUri}virtualizations/${virtName}`,
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return Promise.resolve();
+  };
+
+  /**
+   * Updates virtualization roles.
+   * @param virtName the name of the virtualization
+   * @param roleInfo the role info for the virtualization
+   */
+  const updateVirtualizationRoles = async (
+    virtName: string,
+    roleInfo: RoleInfo
+  ): Promise<void> => {
+    const response = await callFetch({
+      body: roleInfo,
+      headers: {},
+      method: 'PUT',
+      url: `${apiContext.dvApiUri}virtualizations/${virtName}/roles`,
     });
     if (!response.ok) {
       throw new Error(response.statusText);
@@ -611,6 +634,7 @@ export const useVirtualizationHelpers = () => {
     startVirtualization,
     unpublishVirtualization,
     updateVirtualizationDescription,
+    updateVirtualizationRoles,
     validateViewName,
     validateVirtualizationName,
   };
