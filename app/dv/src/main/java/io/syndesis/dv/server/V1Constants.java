@@ -22,7 +22,7 @@ import java.util.Properties;
 import io.syndesis.dv.StringConstants;
 
 /**
- * Constants associated with version 1 of the Komodo REST application.
+ * Constants associated with version 1 of the REST application.
  */
 public interface V1Constants extends StringConstants {
 
@@ -79,7 +79,7 @@ public interface V1Constants extends StringConstants {
     }
 
     /**
-     * The URI path segment for the Komodo REST application. It is included in the base URI. <strong>DO NOT INCLUDE THIS IN
+     * The URI path segment for the REST application. It is included in the base URI. <strong>DO NOT INCLUDE THIS IN
      * OTHER URI SEGMENTS</strong>
      */
     String APP_PATH = FS + "v1"; //$NON-NLS-1$
@@ -178,4 +178,12 @@ public interface V1Constants extends StringConstants {
 
     String TEST_SUPPORT = "test-support"; //$NON-NLS-1$
 
+    /**
+     * Roles
+     */
+    String ROLES = "roles"; //$NON-NLS-1$
+
+    String STATUS = "status"; //$NON-NLS-1$
+
+    String DELETE_FROM = "deleteFrom"; //$NON-NLS-1$
 }
