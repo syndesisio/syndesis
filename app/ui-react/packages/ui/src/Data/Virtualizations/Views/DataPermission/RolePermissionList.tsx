@@ -9,19 +9,29 @@ import {
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import * as React from 'react';
-import { RolePermissionListItem } from '..';
+import { ITablePrivilege, RolePermissionListItem } from '..';
+import './RolePermissionList.css';
 
 export interface IRolePermissionListProps {
   i18nRole: string;
-  i18nRead: string;
-  i18nEdit: string;
+  i18nSelect: string;
+  i18nInsert: string;
+  i18nUpdate: string;
   i18nDelete: string;
   i18nAllAccess: string;
   i18nAddNewRole: string;
+  viewRolePermissionList: ITablePrivilege[];
+  updateRolePermissionModel: (roleName: string, permissions: string[]) => void;
+  roles: string[];
 }
 
 export const RolePermissionList: React.FunctionComponent<IRolePermissionListProps> = props => {
   const [roleRowList, setRoleRowList] = React.useState<JSX.Element[]>([]);
+  const [currentRoles, setCurrentRoles] = React.useState<string[]>(props.roles);
+
+  const addRole = (roleName: string) => {
+    setCurrentRoles([...currentRoles, roleName]);
+  };
 
   const removeRolePermission = (index: number) => {
     setRoleRowList([
@@ -35,7 +45,12 @@ export const RolePermissionList: React.FunctionComponent<IRolePermissionListProp
       ...roleRowList,
       <RolePermissionListItem
         index={roleRowList.length}
+        role={currentRoles}
+        addRole={addRole}
         removeRolePermission={removeRolePermission}
+        selectedRole=""
+        selectedPermissions={[]}
+        updateRolePermissionModel={props.updateRolePermissionModel}
         key={`rolelist-${roleRowList.length}`}
       />,
     ]);
@@ -48,19 +63,22 @@ export const RolePermissionList: React.FunctionComponent<IRolePermissionListProp
           <DataListItemRow>
             <DataListItemCells
               dataListCells={[
-                <DataListCell key="primary content">
+                <DataListCell key="role label">
                   <b>{props.i18nRole}</b>
                 </DataListCell>,
-                <DataListCell key="secondary content 1">
-                  <b>{props.i18nRead}</b>
+                <DataListCell key="select label">
+                  <b>{props.i18nSelect}</b>
                 </DataListCell>,
-                <DataListCell key="secondary content 2">
-                  <b>{props.i18nEdit}</b>
+                <DataListCell key="insert label">
+                  <b>{props.i18nInsert}</b>
                 </DataListCell>,
-                <DataListCell key="more content 1">
+                <DataListCell key="update label">
+                  <b>{props.i18nUpdate}</b>
+                </DataListCell>,
+                <DataListCell key="delete label">
                   <b>{props.i18nDelete}</b>
                 </DataListCell>,
-                <DataListCell key="more content 2">
+                <DataListCell key="allaccess label">
                   <b>{props.i18nAllAccess}</b>
                 </DataListCell>,
               ]}
@@ -69,6 +87,7 @@ export const RolePermissionList: React.FunctionComponent<IRolePermissionListProp
               aria-labelledby="single-action-item1 single-action-action1"
               id="single-action-action1"
               aria-label="Actions"
+              className={'role-permission-list_heading'}
             >
               ""
             </DataListAction>
