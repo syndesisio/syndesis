@@ -1,4 +1,6 @@
 import {
+  Alert,
+  AlertVariant,
   Button,
   DataList,
   DataListCell,
@@ -8,19 +10,33 @@ import {
   DataListItemRow,
   DataListToggle,
   Modal,
+  Radio,
+  Split,
+  SplitItem,
   Text,
   TextVariants,
 } from '@patternfly/react-core';
+import * as H from '@syndesis/history';
 import * as React from 'react';
-import { RolePermissionList } from '..';
+import { EmptyViewsState, RolePermissionList } from '..';
 import { PageSection } from '../../../../Layout';
 import { IListViewToolbarProps } from '../../../../Shared';
 import './ViewPermissionList.css';
 import { ViewPermissionToolbar } from './ViewPermissionToolbar';
+
 export interface IViewPermissionList extends IListViewToolbarProps {
   hasListData: boolean;
   i18nViewName: string;
   i18nPermission: string;
+
+  i18nEmptyStateInfo: string;
+  i18nEmptyStateTitle: string;
+  i18nImportViews: string;
+  i18nImportViewsTip: string;
+  linkCreateViewHRef: H.LocationDescriptor;
+  linkImportViewsHRef: H.LocationDescriptor;
+  i18nCreateViewTip?: string;
+  i18nCreateView: string;
 
   page: number;
   perPage: number;
@@ -37,15 +53,49 @@ export interface IViewPermissionList extends IListViewToolbarProps {
   i18nClearPermission: string;
   i18nSave: string;
   i18nAddNewRole: string;
-  i18nRead: string;
-  i18nEdit: string;
+  i18nSelect: string;
+  i18nInsert: string;
+  i18nUpdate: string;
   i18nDelete: string;
   i18nAllAccess: string;
   i18nRole: string;
-  i18nSelectedViews: string;
   i18nSelectedViewsMsg: string;
   i18nSetPermission: string;
+  i18nSsoConfigWarning: string;
+  status: any;
+  dvRoles: string[];
+  itemSelected: Map<string, string>;
+  updateViewsPermissions: (roleInfo: IRoleInfo) => Promise<boolean>;
+  getDVStatusUpdate: () => void;
+  getUpdatedRole: () => void;
 }
+
+export interface ITablePrivilege {
+  grantPrivileges: string[];
+  roleName: string | undefined;
+  viewDefinitionIds: string[];
+}
+
+export interface IRoleInfo {
+  operation: 'GRANT' | 'REVOKE';
+  tablePrivileges: ITablePrivilege[];
+}
+
+const getUpdatePermissionsPayload = (
+  permissionsModel: Map<string, string[]>,
+  itemSelected: Map<string, string>
+) => {
+  const returnVal: ITablePrivilege[] = [];
+  permissionsModel.forEach((value: string[], key: string) => {
+    returnVal.push({
+      grantPrivileges: value,
+      roleName: key,
+      viewDefinitionIds: Array.from(itemSelected.keys()),
+    });
+  });
+
+  return returnVal;
+};
 
 export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = props => {
   /**
@@ -57,10 +107,67 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
     false
   );
 
+  const [rolePermissionModel, setRolePermissionModel] = React.useState<
+    Map<string, string[]>
+  >(new Map());
+
   const [showMore, setShowMore] = React.useState<boolean>(false);
 
+  const [grantOperation, setGrantOperation] = React.useState<boolean>(true);
+
+  let selectedViewText = Array.from(props.itemSelected.values()).join(', ');
+
+  const updateRolePermissionModel = (
+    roleName: string,
+    permissions: string[]
+  ) => {
+    const rolePermissionModelCopy = new Map<string, string[]>(
+      rolePermissionModel
+    );
+    setRolePermissionModel(rolePermissionModelCopy.set(roleName, permissions));
+  };
+
+  const clearRolePermissionModel = () => {
+    setRolePermissionModel(new Map<string, string[]>());
+  };
+
+  const handleClearRoles = async () => {
+    const clearPayload = {
+      grantPrivileges: ['SELECT', 'INSERT', 'UPDATE', 'DELETE'],
+      roleName: undefined,
+      viewDefinitionIds: Array.from(props.itemSelected.keys()),
+    };
+    const callSucess = await props.updateViewsPermissions({
+      operation: 'REVOKE',
+      tablePrivileges: [clearPayload],
+    });
+    if (callSucess) {
+      props.clearViewSelection();
+      // toggle modal closed
+      setIsClearModalOpen(!isClearModalOpen);
+    }
+  };
+
+  const handleUpdateRoles = async () => {
+    const callSucess = await props.updateViewsPermissions({
+      operation: grantOperation ? 'GRANT' : 'REVOKE',
+      tablePrivileges: getUpdatePermissionsPayload(
+        rolePermissionModel,
+        props.itemSelected
+      ),
+    });
+    if (callSucess) {
+      props.clearViewSelection();
+      clearRolePermissionModel();
+      setGrantOperation(true);
+      // close setPermissionModel
+      setIsSetModalOpen(false);
+    }
+  };
+
   const handleSetModalToggle = () => {
-    // setRoleRowList([]);
+    props.getUpdatedRole();
+    props.getDVStatusUpdate();
     setIsSetModalOpen(!isSetModalOpen);
   };
 
@@ -69,10 +176,11 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
   };
 
   React.useEffect(() => {
-    if (props.i18nSelectedViews.length > 200) {
+    selectedViewText = Array.from(props.itemSelected.values()).join(', ');
+    if (selectedViewText.length > 200) {
       setShowMore(true);
     }
-  }, [props.i18nSelectedViews]);
+  }, [props.itemSelected]);
 
   return (
     <PageSection>
@@ -92,7 +200,8 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
               <Button
                 key="confirm"
                 variant="primary"
-                onClick={handleSetModalToggle}
+                isDisabled={rolePermissionModel.size < 1}
+                onClick={handleUpdateRoles}
               >
                 {props.i18nSave}
               </Button>,
@@ -114,9 +223,9 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
                     showMore ? 'view-permission-list_model-text-truncate' : ''
                   }
                 >
-                  <i>{props.i18nSelectedViews}</i>
+                  <i>{selectedViewText}</i>
                 </b>
-                {props.i18nSelectedViews.length > 200 && (
+                {selectedViewText.length > 200 && (
                   <Button
                     variant={'link'}
                     // tslint:disable-next-line: jsx-no-lambda
@@ -127,13 +236,54 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
                 )}
               </h3>
             </div>
+            <Split
+              gutter="sm"
+              className={'view-permission-list_set-model_grant'}
+            >
+              <SplitItem>
+                <Radio
+                  aria-label={'grant'}
+                  id={'operation-grant'}
+                  data-testid={'operation-grant'}
+                  name={'operation'}
+                  label="GRANT"
+                  // tslint:disable-next-line: jsx-no-lambda
+                  onClick={() => setGrantOperation(true)}
+                  isChecked={grantOperation}
+                />
+              </SplitItem>
+              <SplitItem>
+                <Radio
+                  aria-label={'revoke'}
+                  id={'operation-revoke'}
+                  className={'view-permission-list_radios'}
+                  data-testid={'operation-revoke'}
+                  name={'operation'}
+                  label="REVOKE"
+                  // tslint:disable-next-line: jsx-no-lambda
+                  onClick={() => setGrantOperation(false)}
+                  isChecked={!grantOperation}
+                />
+              </SplitItem>
+            </Split>
+            {props.status.ssoConfigured === 'false' && (
+              <Alert
+                variant={AlertVariant.warning}
+                isInline={true}
+                title={props.i18nSsoConfigWarning}
+              />
+            )}
             <RolePermissionList
               i18nRole={props.i18nRole}
-              i18nRead={props.i18nRead}
-              i18nEdit={props.i18nEdit}
+              i18nSelect={props.i18nSelect}
+              i18nInsert={props.i18nInsert}
+              i18nUpdate={props.i18nUpdate}
               i18nDelete={props.i18nDelete}
               i18nAllAccess={props.i18nAllAccess}
               i18nAddNewRole={props.i18nAddNewRole}
+              viewRolePermissionList={[]}
+              roles={props.dvRoles}
+              updateRolePermissionModel={updateRolePermissionModel}
             />
           </Modal>
           <Modal
@@ -145,7 +295,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
               <Button
                 key="confirm"
                 variant="primary"
-                onClick={handleClearModalToggle}
+                onClick={handleClearRoles}
               >
                 {props.i18nClearPermission}
               </Button>,
@@ -211,9 +361,16 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
           </DataList>
         </React.Fragment>
       ) : (
-        <div>
-          <p>Empty</p>
-        </div>
+        <EmptyViewsState
+          i18nEmptyStateTitle={props.i18nEmptyStateTitle}
+          i18nEmptyStateInfo={props.i18nEmptyStateInfo}
+          i18nCreateView={props.i18nCreateView}
+          i18nCreateViewTip={props.i18nCreateViewTip}
+          i18nImportViews={props.i18nImportViews}
+          i18nImportViewsTip={props.i18nImportViewsTip}
+          linkCreateViewHRef={props.linkCreateViewHRef}
+          linkImportViewsHRef={props.linkImportViewsHRef}
+        />
       )}
     </PageSection>
   );

@@ -10,12 +10,21 @@
   padding-bottom: 15px;
 }
 
+.view-permission-list_set-model_grant {
+  justify-content: center;
+  padding: 15px;
+}
+
 .view-permission-list_clear-model {
   overflow: hidden;
 }
 
 .view-permission-list_model-text-size {
   font-size: 1.3em;
+}
+
+.view-permission-list_radios {
+  margin-bottom: 5px;
 }
 
 .view-permission-list_model-text-truncate {

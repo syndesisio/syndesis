@@ -22,6 +22,8 @@ const draftText = 'Draft';
 const publishedText = 'Published';
 const publishLogUrl = 'testUrl';
 const publishLogUrlText = 'View Logs';
+const popoverHeading = 'Data permission is applied';
+const popover= 'This virtual database has one or more data permissions set.';
 const virtualizationActions: JSX.Element = <div>VirtActions</div>;
 
 const publishedVirtualizationNotes =
@@ -55,7 +57,6 @@ stories
     'sample virtualization item',
     withNotes(publishedVirtualizationNotes)(() => (
       <Router>
-        <Bullseye>
           <VirtualizationListItem
             dropdownActions={virtualizationActions}
             isProgressWithLink={true}
@@ -74,16 +75,18 @@ stories
             detailsPageLink={'/details/page/link'}
             currentPublishedState={'BUILDING'}
             publishingLogUrl={text('publishLogUrl', publishLogUrl)}
+            i18nLockPopoverHeading={popoverHeading}
+            i18nLockPopover={popover}
+            i18nSecuredText={'Secured'}
             usedBy={['stuff']}
+            secured={true}
           />
-        </Bullseye>
       </Router>
     ))
   )
 
   .add('virtualization item with odata', () => (
     <Router>
-      <Bullseye>
         <VirtualizationListItem
           dropdownActions={virtualizationActions}
           isProgressWithLink={false}
@@ -102,8 +105,11 @@ stories
           detailsPageLink={'/details/page/link'}
           currentPublishedState={'RUNNING'}
           publishingLogUrl={text('publishLogUrl', publishLogUrl)}
+          i18nLockPopoverHeading={popoverHeading}
+          i18nLockPopover={popover}
+          i18nSecuredText={'Secured'}
           usedBy={[]}
+          secured={true}
         />
-      </Bullseye>
     </Router>
   ));
