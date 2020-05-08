@@ -25,7 +25,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +49,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -87,11 +85,9 @@ import io.syndesis.dv.metadata.TeiidVdb;
 import io.syndesis.dv.model.DataVirtualization;
 import io.syndesis.dv.model.Edition;
 import io.syndesis.dv.model.SourceSchema;
-import io.syndesis.dv.model.TablePrivileges;
 import io.syndesis.dv.model.ViewDefinition;
 import io.syndesis.dv.model.export.v1.DataVirtualizationV1Adapter;
 import io.syndesis.dv.model.export.v1.SourceV1;
-import io.syndesis.dv.model.export.v1.TablePrivilegeV1Adapter;
 import io.syndesis.dv.model.export.v1.ViewDefinitionV1Adapter;
 import io.syndesis.dv.openshift.BuildStatus;
 import io.syndesis.dv.openshift.BuildStatus.RouteStatus;
@@ -104,7 +100,6 @@ import io.syndesis.dv.openshift.TeiidOpenShiftClient;
 import io.syndesis.dv.openshift.VirtualizationStatus;
 import io.syndesis.dv.server.DvService;
 import io.syndesis.dv.server.Messages;
-import io.syndesis.dv.server.SSOConfigurationProperties;
 import io.syndesis.dv.server.V1Constants;
 import io.syndesis.dv.utils.PathUtils;
 import io.syndesis.dv.utils.StringNameValidator;
@@ -141,9 +136,6 @@ public final class DataVirtualizationService extends DvService {
     @Autowired
     private EditorService utilService;
 
-    @Autowired
-    private SSOConfigurationProperties ssoConfigurationProperties;
-
     /**
      * Get the virtualizations from the repository
      * @return a JSON document representing all the virtualizations
@@ -173,7 +165,6 @@ public final class DataVirtualizationService extends DvService {
         //working state
         entity.setEmpty(this.getWorkspaceManager().findViewDefinitionsNames(virtualization.getName()).isEmpty());
         entity.setEditionCount(this.getWorkspaceManager().getEditionCount(virtualization.getName()));
-        entity.setSecured(this.getWorkspaceManager().hasRoles(virtualization.getName()));
 
         // Set published status of virtualization
         VirtualizationStatus status = this.openshiftClient.getVirtualizationStatus(virtualization.getName());
@@ -569,11 +560,6 @@ public final class DataVirtualizationService extends DvService {
             }
         }
 
-        List<TablePrivileges> tablePrivileges = getWorkspaceManager().findAllTablePrivileges(dv.getName());
-        for (TablePrivileges privileges : tablePrivileges) {
-            adapter.getTablePriveleges().add(new TablePrivilegeV1Adapter(privileges));
-        }
-
         adapter.setSources(new ArrayList<>(sources.values()));
 
         StreamingResponseBody stream = out -> {
@@ -598,7 +584,7 @@ public final class DataVirtualizationService extends DvService {
             if (theVdb != null) {
                 zos.putNextEntry(new ZipEntry(DV_VDB_XML));
                 try {
-                    VDBMetadataParser.marshall(theVdb, zos);
+                    VDBMetadataParser.marshell(theVdb, zos);
                 } catch (XMLStreamException e) {
                     throw new IOException(e);
                 }
@@ -648,13 +634,20 @@ public final class DataVirtualizationService extends DvService {
             dv = mapper.readValue(zis, DataVirtualizationV1Adapter.class);
         }
 
-        final String dvName;
         DataVirtualization toImport = dv.getEntity();
         if (virtualization == null) {
-            dvName = toImport.getName();
+            virtualization = toImport.getName();
         } else {
-            dvName = virtualization;
             toImport.setName(virtualization);
+        }
+
+        //TODO: validate the uuid or assign a new one
+        //for now we just assign new to all objects
+
+        for (ViewDefinitionV1Adapter adapter : dv.getViews()) {
+            ViewDefinition entity = adapter.getEntity();
+            entity.setId(null);
+            entity.setDataVirtualizationName(virtualization);
         }
 
         try {
@@ -693,23 +686,9 @@ public final class DataVirtualizationService extends DvService {
                     existing.setDescription(dv.getDescription());
                 }
 
-                Map<String, String> viewMap = new HashMap<String, String>();
-
-                //TODO: validate the uuid or assign a new one
-                //for now we just assign new to all objects
                 for (ViewDefinitionV1Adapter adapter : dv.getViews()) {
                     ViewDefinition vd = adapter.getEntity();
-                    String oldId = vd.getId();
-                    vd.setId(null);
-                    vd.setDataVirtualizationName(dvName);
-                    String newId = utilService.upsertViewEditorState(vd).getId();
-                    viewMap.put(oldId, newId);
-                }
-
-                for (TablePrivilegeV1Adapter adapter : dv.getTablePriveleges()) {
-                    String id = viewMap.get(adapter.getViewDefinitionId());
-                    TablePrivileges privileges = repositoryManager.createTablePrivileges(id, adapter.getRole());
-                    privileges.setGrantPrivileges(adapter.getGrantPrivileges());
+                    utilService.upsertViewEditorState(vd);
                 }
 
                 if (existing != null) {
@@ -848,7 +827,6 @@ public final class DataVirtualizationService extends DvService {
         }
 
         PublishConfiguration config = new PublishConfiguration();
-        //for now everyone uses the same
 
         StatusObject status = new StatusObject();
         repositoryManager.runInTransaction(false, ()-> {
@@ -881,10 +859,8 @@ public final class DataVirtualizationService extends DvService {
 
             status.addAttribute("Publishing", "Operation initiated");  //$NON-NLS-1$//$NON-NLS-2$
 
-            List<TablePrivileges> tablePrivileges = repositoryManager.findAllTablePrivileges(dataservice.getName());
-
             //use the preview vdb to build the needed metadata
-            VDBMetaData theVdb = new ServiceVdbGenerator(metadataService).createServiceVdb(dataservice.getName(), vdb, editorStates, tablePrivileges);
+            VDBMetaData theVdb = new ServiceVdbGenerator(metadataService).createServiceVdb(dataservice.getName(), vdb, editorStates);
 
             //create a new published edition with the saved workspace state
             Edition edition = repositoryManager.createEdition(dataservice.getName());
@@ -916,17 +892,6 @@ public final class DataVirtualizationService extends DvService {
 
     private void submitPublish(PublishConfiguration config, StatusObject status)
             throws KException {
-        if (config.isSecurityEnabled()) {
-            if (ssoConfigurationProperties.getAuthServerUrl() == null) {
-                //error
-                status.addAttribute("Build Status", BuildStatus.Status.FAILED.name()); //$NON-NLS-1$
-                status.addAttribute("Build Status Message", "Virtualization is configured for SSO integration, but SSO is not configured"); //$NON-NLS-1$ //$NON-NLS-2$
-                return;
-            }
-            config.setSsoConfigurationProperties(ssoConfigurationProperties);
-        }
-
-
         BuildStatus buildStatus = openshiftClient.publishVirtualization(config);
 
         status.addAttribute("OpenShift Name", buildStatus.getOpenShiftName()); //$NON-NLS-1$
@@ -1019,7 +984,7 @@ public final class DataVirtualizationService extends DvService {
             }
             Assertion.isNotNull(ze);
 
-            VDBMetaData theVdb = VDBMetadataParser.unmarshall(zis);
+            VDBMetaData theVdb = VDBMetadataParser.unmarshell(zis);
 
             PublishRequestPayload payload = new PublishRequestPayload();
             PublishConfiguration config = new PublishConfiguration();
@@ -1100,103 +1065,38 @@ public final class DataVirtualizationService extends DvService {
         BasicHeader authHeader = new BasicHeader(HttpHeaders.AUTHORIZATION, authValue);
 
         try (SyndesisHttpClient client = new SyndesisHttpClient()){
-            try (InputStream response = client.executeGET(baseUrl + "org.teiid:type=Runtime/Sessions", authHeader);) {
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode root = mapper.readTree(response);
-                JsonNode value = root.withArray("value");
-                if (value != null) {
-                    int sessionCount = value.size();
-                    metrics.setSessions(sessionCount);
-                }
-            }
-
-            try (InputStream response = client.executeGET(baseUrl + "org.teiid:type=Runtime/TotalRequestsProcessed", authHeader);) {
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode root = mapper.readTree(response);
-                JsonNode value = root.get("value");
-                if (value != null) {
-                    long requestCount = value.asLong();
-                    metrics.setRequestCount(requestCount);
-                }
-            }
-
-            try (InputStream response = client.executeGET(baseUrl + "org.teiid:type=Cache,name=ResultSet/HitRatio", authHeader);) {
-                ObjectMapper mapper = new ObjectMapper();
-                JsonNode root = mapper.readTree(response);
-                JsonNode value = root.get("value");
-                if (value != null) {
-                    double hitRatio = value.asDouble();
-                    metrics.setResultSetCacheHitRatio(hitRatio);
-                }
+        try (InputStream response = client.executeGET(baseUrl + "org.teiid:type=Runtime/Sessions", authHeader);) {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response);
+            JsonNode value = root.withArray("value");
+            if (value != null) {
+                int sessionCount = value.size();
+                metrics.setSessions(sessionCount);
             }
         }
 
-        return metrics;
-    }
-
-    @GetMapping(value = {
-            VIRTUALIZATION_PLACEHOLDER + FS + ROLES }, produces = {
-                    MediaType.APPLICATION_JSON_VALUE })
-    @ApiOperation(value = "Return all role information for the given virtualization", response = RoleInfo.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 406, message = "Only JSON is returned by this operation"),
-            @ApiResponse(code = 403, message = "An error has occurred.") })
-    public RoleInfo getRoles(
-            @ApiParam(value = "name of the virtualization", required = true) final @PathVariable(VIRTUALIZATION) String virtualization)
-            throws Exception {
-        List<TablePrivileges> privileges = repositoryManager
-                .runInTransaction(false, () -> {
-                    return repositoryManager
-                            .findAllTablePrivileges(virtualization);
-                });
-        // we're using a parent container for if / when procedure and schema
-        // level and
-        // other such information is added.
-        RoleInfo result = new RoleInfo();
-        result.setTablePrivileges(privileges);
-        return result;
-    }
-
-    @PutMapping(value = {
-            VIRTUALIZATION_PLACEHOLDER + FS + ROLES }, produces = {
-                    MediaType.APPLICATION_JSON_VALUE })
-    @ApiOperation(value = "Apply the role changes to the given virtualization", response = RoleInfo.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 406, message = "Only JSON is returned by this operation"),
-            @ApiResponse(code = 403, message = "An error has occurred.") })
-    public void applyRoles(
-            @ApiParam(value = "name of the virtualization", required = true) final @PathVariable(VIRTUALIZATION) String virtualization,
-            @ApiParam(value = "role info", required = true) final @RequestBody RoleInfo roleInfo)
-            throws Exception {
-
-        repositoryManager.runInTransaction(false, () -> {
-            RoleInfo.Operation op = roleInfo.getOperation();
-            for (TablePrivileges tablePrivileges : roleInfo
-                    .getTablePrivileges()) {
-                String viewId = tablePrivileges.getViewDefinitionId();
-                TablePrivileges existing = repositoryManager
-                        .findTablePrivileges(viewId,
-                                tablePrivileges.getRoleName());
-                switch (op) {
-                case GRANT:
-                    if (existing == null) {
-                        existing = repositoryManager.createTablePrivileges(
-                                viewId, tablePrivileges.getRoleName());
-                    }
-                    existing.getGrantPrivileges()
-                            .addAll(tablePrivileges.getGrantPrivileges());
-                    break;
-                case REVOKE:
-                    if (existing != null) {
-                        existing.getGrantPrivileges().removeAll(
-                                tablePrivileges.getGrantPrivileges());
-                    } // else currently not implemented
-                      // there are no schema level permissions to remove from
-                    break;
-                }
+        try (InputStream response = client.executeGET(baseUrl + "org.teiid:type=Runtime/TotalRequestsProcessed", authHeader);) {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response);
+            JsonNode value = root.get("value");
+            if (value != null) {
+                long requestCount = value.asLong();
+                metrics.setRequestCount(requestCount);
             }
-            return null;
-        });
+        }
+
+        try (InputStream response = client.executeGET(baseUrl + "org.teiid:type=Cache,name=ResultSet/HitRatio", authHeader);) {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response);
+            JsonNode value = root.get("value");
+            if (value != null) {
+                double hitRatio = value.asDouble();
+                metrics.setResultSetCacheHitRatio(hitRatio);
+            }
+        }
+        }
+
+        return metrics;
     }
 
 }

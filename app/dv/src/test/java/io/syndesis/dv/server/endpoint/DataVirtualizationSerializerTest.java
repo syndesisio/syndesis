@@ -39,8 +39,7 @@ public final class DataVirtualizationSerializerTest {
             "  \"publishedState\" : \"NOTFOUND\",\n" +
             "  \"empty\" : true,\n" +
             "  \"modified\" : false,\n" +
-            "  \"editionCount\" : 0,\n" +
-            "  \"secured\" : false\n" +
+            "  \"editionCount\" : 0\n" +
             "}";
 
     private RestDataVirtualization dataVirtualization;

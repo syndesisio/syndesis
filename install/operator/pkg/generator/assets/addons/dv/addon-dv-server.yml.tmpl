@@ -49,10 +49,6 @@
         serviceAccountName: syndesis-server
         containers:
         - name: syndesis-dv
-          envFrom:
-            - configMapRef:
-              name: dv-sso-config
-              optional: true
           env:
           - name: JAVA_APP_DIR
             value: /deployments

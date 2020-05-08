@@ -46,8 +46,6 @@ import io.syndesis.dv.metadata.MetadataInstance.ValidationResult;
 import io.syndesis.dv.metadata.TeiidDataSource;
 import io.syndesis.dv.metadata.TeiidVdb;
 import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
-import io.syndesis.dv.model.TablePrivileges;
-import io.syndesis.dv.model.TablePrivileges.Privilege;
 import io.syndesis.dv.model.ViewDefinition;
 import io.syndesis.dv.server.endpoint.ServiceVdbGenerator.SchemaFinder;
 
@@ -71,7 +69,7 @@ public class ServiceVdbGeneratorTest {
     private static final String DS_NAME_2 = "pgconnection2";
     private static final String MODEL_NAME_2 = "pgconnection2schemamodel";
 
-    private boolean doPrint = false;
+    private boolean doPrint = true;
 
 
     private final static String TABLE_OPTION_FQN = "teiid_rel:fqn"; //$NON-NLS-1$
@@ -199,7 +197,6 @@ public class ServiceVdbGeneratorTest {
     private ViewDefinition helpCreateViewEditorState(int numSources) throws KException {
 
         ViewDefinition viewDef = new ViewDefinition("dvName", viewDefinitionName);
-        viewDef.setId("1");
         if( numSources == 1 ) {
             helpCreateViewDefinitionAll(viewDef, sourceTablePath2, false);
         } else {
@@ -463,7 +460,7 @@ public class ServiceVdbGeneratorTest {
         t.getIncomingObjects().add(schemas.get("pgconnection1").getTable("customers"));
         Mockito.when(mock.getSchema("servicevdb")).thenReturn(result.getSchema());
 
-        VDBMetaData serviceVdb = vdbGenerator.createServiceVdb("servicevdb", mock, Arrays.asList(state), null);
+        VDBMetaData serviceVdb = vdbGenerator.createServiceVdb("servicevdb", mock, Arrays.asList(state));
 
         assertEquals("<?xml version=\"1.0\" ?><vdb name=\"servicevdb\" version=\"1\"><connection-type>BY_VERSION</connection-type>" +
                 "<property name=\"hidden-qualified\" value=\"true\"></property>" +
@@ -509,24 +506,6 @@ public class ServiceVdbGeneratorTest {
                 "    /*, [INNER|LEFT OUTER|RIGHT OUTER] JOIN pgconnection1schemamodel.customers AS t2 ON t1.ID=t2.<?>*/;\n",
                 viewModel.getSourceMetadataText().get(0));
 
-        //Add some role info
-        List<TablePrivileges> privileges = new ArrayList<>();
-        privileges.add(new TablePrivileges("x", "1", Privilege.I));
-        privileges.add(new TablePrivileges("y", "1", Privilege.I));
-        privileges.add(new TablePrivileges(ServiceVdbGenerator.ANY_AUTHENTICATED, "1", Privilege.S));
-        privileges.add(new TablePrivileges("x", "doesn't exist", Privilege.S));
-
-        serviceVdb = vdbGenerator.createServiceVdb("servicevdb", mock, Arrays.asList(state), privileges);
-
-        String actual = new String(DefaultMetadataInstance.toBytes(serviceVdb).toByteArray(), "UTF-8");
-        actual = actual.substring(actual.indexOf("<data-role"));
-
-        assertEquals("<data-role name=\"x\" any-authenticated=\"false\" grant-all=\"false\">"
-                + "<permission><resource-name>servicevdb.orderInfoView</resource-name><resource-type>TABLE</resource-type><allow-create>true</allow-create></permission><mapped-role-name>x</mapped-role-name></data-role>"
-                + "<data-role name=\"y\" any-authenticated=\"false\" grant-all=\"false\">"
-                + "<permission><resource-name>servicevdb.orderInfoView</resource-name><resource-type>TABLE</resource-type><allow-create>true</allow-create></permission><mapped-role-name>y</mapped-role-name></data-role>"
-                + "<data-role name=\"any authenticated\" any-authenticated=\"true\" grant-all=\"false\">"
-                + "<permission><resource-name>servicevdb.orderInfoView</resource-name><resource-type>TABLE</resource-type><allow-read>true</allow-read></permission></data-role></vdb>", actual);
     }
 
     @Test
@@ -546,7 +525,7 @@ public class ServiceVdbGeneratorTest {
         t.getIncomingObjects().add(schemas.get("pgconnection2").getTable("customers"));
         Mockito.when(mock.getSchema("servicevdb")).thenReturn(result.getSchema());
 
-        VDBMetaData serviceVdb = vdbGenerator.createServiceVdb("servicevdb", mock, Arrays.asList(state), null);
+        VDBMetaData serviceVdb = vdbGenerator.createServiceVdb("servicevdb", mock, Arrays.asList(state));
 
         List<org.teiid.adminapi.Model> models = serviceVdb.getModels();
 

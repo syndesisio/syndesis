@@ -70,8 +70,6 @@ import io.syndesis.dv.openshift.SyndesisConnectionSynchronizer;
 import io.syndesis.dv.openshift.TeiidOpenShiftClient;
 import io.syndesis.dv.rest.JsonMarshaller;
 import io.syndesis.dv.server.Application;
-import io.syndesis.dv.server.DvConfigurationProperties;
-import io.syndesis.dv.server.SSOConfigurationProperties;
 import io.syndesis.dv.server.endpoint.IntegrationTest.IntegrationTestConfiguration;
 
 @RunWith(SpringRunner.class)
@@ -83,10 +81,6 @@ public class IntegrationTest {
     //inject simple auth bypass
     @TestConfiguration
     static class IntegrationTestConfiguration {
-        @MockBean
-        private SSOConfigurationProperties ssoConfigurationProperties;
-        @MockBean
-        private DvConfigurationProperties dvConfigurationProperties;
         /* Stub out the connectivity to syndesis / openshift */
         @MockBean
         private SyndesisConnectionMonitor syndesisConnectionMonitor;

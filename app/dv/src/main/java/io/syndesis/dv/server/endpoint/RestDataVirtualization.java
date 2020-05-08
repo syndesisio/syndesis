@@ -49,7 +49,6 @@ public final class RestDataVirtualization {
     private String publishedMessage;
     private String deployedMessage;
     private String deployedState;
-    private boolean secured;
 
     /**
      * Constructor for use when deserializing
@@ -257,13 +256,5 @@ public final class RestDataVirtualization {
 
     public void setDeployedMessage(String statusMessage) {
         this.deployedMessage = statusMessage;
-    }
-
-    public boolean isSecured() {
-        return secured;
-    }
-
-    public void setSecured(boolean secured) {
-        this.secured = secured;
     }
 }

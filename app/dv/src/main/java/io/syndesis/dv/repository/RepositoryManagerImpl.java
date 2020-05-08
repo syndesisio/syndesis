@@ -32,7 +32,6 @@ import io.syndesis.dv.RepositoryManager;
 import io.syndesis.dv.model.DataVirtualization;
 import io.syndesis.dv.model.Edition;
 import io.syndesis.dv.model.SourceSchema;
-import io.syndesis.dv.model.TablePrivileges;
 import io.syndesis.dv.model.ViewDefinition;
 import io.syndesis.dv.utils.KLog;
 
@@ -54,8 +53,6 @@ public class RepositoryManagerImpl implements RepositoryManager {
     private ViewDefinitionRepository viewDefinitionRepository;
     @Autowired
     private EditionRepository editionRepository;
-    @Autowired
-    private TablePrivilegesRepository tablePrivilegesRepository;
     @Autowired
     private PlatformTransactionManager platformTransactionManager;
 
@@ -119,7 +116,7 @@ public class RepositoryManagerImpl implements RepositoryManager {
 
     @Override
     public List<String> findAllSourceIds() {
-        return schemaRepository.findAllSourceIds();
+        return schemaRepository.findAllSourceIds(); //$NON-NLS-1$
     }
 
     @Override
@@ -253,34 +250,5 @@ public class RepositoryManagerImpl implements RepositoryManager {
     @Override
     public Long deleteViewDefinitions(String virtualization) {
         return this.viewDefinitionRepository.deleteByDataVirtualizationName(virtualization);
-    }
-
-    @Override
-    public List<String> findRoleNames() {
-        return this.tablePrivilegesRepository.findRoleNames();
-    }
-
-    @Override
-    public boolean hasRoles(String name) {
-        return tablePrivilegesRepository.countByVirtualizationName(name) > 0;
-    }
-
-    @Override
-    public List<TablePrivileges> findAllTablePrivileges(String virtualization) {
-        return tablePrivilegesRepository.findAllByVirtualizationName(virtualization);
-    }
-
-    @Override
-    public TablePrivileges createTablePrivileges(String viewId, String roleName) {
-        TablePrivileges tp = new TablePrivileges();
-        tp.setViewDefinitionId(viewId);
-        tp.setRoleName(roleName);
-        return this.tablePrivilegesRepository.save(tp);
-    }
-
-    @Override
-    public TablePrivileges findTablePrivileges(String viewId,
-            String role) {
-        return tablePrivilegesRepository.findTablePrivilegesByViewDefinitionIdAndRoleName(viewId, role);
     }
 }

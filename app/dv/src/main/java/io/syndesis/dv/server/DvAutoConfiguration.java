@@ -19,6 +19,14 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.transaction.TransactionManager;
 
+import io.syndesis.dv.metadata.MetadataInstance;
+import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
+import io.syndesis.dv.metadata.internal.TeiidServer;
+import io.syndesis.dv.openshift.EncryptionComponent;
+import io.syndesis.dv.openshift.SyndesisConnectionSynchronizer;
+import io.syndesis.dv.openshift.TeiidOpenShiftClient;
+import io.syndesis.dv.repository.RepositoryManagerImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -41,16 +49,9 @@ import org.teiid.runtime.EmbeddedConfiguration;
 
 import io.syndesis.dv.RepositoryManager;
 import io.syndesis.dv.lsp.websocket.TeiidDdlWebSocketEndpoint;
-import io.syndesis.dv.metadata.MetadataInstance;
-import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
-import io.syndesis.dv.metadata.internal.TeiidServer;
-import io.syndesis.dv.openshift.EncryptionComponent;
-import io.syndesis.dv.openshift.SyndesisConnectionSynchronizer;
-import io.syndesis.dv.openshift.TeiidOpenShiftClient;
-import io.syndesis.dv.repository.RepositoryManagerImpl;
 
 @Configuration
-@EnableConfigurationProperties({DvConfigurationProperties.class, SpringMavenProperties.class, SSOConfigurationProperties.class})
+@EnableConfigurationProperties({DvConfigurationProperties.class, SpringMavenProperties.class})
 @ComponentScan(basePackageClasses = {RepositoryManagerImpl.class, DefaultMetadataInstance.class, SyndesisConnectionSynchronizer.class})
 @EnableAsync
 public class DvAutoConfiguration implements ApplicationListener<ContextRefreshedEvent>, AsyncConfigurer {

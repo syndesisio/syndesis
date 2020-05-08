@@ -122,7 +122,6 @@ import io.syndesis.dv.model.SourceSchema;
 import io.syndesis.dv.openshift.BuildStatus.RouteStatus;
 import io.syndesis.dv.openshift.BuildStatus.Status;
 import io.syndesis.dv.server.DvConfigurationProperties;
-import io.syndesis.dv.server.SSOConfigurationProperties;
 import io.syndesis.dv.utils.StringNameValidator;
 import io.syndesis.dv.utils.StringUtils;
 import okhttp3.ConnectionPool;
@@ -667,7 +666,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         if (scd.getTeiidName() == null) {
             for (int i = 0; i < 3; i++) {
                 try {
-                    String name = getUniqueTeiidName(scd, syndesisName);
+                    String name = getUniqueKomodoName(scd, syndesisName);
                     scd.setTeiidName(name);
                     break;
                 } catch (PersistenceException | DataIntegrityViolationException e) {
@@ -691,7 +690,7 @@ public class TeiidOpenShiftClient implements StringConstants {
      * @param syndesisName
      * @throws Exception
      */
-    public String getUniqueTeiidName(DefaultSyndesisDataSource scd, String syndesisName) throws Exception {
+    public String getUniqueKomodoName(DefaultSyndesisDataSource scd, String syndesisName) throws Exception {
         return repositoryManager.runInTransaction(false, () -> {
             SourceSchema ss = repositoryManager.findSchemaBySourceId(scd.getSyndesisConnectionId());
             if (ss != null) {
@@ -1083,7 +1082,7 @@ public class TeiidOpenShiftClient implements StringConstants {
                     // create build contents as tar file
                     info(openShiftName, "Publishing - Creating zip archive");
                     GenericArchive archive = ShrinkWrap.create(GenericArchive.class, "contents.tar");
-                    String pomFile = generatePomXml(vdb, publishConfig.isEnableOData(), publishConfig.isSecurityEnabled());
+                    String pomFile = generatePomXml(vdb, publishConfig.isEnableOData());
 
                     debug(openShiftName, "Publishing - Generated pom file: " + NEW_LINE + pomFile);
                     archive.add(new StringAsset(pomFile), "pom.xml");
@@ -1130,11 +1129,6 @@ public class TeiidOpenShiftClient implements StringConstants {
                     waitUntilPodIsReady(openShiftName, client, buildName + "-build", 20);
 
                     info(openShiftName, "Publishing - Fetching environment variables for vdb data sources");
-
-                    if (publishConfig.isSecurityEnabled()) {
-                        SSOConfigurationProperties configurationProperties = publishConfig.getSsoConfigurationProperties();
-                        publishConfig.addEnvironmentVariables(getEnvironmentVariablesForSecurity(configurationProperties));
-                    }
 
                     publishConfig.addEnvironmentVariables(
                             getEnvironmentVariablesForVDBDataSources(vdb, publishConfig, openShiftName));
@@ -1267,14 +1261,6 @@ public class TeiidOpenShiftClient implements StringConstants {
             }
         }
         return properties;
-    }
-
-    Collection<EnvVar> getEnvironmentVariablesForSecurity(SSOConfigurationProperties props) {
-        List<EnvVar> envs = new ArrayList<>();
-        for (Map.Entry<String, String> prop : props.getAllKeycloakFromEnv().entrySet()) {
-            envs.add(env(prop.getKey(), props.getAuthServerUrl()));
-        }
-        return envs;
     }
 
     Collection<EnvVar> getEnvironmentVariablesForVDBDataSources(VDBMetaData vdb,
@@ -1691,7 +1677,7 @@ public class TeiidOpenShiftClient implements StringConstants {
      * @return pom.xml contents
      * @throws KException
      */
-    protected String generatePomXml(VDBMetaData vdb, boolean enableOdata, boolean enableSecurity) throws KException {
+    protected String generatePomXml(VDBMetaData vdb, boolean enableOdata) throws KException {
         try {
             StringBuilder builder = new StringBuilder();
             InputStream is = this.getClass().getClassLoader().getResourceAsStream("s2i/template-pom.xml");
@@ -1743,14 +1729,6 @@ public class TeiidOpenShiftClient implements StringConstants {
                 vdbDependencies.append(StringConstants.NEW_LINE).append("<dependency>"
                         + "<groupId>org.teiid</groupId>"
                         + "<artifactId>spring-odata</artifactId>"
-                        + "<version>${version.springboot.teiid}</version>"
-                        + "</dependency> ");
-            }
-
-            if (enableSecurity) {
-                vdbDependencies.append(StringConstants.NEW_LINE).append("<dependency>"
-                        + "<groupId>org.teiid</groupId>"
-                        + "<artifactId>spring-keycloak</artifactId>"
                         + "<version>${version.springboot.teiid}</version>"
                         + "</dependency> ");
             }
