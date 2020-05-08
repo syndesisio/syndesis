@@ -26,10 +26,10 @@
   <packaging>jar</packaging>
   <properties>
     <version.springboot.teiid>
-      1.3.0
+      @version.springboot.teiid@
     </version.springboot.teiid>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <version.mysql>8.0.17</version.mysql>
+    <version.mysql>@version.mysql@</version.mysql>
     <version.postgresql>@version.postgresql@</version.postgresql>
     <version.springboot>@version.springboot@</version.springboot>
     <version.mssql>@version.mssql@</version.mssql>
@@ -80,26 +80,34 @@
       </plugin>
     </plugins>
   </build>
-  <dependencies>
-    <dependency>
-      <groupId>org.postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>\${version.postgresql}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.teiid</groupId>
-      <artifactId>teiid-spring-boot-starter</artifactId>
-      <version>\${version.springboot.teiid}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.opentracing.contrib</groupId>
-      <artifactId>opentracing-spring-jaeger-web-starter</artifactId>
-      <version>1.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-actuator</artifactId>
-      <version>\${version.springboot}</version>
-    </dependency>
-  </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.teiid</groupId>
+                <artifactId>teiid-spring-boot-starter</artifactId>
+                <version>\${version.springboot.teiid}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>\${version.postgresql}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.teiid</groupId>
+            <artifactId>teiid-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.opentracing.contrib</groupId>
+            <artifactId>opentracing-spring-jaeger-web-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+    </dependencies>
 </project>
