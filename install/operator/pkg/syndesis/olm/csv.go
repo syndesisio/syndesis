@@ -263,43 +263,43 @@ func (c *csv) build() (err error) {
 			RelatedImages: []Image{
 				{
 					Name:   "DV",
-					Images: c.config.Syndesis.Addons.DV.Image.Get(c.config.Syndesis.SHA),
+					Images: c.config.Syndesis.Addons.DV.Image,
 				},
 				{
 					Name:   "Oauth",
-					Images: c.config.Syndesis.Components.Oauth.Image.Get(c.config.Syndesis.SHA),
+					Images: c.config.Syndesis.Components.Oauth.Image,
 				},
 				{
 					Name:   "UI",
-					Images: c.config.Syndesis.Components.UI.Image.Get(c.config.Syndesis.SHA),
+					Images: c.config.Syndesis.Components.UI.Image,
 				},
 				{
 					Name:   "S2I",
-					Images: c.config.Syndesis.Components.S2I.Image.Get(c.config.Syndesis.SHA),
+					Images: c.config.Syndesis.Components.S2I.Image,
 				},
 				{
 					Name:   "Prometheus",
-					Images: c.config.Syndesis.Components.Prometheus.Image.Get(c.config.Syndesis.SHA),
+					Images: c.config.Syndesis.Components.Prometheus.Image,
 				},
 				{
 					Name:   "Upgrade",
-					Images: c.config.Syndesis.Components.Upgrade.Image.Get(c.config.Syndesis.SHA),
+					Images: c.config.Syndesis.Components.Upgrade.Image,
 				},
 				{
 					Name:   "Postgres",
-					Images: c.config.Syndesis.Components.Database.Image.Get(c.config.Syndesis.SHA),
+					Images: c.config.Syndesis.Components.Database.Image,
 				},
 				{
 					Name:   "Exporter",
-					Images: c.config.Syndesis.Components.Database.Exporter.Image.Get(c.config.Syndesis.SHA),
+					Images: c.config.Syndesis.Components.Database.Exporter.Image,
 				},
 				{
 					Name:   "Server",
-					Images: c.config.Syndesis.Components.Server.Image.Get(c.config.Syndesis.SHA),
+					Images: c.config.Syndesis.Components.Server.Image,
 				},
 				{
 					Name:   "CamelK",
-					Images: c.config.Syndesis.Addons.CamelK.Image.Get(c.config.Syndesis.SHA),
+					Images: c.config.Syndesis.Addons.CamelK.Image,
 				},
 				{
 					Name:   "Jaeger Agent",
@@ -315,11 +315,11 @@ func (c *csv) build() (err error) {
 				},
 				{
 					Name:   "Todo",
-					Images: c.config.Syndesis.Addons.Todo.Image.Get(c.config.Syndesis.SHA),
+					Images: c.config.Syndesis.Addons.Todo.Image,
 				},
 				{
 					Name:   "AMQ",
-					Images: c.config.Syndesis.Components.AMQ.Image.Get(c.config.Syndesis.SHA),
+					Images: c.config.Syndesis.Components.AMQ.Image,
 				},
 			},
 			InstallModes: []InstallMode{
@@ -402,7 +402,7 @@ func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 		DatabaseImage string
 		OperatorImage string
 	}{
-		DatabaseImage: c.config.Syndesis.Components.Database.Image.Get(c.config.Syndesis.SHA),
+		DatabaseImage: c.config.Syndesis.Components.Database.Image,
 		OperatorImage: "",
 	}
 
