@@ -1,5 +1,5 @@
 <productname>Syndesis</productname>
-<productnumber>{version}</productnumber>
+<productnumber>{syndesis-version}</productnumber>
 <subtitle>For developers who want to customize Syndesis
 by developing extensions or 
 by defining OpenAPI definitions for REST API client connectors.</subtitle>
@@ -8,8 +8,8 @@ by defining OpenAPI definitions for REST API client connectors.</subtitle>
 </abstract>
 <authorgroup>
   <org>
-    <orgname>Fuse Documentation Team</orgname>
-    <email>fuse-online-evaluation@redhat.com</email>
+    <orgname></orgname>
+    <email></email>
   </org>
 </authorgroup>
 <xi:include href="Common_Content/Legal_Notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
