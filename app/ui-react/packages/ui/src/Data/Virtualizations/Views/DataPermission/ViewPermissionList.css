@@ -24,11 +24,11 @@
 }
 
 .view-permission-list_radios {
-  margin-bottom: 5px;
+  margin-bottom: 15px;
 }
 
-.view-permission-list_model-warning {
-  margin-bottom: 15px;
+.view-permission-list_sso-warning-text {
+  margin-left: 5px;
 }
 
 .view-permission-list_model-text-truncate {

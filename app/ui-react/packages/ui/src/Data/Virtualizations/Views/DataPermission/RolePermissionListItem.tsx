@@ -25,6 +25,7 @@ export interface IRolePermissionListItemProps {
   selectedPermissions: string[];
   i18nSelectRole: string;
   i18nRemoveRoleRow: string;
+  i18nRoleExists: string;
   addRole: (roleName: string) => void;
   updateRolePermissionModel: (roleName: string, permissions: string[]) => void;
   deleteRoleFromPermissionModel: (roleName: string) => void;
@@ -203,7 +204,7 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
         <Alert
           variant={AlertVariant.warning}
           isInline={true}
-          title="A role with this name already exists - using the existing role."
+          title={props.i18nRoleExists}
           action={
             // tslint:disable-next-line: jsx-no-lambda
             <AlertActionCloseButton onClose={() => setShowErrorAlert(false)} />

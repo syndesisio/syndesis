@@ -9,8 +9,7 @@ import {
   SplitItem,
   Tooltip,
 } from '@patternfly/react-core';
-import { ExternalLinkAltIcon } from '@patternfly/react-icons';
-import { CubeIcon, LockIcon } from '@patternfly/react-icons';
+import { CubeIcon, ExternalLinkAltIcon, LockIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
