@@ -15,6 +15,22 @@
  */
 package io.syndesis.server.openshift;
 
+import static io.syndesis.server.openshift.OpenShiftServiceImpl.openshiftName;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import static io.fabric8.kubernetes.client.utils.Serialization.asJson;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TestName;
+
+import org.slf4j.bridge.SLF4JBridgeHandler;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -38,21 +54,6 @@ import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.api.model.RouteBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.server.mock.OpenShiftMockServer;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
-import org.slf4j.bridge.SLF4JBridgeHandler;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import static io.fabric8.kubernetes.client.utils.Serialization.asJson;
-import static io.syndesis.server.openshift.OpenShiftServiceImpl.openshiftName;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 import okhttp3.mockwebserver.RecordedRequest;
 
 public class OpenShiftServiceImplTest {
@@ -469,7 +470,6 @@ public class OpenShiftServiceImplTest {
                 .withName(openshiftName(name))
                 .addToAnnotations(deploymentData.getAnnotations())
                 .addToLabels(deploymentData.getLabels())
-                .addToLabels(OpenShiftServiceImpl.defaultLabels())
             .endMetadata()
             .withNewSpec()
                 .withReplicas(1)
@@ -486,7 +486,6 @@ public class OpenShiftServiceImplTest {
                     .withNewMetadata()
                         .addToLabels("syndesis.io/integration", openshiftName(name))
                         .addToLabels(OpenShiftServiceImpl.COMPONENT_LABEL, "integration")
-                        .addToLabels(OpenShiftServiceImpl.defaultLabels())
                         .addToLabels(deploymentData.getLabels())
                         .addToAnnotations(deploymentData.getAnnotations())
                         .addToAnnotations("prometheus.io/scrape", "true")

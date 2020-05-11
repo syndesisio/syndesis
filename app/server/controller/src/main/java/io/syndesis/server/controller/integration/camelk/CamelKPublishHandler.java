@@ -231,8 +231,8 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         result.getMetadata().getLabels().put(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username));
         result.getMetadata().getLabels().put(OpenShiftService.COMPONENT_LABEL, "integration");
         result.getMetadata().getLabels().put(OpenShiftService.INTEGRATION_NAME_LABEL, Labels.sanitize(integration.getName()));
-        result.getMetadata().getLabels().put(OpenShiftService.INTEGRATION_TYPE_LABEL, "integration");
-        result.getMetadata().getLabels().put(OpenShiftService.INTEGRATION_APP_LABEL, "syndesis");
+        result.getMetadata().getLabels().put(OpenShiftService.INTEGRATION_TYPE_LABEL, OpenShiftService.INTEGRATION_TYPE_LABEL_VALUE);
+        result.getMetadata().getLabels().put(OpenShiftService.INTEGRATION_APP_LABEL, OpenShiftService.INTEGRATION_APP_LABEL_VALUE);
         result.getMetadata().setAnnotations(new HashMap<>());
         result.getMetadata().getAnnotations().put(OpenShiftService.INTEGRATION_NAME_ANNOTATION, integration.getName());
         result.getMetadata().getAnnotations().put(OpenShiftService.INTEGRATION_ID_LABEL, integrationId);
