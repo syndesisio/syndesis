@@ -45,7 +45,7 @@ require (
 	github.com/operator-framework/operator-sdk v0.17.0
 	github.com/spf13/afero v1.2.2
 	go.uber.org/zap v1.14.1
-	sigs.k8s.io/controller-runtime v0.5.2
+	sigs.k8s.io/controller-runtime v0.6.0
 )
 
 replace k8s.io/client-go => k8s.io/client-go v0.17.4 // Required by prometheus-operator
