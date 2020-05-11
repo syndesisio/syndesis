@@ -1,3 +1,4 @@
+import { Tooltip } from '@patternfly/react-core';
 import { OutlinedCopyIcon } from '@patternfly/react-icons';
 import { IRow, Table, TableBody, TableVariant } from '@patternfly/react-table';
 import * as React from 'react';
@@ -10,6 +11,8 @@ export interface ISourceColumn {
 
 export interface ITreeColumnNodeComponentProps {
   metadataTreeColumns: ISourceColumn[];
+  i18nColumnActionTooltip: string;
+  copyToDdlEditor: (insertText: string) => void;
 }
 
 export const TreeColumnNodeComponent: React.FunctionComponent<ITreeColumnNodeComponentProps> = React.memo(
@@ -25,9 +28,19 @@ export const TreeColumnNodeComponent: React.FunctionComponent<ITreeColumnNodeCom
               title: (
                 <div className={'final-tree-child-component_kabab'}>
                   <span>{column.name}</span>
-                  <OutlinedCopyIcon
-                    className={'final-tree-child-component_kabab_copy'}
-                  />
+                  <Tooltip
+                    content={
+                      <div>
+                        {props.i18nColumnActionTooltip}
+                      </div>
+                    }
+                  >
+                    <OutlinedCopyIcon
+                      className={'final-tree-child-component_kabab_copy'}
+                      // tslint:disable-next-line: jsx-no-lambda
+                      onClick={() => props.copyToDdlEditor(column.name)}
+                    />
+                  </Tooltip>
                 </div>
               ),
             },

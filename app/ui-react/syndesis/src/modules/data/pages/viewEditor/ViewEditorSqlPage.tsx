@@ -70,7 +70,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   >([]);
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
-  const [validationResultsTitle, setValidationResultsTitle] = React.useState(
+  const [validationResultsTitle, setValidationResultsTitle] = React.useState<string>(
     t('validationResultsTitle')
   );
   const { params, state, history } = useRouteData<
@@ -92,10 +92,10 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     state.viewDefinition
   );
   const [viewVersion, setViewVersion] = React.useState(viewDefn.version);
-  const [noResultsTitle, setNoResultsTitle] = React.useState(
+  const [noResultsTitle, setNoResultsTitle] = React.useState<string>(
     t('preview.resultsTableValidEmptyTitle')
   );
-  const [noResultsMessage, setNoResultsMessage] = React.useState(
+  const [noResultsMessage, setNoResultsMessage] = React.useState<string>(
     t('preview.resultsTableValidEmptyInfo')
   );
   const ddlHasChanges = React.useRef(false);
@@ -339,14 +339,12 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
               </Breadcrumb>
                 <DdlEditor
                   viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
-                  i18nCursorColumn={t('cursorColumn')}
-                  i18nCursorLine={t('cursorLine')}
-                  i18nDdlTextPlaceholder={t('ddlTextPlaceholder')}
                   i18nDoneLabel={t('shared:Done')}
                   i18nSaveLabel={t('shared:Save')}
                   i18nTitle={t('viewEditor.title')}
-                  i18nMetadataTitle={t('metadataTree')}
                   i18nLoading={t('shared:Loading')}
+                  i18nKababAction={t('metadataTreeKababAction')}
+                  i18nColumnActionTooltip={t('metadataColumnTooltip')}
                   previewExpanded={previewExpanded}
                   i18nValidationResultsTitle={validationResultsTitle}
                   showValidationMessage={validationMessageVisible}

@@ -61,12 +61,14 @@ stories.add('render', () => {
   return (
     <DdlEditor
       viewDdl={viewDdl}
-      i18nDdlTextPlaceholder={'ddlTextPlaceholder'}
       i18nDoneLabel={'Done'}
       i18nSaveLabel={'Save'}
       i18nTitle={'viewEditor'}
-      i18nMetadataTitle={'Metadata Tree'}
       i18nLoading={'Loading...'}
+      i18nKababAction={'Copy table name to Editor'}
+      i18nColumnActionTooltip={
+        'Copy and insert column name at the cursor position in Ddl editor.'
+      }
       previewExpanded={true}
       i18nValidationResultsTitle={'validationResultsTitle'}
       showValidationMessage={true}
@@ -78,6 +80,8 @@ stories.add('render', () => {
       onSave={action('save')}
       setDirty={action('dirty')}
       validationResults={[]}
+      didmount={action('Editormount')}
+      willMount={action('EditorWillMount')}
     />
   );
 });
