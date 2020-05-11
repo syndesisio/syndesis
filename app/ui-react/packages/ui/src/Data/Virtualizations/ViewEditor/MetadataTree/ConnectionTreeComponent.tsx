@@ -7,6 +7,9 @@ import { TreeTableNodeComponent } from '..';
 export interface IConnectionTreeComponentProps {
   metadataTree: Map<string, any>;
   i18nLoading: string;
+  i18nKababAction: string;
+  i18nColumnActionTooltip: string;
+  copyToDdlEditor: (insertText: string) => void;
 }
 
 const compPropsAreEqual = (prevProps: any, nextProps: any) => {
@@ -49,6 +52,9 @@ export const ConnectionTreeComponent: React.FunctionComponent<IConnectionTreeCom
               title: (
                 <TreeTableNodeComponent
                   metadataTreeTables={getTableTree(value)}
+                  i18nKababAction={props.i18nKababAction}
+                  i18nColumnActionTooltip={props.i18nColumnActionTooltip}
+                  copyToDdlEditor={props.copyToDdlEditor}
                 />
               ),
             },

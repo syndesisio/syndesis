@@ -339,14 +339,12 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
               </Breadcrumb>
                 <DdlEditor
                   viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
-                  i18nCursorColumn={t('cursorColumn')}
-                  i18nCursorLine={t('cursorLine')}
-                  i18nDdlTextPlaceholder={t('ddlTextPlaceholder')}
                   i18nDoneLabel={t('shared:Done')}
                   i18nSaveLabel={t('shared:Save')}
                   i18nTitle={t('viewEditor.title')}
-                  i18nMetadataTitle={t('metadataTree')}
                   i18nLoading={t('shared:Loading')}
+                  i18nKababAction={t('metadataTreeKababAction')}
+                  i18nColumnActionTooltip={t('metadataColumnTooltip')}
                   previewExpanded={previewExpanded}
                   i18nValidationResultsTitle={validationResultsTitle}
                   showValidationMessage={validationMessageVisible}

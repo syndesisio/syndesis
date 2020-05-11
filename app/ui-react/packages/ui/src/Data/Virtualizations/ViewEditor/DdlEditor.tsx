@@ -28,14 +28,12 @@ export interface ITableInfo {
 
 export interface IDdlEditorProps {
   viewDdl: string;
-  i18nCursorColumn: string;
-  i18nCursorLine: string;
-  i18nDdlTextPlaceholder: string;
   i18nDoneLabel: string;
   i18nSaveLabel: string;
   i18nTitle: string;
-  i18nMetadataTitle: string;
   i18nLoading: string;
+  i18nKababAction: string;
+  i18nColumnActionTooltip: string;
   previewExpanded: boolean;
   i18nValidationResultsTitle: string;
   /**
@@ -62,7 +60,7 @@ export interface IDdlEditorProps {
   /**
    * The callback for notifying the monaco helper that the editor will mount
    */
-  willMount:  () => void;
+  willMount: () => void;
   onCloseValidationMessage: () => void;
   onFinish: () => void;
   /**
@@ -94,7 +92,10 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = React.memo(
     const [ddlValue, setDdlValue] = React.useState(props.viewDdl);
     const [hasChanges, setHasChanges] = React.useState(false);
     const [savedValue, setSavedValue] = React.useState(props.viewDdl);
+
     const LANGUAGE_ID = 'sql';
+
+    const monacoEditorRef = React.useRef<any>({});
 
     const getMetadataTree = (sourceInfo: any): Map<string, any> => {
       const treeInfo = new Map<string, any>();
@@ -108,23 +109,23 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = React.memo(
     const handleCloseValidationMessage = () => {
       props.onCloseValidationMessage();
     };
-  
+
     const handleEditorChange = (value: any) => {
       setDdlValue(value);
       handleCloseValidationMessage();
-  
+
       const dirty = value !== savedValue;
-  
+
       if (dirty !== hasChanges) {
         setHasChanges(dirty);
         props.setDirty(dirty);
       }
     };
-  
+
     const handleFinish = () => {
       props.onFinish();
     };
-  
+
     const handleSave = async () => {
       const saved = await props.onSave(ddlValue);
       if (saved) {
@@ -140,6 +141,22 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = React.memo(
       useTabStops: true,
     };
 
+    const copyToDdlEditor = (insertText: string) => {
+      const ddlEditorRef = monacoEditorRef.current.editor;
+
+      ddlEditorRef.getModel().applyEdits([
+        {
+          range: {
+            endColumn: ddlEditorRef.getPosition().column,
+            endLineNumber: ddlEditorRef.getPosition().lineNumber,
+            startColumn: ddlEditorRef.getPosition().column,
+            startLineNumber: ddlEditorRef.getPosition().lineNumber,
+          },
+          text: insertText,
+        },
+      ]);
+    };
+
     const memoisedValue = React.useMemo(
       () => getMetadataTree(props.sourceInfo),
       [props.sourceInfo]
@@ -153,9 +170,6 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = React.memo(
             variant={'light'}
             className={'ddl-editor'}
           >
-            <Title headingLevel="h5" size="lg">
-              {props.i18nMetadataTitle}
-            </Title>
             <div
               className={
                 props.previewExpanded
@@ -166,6 +180,9 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = React.memo(
               <ConnectionTreeComponent
                 metadataTree={memoisedValue}
                 i18nLoading={props.i18nLoading}
+                i18nKababAction={props.i18nKababAction}
+                i18nColumnActionTooltip={props.i18nColumnActionTooltip}
+                copyToDdlEditor={copyToDdlEditor}
               />
             </div>
           </PageSection>
@@ -198,17 +215,18 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = React.memo(
               : null}
             <Card>
               <CardBody className={'ddl-editor__card-body'}>
-              <MonacoEditor
-                width="100%"
-                height="300"
-                language={LANGUAGE_ID}
-                theme="vs"
-                value={ddlValue}
-                options={editorOptions}
-                onChange={handleEditorChange}
-                editorDidMount={props.didmount}
-                editorWillMount={props.willMount}
-              />
+                <MonacoEditor
+                  width="100%"
+                  height="300"
+                  language={LANGUAGE_ID}
+                  theme="vs"
+                  value={ddlValue}
+                  options={editorOptions}
+                  onChange={handleEditorChange}
+                  editorDidMount={props.didmount}
+                  editorWillMount={props.willMount}
+                  ref={monacoEditorRef}
+                />
               </CardBody>
               <CardFooter className={'ddl-editor__card-footer'}>
                 <Button
