@@ -1199,6 +1199,9 @@ public final class DataVirtualizationService extends DvService {
                         if (existing != null) {
                             existing.getGrantPrivileges().removeAll(
                                     tablePrivileges.getGrantPrivileges());
+                            if (existing.getGrantPrivileges().isEmpty()) {
+                                repositoryManager.deleteTablePrivileges(existing);
+                            }
                         } // else currently not implemented
                           // there are no schema level permissions to remove from
                         break;
