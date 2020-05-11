@@ -42,12 +42,13 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -240,21 +241,12 @@ public class ExtensionHandler extends BaseHandler implements Getter<Extension>, 
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiImplicitParams({
-        @ApiImplicitParam(
-            name = "sort", value = "Sort the result list according to the given field value",
-            paramType = "query", dataType = "string"),
-        @ApiImplicitParam(
-            name = "direction", value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " +
-            "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string"),
-        @ApiImplicitParam(
-            name = "page", value = "Page number to return", paramType = "query", dataType = "integer", defaultValue = "1"),
-        @ApiImplicitParam(
-            name = "per_page", value = "Number of records per page", paramType = "query", dataType = "integer", defaultValue = "20"),
-        @ApiImplicitParam(
-            name = "query", value = "The search query to filter results on", paramType = "query", dataType = "string")
-    })
-    public ListResult<Extension> list(@Context UriInfo uriInfo, @ApiParam(required = false) @QueryParam("extensionType") String extensionType) {
+    @Parameter(name = "sort", in = ParameterIn.QUERY, schema = @Schema(type = "string"), description = "Sort the result list according to the given field value")
+    @Parameter(name = "direction", in = ParameterIn.QUERY, schema = @Schema(type = "string", allowableValues = {"asc", "desc"}), description = "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)")
+    @Parameter(name = "page", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "1"), description = "Page number to return")
+    @Parameter(name = "per_page", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "20"), description = "Number of records per page")
+    @Parameter(name = "query", in = ParameterIn.QUERY, schema = @Schema(type = "string"), description = "The search query to filter results on")
+    public ListResult<Extension> list(@Context UriInfo uriInfo, @Parameter(required = false) @QueryParam("extensionType") String extensionType) {
         // Defaulting to display only Installed extensions
         String query = uriInfo.getQueryParameters().getFirst("query");
         if (query == null) {
