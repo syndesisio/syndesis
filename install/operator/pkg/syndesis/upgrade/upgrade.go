@@ -180,6 +180,7 @@ func Build(ctx context.Context, log logr.Logger, syndesis *v1beta1.Syndesis, cli
 		newScale(base).down(),
 		bbkp,
 		newMigration(base, u.syndesis, u.backup),
+		newDatabaseUpgrade(base, syndesis),
 		newInstall(base, u.backup),
 		newCleanup(base),
 	}

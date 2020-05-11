@@ -17,10 +17,7 @@
 package configuration
 
 import (
-	"bytes"
 	"context"
-	"io/ioutil"
-	"net/http"
 	"os"
 	"reflect"
 	"testing"
@@ -29,14 +26,7 @@ import (
 
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	v1 "k8s.io/api/core/v1"
 	gofake "k8s.io/client-go/kubernetes/fake"
-	"k8s.io/client-go/rest"
-	restclient "k8s.io/client-go/rest"
-	restfake "k8s.io/client-go/rest/fake"
-	"k8s.io/kubectl/pkg/scheme"
-
-	"k8s.io/client-go/kubernetes"
 
 	"github.com/stretchr/testify/assert"
 
@@ -624,64 +614,6 @@ func Test_setIntFromEnv(t *testing.T) {
 				os.Unsetenv(k)
 			}
 		})
-	}
-}
-
-func Test_PostgreVersionParsingRegexp(t *testing.T) {
-	tests := []struct {
-		version string
-		value   string
-	}{
-		{"postgres (PostgreSQL) 10.6 (Debian 10.6-1.pgdg90+1)", "10.6"},
-		{"PostgreSQL 9.5.14", "9.5"},
-	}
-
-	for _, test := range tests {
-		extracted := postgresVersionRegex.FindStringSubmatch(test.version)
-		if len(extracted) < 2 || extracted[1] != test.value {
-			t.Errorf("Expecting that version %s would be extracted from %s, but it was %s", test.version, test.value, extracted)
-		}
-	}
-}
-
-func Test_postgreSQLVersionFromInitPod(t *testing.T) {
-	os.Setenv("POD_NAME", "syndesis-operator-3-crpjp")
-	defer func() { os.Unsetenv("POD_NAME") }()
-
-	// this simply returns the same HTTP response for every request
-	fakeClient := &restfake.RESTClient{
-		GroupVersion:         v1.SchemeGroupVersion,
-		NegotiatedSerializer: scheme.Codecs,
-		Client: restfake.CreateHTTPClient(func(req *http.Request) (*http.Response, error) {
-			expected := "http://localhost/apis/v1/namespaces/syndesis/pods/syndesis-operator-3-crpjp/log?container=postgres-version"
-			if req.URL.String() != expected {
-				t.Errorf("Expecting to fetch pod log via URL like `%s`, but it was `%s`", expected, req.URL.String())
-			}
-			body := ioutil.NopCloser(bytes.NewReader([]byte("PostgreSQL 9.6.12")))
-			return &http.Response{StatusCode: http.StatusOK, Body: body}, nil
-		}),
-	}
-	clientConfig := &restclient.Config{
-		APIPath: "/apis",
-		ContentConfig: rest.ContentConfig{
-			NegotiatedSerializer: scheme.Codecs,
-			GroupVersion:         &v1.SchemeGroupVersion,
-		},
-	}
-	restClient, _ := rest.RESTClientFor(clientConfig)
-	restClient.Client = fakeClient.Client
-	client := kubernetes.New(restClient).CoreV1()
-
-	syndesis := v1beta1.Syndesis{}
-	syndesis.SetNamespace("syndesis")
-
-	version, err := postgreSQLVersionFromInitPod(client, &syndesis)
-	if err != nil {
-		t.Error(err)
-	}
-
-	if version != 9.6 {
-		t.Errorf("Expecting that version would be 9.6, but it was %f", version)
 	}
 }
 
