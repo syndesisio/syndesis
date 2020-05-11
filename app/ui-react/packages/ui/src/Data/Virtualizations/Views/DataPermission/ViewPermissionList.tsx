@@ -1,6 +1,4 @@
 import {
-  Alert,
-  AlertVariant,
   Button,
   DataList,
   DataListCell,
@@ -10,12 +8,15 @@ import {
   DataListItemRow,
   // DataListToggle,
   Modal,
+  Popover,
   Radio,
   Split,
   SplitItem,
   Text,
   TextVariants,
 } from '@patternfly/react-core';
+import { WarningTriangleIcon } from '@patternfly/react-icons';
+import { global_warning_color_100 } from '@patternfly/react-tokens';
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { EmptyViewsState, RolePermissionList } from '..';
@@ -45,12 +46,15 @@ export interface IViewPermissionList extends IListViewToolbarProps {
   clearViewSelection: () => void;
   selectAllViews: () => void;
   selectPageViews: () => void;
-  hasViewSelected: boolean;
+  enableSetPermissions: boolean;
+  enableClearPermissions: boolean;
   i18nSelectNone: string;
   i18nSelectPage: string;
   i18nSelectAll: string;
-  i18nCancle: string;
+  i18nCancel: string;
   i18nClearPermission: string;
+  i18nClearPermissionConfirm: string;
+  i18nClearFilters: string;
   i18nSave: string;
   i18nAddNewRole: string;
   i18nSelect: string;
@@ -59,12 +63,15 @@ export interface IViewPermissionList extends IListViewToolbarProps {
   i18nDelete: string;
   i18nAllAccess: string;
   i18nRole: string;
+  i18nSelectRoleText: string;
+  i18nRoleExists: string;
   i18nSelectedViewsMsg: string;
   i18nSetPermission: string;
   i18nClearPermissionMsg: string;
   i18nSelectRole: string;
   i18nRemoveRoleRow: string;
   i18nSsoConfigWarning: string;
+  i18nSsoConfigWarningTitle: string;
   status: any;
   dvRoles: string[];
   itemSelected: Map<string, string>;
@@ -117,9 +124,13 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
 
   const [showMore, setShowMore] = React.useState<boolean>(false);
 
+  const [saveEnabled, setSaveEnabled] = React.useState<boolean>(false);
+
   const [grantOperation, setGrantOperation] = React.useState<boolean>(true);
 
   const [showLoading, setShowLoading] = React.useState<boolean>(false);
+  const [showWarningPopover, setShowWarningPopover] = React.useState(false);
+  const toggleWarningPopover = () => setShowWarningPopover(!showWarningPopover);
 
   let selectedViewText = Array.from(props.itemSelected.values()).join(', ');
 
@@ -200,8 +211,52 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
     }
   }, [props.itemSelected]);
 
+  React.useEffect(() => {
+    if (rolePermissionModel.size < 1 || showLoading) {
+      setSaveEnabled(false);
+    // Save button enables if one or more roles exist, and all have a permission checked
+    } else if (rolePermissionModel.size > 0) {
+      let allHaveSelection = true;
+      for (const entry of Array.from(rolePermissionModel.entries())) {
+        if(entry[1].length === 0) {
+          allHaveSelection = false;
+          break;
+        }
+      }
+      setSaveEnabled(allHaveSelection);
+    } else {
+      setSaveEnabled(false);
+    }
+  }, [rolePermissionModel, showLoading]);
+
   return (
     <PageSection>
+      {props.status.ssoConfigured === 'false' && (
+        <Popover
+          position={'auto'}
+          isVisible={showWarningPopover}
+          // tslint:disable-next-line: jsx-no-lambda
+          shouldClose={() => setShowWarningPopover(false)}
+          headerContent={props.i18nSsoConfigWarningTitle}
+          bodyContent={props.i18nSsoConfigWarning}
+        >
+          <ButtonLink
+            data-testid={`view-permission-list-sso-warning-button`}
+            as={'link'}
+            onClick={toggleWarningPopover}
+          >
+            <Split>
+              <SplitItem>
+                <WarningTriangleIcon
+                  color={global_warning_color_100.value}
+                  size={'md'}
+                />
+              </SplitItem>
+              <SplitItem className={'view-permission-list_sso-warning-text'}>{props.i18nSsoConfigWarningTitle}</SplitItem>
+            </Split>
+          </ButtonLink>
+        </Popover>
+      )}
       {props.hasListData ? (
         <React.Fragment>
           <ViewPermissionToolbar
@@ -219,7 +274,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
                 key="confirm"
                 onClick={handleUpdateRoles}
                 as={'primary'}
-                disabled={rolePermissionModel.size < 1 || showLoading} 
+                disabled={!saveEnabled} 
               >
                 {showLoading ? <Loader size={'xs'} inline={true} /> : null}
                 {props.i18nSave}
@@ -230,7 +285,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
                 onClick={handleSetModalToggle}
                 isDisabled={showLoading}
               >
-                {props.i18nCancle}
+                {props.i18nCancel}
               </Button>,
             ]}
             isFooterLeftAligned={true}
@@ -286,14 +341,6 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
                 />
               </SplitItem>
             </Split>
-            {props.status.ssoConfigured === 'false' && (
-              <Alert
-                className={'view-permission-list_model-warning'}
-                variant={AlertVariant.warning}
-                isInline={true}
-                title={props.i18nSsoConfigWarning}
-              />
-            )}
             <RolePermissionList
               i18nRole={props.i18nRole}
               i18nSelect={props.i18nSelect}
@@ -304,6 +351,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
               i18nAddNewRole={props.i18nAddNewRole}
               i18nSelectRole={props.i18nSelectRole}
               i18nRemoveRoleRow={props.i18nRemoveRoleRow}
+              i18nRoleExists={props.i18nRoleExists}
               viewRolePermissionList={[]}
               roles={props.dvRoles}
               updateRolePermissionModel={updateRolePermissionModel}
@@ -330,7 +378,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
                 variant="link"
                 onClick={handleClearModalToggle}
               >
-                {props.i18nCancle}
+                {props.i18nCancel}
               </Button>,
             ]}
             isFooterLeftAligned={true}

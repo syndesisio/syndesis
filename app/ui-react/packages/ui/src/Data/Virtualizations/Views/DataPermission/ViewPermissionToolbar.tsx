@@ -32,8 +32,9 @@ import './ViewPermissionToolbar.css';
 export interface IViewPermissionToolbarProps extends IListViewToolbarProps {
   page: number;
   perPage: number;
-  hasViewSelected: boolean;
   allPageViewsSelected: boolean;
+  enableClearPermissions: boolean;
+  enableSetPermissions: boolean;
   setPage: (page: number) => void;
   setPerPage: (perPage: number) => void;
   clearViewSelection: () => void;
@@ -46,13 +47,15 @@ export interface IViewPermissionToolbarProps extends IListViewToolbarProps {
   i18nSelectAll: string;
   i18nSetPermission: string;
   i18nClearPermission: string;
+  i18nClearFilters: string;
 }
 
 export const ViewPermissionToolbar: React.FunctionComponent<IViewPermissionToolbarProps> = ({
   page,
   perPage,
-  hasViewSelected,
   allPageViewsSelected,
+  enableClearPermissions,
+  enableSetPermissions,
   setPage,
   setPerPage,
   clearViewSelection,
@@ -74,6 +77,7 @@ export const ViewPermissionToolbar: React.FunctionComponent<IViewPermissionToolb
   i18nSelectAll,
   i18nSetPermission,
   i18nClearPermission,
+  i18nClearFilters,
   onUpdateCurrentSortType,
   onUpdateCurrentValue,
   onFilterValueSelected,
@@ -297,7 +301,7 @@ export const ViewPermissionToolbar: React.FunctionComponent<IViewPermissionToolb
           <Button
             variant="primary"
             onClick={handleSetModalToggle}
-            isDisabled={!hasViewSelected}
+            isDisabled={!enableSetPermissions}
           >
             {i18nSetPermission}
           </Button>
@@ -306,7 +310,7 @@ export const ViewPermissionToolbar: React.FunctionComponent<IViewPermissionToolb
           <Button
             variant="secondary"
             onClick={handleClearModalToggle}
-            isDisabled={!hasViewSelected}
+            isDisabled={!enableClearPermissions}
           >
             {i18nClearPermission}
           </Button>
@@ -353,7 +357,7 @@ export const ViewPermissionToolbar: React.FunctionComponent<IViewPermissionToolb
                       // tslint:disable-next-line: jsx-no-lambda
                       onClick={event => onClearFilters(event as any)}
                     >
-                      Clear All Filters
+                      {i18nClearFilters}
                     </Button>
                   </StackItem>
                 </Stack>
