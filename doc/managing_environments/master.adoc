@@ -1,12 +1,4 @@
-:experimental:
 include::topics/shared/attributes.adoc[]
-
-:prodname: Syndesis
-:prodversion: 7.1
-:imagesdir: topics
-:prodnameinurl: fuse-ignite
-:productpkg: red_hat_fuse
-:version: 7.1
 
 
 [id='managing_environments']

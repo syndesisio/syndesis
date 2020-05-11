@@ -1,13 +1,5 @@
-:experimental:
 include::attributes.adoc[]
-include::attributes-links.adoc[]
 
-:prodname: Syndesis
-:prodversion: 7.6
-:prodnameinurl: fuse-ignite
-:productpkg: red_hat_fuse
-:version: 7.6
-:location: upstream
 :context: connectors
 
 [id='connecting-to-applications-and-services']

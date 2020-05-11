@@ -1,5 +1,5 @@
 <productname>Syndesis</productname>
-<productnumber>{version}</productnumber>
+<productnumber>{syndesis-version}</productnumber>
 <subtitle>For business users who want to share data between
 different applications and services</subtitle>
 <abstract>
@@ -7,8 +7,8 @@ different applications and services</subtitle>
 </abstract>
 <authorgroup>
   <org>
-    <orgname>Fuse Documentation Team</orgname>
-    <email>fuse-online-evaluation@redhat.com</email>
+    <orgname></orgname>
+    <email></email>
   </org>
 </authorgroup>
 <xi:include href="Common_Content/Legal_Notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />

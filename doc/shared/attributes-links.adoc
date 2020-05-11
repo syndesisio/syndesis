@@ -52,24 +52,24 @@
 :LinkCamelDevGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/apache_camel_development_guide/index
 :NameOfCamelDevGuide: Apache Camel Development Guide
 
-:LinkFISGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_on_openshift_guide/
+:LinkFISGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_on_openshift_guide/index
 :NameOfFISGuide: Fuse on OpenShift Guide
 
-:LinkDesigningAPIs: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/designing_apis/
+:LinkDesigningAPIs: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/designing_apis/index
 :NameDesigningAPIs: Designing APIs
 
 // Fuse Online titles
 
-:LinkFuseOnlineTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_online_sample_integration_tutorials/
+:LinkFuseOnlineTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_online_sample_integration_tutorials/index
 :NameOfFuseOnlineTutorials: Fuse Online Sample Integration Tutorials
 
-:LinkFuseOnlineIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_fuse_online/
+:LinkFuseOnlineIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_fuse_online/index
 :NameOfFuseOnlineIntegrationGuide: Integrating Applications with Fuse Online
 
-:LinkFuseOnlineConnectorGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/connecting_fuse_online_to_applications_and_services/
+:LinkFuseOnlineConnectorGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/connecting_fuse_online_to_applications_and_services/index
 :NameOfFuseOnlineConnectorGuide: Connecting Fuse Online to Applications and Services
 
-:LinkFuseOnlineOnOCP: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/installing_and_operating_fuse_online_on_openshift_container_platform/
+:LinkFuseOnlineOnOCP: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/installing_and_operating_fuse_online_on_openshift_container_platform/index
 :NameOfFuseOnlineOnOCPGuide: Installing and Operating Fuse Online on OpenShift Container Platform
 
 //REVISIT Don't forget to add the guides from the tooling repo, FIS guide!
@@ -79,10 +79,10 @@
 :DevStudioProdNameShort: CodeReady Studio
 :DevStudioVersion: 12.13
 
-:LinkDevStudioInstallGuide: https://access.redhat.com/documentation/en-us/red_hat_codeready_studio/{DevStudioVersion}/html-single/installation_guide/
+:LinkDevStudioInstallGuide: https://access.redhat.com/documentation/en-us/red_hat_codeready_studio/{DevStudioVersion}/html-single/installation_guide/index
 :NameOfDevStudioInstallGuide: Installation Guide
 
-:LinkDevStudioRelNotes: https://access.redhat.com/documentation/en-us/red_hat_codeready_studio/{DevStudioVersion}/html-single/release_notes_and_known_issues/
+:LinkDevStudioRelNotes: https://access.redhat.com/documentation/en-us/red_hat_codeready_studio/{DevStudioVersion}/html-single/release_notes_and_known_issues/index
 :NameOfDevStudioRelNotes: Release Notes and Known Issues
 
 
@@ -90,7 +90,7 @@
 :CDKProdName: Red Hat Container Development Kit
 :CDKProdNameShort: Container Development Kit
 
-:LinkCDKGettingStarted: https://access.redhat.com/documentation/en-us/red_hat_container_development_kit/{cdk-version}/html-single/getting_started_guide/
+:LinkCDKGettingStarted: https://access.redhat.com/documentation/en-us/red_hat_container_development_kit/{cdk-version}/html-single/getting_started_guide/index
 :NameOfCDKGettingStarted: Getting Started Guide
 
 // Red Hat Single Sign-On titles
@@ -100,25 +100,46 @@
 // Red Hat 3scale API Management titles
 :3scaleProdName: Red Hat 3scale API Management
 :3scaleProdNameShort: 3scale
-:3scaleVersion: 2.6
+:3scaleVersion: 2.8
 
-:Link3scaleServiceDiscovery: https://access.redhat.com/documentation/en-us/red_hat_3scale_api_management/{3scaleVersion}/html-single/service_discovery/
+:Link3scaleServiceDiscovery: https://access.redhat.com/documentation/en-us/red_hat_3scale_api_management/{3scaleVersion}/html-single/service_discovery/index
 :NameOf3scaleServiceDiscovery: Admin Portal Guide
 
 //Red Hat Integration titles
-:IntegrationVersion: 2019-12
+:IntegrationVersion: 2020-04
 
-:LinkIntegrationRelNotes: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/release_notes/
-:NameIntegrationRelNotes: Release Notes
+:LinkIntegrationCDCUserGuide: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/change_data_capture_user_guide/index
+:NameIntegrationCDCUserGuide: Change Data Capture User Guide
 
-:LinkIntegrationGetStart: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/getting_started_with_apis_in_red_hat_integration/
+:LinkDVReference: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/data_virtualization_reference/index
+:NameDVReference: Data Virtualization Reference
+
+:LinkIntegrationDevDeploy: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/developing_and_deploying_api_provider_integrations/index
+:NameIntegrationDevDeploy: Developing and Deploying API Provider Integrations
+
+:LinkDVClientDev: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/developing_clients_for_data_virtualization/index
+:NameDVClientDev: Developing Clients for Data Virtualization
+
+:LinkIntegrationGetStart: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/getting_started_with_apis_in_red_hat_integration/index
 :NameIntegrationGetStart: Getting Started with APIs in Red Hat Integration
 
-:LinkIntegrationDevDeploy: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/developing_and_deploying_apis_with_red_hat_integration/
-:NameIntegrationDevDeploy: Developing and Deploying APIs with Red Hat Integration
+:LinkIntegrationGetStartedWithCDC: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/getting_started_with_change_data_capture/index
+:NameIntegrationGetStartedWithCDC: Getting Started with Change Data Capture
 
-:LinkIntegrationMonitor: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/monitoring_red_hat_integration/
+:LinkIntegrationGetStartedWithServiceRegistry: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/getting_started_with_service_registry/index
+:NameIntegrationGetStartedWithServiceRegistry: Getting Started with Service Registry
+
+:LinkIntegrationInstallingCDCOnOpenShift: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/installing_change_data_capture_on_openshift/index
+:NameIntegrationInstallingCDCOnOpenShift: Installing Change Data Capture on OpenShift
+
+:LinkIntegrationInstallingCDCOnRHEL: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/installing_change_data_capture_on_rhel/index
+:NameIntegrationInstallingCDCOnRHEL: Installing Change Data Capture on RHEL
+
+:LinkIntegrationMonitor: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/monitoring_red_hat_integration/index
 :NameIntegrationMonitor: Monitoring Red Hat Integration
 
-:LinkIntegrationData: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/data_virtualization/
-:NameIntegrationData: Data Integration
+:LinkIntegrationRelNotes: https://access.redhat.com/documentation/en-us/release_notes_for_red_hat_integration_{IntegrationVersion}/{IntegrationVersion}/html-single/release_notes/index
+:NameIntegrationRelNotes: Release Notes for Red Hat Integration {IntegrationVersion}
+
+:LinkIntegrationData: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/using_data_virtualization/index
+:NameIntegrationData: Using Data Virtualization
