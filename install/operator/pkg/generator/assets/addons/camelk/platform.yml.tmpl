@@ -9,7 +9,7 @@
     profile: Knative
     {{- end}}
     build:
-      baseImage: '{{ dockerImageFromComponent .Syndesis.Addons.CamelK.Image .Syndesis.SHA }}'
+      baseImage: '{{ .Syndesis.Addons.CamelK.Image }}'
       {{- if (not .Productized)}}
       camelVersion: {{.Syndesis.Addons.CamelK.CamelVersion}}
       runtimeVersion: {{.Syndesis.Addons.CamelK.CamelKRuntime}}

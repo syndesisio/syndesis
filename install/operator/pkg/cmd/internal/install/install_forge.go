@@ -192,17 +192,15 @@ func (o *Install) installForge() error {
 	components.Server.Features.ManagementUrlFor3scale = convertToParam(string(EnvManagementUrlFor3scale))
 	components.Oauth.SarNamespace = convertToParam(string(EnvSarNamespace))
 
-	components.S2I.Image.Tag = retargetImage(EnvFuseS2iImage, &components.S2I.Tag)
-	components.UI.Image.Tag = retargetImage(EnvFuseUIImage, &components.UI.Tag)
-	components.Server.Image.Tag = retargetImage(EnvFuseServerImage, &components.Server.Tag)
-	components.Meta.Image.Tag = retargetImage(EnvFuseMetaImage, &components.Meta.Tag)
-	components.Oauth.Image.Tag = retargetImage(EnvFuseOauthImage, &components.Oauth.Tag)
-	components.Prometheus.Image.Tag = retargetImage(EnvPrometheusImage, &components.Prometheus.Tag)
-	components.Database.Image.Tag = retargetImage(EnvFuseDBImage, &components.Database.Tag)
-	components.Database.Exporter.Image.Tag = retargetImage(EnvFuseDBExporterImage, &components.Database.Exporter.Tag)
-	synConf.Addons.DV.Image.Tag = retargetImage(EnvFuseDVImage, &synConf.Addons.DV.Tag)
-
-	// components.Database.Image = retargetImage(&components.Database.Image, string(EnvPostgresImageTag))
+	components.S2I.Image = retargetImage(EnvFuseS2iImage, &components.S2I.Image)
+	components.UI.Image = retargetImage(EnvFuseUIImage, &components.UI.Image)
+	components.Server.Image = retargetImage(EnvFuseServerImage, &components.Server.Image)
+	components.Meta.Image = retargetImage(EnvFuseMetaImage, &components.Meta.Image)
+	components.Oauth.Image = retargetImage(EnvFuseOauthImage, &components.Oauth.Image)
+	components.Prometheus.Image = retargetImage(EnvPrometheusImage, &components.Prometheus.Image)
+	components.Database.Image = retargetImage(EnvFuseDBImage, &components.Database.Image)
+	components.Database.Exporter.Image = retargetImage(EnvFuseDBExporterImage, &components.Database.Exporter.Image)
+	synConf.Addons.DV.Image = retargetImage(EnvFuseDVImage, &synConf.Addons.DV.Image)
 
 	// Fix Secrets
 	components.Database.User = convertToParam(string(EnvPostgresqlUser))

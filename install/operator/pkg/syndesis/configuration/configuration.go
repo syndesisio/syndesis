@@ -96,50 +96,27 @@ type ComponentsSpec struct {
 	AMQ        AMQConfiguration        // Configuration AMQ
 }
 
-type Imageable interface {
-	Get(bool) string // Get docker image with SHA reference or Tag depending on parameter
-}
-
-type Image struct {
-	Tag string
-	SHA string
-}
-
-// Return the right docker image given the sha parameter. Assumption is that the
-// image tag is always defined. In case sha is not defined but it is desired, fall
-// back to tag
-func (i Image) Get(sha bool) (image string) {
-	image = i.Tag
-	if sha {
-		if len(i.SHA) != 0 {
-			image = i.SHA
-		}
-	}
-
-	return
-}
-
 type AMQConfiguration struct {
-	Image
+	Image string // Docker image for AMQ
 }
 
 type OauthConfiguration struct {
-	Image
+	Image           string // Docker image for proxy
 	CookieSecret    string // Secret to use to encrypt oauth cookies
 	DisableSarCheck bool   // Enable or disable SAR checks all together
 	SarNamespace    string // The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation
 }
 
 type UIConfiguration struct {
-	Image
+	Image string // Docker image for UI
 }
 
 type S2IConfiguration struct {
-	Image
+	Image string // Docker image for S2I
 }
 
 type DatabaseConfiguration struct {
-	Image
+	Image            string                        // Docker image for Database
 	User             string                        // Username for PostgreSQL user that will be used for accessing the database
 	Name             string                        // Name of the PostgreSQL database accessed
 	URL              string                        // Host and port of the PostgreSQL database to access
@@ -151,11 +128,11 @@ type DatabaseConfiguration struct {
 }
 
 type ExporterConfiguration struct {
-	Image
+	Image string // Docker image for database exporter
 }
 
 type PrometheusConfiguration struct {
-	Image
+	Image     string              // Docker image for prometheus
 	Rules     string              // Monitoring rules for prometheus
 	Resources ResourcesWithVolume // Set volume size for prometheus pod, where metrics are stored
 }
@@ -165,7 +142,7 @@ type GrafanaConfiguration struct {
 }
 
 type ServerConfiguration struct {
-	Image
+	Image                        string         // Docker image for syndesis server
 	Resources                    Resources      // Resources reserved for server pod
 	Features                     ServerFeatures // Server features: integration limits and check interval, support for demo data and more
 	SyndesisEncryptKey           string         // The encryption key used to encrypt/decrypt stored secrets
@@ -174,12 +151,12 @@ type ServerConfiguration struct {
 }
 
 type MetaConfiguration struct {
-	Image
+	Image     string              // Docker image for syndesis meta
 	Resources ResourcesWithVolume // Resources for meta pod, memory
 }
 
 type UpgradeConfiguration struct {
-	Image
+	Image     string              // Docker image for upgrade pod
 	Resources VolumeOnlyResources // Resources for upgrade pod, memory and volume size where database dump is saved
 }
 
@@ -240,12 +217,12 @@ type JaegerConfiguration struct {
 }
 
 type TodoConfiguration struct {
-	Image
+	Image   string // Docker image for todo sample app
 	Enabled bool
 }
 
 type DvConfiguration struct {
-	Image
+	Image     string // Docker image for dv
 	Enabled   bool
 	Resources Resources
 }
@@ -261,7 +238,7 @@ type AddonConfiguration struct {
 }
 
 type CamelKConfiguration struct {
-	Image
+	Image         string
 	Enabled       bool
 	CamelVersion  string
 	CamelKRuntime string
@@ -539,20 +516,20 @@ func (config *Config) setConfigFromEnv() error {
 	imgEnv := Config{
 		Syndesis: SyndesisConfig{
 			Addons: AddonsSpec{
-				DV:     DvConfiguration{Image: Image{Tag: os.Getenv("DV_IMAGE")}},
-				CamelK: CamelKConfiguration{Image: Image{Tag: os.Getenv("CAMELK_IMAGE")}},
-				Todo:   TodoConfiguration{Image: Image{Tag: os.Getenv("TODO_IMAGE")}},
+				DV:     DvConfiguration{Image: os.Getenv("DV_IMAGE")},
+				CamelK: CamelKConfiguration{Image: os.Getenv("CAMELK_IMAGE")},
+				Todo:   TodoConfiguration{Image: os.Getenv("TODO_IMAGE")},
 			},
 			Components: ComponentsSpec{
-				Oauth:      OauthConfiguration{Image: Image{Tag: os.Getenv("OAUTH_IMAGE")}},
-				UI:         UIConfiguration{Image: Image{Tag: os.Getenv("UI_IMAGE")}},
-				S2I:        S2IConfiguration{Image: Image{Tag: os.Getenv("S2I_IMAGE")}},
-				Prometheus: PrometheusConfiguration{Image: Image{Tag: os.Getenv("PROMETHEUS_IMAGE")}},
-				Upgrade:    UpgradeConfiguration{Image: Image{Tag: os.Getenv("UPGRADE_IMAGE")}},
-				Meta:       MetaConfiguration{Image: Image{Tag: os.Getenv("META_IMAGE")}},
+				Oauth:      OauthConfiguration{Image: os.Getenv("OAUTH_IMAGE")},
+				UI:         UIConfiguration{Image: os.Getenv("UI_IMAGE")},
+				S2I:        S2IConfiguration{Image: os.Getenv("S2I_IMAGE")},
+				Prometheus: PrometheusConfiguration{Image: os.Getenv("PROMETHEUS_IMAGE")},
+				Upgrade:    UpgradeConfiguration{Image: os.Getenv("UPGRADE_IMAGE")},
+				Meta:       MetaConfiguration{Image: os.Getenv("META_IMAGE")},
 				Database: DatabaseConfiguration{
-					Image:    Image{Tag: os.Getenv("DATABASE_IMAGE")},
-					Exporter: ExporterConfiguration{Image: Image{Tag: os.Getenv("PSQL_EXPORTER_IMAGE")}},
+					Image:    os.Getenv("DATABASE_IMAGE"),
+					Exporter: ExporterConfiguration{Image: os.Getenv("PSQL_EXPORTER_IMAGE")},
 					Resources: ResourcesWithPersistentVolume{
 						VolumeAccessMode:   os.Getenv("DATABASE_VOLUME_ACCESS_MODE"),
 						VolumeStorageClass: os.Getenv("DATABASE_STORAGE_CLASS"),
@@ -560,9 +537,9 @@ func (config *Config) setConfigFromEnv() error {
 					},
 				},
 				Server: ServerConfiguration{
-					Image: Image{Tag: os.Getenv("SERVER_IMAGE")},
+					Image: os.Getenv("SERVER_IMAGE"),
 				},
-				AMQ: AMQConfiguration{Image: Image{Tag: os.Getenv("AMQ_IMAGE")}},
+				AMQ: AMQConfiguration{Image: os.Getenv("AMQ_IMAGE")},
 			},
 		},
 	}

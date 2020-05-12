@@ -93,7 +93,7 @@
             value: "true"
           image: ' '
 {{else}}
-          image: '{{ dockerImageFromComponent .Syndesis.Components.Meta.Image .Syndesis.SHA }}'
+          image: '{{ .Syndesis.Components.Meta.Image }}'
 {{end}}
           imagePullPolicy: IfNotPresent
           readinessProbe:
