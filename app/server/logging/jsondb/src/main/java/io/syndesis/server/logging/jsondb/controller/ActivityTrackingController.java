@@ -115,14 +115,6 @@ public class ActivityTrackingController implements BackendController, Closeable 
             String dbName = x.getConnection().getMetaData().getDatabaseProductName();
             databaseKind = SqlJsonDB.DatabaseKind.valueOf(dbName);
 
-            // CockroachDB uses the PostgreSQL driver.. so need to look a little
-            // closer.
-            if (databaseKind == SqlJsonDB.DatabaseKind.PostgreSQL) {
-                String version = x.createQuery("SELECT VERSION()").mapTo(String.class).first();
-                if (version.startsWith("CockroachDB")) {
-                    databaseKind = SqlJsonDB.DatabaseKind.CockroachDB;
-                }
-            }
             return null;
         });
     }
