@@ -42,7 +42,7 @@ export const EditSpecificationPage: React.FunctionComponent<
     state.specification
   );
 
-  const [updatedSpecification, setUpdatedSpecification] = React.useState();
+  const [updatedSpecification, setUpdatedSpecification] = React.useState<string>();
 
   const onSpecification = (newSpec: any) => {
     setUpdatedSpecification(JSON.stringify(newSpec.spec));
@@ -85,7 +85,7 @@ export const EditSpecificationPage: React.FunctionComponent<
             cancelHref={cancelHref(params, state)}
             saveHref={saveHref(params, {
               ...state,
-              specification: updatedSpecification || specification,
+              specification: updatedSpecification || specification!,
             })}
           />
         </>

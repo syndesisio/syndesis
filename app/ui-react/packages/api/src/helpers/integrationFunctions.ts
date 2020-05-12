@@ -385,7 +385,13 @@ export function setIntegrationProperty(
   if (!propertyName) {
     return integration;
   }
-  return { ...integration, ...{ [propertyName]: value } };
+  const update = { 
+    [propertyName]: value 
+  };
+  return { 
+    ...integration, 
+    ...update
+  };
 }
 
 export function createStep(): Step {
@@ -435,7 +441,8 @@ export function setDataShapeOnStep(
   }
   const prop = isInput ? 'inputDataShape' : 'outputDataShape';
   const action = step.action ? { ...step.action } : ({} as Action);
-  const descriptor = { ...action.descriptor, ...{ [prop]: dataShape } };
+  const update = { [prop]: dataShape };
+  const descriptor = { ...action.descriptor, ...update };
   return {
     ...step,
     ...{ action: { ...action, ...{ descriptor: { ...descriptor } } } },

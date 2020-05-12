@@ -1,8 +1,8 @@
-import i18n from 'i18next';
+import i18n, { InitOptions } from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { en, it, ru } from './locales';
 
-const options = {
+const options: InitOptions = {
   interpolation: {
     escapeValue: false, // not needed for react!!
   },
@@ -59,7 +59,7 @@ const options = {
     'integrations',
     'settings',
   ],
-} as i18n.InitOptions;
+};
 
 i18n.use(LanguageDetector).init(options);
 export default i18n;

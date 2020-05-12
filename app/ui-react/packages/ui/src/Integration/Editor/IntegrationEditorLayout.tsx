@@ -141,7 +141,7 @@ export const IntegrationEditorLayout: React.FunctionComponent<
                   <Text>{description}</Text>
                 </TextContent>
               </LevelItem>
-              <LevelItem>
+              <LevelItem style={{ display: "flex", alignItems: "center" }}>
                 {(cancelHref || onCancel) && (
                   <>
                     <ButtonLink

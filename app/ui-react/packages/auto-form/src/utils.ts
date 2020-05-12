@@ -27,7 +27,7 @@ export function applyInitialValues<T>(
 /**
  * Ensure that the input values match the property definitions
  */
-export function sanitizeValues<T>(
+export function sanitizeValues<T = any>(
   definition: IFormDefinition,
   initialValue: any = {}
 ): T {

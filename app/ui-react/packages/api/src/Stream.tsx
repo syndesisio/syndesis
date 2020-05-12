@@ -35,20 +35,14 @@ export class Stream extends Fetch<string[]> {
         .then(body => {
           this.reader = body!.getReader();
           const textDecoder = new TextDecoder('utf-8');
-          const pushData = ({
-            done,
-            value,
-          }: {
-            done: boolean;
-            value: Uint8Array;
-          }) => {
-            if (done) {
+          const pushData = (result: ReadableStreamReadResult<Uint8Array>) => {
+            if (result.done) {
               this.setState({
                 loading: false,
               });
             } else {
               this.setState({
-                data: [...(this.state.data || []), textDecoder.decode(value)],
+                data: [...(this.state.data || []), textDecoder.decode(result.value)],
               });
 
               this.reader!.read().then(pushData);

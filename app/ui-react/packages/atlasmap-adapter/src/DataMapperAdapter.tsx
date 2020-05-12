@@ -1,19 +1,9 @@
 import {
-  IDocumentProps,
-  IInitMessagePayload,
-  IMappingsMessagePayload,
-} from '@syndesis/atlasmap-assembly/src/app/app.component';
+  Atlasmap,
+  AtlasmapProvider,
+  IAtlasmapProviderProps,
+} from '@atlasmap/atlasmap';
 import * as React from 'react';
-import equal from 'react-fast-compare';
-
-/* tslint:disable */
-const runtime = require('file-loader?name=atlasmap-runtime.js!@syndesis/atlasmap-assembly/dist/atlasmap/runtime.js');
-const polyfills = require('file-loader?name=atlasmap-polyfills.js!@syndesis/atlasmap-assembly/dist/atlasmap/polyfills.js');
-const styles = require('file-loader?name=atlasmap-styles.js!@syndesis/atlasmap-assembly/dist/atlasmap/styles.js');
-const scripts = require('file-loader?name=atlasmap-scripts.js!@syndesis/atlasmap-assembly/dist/atlasmap/scripts.js');
-const vendor = require('file-loader?name=atlasmap-vendor.js!@syndesis/atlasmap-assembly/dist/atlasmap/vendor.js');
-const main = require('file-loader?name=atlasmap-main.js!@syndesis/atlasmap-assembly/dist/atlasmap/main.js');
-/* tslint:enable*/
 
 export enum DocumentType {
   JAVA = 'JAVA',
@@ -32,121 +22,71 @@ export enum InspectionType {
   INSTANCE = 'INSTANCE',
   UNKNOWN = 'UNKNOWN',
 }
+export interface IDocument {
+  id: string;
+  name: string;
+  description: string;
+  documentType: DocumentType;
+  inspectionType: InspectionType;
+  inspectionSource: string;
+  inspectionResult: string;
+  showFields: boolean;
+}
 
-// tslint:disable-next-line
-export interface IDocument extends IDocumentProps {}
-
-export interface IDataMapperAdapterProps extends IInitMessagePayload {
+export interface IDataMapperAdapterProps {
+  documentId: string;
+  inputDocuments: IDocument[];
+  outputDocument: IDocument;
+  initialMappings?: string;
+  baseJavaInspectionServiceUrl: string;
+  baseXMLInspectionServiceUrl: string;
+  baseJSONInspectionServiceUrl: string;
+  baseCSVInspectionServiceUrl?: string;
+  baseMappingServiceUrl: string;
   onMappings(mappings: string): void;
 }
 
-export class DataMapperAdapter extends React.Component<
-  IDataMapperAdapterProps
-> {
-  protected messageChannel: MessageChannel;
-  protected messagePort?: MessagePort;
-  protected iframe: HTMLIFrameElement | null = null;
-
-  constructor(props: IDataMapperAdapterProps) {
-    super(props);
-    this.messageChannel = new MessageChannel();
-    this.onIframeLoad = this.onIframeLoad.bind(this);
-    this.onMessages = this.onMessages.bind(this);
-  }
-
-  public componentDidMount() {
-    if (this.iframe) {
-      this.iframe.addEventListener('load', this.onIframeLoad);
-    }
-  }
-
-  public componentWillReceiveProps(nextProps: IDataMapperAdapterProps) {
-    const { onMappings: _, ...prevPayload } = this.props;
-    const { onMappings: __, ...nextPayload } = nextProps;
-    if (!equal(prevPayload, nextPayload)) {
-      this.updateDataMapperApp(nextPayload);
-    }
-  }
-
-  public shouldComponentUpdate() {
-    return false;
-  }
-
-  public componentWillUnmount() {
-    if (this.iframe) {
-      this.iframe.removeEventListener('load', this.onIframeLoad);
-    }
-  }
-
-  public onIframeLoad() {
-    this.messagePort = this.messageChannel.port1;
-    this.messagePort.onmessage = this.onMessages;
-    this.iframe!.contentWindow!.postMessage('init', '*', [
-      this.messageChannel.port2,
-    ]);
-  }
-
-  public onMessages(event: MessageEvent) {
-    switch (event.data.message) {
-      case 'ready': {
-        const { onMappings, ...payload } = this.props;
-        this.updateDataMapperApp(payload);
-        break;
+export const DataMapperAdapter: React.FunctionComponent<IDataMapperAdapterProps> = ({
+  documentId,
+  inputDocuments,
+  outputDocument,
+  initialMappings,
+  baseJavaInspectionServiceUrl,
+  baseXMLInspectionServiceUrl,
+  baseJSONInspectionServiceUrl,
+  baseCSVInspectionServiceUrl,
+  baseMappingServiceUrl,
+  onMappings,
+}) => {
+  const externalDocument = React.useMemo(
+    () =>
+      ({
+        documentId,
+        initialMappings,
+        inputDocuments,
+        outputDocument,
+      } as IAtlasmapProviderProps['externalDocument']),
+    [initialMappings, documentId, inputDocuments, outputDocument]
+  );
+  // tslint:disable-next-line: no-console
+  console.log('Atlasmap document', JSON.stringify(externalDocument));
+  return (
+    <AtlasmapProvider
+      baseJSONInspectionServiceUrl={baseJSONInspectionServiceUrl}
+      baseJavaInspectionServiceUrl={baseJavaInspectionServiceUrl}
+      baseMappingServiceUrl={baseMappingServiceUrl}
+      baseXMLInspectionServiceUrl={baseXMLInspectionServiceUrl}
+      baseCSVInspectionServiceUrl={
+        baseCSVInspectionServiceUrl || `${baseMappingServiceUrl}csv/`
       }
-      case 'mappings': {
-        const payload: IMappingsMessagePayload = event.data.payload;
-        this.props.onMappings(payload.mappings);
-        break;
-      }
-    }
-  }
-
-  public updateDataMapperApp(payload: IInitMessagePayload) {
-    if (this.messagePort) {
-      const message = {
-        message: 'update',
-        payload,
-      };
-      this.messagePort.postMessage(message);
-    }
-  }
-
-  public render() {
-    const srcDoc = `<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>Atlasmap</title>
-  <base href="/dm">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body style="background: transparent;">
-  <app-root></app-root>
-  <script type="text/javascript" src="${runtime}"></script>
-  <script type="text/javascript" src="${polyfills}"></script>
-  <script type="text/javascript" src="${styles}"></script>
-  <script type="text/javascript" src="${scripts}"></script>
-  <script type="text/javascript" src="${vendor}"></script>
-  <script type="text/javascript" src="${main}"></script></body>
-</html>
-
-`;
-    // bypass some odd typing incompatibility with base React when using "exotic"
-    // html attributes
-    const extraProps = {
-      allowtransparency: '',
-    };
-    return (
-      <iframe
-        name={'atlasmap-frame'}
-        srcDoc={srcDoc}
-        style={{ width: '100%', height: '100%', lineHeight: '0' }}
-        frameBorder={0}
-        {...extraProps}
-        ref={el => (this.iframe = el)}
+      externalDocument={externalDocument}
+      onMappingChange={onMappings}
+    >
+      <Atlasmap
+        showImportAtlasFileToolbarItem={false}
+        showExportAtlasFileToolbarItem={false}
+        showResetToolbarItem={false}
       />
-    );
-  }
-}
+    </AtlasmapProvider>
+  );
+};

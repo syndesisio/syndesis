@@ -145,7 +145,6 @@ export const DescribeDataShapeForm: React.FunctionComponent<IDescribeDataShapeFo
                         lineWrapping: true,
                         readOnly: false,
                         showCursorWhenSelecting: true,
-                        styleActiveLine: true,
                         tabSize: 2,
                       }}
                     />

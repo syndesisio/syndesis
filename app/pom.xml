@@ -39,7 +39,7 @@
     <deploy.archives>false</deploy.archives>
 
     <!-- Atlasmap version -->
-    <atlasmap.version>2.0.0-M.4</atlasmap.version>
+    <atlasmap.version>2.0.1</atlasmap.version>
 
     <!-- Image names -->
     <image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
@@ -779,6 +779,7 @@
                 com.sun.activation:jakarta.activation-api:1.2.1 within it
               -->
               <ignoredClassPattern>^javax\.activation\..*$</ignoredClassPattern>
+              <ignoredClassPattern>^org\.apache\.daffodil\..*$</ignoredClassPattern>
             </ignoredClassPatterns>
             <exceptions>
               <exception>

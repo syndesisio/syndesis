@@ -12,4 +12,4 @@ export class WithRouterBase extends React.Component<IWithRouterProps> {
   }
 }
 
-export const WithRouter = withRouter<IWithRouterProps>(WithRouterBase);
+export const WithRouter = withRouter<IWithRouterProps, typeof WithRouterBase>(WithRouterBase);

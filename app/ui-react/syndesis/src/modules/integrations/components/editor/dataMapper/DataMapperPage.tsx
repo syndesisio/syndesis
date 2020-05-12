@@ -50,14 +50,12 @@ export interface IDataMapperPageProps extends IPageWithEditorBreadcrumb {
  * **Warning:** this component will throw an exception if the route state is
  * undefined.
  */
-export const DataMapperPage: React.FunctionComponent<
-  IDataMapperPageProps
-> = props => {
+export const DataMapperPage: React.FunctionComponent<IDataMapperPageProps> = props => {
   const appContext = React.useContext(AppContext);
-  const [mappings, setMapping] = React.useState<string | undefined>(undefined);
+  const mappingsRef = React.useRef<string | undefined>(undefined);
 
   const onMappings = (newMappings: string) => {
-    setMapping(newMappings);
+    mappingsRef.current = newMappings;
   };
 
   return (
@@ -101,7 +99,7 @@ export const DataMapperPage: React.FunctionComponent<
                 params.flowId,
                 positionAsNumber,
                 {
-                  [MAPPING_KEY]: mappings,
+                  [MAPPING_KEY]: mappingsRef.current,
                 }
               );
               history.push(
@@ -150,7 +148,6 @@ export const DataMapperPage: React.FunctionComponent<
                     <ButtonLink
                       data-testid={'data-mapper-page-save-mapping-button'}
                       onClick={saveMappingStep}
-                      disabled={!mappings}
                       as={'primary'}
                     >
                       Done

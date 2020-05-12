@@ -2,15 +2,6 @@ import * as React from 'react';
 import { render } from '@testing-library/react';
 import { DataMapperAdapter, IDocument } from '../src';
 
-(window as any).MessageChannel = jest.fn().mockImplementation(() => {
-  return {
-    port1: {
-      onmessage: jest.fn(),
-      postMessage: jest.fn(),
-    },
-  };
-});
-
 const inputDocuments = [
   {
     description: 'Salesforce Contact',
@@ -50,22 +41,23 @@ const outputDocument = {
 
 export default describe('DataMapperAdapter', () => {
   const onMappings = jest.fn();
-  const testComponent = (
-    <DataMapperAdapter
-      documentId={'document-id'}
-      inputDocuments={inputDocuments}
-      outputDocument={outputDocument}
-      baseJavaInspectionServiceUrl={'/whatever'}
-      baseJSONInspectionServiceUrl={'/whatever'}
-      baseMappingServiceUrl={'/whatever'}
-      baseXMLInspectionServiceUrl={'/whatever'}
-      onMappings={onMappings}
-    />
-  );
 
   it('Should render', () => {
-    const { container } = render(testComponent);
-    expect((window as any).MessageChannel).toBeCalledTimes(1);
+    const modalContainer = document.createElement("div");
+    modalContainer.id = "modals";
+    document.body.appendChild(modalContainer);
+    const { container } = render(
+      <DataMapperAdapter
+        documentId={'document-id'}
+        inputDocuments={inputDocuments}
+        outputDocument={outputDocument}
+        baseJavaInspectionServiceUrl={'/whatever'}
+        baseJSONInspectionServiceUrl={'/whatever'}
+        baseMappingServiceUrl={'/whatever'}
+        baseXMLInspectionServiceUrl={'/whatever'}
+        onMappings={onMappings}
+      />
+    );
     expect(container).toBeDefined();
   });
 });
