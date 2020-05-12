@@ -82,7 +82,7 @@ public class SqlJsonDB implements JsonDB, WithGlobalTransaction {
     private static final Logger LOG = LoggerFactory.getLogger(SqlJsonDB.class);
 
     public enum DatabaseKind {
-        PostgreSQL, SQLite, H2, CockroachDB
+        PostgreSQL, H2
     }
 
     protected final DBI dbi;
@@ -91,7 +91,7 @@ public class SqlJsonDB implements JsonDB, WithGlobalTransaction {
     private final Set<String> indexPaths = new HashSet<>();
 
     // These values are used to compute a seq key
-    private DatabaseKind databaseKind = DatabaseKind.PostgreSQL;
+    private final DatabaseKind databaseKind;
 
     public SqlJsonDB(DBI dbi, EventBus bus) {
         this(dbi, bus, Collections.emptyList());
@@ -107,22 +107,12 @@ public class SqlJsonDB implements JsonDB, WithGlobalTransaction {
         }
 
         // Lets find out the type of DB we are working with.
-        withTransaction(x -> {
-            try {
-                String dbName = x.getConnection().getMetaData().getDatabaseProductName();
-                databaseKind = DatabaseKind.valueOf(dbName);
-
-                // CockroachDB uses the PostgreSQL driver.. so need to look a little closer.
-                if( databaseKind == DatabaseKind.PostgreSQL ) {
-                    String version = x.createQuery("SELECT VERSION()").mapTo(String.class).first();
-                    if( version.startsWith("CockroachDB") ) {
-                        databaseKind = DatabaseKind.CockroachDB;
-                    }
-                }
-            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-                throw new IllegalStateException("Could not determine the database type", e);
-            }
-        });
+        try (Handle handle = dbi.open()) {
+            String dbName = handle.getConnection().getMetaData().getDatabaseProductName();
+            databaseKind = DatabaseKind.valueOf(dbName);
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
 
