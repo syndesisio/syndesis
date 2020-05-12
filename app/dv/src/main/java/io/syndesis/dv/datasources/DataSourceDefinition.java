@@ -21,11 +21,12 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.sql.DataSource;
 
-import io.syndesis.dv.metadata.TeiidDataSource;
-import io.syndesis.dv.metadata.internal.TeiidDataSourceImpl;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 
 import com.zaxxer.hikari.HikariDataSource;
+
+import io.syndesis.dv.metadata.TeiidDataSource;
+import io.syndesis.dv.metadata.internal.TeiidDataSourceImpl;
 
 /**
  * Service catalog based Data Services that are available
@@ -83,6 +84,12 @@ public abstract class DataSourceDefinition {
 
         if (scd.getProperty("schema") != null) {
             importProperties.put("importer.schemaName", scd.getProperty("schema"));
+            importProperties.put("importer.UseFullSchemaName", "false");
+        } else {
+            //either we need to try the import and possibly fail,
+            //or just start off with this as true and include the
+            //the source schema names. for now this is simpler
+            importProperties.put("importer.UseFullSchemaName", "true");
         }
         importProperties.put("importer.TableTypes", "TABLE,VIEW");
         importProperties.put("importer.UseQualifiedName", "true");
