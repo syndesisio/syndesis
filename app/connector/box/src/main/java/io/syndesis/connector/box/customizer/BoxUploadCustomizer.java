@@ -15,16 +15,14 @@
  */
 package io.syndesis.connector.box.customizer;
 
-import java.io.File;
 import java.util.Map;
+import java.util.Objects;
 
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
-import org.apache.camel.InvalidPayloadException;
 import org.apache.camel.Message;
-import org.apache.camel.component.file.GenericFile;
 
 public class BoxUploadCustomizer implements ComponentProxyCustomizer {
 
@@ -36,14 +34,28 @@ public class BoxUploadCustomizer implements ComponentProxyCustomizer {
         component.setBeforeProducer(this::beforeProducer);
     }
 
-    @SuppressWarnings("unchecked")
-    private void beforeProducer(Exchange exchange) throws InvalidPayloadException {
+    private void beforeProducer(Exchange exchange) {
         Message in = exchange.getIn();
         if (filename == null) {
-            GenericFile<File> genericFile = in.getMandatoryBody(GenericFile.class);
-            filename = genericFile.getFileName();
+            // dropbox sets the filename as DOWNLOADED_FILE
+            // ftp sets the filename as CamelFileName
+            filename = retrieveFilenameFromHeader(in, "DOWNLOADED_FILE", "CamelFileName", "CamelAwsS3Key");
         }
+        Objects.requireNonNull(filename, "A filename is required. You can set it in the Box connection options.");
+        // in case the filename contains path separators.
+        filename = filename.substring(filename.lastIndexOf('/') + 1);
         in.setHeader("CamelBox.fileName", filename);
+    }
+
+    private static String retrieveFilenameFromHeader(Message in, String ...keys) {
+        String value = null;
+        for (String key: keys) {
+            value = in.getHeader(key, String.class);
+            if (value != null) {
+                break;
+            }
+        }
+        return value;
     }
 
 }

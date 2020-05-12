@@ -23,13 +23,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.model.openapi.OpenApi;
-import io.syndesis.common.util.MavenProperties;
-import io.syndesis.common.util.json.JsonUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,14 +42,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternUtils;
 
-import io.syndesis.common.util.SuppressFBWarnings;
-import io.syndesis.server.dao.init.ReadApiClientData;
-import io.syndesis.server.dao.manager.DaoConfiguration;
-import io.syndesis.integration.api.IntegrationProjectGenerator;
-import io.syndesis.integration.api.IntegrationResourceManager;
-import io.syndesis.integration.project.generator.ProjectGenerator;
-import io.syndesis.integration.project.generator.ProjectGeneratorAutoConfiguration;
-import io.syndesis.integration.project.generator.ProjectGeneratorConfiguration;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ModelData;
 import io.syndesis.common.model.action.Action;
@@ -64,6 +54,18 @@ import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.model.openapi.OpenApi;
+import io.syndesis.common.util.MavenProperties;
+import io.syndesis.common.util.SuppressFBWarnings;
+import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
+import io.syndesis.integration.api.IntegrationResourceManager;
+import io.syndesis.integration.project.generator.ProjectGenerator;
+import io.syndesis.integration.project.generator.ProjectGeneratorAutoConfiguration;
+import io.syndesis.integration.project.generator.ProjectGeneratorConfiguration;
+import io.syndesis.server.dao.init.ReadApiClientData;
+import io.syndesis.server.dao.manager.DaoConfiguration;
 
 @EnableConfigurationProperties(SpringMavenProperties.class)
 @SpringBootApplication(
@@ -109,6 +111,7 @@ public class Application implements ApplicationRunner {
         }
 
         final List<ModelData<?>> modelList = reader.readDataFromString(deploymentText);
+        final Map<String, String> schemeIdMap = new HashMap<>();
         for (final ModelData<?> model : modelList) {
             if (model.getKind() == Kind.Connector) {
                 final Connector connector = (Connector) model.getData();
@@ -128,11 +131,12 @@ public class Application implements ApplicationRunner {
 
             if (model.getKind() == Kind.ConnectorTemplate) {
                 final ConnectorTemplate template = (ConnectorTemplate) model.getData();
+                schemeIdMap.put(template.getComponentScheme(), template.getId().get());
                 steps.add(
                     new Step.Builder()
                         .stepKind(StepKind.endpoint)
                         .connection(new Connection.Builder()
-                            .connectorId("connector-" + template.getId())
+                            .connectorId(template.getId().get())
                             .build())
                         .action(new ConnectorAction.Builder()
                             .descriptor(new ConnectorDescriptor.Builder()
@@ -144,6 +148,7 @@ public class Application implements ApplicationRunner {
             }
         }
 
+        final Map<String, Connector> connectorMap = new HashMap<>();
         try {
             final ResourcePatternResolver resolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader);
             final Resource[] resources = resolver.getResources("classpath:/META-INF/syndesis/connector/*.json");
@@ -153,6 +158,12 @@ public class Application implements ApplicationRunner {
                     Connector connector = JsonUtils.reader().forType(Connector.class).readValue(resource.getInputStream());
 
                     if (connector != null) {
+                        // template IDs are mapped to their actual connectors, to add dependencies
+                        final String templateId = schemeIdMap.get(connector.getComponentScheme().orElse(null));
+                        if (templateId != null) {
+                            connectorMap.put(templateId, connector);
+                        }
+
                         for (final Action action : connector.getActions()) {
                             steps.add(
                                 new Step.Builder()
@@ -180,13 +191,13 @@ public class Application implements ApplicationRunner {
             .addFlow(new Flow.Builder().steps(steps).build())
             .build();
 
-        generate(integration, project);
+        generate(integration, project, connectorMap);
     }
 
     @SuppressWarnings("PMD.UseProperClassLoader")
-    private void generate(Integration integration, File targetDir) throws IOException {
+    private void generate(Integration integration, File targetDir, Map<String, Connector> connectorMap) throws IOException {
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
-        IntegrationProjectGenerator generator = new ProjectGenerator(configuration, new EmptyIntegrationResourceManager(), mavenProperties);
+        IntegrationProjectGenerator generator = new ProjectGenerator(configuration, new EmptyIntegrationResourceManager(connectorMap), mavenProperties);
 
         Path dir =targetDir.toPath();
         Files.createDirectories(dir);
@@ -202,9 +213,16 @@ public class Application implements ApplicationRunner {
     }
 
     private static class EmptyIntegrationResourceManager implements IntegrationResourceManager {
+
+        private final Map<String, Connector> connectorMap;
+
+        public EmptyIntegrationResourceManager(Map<String, Connector> connectorMap) {
+            this.connectorMap = connectorMap;
+        }
+
         @Override
         public Optional<Connector> loadConnector(String id) {
-            return Optional.empty();
+            return Optional.ofNullable(connectorMap.get(id));
         }
 
         @Override

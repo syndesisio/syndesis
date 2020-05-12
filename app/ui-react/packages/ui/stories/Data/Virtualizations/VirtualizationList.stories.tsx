@@ -28,6 +28,8 @@ const editText = 'Edit';
 const viewOData = 'View OData';
 const editTip1 = 'Edit ' + virtualizationName1 + ' virtualization';
 const editTip2 = 'Edit ' + virtualizationName2 + ' virtualization';
+const popoverHeading = 'Data permission is applied';
+const popover= 'This virtual database has one or more data permissions set.';
 const draftText = 'Draft';
 const publishedText = 'Published';
 const deleteText = 'Delete';
@@ -91,8 +93,12 @@ const virtItem = [
     modified={boolean('modified', false)}
     currentPublishedState={currentStatusDraft}
     publishingLogUrl=""
+    i18nLockPopoverHeading={popoverHeading}
+    i18nLockPopover={popover}
+    i18nSecuredText={'Secured'}
     children={viewItems}
     usedBy={['MyVirt']}
+    secured={true}
   />,
 ];
 
@@ -114,7 +120,11 @@ const virtualizationItems = [
     modified={boolean('modified', false)}
     currentPublishedState={currentStatusDraft}
     publishingLogUrl=""
+    i18nLockPopoverHeading={popoverHeading}
+    i18nLockPopover={popover}
+    i18nSecuredText={'Secured'}
     usedBy={[]}
+    secured={true}
   />,
   <VirtualizationListItem
     key="virtualizationListItem2"
@@ -132,7 +142,11 @@ const virtualizationItems = [
     i18nPublishLogUrlText={publishLogUrlText}
     modified={boolean('modified', false)}
     currentPublishedState={currentStatusPublished}
+    i18nLockPopoverHeading={popoverHeading}
+    i18nLockPopover={popover}
+    i18nSecuredText={'Secured'}
     usedBy={[]}
+    secured={true}
   />,
   <VirtualizationListItem
     key="virtualizationListItem3"
@@ -154,7 +168,11 @@ const virtualizationItems = [
     publishingCurrentStep={2}
     publishingTotalSteps={4}
     publishingStepText={'Building'}
+    i18nLockPopoverHeading={popoverHeading}
+    i18nLockPopover={popover}
+    i18nSecuredText={'Secured'}
     usedBy={[]}
+    secured={true}
   />,
 ];
 

@@ -57,6 +57,10 @@
       <groupId>io.syndesis.test</groupId>
       <artifactId>test-support</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-core</artifactId>
+    </dependency>
 
     <!-- Citrus -->
     <dependency>
@@ -88,6 +92,64 @@
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-mail</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-ws</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.ws</groupId>
+      <artifactId>spring-ws-security</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.ws</groupId>
+      <artifactId>spring-ws-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.wss4j</groupId>
+      <artifactId>wss4j-ws-security-common</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.wss</groupId>
+      <artifactId>xws-security</artifactId>
+      <version>3.0</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <!-- Part of JDK -->
+          <groupId>javax.xml.soap</groupId>
+          <artifactId>saaj-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <!-- Part of Java EE -->
+          <groupId>javax.mail</groupId>
+          <artifactId>mail</artifactId>
+        </exclusion>
+        <exclusion>
+          <!-- Part of JDK -->
+          <groupId>javax.xml.bind</groupId>
+          <artifactId>jaxb-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <!-- Part of JDK -->
+          <groupId>javax.xml.stream</groupId>
+          <artifactId>stax-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <!-- Part of JDK -->
+          <groupId>javax.xml.crypto</groupId>
+          <artifactId>xmldsig</artifactId>
+        </exclusion>
+        <exclusion>
+          <!-- Part of JDK -->
+          <groupId>javax.xml.ws</groupId>
+          <artifactId>jaxws-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -238,8 +300,12 @@
         <groupId>org.basepom.maven</groupId>
         <artifactId>duplicate-finder-maven-plugin</artifactId>
         <configuration>
+          <ignoredClassPatterns>
+            <ignoredClassPattern>org.w3._2001.xmlschema.Adapter[12]</ignoredClassPattern>
+          </ignoredClassPatterns>
           <ignoredResourcePatterns>
             <ignoredResourcePattern>binding.xjb</ignoredResourcePattern>
+            <ignore>saml2-xacml2-profile.xml</ignore>
             <ignore>com/consol/citrus/schema/citrus-config.xsd</ignore>
             <ignore>com/consol/citrus/schema/citrus-config-${citrus.version}.xsd</ignore>
             <ignore>com/consol/citrus/schema/citrus-testcase.xsd</ignore>

@@ -1,7 +1,7 @@
 import {
-  Card,
-  CardBody,
   Label,
+  Stack,
+  StackItem,
   Text,
   TextContent,
   TextList,
@@ -16,7 +16,6 @@ import {
   global_warning_color_100,
 } from '@patternfly/react-tokens';
 import * as React from 'react';
-import { Container } from '../Layout';
 
 import './OpenApiReviewActions.css';
 
@@ -38,140 +37,155 @@ export interface IApiProviderReviewActionsProps {
   warningMessages?: string[];
 }
 
-export class OpenApiReviewActions extends React.Component<
+export const OpenApiReviewActions: React.FunctionComponent<
   IApiProviderReviewActionsProps
-> {
-  public render() {
-    return (
-      <Card className={'open-api-review-actions'}>
-        <CardBody>
-          {this.props.i18nValidationFallbackMessage ? (
-            <h5 className={'review-actions__validationFallbackMessage'}>
-              {this.props.i18nValidationFallbackMessage}
-            </h5>
-          ) : (
-            <TextContent>
-              {this.props.alert && this.props.alert}
+> = (
+  {
+    actions,
+    alert,
+    errorMessages,
+    i18nApiDefinitionHeading,
+    i18nDescriptionLabel,
+    i18nErrorsHeading,
+    i18nImportedHeading,
+    i18nNameLabel,
+    i18nOperationsHtmlMessage,
+    i18nOperationTagHtmlMessages,
+    i18nValidationFallbackMessage,
+    i18nWarningsHeading,
+    apiProviderDescription,
+    apiProviderName,
+    warningMessages,
+  }) => {
+  return (
+    <Stack className={'open-api-review-actions'}>
+      <StackItem>
+        {i18nValidationFallbackMessage ? (
+          <h5 className={'review-actions__validationFallbackMessage'}>
+            {i18nValidationFallbackMessage}
+          </h5>
+        ) : (
+          <TextContent>
+            {alert && alert}
+            <Title
+              headingLevel={'h5'}
+              size={'md'}
+              className={'review-actions__heading'}
+            >
+              {i18nApiDefinitionHeading}
+            </Title>
+            <div className={'review-actions__name-description'}>
+              <TextList component={TextListVariants.dl}>
+                <TextListItem component={TextListItemVariants.dt}>
+                  {i18nNameLabel}
+                </TextListItem>
+                <TextListItem component={TextListItemVariants.dd}>
+                  {apiProviderName}
+                </TextListItem>
+                <TextListItem component={TextListItemVariants.dt}>
+                  {i18nDescriptionLabel}
+                </TextListItem>
+                <TextListItem component={TextListItemVariants.dd}>
+                  {apiProviderDescription}
+                </TextListItem>
+              </TextList>
+            </div>
+            <Title
+              headingLevel={'h5'}
+              size={'md'}
+              className={'review-actions__heading'}
+            >
+              {i18nImportedHeading}
+            </Title>
+            <div>
+              <Text
+                component={TextVariants.p}
+                dangerouslySetInnerHTML={{
+                  __html: i18nOperationsHtmlMessage,
+                }}
+              />
+            </div>
+
+            {/* tagged messages */}
+            {i18nOperationTagHtmlMessages && (
+              <TextList className={'review-actions__tagMessageList'}>
+                {i18nOperationTagHtmlMessages.map(
+                  (msg: string, index: number) => (
+                    <TextListItem
+                      key={index}
+                      dangerouslySetInnerHTML={{ __html: msg }}
+                    />
+                  )
+                )}
+              </TextList>
+            )}
+
+            {/* error messages */}
+            {i18nErrorsHeading && errorMessages && (
               <Title
+                data-testid={'api-provider-error-heading'}
                 headingLevel={'h5'}
                 size={'md'}
                 className={'review-actions__heading'}
               >
-                {this.props.i18nApiDefinitionHeading}
+                {i18nErrorsHeading}
+                <Label
+                  style={{ background: global_danger_color_100.value }}
+                  className={'heading__label'}
+                >
+                  {errorMessages.length}
+                </Label>
               </Title>
-              <Container className={'review-actions__name-description'}>
-                <TextList component={TextListVariants.dl}>
-                  <TextListItem component={TextListItemVariants.dt}>
-                    {this.props.i18nNameLabel}
-                  </TextListItem>
-                  <TextListItem component={TextListItemVariants.dd}>
-                    {this.props.apiProviderName}
-                  </TextListItem>
-                  <TextListItem component={TextListItemVariants.dt}>
-                    {this.props.i18nDescriptionLabel}
-                  </TextListItem>
-                  <TextListItem component={TextListItemVariants.dd}>
-                    {this.props.apiProviderDescription}
-                  </TextListItem>
-                </TextList>
-              </Container>
+            )}
+            <div className={'review-actions__errors'}>
+              {errorMessages
+                ? errorMessages.map(
+                  (errorMsg: string, index: number) => (
+                    <Text component={TextVariants.p} key={index}>
+                      {index + 1}. {errorMsg}
+                    </Text>
+                  )
+                )
+                : null}
+            </div>
+
+            {/* warning messages */}
+            {i18nWarningsHeading && warningMessages && (
               <Title
+                data-testid={'api-provider-warning-heading'}
                 headingLevel={'h5'}
                 size={'md'}
                 className={'review-actions__heading'}
               >
-                {this.props.i18nImportedHeading}
+                {i18nWarningsHeading}
+                <Label
+                  style={{ background: global_warning_color_100.value }}
+                  className={'heading__label'}
+                >
+                  {warningMessages.length}
+                </Label>
               </Title>
-              <Container>
-                <Text
-                  component={TextVariants.p}
-                  dangerouslySetInnerHTML={{
-                    __html: this.props.i18nOperationsHtmlMessage,
-                  }}
-                />
-              </Container>
-
-              {/* tagged messages */}
-              {this.props.i18nOperationTagHtmlMessages && (
-                <TextList className={'review-actions__tagMessageList'}>
-                  {this.props.i18nOperationTagHtmlMessages.map(
-                    (msg: string, index: number) => (
-                      <TextListItem
-                        key={index}
-                        dangerouslySetInnerHTML={{ __html: msg }}
-                      />
-                    )
-                  )}
-                </TextList>
-              )}
-
-              {/* error messages */}
-              {this.props.i18nErrorsHeading && this.props.errorMessages && (
-                <Title
-                  data-testid={'api-provider-error-heading'}
-                  headingLevel={'h5'}
-                  size={'md'}
-                  className={'review-actions__heading'}
-                >
-                  {this.props.i18nErrorsHeading}
-                  <Label
-                    style={{ background: global_danger_color_100.value }}
-                    className={'heading__label'}
-                  >
-                    {this.props.errorMessages.length}
-                  </Label>
-                </Title>
-              )}
-              <Container className={'review-actions__errors'}>
-                {this.props.errorMessages
-                  ? this.props.errorMessages.map(
-                      (errorMsg: string, index: number) => (
-                        <Text component={TextVariants.p} key={index}>
-                          {index + 1}. {errorMsg}
-                        </Text>
-                      )
-                    )
-                  : null}
-              </Container>
-
-              {/* warning messages */}
-              {this.props.i18nWarningsHeading && this.props.warningMessages && (
-                <Title
-                  data-testid={'api-provider-warning-heading'}
-                  headingLevel={'h5'}
-                  size={'md'}
-                  className={'review-actions__heading'}
-                >
-                  {this.props.i18nWarningsHeading}
-                  <Label
-                    style={{ background: global_warning_color_100.value }}
-                    className={'heading__label'}
-                  >
-                    {this.props.warningMessages.length}
-                  </Label>
-                </Title>
-              )}
-              <Container className={'review-actions__warnings'}>
-                {this.props.warningMessages
-                  ? this.props.warningMessages.map(
-                      (warningMsg: string, index: number) => (
-                        <Text key={index} component={TextVariants.p}>
-                          {index + 1}. {warningMsg}
-                        </Text>
-                      )
-                    )
-                  : null}
-              </Container>
-            </TextContent>
-          )}
-          {this.props.actions && (
-            <>
-              <br />
-              {this.props.actions}
-            </>
-          )}
-        </CardBody>
-      </Card>
-    );
-  }
+            )}
+            <div className={'review-actions__warnings'}>
+              {warningMessages
+                ? warningMessages.map(
+                  (warningMsg: string, index: number) => (
+                    <Text key={index} component={TextVariants.p}>
+                      {index + 1}. {warningMsg}
+                    </Text>
+                  )
+                )
+                : null}
+            </div>
+          </TextContent>
+        )}
+        {actions && (
+          <>
+            <br />
+            {actions}
+          </>
+        )}
+      </StackItem>
+    </Stack>
+  );
 }

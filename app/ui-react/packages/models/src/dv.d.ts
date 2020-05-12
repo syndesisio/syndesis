@@ -31,6 +31,7 @@ export interface Virtualization {
   publishedRevision?: number;
   serviceViewModel: string;
   description: string;
+  secured: boolean;
   usedBy: string[];
 }
 
@@ -47,6 +48,17 @@ export interface VirtualizationMetrics {
   sessions: number;
   requestCount: number;
   resultSetCacheHitRatio: number;
+}
+
+export interface RoleInfo {
+  operation: 'GRANT' | 'REVOKE';
+  tablePrivileges: TablePrivilege[];
+}
+
+export interface TablePrivilege {
+  grantPrivileges: string[];
+  roleName: string | undefined;
+  viewDefinitionIds: string[];
 }
 
 export interface SchemaNode {
@@ -90,11 +102,21 @@ export interface VirtualizationSourceStatus {
   lastLoad: number;
 }
 
+export interface DVStatusObj {
+  exposeVia3scale: string;
+  ssoConfigured: string;
+}
+
+export interface DVStatus {
+  attributes: DVStatusObj;
+}
+
 export interface ViewDefinitionDescriptor {
   id: string;
   name: string;
   description: string;
   valid: boolean;
+  tablePrivileges: TablePrivilege[]
 }
 
 export interface ViewDefinition {

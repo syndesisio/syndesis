@@ -1,19 +1,15 @@
 import {
   Alert,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
   Form,
   FormGroup,
   Radio,
+  Stack,
+  StackItem,
   TextInput,
   Title,
 } from '@patternfly/react-core';
-import * as H from '@syndesis/history';
 import * as React from 'react';
 import { toValidHtmlId } from '../../../helpers';
-import { ButtonLink } from '../../../Layout';
 
 export interface IAuthenticationTypes {
   value?: string;
@@ -22,95 +18,47 @@ export interface IAuthenticationTypes {
 
 export interface IApiClientConnectorCreateSecurityProps {
   /**
-   * Access token, required for OAuth 2.0.
-   */
-  initialAccessTokenUrl?: string;
-  /**
-   * Used specifically for determining the default type, mostly used
-   * for None and Basic types.
-   */
-  initialAuthenticationType?: string;
-  /**
-   * Authorization URL, required for OAuth 2.0.
-   */
-  initialAuthorizationUrl?: string;
-  /**
    * The list of available authentication types for this specification.
    */
   authenticationTypes?: IAuthenticationTypes[];
-  backHref: H.LocationDescriptor;
+  authUrl?: string;
+  handleChangeAuthUrl: (params: string) => void;
+  handleChangeSelectedType: (params: string) => void;
+  handleChangeTokenUrl: (params: string) => void;
   i18nAccessTokenUrl: string;
   i18nAuthorizationUrl: string;
-  i18nBtnBack: string;
-  i18nBtnNext: string;
+  i18nDescription: string;
   /**
    * Locale string for when no security is specified
    */
   i18nNoSecurity: string;
   i18nTitle: string;
-  i18nDescription: string;
-
+  selectedType?: string;
+  tokenUrl?: string;
   extractAuthType(authType?: string): string;
-
-  isValid(
-    authenticationType?: string,
-    authorizationUrl?: string,
-    tokenUrl?: string
-  ): boolean;
-
-  /**
-   * The action fired when the user presses the Next button
-   */
-  onNext(
-    authenticationType?: string,
-    authorizationUrl?: string,
-    tokenUrl?: string
-  ): void;
 }
 
 export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClientConnectorCreateSecurityProps> = ({
-  backHref,
-  extractAuthType,
-  initialAccessTokenUrl,
-  initialAuthorizationUrl,
-  initialAuthenticationType,
   authenticationTypes,
+  authUrl,
+  extractAuthType,
+  handleChangeAuthUrl,
+  handleChangeSelectedType,
+  handleChangeTokenUrl,
   i18nTitle,
   i18nAccessTokenUrl,
   i18nAuthorizationUrl,
-  i18nBtnBack,
-  i18nBtnNext,
   i18nDescription,
   i18nNoSecurity,
-  onNext,
-  isValid,
+  selectedType,
+  tokenUrl,
 }) => {
-  const [tokenUrl, setTokenUrl] = React.useState(initialAccessTokenUrl);
-  const [authUrl, setAuthUrl] = React.useState(initialAuthorizationUrl);
-  const [selectedType, setSelectedType] = React.useState(
-    initialAuthenticationType
-  );
-  const [valid, setValid] = React.useState(
-    isValid(selectedType, authUrl, tokenUrl)
-  );
-  const handleChangeSelectedType = (newType: string) => {
-    setSelectedType(newType);
-    setValid(isValid(newType, authUrl, tokenUrl));
-  };
-  const handleChangeAuthUrl = (newUrl: string) => {
-    setAuthUrl(newUrl);
-    setValid(isValid(selectedType, newUrl, tokenUrl));
-  };
-  const handleChangeTokenUrl = (newUrl: string) => {
-    setTokenUrl(newUrl);
-    setValid(isValid(selectedType, authUrl, newUrl));
-  };
   return (
-    <Card style={{ maxWidth: '600px', margin: ' auto' }}>
-      <CardHeader>
+    <Stack style={{ maxWidth: '600px' }} gutter="md">
+      <StackItem>
         <Title size="2xl">{i18nTitle}</Title>
-      </CardHeader>
-      <CardBody>
+      </StackItem>
+      <StackItem>
         <Form data-testid={`api-client-connector-auth-type-form`}>
           <Alert type={'info'} title={i18nDescription} isInline={true} />
           <FormGroup fieldId={'authenticationType'}>
@@ -118,7 +66,9 @@ export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClien
               <Radio
                 key={authType.value + '-' + idx}
                 id={'authenticationType'}
-                data-testid={`api-client-connector-auth-type-${toValidHtmlId(authType!.value)}`}
+                data-testid={`api-client-connector-auth-type-${toValidHtmlId(
+                  authType!.value
+                )}`}
                 aria-label={authType.label || i18nNoSecurity}
                 label={authType.label || i18nNoSecurity}
                 isChecked={selectedType === authType.value}
@@ -153,20 +103,7 @@ export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClien
             </>
           )}
         </Form>
-      </CardBody>
-      <CardFooter>
-        <div>
-          <ButtonLink href={backHref}>{i18nBtnBack}</ButtonLink>
-          &nbsp;
-          <ButtonLink
-            onClick={() => onNext(selectedType, authUrl, tokenUrl)}
-            as={'primary'}
-            disabled={!valid}
-          >
-            {i18nBtnNext}
-          </ButtonLink>
-        </div>
-      </CardFooter>
-    </Card>
+      </StackItem>
+    </Stack>
   );
 };

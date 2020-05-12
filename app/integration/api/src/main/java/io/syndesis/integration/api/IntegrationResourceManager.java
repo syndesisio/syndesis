@@ -216,7 +216,20 @@ public interface IntegrationResourceManager {
     }
 
     default Collection<Dependency> collectDependencies(Integration integration) {
-        return collectDependencies(integration.getFlows().stream().flatMap(flow -> flow.getSteps().stream()).collect(Collectors.toList()), true);
+        final List<Dependency> dependencies = new ArrayList<>();
+        dependencies.addAll(integration.getDependencies());
+        dependencies.addAll(collectDependencies(integration.getFlows()));
+        return dependencies;
+    }
+
+    default Collection<Dependency> collectDependencies(List<Flow> flows){
+        final List<Dependency> dependencies = new ArrayList<>();
+        for(Flow flow : flows){
+            dependencies.addAll(flow.getDependencies());
+            Collection<Dependency> stepsDependencies = collectDependencies(flow.getSteps(), true);
+            dependencies.addAll(stepsDependencies);
+        }
+        return dependencies;
     }
 
     default Collection<Dependency> collectDependencies(Collection<? extends Step> steps, boolean resolveExtensionTags) {

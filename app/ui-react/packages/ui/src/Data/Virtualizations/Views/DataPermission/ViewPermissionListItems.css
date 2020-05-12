@@ -1,0 +1,8 @@
+.view-permission-list-items-permission_badge {
+  padding: 5px;
+  margin: 10px;
+}
+
+.view-permission-list-items-disabled_text {
+  color: var(--pf-c-button--disabled--Color);
+}

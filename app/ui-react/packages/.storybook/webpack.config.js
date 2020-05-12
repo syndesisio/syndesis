@@ -11,24 +11,28 @@ module.exports = ({ config, mode }) => {
         options: {
           transpileOnly: true,
           experimentalWatchApi: true,
-        }
+        },
       },
       'react-docgen-typescript-loader',
-    ]
+    ],
   });
-  config.resolve.alias = {'vscode' : require.resolve('monaco-languageclient/lib/vscode-compatibility')}
+  config.resolve.alias = {
+    vscode: require.resolve('monaco-languageclient/lib/vscode-compatibility'),
+  };
   config.resolve.extensions = ['.ts', '.tsx', '.js', '.jsx'];
   config.resolve.plugins = [
     new TsconfigPathsPlugin({
-      configFile: 'tsconfig.storybook.json'
-    })
+      configFile: 'tsconfig.storybook.json',
+    }),
   ];
   config.node = {
     fs: 'empty',
     net: 'mock',
   };
-  config.optimization.minimizer = [ new TerserPlugin({
-    parallel: 1
-  })];
+  config.optimization.minimizer = [
+    new TerserPlugin({
+      parallel: 1,
+    }),
+  ];
   return config;
 };

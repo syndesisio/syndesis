@@ -8,38 +8,36 @@ import { SecurityPage } from './pages/create/SecurityPage';
 import { SelectMethodPage } from './pages/create/SelectMethodPage';
 import routes from './routes';
 
-export default class ApiConnectorCreatorApp extends React.Component {
-  public render() {
-    return (
-      <WithClosedNavigation>
-        <Switch>
-          <Route
-            path={routes.create.upload}
-            exact={true}
-            component={SelectMethodPage}
-          />
-          <Route
-            path={routes.create.review}
-            exact={true}
-            component={ReviewActionsPage}
-          />
-          <Route
-            path={routes.create.specification}
-            exact={true}
-            component={EditSpecificationPage}
-          />
-          <Route
-            path={routes.create.security}
-            exact={true}
-            component={SecurityPage}
-          />
-          <Route
-            path={routes.create.save}
-            exact={true}
-            component={DetailsPage}
-          />
-        </Switch>
-      </WithClosedNavigation>
-    );
-  }
+export const ApiConnectorCreatorApp: React.FunctionComponent = () => {
+  return (
+    <WithClosedNavigation>
+      <Switch>
+        <Route
+          path={routes.create.upload}
+          exact={true}
+          component={SelectMethodPage}
+        />
+        <Route
+          path={routes.create.review}
+          exact={true}
+          component={ReviewActionsPage}
+        />
+        <Route
+          path={routes.create.specification}
+          exact={true}
+          component={EditSpecificationPage}
+        />
+        <Route
+          path={routes.create.security}
+          exact={true}
+          component={SecurityPage}
+        />
+        <Route
+          path={routes.create.save}
+          exact={true}
+          component={DetailsPage}
+        />
+      </Switch>
+    </WithClosedNavigation>
+  );
 }

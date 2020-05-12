@@ -1,5 +1,4 @@
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
-import { ApiConnectorDetailsForm } from '@syndesis/ui';
 import { useContext } from 'react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +15,46 @@ export interface IConnectorValues extends IFormValues {
   icon?: string;
 }
 
+export interface IApiConnectorInfoFormChildrenProps {
+  connectorName?: string;
+  /**
+   * the form (embedded in the right UI elements)
+   */
+  fields: JSX.Element;
+
+  icon?: string | undefined;
+
+  /**
+   * true if the form is being submitted.
+   * Used to enable/disable the submit button.
+   */
+  isSubmitting: boolean;
+
+  /**
+   * `true` if an image is being uploaded.
+   * Used to enable/disable the submit button.
+   */
+  isUploadingImage: boolean;
+
+  /**
+   * The callback for when an icon file was selected from the file system.
+   * @param event the event whose target contains the file being uploaded
+   */
+  onUploadImage: (event: any) => void;
+
+  /**
+   * The callback fired when submitting the form.
+   * @param e the changed properties
+   * @param actions used to set isSubmitting on the form
+   */
+  handleSubmit: (e?: any) => void;
+
+  /**
+   * the callback to trigger to submit the form.
+   */
+  submitForm(): any;
+}
+
 export interface IApiConnectorInfoFormProps {
   name?: string;
   description?: string;
@@ -28,22 +67,19 @@ export interface IApiConnectorInfoFormProps {
   apiConnectorIcon?: string;
 
   /**
-   * `true` when the connection details are being edited.
-   */
-  isEditing: boolean;
-
-  /**
    * The callback fired when submitting the form.
    * @param e the changed properties
    * @param actions used to set isSubmitting on the form
    */
   handleSubmit: (e: IConnectorValues, actions?: any) => void;
 
-  children: (props: {
-    isSubmitting: boolean;
-    isUploadingImage: boolean;
-    submitForm: () => void;
-  }) => React.ReactNode;
+  /**
+   * the render prop that will receive the ready-to-be-rendered form and some
+   * helpers.
+   *
+   * @see [onSubmit]{@link IApiConnectorInfoFormChildrenProps#submitForm}
+   */
+  children(props: IApiConnectorInfoFormChildrenProps): any;
 }
 
 export const ApiConnectorInfoForm: React.FunctionComponent<
@@ -130,24 +166,24 @@ export const ApiConnectorInfoForm: React.FunctionComponent<
       }}
       onSave={onSave}
     >
-      {({ fields, handleSubmit, isSubmitting, submitForm }) => (
-        <>
-          <ApiConnectorDetailsForm
-            apiConnectorIcon={icon}
-            apiConnectorName={props.name}
-            i18nIconLabel={t('ConnectorIcon')}
-            handleSubmit={handleSubmit}
-            onUploadImage={onUploadImage}
-            isEditing={props.isEditing}
-            fields={fields}
-            footer={props.children({
-              isSubmitting,
-              isUploadingImage,
-              submitForm,
-            })}
-          />
-        </>
-      )}
+      {({
+          fields,
+          handleSubmit,
+          isSubmitting,
+          submitForm
+      }) => {
+        const connectorName = props.name;
+        return props.children({
+          connectorName,
+          fields,
+          handleSubmit,
+          icon,
+          isUploadingImage,
+          isSubmitting,
+          onUploadImage,
+          submitForm
+        });
+      }}
     </AutoForm>
   );
 };

@@ -4,13 +4,14 @@ import {
   SchemaNode,
   SchemaNodeInfo,
   ViewDefinition,
+  ViewDefinitionDescriptor,
   ViewInfo,
   ViewSourceInfo,
   Virtualization,
   VirtualizationPublishingDetails,
   VirtualizationSourceStatus,
 } from '@syndesis/models';
-import { ITableInfo } from '@syndesis/ui';
+import { IActiveFilter, ITableInfo } from '@syndesis/ui';
 import { toDateAndTimeString, toShortDateAndTimeString } from '@syndesis/utils';
 import i18n from '../../../i18n';
 
@@ -668,4 +669,35 @@ export function canStart(
 export function canStop(virtualization: Virtualization): boolean {
   // TODO: Fix logic if necessary. Do we need to check if any integrations are using it?
   return virtualization.publishedState === 'RUNNING';
+}
+
+/**
+ * Sort and Filter the passed Virtulization or ViewDefinitionDescriptor array and the filteredAndSorted 
+ * @param {ViewDefinitionDescriptor[] | Virtualization[]} resourceArray the virtualization being checked
+ * @param {IActiveFilter[]} activeFilters list of filter used to search on
+ * @param {boolean} isSortAscending to toggle between ascending and descending order of name 
+ * @returns filtered and sorted Virtulization or ViewDefinitionDescriptor array
+ */
+export function getFilteredAndSortedByName(resourceArray: ViewDefinitionDescriptor[] | Virtualization[],
+  activeFilters: IActiveFilter[],
+  isSortAscending: boolean): any[] {
+  let filteredAndSorted = [...resourceArray];
+    activeFilters.forEach((filter: IActiveFilter) => {
+      const valueToLower = filter.value.toLowerCase();
+      filteredAndSorted = filteredAndSorted.filter(
+        (resource: ViewDefinitionDescriptor | Virtualization) =>
+        resource.name.toLowerCase().includes(valueToLower)
+      );
+    });
+
+    filteredAndSorted = filteredAndSorted.sort((thisResource, thatResource) => {
+      if (isSortAscending) {
+        return thisResource.name.localeCompare(thatResource.name);
+      }
+
+      // sort descending
+      return thatResource.name.localeCompare(thisResource.name);
+    });
+
+    return filteredAndSorted;
 }

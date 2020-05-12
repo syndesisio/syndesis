@@ -1,5 +1,5 @@
 /* tslint:disable */
-const proxy = require('http-proxy-middleware');
+const proxy = require('http-proxy-middleware').createProxyMiddleware;
 const path = require('path');
 
 function getRandomInt(min, max) {
@@ -13,13 +13,11 @@ module.exports = function(app) {
     function chaos(req, res, next) {
       const p = getRandomInt(0, 100);
       if (process.env.CHAOS && p > 75) {
-        res
-          .status(500)
-          .send({
-            errorCode: 500,
-            userMsg: 'Something has gone totally wrong',
-            developerMsg: 'This is for developers only',
-          });
+        res.status(500).send({
+          errorCode: 500,
+          userMsg: 'Something has gone totally wrong',
+          developerMsg: 'This is for developers only',
+        });
       } else if (process.env.CHAOS && p > 50) {
         res.status(500).send('Something broke!');
         next('route');
@@ -41,7 +39,7 @@ module.exports = function(app) {
       logLevel: 'debug',
       onProxyReq: (proxyReq, req, res) => {
         proxyReq.setHeader('origin', process.env.BACKEND);
-      }
+      },
     });
 
     ['/api/v1', '/dv/v1'].forEach(url => {
