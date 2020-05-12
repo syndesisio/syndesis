@@ -19,6 +19,8 @@ import java.util.Map;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.syndesis.common.util.Properties;
 import io.syndesis.connector.support.processor.ErrorMapper;
@@ -31,6 +33,7 @@ public class ApiProviderOnExceptionHandler implements Processor, Properties {
     private static final String HTTP_RESPONSE_CODE_PROPERTY        = "httpResponseCode";
     private static final String HTTP_ERROR_RESPONSE_CODES_PROPERTY = "errorResponseCodes";
     private static final String ERROR_RESPONSE_BODY                = "returnBody";
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiProviderOnExceptionHandler.class);
 
     Map<String, Integer> errorResponseCodeMappings;
     Boolean isReturnBody;
@@ -47,6 +50,7 @@ public class ApiProviderOnExceptionHandler implements Processor, Properties {
         } else {
             exchange.getIn().setBody("");
         }
+        LOGGER.info("Error response: " + statusInfo.getMessage());
     }
 
     @Override

@@ -289,4 +289,14 @@ public class RepositoryManagerImpl implements RepositoryManager {
         return tablePrivilegesRepository.findTablePrivilegesByViewDefinitionId(viewId);
     }
 
+    @Override
+    public void deleteTablePrivileges(List<String> viewIds) {
+        tablePrivilegesRepository.deleteByViewDefinitionIdIn(viewIds);
+    }
+
+    @Override
+    public void deleteTablePrivileges(TablePrivileges existing) {
+        tablePrivilegesRepository.delete(existing);
+    }
+
 }

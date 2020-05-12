@@ -124,7 +124,7 @@ public final class ErrorCategory {
     }
 
     public static boolean isCategorized(Throwable exception) {
-        return ErrorCategory.RUNTIME_EXCEPTION_CATEGORY_MAP.containsKey(exception.getClass().getSimpleName());
+        return ErrorCategory.RUNTIME_EXCEPTION_CATEGORY_MAP.containsKey(exception.getClass().getName());
     }
     /**
      *
@@ -134,7 +134,7 @@ public final class ErrorCategory {
      */
     public static String getCategory(Throwable exception, Set<String> integrationCategories) {
         if (isCategorized(exception)) {
-            String category = ErrorCategory.RUNTIME_EXCEPTION_CATEGORY_MAP.get(exception.getClass().getSimpleName());
+            String category = ErrorCategory.RUNTIME_EXCEPTION_CATEGORY_MAP.get(exception.getClass().getName());
             if (integrationCategories.contains(category)) {
                 return category;
             }

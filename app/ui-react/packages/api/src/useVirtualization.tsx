@@ -23,6 +23,7 @@ export const useVirtualization = (
       modified: true,
       name: '',
       publishedState: 'NOTFOUND',
+      secured: false,
       serviceViewModel: '',
       usedBy: []
     },

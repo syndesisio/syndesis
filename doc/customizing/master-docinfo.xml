@@ -1,0 +1,15 @@
+<productname>Syndesis</productname>
+<productnumber>{syndesis-version}</productnumber>
+<subtitle>For developers who want to customize Syndesis
+by developing extensions or 
+by defining OpenAPI definitions for REST API client connectors.</subtitle>
+<abstract>
+ <para>Syndesis provides integration as a service.</para>
+</abstract>
+<authorgroup>
+  <org>
+    <orgname></orgname>
+    <email></email>
+  </org>
+</authorgroup>
+<xi:include href="Common_Content/Legal_Notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
