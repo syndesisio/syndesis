@@ -258,7 +258,7 @@ func (u *databaseUpgrade) deployUpgrade() error {
 								},
 							},
 							ImagePullPolicy: corev1.PullIfNotPresent,
-							Image:           config.Syndesis.Components.Database.Image.Get(config.Syndesis.SHA),
+							Image:           config.Syndesis.Components.Database.Image,
 							Resources: corev1.ResourceRequirements{
 								Limits: corev1.ResourceList{
 									corev1.ResourceMemory: memory,

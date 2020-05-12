@@ -79,7 +79,7 @@
       spec:
         containers:
         - name: syndesis-public-oauthproxy
-          image: '{{ dockerImageFromComponent .Syndesis.Components.Oauth.Image .Syndesis.SHA }}'
+          image: '{{ .Syndesis.Components.Oauth.Image }}'
           args:
             - --provider=openshift
             - --client-id=system:serviceaccount:{{.OpenShiftProject}}:syndesis-oauth-client
