@@ -15,11 +15,16 @@
  */
 package io.syndesis.dv.lsp.parser;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.teiid.query.parser.SQLParserConstants;
 
-public interface DdlAnalyzerConstants extends SQLParserConstants {
+public final class DdlAnalyzerConstants {
 
-    enum STATEMENT_TYPE {
+    public enum STATEMENT_TYPE {
         UNKNOWN_STATEMENT_TYPE,
         CREATE_TABLE_TYPE,
         CREATE_FOREIGN_TABLE_TYPE,
@@ -29,7 +34,7 @@ public interface DdlAnalyzerConstants extends SQLParserConstants {
         CREATE_VIRTUAL_VIEW_TYPE
     }
 
-    enum CONTEXT {
+    public enum CONTEXT {
         NONE_FOUND,
         PREFIX,
         TABLE_BODY,
@@ -44,101 +49,103 @@ public interface DdlAnalyzerConstants extends SQLParserConstants {
         WHERE_CLAUSE
     }
 
-    int[] DATATYPES = {
-        STRING,
-        VARBINARY,
-        VARCHAR,
-        BOOLEAN,
-        BYTE,
-        TINYINT,
-        SHORT,
-        SMALLINT,
-        CHAR,
-        INTEGER,
-        LONG,
-        BIGINT,
-        BIGINTEGER,
-        FLOAT,
-        REAL,
-        DOUBLE,
-        BIGDECIMAL,
-        DECIMAL,
-        DATE,
-        TIME,
-        TIMESTAMP,
-        BLOB,
-        CLOB,
-        XML,
-        JSON,
-        GEOMETRY,
-        GEOGRAPHY,
-        OBJECT
-    };
+    public static final Set<Integer> DATATYPES = Collections.unmodifiableSet(
+        new HashSet<>(
+            Arrays.asList(
+                SQLParserConstants.STRING,
+                SQLParserConstants.VARBINARY,
+                SQLParserConstants.VARCHAR,
+                SQLParserConstants.BOOLEAN,
+                SQLParserConstants.BYTE,
+                SQLParserConstants.TINYINT,
+                SQLParserConstants.SHORT,
+                SQLParserConstants.SMALLINT,
+                SQLParserConstants.CHAR,
+                SQLParserConstants.INTEGER,
+                SQLParserConstants.LONG,
+                SQLParserConstants.BIGINT,
+                SQLParserConstants.BIGINTEGER,
+                SQLParserConstants.FLOAT,
+                SQLParserConstants.REAL,
+                SQLParserConstants.DOUBLE,
+                SQLParserConstants.BIGDECIMAL,
+                SQLParserConstants.DECIMAL,
+                SQLParserConstants.DATE,
+                SQLParserConstants.TIME,
+                SQLParserConstants.TIMESTAMP,
+                SQLParserConstants.BLOB,
+                SQLParserConstants.CLOB,
+                SQLParserConstants.XML,
+                SQLParserConstants.JSON,
+                SQLParserConstants.GEOMETRY,
+                SQLParserConstants.GEOGRAPHY,
+                SQLParserConstants.OBJECT
+            )));
 
-    String[] DATATYPE_LIST = {
-        getLabel(STRING, false),
-        getLabel(VARBINARY, false),
-        getLabel(VARCHAR, false),
-        getLabel(BOOLEAN, false),
-        getLabel(BYTE, false),
-        getLabel(TINYINT, false),
-        getLabel(SHORT, false),
-        getLabel(SMALLINT, false),
-        getLabel(CHAR, false),
-        getLabel(INTEGER, false),
-        getLabel(LONG, false),
-        getLabel(BIGINT, false),
-        getLabel(BIGINTEGER, false),
-        getLabel(FLOAT, false),
-        getLabel(REAL, false),
-        getLabel(DOUBLE, false),
-        getLabel(BIGDECIMAL, false),
-        getLabel(DECIMAL, false),
-        getLabel(DATE, false),
-        getLabel(TIME, false),
-        getLabel(TIMESTAMP, false),
-        getLabel(BLOB, false),
-        getLabel(CLOB, false),
-        getLabel(XML, false),
-        getLabel(JSON, false),
-        getLabel(GEOMETRY, false),
-        getLabel(GEOGRAPHY, false),
-        getLabel(OBJECT, false)
+    static final String[] DATATYPE_LIST = {
+        getLabel(SQLParserConstants.STRING, false),
+        getLabel(SQLParserConstants.VARBINARY, false),
+        getLabel(SQLParserConstants.VARCHAR, false),
+        getLabel(SQLParserConstants.BOOLEAN, false),
+        getLabel(SQLParserConstants.BYTE, false),
+        getLabel(SQLParserConstants.TINYINT, false),
+        getLabel(SQLParserConstants.SHORT, false),
+        getLabel(SQLParserConstants.SMALLINT, false),
+        getLabel(SQLParserConstants.CHAR, false),
+        getLabel(SQLParserConstants.INTEGER, false),
+        getLabel(SQLParserConstants.LONG, false),
+        getLabel(SQLParserConstants.BIGINT, false),
+        getLabel(SQLParserConstants.BIGINTEGER, false),
+        getLabel(SQLParserConstants.FLOAT, false),
+        getLabel(SQLParserConstants.REAL, false),
+        getLabel(SQLParserConstants.DOUBLE, false),
+        getLabel(SQLParserConstants.BIGDECIMAL, false),
+        getLabel(SQLParserConstants.DECIMAL, false),
+        getLabel(SQLParserConstants.DATE, false),
+        getLabel(SQLParserConstants.TIME, false),
+        getLabel(SQLParserConstants.TIMESTAMP, false),
+        getLabel(SQLParserConstants.BLOB, false),
+        getLabel(SQLParserConstants.CLOB, false),
+        getLabel(SQLParserConstants.XML, false),
+        getLabel(SQLParserConstants.JSON, false),
+        getLabel(SQLParserConstants.GEOMETRY, false),
+        getLabel(SQLParserConstants.GEOGRAPHY, false),
+        getLabel(SQLParserConstants.OBJECT, false)
     };
 
     /*
      * Array of tokens that match the start of a CREATE TABLE statement
      */
-    int[] CREATE_TABLE_STATEMENT = { CREATE, TABLE };
+    static final int[] CREATE_TABLE_STATEMENT = { SQLParserConstants.CREATE, SQLParserConstants.TABLE };
 
     /*
      * Array of tokens that match the start of a CREATE FOREIGNT TABLE statement
      */
-    int[] CREATE_FOREIGN_TABLE_STATEMENT = { CREATE, FOREIGN, TABLE };
+    static final int[] CREATE_FOREIGN_TABLE_STATEMENT = { SQLParserConstants.CREATE, SQLParserConstants.FOREIGN, SQLParserConstants.TABLE };
 
     /*
      * Array of tokens that match the start of a CREATE FOREIGN TEMPORARY TABLE
      * statement
      */
-    int[] CREATE_FOREIGN_TEMPORARY_TABLE_STATEMENT = { CREATE, FOREIGN, TEMPORARY, TABLE };
+    static final int[] CREATE_FOREIGN_TEMPORARY_TABLE_STATEMENT = { SQLParserConstants.CREATE, SQLParserConstants.FOREIGN, SQLParserConstants.TEMPORARY, SQLParserConstants.TABLE };
 
     /*
      * Array of tokens that match the start of a CREATE TEMPORARY TABLE
      * statement
      */
-    int[] CREATE_GLOBAL_TEMPORARY_TABLE_STATEMENT = { CREATE, GLOBAL, TEMPORARY, TABLE };
+    static final int[] CREATE_GLOBAL_TEMPORARY_TABLE_STATEMENT = { SQLParserConstants.CREATE, SQLParserConstants.GLOBAL, SQLParserConstants.TEMPORARY, SQLParserConstants.TABLE };
 
     /*
      * Array of tokens that match the start of a CREATE VIEW
      * statement
      */
-    int[] CREATE_VIEW_STATEMENT = { CREATE, VIEW };
+    static final int[] CREATE_VIEW_STATEMENT = { SQLParserConstants.CREATE, SQLParserConstants.VIEW };
 
     /*
      * Array of tokens that match the start of a CREATE VIRTUAL VIEW
      * statement
      */
-    int[] CREATE_VIRTUAL_VIEW_STATEMENT = { CREATE, VIRTUAL, VIEW };
+    static final int[] CREATE_VIRTUAL_VIEW_STATEMENT = { SQLParserConstants.CREATE, SQLParserConstants.VIRTUAL, SQLParserConstants.VIEW };
 
     int[] NON_DATATYPE_KEYWORDS = {
             ACCESS,
@@ -527,8 +534,8 @@ public interface DdlAnalyzerConstants extends SQLParserConstants {
      * @param tokenImageString string
      * @return string without double quotes
      */
-     static String getLabel(int keywordId, boolean upperCase) {
-         String tokenImageStr = tokenImage[keywordId];
+    public static String getLabel(int keywordId, boolean upperCase) {
+         String tokenImageStr = SQLParserConstants.tokenImage[keywordId];
          if( upperCase ) {
              return tokenImageStr.substring(1, tokenImageStr.length()-1).toUpperCase();
          }
