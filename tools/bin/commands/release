@@ -327,13 +327,16 @@ publish_artifacts() {
             return 1
         fi
         local versions_to_discard=$(git for-each-ref --format="%(refname:short)" --sort=creatordate refs/tags/${major_minor}*|head -n -10)
-        for version in ${versions_to_discard}; do
-            local release_url=$(curl -q -s -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} "${github_api_url}/releases/tags/${version}" | jq -r .url)
-            if [ "${release_url}" != "null" ]; then
-                curl -q -s -S --fail -X DELETE -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} ${release_url}
-            fi
-        done
-        git push --delete origin ${versions_to_discard}
+        if [ ! -z "${versions_to_discard}" ]; then
+            echo "About to remove the following tags: ${versions_to_discard}"
+            for version in ${versions_to_discard}; do
+                local release_url=$(curl -q -s -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} "${github_api_url}/releases/tags/${version}" | jq -r .url)
+                if [ "${release_url}" != "null" ]; then
+                    curl -q -s -S --fail -X DELETE -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} ${release_url}
+                fi
+            done
+            git push --delete origin ${versions_to_discard}
+        fi
     fi
 
     local upload_url=$(curl -q -s -S --fail \
