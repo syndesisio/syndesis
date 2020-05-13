@@ -29,7 +29,7 @@ import org.teiid.translator.ExecutionFactory;
 import org.teiid.translator.TranslatorException;
 
 public class TeiidServer extends EmbeddedServer {
-    private Map<String, TeiidDataSourceImpl> datasources = new ConcurrentHashMap<>();
+    private final Map<String, TeiidDataSourceImpl> datasources = new ConcurrentHashMap<>();
 
     public TeiidServer() {
         this.cmr = new SBConnectorManagerRepository();

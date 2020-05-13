@@ -31,7 +31,7 @@ import io.syndesis.dv.model.TablePrivileges.Privilege;
 public class TablePrivilegeV1Adapter {
 
     @JsonIgnore
-    private TablePrivileges tablePrivileges;
+    private final TablePrivileges tablePrivileges;
 
     public TablePrivilegeV1Adapter() {
         this.tablePrivileges = new TablePrivileges();

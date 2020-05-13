@@ -97,7 +97,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
 
     public class TeiidVdbImpl implements TeiidVdb {
 
-        private VDBMetaData vdb;
+        private final VDBMetaData vdb;
 
         public TeiidVdbImpl(VDB vdb) {
             ArgCheck.isInstanceOf(VDBMetaData.class, vdb);
@@ -302,7 +302,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
             try {
                 rs = statement.executeQuery(query);
             } catch (SQLException e) {
-                KLog.getLogger().warn("Could not execute query: " + query, e.getMessage());
+                KLog.getLogger().warn(e, "Could not execute query: %s", query);
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
             }
 
@@ -407,7 +407,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
                 teiidVdbs.add(new TeiidVdbImpl(vdb));
             }
 
-            return teiidVdbs;
+            return Collections.unmodifiableCollection(teiidVdbs);
         } catch (AdminException ex) {
             throw handleError(ex);
         }

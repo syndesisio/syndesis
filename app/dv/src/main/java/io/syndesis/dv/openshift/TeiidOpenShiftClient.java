@@ -15,60 +15,13 @@
  */
 package io.syndesis.dv.openshift;
 
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.WeakHashMap;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import javax.persistence.PersistenceException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jboss.shrinkwrap.api.GenericArchive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
-import org.jboss.shrinkwrap.api.asset.StringAsset;
-import org.jboss.shrinkwrap.api.exporter.TarExporter;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-import org.teiid.adminapi.Model;
-import org.teiid.adminapi.impl.ModelMetaData;
-import org.teiid.adminapi.impl.SourceMappingMetadata;
-import org.teiid.adminapi.impl.VDBMetaData;
-import org.teiid.core.util.AccessibleByteArrayOutputStream;
-import org.teiid.core.util.ObjectConverterUtil;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.fabric8.kubernetes.api.KubernetesHelper;
 import io.fabric8.kubernetes.api.builds.Builds;
 import io.fabric8.kubernetes.api.model.ContainerPort;
 import io.fabric8.kubernetes.api.model.ContainerStateRunning;
@@ -86,8 +39,6 @@ import io.fabric8.kubernetes.api.model.SecretBuilder;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServiceFluent.SpecNested;
 import io.fabric8.kubernetes.client.KubernetesClientException;
-import io.fabric8.kubernetes.client.Watch;
-import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.kubernetes.client.dsl.internal.PodOperationsImpl;
 import io.fabric8.openshift.api.model.Build;
 import io.fabric8.openshift.api.model.BuildConfig;
@@ -125,8 +76,55 @@ import io.syndesis.dv.server.DvConfigurationProperties;
 import io.syndesis.dv.server.SSOConfigurationProperties;
 import io.syndesis.dv.utils.StringNameValidator;
 import io.syndesis.dv.utils.StringUtils;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.WeakHashMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import javax.persistence.PersistenceException;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jboss.shrinkwrap.api.GenericArchive;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.ByteArrayAsset;
+import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.exporter.TarExporter;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import org.teiid.adminapi.Model;
+import org.teiid.adminapi.impl.ModelMetaData;
+import org.teiid.adminapi.impl.SourceMappingMetadata;
+import org.teiid.adminapi.impl.VDBMetaData;
+import org.teiid.core.util.AccessibleByteArrayOutputStream;
+import org.teiid.core.util.ObjectConverterUtil;
 
 @SuppressWarnings("nls")
 public class TeiidOpenShiftClient implements StringConstants {
@@ -148,8 +146,8 @@ public class TeiidOpenShiftClient implements StringConstants {
     private static final Log LOGGER = LogFactory.getLog(TeiidOpenShiftClient.class);
     public static final String ID = "id";
     private static final String SERVICE_CA_CERT_FILE = "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt";
-    private String openShiftHost = "https://openshift.default.svc";
-    private long buildTimeoutInSeconds = 2 * 60 * 1000L;
+    private final String openShiftHost = "https://openshift.default.svc";
+    private final long buildTimeoutInSeconds = 2 * 60 * 1000L;
     private final OpenShiftConfig openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(openShiftHost)
             .withCaCertFile(SERVICE_CA_CERT_FILE).withBuildTimeout(buildTimeoutInSeconds).build();
     private NamespacedOpenShiftClient openshiftClient;
@@ -170,13 +168,14 @@ public class TeiidOpenShiftClient implements StringConstants {
      */
     private class BuildStatusRunner implements Runnable {
 
-        private BuildStatus work;
+        private final BuildStatus work;
 
         public BuildStatusRunner(BuildStatus buildStatus) {
             this.work = buildStatus;
         }
 
         @Override
+        @SuppressWarnings("FutureReturnValueIgnored")
         public void run() {
             work.setLastUpdated();
             boolean shouldReQueue = true;
@@ -306,24 +305,24 @@ public class TeiidOpenShiftClient implements StringConstants {
     private static final String MANAGED_BY = "managed-by";
     private static final String SYNDESISURL = "http://syndesis-server/api/v1";
 
-    private MetadataInstance metadata;
-    private Map<String, DataSourceDefinition> sources = new ConcurrentHashMap<>();
-    private Map<String, DefaultSyndesisDataSource> syndesisSources = new ConcurrentHashMap<String, DefaultSyndesisDataSource>();
+    private final MetadataInstance metadata;
+    private final Map<String, DataSourceDefinition> sources = new ConcurrentHashMap<>();
+    private final Map<String, DefaultSyndesisDataSource> syndesisSources = new ConcurrentHashMap<String, DefaultSyndesisDataSource>();
     private Map<String, List<String>> integrationsInUse;
     private long integrationRefreshTime;
 
     /**
      * Fixed pool of up to 3 threads for configuring images ready to be deployed
      */
-    private ThreadPoolExecutor configureService = new ThreadPoolExecutor(3, 3, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+    private final ThreadPoolExecutor configureService = new ThreadPoolExecutor(3, 3, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
 
-    private Map<String, PrintWriter> logBuffers = new ConcurrentHashMap<>();
-    private EncryptionComponent encryptionComponent;
-    private DvConfigurationProperties config;
+    private final Map<String, PrintWriter> logBuffers = new ConcurrentHashMap<>();
+    private final EncryptionComponent encryptionComponent;
+    private final DvConfigurationProperties config;
 
-    private ScheduledThreadPoolExecutor workExecutor = new ScheduledThreadPoolExecutor(1);
-    private RepositoryManager repositoryManager;
-    private Map<String, String> mavenRepos;
+    private final ScheduledThreadPoolExecutor workExecutor = new ScheduledThreadPoolExecutor(1);
+    private final RepositoryManager repositoryManager;
+    private final Map<String, String> mavenRepos;
 
     public TeiidOpenShiftClient(MetadataInstance metadata, EncryptionComponent encryptor,
             DvConfigurationProperties config, RepositoryManager repositoryManager, Map<String, String> mavenRepos) {
@@ -343,7 +342,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         add(new H2SQLDefinition());
     }
 
-    private String getLogPath(String id) {
+    private static String getLogPath(String id) {
         String parentDir;
         try {
             File loggerPath = File.createTempFile("vdb-", "log");
@@ -376,7 +375,7 @@ public class TeiidOpenShiftClient implements StringConstants {
                 String logPath = getLogPath(id);
                 File logFile = new File(logPath);
 
-                FileWriter fw = new FileWriter(logFile, true);
+                Writer fw = Files.newBufferedWriter(logFile.toPath(), UTF_8, CREATE, APPEND);
                 BufferedWriter bw = new BufferedWriter(fw);
                 pw = new PrintWriter(bw);
                 logBuffers.put(id, pw);
@@ -508,7 +507,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         return (usedIn == null)?Collections.emptyList():usedIn;
     }
 
-    private Map<String, List<String>> findIntegrationByConnectionId() throws KException {
+    private static Map<String, List<String>> findIntegrationByConnectionId() throws KException {
         Map<String, List<String>> usedIn = new WeakHashMap<>();
         String url = SYNDESISURL+"/integrations";
         try (SyndesisHttpClient syndesisClient = new SyndesisHttpClient();
@@ -560,8 +559,8 @@ public class TeiidOpenShiftClient implements StringConstants {
             });
 
             if (dv != null) {
-                try(SyndesisHttpClient syndesisClient = new SyndesisHttpClient();
-                    InputStream response = syndesisClient.executeDELETE(SYNDESISURL + "/connections/" + dv.getSourceId())){
+                try(SyndesisHttpClient syndesisClient = new SyndesisHttpClient()) {
+                    syndesisClient.executeDELETE(SYNDESISURL + "/connections/" + dv.getSourceId());
                     info(dv.getName(), "Database connection to Virtual Database " + dv.getName()
                         + " deleted with Id = "+ dv.getSourceId());
                     // remove the source id from database
@@ -750,14 +749,14 @@ public class TeiidOpenShiftClient implements StringConstants {
         return null;
     }
 
-    private ImageStream createImageStream(OpenShiftClient client, String namespace, String openShiftName) {
+    private static ImageStream createImageStream(OpenShiftClient client, String namespace, String openShiftName) {
         ImageStream is = client.imageStreams().inNamespace(namespace).createOrReplaceWithNew()
             .withNewMetadata().withName(openShiftName).addToLabels("application", openShiftName).endMetadata()
             .done();
         return is;
     }
 
-    private BuildConfig createBuildConfig(OpenShiftClient client, String namespace, String openShiftName, ImageStream is,
+    private static BuildConfig createBuildConfig(OpenShiftClient client, String namespace, String openShiftName, ImageStream is,
             PublishConfiguration pc) {
         String imageStreamName = is.getMetadata().getName()+":latest";
         BuildConfig bc = client.buildConfigs().inNamespace(namespace).createOrReplaceWithNew()
@@ -788,11 +787,11 @@ public class TeiidOpenShiftClient implements StringConstants {
         return bc;
     }
 
-    private String getBuildConfigName(String openShiftName) {
+    private static String getBuildConfigName(String openShiftName) {
         return openShiftName+"-build-config";
     }
 
-    private Build createBuild(OpenShiftClient client, String namespace, BuildConfig config,
+    private static Build createBuild(OpenShiftClient client, String namespace, BuildConfig config,
             InputStream tarInputStream) {
         Build build = client.buildConfigs()
                 .inNamespace(namespace)
@@ -801,7 +800,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         return build;
     }
 
-    private DeploymentConfig createDeploymentConfig(OpenShiftClient client, BuildStatus config) {
+    private static DeploymentConfig createDeploymentConfig(OpenShiftClient client, BuildStatus config) {
 
         return client.deploymentConfigs().inNamespace(config.getNamespace()).createOrReplaceWithNew()
             .withNewMetadata().withName(config.getOpenShiftName())
@@ -872,7 +871,7 @@ public class TeiidOpenShiftClient implements StringConstants {
             .done();
     }
 
-    private List<ContainerPort> getDeploymentPorts(PublishConfiguration config){
+    private static List<ContainerPort> getDeploymentPorts(PublishConfiguration config){
         List<ContainerPort> ports = new ArrayList<>();
         ports.add(createPort(ProtocolType.PROMETHEUS));
         ports.add(createPort(ProtocolType.JOLOKIA));
@@ -884,7 +883,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         return ports;
     }
 
-    private ContainerPort createPort(ProtocolType protocol) {
+    private static ContainerPort createPort(ProtocolType protocol) {
         ContainerPort p = new ContainerPort();
         p.setName(protocol.id());
         p.setContainerPort(protocol.getSourcePort());
@@ -934,11 +933,11 @@ public class TeiidOpenShiftClient implements StringConstants {
         return service;
     }
 
-    private String secretName(String name) {
+    private static String secretName(String name) {
         return name+"-secret";
     }
 
-    private Secret createSecret(OpenShiftClient client, String namespace, String openShiftName,
+    private static Secret createSecret(OpenShiftClient client, String namespace, String openShiftName,
             BuildStatus config) {
         String secretName = secretName(openShiftName);
 
@@ -950,7 +949,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         return secret;
     }
 
-    private Route createRoute(OpenShiftClient client, String namespace, String openShiftName, String type) {
+    private static Route createRoute(OpenShiftClient client, String namespace, String openShiftName, String type) {
         String routeName = openShiftName+"-"+type;
         Route route = client.routes().inNamespace(namespace).withName(routeName).get();
         if (route == null) {
@@ -980,22 +979,10 @@ public class TeiidOpenShiftClient implements StringConstants {
     }
 
     private void waitUntilPodIsReady(String openShiftName, final OpenShiftClient client, String podName, int nAwaitTimeout) {
-        final CountDownLatch readyLatch = new CountDownLatch(1);
-        try (Watch watch = client.pods().withName(podName).watch(new Watcher<Pod>() {
-            @Override
-            public void eventReceived(Action action, Pod aPod) {
-                if(KubernetesHelper.isPodReady(aPod)) {
-                    readyLatch.countDown();
-                }
-            }
-            @Override
-            public void onClose(KubernetesClientException e) {
-                // Ignore
-            }
-        })) {
-            readyLatch.await(nAwaitTimeout, TimeUnit.SECONDS);
-        } catch (KubernetesClientException | InterruptedException e) {
-            error(openShiftName, "Publishing - Could not watch pod", e);
+        try {
+            client.pods().withName(podName).waitUntilReady(nAwaitTimeout, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            error(openShiftName, "Publishing - Timeout waiting for pod to become ready", e);
         }
     }
 
@@ -1010,7 +997,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         return null;
     }
 
-    private Boolean asBoolean(DeploymentCondition cond) {
+    private static Boolean asBoolean(DeploymentCondition cond) {
         if (cond != null) {
             if (cond.getStatus().equals("True")) {
                 return true;
@@ -1026,14 +1013,14 @@ public class TeiidOpenShiftClient implements StringConstants {
     /**
      * We'll consider things progressing if true or unknown
      */
-    private boolean isDeploymentProgressing(DeploymentCondition progressing) {
-        return !(Boolean.FALSE.equals(asBoolean(progressing)));
+    private static boolean isDeploymentProgressing(DeploymentCondition progressing) {
+        return !Boolean.FALSE.equals(asBoolean(progressing));
     }
 
     /**
      * We're available if available=true and either progressing true, null (not unknown), or old
      */
-    private boolean isDeploymentAvailable(DeploymentCondition available,
+    private static boolean isDeploymentAvailable(DeploymentCondition available,
             DeploymentCondition progressing) {
         return Boolean.TRUE.equals(asBoolean(available)) &&
                 (Boolean.TRUE.equals(asBoolean(progressing))
@@ -1041,7 +1028,7 @@ public class TeiidOpenShiftClient implements StringConstants {
                         || available.getLastTransitionTime().compareTo(progressing.getLastTransitionTime()) > 0);
     }
 
-    private DeploymentCondition getDeploymentCondition(DeploymentConfig dc, String type) {
+    private static DeploymentCondition getDeploymentCondition(DeploymentConfig dc, String type) {
         List<DeploymentCondition> conditions = dc.getStatus().getConditions();
         for (DeploymentCondition cond : conditions) {
             if (cond.getType().equals(type)) {
@@ -1051,6 +1038,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         return null;
     }
 
+    @SuppressWarnings("FutureReturnValueIgnored")
     private BuildStatus addToQueue(String openshiftName, PublishConfiguration publishConfig) {
         BuildStatus work = new BuildStatus(openshiftName);
         work.setStatus(Status.SUBMITTED);
@@ -1261,7 +1249,7 @@ public class TeiidOpenShiftClient implements StringConstants {
                 if (config != null) {
                     for (Map.Entry<String, String> entry : config.entrySet()) {
                         properties.put(entry.getKey(), Base64.getEncoder()
-                                .encodeToString(encryptionComponent.decrypt(entry.getValue()).getBytes()));
+                                .encodeToString(encryptionComponent.decrypt(entry.getValue()).getBytes(UTF_8)));
                     }
                 }
             }
@@ -1391,7 +1379,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         }
     }
 
-    private Build findBuildWithNumber(long number, BuildList buildList) {
+    private static Build findBuildWithNumber(long number, BuildList buildList) {
     	for (Build b: buildList.getItems()) {
     		String buildNumber = b.getMetadata().getAnnotations().get("openshift.io/build.number");
     		if (buildNumber != null && Long.parseLong(buildNumber) == number) {
@@ -1401,7 +1389,7 @@ public class TeiidOpenShiftClient implements StringConstants {
     	return buildList.getItems().get(0);
     }
 
-    private Long getDeployedRevision(DeploymentConfig dc, Long defaultNumber, final OpenShiftClient client) {
+    private static Long getDeployedRevision(DeploymentConfig dc, Long defaultNumber, final OpenShiftClient client) {
         long latestVersion = dc.getStatus().getLatestVersion().longValue();
         ReplicationControllerList list = client.replicationControllers().inNamespace(dc.getMetadata().getNamespace())
                 .withLabel("application", dc.getMetadata().getName()).list();
@@ -1422,7 +1410,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         return defaultNumber;
     }
 
-    private BuildStatus getBuildStatus(String openShiftName, String namespace, final OpenShiftClient client) {
+    private static BuildStatus getBuildStatus(String openShiftName, String namespace, final OpenShiftClient client) {
         BuildStatus status = new BuildStatus(openShiftName);
         status.setNamespace(namespace);
 
@@ -1480,7 +1468,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         return status;
     }
 
-    private void updateDeploymentStatus(String openShiftName, String namespace,
+    private static void updateDeploymentStatus(String openShiftName, String namespace,
             final OpenShiftClient client, String completionTimestamp,
             DeploymentStatus deploymentStatus, Long buildVersion) {
         DeploymentConfig dc = client.deploymentConfigs().inNamespace(namespace).withName(openShiftName).get();
@@ -1517,6 +1505,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         }
     }
 
+    @SuppressWarnings("FutureReturnValueIgnored")
     public BuildStatus deleteVirtualization(String virtualizationName) throws KException {
         String openShiftName = getOpenShiftName(virtualizationName);
         VirtualizationStatus status = getVirtualizationStatus(virtualizationName);
@@ -1540,13 +1529,12 @@ public class TeiidOpenShiftClient implements StringConstants {
 
         runningBuild.setStatus(Status.DELETE_SUBMITTED);
         runningBuild.setStatusMessage("delete submitted");
-        final String inProgressBuildName = runningBuild.getName();
         workExecutor.schedule(new BuildStatusRunner(runningBuild), MONITOR_DELAY, TimeUnit.MILLISECONDS);
         configureService.submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 final OpenShiftClient client = openshiftClient();
-                deleteVDBServiceResources(openShiftName, inProgressBuildName, runningBuild, client);
+                deleteVDBServiceResources(openShiftName, runningBuild, client);
                 //the last call in delete sets the status to delete done, making it very unlikely
                 //that we'll requeue, so we'll just remove the connection here
                 removeSyndesisConnection(virtualizationName);
@@ -1569,7 +1557,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         return null;
     }
 
-    private void deleteVDBServiceResources(String openshiftName, String inProgressBuildName, BuildStatus status, OpenShiftClient client) {
+    private void deleteVDBServiceResources(String openshiftName, BuildStatus status, OpenShiftClient client) {
         final String namespace = ApplicationProperties.getNamespace();
 
         try {
@@ -1695,7 +1683,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         try {
             StringBuilder builder = new StringBuilder();
             InputStream is = this.getClass().getClassLoader().getResourceAsStream("s2i/template-pom.xml");
-            builder.append(new String(ObjectConverterUtil.convertToByteArray(is)));
+            builder.append(new String(ObjectConverterUtil.convertToByteArray(is), UTF_8));
 
             StringBuilder vdbSourceNames = new StringBuilder();
             StringBuilder vdbDependencies = new StringBuilder();

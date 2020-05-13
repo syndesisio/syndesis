@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import io.syndesis.dv.lsp.websocket.TeiidDdlWebSocketEndpoint;
 
+@SuppressWarnings("PrivateConstructorForUtilityClass") // main class
 public class TeiidDdlLanguageServerRunner {
 
     static class TeiidDdlWebSocketServerConfigProvider implements ServerApplicationConfig {
@@ -56,7 +57,7 @@ public class TeiidDdlLanguageServerRunner {
 
     static class TeiidDdlWebSocketRunner implements Closeable {
 
-        private Server server;
+        private final Server server;
 
         public TeiidDdlWebSocketRunner() throws DeploymentException {
             this(null, null, null);
@@ -89,6 +90,7 @@ public class TeiidDdlLanguageServerRunner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TeiidDdlTextDocumentService.class);
 
+    @SuppressWarnings({"try", "FutureReturnValueIgnored"})
     public static void main(String[] args) throws DeploymentException, InterruptedException {
         LOGGER.info("   --  >>>  TeiidDdlLanguageServerRunner.main()");
         List<String> arguments = Arrays.asList(args);

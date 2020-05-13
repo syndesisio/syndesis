@@ -18,7 +18,6 @@ package io.syndesis.dv.server.endpoint;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -32,6 +31,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.server.ResponseStatusException;
 import org.teiid.adminapi.impl.VDBMetaData;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.syndesis.dv.KException;
 import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
@@ -106,13 +107,8 @@ public class MetadataServiceTest {
 
     @Test
     public void testGetSchema() throws Exception {
-        List<RestSchemaNode> nodes = null;
-        try {
-            nodes = metadataService.getSourceSchema("source2");
-            fail();
-        } catch (ResponseStatusException e) {
-            //no source yet
-        }
+        assertThatThrownBy(() -> metadataService.getSourceSchema("source2"))
+            .isInstanceOf(ResponseStatusException.class);
 
         DefaultSyndesisDataSource sds = DataVirtualizationServiceTest.createH2DataSource("source2");
         metadataInstance.registerDataSource(sds);
@@ -121,7 +117,7 @@ public class MetadataServiceTest {
                 "create foreign table tbl (col string) options (\"teiid_rel:fqn\" 'schema=s%20x/t%20bl=bar');"
                 + "create foreign table tbl1 (col string) options (\"teiid_rel:fqn\" 'schema=s%20x/t%20bl=bar1');");
 
-        nodes = metadataService.getSourceSchema("source2");
+        List<RestSchemaNode> nodes = metadataService.getSourceSchema("source2");
         assertEquals(
             "[ {\n" +
             "  \"children\" : [ {\n" +
@@ -153,13 +149,8 @@ public class MetadataServiceTest {
   
     @Test
     public void testGetSchemaSingleLevel() throws Exception {
-        List<RestSchemaNode> nodes = null;
-        try {
-            nodes = metadataService.getSourceSchema("source3");
-            fail();
-        } catch (ResponseStatusException e) {
-            //no source yet
-        }
+        assertThatThrownBy(() -> metadataService.getSourceSchema("source3"))
+            .isInstanceOf(ResponseStatusException.class);
 
         //add the data source, and schema
         DefaultSyndesisDataSource sds = DataVirtualizationServiceTest.createH2DataSource("source3");
@@ -170,7 +161,7 @@ public class MetadataServiceTest {
                 "create foreign table tbl (col string) options (\"teiid_rel:fqn\" 'collection=bar');"
                 + "create foreign table tbl1 (col string) options (\"teiid_rel:fqn\" 'collection=bar1');");
 
-        nodes = metadataService.getSourceSchema("source3");
+        List<RestSchemaNode> nodes = metadataService.getSourceSchema("source3");
         assertEquals(
             "[ {\n" +
             "  \"children\" : [ {\n" +
@@ -205,12 +196,8 @@ public class MetadataServiceTest {
         //get rid of the default preview vdb
         metadataInstance.undeployDynamicVdb(EditorService.PREVIEW_VDB);
 
-        try {
-            metadataService.updatePreviewVdb("dv1");
-            fail();
-        } catch (KException e) {
-            //preveiw vdb does not exist
-        }
+        assertThatThrownBy(() -> metadataService.updatePreviewVdb("dv1"))
+            .isInstanceOf(KException.class);
 
         metadataInstance.deploy(EditorServiceTest.dummyPreviewVdb(false));
 

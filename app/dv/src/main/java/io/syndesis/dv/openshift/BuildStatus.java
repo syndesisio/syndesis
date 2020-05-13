@@ -118,12 +118,12 @@ public class BuildStatus {
     private volatile long lastUpdated = 0L;
     private volatile String statusMessage;
 
-    private String openShiftName;
+    private final String openShiftName;
     private String dataVirtualizationName;
     private Long version;
 
     @JsonIgnore
-    private DeploymentStatus deploymentStatus = new DeploymentStatus();
+    private final DeploymentStatus deploymentStatus = new DeploymentStatus();
 
     public BuildStatus(String openShiftName) {
         this.openShiftName = openShiftName;

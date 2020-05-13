@@ -31,12 +31,12 @@ public class RestSourceColumn {
     /*
      * The column name
      */
-    private String name;
+    private final String name;
 
     /*
      * The column datatype
      */
-    private String datatype;
+    private final String datatype;
 
     /**
      * Constructor for use when deserializing

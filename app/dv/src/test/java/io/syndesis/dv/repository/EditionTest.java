@@ -16,11 +16,11 @@
 
 package io.syndesis.dv.repository;
 
-import static org.junit.Assert.*;
-
 import java.nio.charset.Charset;
 
 import javax.persistence.PersistenceException;
+
+import io.syndesis.dv.model.Edition;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +29,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import io.syndesis.dv.model.Edition;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @SuppressWarnings("nls")
 @RunWith(SpringRunner.class)
@@ -63,10 +65,12 @@ public class EditionTest {
     }
 
     //dv does not exist
-    @Test(expected = PersistenceException.class)
+    @Test
     public void testCreateFails() {
-        repositoryManagerImpl.createEdition("does not exist");
-        entityManager.flush();
+        assertThatThrownBy(() -> {
+            repositoryManagerImpl.createEdition("does not exist");
+            entityManager.flush();
+        }).isInstanceOf(PersistenceException.class);
     }
 
     @Test

@@ -21,8 +21,8 @@ package io.syndesis.dv.openshift;
  */
 public class VirtualizationStatus {
 
-    private BuildStatus buildStatus;
-    private DeploymentStatus deploymentStatus;
+    private final BuildStatus buildStatus;
+    private final DeploymentStatus deploymentStatus;
 
     public VirtualizationStatus(BuildStatus buildStatus, DeploymentStatus deploymentStatus) {
         this.buildStatus = buildStatus;

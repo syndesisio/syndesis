@@ -15,7 +15,11 @@
  */
 package io.syndesis.dv.lsp.completion.providers.items;
 
-public class QueryExpressionHelper {
+public final class QueryExpressionHelper {
+
+    private QueryExpressionHelper() {
+        // utility class
+    }
 
     /*
      * CREATE VIEW TEMPLATE == SAMPLE STATEMENT ==

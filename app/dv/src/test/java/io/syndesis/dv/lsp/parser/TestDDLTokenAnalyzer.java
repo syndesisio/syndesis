@@ -15,12 +15,12 @@
  */
 package io.syndesis.dv.lsp.parser;
 
-import static org.junit.Assert.*;
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.STATEMENT_TYPE;
 
 import org.junit.Test;
 import org.teiid.query.parser.Token;
 
-import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.STATEMENT_TYPE;
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("nls")
 public class TestDDLTokenAnalyzer {

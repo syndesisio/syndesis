@@ -16,7 +16,7 @@
 
 package io.syndesis.dv.repository;
 
-import static org.junit.Assert.*;
+import io.syndesis.dv.model.DataVirtualization;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +25,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import io.syndesis.dv.model.DataVirtualization;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("nls")
 @RunWith(SpringRunner.class)

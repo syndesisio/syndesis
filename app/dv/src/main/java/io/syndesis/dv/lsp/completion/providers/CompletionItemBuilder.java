@@ -29,7 +29,7 @@ import io.syndesis.dv.lsp.completion.DdlCompletionConstants;
 import io.syndesis.dv.lsp.completion.providers.items.DdlCompletionItemLoader;
 
 public class CompletionItemBuilder implements DdlCompletionConstants {
-    private DdlCompletionItemLoader loader = DdlCompletionItemLoader.getInstance();
+    private final DdlCompletionItemLoader loader = DdlCompletionItemLoader.getInstance();
 
     public CompletionItemBuilder() {
     }

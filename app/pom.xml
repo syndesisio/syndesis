@@ -777,6 +777,9 @@
               -->
               <ignoredClassPattern>^javax\.activation\..*$</ignoredClassPattern>
               <ignoredClassPattern>^org\.apache\.daffodil\..*$</ignoredClassPattern>
+              <!-- Multiple Teiid JARs share the same classes, not sure if anything can be done about that -->
+              <ignoredClassPattern>^org\.teiid\..*$</ignoredClassPattern>
+              <ignoredClassPattern>^org\.json\.JSONString$</ignoredClassPattern>
             </ignoredClassPatterns>
             <exceptions>
               <exception>

@@ -84,11 +84,14 @@ public class IntegrationTest {
     @TestConfiguration
     static class IntegrationTestConfiguration {
         @MockBean
+        @SuppressWarnings("UnusedVariable")
         private SSOConfigurationProperties ssoConfigurationProperties;
         @MockBean
+        @SuppressWarnings("UnusedVariable")
         private DvConfigurationProperties dvConfigurationProperties;
         /* Stub out the connectivity to syndesis / openshift */
         @MockBean
+        @SuppressWarnings("UnusedVariable")
         private SyndesisConnectionMonitor syndesisConnectionMonitor;
     }
 
@@ -103,6 +106,9 @@ public class IntegrationTest {
     private TeiidServer teiidServer;
 
     @Autowired DataSource datasource;
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static final Class<List<Map<String, ?>>> GENERIC_RESPONSE_TYPE = (Class) List.class;
 
     //for some reason dirtiescontext does not seem to work, so clear manually
     @After public void after() throws Exception {
@@ -300,10 +306,10 @@ public class IntegrationTest {
         //test that unqualified does not work
         query("select col from t union select 1 as col", dvName, false);
 
-        ResponseEntity<List> sourceStatusResponse = restTemplate.getForEntity("/v1/metadata/sourceStatuses", List.class);
+        ResponseEntity<List<Map<String, ?>>> sourceStatusResponse = restTemplate.getForEntity("/v1/metadata/sourceStatuses", GENERIC_RESPONSE_TYPE);
         assertEquals(HttpStatus.OK, sourceStatusResponse.getStatusCode());
-        Map status = (Map)sourceStatusResponse.getBody().get(0);
-        assertEquals(0, ((List)status.get("errors")).size());
+        Map<String, ?> status = sourceStatusResponse.getBody().get(0);
+        assertEquals(0, ((List<?>)status.get("errors")).size());
         assertEquals("ACTIVE", status.get("schemaState"));
         assertEquals(Boolean.FALSE, status.get("loading"));
         Long last = (Long)status.get("lastLoad");
@@ -360,20 +366,20 @@ public class IntegrationTest {
             }
         }
 
-        sourceStatusResponse = restTemplate.getForEntity("/v1/metadata/sourceStatuses", List.class);
+        sourceStatusResponse = restTemplate.getForEntity("/v1/metadata/sourceStatuses", GENERIC_RESPONSE_TYPE);
         assertEquals(HttpStatus.OK, sourceStatusResponse.getStatusCode());
-        status = (Map)sourceStatusResponse.getBody().get(0);
-        assertEquals(1, ((List)status.get("errors")).size());
+        status = sourceStatusResponse.getBody().get(0);
+        assertEquals(1, ((List<?>)status.get("errors")).size());
         assertEquals("FAILED", status.get("schemaState"));
         assertEquals(Boolean.FALSE, status.get("loading"));
         Long errorLast = (Long)status.get("lastLoad");
         assertNotNull(errorLast);
         assertTrue(errorLast.longValue() > last);
 
-        ResponseEntity<List> virts = restTemplate.getForEntity("/v1/virtualizations", List.class);
+        ResponseEntity<List<Map<String, ?>>> virts = restTemplate.getForEntity("/v1/virtualizations", GENERIC_RESPONSE_TYPE);
         assertEquals(HttpStatus.OK, virts.getStatusCode());
         assertEquals(1, virts.getBody().size());
-        Map virt = (Map)virts.getBody().get(0);
+        Map<String, ?> virt = virts.getBody().get(0);
         assertEquals("testSourceRefresh", virt.get("name"));
 
         //should stay the same instance if nothing has changed
@@ -460,12 +466,12 @@ public class IntegrationTest {
 
         assertEquals(HttpStatus.OK, importResponse.getStatusCode());
 
-        ResponseEntity<List> views = restTemplate.getForEntity(
-                "/v1/virtualizations/{name}/views", List.class, "newName");
+        ResponseEntity<List<Map<String, ?>>> views = restTemplate.getForEntity(
+                "/v1/virtualizations/{name}/views", GENERIC_RESPONSE_TYPE, "newName");
 
         assertEquals(HttpStatus.OK, views.getStatusCode());
         assertEquals(1, views.getBody().size());
-        Map view = (Map)views.getBody().get(0);
+        Map<String, ?> view = views.getBody().get(0);
         assertEquals(Boolean.TRUE, view.get("valid"));
     }
 

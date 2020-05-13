@@ -213,7 +213,7 @@ public final class EditorService extends DvService {
         return viewDefnStatus;
     }
 
-    private boolean definesMultipleObjects(ValidationResult result) {
+    private static boolean definesMultipleObjects(ValidationResult result) {
         return result.getSchema().getTables().size() > 1
                 || !result.getSchema().getProcedures().isEmpty()
                 || !result.getSchema().getFunctions().isEmpty();

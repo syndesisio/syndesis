@@ -15,11 +15,10 @@
  */
 package io.syndesis.dv.utils;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
 
 @SuppressWarnings( {"javadoc", "nls"} )
 public class TestKLog {
@@ -33,11 +32,7 @@ public class TestKLog {
 
     @Test
     public void testLogInit() {
-        try {
-            logger = KLog.getLogger();
-            assertNotNull(logger);
-        } catch (Throwable throwable) {
-            fail("Should not throw an exception " + throwable.getLocalizedMessage());
-        }
+        logger = KLog.getLogger();
+        assertNotNull(logger);
     }
 }

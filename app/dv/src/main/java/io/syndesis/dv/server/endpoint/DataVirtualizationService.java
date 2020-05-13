@@ -129,7 +129,7 @@ public final class DataVirtualizationService extends DvService {
      * Since we'll add the dv- prefix, we don't char what it starts with,
      * but we're still required to end with a letter/number
      */
-    Pattern DATAVIRTUALIZATION_PATTERN = Pattern.compile("[-a-z0-9]*[a-z0-9]", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+    private static final Pattern DATAVIRTUALIZATION_PATTERN = Pattern.compile("[-a-z0-9]*[a-z0-9]", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
     private static final StringNameValidator VALIDATOR = new StringNameValidator();
 
@@ -324,7 +324,7 @@ public final class DataVirtualizationService extends DvService {
         return kso;
     }
 
-    private String getValidationMessage(final String virtualization) {
+    private static String getValidationMessage(final String virtualization) {
         final String errorMsg = VALIDATOR.checkValidName(virtualization);
 
         if (errorMsg != null) {
@@ -430,7 +430,7 @@ public final class DataVirtualizationService extends DvService {
      * @param status
      * @return the odata hostname
      */
-    private String getOdataHost(final DeploymentStatus status) {
+    private static String getOdataHost(final DeploymentStatus status) {
         String odataHost = null;
         List<RouteStatus> routeStatuses = status.getRoutes();
         if(!routeStatuses.isEmpty()) {

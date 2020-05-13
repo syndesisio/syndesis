@@ -50,7 +50,7 @@ public class DdlDiagnostics {
      * @param diagnostics
      * @throws BadLocationException
      */
-    private void doBasicDiagnostics(TextDocumentItem ddlDocument, List<Diagnostic> diagnostics)
+    private static void doBasicDiagnostics(TextDocumentItem ddlDocument, List<Diagnostic> diagnostics)
             throws BadLocationException {
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(ddlDocument.getText());
         CreateViewStatement createStatement = new CreateViewStatement(analyzer);
@@ -60,6 +60,7 @@ public class DdlDiagnostics {
         }
     }
 
+    @SuppressWarnings("FutureReturnValueIgnored")
     private void doAsyncPublishDiagnostics(TextDocumentItem ddlDocument, TeiidDdlLanguageServer languageServer) {
         LOGGER.debug("publishDiagnostics() STARTED ");
 
@@ -82,6 +83,9 @@ public class DdlDiagnostics {
             if( !success ) {
                 clearDiagnostics(uri, languageServer);
             }
+        }).handleAsync((v, e) -> {
+            LOGGER.error("Failed in doAsyncPublishDiagnostics", e);
+            return v;
         });
     }
 }
