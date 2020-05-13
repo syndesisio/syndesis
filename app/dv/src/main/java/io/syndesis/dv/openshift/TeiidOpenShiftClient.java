@@ -19,6 +19,8 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -95,6 +97,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
@@ -397,7 +400,9 @@ public class TeiidOpenShiftClient implements StringConstants {
         String logPath = getLogPath(id);
         File logFile = new File(logPath);
         if (logFile.exists()) {
-            logFile.delete();
+            if (!logFile.delete()) {
+                logFile.deleteOnExit();
+            }
         }
     }
 
@@ -445,6 +450,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         return null;
     }
 
+    @SuppressFBWarnings("REC_CATCH_EXCEPTION")
     private void createSyndesisConnection(final OpenShiftClient client, final String namespace,
             final String openshiftName, final String virtualizationName) throws KException {
         try {
@@ -997,24 +1003,19 @@ public class TeiidOpenShiftClient implements StringConstants {
         return null;
     }
 
-    private static Boolean asBoolean(DeploymentCondition cond) {
-        if (cond != null) {
-            if (cond.getStatus().equals("True")) {
-                return true;
-            }
-            if (cond.getStatus().equals("False")) {
-                return false;
-            }
+    private static boolean asBoolean(DeploymentCondition cond) {
+        if (cond == null) {
+            return false;
         }
-        //null or unknown
-        return null;
+
+        return Boolean.valueOf(cond.getStatus());
     }
 
     /**
      * We'll consider things progressing if true or unknown
      */
     private static boolean isDeploymentProgressing(DeploymentCondition progressing) {
-        return !Boolean.FALSE.equals(asBoolean(progressing));
+        return !asBoolean(progressing);
     }
 
     /**
@@ -1022,8 +1023,8 @@ public class TeiidOpenShiftClient implements StringConstants {
      */
     private static boolean isDeploymentAvailable(DeploymentCondition available,
             DeploymentCondition progressing) {
-        return Boolean.TRUE.equals(asBoolean(available)) &&
-                (Boolean.TRUE.equals(asBoolean(progressing))
+        return asBoolean(available) &&
+                (asBoolean(progressing)
                         || progressing == null
                         || available.getLastTransitionTime().compareTo(progressing.getLastTransitionTime()) > 0);
     }
@@ -1056,6 +1057,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         work.setStatus(Status.CONFIGURING);
         configureService.execute(new Runnable() {
             @Override
+            @SuppressFBWarnings("REC_CATCH_EXCEPTION")
             public void run() {
                 info(work.getOpenShiftName(), "Publishing  - Configuring ...");
 
@@ -1259,7 +1261,7 @@ public class TeiidOpenShiftClient implements StringConstants {
 
     Collection<EnvVar> getEnvironmentVariablesForSecurity(SSOConfigurationProperties props) {
         List<EnvVar> envs = new ArrayList<>();
-        for (Map.Entry<String, String> prop : props.getAllKeycloakFromEnv().entrySet()) {
+        for (Map.Entry<String, String> prop : props.getKeycloakEnv().entrySet()) {
             envs.add(env(prop.getKey(), props.getAuthServerUrl()));
         }
         return envs;
@@ -1506,6 +1508,7 @@ public class TeiidOpenShiftClient implements StringConstants {
     }
 
     @SuppressWarnings("FutureReturnValueIgnored")
+    @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
     public BuildStatus deleteVirtualization(String virtualizationName) throws KException {
         String openShiftName = getOpenShiftName(virtualizationName);
         VirtualizationStatus status = getVirtualizationStatus(virtualizationName);
@@ -1710,11 +1713,12 @@ public class TeiidOpenShiftClient implements StringConstants {
             }
 
             if (this.mavenRepos != null) {
-                for (String key: this.mavenRepos.keySet()) {
+                for (Entry<String, String> repository: this.mavenRepos.entrySet()) {
+                    final String key = repository.getKey();
                     mavenRepositories.append(StringConstants.NEW_LINE).append("<repository>\n")
                         .append("<id>").append(key).append("</id>\n")
                         .append("<name>").append(key).append("</name>\n")
-                        .append("<url>").append(this.mavenRepos.get(key)).append("</url>\n")
+                        .append("<url>").append(repository.getValue()).append("</url>\n")
                         .append(
                             "  <releases>\n" +
                             "    <enabled>true</enabled>\n" +

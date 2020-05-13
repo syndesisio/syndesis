@@ -21,10 +21,9 @@ import java.util.List;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.InsertTextFormat;
+import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
-import io.syndesis.dv.lsp.completion.DdlCompletionConstants;
-import io.syndesis.dv.lsp.parser.statement.CreateViewStatement;
 import io.syndesis.dv.lsp.parser.statement.TokenContext;
 
 /**
@@ -32,13 +31,7 @@ import io.syndesis.dv.lsp.parser.statement.TokenContext;
  * token
  *
  */
-public class TableBodyCompletionProvider extends CompletionItemBuilder implements DdlCompletionConstants {
-    CreateViewStatement statement;
-
-    public TableBodyCompletionProvider(CreateViewStatement statement) {
-        super();
-        this.statement = statement;
-    }
+public class TableBodyCompletionProvider extends CompletionItemBuilder {
 
     public List<CompletionItem> getCompletionItems(TokenContext context) {
         List<CompletionItem> items = new ArrayList<CompletionItem>();
@@ -52,7 +45,7 @@ public class TableBodyCompletionProvider extends CompletionItemBuilder implement
 
             default: {
                 switch (targetToken.kind) {
-                    case RPAREN: {
+                    case SQLParserConstants.RPAREN: {
                         items.add(getAs(1));
                         items.add(getQueryExpressionSnippet(2));
                         String details = "OPTIONS properties are comma separated key-value pairs in the form: OPTION(...  KEY 'some value')";
@@ -117,7 +110,7 @@ public class TableBodyCompletionProvider extends CompletionItemBuilder implement
     }
 
     public String getLabel(int keywordId) {
-        String tokenImageStr = tokenImage[keywordId].toUpperCase();
+        String tokenImageStr = SQLParserConstants.tokenImage[keywordId].toUpperCase();
         return tokenImageStr.substring(1, tokenImageStr.length() - 1);
     }
 }
