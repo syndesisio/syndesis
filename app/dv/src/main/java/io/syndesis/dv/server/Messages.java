@@ -27,6 +27,7 @@ public final class Messages {
     /**
      * Messages relating to errors.
      */
+    @SuppressWarnings("JavaLangClash")
     public enum Error {
 
         RESOURCE_NOT_FOUND,

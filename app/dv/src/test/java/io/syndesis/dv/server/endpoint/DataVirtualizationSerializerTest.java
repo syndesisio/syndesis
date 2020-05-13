@@ -23,6 +23,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import io.syndesis.dv.model.DataVirtualization;
 import io.syndesis.dv.rest.JsonMarshaller;
 
@@ -68,10 +70,11 @@ public final class DataVirtualizationSerializerTest {
         assertEquals(DESCRIPTION, descriptor.getDescription());
     }
 
-    @Test( expected = Exception.class )
+    @Test
     public void shouldNotImportJsonWhenIdIsMissing() {
         final String malformed = "{\"description\":\"my description\",\"links\":[{\"rel\":\"self\",\"href\":\"http://localhost:8080/v1/workspace/vdbs/MyVdb\",\"method\":\"GET\"},{\"rel\":\"parent\",\"href\":\"http://localhost:8080/v1/workspace/vdbs\",\"method\":\"GET\"},{\"rel\":\"manifest\",\"href\":\"http://localhost:8080/v1/workspace/vdbs/MyVdb/manifest\",\"method\":\"GET\"}]}";
-        JsonMarshaller.unmarshall( malformed, RestDataVirtualization.class );
+        assertThatThrownBy(() -> JsonMarshaller.unmarshall( malformed, RestDataVirtualization.class ))
+            .isInstanceOf(RuntimeException.class);
     }
 
 }

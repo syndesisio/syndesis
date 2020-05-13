@@ -34,7 +34,7 @@ public class DdlCompletionProvider extends CompletionItemBuilder implements DdlC
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DdlCompletionProvider.class);
 
-    private boolean doPrintToConsole = false;
+    private final boolean doPrintToConsole = false;
 
     public List<CompletionItem> getCompletionItems(String statement, Position position) {
         List<CompletionItem> items = new ArrayList<CompletionItem>();

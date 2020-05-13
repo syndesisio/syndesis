@@ -29,7 +29,7 @@ import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 @SuppressWarnings("nls")
 public class TestDdlCompletionItemProvider implements DdlAnalyzerConstants {
 
-	private DdlCompletionProvider itemProvider = new DdlCompletionProvider();
+	private final DdlCompletionProvider itemProvider = new DdlCompletionProvider();
 
 	/*
     * The tokenImage[...] call is returning strings wrapped in double-quotes

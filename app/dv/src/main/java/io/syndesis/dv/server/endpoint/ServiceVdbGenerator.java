@@ -194,7 +194,7 @@ public final class ServiceVdbGenerator implements StringConstants {
 
     }
 
-    private void addRoleInformation(VDBMetaData vdb, List<TablePrivileges> tablePrivileges,
+    private static void addRoleInformation(VDBMetaData vdb, List<TablePrivileges> tablePrivileges,
             Map<String, String> viewMap) {
         if (tablePrivileges == null) {
             return;
@@ -283,7 +283,7 @@ public final class ServiceVdbGenerator implements StringConstants {
         return vdb;
     }
 
-    private ModelMetaData addServiceModel(String virtualizationName, VDBMetaData vdb, StringBuilder allViewDdl) {
+    private static ModelMetaData addServiceModel(String virtualizationName, VDBMetaData vdb, StringBuilder allViewDdl) {
         ModelMetaData model = new ModelMetaData();
         model.setName(virtualizationName);
         model.setModelType(org.teiid.adminapi.Model.Type.VIRTUAL);
@@ -296,7 +296,7 @@ public final class ServiceVdbGenerator implements StringConstants {
     /*
      * Generates DDL for a view definition based on properties and supplied array of TableInfo from one or more sources
      */
-    private String getODataViewDdl(ViewDefinition viewDef, TableInfo[] sourceTableInfos) {
+    private static String getODataViewDdl(ViewDefinition viewDef, TableInfo[] sourceTableInfos) {
 
         String viewName = viewDef.getName();
 
@@ -398,7 +398,7 @@ public final class ServiceVdbGenerator implements StringConstants {
         return sb.toString();
     }
 
-    private void appendViewColumns(TableInfo tableInfo, boolean useAliased, boolean useType, StringBuilder sb) {
+    private static void appendViewColumns(TableInfo tableInfo, boolean useAliased, boolean useType, StringBuilder sb) {
         for( Iterator<ColumnInfo> iter = tableInfo.getColumnInfos().iterator(); iter.hasNext();) {
             ColumnInfo info = iter.next();
             if (useAliased) {
@@ -416,7 +416,7 @@ public final class ServiceVdbGenerator implements StringConstants {
         }
     }
 
-    private void startView(String viewName, StringBuilder sb) {
+    private static void startView(String viewName, StringBuilder sb) {
         sb.append("CREATE VIEW "); //$NON-NLS-1$
         sb.append(SQLStringVisitor.escapeSinglePart(viewName));
         sb.append(SPACE);
@@ -456,7 +456,7 @@ public final class ServiceVdbGenerator implements StringConstants {
      * @param description the description
      * @return the table annotation
      */
-    private String getTableAnnotation(final String description) {
+    private static String getTableAnnotation(final String description) {
         if( description!=null && description.length()>0 ) {
             return "OPTIONS (ANNOTATION '" + description + "') ";
         }
@@ -510,15 +510,15 @@ public final class ServiceVdbGenerator implements StringConstants {
     /*
      * Inner class to hold state for source table information and simplifies the DDL generating process
      */
-    class TableInfo {
+    static class TableInfo {
         private final String path;
         private final String alias;
         private final Table table;
 
-        private String name;
-        private String fqname;
+        private final String name;
+        private final String fqname;
 
-        private List<ColumnInfo> columnInfos = new ArrayList<ColumnInfo>();
+        private final List<ColumnInfo> columnInfos = new ArrayList<ColumnInfo>();
 
         private KeyRecord constraint;
 
@@ -579,11 +579,11 @@ public final class ServiceVdbGenerator implements StringConstants {
     /*
      * Inner class to hold state for table column information and simplifies the DDL generating process
      */
-    class ColumnInfo {
-        private String name;
-        private String fqname;
+    static class ColumnInfo {
+        private final String name;
+        private final String fqname;
         private String aliasedName;
-        private String type;
+        private final String type;
 
         private ColumnInfo(Column column, String tableFqn, String tblAlias) throws KException {
             this.name = SQLStringVisitor.escapeSinglePart(column.getName());

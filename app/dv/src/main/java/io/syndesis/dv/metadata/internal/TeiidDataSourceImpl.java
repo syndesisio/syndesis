@@ -27,8 +27,8 @@ import io.syndesis.dv.metadata.TeiidDataSource;
 public class TeiidDataSourceImpl implements Comparable<TeiidDataSourceImpl>, TeiidDataSource, ConnectionFactoryProvider<Object> {
     private final String name;
     private final String translatorName;
-    private Object dataSource;
-    private String id;
+    private final Object dataSource;
+    private final String id;
     private Map<String, String> importProperties;
     private Map<String, String> translatorProperties;
     private DefaultSyndesisDataSource syndesisDataSource;

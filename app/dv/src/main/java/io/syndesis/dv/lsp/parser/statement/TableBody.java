@@ -25,7 +25,7 @@ import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 public class TableBody extends AbstractStatementObject {
     private Token[] tableBodyTokens;
-    private List<TableElement> elements;
+    private final List<TableElement> elements;
     private TableOptionsClause options;
     private boolean hasPrimaryKey;
 

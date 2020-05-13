@@ -15,14 +15,14 @@
  */
 package io.syndesis.dv.lsp.parser.statement;
 
-import static org.junit.Assert.*;
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.STATEMENT_TYPE;
+import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 import org.junit.Test;
 import org.teiid.query.parser.Token;
 
-import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.STATEMENT_TYPE;
-import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("nls")
 public class TestCreateViewStatement {
@@ -30,63 +30,61 @@ public class TestCreateViewStatement {
         System.out.println(headerMessage);
         for (Token token : tkns) {
             System.out.println(" tkn ==>   " + token.image
-                    + "\t @ ( " + 
-                    token.beginLine + ", " + token.beginColumn + ")");
+                + "\t @ ( " +
+                token.beginLine + ", " + token.beginColumn + ")");
         }
     }
-    
+
     public CreateViewStatement createStatatement(String stmt) {
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
 
-    	return new CreateViewStatement(analyzer);
+        return new CreateViewStatement(analyzer);
     }
-    
+
     @Test
     public void testCreateViewStatement() throws Exception {
 
-        String stmt = 
-//        	     01234567890123456789012345678901234567890123456789
-        		"CREATE VIEW wineList (\n" +
-//        	     01234567890123456789012345678901234567890123456789
+        String stmt =
+            // 01234567890123456789012345678901234567890123456789
+            "CREATE VIEW wineList (\n" +
+            // 01234567890123456789012345678901234567890123456789
                 "e1 integer primary key OPTIONS (UPDATEABLE 'false', FOO 'BAR'),\n" +
-//               01234567890123456789012345678901234567890123456789
+                // 01234567890123456789012345678901234567890123456789
                 "e6 varchar index default 'hello',\n" +
-//               01234567890123456789012345678901234567890123456789
-				"e7 decimal(10,2) NOT NULL unique)\n" +
-//               01234567890123456789012345678901234567890123456789
+                // 01234567890123456789012345678901234567890123456789
+                "e7 decimal(10,2) NOT NULL unique)\n" +
+                // 01234567890123456789012345678901234567890123456789
                 "OPTIONS (CARDINALITY 12, UPDATABLE 'true', FOO 'BAR', ANNOTATION 'Test Table')\n" +
-//               01234567890123456789012345678901234567890123456789
+                // 01234567890123456789012345678901234567890123456789
                 "AS SELECT * FROM winelist WHERE e1 > '10';";
-        
 
         CreateViewStatement cvs = createStatatement(stmt);
 
         assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
         assertEquals(58, cvs.analyzer.getTokens().length);
-        
+
         assertEquals("wineList", cvs.getViewName());
 
         assertTrue(cvs.getExceptions().isEmpty());
-        
+
         TableBody tb = cvs.getTableBody();
-        
-        for(TableElement element: tb.getTableElements()) {
-        	System.out.println(element);
+
+        for (TableElement element : tb.getTableElements()) {
+            System.out.println(element);
         }
     }
-    
+
     @Test
     public void testMissingViewName() throws Exception {
-        String stmt = 
-//        	     01234567890123456789012345678901234567890123456789
-        		"CREATE VIEW (\n" +
-//        	     01234567890123456789012345678901234567890123456789
+        String stmt =
+            // 01234567890123456789012345678901234567890123456789
+            "CREATE VIEW (\n" +
+            // 01234567890123456789012345678901234567890123456789
                 "e1 integer primary key,\n" +
-//               01234567890123456789012345678901234567890123456789
+                // 01234567890123456789012345678901234567890123456789
                 "e6 varchar index default 'hello')\n" +
-//               01234567890123456789012345678901234567890123456789
+                // 01234567890123456789012345678901234567890123456789
                 "AS SELECT * FROM winelist WHERE e1 > '10'";
-        
 
         CreateViewStatement cvs = createStatatement(stmt);
 
@@ -95,17 +93,17 @@ public class TestCreateViewStatement {
 
         assertEquals(2, cvs.getExceptions().size());
     }
-    
+
     @Test
     public void testNoTableBody() throws Exception {
-        String stmt = 
-//               01234567890123456789012345678901234567890123456789
-                "CREATE VIEW (\n" +
-//               01234567890123456789012345678901234567890123456789
+        String stmt =
+            // 01234567890123456789012345678901234567890123456789
+            "CREATE VIEW (\n" +
+            // 01234567890123456789012345678901234567890123456789
                 ")\nAS SELECT * FROM winelist WHERE e1 > '10'";
 
         CreateViewStatement cvs = createStatatement(stmt);
-        
+
         assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
         assertEquals(13, cvs.analyzer.getTokens().length);
 

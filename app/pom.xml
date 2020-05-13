@@ -129,7 +129,7 @@
     <json-schema-core.version>1.2.8</json-schema-core.version>
     <json-schema-validator.version>2.2.10</json-schema-validator.version>
     <junit.version>4.13</junit.version>
-    <junit5.version>5.6.0</junit5.version>
+    <junit5.version>5.6.2</junit5.version>
     <powermock.version>2.0.7</powermock.version>
     <testcontainers.version>1.12.5</testcontainers.version>
     <citrus.version>3.0.0-M1</citrus.version>
@@ -770,6 +770,10 @@
               <ignoredResourcePattern>language.properties</ignoredResourcePattern>
               <ignoredResourcePattern>other.properties</ignoredResourcePattern>
               <ignoredResourcePattern>dataformat.properties</ignoredResourcePattern>
+              <ignoredResourcePattern>changelog.txt</ignoredResourcePattern>
+              <ignoredResourcePattern>org/teiid/.*</ignoredResourcePattern>
+              <ignoredResourcePattern>teiid-client-settings.orig.properties</ignoredResourcePattern>
+              <ignoredResourcePattern>vdb-deployer.xsd</ignoredResourcePattern>
             </ignoredResourcePatterns>
             <ignoredClassPatterns>
               <ignoredClassPattern>META-INF.versions.9.module-info</ignoredClassPattern>
@@ -780,6 +784,9 @@
               -->
               <ignoredClassPattern>^javax\.activation\..*$</ignoredClassPattern>
               <ignoredClassPattern>^org\.apache\.daffodil\..*$</ignoredClassPattern>
+              <!-- Multiple Teiid JARs share the same classes, not sure if anything can be done about that -->
+              <ignoredClassPattern>^org\.teiid\..*$</ignoredClassPattern>
+              <ignoredClassPattern>^org\.json\.JSONString$</ignoredClassPattern>
             </ignoredClassPatterns>
             <exceptions>
               <exception>

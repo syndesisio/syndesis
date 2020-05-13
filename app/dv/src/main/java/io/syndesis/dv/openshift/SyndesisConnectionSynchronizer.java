@@ -44,9 +44,9 @@ import io.syndesis.dv.server.endpoint.MetadataService.SourceDeploymentMode;
 public class SyndesisConnectionSynchronizer {
     private static final Log LOGGER = LogFactory.getLog(SyndesisConnectionSynchronizer.class);
 
-    private TeiidOpenShiftClient openshiftClient;
-    private MetadataService metadataService;
-    private RepositoryManager repositoryManager;
+    private final TeiidOpenShiftClient openshiftClient;
+    private final MetadataService metadataService;
+    private final RepositoryManager repositoryManager;
 
     public SyndesisConnectionSynchronizer(@Autowired TeiidOpenShiftClient toc,
             @Autowired MetadataService metadataService, @Autowired RepositoryManager repositoryManager) {

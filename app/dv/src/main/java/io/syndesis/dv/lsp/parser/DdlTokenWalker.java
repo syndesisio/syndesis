@@ -109,7 +109,7 @@ public class DdlTokenWalker implements SQLParserConstants {
         return null;
     }
 
-    class TokenCursorLocator {
+    static class TokenCursorLocator {
         Token token;
         int tokenIndex;
         int line;
@@ -138,11 +138,11 @@ public class DdlTokenWalker implements SQLParserConstants {
         }
 
         public boolean isCursorBefore() {
-            return line < token.beginLine || line == token.beginLine && column < token.beginColumn;
+            return line < token.beginLine || (line == token.beginLine && column < token.beginColumn);
         }
 
         public boolean isCursorAfter() {
-            return line > token.endLine || line == token.endLine && column > token.endColumn;
+            return line > token.endLine || (line == token.endLine && column > token.endColumn);
         }
 
         public boolean isCursorAtFirstColumnInToken() {
@@ -195,7 +195,7 @@ public class DdlTokenWalker implements SQLParserConstants {
 
         @Override
         public String toString() {
-            StringBuffer sb = new StringBuffer(token.image);
+            StringBuilder sb = new StringBuilder(token.image);
             sb.append("\n\t CURSOR: (" + this.line + ", " + this.column + ")");
             sb.append("\n\t SPAN  : (" + this.token.beginLine + ", " + this.token.beginColumn + ")" + " >>> ("
                     + this.token.endLine + ", " + this.token.endColumn + ") ");

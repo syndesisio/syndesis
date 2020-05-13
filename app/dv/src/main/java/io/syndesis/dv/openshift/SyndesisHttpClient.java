@@ -40,13 +40,13 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 
 public class SyndesisHttpClient implements Closeable{
-    private CloseableHttpClient client;
+    private final CloseableHttpClient client;
 
     public SyndesisHttpClient() throws IOException {
         this.client = buildHttpClient();
     }
 
-    private CloseableHttpClient buildHttpClient() throws IOException {
+    private static CloseableHttpClient buildHttpClient() throws IOException {
         try {
             // no verification of host for now.
             SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (certificate, authType) -> true)
