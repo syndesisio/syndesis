@@ -20,22 +20,19 @@
 
 console.log("Migrating to schema 32 ...");
 migrate("integrations", "/integrations", function(integration) {
-
     var changed = false;
     if (integration.continuousDeliveryState) {
-
         var cdPath = "/integrations/:" + integration.id + "/continuousDeliveryState/";
 
         var newStateMap = {};
 
         for (name in integration.continuousDeliveryState) {
-
             // get CD state
             var state = integration.continuousDeliveryState[name];
 
             // does environment exist?
             var envId = null;
-            var ids = internal.jsondb.fetchIdsByPropertyValue("/environments", "name", name)
+            var ids = internal.jsondb.fetchIdsByPropertyValue("/environments", "name", name);
 
             if (ids.size > 0) {
                 envId = ids.values[0];
@@ -43,8 +40,8 @@ migrate("integrations", "/integrations", function(integration) {
                 // create environment object
                 envId = jsondb.createKey();
                 var env = {
-                    "id": envId,
-                    "name": name
+                    id: envId,
+                    name: name
                 };
                 jsondb.set("/environments/:" + envId, env);
             }

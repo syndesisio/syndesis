@@ -24,41 +24,48 @@ var migrateConnector = function(connector) {
     var changed = false;
     if (connector.id === "sql") {
         console.log("Migrating connector: " + connector.id);
-        connector.actions.forEach(function (action) {
+        connector.actions.forEach(function(action) {
             migrateSqlAction(action);
             changed = true;
         });
     }
     return changed;
-}
+};
 
 var migrateSqlAction = function(action) {
-    if (!action || (! (action.id === 'sql-connector' || action.id === 'sql-start-connector'
-    	|| action.id === 'sql-stored-connector' || action.id === 'sql-stored-start-connector'))) {
+    if (
+        !action ||
+        !(
+            action.id === "sql-connector" ||
+            action.id === "sql-start-connector" ||
+            action.id === "sql-stored-connector" ||
+            action.id === "sql-stored-start-connector"
+        )
+    ) {
         return false;
     }
     console.log("Migrating action: " + action.id);
 
     action.descriptor.standardizedErrors = [
         {
-          "name": "DATA_ACCESS_ERROR",
-          "displayName": "DataAccessError"
+            name: "DATA_ACCESS_ERROR",
+            displayName: "DataAccessError"
         },
         {
-          "name": "ENTITY_NOT_FOUND_ERROR",
-          "displayName": "EntityNotFoundError"
+            name: "ENTITY_NOT_FOUND_ERROR",
+            displayName: "EntityNotFoundError"
         },
         {
-          "name": "DUPLICATE_KEY_ERROR",
-          "displayName": "DuplicateKeyError"
+            name: "DUPLICATE_KEY_ERROR",
+            displayName: "DuplicateKeyError"
         },
         {
-          "name": "CONNECTOR_ERROR",
-          "displayName": "ConnectorError"
+            name: "CONNECTOR_ERROR",
+            displayName: "ConnectorError"
         }
     ];
-    return true
-}
+    return true;
+};
 
 var migrateConnection = function(connection) {
     if (!connection) {
@@ -66,11 +73,11 @@ var migrateConnection = function(connection) {
     }
 
     if (migrateConnector(connection.connector)) {
-        return true
+        return true;
     }
 
-    return false
-}
+    return false;
+};
 
 var migrateStep = function(step) {
     if (!step) {
@@ -78,22 +85,22 @@ var migrateStep = function(step) {
     }
 
     var done = false;
-    done |=  migrateSqlAction(step.action);
-    done |=  migrateConnection(step.connection);
+    done |= migrateSqlAction(step.action);
+    done |= migrateConnection(step.connection);
 
     if (step.configuredProperties) {
         for (property in step.configuredProperties) {
-            if (property === 'errorResponseCodes') {
+            if (property === "errorResponseCodes") {
                 json = step.configuredProperties[property];
-                json = json.replace(/SQL_/g, '');
-                json = json.replace(/org.springframework.dao.DuplicateKeyException/g, 'DUPLICATE_KEY_ERROR');
+                json = json.replace(/SQL_/g, "");
+                json = json.replace(/org.springframework.dao.DuplicateKeyException/g, "DUPLICATE_KEY_ERROR");
                 step.configuredProperties[property] = json;
                 done |= true;
             }
         }
     }
     return done;
-}
+};
 
 migrate("connectors", "/connectors", migrateConnector);
 migrate("connections", "/connections", function(connection) {
@@ -104,18 +111,17 @@ migrate("integrations", "/integrations", function(integration) {
     var done = true;
 
     if (integration.steps) {
-        integration.steps.forEach(function (step) {
-            console.log("")
-            done |= migrateStep(step)
+        integration.steps.forEach(function(step) {
+            console.log("");
+            done |= migrateStep(step);
         });
     }
 
     if (integration.flows) {
-        integration.flows.forEach(function (flow) {
-            
-            flow.steps.forEach(function (step) {
+        integration.flows.forEach(function(flow) {
+            flow.steps.forEach(function(step) {
                 console.log("flow " + flow.id + " : step " + step.id);
-                done |= migrateStep(step)
+                done |= migrateStep(step);
             });
         });
     }
