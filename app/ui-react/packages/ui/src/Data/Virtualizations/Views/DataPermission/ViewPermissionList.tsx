@@ -8,7 +8,7 @@ import {
   DataListItem,
   DataListItemCells,
   DataListItemRow,
-  DataListToggle,
+  // DataListToggle,
   Modal,
   Radio,
   Split,
@@ -61,6 +61,9 @@ export interface IViewPermissionList extends IListViewToolbarProps {
   i18nRole: string;
   i18nSelectedViewsMsg: string;
   i18nSetPermission: string;
+  i18nClearPermissionMsg: string;
+  i18nSelectRole: string;
+  i18nRemoveRoleRow: string;
   i18nSsoConfigWarning: string;
   status: any;
   dvRoles: string[];
@@ -127,6 +130,15 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
     setRolePermissionModel(rolePermissionModelCopy.set(roleName, permissions));
   };
 
+  const deleteRoleFromPermissionModel = (roleName: string) => {
+    const rolePermissionModelCopy = new Map<string, string[]>(
+      rolePermissionModel
+    );
+    // tslint:disable-next-line: no-unused-expression
+    rolePermissionModelCopy.delete(roleName) &&
+      setRolePermissionModel(rolePermissionModelCopy);
+  };
+
   const clearRolePermissionModel = () => {
     setRolePermissionModel(new Map<string, string[]>());
   };
@@ -143,7 +155,6 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
     });
     if (callSucess) {
       props.clearViewSelection();
-      // toggle modal closed
       setIsClearModalOpen(!isClearModalOpen);
     }
   };
@@ -160,7 +171,6 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
       props.clearViewSelection();
       clearRolePermissionModel();
       setGrantOperation(true);
-      // close setPermissionModel
       setIsSetModalOpen(false);
     }
   };
@@ -168,6 +178,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
   const handleSetModalToggle = () => {
     props.getUpdatedRole();
     props.getDVStatusUpdate();
+    setGrantOperation(true);
     setIsSetModalOpen(!isSetModalOpen);
   };
 
@@ -268,6 +279,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
             </Split>
             {props.status.ssoConfigured === 'false' && (
               <Alert
+                className={'view-permission-list_model-warning'}
                 variant={AlertVariant.warning}
                 isInline={true}
                 title={props.i18nSsoConfigWarning}
@@ -281,9 +293,12 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
               i18nDelete={props.i18nDelete}
               i18nAllAccess={props.i18nAllAccess}
               i18nAddNewRole={props.i18nAddNewRole}
+              i18nSelectRole={props.i18nSelectRole}
+              i18nRemoveRoleRow={props.i18nRemoveRoleRow}
               viewRolePermissionList={[]}
               roles={props.dvRoles}
               updateRolePermissionModel={updateRolePermissionModel}
+              deleteRoleFromPermissionModel={deleteRoleFromPermissionModel}
             />
           </Modal>
           <Modal
@@ -312,9 +327,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
             {' '}
             <div className={'view-permission-list_clear-model'}>
               <h3 className={'view-permission-list_model-text-size'}>
-                Continue with this action will clear all the existing
-                permissions for selected views. are you sure you want to clear
-                permission?
+                {props.i18nClearPermissionMsg}
               </h3>
             </div>
           </Modal>
@@ -324,12 +337,12 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
               isExpanded={false}
             >
               <DataListItemRow>
-                <DataListToggle
+                {/* <DataListToggle
                   isExpanded={false}
                   id="view-permission-heading-toggle"
                   aria-controls="view-permission-heading-expand"
                   className={'view-permission-list-list_heading'}
-                />
+                /> */}
                 <DataListCheck
                   aria-labelledby="view-permission-heading-check"
                   checked={false}

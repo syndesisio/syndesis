@@ -11,18 +11,24 @@ import {
   Select,
   SelectOption,
   SelectVariant,
+  Tooltip,
+  TooltipPosition,
 } from '@patternfly/react-core';
 import { MinusCircleIcon } from '@patternfly/react-icons';
 import * as React from 'react';
+import './RolePermissionListItem.css';
 
 export interface IRolePermissionListItemProps {
-  index: number;
+  index: string;
   role: string[];
   selectedRole: string | undefined;
   selectedPermissions: string[];
+  i18nSelectRole: string;
+  i18nRemoveRoleRow: string;
   addRole: (roleName: string) => void;
   updateRolePermissionModel: (roleName: string, permissions: string[]) => void;
-  removeRolePermission: (index: number) => void;
+  deleteRoleFromPermissionModel: (roleName: string) => void;
+  removeRolePermission: (index: string) => void;
 }
 
 export interface IRoleOption {
@@ -134,6 +140,12 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
     setCheckState(newState);
   };
 
+  const removePermissionRow = () => {
+    props.removeRolePermission(props.index);
+    // tslint:disable-next-line: no-unused-expression
+    selected && props.deleteRoleFromPermissionModel(selected);
+  };
+
   React.useEffect(() => {
     // tslint:disable-next-line: no-unused-expression
     props.selectedRole && setSelected(props.selectedRole);
@@ -202,9 +214,9 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
         <DataListItemRow>
           <DataListItemCells
             dataListCells={[
-              <DataListCell key="primary content">
+              <DataListCell key="primary content" width={2}>
                 <span id={titleId} hidden={true}>
-                  Select a role
+                  {props.i18nSelectRole}
                 </span>
                 <Select
                   variant={SelectVariant.typeahead}
@@ -215,7 +227,7 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   selections={selected}
                   isExpanded={isExpanded}
                   ariaLabelledBy={titleId}
-                  placeholderText="Select a role"
+                  placeholderText={props.i18nSelectRole}
                   isCreatable={true}
                   onCreateOption={onCreateOption}
                 >
@@ -224,7 +236,7 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   ))}
                 </Select>
               </DataListCell>,
-              <DataListCell key="secondary content 1">
+              <DataListCell key="secondary content 1" width={1}>
                 <Checkbox
                   label=""
                   aria-label="uncontrolled checkbox example"
@@ -236,7 +248,7 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   onChange={handleChange}
                 />
               </DataListCell>,
-              <DataListCell key="secondary content 2">
+              <DataListCell key="secondary content 2" width={1}>
                 <Checkbox
                   label=""
                   aria-label="uncontrolled checkbox example"
@@ -247,7 +259,7 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   onChange={handleChange}
                 />
               </DataListCell>,
-              <DataListCell key="secondary content 3">
+              <DataListCell key="secondary content 3" width={1}>
                 <Checkbox
                   label=""
                   aria-label="uncontrolled checkbox example"
@@ -258,7 +270,7 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   onChange={handleChange}
                 />
               </DataListCell>,
-              <DataListCell key="more content 4">
+              <DataListCell key="more content 4" width={1}>
                 <Checkbox
                   label=""
                   aria-label="uncontrolled checkbox example"
@@ -269,7 +281,7 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   onChange={handleChange}
                 />
               </DataListCell>,
-              <DataListCell key="more content 5">
+              <DataListCell key="more content 5" width={1}>
                 <Checkbox
                   label=""
                   aria-label="uncontrolled checkbox example"
@@ -286,10 +298,15 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
             id="single-action-action1"
             aria-label="Actions"
           >
-            <MinusCircleIcon
-              // tslint:disable-next-line: jsx-no-lambda
-              onClick={() => props.removeRolePermission(props.index)}
-            />
+            <Tooltip
+              position={TooltipPosition.top}
+              content={<div>{props.i18nRemoveRoleRow}</div>}
+            >
+              <MinusCircleIcon
+                className={'role-permission-list-item_remove-button'}
+                onClick={removePermissionRow}
+              />
+            </Tooltip>
           </DataListAction>
         </DataListItemRow>
       </DataListItem>

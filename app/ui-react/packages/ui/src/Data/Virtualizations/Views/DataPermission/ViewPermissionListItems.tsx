@@ -24,6 +24,7 @@ export interface IViewPermissionListItemsProps {
   viewName: string;
   viewRolePermissionList: ITablePrivilege[];
   itemSelected: Map<string, string>;
+  i18nPermissionNotSet: string;
   // status: any;
   // dvRoles: string[];
   onSelectedViewChange: (
@@ -61,7 +62,7 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
     } else {
       setTrimPermissionList([]);
     }
-  });
+  },[props.viewRolePermissionList,props.viewRolePermissionList]);
 
   return (
     <DataListItem
@@ -131,7 +132,7 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
               )}
               {props.viewRolePermissionList.length === 0 && (
                 <span className={'view-permission-list-items-disabled_text'}>
-                  <i>Permission not set</i>
+                  <i>{props.i18nPermissionNotSet}</i>
                 </span>
               )}
             </DataListCell>,
