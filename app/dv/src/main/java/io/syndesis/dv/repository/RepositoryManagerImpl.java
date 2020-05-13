@@ -294,4 +294,9 @@ public class RepositoryManagerImpl implements RepositoryManager {
         tablePrivilegesRepository.deleteByViewDefinitionIdIn(viewIds);
     }
 
+    @Override
+    public void deleteTablePrivileges(TablePrivileges existing) {
+        tablePrivilegesRepository.delete(existing);
+    }
+
 }

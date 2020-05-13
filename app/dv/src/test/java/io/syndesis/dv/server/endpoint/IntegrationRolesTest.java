@@ -17,6 +17,7 @@
 package io.syndesis.dv.server.endpoint;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -102,6 +103,27 @@ public class IntegrationRolesTest {
         statusResponse = restTemplate.getForEntity("/v1/virtualizations/{dv}/roles", RoleInfo.class, dvName);
         assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
         assertEquals("[SELECT]", statusResponse.getBody().getTablePrivileges().get(0).getGrantPrivileges().toString());
+
+        //check that revoking all privileges removes the role association
+        toGrant.setOperation(Operation.REVOKE);
+
+        //let's back that out
+        grant = restTemplate.exchange(
+                "/v1/virtualizations/{dv}/roles", HttpMethod.PUT,
+                new HttpEntity<RoleInfo>(toGrant), String.class, dvName);
+        assertEquals(HttpStatus.OK, grant.getStatusCode());
+
+        //check that it got removed
+        statusResponse = restTemplate.getForEntity("/v1/virtualizations/{dv}/roles", RoleInfo.class, dvName);
+        assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
+        assertTrue(statusResponse.getBody().getTablePrivileges().isEmpty());
+
+        //add it back
+        toGrant.setOperation(Operation.GRANT);
+        grant = restTemplate.exchange(
+                "/v1/virtualizations/{dv}/roles", HttpMethod.PUT,
+                new HttpEntity<RoleInfo>(toGrant), String.class, dvName);
+        assertEquals(HttpStatus.OK, grant.getStatusCode());
 
         //add delete
         toGrant.getTablePrivileges().get(0).setGrantPrivileges(Collections.singleton(Privilege.D));
