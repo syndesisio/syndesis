@@ -25,21 +25,27 @@ public class TokenContext {
     private final Token token;
     private DdlAnalyzerConstants.Context context;
     private final AbstractStatementObject targetObject;
+    private String virtualizationId;
 
-    public TokenContext(Position position, Token token, DdlAnalyzerConstants.Context context, AbstractStatementObject statementObject) {
+    public TokenContext(Position position, Token token,  DdlAnalyzerConstants.Context context, AbstractStatementObject statementObject) {
+        this(position, token, context, statementObject, null);
+    }
+
+    public TokenContext(Position position, Token token,  DdlAnalyzerConstants.Context context, AbstractStatementObject statementObject, String virtualizationId) {
         super();
         this.position = position;
         this.token = token;
         this.context = context;
         this.targetObject = statementObject;
+        this.virtualizationId = virtualizationId;
     }
 
     public Position getPosition() {
-        return position;
+        return this.position;
     }
 
     public Token getToken() {
-        return token;
+        return this.token;
     }
 
     public DdlAnalyzerConstants.Context getContext() {
@@ -51,7 +57,15 @@ public class TokenContext {
     }
 
     public AbstractStatementObject getTargetObject() {
-        return targetObject;
+        return this.targetObject;
+    }
+
+    public String getVirtualizationId() {
+        return this.virtualizationId;
+    }
+
+    public void setVirtualizationId(String id) {
+        this.virtualizationId = id;
     }
 
     public String contextToString() {

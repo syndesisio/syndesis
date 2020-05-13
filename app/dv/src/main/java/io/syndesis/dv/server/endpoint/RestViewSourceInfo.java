@@ -43,4 +43,14 @@ public class RestViewSourceInfo {
     public List<RestSourceSchema> getSchemas() {
         return schemas;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("RestViewSourceInfo: SCHEMA LIST");
+        for( RestSourceSchema rst: getSchemas() ) {
+            sb.append("/n >>> ").append(rst.toString());
+        }
+        return sb.toString();
+    }
+
 }
