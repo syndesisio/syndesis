@@ -45,6 +45,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -62,6 +63,7 @@ import io.syndesis.dv.server.endpoint.IntegrationTest.IntegrationTestConfigurati
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = {IntegrationTestConfiguration.class, Application.class})
+@TestPropertySource(properties = "spring.config.name=application-test")
 @SuppressWarnings("nls")
 public class IntegrationPublishTest {
 
