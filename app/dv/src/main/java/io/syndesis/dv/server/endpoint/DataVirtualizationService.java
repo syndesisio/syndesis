@@ -584,8 +584,8 @@ public final class DataVirtualizationService extends DvService {
             zos.closeEntry();
 
             zos.putNextEntry(new ZipEntry("dv-info.json")); //$NON-NLS-1$
-            String json = String.format("{\"exportVersion\":%s,\n" //$NON-NLS-1$
-                    + "\"revision\":%s,\n" //$NON-NLS-1$
+            String json = String.format("{\"exportVersion\":%s,%n" //$NON-NLS-1$
+                    + "\"revision\":%s,%n" //$NON-NLS-1$
                     + "\"entityVersion\":%s}", 1, //$NON-NLS-1$
                     revision == null ? "\"draft\"" : revision, dv.getVersion()); //$NON-NLS-1$
             zos.write(json.getBytes("UTF-8")); //$NON-NLS-1$
@@ -1020,10 +1020,7 @@ public final class DataVirtualizationService extends DvService {
                 throw new IllegalArgumentException("Unable to unmarshall VDB meta data", xse);
             }
 
-            PublishRequestPayload payload = new PublishRequestPayload();
             PublishConfiguration config = new PublishConfiguration();
-            payload.setName(virtualization);
-
             config.setVDB(theVdb);
             config.setPublishedRevision(e.getRevision());
             return config;
@@ -1179,7 +1176,7 @@ public final class DataVirtualizationService extends DvService {
                     if (op != Operation.REVOKE) {
                         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Can only revoke / clear across all roles"); //$NON-NLS-1$
                     }
-                    repositoryManager.deleteTablePrivileges(Arrays.asList(tablePrivileges.getViewDefinitionIds()));
+                    repositoryManager.deleteTablePrivileges(tablePrivileges.getViewDefinitionIds());
                     continue;
                 }
                 for (String viewId : tablePrivileges.getViewDefinitionIds()) {

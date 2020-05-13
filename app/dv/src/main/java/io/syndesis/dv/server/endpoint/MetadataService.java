@@ -494,7 +494,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
             srcSchemas.add(new RestSourceSchema(s));
         }
 
-        return new RestViewSourceInfo(srcSchemas.toArray(new RestSourceSchema[srcSchemas.size()]));
+        return new RestViewSourceInfo(srcSchemas);
     }
 
     public enum SourceDeploymentMode {

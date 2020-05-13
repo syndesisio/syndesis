@@ -19,19 +19,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.lsp4j.Position;
+import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 public class TableElement extends AbstractStatementObject {
     private Token nameToken;
-    private Token[] datatypeTokens;
-    private Token[] notNullTokens;
+    private List<Token> datatypeTokens;
+    private List<Token> notNullTokens;
     private Token autoIncrementToken;
     private Token uniqueToken;
     private Token indexToken;
-    private Token[] pkTokens;
-    private Token[] defaultTokens;
+    private List<Token> pkTokens;
+    private List<Token> defaultTokens;
     private TableElementOptionsClause optionsClause;
     private int datatypeKind;
     private boolean isPKElement;
@@ -66,7 +68,7 @@ public class TableElement extends AbstractStatementObject {
         boolean elementEnded = false;
 
         while (!elementEnded) {
-            Token tkn = this.getTokens()[currentTknIndex];
+            Token tkn = this.getTokens().get(currentTknIndex);
             if (currentTknIndex >= tableBodylastIndex) {
                 elementEnded = true;
                 setLastTknIndex(tableBodylastIndex - 1);
@@ -75,12 +77,12 @@ public class TableElement extends AbstractStatementObject {
                 switch (count) {
                 case 1: {
                     // first token should be kind == ID
-                    if (tkn.kind == ID || tkn.kind == STRINGVAL) {
+                    if (tkn.kind == SQLParserConstants.ID || tkn.kind == SQLParserConstants.STRINGVAL) {
                         setNameToken(tkn);
                         if (getFirstTknIndex() == 0) {
                             setFirstTknIndex(getTokenIndex(tkn));
                         }
-                    } else if (tkn.kind == PRIMARY) {
+                    } else if (tkn.kind == SQLParserConstants.PRIMARY) {
                         // LOOKING FOR "PRIMARY KEY (ID)" tokens
                         setFirstTknIndex(getTokenIndex(tkn));
                         currentTknIndex = parsePrimaryKeyTokens(currentTknIndex, tkn);
@@ -111,17 +113,17 @@ public class TableElement extends AbstractStatementObject {
                         dTypeTkns.add(tkn);
 
                         // Check for parens in case of string(), decimal() types.. etc
-                        if (isNextTokenOfKind(this.getTokens(), currentTknIndex, LPAREN)) {
-                            Token[] bracketedTkns = getBracketedTokens(getTokens(), currentTknIndex + 1, LPAREN,
-                                    RPAREN);
-                            if (bracketedTkns.length > 0) {
+                        if (isNextTokenOfKind(this.getTokens(), currentTknIndex, SQLParserConstants.LPAREN)) {
+                            List<Token> bracketedTkns = getBracketedTokens(getTokens(), currentTknIndex + 1, SQLParserConstants.LPAREN,
+                                SQLParserConstants.RPAREN);
+                            if (bracketedTkns.size() > 0) {
                                 // collect all the tokens in the datatype
                                 for (Token dTypeTkn : bracketedTkns) {
                                     currentTknIndex++;
                                     dTypeTkns.add(dTypeTkn);
-                                    if( dTypeTkn.kind != LPAREN &&
-                                        dTypeTkn.kind != RPAREN &&
-                                        dTypeTkn.kind != COMMA ) {
+                                    if( dTypeTkn.kind != SQLParserConstants.LPAREN &&
+                                        dTypeTkn.kind != SQLParserConstants.RPAREN &&
+                                        dTypeTkn.kind != SQLParserConstants.COMMA ) {
                                         // Check for integer value
                                         try {
                                             Integer.parseUnsignedInt(dTypeTkn.image);
@@ -134,10 +136,10 @@ public class TableElement extends AbstractStatementObject {
                             }
                         }
                         // Add datatype tokens to the table element
-                        setDatatypeTokens(dTypeTkns.toArray(new Token[0]));
-                    } else if (tkn.kind == NOT) {
+                        setDatatypeTokens(dTypeTkns);
+                    } else if (tkn.kind == SQLParserConstants.NOT) {
                         // Check if exists
-                        if (notNullTokens != null && notNullTokens.length > 0) {
+                        if (notNullTokens != null && !notNullTokens.isEmpty()) {
                             logAlreadySetPropertyException(tkn, tkn, "NOT NULL");
                         } else {
                             // Check for NULL
@@ -145,21 +147,21 @@ public class TableElement extends AbstractStatementObject {
                                 List<Token> tmpTkns = new ArrayList<Token>();
                                 tmpTkns.add(tkn);
                                 currentTknIndex++;
-                                tkn = getTokens()[currentTknIndex];
-                                if (tkn.kind == NULL) {
+                                tkn = getTokens().get(currentTknIndex);
+                                if (tkn.kind == SQLParserConstants.NULL) {
                                     tmpTkns.add(tkn);
-                                    setNotNullTokens(tmpTkns.toArray(new Token[0]));
+                                    setNotNullTokens(tmpTkns);
                                 }
                             }
                         }
-                    } else if (tkn.kind == AUTO_INCREMENT) {
+                    } else if (tkn.kind == SQLParserConstants.AUTO_INCREMENT) {
                         if (autoIncrementToken != null) {
                             logAlreadySetPropertyException(tkn, tkn, "AUTO_INCREMENT");
                         } else {
                             setAutoIncrementToken(tkn);
                         }
-                    } else if (tkn.kind == PRIMARY) {
-                        if (pkTokens != null && pkTokens.length > 0) {
+                    } else if (tkn.kind == SQLParserConstants.PRIMARY) {
+                        if (pkTokens != null && !pkTokens.isEmpty()) {
                             logAlreadySetPropertyException(tkn, tkn, "PRIMARY KEY");
                         } else {
                             // Check for NULL
@@ -167,15 +169,15 @@ public class TableElement extends AbstractStatementObject {
                                 List<Token> tmpTkns = new ArrayList<Token>();
                                 tmpTkns.add(tkn);
                                 currentTknIndex++;
-                                tkn = getTokens()[currentTknIndex];
-                                if (tkn.kind == KEY) {
+                                tkn = getTokens().get(currentTknIndex);
+                                if (tkn.kind == SQLParserConstants.KEY) {
                                     tmpTkns.add(tkn);
-                                    setPrimaryKeyTokens(tmpTkns.toArray(new Token[0]));
+                                    setPrimaryKeyTokens(tmpTkns);
                                 }
                             }
                         }
-                    } else if (tkn.kind == DEFAULT_KEYWORD) {
-                        if (defaultTokens != null && defaultTokens.length > 0) {
+                    } else if (tkn.kind == SQLParserConstants.DEFAULT_KEYWORD) {
+                        if (defaultTokens != null && !defaultTokens.isEmpty()) {
                             logAlreadySetPropertyException(tkn, tkn, "DEFAULT VALUE");
                         } else {
                             // Check for NULL
@@ -183,18 +185,18 @@ public class TableElement extends AbstractStatementObject {
                                 List<Token> tmpTkns = new ArrayList<Token>();
                                 tmpTkns.add(tkn);
                                 currentTknIndex++;
-                                tkn = getTokens()[currentTknIndex];
-                                if (tkn.kind == STRINGVAL) {
+                                tkn = getTokens().get(currentTknIndex);
+                                if (tkn.kind == SQLParserConstants.STRINGVAL) {
                                     tmpTkns.add(tkn);
-                                    setDefaultTokens(tmpTkns.toArray(new Token[0]));
+                                    setDefaultTokens(tmpTkns);
                                 }
                             }
                         }
-                    } else if (tkn.kind == INDEX) {
+                    } else if (tkn.kind == SQLParserConstants.INDEX) {
                         setIndexToken(tkn);
-                    } else if (tkn.kind == UNIQUE) {
+                    } else if (tkn.kind == SQLParserConstants.UNIQUE) {
                         setUniqueToken(tkn);
-                    } else if (tkn.kind == OPTIONS) {
+                    } else if (tkn.kind == SQLParserConstants.OPTIONS) {
                         if (getOptionClause() != null) {
                             logAlreadySetPropertyException(tkn, tkn, "OPTIONS(...)");
                         } else {
@@ -202,24 +204,22 @@ public class TableElement extends AbstractStatementObject {
                             optionsTkns.add(tkn);
 
                             // Check for parens in case of string(), decimal() types.. etc
-                            if (isNextTokenOfKind(getTokens(), currentTknIndex, LPAREN)) {
-                                Token[] bracketedTkns = getBracketedTokens(getTokens(), currentTknIndex + 1, LPAREN,
-                                        RPAREN);
-                                if (bracketedTkns.length > 0) {
-                                    for (Token dTypeTkn : bracketedTkns) {
-                                        currentTknIndex++;
-                                        optionsTkns.add(dTypeTkn);
-                                    }
+                            if (isNextTokenOfKind(getTokens(), currentTknIndex, SQLParserConstants.LPAREN)) {
+                                List<Token> bracketedTkns = getBracketedTokens(getTokens(), currentTknIndex + 1, SQLParserConstants.LPAREN,
+                                    SQLParserConstants.RPAREN);
+                                for (Token dTypeTkn : bracketedTkns) {
+                                    currentTknIndex++;
+                                    optionsTkns.add(dTypeTkn);
                                 }
                             }
 
                             if (!optionsTkns.isEmpty()) {
                                 TableElementOptionsClause options = new TableElementOptionsClause(analyzer);
-                                options.setOptionsTokens(optionsTkns.toArray(new Token[0]));
+                                options.setOptionsTokens(optionsTkns);
                                 setOptionClause(options);
                             }
                         }
-                    } else if (tkn.kind == COMMA) {
+                    } else if (tkn.kind == SQLParserConstants.COMMA) {
                         setLastTknIndex(getTokenIndex(tkn));
                         elementEnded = true;
                     } else if(count == 2) {
@@ -263,33 +263,33 @@ public class TableElement extends AbstractStatementObject {
         // Check for NULL and look for KEY token
         if (hasAnotherToken(getTokens(), currentIndex)) {
             currentIndex++;
-            thisToken = getTokens()[currentIndex];
-            if (thisToken.kind == KEY) {
+            thisToken = getTokens().get(currentIndex);
+            if (thisToken.kind == SQLParserConstants.KEY) {
                 previousToken = thisToken;
                 tmpTkns.add(thisToken);
                 // Check for NULL and look for ( token
                 if (hasAnotherToken(getTokens(), currentIndex)) {
                     currentIndex++;
-                    thisToken = getTokens()[currentIndex];
-                    if (thisToken.kind == LPAREN) {
+                    thisToken = getTokens().get(currentIndex);
+                    if (thisToken.kind == SQLParserConstants.LPAREN) {
                         previousToken = thisToken;
                         tmpTkns.add(thisToken);
                         // Check for NULL and look for ID token
                         if (hasAnotherToken(getTokens(), currentIndex)) {
                             currentIndex++;
-                            thisToken = getTokens()[currentIndex];
-                            if (thisToken.kind == ID) {
+                            thisToken = getTokens().get(currentIndex);
+                            if (thisToken.kind == SQLParserConstants.ID) {
                                 previousToken = thisToken;
                                 tmpTkns.add(thisToken);
                                 // Check for NULL and look for ) token
                                 if (hasAnotherToken(getTokens(), currentIndex)) {
                                     currentIndex++;
-                                    thisToken = getTokens()[currentIndex];
-                                    if (thisToken.kind == RPAREN) {
+                                    thisToken = getTokens().get(currentIndex);
+                                    if (thisToken.kind == SQLParserConstants.RPAREN) {
                                         tmpTkns.add(thisToken);
                                         if (hasAnotherToken(getTokens(), currentIndex)) {
-                                            thisToken = getTokens()[currentIndex + 1];
-                                            if (thisToken.kind != RPAREN && thisToken.kind != COMMA) {
+                                            thisToken = getTokens().get(currentIndex + 1);
+                                            if (thisToken.kind != SQLParserConstants.RPAREN && thisToken.kind != SQLParserConstants.COMMA) {
                                                 logPrimaryKeyException(thisToken, thisToken);
                                             }
                                         }
@@ -300,7 +300,7 @@ public class TableElement extends AbstractStatementObject {
                                     logIncompletePrimaryKeyException(previousToken, previousToken);
                                 }
                             } else {
-                                if (thisToken.kind == RPAREN || thisToken.kind == COMMA) {
+                                if (thisToken.kind == SQLParserConstants.RPAREN || thisToken.kind == SQLParserConstants.COMMA) {
                                     logIncompletePrimaryKeyException(previousToken, previousToken);
                                 } else {
                                     logPrimaryKeyException(previousToken, thisToken);
@@ -310,7 +310,7 @@ public class TableElement extends AbstractStatementObject {
                             logIncompletePrimaryKeyException(previousToken, previousToken);
                         }
                     } else {
-                        if (thisToken.kind == RPAREN || thisToken.kind == COMMA) {
+                        if (thisToken.kind == SQLParserConstants.RPAREN || thisToken.kind == SQLParserConstants.COMMA) {
                             logIncompletePrimaryKeyException(previousToken, previousToken);
                         } else {
                             logPrimaryKeyException(previousToken, thisToken);
@@ -320,7 +320,7 @@ public class TableElement extends AbstractStatementObject {
                     logIncompletePrimaryKeyException(previousToken, previousToken);
                 }
             } else {
-                if (thisToken.kind == RPAREN || thisToken.kind == COMMA) {
+                if (thisToken.kind == SQLParserConstants.RPAREN || thisToken.kind == SQLParserConstants.COMMA) {
                     logIncompletePrimaryKeyException(previousToken, previousToken);
                 } else {
                     logPrimaryKeyException(previousToken, thisToken);
@@ -332,7 +332,7 @@ public class TableElement extends AbstractStatementObject {
 
         if (!tmpTkns.isEmpty()) {
             if (!tableBody.hasPrimaryKey()) {
-                setPrimaryKeyTokens(tmpTkns.toArray(new Token[0]));
+                setPrimaryKeyTokens(tmpTkns);
             } else {
                 // error on all tokens since PK has already been defined
                 Token startToken = tmpTkns.get(0);
@@ -367,12 +367,12 @@ public class TableElement extends AbstractStatementObject {
         this.nameToken = nameToken;
     }
 
-    public Token[] getDatatypeTokens() {
+    public List<Token> getDatatypeTokens() {
         return datatypeTokens;
     }
 
-    public void setDatatypeTokens(Token[] datatypeTokens) {
-        this.datatypeTokens = datatypeTokens;
+    public void setDatatypeTokens(List<Token> dTypeTkns) {
+        this.datatypeTokens = dTypeTkns;
     }
 
     public TableElementOptionsClause getOptionClause() {
@@ -391,29 +391,29 @@ public class TableElement extends AbstractStatementObject {
         this.datatypeKind = datatypeKind;
     }
 
-    public Token[] getNotNullTokens() {
+    public List<Token> getNotNullTokens() {
         return notNullTokens;
     }
 
-    public void setNotNullTokens(Token[] notNullTokens) {
-        this.notNullTokens = notNullTokens;
+    public void setNotNullTokens(List<Token> tmpTkns) {
+        this.notNullTokens = tmpTkns;
     }
 
-    public Token[] getPrimaryKeyTokens() {
+    public List<Token> getPrimaryKeyTokens() {
         return pkTokens;
     }
 
-    public void setPrimaryKeyTokens(Token[] pkTokens) {
-        this.pkTokens = pkTokens;
-        setIsPrimaryKey(pkTokens != null);
+    public void setPrimaryKeyTokens(List<Token> tmpTkns) {
+        this.pkTokens = tmpTkns;
+        setIsPrimaryKey(tmpTkns != null);
     }
 
-    public Token[] getDefaultTokens() {
+    public List<Token> getDefaultTokens() {
         return defaultTokens;
     }
 
-    public void setDefaultTokens(Token[] defaultTokens) {
-        this.defaultTokens = defaultTokens;
+    public void setDefaultTokens(List<Token> tmpTkns) {
+        this.defaultTokens = tmpTkns;
     }
 
     public Token getAutoIncrementToken() {
@@ -440,13 +440,8 @@ public class TableElement extends AbstractStatementObject {
         this.indexToken = indexToken;
     }
 
-    public boolean isDatatype(Token token) {
-        for (int dType : DATATYPES) {
-            if (token.kind == dType) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean isDatatype(Token token) {
+        return DdlAnalyzerConstants.DATATYPES.contains(token.kind);
     }
 
     @Override
@@ -456,14 +451,14 @@ public class TableElement extends AbstractStatementObject {
             Token tkn = this.analyzer.getTokenFor(position);
 
             // Check for last token == COMMA since comma is part of the table element token
-            if (tkn.kind == COMMA && getTokens()[getLastTknIndex()].kind == COMMA
+            if (tkn.kind == SQLParserConstants.COMMA && getTokens().get(getLastTknIndex()).kind == SQLParserConstants.COMMA
                     && getTokenIndex(tkn) == getLastTknIndex()) {
                 // return the TableBody context to show new column definition item
-                return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_BODY, this);
+                return new TokenContext(position, tkn, DdlAnalyzerConstants.CONTEXT.TABLE_BODY, this);
             }
 
             if (tkn.kind == SQLParserConstants.RPAREN) {
-                return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_ELEMENT, this);
+                return new TokenContext(position, tkn, DdlAnalyzerConstants.CONTEXT.TABLE_ELEMENT, this);
             }
 
             if (optionsClause != null) {
@@ -472,7 +467,7 @@ public class TableElement extends AbstractStatementObject {
                     return context;
                 }
             }
-            return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_ELEMENT, this);
+            return new TokenContext(position, tkn, DdlAnalyzerConstants.CONTEXT.TABLE_ELEMENT, this);
         }
 
         return null;
@@ -498,7 +493,7 @@ public class TableElement extends AbstractStatementObject {
         StringBuilder sb = new StringBuilder();
         sb.append("RAW TOKENS: ");
         for (int i = getFirstTknIndex(); i < getLastTknIndex() + 1; i++) {
-            sb.append(' ').append(getTokens().get(i));
+            sb.append(" " + getTokens().get(i));
         }
         return sb.toString();
     }

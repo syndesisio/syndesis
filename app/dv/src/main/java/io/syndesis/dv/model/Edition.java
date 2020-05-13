@@ -28,6 +28,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 @JsonSerialize
 @Entity
 public class Edition
@@ -67,6 +69,7 @@ public class Edition
         this.dataVirtualizationName = dataVirtualizationName;
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public Timestamp getCreatedAt() {
         return createdAt;
     }

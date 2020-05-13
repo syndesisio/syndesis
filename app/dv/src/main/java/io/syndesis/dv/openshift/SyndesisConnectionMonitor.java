@@ -17,6 +17,7 @@ package io.syndesis.dv.openshift;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Objects;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -107,7 +108,7 @@ public class SyndesisConnectionMonitor {
                 return false;
             }
             EventMsg other = (EventMsg) obj;
-            return action == other.action && Objects.equals(kind, other.kind) && Objects.equals(id, other.id);
+            return action == other.action && Objects.equals(kind, other.kind) && Objects.equals(id, other.id); 
         }
 
         @Override

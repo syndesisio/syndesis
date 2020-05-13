@@ -15,6 +15,8 @@
  */
 package io.syndesis.dv.server.endpoint;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -29,16 +31,16 @@ public class RestViewSourceInfo {
     /*
      * The array of source schemas
      */
-    private RestSourceSchema[] schemas = new RestSourceSchema[0];
+    private final List<RestSourceSchema> schemas;
 
-    public RestViewSourceInfo(RestSourceSchema[] sourceSchemas) {
+    public RestViewSourceInfo(List<RestSourceSchema> sourceSchemas) {
         this.schemas = sourceSchemas;
     }
 
     /**
      * @return the projected columns
      */
-    public RestSourceSchema[] getSchemas() {
+    public List<RestSourceSchema> getSchemas() {
         return schemas;
     }
 }

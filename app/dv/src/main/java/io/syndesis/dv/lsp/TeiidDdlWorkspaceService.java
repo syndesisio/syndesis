@@ -21,7 +21,6 @@ import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.lsp4j.DidChangeConfigurationParams;
 import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
-import org.eclipse.lsp4j.FileEvent;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.services.WorkspaceService;
@@ -38,13 +37,11 @@ public class TeiidDdlWorkspaceService implements WorkspaceService {
 
     @Override
     public void didChangeConfiguration(DidChangeConfigurationParams params) {
-        @SuppressWarnings("unused")
-        Object settings = params.getSettings();
+        // nop
     }
 
     @Override
     public void didChangeWatchedFiles(DidChangeWatchedFilesParams params) {
-        @SuppressWarnings("unused")
-        List<FileEvent> settings = params.getChanges();
+        // nop
     }
 }

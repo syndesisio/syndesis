@@ -39,6 +39,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 import org.teiid.runtime.EmbeddedConfiguration;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import io.syndesis.dv.RepositoryManager;
 import io.syndesis.dv.lsp.websocket.TeiidDdlWebSocketEndpoint;
 import io.syndesis.dv.metadata.MetadataInstance;
@@ -120,6 +122,7 @@ public class DvAutoConfiguration implements ApplicationListener<ContextRefreshed
     protected WebMvcConfigurer webMvcConfigurer() {
         return new WebMvcConfigurer() {
             @Override
+            @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE") // false positive
             public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
                 configurer.setTaskExecutor(getAsyncExecutor());
             }

@@ -22,6 +22,7 @@ import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.Position;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
 import io.syndesis.dv.lsp.completion.DdlCompletionConstants;
@@ -30,7 +31,7 @@ import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 import io.syndesis.dv.lsp.parser.statement.CreateViewStatement;
 import io.syndesis.dv.lsp.parser.statement.TokenContext;
 
-public class DdlCompletionProvider extends CompletionItemBuilder implements DdlCompletionConstants {
+public class DdlCompletionProvider extends CompletionItemBuilder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DdlCompletionProvider.class);
 
@@ -63,16 +64,16 @@ public class DdlCompletionProvider extends CompletionItemBuilder implements DdlC
                     // Context is the prefix to the statement "CREATE VIEW xxxxx" statement
                     case PREFIX: {
                         switch(previousToken.kind) {
-                            case CREATE:
-                                words = analyzer.getNextWordsByKind(CREATE);
+                            case SQLParserConstants.CREATE:
+                                words = analyzer.getNextWordsByKind(SQLParserConstants.CREATE);
                                 items.addAll(generateCompletionItems(words));
                                 break;
-                            case VIEW:
+                            case SQLParserConstants.VIEW:
                                 // TODO:  A View should already be named for our primary use-case
                                 // Not sure if we'll have any items here to return
                                 break;
-                            case ID:
-                                items.add(generateCompletionItem(DdlCompletionConstants.getLabel(LPAREN, false), null,  null,  null));
+                            case SQLParserConstants.ID:
+                                items.add(generateCompletionItem(DdlCompletionConstants.getLabel(SQLParserConstants.LPAREN, false), null,  null,  null));
                                 break;
                             default: // TODO: THROW ERROR???
                         }
@@ -80,7 +81,7 @@ public class DdlCompletionProvider extends CompletionItemBuilder implements DdlC
 
                     // Context is the Table body surrounded by (....) and before OPTIONS() or AS
                     case TABLE_BODY: {
-                        items.addAll(new TableBodyCompletionProvider(createStatement).getCompletionItems(tokenContext));
+                        items.addAll(new TableBodyCompletionProvider().getCompletionItems(tokenContext));
                     } break;
                     case TABLE_ELEMENT:
                     case TABLE_ELEMENT_OPTIONS:
@@ -88,17 +89,20 @@ public class DdlCompletionProvider extends CompletionItemBuilder implements DdlC
                         items.addAll(new TableElementCompletionProvider(createStatement).getCompletionItems(tokenContext));
                     } break;
                     case TABLE_OPTIONS: {
-                        items.addAll(new TableBodyCompletionProvider(createStatement).getCompletionItems(tokenContext));
+                        items.addAll(new TableBodyCompletionProvider().getCompletionItems(tokenContext));
                     } break;
                     // Context is the Table body surrounded by (....) and before OPTIONS() or AS
                     case QUERY_EXPRESSION: {
-                        if (previousToken.kind == SQLParserConstants.AS) {
-                            String[] values = {"SELECT"};
-                            items.addAll(generateCompletionItems(values));
-                        } else {
-                            // TODO:  SHOW REAL SCHEMA DATA HERE
-                            items.addAll(getItemLoader().getFunctionCompletionItems());
-                            items.addAll(getItemLoader().getQueryExpressionKeywordItems());
+                        switch(previousToken.kind) {
+                            case SQLParserConstants.AS:
+                                String[] values = {"SELECT"};
+                                items.addAll(generateCompletionItems(values));
+                                break;
+                            default: {
+                                // TODO:  SHOW REAL SCHEMA DATA HERE
+                                items.addAll(getItemLoader().getFunctionCompletionItems());
+                                items.addAll(getItemLoader().getQueryExpressionKeywordItems());
+                            } break;
                         }
                     } break;
                     case SELECT_CLAUSE: {

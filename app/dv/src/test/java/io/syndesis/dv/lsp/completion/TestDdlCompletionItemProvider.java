@@ -22,12 +22,12 @@ import java.util.List;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.Position;
 import org.junit.Test;
+import org.teiid.query.parser.SQLParserConstants;
 
 import io.syndesis.dv.lsp.completion.providers.DdlCompletionProvider;
-import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 
 @SuppressWarnings("nls")
-public class TestDdlCompletionItemProvider implements DdlAnalyzerConstants {
+public class TestDdlCompletionItemProvider {
 
     private final DdlCompletionProvider itemProvider = new DdlCompletionProvider();
 
@@ -38,9 +38,9 @@ public class TestDdlCompletionItemProvider implements DdlAnalyzerConstants {
     * @param tokenImageString string
     * @return string without double quotes
     */
-    public static String getLabel(int keywordId) {
-        String tokenImageStr = SQLParserConstants.tokenImage[keywordId];
-        return tokenImageStr.substring(1, tokenImageStr.length()-1);
+	public static String getLabel(int keywordId) {
+		String tokenImageStr = SQLParserConstants.tokenImage[keywordId];
+    	return tokenImageStr.substring(1, tokenImageStr.length()-1);
     }
 
     @Test

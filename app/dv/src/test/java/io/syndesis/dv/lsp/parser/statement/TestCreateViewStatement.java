@@ -62,7 +62,7 @@ public class TestCreateViewStatement {
 
         CreateViewStatement cvs = createStatatement(stmt);
 
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
+        assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
         assertEquals(58, cvs.analyzer.getTokens().size());
 
         assertEquals("wineList", cvs.getViewName());
@@ -91,7 +91,7 @@ public class TestCreateViewStatement {
 
         CreateViewStatement cvs = createStatatement(stmt);
 
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
+        assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
         assertEquals(23, cvs.analyzer.getTokens().size());
 
         assertEquals(2, cvs.getExceptions().size());
@@ -107,7 +107,7 @@ public class TestCreateViewStatement {
 
         CreateViewStatement cvs = createStatatement(stmt);
 
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
+        assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
         assertEquals(13, cvs.analyzer.getTokens().size());
 
         assertEquals(2, cvs.getExceptions().size());

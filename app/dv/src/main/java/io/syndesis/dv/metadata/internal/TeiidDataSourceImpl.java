@@ -15,6 +15,7 @@
  */
 package io.syndesis.dv.metadata.internal;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 
@@ -32,7 +33,7 @@ public class TeiidDataSourceImpl implements Comparable<TeiidDataSourceImpl>, Tei
     private Map<String, String> importProperties;
     private Map<String, String> translatorProperties;
     private DefaultSyndesisDataSource syndesisDataSource;
-    private volatile Date lastLoad;
+    private volatile Instant lastLoad;
 
     public TeiidDataSourceImpl(String id, String name, String translatorName, Object dataSource) {
         ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
@@ -132,11 +133,11 @@ public class TeiidDataSourceImpl implements Comparable<TeiidDataSourceImpl>, Tei
 
     @Override
     public void loadingMetadata() {
-        this.lastLoad = new Date(System.currentTimeMillis());
+        this.lastLoad = Instant.now();
     }
 
     @Override
     public Date getLastMetadataLoadTime() {
-        return this.lastLoad;
+        return new Date(this.lastLoad.toEpochMilli());
     }
 }

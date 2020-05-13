@@ -20,13 +20,13 @@ import org.teiid.query.parser.Token;
 
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 
-public class TokenContext implements DdlAnalyzerConstants {
+public class TokenContext {
     private final Position position;
     private final Token token;
-    private DdlAnalyzerConstants.Context context;
+    private DdlAnalyzerConstants.CONTEXT context;
     private final AbstractStatementObject targetObject;
 
-    public TokenContext(Position position, Token token, DdlAnalyzerConstants.Context context, AbstractStatementObject statementObject) {
+    public TokenContext(Position position, Token token, DdlAnalyzerConstants.CONTEXT context, AbstractStatementObject statementObject) {
         super();
         this.position = position;
         this.token = token;
@@ -42,11 +42,11 @@ public class TokenContext implements DdlAnalyzerConstants {
         return token;
     }
 
-    public DdlAnalyzerConstants.Context getContext() {
+    public DdlAnalyzerConstants.CONTEXT getContext() {
         return context;
     }
 
-    public DdlAnalyzerConstants.Context setContext(DdlAnalyzerConstants.Context context) {
+    public DdlAnalyzerConstants.CONTEXT setContext(DdlAnalyzerConstants.CONTEXT context) {
         return this.context = context;
     }
 

@@ -26,7 +26,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-import io.syndesis.dv.StringConstants;
 import io.syndesis.dv.server.V1Constants;
 
 /**
@@ -191,10 +190,12 @@ public final class RestSyndesisSourceStatus implements V1Constants {
         return loading;
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public void setLastLoad(Date lastLoad) {
         this.lastLoad = lastLoad;
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public Date getLastLoad() {
         return lastLoad;
     }

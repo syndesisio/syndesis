@@ -237,10 +237,10 @@ public class MetadataServiceTest {
         metadataService.refreshPreviewVdb();
 
         RestViewSourceInfo info = metadataService.getRuntimeMetadata("dv1");
-        RestSourceSchema[] schemas = info.getSchemas();
-        assertEquals(2, schemas.length);
-        assertEquals("dv1", schemas[0].getName());
-        assertEquals("source", schemas[1].getName());
+        List<RestSourceSchema> schemas = info.getSchemas();
+        assertEquals(2, schemas.size());
+        assertEquals("dv1", schemas.get(0).getName());
+        assertEquals("source", schemas.get(1).getName());
     }
 
 }

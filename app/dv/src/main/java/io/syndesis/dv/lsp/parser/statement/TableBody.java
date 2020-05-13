@@ -18,12 +18,15 @@ package io.syndesis.dv.lsp.parser.statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.lsp4j.Position;
-import org.teiid.query.parser.Token;
-
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
+import org.eclipse.lsp4j.Position;
+import org.teiid.query.parser.SQLParserConstants;
+import org.teiid.query.parser.Token;
+
 public class TableBody extends AbstractStatementObject {
+    private List<Token> tableBodyTokens;
     private final List<TableElement> elements;
     private TableOptionsClause options;
     private boolean hasPrimaryKey;
@@ -51,17 +54,18 @@ public class TableBody extends AbstractStatementObject {
 
     @Override
     protected void parseAndValidate() {
-        List<Token> tableBodyTokens = getBracketedTokens(getTokens(), 3, SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
 
-        setFirstTknIndex(getTokenIndex(tableBodyTokens[0]));
-        setLastTknIndex(getTokenIndex(tableBodyTokens[tableBodyTokens.length - 1]));
+        tableBodyTokens = getBracketedTokens(getTokens(), 3, SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
+
+        setFirstTknIndex(getTokenIndex(tableBodyTokens.get(0)));
+        setLastTknIndex(getTokenIndex(tableBodyTokens.get(tableBodyTokens.size() - 1)));
 
         // Process table body (i.e. columns definition)
         // Check for table body content
         if (getLastTknIndex() == getFirstTknIndex() + 1) {
             // NO TABLE BODY
-            Token firstToken = getTokens()[getFirstTknIndex()];
-            Token lastToken = getTokens()[getLastTknIndex()];
+            Token firstToken = getTokens().get(getFirstTknIndex());
+            Token lastToken = getTokens().get(getLastTknIndex());
             this.analyzer.addException(firstToken, lastToken, "No columns defined in table body");
         } else {
             parseTableElements();
@@ -70,32 +74,30 @@ public class TableBody extends AbstractStatementObject {
         // Parse Table Options
 
         // Create index for Token after table body () but it may be NULL
-        int iTkn = 3 + tableBodyTokens.length;
+        int iTkn = 3 + tableBodyTokens.size();
         // check if index == MAX INDEX
-        if( iTkn > getTokens().length-1) { return; }
+        if( iTkn > getTokens().size()-1) { return; }
 
-        Token nextTkn = getTokens()[iTkn];
+        Token nextTkn = getTokens().get(iTkn);
 
-        if (nextTkn.kind == OPTIONS) {
+        if (nextTkn.kind == SQLParserConstants.OPTIONS) {
             List<Token> optionsTkns = new ArrayList<Token>();
             optionsTkns.add(nextTkn);
 
             // Check for parens in case of string(), decimal() types.. etc
             Token lastTkn = nextTkn;
-            if (isNextTokenOfKind(getTokens(), iTkn, LPAREN)) {
-                Token[] bracketedTkns = getBracketedTokens(getTokens(), iTkn + 1, LPAREN, RPAREN);
-                if (bracketedTkns.length > 0) {
-                    for (Token optionsTkn : bracketedTkns) {
-                        iTkn++;
-                        optionsTkns.add(optionsTkn);
-                        lastTkn = optionsTkn;
-                    }
+            if (isNextTokenOfKind(getTokens(), iTkn, SQLParserConstants.LPAREN)) {
+                List<Token> bracketedTkns = getBracketedTokens(getTokens(), iTkn + 1, SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
+                for (Token optionsTkn : bracketedTkns) {
+                    iTkn++;
+                    optionsTkns.add(optionsTkn);
+                    lastTkn = optionsTkn;
                 }
             }
 
             if (!optionsTkns.isEmpty()) {
                 TableOptionsClause options = new TableOptionsClause(analyzer);
-                options.setOptionsTokens(optionsTkns.toArray(new Token[0]));
+                options.setOptionsTokens(optionsTkns);
                 setOptions(options);
                 options.setFirstTknIndex(getTokenIndex(nextTkn));
                 options.setLastTknIndex(getTokenIndex(lastTkn));
@@ -125,13 +127,8 @@ public class TableBody extends AbstractStatementObject {
         }
     }
 
-    public boolean isDatatype(Token token) {
-        for (int dType : DATATYPES) {
-            if (token.kind == dType) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean isDatatype(Token token) {
+        return DdlAnalyzerConstants.DATATYPES.contains(token.kind);
     }
 
     public boolean hasPrimaryKey() {
@@ -157,10 +154,10 @@ public class TableBody extends AbstractStatementObject {
         Token tkn = this.analyzer.getTokenFor(position);
         int index = getTokenIndex(tkn);
         if (index == getFirstTknIndex()) {
-            return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_BODY, this);
+            return new TokenContext(position, tkn, DdlAnalyzerConstants.CONTEXT.TABLE_BODY, this);
         }
         if (index == getLastTknIndex()) {
-            return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_BODY, this);
+            return new TokenContext(position, tkn, DdlAnalyzerConstants.CONTEXT.TABLE_BODY, this);
         }
 
         // Check options
@@ -168,6 +165,6 @@ public class TableBody extends AbstractStatementObject {
             return options.getTokenContext(position);
         }
 
-        return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_BODY, this);
+        return new TokenContext(position, tkn, DdlAnalyzerConstants.CONTEXT.TABLE_BODY, this);
     }
 }

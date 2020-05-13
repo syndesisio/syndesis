@@ -21,15 +21,13 @@ import org.teiid.query.parser.Token;
 
 import java.util.List;
 
-import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.StatementType;
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.STATEMENT_TYPE;
 
 public class DdlTokenWalker implements SQLParserConstants {
-    private final Token[] tokens;
+    private final List<Token> tokens;
 
-    public DdlTokenWalker(Token[] tokens) {
-        super();
-
-        this.tokens = tokens;
+    public DdlTokenWalker(List<Token> list) {
+        this.tokens = list;
     }
 
     /*
@@ -48,8 +46,8 @@ public class DdlTokenWalker implements SQLParserConstants {
 
         TokenCursorLocator previousLocator = null; // last token where cursor is or was (if in blank space)
 
-        if (tokens.length > 0) {
-            previousLocator = new TokenCursorLocator(tokens[0], 0, line, column);
+        if (!tokens.isEmpty()) {
+            previousLocator = new TokenCursorLocator(tokens.get(0), 0, line, column);
 
             // If cursor isn't past the first token, return null;
             if (previousLocator.isCursorBefore()) {
@@ -62,7 +60,7 @@ public class DdlTokenWalker implements SQLParserConstants {
 
             // Case where the cursor is located at least 1 character after the first token
             // (open space)
-            if (tokens.length == 1 && previousLocator.isCursorFreeFromToken()) {
+            if (tokens.size() == 1 && previousLocator.isCursorFreeFromToken()) {
                 return previousLocator.getToken();
             }
 
@@ -74,10 +72,10 @@ public class DdlTokenWalker implements SQLParserConstants {
                 lastFreeLocator = new TokenCursorLocator(previousLocator);
             }
 
-            for (int iTkn = 1; iTkn < tokens.length; iTkn++) {
+            for (int iTkn = 1; iTkn < tokens.size(); iTkn++) {
                 // Check if last token, else create nextLocator
-                nextLocator = new TokenCursorLocator(tokens[iTkn], iTkn, line, column);
-                if (iTkn == tokens.length - 1) {
+                nextLocator = new TokenCursorLocator(tokens.get(iTkn), iTkn, line, column);
+                if (iTkn == tokens.size() - 1) {
                     isLastToken = true;
                 }
 
@@ -117,9 +115,8 @@ public class DdlTokenWalker implements SQLParserConstants {
         int tokenIndex;
         int line;
         int column;
-        int nChars = 0;
 
-        TokenCursorLocator(Token token, int index, int line, int column) {
+        private TokenCursorLocator(Token token, int index, int line, int column) {
             this.token = token;
             this.tokenIndex = index;
             this.line = line;

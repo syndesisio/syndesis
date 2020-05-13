@@ -29,8 +29,11 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import io.syndesis.dv.lsp.completion.DdlCompletionConstants;
 import io.syndesis.dv.lsp.completion.providers.items.DdlCompletionItemLoader;
 
-public class CompletionItemBuilder implements DdlCompletionConstants {
-    private DdlCompletionItemLoader loader = DdlCompletionItemLoader.getInstance();
+public class CompletionItemBuilder {
+    private final DdlCompletionItemLoader loader = DdlCompletionItemLoader.getInstance();
+
+    public CompletionItemBuilder() {
+    }
 
     public DdlCompletionItemLoader getItemLoader() {
         return loader;
@@ -144,10 +147,10 @@ public class CompletionItemBuilder implements DdlCompletionConstants {
         String[4] insertTextFormat;
      */
     public String[] getItemData(String label) {
-        String[] result = DdlCompletionConstants.KEYWORDS_ITEM_DATA.get(label.toUpperCase(Locale.US));
+        String[] result = DdlCompletionConstants.KEYWORDS_ITEM_DATA.get(label.toUpperCase());
 
         if( result == null ) {
-            result = DATATYPES_ITEM_DATA.get(label);
+            result = DdlCompletionConstants.DATATYPES_ITEM_DATA.get(label);
         }
 
         return result;
@@ -187,7 +190,7 @@ public class CompletionItemBuilder implements DdlCompletionConstants {
         MarkupContent markupContent = new MarkupContent();
         markupContent.setKind(MarkupKind.MARKDOWN);
         markupContent.setValue(
-                String.format("```%s\n%s\n```", "java", escapedString));
+                String.format("```%s%n%s%n```", "java", escapedString));
         return Either.forRight(markupContent);
     }
 

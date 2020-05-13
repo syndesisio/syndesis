@@ -31,6 +31,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 @MappedSuperclass
 @SuppressWarnings({"PMD.AbstractClassWithoutAbstractMethod", "PMD.UnusedPrivateField"})
 public abstract class BaseEntity {
@@ -65,10 +67,12 @@ public abstract class BaseEntity {
         }
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public Timestamp getCreatedAt() {
         return createdAt;
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public Timestamp getModifiedAt() {
         return modifiedAt;
     }
@@ -84,6 +88,7 @@ public abstract class BaseEntity {
         return version;
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public void setModifiedAt(Timestamp modifiedAt) {
         this.modifiedAt = modifiedAt;
     }

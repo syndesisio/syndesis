@@ -37,6 +37,8 @@ import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.internal.SSLUtils;
@@ -69,7 +71,6 @@ public class HttpClientUtils {
   }
 
     @SuppressFBWarnings("REC_CATCH_EXCEPTION")
-    @SuppressWarnings({"PMD.NPathComplexity", "PMD.ExcessiveMethodLength", "PMD.CyclomaticComplexity"}) // TODO refactor
     private static OkHttpClient createHttpClient(final Config config, final Consumer<OkHttpClient.Builder> additionalConfig,
         OkHttpClient.Builder httpClientBuilder) {
         try {
@@ -90,16 +91,16 @@ public class HttpClientUtils {
                   trustManager = (X509TrustManager) trustManagers[0];
                 }
 
-                try {
-                    SSLContext sslContext = SSLUtils.sslContext(keyManagers, trustManagers);
+            try {
+                SSLContext sslContext = SSLUtils.sslContext(keyManagers, trustManagers);
+                if (trustManager != null) {
                     httpClientBuilder.sslSocketFactory(sslContext.getSocketFactory(), trustManager);
-                } catch (GeneralSecurityException e) {
-                    throw new AssertionError(); // The system has no TLS. Just give up.
+                } else {
+                    // trustManager can be null, and sslSocketFactory throws NPE in that case
+                    httpClientBuilder.sslSocketFactory(sslContext.getSocketFactory());
                 }
-            } else {
-              SSLContext context = SSLContext.getInstance("TLSv1.2");
-              context.init(keyManagers, trustManagers, null);
-              httpClientBuilder.sslSocketFactory(context.getSocketFactory(), (X509TrustManager) trustManagers[0]);
+            } catch (GeneralSecurityException e) {
+                throw new IllegalStateException("Unable to setup TLS", e);
             }
 
             httpClientBuilder.addInterceptor(chain -> {

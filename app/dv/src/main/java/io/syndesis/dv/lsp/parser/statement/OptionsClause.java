@@ -16,9 +16,12 @@
 package io.syndesis.dv.lsp.parser.statement;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.lsp4j.Position;
+import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
@@ -39,18 +42,18 @@ public class OptionsClause extends AbstractStatementObject {
             return;
         }
         // First token has to be OPTIONS
-        if( !tokenIsOfKind(getFirstTknIndex(), OPTIONS)) {
+        if( !tokenIsOfKind(getFirstTknIndex(), SQLParserConstants.OPTIONS)) {
             // TODO: ADD EXCEPTION
             return;
         }
         // Second token has to be '('
-        if( !tokenIsOfKind(getFirstTknIndex() + 1, LPAREN)) {
+        if( !tokenIsOfKind(getFirstTknIndex() + 1, SQLParserConstants.LPAREN)) {
             // System.out.println("OPTIONS ERROR: left '(' missing ");
             // TODO: ADD EXCEPTION
             return;
         }
         // Last token has to be a ')'
-        if( !tokenIsOfKind(getLastTknIndex(), RPAREN)) {
+        if( !tokenIsOfKind(getLastTknIndex(), SQLParserConstants.RPAREN)) {
             // System.out.println("OPTIONS ERROR: right ')' missing ");
             // TODO: ADD EXCEPTION
             return;
@@ -61,7 +64,7 @@ public class OptionsClause extends AbstractStatementObject {
         List<Token> nextOption = new ArrayList<Token>();
         for(int i=iTkn; i<optionsTokens.length-1; i++) {
             Token nextTkn = optionsTokens[i];
-            if( nextTkn.kind == COMMA) {
+            if( nextTkn.kind == SQLParserConstants.COMMA) {
                 // We found a comma, so add nextOption (tkn array) to the nameValueTokenList
                 Token[] nextNameValueArray = nextOption.toArray(new Token[0]);
                 validateNameValueArray(nextNameValueArray);
@@ -87,7 +90,7 @@ public class OptionsClause extends AbstractStatementObject {
                     "OPTION missing value at " + positionToString(getBeginPosition(firstToken)));
             return;
         }
-        if( nextNameValueArray[0].kind != ID ) {
+        if( nextNameValueArray[0].kind != SQLParserConstants.ID ) {
             Token firstToken = nextNameValueArray[0];
             this.analyzer.addException(
                     firstToken,
@@ -95,7 +98,7 @@ public class OptionsClause extends AbstractStatementObject {
                     "OPTION ID is invalid at " + positionToString(getBeginPosition(firstToken)));
             return;
         }
-        if( nextNameValueArray[1].kind != STRINGVAL && nextNameValueArray[1].kind != UNSIGNEDINTEGER) {
+        if( nextNameValueArray[1].kind != SQLParserConstants.STRINGVAL && nextNameValueArray[1].kind != SQLParserConstants.UNSIGNEDINTEGER) {
             Token firstToken = nextNameValueArray[1];
             this.analyzer.addException(
                     firstToken,
@@ -114,19 +117,18 @@ public class OptionsClause extends AbstractStatementObject {
         }
     }
 
-    public Token[] getOptionsTokens() {
-        return optionsTokens;
+    public List<Token> getOptionsTokens() {
+        return Collections.unmodifiableList(Arrays.asList(optionsTokens));
     }
 
     private boolean tokenIsOfKind(int index, int kind) {
-        return this.getAnalyzer().getTokens()[index].kind == kind;
+        return this.getAnalyzer().getTokens().get(index).kind == kind;
     }
 
-    @SuppressWarnings("PMD.OptimizableToArrayCall") // false positive
     public void setOptionsTokens(List<Token> optionsTokens) {
         this.optionsTokens = optionsTokens.toArray(new Token[optionsTokens.size()]);
         setFirstTknIndex(this.getAnalyzer().getTokenIndex(this.optionsTokens[0]));
-        setLastTknIndex(this.getAnalyzer().getTokenIndex(this.optionsTokens[optionsTokens.length-1]));
+        setLastTknIndex(this.getAnalyzer().getTokenIndex(this.optionsTokens[optionsTokens.size()-1]));
         this.parseAndValidate();
     }
 
