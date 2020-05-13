@@ -36,14 +36,17 @@ import org.testcontainers.images.builder.dockerfile.statement.MultiArgsStatement
  */
 public class SyndesisS2iAssemblyContainer extends GenericContainer<SyndesisS2iAssemblyContainer> {
 
-    private static final String S2I_ASSEMBLE_SCRIPT = "/usr/local/s2i/assemble";
+    static final String S2I_ASSEMBLE_SCRIPT = "/usr/local/s2i/assemble";
     private static final String SRC_DIR = "/tmp/src";
 
     public SyndesisS2iAssemblyContainer(String integrationName, Path projectDir, String imageTag) {
         super(new ImageFromDockerfile(integrationName + "-s2i", true)
             .withFileFromPath(SRC_DIR, projectDir)
             .withDockerfileFromBuilder(builder -> builder.from(String.format("syndesis/syndesis-s2i:%s", imageTag))
-                .withStatement(new MultiArgsStatement("ADD --chown=1000", SRC_DIR, SRC_DIR))
+                .withStatement(new MultiArgsStatement("ADD", SRC_DIR, SRC_DIR))
+                .user("0")
+                .run("chown", "-R", "1000", SRC_DIR)
+                .user("1000")
                 .cmd(S2I_ASSEMBLE_SCRIPT)
                 .build()));
 
