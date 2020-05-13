@@ -81,6 +81,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.HikariDataSource;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import io.syndesis.dv.KException;
 import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
 import io.syndesis.dv.datasources.ExternalSource;
@@ -267,27 +269,19 @@ public class DefaultMetadataInstance implements MetadataInstance {
     }
 
     @Override
+    // OBL_UNSATISFIED_OBLIGATION seems to be false positive
+    @SuppressFBWarnings({"SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE", "OBL_UNSATISFIED_OBLIGATION"}) 
     public QSResult query(String vdb, String query, int offset, int limit) throws KException {
         ObjectMapper mapper = new ObjectMapper();
 
         QSResult result = new QSResult();
 
-        KLog.getLogger().debug("Commencing query execution: %s", query);
-
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet rs = null;
-
-        KLog.getLogger().debug("Initialising SQL connection for vdb %s", vdb);
-
         //
         // Ensure any runtime exceptions are always caught and thrown as KExceptions
         //
-        try {
-            connection = getConnection(vdb, DEFAULT_VDB_VERSION);
-
-            statement = connection.createStatement();
-
+        KLog.getLogger().debug("Initialising SQL connection for vdb %s", vdb);
+        try (Connection connection = getConnection(vdb, DEFAULT_VDB_VERSION);
+            Statement statement = connection.createStatement()) {
             KLog.getLogger().debug("Executing SQL Statement for query %s with offset of %d and limit of %d",
                                    query,
                                    offset,
@@ -299,46 +293,45 @@ public class DefaultMetadataInstance implements MetadataInstance {
                 query = "SELECT * FROM (" + query + ") x LIMIT " + Math.max(0, offset) + ", " + (limit < 0?Integer.MAX_VALUE:limit);
             }
 
-            try {
-                rs = statement.executeQuery(query);
+            KLog.getLogger().debug("Commencing query execution: %s", query);
+            try (ResultSet rs = statement.executeQuery(query)) {
+                ResultSetMetaData rsmd = rs.getMetaData();
+                int columns = rsmd.getColumnCount();
+
+                //
+                // Populate the columns
+                //
+                for (int i = 1; i <= columns; ++i) {
+                    String columnName = rsmd.getColumnName(i);
+                    String columnLabel = rsmd.getColumnLabel(i);
+                    String colTypeName = rsmd.getColumnTypeName(i);
+                    QSColumn column = new QSColumn(colTypeName, columnName, columnLabel);
+                    result.addColumn(column);
+                }
+
+                while (rs.next()) {
+                    QSRow row = new QSRow();
+                    for (int i = 1; i <= columns; ++i) {
+                        Object value = rs.getObject(i);
+                        if (value instanceof ArrayImpl) {
+                            row.add(mapper.writeValueAsString(((ArrayImpl)value).getArray()));
+                        } else if (value instanceof java.sql.Blob) {
+                            row.add("blob");
+                        }  else if (value instanceof java.sql.Clob) {
+                            row.add("clob");
+                        }  else if (value instanceof org.teiid.core.types.AbstractGeospatialType) {
+                            Clob clob = GeometryUtils.geometryToClob((org.teiid.core.types.AbstractGeospatialType)value, true);
+                            ClobToStringTransform transform = new ClobToStringTransform();
+                            row.add(transform.transform(clob, String.class));
+                        } else {
+                           row.add(value);
+                        }
+                    }
+                    result.addRow(row);
+                }
             } catch (SQLException e) {
                 KLog.getLogger().warn(e, "Could not execute query: %s", query);
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-            }
-
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int columns = rsmd.getColumnCount();
-
-            //
-            // Populate the columns
-            //
-            for (int i = 1; i <= columns; ++i) {
-                String columnName = rsmd.getColumnName(i);
-                String columnLabel = rsmd.getColumnLabel(i);
-                String colTypeName = rsmd.getColumnTypeName(i);
-                QSColumn column = new QSColumn(colTypeName, columnName, columnLabel);
-                result.addColumn(column);
-            }
-
-            while (rs.next()) {
-                QSRow row = new QSRow();
-                for (int i = 1; i <= columns; ++i) {
-                    Object value = rs.getObject(i);
-                    if (value instanceof ArrayImpl) {
-                        row.add(mapper.writeValueAsString(((ArrayImpl)value).getArray()));
-                    } else if (value instanceof java.sql.Blob) {
-                        row.add("blob");
-                    }  else if (value instanceof java.sql.Clob) {
-                        row.add("clob");
-                    }  else if (value instanceof org.teiid.core.types.AbstractGeospatialType) {
-                        Clob clob = GeometryUtils.geometryToClob((org.teiid.core.types.AbstractGeospatialType)value, true);
-                        ClobToStringTransform transform = new ClobToStringTransform();
-                        row.add(transform.transform(clob, String.class));
-                    } else {
-                       row.add(value);
-                    }
-                }
-                result.addRow(row);
             }
 
             KLog.getLogger().debug("Query executed and returning %d results", result.getRows().size());
@@ -346,22 +339,6 @@ public class DefaultMetadataInstance implements MetadataInstance {
             return result;
         } catch (SQLException | JsonProcessingException | FunctionExecutionException | TransformationException e) {
             throw new KException(e);
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-
-                if (statement != null) {
-                    statement.close();
-                }
-
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e1) {
-                // ignore
-            }
         }
     }
 

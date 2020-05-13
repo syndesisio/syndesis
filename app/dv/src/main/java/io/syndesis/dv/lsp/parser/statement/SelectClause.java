@@ -15,11 +15,15 @@
  */
 package io.syndesis.dv.lsp.parser.statement;
 
-import org.eclipse.lsp4j.Position;
-import org.teiid.query.parser.Token;
+import java.util.List;
 
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
+
+import org.eclipse.lsp4j.Position;
+import org.teiid.query.parser.SQLParserConstants;
+import org.teiid.query.parser.Token;
 
 public class SelectClause extends AbstractStatementObject {
 
@@ -30,7 +34,7 @@ public class SelectClause extends AbstractStatementObject {
     @Override
     protected void parseAndValidate() {
         // Look for SELECT and FROM tokens
-        Token selectToken = findTokenByKind(SELECT);
+        Token selectToken = findTokenByKind(SQLParserConstants.SELECT);
         if(selectToken != null ) {
             setFirstTknIndex(getTokenIndex(selectToken));
         } else {
@@ -40,15 +44,15 @@ public class SelectClause extends AbstractStatementObject {
         // We have the SELECT
         // Look for FROM
 
-        Token fromToken = findTokenByKind(FROM);
+        Token fromToken = findTokenByKind(SQLParserConstants.FROM);
         if(fromToken != null ) {
             setLastTknIndex(getTokenIndex(fromToken)-1);
         } else {
             // Assume that the SELECT ends at either the last token before the semicolon
             // or the last token if semi-colon isn't there
-            Token[] tokens = getTokens();
-            if( tokens[tokens.length-1].kind == SEMICOLON ) {
-                setLastTknIndex(tokens.length-2);
+            List<Token> tokens = getTokens();
+            if( tokens.get(tokens.size()-1).kind == SQLParserConstants.SEMICOLON ) {
+                setLastTknIndex(tokens.size()-2);
             }
         }
 
@@ -64,7 +68,7 @@ public class SelectClause extends AbstractStatementObject {
         boolean isInClause = isBetween(getFirstTknIndex(), getLastTknIndex(), position);
         if( isInClause ) {
             Token tkn = this.analyzer.getTokenFor(position);
-            return new TokenContext(position, tkn, CONTEXT.SELECT_CLAUSE, this);
+            return new TokenContext(position, tkn, DdlAnalyzerConstants.CONTEXT.SELECT_CLAUSE, this);
         }
         return null;
     }

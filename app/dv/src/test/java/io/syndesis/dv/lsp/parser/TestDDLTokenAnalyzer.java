@@ -15,6 +15,8 @@
  */
 package io.syndesis.dv.lsp.parser;
 
+import java.util.List;
+
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.STATEMENT_TYPE;
 
 import org.junit.Test;
@@ -24,9 +26,9 @@ import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("nls")
 public class TestDDLTokenAnalyzer {
-    public void printTokens(Token[] tkns, String headerMessage) {
+    public void printTokens(List<Token> list, String headerMessage) {
         System.out.println(headerMessage);
-        for (Token token : tkns) {
+        for (Token token : list) {
             System.out.println(" tkn ==>   " + token.image
                     + "\t @ ( " + 
                     token.beginLine + ", " + token.beginColumn + ")");
@@ -44,10 +46,10 @@ public class TestDDLTokenAnalyzer {
         
 
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
-        printTokens(analyzer.getTokens(), "testForeignTable = nTokens  " + analyzer.getTokens().length);
+        printTokens(analyzer.getTokens(), "testForeignTable = nTokens  " + analyzer.getTokens().size());
         
         assertEquals(STATEMENT_TYPE.CREATE_FOREIGN_TABLE_TYPE, analyzer.getStatementType());
-        assertEquals(64, analyzer.getTokens().length);
+        assertEquals(64, analyzer.getTokens().size());
     }
     
     @Test
@@ -63,10 +65,10 @@ public class TestDDLTokenAnalyzer {
                         "OPTIONS (CARDINALITY 12, UUID 'uuid2',  UPDATABLE 'true', FOO 'BAR', ANNOTATION 'Test Table')";
         
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
-        printTokens(analyzer.getTokens(), "testCreateVirtualView nTokens  = " + analyzer.getTokens().length);
+        printTokens(analyzer.getTokens(), "testCreateVirtualView nTokens  = " + analyzer.getTokens().size());
         
         assertEquals(STATEMENT_TYPE.CREATE_VIRTUAL_VIEW_TYPE, analyzer.getStatementType());
-        assertEquals(74, analyzer.getTokens().length);
+        assertEquals(74, analyzer.getTokens().size());
     }
     
     @Test
@@ -77,10 +79,10 @@ public class TestDDLTokenAnalyzer {
                         "OPTIONS (CARDINALITY 12, UUID 'uuid2',  UPDATABLE 'true', FOO 'BAR', ANNOTATION 'Test Table')";
 
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
-        printTokens(analyzer.getTokens(), "testViewName() nTokens = " + analyzer.getTokens().length);
+        printTokens(analyzer.getTokens(), "testViewName() nTokens = " + analyzer.getTokens().size());
 
         assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, analyzer.getStatementType());
-        assertEquals(32, analyzer.getTokens().length);
+        assertEquals(32, analyzer.getTokens().size());
     }
     
     @Test
@@ -88,10 +90,10 @@ public class TestDDLTokenAnalyzer {
         String stmt = "CREATE VIEW winelist( e4 decimal(12,3) default 12.2 options (searchable 'unsearchable') )";
 
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
-        printTokens(analyzer.getTokens(), "testCreateViewWithDatatypes nTokens  = " + analyzer.getTokens().length);
+        printTokens(analyzer.getTokens(), "testCreateViewWithDatatypes nTokens  = " + analyzer.getTokens().size());
 
         assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, analyzer.getStatementType());
-        assertEquals(19, analyzer.getTokens().length);
+        assertEquals(19, analyzer.getTokens().size());
     }
     
     @Test
@@ -102,10 +104,10 @@ public class TestDDLTokenAnalyzer {
                         "e4 decimal(12,3) default 12.2 options (searchable 'unsearchable'))";
         
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
-        printTokens(analyzer.getTokens(), "testCreateViewWithDatatypes nTokens  = " + analyzer.getTokens().length);
+        printTokens(analyzer.getTokens(), "testCreateViewWithDatatypes nTokens  = " + analyzer.getTokens().size());
 
         assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, analyzer.getStatementType());
-        assertEquals(31, analyzer.getTokens().length);
+        assertEquals(31, analyzer.getTokens().size());
     }
 
 }

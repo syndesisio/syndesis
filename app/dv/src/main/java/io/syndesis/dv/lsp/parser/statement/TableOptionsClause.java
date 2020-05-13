@@ -18,6 +18,7 @@ package io.syndesis.dv.lsp.parser.statement;
 import org.eclipse.lsp4j.Position;
 import org.teiid.query.parser.Token;
 
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 public class TableOptionsClause extends OptionsClause {
@@ -31,7 +32,7 @@ public class TableOptionsClause extends OptionsClause {
         boolean isInOptions = isBetween(getFirstTknIndex(), getLastTknIndex(), position);
         if( isInOptions ) {
             Token tkn = this.analyzer.getTokenFor(position);
-            return new TokenContext(position, tkn, CONTEXT.TABLE_OPTIONS, this);
+            return new TokenContext(position, tkn, DdlAnalyzerConstants.CONTEXT.TABLE_OPTIONS, this);
         }
         return null;
     }

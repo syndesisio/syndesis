@@ -37,6 +37,8 @@ import javax.net.ssl.X509TrustManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.internal.SSLUtils;
@@ -73,6 +75,7 @@ public final class HttpClientUtils {
         return createHttpClient(config, b -> b.protocols(Collections.singletonList(Protocol.HTTP_1_1)), httpClientBuilder);
     }
 
+    @SuppressFBWarnings("REC_CATCH_EXCEPTION")
     private static OkHttpClient createHttpClient(final Config config, final Consumer<OkHttpClient.Builder> additionalConfig,
         OkHttpClient.Builder httpClientBuilder) {
         try {
@@ -94,7 +97,12 @@ public final class HttpClientUtils {
 
             try {
                 SSLContext sslContext = SSLUtils.sslContext(keyManagers, trustManagers);
-                httpClientBuilder.sslSocketFactory(sslContext.getSocketFactory(), trustManager);
+                if (trustManager != null) {
+                    httpClientBuilder.sslSocketFactory(sslContext.getSocketFactory(), trustManager);
+                } else {
+                    // trustManager can be null, and sslSocketFactory throws NPE in that case
+                    httpClientBuilder.sslSocketFactory(sslContext.getSocketFactory());
+                }
             } catch (GeneralSecurityException e) {
                 throw new IllegalStateException("Unable to setup TLS", e);
             }
