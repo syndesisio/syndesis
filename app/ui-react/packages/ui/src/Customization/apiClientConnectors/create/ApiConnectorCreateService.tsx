@@ -20,12 +20,12 @@ export interface IApiConnectorCreateServiceProps {
   i18nPort: string;
   i18nService: string;
   i18nServicePortTitle: string;
+  portName?: string;
   /**
    * The list of available services for this document.
    */
   portsAvailable?: IServiceAndPortTypes[];
-  selectedPort?: string;
-  selectedService?: string;
+  serviceName?: string;
   servicesAvailable?: IServiceAndPortTypes[];
 }
 
@@ -36,14 +36,14 @@ export interface IApiConnectorCreateServiceProps {
  * before proceeding to the next step.
  */
 export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCreateServiceProps> = ({
-  handleChangeSelectedPort,
+  // handleChangeSelectedPort,
   handleChangeSelectedService,
-  i18nPort,
-  i18nService,
+  // i18nPort,
+  // i18nService,
   i18nServicePortTitle,
-  portsAvailable,
-  selectedPort,
-  selectedService,
+  // portName,
+  // portsAvailable,
+  serviceName,
   servicesAvailable,
 }) => (
   <Stack style={{ maxWidth: '600px' }} gutter="md">
@@ -52,17 +52,17 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
     </StackItem>
     <StackItem>
       <Form data-testid={`api-client-connector-service-ports`}>
-        <FormGroup fieldId={'authenticationType'}>
+        <FormGroup fieldId={'serviceName'}>
           {servicesAvailable!.map((service: IServiceAndPortTypes, idx) => (
             <Radio
               key={service.value + '-' + idx}
-              id={'authenticationType'}
+              id={'serviceName'}
               data-testid={`api-client-connector-service-${toValidHtmlId(
                 service!.value
               )}`}
               aria-label={service.label}
               label={service.label}
-              isChecked={selectedService === service.value}
+              isChecked={serviceName === service.value}
               name={'service'}
               onChange={() => handleChangeSelectedService(service.value!)}
               value={service.value}
