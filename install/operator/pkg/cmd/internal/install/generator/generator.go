@@ -28,7 +28,7 @@ type config struct {
 	Syndesis struct {
 		Components struct {
 			Database struct {
-				Tag string `yaml:"Tag"`
+				Image string `yaml:"Image"`
 			} `yaml:"Database"`
 		} `yaml:"Components"`
 	} `yaml:"Syndesis"`
@@ -50,7 +50,7 @@ func main() {
 	code := fmt.Sprintf(`package install
 
 const defaultDatabaseImage = "%s"
-`, c.Syndesis.Components.Database.Tag)
+`, c.Syndesis.Components.Database.Image)
 
 	err = ioutil.WriteFile("install_defaults.go", []byte(code), 0644)
 	if err != nil {
