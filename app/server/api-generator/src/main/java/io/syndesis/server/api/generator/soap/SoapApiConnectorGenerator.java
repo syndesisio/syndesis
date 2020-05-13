@@ -275,7 +275,7 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
     private static String toListValue(List<String> stringList) {
         return stringList.stream()
             .map(s -> String.format("\"%s\"", s))
-            .collect(Collectors.joining(",", "{", "}"));
+            .collect(Collectors.joining(",", "[", "]"));
     }
 
 }
