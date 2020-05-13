@@ -46,7 +46,7 @@ public final class Messages {
      */
     @SuppressWarnings("PMD.AvoidCatchingNPE")
     public static String getString(Enum<?> key, ResourceBundle bundle) {
-        String enumKey = key.getClass().getSimpleName() + '.' + key.name();
+        String enumKey = key.getDeclaringClass().getSimpleName() + '.' + key.name();
         try {
             return bundle.getString(enumKey);
         } catch (NullPointerException ignored) {

@@ -39,7 +39,7 @@ import io.syndesis.dv.utils.KLog;
 @Component
 public class RepositoryManagerImpl implements RepositoryManager {
 
-    private static DefaultTransactionDefinition NEW_TRANSACTION_DEFINITION = new DefaultTransactionDefinition();
+    private static final DefaultTransactionDefinition NEW_TRANSACTION_DEFINITION = new DefaultTransactionDefinition();
     static {
         NEW_TRANSACTION_DEFINITION.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
     }
@@ -60,8 +60,8 @@ public class RepositoryManagerImpl implements RepositoryManager {
     private PlatformTransactionManager platformTransactionManager;
 
     @Override
-    @SuppressWarnings({"Finally", "PMD.DoNotThrowExceptionInFinally"})
-    public <T> T runInTransaction(boolean rollbackOnly, Task<T> callable) {
+    @SuppressWarnings("Finally")
+    public <T> T runInTransaction(boolean rollbackOnly, Callable<T> callable) throws Exception {
         TransactionStatus transactionStatus = platformTransactionManager.getTransaction(NEW_TRANSACTION_DEFINITION);
 
         boolean shouldRollback = rollbackOnly;

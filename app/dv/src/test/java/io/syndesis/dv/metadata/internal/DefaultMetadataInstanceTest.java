@@ -85,7 +85,7 @@ public class DefaultMetadataInstanceTest {
         assertTrue(report.toString(), report.getReport().hasItems());
 
         //redo with the same name
-        report = metadataInstance.getVdb("myservice").validate("create view v (col, col1) as select col from tbl");
+        metadataInstance.getVdb("myservice").validate("create view v (col, col1) as select col from tbl");
     }
 
     @Test

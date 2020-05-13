@@ -106,7 +106,10 @@ public class IntegrationPublishTest {
         RestViewDefinitionStatus saved = JsonMarshaller.unmarshall(stashStatus.getBody(), RestViewDefinitionStatus.class);
         String id = saved.getViewDefinition().getId();
 
-        ResponseEntity<List> listResponse = restTemplate.getForEntity("/v1/virtualizations/publish/{name}", List.class, dvName);
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        final Class<List<?>> listOfAnything = (Class) List.class;
+
+        ResponseEntity<List<?>> listResponse = restTemplate.getForEntity("/v1/virtualizations/publish/{name}", listOfAnything, dvName);
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         assertTrue(listResponse.getBody().isEmpty());
 
@@ -141,7 +144,7 @@ public class IntegrationPublishTest {
         assertEquals("dv-testpublish", status.getAttributes().get("OpenShift Name"));
 
         //there should be a new edition
-        listResponse = restTemplate.getForEntity("/v1/virtualizations/publish/{name}", List.class, dvName);
+        listResponse = restTemplate.getForEntity("/v1/virtualizations/publish/{name}", listOfAnything, dvName);
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         assertEquals(1, listResponse.getBody().size());
 
@@ -172,7 +175,7 @@ public class IntegrationPublishTest {
         assertEquals("dv-testpublish", status.getAttributes().get("OpenShift Name"));
 
         //there should be a new edition
-        listResponse = restTemplate.getForEntity("/v1/virtualizations/publish/{name}", List.class, dvName);
+        listResponse = restTemplate.getForEntity("/v1/virtualizations/publish/{name}", listOfAnything, dvName);
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         assertEquals(2, listResponse.getBody().size());
 
@@ -198,8 +201,8 @@ public class IntegrationPublishTest {
         //for now ids are reassigned
         assertEquals(HttpStatus.NOT_FOUND, view.getStatusCode());
 
-        ResponseEntity<List> views = restTemplate.getForEntity(
-                "/v1/virtualizations/{name}/views", List.class, dvName);
+        ResponseEntity<List<?>> views = restTemplate.getForEntity(
+                "/v1/virtualizations/{name}/views", listOfAnything, dvName);
 
         assertEquals(HttpStatus.OK, views.getStatusCode());
         assertEquals(1, views.getBody().size());

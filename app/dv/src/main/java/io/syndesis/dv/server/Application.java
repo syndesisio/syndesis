@@ -21,6 +21,7 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfigurat
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 
 @SpringBootApplication(exclude = {MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
+@SuppressWarnings("PrivateConstructorForUtilityClass")
 public class Application {
 
     public static void main(String[] args) {

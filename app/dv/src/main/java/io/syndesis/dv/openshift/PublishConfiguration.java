@@ -33,8 +33,8 @@ public class PublishConfiguration {
     private boolean enableOdata = true;
     private String containerMemorySize = "1024Mi";
     private String containerDiskSize = "20Gi";
-    private List<EnvVar> allEnvironmentVariables = new ArrayList<>();
-    private HashMap<String, String> buildNodeSelector = new HashMap<>();
+    private final List<EnvVar> allEnvironmentVariables = new ArrayList<>();
+    private final HashMap<String, String> buildNodeSelector = new HashMap<>();
     private String buildImageStream = "syndesis-s2i:latest";
     private Map<String, String> secretVariables = new HashMap<>();
     private SSOConfigurationProperties ssoConfigurationProperties;

@@ -15,13 +15,12 @@
  */
 package io.syndesis.dv.server.endpoint;
 
-import static org.junit.Assert.*;
+import io.syndesis.dv.model.ViewDefinition;
+import io.syndesis.dv.rest.JsonMarshaller;
 
 import org.junit.Test;
 
-import io.syndesis.dv.model.ViewDefinition;
-import io.syndesis.dv.rest.JsonMarshaller;
-import io.syndesis.dv.server.endpoint.RestViewDefinitionStatus;
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings( { "javadoc", "nls" } )
 public final class RestViewDefinitionStatusTest {

@@ -29,7 +29,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import io.syndesis.dv.lsp.completion.DdlCompletionConstants;
 import io.syndesis.dv.lsp.completion.providers.items.DdlCompletionItemLoader;
 
-public class CompletionItemBuilder {
+public class CompletionItemBuilder implements DdlCompletionConstants {
     private final DdlCompletionItemLoader loader = DdlCompletionItemLoader.getInstance();
 
     public CompletionItemBuilder() {

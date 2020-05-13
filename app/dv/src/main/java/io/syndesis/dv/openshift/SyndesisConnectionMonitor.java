@@ -15,22 +15,18 @@
  */
 package io.syndesis.dv.openshift;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.syndesis.dv.KException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Objects;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.PostConstruct;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.syndesis.dv.KException;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -39,16 +35,20 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class SyndesisConnectionMonitor {
     private static final Log LOG = LogFactory.getLog(SyndesisConnectionMonitor.class);
     private volatile WebSocket webSocket;
     private volatile boolean connected;
-    private ObjectMapper mapper = new ObjectMapper();
-    private SyndesisConnectionSynchronizer connectionSynchronizer;
-    private ScheduledThreadPoolExecutor executor;
-    private static volatile boolean UPDATE = true;
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final SyndesisConnectionSynchronizer connectionSynchronizer;
+    private final ScheduledThreadPoolExecutor executor;
+    private static final AtomicBoolean UPDATE = new AtomicBoolean(true);
 
     static class Message {
         private String event;
@@ -74,7 +74,7 @@ public class SyndesisConnectionMonitor {
     static class EventMsg implements Comparable<EventMsg>{
         enum Type {
             created, deleted, updated
-        };
+        }
         private Type action;
         private String kind;
         private String id;
@@ -148,7 +148,6 @@ public class SyndesisConnectionMonitor {
             if (response.isSuccessful()) {
                 message = mapper.readValue(response.body().bytes(), Message.class);
             }
-            response.close();
         } catch (IOException e) {
             LOG.info("Failed to retrive Subscription ID for reading the connection events: " + e.getMessage());
         }
@@ -205,12 +204,12 @@ public class SyndesisConnectionMonitor {
     private void handleMessage(String text) {
         executor.execute(() -> {
             try {
-                Message msg = mapper.readValue(text.getBytes(), Message.class);
+                Message msg = mapper.readValue(text.getBytes(UTF_8), Message.class);
                 if (msg.getEvent().contentEquals("message") && msg.getData().contentEquals("connected")) {
                     connected = true;
                     connectionSynchronizer.synchronizeConnections(false);
                 } else if (msg.getEvent().contentEquals("change-event")) {
-                    EventMsg event = mapper.readValue(msg.getData().getBytes(), EventMsg.class);
+                    EventMsg event = mapper.readValue(msg.getData().getBytes(UTF_8), EventMsg.class);
                     if (event.getKind().contentEquals("connection")) {
                         connectionSynchronizer.handleConnectionEvent(event);
                     } else {
@@ -236,13 +235,13 @@ public class SyndesisConnectionMonitor {
     }
 
     @PostConstruct
+    @SuppressWarnings("FutureReturnValueIgnored")
     public void init() {
         this.executor.scheduleAtFixedRate(()->this.connect(), 5, 15, TimeUnit.SECONDS);
         this.executor.scheduleAtFixedRate(()->{
             try {
-                if (connected && UPDATE) {
+                if (connected && UPDATE.compareAndSet(true, false)) {
                     connectionSynchronizer.synchronizeConnections(true);
-                    UPDATE = false;
                 }
             } catch (KException e) {
                 LOG.error("failed to synchronize", e);
@@ -251,6 +250,6 @@ public class SyndesisConnectionMonitor {
     }
 
     public static void setUpdate(boolean update) {
-        UPDATE = update;
+        UPDATE.set(update);
     }
 }

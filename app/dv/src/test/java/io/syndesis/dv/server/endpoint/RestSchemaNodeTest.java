@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import io.syndesis.dv.rest.JsonMarshaller;
-import io.syndesis.dv.server.endpoint.RestSchemaNode;
 
 public class RestSchemaNodeTest {
 

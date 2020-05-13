@@ -15,9 +15,6 @@
  */
 package io.syndesis.dv.lsp.parser.statement;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.lsp4j.Position;
 import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
@@ -72,12 +69,6 @@ public class FromClause extends AbstractStatementObject {
             } else {
                 setLastTknIndex(tokens.size()-1);
             }
-        }
-
-        // populate the list of fromClauseTokens
-        List<Token> tkns = new ArrayList<Token>();
-        for( int i=getFirstTknIndex(); i<getLastTknIndex()+1; i++) {
-            tkns.add(getTokens()[i]);
         }
     }
 }

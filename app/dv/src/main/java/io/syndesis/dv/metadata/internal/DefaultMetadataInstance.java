@@ -108,7 +108,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
 
     public class TeiidVdbImpl implements TeiidVdb {
 
-        private VDBMetaData vdb;
+        private final VDBMetaData vdb;
 
         private Set<String> haveErrors;
 
@@ -296,10 +296,26 @@ public class DefaultMetadataInstance implements MetadataInstance {
                 queryToRun = "SELECT * FROM (" + query + ") x LIMIT " + Math.max(0, offset) + ", " + (limit < 0?Integer.MAX_VALUE:limit);
             }
 
-            KLog.getLogger().debug("Commencing query execution: %s", query);
-            try (ResultSet rs = statement.executeQuery(query)) {
-                ResultSetMetaData rsmd = rs.getMetaData();
-                int columns = rsmd.getColumnCount();
+            try {
+                rs = statement.executeQuery(query);
+            } catch (SQLException e) {
+                KLog.getLogger().warn(e, "Could not execute query: %s", query);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            }
+
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columns = rsmd.getColumnCount();
+
+            //
+            // Populate the columns
+            //
+            for (int i = 1; i <= columns; ++i) {
+                String columnName = rsmd.getColumnName(i);
+                String columnLabel = rsmd.getColumnLabel(i);
+                String colTypeName = rsmd.getColumnTypeName(i);
+                QSColumn column = new QSColumn(colTypeName, columnName, columnLabel);
+                result.addColumn(column);
+            }
 
                 //
                 // Populate the columns
@@ -387,7 +403,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
                 teiidVdbs.add(new TeiidVdbImpl(vdb));
             }
 
-            return teiidVdbs;
+            return Collections.unmodifiableCollection(teiidVdbs);
         } catch (AdminException ex) {
             throw handleError(ex);
         }

@@ -35,7 +35,7 @@ public class DdlCompletionProvider extends CompletionItemBuilder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DdlCompletionProvider.class);
 
-    private static final boolean DO_PRINT_TO_CONSOLE = false;
+    private final boolean doPrintToConsole = false;
 
     @SuppressWarnings("PMD.CyclomaticComplexity")
     public List<CompletionItem> getCompletionItems(String statement, Position position) {

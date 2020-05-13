@@ -20,7 +20,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 
@@ -35,6 +34,8 @@ import org.springframework.web.server.ResponseStatusException;
 import org.teiid.adminapi.Model.Type;
 import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.adminapi.impl.VDBMetaData;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
 import io.syndesis.dv.model.ViewDefinition;
@@ -77,15 +78,11 @@ public class EditorServiceTest {
         assertEquals(Long.valueOf(0), saved.getVersion());
         assertNotNull(saved.getId());
 
-        vd = new ViewDefinition("x", "y");
-        vd.setId("not correct");
-
-        try {
-            saved = utilService.upsertViewEditorState(vd);
-            fail();
-        } catch (ResponseStatusException e) {
-            //trying to change the id
-        }
+        assertThatThrownBy(() -> {
+            ViewDefinition incorrect = new ViewDefinition("x", "y");
+            incorrect.setId("not correct");
+            utilService.upsertViewEditorState(incorrect);
+        }).isInstanceOf(ResponseStatusException.class);
 
         //add a dummy preview vdb
         VDBMetaData vdb = dummyPreviewVdb(true);
@@ -114,7 +111,7 @@ public class EditorServiceTest {
         //saving with valid ddl
         vd.setDdl("create view y as select * from v");
 
-        saved = utilService.upsertViewEditorState(vd);
+        utilService.upsertViewEditorState(vd);
         //v is hidden, can't be unqualified
         ViewListing listing = dvService.getViewListing(vd.getDataVirtualizationName(), vd.getName());
         assertFalse(listing.isValid());

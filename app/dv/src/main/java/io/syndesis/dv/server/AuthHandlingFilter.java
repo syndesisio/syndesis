@@ -27,7 +27,7 @@ public class AuthHandlingFilter implements HandlerInterceptor {
     private static final ThreadLocal<OAuthCredentials> THREAD_OAUTH_CREDENTIALS  = new ThreadLocal<OAuthCredentials>();
 
     public static class AuthToken {
-        private String token;
+        private final String token;
 
         public AuthToken(String token) {
             this.token = token;
@@ -44,8 +44,8 @@ public class AuthHandlingFilter implements HandlerInterceptor {
     }
 
     public static class OAuthCredentials {
-        private AuthToken token;
-        private String user;
+        private final AuthToken token;
+        private final String user;
 
         public OAuthCredentials(String token, String user) {
             this.token = new AuthToken(token);
@@ -60,22 +60,24 @@ public class AuthHandlingFilter implements HandlerInterceptor {
         }
     }
 
+    private static final ThreadLocal<OAuthCredentials> THREAD_OAUTH_CREDENTIALS  = new ThreadLocal<OAuthCredentials>();
+
     @Override
     public boolean preHandle(HttpServletRequest request,
             HttpServletResponse response, Object contentHandler) {
         String accessToken = request.getHeader("X-Forwarded-Access-Token");
         String user = request.getHeader("X-Forwarded-User");
         if (KLog.getLogger().isTraceEnabled()) {
-            KLog.getLogger().trace("URL =" + request.getRequestURI());
-            KLog.getLogger().trace("X-Forwarded-Access-Token = " + accessToken);
-            KLog.getLogger().trace("X-Forwarded-User = " + user);
+            KLog.getLogger().trace("URL = %s", request.getRequestURI());
+            KLog.getLogger().trace("X-Forwarded-Access-Token = %s", accessToken);
+            KLog.getLogger().trace("X-Forwarded-User = %s", user);
         }
         OAuthCredentials creds = new OAuthCredentials(accessToken, user);
-        threadOAuthCredentials.set(creds);
+        THREAD_OAUTH_CREDENTIALS.set(creds);
         return true;
     }
 
     public OAuthCredentials getCredentials() {
-        return threadOAuthCredentials.get();
+        return THREAD_OAUTH_CREDENTIALS.get();
     }
 }

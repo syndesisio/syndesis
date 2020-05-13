@@ -77,11 +77,13 @@ public class StringNameValidator {
         final int strLength = name.length();
         if (strLength < getMinimumLength()) {
             final Object[] params = new Integer[]{ getMinimumLength() };
-            return Messages.getString(Messages.StringNameValidator.minLengthFailure, params);
+            final String msg = Messages.getString(Messages.StringNameValidator.minLengthFailure, params);
+            return msg;
             // check the entity name length against a desired value
         } else if (strLength > getMaximumLength()) {
             final Object[] params = new Object[] {strLength, getMaximumLength()};
-            return Messages.getString(Messages.StringNameValidator.nameLengthLongerThanAllowed, params);
+            final String msg = Messages.getString(Messages.StringNameValidator.nameLengthLongerThanAllowed, params);
+            return msg;
         }
 
         // Valid, so return no error message

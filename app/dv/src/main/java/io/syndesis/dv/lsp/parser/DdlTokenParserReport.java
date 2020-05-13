@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DdlTokenParserReport {
-    private List<DdlAnalyzerException> exceptions;
+    private final List<DdlAnalyzerException> exceptions;
     private boolean parensMatch = true;
     private boolean bracesMatch = true;
 

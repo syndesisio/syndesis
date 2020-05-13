@@ -29,7 +29,7 @@ import io.syndesis.dv.lsp.completion.providers.DdlCompletionProvider;
 @SuppressWarnings("nls")
 public class TestDdlCompletionItemProvider {
 
-    private final DdlCompletionProvider itemProvider = new DdlCompletionProvider();
+	private final DdlCompletionProvider itemProvider = new DdlCompletionProvider();
 
     /*
     * The tokenImage[...] call is returning strings wrapped in double-quotes

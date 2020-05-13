@@ -99,10 +99,7 @@ public class RestViewDefinitionStatus {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (!(obj instanceof RestViewDefinitionStatus)) {
             return false;
         }
         RestViewDefinitionStatus other = (RestViewDefinitionStatus)obj;

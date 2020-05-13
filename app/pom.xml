@@ -136,11 +136,11 @@
     <mailapi.version>1.6.4</mailapi.version>
     <json-schema-core.version>1.2.8</json-schema-core.version>
     <json-schema-validator.version>2.2.10</json-schema-validator.version>
-    <junit.version>4.12</junit.version>
-    <junit5.version>5.5.2</junit5.version>
-    <powermock.version>2.0.4</powermock.version>
-    <testcontainers.version>1.12.3</testcontainers.version>
-    <citrus.version>2.8.0</citrus.version>
+    <junit.version>4.13</junit.version>
+    <junit5.version>5.6.2</junit5.version>
+    <powermock.version>2.0.7</powermock.version>
+    <testcontainers.version>1.12.5</testcontainers.version>
+    <citrus.version>3.0.0-M1</citrus.version>
     <mockito.version>2.19.0</mockito.version>
     <mongodb.version>3.9.0</mongodb.version>
 
@@ -767,6 +767,16 @@
               <ignoredResourcePattern>resource-handler-services.vm</ignoredResourcePattern>
               <ignoredResourcePattern>resource-handler.vm</ignoredResourcePattern>
               <ignoredResourcePattern>resource-operation.vm</ignoredResourcePattern>
+              <ignoredResourcePattern>.gitkeep</ignoredResourcePattern>
+              <!-- Camel has component.properties and language.properties in most jars-->
+              <ignoredResourcePattern>component.properties</ignoredResourcePattern>
+              <ignoredResourcePattern>language.properties</ignoredResourcePattern>
+              <ignoredResourcePattern>other.properties</ignoredResourcePattern>
+              <ignoredResourcePattern>dataformat.properties</ignoredResourcePattern>
+              <ignoredResourcePattern>changelog.txt</ignoredResourcePattern>
+              <ignoredResourcePattern>org/teiid/.*</ignoredResourcePattern>
+              <ignoredResourcePattern>teiid-client-settings.orig.properties</ignoredResourcePattern>
+              <ignoredResourcePattern>vdb-deployer.xsd</ignoredResourcePattern>
             </ignoredResourcePatterns>
             <ignoredClassPatterns>
               <ignoredClassPattern>META-INF.versions.9.module-info</ignoredClassPattern>
@@ -777,6 +787,9 @@
               -->
               <ignoredClassPattern>^javax\.activation\..*$</ignoredClassPattern>
               <ignoredClassPattern>^org\.apache\.daffodil\..*$</ignoredClassPattern>
+              <!-- Multiple Teiid JARs share the same classes, not sure if anything can be done about that -->
+              <ignoredClassPattern>^org\.teiid\..*$</ignoredClassPattern>
+              <ignoredClassPattern>^org\.json\.JSONString$</ignoredClassPattern>
             </ignoredClassPatterns>
             <exceptions>
               <exception>

@@ -54,7 +54,7 @@ public class TestSupportHandler extends DvService {
                 dataVirtualizationService.deletePublishedVirtualization(dv.getName());
                 dataVirtualizationService.deleteDataVirtualization(dv.getName());
             } catch (Exception e) {
-                LOGGER.info("Could not delete virtualization %s", e, dv.getName()); //$NON-NLS-1$
+                LOGGER.info(e, "Could not delete virtualization %s", dv.getName()); //$NON-NLS-1$
             }
         }
     }

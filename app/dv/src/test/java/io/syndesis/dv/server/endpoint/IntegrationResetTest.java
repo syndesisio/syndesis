@@ -56,14 +56,17 @@ public class IntegrationResetTest {
                 "/v1/virtualizations", rdv, String.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        ResponseEntity<List> virts = restTemplate.getForEntity("/v1/virtualizations", List.class);
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        final Class<List<?>> listOfAnything = (Class) List.class;
+
+        ResponseEntity<List<?>> virts = restTemplate.getForEntity("/v1/virtualizations", listOfAnything);
         assertEquals(HttpStatus.OK, virts.getStatusCode());
         assertEquals(1, virts.getBody().size());
 
         ResponseEntity<String> resetResponse = restTemplate.getForEntity("/v1/test-support/reset-db", String.class);
         assertEquals(HttpStatus.OK, resetResponse.getStatusCode());
 
-        virts = restTemplate.getForEntity("/v1/virtualizations", List.class);
+        virts = restTemplate.getForEntity("/v1/virtualizations", listOfAnything);
         assertEquals(HttpStatus.OK, virts.getStatusCode());
         assertEquals(0, virts.getBody().size());
     }

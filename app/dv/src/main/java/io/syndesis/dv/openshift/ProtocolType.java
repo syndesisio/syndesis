@@ -26,8 +26,8 @@ public enum ProtocolType {
     @JsonProperty("jolokia") JOLOKIA(8778,8778),
     @JsonProperty("prometheus") PROMETHEUS(9779,9779);
 
-    private int sourcePort;
-    private int targetPort;
+    private final int sourcePort;
+    private final int targetPort;
 
     ProtocolType(int sourcePort, int targetPort) {
         this.sourcePort = sourcePort;

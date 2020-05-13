@@ -17,22 +17,25 @@ package io.syndesis.dv.utils;
 
 import org.apache.commons.logging.LogFactory;
 
+import com.google.errorprone.annotations.FormatMethod;
+import com.google.errorprone.annotations.FormatString;
+
 import io.syndesis.dv.StringConstants;
 
 public class KLog {
 
-    private final org.apache.commons.logging.Log kLogger = LogFactory.getLog(KLog.class);
-
-    private static final KLog INSTANCE = new KLog();
-
     @FormatMethod
-    private static String format(final @FormatString String message, final Object... arguments ) {
-        final String messageToUse = message == null ? StringConstants.EMPTY_STRING : message;
+    private static String format(@FormatString String message, Object... arguments ) {
+        if (message == null) {
+            message = StringConstants.EMPTY_STRING;
+        }
         if (arguments == null || arguments.length == 0) {
             return messageToUse;
         }
         return String.format(messageToUse, arguments);
     }
+
+    private static final KLog instance = new KLog();
 
     /**
      * @return singleton instance of this logger
@@ -41,12 +44,15 @@ public class KLog {
         return INSTANCE;
     }
 
+    private final org.apache.commons.logging.Log kLogger = LogFactory.getLog(KLog.class);
+
     @FormatMethod
     public void info(@FormatString String message, Object... args) {
         kLogger.info(format(message, args));
     }
 
-    public void info(String message, Throwable throwable, Object... args) {
+    @FormatMethod
+    public void info(Throwable throwable, @FormatString String message, Object... args) {
         kLogger.info(format(message, args), throwable);
     }
 
@@ -54,11 +60,17 @@ public class KLog {
         return this.kLogger.isInfoEnabled();
     }
 
-    public void warn(String message, Object... args) {
+    @FormatMethod
+    public void warn(@FormatString String message, Object... args) {
         kLogger.warn(format(message, args));
     }
 
-    public void warn(String message, Throwable throwable, Object... args) {
+    public void warn(String message, Throwable throwable) {
+        kLogger.warn(message, throwable);
+    }
+
+    @FormatMethod
+    public void warn(Throwable throwable, @FormatString String message, Object... args) {
         kLogger.warn(format(message, args), throwable);
     }
 
@@ -66,11 +78,17 @@ public class KLog {
         return this.kLogger.isWarnEnabled();
     }
 
-    public void error(String message, Object... args) {
+    @FormatMethod
+    public void error(@FormatString String message, Object... args) {
         kLogger.error(format(message, args));
     }
 
-    public void error(String message, Throwable throwable, Object... args) {
+    public void error(String message, Throwable throwable) {
+        kLogger.error(message, throwable);
+    }
+
+    @FormatMethod
+    public void error(Throwable throwable, @FormatString String message, Object... args) {
         kLogger.error(format(message, args), throwable);
     }
 
@@ -78,14 +96,23 @@ public class KLog {
         return this.kLogger.isErrorEnabled();
     }
 
-    public void debug(String message, Object... args) {
+    public void debug(String message, Throwable throwable) {
+        if (!isDebugEnabled()) {
+            return;
+        }
+        kLogger.debug(message, throwable);
+    }
+
+    @FormatMethod
+    public void debug(@FormatString String message, Object... args) {
         if (!isDebugEnabled()) {
             return;
         }
         kLogger.debug(format(message, args));
     }
 
-    public void debug(String message, Throwable throwable, Object... args) {
+    @FormatMethod
+    public void debug(Throwable throwable, @FormatString String message, Object... args) {
         if (!isDebugEnabled()) {
             return;
         }
@@ -96,14 +123,16 @@ public class KLog {
         return this.kLogger.isDebugEnabled();
     }
 
-    public void trace(String message, Object... args) {
+    @FormatMethod
+    public void trace(@FormatString String message, Object... args) {
         if (!isTraceEnabled()) {
             return;
         }
         kLogger.trace(format(message, args));
     }
 
-    public void trace(String message, Throwable throwable, Object... args) {
+    @FormatMethod
+    public void trace(Throwable throwable, @FormatString String message, Object... args) {
         if (!isTraceEnabled()) {
             return;
         }

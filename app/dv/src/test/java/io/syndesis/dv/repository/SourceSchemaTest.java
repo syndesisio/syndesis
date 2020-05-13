@@ -16,7 +16,7 @@
 
 package io.syndesis.dv.repository;
 
-import static org.junit.Assert.*;
+import io.syndesis.dv.model.SourceSchema;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import io.syndesis.dv.model.SourceSchema;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @SuppressWarnings("nls")
 @RunWith(SpringRunner.class)
@@ -47,30 +52,25 @@ public class SourceSchemaTest {
         SourceSchema found = workspaceManagerImpl.findSchemaBySourceId(s.getSourceId());
         assertEquals(s.getDdl(), found.getDdl());
 
-        try {
+        assertThatThrownBy(() -> {
             workspaceManagerImpl.createSchema("foo", "bar", "create ...");
             workspaceManagerImpl.flush();
             fail();
-        } catch (DataIntegrityViolationException e) {
-        }
+        }).isInstanceOf(DataIntegrityViolationException.class);
 
         entityManager.clear();
 
-        try {
+        assertThatThrownBy(() -> {
             workspaceManagerImpl.createSchema("foo", "bar1", "create ...");
             workspaceManagerImpl.flush();
-            fail();
-        } catch (DataIntegrityViolationException e) {
-        }
+        }).isInstanceOf(DataIntegrityViolationException.class);
 
         entityManager.clear();
 
-        try {
+        assertThatThrownBy(() -> {
             workspaceManagerImpl.createSchema("foo1", "baR", "create ...");
             workspaceManagerImpl.flush();
-            fail();
-        } catch (DataIntegrityViolationException e) {
-        }
+        }).isInstanceOf(DataIntegrityViolationException.class);
 
         entityManager.clear();
 
@@ -93,11 +93,13 @@ public class SourceSchemaTest {
         assertTrue(workspaceManagerImpl.isNameInUse("x"));
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test
     public void testNameConflict() {
-        workspaceManagerImpl.createSchema("foo", "x", "create ...");
-        workspaceManagerImpl.createDataVirtualization("x");
-        workspaceManagerImpl.flush();
+        assertThatThrownBy(() -> {
+            workspaceManagerImpl.createSchema("foo", "x", "create ...");
+            workspaceManagerImpl.createDataVirtualization("x");
+            workspaceManagerImpl.flush();
+        }).isInstanceOf(DataIntegrityViolationException.class);
     }
 
 }

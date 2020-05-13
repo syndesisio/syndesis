@@ -15,30 +15,31 @@
  */
 package io.syndesis.dv.server.endpoint;
 
-import static org.junit.Assert.*;
-
 import java.util.Arrays;
 import java.util.List;
-
-import org.junit.Test;
 
 import io.syndesis.dv.model.ViewDefinition;
 import io.syndesis.dv.rest.JsonMarshaller;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 @SuppressWarnings("nls")
 public class ViewDefinitionSerializerTest {
 
-    private String viewName = "myNewView";
-    private String viewDefinitionName = "testView";
-    private String description = "test view description text";
-    private boolean isComplete = true;
-    private boolean isUserDefined = false;
-    private String sourceTablePath1 = "path/to/source1";
-    private String sourceTablePath2 = "path/to/source2";
-    private String sourceTablePath3 = "path/to/source3";
-    private String sourceTablePath4 = "path/to/source4";
+    private final String viewName = "myNewView";
+    private final String viewDefinitionName = "testView";
+    private final String description = "test view description text";
+    private final boolean isComplete = true;
+    private final boolean isUserDefined = false;
+    private final String sourceTablePath1 = "path/to/source1";
+    private final String sourceTablePath2 = "path/to/source2";
+    private final String sourceTablePath3 = "path/to/source3";
+    private final String sourceTablePath4 = "path/to/source4";
 
-    private String createViewEditorState() {
+    private static String createViewEditorState() {
         return "{\n" +
                 "  \"complete\" : true,\n" +
                 "  \"dataVirtualizationName\" : \"dvName\",\n" +

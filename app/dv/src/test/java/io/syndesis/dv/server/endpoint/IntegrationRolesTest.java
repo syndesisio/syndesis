@@ -78,8 +78,11 @@ public class IntegrationRolesTest {
 
         assertEquals(HttpStatus.OK, stashStatus.getStatusCode());
 
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        final Class<List<?>> listOfAnything = (Class) List.class;
+
         //no roles yet, but there's any authenticated
-        ResponseEntity<List> rolesResponse = restTemplate.getForEntity("/v1/status/roles", List.class);
+        ResponseEntity<List<?>> rolesResponse = restTemplate.getForEntity("/v1/status/roles", listOfAnything);
         assertEquals(HttpStatus.OK, rolesResponse.getStatusCode());
         assertEquals("[any authenticated]", rolesResponse.getBody().toString());
 
@@ -98,7 +101,7 @@ public class IntegrationRolesTest {
         assertEquals(HttpStatus.OK, grant.getStatusCode());
 
         //check that it got added
-        rolesResponse = restTemplate.getForEntity("/v1/status/roles", List.class);
+        rolesResponse = restTemplate.getForEntity("/v1/status/roles", listOfAnything);
         assertEquals(HttpStatus.OK, rolesResponse.getStatusCode());
         assertEquals("[x, any authenticated]", rolesResponse.getBody().toString());
 
@@ -154,8 +157,8 @@ public class IntegrationRolesTest {
         assertEquals("[SELECT]", statusResponse.getBody().getTablePrivileges().get(0).getGrantPrivileges().toString());
 
         //check the role info on the view listing
-        ResponseEntity<List> views = restTemplate.getForEntity(
-                "/v1/virtualizations/{name}/views", List.class, dvName);
+        ResponseEntity<List<?>> views = restTemplate.getForEntity(
+                "/v1/virtualizations/{name}/views", listOfAnything, dvName);
         assertEquals(HttpStatus.OK, views.getStatusCode());
         assertEquals(1, views.getBody().size());
         Map<?, ?> viewMap = (Map<?, ?>) views.getBody().get(0);
@@ -169,7 +172,7 @@ public class IntegrationRolesTest {
         assertEquals(HttpStatus.OK, grant.getStatusCode());
 
         views = restTemplate.getForEntity(
-                "/v1/virtualizations/{name}/views", List.class, dvName);
+                "/v1/virtualizations/{name}/views", listOfAnything, dvName);
         assertEquals(HttpStatus.OK, views.getStatusCode());
         assertEquals(1, views.getBody().size());
         viewMap = (Map<?, ?>) views.getBody().get(0);

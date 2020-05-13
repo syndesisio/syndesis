@@ -26,7 +26,7 @@ import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
 public class TableBody extends AbstractStatementObject {
-    private List<Token> tableBodyTokens;
+    private Token[] tableBodyTokens;
     private final List<TableElement> elements;
     private TableOptionsClause options;
     private boolean hasPrimaryKey;

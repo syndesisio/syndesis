@@ -35,12 +35,12 @@ public class RestSourceTable {
     /*
      * The table name
      */
-    private String name;
+    private final String name;
 
     /*
      * The columns for this table
      */
-    private final List<RestSourceColumn> columns;
+    private final RestSourceColumn[] columns;
 
     /**
      * Constructor for use when de-serializing

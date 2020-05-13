@@ -108,11 +108,11 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
      * vdb deployments/undeployments. The keys are either dv names, or
      * source vdb names
      */
-    private Striped<Lock> previewVdbLocks = Striped.lazyWeakLock(32);
+    private final Striped<Lock> previewVdbLocks = Striped.lazyWeakLock(32);
     /**
      * lock for operations that depend on / affect the master preview vdb
      */
-    private Object masterLock = new Object();
+    private final Object masterLock = new Object();
 
     private MetadataInstance getMetadataInstance() {
         return metadataInstance;
@@ -388,6 +388,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
         SyndesisConnectionMonitor.setUpdate(true);
         return repositoryManager.runInTransaction(true, () -> {
 
+            List<RestSchemaNode> rootNodes = new ArrayList<RestSchemaNode>();
             Collection<TeiidDataSource> resultTeiidSources = new ArrayList<>();
             if (teiidSourceName != null) {
                 // Find the bound teiid source corresponding to the syndesis source
@@ -410,7 +411,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
                     continue;
                 }
 
-                List<RestSchemaNode> schemaNodes = this.generateSourceSchema(schemaModel.getName(),
+                List<RestSchemaNode> schemaNodes = MetadataService.generateSourceSchema(schemaModel.getName(),
                         schemaModel.getTables().values());
                 if (schemaNodes != null && !schemaNodes.isEmpty()) {
                     RestSchemaNode rootNode = new RestSchemaNode();
@@ -459,7 +460,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
                 }
                 statuses.add(status);
             }
-            LOGGER.debug( "getSyndesisSourceStatuses '{0}' statuses", statuses.size() ); //$NON-NLS-1$
+            LOGGER.debug( "getSyndesisSourceStatuses '%d' statuses", statuses.size() ); //$NON-NLS-1$
             return statuses;
         });
     }
