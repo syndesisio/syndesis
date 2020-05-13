@@ -16,6 +16,7 @@
 package io.syndesis.server.api.generator.soap;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -33,7 +34,10 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.soap.parser.XmlSchemaTestHelper;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectReader;
 
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.ADDRESS_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.DATA_FORMAT_PROPERTY;
@@ -41,7 +45,9 @@ import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.DEFAU
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.DEFAULT_OPERATION_NAME_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.PASSWORD_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.PAYLOAD_FORMAT;
+import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.PORTS_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.PORT_NAME_PROPERTY;
+import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SERVICES_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SERVICE_NAME_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SOAP_VERSION_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SPECIFICATION_PROPERTY;
@@ -57,7 +63,7 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
     }
 
     @Test
-    public void shouldProvideInfo() {
+    public void shouldProvideInfo() throws IOException {
 
         final APISummary apiSummary = connectorGenerator.info(SoapConnectorTemplate.SOAP_TEMPLATE,
             getConnectorSettings());
@@ -74,6 +80,17 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
         assertThat(configuredProperties).containsKey(SPECIFICATION_PROPERTY);
         assertThat(configuredProperties).containsKey(SERVICE_NAME_PROPERTY);
         assertThat(configuredProperties).containsKey(PORT_NAME_PROPERTY);
+
+        // services and ports should contain valid json list and map respectively
+        final ObjectReader reader = JsonUtils.reader();
+        final String[] services = reader
+            .forType(String[].class)
+            .readValue(configuredProperties.get(SERVICES_PROPERTY));
+        final Map<String, List<String>> ports = reader
+            .forType(new TypeReference<Map<String, List<String>>>(){})
+            .readValue(configuredProperties.get(PORTS_PROPERTY));
+        assertThat(services).isNotEmpty();
+        assertThat(ports).isNotEmpty();
 
         final ActionsSummary actionsSummary = apiSummary.getActionsSummary();
         assertThat(actionsSummary).isNotNull();
