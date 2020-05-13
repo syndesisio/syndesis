@@ -33,6 +33,7 @@ import io.syndesis.dv.openshift.TeiidOpenShiftClient;
 public class ServiceTestConfiguration {
 
     @MockBean
+    @SuppressWarnings("UnusedVariable")
     private TeiidOpenShiftClient teiidOpenShiftClient;
 
     @Bean
@@ -44,6 +45,7 @@ public class ServiceTestConfiguration {
     }
 
     @MockBean(name="connectionExecutor")
+    @SuppressWarnings("UnusedVariable")
     private ScheduledThreadPoolExecutor connectionExecutor;
 
 }

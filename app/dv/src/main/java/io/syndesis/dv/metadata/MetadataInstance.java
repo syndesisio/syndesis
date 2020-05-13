@@ -32,9 +32,9 @@ import io.syndesis.dv.metadata.query.QSResult;
 public interface MetadataInstance extends StringConstants {
 
     public static class ValidationResult {
-        private ValidatorReport report;
-        private Schema schema;
-        private MetadataException metadataException;
+        private final ValidatorReport report;
+        private final Schema schema;
+        private final MetadataException metadataException;
 
         public ValidationResult(ValidatorReport report, Schema schema, MetadataException metadataException) {
             this.report = report;

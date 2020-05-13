@@ -73,7 +73,7 @@ public class DvAutoConfiguration implements ApplicationListener<ContextRefreshed
     @Autowired
     private MetadataInstance metadataInstance;
 
-    private ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+    private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 
     @Bean(name = "connectionExecutor")
     public ScheduledThreadPoolExecutor connectionExecutor() {

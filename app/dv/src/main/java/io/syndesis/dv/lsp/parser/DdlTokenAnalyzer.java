@@ -30,15 +30,15 @@ import io.syndesis.dv.lsp.completion.DdlCompletionConstants;
 public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
 
     private final String statement;
-    private Token[] tokens = null;
+    private final Token[] tokens;
     private final STATEMENT_TYPE statementType;
 
-    private DdlTokenParserReport report;
+    private final DdlTokenParserReport report;
 
     public DdlTokenAnalyzer(String statement) {
         super();
         this.statement = statement;
-        init();
+        tokens = init(statement);
         this.statementType = getStatementType();
         this.report = new DdlTokenParserReport();
     }
@@ -47,9 +47,9 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
         return this.statement;
     }
 
-    private void init() {
+    private static Token[] init(final String statement) {
 
-        JavaCharStream jcs = new JavaCharStream(new StringReader(this.statement));
+        JavaCharStream jcs = new JavaCharStream(new StringReader(statement));
         TeiidDdlParserTokenManager token_source = new TeiidDdlParserTokenManager(jcs);
 
         List<Token> tokensList = new ArrayList<Token>();
@@ -78,10 +78,10 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
             }
         }
 
-        this.tokens = tokensList.toArray(new Token[0]);
+        return tokensList.toArray(new Token[0]);
     }
 
-    private void convertToken(Token token) {
+    private static void convertToken(Token token) {
         token.beginColumn--;
         token.endColumn--;
         token.beginLine--;
@@ -160,7 +160,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
         return stringListToArray(words);
     }
 
-    private String[] stringListToArray(List<String> array) {
+    private static String[] stringListToArray(List<String> array) {
         return array.toArray(new String[array.size()]);
     }
 
@@ -197,7 +197,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
         return STATEMENT_TYPE.UNKNOWN_STATEMENT_TYPE;
     }
 
-    private boolean isStatementType(Token[] tkns, int[] statementTokens) {
+    private static boolean isStatementType(Token[] tkns, int[] statementTokens) {
         int iTkn = 0;
         for(int kind : statementTokens ) {
             // Check each token for kind
@@ -367,7 +367,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
         return "Line " + (position.getLine()+1) + " Column " + (position.getCharacter()+1);
     }
 
-    private void printTokens(Token[] tkns, String headerMessage) {
+    private static void printTokens(Token[] tkns, String headerMessage) {
         System.out.println(headerMessage);
         for (Token token : tkns) {
             System.out.println("  >> Token = " + token.image +

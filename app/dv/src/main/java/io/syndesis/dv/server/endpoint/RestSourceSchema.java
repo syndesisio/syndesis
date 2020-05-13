@@ -35,12 +35,12 @@ public class RestSourceSchema {
     /*
      * The schema name
      */
-    private String name;
+    private final String name;
 
     /*
      * The source table objects for this schema
      */
-    private RestSourceTable[] tables;
+    private final RestSourceTable[] tables;
 
     public RestSourceSchema(Schema schema) {
         super();

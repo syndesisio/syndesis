@@ -16,11 +16,11 @@
 
 package io.syndesis.dv.server.endpoint;
 
-import static org.junit.Assert.*;
+import io.syndesis.dv.rest.JsonMarshaller;
 
 import org.junit.Test;
-import io.syndesis.dv.rest.JsonMarshaller;
-import io.syndesis.dv.server.endpoint.StatusObject;
+
+import static org.junit.Assert.assertEquals;
 
 public class StatusObjectTest {
 

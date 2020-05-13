@@ -54,7 +54,7 @@ public class TestVDBPublisher {
         this.vdb = VDBMetadataParser.unmarshall(vdbStream);
     }
 
-    private TeiidOpenShiftClient testDataSetup() {
+    private static TeiidOpenShiftClient testDataSetup() {
         MetadataInstance metadata = Mockito.mock(MetadataInstance.class);
 
         HashSet<DefaultSyndesisDataSource> sources = new HashSet<>();
@@ -81,7 +81,7 @@ public class TestVDBPublisher {
         return client;
     }
 
-    private DefaultSyndesisDataSource getMySQLDS() {
+    private static DefaultSyndesisDataSource getMySQLDS() {
         DefaultSyndesisDataSource ds1 = new DefaultSyndesisDataSource();
         ds1.setSyndesisName("inventory-abc");
         ds1.setTeiidName("inventory-abc");
@@ -97,7 +97,7 @@ public class TestVDBPublisher {
         return ds1;
     }
 
-    private DefaultSyndesisDataSource getPostgreSQL() {
+    private static DefaultSyndesisDataSource getPostgreSQL() {
         DefaultSyndesisDataSource ds2 = new DefaultSyndesisDataSource();
         ds2.setSyndesisName("accounts-xyz");
         ds2.setTeiidName("accounts-xyz");

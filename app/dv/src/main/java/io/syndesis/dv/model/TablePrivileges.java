@@ -82,7 +82,7 @@ public class TablePrivileges {
         U("UPDATE"),
         D("DELETE");
 
-        private String fullName;
+        private final String fullName;
 
         private Privilege(String name) {
             this.fullName = name;
