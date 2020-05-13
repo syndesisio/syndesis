@@ -333,7 +333,9 @@ publish_artifacts() {
                 curl -q -s -S --fail -X DELETE -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} ${release_url}
             fi
         done
-        git push --delete origin ${versions_to_discard}
+        if [ -n "${versions_to_discard}" ]; then
+          git push --delete origin ${versions_to_discard}
+        fi
     fi
 
     local upload_url=$(curl -q -s -S --fail \
