@@ -6,7 +6,6 @@ Scheduled: true
 ProductName: syndesis
 Syndesis:
     DemoData: false
-    SHA: false
     Addons:
         Jaeger:
             Enabled: false
@@ -19,17 +18,17 @@ Syndesis:
             Enabled: false
         Todo:
             Enabled: false
-            Tag: "docker.io/centos/php-71-centos7"
+            Image: "docker.io/centos/php-71-centos7"
         Knative:
             Enabled: false
         DV:
             Enabled: false
-            Tag: "docker.io/syndesis/syndesis-dv:latest"
+            Image: "docker.io/syndesis/syndesis-dv:latest"
             Resources:
                 Memory: "1024Mi"
         CamelK:
             Enabled: false
-            Tag: "fabric8/s2i-java:3.0-java8"
+            Image: "fabric8/s2i-java:3.0-java8"
             CamelVersion: "2.23.2.fuse-760024"
             CamelKRuntime: "0.3.4.fuse-740008"
         PublicApi:
@@ -37,24 +36,24 @@ Syndesis:
             DisableSarCheck: false
     Components:
         Oauth:
-            Tag: "quay.io/openshift/origin-oauth-proxy:v4.0.0"
+            Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0"
             DisableSarCheck: false
         UI:
-            Tag: "docker.io/syndesis/syndesis-ui:latest"
+            Image: "docker.io/syndesis/syndesis-ui:latest"
         S2I:
-            Tag: "docker.io/syndesis/syndesis-s2i:latest"
+            Image: "docker.io/syndesis/syndesis-s2i:latest"
         Prometheus:
             Rules: ""
-            Tag: "docker.io/prom/prometheus:v2.1.0"
+            Image: "docker.io/prom/prometheus:v2.1.0"
             Resources:
                 Memory: "512Mi"
                 VolumeCapacity: "1Gi"
         Upgrade:
-            Tag: "docker.io/syndesis/syndesis-upgrade:latest"
+            Image: "docker.io/syndesis/syndesis-upgrade:latest"
             Resources:
                 VolumeCapacity: "1Gi"
         Meta:
-            Tag: "docker.io/syndesis/syndesis-meta:latest"
+            Image: "docker.io/syndesis/syndesis-meta:latest"
             Resources:
                 Memory: "512Mi"
                 VolumeCapacity: "1Gi"
@@ -62,15 +61,15 @@ Syndesis:
             Name: "syndesis"
             User: "syndesis"
             URL: "postgresql://syndesis-db:5432/syndesis?sslmode=disable"
-            Tag: "centos/postgresql-96-centos7"
+            Image: "centos/postgresql-96-centos7"
             Exporter:
-                Tag: "docker.io/wrouesnel/postgres_exporter:v0.4.7"
+                Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"
             Resources:
                 Memory: "255Mi"
                 VolumeCapacity: "1Gi"
                 VolumeAccessMode: "ReadWriteOnce"
         Server:
-            Tag: "docker.io/syndesis/syndesis-server:latest"
+            Image: "docker.io/syndesis/syndesis-server:latest"
             Resources:
                 Memory: "800Mi"
             Features:
@@ -85,4 +84,4 @@ Syndesis:
                     repo-02-redhat-ga: "https://maven.repository.redhat.com/ga/"
                     repo-03-jboss-ea: "https://repository.jboss.org/nexus/content/groups/ea/"
         AMQ:
-            Tag: "registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.3"
+            Image: "registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.3"

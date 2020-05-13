@@ -86,9 +86,6 @@ var templateFunctions = template.FuncMap{
 		}
 		return splits[len(splits)-1]
 	},
-	"dockerImageFromComponent": func(i configuration.Imageable, sha bool) (image string) {
-		return i.Get(sha)
-	},
 }
 
 func RenderFSDir(assets http.FileSystem, directory string, context interface{}) ([]unstructured.Unstructured, error) {

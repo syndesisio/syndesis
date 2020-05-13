@@ -136,16 +136,16 @@ func (o *options) run() error {
 		return err
 	}
 
-	util.KnownDockerImages[config.Syndesis.Components.Server.Image.Get(config.Syndesis.SHA)] = true
-	util.KnownDockerImages[config.Syndesis.Components.Meta.Image.Get(config.Syndesis.SHA)] = true
-	util.KnownDockerImages[config.Syndesis.Components.UI.Image.Get(config.Syndesis.SHA)] = true
-	util.KnownDockerImages[config.Syndesis.Components.S2I.Image.Get(config.Syndesis.SHA)] = true
-	util.KnownDockerImages[config.Syndesis.Components.Database.Image.Get(config.Syndesis.SHA)] = true
-	util.KnownDockerImages[config.Syndesis.Components.Oauth.Image.Get(config.Syndesis.SHA)] = true
-	util.KnownDockerImages[config.Syndesis.Components.Database.Exporter.Image.Get(config.Syndesis.SHA)] = true
-	util.KnownDockerImages[config.Syndesis.Components.Prometheus.Image.Get(config.Syndesis.SHA)] = true
-	util.KnownDockerImages[config.Syndesis.Components.Upgrade.Image.Get(config.Syndesis.SHA)] = true
-	util.KnownDockerImages[config.Syndesis.Addons.DV.Image.Get(config.Syndesis.SHA)] = true
+	util.KnownDockerImages[config.Syndesis.Components.Server.Image] = true
+	util.KnownDockerImages[config.Syndesis.Components.Meta.Image] = true
+	util.KnownDockerImages[config.Syndesis.Components.UI.Image] = true
+	util.KnownDockerImages[config.Syndesis.Components.S2I.Image] = true
+	util.KnownDockerImages[config.Syndesis.Components.Database.Image] = true
+	util.KnownDockerImages[config.Syndesis.Components.Oauth.Image] = true
+	util.KnownDockerImages[config.Syndesis.Components.Database.Exporter.Image] = true
+	util.KnownDockerImages[config.Syndesis.Components.Prometheus.Image] = true
+	util.KnownDockerImages[config.Syndesis.Components.Upgrade.Image] = true
+	util.KnownDockerImages[config.Syndesis.Addons.DV.Image] = true
 
 	ctx := o.Context
 

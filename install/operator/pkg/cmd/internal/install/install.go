@@ -153,7 +153,7 @@ func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 	o.databaseImage = defaultDatabaseImage
 	config, err := configuration.GetProperties(configuration.TemplateConfig, o.Context, nil, &v1beta1.Syndesis{})
 	if err == nil {
-		o.databaseImage = config.Syndesis.Components.Database.Image.Get(config.Syndesis.SHA)
+		o.databaseImage = config.Syndesis.Components.Database.Image
 	}
 
 	return nil

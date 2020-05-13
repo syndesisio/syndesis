@@ -236,7 +236,7 @@
           - name: POSTGRESQL_UPGRADE
             value: copy
 {{- end}}
-          image: '{{ dockerImageFromComponent .Syndesis.Components.Database.Image .Syndesis.SHA }}'
+          image: '{{ .Syndesis.Components.Database.Image }}'
           imagePullPolicy: IfNotPresent
           lifecycle:
             postStart:
@@ -280,7 +280,7 @@
             value: postgresql://{{.Syndesis.Components.Database.User}}:{{.Syndesis.Components.Database.Password}}@localhost:5432/syndesis?sslmode=disable
           - name: PG_EXPORTER_EXTEND_QUERY_PATH
             value: /etc/postgres/exporter/queries.yaml
-          image: '{{ dockerImageFromComponent .Syndesis.Components.Database.Exporter.Image .Syndesis.SHA }}'
+          image: '{{ .Syndesis.Components.Database.Exporter.Image }}'
           imagePullPolicy: IfNotPresent
           name: syndesis-db-metrics
           livenessProbe:

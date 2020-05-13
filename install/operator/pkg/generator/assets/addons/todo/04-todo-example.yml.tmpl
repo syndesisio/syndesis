@@ -76,7 +76,7 @@
       sourceStrategy:
         from:
           kind: DockerImage
-          name: {{ dockerImageFromComponent .Syndesis.Addons.Todo.Image .Syndesis.SHA }}
+          name: {{ .Syndesis.Addons.Todo.Image }}
       type: Source
     triggers:
       - type: ConfigChange
