@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import {
   Radio,
   Split,
@@ -8,7 +7,6 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 import * as React from 'react';
-import { ApiConnectorCreateService } from '../Customization/apiClientConnectors/create';
 import { ButtonLink } from '../Layout';
 import { DndFileChooser } from './DndFileChooser';
 import './OpenApiSelectMethod.css';
@@ -35,10 +33,7 @@ export interface IOpenApiSelectMethodProps {
   i18nMethodFromScratch2x?: string;
   i18nMethodFromScratch3x?: string;
   i18nNoFileSelectedMessage: string;
-  i18nPort?: string;
   i18nSelectedFileLabel: string;
-  i18nService?: string;
-  i18nServicePortTitle?: string;
   i18nUploadFailedMessage?: string;
   i18nUploadSuccessMessage?: string;
   i18nUrlNote: string;
@@ -60,10 +55,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
   i18nMethodFromScratch2x,
   i18nMethodFromScratch3x,
   i18nNoFileSelectedMessage,
-  i18nPort,
   i18nSelectedFileLabel,
-  i18nService,
-  i18nServicePortTitle,
   i18nUploadFailedMessage,
   i18nUploadSuccessMessage,
   i18nUrlNote,
@@ -158,18 +150,11 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
     }
   };
 
-  const handleChangeSelectedPort = (params: string) => {
-    //
-  };
-
-  const handleChangeSelectedService = (params: string) => {
-    //
-  };
-
   const handleAddSpec = (val: any, evt: React.FormEvent<HTMLInputElement>) =>
     onAddUrlSpecification(evt);
   const handleSelectFile = () => onSelectMethod(FILE);
   const handleSelectUrl = () => onSelectMethod(URL);
+
   return (
     <Stack className={'open-api-select-method'} data-testid={'openapi-select-method'}>
       <StackItem>
@@ -278,13 +263,6 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
           </StackItem>
         </>
       )}
-      <ApiConnectorCreateService
-        handleChangeSelectedPort={handleChangeSelectedPort}
-        handleChangeSelectedService={handleChangeSelectedService}
-        i18nPort={i18nPort}
-        i18nService={i18nService}
-        i18nServicePortTitle={i18nServicePortTitle}
-      />
       <StackItem>
         <ButtonLink
           id={'button-next'}

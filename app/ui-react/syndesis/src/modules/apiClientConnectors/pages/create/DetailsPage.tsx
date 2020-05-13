@@ -7,7 +7,7 @@ import {
   ApiConnectorCreatorFooter,
   ApiConnectorCreatorLayout,
   ApiConnectorCreatorToggleList,
-  ApiConnectorDetailsForm
+  ApiConnectorDetailsForm,
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -15,10 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import { PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
-import {
-  ApiConnectorInfoForm,
-  IConnectorValues,
-} from '../../components';
+import { ApiConnectorInfoForm, IConnectorValues } from '../../components';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
 
@@ -51,7 +48,6 @@ export const DetailsPage: React.FunctionComponent = () => {
         const onSubmit = async (values: IConnectorValues, actions: any) => {
           actions.setSubmitting(true);
           try {
-            // tslint:disable-next-line
             await createApiConnector({
               ...values,
               authenticationType: state.authenticationType,
@@ -91,14 +87,14 @@ export const DetailsPage: React.FunctionComponent = () => {
               handleSubmit={onSubmit}
             >
               {({
-                  connectorName,
-                  fields,
-                  handleSubmit,
-                  icon,
-                  isSubmitting,
-                  isUploadingImage,
-                  onUploadImage,
-                  submitForm
+                connectorName,
+                fields,
+                handleSubmit,
+                icon,
+                isSubmitting,
+                isUploadingImage,
+                onUploadImage,
+                submitForm,
               }) => (
                 <ApiConnectorCreatorLayout
                   content={
@@ -127,19 +123,31 @@ export const DetailsPage: React.FunctionComponent = () => {
                   navigation={
                     <ApiConnectorCreatorBreadSteps
                       step={4}
-                      i18nDetails={t('apiClientConnectors:create:details:title')}
+                      i18nDetails={t(
+                        'apiClientConnectors:create:details:title'
+                      )}
                       i18nReview={t('apiClientConnectors:create:review:title')}
-                      i18nSecurity={t('apiClientConnectors:create:security:title')}
-                      i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                      i18nSecurity={t(
+                        'apiClientConnectors:create:security:title'
+                      )}
+                      i18nSelectMethod={t(
+                        'apiClientConnectors:create:selectMethod:title'
+                      )}
                     />
                   }
                   toggle={
                     <ApiConnectorCreatorToggleList
                       step={1}
-                      i18nDetails={t('apiClientConnectors:create:details:title')}
+                      i18nDetails={t(
+                        'apiClientConnectors:create:details:title'
+                      )}
                       i18nReview={t('apiClientConnectors:create:review:title')}
-                      i18nSecurity={t('apiClientConnectors:create:security:title')}
-                      i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                      i18nSecurity={t(
+                        'apiClientConnectors:create:security:title'
+                      )}
+                      i18nSelectMethod={t(
+                        'apiClientConnectors:create:selectMethod:title'
+                      )}
                     />
                   }
                 />

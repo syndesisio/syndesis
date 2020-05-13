@@ -4,6 +4,7 @@ import {
   Radio,
   Stack,
   StackItem,
+  TextInput,
   Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
@@ -36,42 +37,54 @@ export interface IApiConnectorCreateServiceProps {
  * before proceeding to the next step.
  */
 export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCreateServiceProps> = ({
-  // handleChangeSelectedPort,
+  handleChangeSelectedPort,
   handleChangeSelectedService,
-  // i18nPort,
-  // i18nService,
+  i18nPort,
+  i18nService,
   i18nServicePortTitle,
-  // portName,
-  // portsAvailable,
+  portName,
+  portsAvailable,
   serviceName,
   servicesAvailable,
-}) => (
-  <Stack style={{ maxWidth: '600px' }} gutter="md">
-    <StackItem>
-      <Title size="2xl">{i18nServicePortTitle}</Title>
-    </StackItem>
-    <StackItem>
-      <Form data-testid={`api-client-connector-service-ports`}>
-        <FormGroup fieldId={'serviceName'}>
-          {servicesAvailable &&
-            servicesAvailable!.map((service: IServiceAndPortTypes, idx) => (
-              <Radio
-                key={service.value + '-' + idx}
-                id={'serviceName'}
-                data-testid={`api-client-connector-service-${toValidHtmlId(
-                  service!.value
-                )}`}
-                aria-label={service.label}
-                label={service.label}
-                isChecked={serviceName === service.value}
-                name={'service'}
-                onChange={() => handleChangeSelectedService(service.value!)}
-                value={service.value}
-                readOnly={true}
+}) => {
+  return (
+    <Stack style={{ maxWidth: '600px' }} gutter="md">
+      <StackItem>
+        <Title size="2xl">{i18nServicePortTitle}</Title>
+      </StackItem>
+      <StackItem>
+        <Form data-testid={`api-client-connector-service-ports`}>
+          <FormGroup fieldId={'serviceName'}>
+            {servicesAvailable &&
+              servicesAvailable!.map((service: IServiceAndPortTypes, idx) => (
+                <Radio
+                  key={service.value + '-' + idx}
+                  id={'serviceName'}
+                  data-testid={`api-client-connector-service-${toValidHtmlId(
+                    service!.value
+                  )}`}
+                  aria-label={service.label}
+                  label={service.label}
+                  isChecked={serviceName === service.value}
+                  name={'service'}
+                  onChange={() => handleChangeSelectedService(service.value!)}
+                  value={service.value}
+                  readOnly={true}
+                />
+              ))}
+          </FormGroup>
+          <>
+            <FormGroup fieldId={'port'} label={i18nPort}>
+              <TextInput
+                id={'portName'}
+                type={'text'}
+                value={portName}
+                onChange={value => handleChangeSelectedPort(value)}
               />
-            ))}
-        </FormGroup>
-      </Form>
-    </StackItem>
-  </Stack>
-);
+            </FormGroup>
+          </>
+        </Form>
+      </StackItem>
+    </Stack>
+  );
+};
