@@ -15,17 +15,6 @@
  */
 package io.syndesis.server.controller.integration.online;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentError;
@@ -42,9 +31,21 @@ import io.syndesis.server.dao.IntegrationDao;
 import io.syndesis.server.dao.IntegrationDeploymentDao;
 import io.syndesis.server.openshift.DeploymentData;
 import io.syndesis.server.openshift.OpenShiftService;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
 
 @Qualifier("s2i")
 @Component()
@@ -140,6 +141,8 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
         String version = Integer.toString(integrationDeployment.getVersion());
         final DeploymentData.Builder deploymentDataBuilder = DeploymentData.builder()
             .withVersion(integrationDeployment.getVersion())
+            .addLabel(OpenShiftService.INTEGRATION_TYPE_LABEL, OpenShiftService.INTEGRATION_TYPE_LABEL_VALUE)
+            .addLabel(OpenShiftService.INTEGRATION_APP_LABEL, OpenShiftService.INTEGRATION_APP_LABEL_VALUE)
             .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationId))
             .addLabel(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
             .addLabel(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username))
@@ -148,7 +151,7 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
             .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
             .addSecretEntry("application.properties", propsToString(applicationProperties));
 
-        integration.getConfiguredProperties().forEach((k, v) -> deploymentDataBuilder.addProperty(k, v));
+        integration.getConfiguredProperties().forEach(deploymentDataBuilder::addProperty);
 
         DeploymentData data = deploymentDataBuilder.build();
 

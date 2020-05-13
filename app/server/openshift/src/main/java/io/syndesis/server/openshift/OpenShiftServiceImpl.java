@@ -15,9 +15,14 @@
  */
 package io.syndesis.server.openshift;
 
+import io.syndesis.common.util.Names;
+import io.syndesis.common.util.SyndesisServerException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -28,9 +33,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.Container;
@@ -60,8 +62,6 @@ import io.fabric8.openshift.api.model.RouteSpec;
 import io.fabric8.openshift.api.model.User;
 import io.fabric8.openshift.api.model.UserBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
-import io.syndesis.common.util.Names;
-import io.syndesis.common.util.SyndesisServerException;
 
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention", "PMD.GodClass"})
 public class OpenShiftServiceImpl implements OpenShiftService {
@@ -69,9 +69,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenShiftServiceImpl.class);
 
     private static final String OPENSHIFT_PREFIX = "i-";
-
-    // Labels used for generated objects
-    private static final Map<String, String> INTEGRATION_DEFAULT_LABELS = defaultLabels();
 
     private final NamespacedOpenShiftClient openShiftClient;
     private final OpenShiftConfigurationProperties config;
@@ -144,7 +141,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
-    public void scale(String name, Map<String, String> labels, int desiredReplicas, long amount, TimeUnit timeUnit) throws InterruptedException {
+    public void scale(String name, Map<String, String> labels, int desiredReplicas, long amount, TimeUnit timeUnit) {
         String sName = openshiftName(name);
         getDeploymentsByLabel(labels)
             .stream()
@@ -170,7 +167,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         if (deploymentConfigs.isEmpty()) {
           return false;
         }
-
 
         DeploymentConfig dc = deploymentConfigs.get(0);
         int allReplicas = 0;
@@ -226,7 +222,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         openShiftClient.imageStreams().withName(name).createOrReplaceWithNew()
             .withNewMetadata()
                 .withName(name)
-                .addToLabels(INTEGRATION_DEFAULT_LABELS)
+                .addToLabels(INTEGRATION_APP_LABEL, INTEGRATION_APP_LABEL_VALUE)
+                .addToLabels(INTEGRATION_TYPE_LABEL, INTEGRATION_TYPE_LABEL_VALUE)
             .endMetadata()
             .done();
     }
@@ -292,7 +289,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                         .withName(name)
                         .addToAnnotations(deploymentData.getAnnotations())
                         .addToLabels(deploymentData.getLabels())
-                        .addToLabels(INTEGRATION_DEFAULT_LABELS)
                     .endMetadata()
                     .editSpec()
                         // if not set to more than 1, force replicas to 1 to start the integration pod
@@ -303,7 +299,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                             .editMetadata()
                                 .addToLabels(INTEGRATION_NAME_LABEL, name)
                                 .addToLabels(COMPONENT_LABEL, "integration")
-                                .addToLabels(INTEGRATION_DEFAULT_LABELS)
                                 .addToLabels(deploymentData.getLabels())
                                 .addToAnnotations(deploymentData.getAnnotations())
                                 .addToAnnotations("prometheus.io/scrape", "true")
@@ -358,7 +353,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                         .withName(name)
                         .addToAnnotations(deploymentData.getAnnotations())
                         .addToLabels(deploymentData.getLabels())
-                        .addToLabels(INTEGRATION_DEFAULT_LABELS)
                     .endMetadata()
                     .withNewSpec()
                         .withReplicas(1)
@@ -375,7 +369,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                             .withNewMetadata()
                                 .addToLabels(INTEGRATION_NAME_LABEL, name)
                                 .addToLabels(COMPONENT_LABEL, "integration")
-                                .addToLabels(INTEGRATION_DEFAULT_LABELS)
                                 .addToLabels(deploymentData.getLabels())
                                 .addToAnnotations(deploymentData.getAnnotations())
                                 .addToAnnotations("prometheus.io/scrape", "true")
@@ -459,7 +452,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                 .withName(name)
                 .addToAnnotations(deploymentData.getAnnotations())
                 .addToLabels(deploymentData.getLabels())
-                .addToLabels(INTEGRATION_DEFAULT_LABELS)
             .endMetadata()
             .withNewSpec()
                 .withRunPolicy("SerialLatestOnly")
@@ -653,14 +645,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     protected static String openshiftName(String name) {
         return OPENSHIFT_PREFIX + Names.sanitize(name);
-    }
-
-    static Map<String, String> defaultLabels() {
-        final HashMap<String, String> labels = new HashMap<String, String>();
-        labels.put("syndesis.io/type", "integration");
-        labels.put("syndesis.io/app", "syndesis");
-
-        return Collections.unmodifiableMap(labels);
     }
 
     @Override
