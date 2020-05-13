@@ -116,7 +116,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
   /**
    * Hook to handle when confirmation dialog is visible.
    */
-  const [promptActionOptions, setPromptActionOptions] = React.useState();
+  const [promptActionOptions, setPromptActionOptions] = React.useState<IPromptActionOptions>();
 
   /**
    * Hook to indicate when the dialog should be visible.
@@ -205,7 +205,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
           icon: ConfirmationIconType.DANGER,
           message: 'Are you sure you want to delete?',
           title: 'Confirm Delete?',
-        } as IPromptActionOptions);
+        });
         setShowDialog(true);
       },
     };
@@ -387,7 +387,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
             version: props.revision,
           }),
           title: t('replaceDraftVirtualizationConfirmTitle'),
-        } as IPromptActionOptions);
+        });
         setShowDialog(true);
       },
     };
@@ -667,7 +667,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
   };
 
   const handleAction = () => {
-    const action = promptActionOptions.handleAction;
+    const action = promptActionOptions?.handleAction;
     setShowDialog(false);
 
     if (typeof action === 'function') {

@@ -18,10 +18,18 @@
   },
   "devDependencies": {
     "@babel/core": "^7.1.5",
+    "@patternfly/react-core": "^3.77.2",
+    "@patternfly/react-icons": "^3.10.15",
+    "@patternfly/react-styles": "^3.5.7",
+    "@patternfly/react-table": "^2.28.29",
+    "@patternfly/react-topology": "^2.8.65",
     "@storybook/addon-info": "^5.3.8",
     "@storybook/addon-options": "^5.3.8",
     "@storybook/react": "^5.3.8",
     "@testing-library/jest-dom": "^4.0.0",
+    "@testing-library/react": "^9.3.2",
+    "@types/d3-scale": "^2.1.1",
+    "@types/d3-shape": "^1.3.2",
     "@types/expect": "^24.3.0",
     "@types/jest": "^24.0.11",
     "@types/patternfly-react": "*",
@@ -30,13 +38,14 @@
     "expect": "^24.1.0",
     "jest": "^25.1.0",
     "jest-cli": "^25.1.0",
+    "jest-fetch-mock": "^3.0.3",
+    "ky": "^0.17.0",
     "microbundle": "^0.11.0",
     "react": "^16.6.0",
     "react-docgen-typescript-loader": "^3.1.0",
     "react-dom": "^16.6.0",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
-    "@testing-library/react": "^9.3.2",
     "rimraf": "^3.0.2",
     "ts-jest": "^24.0.0",
     "ts-loader": "^6.0.4",
@@ -45,7 +54,7 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.16.0",
     "tslint-react": "^4.0.0",
-    "typescript": "^3.4.5"
+    "typescript": "~3.8.3"
   },
   "scripts": {
     "lint": "tslint -c ../../tslint.json --project .",
@@ -56,24 +65,39 @@
     "dev": "microbundle watch --format cjs --no-compress"
   },
   "peerDependencies": {
+    "@patternfly/react-core": "^3.77.2",
+    "@patternfly/react-icons": "^3.10.15",
+    "@patternfly/react-styles": "^3.5.7",
+    "@patternfly/react-table": "^2.28.29",
+    "@patternfly/react-topology": "^2.8.65",
+    "d3-scale": "^3.2.0",
+    "d3-shape": "^1.3.5",
+    "ky": "^0.17.0",
+    "lodash.clamp": "^4.0.3",
+    "react-dnd-html5-backend": "^10.0.2",
+    "react-dnd-touch-backend": "^10.0.2",
+    "react-dnd": "^10.0.2",
+    "react-file-picker": "0.0.6",
+    "react-use-gesture": "^7.0.4",
+    "rxjs": "^6.2.2",
     "react": "^16.6.0",
-    "react-dom": "^16.6.0",
-    "react-router": "^4.3.1",
-    "react-router-dom": "^4.3.1"
+    "react-dom": "^16.6.0"
   },
   "dependencies": {
-    "@syndesis/atlasmap-assembly": "*",
+    "@atlasmap/atlasmap": "^2.0.1",
     "react-fast-compare": "^2.0.2"
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "<rootDir>/../.jest/setup.ts"
+      "<rootDir>/../.jest/setup.ts",
+      "<rootDir>/setupJest.ts"
     ],
     "preset": "ts-jest",
     "moduleNameMapper": {
       "\\atlasmap/.*.js$": "<rootDir>/../.jest/fileMock.js",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/../.jest/fileMock.js",
-      "\\.(css|less)$": "<rootDir>/../.jest/styleMock.js"
+      "\\.(css|less)$": "<rootDir>/../.jest/styleMock.js",
+      "ky": "ky/umd"
     },
     "globals": {
       "ts-jest": {
