@@ -17,6 +17,7 @@ import {
 } from '@patternfly/react-tokens';
 import * as React from 'react';
 
+import { ApiConnectorCreateService } from '../Customization/apiClientConnectors/create';
 import './OpenApiReviewActions.css';
 
 export interface IApiProviderReviewActionsProps {
@@ -32,31 +33,49 @@ export interface IApiProviderReviewActionsProps {
   i18nNameLabel: string;
   i18nOperationsHtmlMessage: string;
   i18nOperationTagHtmlMessages?: string[];
+  i18nPort?: string;
+  i18nService?: string;
+  i18nServicePortTitle?: string;
   i18nValidationFallbackMessage?: string;
   i18nWarningsHeading?: string;
   warningMessages?: string[];
 }
 
-export const OpenApiReviewActions: React.FunctionComponent<
-  IApiProviderReviewActionsProps
-> = (
-  {
-    actions,
-    alert,
-    errorMessages,
-    i18nApiDefinitionHeading,
-    i18nDescriptionLabel,
-    i18nErrorsHeading,
-    i18nImportedHeading,
-    i18nNameLabel,
-    i18nOperationsHtmlMessage,
-    i18nOperationTagHtmlMessages,
-    i18nValidationFallbackMessage,
-    i18nWarningsHeading,
-    apiProviderDescription,
-    apiProviderName,
-    warningMessages,
-  }) => {
+export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewActionsProps> = ({
+  actions,
+  alert,
+  errorMessages,
+  i18nApiDefinitionHeading,
+  i18nDescriptionLabel,
+  i18nErrorsHeading,
+  i18nImportedHeading,
+  i18nNameLabel,
+  i18nOperationsHtmlMessage,
+  i18nOperationTagHtmlMessages,
+  i18nPort,
+  i18nService,
+  i18nServicePortTitle,
+  i18nValidationFallbackMessage,
+  i18nWarningsHeading,
+  apiProviderDescription,
+  apiProviderName,
+  warningMessages,
+}) => {
+  const [port, setPort] = React.useState('');
+  const [service, setService] = React.useState('');
+
+  let fileExtension: string;
+
+  const handleChangeSelectedPort = (params: string) => {
+    fileExtension = '';
+    setPort('');
+  };
+
+  const handleChangeSelectedService = (params: string) => {
+    fileExtension = '';
+    setService('');
+  };
+
   return (
     <Stack className={'open-api-review-actions'}>
       <StackItem>
@@ -139,13 +158,11 @@ export const OpenApiReviewActions: React.FunctionComponent<
             )}
             <div className={'review-actions__errors'}>
               {errorMessages
-                ? errorMessages.map(
-                  (errorMsg: string, index: number) => (
+                ? errorMessages.map((errorMsg: string, index: number) => (
                     <Text component={TextVariants.p} key={index}>
                       {index + 1}. {errorMsg}
                     </Text>
-                  )
-                )
+                  ))
                 : null}
             </div>
 
@@ -168,13 +185,11 @@ export const OpenApiReviewActions: React.FunctionComponent<
             )}
             <div className={'review-actions__warnings'}>
               {warningMessages
-                ? warningMessages.map(
-                  (warningMsg: string, index: number) => (
+                ? warningMessages.map((warningMsg: string, index: number) => (
                     <Text key={index} component={TextVariants.p}>
                       {index + 1}. {warningMsg}
                     </Text>
-                  )
-                )
+                  ))
                 : null}
             </div>
           </TextContent>
@@ -186,6 +201,17 @@ export const OpenApiReviewActions: React.FunctionComponent<
           </>
         )}
       </StackItem>
+
+      {/* Where users can specify a SOAP service and port if connector is WSDL file */}
+      <StackItem>
+        <ApiConnectorCreateService
+          handleChangeSelectedPort={handleChangeSelectedPort}
+          handleChangeSelectedService={handleChangeSelectedService}
+          i18nPort={i18nPort}
+          i18nService={i18nService}
+          i18nServicePortTitle={i18nServicePortTitle}
+        />
+      </StackItem>
     </Stack>
   );
-}
+};
