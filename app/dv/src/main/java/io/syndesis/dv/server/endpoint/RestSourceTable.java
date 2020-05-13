@@ -61,4 +61,16 @@ public class RestSourceTable {
     public List<RestSourceColumn> getColumns() {
         return this.columns;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("\nRestSourceTable: NAME: ");
+        sb.append(getName());
+        for( RestSourceColumn rsc: getColumns() ) {
+            sb.append("\n >>> ");
+            sb.append(rsc.toString());
+        }
+        return sb.toString();
+    }
+
 }

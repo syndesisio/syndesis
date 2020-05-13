@@ -15,20 +15,29 @@
  */
 package io.syndesis.dv.lsp.websocket;
 
-import io.syndesis.dv.lsp.TeiidDdlLanguageServer;
 import java.util.Collection;
+
 import javax.websocket.server.ServerEndpoint;
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
 import org.eclipse.lsp4j.websocket.WebSocketEndpoint;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-@ServerEndpoint(value="/teiid-ddl-language-server")
+import io.syndesis.dv.lsp.TeiidDdlLanguageServer;
+import io.syndesis.dv.server.endpoint.MetadataService;
+
+@Component
+@ServerEndpoint(value="/teiid-ddl-language-server", configurator = CustomConfigurator.class)
 public class TeiidDdlWebSocketEndpoint extends WebSocketEndpoint<LanguageClient> {
+
+    @Autowired
+    private MetadataService metadataService;
 
     @Override
     protected void configure(Launcher.Builder<LanguageClient> builder) {
-        builder.setLocalService(new TeiidDdlLanguageServer());
+        builder.setLocalService(new TeiidDdlLanguageServer(metadataService));
         builder.setRemoteInterface(LanguageClient.class);
     }
 

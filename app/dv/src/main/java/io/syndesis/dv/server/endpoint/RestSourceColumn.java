@@ -54,4 +54,12 @@ public class RestSourceColumn {
     public String getDatatype() {
         return this.datatype;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("\nRestSourceColumn: NAME: ");
+        sb.append(getName()).append(" Type: ").append(getDatatype());
+        return sb.toString();
+    }
+
 }

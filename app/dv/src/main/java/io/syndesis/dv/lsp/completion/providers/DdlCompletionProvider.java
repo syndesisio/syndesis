@@ -25,17 +25,32 @@ import org.slf4j.LoggerFactory;
 import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
+import io.syndesis.dv.lsp.TeiidDdlWorkspaceService;
 import io.syndesis.dv.lsp.completion.DdlCompletionConstants;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 import io.syndesis.dv.lsp.parser.statement.CreateViewStatement;
 import io.syndesis.dv.lsp.parser.statement.TokenContext;
+import io.syndesis.dv.server.endpoint.MetadataService;
 
 public class DdlCompletionProvider extends CompletionItemBuilder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DdlCompletionProvider.class);
 
     private static final boolean DO_PRINT_TO_CONSOLE = false;
+    private final TeiidDdlWorkspaceService workspaceService;
+    private final MetadataService metadataService;
+
+    public DdlCompletionProvider(MetadataService metadataService, TeiidDdlWorkspaceService workspaceService) {
+        super();
+        this.workspaceService = workspaceService;
+        this.metadataService = metadataService;
+    }
+
+    public DdlCompletionProvider() {
+        this.workspaceService = null;
+        this.metadataService = null;
+    }
 
     @SuppressWarnings("PMD.CyclomaticComplexity")
     public List<CompletionItem> getCompletionItems(String statement, Position position) {
@@ -43,13 +58,16 @@ public class DdlCompletionProvider extends CompletionItemBuilder {
 
         try {
             DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(statement);
-
             CreateViewStatement createStatement = new CreateViewStatement(analyzer);
-
             TokenContext tokenContext = createStatement.getTokenContext(position);
-            Token previousToken = tokenContext.getToken();
+            if( workspaceService != null) {
+                tokenContext.setVirtualizationId(workspaceService.getCurrentVirtualizationName());
+            }
 
-            String[] words = null;
+            MetadataItemProvider metadataItemProvider =
+                new MetadataItemProvider(createStatement, this.metadataService, this.workspaceService);
+
+            Token previousToken = tokenContext.getToken();
 
             if( previousToken != null ) {
                 systemPrint("\nlast full token = " + previousToken.image + " At Position : " + position);
@@ -63,20 +81,7 @@ public class DdlCompletionProvider extends CompletionItemBuilder {
                 switch(tokenContext.getContext()) {
                     // Context is the prefix to the statement "CREATE VIEW xxxxx" statement
                     case PREFIX: {
-                        switch(previousToken.kind) {
-                            case SQLParserConstants.CREATE:
-                                words = analyzer.getNextWordsByKind(SQLParserConstants.CREATE);
-                                items.addAll(generateCompletionItems(words));
-                                break;
-                            case SQLParserConstants.VIEW:
-                                // TODO:  A View should already be named for our primary use-case
-                                // Not sure if we'll have any items here to return
-                                break;
-                            case SQLParserConstants.ID:
-                                items.add(generateCompletionItem(DdlCompletionConstants.getLabel(SQLParserConstants.LPAREN, false), null,  null,  null));
-                                break;
-                            default: // TODO: THROW ERROR???
-                        }
+                        handlePrefixItems(tokenContext, items, analyzer);
                     } break;
 
                     // Context is the Table body surrounded by (....) and before OPTIONS() or AS
@@ -93,26 +98,16 @@ public class DdlCompletionProvider extends CompletionItemBuilder {
                     } break;
                     // Context is the Table body surrounded by (....) and before OPTIONS() or AS
                     case QUERY_EXPRESSION: {
-                        if (previousToken.kind == SQLParserConstants.AS) {
-                            String[] values = {"SELECT"};
-                            items.addAll(generateCompletionItems(values));
-                        } else {
-                            // TODO:  SHOW REAL SCHEMA DATA HERE
-                            items.addAll(getItemLoader().getFunctionCompletionItems());
-                            items.addAll(getItemLoader().getQueryExpressionKeywordItems());
-                        }
+                        items.addAll(getQueryExpressionItems(tokenContext, metadataItemProvider));
                     } break;
                     case SELECT_CLAUSE: {
-                        items.addAll(getItemLoader().getFunctionCompletionItems());
-                        items.addAll(getItemLoader().getQueryExpressionKeywordItems());
+                        items.addAll(getSelectClauseItems(tokenContext, metadataItemProvider));
                     } break;
                     case FROM_CLAUSE: {
-                        // TODO:  Add symbols for applicable database schema symbols here
-                        items.addAll(getItemLoader().getQueryExpressionKeywordItems());
+                        items.addAll(getFromClauseItems(tokenContext, metadataItemProvider));
                     } break;
                     case WHERE_CLAUSE: {
-                        // TODO:  Add symbols for applicable database schema symbols here
-                        items.addAll(getItemLoader().getQueryExpressionKeywordItems());
+                        items.addAll(getWhereClauseItems(tokenContext, metadataItemProvider));
                     } break;
                     case NONE_FOUND:
                     default: // RETURN ALL KEYWORDS
@@ -132,6 +127,60 @@ public class DdlCompletionProvider extends CompletionItemBuilder {
         }
         systemPrint("\n CompletionItems = " + items.size() + "\n");
 
+        return items;
+    }
+
+    private void handlePrefixItems(TokenContext tokenContext, List<CompletionItem> items, DdlTokenAnalyzer analyzer) {
+        switch(tokenContext.getToken().kind) {
+            case SQLParserConstants.CREATE:
+                String[] words = analyzer.getNextWordsByKind(SQLParserConstants.CREATE);
+                items.addAll(generateCompletionItems(words));
+                break;
+            case SQLParserConstants.VIEW:
+                // TODO:  A View should already be named for our primary use-case
+                // Not sure if we'll have any items here to return
+                break;
+            case SQLParserConstants.ID:
+                items.add(generateCompletionItem(DdlCompletionConstants.getLabel(SQLParserConstants.LPAREN, false), null,  null,  null));
+                break;
+            default: // TODO: THROW ERROR???
+        }
+    }
+
+    private List<CompletionItem> getQueryExpressionItems(TokenContext tokenContext, MetadataItemProvider metadataItemProvider) {
+        List<CompletionItem> items = new ArrayList<CompletionItem>();
+        if (tokenContext.getToken().kind == SQLParserConstants.AS) {
+            String[] values = {"SELECT"};
+            items.addAll(generateCompletionItems(values));
+        } else {
+            items.addAll(metadataItemProvider.getCompletionItems(tokenContext));
+            items.addAll(getItemLoader().getFunctionCompletionItems());
+            items.addAll(getItemLoader().getQueryExpressionKeywordItems());
+        }
+        return items;
+    }
+
+    private List<CompletionItem> getSelectClauseItems(TokenContext tokenContext, MetadataItemProvider metadataItemProvider) {
+        List<CompletionItem> items = new ArrayList<CompletionItem>();
+        items.addAll(metadataItemProvider.getCompletionItems(tokenContext));
+        items.addAll(getItemLoader().getFunctionCompletionItems());
+        items.addAll(getItemLoader().getQueryExpressionKeywordItems());
+        return items;
+    }
+
+    private List<CompletionItem> getFromClauseItems(TokenContext tokenContext, MetadataItemProvider metadataItemProvider) {
+        List<CompletionItem> items = new ArrayList<CompletionItem>();
+        items.addAll(metadataItemProvider.getCompletionItems(tokenContext));
+        // TODO:  Add symbols for applicable database schema symbols here
+        items.addAll(getItemLoader().getQueryExpressionKeywordItems());
+        return items;
+    }
+
+    private List<CompletionItem> getWhereClauseItems(TokenContext tokenContext, MetadataItemProvider metadataItemProvider) {
+        List<CompletionItem> items = new ArrayList<CompletionItem>();
+        items.addAll(metadataItemProvider.getCompletionItems(tokenContext));
+        // TODO:  Add symbols for applicable database schema symbols here
+        items.addAll(getItemLoader().getQueryExpressionKeywordItems());
         return items;
     }
 

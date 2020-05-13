@@ -102,6 +102,9 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
 
   const handleMetadataLoaded = async (): Promise<void> => {
     if (sourceTableColumns != null && sourceTableColumns.length > 0) {
+      // tslint:disable-next-line:no-console
+      console.log("  VESPage.handleMetadataLoaded() \n\t  virtualization.name = ", virtualization.name);
+      monacoContext.setVirtualization(virtualization.name);
       setMetadataLoaded(true);
     }
   };
@@ -307,6 +310,19 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   }, [ddlHasChanges]);
 
   const monacoContext = useContext(MonacoContext);
+
+  // Pass current virtualization ID to monaco language client
+  // React.useEffect(() => {
+  //   monacoContext.setVirtualization(virtualization.name);
+  // }, []);
+
+
+  // const handleMonacoEditorWillMount = () => {
+    // tslint:disable-next-line:no-console
+    // console.log("  VESPage.handleMonacoEditorWillMount() \n\t  virtualization.name = ", virtualization.name);
+    // monacoContext.setVirtualization(virtualization.name);
+  //   monacoContext.willMountEditor();
+  // }
 
   return (
     <WithLoader
