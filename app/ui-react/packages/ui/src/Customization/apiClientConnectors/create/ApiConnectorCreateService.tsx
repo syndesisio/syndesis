@@ -17,16 +17,16 @@ export interface IServiceAndPortTypes {
 export interface IApiConnectorCreateServiceProps {
   handleChangeSelectedPort: (params: string) => void;
   handleChangeSelectedService: (params: string) => void;
-  i18nPort: string;
-  i18nService: string;
-  i18nServicePortTitle: string;
+  i18nPort?: string;
+  i18nService?: string;
+  i18nServicePortTitle?: string;
   portName?: string;
   /**
    * The list of available services for this document.
    */
-  portsAvailable?: IServiceAndPortTypes[];
+  portsAvailable?: any[];
   serviceName?: string;
-  servicesAvailable?: IServiceAndPortTypes[];
+  servicesAvailable?: any[];
 }
 
 /**
@@ -53,22 +53,23 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
     <StackItem>
       <Form data-testid={`api-client-connector-service-ports`}>
         <FormGroup fieldId={'serviceName'}>
-          {servicesAvailable!.map((service: IServiceAndPortTypes, idx) => (
-            <Radio
-              key={service.value + '-' + idx}
-              id={'serviceName'}
-              data-testid={`api-client-connector-service-${toValidHtmlId(
-                service!.value
-              )}`}
-              aria-label={service.label}
-              label={service.label}
-              isChecked={serviceName === service.value}
-              name={'service'}
-              onChange={() => handleChangeSelectedService(service.value!)}
-              value={service.value}
-              readOnly={true}
-            />
-          ))}
+          {servicesAvailable &&
+            servicesAvailable!.map((service: IServiceAndPortTypes, idx) => (
+              <Radio
+                key={service.value + '-' + idx}
+                id={'serviceName'}
+                data-testid={`api-client-connector-service-${toValidHtmlId(
+                  service!.value
+                )}`}
+                aria-label={service.label}
+                label={service.label}
+                isChecked={serviceName === service.value}
+                name={'service'}
+                onChange={() => handleChangeSelectedService(service.value!)}
+                value={service.value}
+                readOnly={true}
+              />
+            ))}
         </FormGroup>
       </Form>
     </StackItem>
