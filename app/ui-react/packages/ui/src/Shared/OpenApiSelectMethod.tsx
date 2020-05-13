@@ -35,7 +35,10 @@ export interface IOpenApiSelectMethodProps {
   i18nMethodFromScratch2x?: string;
   i18nMethodFromScratch3x?: string;
   i18nNoFileSelectedMessage: string;
+  i18nPort?: string;
   i18nSelectedFileLabel: string;
+  i18nService?: string;
+  i18nServicePortTitle?: string;
   i18nUploadFailedMessage?: string;
   i18nUploadSuccessMessage?: string;
   i18nUrlNote: string;
@@ -57,7 +60,10 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
   i18nMethodFromScratch2x,
   i18nMethodFromScratch3x,
   i18nNoFileSelectedMessage,
+  i18nPort,
   i18nSelectedFileLabel,
+  i18nService,
+  i18nServicePortTitle,
   i18nUploadFailedMessage,
   i18nUploadSuccessMessage,
   i18nUrlNote,
@@ -69,6 +75,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
   const [valid, setValid] = React.useState(false);
   const [uploadSuccessMessage, setUploadSuccessMessage] = React.useState('');
   const [uploadFailedMessage, setUploadFailedMessage] = React.useState('');
+
   /**
    * Helper function used to build the D&D upload success/fail
    * messages, which are subsequently set in the UI state
@@ -83,10 +90,12 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
       setUploadFailedMessage("'" + fileName + "'" + i18nUploadFailedMessage);
     }
   };
+
   const checkValidUrl = (toCheck: string): boolean => {
     const regexp = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     return regexp.test(toCheck);
   };
+
   /**
    * User has added a specification via a string URL, which will be
    * checked if is a valid HTTP/HTTPS string.
@@ -101,6 +110,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
       setValid(false);
     }
   };
+
   /**
    * The action fired when the user selects the method
    * to provide an OpenAPI specification.
@@ -113,6 +123,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
     setUploadSuccessMessage('');
     setValid(newMethod === SCRATCH_2X || newMethod === SCRATCH_3X);
   };
+
   /**
    * Callback for when one or more file uploads have been accepted.
    */
@@ -125,6 +136,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
       setValid(true);
     };
   };
+
   /**
    * Obtains the localized text (may include HTML tags) that appears when the file upload was rejected. This
    * will occur when a DnD of a file with the wrong extension is dropped. This message is presented
@@ -137,6 +149,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
     setValid(false);
     return `<span>File <strong>${fileName}</strong> could not be uploaded</span>`;
   };
+
   const handleClickNext = () => {
     if (method === URL) {
       onNext(method, url);
@@ -144,23 +157,30 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
       onNext(method as 'file', specification);
     }
   };
+
   const handleChangeSelectedPort = (params: string) => {
     //
   };
+
   const handleChangeSelectedService = (params: string) => {
     //
   };
+
+  const handleAddSpec = (val: any, evt: React.FormEvent<HTMLInputElement>) =>
+    onAddUrlSpecification(evt);
+  const handleSelectFile = () => onSelectMethod(FILE);
+  const handleSelectUrl = () => onSelectMethod(URL);
   return (
     <Stack>
       <StackItem>
-        <Split onClick={() => onSelectMethod(FILE)}>
+        <Split onClick={handleSelectFile}>
           <SplitItem>
             <Radio
               aria-label={'From File'}
               id={'method-file'}
               data-testid={'method-file'}
               name={'method'}
-              onClick={() => onSelectMethod(FILE)}
+              onClick={handleSelectFile}
               isChecked={method === FILE}
               readOnly={true}
             />
@@ -186,7 +206,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
         </Split>
       </StackItem>
       <StackItem>
-        <Split onClick={() => onSelectMethod(URL)}>
+        <Split onClick={handleSelectUrl}>
           <SplitItem>
             <Radio
               aria-label={'from url radio'}
@@ -195,7 +215,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
               name={'method'}
               label={<></>}
               isChecked={method === URL}
-              onClick={() => onSelectMethod(URL)}
+              onClick={handleSelectUrl}
               readOnly={true}
             />
           </SplitItem>
@@ -209,7 +229,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
                 type={'text'}
                 isDisabled={method !== URL}
                 value={url}
-                onChange={(val, evt) => onAddUrlSpecification(evt)}
+                onChange={handleAddSpec}
               />
               <br />
               <span className={'url-note'}>{i18nUrlNote}</span>
@@ -261,9 +281,9 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
       <ApiConnectorCreateService
         handleChangeSelectedPort={handleChangeSelectedPort}
         handleChangeSelectedService={handleChangeSelectedService}
-        i18nPort={''}
-        i18nService={''}
-        i18nServicePortTitle={''}
+        i18nPort={i18nPort}
+        i18nService={i18nService}
+        i18nServicePortTitle={i18nServicePortTitle}
       />
       <StackItem>
         <ButtonLink
