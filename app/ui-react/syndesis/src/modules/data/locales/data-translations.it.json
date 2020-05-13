@@ -78,6 +78,8 @@
   "importVirtualizationZipInvalid": "Il file compresso non è valido (dv.json non trovato).",
   "Invalid": "Invalido",
   "metadataTree": "Albero dei metadati",
+  "metadataTreeKababAction":"Copia il nome della tabella in Editor",
+  "metadataColumnTooltip": "Copia e inserisci il nome della colonna nella posizione del cursore nell'editor Ddl.",
   "Metrics": "Metrica",
   "metricsCacheHitRatioA11yInfo": "Chiudi le informazioni sul rapporto risultati cache",
   "metricsCacheHitRatioA11yInfoClose": "Informazioni sul rapporto risultati cache",

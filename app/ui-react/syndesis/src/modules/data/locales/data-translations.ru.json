@@ -78,6 +78,8 @@
   "importVirtualizationZipInvalid": "Сжатый файл недействителен (dv.json не найден).",
   "Invalid": "Некорректный",
   "metadataTree": "Дерево метаданных",
+  "metadataTreeKababAction":"Скопировать имя таблицы в редактор",
+  "metadataColumnTooltip": "Скопируйте и вставьте имя столбца в позиции курсора в редакторе Ddl.",
   "Metrics": "Метрики",
   "metricsCacheHitRatioA11yInfo": "Информация о соотношении попаданий в кэш",
   "metricsCacheHitRatioA11yInfoClose": "Информация о соотношении попаданий в кэш",

@@ -9,19 +9,17 @@ import './KababActionComponent.css';
 
 export interface IKababActionComponentProps {
   textData: string;
+  i18nKababAction: string;
+  copyToDdlEditor: (insertText: string) => void;
 }
 
 export const KababActionComponent: React.FunctionComponent<IKababActionComponentProps> = props => {
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   const dropdownItems = [
-    /* tslint:disable-next-line: no-console
-         tslint:disable-next-line: jsx-no-lambda */
-    <DropdownItem key="link" onClick={() => console.log(props.textData)}>
-      Copy to Editor
-    </DropdownItem>,
-    <DropdownItem key="action" component="button">
-      Get Query
+         // tslint:disable-next-line: jsx-no-lambda
+    <DropdownItem key="link" onClick={() => props.copyToDdlEditor(props.textData)}>
+      {props.i18nKababAction}
     </DropdownItem>,
   ];
 
