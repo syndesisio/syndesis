@@ -8,6 +8,7 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 import * as React from 'react';
+import { ApiConnectorCreateService } from '../Customization/apiClientConnectors/create';
 import { ButtonLink } from '../Layout';
 import { DndFileChooser } from './DndFileChooser';
 import './OpenApiSelectMethod.css';
@@ -143,6 +144,12 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
       onNext(method as 'file', specification);
     }
   };
+  const handleChangeSelectedPort = (params: string) => {
+    //
+  };
+  const handleChangeSelectedService = (params: string) => {
+    //
+  };
   return (
     <Stack>
       <StackItem>
@@ -251,6 +258,13 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
           </StackItem>
         </>
       )}
+      <ApiConnectorCreateService
+        handleChangeSelectedPort={handleChangeSelectedPort}
+        handleChangeSelectedService={handleChangeSelectedService}
+        i18nPort={''}
+        i18nService={''}
+        i18nServicePortTitle={''}
+      />
       <StackItem>
         <ButtonLink
           id={'button-next'}
