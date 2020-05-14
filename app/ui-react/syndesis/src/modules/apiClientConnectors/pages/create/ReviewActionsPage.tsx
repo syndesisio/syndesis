@@ -19,7 +19,6 @@ import resolvers from '../../resolvers';
 import routes from '../../routes';
 
 export interface IReviewActionsRouteState {
-  connectorTemplateId?: string;
   specification: string;
 }
 
@@ -27,8 +26,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
   const uiContext = React.useContext(UIContext);
   const { state, history } = useRouteData<null, IReviewActionsRouteState>();
   const { apiSummary, loading, error } = useApiConnectorSummary(
-    state.specification,
-    state.connectorTemplateId
+    state.specification
   );
 
   React.useEffect(() => {
@@ -90,13 +88,6 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         i18nNameLabel={t(
                           'apiClientConnectors:create:review:nameLabel'
                         )}
-                        i18nPort={t('apiClientConnectors:create:soap:port')}
-                        i18nService={t(
-                          'apiClientConnectors:create:soap:service'
-                        )}
-                        i18nServicePortTitle={t(
-                          'apiClientConnectors:create:soap:servicePortTitle'
-                        )}
                         apiProviderDescription={apiSummary!.description}
                         apiProviderName={apiSummary!.name}
                         i18nOperationsHtmlMessage={`<strong>${
@@ -104,16 +95,6 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         }</strong> operations`}
                         i18nWarningsHeading={t(
                           'apiClientConnectors:create:review:sectionWarnings'
-                        )}
-                        portName={apiSummary!.configuredProperties!.portName}
-                        portsAvailable={JSON.parse(
-                          apiSummary!.configuredProperties!.ports
-                        )}
-                        serviceName={
-                          apiSummary!.configuredProperties!.serviceName
-                        }
-                        servicesAvailable={JSON.parse(
-                          apiSummary!.configuredProperties!.services
                         )}
                         warningMessages={
                           apiSummary!.warnings

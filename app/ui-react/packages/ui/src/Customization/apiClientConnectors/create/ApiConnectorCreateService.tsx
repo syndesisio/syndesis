@@ -15,8 +15,7 @@ export interface IServiceAndPortTypes {
 }
 
 export interface IApiConnectorCreateServiceProps {
-  handleChangeSelectedPort: (params: string) => void;
-  handleChangeSelectedService: (params: string) => void;
+  handleNext: (params: string) => void;
   i18nPort: string;
   i18nService: string;
   i18nServicePortTitle?: string;
@@ -36,8 +35,7 @@ export interface IApiConnectorCreateServiceProps {
  * before proceeding to the next step.
  */
 export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCreateServiceProps> = ({
-  handleChangeSelectedPort,
-  handleChangeSelectedService,
+  handleNext,
   i18nPort,
   i18nService,
   i18nServicePortTitle,
@@ -46,7 +44,24 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
   serviceName,
   servicesAvailable,
 }) => {
+  const [port, setPort] = React.useState(portName);
+  const [service, setService] = React.useState(serviceName);
+
   const portsArray = portsAvailable[serviceName];
+
+  // tslint:disable:no-console
+
+  const handleChangeSelectedPort = (params: string) => {
+    console.log('changed port: ' + JSON.stringify(params));
+    setPort(params);
+    handleNext(port);
+  };
+
+  const handleChangeSelectedService = (params: string) => {
+    console.log('changed service: ' + JSON.stringify(params));
+    setService(params);
+    handleNext(service);
+  };
 
   return (
     <Stack style={{ maxWidth: '600px' }} gutter="md">
@@ -63,8 +78,12 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
                 id={'api-connector-create-service-input'}
                 onChange={handleChangeSelectedService}
               >
-                {servicesAvailable.map((service, idx) => (
-                  <FormSelectOption key={idx} value={service} label={service} />
+                {servicesAvailable.map((serviceItem, idx) => (
+                  <FormSelectOption
+                    key={idx}
+                    value={serviceItem}
+                    label={serviceItem}
+                  />
                 ))}
               </FormSelect>
             </FormGroup>
@@ -76,8 +95,12 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
                 onChange={handleChangeSelectedPort}
               >
                 {portsArray.map(
-                  (port: string, idx: string | number | undefined) => (
-                    <FormSelectOption key={idx} value={port} label={port} />
+                  (portItem: string, idx: string | number | undefined) => (
+                    <FormSelectOption
+                      key={idx}
+                      value={portItem}
+                      label={portItem}
+                    />
                   )
                 )}
               </FormSelect>

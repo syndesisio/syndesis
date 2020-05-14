@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import {
   Label,
   Stack,
@@ -18,7 +17,6 @@ import {
 } from '@patternfly/react-tokens';
 import * as React from 'react';
 
-import { ApiConnectorCreateService } from '../Customization/apiClientConnectors/create';
 import './OpenApiReviewActions.css';
 
 export interface IApiProviderReviewActionsProps {
@@ -27,7 +25,6 @@ export interface IApiProviderReviewActionsProps {
   apiProviderDescription?: string;
   apiProviderName?: string;
   errorMessages?: string[];
-  fileName?: string;
   i18nApiDefinitionHeading: string;
   i18nDescriptionLabel: string;
   i18nErrorsHeading?: string;
@@ -35,15 +32,8 @@ export interface IApiProviderReviewActionsProps {
   i18nNameLabel: string;
   i18nOperationsHtmlMessage: string;
   i18nOperationTagHtmlMessages?: string[];
-  i18nPort?: string;
-  i18nService?: string;
-  i18nServicePortTitle?: string;
   i18nValidationFallbackMessage?: string;
   i18nWarningsHeading?: string;
-  portName?: string;
-  portsAvailable?: any;
-  serviceName?: string;
-  servicesAvailable?: any;
   warningMessages?: string[];
 }
 
@@ -60,30 +50,10 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
   i18nNameLabel,
   i18nOperationsHtmlMessage,
   i18nOperationTagHtmlMessages,
-  i18nPort,
-  i18nService,
-  i18nServicePortTitle,
   i18nValidationFallbackMessage,
   i18nWarningsHeading,
-  portsAvailable,
-  portName,
-  serviceName,
-  servicesAvailable,
   warningMessages,
 }) => {
-  const [port, setPort] = React.useState(portName);
-  const [service, setService] = React.useState(serviceName);
-
-  const handleChangeSelectedPort = (params: string) => {
-    console.log('changed port: ' + JSON.stringify(params));
-    setPort(params);
-  };
-
-  const handleChangeSelectedService = (params: string) => {
-    console.log('changed service: ' + JSON.stringify(params));
-    setService(params);
-  };
-
   return (
     <Stack className={'open-api-review-actions'}>
       <StackItem>
@@ -209,23 +179,6 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
           </>
         )}
       </StackItem>
-
-      {/* Where users can specify a SOAP service and port if connector is WSDL file */}
-      {servicesAvailable && (
-        <StackItem>
-          <ApiConnectorCreateService
-            handleChangeSelectedPort={handleChangeSelectedPort}
-            handleChangeSelectedService={handleChangeSelectedService}
-            i18nPort={i18nPort!}
-            i18nService={i18nService!}
-            i18nServicePortTitle={i18nServicePortTitle}
-            portName={port!}
-            portsAvailable={portsAvailable}
-            serviceName={service!}
-            servicesAvailable={servicesAvailable}
-          />
-        </StackItem>
-      )}
     </Stack>
   );
 };

@@ -38,9 +38,8 @@ export default {
       IReviewActionsRouteState,
       null,
       IReviewActionsRouteState
-    >(routes.create.review, ({ specification, connectorTemplateId }) => ({
+    >(routes.create.review, ({ specification }) => ({
       state: {
-        connectorTemplateId,
         specification,
       },
     })),
