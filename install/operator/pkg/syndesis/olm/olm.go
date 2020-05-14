@@ -76,15 +76,15 @@ func (m manifest) Generate() (err error) {
 		return err
 	}
 
-	if err = ioutil.WriteFile(filepath.Join(m.path, m.config.Version, "manifests", "syndesis.crd.yaml"), m.crd.body, 0644); err != nil {
+	if err = ioutil.WriteFile(filepath.Join(m.path, "manifests", "syndesis.crd.yaml"), m.crd.body, 0644); err != nil {
 		return err
 	}
 
-	if err = ioutil.WriteFile(filepath.Join(m.path, m.config.Version, "manifests", "syndesis.clusterserviceversion.yaml"), m.csv.body, 0644); err != nil {
+	if err = ioutil.WriteFile(filepath.Join(m.path, "manifests", "syndesis.clusterserviceversion.yaml"), m.csv.body, 0644); err != nil {
 		return err
 	}
 
-	if err = ioutil.WriteFile(filepath.Join(m.path, m.config.Version, "metadata", "annotations.yaml"), m.annotation.body, 0644); err != nil {
+	if err = ioutil.WriteFile(filepath.Join(m.path, "metadata", "annotations.yaml"), m.annotation.body, 0644); err != nil {
 		return err
 	}
 
@@ -99,17 +99,17 @@ func (m manifest) ensureDir() (err error) {
 		return err
 	}
 
-	err = os.Mkdir(filepath.Join(m.path, m.config.Version), 0755)
+	err = os.Mkdir(filepath.Join(m.path), 0755)
 	if err != nil && !os.IsExist(err) {
 		return err
 	}
 
-	err = os.Mkdir(filepath.Join(m.path, m.config.Version, "manifests"), 0755)
+	err = os.Mkdir(filepath.Join(m.path, "manifests"), 0755)
 	if err != nil && !os.IsExist(err) {
 		return err
 	}
 
-	err = os.Mkdir(filepath.Join(m.path, m.config.Version, "metadata"), 0755)
+	err = os.Mkdir(filepath.Join(m.path, "metadata"), 0755)
 	if err != nil && !os.IsExist(err) {
 		return err
 	}
