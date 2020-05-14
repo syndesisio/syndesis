@@ -27,6 +27,8 @@ import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeAware;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.connector.support.processor.ErrorMapper;
+import io.syndesis.connector.support.processor.ErrorStatusInfo;
 import io.syndesis.connector.support.processor.HttpRequestUnwrapperProcessor;
 import io.syndesis.connector.support.processor.util.SimpleJsonSchemaInspector;
 import io.syndesis.connector.support.util.ConnectorOptions;
@@ -69,7 +71,7 @@ public class ApiProviderReturnPathCustomizer implements ComponentProxyCustomizer
             }
         }
 
-        Map<String, String> errorResponseCodeMappings = ErrorMapper.jsonToMap(
+        Map<String, Integer> errorResponseCodeMappings = ErrorMapper.jsonToMap(
                 ConnectorOptions.extractOptionAndMap(options, HTTP_ERROR_RESPONSE_CODES_PROPERTY, String::valueOf, ""));
         Boolean isReturnBody =
                 ConnectorOptions.extractOptionAndMap(options, ERROR_RESPONSE_BODY, Boolean::valueOf, false);
@@ -79,13 +81,13 @@ public class ApiProviderReturnPathCustomizer implements ComponentProxyCustomizer
         component.setAfterProducer(statusCodeUpdater(httpResponseStatus, errorResponseCodeMappings, isReturnBody));
     }
 
-    private static Processor statusCodeUpdater(Integer responseCode, Map<String, String> errorResponseCodeMappings,
+    private static Processor statusCodeUpdater(Integer responseCode, Map<String, Integer> errorResponseCodeMappings,
             Boolean isReturnBody) {
         return exchange -> {
             if (exchange.getException() != null) {
                 ErrorStatusInfo statusInfo =
                         ErrorMapper.mapError(exchange.getException(), errorResponseCodeMappings, responseCode);
-                exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, statusInfo.getResponseCode());
+                exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, statusInfo.getHttpResponseCode());
                 if (isReturnBody) {
                     exchange.getIn().setBody(statusInfo.toJson());
                 } else {

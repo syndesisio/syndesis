@@ -48,6 +48,10 @@
         "componentScheme": "bean",
         "standardizedErrors": [
           {
+            "name": "TRANSIENT_DATA_ACCESS_ERROR",
+            "displayName": "TransientDataAccessError"
+          },
+          {
             "name": "SERVER_ERROR",
             "displayName": "ServerError"
           }
@@ -59,6 +63,7 @@
         "connectorCustomizers": [
           "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
         ],
+        "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
         "inputDataShape": {
           "kind": "any"
         },

@@ -7,16 +7,20 @@
         "componentScheme": "sql",
         "standardizedErrors": [
           {
-            "name": "SQL_DATA_ACCESS_ERROR",
-            "displayName": "SqlDataAccessError"
+            "name": "DATA_ACCESS_ERROR",
+            "displayName": "DataAccessError"
           },
           {
-            "name": "SQL_ENTITY_NOT_FOUND_ERROR",
-            "displayName": "SqlEntityNotFoundError"
+            "name": "ENTITY_NOT_FOUND_ERROR",
+            "displayName": "EntityNotFoundError"
           },
           {
-            "name": "SQL_CONNECTOR_ERROR",
-            "displayName": "SqlConnectorError"
+            "name": "DUPLICATE_KEY_ERROR",
+            "displayName": "DuplicateKeyError"
+          },
+          {
+            "name": "CONNECTOR_ERROR",
+            "displayName": "ConnectorError"
           }
         ],
         "connectorCustomizers": [

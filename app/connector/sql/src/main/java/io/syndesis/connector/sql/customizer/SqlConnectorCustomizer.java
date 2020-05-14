@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.SqlParameterValue;
 
+import io.syndesis.common.util.ErrorCategory;
 import io.syndesis.common.util.SyndesisConnectorException;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.sql.common.DbMetaDataHelper;
@@ -78,7 +79,7 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
                 try {
                     jsonBeans = JsonUtils.arrayToJsonBeans(JsonUtils.reader().readTree(body));
                 } catch (IOException e) {
-                    throw SyndesisConnectorException.wrap(SqlErrorCategory.SQL_DATA_ACCESS_ERROR, e);
+                    throw SyndesisConnectorException.wrap(ErrorCategory.DATA_ACCESS_ERROR, e);
                 }
             } else if (JsonUtils.isJson(body)) {
                 jsonBeans = Collections.singletonList(body);
@@ -106,10 +107,9 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
 
         if (exchange.getException()!=null) {
             throw SyndesisConnectorException.wrap(
-                    SqlErrorCategory.SQL_CONNECTOR_ERROR, exchange.getException());
+                    ErrorCategory.CONNECTOR_ERROR, exchange.getException());
         }
         final Message in = exchange.getIn();
-
         //converting SQL Map or List results to JSON Beans
         List<String> list = null;
         if (isRetrieveGeneratedKeys) {
@@ -122,7 +122,7 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
         }
         if (isRaiseErrorOnNotFound && !isRecordsFound(in))  {
             String detailedMsg = "SQL " + statementType.name() + " did not " + statementType +  " any records";
-            throw new SyndesisConnectorException(SqlErrorCategory.SQL_ENTITY_NOT_FOUND_ERROR, detailedMsg);
+            throw new SyndesisConnectorException(ErrorCategory.ENTITY_NOT_FOUND_ERROR, detailedMsg);
         }
     }
 

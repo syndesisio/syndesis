@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.apiprovider;
+package io.syndesis.connector.support.processor;
 
 import io.syndesis.common.util.json.JsonUtils;
 import org.slf4j.Logger;
@@ -23,24 +23,26 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class ErrorStatusInfo {
 
-    private Integer responseCode;
+    private Integer httpResponseCode;
     private String category;
     private String message;
+    private String error;
 
     private static final Logger LOG = LoggerFactory.getLogger(ErrorStatusInfo.class);
 
-    public ErrorStatusInfo(Integer responseCode, String category, String message) {
-        this.responseCode = responseCode;
+    public ErrorStatusInfo(Integer httpResponseCode, String category, String message, String error) {
+        this.httpResponseCode = httpResponseCode;
         this.message = message;
         this.category = category;
+        this.error = error;
     }
 
-    public Integer getResponseCode() {
-        return responseCode;
+    public Integer getHttpResponseCode() {
+        return httpResponseCode;
     }
 
-    public void setResponseCode(Integer responseCode) {
-        this.responseCode = responseCode;
+    public void setHttpResponseCode(Integer httpResponseCode) {
+        this.httpResponseCode = httpResponseCode;
     }
 
     public String getCategory() {
@@ -66,5 +68,13 @@ public class ErrorStatusInfo {
             LOG.warn(e.getMessage());
             return "";
         }
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }
