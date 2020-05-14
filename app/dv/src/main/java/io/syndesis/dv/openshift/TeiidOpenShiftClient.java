@@ -172,7 +172,7 @@ public class TeiidOpenShiftClient implements StringConstants {
 
         private BuildStatus work;
 
-        public BuildStatusRunner(BuildStatus buildStatus) {
+        private BuildStatusRunner(BuildStatus buildStatus) {
             this.work = buildStatus;
         }
 

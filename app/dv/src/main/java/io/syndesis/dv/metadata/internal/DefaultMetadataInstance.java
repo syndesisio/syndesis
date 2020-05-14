@@ -267,7 +267,9 @@ public class DefaultMetadataInstance implements MetadataInstance {
     }
 
     @Override
-    public QSResult query(String vdb, String query, int offset, int limit) throws KException {
+    // OBL_UNSATISFIED_OBLIGATION seems to be false positive
+    @SuppressFBWarnings({"SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE", "OBL_UNSATISFIED_OBLIGATION"})
+    public QSResult query(String vdb, String query, int offset, int limit) {
         ObjectMapper mapper = new ObjectMapper();
 
         QSResult result = new QSResult();

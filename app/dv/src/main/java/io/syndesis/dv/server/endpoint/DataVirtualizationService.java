@@ -618,7 +618,7 @@ public final class DataVirtualizationService extends DvService {
      * @param virtualization
      * @param file
      * @return
-     * @throws Exception
+     * @throws IOException
      */
     @PostMapping()
     @ApiOperation(value = "Import a single data virtualization", response = StatusObject.class)
@@ -1064,7 +1064,7 @@ public final class DataVirtualizationService extends DvService {
      * Get the published virtualization metrics
      * @param virtualization
      * @return
-     * @throws Exception
+     * @throws IOException
      */
     @RequestMapping(value = {VIRTUALIZATION_PLACEHOLDER + FS + "metrics"}, method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE })

@@ -100,6 +100,20 @@ public class SyndesisConnectionMonitor {
         public int compareTo(EventMsg o) {
             return id.compareTo(o.id);
         }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof EventMsg)) {
+                return false;
+            }
+            EventMsg other = (EventMsg) obj;
+            return action == other.action && Objects.equals(kind, other.kind) && Objects.equals(id, other.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(action, kind, id);
+        }
     }
 
     public SyndesisConnectionMonitor(@Autowired SyndesisConnectionSynchronizer scs, @Autowired ScheduledThreadPoolExecutor connectionExecutor) {
