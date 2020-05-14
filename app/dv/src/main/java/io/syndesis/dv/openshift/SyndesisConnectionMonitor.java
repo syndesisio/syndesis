@@ -108,7 +108,7 @@ public class SyndesisConnectionMonitor {
                 return false;
             }
             EventMsg other = (EventMsg) obj;
-            return action == other.action && Objects.equals(kind, other.kind) && Objects.equals(id, other.id); 
+            return action == other.action && Objects.equals(kind, other.kind) && Objects.equals(id, other.id);
         }
 
         @Override
