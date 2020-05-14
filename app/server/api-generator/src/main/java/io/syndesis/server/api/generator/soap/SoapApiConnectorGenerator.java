@@ -139,7 +139,7 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
             final Element docElement = d.getDocumentationElement();
             final QName qName = d.getQName();
             return docElement != null ? docElement.getTextContent() :
-                (qName != null ? defaultDescription + " for service " + qName.getLocalPart() : null);
+                (qName != null ? defaultDescription + " for service " + qName : null);
         }).orElse(defaultDescription);
     }
 
