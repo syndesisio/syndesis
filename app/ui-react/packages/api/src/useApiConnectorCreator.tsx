@@ -48,6 +48,7 @@ export function useApiConnectorCreator() {
         { type: 'application/json' }
       )
     );
+
     const response = await callFetch({
       body,
       headers: apiContext.headers,
@@ -56,7 +57,9 @@ export function useApiConnectorCreator() {
       method: 'POST',
       url: `${apiContext.apiUri}/connectors/custom`,
     });
+
     const integration = await response.json();
+
     if (integration.errorCode) {
       throw new Error(integration.userMsg);
     }

@@ -43,6 +43,8 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
     state.portName
   );
 
+  console.log('RA apiSummary: ' + JSON.stringify(apiSummary));
+
   React.useEffect(() => {
     if (error) {
       uiContext.pushNotification((error as Error).message, 'error');
@@ -140,6 +142,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         isNextLoading={false}
                         isNextDisabled={!!apiSummary!.errors}
                         nextHref={resolvers.create.security({
+                          connectorTemplateId: state.connectorTemplateId,
                           specification: apiSummary!,
                         })}
                         reviewEditHref={resolvers.create.specification({

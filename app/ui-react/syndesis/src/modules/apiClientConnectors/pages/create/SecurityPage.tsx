@@ -18,13 +18,14 @@ import resolvers from '../../resolvers';
 import routes from '../../routes';
 
 export interface ISecurityPageRouteState {
+  connectorTemplateId?: string;
   specification: IApiSummarySoap;
 }
 
 export const SecurityPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, ISecurityPageRouteState>();
-  const { specification } = state;
-  const { connectorTemplateId, properties } = specification;
+  const { connectorTemplateId, specification } = state;
+  const { properties } = specification;
   const { portName, serviceName } = specification.configuredProperties!;
 
   const backHref = resolvers.create.review({
@@ -37,6 +38,7 @@ export const SecurityPage: React.FunctionComponent = () => {
     if (authType === 'unselected') {
       throw new Error('Invalid authentication type allowed');
     }
+
     history.push(
       resolvers.create.save({
         authenticationType: authType,
