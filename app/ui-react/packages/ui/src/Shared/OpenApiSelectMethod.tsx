@@ -1,3 +1,4 @@
+// tslint:disable:no-console
 import {
   Radio,
   Split,
@@ -40,7 +41,11 @@ export interface IOpenApiSelectMethodProps {
   /**
    * The action fired when the user presses the Next button
    */
-  onNext(method?: Method, specification?: string): void;
+  onNext(
+    method?: Method,
+    specification?: string,
+    connectorTemplateId?: string
+  ): void;
 }
 
 export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodProps> = ({
@@ -68,6 +73,8 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
   const [uploadSuccessMessage, setUploadSuccessMessage] = React.useState('');
   const [uploadFailedMessage, setUploadFailedMessage] = React.useState('');
 
+  const [connectorTemplateId, setConnectorTemplateId] = React.useState();
+
   /**
    * Helper function used to build the D&D upload success/fail
    * messages, which are subsequently set in the UI state
@@ -89,13 +96,31 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
   };
 
   /**
+   * Checks if the filename is .wsdl (SOAP)
+   * and sets the connector template ID.
+   * @param fileName
+   */
+  const checkDocStyle = (fileName: string) => {
+    return fileName
+      .split('.')
+      .pop()!
+      .toLowerCase();
+  };
+
+  /**
    * User has added a specification via a string URL, which will be
    * checked if is a valid HTTP/HTTPS string.
    * @param e
    */
   const onAddUrlSpecification = (e: React.FormEvent<HTMLInputElement>) => {
     const newUrl = e.currentTarget.value;
+
+    if (checkDocStyle(newUrl) === 'wsdl') {
+      setConnectorTemplateId('soap-connector-template');
+    }
+
     setUrl(newUrl);
+
     if (method === URL && checkValidUrl(newUrl)) {
       setValid(true);
     } else {
@@ -120,9 +145,13 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
    * Callback for when one or more file uploads have been accepted.
    */
   const onUploadAccepted = (files: File[]): void => {
+    if (checkDocStyle(files[0].name) === 'wsdl') {
+      setConnectorTemplateId('soap-connector-template');
+    }
     const reader = new FileReader();
     reader.readAsText(files[0]);
     buildUploadMessage(files[0].name, true);
+    console.log('what about here: ' + connectorTemplateId);
     reader.onload = () => {
       setSpecification(reader.result as string);
       setValid(true);
@@ -144,9 +173,9 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
 
   const handleClickNext = () => {
     if (method === URL) {
-      onNext(method, url);
+      onNext(method, url, connectorTemplateId);
     } else {
-      onNext(method as 'file', specification);
+      onNext(method as 'file', specification, connectorTemplateId);
     }
   };
 

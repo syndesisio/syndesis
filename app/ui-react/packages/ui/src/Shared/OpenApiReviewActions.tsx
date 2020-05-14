@@ -1,3 +1,4 @@
+// tslint:disable:no-console
 import {
   Label,
   Stack,
@@ -23,9 +24,11 @@ import './OpenApiReviewActions.css';
 export interface IApiProviderReviewActionsProps {
   actions?: React.ReactNode;
   alert?: React.ReactNode;
+  apiProvider?: any;
   apiProviderDescription?: string;
   apiProviderName?: string;
   errorMessages?: string[];
+  fileName?: string;
   i18nApiDefinitionHeading: string;
   i18nDescriptionLabel: string;
   i18nErrorsHeading?: string;
@@ -38,12 +41,19 @@ export interface IApiProviderReviewActionsProps {
   i18nServicePortTitle?: string;
   i18nValidationFallbackMessage?: string;
   i18nWarningsHeading?: string;
+  portName?: string;
+  portsAvailable?: string;
+  serviceName?: string;
+  servicesAvailable?: any;
   warningMessages?: string[];
 }
 
 export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewActionsProps> = ({
   actions,
   alert,
+  apiProvider,
+  apiProviderDescription,
+  apiProviderName,
   errorMessages,
   i18nApiDefinitionHeading,
   i18nDescriptionLabel,
@@ -57,24 +67,30 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
   i18nServicePortTitle,
   i18nValidationFallbackMessage,
   i18nWarningsHeading,
-  apiProviderDescription,
-  apiProviderName,
+  fileName,
+  portsAvailable,
+  portName,
+  serviceName,
+  servicesAvailable,
   warningMessages,
 }) => {
-  const [port, setPort] = React.useState('');
-  const [service, setService] = React.useState('');
+  // const [port, setPort] = React.useState('');
+  // const [service, setService] = React.useState('');
 
-  let fileExtension: string;
+  // let fileExtension: string;
 
   const handleChangeSelectedPort = (params: string) => {
-    fileExtension = '';
-    setPort('');
+    // fileExtension = '';
+    // setPort('');
   };
 
   const handleChangeSelectedService = (params: string) => {
-    fileExtension = '';
-    setService('');
+    // fileExtension = '';
+    // setService('');
   };
+
+  console.log('apiProvider: ' + JSON.stringify(apiProvider));
+  // console.log('fileName: ' + JSON.stringify(fileName));
 
   return (
     <Stack className={'open-api-review-actions'}>

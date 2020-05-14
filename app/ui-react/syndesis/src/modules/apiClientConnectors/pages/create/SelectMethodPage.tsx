@@ -14,8 +14,16 @@ import resolvers from '../../resolvers';
 
 export const SelectMethodPage: React.FunctionComponent = () => {
   const { history } = useRouteData();
-  const onNext = (method: Method, specification: string) => {
-    history.push(resolvers.create.review({ specification }));
+  const onNext = (
+    method: Method,
+    specification: string,
+    connectorTemplateId?: string
+  ) => {
+    // tslint:disable:no-console
+    console.log('connectorTemplateId: ' + JSON.stringify(connectorTemplateId));
+    history.push(
+      resolvers.create.review({ specification, connectorTemplateId })
+    );
   };
   return (
     <Translation ns={['apiClientConnectors', 'shared']}>
@@ -76,7 +84,9 @@ export const SelectMethodPage: React.FunctionComponent = () => {
                 i18nDetails={t('apiClientConnectors:create:details:title')}
                 i18nReview={t('apiClientConnectors:create:review:title')}
                 i18nSecurity={t('apiClientConnectors:create:security:title')}
-                i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                i18nSelectMethod={t(
+                  'apiClientConnectors:create:selectMethod:title'
+                )}
               />
             }
             toggle={
@@ -85,7 +95,9 @@ export const SelectMethodPage: React.FunctionComponent = () => {
                 i18nDetails={t('apiClientConnectors:create:details:title')}
                 i18nReview={t('apiClientConnectors:create:review:title')}
                 i18nSecurity={t('apiClientConnectors:create:security:title')}
-                i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                i18nSelectMethod={t(
+                  'apiClientConnectors:create:selectMethod:title'
+                )}
               />
             }
           />

@@ -6,7 +6,7 @@ import {
   ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorFooter,
   ApiConnectorCreatorLayout,
-  ApiConnectorCreatorToggleList
+  ApiConnectorCreatorToggleList,
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -41,6 +41,10 @@ export const SecurityPage: React.FunctionComponent = () => {
       })
     );
   };
+  // tslint:disable:no-console
+  /**
+   * console.log('specification from security page: ' + JSON.stringify(specification));
+   */
   const extractAuthType = (authType?: string): string => {
     // avoid npe
     if (typeof authType === 'undefined') {
@@ -95,26 +99,33 @@ export const SecurityPage: React.FunctionComponent = () => {
                 connectorsHref={resolvers.list()}
                 i18nCancel={t('shared:Cancel')}
                 i18nConnectors={t('apiClientConnectors:apiConnectorsPageTitle')}
-                i18nCreateConnection={t('apiClientConnectors:CreateApiConnector')}
+                i18nCreateConnection={t(
+                  'apiClientConnectors:CreateApiConnector'
+                )}
               />
               <ApiConnectorSecurityForm
-                initialAccessTokenUrl={(properties!.tokenEndpoint && properties!.tokenEndpoint.defaultValue)}
-                initialAuthenticationType={properties!.authenticationType.defaultValue}
+                initialAccessTokenUrl={
+                  properties!.tokenEndpoint &&
+                  properties!.tokenEndpoint.defaultValue
+                }
+                initialAuthenticationType={
+                  properties!.authenticationType.defaultValue
+                }
                 initialAuthorizationUrl={
-                  (properties!.authorizationEndpoint &&
-                    properties!.authorizationEndpoint.defaultValue)
+                  properties!.authorizationEndpoint &&
+                  properties!.authorizationEndpoint.defaultValue
                 }
                 isValid={isValid}
               >
                 {({
-                    authUrl,
-                    handleChangeAuthUrl,
-                    handleChangeSelectedType,
-                    handleChangeTokenUrl,
-                    selectedType,
-                    tokenUrl,
-                    valid
-                  }) => (
+                  authUrl,
+                  handleChangeAuthUrl,
+                  handleChangeSelectedType,
+                  handleChangeTokenUrl,
+                  selectedType,
+                  tokenUrl,
+                  valid,
+                }) => (
                   <ApiConnectorCreatorLayout
                     content={
                       <ApiClientConnectorCreateSecurity
@@ -141,7 +152,9 @@ export const SecurityPage: React.FunctionComponent = () => {
                         i18nNoSecurity={t(
                           'apiClientConnectors:create:security:noSecurity'
                         )}
-                        i18nTitle={t('apiClientConnectors:create:security:title')}
+                        i18nTitle={t(
+                          'apiClientConnectors:create:security:title'
+                        )}
                         selectedType={selectedType}
                         tokenUrl={tokenUrl}
                       />
@@ -159,19 +172,35 @@ export const SecurityPage: React.FunctionComponent = () => {
                     navigation={
                       <ApiConnectorCreatorBreadSteps
                         step={3}
-                        i18nDetails={t('apiClientConnectors:create:details:title')}
-                        i18nReview={t('apiClientConnectors:create:review:title')}
-                        i18nSecurity={t('apiClientConnectors:create:security:title')}
-                        i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                        i18nDetails={t(
+                          'apiClientConnectors:create:details:title'
+                        )}
+                        i18nReview={t(
+                          'apiClientConnectors:create:review:title'
+                        )}
+                        i18nSecurity={t(
+                          'apiClientConnectors:create:security:title'
+                        )}
+                        i18nSelectMethod={t(
+                          'apiClientConnectors:create:selectMethod:title'
+                        )}
                       />
                     }
                     toggle={
                       <ApiConnectorCreatorToggleList
                         step={1}
-                        i18nDetails={t('apiClientConnectors:create:details:title')}
-                        i18nReview={t('apiClientConnectors:create:review:title')}
-                        i18nSecurity={t('apiClientConnectors:create:security:title')}
-                        i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                        i18nDetails={t(
+                          'apiClientConnectors:create:details:title'
+                        )}
+                        i18nReview={t(
+                          'apiClientConnectors:create:review:title'
+                        )}
+                        i18nSecurity={t(
+                          'apiClientConnectors:create:security:title'
+                        )}
+                        i18nSelectMethod={t(
+                          'apiClientConnectors:create:selectMethod:title'
+                        )}
                       />
                     }
                   />
