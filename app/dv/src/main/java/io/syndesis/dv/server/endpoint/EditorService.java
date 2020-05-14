@@ -37,6 +37,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.syndesis.dv.StringConstants;
 import io.syndesis.dv.metadata.MetadataInstance;
 import io.syndesis.dv.metadata.MetadataInstance.ValidationResult;
 import io.syndesis.dv.metadata.TeiidVdb;
@@ -51,7 +52,7 @@ import io.syndesis.dv.utils.StringUtils;
  * A REST service for obtaining view information.
  */
 @RestController
-@RequestMapping(value=V1Constants.APP_PATH+V1Constants.FS+V1Constants.EDITORS_SEGMENT)
+@RequestMapping(value=V1Constants.APP_PATH+StringConstants.FS+V1Constants.EDITORS_SEGMENT)
 @Api( tags = {V1Constants.EDITORS_SEGMENT} )
 public final class EditorService extends DvService {
 
@@ -81,7 +82,7 @@ public final class EditorService extends DvService {
     })
     public RestViewDefinitionStatus getViewDefinition(
             @ApiParam(value = "Name of the view editor state to fetch", required = true)
-            final @PathVariable(ID) String viewEditorStateId) throws Exception {
+            final @PathVariable(ID) String viewEditorStateId) {
         return repositoryManager.runInTransaction(true, ()->{
             ViewDefinition viewEditorState = getWorkspaceManager().findViewDefinition(viewEditorStateId);
             LOGGER.debug( "getViewEditorState:found %d ViewEditorStates", //$NON-NLS-1$
@@ -112,8 +113,8 @@ public final class EditorService extends DvService {
         @ApiResponse(code = 403, message = "An error has occurred.")
     })
     public RestViewDefinitionStatus upsertViewDefinition(
-            @ApiParam(required = true) @RequestBody final io.syndesis.dv.model.ViewDefinition restViewEditorState)
-            throws Exception {
+            @ApiParam(required = true) @RequestBody final ViewDefinition restViewEditorState)
+            {
         if (StringUtils.isBlank(restViewEditorState.getName())) {
             throw forbidden(Messages.Error.VIEW_DEFINITION_MISSING_NAME);
         }
@@ -136,15 +137,14 @@ public final class EditorService extends DvService {
         return validated;
     }
 
+    @SuppressWarnings("PMD.NPathComplexity") // TODO refactor
     public RestViewDefinitionStatus validateViewDefinition(
-            @ApiParam(required = true) @RequestBody final ViewDefinition restViewDefinition) throws Exception {
+            @ApiParam(required = true) @RequestBody final ViewDefinition restViewDefinition) {
         LOGGER.debug("Validating view : %s", restViewDefinition.getName()); //$NON-NLS-1$
 
         RestViewDefinitionStatus viewDefnStatus = new RestViewDefinitionStatus();
 
         String viewName = restViewDefinition.getName();
-        String viewDdl = restViewDefinition.getDdl();
-
         if (StringUtils.isBlank(viewName)) {
             viewDefnStatus.setStatus(ERROR);
             viewDefnStatus.setMessage(Messages.getString(Messages.Error.VIEW_DEFINITION_MISSING_NAME));
@@ -157,6 +157,7 @@ public final class EditorService extends DvService {
             return viewDefnStatus;
         }
 
+        String viewDdl = restViewDefinition.getDdl();
         if (StringUtils.isBlank(viewDdl)) {
             viewDefnStatus.setStatus(ERROR);
             viewDefnStatus.setMessage(Messages.getString(Messages.Error.VIEW_DEFINITION_MISSING_DDL));
@@ -170,7 +171,6 @@ public final class EditorService extends DvService {
         }
 
         ValidationResult result = vdb.validate(restViewDefinition.getDdl());
-        ValidatorReport report = result.getReport();
 
         if (result.getMetadataException() != null) {
             viewDefnStatus.setStatus(ERROR);
@@ -178,13 +178,13 @@ public final class EditorService extends DvService {
             return viewDefnStatus;
         }
 
-        Table t = result.getSchema().getTables().get(viewName);
-
         if (definesMultipleObjects(result)) {
             viewDefnStatus.setStatus(ERROR);
             viewDefnStatus.setMessage("DDL defines more than one object"); //$NON-NLS-1$
             return viewDefnStatus;
         }
+
+        Table t = result.getSchema().getTables().get(viewName);
 
         // If names do not match, create an error status
         if(t == null) {
@@ -201,6 +201,8 @@ public final class EditorService extends DvService {
                     restViewDefinition.addSourcePath(fqn.toString());
                 }
             }
+
+            ValidatorReport report = result.getReport();
             String error = report.getFailureMessage();
             if (report.hasItems() && !error.isEmpty()) {
                 viewDefnStatus.setStatus(ERROR);
@@ -227,7 +229,8 @@ public final class EditorService extends DvService {
      *
      * TODO: could refactor to directly save / merge, rather than copy
      */
-    ViewDefinition upsertViewEditorState(final ViewDefinition restViewDefn) throws Exception {
+    @SuppressWarnings({"PMD.NPathComplexity", "PMD.CyclomaticComplexity"}) // TODO refactor
+    ViewDefinition upsertViewEditorState(final ViewDefinition restViewDefn) {
 
         ViewDefinition viewDefn = null;
 
@@ -336,7 +339,7 @@ public final class EditorService extends DvService {
     public StatusObject removeViewDefinition(
             @ApiParam(value = "Id of the view editor state to remove", required = true)
             final @PathVariable(V1Constants.ID) String viewEditorStateId)
-            throws Exception {
+            {
         return repositoryManager.runInTransaction(false, ()-> {
             ViewDefinition vd = getWorkspaceManager().findViewDefinition(viewEditorStateId);
             if (vd == null) {

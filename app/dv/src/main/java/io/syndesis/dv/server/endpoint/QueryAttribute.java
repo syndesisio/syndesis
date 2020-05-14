@@ -18,6 +18,7 @@ package io.syndesis.dv.server.endpoint;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.Objects;
 
 
 /**
@@ -33,14 +34,7 @@ public class QueryAttribute {
 
     private int limit = -1;
 
-    private int offset = 0;
-
-    /**
-     * Default constructor for deserialization
-     */
-    public QueryAttribute() {
-        // do nothing
-    }
+    private int offset;
 
     /**
      * @return the query
@@ -121,27 +115,11 @@ public class QueryAttribute {
             return false;
         }
         QueryAttribute other = (QueryAttribute)obj;
-        if (limit != other.limit) {
-            return false;
-        }
-        if (offset != other.offset) {
-            return false;
-        }
-        if (query == null) {
-            if (other.query != null) {
-                return false;
-            }
-        } else if (!query.equals(other.query)) {
-            return false;
-        }
-        if (target == null) {
-            if (other.target != null) {
-                return false;
-            }
-        } else if (!target.equals(other.target)) {
-            return false;
-        }
-        return true;
+
+        return limit == other.limit
+               && offset == other.offset
+               && Objects.equal(query, other.query)
+               && Objects.equal(target, other.target);
     }
 
     @Override

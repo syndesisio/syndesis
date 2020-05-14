@@ -20,6 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.junit.Test;
@@ -31,6 +32,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.server.ResponseStatusException;
+import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.impl.VDBMetaData;
 
 import io.syndesis.dv.KException;
@@ -59,7 +61,7 @@ public class MetadataServiceTest {
     private DefaultMetadataInstance metadataInstance;
 
     @Test
-    public void testSourceVdbGeneration() throws Exception {
+    public void testSourceVdbGeneration() throws AdminException, UnsupportedEncodingException {
 //        Map<String, String> properties = new LinkedHashMap<String, String>();
 //        properties.put(TeiidDataSource.DATASOURCE_JNDINAME, "something");
 //        properties.put(TeiidDataSource.DATASOURCE_DRIVERNAME, "type");
@@ -105,14 +107,9 @@ public class MetadataServiceTest {
     }
 
     @Test
-    public void testGetSchema() throws Exception {
-        List<RestSchemaNode> nodes = null;
-        try {
-            nodes = metadataService.getSourceSchema("source2");
-            fail();
-        } catch (ResponseStatusException e) {
-            //no source yet
-        }
+    public void testGetSchema() throws AdminException {
+        assertThatThrownBy(() -> metadataService.getSourceSchema("source2"))
+            .isInstanceOf(ResponseStatusException.class);
 
         DefaultSyndesisDataSource sds = DataVirtualizationServiceTest.createH2DataSource("source2");
         metadataInstance.registerDataSource(sds);
@@ -152,14 +149,9 @@ public class MetadataServiceTest {
         }
   
     @Test
-    public void testGetSchemaSingleLevel() throws Exception {
-        List<RestSchemaNode> nodes = null;
-        try {
-            nodes = metadataService.getSourceSchema("source3");
-            fail();
-        } catch (ResponseStatusException e) {
-            //no source yet
-        }
+    public void testGetSchemaSingleLevel() throws AdminException {
+        assertThatThrownBy(() -> metadataService.getSourceSchema("source3"))
+            .isInstanceOf(ResponseStatusException.class);
 
         //add the data source, and schema
         DefaultSyndesisDataSource sds = DataVirtualizationServiceTest.createH2DataSource("source3");
@@ -195,7 +187,7 @@ public class MetadataServiceTest {
     }
 
     @Test
-    public void testPreviewQuery() throws Exception {
+    public void testPreviewQuery() {
         QueryAttribute kqa = new QueryAttribute();
         kqa.setQuery("select * from myview");
         kqa.setTarget("dv1");
@@ -224,7 +216,7 @@ public class MetadataServiceTest {
     }
 
     @Test
-    public void testRuntimeMetadata() throws Exception {
+    public void testRuntimeMetadata() throws AdminException {
         QueryAttribute kqa = new QueryAttribute();
         kqa.setQuery("select * from myview");
         kqa.setTarget("dv1");

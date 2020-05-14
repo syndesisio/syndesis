@@ -18,12 +18,10 @@ package io.syndesis.dv.utils;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import io.syndesis.dv.StringConstants;
-
 /**
  *
  */
-public class Messages implements StringConstants {
+public final class Messages {
     private static final String BUNDLE_NAME = "io.syndesis.dv.utils.messages"; //$NON-NLS-1$
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
@@ -46,22 +44,17 @@ public class Messages implements StringConstants {
      *
      * @return i18n string
      */
+    @SuppressWarnings("PMD.AvoidCatchingNPE")
     public static String getString(Enum<?> key, ResourceBundle bundle) {
         String enumKey = key.getClass().getSimpleName() + '.' + key.name();
         try {
             return bundle.getString(enumKey);
+        } catch (NullPointerException ignored) {
+            return "<No message available>";
+        } catch (MissingResourceException ignored) {
+            return "<Missing message for key \"" + enumKey + "\" in: " + BUNDLE_NAME + '>';
         } catch (final Exception err) {
-            String msg;
-
-            if (err instanceof NullPointerException) {
-                msg = "<No message available>"; //$NON-NLS-1$
-            } else if (err instanceof MissingResourceException) {
-                msg = "<Missing message for key \"" + enumKey + "\" in: " + BUNDLE_NAME + '>'; //$NON-NLS-1$ //$NON-NLS-2$
-            } else {
-                msg = err.getLocalizedMessage();
-            }
-
-            return msg;
+            return err.getLocalizedMessage();
         }
     }
 

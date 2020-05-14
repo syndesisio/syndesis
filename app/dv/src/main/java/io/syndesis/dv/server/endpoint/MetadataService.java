@@ -75,7 +75,7 @@ import io.syndesis.dv.utils.StringUtils;
  * A REST service for obtaining information from a metadata instance.
  */
 @RestController
-@RequestMapping( V1Constants.APP_PATH+V1Constants.FS+V1Constants.METADATA_SEGMENT )
+@RequestMapping( V1Constants.APP_PATH+StringConstants.FS+V1Constants.METADATA_SEGMENT )
 @Api( tags = {V1Constants.METADATA_SEGMENT} )
 public class MetadataService extends DvService implements ServiceVdbGenerator.SchemaFinder {
 
@@ -121,11 +121,11 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
     /**
      * Does not need to be transactional as it only affects the runtime instance
      */
-    public void removeVdb(final String vdbName) throws KException {
+    public void removeVdb(final String vdbName) {
         getMetadataInstance().undeployDynamicVdb(vdbName);
     }
 
-    public void refreshPreviewVdb() throws KException {
+    public void refreshPreviewVdb() {
         VDBMetaData workingCopy = new VDBMetaData();
         workingCopy.setName(EditorService.PREVIEW_VDB);
         workingCopy.addProperty("preview", "true");  //$NON-NLS-1$ //$NON-NLS-2$
@@ -168,20 +168,19 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
         @ApiResponse(code = 406, message = "Only JSON is returned by this operation"),
         @ApiResponse(code = 400, message = "An error has occurred.")
     })
-    public QSResult query(@ApiParam( value = "" +
-             "JSON of the properties of the query:<br>" +
-             OPEN_PRE_TAG +
-             OPEN_BRACE + BR +
-             NBSP + "query: \"SQL formatted query to interrogate the target\"" + COMMA + BR +
-             NBSP + "target: \"The name of the target data virtualization to be queried\"" + BR +
-             NBSP + OPEN_PRE_CMT + "(The target can be a vdb or data service. If the latter " +
-             NBSP + "then the name of the service vdb is extracted and " +
-             NBSP + "replaces the data service)" + CLOSE_PRE_CMT + COMMA + BR +
-             NBSP + "limit: Add a limit on number of results to be returned" + COMMA + BR +
-             NBSP + "offset: The index of the result to begin the results with" + BR +
-             CLOSE_BRACE +
-             CLOSE_PRE_TAG,required = true)
-           @RequestBody final QueryAttribute kqa) throws Exception {
+    public QSResult query(@ApiParam( value = "JSON of the properties of the query:<br>" +
+             StringConstants.OPEN_PRE_TAG +
+             StringConstants.OPEN_BRACE + StringConstants.BR +
+             StringConstants.NBSP + "query: \"SQL formatted query to interrogate the target\"" + StringConstants.COMMA + StringConstants.BR +
+             StringConstants.NBSP + "target: \"The name of the target data virtualization to be queried\"" + StringConstants.BR +
+             StringConstants.NBSP + StringConstants.OPEN_PRE_CMT + "(The target can be a vdb or data service. If the latter " +
+             StringConstants.NBSP + "then the name of the service vdb is extracted and " +
+             StringConstants.NBSP + "replaces the data service)" + StringConstants.CLOSE_PRE_CMT + StringConstants.COMMA + StringConstants.BR +
+             StringConstants.NBSP + "limit: Add a limit on number of results to be returned" + StringConstants.COMMA + StringConstants.BR +
+             StringConstants.NBSP + "offset: The index of the result to begin the results with" + StringConstants.BR +
+             StringConstants.CLOSE_BRACE +
+             StringConstants.CLOSE_PRE_TAG,required = true)
+           @RequestBody final QueryAttribute kqa) {
         //
         // Error if there is no query attribute defined
         //
@@ -199,11 +198,10 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
         TeiidVdb vdb = updatePreviewVdb(target);
 
         LOGGER.debug("Establishing query service for query %s on vdb %s", query, target);
-        QSResult result = getMetadataInstance().query(vdb.getName(), query, kqa.getOffset(), kqa.getLimit());
-        return result;
+        return getMetadataInstance().query(vdb.getName(), query, kqa.getOffset(), kqa.getLimit());
     }
 
-    protected TeiidVdb updatePreviewVdb(String dvName) throws Exception {
+    protected TeiidVdb updatePreviewVdb(String dvName) {
         SyndesisConnectionMonitor.setUpdate(true);
         return repositoryManager.runInTransaction(true, ()->{
             DataVirtualization dv = repositoryManager.findDataVirtualization(dvName);
@@ -256,7 +254,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
         @ApiResponse(code = 403, message = "An error has occurred.")
     })
     public StatusObject refreshSchema( @ApiParam( value = "Name of the teiid source", required = true )
-                                   final @PathVariable(V1Constants.TEIID_SOURCE) String teiidSourceName) throws Exception {
+                                   final @PathVariable(V1Constants.TEIID_SOURCE) String teiidSourceName) {
         // Error if the syndesisSource is missing
         if (StringUtils.isBlank( teiidSourceName )) {
             throw forbidden(Messages.Error.CONNECTION_SERVICE_MISSING_CONNECTION_NAME);
@@ -266,7 +264,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
     }
 
     public void deploySourceVdb(String teiidSourceName,
-            SourceDeploymentMode sourceDeploymentMode ) throws Exception {
+            SourceDeploymentMode sourceDeploymentMode ) {
         TeiidDataSource teiidSource = findTeiidDatasource(teiidSourceName);
 
         if (teiidSource == null) {
@@ -279,7 +277,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
         });
     }
 
-    public boolean deleteSchema(String sourceId, String teiidDataSourceName) throws Exception {
+    public boolean deleteSchema(String sourceId, String teiidDataSourceName) {
         //TODO: this can invalidate a lot of stuff
         boolean result = repositoryManager.runInTransaction(false, () -> {
             return repositoryManager.deleteSchemaBySourceId(sourceId);
@@ -300,6 +298,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
     }
 
     @PostConstruct
+    @SuppressWarnings("PMD.NPathComplexity") // TODO refactor
     void init() {
         //create an initial dummy preview vdb
         try {
@@ -374,7 +373,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
      * @return the JSON representation of the schema collection (never <code>null</code>)
      * @throws Exception
      */
-    @RequestMapping(value = {"sourceSchema", "sourceSchema" + FS + TEIID_SOURCE_PLACEHOLDER}, method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @RequestMapping(value = {"sourceSchema", "sourceSchema" + StringConstants.FS + TEIID_SOURCE_PLACEHOLDER}, method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation( value = "Get the native schema for a teiid source.  In no teiidSource supplied, all schema are returned",
                    response = RestSchemaNode.class,
                    responseContainer = "List")
@@ -385,12 +384,11 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
     } )
     public List<RestSchemaNode> getSourceSchema(
                                 @ApiParam(value = "Name of the teiid source", required = false)
-                                final @PathVariable(required=false, name=V1Constants.TEIID_SOURCE) String teiidSourceName) throws Exception {
+                                final @PathVariable(required=false, name=V1Constants.TEIID_SOURCE) String teiidSourceName) {
         SyndesisConnectionMonitor.setUpdate(true);
         return repositoryManager.runInTransaction(true, () -> {
 
-            List<RestSchemaNode> rootNodes = new ArrayList<RestSchemaNode>();
-            Collection<TeiidDataSource> resultTeiidSources = new ArrayList();
+            Collection<TeiidDataSource> resultTeiidSources = new ArrayList<>();
             if (teiidSourceName != null) {
                 // Find the bound teiid source corresponding to the syndesis source
                 TeiidDataSource teiidSource = findTeiidDatasource(teiidSourceName);
@@ -404,6 +402,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
                 resultTeiidSources.addAll(getMetadataInstance().getDataSources());
             }
 
+            List<RestSchemaNode> rootNodes = new ArrayList<RestSchemaNode>();
             for (TeiidDataSource teiidSource : resultTeiidSources) {
                 final Schema schemaModel = findSchemaModel(teiidSource);
 
@@ -439,7 +438,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
         responseContainer = "List")
     @ApiResponses(value = {@ApiResponse(code = 403, message = "An error has occurred.")
     })
-    public List<RestSyndesisSourceStatus> getSyndesisSourceStatuses() throws Exception {
+    public List<RestSyndesisSourceStatus> getSyndesisSourceStatuses() {
 
         final List< RestSyndesisSourceStatus > statuses = new ArrayList<>();
 
@@ -477,20 +476,20 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
             @ApiResponse(code = 403, message = "An error has occurred.") })
     public RestViewSourceInfo getRuntimeMetadata(
             @ApiParam( value = "Name of the data virtualization", required = true )
-            final @PathVariable( VIRTUALIZATION ) String virtualization) throws Exception {
+            final @PathVariable( VIRTUALIZATION ) String virtualization) {
         LOGGER.debug("getRuntimeMetadata()");
 
         if (virtualization == null) {
             throw forbidden(Messages.Error.DATASERVICE_SERVICE_MISSING_NAME);
         }
 
-        List<RestSourceSchema> srcSchemas = new ArrayList<>();
 
         TeiidVdb vdb = updatePreviewVdb(virtualization);
         if (vdb == null || !vdb.hasLoaded()) {
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
         }
 
+        List<RestSourceSchema> srcSchemas = new ArrayList<>();
         for (Schema s : vdb.getLocalSchema()) {
             srcSchemas.add(new RestSourceSchema(s));
         }
@@ -510,13 +509,15 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
      * @param teiidSource the teiidSource
      * @throws KException
      */
-    private void doDeploySourceVdb( TeiidDataSource teiidSource, SourceDeploymentMode sourceDeploymentMode) throws KException {
+    @SuppressWarnings({"PMD.NPathComplexity", "PMD.CyclomaticComplexity", "PMD.UseStringBufferForStringAppends"}) // TODO refactor
+    private void doDeploySourceVdb( TeiidDataSource teiidSource, SourceDeploymentMode sourceDeploymentMode) {
         assert( teiidSource != null );
 
         boolean replace = false;
-        if (sourceDeploymentMode == SourceDeploymentMode.REPLACE_DDL) {
+        SourceDeploymentMode mode = sourceDeploymentMode;
+        if (mode == SourceDeploymentMode.REPLACE_DDL) {
             replace = true;
-            sourceDeploymentMode = SourceDeploymentMode.REUSE_DDL;
+            mode = SourceDeploymentMode.REUSE_DDL;
         }
 
         // VDB is created in the repository.  If it already exists, delete it
@@ -528,20 +529,20 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
             return;
         }
 
-        // Name of VDB to be created is based on the source name
-        String vdbName = getWorkspaceSourceVdbName( teiidSource.getName() );
 
-        if (sourceDeploymentMode == SourceDeploymentMode.REUSE_DDL
+        if (mode == SourceDeploymentMode.REUSE_DDL
                 && schema.getDdl() == null) {
             //if the ddl doesn't already exist, don't do a deployment/save
             //the calling operation should be fail-fast
             return;
         }
 
-        String ddl = sourceDeploymentMode == SourceDeploymentMode.REFRESH ? null : schema.getDdl();
+        String ddl = mode == SourceDeploymentMode.REFRESH ? null : schema.getDdl();
 
+        // Name of VDB to be created is based on the source name
+        String vdbName = getWorkspaceSourceVdbName( teiidSource.getName() );
         if (ddl == null) {
-            vdbName += LOAD_SUFFIX;
+            vdbName = vdbName + LOAD_SUFFIX;
         }
 
         TeiidVdb existing = getMetadataInstance().getVdb(vdbName);
@@ -630,7 +631,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
      * @return the Model
      * @throws KException
      */
-    private Schema findSchemaModel(final TeiidDataSource dataSource ) throws KException {
+    private Schema findSchemaModel(final TeiidDataSource dataSource ) {
         final String dataSourceName = dataSource.getName( );
 
         //find from deployed state
@@ -664,7 +665,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
      * @return the list of schema nodes
      * @throws KException exception if problem occurs
      */
-    private static List<RestSchemaNode> generateSourceSchema(final String sourceName, final Collection<org.teiid.metadata.Table> tables) throws KException {
+    private static List<RestSchemaNode> generateSourceSchema(final String sourceName, final Collection<org.teiid.metadata.Table> tables) {
         List<RestSchemaNode> schemaNodes = new ArrayList<RestSchemaNode>();
 
         for(final org.teiid.metadata.Table table : tables) {
@@ -777,7 +778,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
      * @param status the RestSyndesisSourceStatus
      * @throws Exception if error occurs
      */
-    private void setSchemaStatus(String schemaId, final RestSyndesisSourceStatus status ) throws Exception {
+    private void setSchemaStatus(String schemaId, final RestSyndesisSourceStatus status ) {
         // Get the workspace schema VDB
         SourceSchema schema = repositoryManager.findSchemaBySourceId(schemaId);
         status.setId(schemaId);
@@ -799,7 +800,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
     }
 
     @Override
-    public Schema findSchema(String connectionName) throws KException {
+    public Schema findSchema(String connectionName) {
         TeiidDataSource tds = findTeiidDatasource(connectionName);
         if (tds == null) {
             return null;
@@ -808,11 +809,11 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
     }
 
     @Override
-    public TeiidDataSource findTeiidDatasource(String connectionName) throws KException {
+    public TeiidDataSource findTeiidDatasource(String connectionName) {
         return getMetadataInstance().getDataSource(connectionName);
     }
 
-    public Collection<? extends TeiidDataSource> getTeiidDatasources() throws KException {
+    public Collection<? extends TeiidDataSource> getTeiidDatasources() {
         return getMetadataInstance().getDataSources();
     }
 }

@@ -34,7 +34,7 @@ public interface TablePrivilegesRepository extends JpaRepository<TablePrivileges
     @Query(value = "SELECT count(*) FROM "
             + "dv_table_privileges tp inner join view_definition vd on (tp.view_definition_id = vd.id)"
             + " where vd.dv_name = :name ", nativeQuery = true)
-    public long countByVirtualizationName(@Param("name") String name);
+    long countByVirtualizationName(@Param("name") String name);
 
     @Query(value = "SELECT tp.* FROM "
             + "dv_table_privileges tp inner join view_definition vd on (tp.view_definition_id = vd.id)"

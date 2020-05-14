@@ -55,7 +55,7 @@ public class IntegrationRolesTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void testCreateUpdate() throws Exception {
+    public void testCreateUpdate() {
         RestDataVirtualization rdv = new RestDataVirtualization();
         String dvName = "testRoles";
         rdv.setName(dvName);

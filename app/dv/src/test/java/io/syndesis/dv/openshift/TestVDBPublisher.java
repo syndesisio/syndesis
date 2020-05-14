@@ -19,12 +19,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import javax.xml.stream.XMLStreamException;
 
 import org.jboss.shrinkwrap.api.GenericArchive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -37,7 +40,6 @@ import org.teiid.adminapi.impl.VDBMetadataParser;
 import org.teiid.core.util.ObjectConverterUtil;
 
 import io.fabric8.kubernetes.api.model.EnvVar;
-import io.syndesis.dv.KException;
 import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
 import io.syndesis.dv.datasources.MySQLDefinition;
 import io.syndesis.dv.datasources.PostgreSQLDefinition;
@@ -49,7 +51,7 @@ public class TestVDBPublisher {
     private VDBMetaData vdb;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() throws XMLStreamException {
         final InputStream vdbStream = getClass().getClassLoader().getResourceAsStream("myservice-vdb.xml");
         this.vdb = VDBMetadataParser.unmarshall(vdbStream);
     }
@@ -66,11 +68,11 @@ public class TestVDBPublisher {
 
         TeiidOpenShiftClient client = new TeiidOpenShiftClient(metadata, new EncryptionComponent("blah"), new DvConfigurationProperties(), null, repos) {
             @Override
-            public Set<DefaultSyndesisDataSource> getSyndesisSources() throws KException {
+            public Set<DefaultSyndesisDataSource> getSyndesisSources() {
                 return sources;
             }
             @Override
-            public DefaultSyndesisDataSource getSyndesisDataSource(String dsName) throws KException {
+            public DefaultSyndesisDataSource getSyndesisDataSource(String dsName) {
                 if (dsName.equals("accounts-xyz")) {
                     return getPostgreSQL();
                 } else {
@@ -114,7 +116,7 @@ public class TestVDBPublisher {
     }
 
     @Test
-    public void testDecryption() throws Exception {
+    public void testDecryption() {
         EncryptionComponent ec = new EncryptionComponent("GpADvcFIBgqMUwSfvljdQ1N5qeQFNXaAToht2O4kgBW2bIalkcPWphs54C4e7mjq");
         Map<String, String> credentialData = new HashMap<>();
         credentialData.put("password", "»ENC:7965a258e2f0029b0e5e797b81917366ed11608f195755fc4fcfebecfca4781917de289fb8579d306741b5ec5680a686");
@@ -126,7 +128,7 @@ public class TestVDBPublisher {
     }
 
     @Test
-    public void testGeneratePomXML() throws Exception {
+    public void testGeneratePomXML() throws IOException {
         TeiidOpenShiftClient generator = testDataSetup();
 
         String pom = generator.generatePomXml(vdb, false, false);
@@ -144,7 +146,7 @@ public class TestVDBPublisher {
     }
 
     @Test
-    public void testGenerateDataSource() throws Exception {
+    public void testGenerateDataSource() throws IOException {
         TeiidOpenShiftClient generator = testDataSetup();
 
         generator.normalizeDataSourceNames(vdb);
@@ -162,7 +164,7 @@ public class TestVDBPublisher {
     }
 
     @Test
-    public void testGenerateDeploymentYML() throws Exception {
+    public void testGenerateDeploymentYML() {
         TeiidOpenShiftClient generator = testDataSetup();
 
         PublishConfiguration config = new PublishConfiguration();

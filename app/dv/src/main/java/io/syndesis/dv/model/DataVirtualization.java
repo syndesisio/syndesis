@@ -25,6 +25,10 @@ import io.syndesis.dv.StringConstants;
 @DiscriminatorValue("v")
 public class DataVirtualization extends BaseDataVirtualization {
 
+    private String description;
+
+    private boolean modified = true;
+
     /**
      * Get the preview vdb name for the virtualization name -
      * the suffix is added to not conflict with the source and
@@ -36,10 +40,8 @@ public class DataVirtualization extends BaseDataVirtualization {
         return name + StringConstants.SERVICE_VDB_SUFFIX;
     }
 
-    private String description;
-    private boolean modified = true;
-
     protected DataVirtualization() {
+        // TODO needed by ORM?
     }
 
     public DataVirtualization(String name) {

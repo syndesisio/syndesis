@@ -34,8 +34,9 @@ public class DdlCompletionProvider extends CompletionItemBuilder implements DdlC
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DdlCompletionProvider.class);
 
-    private boolean doPrintToConsole = false;
+    private static final boolean DO_PRINT_TO_CONSOLE = false;
 
+    @SuppressWarnings("PMD.CyclomaticComplexity")
     public List<CompletionItem> getCompletionItems(String statement, Position position) {
         List<CompletionItem> items = new ArrayList<CompletionItem>();
 
@@ -91,16 +92,13 @@ public class DdlCompletionProvider extends CompletionItemBuilder implements DdlC
                     } break;
                     // Context is the Table body surrounded by (....) and before OPTIONS() or AS
                     case QUERY_EXPRESSION: {
-                        switch(previousToken.kind) {
-                            case AS:
-                                String[] values = {"SELECT"};
-                                items.addAll(generateCompletionItems(values));
-                                break;
-                            default: {
-                                // TODO:  SHOW REAL SCHEMA DATA HERE
-                                items.addAll(getItemLoader().getFunctionCompletionItems());
-                                items.addAll(getItemLoader().getQueryExpressionKeywordItems());
-                            } break;
+                        if (previousToken.kind == SQLParserConstants.AS) {
+                            String[] values = {"SELECT"};
+                            items.addAll(generateCompletionItems(values));
+                        } else {
+                            // TODO:  SHOW REAL SCHEMA DATA HERE
+                            items.addAll(getItemLoader().getFunctionCompletionItems());
+                            items.addAll(getItemLoader().getQueryExpressionKeywordItems());
                         }
                     } break;
                     case SELECT_CLAUSE: {
@@ -125,7 +123,7 @@ public class DdlCompletionProvider extends CompletionItemBuilder implements DdlC
                 }
             }
 
-            if( doPrintToConsole ) {
+            if( DO_PRINT_TO_CONSOLE ) {
                 analyzer.logReport();
             }
         } catch (Exception e) {
@@ -136,8 +134,9 @@ public class DdlCompletionProvider extends CompletionItemBuilder implements DdlC
         return items;
     }
 
-    private void systemPrint(String str) {
-        if( doPrintToConsole ) {
+    @SuppressWarnings("PMD.SystemPrintln")
+    private static void systemPrint(String str) {
+        if( DO_PRINT_TO_CONSOLE ) {
             System.out.print(str);
         }
     }

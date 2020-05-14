@@ -17,6 +17,7 @@ package io.syndesis.dv.server.endpoint;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 import org.junit.Before;
@@ -46,7 +47,7 @@ public final class DataVirtualizationSerializerTest {
     private RestDataVirtualization dataVirtualization;
 
     @Before
-    public void init() throws Exception {
+    public void init() {
         DataVirtualization theService = Mockito.mock(DataVirtualization.class);
         Mockito.when(theService.getName()).thenReturn(DATASERVICE_NAME);
 
@@ -55,7 +56,7 @@ public final class DataVirtualizationSerializerTest {
     }
 
     @Test
-    public void shouldExportJson() throws Exception {
+    public void shouldExportJson() throws UnsupportedEncodingException {
         String json = JsonMarshaller.marshall( this.dataVirtualization );
         json = URLDecoder.decode(json, "UTF-8");
         assertEquals(JSON, json);

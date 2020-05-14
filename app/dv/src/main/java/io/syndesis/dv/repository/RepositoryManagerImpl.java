@@ -17,7 +17,7 @@
 package io.syndesis.dv.repository;
 
 import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -60,21 +60,24 @@ public class RepositoryManagerImpl implements RepositoryManager {
     private PlatformTransactionManager platformTransactionManager;
 
     @Override
-    public <T> T runInTransaction(boolean rollbackOnly, Callable<T> callable) throws Exception {
+    @SuppressWarnings({"Finally", "PMD.DoNotThrowExceptionInFinally"})
+    public <T> T runInTransaction(boolean rollbackOnly, Task<T> callable) {
         TransactionStatus transactionStatus = platformTransactionManager.getTransaction(NEW_TRANSACTION_DEFINITION);
+
+        boolean shouldRollback = rollbackOnly;
         if (transactionStatus.isNewTransaction()) {
             if (rollbackOnly) {
                 transactionStatus.setRollbackOnly();
             }
         } else {
             //there is a surrounding txn, so we can't set the rollback only flag
-            rollbackOnly = false;
+            shouldRollback = false;
         }
         String txnName = null;
         if (LOGGER.isDebugEnabled()) {
             StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
             txnName = stackTraceElements[2].getMethodName();
-            LOGGER.debug( "createTransaction:created '%s', rollbackOnly = '%b'", txnName, rollbackOnly ); //$NON-NLS-1$
+            LOGGER.debug( "createTransaction:created '%s', rollbackOnly = '%b'", txnName, shouldRollback ); //$NON-NLS-1$
         }
         try {
             return callable.call();
@@ -92,18 +95,15 @@ public class RepositoryManagerImpl implements RepositoryManager {
     }
 
     @Override
-    public io.syndesis.dv.model.SourceSchema findSchemaBySourceId(String id) {
+    public SourceSchema findSchemaBySourceId(String id) {
         return this.schemaRepository.findBySourceId(id);
     }
 
     @Override
     public boolean deleteSchemaBySourceId(String sourceid) {
         try {
-            if (this.schemaRepository.deleteBySourceId(sourceid) == 0) {
-                return false;
-            }
-            return true;
-        } catch (EmptyResultDataAccessException e) {
+            return this.schemaRepository.deleteBySourceId(sourceid) != 0;
+        } catch (EmptyResultDataAccessException ignored) {
             return false;
         }
     }
@@ -124,7 +124,7 @@ public class RepositoryManagerImpl implements RepositoryManager {
 
     @Override
     public boolean isNameInUse(String name) {
-        return dataVirtualizationRepository.countByUpperName(name.toUpperCase()) > 0;
+        return dataVirtualizationRepository.countByUpperName(name.toUpperCase(Locale.US)) > 0;
     }
 
     @Override
@@ -161,7 +161,7 @@ public class RepositoryManagerImpl implements RepositoryManager {
 
     @Override
     public boolean deleteDataVirtualization(String serviceName) {
-        io.syndesis.dv.model.DataVirtualization dv = this.dataVirtualizationRepository.findByName(serviceName);
+        DataVirtualization dv = this.dataVirtualizationRepository.findByName(serviceName);
         if (dv == null) {
             return false;
         }
@@ -176,8 +176,8 @@ public class RepositoryManagerImpl implements RepositoryManager {
     }
 
     @Override
-    public io.syndesis.dv.model.ViewDefinition createViewDefiniton(String dvName, String viewName) {
-        io.syndesis.dv.model.ViewDefinition viewEditorState = new io.syndesis.dv.model.ViewDefinition(dvName, viewName);
+    public ViewDefinition createViewDefiniton(String dvName, String viewName) {
+        ViewDefinition viewEditorState = new ViewDefinition(dvName, viewName);
         return this.viewDefinitionRepository.save(viewEditorState);
     }
 
@@ -187,7 +187,7 @@ public class RepositoryManagerImpl implements RepositoryManager {
     }
 
     @Override
-    public List<io.syndesis.dv.model.ViewDefinition> findViewDefinitions(String dvName) {
+    public List<ViewDefinition> findViewDefinitions(String dvName) {
         return this.viewDefinitionRepository.findAllByDataVirtualizationName(dvName);
     }
 
@@ -203,7 +203,7 @@ public class RepositoryManagerImpl implements RepositoryManager {
     }
 
     @Override
-    public io.syndesis.dv.model.ViewDefinition findViewDefinition(String id) {
+    public ViewDefinition findViewDefinition(String id) {
         return this.viewDefinitionRepository.findById(id).orElse(null);
     }
 

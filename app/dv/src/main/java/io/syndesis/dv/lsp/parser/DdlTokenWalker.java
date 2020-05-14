@@ -19,7 +19,9 @@ import org.eclipse.lsp4j.Position;
 import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
-import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.STATEMENT_TYPE;
+import java.util.List;
+
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.StatementType;
 
 public class DdlTokenWalker implements SQLParserConstants {
     private final Token[] tokens;
@@ -33,7 +35,8 @@ public class DdlTokenWalker implements SQLParserConstants {
     /*
      * Uses 0 based line/column positions for cursor and token values
      */
-    public Token findToken(Position position, STATEMENT_TYPE statementType) {
+    @SuppressWarnings("PMD.NPathComplexity") // TODO refactor
+    public Token findToken(Position position, StatementType statementType) {
         int line = position.getLine();
         int column = position.getCharacter();
 
@@ -116,15 +119,14 @@ public class DdlTokenWalker implements SQLParserConstants {
         int column;
         int nChars = 0;
 
-        private TokenCursorLocator(Token token, int index, int line, int column) {
-            super();
+        TokenCursorLocator(Token token, int index, int line, int column) {
             this.token = token;
             this.tokenIndex = index;
             this.line = line;
             this.column = column;
         }
 
-        private TokenCursorLocator(TokenCursorLocator locator) {
+        TokenCursorLocator(TokenCursorLocator locator) {
             super();
             this.token = locator.getToken();
             this.tokenIndex = locator.getTokenIndex();
@@ -160,17 +162,9 @@ public class DdlTokenWalker implements SQLParserConstants {
          * Example "CREATE  VIEW abcdefg" NO ^ YES ^
          */
         public boolean isCursorFreeFromToken() {
-            if (line > token.endLine) {
-                return true;
-            }
-            if (isSingleChar()) {
-                return true;
-            }
-            if (line == token.endLine && column > token.endColumn + 1) {
-                return true;
-            }
-
-            return false;
+            return line > token.endLine
+                || isSingleChar()
+                || (line == token.endLine && column > token.endColumn + 1);
         }
 
         public boolean isWithinLines() {
@@ -194,16 +188,17 @@ public class DdlTokenWalker implements SQLParserConstants {
         }
 
         @Override
+        @SuppressWarnings("PMD.InsufficientStringBufferDeclaration") // false positive
         public String toString() {
-            StringBuffer sb = new StringBuffer(token.image);
-            sb.append("\n\t CURSOR: (" + this.line + ", " + this.column + ")");
-            sb.append("\n\t SPAN  : (" + this.token.beginLine + ", " + this.token.beginColumn + ")" + " >>> ("
-                    + this.token.endLine + ", " + this.token.endColumn + ") ");
-            sb.append("\n\t   isCursorBefore()        = " + isCursorBefore());
-            sb.append("\n\t   isCursorInside()        = " + isCursorInside());
-            sb.append("\n\t   isCursorAfter()         = " + isCursorAfter());
-            sb.append("\n\t   isCursorFreeFromToken() = " + isCursorFreeFromToken());
-            return sb.toString();
+            StringBuilder sb = new StringBuilder(200).append(token.image)
+                .append("\n\t CURSOR: (").append(this.line).append(", ").append(this.column).append(")")
+                .append("\n\t SPAN  : (").append(this.token.beginLine).append(", ").append(this.token.beginColumn + ")").append(" >>> (").append(this.token.endLine).append(", ").append(this.token.endColumn).append(") ")
+                .append("\n\t   isCursorBefore()        = ").append(isCursorBefore())
+                .append("\n\t   isCursorInside()        = ").append(isCursorInside())
+                .append("\n\t   isCursorAfter()         = ").append(isCursorAfter())
+                .append("\n\t   isCursorFreeFromToken() = ").append(isCursorFreeFromToken());
+
+                return sb.toString();
         }
     }
 }

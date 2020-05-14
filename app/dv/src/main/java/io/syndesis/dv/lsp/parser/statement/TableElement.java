@@ -49,6 +49,7 @@ public class TableElement extends AbstractStatementObject {
     }
 
     @Override
+    @SuppressWarnings("PMD") // TODO refactor
     protected void parseAndValidate() {
         int count = 0;
         int tableBodyFirstIndex = tableBody.getFirstTknIndex();
@@ -249,6 +250,7 @@ public class TableElement extends AbstractStatementObject {
         }
     }
 
+    @SuppressWarnings("PMD.CyclomaticComplexity") // TODO refactor
     private int parsePrimaryKeyTokens(int startIndex, Token primaryToken) {
         int currentIndex = startIndex;
         // LOOKING FOR "PRIMARY KEY (ID)" tokens
@@ -457,11 +459,11 @@ public class TableElement extends AbstractStatementObject {
             if (tkn.kind == COMMA && getTokens()[getLastTknIndex()].kind == COMMA
                     && getTokenIndex(tkn) == getLastTknIndex()) {
                 // return the TableBody context to show new column definition item
-                return new TokenContext(position, tkn, CONTEXT.TABLE_BODY, this);
+                return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_BODY, this);
             }
 
-            if (tkn.kind == RPAREN) {
-                return new TokenContext(position, tkn, CONTEXT.TABLE_ELEMENT, this);
+            if (tkn.kind == SQLParserConstants.RPAREN) {
+                return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_ELEMENT, this);
             }
 
             if (optionsClause != null) {
@@ -469,9 +471,8 @@ public class TableElement extends AbstractStatementObject {
                 if (context != null) {
                     return context;
                 }
-                ;
             }
-            return new TokenContext(position, tkn, CONTEXT.TABLE_ELEMENT, this);
+            return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_ELEMENT, this);
         }
 
         return null;
@@ -497,51 +498,46 @@ public class TableElement extends AbstractStatementObject {
         StringBuilder sb = new StringBuilder();
         sb.append("RAW TOKENS: ");
         for (int i = getFirstTknIndex(); i < getLastTknIndex() + 1; i++) {
-            sb.append(" " + getTokens()[i]);
+            sb.append(' ').append(getTokens().get(i));
         }
         return sb.toString();
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("TableElement:   ").append(getNameToken());
-        if (getDatatypeTokens() != null) {
-            for (Token tkn : getDatatypeTokens()) {
-                sb.append(" " + tkn.image);
-            }
+        StringBuilder sb = new StringBuilder(75)
+            .append("TableElement:   ").append(getNameToken());
+
+        append(datatypeTokens, sb);
+        append(notNullTokens, sb);
+        append(autoIncrementToken, sb);
+        append(indexToken, sb);
+        append(defaultTokens, sb);
+        append(uniqueToken, sb);
+        append(pkTokens, sb);
+        if (optionsClause != null) {
+            append(optionsClause.getOptionsTokens(), sb);
         }
-        if (getNotNullTokens() != null) {
-            for (Token tkn : getNotNullTokens()) {
-                sb.append(" " + tkn.image);
-            }
-        }
-        if (getAutoIncrementToken() != null) {
-            sb.append(getAutoIncrementToken().image);
-        }
-        if (getIndexToken() != null) {
-            sb.append(" " + getIndexToken().image);
-        }
-        if (getDefaultTokens() != null) {
-            for (Token tkn : getDefaultTokens()) {
-                sb.append(" " + tkn.image);
-            }
-        }
-        if (getUniqueToken() != null) {
-            sb.append(" " + getUniqueToken().image);
-        }
-        if (getPrimaryKeyTokens() != null) {
-            for (Token tkn : getPrimaryKeyTokens()) {
-                sb.append(" " + tkn.image);
-            }
-        }
-        if (getOptionClause() != null) {
-            for (Token tkn : getOptionClause().getOptionsTokens()) {
-                sb.append(" " + tkn.image);
-            }
-        }
-        sb.append("\n" + getFullTokenString());
+        sb.append('\n').append(getFullTokenString());
 
         return sb.toString();
+    }
+
+    private static void append(Token token, StringBuilder target) {
+        if (token == null) {
+            return;
+        }
+
+        target.append(' ').append(token.image);
+    }
+
+    private static void append(final Iterable<Token> tokens, final StringBuilder target) {
+        if (tokens == null) {
+            return;
+        }
+
+        for (Token token : tokens) {
+            append(token, target);
+        }
     }
 }

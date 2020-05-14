@@ -15,6 +15,8 @@
  */
 package io.syndesis.dv.openshift;
 
+import java.util.Locale;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum ProtocolType {
@@ -27,13 +29,13 @@ public enum ProtocolType {
     private int sourcePort;
     private int targetPort;
 
-    private ProtocolType(int sourcePort, int targetPort) {
+    ProtocolType(int sourcePort, int targetPort) {
         this.sourcePort = sourcePort;
         this.targetPort = targetPort;
     }
 
     public String id() {
-        return this.name().toLowerCase();
+        return this.name().toLowerCase(Locale.US);
     }
 
     public int getSourcePort() {

@@ -27,7 +27,7 @@ import io.syndesis.dv.rest.JsonMarshaller;
 @SuppressWarnings("nls")
 public class StatusTest {
 
-    @Test public void testJsonRoundtrip() throws Exception {
+    @Test public void testJsonRoundtrip() {
         BuildStatus bs = new BuildStatus("vdb");
         bs.setName("buildName");
         bs.setStatus(Status.COMPLETE);

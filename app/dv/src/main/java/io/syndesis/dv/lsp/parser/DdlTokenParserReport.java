@@ -53,6 +53,7 @@ public class DdlTokenParserReport {
         this.bracesMatch = bracesMatch;
     }
 
+    @SuppressWarnings("PMD.SystemPrintln")
     public void log() {
         System.out.println("\n########### DDL PARSER REPORT ###########\n");
         if( !this.exceptions.isEmpty() ) {

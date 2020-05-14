@@ -23,10 +23,10 @@ import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 public class TokenContext implements DdlAnalyzerConstants {
     private final Position position;
     private final Token token;
-    private CONTEXT context;
+    private DdlAnalyzerConstants.Context context;
     private final AbstractStatementObject targetObject;
 
-    public TokenContext(Position position, Token token, CONTEXT context, AbstractStatementObject statementObject) {
+    public TokenContext(Position position, Token token, DdlAnalyzerConstants.Context context, AbstractStatementObject statementObject) {
         super();
         this.position = position;
         this.token = token;
@@ -42,11 +42,11 @@ public class TokenContext implements DdlAnalyzerConstants {
         return token;
     }
 
-    public CONTEXT getContext() {
+    public DdlAnalyzerConstants.Context getContext() {
         return context;
     }
 
-    public CONTEXT setContext(CONTEXT context) {
+    public DdlAnalyzerConstants.Context setContext(DdlAnalyzerConstants.Context context) {
         return this.context = context;
     }
 
@@ -71,7 +71,7 @@ public class TokenContext implements DdlAnalyzerConstants {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(75);
         sb.append("TokenContext: ");
         if( token != null ) {
             sb.append(token.image);
@@ -82,8 +82,7 @@ public class TokenContext implements DdlAnalyzerConstants {
             .append(position.getLine())
             .append(", ")
             .append(position.getCharacter())
-            .append(")");
-        sb.append(" Context: ").append(contextToString());
+            .append(") Context: ").append(contextToString());
 
         return sb.toString();
     }

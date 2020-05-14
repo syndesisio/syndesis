@@ -15,7 +15,8 @@
  */
 package io.syndesis.dv.lsp.parser.statement;
 
-import static org.junit.Assert.*;
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.StatementType;
+import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 import org.junit.Test;
 import org.teiid.query.parser.Token;
@@ -42,7 +43,7 @@ public class TestCreateViewStatement {
     }
     
     @Test
-    public void testCreateViewStatement() throws Exception {
+    public void testCreateViewStatement() {
 
         String stmt = 
 //        	     01234567890123456789012345678901234567890123456789
@@ -61,9 +62,9 @@ public class TestCreateViewStatement {
 
         CreateViewStatement cvs = createStatatement(stmt);
 
-        assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(58, cvs.analyzer.getTokens().length);
-        
+        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
+        assertEquals(58, cvs.analyzer.getTokens().size());
+
         assertEquals("wineList", cvs.getViewName());
 
         assertTrue(cvs.getExceptions().isEmpty());
@@ -76,11 +77,11 @@ public class TestCreateViewStatement {
     }
     
     @Test
-    public void testMissingViewName() throws Exception {
-        String stmt = 
-//        	     01234567890123456789012345678901234567890123456789
-        		"CREATE VIEW (\n" +
-//        	     01234567890123456789012345678901234567890123456789
+    public void testMissingViewName() {
+        String stmt =
+            // 01234567890123456789012345678901234567890123456789
+            "CREATE VIEW (\n" +
+            // 01234567890123456789012345678901234567890123456789
                 "e1 integer primary key,\n" +
 //               01234567890123456789012345678901234567890123456789
                 "e6 varchar index default 'hello')\n" +
@@ -90,24 +91,24 @@ public class TestCreateViewStatement {
 
         CreateViewStatement cvs = createStatatement(stmt);
 
-        assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(23, cvs.analyzer.getTokens().length);
+        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
+        assertEquals(23, cvs.analyzer.getTokens().size());
 
         assertEquals(2, cvs.getExceptions().size());
     }
     
     @Test
-    public void testNoTableBody() throws Exception {
-        String stmt = 
-//               01234567890123456789012345678901234567890123456789
-                "CREATE VIEW (\n" +
-//               01234567890123456789012345678901234567890123456789
+    public void testNoTableBody() {
+        String stmt =
+            // 01234567890123456789012345678901234567890123456789
+            "CREATE VIEW (\n" +
+            // 01234567890123456789012345678901234567890123456789
                 ")\nAS SELECT * FROM winelist WHERE e1 > '10'";
 
         CreateViewStatement cvs = createStatatement(stmt);
-        
-        assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(13, cvs.analyzer.getTokens().length);
+
+        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
+        assertEquals(13, cvs.analyzer.getTokens().size());
 
         assertEquals(2, cvs.getExceptions().size());
     }

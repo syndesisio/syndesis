@@ -17,6 +17,7 @@
 package io.syndesis.dv.repository;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -31,23 +32,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Converter(autoApply = true)
 public abstract class JpaConverterJson<T> implements AttributeConverter<T, String> {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     @Override
     public String convertToDatabaseColumn(Object meta) {
         try {
-            return objectMapper.writeValueAsString(meta);
+            return OBJECT_MAPPER.writeValueAsString(meta);
         } catch (JsonProcessingException ex) {
-            throw new RuntimeException(ex);
+            throw new UncheckedIOException(ex);
         }
     }
 
     @Override
     public T convertToEntityAttribute(String dbData) {
         try {
-            return objectMapper.readValue(dbData, targetClass());
+            return OBJECT_MAPPER.readValue(dbData, targetClass());
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new UncheckedIOException(ex);
         }
     }
 

@@ -43,10 +43,6 @@ public class Edition
     @CreationTimestamp
     private Timestamp createdAt;
 
-    public Edition() {
-
-    }
-
     public long getRevision() {
         return revision;
     }

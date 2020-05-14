@@ -18,7 +18,7 @@ package io.syndesis.dv;
 /**
  * A Komodo error.
  */
-public class KException extends Exception {
+public class KException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 

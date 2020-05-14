@@ -16,6 +16,7 @@
 package io.syndesis.dv.model;
 
 import java.sql.Timestamp;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -31,6 +32,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @MappedSuperclass
+@SuppressWarnings({"PMD.AbstractClassWithoutAbstractMethod", "PMD.UnusedPrivateField"})
 public abstract class BaseEntity {
 
     @Id
@@ -57,7 +59,7 @@ public abstract class BaseEntity {
     public void setName(String name) {
         this.name = name;
         if (name != null) {
-            upperName = name.toUpperCase();
+            upperName = name.toUpperCase(Locale.US);
         } else {
             upperName = null;
         }
@@ -74,7 +76,7 @@ public abstract class BaseEntity {
     @PrePersist
     protected void prePersist() {
         if (name != null) {
-            upperName = name.toUpperCase();
+            upperName = name.toUpperCase(Locale.US);
         }
     }
 

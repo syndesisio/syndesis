@@ -24,7 +24,7 @@ import java.net.URL;
 import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.concurrent.TimeUnit;
+import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,7 +68,10 @@ public class HttpClientUtils {
       return createHttpClient(config, b -> b.protocols(Collections.singletonList(Protocol.HTTP_1_1)), httpClientBuilder);
   }
 
-  private static OkHttpClient createHttpClient(final Config config, final Consumer<OkHttpClient.Builder> additionalConfig, OkHttpClient.Builder httpClientBuilder) {
+    @SuppressFBWarnings("REC_CATCH_EXCEPTION")
+    @SuppressWarnings({"PMD.NPathComplexity", "PMD.ExcessiveMethodLength", "PMD.CyclomaticComplexity"}) // TODO refactor
+    private static OkHttpClient createHttpClient(final Config config, final Consumer<OkHttpClient.Builder> additionalConfig,
+        OkHttpClient.Builder httpClientBuilder) {
         try {
             // Follow any redirects
             httpClientBuilder.followRedirects(true);
@@ -99,18 +102,20 @@ public class HttpClientUtils {
               httpClientBuilder.sslSocketFactory(context.getSocketFactory(), (X509TrustManager) trustManagers[0]);
             }
 
-          httpClientBuilder.addInterceptor(chain -> {
-            Request request = chain.request();
-            if (Utils.isNotNullOrEmpty(config.getUsername()) && Utils.isNotNullOrEmpty(config.getPassword())) {
-              Request authReq = chain.request().newBuilder().addHeader("Authorization", Credentials.basic(config.getUsername(), config.getPassword())).build();
-              return chain.proceed(authReq);
-            } else if (Utils.isNotNullOrEmpty(config.getOauthToken())) {
-              Request authReq = chain.request().newBuilder().addHeader("Authorization", "Bearer " + config.getOauthToken()).build();
-              return chain.proceed(authReq);
-            }
-            return chain.proceed(request);
-          }).addInterceptor(new ImpersonatorInterceptor(config))
-            .addInterceptor(new BackwardsCompatibilityInterceptor());
+            httpClientBuilder.addInterceptor(chain -> {
+                if (Utils.isNotNullOrEmpty(config.getUsername()) && Utils.isNotNullOrEmpty(config.getPassword())) {
+                    Request authReq = chain.request().newBuilder().addHeader("Authorization", Credentials.basic(config.getUsername(), config.getPassword()))
+                        .build();
+                    return chain.proceed(authReq);
+                } else if (Utils.isNotNullOrEmpty(config.getOauthToken())) {
+                    Request authReq = chain.request().newBuilder().addHeader("Authorization", "Bearer " + config.getOauthToken()).build();
+                    return chain.proceed(authReq);
+                }
+
+                Request request = chain.request();
+                return chain.proceed(request);
+            }).addInterceptor(new ImpersonatorInterceptor(config))
+                .addInterceptor(new BackwardsCompatibilityInterceptor());
 
             Logger reqLogger = LoggerFactory.getLogger(HttpLoggingInterceptor.class);
             if (reqLogger.isTraceEnabled()) {
@@ -139,7 +144,7 @@ public class HttpClientUtils {
             }
 
             // Only check proxy if it's a full URL with protocol
-            if (config.getMasterUrl().toLowerCase().startsWith(Config.HTTP_PROTOCOL_PREFIX) || config.getMasterUrl().startsWith(Config.HTTPS_PROTOCOL_PREFIX)) {
+            if (config.getMasterUrl().toLowerCase(Locale.US).startsWith(Config.HTTP_PROTOCOL_PREFIX) || config.getMasterUrl().startsWith(Config.HTTPS_PROTOCOL_PREFIX)) {
                 try {
                     URL proxyUrl = getProxyUrl(config);
                     if (proxyUrl != null) {

@@ -87,11 +87,7 @@ public class DvAutoConfiguration implements ApplicationListener<ContextRefreshed
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        try {
-            repositoryManager.findDataVirtualization("x");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        repositoryManager.findDataVirtualization("x");
     }
 
     @Bean

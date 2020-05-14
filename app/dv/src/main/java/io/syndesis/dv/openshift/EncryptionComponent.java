@@ -58,7 +58,7 @@ public class EncryptionComponent {
     }
 
 
-    public String decrypt(final String value) throws KException {
+    public String decrypt(final String value) {
         // value might not be encrypted...
         if( value == null ) {
             return null;
@@ -76,7 +76,7 @@ public class EncryptionComponent {
         return result;
     }
 
-    public Map<String, String> decrypt(Map<String, String> props) throws KException {
+    public Map<String, String> decrypt(Map<String, String> props) {
         if( props == null ) {
             return null;
         }

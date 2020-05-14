@@ -46,10 +46,7 @@ public class SalesforceDefinition extends DataSourceDefinition {
 
     @Override
     public boolean isTypeOf(Map<String, String> properties, String type) {
-        if (type.equals("salesforce")) {
-            return true;
-        }
-        return false;
+        return "salesforce".equals(type);
     }
 
     @Override

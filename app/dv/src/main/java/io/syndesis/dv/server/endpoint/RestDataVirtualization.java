@@ -31,6 +31,7 @@ import io.syndesis.dv.openshift.BuildStatus;
  */
 @JsonSerialize(as = RestDataVirtualization.class)
 @JsonInclude(Include.NON_NULL)
+@SuppressWarnings("PMD.TooManyFields")
 public final class RestDataVirtualization {
 
     private String id;
@@ -63,7 +64,7 @@ public final class RestDataVirtualization {
      * @param dataService the dataService
      * @throws KException if error occurs
      */
-    public RestDataVirtualization(DataVirtualization dataService) throws KException {
+    public RestDataVirtualization(DataVirtualization dataService) {
         setName(dataService.getName());
 
         setId(dataService.getId());

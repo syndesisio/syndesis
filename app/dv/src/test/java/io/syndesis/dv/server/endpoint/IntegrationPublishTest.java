@@ -25,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -70,7 +71,7 @@ public class IntegrationPublishTest {
     @Autowired DataSource datasource;
 
     //for some reason dirtiescontext does not seem to work, so clear manually
-    @After public void after() throws Exception {
+    @After public void after() throws SQLException {
         try (Connection c = datasource.getConnection();) {
             c.createStatement().execute("delete from data_virtualization");
         }
@@ -80,7 +81,7 @@ public class IntegrationPublishTest {
     DefaultMetadataInstance metadata;
 
     @Test
-    public void testPublishRevert() throws Exception {
+    public void testPublishRevert() throws IOException {
         RestDataVirtualization rdv = new RestDataVirtualization();
         String dvName = "testPublish";
         rdv.setName(dvName);

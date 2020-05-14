@@ -40,7 +40,7 @@ public class FromClause extends AbstractStatementObject {
         boolean isInClause = isBetween(getFirstTknIndex(), getLastTknIndex(), position);
         if( isInClause ) {
             Token tkn = this.analyzer.getTokenFor(position);
-            return new TokenContext(position, tkn, CONTEXT.FROM_CLAUSE, this);
+            return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.FROM_CLAUSE, this);
         }
         return null;
     }

@@ -26,6 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -105,14 +106,14 @@ public class IntegrationTest {
     @Autowired DataSource datasource;
 
     //for some reason dirtiescontext does not seem to work, so clear manually
-    @After public void after() throws Exception {
+    @After public void after() throws SQLException {
         try (Connection c = datasource.getConnection();) {
             c.createStatement().execute("delete from data_virtualization");
         }
     }
 
     @Test
-    public void testError() throws Exception {
+    public void testError() {
         QueryAttribute kqa = new QueryAttribute();
         ResponseEntity<String> response = restTemplate.postForEntity("/v1/metadata/query", kqa, String.class);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
@@ -126,7 +127,7 @@ public class IntegrationTest {
      * @throws Exception
      */
     @Test
-    public void testViewLayers() throws Exception {
+    public void testViewLayers() {
         RestDataVirtualization rdv = new RestDataVirtualization();
         String dvName = "dv";
         rdv.setName(dvName);
@@ -229,10 +230,12 @@ public class IntegrationTest {
 
     /**
      * Tests an update to source metadata
-     * @throws Exception
+     * @throws InterruptedException 
+     * @throws SQLException 
+     * @throws CloneNotSupportedException 
      */
     @Test
-    public void testSourceRefresh() throws Exception {
+    public void testSourceRefresh() throws InterruptedException, SQLException, CloneNotSupportedException {
         RestDataVirtualization rdv = new RestDataVirtualization();
         String dvName = "testSourceRefresh";
         rdv.setName(dvName);
@@ -470,7 +473,7 @@ public class IntegrationTest {
     }
 
     @Test
-    public void testSwagger() throws Exception {
+    public void testSwagger() {
         ResponseEntity<String> response = restTemplate.getForEntity("/v1/swagger.json", String.class);
         assertTrue(response.getBody().contains("Editor Service"));
     }

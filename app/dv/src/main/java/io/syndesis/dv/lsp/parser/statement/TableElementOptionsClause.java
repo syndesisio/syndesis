@@ -31,10 +31,10 @@ public class TableElementOptionsClause extends OptionsClause {
         boolean isInOptions = isBetween(getFirstTknIndex(), getLastTknIndex(), position);
         if (isInOptions) {
             Token tkn = this.analyzer.getTokenFor(position);
-            if (tkn.kind == ID && tkn.image.equalsIgnoreCase("SEARCHABLE")) {
-                return new TokenContext(position, tkn, CONTEXT.TABLE_ELEMENT_OPTION_SEARCHABLE, this);
+            if (tkn.kind == SQLParserConstants.ID && "SEARCHABLE".equalsIgnoreCase(tkn.image)) {
+                return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_ELEMENT_OPTION_SEARCHABLE, this);
             }
-            return new TokenContext(position, tkn, CONTEXT.TABLE_ELEMENT_OPTIONS, this);
+            return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_ELEMENT_OPTIONS, this);
         }
         return null;
     }

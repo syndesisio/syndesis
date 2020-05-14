@@ -24,8 +24,7 @@ import org.teiid.query.parser.Token;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 public class TableBody extends AbstractStatementObject {
-    private Token[] tableBodyTokens;
-    private List<TableElement> elements;
+    private final List<TableElement> elements;
     private TableOptionsClause options;
     private boolean hasPrimaryKey;
 
@@ -52,8 +51,7 @@ public class TableBody extends AbstractStatementObject {
 
     @Override
     protected void parseAndValidate() {
-
-        tableBodyTokens = getBracketedTokens(getTokens(), 3, LPAREN, RPAREN);
+        List<Token> tableBodyTokens = getBracketedTokens(getTokens(), 3, SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
 
         setFirstTknIndex(getTokenIndex(tableBodyTokens[0]));
         setLastTknIndex(getTokenIndex(tableBodyTokens[tableBodyTokens.length - 1]));
@@ -159,10 +157,10 @@ public class TableBody extends AbstractStatementObject {
         Token tkn = this.analyzer.getTokenFor(position);
         int index = getTokenIndex(tkn);
         if (index == getFirstTknIndex()) {
-            return new TokenContext(position, tkn, CONTEXT.TABLE_BODY, this);
+            return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_BODY, this);
         }
         if (index == getLastTknIndex()) {
-            return new TokenContext(position, tkn, CONTEXT.TABLE_BODY, this);
+            return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_BODY, this);
         }
 
         // Check options
@@ -170,6 +168,6 @@ public class TableBody extends AbstractStatementObject {
             return options.getTokenContext(position);
         }
 
-        return new TokenContext(position, tkn, CONTEXT.TABLE_BODY, this);
+        return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_BODY, this);
     }
 }

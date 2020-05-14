@@ -41,7 +41,7 @@ import okio.ByteString;
 
 @Component
 public class SyndesisConnectionMonitor {
-    private static final Log LOGGER = LogFactory.getLog(SyndesisConnectionMonitor.class);
+    private static final Log LOG = LogFactory.getLog(SyndesisConnectionMonitor.class);
     private volatile WebSocket webSocket;
     private volatile boolean connected;
     private ObjectMapper mapper = new ObjectMapper();
@@ -135,13 +135,12 @@ public class SyndesisConnectionMonitor {
         if (isConnected()) {
             return;
         }
-        String RESERVATIONS_PATH = "http://syndesis-server/api/v1/event/reservations";
-        String WS_PATH = "ws://syndesis-server/api/v1/event/streams.ws/";
 
         ConnectionPool pool = new ConnectionPool(5, 10000, TimeUnit.MILLISECONDS);
         OkHttpClient client = new OkHttpClient.Builder().connectionPool(pool).build();
 
-        Request request = buildRequest().url(RESERVATIONS_PATH).post(RequestBody.create(null, "")).build();
+        String reservationsPath = "http://syndesis-server/api/v1/event/reservations";
+        Request request = buildRequest().url(reservationsPath).post(RequestBody.create(null, "")).build();
 
         Message message = null;
         try (Response response = client.newCall(request).execute()) {
@@ -150,51 +149,52 @@ public class SyndesisConnectionMonitor {
             }
             response.close();
         } catch (IOException e) {
-            LOGGER.info("Failed to retrive Subscription ID for reading the connection events: " + e.getMessage());
+            LOG.info("Failed to retrive Subscription ID for reading the connection events: " + e.getMessage());
         }
 
         if (message == null) {
             return;
         }
 
-        LOGGER.info("Connecting to syndesis server for process connection events");
+        LOG.info("Connecting to syndesis server for process connection events");
 
-        request = buildRequest().url(WS_PATH + message.getData()).build();
+        String wsPath = "ws://syndesis-server/api/v1/event/streams.ws/";
+        request = buildRequest().url(wsPath + message.getData()).build();
 
         webSocket = client.newWebSocket(request, new WebSocketListener() {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
-                LOGGER.debug("   ---->>>  onOpen(): Socket has been opened successfully.");
+                LOG.debug("   ---->>>  onOpen(): Socket has been opened successfully.");
             }
 
             @Override
             public void onMessage(WebSocket webSocket, String text) {
-                LOGGER.debug("   ---->>>  onMessage(String): New Text Message received " + text);
+                LOG.debug("   ---->>>  onMessage(String): New Text Message received " + text);
                 handleMessage(text);
             }
 
             @Override
             public void onMessage(WebSocket webSocket, ByteString message) {
-                LOGGER.debug("   ---->>>  onMessage(ByteString): New ByteString Message received " + message);
+                LOG.debug("   ---->>>  onMessage(ByteString): New ByteString Message received " + message);
                 handleMessage(new String(message.asByteBuffer().array(), Charset.defaultCharset()));
             }
 
             @Override
             public void onClosing(WebSocket webSocket, int code, String reason) {
-                LOGGER.debug("   ---->>>  onClosing(): Close request from server with reason '" + reason + "'");
+                LOG.debug("   ---->>>  onClosing(): Close request from server with reason '" + reason + "'");
                 webSocket.close(1000, reason);
                 connected = false;
             }
 
             @Override
             public void onClosed(WebSocket webSocket, int code, String reason) {
-                LOGGER.debug("   ---->>>  onClosed(): Socket connection closed with reason '" + reason + "'");
+                LOG.debug("   ---->>>  onClosed(): Socket connection closed with reason '" + reason + "'");
                 connected = false;
             }
 
             @Override
             public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-                LOGGER.error("   ---->>>  onFailure(): failure received", t);
+                LOG.error("   ---->>>  onFailure(): failure received", t);
                 webSocket.close(1000, t.getMessage());
                 connected = false;
             }
@@ -213,11 +213,11 @@ public class SyndesisConnectionMonitor {
                     if (event.getKind().contentEquals("connection")) {
                         connectionSynchronizer.handleConnectionEvent(event);
                     } else {
-                        LOGGER.debug("Message discarded " + text);
+                        LOG.debug("Message discarded " + text);
                     }
                 }
             } catch (Exception e) {
-                LOGGER.error("handleMessage: Failed to process the message", e);
+                LOG.error("handleMessage: Failed to process the message", e);
             }
         });
     }
@@ -244,7 +244,7 @@ public class SyndesisConnectionMonitor {
                     UPDATE = false;
                 }
             } catch (KException e) {
-                LOGGER.error("failed to synchronize", e);
+                LOG.error("failed to synchronize", e);
             }
         }, 5, 15, TimeUnit.MINUTES);
     }

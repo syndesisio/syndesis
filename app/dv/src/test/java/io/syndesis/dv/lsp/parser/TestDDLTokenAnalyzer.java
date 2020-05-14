@@ -15,7 +15,9 @@
  */
 package io.syndesis.dv.lsp.parser;
 
-import static org.junit.Assert.*;
+import java.util.List;
+
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.StatementType;
 
 import org.junit.Test;
 import org.teiid.query.parser.Token;
@@ -33,7 +35,7 @@ public class TestDDLTokenAnalyzer {
         }
     }
     @Test
-    public void testForeignTable() throws Exception {
+    public void testForeignTable() {
 
         String stmt = "CREATE FOREIGN TABLE G1(\n" +
                         "e1 integer primary key,\n" +
@@ -46,12 +48,12 @@ public class TestDDLTokenAnalyzer {
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
         printTokens(analyzer.getTokens(), "testForeignTable = nTokens  " + analyzer.getTokens().length);
         
-        assertEquals(STATEMENT_TYPE.CREATE_FOREIGN_TABLE_TYPE, analyzer.getStatementType());
-        assertEquals(64, analyzer.getTokens().length);
+        assertEquals(StatementType.CREATE_FOREIGN_TABLE_TYPE, analyzer.getStatementType());
+        assertEquals(64, analyzer.getTokens().size());
     }
     
     @Test
-    public void testCreateVirtualView() throws Exception {
+    public void testCreateVirtualView() {
 
         String stmt = "CREATE VIRTUAL VIEW winelist(\n" +
                         "e1 integer primary key,\n" +
@@ -65,12 +67,12 @@ public class TestDDLTokenAnalyzer {
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
         printTokens(analyzer.getTokens(), "testCreateVirtualView nTokens  = " + analyzer.getTokens().length);
         
-        assertEquals(STATEMENT_TYPE.CREATE_VIRTUAL_VIEW_TYPE, analyzer.getStatementType());
-        assertEquals(74, analyzer.getTokens().length);
+        assertEquals(StatementType.CREATE_VIRTUAL_VIEW_TYPE, analyzer.getStatementType());
+        assertEquals(74, analyzer.getTokens().size());
     }
     
     @Test
-    public void testViewName() throws Exception {
+    public void testViewName() {
         String stmt = "CREATE VIEW \"wineList xxx\" (\n" +
                         "e1 integer primary key,\n" +
                         "e6 varchar index default 'hello')\n" +
@@ -79,23 +81,23 @@ public class TestDDLTokenAnalyzer {
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
         printTokens(analyzer.getTokens(), "testViewName() nTokens = " + analyzer.getTokens().length);
 
-        assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, analyzer.getStatementType());
-        assertEquals(32, analyzer.getTokens().length);
+        assertEquals(StatementType.CREATE_VIEW_TYPE, analyzer.getStatementType());
+        assertEquals(32, analyzer.getTokens().size());
     }
     
     @Test
-    public void testCreateViewSimple() throws Exception {
+    public void testCreateViewSimple() {
         String stmt = "CREATE VIEW winelist( e4 decimal(12,3) default 12.2 options (searchable 'unsearchable') )";
 
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
         printTokens(analyzer.getTokens(), "testCreateViewWithDatatypes nTokens  = " + analyzer.getTokens().length);
 
-        assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, analyzer.getStatementType());
-        assertEquals(19, analyzer.getTokens().length);
+        assertEquals(StatementType.CREATE_VIEW_TYPE, analyzer.getStatementType());
+        assertEquals(19, analyzer.getTokens().size());
     }
     
     @Test
-    public void testCreateViewWithDatatypes() throws Exception {
+    public void testCreateViewWithDatatypes() {
         String stmt = "CREATE VIEW winelist(\n" +
                         "e1 integer primary key,\n" +
                         "e2 varchar(10) unique,\n" +
@@ -104,8 +106,8 @@ public class TestDDLTokenAnalyzer {
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
         printTokens(analyzer.getTokens(), "testCreateViewWithDatatypes nTokens  = " + analyzer.getTokens().length);
 
-        assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, analyzer.getStatementType());
-        assertEquals(31, analyzer.getTokens().length);
+        assertEquals(StatementType.CREATE_VIEW_TYPE, analyzer.getStatementType());
+        assertEquals(31, analyzer.getTokens().size());
     }
 
 }

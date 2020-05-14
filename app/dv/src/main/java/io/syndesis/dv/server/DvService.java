@@ -28,24 +28,6 @@ public abstract class DvService implements V1Constants {
 
     protected static final KLog LOGGER = KLog.getLogger();
 
-    /**
-     * Query parameter keys used by the service methods.
-     */
-    public interface QueryParamKeys {
-
-        /**
-         * The number of objects to return. If not present, all objects are returned.
-         */
-        String SIZE = "size"; //$NON-NLS-1$
-
-        /**
-         * The index of the first object to return. Defaults to zero.
-         */
-        String START = "start"; //$NON-NLS-1$
-
-        String VIRTUALIZATION = "virtualization";
-    }
-
     @Autowired
     protected RepositoryManager repositoryManager;
 

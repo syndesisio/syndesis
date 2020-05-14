@@ -62,15 +62,9 @@ import io.syndesis.dv.utils.PathUtils;
  * Each model is created via generating DDL and calling setModelDefinition() method
  *
  */
-public final class ServiceVdbGenerator implements StringConstants {
+public final class ServiceVdbGenerator {
 
     public static final String ANY_AUTHENTICATED = "any authenticated"; //$NON-NLS-1$
-
-    public interface SchemaFinder {
-        Schema findSchema(String connectionName) throws KException;
-
-        TeiidDataSource findTeiidDatasource(String connectionName) throws KException;
-    }
 
     private static final String COMMENT_START = "/*"; //$NON-NLS-1$
     private static final String COMMENT_END = "*/"; //$NON-NLS-1$
@@ -106,7 +100,8 @@ public final class ServiceVdbGenerator implements StringConstants {
      * Creates the service vdb - must be valid
      * @throws KException
      */
-    public VDBMetaData createServiceVdb(String virtualizationName, TeiidVdb previewVDB, List<? extends ViewDefinition> editorStates, List<TablePrivileges> tablePrivileges) throws KException {
+    @SuppressWarnings("PMD.NPathComplexity") // TODO refactor
+    public VDBMetaData createServiceVdb(String virtualizationName, TeiidVdb previewVDB, List<? extends ViewDefinition> editorStates, List<TablePrivileges> tablePrivileges) {
         VDBMetaData vdb = new VDBMetaData();
         vdb.addProperty("hidden-qualified", "true"); //$NON-NLS-1$ //$NON-NLS-2$
         vdb.setName(virtualizationName);
@@ -129,10 +124,10 @@ public final class ServiceVdbGenerator implements StringConstants {
 
             String viewDdl = viewDef.getDdl();
             allViewDdl.append(viewDdl);
-            if (!viewDdl.endsWith(SEMI_COLON)) {
-                allViewDdl.append(SEMI_COLON);
+            if (!viewDdl.endsWith(StringConstants.SEMI_COLON)) {
+                allViewDdl.append(StringConstants.SEMI_COLON);
             }
-            allViewDdl.append(NEW_LINE);
+            allViewDdl.append(StringConstants.NEW_LINE);
 
             AbstractMetadataRecord record = s.getTable(viewDef.getName());
 
@@ -164,7 +159,7 @@ public final class ServiceVdbGenerator implements StringConstants {
             StringBuilder regex = new StringBuilder();
             for ( Table table: entry.getValue() ) {
                 if (regex.length() > 0) {
-                    regex.append("|"); //$NON-NLS-1$
+                    regex.append('|'); //$NON-NLS-1$
                 }
                 regex.append(Pattern.quote(table.getName()));
             }
@@ -265,10 +260,10 @@ public final class ServiceVdbGenerator implements StringConstants {
             String viewDdl = viewDef.getDdl();
             //we don't need an exhaustive check here,
             //the parser is tolerant to redundant semi-colons
-            if (!viewDdl.endsWith(SEMI_COLON)) {
-                allViewDdl.append(SEMI_COLON);
+            if (!viewDdl.endsWith(StringConstants.SEMI_COLON)) {
+                allViewDdl.append(StringConstants.SEMI_COLON);
             }
-            allViewDdl.append(viewDdl).append(NEW_LINE);
+            allViewDdl.append(viewDdl).append(StringConstants.NEW_LINE);
         }
 
         addServiceModel(virtualizationName, vdb, allViewDdl);
@@ -296,18 +291,19 @@ public final class ServiceVdbGenerator implements StringConstants {
     /*
      * Generates DDL for a view definition based on properties and supplied array of TableInfo from one or more sources
      */
-    private String getODataViewDdl(ViewDefinition viewDef, TableInfo[] sourceTableInfos) {
+    @SuppressWarnings({"PMD.NPathComplexity", "PMD.ExcessiveMethodLength"}) // TODO refactor
+    private static String getODataViewDdl(ViewDefinition viewDef, TableInfo... sourceTableInfos) {
 
         String viewName = viewDef.getName();
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(200);
 
         // Generate the View DDL
         startView(viewName, sb);
-        sb.append(OPEN_BRACKET);
-        sb.append(NEW_LINE);
-        sb.append(SPACE);
-        sb.append(SPACE);
+        sb.append(StringConstants.OPEN_BRACKET)
+          .append(StringConstants.NEW_LINE)
+          .append(StringConstants.SPACE)
+          .append(StringConstants.SPACE);
 
         // add primary table
         appendViewColumns(sourceTableInfos[0], false, false, sb);
@@ -315,11 +311,11 @@ public final class ServiceVdbGenerator implements StringConstants {
         // add all others in comments
         if (sourceTableInfos.length > 1) {
             for (int i = 1; i < sourceTableInfos.length; i++) {
-                sb.append(NEW_LINE);
-                sb.append(SPACE);
-                sb.append(SPACE);
-                sb.append(COMMENT_START);
-                sb.append(StringConstants.COMMA);
+                sb.append(StringConstants.NEW_LINE)
+                  .append(StringConstants.SPACE)
+                  .append(StringConstants.SPACE)
+                  .append(COMMENT_START)
+                  .append(StringConstants.COMMA);
                 appendViewColumns(sourceTableInfos[i], false, false, sb);
                 sb.append(COMMENT_END);
             }
@@ -328,67 +324,67 @@ public final class ServiceVdbGenerator implements StringConstants {
         // Add PK from primary
         KeyRecord constraint = sourceTableInfos[0].getUniqueConstraint();
         if (constraint != null) {
-        	sb.append(COMMA).append(SPACE);
-        	if (sourceTableInfos.length > 1) {
-                sb.append(NEW_LINE);
-                sb.append(SPACE);
-                sb.append(SPACE);
-        	}
+            sb.append(StringConstants.COMMA).append(StringConstants.SPACE);
+            if (sourceTableInfos.length > 1) {
+                sb.append(StringConstants.NEW_LINE)
+                  .append(StringConstants.SPACE)
+                  .append(StringConstants.SPACE);
+            }
             List<Column> keyCols = constraint.getColumns();
             sb.append(constraint.getType() == Type.Primary ? DDLConstants.PRIMARY_KEY : SQLConstants.Reserved.UNIQUE)
                     .append(StringConstants.OPEN_BRACKET);
             for (int i = 0; i < keyCols.size(); i++) {
                 if (i > 0) {
-                    sb.append(COMMA).append(SPACE);
+                    sb.append(StringConstants.COMMA).append(StringConstants.SPACE);
                 }
                 sb.append(keyCols.get(i).getName());
             }
             sb.append(StringConstants.CLOSE_BRACKET);
         }
 
-        sb.append(NEW_LINE).append(StringConstants.CLOSE_BRACKET).append(SPACE);
-        sb.append(getTableAnnotation(viewDef.getDescription()));
-        sb.append("AS \n  SELECT "); //$NON-NLS-1$
+        sb.append(StringConstants.NEW_LINE).append(StringConstants.CLOSE_BRACKET).append(StringConstants.SPACE)
+          .append(getTableAnnotation(viewDef.getDescription()))
+          .append("AS \n  SELECT ") //$NON-NLS-1$
 
-        sb.append(NEW_LINE);
-        sb.append(SPACE).append(SPACE).append(SPACE).append(SPACE);
+          .append(StringConstants.NEW_LINE)
+          .append(StringConstants.SPACE).append(StringConstants.SPACE).append(StringConstants.SPACE).append(StringConstants.SPACE);
         appendViewColumns(sourceTableInfos[0], true, false, sb);
         if (sourceTableInfos.length > 1) {
             for (int i = 1; i < sourceTableInfos.length; i++) {
-                sb.append(NEW_LINE);
-                sb.append(SPACE).append(SPACE).append(SPACE).append(SPACE);
-                sb.append(COMMENT_START);
-                sb.append(COMMA);
+                sb.append(StringConstants.NEW_LINE)
+                  .append(StringConstants.SPACE).append(StringConstants.SPACE).append(StringConstants.SPACE).append(StringConstants.SPACE)
+                  .append(COMMENT_START)
+                  .append(StringConstants.COMMA);
                 appendViewColumns(sourceTableInfos[i], true, false, sb);
                 sb.append(COMMENT_END);
             }
         }
 
-        sb.append(NEW_LINE); //$NON-NLS-1$
-        sb.append("  FROM "); //$NON-NLS-1$
-        sb.append(NEW_LINE);
-        sb.append(SPACE).append(SPACE).append(SPACE).append(SPACE);
+        sb.append(StringConstants.NEW_LINE) //$NON-NLS-1$
+          .append("  FROM ") //$NON-NLS-1$
+          .append(StringConstants.NEW_LINE)
+          .append(StringConstants.SPACE).append(StringConstants.SPACE).append(StringConstants.SPACE).append(StringConstants.SPACE);
 
         for (int i = 0; i < sourceTableInfos.length; i++) {
             if (i == 0) {
                 sb.append(sourceTableInfos[0].getFQName() + " AS " + sourceTableInfos[0].getAlias());
             } else {
-                sb.append(NEW_LINE);
-                sb.append(SPACE).append(SPACE).append(SPACE).append(SPACE);
-                sb.append(COMMENT_START);
-                sb.append(COMMA);
+                sb.append(StringConstants.NEW_LINE)
+                  .append(StringConstants.SPACE).append(StringConstants.SPACE).append(StringConstants.SPACE).append(StringConstants.SPACE)
+                  .append(COMMENT_START)
+                  .append(StringConstants.COMMA);
                 if (constraint != null) {
-                    sb.append(" [INNER|LEFT OUTER|RIGHT OUTER] JOIN ");
-                    sb.append(sourceTableInfos[i].getFQName() + " AS " + sourceTableInfos[i].getAlias());
-                    sb.append(" ON ");
+                    sb.append(" [INNER|LEFT OUTER|RIGHT OUTER] JOIN ")
+                      .append(sourceTableInfos[i].getFQName()).append(" AS ").append(sourceTableInfos[i].getAlias())
+                      .append(" ON ");
                     List<Column> keyCols = constraint.getColumns();
                     for (int k = 0; k < keyCols.size(); k++) {
                         if (k > 0) {
                             sb.append(" AND ");
                         }
-                        sb.append(sourceTableInfos[0].getAlias()).append(DOT)
-                                .append(keyCols.get(k).getName()).append(EQUALS)
-                                .append(sourceTableInfos[i].getAlias()).append(DOT)
+                        sb.append(sourceTableInfos[0].getAlias()).append(StringConstants.DOT)
+                                .append(keyCols.get(k).getName()).append(StringConstants.EQUALS)
+                                .append(sourceTableInfos[i].getAlias()).append(StringConstants.DOT)
                                 .append("<?>");
                     }
                 }
@@ -407,19 +403,19 @@ public final class ServiceVdbGenerator implements StringConstants {
                 sb.append(info.getName());
             }
             if (useType) {
-                sb.append(SPACE);
+                sb.append(StringConstants.SPACE);
                 sb.append(info.getType());
             }
             if (iter.hasNext()) {
-                sb.append(COMMA).append(SPACE);
+                sb.append(StringConstants.COMMA).append(StringConstants.SPACE);
             }
         }
     }
 
-    private void startView(String viewName, StringBuilder sb) {
-        sb.append("CREATE VIEW "); //$NON-NLS-1$
-        sb.append(SQLStringVisitor.escapeSinglePart(viewName));
-        sb.append(SPACE);
+    private static void startView(String viewName, StringBuilder sb) {
+        sb.append("CREATE VIEW ") //$NON-NLS-1$
+          .append(SQLStringVisitor.escapeSinglePart(viewName))
+          .append(StringConstants.SPACE);
     }
 
     /**
@@ -431,7 +427,7 @@ public final class ServiceVdbGenerator implements StringConstants {
      * @throws KException
      *         if problem occurs
      */
-    public String getODataViewDdl(ViewDefinition viewDef) throws KException {
+    public String getODataViewDdl(ViewDefinition viewDef) {
         if ( !viewDef.isComplete() ) {
             return null;
         }
@@ -441,10 +437,10 @@ public final class ServiceVdbGenerator implements StringConstants {
         }
 
         if (tableInfos.length == 0) {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder(200);
             startView(viewDef.getName(), sb);
-            sb.append(getTableAnnotation(viewDef.getDescription()));
-            sb.append("AS \nSELECT 1 as col;"); //$NON-NLS-1$
+            sb.append(getTableAnnotation(viewDef.getDescription()))
+              .append("AS \nSELECT 1 as col;"); //$NON-NLS-1$
             return sb.toString();
         }
 
@@ -470,7 +466,7 @@ public final class ServiceVdbGenerator implements StringConstants {
      * @return {@link TableInfo} array
      * @throws KException
      */
-    private TableInfo[] getSourceTableInfos(ViewDefinition viewDefinition) throws KException {
+    private TableInfo[] getSourceTableInfos(ViewDefinition viewDefinition) {
         if ( !viewDefinition.isComplete() ) {
             return null;
         }
@@ -507,6 +503,12 @@ public final class ServiceVdbGenerator implements StringConstants {
         return sourceTableInfos.toArray(new TableInfo[0]);
     }
 
+    public interface SchemaFinder {
+        Schema findSchema(String connectionName);
+
+        TeiidDataSource findTeiidDatasource(String connectionName);
+    }
+
     /*
      * Inner class to hold state for source table information and simplifies the DDL generating process
      */
@@ -522,13 +524,13 @@ public final class ServiceVdbGenerator implements StringConstants {
 
         private KeyRecord constraint;
 
-        private TableInfo(String path, Table table, String alias) throws KException {
+        TableInfo(String path, Table table, String alias) {
             this.path = path;
             this.alias = alias;
             this.table = table;
             this.name = SQLStringVisitor.escapeSinglePart(table.getName());
             Schema schemaModel = table.getParent();
-            this.fqname = SQLStringVisitor.escapeSinglePart(schemaModel.getName()) + DOT + this.name;
+            this.fqname = SQLStringVisitor.escapeSinglePart(schemaModel.getName()) + StringConstants.DOT + this.name;
             createColumnInfos(table);
             constraint = table.getPrimaryKey();
             if (constraint == null) {
@@ -539,11 +541,11 @@ public final class ServiceVdbGenerator implements StringConstants {
             }
         }
 
-        private void createColumnInfos(Table table) throws KException {
+        private void createColumnInfos(Table table) {
             // Walk through the columns and create an array of column + datatype strings
             List<Column> cols = table.getColumns();
             for( Column col : cols) {
-                this.columnInfos.add(new ColumnInfo(col, getFQName(), this.alias));
+                this.columnInfos.add(new ColumnInfo(col, fqname, this.alias));
             }
         }
 
@@ -585,13 +587,13 @@ public final class ServiceVdbGenerator implements StringConstants {
         private String aliasedName;
         private String type;
 
-        private ColumnInfo(Column column, String tableFqn, String tblAlias) throws KException {
+        ColumnInfo(Column column, String tableFqn, String tblAlias) {
             this.name = SQLStringVisitor.escapeSinglePart(column.getName());
             this.aliasedName = name;
             if( tblAlias != null ) {
-                this.aliasedName = tblAlias + DOT + name;
+                this.aliasedName = tblAlias + StringConstants.DOT + name;
             }
-            this.fqname = tableFqn + DOT + name;
+            this.fqname = tableFqn + StringConstants.DOT + name;
             this.type = column.getDatatype().getName();
         }
 

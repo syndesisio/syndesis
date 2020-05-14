@@ -62,7 +62,7 @@ public class EditorServiceTest {
     @Autowired
     private RepositoryManagerImpl repositoryManager;
 
-    @Test public void testStash() throws Exception {
+    @Test public void testStash() {
 
         repositoryManager.createDataVirtualization("x");
 

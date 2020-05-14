@@ -42,6 +42,19 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @DynamicUpdate
 public class ViewDefinition extends BaseEntity {
 
+    private String ddl;
+    @Column(name = "dv_name")
+    private String dataVirtualizationName;
+    private String description;
+    private boolean complete;
+    private boolean userDefined;
+    @JsonIgnore
+    private boolean parsable;
+
+    @JsonIgnore //for non-Entity serialization, the getters/setters will be used
+    @Convert(converter = ViewDefinitionStateConvertor.class)
+    private State state = new State();
+
     public static class State {
         private List<String> sourcePaths = new ArrayList<>(1);
 
@@ -73,20 +86,8 @@ public class ViewDefinition extends BaseEntity {
         }
     }
 
-    private String ddl;
-    @Column(name = "dv_name")
-    private String dataVirtualizationName;
-    private String description;
-    private boolean complete;
-    private boolean userDefined;
-    @JsonIgnore
-    private boolean parsable;
-
-    @JsonIgnore //for non-Entity serialization, the getters/setters will be used
-    @Convert(converter = ViewDefinitionStateConvertor.class)
-    private State state = new State();
-
     protected ViewDefinition() {
+        // TODO needed? by ORM?
     }
 
     public ViewDefinition(String dataVirtualizationName, String name) {
