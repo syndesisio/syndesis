@@ -1,5 +1,5 @@
 import * as H from '@syndesis/history';
-import { APISummary } from '@syndesis/models';
+import { IApiSummarySoap } from '@syndesis/models';
 import {
   ApiClientConnectorCreateSecurity,
   ApiConnectorCreatorBreadcrumb,
@@ -18,16 +18,17 @@ import resolvers from '../../resolvers';
 import routes from '../../routes';
 
 export interface ISecurityPageRouteState {
-  specification: APISummary;
+  specification: IApiSummarySoap;
 }
 
 export const SecurityPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, ISecurityPageRouteState>();
   const { specification } = state;
-  const { properties } = specification;
+  const { connectorTemplateId, properties } = specification;
   const { portName, serviceName } = specification.configuredProperties!;
 
   const backHref = resolvers.create.review({
+    connectorTemplateId,
     portName,
     serviceName,
     specification: specification.configuredProperties!.specification,
@@ -40,6 +41,7 @@ export const SecurityPage: React.FunctionComponent = () => {
       resolvers.create.save({
         authenticationType: authType,
         authorizationEndpoint: authUrl,
+        connectorTemplateId,
         portName,
         serviceName,
         specification,
