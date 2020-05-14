@@ -136,6 +136,8 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
     setValid(newMethod === SCRATCH_2X || newMethod === SCRATCH_3X);
   };
 
+  // tslint:disable:no-console
+
   /**
    * Callback for when one or more file uploads have been accepted.
    */
@@ -143,6 +145,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
     const fileExt = checkDocStyle(files[0].name);
 
     if (fileExt === 'wsdl' || fileExt.includes('?WSDL')) {
+      console.log('soap');
       setConnectorTemplateId('soap-connector-template');
     }
     const reader = new FileReader();
@@ -169,6 +172,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
   };
 
   const handleClickNext = () => {
+    console.log('connectorTemplateId: ' + JSON.stringify(connectorTemplateId));
     if (method === URL) {
       onNext(url, connectorTemplateId);
     } else {

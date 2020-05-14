@@ -15,6 +15,9 @@ export function useApiConnectorSummary(
   );
 
   React.useEffect(() => {
+    if (!specification) {
+      return;
+    }
     const fetchSummary = async () => {
       setLoading(true);
       try {
