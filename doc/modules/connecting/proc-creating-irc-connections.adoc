@@ -19,7 +19,7 @@ connect to.
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
-. In the upper right, click *Create Connection* to display
+. Click *Create Connection* to display
 {prodname} connectors.
 . Click the *IRC* connector.
 . In the *Hostname* field, enter an IRC hostname. You can 

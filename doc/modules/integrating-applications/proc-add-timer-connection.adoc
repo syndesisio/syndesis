@@ -12,7 +12,7 @@ flow nor at the end of a flow.
 .Procedure
 
 . In {prodname}, on the left, click *Integrations*.
-. In the upper right, click *Create Integration*.
+. Click *Create Integration*.
 . On the *Choose a connection* page, click *Timer*. 
 +
 {prodname} provides a *Timer* connection; you do not need to create a timer

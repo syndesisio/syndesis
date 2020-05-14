@@ -15,7 +15,7 @@ You must know the host name of the server you want to connect to.
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
-. In the upper right, click *Create Connection* to display
+. Click *Create Connection* to display
 {prodname} connectors.
 . To create a connection that uses 
 File Transfer Protocol, click the *FTP* connector. 

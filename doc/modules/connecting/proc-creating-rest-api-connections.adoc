@@ -17,7 +17,7 @@ REST API.
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
-. In the upper right, click *Create Connection* to display
+. Click *Create Connection* to display
 available connectors.
 . Click the connector for the API that you want to create a connection for.
 . Respond to prompts for additional information. The

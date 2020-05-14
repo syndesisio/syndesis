@@ -17,7 +17,7 @@ For the AMQP broker that you want to connect to, you have the following:
 .Procedure
 . In {prodname}, in the left panel, click *Connections* to 
 display any available connections. 
-. In the upper right, click *Create Connection* to display
+. Click *Create Connection* to display
 connectors.  
 . Click the *AMQP Message Broker* connector.
 . Configure the connection: 

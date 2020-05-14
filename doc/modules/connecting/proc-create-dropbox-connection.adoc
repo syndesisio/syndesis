@@ -25,7 +25,7 @@ registers access from your {prodname} environment.
 . In another browser tab, in {prodname}, do the following:
 .. In the left panel, click *Connections* to
 display any available connections.
-.. In the upper right, click *Create Connection* to display
+.. Click *Create Connection* to display
 the available connectors. 
 .. Click the *Dropbox* connector.
 

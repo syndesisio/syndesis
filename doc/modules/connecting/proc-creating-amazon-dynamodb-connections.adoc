@@ -21,7 +21,7 @@ connects to DynamoDB.
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
-. In the upper right, click *Create Connection* to display
+. Click *Create Connection* to display
 {prodname} connectors.
 . Click the *Amazon DynamoDB* connector.
 . In the *Access Key* field, enter an Amazon access key ID that is 

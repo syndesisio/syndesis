@@ -24,7 +24,7 @@ on your classpath. See
 link:{LinkFuseOnlineIntegrationGuide}#creating-jdbc-driver-library-extensions_extensions[Creating JDBC driver library extensions]. 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
-. In the upper right, click *Create Connection* to display
+. Click *Create Connection* to display
 {prodname} connectors.
 . Click the *Database* connector.
 . Configure the connection by entering:

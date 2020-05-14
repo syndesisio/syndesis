@@ -18,7 +18,7 @@ access to the MongoDB database.
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
-. In the upper right, click *Create Connection* to display
+. Click *Create Connection* to display
 connectors.  
 . Click the *MongoDB* connector.
 . Configure the connection:

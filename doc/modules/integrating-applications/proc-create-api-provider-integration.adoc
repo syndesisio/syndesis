@@ -28,7 +28,7 @@ to add to an operation's flow.
 .Procedure
 
 . In {prodname}, in the left navigation panel, click *Integrations*.
-. In the upper right, click *Create Integration*.
+. Click *Create Integration*.
 . On the *Choose a connection* page, click *API Provider*.
 . On the *Start integration with an API call* page:
 +

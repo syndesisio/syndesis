@@ -20,7 +20,7 @@ client ID and client secret for you, you must know these values.
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
-. In the upper right, click *Create Connection* to display
+. Click *Create Connection* to display
 {prodname} connectors.
 . Click the *ServiceNow* connector.
 . Configure this ServiceNow connection:

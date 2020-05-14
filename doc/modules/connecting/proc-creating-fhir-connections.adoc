@@ -25,7 +25,7 @@ not require authentication.
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
-. In the upper right, click *Create Connection* to display
+. Click *Create Connection* to display
 connectors.  
 . Click the *FHIR* connector and configure the connection as follows:
 .. In the *FHIR version* field, accept *DSTU3*, which is required.
