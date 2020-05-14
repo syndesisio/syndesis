@@ -25,7 +25,11 @@ export const SecurityPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, ISecurityPageRouteState>();
   const { specification } = state;
   const { properties } = specification;
+  const { portName, serviceName } = specification.configuredProperties!;
+
   const backHref = resolvers.create.review({
+    portName,
+    serviceName,
     specification: specification.configuredProperties!.specification,
   });
   const onNext = (authType?: string, authUrl?: string, tokenUrl?: string) => {
@@ -36,15 +40,13 @@ export const SecurityPage: React.FunctionComponent = () => {
       resolvers.create.save({
         authenticationType: authType,
         authorizationEndpoint: authUrl,
+        portName,
+        serviceName,
         specification,
-        tokenEndpoint: tokenUrl,
       })
     );
   };
-  // tslint:disable:no-console
-  /**
-   * console.log('specification from security page: ' + JSON.stringify(specification));
-   */
+
   const extractAuthType = (authType?: string): string => {
     // avoid npe
     if (typeof authType === 'undefined') {

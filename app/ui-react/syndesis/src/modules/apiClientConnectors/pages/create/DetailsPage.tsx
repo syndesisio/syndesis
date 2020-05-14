@@ -22,6 +22,8 @@ import routes from '../../routes';
 export interface IDetailsPageRouteState {
   authenticationType?: string;
   authorizationEndpoint?: string;
+  portName?: string;
+  serviceName?: string;
   specification: APISummary;
   tokenEndpoint?: string;
 }
@@ -52,6 +54,9 @@ export const DetailsPage: React.FunctionComponent = () => {
               ...values,
               authenticationType: state.authenticationType,
               authorizationEndpoint: state.authorizationEndpoint,
+              portName: state.specification.configuredProperties!.portName,
+              serviceName: state.specification.configuredProperties!
+                .serviceName,
               specification: state.specification.configuredProperties!
                 .specification,
               tokenEndpoint: state.tokenEndpoint,

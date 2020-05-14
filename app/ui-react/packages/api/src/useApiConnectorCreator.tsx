@@ -5,6 +5,7 @@ import { callFetch } from './callFetch';
 export interface ICreateConnectorProps {
   authenticationType?: string | undefined;
   authorizationEndpoint?: string;
+  connectorTemplateId?: string;
   tokenEndpoint?: string;
   specification: string;
   name: string;
@@ -12,6 +13,8 @@ export interface ICreateConnectorProps {
   host?: string;
   basePath?: string;
   icon?: string;
+  portName?: string;
+  serviceName?: string;
 }
 
 export function useApiConnectorCreator() {
@@ -19,8 +22,6 @@ export function useApiConnectorCreator() {
 
   const createConnector = async (connector: ICreateConnectorProps) => {
     const body = new FormData();
-    // tslint:disable:no-console
-    console.log('create connector..');
     body.append(
       'connectorSettings',
       new Blob(
@@ -31,10 +32,14 @@ export function useApiConnectorCreator() {
               authorizationEndpoint: connector.authorizationEndpoint,
               basePath: connector.basePath,
               host: connector.host,
+              portName: connector.portName,
+              serviceName: connector.serviceName,
               specification: connector.specification,
               tokenEndpoint: connector.tokenEndpoint,
             },
-            connectorTemplateId: 'swagger-connector-template',
+            connectorTemplateId: connector.connectorTemplateId
+              ? connector.connectorTemplateId
+              : 'swagger-connector-template',
             description: connector.description,
             icon: connector.icon,
             name: connector.name,
@@ -52,9 +57,6 @@ export function useApiConnectorCreator() {
       url: `${apiContext.apiUri}/connectors/custom`,
     });
     const integration = await response.json();
-    console.log(
-      'integration from useApiConnectorCreator: ' + JSON.stringify(integration)
-    );
     if (integration.errorCode) {
       throw new Error(integration.userMsg);
     }
