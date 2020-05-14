@@ -38,11 +38,13 @@
       "dndSelectedFileLabel": "Selected file:",
       "methodFromFile": "Upload document",
       "methodFromUrl": "Use a URL",
-      "port": "Port",
-      "service": "Service",
-      "serviceAndPort": "Specify service and port",
       "title": "Provide Document",
       "urlNote": "* Note: After uploading this document, updates to it are not automatically obtained."
+    },
+    "soap": {
+      "port": "Port",
+      "service": "Service",
+      "servicePortTitle": "Specify service and port"
     },
     "review": {
       "btnReviewEdit": "Review/Edit",

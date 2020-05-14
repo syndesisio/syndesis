@@ -3,7 +3,6 @@ import {
   ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorLayout,
   ApiConnectorCreatorToggleList,
-  Method,
   OpenApiSelectMethod,
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
@@ -15,11 +14,7 @@ import resolvers from '../../resolvers';
 export const SelectMethodPage: React.FunctionComponent = () => {
   const { history } = useRouteData();
 
-  const onNext = (
-    method: Method,
-    specification: string,
-    connectorTemplateId?: string
-  ) => {
+  const onNext = (specification: string, connectorTemplateId?: string) => {
     history.push(
       resolvers.create.review({ specification, connectorTemplateId })
     );

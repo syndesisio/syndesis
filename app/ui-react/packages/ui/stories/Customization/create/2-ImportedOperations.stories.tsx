@@ -15,8 +15,6 @@ const stories = storiesOf(
   module
 );
 
-const apiSummaryRest = {};
-
 const apiSummarySoap = {
   actionsSummary: {
     actionCountByTags: {
@@ -322,58 +320,6 @@ stories.add('Specify Service & Port (SOAP)', () => {
                 )
               : undefined
           }
-        />
-      }
-      footer={
-        <ApiConnectorCreatorFooter
-          backHref={''}
-          i18nBack={'Back'}
-          i18nNext={'Next'}
-          i18nReviewEdit={'Review/Edit'}
-          isNextLoading={boolean('isNextLoading', false)}
-          isNextDisabled={boolean('isNextDisabled', false)}
-          nextHref={''}
-          reviewEditHref={''}
-        />
-      }
-      navigation={
-        <ApiConnectorCreatorBreadSteps
-          step={2}
-          i18nDetails={'Review/Edit Connector Details'}
-          i18nReview={'Imported Operations'}
-          i18nSecurity={'Specify Security'}
-          i18nSelectMethod={'Provide Document'}
-        />
-      }
-      toggle={
-        <ApiConnectorCreatorToggleList
-          step={1}
-          i18nDetails={'Review/Edit Connector Details'}
-          i18nReview={'Imported Operations'}
-          i18nSecurity={'Specify Security'}
-          i18nSelectMethod={'Provide Document'}
-        />
-      }
-    />
-  );
-});
-
-stories.add('Imported Operations (REST)', () => {
-  return (
-    <ApiConnectorCreatorLayout
-      content={
-        <OpenApiReviewActions
-          i18nApiDefinitionHeading={'API DEFINITION'}
-          i18nDescriptionLabel={'Description'}
-          i18nImportedHeading={'IMPORTED'}
-          i18nNameLabel={'Name'}
-          apiProviderDescription={''}
-          apiProviderName={''}
-          i18nOperationsHtmlMessage={`<strong>2</strong> operations`}
-          i18nWarningsHeading={'WARNINGS'}
-          warningMessages={[]}
-          i18nErrorsHeading={'ERRORS'}
-          errorMessages={[]}
         />
       }
       footer={

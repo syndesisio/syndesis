@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import {
   Radio,
   Split,
@@ -41,11 +40,7 @@ export interface IOpenApiSelectMethodProps {
   /**
    * The action fired when the user presses the Next button
    */
-  onNext(
-    method?: Method,
-    specification?: string,
-    connectorTemplateId?: string
-  ): void;
+  onNext(specification?: string, connectorTemplateId?: string): void;
 }
 
 export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodProps> = ({
@@ -66,14 +61,13 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
   i18nUrlNote,
   onNext,
 }) => {
+  const [connectorTemplateId, setConnectorTemplateId] = React.useState();
   const [method, setMethod] = React.useState(FILE);
   const [specification, setSpecification] = React.useState('');
   const [url, setUrl] = React.useState('');
   const [valid, setValid] = React.useState(false);
   const [uploadSuccessMessage, setUploadSuccessMessage] = React.useState('');
   const [uploadFailedMessage, setUploadFailedMessage] = React.useState('');
-
-  const [connectorTemplateId, setConnectorTemplateId] = React.useState();
 
   /**
    * Helper function used to build the D&D upload success/fail
@@ -176,9 +170,9 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
 
   const handleClickNext = () => {
     if (method === URL) {
-      onNext(method, url, connectorTemplateId);
+      onNext(url, connectorTemplateId);
     } else {
-      onNext(method as 'file', specification, connectorTemplateId);
+      onNext(specification, connectorTemplateId);
     }
   };
 
