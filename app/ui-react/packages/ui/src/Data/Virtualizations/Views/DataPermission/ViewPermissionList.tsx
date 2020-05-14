@@ -19,7 +19,7 @@ import {
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { EmptyViewsState, RolePermissionList } from '..';
-import { PageSection } from '../../../../Layout';
+import { ButtonLink, Loader, PageSection } from '../../../../Layout';
 import { IListViewToolbarProps } from '../../../../Shared';
 import './ViewPermissionList.css';
 import { ViewPermissionToolbar } from './ViewPermissionToolbar';
@@ -68,6 +68,7 @@ export interface IViewPermissionList extends IListViewToolbarProps {
   status: any;
   dvRoles: string[];
   itemSelected: Map<string, string>;
+  allPageViewsSelected: boolean;
   updateViewsPermissions: (roleInfo: IRoleInfo) => Promise<boolean>;
   getDVStatusUpdate: () => void;
   getUpdatedRole: () => void;
@@ -118,6 +119,8 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
 
   const [grantOperation, setGrantOperation] = React.useState<boolean>(true);
 
+  const [showLoading, setShowLoading] = React.useState<boolean>(false);
+
   let selectedViewText = Array.from(props.itemSelected.values()).join(', ');
 
   const updateRolePermissionModel = (
@@ -144,6 +147,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
   };
 
   const handleClearRoles = async () => {
+    setShowLoading(true);
     const clearPayload = {
       grantPrivileges: ['SELECT', 'INSERT', 'UPDATE', 'DELETE'],
       roleName: undefined,
@@ -154,12 +158,14 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
       tablePrivileges: [clearPayload],
     });
     if (callSucess) {
+      setShowLoading(false);
       props.clearViewSelection();
       setIsClearModalOpen(!isClearModalOpen);
     }
   };
 
   const handleUpdateRoles = async () => {
+    setShowLoading(true);
     const callSucess = await props.updateViewsPermissions({
       operation: grantOperation ? 'GRANT' : 'REVOKE',
       tablePrivileges: getUpdatePermissionsPayload(
@@ -168,6 +174,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
       ),
     });
     if (callSucess) {
+      setShowLoading(false);
       props.clearViewSelection();
       clearRolePermissionModel();
       setGrantOperation(true);
@@ -208,18 +215,20 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
             isOpen={isSetModalOpen}
             onClose={handleSetModalToggle}
             actions={[
-              <Button
+              <ButtonLink
                 key="confirm"
-                variant="primary"
-                isDisabled={rolePermissionModel.size < 1}
                 onClick={handleUpdateRoles}
+                as={'primary'}
+                disabled={rolePermissionModel.size < 1 || showLoading} 
               >
+                {showLoading ? <Loader size={'xs'} inline={true} /> : null}
                 {props.i18nSave}
-              </Button>,
+              </ButtonLink>,
               <Button
                 key="cancel"
                 variant="link"
                 onClick={handleSetModalToggle}
+                isDisabled={showLoading}
               >
                 {props.i18nCancle}
               </Button>,
@@ -307,13 +316,15 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
             isOpen={isClearModalOpen}
             onClose={handleClearModalToggle}
             actions={[
-              <Button
+              <ButtonLink
                 key="confirm"
-                variant="primary"
+                as={'primary'}
                 onClick={handleClearRoles}
+                disabled={showLoading}
               >
+                 {showLoading ? <Loader size={'xs'} inline={true} /> : null}
                 {props.i18nClearPermission}
-              </Button>,
+              </ButtonLink>,
               <Button
                 key="cancel"
                 variant="link"
