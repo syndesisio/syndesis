@@ -15,12 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -34,10 +28,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.bulletin.ConnectionBulletinBoard;
@@ -49,11 +48,13 @@ import io.syndesis.server.credential.CredentialFlowState;
 import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
+import io.syndesis.server.endpoint.util.PaginationFilter;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import io.syndesis.server.endpoint.v1.operations.Creator;
 import io.syndesis.server.endpoint.v1.operations.Deleter;
 import io.syndesis.server.endpoint.v1.operations.Getter;
 import io.syndesis.server.endpoint.v1.operations.Lister;
+import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.operations.Updater;
 import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
@@ -98,9 +99,12 @@ public class ConnectionHandler
     }
 
     @Override
-    public ListResult<ConnectionOverview> list(@Context UriInfo uriInfo) {
-        final DataManager dataManager = getDataManager();
-        final ListResult<Connection> connectionResults = fetchAll(Connection.class, uriInfo);
+    public ListResult<ConnectionOverview> list(int page, int perPage) {
+        DataManager dataManager = getDataManager();
+        final ListResult<Connection> connectionResults = dataManager.fetchAll(
+            Connection.class,
+            new PaginationFilter<>(new PaginationOptionsFromQueryParams(page, perPage))
+        );
         final List<Connection> connections = connectionResults.getItems();
         final List<ConnectionOverview> overviews = new ArrayList<>(connectionResults.getTotalCount());
 

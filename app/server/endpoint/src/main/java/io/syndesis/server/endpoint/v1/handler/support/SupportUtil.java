@@ -15,6 +15,8 @@
  */
 package io.syndesis.server.endpoint.v1.handler.support;
 
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.StreamingOutput;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,9 +35,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
 
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.DoneablePod;
@@ -101,7 +100,7 @@ public class SupportUtil {
         this.integrationSupportHandler = integrationSupportHandler;
     }
 
-    public File createSupportZipFile(Map<String, Boolean> configurationMap, UriInfo uriInfo) {
+    public File createSupportZipFile(Map<String, Boolean> configurationMap, int page, int perPage) {
         File zipFile = null;
         try {
             zipFile = File.createTempFile("syndesis.", ".zip");
@@ -113,7 +112,7 @@ public class SupportUtil {
         try (ZipOutputStream os = new ZipOutputStream(new FileOutputStream(zipFile))) {
             addPlatformPodsLogs(os);
             addResourceDescriptors(os);
-            addIntegrationsFiles(configurationMap, uriInfo, os);
+            addIntegrationsFiles(configurationMap, page, perPage, os);
             log.info("Created Support file: {}", zipFile);
         } catch (IOException e) {
             log.error("Error producing Support zip file", e);
@@ -126,16 +125,16 @@ public class SupportUtil {
         return zipFile;
     }
 
-    protected void addIntegrationsFiles(Map<String, Boolean> configurationMap, UriInfo uriInfo, ZipOutputStream os) {
+    protected void addIntegrationsFiles(Map<String, Boolean> configurationMap, int page, int perPage, ZipOutputStream os) {
         configurationMap.keySet().stream().forEach(integrationName -> {
             addIntegrationLogs(os, integrationName);
-            addSourceFiles(uriInfo, os, integrationName);
+            addSourceFiles(page, perPage, os, integrationName);
         });
     }
 
     @SuppressWarnings( {"PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl"})
-    protected void addSourceFiles(UriInfo uriInfo, ZipOutputStream os, String integrationName) {
-        ListResult<IntegrationOverview> list = integrationHandler.list(uriInfo);
+    protected void addSourceFiles(int page, int perPage, ZipOutputStream os, String integrationName) {
+        ListResult<IntegrationOverview> list = integrationHandler.list(page,perPage);
         list.getItems().stream()
             .filter(integration -> integrationName.equalsIgnoreCase(integration.getName().replace(' ', '-')))
             .map(integration -> integration.getId())

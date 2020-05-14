@@ -52,14 +52,6 @@ public class IntegrationsITCase extends BaseITCase {
     }
 
     @Test
-    public void invalidSortField() {
-        ResponseEntity<RestError> response = get("/api/v1/integrations?sort=invalid_field", RestError.class, HttpStatus.BAD_REQUEST);
-        assertThat(response.getBody().getErrorCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        assertThat(response.getBody().getUserMsg()).isEqualTo("Please check your sorting arguments");
-        assertThat(response.getBody().getDeveloperMsg()).startsWith("Illegal Argument on Call");
-    }
-
-    @Test
     public void createAndGetIntegration() {
 
         // Verify that the integration does not exist.
