@@ -36,7 +36,7 @@ stories.add('Review/Edit Connector Details', () => {
           backHref={''}
           onNext={action('submitForm')}
           i18nBack={'Back'}
-          i18nNext={'shared:Save'}
+          i18nNext={'Save'}
           isNextLoading={boolean('isSubmitting', false)}
           isNextDisabled={boolean('isNextDisabled', false)}
         />

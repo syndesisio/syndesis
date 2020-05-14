@@ -72,12 +72,16 @@ export default {
       ({
         authenticationType,
         authorizationEndpoint,
+        portName,
+        serviceName,
         specification,
         tokenEndpoint,
       }) => ({
         state: {
           authenticationType,
           authorizationEndpoint,
+          portName,
+          serviceName,
           specification,
           tokenEndpoint,
         },

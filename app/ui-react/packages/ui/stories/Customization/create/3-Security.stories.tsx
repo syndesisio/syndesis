@@ -284,11 +284,11 @@ stories.add('Specify Security (SOAP)', () => {
           handleChangeSelectedType={action('handleChangeSelectedType')}
           handleChangeTokenUrl={action('handleChangeTokenUrl')}
           i18nAccessTokenUrl={'Access Token URL'}
-          i18nAuthorizationUrl={
-            'apiClientConnectors:create:security:authorizationUrl'
+          i18nAuthorizationUrl={'Authorization URL'}
+          i18nDescription={
+            '$t(shared:project.name) reads the document to determine the information needed to configure the connector to meet the API’s security requirements. Connections created from this connector always use the authentication type that you select here.'
           }
-          i18nDescription={'apiClientConnectors:create:security:description'}
-          i18nNoSecurity={'apiClientConnectors:create:security:noSecurity'}
+          i18nNoSecurity={'No Security'}
           i18nTitle={'Specify Security'}
           selectedType={'selectedType'}
           tokenUrl={'tokenUrl'}
@@ -337,11 +337,11 @@ stories.add('Specify Security (REST)', () => (
         handleChangeSelectedType={action('handleChangeSelectedType')}
         handleChangeTokenUrl={action('handleChangeTokenUrl')}
         i18nAccessTokenUrl={'Access Token URL'}
-        i18nAuthorizationUrl={
-          'apiClientConnectors:create:security:authorizationUrl'
+        i18nAuthorizationUrl={'Authorization URL'}
+        i18nDescription={
+          '$t(shared:project.name) reads the document to determine the information needed to configure the connector to meet the API’s security requirements. Connections created from this connector always use the authentication type that you select here.'
         }
-        i18nDescription={'apiClientConnectors:create:security:description'}
-        i18nNoSecurity={'apiClientConnectors:create:security:noSecurity'}
+        i18nNoSecurity={'No Security'}
         i18nTitle={'Specify Security'}
         selectedType={'selectedType'}
         tokenUrl={'tokenUrl'}
