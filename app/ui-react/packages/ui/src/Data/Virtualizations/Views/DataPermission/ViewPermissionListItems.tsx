@@ -62,7 +62,7 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
     } else {
       setTrimPermissionList([]);
     }
-  },[props.viewRolePermissionList,props.viewRolePermissionList]);
+  },[props.viewRolePermissionList]);
 
   return (
     <DataListItem
