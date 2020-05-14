@@ -71,8 +71,9 @@ public class CreateViewStatement extends AbstractStatementObject {
         this.queryExpression = queryExpression;
     }
 
+    @SuppressWarnings({"PMD.NPathComplexity", "PMD.ExcessiveMethodLength"}) // TODO refactor
     @Override
-    protected void parseAndValidate() {
+    protected final void parseAndValidate() {
         // Check statement
         boolean prefixOK = true;
 
@@ -82,7 +83,7 @@ public class CreateViewStatement extends AbstractStatementObject {
             setLastTknIndex(0);
 
             Token onlyToken = this.analyzer.getTokens().get(0);
-            prefixOK = !onlyToken.image.equalsIgnoreCase("CREATE");
+            prefixOK = !"CREATE".equalsIgnoreCase(onlyToken.image);
             Position startPosition = new Position(onlyToken.beginLine, onlyToken.beginColumn);
             Position endPosition = new Position(onlyToken.endLine, onlyToken.endColumn+1);
             DdlAnalyzerException exception =
@@ -101,7 +102,7 @@ public class CreateViewStatement extends AbstractStatementObject {
 
             Token firstToken = this.analyzer.getTokens().get(0);
             Token lastToken = this.analyzer.getTokens().get(0);
-            prefixOK = !lastToken.image.equalsIgnoreCase("VIEW");
+            prefixOK = !"VIEW".equalsIgnoreCase(lastToken.image);
             this.analyzer.addException(
                     firstToken,
                     lastToken,
@@ -219,7 +220,7 @@ public class CreateViewStatement extends AbstractStatementObject {
     public TokenContext getTokenContext(Position position) {
         if( isBetween(getFirstTknIndex(), getLastTknIndex(), position) ) {
             // PREFIX token
-            return new TokenContext(position, this.analyzer.getTokenFor(position), DdlAnalyzerConstants.CONTEXT.PREFIX, this);
+            return new TokenContext(position, this.analyzer.getTokenFor(position), DdlAnalyzerConstants.Context.PREFIX, this);
         } else if( isBetween(tableBody.getFirstTknIndex(),
                              tableBody.getLastTknIndex(), position) ) {
             // TABLE BODY
@@ -234,6 +235,6 @@ public class CreateViewStatement extends AbstractStatementObject {
             return queryExpression.getTokenContext(position);
         }
 
-        return new TokenContext(position, null, DdlAnalyzerConstants.CONTEXT.NONE_FOUND, this);
+        return new TokenContext(position, null, DdlAnalyzerConstants.Context.NONE_FOUND, this);
     }
 }

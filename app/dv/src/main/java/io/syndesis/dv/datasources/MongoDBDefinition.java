@@ -47,10 +47,7 @@ public class MongoDBDefinition extends DataSourceDefinition {
 
     @Override
     public boolean isTypeOf(Map<String, String> properties, String type) {
-        if (type.equalsIgnoreCase("mongodb3")) {
-            return true;
-        }
-        return false;
+        return "mongodb3".equalsIgnoreCase(type);
     }
 
     @Override

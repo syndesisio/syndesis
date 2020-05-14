@@ -15,6 +15,7 @@
  */
 package io.syndesis.dv.utils;
 
+import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public final class PathUtils {
             try {
                 props.add(Pair.of(URLDecoder.decode(key, "UTF-8") , URLDecoder.decode(value, "UTF-8")));
             } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
+                throw new UncheckedIOException(e);
             }
         }
 

@@ -24,27 +24,25 @@ import io.syndesis.dv.StringConstants;
 
 public class KLog {
 
-    @FormatMethod
-    private static String format(@FormatString String message, Object... arguments ) {
-        if (message == null) {
-            message = StringConstants.EMPTY_STRING;
-        }
-        if (arguments == null || arguments.length == 0) {
-            return message;
-        }
-        return String.format(message, arguments);
-    }
+    private final org.apache.commons.logging.Log kLogger = LogFactory.getLog(KLog.class);
 
-    private static final KLog instance = new KLog();
+    private static final KLog INSTANCE = new KLog();
+
+    @FormatMethod
+    private static String format(final @FormatString String message, final Object... arguments ) {
+        final String messageToUse = message == null ? StringConstants.EMPTY_STRING : message;
+        if (arguments == null || arguments.length == 0) {
+            return messageToUse;
+        }
+        return String.format(messageToUse, arguments);
+    }
 
     /**
      * @return singleton instance of this logger
      */
     public static KLog getLogger() {
-        return instance;
+        return INSTANCE;
     }
-
-    private final org.apache.commons.logging.Log kLogger = LogFactory.getLog(KLog.class);
 
     @FormatMethod
     public void info(@FormatString String message, Object... args) {

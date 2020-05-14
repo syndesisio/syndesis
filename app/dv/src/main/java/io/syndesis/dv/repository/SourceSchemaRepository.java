@@ -29,13 +29,13 @@ import io.syndesis.dv.model.SourceSchema;
 @Repository
 public interface SourceSchemaRepository extends JpaRepository<SourceSchema, String> {
 
-    public SourceSchema findBySourceId(String id);
+    SourceSchema findBySourceId(String id);
 
     @Modifying
     @Query("delete from SourceSchema s where s.sourceId=:sourceId")
-    public int deleteBySourceId(@Param("sourceId") String sourceid);
+    int deleteBySourceId(@Param("sourceId") String sourceid);
 
     @Query("SELECT sourceId FROM SourceSchema")
-    public List<String> findAllSourceIds();
+    List<String> findAllSourceIds();
 
 }

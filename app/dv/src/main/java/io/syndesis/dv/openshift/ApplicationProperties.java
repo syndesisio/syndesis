@@ -15,7 +15,7 @@
  */
 package io.syndesis.dv.openshift;
 
-public class ApplicationProperties {
+public final class ApplicationProperties {
 
     private ApplicationProperties() {}
 

@@ -15,7 +15,6 @@
  */
 package io.syndesis.dv.server.endpoint;
 
-import io.syndesis.dv.StringConstants;
 import io.syndesis.dv.metadata.query.QSColumn;
 import io.syndesis.dv.metadata.query.QSResult;
 import io.syndesis.dv.metadata.query.QSRow;
@@ -27,7 +26,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("nls")
-public class QueryResultSerializerTest implements StringConstants {
+public class QueryResultSerializerTest {
 
     private static final String[][] COLUMNS_DATA = {
         { "Id", "ID", "long" },
@@ -54,7 +53,7 @@ public class QueryResultSerializerTest implements StringConstants {
     private String expected;
 
     @Before
-    public void init() throws Exception {
+    public void init() {
         queryResult = new QSResult();
 
         for (int i = 0; i < COLUMNS_DATA.length; ++i) {
@@ -105,7 +104,7 @@ public class QueryResultSerializerTest implements StringConstants {
     }
 
     @Test
-    public void shouldExportResult() throws Exception {
+    public void shouldExportResult() {
         String json = JsonMarshaller.marshall( this.queryResult );
         assertEquals(expected, json);
     }

@@ -27,7 +27,7 @@ import io.syndesis.dv.model.ViewDefinition;
 
 public interface RepositoryManager {
 
-    public static class EntityNotFoundException extends Exception {
+    class EntityNotFoundException extends RuntimeException {
 
         /**
          *
@@ -36,7 +36,7 @@ public interface RepositoryManager {
 
     }
 
-    public class TimeoutException extends Exception {
+    class TimeoutException extends RuntimeException {
 
         private static final long serialVersionUID = -3492466153109760780L;
 
@@ -44,6 +44,12 @@ public interface RepositoryManager {
             super(cause);
         }
 
+    }
+
+    @FunctionalInterface
+    interface Task<T> extends Callable<T> {
+        @Override
+        T call();
     }
 
     /**
@@ -54,7 +60,7 @@ public interface RepositoryManager {
      * @return
      * @throws Exception
      */
-    <T> T runInTransaction(boolean rollbackOnly, Callable<T> callable) throws Exception;
+    <T> T runInTransaction(boolean rollbackOnly, Task<T> callable);
 
     SourceSchema findSchemaBySourceId(String id);
 
@@ -73,7 +79,7 @@ public interface RepositoryManager {
 
     DataVirtualization findDataVirtualizationBySourceId(String sourceId);
 
-    public Iterable<? extends DataVirtualization> findDataVirtualizations();
+    Iterable<? extends DataVirtualization> findDataVirtualizations();
 
     boolean deleteDataVirtualization(String virtualizationName);
 

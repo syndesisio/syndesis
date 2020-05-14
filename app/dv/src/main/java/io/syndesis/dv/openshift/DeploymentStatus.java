@@ -38,7 +38,7 @@ public class DeploymentStatus {
     private volatile String deploymentName;
     private volatile Status status = Status.NOTFOUND;
     private volatile String statusMessage;
-    private List<RouteStatus> routes = null;
+    private List<RouteStatus> routes;
     private List<String> usedBy = Collections.emptyList();
     private Long version;
 

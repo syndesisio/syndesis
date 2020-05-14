@@ -86,8 +86,6 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
         LOGGER.debug("completion: {}", uri);
         TextDocumentItem doc = openedDocuments.get(uri);
 
-        // create an empty results array
-        List<CompletionItem> emptyResults = new ArrayList<CompletionItem>();
 
         // get applicable completion items
         List<CompletionItem> items = completionProvider.getCompletionItems(doc.getText(),
@@ -98,6 +96,9 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
             LOGGER.debug(" CompletionItems = " + items);
             return CompletableFuture.completedFuture(Either.forLeft(items));
         }
+
+        // create an empty results array
+        List<CompletionItem> emptyResults = new ArrayList<CompletionItem>();
 
         // if items do no exist return empty results
         LOGGER.debug(" CompletionItems = " + emptyResults);

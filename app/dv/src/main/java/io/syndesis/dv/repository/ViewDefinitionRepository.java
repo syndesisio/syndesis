@@ -29,13 +29,13 @@ import io.syndesis.dv.model.ViewDefinition;
 public interface ViewDefinitionRepository extends JpaRepository<ViewDefinition, String> {
 
     @Query("from ViewDefinition vd where vd.dataVirtualizationName = :dvName and vd.upperName = UPPER(:viewDefinitionName)")
-    public ViewDefinition findByNameIgnoreCase(@Param("dvName") String dvName, @Param("viewDefinitionName") String viewDefinitionName);
+    ViewDefinition findByNameIgnoreCase(@Param("dvName") String dvName, @Param("viewDefinitionName") String viewDefinitionName);
 
-    public List<ViewDefinition> findAllByDataVirtualizationName(String dvName);
+    List<ViewDefinition> findAllByDataVirtualizationName(String dvName);
 
     @Query(value = "SELECT name FROM view_definition WHERE dv_name = ?1", nativeQuery = true)
-    public List<String> findAllNamesByDataVirtualizationName(String dvName);
+    List<String> findAllNamesByDataVirtualizationName(String dvName);
 
-    public Long deleteByDataVirtualizationName(String virtualization);
+    Long deleteByDataVirtualizationName(String virtualization);
 
 }

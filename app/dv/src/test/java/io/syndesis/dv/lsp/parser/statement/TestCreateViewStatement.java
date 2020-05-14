@@ -15,7 +15,7 @@
  */
 package io.syndesis.dv.lsp.parser.statement;
 
-import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.STATEMENT_TYPE;
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.StatementType;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class TestCreateViewStatement {
     }
 
     @Test
-    public void testCreateViewStatement() throws Exception {
+    public void testCreateViewStatement() {
 
         String stmt =
             // 01234567890123456789012345678901234567890123456789
@@ -60,7 +60,7 @@ public class TestCreateViewStatement {
 
         CreateViewStatement cvs = createStatatement(stmt);
 
-        assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
+        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
         assertEquals(58, cvs.analyzer.getTokens().size());
 
         assertEquals("wineList", cvs.getViewName());
@@ -75,7 +75,7 @@ public class TestCreateViewStatement {
     }
 
     @Test
-    public void testMissingViewName() throws Exception {
+    public void testMissingViewName() {
         String stmt =
             // 01234567890123456789012345678901234567890123456789
             "CREATE VIEW (\n" +
@@ -88,14 +88,14 @@ public class TestCreateViewStatement {
 
         CreateViewStatement cvs = createStatatement(stmt);
 
-        assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
+        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
         assertEquals(23, cvs.analyzer.getTokens().size());
 
         assertEquals(2, cvs.getExceptions().size());
     }
 
     @Test
-    public void testNoTableBody() throws Exception {
+    public void testNoTableBody() {
         String stmt =
             // 01234567890123456789012345678901234567890123456789
             "CREATE VIEW (\n" +
@@ -104,7 +104,7 @@ public class TestCreateViewStatement {
 
         CreateViewStatement cvs = createStatatement(stmt);
 
-        assertEquals(STATEMENT_TYPE.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
+        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
         assertEquals(13, cvs.analyzer.getTokens().size());
 
         assertEquals(2, cvs.getExceptions().size());

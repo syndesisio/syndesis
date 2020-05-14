@@ -17,6 +17,7 @@ package io.syndesis.dv.lsp.completion.providers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.lsp4j.CompletionItem;
 import org.teiid.query.parser.SQLParserConstants;
@@ -84,7 +85,7 @@ public class TableElementCompletionProvider extends CompletionItemBuilder {
         return items;
     }
 
-    public boolean isDatatype(Token token, Token[] datatypeTokens) {
+    public boolean isDatatype(Token token, Token... datatypeTokens) {
         if (DdlAnalyzerConstants.DATATYPES.contains(token.kind)) {
             return true;
         }
@@ -97,7 +98,7 @@ public class TableElementCompletionProvider extends CompletionItemBuilder {
     }
 
     public String getLabel(int keywordId) {
-        String tokenImageStr = SQLParserConstants.tokenImage[keywordId].toUpperCase();
+        String tokenImageStr = SQLParserConstants.tokenImage[keywordId].toUpperCase(Locale.US);
         return tokenImageStr.substring(1, tokenImageStr.length()-1);
     }
 
@@ -112,6 +113,7 @@ public class TableElementCompletionProvider extends CompletionItemBuilder {
         return null;
     }
 
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
     private List<CompletionItem> getRemainingItems(Token targetToken) {
         List<CompletionItem> remainingItems = new ArrayList<CompletionItem>();
         List<CompletionItem> allItems = getItemLoader().getTableElementCompletionItems();

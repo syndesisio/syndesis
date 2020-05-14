@@ -48,7 +48,7 @@ public final class RestDataserviceTest {
     }
 
     @Before
-    public void init() throws Exception {
+    public void init() {
         DataVirtualization theDataservice = Mockito.mock(DataVirtualization.class);
         Mockito.when(theDataservice.getName()).thenReturn(DATASERVICE_NAME);
 
