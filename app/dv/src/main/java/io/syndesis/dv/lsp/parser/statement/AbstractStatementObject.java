@@ -17,6 +17,7 @@ package io.syndesis.dv.lsp.parser.statement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.lsp4j.Position;
 import org.teiid.language.SQLConstants;
@@ -149,13 +150,14 @@ public abstract class AbstractStatementObject {
     }
 
     protected boolean isReservedKeywordToken(Token tkn) {
-        return SQLConstants.isReservedWord(tkn.image.toUpperCase());
+        return SQLConstants.isReservedWord(tkn.image.toUpperCase(Locale.US));
     }
 
     protected boolean isNonReservedKeywordToken(Token tkn) {
-        return SQLConstants.getNonReservedWords().contains(tkn.image.toUpperCase());
+        return SQLConstants.getNonReservedWords().contains(tkn.image.toUpperCase(Locale.US));
     }
 
+    @SuppressWarnings("PMD.SystemPrintln")
     protected void printTokens(Token[] tkns, String headerMessage) {
         System.out.println(headerMessage);
         for (Token token : tkns) {

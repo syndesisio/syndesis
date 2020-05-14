@@ -51,7 +51,7 @@ public class StatusService extends DvService {
         response = String.class, responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 403, message = "An error has occurred."),
     @ApiResponse(code = 503, message = "Security Not Configured")})
-    public List<String> getRoles() throws Exception {
+    public List<String> getRoles() {
         return repositoryManager.runInTransaction(false, () -> {
             ArrayList<String> result = new ArrayList<>(repositoryManager
                     .findRoleNames());

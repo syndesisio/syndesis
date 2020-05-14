@@ -19,6 +19,7 @@ package io.syndesis.dv.server.endpoint;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.junit.Test;
@@ -30,6 +31,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.server.ResponseStatusException;
+import org.teiid.adminapi.AdminException;
 import org.teiid.adminapi.impl.VDBMetaData;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -60,7 +62,7 @@ public class MetadataServiceTest {
     private DefaultMetadataInstance metadataInstance;
 
     @Test
-    public void testSourceVdbGeneration() throws Exception {
+    public void testSourceVdbGeneration() throws AdminException, UnsupportedEncodingException {
 //        Map<String, String> properties = new LinkedHashMap<String, String>();
 //        properties.put(TeiidDataSource.DATASOURCE_JNDINAME, "something");
 //        properties.put(TeiidDataSource.DATASOURCE_DRIVERNAME, "type");
@@ -106,7 +108,7 @@ public class MetadataServiceTest {
     }
 
     @Test
-    public void testGetSchema() throws Exception {
+    public void testGetSchema() throws AdminException {
         assertThatThrownBy(() -> metadataService.getSourceSchema("source2"))
             .isInstanceOf(ResponseStatusException.class);
 
@@ -148,7 +150,7 @@ public class MetadataServiceTest {
         }
   
     @Test
-    public void testGetSchemaSingleLevel() throws Exception {
+    public void testGetSchemaSingleLevel() throws AdminException {
         assertThatThrownBy(() -> metadataService.getSourceSchema("source3"))
             .isInstanceOf(ResponseStatusException.class);
 
@@ -186,7 +188,7 @@ public class MetadataServiceTest {
     }
 
     @Test
-    public void testPreviewQuery() throws Exception {
+    public void testPreviewQuery() {
         QueryAttribute kqa = new QueryAttribute();
         kqa.setQuery("select * from myview");
         kqa.setTarget("dv1");
@@ -211,7 +213,7 @@ public class MetadataServiceTest {
     }
 
     @Test
-    public void testRuntimeMetadata() throws Exception {
+    public void testRuntimeMetadata() throws AdminException {
         QueryAttribute kqa = new QueryAttribute();
         kqa.setQuery("select * from myview");
         kqa.setTarget("dv1");

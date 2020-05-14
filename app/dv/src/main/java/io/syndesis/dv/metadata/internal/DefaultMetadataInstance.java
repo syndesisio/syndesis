@@ -17,6 +17,7 @@ package io.syndesis.dv.metadata.internal;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -53,6 +54,7 @@ import org.teiid.adminapi.impl.VDBMetadataParser;
 import org.teiid.api.exception.query.FunctionExecutionException;
 import org.teiid.api.exception.query.QueryMetadataException;
 import org.teiid.core.TeiidComponentException;
+import org.teiid.core.types.AbstractGeospatialType;
 import org.teiid.core.types.ArrayImpl;
 import org.teiid.core.types.TransformationException;
 import org.teiid.core.types.basic.ClobToStringTransform;
@@ -97,9 +99,18 @@ import io.syndesis.dv.utils.KLog;
 @Component
 public class DefaultMetadataInstance implements MetadataInstance {
 
+    public static final String DEFAULT_VDB_VERSION = "1"; //$NON-NLS-1$
+
+    @Autowired
+    private TeiidServer server;
+
+    private Admin admin;
+
     public class TeiidVdbImpl implements TeiidVdb {
 
         private final VDBMetaData vdb;
+
+        private Set<String> haveErrors;
 
         public TeiidVdbImpl(VDB vdb) {
             ArgCheck.isInstanceOf(VDBMetaData.class, vdb);
@@ -178,7 +189,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
         }
 
         @Override
-        public ValidationResult validate(String ddl) throws KException {
+        public ValidationResult validate(String ddl) {
             return DefaultMetadataInstance.this.validate(this, ddl, false);
         }
 
@@ -193,8 +204,6 @@ public class DefaultMetadataInstance implements MetadataInstance {
                     .map(m -> qmi.getMetadataStore().getSchema(m.getName()))
                     .collect(Collectors.toList());
         }
-
-        private Set<String> haveErrors;
 
         @Override
         public boolean hasValidationError(String schemaName, String objectName, String childType) {
@@ -217,15 +226,8 @@ public class DefaultMetadataInstance implements MetadataInstance {
 
     }
 
-    public static final String DEFAULT_VDB_VERSION = "1"; //$NON-NLS-1$
-
-    @Autowired
-    private TeiidServer server;
-
-    private Admin admin;
-
     public DefaultMetadataInstance() {
-
+        // TODO needed?
     }
 
     public DefaultMetadataInstance(TeiidServer server) {
@@ -247,7 +249,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
             return server.getDriver().connect("jdbc:teiid:"+vdb+"."+version, props);
         } catch (SQLException e) {
             KLog.getLogger().warn("Could not get a connection to " + vdb, e);
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage(), e);
         }
     }
 
@@ -271,7 +273,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
     @Override
     // OBL_UNSATISFIED_OBLIGATION seems to be false positive
     @SuppressFBWarnings({"SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE", "OBL_UNSATISFIED_OBLIGATION"}) 
-    public QSResult query(String vdb, String query, int offset, int limit) throws KException {
+    public QSResult query(String vdb, String query, int offset, int limit) {
         ObjectMapper mapper = new ObjectMapper();
 
         QSResult result = new QSResult();
@@ -287,14 +289,15 @@ public class DefaultMetadataInstance implements MetadataInstance {
                                    offset,
                                    limit);
 
+            String queryToRun = query;
             if (offset != NO_OFFSET || limit != NO_LIMIT) {
                 //if we want more effective pagination, then
                 //we need to enable result set caching and parameterize the limit/offset
-                query = "SELECT * FROM (" + query + ") x LIMIT " + Math.max(0, offset) + ", " + (limit < 0?Integer.MAX_VALUE:limit);
+                queryToRun = "SELECT * FROM (" + query + ") x LIMIT " + Math.max(0, offset) + ", " + (limit < 0?Integer.MAX_VALUE:limit);
             }
 
-            KLog.getLogger().debug("Commencing query execution: %s", query);
-            try (ResultSet rs = statement.executeQuery(query)) {
+            KLog.getLogger().debug("Commencing query execution: %s", queryToRun);
+            try (ResultSet rs = statement.executeQuery(queryToRun)) {
                 ResultSetMetaData rsmd = rs.getMetaData();
                 int columns = rsmd.getColumnCount();
 
@@ -315,12 +318,12 @@ public class DefaultMetadataInstance implements MetadataInstance {
                         Object value = rs.getObject(i);
                         if (value instanceof ArrayImpl) {
                             row.add(mapper.writeValueAsString(((ArrayImpl)value).getArray()));
-                        } else if (value instanceof java.sql.Blob) {
+                        } else if (value instanceof Blob) {
                             row.add("blob");
-                        }  else if (value instanceof java.sql.Clob) {
+                        }  else if (value instanceof Clob) {
                             row.add("clob");
-                        }  else if (value instanceof org.teiid.core.types.AbstractGeospatialType) {
-                            Clob clob = GeometryUtils.geometryToClob((org.teiid.core.types.AbstractGeospatialType)value, true);
+                        }  else if (value instanceof AbstractGeospatialType) {
+                            Clob clob = GeometryUtils.geometryToClob((AbstractGeospatialType)value, true);
                             ClobToStringTransform transform = new ClobToStringTransform();
                             row.add(transform.transform(clob, String.class));
                         } else {
@@ -330,8 +333,8 @@ public class DefaultMetadataInstance implements MetadataInstance {
                     result.addRow(row);
                 }
             } catch (SQLException e) {
-                KLog.getLogger().warn(e, "Could not execute query: %s", query);
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+                KLog.getLogger().warn(e, "Could not execute query: %s", queryToRun);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
             }
 
             KLog.getLogger().debug("Query executed and returning %d results", result.getRows().size());
@@ -343,12 +346,12 @@ public class DefaultMetadataInstance implements MetadataInstance {
     }
 
     @Override
-    public TeiidDataSourceImpl getDataSource(String name) throws KException {
+    public TeiidDataSourceImpl getDataSource(String name) {
         return this.server.getDatasources().get(name);
     }
 
     @Override
-    public void deleteDataSource(String dsName) throws KException {
+    public void deleteDataSource(String dsName) {
         try {
             TeiidDataSource ds = this.server.getDatasources().remove(dsName);
             if (ds != null) {
@@ -367,12 +370,12 @@ public class DefaultMetadataInstance implements MetadataInstance {
     }
 
     @Override
-    public Collection<? extends TeiidDataSource> getDataSources() throws KException {
+    public Collection<? extends TeiidDataSource> getDataSources() {
         return this.server.getDatasources().values();
     }
 
     @Override
-    public Collection<TeiidVdb> getVdbs() throws KException {
+    public Collection<TeiidVdb> getVdbs() {
         try {
             Collection<? extends VDB> vdbs = getAdmin().getVDBs();
             if (vdbs.isEmpty()) {
@@ -391,7 +394,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
     }
 
     @Override
-    public TeiidVdbImpl getVdb(String name) throws KException {
+    public TeiidVdbImpl getVdb(String name) {
         try {
             VDB vdb = getAdmin().getVDB(name, DEFAULT_VDB_VERSION);
             if (vdb == null) {
@@ -405,7 +408,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
     }
 
     @Override
-    public void deploy(VDBMetaData vdb) throws KException {
+    public void deploy(VDBMetaData vdb) {
         String vdbName = vdb.getName();
 
         try {
@@ -436,7 +439,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
     }
 
     @Override
-    public void undeployDynamicVdb(String vdbName) throws KException {
+    public void undeployDynamicVdb(String vdbName) {
         try {
             TeiidVdb vdb = getVdb(vdbName);
             if (vdb != null) {
@@ -448,7 +451,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
     }
 
     @Override
-    public String getSchema(String vdbName, String modelName) throws KException {
+    public String getSchema(String vdbName, String modelName) {
         try {
             return getAdmin().getSchema(vdbName, DEFAULT_VDB_VERSION, modelName, null, null);
         } catch (AdminException ex) {
@@ -456,7 +459,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
         }
     }
 
-    public static AccessibleByteArrayOutputStream toBytes(VDBMetaData vdb) throws KException {
+    public static AccessibleByteArrayOutputStream toBytes(VDBMetaData vdb) {
         AccessibleByteArrayOutputStream baos = new AccessibleByteArrayOutputStream();
         try {
             VDBMetadataParser.marshall(vdb, baos);
@@ -491,11 +494,11 @@ public class DefaultMetadataInstance implements MetadataInstance {
     }
 
     @Override
-    public ValidationResult parse(String ddl) throws KException {
+    public ValidationResult parse(String ddl) {
         return validate(null, ddl, true); //$NON-NON-NLS-1$
     }
 
-    public ValidationResult validate(TeiidVdbImpl preview, String ddl, boolean parseOnly) throws KException {
+    public ValidationResult validate(TeiidVdbImpl preview, String ddl, boolean parseOnly) {
         QueryParser parser = QueryParser.getQueryParser();
 
         ModelMetaData m = new ModelMetaData();

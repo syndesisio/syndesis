@@ -28,7 +28,6 @@ import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 public class OptionsClause extends AbstractStatementObject {
     private Token[] optionsTokens;
-    private List<Token[]> nameValueTokenList;
 
     public OptionsClause(DdlTokenAnalyzer analyzer) {
         super(analyzer);
@@ -36,8 +35,6 @@ public class OptionsClause extends AbstractStatementObject {
 
     @Override
     protected void parseAndValidate() {
-        nameValueTokenList = new ArrayList<Token[]>();
-
         // minimum 3 tokens.... OPTIONS()
         if( optionsTokens.length < 3 ) {
             // System.out.println("OPTIONS ERROR: INVALID ... should be OPTIONS() ");
@@ -70,21 +67,19 @@ public class OptionsClause extends AbstractStatementObject {
             if( nextTkn.kind == SQLParserConstants.COMMA) {
                 // We found a comma, so add nextOption (tkn array) to the nameValueTokenList
                 Token[] nextNameValueArray = nextOption.toArray(new Token[0]);
-                nameValueTokenList.add(nextNameValueArray);
                 validateNameValueArray(nextNameValueArray);
                 nextOption.clear();
             } else {
                 nextOption.add(nextTkn);
                 if( i == optionsTokens.length-2) {
                     Token[] nextNameValueArray = nextOption.toArray(new Token[0]);
-                    nameValueTokenList.add(nextNameValueArray);
                     validateNameValueArray(nextNameValueArray);
                 }
             }
         }
     }
 
-    private void validateNameValueArray(Token[] nextNameValueArray) {
+    private void validateNameValueArray(Token... nextNameValueArray) {
         // Should be 2 tokens
         if( nextNameValueArray.length == 1 ) {
             Token firstToken = nextNameValueArray[0];
@@ -130,6 +125,7 @@ public class OptionsClause extends AbstractStatementObject {
         return this.getAnalyzer().getTokens().get(index).kind == kind;
     }
 
+    @SuppressWarnings("PMD.OptimizableToArrayCall") // false positive
     public void setOptionsTokens(List<Token> optionsTokens) {
         this.optionsTokens = optionsTokens.toArray(new Token[optionsTokens.size()]);
         setFirstTknIndex(this.getAnalyzer().getTokenIndex(this.optionsTokens[0]));

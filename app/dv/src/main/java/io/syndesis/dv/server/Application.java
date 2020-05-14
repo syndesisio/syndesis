@@ -24,7 +24,7 @@ import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 @SuppressWarnings("PrivateConstructorForUtilityClass")
 public class Application {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 }

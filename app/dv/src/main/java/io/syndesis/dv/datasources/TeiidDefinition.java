@@ -36,11 +36,8 @@ public class TeiidDefinition extends DataSourceDefinition {
 
     @Override
     public boolean isTypeOf(Map<String, String> properties, String type) {
-        if ((properties != null) && (properties.get("url") != null)
-                && (properties.get("url").startsWith("jdbc:teiid:") && type.equals("sql"))) {
-            return true;
-        }
-        return false;
+        return (properties != null) && (properties.get("url") != null)
+                && (properties.get("url").startsWith("jdbc:teiid:") && type.equals("sql"));
     }
 
 }

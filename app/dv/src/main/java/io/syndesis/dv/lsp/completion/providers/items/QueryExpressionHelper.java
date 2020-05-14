@@ -17,10 +17,6 @@ package io.syndesis.dv.lsp.completion.providers.items;
 
 public final class QueryExpressionHelper {
 
-    private QueryExpressionHelper() {
-        // utility class
-    }
-
     /*
      * CREATE VIEW TEMPLATE == SAMPLE STATEMENT ==
      *
@@ -72,5 +68,9 @@ public final class QueryExpressionHelper {
     public static final String CREATE_VIEW_LEFT_OUTER_JOIN_INSERT_TEXT = "CREATE VIEW ${1:view_name} (\n\t/* add column definitions */\n) "
             + "AS SELECT * FROM ${2:table1_name} AS t1\nJOIN ${3:table2_name} "
             + "AS t2\n\tON t2.${4:column_a} = t1.${5:column_b}\nORDER BY t2.${5:column_b};";
+
+    private QueryExpressionHelper() {
+        // utility class
+    }
 
 }

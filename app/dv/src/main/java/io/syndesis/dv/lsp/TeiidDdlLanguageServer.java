@@ -82,6 +82,7 @@ public class TeiidDdlLanguageServer implements LanguageServer, LanguageClientAwa
 
     @Override
     public void exit() {
+        // nop
     }
 
     private static ServerCapabilities createServerCapabilities() {

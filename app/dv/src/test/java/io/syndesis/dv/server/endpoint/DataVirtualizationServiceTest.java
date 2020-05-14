@@ -34,6 +34,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.server.ResponseStatusException;
+import org.teiid.adminapi.AdminException;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -65,7 +66,7 @@ public class DataVirtualizationServiceTest {
     @Autowired
     private DefaultMetadataInstance metadataInstance;
 
-    @Test public void testImport() throws Exception {
+    @Test public void testImport() throws AdminException {
         ImportPayload payload = new ImportPayload();
         payload.setTables(Arrays.asList("tbl", "tbl2", "tbl3"));
 
@@ -123,7 +124,7 @@ public class DataVirtualizationServiceTest {
         assertEquals(Long.valueOf(1), dv.getVersion());
     }
 
-    @Test public void testValidateNameUsingGet() throws Exception {
+    @Test public void testValidateNameUsingGet() {
         assertThatThrownBy(() -> dataVirtualizationService.getDataVirtualization("foo"))
             .isInstanceOf(ResponseStatusException.class)
             .extracting(e -> ((ResponseStatusException) e).getStatus()).isEqualTo(HttpStatus.NOT_FOUND);

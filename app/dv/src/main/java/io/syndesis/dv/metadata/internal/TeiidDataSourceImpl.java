@@ -85,9 +85,9 @@ public class TeiidDataSourceImpl implements Comparable<TeiidDataSourceImpl>, Tei
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("Data Source:\t" + getName()); //$NON-NLS-1$
-        if (!getTranslatorName().equalsIgnoreCase("<unknown>")) { //$NON-NLS-1$
-            sb.append("\nType: \t\t" + getTranslatorName()); //$NON-NLS-1$
+        StringBuilder sb = new StringBuilder(75).append("Data Source:\t").append(getName()); //$NON-NLS-1$
+        if (!"<unknown>".equalsIgnoreCase(getTranslatorName())) { //$NON-NLS-1$
+            sb.append("\nType: \t\t").append(getTranslatorName()); //$NON-NLS-1$
         }
 
         return sb.toString();

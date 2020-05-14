@@ -28,9 +28,6 @@ public class SourceSchema extends BaseDataVirtualization {
 
     private String ddl;
 
-    public SourceSchema() {
-    }
-
     public String getDdl() {
         return ddl;
     }

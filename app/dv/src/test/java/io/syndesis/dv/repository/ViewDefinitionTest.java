@@ -45,7 +45,7 @@ public class ViewDefinitionTest {
     private RepositoryManagerImpl repositoryManager;
 
     @Test
-    public void testFindDeleteByName() throws Exception {
+    public void testFindDeleteByName() {
         DataVirtualization dv = repositoryManager.createDataVirtualization("name");
 
         ViewDefinition v = repositoryManager.createViewDefiniton(dv.getName(), "x");
@@ -101,7 +101,7 @@ public class ViewDefinitionTest {
     }
 
     @Test
-    public void testSameName() throws Exception {
+    public void testSameName() {
         repositoryManager.createDataVirtualization("name");
 
         repositoryManager.createDataVirtualization("name1");
@@ -116,7 +116,7 @@ public class ViewDefinitionTest {
     }
 
     @Test
-    public void testDeleteByVirtualization() throws Exception {
+    public void testDeleteByVirtualization() {
         repositoryManager.createDataVirtualization("dv");
         repositoryManager.createViewDefiniton("dv", "x");
         repositoryManager.createViewDefiniton("dv", "y");

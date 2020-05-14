@@ -24,6 +24,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 public class AuthHandlingFilter implements HandlerInterceptor {
 
+    private static final ThreadLocal<OAuthCredentials> THREAD_OAUTH_CREDENTIALS  = new ThreadLocal<OAuthCredentials>();
+
     public static class AuthToken {
         private final String token;
 
@@ -58,11 +60,9 @@ public class AuthHandlingFilter implements HandlerInterceptor {
         }
     }
 
-    private static final ThreadLocal<OAuthCredentials> THREAD_OAUTH_CREDENTIALS  = new ThreadLocal<OAuthCredentials>();
-
     @Override
     public boolean preHandle(HttpServletRequest request,
-            HttpServletResponse response, Object contentHandler) throws Exception {
+            HttpServletResponse response, Object contentHandler) {
         String accessToken = request.getHeader("X-Forwarded-Access-Token");
         String user = request.getHeader("X-Forwarded-User");
         if (KLog.getLogger().isTraceEnabled()) {

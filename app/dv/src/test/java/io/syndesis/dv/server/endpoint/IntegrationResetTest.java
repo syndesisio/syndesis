@@ -46,7 +46,7 @@ public class IntegrationResetTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void testReset() throws Exception {
+    public void testReset() {
         RestDataVirtualization rdv = new RestDataVirtualization();
         String dvName = "testPublish";
         rdv.setName(dvName);
