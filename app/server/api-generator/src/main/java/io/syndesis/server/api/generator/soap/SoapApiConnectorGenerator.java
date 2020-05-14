@@ -137,8 +137,9 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
 
         return definition.map(d -> {
             final Element docElement = d.getDocumentationElement();
+            final QName qName = d.getQName();
             return docElement != null ? docElement.getTextContent() :
-                    defaultDescription + " for service " + d.getQName();
+                (qName != null ? defaultDescription + " for service " + qName.getLocalPart() : null);
         }).orElse(defaultDescription);
     }
 
@@ -147,7 +148,7 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
                                                    ConnectorSettings connectorSettings) {
         final String defaultName = super.determineConnectorName(connectorTemplate, connectorSettings);
         return getModelInfo(connectorSettings).getModel()
-                .map(d -> d.getQName().getLocalPart())
+                .map(d -> d.getQName() != null ? d.getQName().getLocalPart() : null)
                 .orElse(defaultName);
     }
 
