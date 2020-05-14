@@ -19,7 +19,7 @@ you are creating to send messages to or retrieve messages from.
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
-. In the upper right, click *Create Connection* to display
+. Click *Create Connection* to display
 {prodname} connectors.
 . Click the *Amazon SQS* connector.
 . In the *Access Key* field, enter an Amazon access key ID that is 

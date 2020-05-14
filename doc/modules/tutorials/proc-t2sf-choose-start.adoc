@@ -14,7 +14,7 @@ the first task is to choose the start connection.
 .Procedure
 
 . On the left, click *Integrations*.
-. In the upper right, click *Create Integration*.
+. Click *Create Integration*.
 . On the *Choose a connection* page, click the Twitter connection
 that you created. If you gave it the example name, you would
 click *Twitter Connect 1*.

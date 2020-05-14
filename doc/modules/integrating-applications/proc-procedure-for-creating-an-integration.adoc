@@ -22,7 +22,7 @@ want to connect to in this integration.
 
 . In the left panel in {prodname}, click *Integrations*.
 
-. In the upper right, click *Create Integration*.
+. Click *Create Integration*.
 
 . Choose and configure the start connection:
 
