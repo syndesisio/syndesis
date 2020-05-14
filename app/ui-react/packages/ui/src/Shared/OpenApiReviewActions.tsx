@@ -35,9 +35,9 @@ export interface IApiProviderReviewActionsProps {
   i18nNameLabel: string;
   i18nOperationsHtmlMessage: string;
   i18nOperationTagHtmlMessages?: string[];
-  i18nPort: string;
-  i18nService: string;
-  i18nServicePortTitle: string;
+  i18nPort?: string;
+  i18nService?: string;
+  i18nServicePortTitle?: string;
   i18nValidationFallbackMessage?: string;
   i18nWarningsHeading?: string;
   portName?: string;
@@ -216,8 +216,8 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
           <ApiConnectorCreateService
             handleChangeSelectedPort={handleChangeSelectedPort}
             handleChangeSelectedService={handleChangeSelectedService}
-            i18nPort={i18nPort}
-            i18nService={i18nService}
+            i18nPort={i18nPort!}
+            i18nService={i18nService!}
             i18nServicePortTitle={i18nServicePortTitle}
             portName={port!}
             portsAvailable={portsAvailable}
