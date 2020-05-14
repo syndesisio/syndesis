@@ -50,12 +50,13 @@ export const DetailsPage: React.FunctionComponent = () => {
       {({ allowNavigation }) => {
         const onSubmit = async (values: IConnectorValues, actions: any) => {
           actions.setSubmitting(true);
+
           try {
             await createApiConnector({
               ...values,
               authenticationType: state.authenticationType,
               authorizationEndpoint: state.authorizationEndpoint,
-              connectorTemplateId: state.specification.connectorTemplateId,
+              connectorTemplateId: state.connectorTemplateId,
               portName: state.specification.configuredProperties!.portName,
               serviceName: state.specification.configuredProperties!
                 .serviceName,

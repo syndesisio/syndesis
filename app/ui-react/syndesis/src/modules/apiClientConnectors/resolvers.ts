@@ -62,8 +62,9 @@ export default {
       ISecurityPageRouteState,
       null,
       ISecurityPageRouteState
-    >(routes.create.security, ({ specification }) => ({
+    >(routes.create.security, ({ connectorTemplateId, specification }) => ({
       state: {
+        connectorTemplateId,
         specification,
       },
     })),

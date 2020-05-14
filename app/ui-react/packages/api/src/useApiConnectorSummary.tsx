@@ -1,4 +1,4 @@
-import { APISummary } from '@syndesis/models';
+import { IApiSummarySoap } from '@syndesis/models';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
@@ -12,9 +12,9 @@ export function useApiConnectorSummary(
   const apiContext = React.useContext(ApiContext);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<false | Error>(false);
-  const [apiSummary, setApiSummary] = React.useState<APISummary | undefined>(
-    undefined
-  );
+  const [apiSummary, setApiSummary] = React.useState<
+    IApiSummarySoap | undefined
+  >(undefined);
 
   React.useEffect(() => {
     if (!specification) {
@@ -57,7 +57,7 @@ export function useApiConnectorSummary(
           }
           throw new Error(errorMessage);
         }
-        setApiSummary(summary as APISummary);
+        setApiSummary(summary as IApiSummarySoap);
       } catch (e) {
         setError(e as Error);
       } finally {
