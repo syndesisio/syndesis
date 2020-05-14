@@ -15,12 +15,6 @@ export function useApiConnectorSummary(
   );
 
   React.useEffect(() => {
-    // tslint:disable:no-console
-    console.log(
-      'connectorTemplateId from useApiConnectorSummary: ' +
-        JSON.stringify(connectorTemplateId)
-    );
-
     const fetchSummary = async () => {
       setLoading(true);
       try {
@@ -29,7 +23,9 @@ export function useApiConnectorSummary(
             configuredProperties: {
               specification,
             },
-            connectorTemplateId: 'soap-connector-template',
+            connectorTemplateId: connectorTemplateId
+              ? connectorTemplateId
+              : 'swagger-connector-template',
           },
           headers: apiContext.headers,
           includeAccept: true,

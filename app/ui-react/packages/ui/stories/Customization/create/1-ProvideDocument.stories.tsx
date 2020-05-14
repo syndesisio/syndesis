@@ -14,47 +14,49 @@ const stories = storiesOf(
   module
 );
 
-stories.add('Provide Document', () => (
-  <ApiConnectorCreatorLayout
-    content={
-      <OpenApiSelectMethod
-        disableDropzone={boolean('disableDropzone', false)}
-        fileExtensions={'.json,.yaml,.yml,.wsdl'}
-        i18nBtnNext={'Next'}
-        i18nHelpMessage={'Accepted file type: .json, .yaml, .yml, and .wsdl'}
-        i18nInstructions={
-          'Drag and drop a file here, or <strong>click</strong> to select a file by using a file chooser dialog.'
-        }
-        i18nNoFileSelectedMessage={'No file selected'}
-        i18nSelectedFileLabel={'Selected file:'}
-        i18nUploadFailedMessage={' could not be uploaded'}
-        i18nUploadSuccessMessage={'Process file '}
-        i18nMethodFromFile={'Upload document'}
-        i18nMethodFromUrl={'Use a URL'}
-        i18nUrlNote={
-          '* Note: After uploading this document, updates to it are not automatically obtained.'
-        }
-        onNext={action('Next')}
-        allowFromScratch={boolean('allowFromScratch', false)}
-      />
-    }
-    navigation={
-      <ApiConnectorCreatorBreadSteps
-        step={1}
-        i18nDetails={'Review/Edit Connector Details'}
-        i18nReview={'Imported Operations'}
-        i18nSecurity={'Specify Security'}
-        i18nSelectMethod={'Provide Document'}
-      />
-    }
-    toggle={
-      <ApiConnectorCreatorToggleList
-        step={1}
-        i18nDetails={'Review/Edit Connector Details'}
-        i18nReview={'Imported Operations'}
-        i18nSecurity={'Specify Security'}
-        i18nSelectMethod={'Provide Document'}
-      />
-    }
-  />
-));
+stories.add('Provide Document', () => {
+  return (
+    <ApiConnectorCreatorLayout
+      content={
+        <OpenApiSelectMethod
+          disableDropzone={boolean('disableDropzone', false)}
+          fileExtensions={'.json,.yaml,.yml,.wsdl'}
+          i18nBtnNext={'Next'}
+          i18nHelpMessage={'Accepted file type: .json, .yaml, .yml, and .wsdl'}
+          i18nInstructions={
+            'Drag and drop a file here, or <strong>click</strong> to select a file by using a file chooser dialog.'
+          }
+          i18nNoFileSelectedMessage={'No file selected'}
+          i18nSelectedFileLabel={'Selected file:'}
+          i18nUploadFailedMessage={' could not be uploaded'}
+          i18nUploadSuccessMessage={'Process file '}
+          i18nMethodFromFile={'Upload document'}
+          i18nMethodFromUrl={'Use a URL'}
+          i18nUrlNote={
+            '* Note: After uploading this document, updates to it are not automatically obtained.'
+          }
+          onNext={action('Next')}
+          allowFromScratch={boolean('allowFromScratch', false)}
+        />
+      }
+      navigation={
+        <ApiConnectorCreatorBreadSteps
+          step={1}
+          i18nDetails={'Review/Edit Connector Details'}
+          i18nReview={'Imported Operations'}
+          i18nSecurity={'Specify Security'}
+          i18nSelectMethod={'Provide Document'}
+        />
+      }
+      toggle={
+        <ApiConnectorCreatorToggleList
+          step={1}
+          i18nDetails={'Review/Edit Connector Details'}
+          i18nReview={'Imported Operations'}
+          i18nSecurity={'Specify Security'}
+          i18nSelectMethod={'Provide Document'}
+        />
+      }
+    />
+  );
+});

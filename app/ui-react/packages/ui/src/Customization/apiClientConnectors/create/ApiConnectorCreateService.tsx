@@ -1,14 +1,15 @@
 import {
   Form,
   FormGroup,
-  Radio,
+  FormSelect,
+  FormSelectOption,
   Stack,
   StackItem,
   TextInput,
   Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
-import { toValidHtmlId } from '../../../helpers';
+// import { toValidHtmlId } from '../../../helpers';
 
 export interface IServiceAndPortTypes {
   value?: string;
@@ -25,9 +26,9 @@ export interface IApiConnectorCreateServiceProps {
   /**
    * The list of available services for this document.
    */
-  portsAvailable?: any[];
+  portsAvailable: any[];
   serviceName?: string;
-  servicesAvailable?: any[];
+  servicesAvailable: any[];
 }
 
 /**
@@ -47,6 +48,14 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
   serviceName,
   servicesAvailable,
 }) => {
+  // tslint:disable:no-console
+  console.log('CreateSvc portName: ' + JSON.stringify(portName));
+  console.log('CreateSvc portsAvailable: ' + JSON.stringify(portsAvailable));
+  console.log('CreateSvc serviceName: ' + JSON.stringify(serviceName));
+  console.log(
+    'CreateSvc servicesAvailable: ' + JSON.stringify(servicesAvailable)
+  );
+
   return (
     <Stack style={{ maxWidth: '600px' }} gutter="md">
       <StackItem>
@@ -54,27 +63,18 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
       </StackItem>
       <StackItem>
         <Form data-testid={`api-client-connector-service-ports`}>
-          <FormGroup fieldId={'serviceName'}>
-            {servicesAvailable &&
-              servicesAvailable!.map((service: IServiceAndPortTypes, idx) => (
-                <Radio
-                  key={service.value + '-' + idx}
-                  id={'serviceName'}
-                  data-testid={`api-client-connector-service-${toValidHtmlId(
-                    service!.value
-                  )}`}
-                  aria-label={service.label}
-                  label={service.label}
-                  isChecked={serviceName === service.value}
-                  name={'service'}
-                  onChange={() => handleChangeSelectedService(service.value!)}
-                  value={service.value}
-                  readOnly={true}
-                />
-              ))}
-          </FormGroup>
           <>
-            <FormGroup fieldId={'port'} label={i18nPort}>
+            <FormGroup fieldId={'service'} label={i18nService}>
+              <FormSelect
+                value={serviceName}
+                data-testid={'api-connector-create-service-input'}
+                id={'api-connector-create-service-input'}
+                onChange={handleChangeSelectedService}
+              >
+                {servicesAvailable.map((service, idx) => (
+                  <FormSelectOption key={idx} value={service} label={service} />
+                ))}
+              </FormSelect>
               <TextInput
                 id={'portName'}
                 type={'text'}

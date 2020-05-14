@@ -42,7 +42,7 @@ export interface IApiProviderReviewActionsProps {
   i18nValidationFallbackMessage?: string;
   i18nWarningsHeading?: string;
   portName?: string;
-  portsAvailable?: string;
+  portsAvailable?: any;
   serviceName?: string;
   servicesAvailable?: any;
   warningMessages?: string[];
@@ -67,7 +67,6 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
   i18nServicePortTitle,
   i18nValidationFallbackMessage,
   i18nWarningsHeading,
-  fileName,
   portsAvailable,
   portName,
   serviceName,
@@ -80,16 +79,18 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
   // let fileExtension: string;
 
   const handleChangeSelectedPort = (params: string) => {
+    console.log('changed port: ' + JSON.stringify(params));
     // fileExtension = '';
     // setPort('');
   };
 
   const handleChangeSelectedService = (params: string) => {
+    console.log('changed service: ' + JSON.stringify(params));
     // fileExtension = '';
     // setService('');
   };
 
-  console.log('apiProvider: ' + JSON.stringify(apiProvider));
+  // console.log('apiProvider: ' + JSON.stringify(apiProvider));
   // console.log('fileName: ' + JSON.stringify(fileName));
 
   return (
@@ -219,15 +220,21 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
       </StackItem>
 
       {/* Where users can specify a SOAP service and port if connector is WSDL file */}
-      <StackItem>
-        <ApiConnectorCreateService
-          handleChangeSelectedPort={handleChangeSelectedPort}
-          handleChangeSelectedService={handleChangeSelectedService}
-          i18nPort={i18nPort}
-          i18nService={i18nService}
-          i18nServicePortTitle={i18nServicePortTitle}
-        />
-      </StackItem>
+      {servicesAvailable && (
+        <StackItem>
+          <ApiConnectorCreateService
+            handleChangeSelectedPort={handleChangeSelectedPort}
+            handleChangeSelectedService={handleChangeSelectedService}
+            i18nPort={i18nPort}
+            i18nService={i18nService}
+            i18nServicePortTitle={i18nServicePortTitle}
+            portName={portName}
+            portsAvailable={portsAvailable}
+            serviceName={serviceName}
+            servicesAvailable={servicesAvailable}
+          />
+        </StackItem>
+      )}
     </Stack>
   );
 };

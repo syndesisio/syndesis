@@ -14,17 +14,17 @@ import resolvers from '../../resolvers';
 
 export const SelectMethodPage: React.FunctionComponent = () => {
   const { history } = useRouteData();
+
   const onNext = (
     method: Method,
     specification: string,
     connectorTemplateId?: string
   ) => {
-    // tslint:disable:no-console
-    console.log('connectorTemplateId: ' + JSON.stringify(connectorTemplateId));
     history.push(
       resolvers.create.review({ specification, connectorTemplateId })
     );
   };
+
   return (
     <Translation ns={['apiClientConnectors', 'shared']}>
       {t => (
