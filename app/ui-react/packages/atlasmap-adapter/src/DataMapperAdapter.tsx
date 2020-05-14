@@ -83,9 +83,11 @@ export const DataMapperAdapter: React.FunctionComponent<IDataMapperAdapterProps>
       onMappingChange={onMappings}
     >
       <Atlasmap
-        showImportAtlasFileToolbarItem={false}
-        showExportAtlasFileToolbarItem={false}
-        showResetToolbarItem={false}
+        allowImport={false}
+        allowExport={false}
+        allowReset={false}
+        allowDelete={false}
+        allowCustomJavaClasses={false}
       />
     </AtlasmapProvider>
   );
