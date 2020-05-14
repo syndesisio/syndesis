@@ -24,7 +24,6 @@ import './OpenApiReviewActions.css';
 export interface IApiProviderReviewActionsProps {
   actions?: React.ReactNode;
   alert?: React.ReactNode;
-  apiProvider?: any;
   apiProviderDescription?: string;
   apiProviderName?: string;
   errorMessages?: string[];
@@ -36,9 +35,9 @@ export interface IApiProviderReviewActionsProps {
   i18nNameLabel: string;
   i18nOperationsHtmlMessage: string;
   i18nOperationTagHtmlMessages?: string[];
-  i18nPort?: string;
-  i18nService?: string;
-  i18nServicePortTitle?: string;
+  i18nPort: string;
+  i18nService: string;
+  i18nServicePortTitle: string;
   i18nValidationFallbackMessage?: string;
   i18nWarningsHeading?: string;
   portName?: string;
@@ -51,7 +50,6 @@ export interface IApiProviderReviewActionsProps {
 export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewActionsProps> = ({
   actions,
   alert,
-  apiProvider,
   apiProviderDescription,
   apiProviderName,
   errorMessages,
@@ -73,25 +71,18 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
   servicesAvailable,
   warningMessages,
 }) => {
-  // const [port, setPort] = React.useState('');
-  // const [service, setService] = React.useState('');
-
-  // let fileExtension: string;
+  const [port, setPort] = React.useState(portName);
+  const [service, setService] = React.useState(serviceName);
 
   const handleChangeSelectedPort = (params: string) => {
     console.log('changed port: ' + JSON.stringify(params));
-    // fileExtension = '';
-    // setPort('');
+    setPort(params);
   };
 
   const handleChangeSelectedService = (params: string) => {
     console.log('changed service: ' + JSON.stringify(params));
-    // fileExtension = '';
-    // setService('');
+    setService(params);
   };
-
-  // console.log('apiProvider: ' + JSON.stringify(apiProvider));
-  // console.log('fileName: ' + JSON.stringify(fileName));
 
   return (
     <Stack className={'open-api-review-actions'}>
@@ -228,9 +219,9 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
             i18nPort={i18nPort}
             i18nService={i18nService}
             i18nServicePortTitle={i18nServicePortTitle}
-            portName={portName}
+            portName={port!}
             portsAvailable={portsAvailable}
-            serviceName={serviceName}
+            serviceName={service!}
             servicesAvailable={servicesAvailable}
           />
         </StackItem>

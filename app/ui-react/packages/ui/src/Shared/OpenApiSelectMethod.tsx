@@ -114,8 +114,9 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
    */
   const onAddUrlSpecification = (e: React.FormEvent<HTMLInputElement>) => {
     const newUrl = e.currentTarget.value;
+    const fileExt = checkDocStyle(newUrl);
 
-    if (checkDocStyle(newUrl) === 'wsdl') {
+    if (fileExt === 'wsdl' || fileExt.includes('?WSDL')) {
       setConnectorTemplateId('soap-connector-template');
     }
 
@@ -145,7 +146,9 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
    * Callback for when one or more file uploads have been accepted.
    */
   const onUploadAccepted = (files: File[]): void => {
-    if (checkDocStyle(files[0].name) === 'wsdl') {
+    const fileExt = checkDocStyle(files[0].name);
+
+    if (fileExt === 'wsdl' || fileExt.includes('?WSDL')) {
       setConnectorTemplateId('soap-connector-template');
     }
     const reader = new FileReader();
