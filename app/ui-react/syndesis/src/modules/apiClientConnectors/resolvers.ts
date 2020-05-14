@@ -38,11 +38,17 @@ export default {
       IReviewActionsRouteState,
       null,
       IReviewActionsRouteState
-    >(routes.create.review, ({ specification }) => ({
-      state: {
-        specification,
-      },
-    })),
+    >(
+      routes.create.review,
+      ({ specification, connectorTemplateId, serviceName, portName }) => ({
+        state: {
+          connectorTemplateId,
+          portName,
+          serviceName,
+          specification,
+        },
+      })
+    ),
     specification: makeResolver<
       IEditSpecificationRouteState,
       null,

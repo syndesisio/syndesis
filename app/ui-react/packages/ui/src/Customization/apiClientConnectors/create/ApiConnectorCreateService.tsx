@@ -8,6 +8,7 @@ import {
   Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
+import { ButtonLink } from '../../../Layout';
 
 export interface IServiceAndPortTypes {
   value?: string;
@@ -15,7 +16,8 @@ export interface IServiceAndPortTypes {
 }
 
 export interface IApiConnectorCreateServiceProps {
-  handleNext: (params: string) => void;
+  handleNext: (service: string, port: string) => void;
+  i18nBtnNext: string;
   i18nPort: string;
   i18nService: string;
   i18nServicePortTitle?: string;
@@ -36,6 +38,7 @@ export interface IApiConnectorCreateServiceProps {
  */
 export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCreateServiceProps> = ({
   handleNext,
+  i18nBtnNext,
   i18nPort,
   i18nService,
   i18nServicePortTitle,
@@ -51,12 +54,14 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
 
   const handleChangeSelectedPort = (params: string) => {
     setPort(params);
-    handleNext(port);
   };
 
   const handleChangeSelectedService = (params: string) => {
     setService(params);
-    handleNext(service);
+  };
+
+  const handleClickNext = () => {
+    handleNext(service, port);
   };
 
   return (
@@ -103,6 +108,16 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
             </FormGroup>
           </>
         </Form>
+      </StackItem>
+      <StackItem>
+        <ButtonLink
+          id={'button-next'}
+          data-testid={'button-next'}
+          as={'primary'}
+          onClick={handleClickNext}
+        >
+          {i18nBtnNext}
+        </ButtonLink>
       </StackItem>
     </Stack>
   );

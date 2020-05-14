@@ -16,16 +16,20 @@ import resolvers from '../../resolvers';
 
 export const SelectMethodPage: React.FunctionComponent = () => {
   const { history } = useRouteData();
-  // const [apiSummaryRef, setApiSummaryRef] = React.useState();
   const [connectorTemplateId, setConnectorTemplateId] = React.useState();
-  const [spec, setSpec] = React.useState('');
-  // const [currentConnector, setCurrentConnector] = React.useState();
+  const [spec, setSpec] = React.useState();
   const [showSoapConfig, setShowSoapConfig] = React.useState(false);
   const { apiSummary } = useApiConnectorSummary(spec, connectorTemplateId);
 
-  const onServiceConfigured = () => {
-    console.log('service has been configured..');
-    console.log("now we'll need to get an API summary..");
+  const onServiceConfigured = (service: string, port: string) => {
+    history.push(
+      resolvers.create.review({
+        connectorTemplateId,
+        portName: port,
+        serviceName: service,
+        specification: spec,
+      })
+    );
   };
 
   const onNext = (specification: string, connectorTemplate?: string) => {
@@ -97,6 +101,7 @@ export const SelectMethodPage: React.FunctionComponent = () => {
                 {showSoapConfig && apiSummary && (
                   <ApiConnectorCreateService
                     handleNext={onServiceConfigured}
+                    i18nBtnNext={t('shared:Next')}
                     i18nPort={t('apiClientConnectors:create:soap:port')}
                     i18nService={t('apiClientConnectors:create:soap:service')}
                     i18nServicePortTitle={t(
