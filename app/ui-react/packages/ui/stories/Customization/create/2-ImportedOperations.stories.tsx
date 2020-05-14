@@ -1,4 +1,3 @@
-// tslint:disable:object-literal-sort-keys
 import { boolean } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
@@ -23,18 +22,18 @@ const apiSummarySoap = {
     totalActions: 1,
   },
   configuredProperties: {
-    componentName: 'connector-soap',
-    serviceName: '{http://camel.apache.org/cxf/wsrm}HelloWorldService',
-    portName: 'HelloWorldPort',
     address: 'http://localhost:9191/HelloWorld',
-    services:
-      '["{http://camel.apache.org/cxf/wsrm}HelloWorldService",' +
-      ' "{http://camel.apache.org/cxf/wsrm}GoodbyeService"]',
+    componentName: 'connector-soap',
+    portName: 'HelloWorldPort',
     ports:
       '{' +
       '"{http://camel.apache.org/cxf/wsrm}HelloWorldService": ["HelloWorldPort1", "HelloWorldPort2"],' +
       '"{http://camel.apache.org/cxf/wsrm}GoodbyeService": ["GoodbyeWorldPort1", "GoodbyeWorldPort2"]' +
       '}',
+    serviceName: '{http://camel.apache.org/cxf/wsrm}HelloWorldService',
+    services:
+      '["{http://camel.apache.org/cxf/wsrm}HelloWorldService",' +
+      ' "{http://camel.apache.org/cxf/wsrm}GoodbyeService"]',
   },
   description:
     'Web Services Connector for service {http://camel.apache.org/cxf/wsrm}HelloWorldImplService',
