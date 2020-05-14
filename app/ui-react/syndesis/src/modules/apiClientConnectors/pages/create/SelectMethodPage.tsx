@@ -25,8 +25,8 @@ export const SelectMethodPage: React.FunctionComponent = () => {
   );
 
   const onServiceConfigured = () => {
-    // console.log('service has been configured..');
-    // console.log("now we'll need to get an API summary..");
+    console.log('service has been configured..');
+    console.log("now we'll need to get an API summary..");
   };
 
   const onNext = (specification: string, connectorTemplateId?: string) => {

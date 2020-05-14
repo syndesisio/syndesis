@@ -39,8 +39,53 @@ const soapUpload = {
 };
 
 stories.add('Provide Document', () => {
-  let showSoapConfig = false;
+  return (
+    <ApiConnectorCreatorLayout
+      content={
+        <OpenApiSelectMethod
+          disableDropzone={boolean('disableDropzone', false)}
+          fileExtensions={'.json,.yaml,.yml,.wsdl'}
+          i18nBtnNext={'Next'}
+          i18nHelpMessage={'Accepted file type: .json, .yaml, .yml, and .wsdl'}
+          i18nInstructions={
+            'Drag and drop a file here, or <strong>click</strong> to select a file by using a file chooser dialog.'
+          }
+          i18nNoFileSelectedMessage={'No file selected'}
+          i18nSelectedFileLabel={'Selected file:'}
+          i18nUploadFailedMessage={' could not be uploaded'}
+          i18nUploadSuccessMessage={'Process file '}
+          i18nMethodFromFile={'Upload document'}
+          i18nMethodFromUrl={'Use a URL'}
+          i18nUrlNote={
+            '* Note: After uploading this document, updates to it are not automatically obtained.'
+          }
+          onNext={action('onNext')}
+          allowFromScratch={boolean('allowFromScratch', false)}
+        />
+      }
+      navigation={
+        <ApiConnectorCreatorBreadSteps
+          step={1}
+          i18nDetails={'Review/Edit Connector Details'}
+          i18nReview={'Imported Operations'}
+          i18nSecurity={'Specify Security'}
+          i18nSelectMethod={'Provide Document'}
+        />
+      }
+      toggle={
+        <ApiConnectorCreatorToggleList
+          step={1}
+          i18nDetails={'Review/Edit Connector Details'}
+          i18nReview={'Imported Operations'}
+          i18nSecurity={'Specify Security'}
+          i18nSelectMethod={'Provide Document'}
+        />
+      }
+    />
+  );
+});
 
+stories.add('Provide SOAP Document', () => {
   return (
     <>
       <ApiConnectorCreatorLayout
@@ -64,7 +109,7 @@ stories.add('Provide Document', () => {
             i18nUrlNote={
               '* Note: After uploading this document, updates to it are not automatically obtained.'
             }
-            onNext={() => (showSoapConfig = true)}
+            onNext={action('onNext')}
             allowFromScratch={boolean('allowFromScratch', false)}
           />
         }
@@ -88,20 +133,18 @@ stories.add('Provide Document', () => {
         }
       />
       {/* Where users can specify a SOAP service and port if connector is WSDL file */}
-      {showSoapConfig && (
-        <ApiConnectorCreateService
-          handleNext={action('onServiceConfigured')}
-          i18nPort={'Port'}
-          i18nService={'Service'}
-          i18nServicePortTitle={'Specify service and port'}
-          portName={soapUpload!.configuredProperties!.portName}
-          portsAvailable={JSON.parse(soapUpload!.configuredProperties!.ports)}
-          serviceName={soapUpload!.configuredProperties!.serviceName}
-          servicesAvailable={JSON.parse(
-            soapUpload!.configuredProperties!.services
-          )}
-        />
-      )}
+      <ApiConnectorCreateService
+        handleNext={action('onServiceConfigured')}
+        i18nPort={'Port'}
+        i18nService={'Service'}
+        i18nServicePortTitle={'Specify service and port'}
+        portName={soapUpload!.configuredProperties!.portName}
+        portsAvailable={JSON.parse(soapUpload!.configuredProperties!.ports)}
+        serviceName={soapUpload!.configuredProperties!.serviceName}
+        servicesAvailable={JSON.parse(
+          soapUpload!.configuredProperties!.services
+        )}
+      />
     </>
   );
 });
