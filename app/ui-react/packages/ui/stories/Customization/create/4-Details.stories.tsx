@@ -15,48 +15,50 @@ const stories = storiesOf(
   module
 );
 
-stories.add('Review/Edit Connector Details', () => (
-  <ApiConnectorCreatorLayout
-    content={
-      <div style={{ maxWidth: '600px' }}>
-        <ApiConnectorDetailsForm
-          apiConnectorIcon={'icon'}
-          apiConnectorName={'connectorName'}
-          i18nIconLabel={'ConnectorIcon'}
-          handleSubmit={action('handleSubmit')}
-          onUploadImage={action('onUploadImage')}
-          isEditing={boolean('isEditing', true)}
-          fields={<></>}
+stories.add('Review/Edit Connector Details', () => {
+  return (
+    <ApiConnectorCreatorLayout
+      content={
+        <div style={{ maxWidth: '600px' }}>
+          <ApiConnectorDetailsForm
+            apiConnectorIcon={'icon'}
+            apiConnectorName={'connectorName'}
+            i18nIconLabel={'ConnectorIcon'}
+            handleSubmit={action('handleSubmit')}
+            onUploadImage={action('onUploadImage')}
+            isEditing={boolean('isEditing', true)}
+            fields={<></>}
+          />
+        </div>
+      }
+      footer={
+        <ApiConnectorCreatorFooter
+          backHref={''}
+          onNext={action('submitForm')}
+          i18nBack={'Back'}
+          i18nNext={'shared:Save'}
+          isNextLoading={boolean('isSubmitting', false)}
+          isNextDisabled={boolean('isNextDisabled', false)}
         />
-      </div>
-    }
-    footer={
-      <ApiConnectorCreatorFooter
-        backHref={''}
-        onNext={action('submitForm')}
-        i18nBack={'Back'}
-        i18nNext={'shared:Save'}
-        isNextLoading={boolean('isSubmitting', false)}
-        isNextDisabled={boolean('isNextDisabled', false)}
-      />
-    }
-    navigation={
-      <ApiConnectorCreatorBreadSteps
-        step={4}
-        i18nDetails={'Review/Edit Connector Details'}
-        i18nReview={'Imported Operations'}
-        i18nSecurity={'Specify Security'}
-        i18nSelectMethod={'Provide Document'}
-      />
-    }
-    toggle={
-      <ApiConnectorCreatorToggleList
-        step={1}
-        i18nDetails={'Review/Edit Connector Details'}
-        i18nReview={'Imported Operations'}
-        i18nSecurity={'Specify Security'}
-        i18nSelectMethod={'Provide Document'}
-      />
-    }
-  />
-));
+      }
+      navigation={
+        <ApiConnectorCreatorBreadSteps
+          step={4}
+          i18nDetails={'Review/Edit Connector Details'}
+          i18nReview={'Imported Operations'}
+          i18nSecurity={'Specify Security'}
+          i18nSelectMethod={'Provide Document'}
+        />
+      }
+      toggle={
+        <ApiConnectorCreatorToggleList
+          step={1}
+          i18nDetails={'Review/Edit Connector Details'}
+          i18nReview={'Imported Operations'}
+          i18nSecurity={'Specify Security'}
+          i18nSelectMethod={'Provide Document'}
+        />
+      }
+    />
+  );
+});

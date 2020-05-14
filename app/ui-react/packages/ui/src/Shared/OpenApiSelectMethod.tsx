@@ -151,7 +151,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
     const reader = new FileReader();
     reader.readAsText(files[0]);
     buildUploadMessage(files[0].name, true);
-    console.log('what about here: ' + connectorTemplateId);
+
     reader.onload = () => {
       setSpecification(reader.result as string);
       setValid(true);
