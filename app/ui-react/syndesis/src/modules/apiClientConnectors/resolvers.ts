@@ -72,6 +72,7 @@ export default {
       ({
         authenticationType,
         authorizationEndpoint,
+        connectorTemplateId,
         portName,
         serviceName,
         specification,
@@ -80,6 +81,7 @@ export default {
         state: {
           authenticationType,
           authorizationEndpoint,
+          connectorTemplateId,
           portName,
           serviceName,
           specification,

@@ -1,6 +1,6 @@
 import { useApiConnectorCreator } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { APISummary } from '@syndesis/models';
+import { IApiSummarySoap } from '@syndesis/models';
 import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
@@ -22,9 +22,10 @@ import routes from '../../routes';
 export interface IDetailsPageRouteState {
   authenticationType?: string;
   authorizationEndpoint?: string;
+  connectorTemplateId?: string;
   portName?: string;
   serviceName?: string;
-  specification: APISummary;
+  specification: IApiSummarySoap;
   tokenEndpoint?: string;
 }
 
@@ -54,6 +55,7 @@ export const DetailsPage: React.FunctionComponent = () => {
               ...values,
               authenticationType: state.authenticationType,
               authorizationEndpoint: state.authorizationEndpoint,
+              connectorTemplateId: state.specification.connectorTemplateId,
               portName: state.specification.configuredProperties!.portName,
               serviceName: state.specification.configuredProperties!
                 .serviceName,
