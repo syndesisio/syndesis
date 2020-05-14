@@ -31,9 +31,14 @@ const apiSummarySoap = {
     serviceName: '{http://camel.apache.org/cxf/wsrm}HelloWorldService',
     portName: 'HelloWorldPort',
     address: 'http://localhost:9191/HelloWorld',
-    services: '["{http://camel.apache.org/cxf/wsrm}HelloWorldService"]',
+    services:
+      '["{http://camel.apache.org/cxf/wsrm}HelloWorldService",' +
+      ' "{http://camel.apache.org/cxf/wsrm}GoodbyeService"]',
     ports:
-      '{"{http://camel.apache.org/cxf/wsrm}HelloWorldService": ["HelloWorldPort"]}',
+      '{' +
+      '"{http://camel.apache.org/cxf/wsrm}HelloWorldService": ["HelloWorldPort1", "HelloWorldPort2"],' +
+      '"{http://camel.apache.org/cxf/wsrm}GoodbyeService": ["GoodbyeWorldPort1", "GoodbyeWorldPort2"]' +
+      '}',
   },
   description:
     'Web Services Connector for service {http://camel.apache.org/cxf/wsrm}HelloWorldImplService',
@@ -300,6 +305,9 @@ stories.add('Specify Service & Port (SOAP)', () => {
           i18nOperationsHtmlMessage={`<strong>${
             apiSummarySoap!.actionsSummary!.totalActions
           }</strong> operations`}
+          i18nService={'Service'}
+          i18nServicePortTitle={'Specify service and port'}
+          i18nPort={'Port'}
           i18nWarningsHeading={'WARNINGS'}
           portName={apiSummarySoap.configuredProperties.portName}
           portsAvailable={JSON.parse(apiSummarySoap.configuredProperties.ports)}

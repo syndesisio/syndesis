@@ -90,7 +90,6 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         i18nNameLabel={t(
                           'apiClientConnectors:create:review:nameLabel'
                         )}
-                        apiProvider={apiSummary}
                         apiProviderDescription={apiSummary!.description}
                         apiProviderName={apiSummary!.name}
                         i18nOperationsHtmlMessage={`<strong>${

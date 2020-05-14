@@ -5,11 +5,9 @@ import {
   FormSelectOption,
   Stack,
   StackItem,
-  TextInput,
   Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
-// import { toValidHtmlId } from '../../../helpers';
 
 export interface IServiceAndPortTypes {
   value?: string;
@@ -19,16 +17,16 @@ export interface IServiceAndPortTypes {
 export interface IApiConnectorCreateServiceProps {
   handleChangeSelectedPort: (params: string) => void;
   handleChangeSelectedService: (params: string) => void;
-  i18nPort?: string;
-  i18nService?: string;
+  i18nPort: string;
+  i18nService: string;
   i18nServicePortTitle?: string;
-  portName?: string;
+  portName: string;
   /**
    * The list of available services for this document.
    */
   portsAvailable: any[];
-  serviceName?: string;
-  servicesAvailable: any[];
+  serviceName: string;
+  servicesAvailable: string[];
 }
 
 /**
@@ -48,18 +46,12 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
   serviceName,
   servicesAvailable,
 }) => {
-  // tslint:disable:no-console
-  console.log('CreateSvc portName: ' + JSON.stringify(portName));
-  console.log('CreateSvc portsAvailable: ' + JSON.stringify(portsAvailable));
-  console.log('CreateSvc serviceName: ' + JSON.stringify(serviceName));
-  console.log(
-    'CreateSvc servicesAvailable: ' + JSON.stringify(servicesAvailable)
-  );
+  const portsArray = portsAvailable[serviceName];
 
   return (
     <Stack style={{ maxWidth: '600px' }} gutter="md">
       <StackItem>
-        <Title size="2xl">{i18nServicePortTitle}</Title>
+        <Title size="lg">{i18nServicePortTitle}</Title>
       </StackItem>
       <StackItem>
         <Form data-testid={`api-client-connector-service-ports`}>
@@ -75,12 +67,20 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
                   <FormSelectOption key={idx} value={service} label={service} />
                 ))}
               </FormSelect>
-              <TextInput
-                id={'portName'}
-                type={'text'}
+            </FormGroup>
+            <FormGroup fieldId={'port'} label={i18nPort}>
+              <FormSelect
                 value={portName}
-                onChange={value => handleChangeSelectedPort(value)}
-              />
+                data-testid={'api-connector-create-port-input'}
+                id={'api-connector-create-port-input'}
+                onChange={handleChangeSelectedPort}
+              >
+                {portsArray.map(
+                  (port: string, idx: string | number | undefined) => (
+                    <FormSelectOption key={idx} value={port} label={port} />
+                  )
+                )}
+              </FormSelect>
             </FormGroup>
           </>
         </Form>
