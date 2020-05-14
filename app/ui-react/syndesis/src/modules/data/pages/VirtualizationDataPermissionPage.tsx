@@ -32,6 +32,22 @@ import {
   VirtualizationEditorPage,
 } from './VirtualizationEditorPage';
 
+const checkIfAllPageViewSelected = (
+  pageViews: ViewDefinitionDescriptor[],
+  selectedViews: Map<string, string>
+): boolean => {
+  if (pageViews.length !== selectedViews.size) {
+    return false;
+  } else {
+    for(const view of pageViews){
+      if(!Array.from(selectedViews.keys()).includes(view.id)){
+        return false;
+      }
+    }
+    return true;
+  }
+};
+
 export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
   /**
    * Context that broadcasts global notifications.
@@ -106,6 +122,10 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
   const [perPage, setPerPage] = React.useState<number>(20);
   const [page, setPage] = React.useState<number>(1);
 
+  const [allPageViewsSelected, setAllPageViewsSelected] = React.useState<
+    boolean
+  >(false);
+
   let filteredAndSortedPerPage: ViewDefinitionDescriptor[] = [];
 
   /**
@@ -161,6 +181,12 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
       return false;
     }
   };
+
+  React.useEffect(() => {
+    checkIfAllPageViewSelected(filteredAndSortedPerPage, itemSelected)
+      ? setAllPageViewsSelected(true)
+      : setAllPageViewsSelected(false);
+  }, [itemSelected, filteredAndSortedPerPage]);
 
   /**
    * A filter for throwing out views without names.
@@ -278,6 +304,7 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                     updateViewsPermissions={updateViewsPermissions}
                     getDVStatusUpdate={getDVStatusUpdate}
                     getUpdatedRole={getUpdatedRole}
+                    allPageViewsSelected={allPageViewsSelected}
                   >
                     {filteredAndSortedPerPage
                       .filter(

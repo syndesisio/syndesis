@@ -33,6 +33,7 @@ export interface IViewPermissionToolbarProps extends IListViewToolbarProps {
   page: number;
   perPage: number;
   hasViewSelected: boolean;
+  allPageViewsSelected: boolean;
   setPage: (page: number) => void;
   setPerPage: (perPage: number) => void;
   clearViewSelection: () => void;
@@ -51,6 +52,7 @@ export const ViewPermissionToolbar: React.FunctionComponent<IViewPermissionToolb
   page,
   perPage,
   hasViewSelected,
+  allPageViewsSelected,
   setPage,
   setPerPage,
   clearViewSelection,
@@ -133,6 +135,14 @@ export const ViewPermissionToolbar: React.FunctionComponent<IViewPermissionToolb
     </DropdownItem>,
   ];
 
+  const onToolbarCheckSelection = (checked: boolean, event: any) => {
+    if (checked) {
+      selectPageViews()
+    } else {
+      clearViewSelection()
+    }
+  };
+
   const renderInput = () => {
     if (!currentFilterType) {
       return null;
@@ -201,6 +211,9 @@ export const ViewPermissionToolbar: React.FunctionComponent<IViewPermissionToolb
                     id="example-checkbox-1"
                     key="split-checkbox"
                     aria-label="Select all"
+                    checked={allPageViewsSelected}
+                    // tslint:disable-next-line: jsx-no-lambda
+                    onChange={(checked: boolean, event: any) => onToolbarCheckSelection(checked,event)}
                   />,
                 ]}
                 onToggle={multiSelectToggle}
