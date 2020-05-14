@@ -3,7 +3,10 @@ import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
 
-export function useApiConnectorSummary(specification: string) {
+export function useApiConnectorSummary(
+  specification: string,
+  connectorTemplateId?: string
+) {
   const apiContext = React.useContext(ApiContext);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<false | Error>(false);
@@ -12,6 +15,12 @@ export function useApiConnectorSummary(specification: string) {
   );
 
   React.useEffect(() => {
+    // tslint:disable:no-console
+    console.log(
+      'connectorTemplateId from useApiConnectorSummary: ' +
+        JSON.stringify(connectorTemplateId)
+    );
+
     const fetchSummary = async () => {
       setLoading(true);
       try {
@@ -20,7 +29,7 @@ export function useApiConnectorSummary(specification: string) {
             configuredProperties: {
               specification,
             },
-            connectorTemplateId: 'swagger-connector-template',
+            connectorTemplateId: 'soap-connector-template',
           },
           headers: apiContext.headers,
           includeAccept: true,

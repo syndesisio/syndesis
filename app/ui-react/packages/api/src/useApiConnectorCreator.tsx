@@ -19,6 +19,8 @@ export function useApiConnectorCreator() {
 
   const createConnector = async (connector: ICreateConnectorProps) => {
     const body = new FormData();
+    // tslint:disable:no-console
+    console.log('create connector..');
     body.append(
       'connectorSettings',
       new Blob(
@@ -50,6 +52,9 @@ export function useApiConnectorCreator() {
       url: `${apiContext.apiUri}/connectors/custom`,
     });
     const integration = await response.json();
+    console.log(
+      'integration from useApiConnectorCreator: ' + JSON.stringify(integration)
+    );
     if (integration.errorCode) {
       throw new Error(integration.userMsg);
     }

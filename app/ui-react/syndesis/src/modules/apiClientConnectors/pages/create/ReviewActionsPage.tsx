@@ -7,7 +7,7 @@ import {
   ApiConnectorCreatorLayout,
   ApiConnectorCreatorToggleList,
   OpenApiReviewActions,
-  PageLoader
+  PageLoader,
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -19,6 +19,7 @@ import resolvers from '../../resolvers';
 import routes from '../../routes';
 
 export interface IReviewActionsRouteState {
+  connectorTemplateId?: string;
   specification: string;
 }
 
@@ -59,13 +60,19 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
             >
               {() => (
                 <>
-                  <PageTitle title={t('apiClientConnectors:create:review:title')} />
+                  <PageTitle
+                    title={t('apiClientConnectors:create:review:title')}
+                  />
                   <ApiConnectorCreatorBreadcrumb
                     cancelHref={resolvers.list()}
                     connectorsHref={resolvers.list()}
                     i18nCancel={t('shared:Cancel')}
-                    i18nConnectors={t('apiClientConnectors:apiConnectorsPageTitle')}
-                    i18nCreateConnection={t('apiClientConnectors:CreateApiConnector')}
+                    i18nConnectors={t(
+                      'apiClientConnectors:apiConnectorsPageTitle'
+                    )}
+                    i18nCreateConnection={t(
+                      'apiClientConnectors:CreateApiConnector'
+                    )}
                   />
                   <ApiConnectorCreatorLayout
                     content={
@@ -82,6 +89,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         i18nNameLabel={t(
                           'apiClientConnectors:create:review:nameLabel'
                         )}
+                        apiProvider={apiSummary}
                         apiProviderDescription={apiSummary!.description}
                         apiProviderName={apiSummary!.name}
                         i18nOperationsHtmlMessage={`<strong>${
@@ -93,8 +101,8 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         warningMessages={
                           apiSummary!.warnings
                             ? apiSummary!.warnings.map(
-                            warning => (warning as any).message
-                            )
+                                warning => (warning as any).message
+                              )
                             : undefined
                         }
                         i18nErrorsHeading={t(
@@ -103,8 +111,8 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         errorMessages={
                           apiSummary!.errors
                             ? apiSummary!.errors.map(
-                            (e: any) => `${e.property}: ${e.message}`
-                            )
+                                (e: any) => `${e.property}: ${e.message}`
+                              )
                             : undefined
                         }
                       />
@@ -123,27 +131,43 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                           specification: apiSummary!,
                         })}
                         reviewEditHref={resolvers.create.specification({
-                          specification: apiSummary!
-                            .configuredProperties!.specification,
+                          specification: apiSummary!.configuredProperties!
+                            .specification,
                         })}
                       />
                     }
                     navigation={
                       <ApiConnectorCreatorBreadSteps
                         step={2}
-                        i18nDetails={t('apiClientConnectors:create:details:title')}
-                        i18nReview={t('apiClientConnectors:create:review:title')}
-                        i18nSecurity={t('apiClientConnectors:create:security:title')}
-                        i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                        i18nDetails={t(
+                          'apiClientConnectors:create:details:title'
+                        )}
+                        i18nReview={t(
+                          'apiClientConnectors:create:review:title'
+                        )}
+                        i18nSecurity={t(
+                          'apiClientConnectors:create:security:title'
+                        )}
+                        i18nSelectMethod={t(
+                          'apiClientConnectors:create:selectMethod:title'
+                        )}
                       />
                     }
                     toggle={
                       <ApiConnectorCreatorToggleList
                         step={1}
-                        i18nDetails={t('apiClientConnectors:create:details:title')}
-                        i18nReview={t('apiClientConnectors:create:review:title')}
-                        i18nSecurity={t('apiClientConnectors:create:security:title')}
-                        i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                        i18nDetails={t(
+                          'apiClientConnectors:create:details:title'
+                        )}
+                        i18nReview={t(
+                          'apiClientConnectors:create:review:title'
+                        )}
+                        i18nSecurity={t(
+                          'apiClientConnectors:create:security:title'
+                        )}
+                        i18nSelectMethod={t(
+                          'apiClientConnectors:create:selectMethod:title'
+                        )}
                       />
                     }
                   />

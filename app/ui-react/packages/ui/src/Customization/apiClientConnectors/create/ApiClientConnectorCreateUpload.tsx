@@ -1,6 +1,4 @@
-import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
 import * as React from 'react';
-import { DndFileChooser } from '../../../Shared';
 
 export interface IApiClientConnectorCreateUploadProps {
   /**
@@ -64,30 +62,6 @@ export class ApiClientConnectorCreateUpload extends React.Component<
   IApiClientConnectorCreateUploadProps
 > {
   public render() {
-    return (
-      /**
-       * TODO: Move drag and drop stuff to its own component,
-       * keep this is as a list of options: Upload or Use a URL
-       */
-      <Card>
-        <CardHeader>
-          <Title size="lg">{this.props.i18nTitle}</Title>
-        </CardHeader>
-        <CardBody>
-          <DndFileChooser
-            disableDropzone={this.props.dndDisabled}
-            fileExtensions={'.json'}
-            i18nHelpMessage={this.props.i18nDndHelpMessage}
-            i18nInstructions={this.props.i18nDndInstructions}
-            i18nNoFileSelectedMessage={this.props.i18nDndNoFileSelectedMessage}
-            i18nSelectedFileLabel={this.props.i18nDndSelectedFileLabel}
-            i18nUploadFailedMessage={this.props.i18nDndUploadFailedMessage}
-            i18nUploadSuccessMessage={this.props.i18nDndUploadSuccessMessage}
-            onUploadAccepted={this.props.onDndUploadAccepted}
-            onUploadRejected={this.props.onDndUploadRejected}
-          />
-        </CardBody>
-      </Card>
-    );
+    return <></>;
   }
 }
