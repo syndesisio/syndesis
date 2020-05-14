@@ -49,16 +49,12 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
 
   const portsArray = portsAvailable[serviceName];
 
-  // tslint:disable:no-console
-
   const handleChangeSelectedPort = (params: string) => {
-    console.log('changed port: ' + JSON.stringify(params));
     setPort(params);
     handleNext(port);
   };
 
   const handleChangeSelectedService = (params: string) => {
-    console.log('changed service: ' + JSON.stringify(params));
     setService(params);
     handleNext(service);
   };
@@ -73,7 +69,7 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
           <>
             <FormGroup fieldId={'service'} label={i18nService}>
               <FormSelect
-                value={serviceName}
+                value={service}
                 data-testid={'api-connector-create-service-input'}
                 id={'api-connector-create-service-input'}
                 onChange={handleChangeSelectedService}
@@ -89,7 +85,7 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
             </FormGroup>
             <FormGroup fieldId={'port'} label={i18nPort}>
               <FormSelect
-                value={portName}
+                value={port}
                 data-testid={'api-connector-create-port-input'}
                 id={'api-connector-create-port-input'}
                 onChange={handleChangeSelectedPort}
