@@ -78,11 +78,23 @@ public class ConnectorsITCase extends BaseITCase {
         assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.FORBIDDEN);
     }
 
+
     @Test
-    public void filterConnectorList() {
+    public void filterByNameConnectorList() {
         @SuppressWarnings({"unchecked", "rawtypes"})
         final Class<ListResult<Connector>> type = (Class) ListResult.class;
-        final ResponseEntity<ListResult<Connector>> response = get("/api/v1/connectors?query=name=Salesforce", type);
+        final ResponseEntity<ListResult<Connector>> response = get("/api/v1/connectors?name=Salesforce", type);
+        assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
+        final ListResult<Connector> result = response.getBody();
+        assertThat(result.getTotalCount()).as("connectors total").isEqualTo(1);
+        assertThat(result.getItems().size()).as("connector list").isEqualTo(1);
+    }
+
+    @Test
+    public void filterByConnectorGroupIdConnectorList() {
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        final Class<ListResult<Connector>> type = (Class) ListResult.class;
+        final ResponseEntity<ListResult<Connector>> response = get("/api/v1/connectors?connectorGroupId=io.syndesis.connector.concur", type);
         assertThat(response.getStatusCode()).as("component list status code").isEqualTo(HttpStatus.OK);
         final ListResult<Connector> result = response.getBody();
         assertThat(result.getTotalCount()).as("connectors total").isEqualTo(1);

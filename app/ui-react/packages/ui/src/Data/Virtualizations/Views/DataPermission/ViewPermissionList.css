@@ -27,6 +27,10 @@
   margin-bottom: 5px;
 }
 
+.view-permission-list_model-warning {
+  margin-bottom: 15px;
+}
+
 .view-permission-list_model-text-truncate {
   overflow: hidden;
   text-overflow: ellipsis;

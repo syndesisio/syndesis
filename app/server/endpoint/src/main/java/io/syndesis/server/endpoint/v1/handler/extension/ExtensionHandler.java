@@ -22,6 +22,7 @@ import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
 import javax.validation.groups.Default;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -33,7 +34,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -43,7 +43,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -69,16 +68,12 @@ import io.syndesis.server.api.generator.util.IconGenerator;
 import io.syndesis.server.dao.file.FileDAO;
 import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.endpoint.util.FilterOptionsParser;
 import io.syndesis.server.endpoint.util.PaginationFilter;
-import io.syndesis.server.endpoint.util.ReflectiveFilterer;
-import io.syndesis.server.endpoint.util.ReflectiveSorter;
 import io.syndesis.server.endpoint.v1.SyndesisRestException;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import io.syndesis.server.endpoint.v1.operations.Deleter;
 import io.syndesis.server.endpoint.v1.operations.Getter;
 import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
-import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.util.PredicateFilter;
 import okio.BufferedSink;
 import okio.Okio;
@@ -241,26 +236,19 @@ public class ExtensionHandler extends BaseHandler implements Getter<Extension>, 
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Parameter(name = "sort", in = ParameterIn.QUERY, schema = @Schema(type = "string"), description = "Sort the result list according to the given field value")
-    @Parameter(name = "direction", in = ParameterIn.QUERY, schema = @Schema(type = "string", allowableValues = {"asc", "desc"}), description = "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)")
-    @Parameter(name = "page", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "1"), description = "Page number to return")
-    @Parameter(name = "per_page", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "20"), description = "Number of records per page")
-    @Parameter(name = "query", in = ParameterIn.QUERY, schema = @Schema(type = "string"), description = "The search query to filter results on")
-    public ListResult<Extension> list(@Context UriInfo uriInfo, @Parameter(required = false) @QueryParam("extensionType") Extension.Type extensionType) {
-        // Defaulting to display only Installed extensions
-        String query = uriInfo.getQueryParameters().getFirst("query");
-        if (query == null) {
-            query = "status=" + Extension.Status.Installed;
-        }
-
+    public ListResult<Extension> list(
+        @Parameter(required = false, description = "Page number to return") @QueryParam("page") @DefaultValue("1") int page,
+        @Parameter(required = false, description = "Number of records per page") @QueryParam("per_page") @DefaultValue("20") int perPage,
+        @Parameter(required = false, description = "Status of extension you want to filter") @QueryParam("status") @DefaultValue("Installed") Extension.Status status,
+        @Parameter(required = false, description = "Type of extension you want to filter") @QueryParam("extensionType") Extension.Type extensionType
+    ) {
         return getDataManager().fetchAll(
             Extension.class,
-            new ReflectiveFilterer<>(Extension.class, FilterOptionsParser.fromString(query)),
+            new PredicateFilter<>(extension -> extension.getStatus().isPresent() && extension.getStatus().get().equals(status)),
             new PredicateFilter<>(
                 extension -> extensionType == null || extension.getExtensionType().equals(extensionType)
             ),
-            new ReflectiveSorter<>(Extension.class, new SortOptionsFromQueryParams(uriInfo)),
-            new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
+            new PaginationFilter<>(new PaginationOptionsFromQueryParams(page, perPage))
         );
     }
 

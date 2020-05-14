@@ -16,17 +16,15 @@
 package io.syndesis.server.endpoint.v1.handler.connection;
 
 import javax.ws.rs.Path;
-import javax.ws.rs.core.UriInfo;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.ConnectorTemplate;
+import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import io.syndesis.server.endpoint.v1.operations.Getter;
 import io.syndesis.server.endpoint.v1.operations.Lister;
-
 import org.springframework.stereotype.Component;
 
 @Path("/connector-templates")
@@ -45,8 +43,8 @@ public final class ConnectorTemplateHandler extends BaseHandler
     }
 
     @Override
-    public ListResult<ConnectorTemplate> list(final UriInfo uriInfo) {
-        return Lister.super.list(uriInfo);
+    public ListResult<ConnectorTemplate> list(int page, int perPage) {
+        return Lister.super.list(page, perPage);
     }
 
     @Override
