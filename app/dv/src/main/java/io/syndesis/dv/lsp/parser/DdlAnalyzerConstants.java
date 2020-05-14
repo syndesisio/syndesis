@@ -18,13 +18,14 @@ package io.syndesis.dv.lsp.parser;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import org.teiid.query.parser.SQLParserConstants;
 
 public final class DdlAnalyzerConstants {
 
-    public enum STATEMENT_TYPE {
+    public enum StatementType {
         UNKNOWN_STATEMENT_TYPE,
         CREATE_TABLE_TYPE,
         CREATE_FOREIGN_TABLE_TYPE,
@@ -34,7 +35,7 @@ public final class DdlAnalyzerConstants {
         CREATE_VIRTUAL_VIEW_TYPE
     }
 
-    public enum CONTEXT {
+    public enum Context {
         NONE_FOUND,
         PREFIX,
         TABLE_BODY,
@@ -161,7 +162,7 @@ public final class DdlAnalyzerConstants {
     public static String getLabel(int keywordId, boolean upperCase) {
          String tokenImageStr = SQLParserConstants.tokenImage[keywordId];
          if( upperCase ) {
-             return tokenImageStr.substring(1, tokenImageStr.length()-1).toUpperCase();
+             return tokenImageStr.substring(1, tokenImageStr.length()-1).toUpperCase(Locale.US);
          }
          return tokenImageStr.substring(1, tokenImageStr.length()-1);
      }

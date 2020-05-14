@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
@@ -34,7 +35,7 @@ import com.google.common.collect.ImmutableMap;
 
 import io.syndesis.dv.lsp.completion.providers.CompletionItemBuilder;
 
-public class DdlCompletionItemLoader extends CompletionItemBuilder {
+public final class DdlCompletionItemLoader extends CompletionItemBuilder {
     private static final DdlCompletionItemLoader INSTANCE = new DdlCompletionItemLoader();
     private static final String FUNCTION_JSON_FILE = "./functionCompletionItems.json";
     private static final String DATATYPES_JSON_FILE = "./datatypesCompletionItems.json";
@@ -56,13 +57,6 @@ public class DdlCompletionItemLoader extends CompletionItemBuilder {
             "INTERFACE", "MODULE", "PROPERTY", "UNIT", "VALUE", "ENUM", "KEYWORD", "SNIPPET", "COLOR", "FILE",
             "REFERENCE", "FOLDER", "ENUMMEMBER", "CONSTANT", "STRUCT", "EVENT", "OPERATOR", "TYPEPARAMETER" };
 
-    public static DdlCompletionItemLoader getInstance() {
-        return INSTANCE;
-    }
-
-    public DdlCompletionItemLoader() {
-    }
-
     private static final ImmutableMap<String, CompletionItemKind> STRING_TO_KIND_MAP = ImmutableMap.<String, CompletionItemKind>builder()
             .put(KINDS[0], CompletionItemKind.Text).put(KINDS[1], CompletionItemKind.Method)
             .put(KINDS[2], CompletionItemKind.Function).put(KINDS[3], CompletionItemKind.Constructor)
@@ -77,6 +71,14 @@ public class DdlCompletionItemLoader extends CompletionItemBuilder {
             .put(KINDS[20], CompletionItemKind.Constant).put(KINDS[21], CompletionItemKind.Operator)
             .put(KINDS[22], CompletionItemKind.Struct).put(KINDS[23], CompletionItemKind.Event)
             .put(KINDS[24], CompletionItemKind.TypeParameter).build();
+
+    private DdlCompletionItemLoader() {
+        // singleton
+    }
+
+    public static DdlCompletionItemLoader getInstance() {
+        return INSTANCE;
+    }
 
     @SuppressWarnings("unchecked")
     private List<CompletionItem> loadItemsFromFile(String fileName) {
@@ -97,7 +99,7 @@ public class DdlCompletionItemLoader extends CompletionItemBuilder {
                     LinkedHashMap<String, Object> itemInfo = (LinkedHashMap<String, Object>) item;
                     CompletionItem newItem = new CompletionItem();
                     newItem.setLabel((String) itemInfo.get("label"));
-                    newItem.setKind(STRING_TO_KIND_MAP.get(((String) itemInfo.get("kind")).toUpperCase()));
+                    newItem.setKind(STRING_TO_KIND_MAP.get(((String) itemInfo.get("kind")).toUpperCase(Locale.US)));
 
                     String detail = (String) itemInfo.get("detail");
                     if (detail != null) {
@@ -154,11 +156,11 @@ public class DdlCompletionItemLoader extends CompletionItemBuilder {
     }
 
     private void addItemByCategory(String category, CompletionItem item) {
-        if (category.equalsIgnoreCase("SEARCHABLE_VALUE")) {
+        if ("SEARCHABLE_VALUE".equalsIgnoreCase(category)) {
             if (searchableValueItems == null) {
                 searchableValueItems = new ArrayList<CompletionItem>();
             }
-            if (item.getLabel().equalsIgnoreCase("SEARCHABLE_VALUE")) {
+            if ("SEARCHABLE_VALUE".equalsIgnoreCase(item.getLabel())) {
                 item.setLabel("SEARCHABLE");
             }
             searchableValueItems.add(item);
@@ -230,8 +232,8 @@ public class DdlCompletionItemLoader extends CompletionItemBuilder {
                 }
                 image = image.substring(1, image.length()-1);
                 //newer teiid versions won't require upper
-                String upper = image.toUpperCase();
-                if (upper.equalsIgnoreCase(DataTypeManager.DefaultDataTypes.OBJECT) ||
+                String upper = image.toUpperCase(Locale.US);
+                if (DataTypeManager.DefaultDataTypes.OBJECT.equalsIgnoreCase(upper) ||
                         DataTypeManager.getDataTypeClass(image) != DataTypeManager.DefaultDataClasses.OBJECT
                         || !(SQLConstants.getReservedWords().contains(upper)
                                 || SQLConstants.getNonReservedWords().contains(upper))) {

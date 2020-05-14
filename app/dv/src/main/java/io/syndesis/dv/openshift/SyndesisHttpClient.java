@@ -52,9 +52,8 @@ public class SyndesisHttpClient implements Closeable{
             SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (certificate, authType) -> true)
                     .build();
 
-            CloseableHttpClient client = HttpClients.custom().setSSLContext(sslContext)
+            return HttpClients.custom().setSSLContext(sslContext)
                     .setSSLHostnameVerifier(new NoopHostnameVerifier()).build();
-            return client;
         } catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
             throw new IOException("Failed to create the Http client to access Syndesis server", e);
         }
@@ -84,8 +83,7 @@ public class SyndesisHttpClient implements Closeable{
                 return entity.getContent();
             }
         };
-        InputStream result = handler.handleResponse(response);
-        return result;
+        return handler.handleResponse(response);
     }
 
     public InputStream executePOST(String url, String payload) throws IOException{
@@ -99,8 +97,7 @@ public class SyndesisHttpClient implements Closeable{
                 return entity.getContent();
             }
         };
-        InputStream result = handler.handleResponse(response);
-        return result;
+        return handler.handleResponse(response);
     }
 
     public InputStream executeDELETE(String url) throws IOException {
@@ -113,8 +110,7 @@ public class SyndesisHttpClient implements Closeable{
                 return entity.getContent();
             }
         };
-        InputStream result = handler.handleResponse(response);
-        return result;
+        return handler.handleResponse(response);
     }
 
     @Override

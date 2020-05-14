@@ -40,13 +40,13 @@ public class RestSchemaNode {
 
     private String type;
 
-    private boolean queryable = false;
+    private boolean queryable;
 
     /**
      * Constructor for use when deserializing
      */
     public RestSchemaNode() {
-        super();
+        // Constructor for use when deserializing
     }
 
     /**

@@ -25,36 +25,10 @@ import org.teiid.metadata.Schema;
 import org.teiid.query.validator.ValidatorReport;
 
 import io.syndesis.dv.KException;
-import io.syndesis.dv.StringConstants;
 import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
 import io.syndesis.dv.metadata.query.QSResult;
 
-public interface MetadataInstance extends StringConstants {
-
-    public static class ValidationResult {
-        private final ValidatorReport report;
-        private final Schema schema;
-        private final MetadataException metadataException;
-
-        public ValidationResult(ValidatorReport report, Schema schema, MetadataException metadataException) {
-            this.report = report;
-            this.schema = schema;
-            this.metadataException = metadataException;
-        }
-
-        public ValidatorReport getReport() {
-            return report;
-        }
-
-        public Schema getSchema() {
-            return schema;
-        }
-
-        public MetadataException getMetadataException() {
-            return metadataException;
-        }
-
-    }
+public interface MetadataInstance {
 
     /**
      * The host of the metadata instance
@@ -97,6 +71,16 @@ public interface MetadataInstance extends StringConstants {
     String DEFAULT_INSTANCE_PROTOCOL = "mms"; //$NON-NLS-1$
 
     /**
+     * Value representing no limit to results returned by a query
+     */
+    int NO_LIMIT = -1;
+
+    /**
+     * Value representing no offset to a set of results returned by a query
+     */
+    int NO_OFFSET = 0;
+
+    /**
      * Type of connectivity
      */
     enum ConnectivityType {
@@ -129,15 +113,30 @@ public interface MetadataInstance extends StringConstants {
         }
     }
 
-    /**
-     * Value representing no limit to results returned by a query
-     */
-    int NO_LIMIT = -1;
+    class ValidationResult {
+        private final ValidatorReport report;
+        private final Schema schema;
+        private final MetadataException metadataException;
 
-    /**
-     * Value representing no offset to a set of results returned by a query
-     */
-    int NO_OFFSET = 0;
+        public ValidationResult(ValidatorReport report, Schema schema, MetadataException metadataException) {
+            this.report = report;
+            this.schema = schema;
+            this.metadataException = metadataException;
+        }
+
+        public ValidatorReport getReport() {
+            return report;
+        }
+
+        public Schema getSchema() {
+            return schema;
+        }
+
+        public MetadataException getMetadataException() {
+            return metadataException;
+        }
+
+    }
 
     /**
      * Query the vdb with given name
@@ -149,20 +148,20 @@ public interface MetadataInstance extends StringConstants {
      * @return the set of results
      * @throws KException
      */
-    QSResult query(String vdbName, String query, int offset, int limit) throws KException;
+    QSResult query(String vdbName, String query, int offset, int limit);
 
     /**
      * @return the collection of deployed vdbs
      * @throws KException
      */
-    Collection<TeiidVdb> getVdbs() throws KException;
+    Collection<TeiidVdb> getVdbs();
 
     /**
      * @param vdbDeploymentName
      * @return the deployed vdb
      * @throws KException
      */
-    TeiidVdb getVdb(String vdbDeploymentName) throws KException;
+    TeiidVdb getVdb(String vdbDeploymentName);
 
     /**
      * @param vdbName
@@ -170,7 +169,7 @@ public interface MetadataInstance extends StringConstants {
      * @return the schema from the given model in the vdb with the given name
      * @throws KException
      */
-    String getSchema(String vdbName, String modelName) throws KException;
+    String getSchema(String vdbName, String modelName);
 
     /**
      * Undeploy the dynamic vdb with the given name
@@ -178,20 +177,20 @@ public interface MetadataInstance extends StringConstants {
      * @param name
      * @throws KException
      */
-    void undeployDynamicVdb(String name) throws KException;
+    void undeployDynamicVdb(String name);
 
     /**
      * @return the collection of data sources
      * @throws KException
      */
-    Collection<? extends TeiidDataSource> getDataSources() throws KException;
+    Collection<? extends TeiidDataSource> getDataSources();
 
     /**
      * @param sourceName
      * @return the data source with the given name
      * @throws KException
      */
-    TeiidDataSource getDataSource(String sourceName) throws KException;
+    TeiidDataSource getDataSource(String sourceName);
 
     /**
      * Removes the data source from the metadata instance (if exists)
@@ -199,18 +198,18 @@ public interface MetadataInstance extends StringConstants {
      * @param dsName the data source name
      * @throws KException if failure in deleting data source on metadata instance
      */
-    void deleteDataSource(String dsName) throws KException;
+    void deleteDataSource(String dsName);
 
     /**
      * @param vdb
      */
-    void deploy(VDBMetaData vdb) throws KException;
+    void deploy(VDBMetaData vdb);
 
     Collection<String> getDataSourceNames() throws AdminException;
 
     void registerDataSource(DefaultSyndesisDataSource dataSource) throws AdminException;
 
-    ValidationResult parse(String ddl) throws KException;
+    ValidationResult parse(String ddl);
 
     void addVDBLifeCycleListener(VDBLifeCycleListener listener);
 }

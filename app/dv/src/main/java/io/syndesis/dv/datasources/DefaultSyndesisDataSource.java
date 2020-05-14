@@ -95,11 +95,7 @@ public class DefaultSyndesisDataSource implements Cloneable {
     }
 
     @Override
-    public DefaultSyndesisDataSource clone() {
-        try {
-            return (DefaultSyndesisDataSource)super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+    public DefaultSyndesisDataSource clone() throws CloneNotSupportedException {
+        return (DefaultSyndesisDataSource)super.clone();
     }
 }

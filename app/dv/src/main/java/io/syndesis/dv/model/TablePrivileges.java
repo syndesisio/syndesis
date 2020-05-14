@@ -78,6 +78,17 @@ class TablePrivilegesId implements Serializable {
 @IdClass(TablePrivilegesId.class)
 public class TablePrivileges {
 
+    @JsonIgnore
+    @Column(name = "view_definition_id")
+    @Id private String viewDefinitionId;
+    //for bulk operations, not part of the db/import/export
+    @Transient
+    private List<String> viewDefinitionIds;
+    @Id private String roleName;
+    @Convert(converter = PrivilegeConvertor.class)
+    private Set<Privilege> grantPrivileges = new TreeSet<>();
+    //Set<Privilege> revokePrivilege = new TreeSet<>();
+
     public enum Privilege {
         S("SELECT"),
         I("INSERT"),
@@ -86,7 +97,7 @@ public class TablePrivileges {
 
         private final String fullName;
 
-        private Privilege(String name) {
+        Privilege(String name) {
             this.fullName = name;
         }
 
@@ -126,18 +137,8 @@ public class TablePrivileges {
         }
     }
 
-    @JsonIgnore
-    @Column(name = "view_definition_id")
-    @Id private String viewDefinitionId;
-    //for bulk operations, not part of the db/import/export
-    @Transient
-    private List<String> viewDefinitionIds;
-    @Id private String roleName;
-    @Convert(converter = PrivilegeConvertor.class)
-    private Set<Privilege> grantPrivileges = new TreeSet<>();
-    //Set<Privilege> revokePrivilege = new TreeSet<>();
-
     public TablePrivileges() {
+        // TODO needed?
     }
 
     public TablePrivileges(String roleName, String viewId, Privilege... privileges) {

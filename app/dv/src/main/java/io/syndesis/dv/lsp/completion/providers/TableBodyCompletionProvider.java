@@ -17,6 +17,7 @@ package io.syndesis.dv.lsp.completion.providers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
@@ -24,6 +25,7 @@ import org.eclipse.lsp4j.InsertTextFormat;
 import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.Context;
 import io.syndesis.dv.lsp.parser.statement.TokenContext;
 
 /**
@@ -38,26 +40,19 @@ public class TableBodyCompletionProvider extends CompletionItemBuilder {
 
         Token targetToken = context.getToken();
 
-        switch (context.getContext()) {
-            case TABLE_OPTIONS: {
-                items = getItemLoader().getTableBodyOptionsCompletionItems();
-            } break;
-
-            default: {
-                switch (targetToken.kind) {
-                    case SQLParserConstants.RPAREN: {
-                        items.add(getAs(1));
-                        items.add(getQueryExpressionSnippet(2));
-                        String details = "OPTIONS properties are comma separated key-value pairs in the form: OPTION(...  KEY 'some value')";
-                        items.add(generateCompletionItem("OPTIONS", null, details, "OPTIONS()"));
-                    } break;
-                    default: {
-                        // 1) COLUMN DEFINITION snippet
-                        items.add(getColumnCompletionItem(0));
-                        // 2) PRIMARY KEY snippet
-                        items.add(getPrimaryKeyCompletionItem(0));
-                    }
-                }
+        if (context.getContext() == Context.TABLE_OPTIONS) {
+            items = getItemLoader().getTableBodyOptionsCompletionItems();
+        } else {
+            if (targetToken.kind == SQLParserConstants.RPAREN) {
+                items.add(getAs(1));
+                items.add(getQueryExpressionSnippet(2));
+                String details = "OPTIONS properties are comma separated key-value pairs in the form: OPTION(...  KEY 'some value')";
+                items.add(generateCompletionItem("OPTIONS", null, details, "OPTIONS()"));
+            } else {
+                // 1) COLUMN DEFINITION snippet
+                items.add(getColumnCompletionItem(0));
+                // 2) PRIMARY KEY snippet
+                items.add(getPrimaryKeyCompletionItem(0));
             }
         }
 
@@ -110,7 +105,7 @@ public class TableBodyCompletionProvider extends CompletionItemBuilder {
     }
 
     public String getLabel(int keywordId) {
-        String tokenImageStr = SQLParserConstants.tokenImage[keywordId].toUpperCase();
+        String tokenImageStr = SQLParserConstants.tokenImage[keywordId].toUpperCase(Locale.US);
         return tokenImageStr.substring(1, tokenImageStr.length() - 1);
     }
 }
