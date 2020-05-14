@@ -260,68 +260,6 @@ func (c *csv) build() (err error) {
 					URL:  "https://github.com/syndesisio/syndesis/tree/master/install/operator",
 				},
 			},
-			RelatedImages: []Image{
-				{
-					Name:   "DV",
-					Images: c.config.Syndesis.Addons.DV.Image,
-				},
-				{
-					Name:   "Oauth",
-					Images: c.config.Syndesis.Components.Oauth.Image,
-				},
-				{
-					Name:   "UI",
-					Images: c.config.Syndesis.Components.UI.Image,
-				},
-				{
-					Name:   "S2I",
-					Images: c.config.Syndesis.Components.S2I.Image,
-				},
-				{
-					Name:   "Prometheus",
-					Images: c.config.Syndesis.Components.Prometheus.Image,
-				},
-				{
-					Name:   "Upgrade",
-					Images: c.config.Syndesis.Components.Upgrade.Image,
-				},
-				{
-					Name:   "Postgres",
-					Images: c.config.Syndesis.Components.Database.Image,
-				},
-				{
-					Name:   "Exporter",
-					Images: c.config.Syndesis.Components.Database.Exporter.Image,
-				},
-				{
-					Name:   "Server",
-					Images: c.config.Syndesis.Components.Server.Image,
-				},
-				{
-					Name:   "CamelK",
-					Images: c.config.Syndesis.Addons.CamelK.Image,
-				},
-				{
-					Name:   "Jaeger Agent",
-					Images: c.config.Syndesis.Addons.Jaeger.ImageAgent,
-				},
-				{
-					Name:   "Jaeger Operator",
-					Images: c.config.Syndesis.Addons.Jaeger.ImageOperator,
-				},
-				{
-					Name:   "Jaeger",
-					Images: c.config.Syndesis.Addons.Jaeger.ImageAllInOne,
-				},
-				{
-					Name:   "Todo",
-					Images: c.config.Syndesis.Addons.Todo.Image,
-				},
-				{
-					Name:   "AMQ",
-					Images: c.config.Syndesis.Components.AMQ.Image,
-				},
-			},
 			InstallModes: []InstallMode{
 				{
 					Type:      "OwnNamespace",
@@ -399,11 +337,37 @@ func (c *csv) loadRoleFromTemplate() (r interface{}, err error) {
 // Load syndesis-operator deployment from template file
 func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 	context := struct {
-		DatabaseImage string
-		OperatorImage string
+		RelatedImages   bool
+		DatabaseImage   string
+		OperatorImage   string
+		DvImage         string
+		AmqImage        string
+		CamelKImage     string
+		TodoImage       string
+		OauthImage      string
+		UiImage         string
+		S2iImage        string
+		PrometheusImage string
+		UpgradeImage    string
+		MetaImage       string
+		ServerImage     string
+		ExporterImage   string
 	}{
-		DatabaseImage: c.config.Syndesis.Components.Database.Image,
-		OperatorImage: "",
+		RelatedImages:   true,
+		OperatorImage:   "",
+		DatabaseImage:   c.config.Syndesis.Components.Database.Image,
+		DvImage:         c.config.Syndesis.Addons.DV.Image,
+		CamelKImage:     c.config.Syndesis.Addons.CamelK.Image,
+		TodoImage:       c.config.Syndesis.Addons.Todo.Image,
+		AmqImage:        c.config.Syndesis.Components.AMQ.Image,
+		OauthImage:      c.config.Syndesis.Components.Oauth.Image,
+		UiImage:         c.config.Syndesis.Components.UI.Image,
+		MetaImage:       c.config.Syndesis.Components.Meta.Image,
+		ServerImage:     c.config.Syndesis.Components.Server.Image,
+		S2iImage:        c.config.Syndesis.Components.S2I.Image,
+		PrometheusImage: c.config.Syndesis.Components.Prometheus.Image,
+		UpgradeImage:    c.config.Syndesis.Components.Upgrade.Image,
+		ExporterImage:   c.config.Syndesis.Components.Database.Exporter.Image,
 	}
 
 	g, err := generator.Render("./install/deployment.yml.tmpl", context)

@@ -42,5 +42,33 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.name
+{{- if .RelatedImages }}
           - name: OPERATOR_NAME
             value: "syndesis-operator"
+          - name: RELATED_IMAGE_DV
+            value: '{{.DvImage}}'
+          - name: RELATED_IMAGE_CAMELK
+            value: '{{.CamelKImage}}'
+          - name: RELATED_IMAGE_TODO
+            value: '{{.TodoImage}}'
+          - name: RELATED_IMAGE_OAUTH
+            value: '{{.OauthImage}}'
+          - name: RELATED_IMAGE_UI
+            value: '{{.UiImage}}'
+          - name: RELATED_IMAGE_S2I
+            value: '{{.S2iImage}}'
+          - name: RELATED_IMAGE_PROMETHEUS
+            value: '{{.PrometheusImage}}'
+          - name: RELATED_IMAGE_UPGRADE
+            value: '{{.UpgradeImage}}'
+          - name: RELATED_IMAGE_META
+            value: '{{.MetaImage}}'
+          - name: RELATED_IMAGE_DATABASE
+            value: '{{.DatabaseImage}}'
+          - name: RELATED_IMAGE_PSQL_EXPORTER
+            value: '{{.ExporterImage}}'
+          - name: RELATED_IMAGE_SERVER
+            value: '{{.ServerImage}}'
+          - name: RELATED_IMAGE_AMQ
+            value: '{{.AmqImage}}'
+{{- end }}
