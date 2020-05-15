@@ -16,6 +16,7 @@
 
 console.log("Migrating to schema 40 ...");
 
+
 migrate("integrations", "/integrations", function(integration) {
     var changed = false;
 
@@ -24,47 +25,24 @@ migrate("integrations", "/integrations", function(integration) {
     };
 
     if (Array.isArray(integration.tags)) {
-        integration.tags = integration.tags.map(change("http4", "http", ch)).map(change("https4", "https", ch));
+        integration.tags = integration.tags.map(change("http4", "http", ch))
+            .map(change("https4", "https", ch));
     }
 
     if (Array.isArray(integration.flows)) {
         var migrateAction = function(action) {
             if (action) {
-                action.id = change(
-                    "io.syndesis.connector:connector-http:ttps4-periodic-invoke-url",
-                    "io.syndesis.connector:connector-http:https-periodic-invoke-url",
-                    ch
-                )(action.id);
-                action.id = change(
-                    "io.syndesis.connector:connector-http:https4-invoke-url",
-                    "io.syndesis.connector:connector-http:https-invoke-url",
-                    ch
-                )(action.id);
-                action.id = change(
-                    "io.syndesis.connector:connector-http:http4-periodic-invoke-url",
-                    "io.syndesis.connector:connector-http:http-periodic-invoke-url",
-                    ch
-                )(action.id);
-                action.id = change(
-                    "io.syndesis.connector:connector-http:http4-invoke-url",
-                    "io.syndesis.connector:connector-http:http-invoke-url",
-                    ch
-                )(action.id);
+                action.id = change("io.syndesis.connector:connector-http:ttps4-periodic-invoke-url", "io.syndesis.connector:connector-http:https-periodic-invoke-url", ch)(action.id);
+                action.id = change("io.syndesis.connector:connector-http:https4-invoke-url", "io.syndesis.connector:connector-http:https-invoke-url", ch)(action.id);
+                action.id = change("io.syndesis.connector:connector-http:http4-periodic-invoke-url", "io.syndesis.connector:connector-http:http-periodic-invoke-url", ch)(action.id);
+                action.id = change("io.syndesis.connector:connector-http:http4-invoke-url", "io.syndesis.connector:connector-http:http-invoke-url", ch)(action.id);
 
                 if (action.descriptor && action.descriptor.connectorFactory) {
-                    action.descriptor.connectorFactory = change(
-                        "io.syndesis.connector.http.HttpConnectorFactories$Http4",
-                        "io.syndesis.connector.http.HttpConnectorFactories$Http",
-                        ch
-                    )(action.descriptor.connectorFactory);
-                    action.descriptor.connectorFactory = change(
-                        "io.syndesis.connector.http.HttpConnectorFactories$Https4",
-                        "io.syndesis.connector.http.HttpConnectorFactories$Https",
-                        ch
-                    )(action.descriptor.connectorFactory);
+                    action.descriptor.connectorFactory = change("io.syndesis.connector.http.HttpConnectorFactories$Http4", "io.syndesis.connector.http.HttpConnectorFactories$Http", ch)(action.descriptor.connectorFactory);
+                    action.descriptor.connectorFactory = change("io.syndesis.connector.http.HttpConnectorFactories$Https4", "io.syndesis.connector.http.HttpConnectorFactories$Https", ch)(action.descriptor.connectorFactory);
                 }
             }
-        };
+        }
 
         integration.flows.forEach(function(flow) {
             if (Array.isArray(flow.steps)) {
@@ -75,11 +53,7 @@ migrate("integrations", "/integrations", function(integration) {
 
                     if (step.connection) {
                         step.connection.icon = change("assets:http4.svg", "assets:http.svg", ch)(step.connection.icon);
-                        step.connection.icon = change(
-                            "assets:https4.svg",
-                            "assets:https.svg",
-                            ch
-                        )(step.connection.icon);
+                        step.connection.icon = change("assets:https4.svg", "assets:https.svg", ch)(step.connection.icon);
 
                         if (step.connection.connectorId) {
                             step.connection.connectorId = change("http4", "http", ch)(step.connection.connectorId);
@@ -89,26 +63,10 @@ migrate("integrations", "/integrations", function(integration) {
                         if (step.connection.connector) {
                             step.connection.connector.id = change("http4", "http", ch)(step.connection.connector.id);
                             step.connection.connector.id = change("https4", "https", ch)(step.connection.connector.id);
-                            step.connection.connector.componentScheme = change(
-                                "http4",
-                                "http",
-                                ch
-                            )(step.connection.connector.componentScheme);
-                            step.connection.connector.componentScheme = change(
-                                "https4",
-                                "https",
-                                ch
-                            )(step.connection.connector.componentScheme);
-                            step.connection.connector.icon = change(
-                                "assets:http4.svg",
-                                "assets:http.svg",
-                                ch
-                            )(step.connection.connector.icon);
-                            step.connection.connector.icon = change(
-                                "assets:https4.svg",
-                                "assets:https.svg",
-                                ch
-                            )(step.connection.connector.icon);
+                            step.connection.connector.componentScheme = change("http4", "http", ch)(step.connection.connector.componentScheme);
+                            step.connection.connector.componentScheme = change("https4", "https", ch)(step.connection.connector.componentScheme);
+                            step.connection.connector.icon = change("assets:http4.svg", "assets:http.svg", ch)(step.connection.connector.icon);
+                            step.connection.connector.icon = change("assets:https4.svg", "assets:https.svg", ch)(step.connection.connector.icon);
 
                             if (Array.isArray(step.connection.connector.actions)) {
                                 step.connection.connector.actions.forEach(migrateAction);
@@ -118,9 +76,12 @@ migrate("integrations", "/integrations", function(integration) {
                 });
             }
         });
-    }
+     }
 
     return changed;
 });
 
+
 console.log("Migration to schema 40 completed");
+
+

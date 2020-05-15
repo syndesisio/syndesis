@@ -18,18 +18,18 @@
 // Migration
 //
 
-var KeyGenerator = Java.type("io.syndesis.common.util.KeyGenerator");
+var KeyGenerator = Java.type('io.syndesis.common.util.KeyGenerator')
 
 console.log("Migration to schema 30 ...");
 migrate("integrations", "/integrations", function(integration) {
     var changed = false;
     if (integration.flows) {
-        integration.flows.forEach(function(flow) {
+        integration.flows.forEach(function (flow) {
             var parts = /.+:flows:(.+)/.exec(flow.id);
             if (parts && parts.length > 1) {
                 var operationId = parts[1];
-                flow.id = KeyGenerator.createKey();
-                flow.metadata["openapi-operationid"] = operationId;
+                flow.id = KeyGenerator.createKey()
+                flow.metadata['openapi-operationid'] = operationId;
 
                 changed = true;
             }

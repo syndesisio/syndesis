@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { useApiConnectorSummary } from '@syndesis/api';
 import {
   ApiConnectorCreateService,

@@ -22,7 +22,7 @@ migrate("integrations", "/integrations", function(integration) {
             if (Array.isArray(flow.steps)) {
                 flow.steps.forEach(function(step) {
                     if (step.connection && step.connection.connector && step.connection.connector.id === "fhir") {
-                        step.connection.connector.configuredProperties = { encoding: "XML" };
+                        step.connection.connector.configuredProperties = {"encoding": "XML"};
 
                         changed = true;
                     }

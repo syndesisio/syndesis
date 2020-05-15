@@ -25,29 +25,29 @@ var console = {
  * Provide a nicer js interface to jsondb
  */
 var jsondb = {
-    get: function(path) {
+    get: function (path) {
         var rc = internal.jsondb.getAsString(path);
         if (rc === null) {
             return rc;
         }
         return JSON.parse(rc);
     },
-    set: function(path, value) {
+    set: function (path, value) {
         internal.jsondb.set(path, JSON.stringify(value));
     },
-    update: function(path, value) {
+    update: function (path, value) {
         internal.jsondb.update(path, JSON.stringify(value));
     },
-    push: function(path, value) {
+    push: function (path, value) {
         internal.jsondb.push(path, JSON.stringify(value));
     },
-    createKey: function() {
+    createKey: function () {
         return internal.jsondb.createKey();
     },
-    delete: function(path) {
+    delete: function (path) {
         return internal.jsondb.delete(path);
     },
-    exists: function(path) {
+    exists: function (path) {
         return internal.jsondb.exists(path);
     }
 };
@@ -56,11 +56,11 @@ var jsondb = {
 //Helpers
 //
 var migrate = function(type, path, consumer) {
-    console.log("Start " + type + " migration");
+    console.log("Start " + type + " migration")
 
-    var migrated = 0;
+    var migrated  = 0;
     var inspected = 0;
-    var elements = jsondb.get(path);
+    var elements  = jsondb.get(path);
 
     if (elements) {
         Object.keys(elements).forEach(function(elementId) {
@@ -77,7 +77,7 @@ var migrate = function(type, path, consumer) {
     }
 
     console.log(type + ": migrated " + migrated + " out of " + inspected);
-};
+}
 
 var change = function(previous, next, changeCallback) {
     return function(value) {
@@ -89,5 +89,5 @@ var change = function(previous, next, changeCallback) {
         }
 
         return value;
-    };
-};
+    }
+}
