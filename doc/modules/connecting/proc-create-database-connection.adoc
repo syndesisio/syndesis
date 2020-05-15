@@ -21,7 +21,7 @@ connects to the database.
 is on your classpath. If you uploaded a JDBC driver library extension to 
 connect to a proprietary database, then the upload process puts the driver
 on your classpath. See 
-link:{LinkFuseOnlineIntegrationGuide}#creating-jdbc-driver-library-extensions_extensions[Creating JDBC driver library extensions]. 
+link:{LinkSyndesisIntegrationGuide}#creating-jdbc-driver-library-extensions_extensions[Creating JDBC driver library extensions]. 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
 . Click *Create Connection* to display
@@ -39,7 +39,7 @@ user account you want to use to access the database.
 .. In the *Schema* field, enter the name of the schema for the database.
 How you specify the database schema varies for each type of database. 
 Details are in the next section: 
-link:{LinkFuseOnlineConnectorGuide}#how-to-specify-the-schema-in-a-database-connection_db[How to specify the schema in a database connection].
+link:{LinkSyndesisConnectorGuide}#how-to-specify-the-schema-in-a-database-connection_db[How to specify the schema in a database connection].
 
 . Click *Validate*. {prodname} tries to validate the
 connection and displays a message that indicates whether

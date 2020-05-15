@@ -9,7 +9,7 @@ Amazon S3 connection to an integration.
 
 .Prerequisites
 
-* AWS access key. See link:{LinkFuseOnlineConnectorGuide}#obtaining-aws-credentials_aws[Obtaining AWS credentials].
+* AWS access key. See link:{LinkSyndesisConnectorGuide}#obtaining-aws-credentials_aws[Obtaining AWS credentials].
 
 * If the bucket that you want the connection to access already exists, 
 you must know:

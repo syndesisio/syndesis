@@ -27,4 +27,4 @@ trash can again.
 
 .Additional resource
 
-* link:{LinkFuseOnlineIntegrationGuide}#available-transformations_map[Available transformations].
+* link:{LinkSyndesisIntegrationGuide}#available-transformations_map[Available transformations].

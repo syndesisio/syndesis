@@ -23,7 +23,7 @@ The content in this guide is organized as follows:
 * <<customizing_{context}>>
 
 To learn how to use {prodname} by creating sample integrations, see:
-link:{LinkFuseOnlineTutorials}[{NameOfFuseOnlineTutorials}].
+link:{LinkSyndesisTutorials}[{NameOfSyndesisTutorials}].
 
 include::assemblies/integrating-applications/assembly-high-level-overview.adoc[leveloffset=+1]
 

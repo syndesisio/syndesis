@@ -22,7 +22,7 @@ register your {prodname} environment as a client of the REST API.
 This authorizes your {prodname} environment to access the REST API. As part
 of registration, you provide the {prodname} callback URL. 
 The details for doing this are described in
-link:{LinkFuseOnlineConnectorGuide}#register-with-rest-api_rest[{NameOfFuseOnlineConnectorGuide}, Registering {prodname} as a REST API client].
+link:{LinkSyndesisConnectorGuide}#register-with-rest-api_rest[{NameOfSyndesisConnectorGuide}, Registering {prodname} as a REST API client].
 
 For a REST API that uses OAuth, {prodname} supports only the 
 *Authorization Code* grant flow for obtaining authorization. 

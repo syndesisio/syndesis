@@ -18,7 +18,7 @@ to add to the integration. Or, {prodname} is prompting you to choose a finish co
 add records to. Your ServiceNow administrator can
 help you identify the appropriate import set. If the import set 
 does not exist, see 
-link:{LinkFuseOnlineConnectorGuide}#create-servicenow-import-set_servicenow[Creating an import set in ServiceNow].
+link:{LinkSyndesisConnectorGuide}#create-servicenow-import-set_servicenow[Creating an import set in ServiceNow].
 * The ServiceNow import set is configured to handle the addition 
 of records.
 

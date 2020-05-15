@@ -73,4 +73,4 @@ Note that the basic filter step *matches* operator corresponds to the Simple Lan
 *regex* operator. 
 
 * If you cannot define the filter you need in a basic filter step,
-see link:{LinkFuseOnlineIntegrationGuide}#add-advanced-filter-step_create[Adding an advanced filter step].
+see link:{LinkSyndesisIntegrationGuide}#add-advanced-filter-step_create[Adding an advanced filter step].

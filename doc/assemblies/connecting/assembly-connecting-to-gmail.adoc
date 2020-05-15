@@ -16,7 +16,7 @@ particular Gmail account, do either of the following:
 
 The general steps for connecting to Gmail in an integration are:
 
-. link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Registering {prodname} as a Google client application].
+. link:{LinkSyndesisConnectorGuide}#register-with-google_google[Registering {prodname} as a Google client application].
 . Creating a Gmail connection. When you do this you choose the Gmail account that
 the connection is authorized to access.
 . If your integration sends an email from a Gmail account, 

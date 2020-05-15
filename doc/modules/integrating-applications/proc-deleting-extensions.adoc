@@ -27,5 +27,5 @@ To run one of these integrations, you will need to edit the
 integration to remove the customization.
 
 .Additional resources
-* link:{LinkFuseOnlineIntegrationGuide}#identifying-extension-use_add-extension[Identifying extension use]
-* link:{LinkFuseOnlineIntegrationGuide}#updating-extensions_add-extension[Updating extensions]
+* link:{LinkSyndesisIntegrationGuide}#identifying-extension-use_add-extension[Identifying extension use]
+* link:{LinkSyndesisIntegrationGuide}#updating-extensions_add-extension[Updating extensions]
