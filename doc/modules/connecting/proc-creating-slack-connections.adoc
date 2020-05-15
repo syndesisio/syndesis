@@ -18,7 +18,7 @@ You can use the same Slack connection in any number of integrations.
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
-. In the upper right, click *Create Connection* to display
+. Click *Create Connection* to display
 {prodname} connectors.
 . Click the *Slack* connector.
 . In the *Slack webhook URL* field, enter the webhook URL for your 
