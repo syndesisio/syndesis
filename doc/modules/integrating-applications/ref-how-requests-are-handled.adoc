@@ -10,7 +10,7 @@ a simple integration. Although a `GET` request usually obtains data and a
 to trigger an integration that does either operation. Any parameters 
 in the request are available for mapping to data fields in the
 next connection that is in the integration. For details, see
-link:{LinkFuseOnlineIntegrationGuide}#about-json-schema-for-http-requests_webhook[About the JSON schema for specifying request parameters]. 
+link:{LinkSyndesisIntegrationGuide}#about-json-schema-for-http-requests_webhook[About the JSON schema for specifying request parameters]. 
 
 A Webhook connection only passes the data it receives to
 the next connection in the integration. 

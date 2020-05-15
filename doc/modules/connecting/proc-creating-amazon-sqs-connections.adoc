@@ -9,7 +9,7 @@ Amazon SQS connection to an integration.
 
 .Prerequisites
 
-* AWS access key. See link:{LinkFuseOnlineConnectorGuide}#obtaining-aws-credentials_aws[Obtaining AWS credentials].
+* AWS access key. See link:{LinkSyndesisConnectorGuide}#obtaining-aws-credentials_aws[Obtaining AWS credentials].
 
 * You must know the region in which the SQS queue is located. 
 This is the queue that you want the SQS connection that 

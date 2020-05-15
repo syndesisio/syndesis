@@ -63,4 +63,4 @@ from the new log step.
 .Additional resources
 After a flow that has a log step has been executed, output from
 the log step appears in the integration's *Activity* tab. See
-link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-activity-information_monitor[Viewing integration activity information].
+link:{LinkSyndesisIntegrationGuide}#viewing-integration-activity-information_monitor[Viewing integration activity information].

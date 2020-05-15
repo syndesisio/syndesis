@@ -141,8 +141,8 @@ a transformation to.
 
 +
 For more information, see 
-link:{LinkFuseOnlineIntegrationGuide}#available-transformations_map[Descriptions of available transformations] and 
-link:{LinkFuseOnlineIntegrationGuide}#about-transformations-on-multiple-source-values_map[About transformations on multiple source values before mapping to one target field].
+link:{LinkSyndesisIntegrationGuide}#available-transformations_map[Descriptions of available transformations] and 
+link:{LinkSyndesisIntegrationGuide}#about-transformations-on-multiple-source-values_map[About transformations on multiple source values before mapping to one target field].
 
 +
 For example, in the same mapping presented in this procedure, in the 

@@ -70,4 +70,4 @@ document defines.
 
 .Next step
 For each operation,
-link:{LinkFuseOnlineIntegrationGuide}#define-integration-operation-flows_api-provider[define a flow that executes that operation].
+link:{LinkSyndesisIntegrationGuide}#define-integration-operation-flows_api-provider[define a flow that executes that operation].

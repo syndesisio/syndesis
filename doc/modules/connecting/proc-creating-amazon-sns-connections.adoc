@@ -9,7 +9,7 @@ Amazon SNS connection to an integration.
 
 .Prerequisites
 
-* AWS access key. See link:{LinkFuseOnlineConnectorGuide}#obtaining-aws-credentials_aws[Obtaining AWS credentials].
+* AWS access key. See link:{LinkSyndesisConnectorGuide}#obtaining-aws-credentials_aws[Obtaining AWS credentials].
 
 * You must know the region in which the SNS topic is located. 
 This is the topic that you want the SNS connection that 

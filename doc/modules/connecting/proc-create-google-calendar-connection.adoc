@@ -11,7 +11,7 @@ add it to multiple integrations.
 
 .Prerequisites
 * You 
-link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[registered {prodname} as a Google client application] 
+link:{LinkSyndesisConnectorGuide}#register-with-google_google[registered {prodname} as a Google client application] 
 and enabled the Google Calendar API. 
 * The {prodname} *Settings* page entry for Google Calendar has values for the client ID and client secret, which
 you obtained by registering {prodname} as a Google client application. 
@@ -30,7 +30,7 @@ which takes you to a Google sign-in page.
 If *Connect Google Calendar* does not display, then your {prodname} environment
 is not registered as a Google client application with the Google Calendar API
 enabled. See 
-link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Registering {prodname} as a Google client application]. 
+link:{LinkSyndesisConnectorGuide}#register-with-google_google[Registering {prodname} as a Google client application]. 
 When your environment is not registered with
 Google, then when you try to create a Google Calendar connection, {prodname} displays
 multiple fields that prompt for authorization information. While you can
