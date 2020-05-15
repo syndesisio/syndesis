@@ -48,9 +48,10 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
   servicesAvailable,
 }) => {
   const [port, setPort] = React.useState(portName);
+  const [portsArray, setPortsArray] = React.useState(
+    portsAvailable[serviceName]
+  );
   const [service, setService] = React.useState(serviceName);
-
-  const portsArray = portsAvailable[serviceName];
 
   const handleChangeSelectedPort = (params: string) => {
     setPort(params);
@@ -58,6 +59,7 @@ export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCre
 
   const handleChangeSelectedService = (params: string) => {
     setService(params);
+    setPortsArray(portsAvailable[params]);
   };
 
   const handleClickNext = () => {
