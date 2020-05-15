@@ -245,6 +245,9 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                     i18nInsert={t('shared:Insert')}
                     i18nUpdate={t('shared:Update')}
                     i18nDelete={t('shared:Delete')}
+                    i18nClearPermissionMsg={t('clearPermissionMsg')}
+                    i18nRemoveRoleRow={t('removeRoleRow')}
+                    i18nSelectRole={t('selectARole')}
                     i18nAllAccess={t('allAccess')}
                     i18nRole={t('permissionRole')}
                     i18nAddNewRole={t('addNewRole')}
@@ -298,6 +301,7 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                             itemSelected={itemSelected}
                             viewId={viewDefinitionDescriptor.id}
                             viewName={viewDefinitionDescriptor.name}
+                            i18nPermissionNotSet={t('permissionNotSet')}
                             viewRolePermissionList={
                               viewDefinitionDescriptor.tablePrivileges
                             }
