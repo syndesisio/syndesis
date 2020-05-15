@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { useApiConnectorSummary } from '@syndesis/api';
 import {
   ApiConnectorCreateService,
@@ -16,8 +15,8 @@ import resolvers from '../../resolvers';
 
 export const SelectMethodPage: React.FunctionComponent = () => {
   const { history } = useRouteData();
-  const [connectorTemplateId, setConnectorTemplateId] = React.useState();
-  const [spec, setSpec] = React.useState();
+  const [connectorTemplateId, setConnectorTemplateId] = React.useState('');
+  const [spec, setSpec] = React.useState('');
   const [showSoapConfig, setShowSoapConfig] = React.useState(false);
   const { apiSummary } = useApiConnectorSummary(spec, connectorTemplateId);
 

@@ -61,7 +61,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
   i18nUrlNote,
   onNext,
 }) => {
-  const [connectorTemplateId, setConnectorTemplateId] = React.useState();
+  const [connectorTemplateId, setConnectorTemplateId] = React.useState('');
   const [method, setMethod] = React.useState(FILE);
   const [specification, setSpecification] = React.useState('');
   const [url, setUrl] = React.useState('');
