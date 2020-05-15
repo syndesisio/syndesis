@@ -90,6 +90,7 @@ stories.add('On Providing WSDL (SOAP) Document', () => {
       content={
         <ApiConnectorCreateService
           handleNext={action('onServiceConfigured')}
+          i18nBtnNext={'Next'}
           i18nPort={'Port'}
           i18nService={'Service'}
           i18nServicePortTitle={'Specify service and port'}
