@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
@@ -135,7 +136,7 @@ public interface OAuthApp extends WithId<OAuthApp>, WithName, WithProperties {
 
                     final String currentValue = current.get(propertyName);
                     if (currentValue == null) {
-                        value = configuration.getDefaultValue();
+                        value = Objects.toString(configuration.getDefaultValue(), null);
                     } else {
                         value = currentValue;
                     }
