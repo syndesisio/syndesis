@@ -64,7 +64,7 @@
     "@syndesis/ui": "*",
     "moment": "^2.24.0",
     "named-urls": "^2.0.0",
-    "react-fast-compare": "^2.0.2",
+    "react-fast-compare": "^3.1.1",
     "use-react-router": "^1.0.7"
   },
   "jest": {
