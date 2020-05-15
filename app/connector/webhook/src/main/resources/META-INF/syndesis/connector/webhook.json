@@ -97,6 +97,7 @@
               "returnBody": {
                 "order": 4,
                 "componentProperty": false,
+                "defaultValue": true,
                 "deprecated": false,
                 "displayName": "Include error message in the return body",
                 "javaType": "Boolean",
