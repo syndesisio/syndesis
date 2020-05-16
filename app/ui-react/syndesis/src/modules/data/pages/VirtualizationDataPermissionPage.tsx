@@ -32,6 +32,22 @@ import {
   VirtualizationEditorPage,
 } from './VirtualizationEditorPage';
 
+const checkIfAllPageViewSelected = (
+  pageViews: ViewDefinitionDescriptor[],
+  selectedViews: Map<string, string>
+): boolean => {
+  if (pageViews.length !== selectedViews.size) {
+    return false;
+  } else {
+    for(const view of pageViews){
+      if(!Array.from(selectedViews.keys()).includes(view.id)){
+        return false;
+      }
+    }
+    return true;
+  }
+};
+
 export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
   /**
    * Context that broadcasts global notifications.
@@ -106,6 +122,10 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
   const [perPage, setPerPage] = React.useState<number>(20);
   const [page, setPage] = React.useState<number>(1);
 
+  const [allPageViewsSelected, setAllPageViewsSelected] = React.useState<
+    boolean
+  >(false);
+
   let filteredAndSortedPerPage: ViewDefinitionDescriptor[] = [];
 
   /**
@@ -147,6 +167,22 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
     setItemSelected(selectedViews);
   };
 
+  const allowClearPermissions = () => {
+    if (itemSelected.size === 0) {
+      return false;
+    }
+    // Make sure at least one selection has existing permission
+    let anyHasPermissions = false;
+    for (const entry of Array.from(itemSelected.entries())) {
+      const viewDescr = viewDefinitionDescriptors.find(view => view.id === entry[0])
+      if( viewDescr && viewDescr.tablePrivileges.length > 0 ) {
+        anyHasPermissions = true;
+        break;
+      }
+    }
+    return anyHasPermissions;
+  };
+
   const updateViewsPermissions = async (roleInfo: RoleInfo) => {
     try {
       await updateVirtualizationRoles(params.virtualizationId, roleInfo);
@@ -161,6 +197,12 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
       return false;
     }
   };
+
+  React.useEffect(() => {
+    checkIfAllPageViewSelected(filteredAndSortedPerPage, itemSelected)
+      ? setAllPageViewsSelected(true)
+      : setAllPageViewsSelected(false);
+  }, [itemSelected, filteredAndSortedPerPage]);
 
   /**
    * A filter for throwing out views without names.
@@ -223,7 +265,8 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                       count: filteredAndSorted.length,
                     })}
                     hasListData={viewDefinitionDescriptors.length > 0}
-                    hasViewSelected={itemSelected.size > 0}
+                    enableSetPermissions={itemSelected.size > 0}
+                    enableClearPermissions={allowClearPermissions()}
                     i18nViewName={t('viewNameDisplay')}
                     i18nPermission={t('permissions')}
                     i18nSelectNone={t('permissionSelectNone')}
@@ -239,7 +282,7 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                     i18nImportViewsTip={t('importDataSourceTip')}
                     i18nCreateView={t('createView')}
                     i18nCreateViewTip={t('createViewTip')}
-                    i18nCancle={t('shared:Cancel')}
+                    i18nCancel={t('shared:Cancel')}
                     i18nSave={t('shared:Save')}
                     i18nSelect={t('shared:Select')}
                     i18nInsert={t('shared:Insert')}
@@ -253,8 +296,13 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                     i18nAddNewRole={t('addNewRole')}
                     i18nSetPermission={t('permissionSet')}
                     i18nClearPermission={t('permissionClear')}
+                    i18nClearPermissionConfirm={t('permissionClearConfirmText')}
+                    i18nClearFilters={t('permissionClearFilters')}
+                    i18nSelectRoleText={t('roleSelectText')} 
+                    i18nRoleExists={t('roleAlreadyExistsText')}
                     i18nSelectedViewsMsg={t('permissionSeletedViews')}
                     i18nSsoConfigWarning={t('permissionSsoConfig')}
+                    i18nSsoConfigWarningTitle={t('permissionSsoConfigTitle')}
                     linkCreateViewHRef={resolvers.data.virtualizations.views.createView.selectSources(
                       {
                         virtualization,
@@ -278,6 +326,7 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                     updateViewsPermissions={updateViewsPermissions}
                     getDVStatusUpdate={getDVStatusUpdate}
                     getUpdatedRole={getUpdatedRole}
+                    allPageViewsSelected={allPageViewsSelected}
                   >
                     {filteredAndSortedPerPage
                       .filter(
