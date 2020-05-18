@@ -15,6 +15,13 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -28,22 +35,18 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.bulletin.ConnectionBulletinBoard;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.ConnectionOverview;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.util.RandomValueGenerator;
 import io.syndesis.server.credential.CredentialFlowState;
 import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.dao.manager.DataManager;
@@ -137,13 +140,41 @@ public class ConnectionHandler
         final ConnectionOverview.Builder builder = new ConnectionOverview.Builder().createFrom(connection);
 
         // set the connector
-        DataManagerSupport.fetch(dataManager, Connector.class, connection.getConnectorId())
-            .ifPresent(builder::connector);
+        Optional<Connector> c = DataManagerSupport.fetch(dataManager, Connector.class, connection.getConnectorId());
+        enrichWithDynamicProperties(c).ifPresent(builder::connector);
 
         // set the board
         DataManagerSupport.fetchBoard(dataManager, ConnectionBulletinBoard.class, id).ifPresent(builder::board);
 
         return builder.build();
+    }
+
+    private static Optional<Connector> enrichWithDynamicProperties(Optional<Connector> conn) {
+        if (conn == null || !conn.isPresent()) {
+            return Optional.empty();
+        }
+        //We need to clone the connector because it is immutable
+        final Connector.Builder enriched = new Connector.Builder().createFrom(conn.get());
+        List<ConnectorAction> actions = new ArrayList<ConnectorAction>();
+
+        for (ConnectorAction action : conn.get().getActions()) {
+            final ConnectorDescriptor originalDescriptor = action.getDescriptor();
+            ConnectorDescriptor.Builder generatedDescriptorBuilder =
+                new ConnectorDescriptor.Builder().createFrom(originalDescriptor);
+            action.getProperties().forEach((k, v) -> {
+                if (v.getGenerator() != null && v.getDefaultValue() == null) {
+                    generatedDescriptorBuilder.replaceConfigurationProperty(k,
+                        c -> c.defaultValue(RandomValueGenerator.generate(v.getGenerator())));
+                }
+            });
+            ConnectorAction.Builder actionBuilder = action.builder();
+            actionBuilder.descriptor(generatedDescriptorBuilder.build());
+            actions.add(actionBuilder.build());
+        }
+        enriched.actions(actions);
+        Connector connector = enriched.build();
+
+        return Optional.of(connector);
     }
 
     @Override
