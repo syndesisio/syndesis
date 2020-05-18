@@ -107,7 +107,23 @@
                 "labelHint": "To get the object from the bucket with the given file name",
                 "required": false,
                 "secret": false,
-                "type": "string"
+                "type": "string",
+                "order": "1"
+              },
+              "delay": {
+                "defaultValue": 500,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "scheduler",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Milliseconds before the next poll",
+                "optionalPrefix": "consumer.",
+                "required": false,
+                "secret": false,
+                "type": "duration",
+                "order": "2"
               }
             }
           }
