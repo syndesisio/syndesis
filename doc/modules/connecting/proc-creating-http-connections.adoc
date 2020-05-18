@@ -16,7 +16,7 @@ You must know the URL for the endpoint that you want to connect to.
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
-. In the upper right, click *Create Connection* to display
+. Click *Create Connection* to display
 {prodname} connectors.
 . If you want to use Hyper Text Transfer Protocol to connect to the endpoint, 
 then click the *HTTP* connector. If you want to use

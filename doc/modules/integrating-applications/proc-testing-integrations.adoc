@@ -16,10 +16,10 @@ development environment.
 
 .Procedure
 
-. Learn about link:{LinkFuseOnlineIntegrationGuide}#about-copying-integrations_copy[copying an integration to another environment].
+. Learn about link:{LinkSyndesisIntegrationGuide}#about-copying-integrations_copy[copying an integration to another environment].
 
 . Export the integration from the development environment. See
-link:{LinkFuseOnlineIntegrationGuide}#exporting-integrations_copy[Exporting an integration].
+link:{LinkSyndesisIntegrationGuide}#exporting-integrations_copy[Exporting an integration].
 
 . Import the integration into the test environment. See
-link:{LinkFuseOnlineIntegrationGuide}#importing-integrations_copy[Importing an integration].
+link:{LinkSyndesisIntegrationGuide}#importing-integrations_copy[Importing an integration].

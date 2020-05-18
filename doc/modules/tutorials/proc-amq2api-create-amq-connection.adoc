@@ -34,7 +34,7 @@ the AMQ broker.
 
 .. In {prodname}, in the left panel, click *Connections* to display any
 available connections.
-.. In the upper right, click *Create Connection* to display
+.. Click *Create Connection* to display
 {prodname} connectors.
 .. Click the *Red Hat AMQ* connector.
 .. Configure the connection by entering:

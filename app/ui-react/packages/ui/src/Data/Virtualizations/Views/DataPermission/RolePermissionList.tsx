@@ -22,6 +22,7 @@ export interface IRolePermissionListProps {
   i18nAddNewRole: string;
   i18nSelectRole: string;
   i18nRemoveRoleRow: string;
+  i18nRoleExists: string;
   viewRolePermissionList: ITablePrivilege[];
   updateRolePermissionModel: (roleName: string, permissions: string[]) => void;
   deleteRoleFromPermissionModel: (roleName: string) => void;
@@ -101,6 +102,7 @@ export const RolePermissionList: React.FunctionComponent<IRolePermissionListProp
             deleteRoleFromPermissionModel={props.deleteRoleFromPermissionModel}
             i18nSelectRole={props.i18nSelectRole}
             i18nRemoveRoleRow={props.i18nRemoveRoleRow}
+            i18nRoleExists={props.i18nRoleExists}
             key={roleNumber}
           />
         ))}

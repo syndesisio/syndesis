@@ -18,7 +18,7 @@ or service that you want to integrate. This is a connector extension.
 +
 NOTE: {prodname} can use an OpenAPI document to create a connector 
 for a REST API client. See 
-link:{LinkFuseOnlineIntegrationGuide}#developing-rest-api-client-connectors_custom[Develop a REST API client connector].
+link:{LinkSyndesisIntegrationGuide}#developing-rest-api-client-connectors_custom[Develop a REST API client connector].
 
 A business integrator shares requirements with a developer who codes the extension.
 The developer provides a `.jar` file that contains the extension.
@@ -30,4 +30,4 @@ exactly one extension.
 
 For an example of uploading and using an extension that provides a step
 that operates on data between connections, see the 
-link:{LinkFuseOnlineTutorials}#amq-to-rest-api_tutorials[AMQ to REST API sample integration tutorial].
+link:{LinkSyndesisTutorials}#amq-to-rest-api_tutorials[AMQ to REST API sample integration tutorial].

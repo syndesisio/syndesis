@@ -127,5 +127,5 @@ to get `10`, and then subtracts `9` from `10` to get `1`. The mapper inserts
 |===
 
 .Additional resources
-* link:{LinkFuseOnlineIntegrationGuide}#combine-multiple-source-fields-into-one-target-field_map[Combining multiple source fields into one target field]
-* link:{LinkFuseOnlineIntegrationGuide}#example-missing-unwanted-data_map[Separating one source field into multiple target fields]
+* link:{LinkSyndesisIntegrationGuide}#combine-multiple-source-fields-into-one-target-field_map[Combining multiple source fields into one target field]
+* link:{LinkSyndesisIntegrationGuide}#example-missing-unwanted-data_map[Separating one source field into multiple target fields]

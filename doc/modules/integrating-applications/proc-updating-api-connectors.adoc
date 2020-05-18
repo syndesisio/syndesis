@@ -26,7 +26,7 @@ To easily distinguish between the old connector and the new connector,
 you  might want to specify a version number in the connector name or 
 the connector description. 
 +
-See link:{LinkFuseOnlineIntegrationGuide}#creating-api-connectors_add-client-connector[Creating REST API client connectors].
+See link:{LinkSyndesisIntegrationGuide}#creating-api-connectors_add-client-connector[Creating REST API client connectors].
 
 . Create a new connection from the new connector. Again, you want to be
 able to easily distinguish between connections created from the old

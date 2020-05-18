@@ -41,4 +41,4 @@ when a Webhook connection's data shape conforms to this JSON schema,
 then query parameters and body content are available for mapping.
 
 For examples, see
-link:{LinkFuseOnlineIntegrationGuide}#how-to-specify-request_webhook[How to specify HTTP requests].
+link:{LinkSyndesisIntegrationGuide}#how-to-specify-request_webhook[How to specify HTTP requests].
