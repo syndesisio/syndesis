@@ -44,7 +44,7 @@
     "react-dnd-touch-backend": "^10.0.2",
     "react-dom": "^16.8.3",
     "react-dropzone": "^10.0.0",
-    "react-fast-compare": "^2.0.2",
+    "react-fast-compare": "^3.1.1",
     "react-file-picker": "0.0.6",
     "react-helmet": "^5.2.0",
     "react-i18next": "^11.4.0",
