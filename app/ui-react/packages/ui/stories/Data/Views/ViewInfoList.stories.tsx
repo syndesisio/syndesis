@@ -1,6 +1,5 @@
 import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
-import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -63,7 +62,7 @@ stories
 
   .add(
     'no Source Tables, not loading',
-    withNotes(noSourceTablesTestNotes)(() => (
+    () => (
       <Router>
         <ViewInfoList
           activeFilters={[]}
@@ -112,12 +111,13 @@ stories
           children={[]}
         />
       </Router>
-    ))
+    ),
+    { notes: noSourceTablesTestNotes }
   )
 
   .add(
     'no Source Tables, loading',
-    withNotes(noSourceTablesTestNotes)(() => (
+    () => (
       <Router>
         <ViewInfoList
           activeFilters={[]}
@@ -166,12 +166,13 @@ stories
           children={[]}
         />
       </Router>
-    ))
+    ),
+    { notes: noSourceTablesTestNotes }
   )
 
   .add(
     'has Source Tables, not loading',
-    withNotes(hasSourceTablesTestNotes)(() => (
+    () => (
       <Router>
         <ViewInfoList
           activeFilters={[]}
@@ -223,12 +224,13 @@ stories
           children={tableItems}
         />
       </Router>
-    ))
+    ),
+    { notes: hasSourceTablesTestNotes }
   )
 
   .add(
     'has Source Tables, loading',
-    withNotes(hasSourceTablesTestNotes)(() => (
+    () => (
       <Router>
         <ViewInfoList
           activeFilters={[]}
@@ -280,5 +282,6 @@ stories
           children={tableItems}
         />
       </Router>
-    ))
+    ),
+    { notes: hasSourceTablesTestNotes }
   );

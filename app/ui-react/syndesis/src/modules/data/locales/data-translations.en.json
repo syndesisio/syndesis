@@ -107,6 +107,8 @@
   "permissionSelectAll": "Select all ({{allListLength}} items)",
   "permissionSet": "Set permissions",
   "permissionSeletedViews": "Grant or Revoke permissions for the selected Views: ",
+  "permissionShowLess": "Show less",
+  "permissionShowMore": "Show more",
   "permissionSsoConfig": "Publishing with edited roles will fail unless SSO is configured.",
   "permissionSsoConfigTitle": "SSO not configured",
   "preview": {
