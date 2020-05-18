@@ -97,7 +97,7 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
   /**
    * Hook to obtain the dv status is sso configured
    */
-  const { resource: dvStatus, read: getDVStatusUpdate } = useDVStatus();
+  const { resource: dvStatus} = useDVStatus();
 
   /**
    * Hook to obtain the avalable roles.
@@ -324,7 +324,6 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                     dvRoles={dvRoles}
                     itemSelected={itemSelected}
                     updateViewsPermissions={updateViewsPermissions}
-                    getDVStatusUpdate={getDVStatusUpdate}
                     getUpdatedRole={getUpdatedRole}
                     allPageViewsSelected={allPageViewsSelected}
                   >
