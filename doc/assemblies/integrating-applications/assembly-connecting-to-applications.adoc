@@ -17,7 +17,7 @@ The procedure for
 creating a connection varies for each application or service. The details
 for creating each kind of connection and configuring it for a particular
 integration are in 
-link:{LinkFuseOnlineConnectorGuide}[{NameOfFuseOnlineConnectorGuide}].
+link:{LinkSyndesisConnectorGuide}[{NameOfSyndesisConnectorGuide}].
 
 The following topics
 provide general information about connections:

@@ -66,4 +66,4 @@ the flow. If verification fails then {prodname} displays a message
 about the problem. Update your input as needed and try again.
 
 .Additional resource
-link:{LinkFuseOnlineConnectorGuide}about-parameter-placeholders-and-values_db[About parameter placeholders and values in SQL statements that update data].
+link:{LinkSyndesisConnectorGuide}about-parameter-placeholders-and-values_db[About parameter placeholders and values in SQL statements that update data].

@@ -13,10 +13,10 @@ click *Create Integration*, {prodname} guides you
 through the procedure to create an integration.
 
 .Prerequisites
-* link:{LinkFuseOnlineIntegrationGuide}#plan_ready[Considerations for planning your integrations]
+* link:{LinkSyndesisIntegrationGuide}#plan_ready[Considerations for planning your integrations]
 * According to the kind of integration that you want to create: 
-** An understanding of the link:{LinkFuseOnlineIntegrationGuide}#workflow-overview_ready[general workflow for creating a simple integration]
-** An understanding of the link:{LinkFuseOnlineIntegrationGuide}#overview-benefit-api-provider-integrations_api-provider[general workflow for creating an API provider integration]
+** An understanding of the link:{LinkSyndesisIntegrationGuide}#workflow-overview_ready[general workflow for creating a simple integration]
+** An understanding of the link:{LinkSyndesisIntegrationGuide}#overview-benefit-api-provider-integrations_api-provider[general workflow for creating an API provider integration]
 
 The following topics provide information and instructions for creating
 an integration:

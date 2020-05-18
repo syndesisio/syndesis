@@ -17,7 +17,7 @@ To Do app REST API.
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
-. In the upper right, click *Create Connection* to display
+. Click *Create Connection* to display
 available connectors.
 . Click the *Todo App API* connector that you just created.
 +

@@ -9,19 +9,19 @@ accomplished are as follows:
 
 . A developer creates a library extension that contains the JDBC driver 
 for the database that you want to access in an integration. See 
-link:{LinkFuseOnlineIntegrationGuide}#creating-jdbc-driver-library-extensions_extensions[Creating JDBC driver library extensions].
+link:{LinkSyndesisIntegrationGuide}#creating-jdbc-driver-library-extensions_extensions[Creating JDBC driver library extensions].
 
 . The developer provides a `.jar` file that contains the library extension.
 
 . You upload that `.jar` file to {prodname}. See 
-link:{LinkFuseOnlineIntegrationGuide}#making-extensions-available_add-extension[Making extensions available].
+link:{LinkSyndesisIntegrationGuide}#making-extensions-available_add-extension[Making extensions available].
 
 . You create a connection to your database by selecting the 
 {prodname} *Database* connector and specifying the connection URL
 for your database. See 
-link:{LinkFuseOnlineConnectorGuide}#create-database-connection_db[Creating a database connection].
+link:{LinkSyndesisConnectorGuide}#create-database-connection_db[Creating a database connection].
 
 . In an integration, you add the connection to your database. 
 See 
-link:{LinkFuseOnlineConnectorGuide}#adding-db-connection-start_db[Starting an integration by accessing a database] or 
-link:{LinkFuseOnlineConnectorGuide}#adding-db-connection-finish-middle_db[Accessing a database in the middle or to complete an integration]. 
+link:{LinkSyndesisConnectorGuide}#adding-db-connection-start_db[Starting an integration by accessing a database] or 
+link:{LinkSyndesisConnectorGuide}#adding-db-connection-finish-middle_db[Accessing a database in the middle or to complete an integration]. 

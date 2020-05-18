@@ -18,7 +18,7 @@ previous step(s) in the flow.
 
 .Prerequisites
 * You uploaded the custom step extension to {prodname}. See 
-link:{LinkFuseOnlineIntegrationGuide}#making-extensions-available_add-extension[Making custom features available].
+link:{LinkSyndesisIntegrationGuide}#making-extensions-available_add-extension[Making custom features available].
 * You are creating or editing a flow.
 * The flow already has all the connections that it requires.
 

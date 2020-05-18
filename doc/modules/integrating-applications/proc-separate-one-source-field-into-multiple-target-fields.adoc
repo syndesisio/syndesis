@@ -12,7 +12,7 @@ target fields. For  example, map the `Name` field to the `FirstName` and
 For the source field, you must know what type of content is in each
 part of this compound field, the order and index of each part of the content, 
 and the separator between parts, such as a space or comma. See
-link:{LinkFuseOnlineIntegrationGuide}#example-missing-unwanted-data_map[Example of missing or unwanted data]. 
+link:{LinkSyndesisIntegrationGuide}#example-missing-unwanted-data_map[Example of missing or unwanted data]. 
 
 .Procedure
 

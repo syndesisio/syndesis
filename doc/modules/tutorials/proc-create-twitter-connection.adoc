@@ -32,7 +32,7 @@ after registration to the {prodname} *Settings* page.
 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
-. In the upper right, click *Create Connection* to display
+. Click *Create Connection* to display
 the available connectors. A connector is a template that
 you use to create one or more connections.
 . Click the *Twitter* connector.
@@ -41,7 +41,7 @@ You might need to log in to Twitter before you see the authorization page.
 +
 If *Connect Twitter* does not appear, then your {prodname} environment
 is not registered as a Twitter client application. See
-link:{LinkFuseOnlineConnectorGuide}#register-with-twitter_twitter[Registering {prodname} as a Twitter client application].
+link:{LinkSyndesisConnectorGuide}#register-with-twitter_twitter[Registering {prodname} as a Twitter client application].
 When you try to create a Twitter connection and your {prodname} environment 
 is not registered as a Twitter client application, then {prodname} displays
 multiple fields that prompt for authorization information. While you can
