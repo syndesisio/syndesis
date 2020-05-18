@@ -144,7 +144,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
     }
   };
   return (
-    <Stack>
+    <Stack className={'open-api-select-method'} data-testid={'openapi-select-method'}>
       <StackItem>
         <Split onClick={() => onSelectMethod(FILE)}>
           <SplitItem>
