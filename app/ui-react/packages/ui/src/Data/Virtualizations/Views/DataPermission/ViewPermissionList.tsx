@@ -77,7 +77,6 @@ export interface IViewPermissionList extends IListViewToolbarProps {
   itemSelected: Map<string, string>;
   allPageViewsSelected: boolean;
   updateViewsPermissions: (roleInfo: IRoleInfo) => Promise<boolean>;
-  getDVStatusUpdate: () => void;
   getUpdatedRole: () => void;
 }
 
@@ -135,13 +134,20 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
   let selectedViewText = Array.from(props.itemSelected.values()).join(', ');
 
   const updateRolePermissionModel = (
-    roleName: string,
-    permissions: string[]
+    roleName: string | undefined,
+    permissions: string[],
+    deleteRole: boolean,
+    prevSelected: string | undefined
   ) => {
     const rolePermissionModelCopy = new Map<string, string[]>(
       rolePermissionModel
     );
-    setRolePermissionModel(rolePermissionModelCopy.set(roleName, permissions));
+    // tslint:disable-next-line: no-unused-expression
+    roleName && rolePermissionModelCopy.set(roleName, permissions);
+    if (deleteRole && prevSelected) {
+      rolePermissionModelCopy.delete(prevSelected);
+    }
+    setRolePermissionModel(rolePermissionModelCopy);
   };
 
   const deleteRoleFromPermissionModel = (roleName: string) => {
@@ -169,6 +175,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
       tablePrivileges: [clearPayload],
     });
     if (callSucess) {
+      props.getUpdatedRole();
       setShowLoading(false);
       props.clearViewSelection();
       setIsClearModalOpen(!isClearModalOpen);
@@ -185,6 +192,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
       ),
     });
     if (callSucess) {
+      props.getUpdatedRole();
       setShowLoading(false);
       props.clearViewSelection();
       clearRolePermissionModel();
@@ -194,8 +202,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
   };
 
   const handleSetModalToggle = () => {
-    props.getUpdatedRole();
-    props.getDVStatusUpdate();
+    clearRolePermissionModel();
     setGrantOperation(true);
     setIsSetModalOpen(!isSetModalOpen);
   };
@@ -214,11 +221,11 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
   React.useEffect(() => {
     if (rolePermissionModel.size < 1 || showLoading) {
       setSaveEnabled(false);
-    // Save button enables if one or more roles exist, and all have a permission checked
+      // Save button enables if one or more roles exist, and all have a permission checked
     } else if (rolePermissionModel.size > 0) {
       let allHaveSelection = true;
       for (const entry of Array.from(rolePermissionModel.entries())) {
-        if(entry[1].length === 0) {
+        if (entry[1].length === 0) {
           allHaveSelection = false;
           break;
         }
@@ -252,7 +259,9 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
                   size={'md'}
                 />
               </SplitItem>
-              <SplitItem className={'view-permission-list_sso-warning-text'}>{props.i18nSsoConfigWarningTitle}</SplitItem>
+              <SplitItem className={'view-permission-list_sso-warning-text'}>
+                {props.i18nSsoConfigWarningTitle}
+              </SplitItem>
             </Split>
           </ButtonLink>
         </Popover>
@@ -274,7 +283,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
                 key="confirm"
                 onClick={handleUpdateRoles}
                 as={'primary'}
-                disabled={!saveEnabled} 
+                disabled={!saveEnabled}
               >
                 {showLoading ? <Loader size={'xs'} inline={true} /> : null}
                 {props.i18nSave}
@@ -370,7 +379,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
                 onClick={handleClearRoles}
                 disabled={showLoading}
               >
-                 {showLoading ? <Loader size={'xs'} inline={true} /> : null}
+                {showLoading ? <Loader size={'xs'} inline={true} /> : null}
                 {props.i18nClearPermission}
               </ButtonLink>,
               <Button

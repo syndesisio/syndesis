@@ -27,7 +27,12 @@ export interface IRolePermissionListItemProps {
   i18nRemoveRoleRow: string;
   i18nRoleExists: string;
   addRole: (roleName: string) => void;
-  updateRolePermissionModel: (roleName: string, permissions: string[]) => void;
+  updateRolePermissionModel: (
+    roleName: string | undefined,
+    permissions: string[],
+    deleteRole: boolean,
+    prevSelected: string | undefined
+  ) => void;
   deleteRoleFromPermissionModel: (roleName: string) => void;
   removeRolePermission: (index: string) => void;
 }
@@ -102,6 +107,12 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
   const [selected, setSelected] = React.useState<any>(null);
   const [options, setOptions] = React.useState<IRoleOption[]>([]);
   const [showErrorAlert, setShowErrorAlert] = React.useState<boolean>(false);
+
+  const prevSelectedRef = React.useRef();
+  React.useEffect(() => {
+    prevSelectedRef.current = selected;
+  });
+  const prevSelected: string | undefined = prevSelectedRef.current;
 
   // tslint:disable-next-line: no-shadowed-variable
   const onToggle = (isExpanded: boolean) => {
@@ -188,12 +199,14 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
   ]);
 
   React.useEffect(() => {
+    const deleteRole = selected !== prevSelected;
     // tslint:disable-next-line: no-unused-expression
-    selected &&
-      props.updateRolePermissionModel(
-        selected,
-        getRolePermissionsModel(checkState)
-      );
+    props.updateRolePermissionModel(
+      selected,
+      getRolePermissionsModel(checkState),
+      deleteRole,
+      prevSelected
+    );
   }, [checkState, selected]);
 
   const titleId = 'role-select-id';
@@ -289,6 +302,7 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   id="check-5"
                   name="allAccessCheck"
                   isChecked={checkState.allAccessCheck}
+                  isDisabled={!selected}
                   onChange={handleChange}
                 />
               </DataListCell>,
