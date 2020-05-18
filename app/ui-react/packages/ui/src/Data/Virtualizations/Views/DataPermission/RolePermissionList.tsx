@@ -24,7 +24,12 @@ export interface IRolePermissionListProps {
   i18nRemoveRoleRow: string;
   i18nRoleExists: string;
   viewRolePermissionList: ITablePrivilege[];
-  updateRolePermissionModel: (roleName: string, permissions: string[]) => void;
+  updateRolePermissionModel: (
+    roleName: string | undefined,
+    permissions: string[],
+    deleteRole: boolean,
+    prevSelected: string | undefined
+  ) => void;
   deleteRoleFromPermissionModel: (roleName: string) => void;
   roles: string[];
 }
