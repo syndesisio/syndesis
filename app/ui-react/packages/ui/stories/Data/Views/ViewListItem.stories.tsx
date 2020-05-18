@@ -1,6 +1,5 @@
 import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
-import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
@@ -38,7 +37,7 @@ const sampleViewNotes =
 
 stories.add(
   'valid view item',
-  withNotes(sampleViewNotes)(() => (
+  () => (
     <ViewListItem
       viewId="viewListItem1"
       viewName={text('viewName', viewName)}
@@ -55,12 +54,13 @@ stories.add(
       isValid={true}
       onDelete={action(deleteActionText)}
     />
-  ))
+  ),
+  { notes: sampleViewNotes }
 );
 
 stories.add(
   'invalid view item',
-  withNotes(sampleViewNotes)(() => (
+  () => (
     <ViewListItem
       viewId="invalidViewListItem"
       viewName={text('viewName', viewName)}
@@ -77,5 +77,6 @@ stories.add(
       isValid={false}
       onDelete={action(deleteActionText)}
     />
-  ))
+  ),
+  { notes: sampleViewNotes }
 );

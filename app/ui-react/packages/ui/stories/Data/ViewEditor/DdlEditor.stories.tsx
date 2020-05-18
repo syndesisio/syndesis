@@ -23,6 +23,7 @@ const sourceInfo = [
     tables: [
       {
         name: 'contact',
+        // tslint:disable-next-line: object-literal-sort-keys
         columns: [
           { name: 'first_name', datatype: 'string' },
           { name: 'last_name', datatype: 'string' },
@@ -33,6 +34,7 @@ const sourceInfo = [
       },
       {
         name: 'todo',
+        // tslint:disable-next-line: object-literal-sort-keys
         columns: [
           { name: 'id', datatype: 'integer' },
           { name: 'task', datatype: 'string' },
@@ -41,6 +43,7 @@ const sourceInfo = [
       },
       {
         name: 'winelist',
+        // tslint:disable-next-line: object-literal-sort-keys
         columns: [
           { name: 'id', datatype: 'integer' },
           { name: 'wine', datatype: 'string' },
