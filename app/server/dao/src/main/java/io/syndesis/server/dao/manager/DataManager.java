@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -167,9 +168,9 @@ public class DataManager implements DataAccessObjectRegistry {
                         final Connector existing = fetch(Connector.class, id);
                         if (existing != null) {
                             // the only mutable part of the Connector
-                            final Map<String, String> configuredProperties = existing.getConfiguredProperties();
-
-                            connector = connector.builder().configuredProperties(configuredProperties).build();
+                            final Map<String, String> existingConfiguredProperties = existing.getConfiguredProperties();
+                            final Map<String, String> mergedConfiguredProperties = merge(existingConfiguredProperties, connector.getConfiguredProperties());
+                            connector = connector.builder().configuredProperties(mergedConfiguredProperties).build();
                         }
                         store(connector, Connector.class);
                     }
@@ -180,6 +181,20 @@ public class DataManager implements DataAccessObjectRegistry {
         } catch (IOException e) {
             throw new IllegalStateException("Cannot load connector from resources due to: " + e.getMessage(), e);
         }
+    }
+
+    private static Map<String, String> merge(Map<String, String> existingProps, Map<String, String> newProps) {
+        Map<String, String> mergedProps = new HashMap<>();
+        mergedProps.putAll(existingProps);
+        // New properties will override any existing property with same name
+        mergedProps.putAll(newProps);
+        LOGGER.info("Merging {} new configured properties with {} existing configured properties: {} merged configured properties",
+            newProps.size(),
+            existingProps.size(),
+            mergedProps.size()
+        );
+
+        return mergedProps;
     }
 
     public <T extends WithId<T>> void store(ModelData<T> modelData) {

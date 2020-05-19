@@ -18,6 +18,7 @@ package io.syndesis.server.dao;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -208,5 +209,42 @@ public class DataManagerTest {
         assertThat(afterInit.getConfiguredProperties()).contains(
             entry("clientId", "my-client-id"),
             entry("clientSecret", "my-client-secret"));
+    }
+
+    @Test
+    public void shouldInheritConfiguredProperties() {
+        Map<String, String> configuredPropertiesV0 = Collections.singletonMap("version0", "version0");
+        final Connector concur = dataManager.fetch(Connector.class, "concur");
+        final Connector connectorV0 = concur.builder()
+            .configuredProperties(configuredPropertiesV0)
+            .build();
+        dataManager.store(connectorV0, Connector.class);
+
+        // The reset simulate the update of a new connector version with the configured properties coming
+        // from the json descriptor (such as authenticationType)
+        dataManager.resetDeploymentData();
+        final Connector loadedConnector = dataManager.fetch(Connector.class, "concur");
+
+        assertThat(loadedConnector.getConfiguredProperties()).contains(
+            entry("authenticationType", "oauth2"),
+            entry("version0", "version0"));
+    }
+
+    @Test
+    public void shouldOverrideExistingConfiguredProperties() {
+        Map<String, String> configuredPropertiesV0 = Collections.singletonMap("authenticationType", "oldVersion");
+        final Connector concur = dataManager.fetch(Connector.class, "concur");
+        final Connector connectorV0 = concur.builder()
+            .configuredProperties(configuredPropertiesV0)
+            .build();
+        dataManager.store(connectorV0, Connector.class);
+
+        // The reset simulate the update of a new connector version with the configured properties coming
+        // from the json descriptor (we want this value to override the previous version one)
+        dataManager.resetDeploymentData();
+        final Connector loadedConnector = dataManager.fetch(Connector.class, "concur");
+
+        assertThat(loadedConnector.getConfiguredProperties()).contains(
+            entry("authenticationType", "oauth2"));
     }
 }
