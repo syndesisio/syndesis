@@ -119,7 +119,7 @@
     <dep.plugin.git-commit-id.version>4.0.0</dep.plugin.git-commit-id.version>
 
     <!-- UI dependencies -->
-    <iltorb-version>2.4.1</iltorb-version>
+    <iltorb-version>2.4.5</iltorb-version>
     <node-sass-version>4.12.0</node-sass-version>
 
     <!-- Common dependencies -->
