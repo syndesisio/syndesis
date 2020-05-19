@@ -79,6 +79,8 @@ export class ConfigureActionPage extends React.Component<
             IConfigureActionRouteState
           >>
             {(params, state, { history }) => {
+              // tslint:disable:no-console
+
               const pageAsNumber = parseInt(params.page, 10);
               const positionAsNumber = parseInt(params.position, 10);
               const oldStepConfig = getStep(
@@ -86,13 +88,44 @@ export class ConfigureActionPage extends React.Component<
                 params.flowId,
                 positionAsNumber
               );
-              const errorKeys = collectErrorKeys(
-                getFlow(
-                  state.updatedIntegration || state.integration,
-                  params.flowId
-                )!,
-                positionAsNumber
+
+              console.log(
+                'state.connection: ' + JSON.stringify(state.connection)
               );
+
+              /*
+              console.log(
+                'state.integration: ' +
+                  JSON.stringify(state.updatedIntegration || state.integration)
+              );
+              console.log('params.flowId: ' + params.flowId);
+
+               */
+
+              /*
+              const flowTest = getFlow(
+                state.updatedIntegration || state.integration,
+                params.flowId
+              )!;*/
+              // console.log('flowTest: ' + JSON.stringify(flowTest));
+
+              const flow = getFlow(
+                state.updatedIntegration || state.integration,
+                params.flowId
+              )!;
+
+              /**
+               * Check that the flow has `steps` at all.
+               * If it doesn't, chances are that it is a first unconfigured
+               * step (e.g. DB connector, webhook). In this case, the
+               * `standardizedErrors` key that we use to create error
+               * keys is located in the `actions` instead of the `steps`.
+               * TODO: Check that we can use this implementation for
+               * all connections, or if we need to add a conditional statement.
+               */
+
+              const errorKeys = collectErrorKeys(flow, positionAsNumber);
+
               /**
                * It's possible for this to be mismatched if we come into
                * this controller after deleting a start or end connection,
@@ -124,7 +157,6 @@ export class ConfigureActionPage extends React.Component<
                * whether or not to allow the user to press back on the Configure
                * Action page.
                */
-              const flow = getFlow(state.integration, params.flowId);
               const allowBack = !isApiProviderFlow(flow!);
 
               const onUpdatedIntegration = async ({
@@ -258,9 +290,7 @@ export class ConfigureActionPage extends React.Component<
                     })}
                     content={
                       <WithConfigurationForm
-                        key={`${positionAsNumber}:${
-                          params.actionId
-                        }:${pageAsNumber}`}
+                        key={`${positionAsNumber}:${params.actionId}:${pageAsNumber}`}
                         connection={state.connection}
                         actionId={params.actionId}
                         configurationPage={pageAsNumber}

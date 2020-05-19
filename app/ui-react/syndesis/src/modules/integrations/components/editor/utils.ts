@@ -98,7 +98,8 @@ export function toUIStep(step: Step | StepKind): IUIStep {
     case ENDPOINT:
     case CONNECTOR:
       // this step is a Connection step
-      const connectionName = step.name || step.connection!.name || step.connection!.connector!.name;
+      const connectionName =
+        step.name || step.connection!.name || step.connection!.connector!.name;
       return {
         ...step,
         description:
@@ -122,8 +123,7 @@ export function toUIStep(step: Step | StepKind): IUIStep {
           step.action.descriptor.propertyDefinitionSteps.length &&
           step.action.descriptor.propertyDefinitionSteps[0].properties,
         title:
-          `${connectionName} ` +
-          step.action
+          `${connectionName} ` + step.action
             ? ` - ${(step.action && step.action.name) || '<unknown>'}`
             : '',
         uiStepKind,
@@ -224,7 +224,8 @@ export function toUIIntegrationStepCollection(
           step.stepKind === CHOICE &&
           !isActionOutputShapeless(step.action.descriptor)
         ) {
-          shouldAddDefaultFlow = typeof step.configuredProperties!.default === 'undefined'
+          shouldAddDefaultFlow =
+            typeof step.configuredProperties!.default === 'undefined';
         }
       }
     }
@@ -322,42 +323,39 @@ export function mergeConnectionsSources(
         stepKind: ENDPOINT,
       } as StepKind)
     ),
-    ...extensions.reduce(
-      (extentionsByAction, extension) => {
-        (extension.actions || []).forEach(a => {
-          let properties = {};
-          if (
-            a.descriptor &&
-            Array.isArray(a.descriptor.propertyDefinitionSteps)
-          ) {
-            properties = a.descriptor.propertyDefinitionSteps.reduce(
-              (acc, current) => {
-                return { ...acc, ...current.properties };
-              },
-              {}
-            );
-          }
-          if (a.actionType === 'step') {
-            extentionsByAction.push(
-              toUIStep({
-                action: a,
-                configuredProperties: undefined,
-                description: a.description || '',
-                extension,
-                icon: extension.icon,
-                metadata: (extension.metadata as { [name: string]: any }) || {},
-                name: a.name,
-                properties,
-                stepKind: EXTENSION,
-                title: a.name,
-              } as StepKind)
-            );
-          }
-        });
-        return extentionsByAction;
-      },
-      [] as IUIStep[]
-    ),
+    ...extensions.reduce((extentionsByAction, extension) => {
+      (extension.actions || []).forEach(a => {
+        let properties = {};
+        if (
+          a.descriptor &&
+          Array.isArray(a.descriptor.propertyDefinitionSteps)
+        ) {
+          properties = a.descriptor.propertyDefinitionSteps.reduce(
+            (acc, current) => {
+              return { ...acc, ...current.properties };
+            },
+            {}
+          );
+        }
+        if (a.actionType === 'step') {
+          extentionsByAction.push(
+            toUIStep({
+              action: a,
+              configuredProperties: undefined,
+              description: a.description || '',
+              extension,
+              icon: extension.icon,
+              metadata: (extension.metadata as { [name: string]: any }) || {},
+              name: a.name,
+              properties,
+              stepKind: EXTENSION,
+              title: a.name,
+            } as StepKind)
+          );
+        }
+      });
+      return extentionsByAction;
+    }, [] as IUIStep[]),
     ...steps.map(s => toUIStep(s)),
   ]
     .filter(s => !!s.uiStepKind) // this should never happen
@@ -494,6 +492,8 @@ export function visibleStepsByPosition(
 export function collectErrorKeys(flow: Flow, position: number) {
   // We want all previous steps and this step
   const previousSteps = getPreviousSteps(flow.steps!, position + 1);
+  // tslint:disable:no-console
+  console.log('previousSteps: ' + JSON.stringify(previousSteps));
   // Gather up all possible standardized errors in the flow
   const collectedErrors = previousSteps
     .filter(s => typeof s.action !== 'undefined')
