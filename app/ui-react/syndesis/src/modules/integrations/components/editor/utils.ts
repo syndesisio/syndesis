@@ -25,6 +25,7 @@ import {
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import {
+  Action,
   Connection,
   ConnectionOverview,
   ConnectorAction,
@@ -32,7 +33,6 @@ import {
   ErrorKey,
   ExtendedActionDescriptor,
   Extension,
-  Flow,
   IConnectionOverview,
   Step,
   StepKind,
@@ -484,18 +484,23 @@ export function visibleStepsByPosition(
   });
 }
 
+const errorKeysWithDuplicates = (collectedErrors: any[]) => {
+  return [].concat(...(collectedErrors as any)) as ErrorKey[];
+};
+
+const uniqueErrorArray = (arrayParam: any[]) => {
+  return Array.from(new Set(arrayParam.map(err => err.name)));
+};
+
 /**
- * Builds an array of error keys for a flow using all steps before the supplied position
- * @param flow
+ * Returns the actions array for a flow using all steps before the supplied position
+ * @param flowSteps
  * @param position
  */
-export function collectErrorKeys(flow: Flow, position: number) {
+export function actionsFromFlow(flowSteps: Step[], position: number) {
   // We want all previous steps and this step
-  const previousSteps = getPreviousSteps(flow.steps!, position + 1);
-  // tslint:disable:no-console
-  console.log('previousSteps: ' + JSON.stringify(previousSteps));
-  // Gather up all possible standardized errors in the flow
-  const collectedErrors = previousSteps
+  const previousSteps = getPreviousSteps(flowSteps, position + 1);
+  return previousSteps
     .filter(s => typeof s.action !== 'undefined')
     .filter(s => s.action!.descriptor !== 'undefined')
     .filter(
@@ -503,19 +508,20 @@ export function collectErrorKeys(flow: Flow, position: number) {
         typeof (s.action!.descriptor! as ExtendedActionDescriptor)
           .standardizedErrors !== 'undefined'
     )
-    .map(
-      s =>
-        (s.action!.descriptor! as ExtendedActionDescriptor).standardizedErrors!
-    );
-  const standardizedErrorsWithDuplicates = [].concat(
-    ...(collectedErrors as any)
-  ) as ErrorKey[];
-  const uniqueErrors = Array.from(
-    new Set(standardizedErrorsWithDuplicates.map(err => err.name))
+    .map(s => s.action!);
+}
+
+export function collectErrorKeysFromActions(actions: Action[]) {
+  const collectedErrors = actions.map(
+    a => (a.descriptor! as ExtendedActionDescriptor).standardizedErrors!
   );
+
+  const standardizedErrors = errorKeysWithDuplicates(collectedErrors);
+  const uniqueErrors = uniqueErrorArray(standardizedErrors);
+
   return uniqueErrors
     .map(uniqueError =>
-      standardizedErrorsWithDuplicates.find(err => err.name === uniqueError!)
+      standardizedErrors.find(err => err.name === uniqueError!)
     )
     .map(err => localizeErrorKey(err!));
 }

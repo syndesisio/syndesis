@@ -37,9 +37,7 @@ export interface IConfigurationFormProps
   isBackAllowed: boolean;
 }
 
-export const ConfigurationForm: React.FunctionComponent<
-  IConfigurationFormProps
-> = ({
+export const ConfigurationForm: React.FunctionComponent<IConfigurationFormProps> = ({
   action,
   configurationPage,
   descriptor,
@@ -111,26 +109,26 @@ export const ConfigurationForm: React.FunctionComponent<
       >
         {({ fields, handleSubmit, isValid, isSubmitting, submitForm }) => {
           return (
-          <>
-            <IntegrationEditorForm
-              i18nFormTitle={formTitle}
-              i18nBackAction={'Choose Action'}
-              i18nNext={'Next'}
-              isBackAllowed={isBackAllowed}
-              isValid={isValid}
-              isLoading={isSubmitting}
-              submitForm={() => {
-                setError(undefined);
-                submitForm();
-              }}
-              handleSubmit={handleSubmit}
-              backActionHref={chooseActionHref}
-              error={error}
-            >
-              {fields}
-            </IntegrationEditorForm>
-          </>
-          )
+            <>
+              <IntegrationEditorForm
+                i18nFormTitle={formTitle}
+                i18nBackAction={'Choose Action'}
+                i18nNext={'Next'}
+                isBackAllowed={isBackAllowed}
+                isValid={isValid}
+                isLoading={isSubmitting}
+                submitForm={() => {
+                  setError(undefined);
+                  submitForm();
+                }}
+                handleSubmit={handleSubmit}
+                backActionHref={chooseActionHref}
+                error={error}
+              >
+                {fields}
+              </IntegrationEditorForm>
+            </>
+          );
         }}
       </AutoForm>
     );

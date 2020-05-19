@@ -7,6 +7,7 @@ import {
   isStartStep,
   requiresInputDescribeDataShape,
   requiresOutputDescribeDataShape,
+  WEBHOOK_INCOMING_ACTION_ID,
   WithIntegrationHelpers,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
@@ -24,7 +25,12 @@ import {
   IDescribeDataShapeRouteState,
   IPageWithEditorBreadcrumb,
 } from '../interfaces';
-import { collectErrorKeys, toUIStep, toUIStepCollection } from '../utils';
+import {
+  actionsFromFlow,
+  collectErrorKeysFromActions,
+  toUIStep,
+  toUIStepCollection,
+} from '../utils';
 import {
   IOnUpdatedIntegrationProps,
   WithConfigurationForm,
@@ -79,8 +85,6 @@ export class ConfigureActionPage extends React.Component<
             IConfigureActionRouteState
           >>
             {(params, state, { history }) => {
-              // tslint:disable:no-console
-
               const pageAsNumber = parseInt(params.page, 10);
               const positionAsNumber = parseInt(params.position, 10);
               const oldStepConfig = getStep(
@@ -89,42 +93,29 @@ export class ConfigureActionPage extends React.Component<
                 positionAsNumber
               );
 
-              console.log(
-                'state.connection: ' + JSON.stringify(state.connection)
-              );
-
-              /*
-              console.log(
-                'state.integration: ' +
-                  JSON.stringify(state.updatedIntegration || state.integration)
-              );
-              console.log('params.flowId: ' + params.flowId);
-
-               */
-
-              /*
-              const flowTest = getFlow(
-                state.updatedIntegration || state.integration,
-                params.flowId
-              )!;*/
-              // console.log('flowTest: ' + JSON.stringify(flowTest));
-
               const flow = getFlow(
                 state.updatedIntegration || state.integration,
                 params.flowId
               )!;
 
               /**
-               * Check that the flow has `steps` at all.
-               * If it doesn't, chances are that it is a first unconfigured
-               * step (e.g. DB connector, webhook). In this case, the
-               * `standardizedErrors` key that we use to create error
-               * keys is located in the `actions` instead of the `steps`.
-               * TODO: Check that we can use this implementation for
-               * all connections, or if we need to add a conditional statement.
+               * Webhooks are treated differently because the `actions` that
+               * are used to extract `errorKeys` are located in the `connector`,
+               * whereas they are usually in the `flow` and have be
+               * extracted beforehand.
                */
 
-              const errorKeys = collectErrorKeys(flow, positionAsNumber);
+              const isWebHook = params.actionId === WEBHOOK_INCOMING_ACTION_ID;
+
+              const getFlowActions = actionsFromFlow(
+                flow.steps!,
+                positionAsNumber
+              );
+
+              const actions = isWebHook
+                ? state.connection!.connector!.actions
+                : getFlowActions;
+              const errorKeys = collectErrorKeysFromActions(actions);
 
               /**
                * It's possible for this to be mismatched if we come into

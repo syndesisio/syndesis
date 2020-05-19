@@ -138,8 +138,12 @@ export const WithConfigurationForm: React.FunctionComponent<IWithConfigurationFo
       getConnectorActions(getConnectionConnector(props.connection)),
       props.actionId
     );
+
+  const isApiProvider = props.actionId === API_PROVIDER_END_ACTION_ID;
+  const isWebHook = props.actionId === WEBHOOK_INCOMING_ACTION_ID;
+
   // The API provider end action gets some special treatment
-  if (props.actionId === API_PROVIDER_END_ACTION_ID || props.actionId === WEBHOOK_INCOMING_ACTION_ID) {
+  if (isApiProvider) {
     const definitionOverride = applyErrorKeysToForm(action, props.errorKeys!);
     return (
       <ConfigurationForm
@@ -156,6 +160,11 @@ export const WithConfigurationForm: React.FunctionComponent<IWithConfigurationFo
       </ConfigurationForm>
     );
   }
+
+  const webhookDefinitionOverride = isWebHook
+    ? applyErrorKeysToForm(action, props.errorKeys!)
+    : null;
+
   // For all other actions, the descriptor is fetched from the meta service
   return (
     <WithActionDescriptor
@@ -181,7 +190,12 @@ export const WithConfigurationForm: React.FunctionComponent<IWithConfigurationFo
           }
         >
           {() => (
-            <ConfigurationForm action={action} descriptor={data} {...props}>
+            <ConfigurationForm
+              action={action}
+              definitionOverride={webhookDefinitionOverride}
+              descriptor={data}
+              {...props}
+            >
               <NothingToConfigure
                 action={action}
                 descriptor={data}
