@@ -81,6 +81,7 @@
             <configuration>
               <environmentVariables>
                 <CYPRESS_INSTALL_BINARY>0</CYPRESS_INSTALL_BINARY>
+                <PUPPETEER_SKIP_CHROMIUM_DOWNLOAD>true</PUPPETEER_SKIP_CHROMIUM_DOWNLOAD>
               </environmentVariables>
               <arguments>install --force --no-progress --frozen-lockfile ${yarn-install-args} ${yarn-verbose}</arguments>
             </configuration>
@@ -316,7 +317,7 @@
                 </goals>
                 <configuration>
                   <url>${iltorb-binary-site}/v${iltorb-version}/iltorb-v${iltorb-version}-node-v64-${os.type}-x64.tar.gz</url>
-                  <outputFileName>45aa7d-iltorb-v${iltorb-version}-node-v64-${os.type}-x64.tar.gz</outputFileName>
+                  <outputFileName>2a34dd-iltorb-v${iltorb-version}-node-v64-linux-x64.tar.gz</outputFileName>
                   <outputDirectory>${user.home}/.npm/_prebuilds/</outputDirectory>
                 </configuration>
               </execution>
