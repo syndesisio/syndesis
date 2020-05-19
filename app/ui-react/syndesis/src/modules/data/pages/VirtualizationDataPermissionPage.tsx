@@ -301,6 +301,8 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                     i18nSelectRoleText={t('roleSelectText')} 
                     i18nRoleExists={t('roleAlreadyExistsText')}
                     i18nSelectedViewsMsg={t('permissionSeletedViews')}
+                    i18nShowLess={t('permissionShowLess')}
+                    i18nShowMore={t('permissionShowMore')}
                     i18nSsoConfigWarning={t('permissionSsoConfig')}
                     i18nSsoConfigWarningTitle={t('permissionSsoConfigTitle')}
                     linkCreateViewHRef={resolvers.data.virtualizations.views.createView.selectSources(
@@ -350,6 +352,7 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                             viewId={viewDefinitionDescriptor.id}
                             viewName={viewDefinitionDescriptor.name}
                             i18nPermissionNotSet={t('permissionNotSet')}
+                            i18nShowLess={t('permissionShowLess')}
                             viewRolePermissionList={
                               viewDefinitionDescriptor.tablePrivileges
                             }

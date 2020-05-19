@@ -107,6 +107,8 @@
   "permissionSelectAll": "Seleziona tutto ({{allListLength}} articoli)",
   "permissionSet": "Imposta l'autorizzazione",
   "permissionSeletedViews": "Concedere o revocare le autorizzazioni per le viste selezionate: ",
+  "permissionShowLess": "Mostra meno",
+  "permissionShowMore": "Mostra di più",
   "permissionSsoConfig": "La pubblicazione con ruoli modificati avrà esito negativo a meno che non sia configurato SSO.",
   "permissionSsoConfigTitle": "SSO non configurato",
   "preview": {

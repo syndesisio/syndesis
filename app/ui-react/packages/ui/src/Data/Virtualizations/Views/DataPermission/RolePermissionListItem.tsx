@@ -228,7 +228,7 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
         <DataListItemRow>
           <DataListItemCells
             dataListCells={[
-              <DataListCell key="primary content" width={2}>
+              <DataListCell key="roleSelect" width={2}>
                 <span id={titleId} hidden={true}>
                   {props.i18nSelectRole}
                 </span>
@@ -250,10 +250,11 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   ))}
                 </Select>
               </DataListCell>,
-              <DataListCell key="secondary content 1" width={1}>
+              <DataListCell key="selectCheckbox" width={1}>
                 <Checkbox
                   label=""
-                  aria-label="uncontrolled checkbox example"
+                  className="role-permission-list-item_checkbox"
+                  aria-label="select checkbox"
                   id="check-select"
                   name="selectCheck"
                   isChecked={checkState.selectCheck}
@@ -262,10 +263,11 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   onChange={handleChange}
                 />
               </DataListCell>,
-              <DataListCell key="secondary content 2" width={1}>
+              <DataListCell key="insertCheckbox" width={1}>
                 <Checkbox
                   label=""
-                  aria-label="uncontrolled checkbox example"
+                  className="role-permission-list-item_checkbox"
+                  aria-label="insert checkbox"
                   id="check-insert"
                   name="insertCheck"
                   isChecked={checkState.insertCheck}
@@ -273,10 +275,11 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   onChange={handleChange}
                 />
               </DataListCell>,
-              <DataListCell key="secondary content 3" width={1}>
+              <DataListCell key="updateCheckbox" width={1}>
                 <Checkbox
                   label=""
-                  aria-label="uncontrolled checkbox example"
+                  className="role-permission-list-item_checkbox"
+                  aria-label="update checkbox"
                   id="check-update"
                   name="updateCheck"
                   isChecked={checkState.updateCheck}
@@ -284,10 +287,11 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   onChange={handleChange}
                 />
               </DataListCell>,
-              <DataListCell key="more content 4" width={1}>
+              <DataListCell key="deleteCheckbox" width={1}>
                 <Checkbox
                   label=""
-                  aria-label="uncontrolled checkbox example"
+                  className="role-permission-list-item_checkbox"
+                  aria-label="delete checkbox"
                   id="check-delete"
                   name="deleteCheck"
                   isChecked={checkState.deleteCheck}
@@ -295,10 +299,11 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   onChange={handleChange}
                 />
               </DataListCell>,
-              <DataListCell key="more content 5" width={1}>
+              <DataListCell key="allAccessCheckbox" width={1}>
                 <Checkbox
                   label=""
-                  aria-label="uncontrolled checkbox example"
+                  className="role-permission-list-item_checkbox"
+                  aria-label="allAccess checkbox"
                   id="check-5"
                   name="allAccessCheck"
                   isChecked={checkState.allAccessCheck}

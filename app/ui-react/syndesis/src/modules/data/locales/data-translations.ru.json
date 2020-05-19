@@ -107,6 +107,8 @@
   "permissionSelectAll": "Выбрать все ({{allListLength}} пунктов)",
   "permissionSet": "Установить разрешение",
   "permissionSeletedViews": "Предоставить или отозвать разрешения для выбранных видов: ",
+  "permissionShowLess": "Показывай меньше",
+  "permissionShowMore": "Показать больше",
   "permissionSsoConfig": "Публикация с отредактированными ролями завершится неудачей, если не настроен SSO.",
   "permissionSsoConfigTitle": "SSO не настроен",
   "preview": {

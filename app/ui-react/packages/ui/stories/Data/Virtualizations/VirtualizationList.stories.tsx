@@ -1,6 +1,5 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
-import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -239,7 +238,7 @@ stories
 
   .add(
     'empty list',
-    withNotes(noVirtualizationsTestNotes)(() => (
+    () => (
       <Router>
         <VirtualizationList
           activeFilters={[]}
@@ -299,12 +298,13 @@ stories
           hasListData={false}
         />
       </Router>
-    ))
+    ),
+    { notes: noVirtualizationsTestNotes }
   )
 
   .add(
     '3 virtualizations',
-    withNotes(threeVirtualizationsTestNotes)(() => (
+    () => (
       <Router>
         <VirtualizationList
           activeFilters={[]}
@@ -366,12 +366,13 @@ stories
           hasListData={true}
         />
       </Router>
-    ))
+    ),
+    { notes: threeVirtualizationsTestNotes }
   )
 
   .add(
     'single virtualization - expand views',
-    withNotes(singleVirtualizationWithViewsTestNotes)(() => (
+    () => (
       <Router>
         <VirtualizationList
           activeFilters={[]}
@@ -433,5 +434,6 @@ stories
           hasListData={true}
         />
       </Router>
-    ))
+    ),
+    { notes: singleVirtualizationWithViewsTestNotes }
   );

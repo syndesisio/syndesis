@@ -25,6 +25,7 @@ export interface IViewPermissionListItemsProps {
   viewRolePermissionList: ITablePrivilege[];
   itemSelected: Map<string, string>;
   i18nPermissionNotSet: string;
+  i18nShowLess: string;
   // status: any;
   // dvRoles: string[];
   onSelectedViewChange: (
@@ -126,8 +127,8 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
                 // tslint:disable-next-line: jsx-no-lambda
                 <Button variant={'link'} onClick={() => setShowAll(!showAll)}>
                   {showAll
-                    ? 'Show less'
-                    : `${props.viewRolePermissionList.length - 4}more...`}{' '}
+                    ? `${props.i18nShowLess}`
+                    : `${props.viewRolePermissionList.length - 4} more...`}{' '}
                 </Button>
               )}
               {props.viewRolePermissionList.length === 0 && (
