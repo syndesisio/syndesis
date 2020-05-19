@@ -15,6 +15,7 @@
  */
 package io.syndesis.dv.utils;
 
+import java.io.UncheckedIOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ import org.springframework.data.util.Pair;
  *
  *  The Path string will be composed of key=value string pairs separated by forward slash ('/')
  */
-public class PathUtils {
+public final class PathUtils {
     /**
      * The String "/"
      */
@@ -39,6 +40,10 @@ public class PathUtils {
      * The String "="
      */
     public static final String VALUE_SEPARATOR = "="; //$NON-NLS-1$
+
+    private PathUtils() {
+        // utility class
+    }
 
     /**
      * Simple method parses the input path and returns a set of string {@link Properties}
@@ -60,7 +65,7 @@ public class PathUtils {
             try {
                 props.add(Pair.of(URLDecoder.decode(key, "UTF-8") , URLDecoder.decode(value, "UTF-8")));
             } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
+                throw new UncheckedIOException(e);
             }
         }
 

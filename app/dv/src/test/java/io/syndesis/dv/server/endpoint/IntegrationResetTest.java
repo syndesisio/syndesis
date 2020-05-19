@@ -29,6 +29,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import io.syndesis.dv.server.Application;
@@ -37,6 +38,7 @@ import io.syndesis.dv.server.endpoint.IntegrationTest.IntegrationTestConfigurati
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = {IntegrationTestConfiguration.class, Application.class})
+@TestPropertySource(properties = "spring.config.name=application-test")
 @SuppressWarnings("nls")
 public class IntegrationResetTest {
 
@@ -44,7 +46,7 @@ public class IntegrationResetTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void testReset() throws Exception {
+    public void testReset() {
         RestDataVirtualization rdv = new RestDataVirtualization();
         String dvName = "testPublish";
         rdv.setName(dvName);
@@ -54,14 +56,17 @@ public class IntegrationResetTest {
                 "/v1/virtualizations", rdv, String.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        ResponseEntity<List> virts = restTemplate.getForEntity("/v1/virtualizations", List.class);
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        final Class<List<?>> listOfAnything = (Class) List.class;
+
+        ResponseEntity<List<?>> virts = restTemplate.getForEntity("/v1/virtualizations", listOfAnything);
         assertEquals(HttpStatus.OK, virts.getStatusCode());
         assertEquals(1, virts.getBody().size());
 
         ResponseEntity<String> resetResponse = restTemplate.getForEntity("/v1/test-support/reset-db", String.class);
         assertEquals(HttpStatus.OK, resetResponse.getStatusCode());
 
-        virts = restTemplate.getForEntity("/v1/virtualizations", List.class);
+        virts = restTemplate.getForEntity("/v1/virtualizations", listOfAnything);
         assertEquals(HttpStatus.OK, virts.getStatusCode());
         assertEquals(0, virts.getBody().size());
     }

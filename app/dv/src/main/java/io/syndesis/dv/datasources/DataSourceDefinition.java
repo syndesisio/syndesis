@@ -32,7 +32,7 @@ import io.syndesis.dv.metadata.internal.TeiidDataSourceImpl;
  * Service catalog based Data Services that are available
  */
 public abstract class DataSourceDefinition {
-    private static ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+    private static final ScheduledThreadPoolExecutor EXECUTOR = new ScheduledThreadPoolExecutor(1);
 
     /**
      * Returns the type of the database. Matches with the translator name
@@ -77,7 +77,7 @@ public abstract class DataSourceDefinition {
             ((HikariDataSource)ds).setMaximumPoolSize(10);
             ((HikariDataSource)ds).setMinimumIdle(0);
             ((HikariDataSource)ds).setIdleTimeout(60000);
-            ((HikariDataSource)ds).setScheduledExecutor(executor);
+            ((HikariDataSource)ds).setScheduledExecutor(EXECUTOR);
         }
         Map<String, String> importProperties = new HashMap<String, String>();
         Map<String, String> translatorProperties = new HashMap<String, String>();

@@ -24,6 +24,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+import io.syndesis.dv.StringConstants;
 import io.syndesis.dv.server.V1Constants;
 
 /**
@@ -84,7 +87,7 @@ public final class RestSyndesisSourceStatus implements V1Constants {
      */
     @Override
     public boolean equals( final Object obj ) {
-        if ( obj == null || !( obj instanceof RestSyndesisSourceStatus ) ) {
+        if ( !( obj instanceof RestSyndesisSourceStatus ) ) {
             return false;
         }
 
@@ -116,7 +119,7 @@ public final class RestSyndesisSourceStatus implements V1Constants {
      * @return the errors (never <code>null</code>)
      */
     public List<String> getErrors() {
-        return this.errors == null ? Arrays.asList( EMPTY_ARRAY ) : this.errors;
+        return this.errors == null ? Arrays.asList( StringConstants.EMPTY_ARRAY ) : this.errors;
     }
 
     /**
@@ -188,10 +191,12 @@ public final class RestSyndesisSourceStatus implements V1Constants {
         return loading;
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public void setLastLoad(Date lastLoad) {
         this.lastLoad = lastLoad;
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public Date getLastLoad() {
         return lastLoad;
     }

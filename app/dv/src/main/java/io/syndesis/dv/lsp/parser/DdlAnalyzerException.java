@@ -28,8 +28,7 @@ public class DdlAnalyzerException extends Exception {
      */
     private static final long serialVersionUID = 1L;
 
-    @SuppressWarnings("unused")
-    private Diagnostic diagnostic;
+    private final Diagnostic diagnostic;
 
     /**
      * The following constructors are for use by you for whatever
@@ -42,6 +41,7 @@ public class DdlAnalyzerException extends Exception {
      */
     public DdlAnalyzerException() {
       super();
+      diagnostic = null;
     }
 
     /** Constructor with message. */

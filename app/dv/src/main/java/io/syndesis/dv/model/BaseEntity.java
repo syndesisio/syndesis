@@ -16,6 +16,7 @@
 package io.syndesis.dv.model;
 
 import java.sql.Timestamp;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -30,7 +31,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 @MappedSuperclass
+@SuppressWarnings({"PMD.AbstractClassWithoutAbstractMethod", "PMD.UnusedPrivateField"})
 public abstract class BaseEntity {
 
     @Id
@@ -57,16 +61,18 @@ public abstract class BaseEntity {
     public void setName(String name) {
         this.name = name;
         if (name != null) {
-            upperName = name.toUpperCase();
+            upperName = name.toUpperCase(Locale.US);
         } else {
             upperName = null;
         }
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public Timestamp getCreatedAt() {
         return createdAt;
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP")
     public Timestamp getModifiedAt() {
         return modifiedAt;
     }
@@ -74,7 +80,7 @@ public abstract class BaseEntity {
     @PrePersist
     protected void prePersist() {
         if (name != null) {
-            upperName = name.toUpperCase();
+            upperName = name.toUpperCase(Locale.US);
         }
     }
 
@@ -82,6 +88,7 @@ public abstract class BaseEntity {
         return version;
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public void setModifiedAt(Timestamp modifiedAt) {
         this.modifiedAt = modifiedAt;
     }

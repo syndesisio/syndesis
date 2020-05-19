@@ -31,16 +31,16 @@ class OAuthRefreshTokenOnFailProcessor extends OAuthRefreshTokenProcessor {
 
     private static final Logger LOG = LoggerFactory.getLogger(OAuthRefreshTokenOnFailProcessor.class);
 
-    private Set<Integer> statusesToRefreshFor = new HashSet<>();
+    private final Set<Integer> statusesToRefreshFor = new HashSet<>();
 
     OAuthRefreshTokenOnFailProcessor(final OAuthState state, final Configuration configuration) {
         super(state, configuration);
 
         final String statuses = configuration.stringOption("refreshTokenRetryStatuses");
         if (statuses != null) {
-            statusesToRefreshFor = Stream.of(statuses.split("\\s*,\\s*"))
+            statusesToRefreshFor.addAll(Stream.of(statuses.split("\\s*,\\s*"))
                 .map(Integer::valueOf)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet()));
         }
     }
 

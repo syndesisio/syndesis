@@ -18,6 +18,8 @@ package io.syndesis.dv.model;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
@@ -76,15 +78,26 @@ class TablePrivilegesId implements Serializable {
 @IdClass(TablePrivilegesId.class)
 public class TablePrivileges {
 
+    @JsonIgnore
+    @Column(name = "view_definition_id")
+    @Id private String viewDefinitionId;
+    //for bulk operations, not part of the db/import/export
+    @Transient
+    private List<String> viewDefinitionIds;
+    @Id private String roleName;
+    @Convert(converter = PrivilegeConvertor.class)
+    private Set<Privilege> grantPrivileges = new TreeSet<>();
+    //Set<Privilege> revokePrivilege = new TreeSet<>();
+
     public enum Privilege {
         S("SELECT"),
         I("INSERT"),
         U("UPDATE"),
         D("DELETE");
 
-        private String fullName;
+        private final String fullName;
 
-        private Privilege(String name) {
+        Privilege(String name) {
             this.fullName = name;
         }
 
@@ -124,18 +137,8 @@ public class TablePrivileges {
         }
     }
 
-    @JsonIgnore
-    @Column(name = "view_definition_id")
-    @Id private String viewDefinitionId;
-    //for bulk operations, not part of the db/import/export
-    @Transient
-    private String[] viewDefinitionIds;
-    @Id private String roleName;
-    @Convert(converter = PrivilegeConvertor.class)
-    private Set<Privilege> grantPrivileges = new TreeSet<>();
-    //Set<Privilege> revokePrivilege = new TreeSet<>();
-
     public TablePrivileges() {
+        // TODO needed?
     }
 
     public TablePrivileges(String roleName, String viewId, Privilege... privileges) {
@@ -180,14 +183,14 @@ public class TablePrivileges {
         return String.join(" ", viewDefinitionId, roleName, grantPrivileges.toString()); //$NON-NLS-1$
     }
 
-    public String[] getViewDefinitionIds() {
-        if (viewDefinitionIds == null) {
-            return new String[] {viewDefinitionId};
+    public List<String> getViewDefinitionIds() {
+        if (viewDefinitionIds == null || viewDefinitionIds.isEmpty()) {
+            return Collections.singletonList(viewDefinitionId);
         }
         return viewDefinitionIds;
     }
 
-    public void setViewDefinitionIds(String[] viewDefinitionIds) {
+    public void setViewDefinitionIds(List<String> viewDefinitionIds) {
         this.viewDefinitionIds = viewDefinitionIds;
     }
 

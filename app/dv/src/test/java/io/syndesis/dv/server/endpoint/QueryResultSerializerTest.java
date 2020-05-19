@@ -15,27 +15,26 @@
  */
 package io.syndesis.dv.server.endpoint;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Test;
 import io.syndesis.dv.metadata.query.QSColumn;
 import io.syndesis.dv.metadata.query.QSResult;
 import io.syndesis.dv.metadata.query.QSRow;
 import io.syndesis.dv.rest.JsonMarshaller;
 
-import io.syndesis.dv.StringConstants;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("nls")
-public class QueryResultSerializerTest implements StringConstants {
+public class QueryResultSerializerTest {
 
-    private static String[][] columnsData = {
+    private static final String[][] COLUMNS_DATA = {
         { "Id", "ID", "long" },
         { "Name", "Name", "varchar" },
         { "Code", "Code", "varchar" }
     };
 
-    private static Object[][] rowsData = {
+    private static final Object[][] ROWS_DATA = {
         { 1, "Florida", "FL" },
         { 2, "Washington", "WA" },
         { 3, "Missouri", "MI" },
@@ -43,30 +42,30 @@ public class QueryResultSerializerTest implements StringConstants {
         { 5, "Montana", "MO" }
     };
 
-    private static int COLUMN_NAME = 0;
+    private static final int COLUMN_NAME = 0;
 
-    private static int COLUMN_LABEL = 1;
+    private static final int COLUMN_LABEL = 1;
 
-    private static int COLUMN_TYPE = 2;
+    private static final int COLUMN_TYPE = 2;
 
     private QSResult queryResult;
 
-    private String JSON;
+    private String expected;
 
     @Before
-    public void init() throws Exception {
+    public void init() {
         queryResult = new QSResult();
 
-        for (int i = 0; i < columnsData.length; ++i) {
-            String[] columnData = columnsData[i];
+        for (int i = 0; i < COLUMNS_DATA.length; ++i) {
+            String[] columnData = COLUMNS_DATA[i];
 
             QSColumn column = new QSColumn(columnData[COLUMN_TYPE], columnData[COLUMN_NAME], columnData[COLUMN_LABEL]);
 
             queryResult.addColumn(column);
         }
 
-        for (int i = 0; i < rowsData.length; ++i) {
-            Object[] rowData = rowsData[i];
+        for (int i = 0; i < ROWS_DATA.length; ++i) {
+            Object[] rowData = ROWS_DATA[i];
 
             QSRow row = new QSRow();
             for (Object o : rowData) {
@@ -76,7 +75,7 @@ public class QueryResultSerializerTest implements StringConstants {
             queryResult.addRow(row);
         }
 
-        JSON = "{\n" +
+        expected = "{\n" +
                 "  \"columns\" : [ {\n" +
                 "    \"type\" : \"long\",\n" +
                 "    \"name\" : \"Id\",\n" +
@@ -105,9 +104,9 @@ public class QueryResultSerializerTest implements StringConstants {
     }
 
     @Test
-    public void shouldExportResult() throws Exception {
+    public void shouldExportResult() {
         String json = JsonMarshaller.marshall( this.queryResult );
-        assertEquals(JSON, json);
+        assertEquals(expected, json);
     }
 
 }

@@ -15,21 +15,18 @@
  */
 package io.syndesis.dv.openshift;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.PostConstruct;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.syndesis.dv.KException;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Objects;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.annotation.PostConstruct;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -38,16 +35,20 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class SyndesisConnectionMonitor {
-    private static final Log LOGGER = LogFactory.getLog(SyndesisConnectionMonitor.class);
+    private static final Log LOG = LogFactory.getLog(SyndesisConnectionMonitor.class);
     private volatile WebSocket webSocket;
     private volatile boolean connected;
-    private ObjectMapper mapper = new ObjectMapper();
-    private SyndesisConnectionSynchronizer connectionSynchronizer;
-    private ScheduledThreadPoolExecutor executor;
-    private static volatile boolean UPDATE = true;
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final SyndesisConnectionSynchronizer connectionSynchronizer;
+    private final ScheduledThreadPoolExecutor executor;
+    private static final AtomicBoolean UPDATE = new AtomicBoolean(true);
 
     static class Message {
         private String event;
@@ -73,7 +74,7 @@ public class SyndesisConnectionMonitor {
     static class EventMsg implements Comparable<EventMsg>{
         enum Type {
             created, deleted, updated
-        };
+        }
         private Type action;
         private String kind;
         private String id;
@@ -100,6 +101,20 @@ public class SyndesisConnectionMonitor {
         public int compareTo(EventMsg o) {
             return id.compareTo(o.id);
         }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof EventMsg)) {
+                return false;
+            }
+            EventMsg other = (EventMsg) obj;
+            return action == other.action && Objects.equals(kind, other.kind) && Objects.equals(id, other.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(action, kind, id);
+        }
     }
 
     public SyndesisConnectionMonitor(@Autowired SyndesisConnectionSynchronizer scs, @Autowired ScheduledThreadPoolExecutor connectionExecutor) {
@@ -121,66 +136,65 @@ public class SyndesisConnectionMonitor {
         if (isConnected()) {
             return;
         }
-        String RESERVATIONS_PATH = "http://syndesis-server/api/v1/event/reservations";
-        String WS_PATH = "ws://syndesis-server/api/v1/event/streams.ws/";
 
         ConnectionPool pool = new ConnectionPool(5, 10000, TimeUnit.MILLISECONDS);
         OkHttpClient client = new OkHttpClient.Builder().connectionPool(pool).build();
 
-        Request request = buildRequest().url(RESERVATIONS_PATH).post(RequestBody.create(null, "")).build();
+        String reservationsPath = "http://syndesis-server/api/v1/event/reservations";
+        Request request = buildRequest().url(reservationsPath).post(RequestBody.create(null, "")).build();
 
         Message message = null;
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 message = mapper.readValue(response.body().bytes(), Message.class);
             }
-            response.close();
         } catch (IOException e) {
-            LOGGER.info("Failed to retrive Subscription ID for reading the connection events: " + e.getMessage());
+            LOG.info("Failed to retrive Subscription ID for reading the connection events: " + e.getMessage());
         }
 
         if (message == null) {
             return;
         }
 
-        LOGGER.info("Connecting to syndesis server for process connection events");
+        LOG.info("Connecting to syndesis server for process connection events");
 
-        request = buildRequest().url(WS_PATH + message.getData()).build();
+        String wsPath = "ws://syndesis-server/api/v1/event/streams.ws/";
+        request = buildRequest().url(wsPath + message.getData()).build();
 
         webSocket = client.newWebSocket(request, new WebSocketListener() {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
-                LOGGER.debug("   ---->>>  onOpen(): Socket has been opened successfully.");
+                LOG.debug("   ---->>>  onOpen(): Socket has been opened successfully.");
             }
 
             @Override
             public void onMessage(WebSocket webSocket, String text) {
-                LOGGER.debug("   ---->>>  onMessage(String): New Text Message received " + text);
+                LOG.debug("   ---->>>  onMessage(String): New Text Message received " + text);
                 handleMessage(text);
             }
 
             @Override
             public void onMessage(WebSocket webSocket, ByteString message) {
-                LOGGER.debug("   ---->>>  onMessage(ByteString): New ByteString Message received " + message);
+                LOG.debug("   ---->>>  onMessage(ByteString): New ByteString Message received " + message);
                 handleMessage(new String(message.asByteBuffer().array(), Charset.defaultCharset()));
             }
 
             @Override
             public void onClosing(WebSocket webSocket, int code, String reason) {
-                LOGGER.debug("   ---->>>  onClosing(): Close request from server with reason '" + reason + "'");
+                LOG.debug("   ---->>>  onClosing(): Close request from server with reason '" + reason + "'");
                 webSocket.close(1000, reason);
                 connected = false;
             }
 
             @Override
             public void onClosed(WebSocket webSocket, int code, String reason) {
-                LOGGER.debug("   ---->>>  onClosed(): Socket connection closed with reason '" + reason + "'");
+                LOG.debug("   ---->>>  onClosed(): Socket connection closed with reason '" + reason + "'");
                 connected = false;
             }
 
             @Override
             public void onFailure(WebSocket webSocket, Throwable t, Response response) {
-                LOGGER.error("   ---->>>  onFailure(): failure received", t);
+                LOG.error("   ---->>>  onFailure(): failure received", t);
                 webSocket.close(1000, t.getMessage());
                 connected = false;
             }
@@ -190,20 +204,20 @@ public class SyndesisConnectionMonitor {
     private void handleMessage(String text) {
         executor.execute(() -> {
             try {
-                Message msg = mapper.readValue(text.getBytes(), Message.class);
+                Message msg = mapper.readValue(text.getBytes(UTF_8), Message.class);
                 if (msg.getEvent().contentEquals("message") && msg.getData().contentEquals("connected")) {
                     connected = true;
                     connectionSynchronizer.synchronizeConnections(false);
                 } else if (msg.getEvent().contentEquals("change-event")) {
-                    EventMsg event = mapper.readValue(msg.getData().getBytes(), EventMsg.class);
+                    EventMsg event = mapper.readValue(msg.getData().getBytes(UTF_8), EventMsg.class);
                     if (event.getKind().contentEquals("connection")) {
                         connectionSynchronizer.handleConnectionEvent(event);
                     } else {
-                        LOGGER.debug("Message discarded " + text);
+                        LOG.debug("Message discarded " + text);
                     }
                 }
             } catch (Exception e) {
-                LOGGER.error("handleMessage: Failed to process the message", e);
+                LOG.error("handleMessage: Failed to process the message", e);
             }
         });
     }
@@ -221,21 +235,21 @@ public class SyndesisConnectionMonitor {
     }
 
     @PostConstruct
+    @SuppressWarnings("FutureReturnValueIgnored")
     public void init() {
         this.executor.scheduleAtFixedRate(()->this.connect(), 5, 15, TimeUnit.SECONDS);
         this.executor.scheduleAtFixedRate(()->{
             try {
-                if (connected && UPDATE) {
+                if (connected && UPDATE.compareAndSet(true, false)) {
                     connectionSynchronizer.synchronizeConnections(true);
-                    UPDATE = false;
                 }
             } catch (KException e) {
-                LOGGER.error("failed to synchronize", e);
+                LOG.error("failed to synchronize", e);
             }
         }, 5, 15, TimeUnit.MINUTES);
     }
 
     public static void setUpdate(boolean update) {
-        UPDATE = update;
+        UPDATE.set(update);
     }
 }

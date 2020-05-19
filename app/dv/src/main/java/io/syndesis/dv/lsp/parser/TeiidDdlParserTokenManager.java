@@ -25,7 +25,7 @@ import org.teiid.query.parser.TokenMgrError;
 public class TeiidDdlParserTokenManager extends SQLParserTokenManager {
 
     static final int INVALID_TOKEN = -1;
-    int tokenCount = 0;
+    int tokenCount;
     Token head;
 
     public TeiidDdlParserTokenManager(JavaCharStream stream) {
@@ -62,7 +62,8 @@ public class TeiidDdlParserTokenManager extends SQLParserTokenManager {
             try {
                 //mark the char a consumed
                 this.input_stream.readChar();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
+                // ignored
             }
             return t;
         }

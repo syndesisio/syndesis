@@ -16,9 +16,10 @@
 
 package io.syndesis.dv.repository;
 
-import static org.junit.Assert.*;
-
 import java.util.Arrays;
+
+import io.syndesis.dv.model.DataVirtualization;
+import io.syndesis.dv.model.ViewDefinition;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,8 +28,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import io.syndesis.dv.model.DataVirtualization;
-import io.syndesis.dv.model.ViewDefinition;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -42,7 +45,7 @@ public class ViewDefinitionTest {
     private RepositoryManagerImpl repositoryManager;
 
     @Test
-    public void testFindDeleteByName() throws Exception {
+    public void testFindDeleteByName() {
         DataVirtualization dv = repositoryManager.createDataVirtualization("name");
 
         ViewDefinition v = repositoryManager.createViewDefiniton(dv.getName(), "x");
@@ -98,7 +101,7 @@ public class ViewDefinitionTest {
     }
 
     @Test
-    public void testSameName() throws Exception {
+    public void testSameName() {
         repositoryManager.createDataVirtualization("name");
 
         repositoryManager.createDataVirtualization("name1");
@@ -113,7 +116,7 @@ public class ViewDefinitionTest {
     }
 
     @Test
-    public void testDeleteByVirtualization() throws Exception {
+    public void testDeleteByVirtualization() {
         repositoryManager.createDataVirtualization("dv");
         repositoryManager.createViewDefiniton("dv", "x");
         repositoryManager.createViewDefiniton("dv", "y");

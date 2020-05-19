@@ -18,14 +18,12 @@ package io.syndesis.dv.utils;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import io.syndesis.dv.StringConstants;
-
 /**
  * This is a common place to put String utility methods.
  *
  *
  */
-public final class StringUtils implements StringConstants {
+public final class StringUtils {
 
     /**
      * @param text the text being checked (may be <code>null</code>)

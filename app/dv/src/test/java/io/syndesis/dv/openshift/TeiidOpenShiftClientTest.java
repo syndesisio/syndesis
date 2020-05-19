@@ -19,8 +19,6 @@ package io.syndesis.dv.openshift;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.util.concurrent.Callable;
-
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -34,13 +32,12 @@ public class TeiidOpenShiftClientTest {
     static abstract class MockRepositoryManager implements RepositoryManager {
 
         @Override
-        public <T> T runInTransaction(boolean rollbackOnly,
-                Callable<T> callable) throws Exception {
-            return callable.call();
+        public <T> T runInTransaction(boolean rollbackOnly, Task<T> task) {
+            return task.call();
         }
     }
 
-    @Test public void testSetTeiidName() throws Exception {
+    @Test public void testSetTeiidName() {
         MetadataInstance metadata = Mockito.mock(MetadataInstance.class);
 
         RepositoryManager mock = Mockito.mock(MockRepositoryManager.class);

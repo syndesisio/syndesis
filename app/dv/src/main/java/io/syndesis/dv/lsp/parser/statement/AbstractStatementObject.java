@@ -17,15 +17,15 @@ package io.syndesis.dv.lsp.parser.statement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.lsp4j.Position;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.parser.Token;
 
-import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
-public abstract class AbstractStatementObject implements DdlAnalyzerConstants  {
+public abstract class AbstractStatementObject {
     DdlTokenAnalyzer analyzer;
     int firstTknIndex;
     int lastTknIndex;
@@ -35,7 +35,7 @@ public abstract class AbstractStatementObject implements DdlAnalyzerConstants  {
         this.analyzer = analyzer;
     }
 
-    public Token[] getTokens() {
+    public List<Token> getTokens() {
         return this.analyzer.getTokens();
     }
 
@@ -109,22 +109,22 @@ public abstract class AbstractStatementObject implements DdlAnalyzerConstants  {
         this.lastTknIndex = lastTknIndex;
     }
 
-    protected boolean hasAnotherToken(Token[] tkns, int currentIndex) {
-        return currentIndex+2 < tkns.length;
+    protected boolean hasAnotherToken(List<Token> tkns, int currentIndex) {
+        return currentIndex+2 < tkns.size();
     }
 
-    protected boolean isNextTokenOfKind(Token[] tkns, int currentIndex, int kind) {
-        return hasAnotherToken(tkns, currentIndex) && tkns[currentIndex+1].kind == kind;
+    protected boolean isNextTokenOfKind(List<Token> tkns, int currentIndex, int kind) {
+        return hasAnotherToken(tkns, currentIndex) && tkns.get(currentIndex+1).kind == kind;
     }
 
-    public Token[] getBracketedTokens(Token[] tkns, int startTokenId, int bracketStartKind, int bracketEndKind) {
+    public List<Token> getBracketedTokens(List<Token> tkns, int startTokenId, int bracketStartKind, int bracketEndKind) {
         int numUnmatchedParens = 0;
 
-        for(int iTkn = 0; iTkn<getTokens().length; iTkn++) {
+        for(int iTkn = 0; iTkn<getTokens().size(); iTkn++) {
             if( iTkn < startTokenId) {
                 continue;
             }
-            Token token = tkns[iTkn];
+            Token token = tkns.get(iTkn);
             if( token.kind == bracketStartKind) {
                 numUnmatchedParens++;
             }
@@ -133,13 +133,13 @@ public abstract class AbstractStatementObject implements DdlAnalyzerConstants  {
             }
 
             if( numUnmatchedParens == 0) {
-                List<Token> bracketedTokens = new ArrayList<Token>(tkns.length);
-                bracketedTokens.add(tkns[startTokenId]);
+                List<Token> bracketedTokens = new ArrayList<Token>(tkns.size());
+                bracketedTokens.add(tkns.get(startTokenId));
                 for(int jTkn = startTokenId+1; jTkn < iTkn; jTkn++) {
-                    bracketedTokens.add(tkns[jTkn]);
+                    bracketedTokens.add(tkns.get(jTkn));
                 }
-                bracketedTokens.add(tkns[startTokenId + bracketedTokens.size()]);
-                return bracketedTokens.toArray(new Token[0]);
+                bracketedTokens.add(tkns.get(startTokenId + bracketedTokens.size()));
+                return bracketedTokens;
             }
         }
         return tkns;
@@ -150,13 +150,14 @@ public abstract class AbstractStatementObject implements DdlAnalyzerConstants  {
     }
 
     protected boolean isReservedKeywordToken(Token tkn) {
-        return SQLConstants.isReservedWord(tkn.image.toUpperCase());
+        return SQLConstants.isReservedWord(tkn.image.toUpperCase(Locale.US));
     }
 
     protected boolean isNonReservedKeywordToken(Token tkn) {
-        return SQLConstants.getNonReservedWords().contains(tkn.image.toUpperCase());
+        return SQLConstants.getNonReservedWords().contains(tkn.image.toUpperCase(Locale.US));
     }
 
+    @SuppressWarnings("PMD.SystemPrintln")
     protected void printTokens(Token[] tkns, String headerMessage) {
         System.out.println(headerMessage);
         for (Token token : tkns) {

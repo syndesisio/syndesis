@@ -17,6 +17,7 @@ package io.syndesis.dv.lsp.completion.providers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
@@ -28,11 +29,8 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import io.syndesis.dv.lsp.completion.DdlCompletionConstants;
 import io.syndesis.dv.lsp.completion.providers.items.DdlCompletionItemLoader;
 
-public class CompletionItemBuilder implements DdlCompletionConstants {
-    private DdlCompletionItemLoader loader = DdlCompletionItemLoader.getInstance();
-
-    public CompletionItemBuilder() {
-    }
+public class CompletionItemBuilder {
+    private final DdlCompletionItemLoader loader = DdlCompletionItemLoader.getInstance();
 
     public DdlCompletionItemLoader getItemLoader() {
         return loader;
@@ -117,7 +115,7 @@ public class CompletionItemBuilder implements DdlCompletionConstants {
         return ci;
     }
 
-    public List<CompletionItem> generateCompletionItems(String[] words) {
+    public List<CompletionItem> generateCompletionItems(String... words) {
         List<CompletionItem> items = new ArrayList<CompletionItem>();
 
         for(String word: words ) {
@@ -146,10 +144,10 @@ public class CompletionItemBuilder implements DdlCompletionConstants {
         String[4] insertTextFormat;
      */
     public String[] getItemData(String label) {
-        String[] result = KEYWORDS_ITEM_DATA.get(label.toUpperCase());
+        String[] result = DdlCompletionConstants.KEYWORDS_ITEM_DATA.get(label.toUpperCase(Locale.US));
 
         if( result == null ) {
-            result = DATATYPES_ITEM_DATA.get(label);
+            result = DdlCompletionConstants.DATATYPES_ITEM_DATA.get(label);
         }
 
         return result;
@@ -179,7 +177,7 @@ public class CompletionItemBuilder implements DdlCompletionConstants {
         MarkupContent markupContent = new MarkupContent();
         markupContent.setKind(MarkupKind.MARKDOWN);
         markupContent.setValue(
-                String.format("```%s\n%s\n```", "java", escapedString));
+                String.format("```%s%n%s%n```", "java", escapedString));
         return Either.forRight(markupContent);
     }
 

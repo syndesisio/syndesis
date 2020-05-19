@@ -23,7 +23,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.teiid.translator.ExecutionFactory;
 import org.teiid.translator.Translator;
 
-public class ExternalSource {
+public final class ExternalSource {
 
     private ExternalSource() {}
 

@@ -35,12 +35,12 @@ public class RestSourceTable {
     /*
      * The table name
      */
-    private String name;
+    private final String name;
 
     /*
      * The columns for this table
      */
-    private RestSourceColumn[] columns;
+    private final List<RestSourceColumn> columns;
 
     /**
      * Constructor for use when de-serializing
@@ -48,18 +48,17 @@ public class RestSourceTable {
     public RestSourceTable(Table table) {
         super();
         this.name = table.getName();
-        List<RestSourceColumn> tableColumns = new ArrayList<RestSourceColumn>();
+        this.columns = new ArrayList<RestSourceColumn>();
         for( Column column : table.getColumns()) {
-            tableColumns.add(new RestSourceColumn(column));
+            columns.add(new RestSourceColumn(column));
         }
-        this.columns = tableColumns.toArray(new RestSourceColumn[0]);
     }
 
     public String getName() {
         return this.name;
     }
 
-    public RestSourceColumn[] getColumns() {
+    public List<RestSourceColumn> getColumns() {
         return this.columns;
     }
 }

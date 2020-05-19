@@ -32,12 +32,12 @@ import org.slf4j.LoggerFactory;
 
 public class TeiidDdlLanguageServer implements LanguageServer, LanguageClientAware {
 
-    private static CompletionOptions DEFAULT_COMPLETION_OPTIONS = new CompletionOptions(Boolean.TRUE, Arrays.asList(".", "@", "#", "*"));
+    private static final CompletionOptions DEFAULT_COMPLETION_OPTIONS = new CompletionOptions(Boolean.TRUE, Arrays.asList(".", "@", "#", "*"));
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TeiidDdlLanguageServer.class);
 
-    private WorkspaceService workspaceService;
-    private TeiidDdlTextDocumentService textDocumentService;
+    private final WorkspaceService workspaceService;
+    private final TeiidDdlTextDocumentService textDocumentService;
 
     private LanguageClient client;
 
@@ -82,9 +82,10 @@ public class TeiidDdlLanguageServer implements LanguageServer, LanguageClientAwa
 
     @Override
     public void exit() {
+        // nop
     }
 
-    private ServerCapabilities createServerCapabilities() {
+    private static ServerCapabilities createServerCapabilities() {
         ServerCapabilities capabilities = new ServerCapabilities();
         capabilities.setTextDocumentSync(TextDocumentSyncKind.Full);
         capabilities.setHoverProvider(Boolean.TRUE);

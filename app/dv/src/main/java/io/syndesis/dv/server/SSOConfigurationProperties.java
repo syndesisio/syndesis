@@ -24,32 +24,29 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * TODO: This could take overrides per VDB, but for now it just
  * represents the SSO_ env properties
  */
-@ConfigurationProperties("sso")
+@ConfigurationProperties("sso") // TODO clarify, doesn't seem to be used
 public class SSOConfigurationProperties {
 
-    private volatile TreeMap<String, String> allEnv;
+    private final Map<String, String> keycloakEnv = getAllKeycloakFromEnv();
 
     public String getAuthServerUrl() {
-        return getAllKeycloakFromEnv().get("KEYCLOAK_AUTHSERVERURL");
+        return keycloakEnv.get("KEYCLOAK_AUTHSERVERURL");
     }
 
-    public TreeMap<String, String> getAllKeycloakFromEnv() {
-        if (allEnv == null) {
-            //postconstruct doesn't seem to work with config props,
-            //so we'll just do this lazily
-            synchronized (this) {
-                if (allEnv == null) {
-                    allEnv = new TreeMap<>();
-                    Map<String, String> env = System.getenv();
-                    for (Map.Entry<String, String> entry : env.entrySet()) {
-                        if (entry.getKey().startsWith("SSO_")) {
-                            allEnv.put("KEYCLOAK_"+entry.getKey().substring(4), entry.getValue());
-                        }
-                    }
-                }
+    public Map<String, String> getKeycloakEnv() {
+        return keycloakEnv;
+    }
+
+    private static Map<String, String> getAllKeycloakFromEnv() {
+        Map<String, String> keycloakEnv =  new TreeMap<>();
+        Map<String, String> env = System.getenv();
+        for (Map.Entry<String, String> entry : env.entrySet()) {
+            if (entry.getKey().startsWith("SSO_")) {
+                keycloakEnv.put("KEYCLOAK_"+entry.getKey().substring(4), entry.getValue());
             }
         }
-        return allEnv;
+
+        return keycloakEnv;
     }
 
 }

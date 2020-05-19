@@ -15,11 +15,15 @@
  */
 package io.syndesis.dv.lsp.parser.statement;
 
-import org.eclipse.lsp4j.Position;
-import org.teiid.query.parser.Token;
+import java.util.List;
 
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
+
+import org.eclipse.lsp4j.Position;
+import org.teiid.query.parser.SQLParserConstants;
+import org.teiid.query.parser.Token;
 
 public class QueryExpression extends AbstractStatementObject {
     SelectClause selectClause;
@@ -34,13 +38,13 @@ public class QueryExpression extends AbstractStatementObject {
     protected void parseAndValidate() {
         // For now we're going to pull ALL the tokens from AS... on... except for the ';' if it exists
 
-        Token[] tokens = getTokens();
-        Token lastToken = tokens[tokens.length-1];
-        if( tokens[tokens.length-1].kind == SEMICOLON ) {
-            lastToken = tokens[tokens.length-2];
-            setLastTknIndex(tokens.length-2);
+        List<Token> tokens = getTokens();
+        Token lastToken = tokens.get(tokens.size()-1);
+        if( tokens.get(tokens.size()-1).kind == SQLParserConstants.SEMICOLON ) {
+            lastToken = tokens.get(tokens.size()-2);
+            setLastTknIndex(tokens.size()-2);
         }
-        Token firstToken = findTokenByKind(AS);
+        Token firstToken = findTokenByKind(SQLParserConstants.AS);
 
         if( firstToken == null ) {
             this.analyzer.addException(new DdlAnalyzerException("There is no 'AS' to project to your query expression"));
@@ -62,8 +66,6 @@ public class QueryExpression extends AbstractStatementObject {
 
     @Override
     protected TokenContext getTokenContext(Position position) {
-        Token tkn = this.analyzer.getTokenFor(position);
-
         if( selectClause != null ) {
             TokenContext theContext = selectClause.getTokenContext(position);
             if( theContext != null) {
@@ -85,6 +87,7 @@ public class QueryExpression extends AbstractStatementObject {
             }
         }
 
-        return new TokenContext(position, tkn, CONTEXT.QUERY_EXPRESSION, this);
+        Token tkn = this.analyzer.getTokenFor(position);
+        return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.QUERY_EXPRESSION, this);
     }
 }

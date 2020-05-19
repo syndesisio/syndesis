@@ -17,6 +17,7 @@ package io.syndesis.dv.server;
 
 import static io.syndesis.dv.StringConstants.DOT;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
@@ -27,6 +28,7 @@ public final class Messages {
     /**
      * Messages relating to errors.
      */
+    @SuppressWarnings("JavaLangClash")
     public enum Error {
 
         RESOURCE_NOT_FOUND,
@@ -546,7 +548,7 @@ public final class Messages {
     }
 
     private static final String BUNDLE_NAME = Messages.class.getPackage().getName() + DOT
-                                              + Messages.class.getSimpleName().toLowerCase();
+                                              + Messages.class.getSimpleName().toLowerCase(Locale.US);
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle( BUNDLE_NAME );
 

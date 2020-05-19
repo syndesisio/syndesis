@@ -22,29 +22,29 @@ import java.util.List;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.Position;
 import org.junit.Test;
+import org.teiid.query.parser.SQLParserConstants;
 
 import io.syndesis.dv.lsp.completion.providers.DdlCompletionProvider;
-import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 
 @SuppressWarnings("nls")
-public class TestDdlCompletionItemProvider implements DdlAnalyzerConstants {
+public class TestDdlCompletionItemProvider {
 
-	private DdlCompletionProvider itemProvider = new DdlCompletionProvider();
+    private final DdlCompletionProvider itemProvider = new DdlCompletionProvider();
 
-	/*
+    /*
     * The tokenImage[...] call is returning strings wrapped in double-quotes
     * 
     * Need to return a simple string
     * @param tokenImageString string
     * @return string without double quotes
     */
-	public static String getLabel(int keywordId) {
-		String tokenImageStr = tokenImage[keywordId];
-    	return tokenImageStr.substring(1, tokenImageStr.length()-1);
+    public static String getLabel(int keywordId) {
+        String tokenImageStr = SQLParserConstants.tokenImage[keywordId];
+        return tokenImageStr.substring(1, tokenImageStr.length()-1);
     }
 
     @Test
-    public void testEmptyViewCompletions() throws Exception {
+    public void testEmptyViewCompletions() {
         //             01234567890123456789
         String stmt = "";
 
@@ -54,7 +54,7 @@ public class TestDdlCompletionItemProvider implements DdlAnalyzerConstants {
     }
 
     @Test
-    public void testViewNameCompletions() throws Exception {
+    public void testViewNameCompletions() {
         //      01234567890123456789
         String stmt = "";
         List<CompletionItem> items = itemProvider.getCompletionItems(stmt, new Position(0, 0));
@@ -81,14 +81,14 @@ public class TestDdlCompletionItemProvider implements DdlAnalyzerConstants {
         items = itemProvider.getCompletionItems(stmt, new Position(0, 20));
         assertEquals(2, items.size());
     }
-	
+
     @Test
-    public void testCreateViewCompletions() throws Exception {
+    public void testCreateViewCompletions() {
         //             01234567890123456789
         String stmt = "CREATE VIEW winelist ( \n" + 
-	        		  "   wine string(255), price decimal(2, 15), vendor string(255) \n" + 
-	        		  ") AS SELECT * FROM PostgresDB.winelist";
-        
+                      "   wine string(255), price decimal(2, 15), vendor string(255) \n" + 
+                      ") AS SELECT * FROM PostgresDB.winelist";
+
         List<CompletionItem> items = itemProvider.getCompletionItems(stmt, new Position(0, 0));
         assertEquals(3, items.size());
 
@@ -115,7 +115,7 @@ public class TestDdlCompletionItemProvider implements DdlAnalyzerConstants {
     }
 
     @Test
-    public void testTableBody() throws Exception {
+    public void testTableBody() {
         String stmt = 
 //               01234567890123456789012345678901234567890123456789
                 "CREATE VIEW winelist (\n" +
@@ -135,7 +135,7 @@ public class TestDdlCompletionItemProvider implements DdlAnalyzerConstants {
     }
 
     @Test
-    public void testNoTableBody() throws Exception {
+    public void testNoTableBody() {
         String stmt = 
 //               01234567890123456789012345678901234567890123456789
                 "CREATE VIEW winelist AS SELECT * FROM winelist";

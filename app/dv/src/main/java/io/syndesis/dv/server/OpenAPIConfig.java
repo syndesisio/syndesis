@@ -60,10 +60,10 @@ public class OpenAPIConfig {
             .build();
     }
 
-    class BasePathAwareRelativePathProvider extends RelativePathProvider {
-        private String basePath;
+    static class BasePathAwareRelativePathProvider extends RelativePathProvider {
+        private final String basePath;
 
-        public BasePathAwareRelativePathProvider(ServletContext servletContext, String basePath) {
+        BasePathAwareRelativePathProvider(ServletContext servletContext, String basePath) {
             super(servletContext);
             this.basePath = basePath;
         }

@@ -17,28 +17,31 @@ package io.syndesis.dv.lsp.parser;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.teiid.query.parser.JavaCharStream;
+import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
 import io.syndesis.dv.lsp.completion.DdlCompletionConstants;
 
-public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
+@SuppressWarnings("PMD.GodClass")
+public class DdlTokenAnalyzer {
 
     private final String statement;
-    private Token[] tokens = null;
-    private final STATEMENT_TYPE statementType;
+    private final List<Token> tokens;
+    private final DdlAnalyzerConstants.StatementType statementType;
 
-    private DdlTokenParserReport report;
+    private final DdlTokenParserReport report;
 
     public DdlTokenAnalyzer(String statement) {
         super();
         this.statement = statement;
-        init();
+        tokens = init(statement);
         this.statementType = getStatementType();
         this.report = new DdlTokenParserReport();
     }
@@ -47,14 +50,14 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
         return this.statement;
     }
 
-    private void init() {
+    private static List<Token> init(final String statement) {
 
-        JavaCharStream jcs = new JavaCharStream(new StringReader(this.statement));
-        TeiidDdlParserTokenManager token_source = new TeiidDdlParserTokenManager(jcs);
+        JavaCharStream jcs = new JavaCharStream(new StringReader(statement));
+        TeiidDdlParserTokenManager tokenSource = new TeiidDdlParserTokenManager(jcs);
 
         List<Token> tokensList = new ArrayList<Token>();
 
-        Token currentToken = token_source.getNextToken();
+        Token currentToken = tokenSource.getNextToken();
 
         if( currentToken != null ) {
             convertToken(currentToken);
@@ -66,7 +69,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
 
             while ( !done ) {
                 // Get next token
-                currentToken = token_source.getNextToken();
+                currentToken = tokenSource.getNextToken();
 
                 // Check if next token exists
                 if( currentToken != null && (currentToken.image.length() > 0) ) {
@@ -78,29 +81,27 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
             }
         }
 
-        this.tokens = tokensList.toArray(new Token[0]);
+        return tokensList;
     }
 
-    private void convertToken(Token token) {
+    private static void convertToken(Token token) {
         token.beginColumn--;
         token.endColumn--;
         token.beginLine--;
         token.endLine--;
     }
 
-    public Token[] getTokens() {
-        return this.tokens;
+    public List<Token> getTokens() {
+        return Collections.unmodifiableList(this.tokens);
     }
 
     public Token getTokenFor(Position pos) {
         DdlTokenWalker walker = new DdlTokenWalker(this.tokens);
-        Token token = walker.findToken(pos, this.statementType);
-        //System.out.println("  Walker found Token = " + token + " At " + pos);
-        return token;
+        return walker.findToken(pos, this.statementType);
     }
 
     protected String[] getDatatypesList() {
-        return DATATYPE_LIST;
+        return DdlAnalyzerConstants.DATATYPE_LIST;
     }
 
     public String[] getNextWordsByKind(int kind) {
@@ -111,9 +112,9 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
         List<String> words = new ArrayList<String>();
 
         switch (kind) {
-            case CREATE:
-                words.add(getKeywordLabel(VIEW, true));
-                words.add(getKeywordLabel(VIRTUAL, true));
+            case SQLParserConstants.CREATE:
+                words.add(getKeywordLabel(SQLParserConstants.VIEW, true));
+                words.add(getKeywordLabel(SQLParserConstants.VIRTUAL, true));
 //                words.add(getKeywordLabel(GLOBAL, true));
 //                words.add(getKeywordLabel(FOREIGN, true));
 //                words.add(getKeywordLabel(TABLE, true));
@@ -123,103 +124,105 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
 //                words.add(getKeywordLabel(SCHEMA, true));
 //                words.add(getKeywordLabel(SERVER, true));
 //                words.add(getKeywordLabel(DATABASE, true));
-                words.add(getKeywordLabel(PROCEDURE, true));
+                words.add(getKeywordLabel(SQLParserConstants.PROCEDURE, true));
             break;
 
-            case GLOBAL:
-                words.add(getKeywordLabel(TEMPORARY, true));
+            case SQLParserConstants.GLOBAL:
+                words.add(getKeywordLabel(SQLParserConstants.TEMPORARY, true));
             break;
 
-            case TEMPORARY:
-                words.add(getKeywordLabel(TABLE, true));
+            case SQLParserConstants.TEMPORARY:
+                words.add(getKeywordLabel(SQLParserConstants.TABLE, true));
             break;
 
-            case FOREIGN:
-                words.add(getKeywordLabel(TABLE, true));
-                words.add(getKeywordLabel(TEMPORARY, true));
+            case SQLParserConstants.FOREIGN:
+                words.add(getKeywordLabel(SQLParserConstants.TABLE, true));
+                words.add(getKeywordLabel(SQLParserConstants.TEMPORARY, true));
             break;
 
-            case VIRTUAL:
-                words.add(getKeywordLabel(VIEW, true));
-                words.add(getKeywordLabel(PROCEDURE, true));
+            case SQLParserConstants.VIRTUAL:
+                words.add(getKeywordLabel(SQLParserConstants.VIEW, true));
+                words.add(getKeywordLabel(SQLParserConstants.PROCEDURE, true));
             break;
 
-            case ID:
+            case SQLParserConstants.ID:
                 if( isStatementId ) {
-                    words.add(getKeywordLabel(LPAREN, false));
+                    words.add(getKeywordLabel(SQLParserConstants.LPAREN, false));
                 }
             break;
 
-            case SELECT:
-                words.add(getKeywordLabel(STAR, true));
+            case SQLParserConstants.SELECT:
+                words.add(getKeywordLabel(SQLParserConstants.STAR, true));
                 break;
 
             default:
+                break;
         }
 
         return stringListToArray(words);
     }
 
-    private String[] stringListToArray(List<String> array) {
+    @SuppressWarnings("PMD.OptimizableToArrayCall") // false positive
+    private static String[] stringListToArray(List<String> array) {
         return array.toArray(new String[array.size()]);
     }
 
-    public STATEMENT_TYPE getStatementType() {
+    public final DdlAnalyzerConstants.StatementType getStatementType() {
         // walk through start of token[] array and return the type
-        if( tokens.length < 2 ) {
-            return STATEMENT_TYPE.UNKNOWN_STATEMENT_TYPE;
+        if( tokens.size() < 2 ) {
+            return DdlAnalyzerConstants.StatementType.UNKNOWN_STATEMENT_TYPE;
         }
 
-        if( isStatementType(tokens, CREATE_VIRTUAL_VIEW_STATEMENT) ) {
-            return STATEMENT_TYPE.CREATE_VIRTUAL_VIEW_TYPE;
+        if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_VIRTUAL_VIEW_STATEMENT) ) {
+            return DdlAnalyzerConstants.StatementType.CREATE_VIRTUAL_VIEW_TYPE;
         }
 
-        if( isStatementType(tokens, CREATE_VIEW_STATEMENT) ) {
-            return STATEMENT_TYPE.CREATE_VIEW_TYPE;
+        if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_VIEW_STATEMENT) ) {
+            return DdlAnalyzerConstants.StatementType.CREATE_VIEW_TYPE;
         }
 
-        if( isStatementType(tokens, CREATE_GLOBAL_TEMPORARY_TABLE_STATEMENT) ) {
-            return STATEMENT_TYPE.CREATE_GLOBAL_TEMPORARY_TABLE_TYPE;
+        if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_GLOBAL_TEMPORARY_TABLE_STATEMENT) ) {
+            return DdlAnalyzerConstants.StatementType.CREATE_GLOBAL_TEMPORARY_TABLE_TYPE;
         }
 
-        if( isStatementType(tokens, CREATE_FOREIGN_TEMPORARY_TABLE_STATEMENT) ) {
-            return STATEMENT_TYPE.CREATE_FOREIGN_TEMPORARY_TABLE_TYPE;
+        if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_FOREIGN_TEMPORARY_TABLE_STATEMENT) ) {
+            return DdlAnalyzerConstants.StatementType.CREATE_FOREIGN_TEMPORARY_TABLE_TYPE;
         }
 
-        if( isStatementType(tokens, CREATE_FOREIGN_TABLE_STATEMENT) ) {
-            return STATEMENT_TYPE.CREATE_FOREIGN_TABLE_TYPE;
+        if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_FOREIGN_TABLE_STATEMENT) ) {
+            return DdlAnalyzerConstants.StatementType.CREATE_FOREIGN_TABLE_TYPE;
         }
 
-        if( isStatementType(tokens, CREATE_TABLE_STATEMENT) ) {
-            return STATEMENT_TYPE.CREATE_TABLE_TYPE;
+        if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_TABLE_STATEMENT) ) {
+            return DdlAnalyzerConstants.StatementType.CREATE_TABLE_TYPE;
         }
 
-        return STATEMENT_TYPE.UNKNOWN_STATEMENT_TYPE;
+        return DdlAnalyzerConstants.StatementType.UNKNOWN_STATEMENT_TYPE;
     }
 
-    private boolean isStatementType(Token[] tkns, int[] statementTokens) {
-        int iTkn = 0;
-        for(int kind : statementTokens ) {
-            // Check each token for kind
-            if( tkns[iTkn].kind == kind) {
-                if( ++iTkn == statementTokens.length) {
-                    return true;
-                }
-                continue;
-            };
-            break;
+    private static boolean isStatementType(List<Token> tokens, int... statementTokens) {
+        if (tokens.size() < statementTokens.length) {
+            return false;
         }
-        return false;
+
+        for (int i = 0; i < statementTokens.length; i++) {
+            if (tokens.get(i).kind != statementTokens[i]) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    public boolean allParensMatch(Token[] tkns) {
+    public boolean allParensMatch(Token... tkns) {
         return parensMatch(tkns, 0);
     }
 
     public DdlAnalyzerException checkAllParens() {
-        return checkAllBrackets(LPAREN, RPAREN);
+        return checkAllBrackets(SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
     }
 
+    @SuppressWarnings("PMD.NPathComplexity") // TODO refactor
     public DdlAnalyzerException checkAllBrackets(int leftBracketKind, int rightBracketKind) {
         int numUnmatchedParens = 0;
         DdlAnalyzerException exception = null;
@@ -228,8 +231,8 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
 
         // TODO: Add logic to check for the scenarios like the first bracket
 
-        for(int iTkn= 0; iTkn<tokens.length; iTkn++) {
-            Token token = tokens[iTkn];
+        for(int iTkn= 0; iTkn<tokens.size(); iTkn++) {
+            Token token = tokens.get(iTkn);
             if( token.kind == leftBracketKind)  {
                 if( diagStartPosition == null ) {
                     diagStartPosition = new Position(token.beginLine, token.beginColumn);
@@ -256,7 +259,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
             //  VALID:  (  () () )
             //  INVALID (  )) () (
             //              ^ would occur here
-            if( diagStartPosition != null && exception == null && numUnmatchedParens < 0 ) {
+            if( diagStartPosition != null && numUnmatchedParens < 0 ) {
                 Position diagEndPosition = new Position(token.endLine, token.beginLine);
                 exception = new DdlAnalyzerException("Bracket at location " //$NON-NLS-1$
                         + getPositionString(token) + " does not properly match previous bracket"); //$NON-NLS-1$
@@ -273,7 +276,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
             exception = new DdlAnalyzerException("Missing or mismatched brackets"); //$NON-NLS-1$
             exception.getDiagnostic().setMessage(exception.getMessage());
             exception.getDiagnostic().setSeverity(DiagnosticSeverity.Error);
-            Token lastToken = tokens[tokens.length-1];
+            Token lastToken = tokens.get(tokens.size()-1);
             Position diagEndPosition = new Position(lastToken.endLine, lastToken.endColumn);
             exception.getDiagnostic().setRange(new Range(diagStartPosition, diagEndPosition));
         }
@@ -288,7 +291,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
     public boolean bracketsMatch(Token[] tkns, int startTokenId, int leftBracket, int rightBracket) {
         int numUnmatchedParens = 0;
 
-        for(int iTkn= 0; iTkn<tokens.length; iTkn++) {
+        for(int iTkn= 0; iTkn<tokens.size(); iTkn++) {
             if( iTkn < startTokenId) {
                 continue;
             }
@@ -305,7 +308,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
     }
 
     public boolean parensMatch(Token[] tkns, int startTokenId) {
-        return bracketsMatch(tkns, startTokenId, LPAREN, RPAREN);
+        return bracketsMatch(tkns, startTokenId, SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
     }
 
     public void addException(DdlAnalyzerException exception) {
@@ -340,12 +343,8 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
         this.report.log();
     }
 
-    public void printTokens() {
-        printTokens(this.tokens, null);
-    }
-
     public Token getToken(int tokenIndex) {
-        return this.tokens[tokenIndex];
+        return this.tokens.get(tokenIndex);
     }
 
     public int getTokenIndex(Token token) {
@@ -355,6 +354,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
 
         int index = 0;
         for (Token tkn : getTokens()) {
+            // TODO no equals/hashCode implemented in Token
             if (token.equals(tkn)) {
                 return index;
             }
@@ -365,19 +365,6 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
 
     public String positionToString(Position position) {
         return "Line " + (position.getLine()+1) + " Column " + (position.getCharacter()+1);
-    }
-
-    private void printTokens(Token[] tkns, String headerMessage) {
-        System.out.println(headerMessage);
-        for (Token token : tkns) {
-            System.out.println("  >> Token = " + token.image +
-                    "\n\t   >> KIND = " + token.kind +
-                    "\n\t   >> begins at ( " +
-                    token.beginLine + ", " + token.beginColumn + " )" +
-                    "\n\t   >> ends   at ( " +
-                    token.endLine + ", " + token.endColumn + " )");
-
-        }
     }
 
     public String[] getKeywordLabels(int[] keywordIds, boolean upperCase) {

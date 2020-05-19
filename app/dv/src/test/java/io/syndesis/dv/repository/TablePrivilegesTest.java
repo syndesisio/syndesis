@@ -65,7 +65,7 @@ public class TablePrivilegesTest {
 
         entityManager.flush();
 
-        TablePrivileges tp2 = repositoryManagerImpl.createTablePrivileges(vd.getId(), "my-role1");
+        repositoryManagerImpl.createTablePrivileges(vd.getId(), "my-role1");
         tp.getGrantPrivileges().add(Privilege.D);
 
         assertTrue(repositoryManagerImpl.hasRoles("x"));

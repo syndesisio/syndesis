@@ -16,14 +16,14 @@
 
 package io.syndesis.dv.server.endpoint;
 
-import static org.junit.Assert.*;
-
 import java.util.Arrays;
 
-import org.junit.Test;
 import io.syndesis.dv.rest.JsonMarshaller;
-import io.syndesis.dv.server.endpoint.RestSyndesisSourceStatus;
 import io.syndesis.dv.server.endpoint.RestSyndesisSourceStatus.EntityState;
+
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("nls")
 public class RestSyndesisSourceStatusTest {

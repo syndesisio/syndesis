@@ -25,17 +25,16 @@ import java.util.TreeMap;
 import org.teiid.adminapi.impl.VDBMetaData;
 
 import io.fabric8.kubernetes.api.model.EnvVar;
-import io.syndesis.dv.StringConstants;
 import io.syndesis.dv.server.SSOConfigurationProperties;
 
-public class PublishConfiguration implements StringConstants {
+public class PublishConfiguration {
 
     private VDBMetaData vdb;
     private boolean enableOdata = true;
     private String containerMemorySize = "1024Mi";
     private String containerDiskSize = "20Gi";
-    private List<EnvVar> allEnvironmentVariables = new ArrayList<>();
-    private HashMap<String, String> buildNodeSelector = new HashMap<>();
+    private final List<EnvVar> allEnvironmentVariables = new ArrayList<>();
+    private final HashMap<String, String> buildNodeSelector = new HashMap<>();
     private String buildImageStream = "syndesis-s2i:latest";
     private Map<String, String> secretVariables = new HashMap<>();
     private SSOConfigurationProperties ssoConfigurationProperties;
@@ -96,21 +95,22 @@ public class PublishConfiguration implements StringConstants {
         this.secretVariables = secretVariables;
     }
 
+    @SuppressWarnings({"PMD.ConsecutiveLiteralAppends", "PMD.InsufficientStringBufferDeclaration"}) // more readable and false positive
     protected String getUserJavaOptions() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(" -XX:+UnlockExperimentalVMOptions");
-        sb.append(" -XX:+UseCGroupMemoryLimitForHeap");
-        sb.append(" -Djava.net.preferIPv4Addresses=true");
-        sb.append(" -Djava.net.preferIPv4Stack=true");
+        StringBuilder sb = new StringBuilder(400)
+          .append(" -XX:+UnlockExperimentalVMOptions")
+          .append(" -XX:+UseCGroupMemoryLimitForHeap")
+          .append(" -Djava.net.preferIPv4Addresses=true")
+          .append(" -Djava.net.preferIPv4Stack=true")
 
-        // CPU specific JVM options
-        sb.append(" -XX:ParallelGCThreads="+cpuLimit());
-        sb.append(" -XX:ConcGCThreads="+cpuLimit());
-        sb.append(" -Djava.util.concurrent.ForkJoinPool.common.parallelism="+cpuLimit());
-        sb.append(" -Dio.netty.eventLoopThreads="+(2*cpuLimit()));
+          // CPU specific JVM options
+          .append(" -XX:ParallelGCThreads=").append(cpuLimit())
+          .append(" -XX:ConcGCThreads=").append(cpuLimit())
+          .append(" -Djava.util.concurrent.ForkJoinPool.common.parallelism=").append(cpuLimit())
+          .append(" -Dio.netty.eventLoopThreads=").append(2*cpuLimit())
 
-        sb.append(" -Dorg.teiid.hiddenMetadataResolvable=false");
-        sb.append(" -Dorg.teiid.allowAlter=false");
+          .append(" -Dorg.teiid.hiddenMetadataResolvable=false")
+          .append(" -Dorg.teiid.allowAlter=false");
         return sb.toString();
     }
 

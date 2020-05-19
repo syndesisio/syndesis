@@ -22,6 +22,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
+import java.io.UnsupportedEncodingException;
+
+import javax.xml.stream.XMLStreamException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,7 +32,6 @@ import org.junit.Test;
 import org.teiid.adminapi.impl.VDBMetadataParser;
 import org.teiid.runtime.EmbeddedConfiguration;
 
-import io.syndesis.dv.KException;
 import io.syndesis.dv.metadata.MetadataInstance.ValidationResult;
 import io.syndesis.dv.metadata.TeiidVdb;
 import io.syndesis.dv.metadata.internal.DefaultMetadataInstance.TeiidVdbImpl;
@@ -55,19 +57,19 @@ public class DefaultMetadataInstanceTest {
     }
 
     @Test
-    public void shouldParse() throws KException {
+    public void shouldParse() {
         ValidationResult result = metadataInstance.parse("create view v as select 1");
         assertNull(result.getMetadataException());
     }
 
     @Test
-    public void shouldFailParse() throws KException {
+    public void shouldFailParse() {
         ValidationResult result = metadataInstance.parse("create view v as ");
         assertNotNull(result.getMetadataException());
     }
 
     @Test
-    public void shouldValidate() throws Exception {
+    public void shouldValidate() throws UnsupportedEncodingException, XMLStreamException {
         String vdb = "<vdb name=\"myservice\" version=\"1\">\n" +
                 "    <model visible=\"true\" name=\"accounts\" type=\"VIRTUAL\">\n" +
                 "      <metadata type=\"DDL\">create view tbl (col) as select 1;</metadata>" +
@@ -83,11 +85,11 @@ public class DefaultMetadataInstanceTest {
         assertTrue(report.toString(), report.getReport().hasItems());
 
         //redo with the same name
-        report = metadataInstance.getVdb("myservice").validate("create view v (col, col1) as select col from tbl");
+        metadataInstance.getVdb("myservice").validate("create view v (col, col1) as select col from tbl");
     }
 
     @Test
-    public void testHasLoaded() throws Exception {
+    public void testHasLoaded() throws UnsupportedEncodingException, XMLStreamException {
         String vdb = "<vdb name=\"myservice\" version=\"1\">\n" +
                 "    <model visible=\"true\" name=\"accounts\" type=\"VIRTUAL\">\n" +
                 "      <metadata type=\"DDL\">create view tbl (col) as select 1;</metadata>" +
@@ -107,7 +109,7 @@ public class DefaultMetadataInstanceTest {
     }
 
     @Test
-    public void shouldFindValidationErrors() throws Exception {
+    public void shouldFindValidationErrors() throws UnsupportedEncodingException, XMLStreamException {
         String vdb = "<vdb name=\"myservice\" version=\"1\">\n" +
                 "    <property name=\"preview\" value=\"true\"/>" +
                 "    <model visible=\"true\" name=\"views\" type=\"VIRTUAL\">\n" +

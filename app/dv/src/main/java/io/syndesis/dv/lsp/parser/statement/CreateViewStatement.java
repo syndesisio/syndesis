@@ -20,8 +20,10 @@ import java.util.List;
 import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
+import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
@@ -36,7 +38,7 @@ public class CreateViewStatement extends AbstractStatementObject {
 
         tableBody = new TableBody(analyzer);
         queryExpression = new QueryExpression(analyzer);
-        this.numTokens = this.analyzer.getTokens().length;
+        this.numTokens = this.analyzer.getTokens().size();
 
         parseAndValidate();
     }
@@ -69,8 +71,9 @@ public class CreateViewStatement extends AbstractStatementObject {
         this.queryExpression = queryExpression;
     }
 
+    @SuppressWarnings({"PMD.NPathComplexity", "PMD.ExcessiveMethodLength"}) // TODO refactor
     @Override
-    protected void parseAndValidate() {
+    protected final void parseAndValidate() {
         // Check statement
         boolean prefixOK = true;
 
@@ -79,8 +82,8 @@ public class CreateViewStatement extends AbstractStatementObject {
             setFirstTknIndex(0);
             setLastTknIndex(0);
 
-            Token onlyToken = this.analyzer.getTokens()[0];
-            prefixOK = !onlyToken.image.equalsIgnoreCase("CREATE");
+            Token onlyToken = this.analyzer.getTokens().get(0);
+            prefixOK = !"CREATE".equalsIgnoreCase(onlyToken.image);
             Position startPosition = new Position(onlyToken.beginLine, onlyToken.beginColumn);
             Position endPosition = new Position(onlyToken.endLine, onlyToken.endColumn+1);
             DdlAnalyzerException exception =
@@ -97,9 +100,9 @@ public class CreateViewStatement extends AbstractStatementObject {
             setFirstTknIndex(0);
             setLastTknIndex(1);
 
-            Token firstToken = this.analyzer.getTokens()[0];
-            Token lastToken = this.analyzer.getTokens()[0];
-            prefixOK = !lastToken.image.equalsIgnoreCase("VIEW");
+            Token firstToken = this.analyzer.getTokens().get(0);
+            Token lastToken = this.analyzer.getTokens().get(0);
+            prefixOK = !"VIEW".equalsIgnoreCase(lastToken.image);
             this.analyzer.addException(
                     firstToken,
                     lastToken,
@@ -109,8 +112,8 @@ public class CreateViewStatement extends AbstractStatementObject {
         }
 
         if(!prefixOK) {
-            Token firstToken = this.analyzer.getTokens()[0];
-            Token lastToken = this.analyzer.getTokens()[1];
+            Token firstToken = this.analyzer.getTokens().get(0);
+            Token lastToken = this.analyzer.getTokens().get(1);
             this.analyzer.addException(
                     firstToken,
                     lastToken,
@@ -127,7 +130,7 @@ public class CreateViewStatement extends AbstractStatementObject {
                     lastToken,
                     "Valid view name is missing after : " + getToken(1));
         } else {
-            if( token.kind == ID || token.kind == STRINGVAL ) {
+            if( token.kind == SQLParserConstants.ID || token.kind == SQLParserConstants.STRINGVAL ) {
                 this.viewNameToken = token;
             } else {
                 String msg = "View name '" + viewNameToken.image + "' is invalid ";
@@ -148,7 +151,7 @@ public class CreateViewStatement extends AbstractStatementObject {
             this.analyzer.getReport().setParensMatch(false);
         }
 
-        if( !isOk(this.analyzer.checkAllBrackets(LBRACE, RBRACE)) ) {
+        if( !isOk(this.analyzer.checkAllBrackets(SQLParserConstants.LBRACE, SQLParserConstants.RBRACE)) ) {
             this.analyzer.addException(new DdlAnalyzerException("All braces DO NOT MATCH"));
             this.analyzer.getReport().setBracesMatch(false);
         }
@@ -170,7 +173,7 @@ public class CreateViewStatement extends AbstractStatementObject {
                 queryExpression.parseAndValidate();
             } else {
                 // Table Body is NOT required so check for token[3] == AS
-                if( getToken(3).kind == AS) {
+                if( getToken(3).kind == SQLParserConstants.AS) {
                     queryExpression.parseAndValidate();
                 } else {
                     Token firstToken = getToken(3);
@@ -217,7 +220,7 @@ public class CreateViewStatement extends AbstractStatementObject {
     public TokenContext getTokenContext(Position position) {
         if( isBetween(getFirstTknIndex(), getLastTknIndex(), position) ) {
             // PREFIX token
-            return new TokenContext(position, this.analyzer.getTokenFor(position), CONTEXT.PREFIX, this);
+            return new TokenContext(position, this.analyzer.getTokenFor(position), DdlAnalyzerConstants.Context.PREFIX, this);
         } else if( isBetween(tableBody.getFirstTknIndex(),
                              tableBody.getLastTknIndex(), position) ) {
             // TABLE BODY
@@ -232,6 +235,6 @@ public class CreateViewStatement extends AbstractStatementObject {
             return queryExpression.getTokenContext(position);
         }
 
-        return new TokenContext(position, null, CONTEXT.NONE_FOUND, this);
+        return new TokenContext(position, null, DdlAnalyzerConstants.Context.NONE_FOUND, this);
     }
 }

@@ -15,6 +15,7 @@
  */
 package io.syndesis.dv.metadata.internal;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 
@@ -27,12 +28,12 @@ import io.syndesis.dv.metadata.TeiidDataSource;
 public class TeiidDataSourceImpl implements Comparable<TeiidDataSourceImpl>, TeiidDataSource, ConnectionFactoryProvider<Object> {
     private final String name;
     private final String translatorName;
-    private Object dataSource;
-    private String id;
+    private final Object dataSource;
+    private final String id;
     private Map<String, String> importProperties;
     private Map<String, String> translatorProperties;
     private DefaultSyndesisDataSource syndesisDataSource;
-    private volatile Date lastLoad;
+    private volatile Instant lastLoad;
 
     public TeiidDataSourceImpl(String id, String name, String translatorName, Object dataSource) {
         ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
@@ -84,9 +85,9 @@ public class TeiidDataSourceImpl implements Comparable<TeiidDataSourceImpl>, Tei
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("Data Source:\t" + getName()); //$NON-NLS-1$
-        if (!getTranslatorName().equalsIgnoreCase("<unknown>")) { //$NON-NLS-1$
-            sb.append("\nType: \t\t" + getTranslatorName()); //$NON-NLS-1$
+        StringBuilder sb = new StringBuilder(75).append("Data Source:\t").append(getName()); //$NON-NLS-1$
+        if (!"<unknown>".equalsIgnoreCase(getTranslatorName())) { //$NON-NLS-1$
+            sb.append("\nType: \t\t").append(getTranslatorName()); //$NON-NLS-1$
         }
 
         return sb.toString();
@@ -132,11 +133,11 @@ public class TeiidDataSourceImpl implements Comparable<TeiidDataSourceImpl>, Tei
 
     @Override
     public void loadingMetadata() {
-        this.lastLoad = new Date(System.currentTimeMillis());
+        this.lastLoad = Instant.now();
     }
 
     @Override
     public Date getLastMetadataLoadTime() {
-        return this.lastLoad;
+        return new Date(this.lastLoad.toEpochMilli());
     }
 }

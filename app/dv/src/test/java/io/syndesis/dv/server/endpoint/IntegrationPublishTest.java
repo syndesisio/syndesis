@@ -25,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -44,6 +45,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -61,6 +63,7 @@ import io.syndesis.dv.server.endpoint.IntegrationTest.IntegrationTestConfigurati
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = {IntegrationTestConfiguration.class, Application.class})
+@TestPropertySource(properties = "spring.config.name=application-test")
 @SuppressWarnings("nls")
 public class IntegrationPublishTest {
 
@@ -70,7 +73,7 @@ public class IntegrationPublishTest {
     @Autowired DataSource datasource;
 
     //for some reason dirtiescontext does not seem to work, so clear manually
-    @After public void after() throws Exception {
+    @After public void after() throws SQLException {
         try (Connection c = datasource.getConnection();) {
             c.createStatement().execute("delete from data_virtualization");
         }
@@ -80,7 +83,7 @@ public class IntegrationPublishTest {
     DefaultMetadataInstance metadata;
 
     @Test
-    public void testPublishRevert() throws Exception {
+    public void testPublishRevert() throws IOException {
         RestDataVirtualization rdv = new RestDataVirtualization();
         String dvName = "testPublish";
         rdv.setName(dvName);
@@ -103,7 +106,10 @@ public class IntegrationPublishTest {
         RestViewDefinitionStatus saved = JsonMarshaller.unmarshall(stashStatus.getBody(), RestViewDefinitionStatus.class);
         String id = saved.getViewDefinition().getId();
 
-        ResponseEntity<List> listResponse = restTemplate.getForEntity("/v1/virtualizations/publish/{name}", List.class, dvName);
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        final Class<List<?>> listOfAnything = (Class) List.class;
+
+        ResponseEntity<List<?>> listResponse = restTemplate.getForEntity("/v1/virtualizations/publish/{name}", listOfAnything, dvName);
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         assertTrue(listResponse.getBody().isEmpty());
 
@@ -138,7 +144,7 @@ public class IntegrationPublishTest {
         assertEquals("dv-testpublish", status.getAttributes().get("OpenShift Name"));
 
         //there should be a new edition
-        listResponse = restTemplate.getForEntity("/v1/virtualizations/publish/{name}", List.class, dvName);
+        listResponse = restTemplate.getForEntity("/v1/virtualizations/publish/{name}", listOfAnything, dvName);
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         assertEquals(1, listResponse.getBody().size());
 
@@ -169,7 +175,7 @@ public class IntegrationPublishTest {
         assertEquals("dv-testpublish", status.getAttributes().get("OpenShift Name"));
 
         //there should be a new edition
-        listResponse = restTemplate.getForEntity("/v1/virtualizations/publish/{name}", List.class, dvName);
+        listResponse = restTemplate.getForEntity("/v1/virtualizations/publish/{name}", listOfAnything, dvName);
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         assertEquals(2, listResponse.getBody().size());
 
@@ -195,8 +201,8 @@ public class IntegrationPublishTest {
         //for now ids are reassigned
         assertEquals(HttpStatus.NOT_FOUND, view.getStatusCode());
 
-        ResponseEntity<List> views = restTemplate.getForEntity(
-                "/v1/virtualizations/{name}/views", List.class, dvName);
+        ResponseEntity<List<?>> views = restTemplate.getForEntity(
+                "/v1/virtualizations/{name}/views", listOfAnything, dvName);
 
         assertEquals(HttpStatus.OK, views.getStatusCode());
         assertEquals(1, views.getBody().size());

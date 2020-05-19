@@ -68,12 +68,12 @@ import io.syndesis.dv.lsp.diagnostics.DdlDiagnostics;
  */
 public class TeiidDdlTextDocumentService implements TextDocumentService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TeiidDdlTextDocumentService.class);
-    private Map<String, TextDocumentItem> openedDocuments = new HashMap<>();
+    private final Map<String, TextDocumentItem> openedDocuments = new HashMap<>();
     private final TeiidDdlLanguageServer teiidLanguageServer;
 
-    private DdlCompletionProvider completionProvider = new DdlCompletionProvider();
+    private final DdlCompletionProvider completionProvider = new DdlCompletionProvider();
 
-    private DdlDiagnostics diagnostics = new DdlDiagnostics();
+    private final DdlDiagnostics diagnostics = new DdlDiagnostics();
 
     public TeiidDdlTextDocumentService(TeiidDdlLanguageServer teiidLanguageServer) {
         this.teiidLanguageServer = teiidLanguageServer;
@@ -86,8 +86,6 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
         LOGGER.debug("completion: {}", uri);
         TextDocumentItem doc = openedDocuments.get(uri);
 
-        // create an empty results array
-        List<CompletionItem> emptyResults = new ArrayList<CompletionItem>();
 
         // get applicable completion items
         List<CompletionItem> items = completionProvider.getCompletionItems(doc.getText(),
@@ -98,6 +96,9 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
             LOGGER.debug(" CompletionItems = " + items);
             return CompletableFuture.completedFuture(Either.forLeft(items));
         }
+
+        // create an empty results array
+        List<CompletionItem> emptyResults = new ArrayList<CompletionItem>();
 
         // if items do no exist return empty results
         LOGGER.debug(" CompletionItems = " + emptyResults);

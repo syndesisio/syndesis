@@ -19,21 +19,22 @@ import org.eclipse.lsp4j.Position;
 import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
-import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.STATEMENT_TYPE;
+import java.util.List;
+
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.StatementType;
 
 public class DdlTokenWalker implements SQLParserConstants {
-    private final Token[] tokens;
+    private final List<Token> tokens;
 
-    public DdlTokenWalker(Token[] tokens) {
-        super();
-
-        this.tokens = tokens;
+    public DdlTokenWalker(List<Token> list) {
+        this.tokens = list;
     }
 
     /*
      * Uses 0 based line/column positions for cursor and token values
      */
-    public Token findToken(Position position, STATEMENT_TYPE statementType) {
+    @SuppressWarnings("PMD.NPathComplexity") // TODO refactor
+    public Token findToken(Position position, StatementType statementType) {
         int line = position.getLine();
         int column = position.getCharacter();
 
@@ -45,8 +46,8 @@ public class DdlTokenWalker implements SQLParserConstants {
 
         TokenCursorLocator previousLocator = null; // last token where cursor is or was (if in blank space)
 
-        if (tokens.length > 0) {
-            previousLocator = new TokenCursorLocator(tokens[0], 0, line, column);
+        if (!tokens.isEmpty()) {
+            previousLocator = new TokenCursorLocator(tokens.get(0), 0, line, column);
 
             // If cursor isn't past the first token, return null;
             if (previousLocator.isCursorBefore()) {
@@ -59,7 +60,7 @@ public class DdlTokenWalker implements SQLParserConstants {
 
             // Case where the cursor is located at least 1 character after the first token
             // (open space)
-            if (tokens.length == 1 && previousLocator.isCursorFreeFromToken()) {
+            if (tokens.size() == 1 && previousLocator.isCursorFreeFromToken()) {
                 return previousLocator.getToken();
             }
 
@@ -71,10 +72,10 @@ public class DdlTokenWalker implements SQLParserConstants {
                 lastFreeLocator = new TokenCursorLocator(previousLocator);
             }
 
-            for (int iTkn = 1; iTkn < tokens.length; iTkn++) {
+            for (int iTkn = 1; iTkn < tokens.size(); iTkn++) {
                 // Check if last token, else create nextLocator
-                nextLocator = new TokenCursorLocator(tokens[iTkn], iTkn, line, column);
-                if (iTkn == tokens.length - 1) {
+                nextLocator = new TokenCursorLocator(tokens.get(iTkn), iTkn, line, column);
+                if (iTkn == tokens.size() - 1) {
                     isLastToken = true;
                 }
 
@@ -109,22 +110,20 @@ public class DdlTokenWalker implements SQLParserConstants {
         return null;
     }
 
-    class TokenCursorLocator {
+    static class TokenCursorLocator {
         Token token;
         int tokenIndex;
         int line;
         int column;
-        int nChars = 0;
 
-        private TokenCursorLocator(Token token, int index, int line, int column) {
-            super();
+        TokenCursorLocator(Token token, int index, int line, int column) {
             this.token = token;
             this.tokenIndex = index;
             this.line = line;
             this.column = column;
         }
 
-        private TokenCursorLocator(TokenCursorLocator locator) {
+        TokenCursorLocator(TokenCursorLocator locator) {
             super();
             this.token = locator.getToken();
             this.tokenIndex = locator.getTokenIndex();
@@ -138,11 +137,11 @@ public class DdlTokenWalker implements SQLParserConstants {
         }
 
         public boolean isCursorBefore() {
-            return line < token.beginLine || line == token.beginLine && column < token.beginColumn;
+            return line < token.beginLine || (line == token.beginLine && column < token.beginColumn);
         }
 
         public boolean isCursorAfter() {
-            return line > token.endLine || line == token.endLine && column > token.endColumn;
+            return line > token.endLine || (line == token.endLine && column > token.endColumn);
         }
 
         public boolean isCursorAtFirstColumnInToken() {
@@ -160,17 +159,9 @@ public class DdlTokenWalker implements SQLParserConstants {
          * Example "CREATE  VIEW abcdefg" NO ^ YES ^
          */
         public boolean isCursorFreeFromToken() {
-            if (line > token.endLine) {
-                return true;
-            }
-            if (isSingleChar()) {
-                return true;
-            }
-            if (line == token.endLine && column > token.endColumn + 1) {
-                return true;
-            }
-
-            return false;
+            return line > token.endLine
+                || isSingleChar()
+                || (line == token.endLine && column > token.endColumn + 1);
         }
 
         public boolean isWithinLines() {
@@ -194,16 +185,17 @@ public class DdlTokenWalker implements SQLParserConstants {
         }
 
         @Override
+        @SuppressWarnings("PMD.InsufficientStringBufferDeclaration") // false positive
         public String toString() {
-            StringBuffer sb = new StringBuffer(token.image);
-            sb.append("\n\t CURSOR: (" + this.line + ", " + this.column + ")");
-            sb.append("\n\t SPAN  : (" + this.token.beginLine + ", " + this.token.beginColumn + ")" + " >>> ("
-                    + this.token.endLine + ", " + this.token.endColumn + ") ");
-            sb.append("\n\t   isCursorBefore()        = " + isCursorBefore());
-            sb.append("\n\t   isCursorInside()        = " + isCursorInside());
-            sb.append("\n\t   isCursorAfter()         = " + isCursorAfter());
-            sb.append("\n\t   isCursorFreeFromToken() = " + isCursorFreeFromToken());
-            return sb.toString();
+            StringBuilder sb = new StringBuilder(200).append(token.image)
+                .append("\n\t CURSOR: (").append(this.line).append(", ").append(this.column).append(")")
+                .append("\n\t SPAN  : (").append(this.token.beginLine).append(", ").append(this.token.beginColumn + ")").append(" >>> (").append(this.token.endLine).append(", ").append(this.token.endColumn).append(") ")
+                .append("\n\t   isCursorBefore()        = ").append(isCursorBefore())
+                .append("\n\t   isCursorInside()        = ").append(isCursorInside())
+                .append("\n\t   isCursorAfter()         = ").append(isCursorAfter())
+                .append("\n\t   isCursorFreeFromToken() = ").append(isCursorFreeFromToken());
+
+                return sb.toString();
         }
     }
 }

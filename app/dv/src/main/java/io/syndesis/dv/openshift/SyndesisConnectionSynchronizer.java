@@ -42,11 +42,11 @@ import io.syndesis.dv.server.endpoint.MetadataService.SourceDeploymentMode;
  */
 @Component
 public class SyndesisConnectionSynchronizer {
-    private static final Log LOGGER = LogFactory.getLog(SyndesisConnectionSynchronizer.class);
+    private static final Log LOG = LogFactory.getLog(SyndesisConnectionSynchronizer.class);
 
-    private TeiidOpenShiftClient openshiftClient;
-    private MetadataService metadataService;
-    private RepositoryManager repositoryManager;
+    private final TeiidOpenShiftClient openshiftClient;
+    private final MetadataService metadataService;
+    private final RepositoryManager repositoryManager;
 
     public SyndesisConnectionSynchronizer(@Autowired TeiidOpenShiftClient toc,
             @Autowired MetadataService metadataService, @Autowired RepositoryManager repositoryManager) {
@@ -59,18 +59,18 @@ public class SyndesisConnectionSynchronizer {
      * This method processes each connection event and delegates to appropriate
      * connection operation
      */
-    public void handleConnectionEvent(final EventMsg event) throws KException {
+    public void handleConnectionEvent(final EventMsg event) {
         switch (event.getAction()) {
         case created:
-            LOGGER.info("Handling CREATE connection with Event ID = " + event.getId());
+            LOG.info("Handling CREATE connection with Event ID = " + event.getId());
             handleAddConnection(event, false);
             break;
         case deleted:
-            LOGGER.info("Handling DELETE connection with Event ID = " + event.getId());
+            LOG.info("Handling DELETE connection with Event ID = " + event.getId());
             handleDeleteConnection(event.getId());
             break;
         case updated:
-            LOGGER.info("Handling UPDATE connection with Event ID = " + event.getId());
+            LOG.info("Handling UPDATE connection with Event ID = " + event.getId());
             handleAddConnection(event, true);
             break;
         }
@@ -80,14 +80,14 @@ public class SyndesisConnectionSynchronizer {
      * This method checks each applicable syndesis connection and updates all
      * associated syndesisSource vdbs and schema
      */
-    public void synchronizeConnections(boolean update) throws KException {
+    public void synchronizeConnections(boolean update) {
         // Get syndesis sources
         Collection<DefaultSyndesisDataSource> dataSources = openshiftClient.getSyndesisSources();
         synchronizeConnections(update, dataSources);
     }
 
     public void synchronizeConnections(boolean update, Collection<DefaultSyndesisDataSource> dataSources)
-            throws KException {
+            {
 
         List<String> existingSchemas = this.repositoryManager.findAllSourceIds();
         for (DefaultSyndesisDataSource sds : dataSources) {
@@ -110,14 +110,14 @@ public class SyndesisConnectionSynchronizer {
         }
     }
 
-    private void handleAddConnection(EventMsg event, boolean update) throws KException {
+    private void handleAddConnection(EventMsg event, boolean update) {
         DefaultSyndesisDataSource sds = this.openshiftClient.getSyndesisDataSourceById(event.getId(), true);
         if (sds != null) {
             addConnection(sds, update);
         }
     }
 
-    private void handleDeleteConnection(String id) throws KException {
+    private void handleDeleteConnection(String id) {
         // note here that the datasource is already deleted from the syndesis
         // so we would need to search by local cached event id
         DefaultSyndesisDataSource sds = this.openshiftClient.getSyndesisDataSourceById(id, false);
@@ -126,6 +126,7 @@ public class SyndesisConnectionSynchronizer {
         }
     }
 
+    @SuppressWarnings("PMD.NPathComplexity") // TODO refactor
     public void addConnection(DefaultSyndesisDataSource sds, boolean update) {
         // this is avoid circular creation of the virtualization connection that is
         // published through syndesis
@@ -152,7 +153,7 @@ public class SyndesisConnectionSynchronizer {
                     this.openshiftClient.deleteDataSource(sds);
                 }
             } catch (KException e) {
-                LOGGER.warn("Error deleting data source for " + sds.getSyndesisName(), e);
+                LOG.warn("Error deleting data source for " + sds.getSyndesisName(), e);
             }
         }
 
@@ -161,22 +162,23 @@ public class SyndesisConnectionSynchronizer {
                 this.openshiftClient.createDataSource(sds);
                 validateConnection(sds);
             } catch (Exception e) {
-                LOGGER.warn("Error creating data source for " + sds.getSyndesisName(), e);
+                LOG.warn("Error creating data source for " + sds.getSyndesisName(), e);
                 return;
             }
         }
 
         try {
             this.metadataService.deploySourceVdb(sds.getTeiidName(), update?SourceDeploymentMode.REFRESH:SourceDeploymentMode.MAKE_LIVE);
-            LOGGER.info("submitted request to fetch metadata of connection " + sds.getSyndesisName());
+            LOG.info("submitted request to fetch metadata of connection " + sds.getSyndesisName());
         } catch (Exception e) {
-            LOGGER.warn("Failed to fetch metadata for connection " + sds.getSyndesisName(), e);
+            LOG.warn("Failed to fetch metadata for connection " + sds.getSyndesisName(), e);
         }
     }
 
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private void validateConnection(DefaultSyndesisDataSource sds) throws Exception {
         for (TeiidDataSource tds : this.metadataService.getTeiidDatasources()) {
-            LOGGER.warn("data sources" + tds.getSyndesisId() +"="+sds.getSyndesisConnectionId() + ", " + sds.getSyndesisName());
+            LOG.warn("data sources" + tds.getSyndesisId() +"="+sds.getSyndesisConnectionId() + ", " + sds.getSyndesisName());
             if (tds.getSyndesisId().contentEquals(sds.getSyndesisConnectionId())){
                 Object obj = tds.getConnectionFactory();
                 if (obj instanceof BaseConnectionFactory) {
@@ -194,26 +196,26 @@ public class SyndesisConnectionSynchronizer {
         }
     }
 
-    public void deleteConnection(DefaultSyndesisDataSource dsd) throws KException {
+    public void deleteConnection(DefaultSyndesisDataSource dsd) {
         try {
             if (this.metadataService.deleteSchema(dsd.getSyndesisConnectionId(), dsd.getTeiidName())) {
-                LOGGER.info("Workspace schema " + dsd.getTeiidName() + " deleted.");
+                LOG.info("Workspace schema " + dsd.getTeiidName() + " deleted.");
             } // else already deleted
         } catch (Exception e) {
-            LOGGER.info("Failed to delete schema " + dsd.getTeiidName(), e);
+            LOG.info("Failed to delete schema " + dsd.getTeiidName(), e);
         }
 
         this.openshiftClient.deleteDataSource(dsd);
-        LOGGER.info("Connection deleted " + dsd.getSyndesisName());
+        LOG.info("Connection deleted " + dsd.getSyndesisName());
     }
 
-    public void deleteConnectionSchema(String sourceId, String teiidDatasourceName) throws KException {
+    public void deleteConnectionSchema(String sourceId, String teiidDatasourceName) {
         try {
             if (this.metadataService.deleteSchema(sourceId, teiidDatasourceName)) {
-                LOGGER.info("Workspace schema " + teiidDatasourceName + " deleted.");
+                LOG.info("Workspace schema " + teiidDatasourceName + " deleted.");
             } // else already deleted
         } catch (Exception e) {
-            LOGGER.info("Failed to delete schema " + teiidDatasourceName, e);
+            LOG.info("Failed to delete schema " + teiidDatasourceName, e);
         }
     }
 }

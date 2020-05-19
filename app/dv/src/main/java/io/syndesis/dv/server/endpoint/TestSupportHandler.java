@@ -25,13 +25,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.syndesis.dv.StringConstants;
 import io.syndesis.dv.model.DataVirtualization;
 import io.syndesis.dv.server.DvService;
 import io.syndesis.dv.server.V1Constants;
 
 @RestController
 @ConditionalOnProperty(value = "endpoints.test_support.enabled")
-@RequestMapping( V1Constants.APP_PATH+V1Constants.FS+V1Constants.TEST_SUPPORT )
+@RequestMapping( V1Constants.APP_PATH+StringConstants.FS+V1Constants.TEST_SUPPORT )
 @Api( tags = {V1Constants.TEST_SUPPORT} )
 public class TestSupportHandler extends DvService {
 
@@ -43,7 +44,7 @@ public class TestSupportHandler extends DvService {
     @ApiResponses(value = {
         @ApiResponse(code = 400, message = "An error has occurred.")
     })
-    public void resetDBToDefault() throws Exception {
+    public void resetDBToDefault() {
         Iterable<? extends DataVirtualization> virtualizations = repositoryManager.runInTransaction(true, ()->{
             return repositoryManager.findDataVirtualizations();
         });
@@ -53,7 +54,7 @@ public class TestSupportHandler extends DvService {
                 dataVirtualizationService.deletePublishedVirtualization(dv.getName());
                 dataVirtualizationService.deleteDataVirtualization(dv.getName());
             } catch (Exception e) {
-                LOGGER.info("Could not delete virtualization %s", e, dv.getName()); //$NON-NLS-1$
+                LOGGER.info(e, "Could not delete virtualization %s", dv.getName()); //$NON-NLS-1$
             }
         }
     }
