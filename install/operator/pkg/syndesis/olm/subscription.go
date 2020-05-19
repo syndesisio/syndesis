@@ -22,10 +22,10 @@ import (
 	"fmt"
 	"time"
 
-	olmopv1alpha1 "github.com/operator-framework/operator-lifecycle-manager/pkg/api/apis/operators/v1alpha1"
+	olmapiv1alpha1 "github.com/operator-framework/api/pkg/operators/v1alpha1"
 	"k8s.io/apimachinery/pkg/util/wait"
 
-	olmopv1 "github.com/operator-framework/operator-lifecycle-manager/pkg/api/apis/operators/v1"
+	olmapiv1 "github.com/operator-framework/api/pkg/operators/v1"
 	olmpkgsvr "github.com/operator-framework/operator-lifecycle-manager/pkg/package-server/apis/operators/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	conf "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
@@ -152,10 +152,10 @@ func findChannel(ctx context.Context, pkgManifest *olmpkgsvr.PackageManifest, ch
 	return nil, fmt.Errorf("The package manifest for %s has no channel %s", pkgManifest.Name, chnlName)
 }
 
-func findPackageCSV(ctx context.Context, rtClient client.Client, channel *olmpkgsvr.PackageChannel, namespace string) (*olmopv1alpha1.ClusterServiceVersion, error) {
+func findPackageCSV(ctx context.Context, rtClient client.Client, channel *olmpkgsvr.PackageChannel, namespace string) (*olmapiv1alpha1.ClusterServiceVersion, error) {
 	sublog.Info("Finding csv for package in namespace", "Channel", channel.Name, "Namespace", namespace)
 
-	csv := olmopv1alpha1.ClusterServiceVersion{}
+	csv := olmapiv1alpha1.ClusterServiceVersion{}
 	if err := rtClient.Get(ctx, client.ObjectKey{Namespace: namespace, Name: channel.CurrentCSV}, &csv); err != nil {
 		if k8serr.IsNotFound(err) {
 			return nil, nil // No csvs in namespace
@@ -169,7 +169,7 @@ func findPackageCSV(ctx context.Context, rtClient client.Client, channel *olmpkg
 	return &csv, nil
 }
 
-func createSubscription(ctx context.Context, rtClient client.Client, configuration *conf.Config, pkgManifest *olmpkgsvr.PackageManifest, channel *olmpkgsvr.PackageChannel) (*olmopv1alpha1.Subscription, error) {
+func createSubscription(ctx context.Context, rtClient client.Client, configuration *conf.Config, pkgManifest *olmpkgsvr.PackageManifest, channel *olmpkgsvr.PackageChannel) (*olmapiv1alpha1.Subscription, error) {
 	sublog.Info("Creating subsription for package in namespace", "Channel", channel.Name, "Namespace", configuration.OpenShiftProject)
 
 	ogName := fmt.Sprintf("%s-%s-og", configuration.OpenShiftProject, pkgManifest.Status.PackageName)
@@ -177,25 +177,25 @@ func createSubscription(ctx context.Context, rtClient client.Client, configurati
 	//
 	// Create an operator group allowing the OLM to see the namespace
 	//
-	og := &olmopv1.OperatorGroup{
+	og := &olmapiv1.OperatorGroup{
 		ObjectMeta: metav1.ObjectMeta{
 			Namespace: configuration.OpenShiftProject,
 			Name:      ogName,
 			Labels:    map[string]string{configuration.ProductName: configuration.OpenShiftProject},
 		},
-		Spec: olmopv1.OperatorGroupSpec{}, // all namespaces by default
+		Spec: olmapiv1.OperatorGroupSpec{}, // all namespaces by default
 	}
 
 	//
 	// Create a subscription for the install
 	//
-	sub := &olmopv1alpha1.Subscription{
+	sub := &olmapiv1alpha1.Subscription{
 		ObjectMeta: metav1.ObjectMeta{
 			Namespace: configuration.OpenShiftProject,
 			Name:      pkgManifest.Status.PackageName,
 		},
-		Spec: &olmopv1alpha1.SubscriptionSpec{
-			InstallPlanApproval:    olmopv1alpha1.ApprovalAutomatic,
+		Spec: &olmapiv1alpha1.SubscriptionSpec{
+			InstallPlanApproval:    olmapiv1alpha1.ApprovalAutomatic,
 			Package:                pkgManifest.Status.PackageName,
 			CatalogSourceNamespace: pkgManifest.Status.CatalogSourceNamespace,
 			CatalogSource:          pkgManifest.Status.CatalogSource,
@@ -212,12 +212,12 @@ func createSubscription(ctx context.Context, rtClient client.Client, configurati
 	sub.Spec.StartingCSV = channel.CurrentCSV
 
 	// Determine install mode and add target ns to group if install mode does not allow all namespaces
-	if !hasInstallMode(csvDesc.InstallModes, olmopv1alpha1.InstallModeTypeAllNamespaces) {
-		if hasInstallMode(csvDesc.InstallModes, olmopv1alpha1.InstallModeTypeOwnNamespace) {
+	if !hasInstallMode(csvDesc.InstallModes, olmapiv1alpha1.InstallModeTypeAllNamespaces) {
+		if hasInstallMode(csvDesc.InstallModes, olmapiv1alpha1.InstallModeTypeOwnNamespace) {
 			og.Spec.TargetNamespaces = []string{configuration.OpenShiftProject}
-		} else if hasInstallMode(csvDesc.InstallModes, olmopv1alpha1.InstallModeTypeSingleNamespace) {
+		} else if hasInstallMode(csvDesc.InstallModes, olmapiv1alpha1.InstallModeTypeSingleNamespace) {
 			og.Spec.TargetNamespaces = []string{configuration.OpenShiftProject}
-		} else if hasInstallMode(csvDesc.InstallModes, olmopv1alpha1.InstallModeTypeMultiNamespace) {
+		} else if hasInstallMode(csvDesc.InstallModes, olmapiv1alpha1.InstallModeTypeMultiNamespace) {
 			og.Spec.TargetNamespaces = []string{configuration.OpenShiftProject}
 		}
 	}
@@ -236,7 +236,7 @@ func createSubscription(ctx context.Context, rtClient client.Client, configurati
 	return sub, nil
 }
 
-func hasInstallMode(installModes []olmopv1alpha1.InstallMode, tgtModeType olmopv1alpha1.InstallModeType) bool {
+func hasInstallMode(installModes []olmapiv1alpha1.InstallMode, tgtModeType olmapiv1alpha1.InstallModeType) bool {
 	if len(installModes) == 0 {
 		return false
 	}
@@ -250,9 +250,8 @@ func hasInstallMode(installModes []olmopv1alpha1.InstallMode, tgtModeType olmopv
 	return false
 }
 
-func waitForSubscription(ctx context.Context, rtClient client.Client, sub *olmopv1alpha1.Subscription) error {
+func waitForSubscription(ctx context.Context, rtClient client.Client, sub *olmapiv1alpha1.Subscription) error {
 	sublog.Info("Waiting on subscription install plan to complete for package in namespace", "Name", sub.Name, "Namespace", sub.Namespace)
-
 	//
 	// Wait for the subscription to install the operator
 	//
@@ -273,20 +272,20 @@ func waitForSubscription(ctx context.Context, rtClient client.Client, sub *olmop
 		}
 
 		iPlanRef := sub.Status.InstallPlanRef
-		installPlan := &olmopv1alpha1.InstallPlan{}
+		installPlan := &olmapiv1alpha1.InstallPlan{}
 		if err := rtClient.Get(ctx, client.ObjectKey{Namespace: iPlanRef.Namespace, Name: iPlanRef.Name}, installPlan); err != nil {
 			return false, err
 		}
 
-		if installPlan.Status.Phase == olmopv1alpha1.InstallPlanPhaseRequiresApproval {
+		if installPlan.Status.Phase == olmapiv1alpha1.InstallPlanPhaseRequiresApproval {
 			return false, fmt.Errorf("Subscription %s requires install approval to complete installation", sub.Name)
 		}
 
-		if installPlan.Status.Phase == olmopv1alpha1.InstallPlanPhaseFailed {
+		if installPlan.Status.Phase == olmapiv1alpha1.InstallPlanPhaseFailed {
 			return false, fmt.Errorf("Subscription %s failed to install the operator", sub.Name)
 		}
 
-		if installPlan.Status.Phase == olmopv1alpha1.InstallPlanPhaseComplete {
+		if installPlan.Status.Phase == olmapiv1alpha1.InstallPlanPhaseComplete {
 			sublog.Info("Install plan for subscription complete", "Subscription Name", sub.Name, "Subscription Namespace", sub.Namespace)
 			return true, nil
 		}

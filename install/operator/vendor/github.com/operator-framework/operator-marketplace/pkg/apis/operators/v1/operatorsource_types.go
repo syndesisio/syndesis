@@ -55,10 +55,12 @@ type OperatorSourceSpec struct {
 	// repositories in remote registry associated with the operator source.
 	AuthorizationToken OperatorSourceAuthorizationToken `json:"authorizationToken,omitempty"`
 
-	// DisplayName is passed along to the resulting CatalogSource to be used as a pretty name.
+	// DisplayName is passed along to the CatalogSourceConfig to be used
+	// by the resulting CatalogSource to be used as a pretty name.
 	DisplayName string `json:"displayName,omitempty"`
 
-	// Publisher is passed along to the resulting CatalogSource that defines what entity published
+	// Publisher is passed along to the CatalogSourceConfig to be used
+	// by the resulting CatalogSource that defines what entity published
 	// the artifacts from the OperatorSource.
 	Publisher string `json:"publisher,omitempty"`
 }
