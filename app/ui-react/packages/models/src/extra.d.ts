@@ -11,7 +11,7 @@ import {
   IntegrationOverview,
   Step,
 } from './models';
-import { ActionDescriptor } from './models-internal';
+import { ActionDescriptor, APISummary } from './models-internal';
 
 /**
  * Extra interfaces and overrides for the swagger generated models
@@ -43,6 +43,14 @@ export interface ActivityStep extends Step {
   messages?: string[];
   output?: string;
   events?: any;
+}
+
+/**
+ * Extending APISummary to support `connectorTemplateId`
+ * for SOAP connector
+ */
+export interface IApiSummarySoap extends APISummary {
+  connectorTemplateId?: string;
 }
 
 export interface IApiVersion {

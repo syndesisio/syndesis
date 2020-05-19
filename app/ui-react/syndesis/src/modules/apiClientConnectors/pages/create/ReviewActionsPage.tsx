@@ -7,7 +7,7 @@ import {
   ApiConnectorCreatorLayout,
   ApiConnectorCreatorToggleList,
   OpenApiReviewActions,
-  PageLoader
+  PageLoader,
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -19,6 +19,17 @@ import resolvers from '../../resolvers';
 import routes from '../../routes';
 
 export interface IReviewActionsRouteState {
+  /**
+   * connectorTemplateId indicates whether
+   * this is a SOAP or REST style web service
+   */
+  connectorTemplateId?: string;
+  /**
+   * portName & serviceName
+   * are used for SOAP documents
+   */
+  portName?: string;
+  serviceName?: string;
   specification: string;
 }
 
@@ -26,7 +37,10 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
   const uiContext = React.useContext(UIContext);
   const { state, history } = useRouteData<null, IReviewActionsRouteState>();
   const { apiSummary, loading, error } = useApiConnectorSummary(
-    state.specification
+    state.specification,
+    state.connectorTemplateId,
+    state.serviceName,
+    state.portName
   );
 
   React.useEffect(() => {
@@ -59,13 +73,19 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
             >
               {() => (
                 <>
-                  <PageTitle title={t('apiClientConnectors:create:review:title')} />
+                  <PageTitle
+                    title={t('apiClientConnectors:create:review:title')}
+                  />
                   <ApiConnectorCreatorBreadcrumb
                     cancelHref={resolvers.list()}
                     connectorsHref={resolvers.list()}
                     i18nCancel={t('shared:Cancel')}
-                    i18nConnectors={t('apiClientConnectors:apiConnectorsPageTitle')}
-                    i18nCreateConnection={t('apiClientConnectors:CreateApiConnector')}
+                    i18nConnectors={t(
+                      'apiClientConnectors:apiConnectorsPageTitle'
+                    )}
+                    i18nCreateConnection={t(
+                      'apiClientConnectors:CreateApiConnector'
+                    )}
                   />
                   <ApiConnectorCreatorLayout
                     content={
@@ -93,8 +113,8 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         warningMessages={
                           apiSummary!.warnings
                             ? apiSummary!.warnings.map(
-                            warning => (warning as any).message
-                            )
+                                warning => (warning as any).message
+                              )
                             : undefined
                         }
                         i18nErrorsHeading={t(
@@ -103,8 +123,8 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         errorMessages={
                           apiSummary!.errors
                             ? apiSummary!.errors.map(
-                            (e: any) => `${e.property}: ${e.message}`
-                            )
+                                (e: any) => `${e.property}: ${e.message}`
+                              )
                             : undefined
                         }
                       />
@@ -120,30 +140,47 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         isNextLoading={false}
                         isNextDisabled={!!apiSummary!.errors}
                         nextHref={resolvers.create.security({
+                          connectorTemplateId: state.connectorTemplateId,
                           specification: apiSummary!,
                         })}
                         reviewEditHref={resolvers.create.specification({
-                          specification: apiSummary!
-                            .configuredProperties!.specification,
+                          specification: apiSummary!.configuredProperties!
+                            .specification,
                         })}
                       />
                     }
                     navigation={
                       <ApiConnectorCreatorBreadSteps
                         step={2}
-                        i18nDetails={t('apiClientConnectors:create:details:title')}
-                        i18nReview={t('apiClientConnectors:create:review:title')}
-                        i18nSecurity={t('apiClientConnectors:create:security:title')}
-                        i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                        i18nDetails={t(
+                          'apiClientConnectors:create:details:title'
+                        )}
+                        i18nReview={t(
+                          'apiClientConnectors:create:review:title'
+                        )}
+                        i18nSecurity={t(
+                          'apiClientConnectors:create:security:title'
+                        )}
+                        i18nSelectMethod={t(
+                          'apiClientConnectors:create:selectMethod:title'
+                        )}
                       />
                     }
                     toggle={
                       <ApiConnectorCreatorToggleList
                         step={1}
-                        i18nDetails={t('apiClientConnectors:create:details:title')}
-                        i18nReview={t('apiClientConnectors:create:review:title')}
-                        i18nSecurity={t('apiClientConnectors:create:security:title')}
-                        i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                        i18nDetails={t(
+                          'apiClientConnectors:create:details:title'
+                        )}
+                        i18nReview={t(
+                          'apiClientConnectors:create:review:title'
+                        )}
+                        i18nSecurity={t(
+                          'apiClientConnectors:create:security:title'
+                        )}
+                        i18nSelectMethod={t(
+                          'apiClientConnectors:create:selectMethod:title'
+                        )}
                       />
                     }
                   />

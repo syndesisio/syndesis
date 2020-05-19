@@ -5,6 +5,7 @@ import { callFetch } from './callFetch';
 export interface ICreateConnectorProps {
   authenticationType?: string | undefined;
   authorizationEndpoint?: string;
+  connectorTemplateId?: string;
   tokenEndpoint?: string;
   specification: string;
   name: string;
@@ -12,6 +13,8 @@ export interface ICreateConnectorProps {
   host?: string;
   basePath?: string;
   icon?: string;
+  portName?: string;
+  serviceName?: string;
 }
 
 export function useApiConnectorCreator() {
@@ -29,10 +32,14 @@ export function useApiConnectorCreator() {
               authorizationEndpoint: connector.authorizationEndpoint,
               basePath: connector.basePath,
               host: connector.host,
+              portName: connector.portName,
+              serviceName: connector.serviceName,
               specification: connector.specification,
               tokenEndpoint: connector.tokenEndpoint,
             },
-            connectorTemplateId: 'swagger-connector-template',
+            connectorTemplateId: connector.connectorTemplateId
+              ? connector.connectorTemplateId
+              : 'swagger-connector-template',
             description: connector.description,
             icon: connector.icon,
             name: connector.name,
@@ -41,6 +48,7 @@ export function useApiConnectorCreator() {
         { type: 'application/json' }
       )
     );
+
     const response = await callFetch({
       body,
       headers: apiContext.headers,
@@ -49,7 +57,9 @@ export function useApiConnectorCreator() {
       method: 'POST',
       url: `${apiContext.apiUri}/connectors/custom`,
     });
+
     const integration = await response.json();
+
     if (integration.errorCode) {
       throw new Error(integration.userMsg);
     }

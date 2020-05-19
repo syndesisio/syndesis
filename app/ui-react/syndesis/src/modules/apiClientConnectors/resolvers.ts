@@ -38,11 +38,17 @@ export default {
       IReviewActionsRouteState,
       null,
       IReviewActionsRouteState
-    >(routes.create.review, ({ specification }) => ({
-      state: {
-        specification,
-      },
-    })),
+    >(
+      routes.create.review,
+      ({ specification, connectorTemplateId, serviceName, portName }) => ({
+        state: {
+          connectorTemplateId,
+          portName,
+          serviceName,
+          specification,
+        },
+      })
+    ),
     specification: makeResolver<
       IEditSpecificationRouteState,
       null,
@@ -56,8 +62,9 @@ export default {
       ISecurityPageRouteState,
       null,
       ISecurityPageRouteState
-    >(routes.create.security, ({ specification }) => ({
+    >(routes.create.security, ({ connectorTemplateId, specification }) => ({
       state: {
+        connectorTemplateId,
         specification,
       },
     })),
@@ -66,12 +73,18 @@ export default {
       ({
         authenticationType,
         authorizationEndpoint,
+        connectorTemplateId,
+        portName,
+        serviceName,
         specification,
         tokenEndpoint,
       }) => ({
         state: {
           authenticationType,
           authorizationEndpoint,
+          connectorTemplateId,
+          portName,
+          serviceName,
           specification,
           tokenEndpoint,
         },
