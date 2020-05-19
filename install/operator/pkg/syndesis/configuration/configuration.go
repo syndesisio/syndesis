@@ -516,20 +516,20 @@ func (config *Config) setConfigFromEnv() error {
 	imgEnv := Config{
 		Syndesis: SyndesisConfig{
 			Addons: AddonsSpec{
-				DV:     DvConfiguration{Image: os.Getenv("DV_IMAGE")},
-				CamelK: CamelKConfiguration{Image: os.Getenv("CAMELK_IMAGE")},
-				Todo:   TodoConfiguration{Image: os.Getenv("TODO_IMAGE")},
+				DV:     DvConfiguration{Image: os.Getenv("RELATED_IMAGE_DV")},
+				CamelK: CamelKConfiguration{Image: os.Getenv("RELATED_IMAGE_CAMELK")},
+				Todo:   TodoConfiguration{Image: os.Getenv("RELATED_IMAGE_TODO")},
 			},
 			Components: ComponentsSpec{
-				Oauth:      OauthConfiguration{Image: os.Getenv("OAUTH_IMAGE")},
-				UI:         UIConfiguration{Image: os.Getenv("UI_IMAGE")},
-				S2I:        S2IConfiguration{Image: os.Getenv("S2I_IMAGE")},
-				Prometheus: PrometheusConfiguration{Image: os.Getenv("PROMETHEUS_IMAGE")},
-				Upgrade:    UpgradeConfiguration{Image: os.Getenv("UPGRADE_IMAGE")},
-				Meta:       MetaConfiguration{Image: os.Getenv("META_IMAGE")},
+				Oauth:      OauthConfiguration{Image: os.Getenv("RELATED_IMAGE_OAUTH")},
+				UI:         UIConfiguration{Image: os.Getenv("RELATED_IMAGE_UI")},
+				S2I:        S2IConfiguration{Image: os.Getenv("RELATED_IMAGE_S2I")},
+				Prometheus: PrometheusConfiguration{Image: os.Getenv("RELATED_IMAGE_PROMETHEUS")},
+				Upgrade:    UpgradeConfiguration{Image: os.Getenv("RELATED_IMAGE_UPGRADE")},
+				Meta:       MetaConfiguration{Image: os.Getenv("RELATED_IMAGE_META")},
 				Database: DatabaseConfiguration{
-					Image:    os.Getenv("DATABASE_IMAGE"),
-					Exporter: ExporterConfiguration{Image: os.Getenv("PSQL_EXPORTER_IMAGE")},
+					Image:    os.Getenv("RELATED_IMAGE_DATABASE"),
+					Exporter: ExporterConfiguration{Image: os.Getenv("RELATED_IMAGE_PSQL_EXPORTER")},
 					Resources: ResourcesWithPersistentVolume{
 						VolumeAccessMode:   os.Getenv("DATABASE_VOLUME_ACCESS_MODE"),
 						VolumeStorageClass: os.Getenv("DATABASE_STORAGE_CLASS"),
@@ -537,9 +537,9 @@ func (config *Config) setConfigFromEnv() error {
 					},
 				},
 				Server: ServerConfiguration{
-					Image: os.Getenv("SERVER_IMAGE"),
+					Image: os.Getenv("RELATED_IMAGE_SERVER"),
 				},
-				AMQ: AMQConfiguration{Image: os.Getenv("AMQ_IMAGE")},
+				AMQ: AMQConfiguration{Image: os.Getenv("RELATED_IMAGE_AMQ")},
 			},
 		},
 	}
