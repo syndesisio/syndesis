@@ -27,15 +27,6 @@ import io.syndesis.dv.model.ViewDefinition;
 
 public interface RepositoryManager {
 
-    class EntityNotFoundException extends RuntimeException {
-
-        /**
-         *
-         */
-        private static final long serialVersionUID = -3995911719208421687L;
-
-    }
-
     class TimeoutException extends RuntimeException {
 
         private static final long serialVersionUID = -3492466153109760780L;
