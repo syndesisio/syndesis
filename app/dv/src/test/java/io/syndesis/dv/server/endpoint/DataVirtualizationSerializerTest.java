@@ -32,7 +32,7 @@ import io.syndesis.dv.rest.JsonMarshaller;
 @SuppressWarnings( { "javadoc", "nls" } )
 public final class DataVirtualizationSerializerTest {
 
-    protected static final String DATASERVICE_NAME = "dataservice1";
+    static final String DATASERVICE_NAME = "dataservice1";
 
     private static final String DESCRIPTION = "my description";
 

@@ -207,8 +207,6 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
 
     /**
      * Obtains the name.
-     *
-     * @return
      */
     public String getName() {
         return name;
@@ -216,8 +214,6 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
 
     /**
      * Obtains the projectGeneratorConfiguration.
-     *
-     * @return
      */
     public ProjectGeneratorConfiguration getProjectGeneratorConfiguration() {
         return projectGeneratorConfiguration;
@@ -225,8 +221,6 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
 
     /**
      * Obtains the mavenProperties.
-     *
-     * @return
      */
     public MavenProperties getMavenProperties() {
         return mavenProperties;

@@ -52,16 +52,10 @@ public class StringNameValidator {
         this(DEFAULT_MINIMUM_LENGTH, DEFAULT_MAXIMUM_LENGTH);
     }
 
-    /**
-     * @return
-     */
     public int getMaximumLength() {
         return maximumLength;
     }
 
-    /**
-     * @return
-     */
     public int getMinimumLength() {
         return minimumLength;
     }

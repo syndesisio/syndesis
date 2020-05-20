@@ -54,7 +54,6 @@ public abstract class DataSourceDefinition {
     /**
      * Check to see if the properties given match to the Data Source definition, using which
      * connection can be made.
-     * @param properties
      * @return true if the properties match
      */
     public boolean isTypeOf(Map<String, String> properties, String type) {
@@ -63,8 +62,6 @@ public abstract class DataSourceDefinition {
 
     /**
      * create data source for the given Syndesis Data source
-     * @param deploymentName
-     * @param scd
      * @return {@link TeiidDataSource}
      */
     public TeiidDataSourceImpl createDatasource(String deploymentName, DefaultSyndesisDataSource scd) {

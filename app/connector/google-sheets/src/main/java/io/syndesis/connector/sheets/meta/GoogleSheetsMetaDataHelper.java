@@ -120,10 +120,6 @@ public final class GoogleSheetsMetaDataHelper {
     /**
      * Create dynamic json schema from row dimension. If split only a single object "ROW" holding 1-n column values is
      * created. Otherwise each row results in a separate object with 1-n column values as property.
-     *
-     * @param spec
-     * @param coordinate
-     * @param columnNames
      */
     private static void createSchemaFromRowDimension(ObjectSchema spec, RangeCoordinate coordinate, String ... columnNames) {
         for (int i = coordinate.getColumnStartIndex(); i < coordinate.getColumnEndIndex(); i++) {
@@ -134,9 +130,6 @@ public final class GoogleSheetsMetaDataHelper {
     /**
      * Create dynamic json schema from column dimension. If split only a single object "COLUMN" holding 1-n row values is
      * created. Otherwise each column results in a separate object with 1-n row values as property.
-     *
-     * @param spec
-     * @param coordinate
      */
     private static void createSchemaFromColumnDimension(ObjectSchema spec, RangeCoordinate coordinate) {
         for (int i = coordinate.getRowStartIndex() + 1; i <= coordinate.getRowEndIndex(); i++) {

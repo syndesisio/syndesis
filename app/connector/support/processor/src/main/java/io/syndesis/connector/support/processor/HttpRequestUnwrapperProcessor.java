@@ -32,6 +32,8 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 public final class HttpRequestUnwrapperProcessor implements Processor {
 
     private static final Logger LOG = LoggerFactory.getLogger(HttpRequestUnwrapperProcessor.class);
@@ -49,37 +51,40 @@ public final class HttpRequestUnwrapperProcessor implements Processor {
 
         final JsonNode data = parseBody(body);
 
-        if (data != null) {
-            final JsonNode paramMap = data.get("parameters");
-            final JsonNode bodyData = data.get("body");
+        if (data == null) {
+            return;
+        }
 
-            if (paramMap != null || bodyData != null) {
-                if (paramMap != null) {
-                    for (final String key : parameters) {
-                        final JsonNode valueNode = paramMap.get(key);
-                        if (valueNode != null) {
-                            final String val = valueNode.asText();
-                            message.setHeader(key, val);
-                        }
+        final JsonNode paramMap = data.get("parameters");
+        final JsonNode bodyData = data.get("body");
+
+        if (paramMap != null || bodyData != null) {
+            if (paramMap != null) {
+                for (final String key : parameters) {
+                    final JsonNode valueNode = paramMap.get(key);
+                    if (valueNode != null) {
+                        final String val = valueNode.asText();
+                        message.setHeader(key, val);
                     }
                 }
-
-                if (bodyData == null) {
-                    message.setBody(null);
-                    return;
-                }
-
-                if (bodyData.isContainerNode()) {
-                    message.setBody(JsonUtils.toString(bodyData));
-                    return;
-                }
-
-                message.setHeader(Exchange.CONTENT_TYPE, "text/plain");
-                message.setBody(bodyData.asText());
             }
+
+            if (bodyData == null) {
+                message.setBody(null);
+                return;
+            }
+
+            if (bodyData.isContainerNode()) {
+                message.setBody(JsonUtils.toString(bodyData));
+                return;
+            }
+
+            message.setHeader(Exchange.CONTENT_TYPE, "text/plain");
+            message.setBody(bodyData.asText());
         }
     }
 
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE") // https://github.com/spotbugs/spotbugs/issues/259
     static JsonNode parseBody(final Object body) throws IOException, JsonProcessingException {
         if (body == null) {
             return null;

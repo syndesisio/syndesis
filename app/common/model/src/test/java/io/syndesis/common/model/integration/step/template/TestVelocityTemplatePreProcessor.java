@@ -147,7 +147,6 @@ public class TestVelocityTemplatePreProcessor implements StringConstants {
 
     /**
      * Velocity does not allow numbers at the start of its symbols
-     * @throws Exception
      */
     @Test
     public void testTemplateSymbolBeginningWithNumber() throws Exception {
@@ -165,8 +164,6 @@ public class TestVelocityTemplatePreProcessor implements StringConstants {
 
     /**
      * Velocity does not allow spaces in its symbols
-     *
-     * @throws Exception
      */
     @Test
     public void testTemplateSymbolsWithSpaces() throws Exception {

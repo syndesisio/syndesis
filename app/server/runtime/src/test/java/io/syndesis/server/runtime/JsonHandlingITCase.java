@@ -15,7 +15,7 @@
  */
 package io.syndesis.server.runtime;
 
-import java.util.SortedSet;
+import java.util.NavigableSet;
 import java.util.TreeSet;
 import java.util.UUID;
 
@@ -38,7 +38,7 @@ public class JsonHandlingITCase extends BaseITCase {
 
     @Test
     public void valuesGivenInJsonShouldBeTrimmedToNull() {
-        final SortedSet<String> tags = new TreeSet<>();
+        final NavigableSet<String> tags = new TreeSet<>();
         tags.add("");
         tags.add(" tag");
         tags.add("\tTaggy McTagface\t");

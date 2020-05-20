@@ -53,8 +53,6 @@ public final class KuduSupport {
 
     /**
      * Convenience method to convert a Camel Map output to a JSON Bean String.
-     *
-     * @param map
      * @return JSON bean String
      */
     public static String toJSONBean(final Map<String, Object> map) {

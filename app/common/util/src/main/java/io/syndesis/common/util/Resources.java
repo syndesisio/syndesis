@@ -37,11 +37,7 @@ public final class Resources {
     }
 
     public static byte[] getResourceAsBytes(String file, ClassLoader cl) throws IOException {
-        InputStream i = cl.getResourceAsStream(file);
-        if (i == null) {
-            return null;
-        }
-        try (InputStream is = i) {
+        try (InputStream is = cl.getResourceAsStream(file)) {
             return readBytes(is);
         }
     }
@@ -51,11 +47,7 @@ public final class Resources {
     }
 
     public static String getResourceAsText(String file, ClassLoader cl) throws IOException {
-        InputStream i = cl.getResourceAsStream(file);
-        if (i == null) {
-            return null;
-        }
-        try (InputStream is = i) {
+        try (InputStream is = cl.getResourceAsStream(file)) {
             return readText(is);
         }
     }

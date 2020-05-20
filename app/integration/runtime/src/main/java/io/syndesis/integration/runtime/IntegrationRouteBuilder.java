@@ -111,17 +111,9 @@ public class IntegrationRouteBuilder extends RouteBuilder {
     }
 
     protected Integration loadIntegration() throws IOException {
-        final Integration integration;
-
         try (InputStream is = createIntegrationInputStream()) {
-            if (is != null) {
-                integration = JsonUtils.reader().forType(Integration.class).readValue(is);
-            } else {
-                throw new IllegalStateException("Unable to load deployment: " + configurationUri);
-            }
+            return JsonUtils.reader().forType(Integration.class).readValue(is);
         }
-
-        return integration;
     }
 
     protected InputStream createIntegrationInputStream() throws IOException {
@@ -133,7 +125,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             }
         }
         LOGGER.info("Loading integration from: {}", configurationUri);
-        return ResourceHelper.resolveResourceAsInputStream(getContext().getClassResolver(), configurationUri);
+        return ResourceHelper.resolveMandatoryResourceAsInputStream(getContext(), configurationUri);
     }
 
     @Override
@@ -274,9 +266,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
     /**
      * Adds out message capture message processor to save current message to memory for later usage.
-     * @param parent
-     * @param stepId
-     * @return
      */
     private ProcessorDefinition<?> captureOutMessage(final ProcessorDefinition<?> parent, String stepId) {
         ProcessorDefinition<?> definition;

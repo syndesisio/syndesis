@@ -18,7 +18,6 @@ package io.syndesis.server.api.generator;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -69,7 +68,7 @@ public abstract class ConnectorGenerator {
         final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties()
             .entrySet().stream()
             .filter(e -> properties.contains(e.getKey()))
-            .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         configuredProperties.putAll(baseConnector.getConfiguredProperties());
 
         final String name = Optional.ofNullable(connectorSettings.getName())

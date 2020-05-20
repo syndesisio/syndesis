@@ -84,7 +84,6 @@ public class DefaultSyndesisDataSource implements Cloneable {
     /**
      * If bound returns the unique Teiid datasource name, which is also a valid
      * schema name.  It will already be cleansed of problematic characters.
-     * @return
      */
     public String getTeiidName() {
         return teiidName;

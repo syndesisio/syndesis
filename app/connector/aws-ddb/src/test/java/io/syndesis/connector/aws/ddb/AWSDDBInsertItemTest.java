@@ -40,8 +40,6 @@ public class AWSDDBInsertItemTest extends AWSDDBGenericOperation {
 
     /**
      * Extend the steps to add an intermediate putitem
-     *
-     * @return
      */
     @Override
     protected List<Step> createSteps() {

@@ -48,8 +48,6 @@ public class GoogleChart {
 
         /**
          * Specifies the domainRange.
-         *
-         * @param domainRange
          */
         public void setDomainRange(String domainRange) {
             this.domainRange = domainRange;
@@ -61,8 +59,6 @@ public class GoogleChart {
 
         /**
          * Specifies the dataRange.
-         *
-         * @param dataRange
          */
         public void setDataRange(String dataRange) {
             this.dataRange = dataRange;
@@ -74,8 +70,6 @@ public class GoogleChart {
 
         /**
          * Specifies the legendPosition.
-         *
-         * @param legendPosition
          */
         public void setLegendPosition(String legendPosition) {
             this.legendPosition = legendPosition;
@@ -96,8 +90,6 @@ public class GoogleChart {
 
         /**
          * Specifies the domainRange.
-         *
-         * @param domainRange
          */
         public void setDomainRange(String domainRange) {
             this.domainRange = domainRange;
@@ -109,8 +101,6 @@ public class GoogleChart {
 
         /**
          * Specifies the dataRange.
-         *
-         * @param dataRange
          */
         public void setDataRange(String dataRange) {
             this.dataRange = dataRange;
@@ -122,8 +112,6 @@ public class GoogleChart {
 
         /**
          * Specifies the axisTitleBottom.
-         *
-         * @param axisTitleBottom
          */
         public void setAxisTitleBottom(String axisTitleBottom) {
             this.axisTitleBottom = axisTitleBottom;
@@ -135,8 +123,6 @@ public class GoogleChart {
 
         /**
          * Specifies the axisTitleLeft.
-         *
-         * @param axisTitleLeft
          */
         public void setAxisTitleLeft(String axisTitleLeft) {
             this.axisTitleLeft = axisTitleLeft;
@@ -148,8 +134,6 @@ public class GoogleChart {
 
         /**
          * Specifies the chart type. Default is "COLUMN".
-         *
-         * @param type
          */
         public void setType(String type) {
             this.type = type;
@@ -162,8 +146,6 @@ public class GoogleChart {
 
     /**
      * Specifies the spreadsheetId.
-     *
-     * @param spreadsheetId
      */
     public void setSpreadsheetId(String spreadsheetId) {
         this.spreadsheetId = spreadsheetId;
@@ -175,8 +157,6 @@ public class GoogleChart {
 
     /**
      * Specifies the sheetId.
-     *
-     * @param sheetId
      */
     public void setSheetId(Integer sheetId) {
         this.sheetId = sheetId;
@@ -188,8 +168,6 @@ public class GoogleChart {
 
     /**
      * Specifies the title.
-     *
-     * @param title
      */
     public void setTitle(String title) {
         this.title = title;
@@ -201,8 +179,6 @@ public class GoogleChart {
 
     /**
      * Specifies the subtitle.
-     *
-     * @param subtitle
      */
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
@@ -215,8 +191,6 @@ public class GoogleChart {
     /**
      * Specifies the overlayPosition in A1 notation representing a target cell as anchor. If set
      * the chart is placed as overlayPosition on the same sheet next to the anchor cell.
-     *
-     * @param overlayPosition
      */
     public void setOverlayPosition(String overlayPosition) {
         this.overlayPosition = overlayPosition;
@@ -228,8 +202,6 @@ public class GoogleChart {
 
     /**
      * Specifies the sourceSheetId.
-     *
-     * @param sourceSheetId
      */
     public void setSourceSheetId(Integer sourceSheetId) {
         this.sourceSheetId = sourceSheetId;
@@ -241,8 +213,6 @@ public class GoogleChart {
 
     /**
      * Specifies the basicChart.
-     *
-     * @param basicChart
      */
     public void setBasicChart(BasicChart basicChart) {
         this.basicChart = basicChart;
@@ -254,8 +224,6 @@ public class GoogleChart {
 
     /**
      * Specifies the pieChart.
-     *
-     * @param pieChart
      */
     public void setPieChart(PieChart pieChart) {
         this.pieChart = pieChart;

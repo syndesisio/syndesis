@@ -19,8 +19,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableSet;
 import java.util.Optional;
-import java.util.SortedSet;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.extension.Extension;
@@ -43,7 +43,7 @@ public class ExtensionWithDomain extends TargetWithDomain<Extension> implements 
     }
 
     @Override
-    public SortedSet<String> getTags() {
+    public NavigableSet<String> getTags() {
         return getTarget().getTags();
     }
 

@@ -143,8 +143,6 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
 
     /**
      * Activity tracking is only active for pipelines.
-     * @param definition
-     * @return
      */
     private static boolean shouldTrack(NamedNode definition) {
         return definition instanceof PipelineDefinition &&
@@ -156,8 +154,6 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
      * should not track the done event because this leads to reversed order of log events.
      *
      * Only log done events with duration measurement for no output definitions like {@link org.apache.camel.model.ToDefinition}.
-     * @param definition
-     * @return
      */
     private static boolean shouldTrackDoneEvent(NamedNode definition) {
         if (!(definition instanceof OutputDefinition)) {

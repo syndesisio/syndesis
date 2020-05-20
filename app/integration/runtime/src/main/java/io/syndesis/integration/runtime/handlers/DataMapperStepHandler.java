@@ -71,9 +71,6 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
     /**
      * In case atlas mapping definition contains Json typed source documents we need to make sure to convert those from list to Json array Strings before passing those
      * source documents to the mapper.
-     * @param route
-     * @param dataSources
-     * @return
      */
     private static void addJsonTypeSourceProcessor(ProcessorDefinition<?> route, List<Map<String, Object>> dataSources) {
         List<Map<String, Object>> sourceDocuments = dataSources.stream()
@@ -94,9 +91,6 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
     /**
      * In case mapping definition has Json typed target document we need to make sure to convert the output. This is because mapper provides Json target collection as Json array String representation.
      * We prefer to use list objects where each element is a Json Object String.
-     * @param route
-     * @param dataSources
-     * @return
      */
     private static void addJsonTypeTargetProcessor(ProcessorDefinition<?> route, List<Map<String, Object>> dataSources) {
         boolean isJsonTypeTarget = dataSources.stream()
@@ -109,8 +103,6 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
 
     /**
      * Reads atlas mapping definition from configured step properties and extracts all data source elements.
-     * @param configuredProperties
-     * @return
      */
     @SuppressWarnings("unchecked")
     private static List<Map<String, Object>> getAtlasmapDataSources(Map<String, String> configuredProperties) {
@@ -161,7 +153,6 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
 
         /**
          * Convert list typed message body to Json array String representation.
-         * @param message
          */
         private static void convertMessageJsonTypeBody(Exchange exchange, Message message) {
             if (message != null && message.getBody() instanceof List) {

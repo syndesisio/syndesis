@@ -17,8 +17,8 @@ package io.syndesis.common.model.validation.integration;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.NavigableSet;
 import java.util.Optional;
-import java.util.SortedSet;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.validation.TargetWithDomain;
@@ -42,7 +42,7 @@ public class IntegrationWithDomain extends TargetWithDomain<Integration> impleme
     }
 
     @Override
-    public SortedSet<String> getTags() {
+    public NavigableSet<String> getTags() {
         return getTarget().getTags();
     }
 

@@ -47,7 +47,6 @@ public final class PathUtils {
 
     /**
      * Simple method parses the input path and returns a set of string {@link Properties}
-     * @param path
      * @return properties object
      */
     public static List<Pair<String, String>> getOptions(String path) {

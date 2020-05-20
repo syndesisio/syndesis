@@ -134,8 +134,6 @@ public class CompletionItemBuilder {
     }
 
     /**
-     *
-     * @param label
      * @return    String[] array >>>>
         String[0] label;
         String[1] detail;

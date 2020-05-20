@@ -48,8 +48,6 @@ public class PodMetricsReader implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PodMetricsReader.class);
 
-    private static final String JOLOKIA_URL_FORMAT = "%sapi/v1/namespaces/%s/pods/https:%s:8778/proxy/jolokia/";
-
     private static final String ROUTE_ID = "RouteId";
     private static final String START_TIMESTAMP = "StartTimestamp";
     private static final String EXCHANGES_TOTAL = "ExchangesTotal";
@@ -144,8 +142,6 @@ public class PodMetricsReader implements Runnable {
      * Code borrowed from the DefaultCamelController: https://github.com/apache/camel/blob/master/platforms/commands/commands-jolokia/src/main/java/org/apache/camel/commands/jolokia/DefaultJolokiaCamelController.java
      * Slight modifications have been applied.
      * Credits to: Claus & Tomo
-     * @throws J4pException
-     * @throws MalformedObjectNameException
      */
     private ObjectName lookupCamelContext(String camelContextName) throws MalformedObjectNameException, J4pException {
         ObjectName on = cache.get(camelContextName);
@@ -234,7 +230,7 @@ public class PodMetricsReader implements Runnable {
      * @return An instance of the {@link J4pClient}.
      */
     private static J4pClient forPod(KubernetesClient kubernetes, String pod) {
-        String jolokiaUrl = String.format(JOLOKIA_URL_FORMAT, kubernetes.getMasterUrl(), kubernetes.getNamespace(), pod);
+        String jolokiaUrl = String.format("%sapi/v1/namespaces/%s/pods/https:%s:8778/proxy/jolokia/", kubernetes.getMasterUrl(), kubernetes.getNamespace(), pod);
         try {
             return new J4pClientBuilder()
                 .url(jolokiaUrl)

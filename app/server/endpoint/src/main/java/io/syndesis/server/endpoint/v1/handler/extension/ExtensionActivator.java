@@ -50,6 +50,7 @@ public class ExtensionActivator {
         this.verifier = verifier;
     }
 
+    @SuppressWarnings("JdkObsolete")
     public void activateExtension(Extension extension) {
         Date rightNow = new Date();
 
@@ -89,6 +90,7 @@ public class ExtensionActivator {
         }
     }
 
+    @SuppressWarnings("JdkObsolete")
     private void doDelete(Extension extension) {
         Date rightNow = new Date();
         dataManager.update(new Extension.Builder()

@@ -24,11 +24,11 @@ import org.slf4j.LoggerFactory;
 
 public final class Threads {
 
-    private static class Logging implements UncaughtExceptionHandler {
+    static class Logging implements UncaughtExceptionHandler {
 
-        private final Logger log;
+        final Logger log;
 
-        public Logging(final Logger log) {
+        Logging(final Logger log) {
             this.log = log;
         }
 

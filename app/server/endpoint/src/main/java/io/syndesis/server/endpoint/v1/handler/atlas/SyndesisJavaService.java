@@ -35,10 +35,6 @@ public class SyndesisJavaService extends JavaService {
 
     /**
      * Stub out mavenclasspath processing for now.
-     *
-     * @param request
-     * @return
-     * @throws Exception
      */
     @Override
     @POST

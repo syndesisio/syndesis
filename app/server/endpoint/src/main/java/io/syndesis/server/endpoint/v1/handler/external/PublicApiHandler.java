@@ -51,6 +51,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.syndesis.common.model.Kind;
@@ -204,6 +206,7 @@ public class PublicApiHandler {
     @GET
     @Path("integrations/{env}/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @SuppressWarnings("JdkObsolete")
     public Response exportResources(@NotNull @PathParam("env") @Parameter(required = true) String environment,
                                     @QueryParam("all") @Parameter boolean exportAll,
                                     @QueryParam("ignoreTimestamp") @Parameter boolean ignoreTimestamp) throws IOException {
@@ -222,7 +225,7 @@ public class PublicApiHandler {
             integrations = dataMgr.fetchAll(Integration.class);
 
             // tag all integrations for export
-            Date taggedAt = new Date();
+            @SuppressWarnings("JdkObsolete") Date taggedAt = new Date();
             integrations.getItems().forEach(i -> {
                 final HashMap<String, ContinuousDeliveryEnvironment> state = new HashMap<>(i.getContinuousDeliveryState());
                 EnvironmentHandler.createOrUpdateTag(state, envId, taggedAt);
@@ -258,7 +261,7 @@ public class PublicApiHandler {
             return Response.status(Response.Status.NO_CONTENT.getStatusCode(), "No integrations to export").build();
         }
 
-        final Date exportedAt = new Date();
+        @SuppressWarnings("JdkObsolete") final Date exportedAt = new Date();
         final StreamingOutput output = handler.export(ids);
 
         // update lastExportedAt
@@ -281,6 +284,7 @@ public class PublicApiHandler {
     @Path("integrations")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE") // https://github.com/spotbugs/spotbugs/issues/259
     public ContinuousDeliveryImportResults importResources(@Context SecurityContext sec,
         @NotNull @MultipartForm @Parameter(required = true) ImportFormDataInput formInput) {
 
@@ -301,7 +305,7 @@ public class PublicApiHandler {
             }
 
             // importedAt date to be updated in all imported integrations
-            final Date lastImportedAt = new Date();
+            @SuppressWarnings("JdkObsolete") final Date lastImportedAt = new Date();
 
             final Map<String, List<WithResourceId>> resources = handler.importIntegration(sec, importFile);
             final List<WithResourceId> results = new ArrayList<>();
@@ -359,7 +363,8 @@ public class PublicApiHandler {
         validateParam("connectionId", connectionId);
         final Connection connection = getResource(Connection.class, connectionId, WithResourceId::hasId);
 
-        updateConnection(connection, properties, refeshIntegrations, new Date(), null);
+        @SuppressWarnings("JdkObsolete") Date  now = new Date();
+        updateConnection(connection, properties, refeshIntegrations, now, null);
         return connectionHandler.get(connection.getId().get());
     }
 

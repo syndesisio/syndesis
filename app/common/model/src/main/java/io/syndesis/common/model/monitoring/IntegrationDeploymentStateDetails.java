@@ -70,7 +70,6 @@ public interface IntegrationDeploymentStateDetails extends WithId<IntegrationDep
 
     /**
      * Type of log link being returned, i.e. whether events url or logs url should be displayed.
-     * @return
      */
     Optional<LinkType> getLinkType();
 

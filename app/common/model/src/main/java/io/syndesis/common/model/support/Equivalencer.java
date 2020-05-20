@@ -481,8 +481,7 @@ public class Equivalencer implements StringConstants {
      * properties are different. Thus, this should only be used in appropriate
      * situations.
      *
-     * @param parentContext
-     * @param one
+     * @param one first {@link Connector} to compare with
      * @param another a {@link Connector} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */

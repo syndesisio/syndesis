@@ -243,8 +243,6 @@ public class GenerateMetadataMojo extends AbstractMojo {
     /**
      * Generate atlasmap inspections, no matter if they come from annotations or
      * they are written directly into source json
-     *
-     * @throws MojoExecutionException
      */
     private void generateAtlasMapInspections() throws MojoExecutionException {
         final Map<String, Action> processedActions = new TreeMap<>();
@@ -443,7 +441,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
                         getLog().error("Error reading file " + path, e);
                     }
                 }
-            } catch (final Exception e) {
+            } catch (final IOException e) {
                 throw new MojoExecutionException("Error checking annotations.", e);
             }
         } else {
@@ -484,8 +482,6 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
     /**
      * Loads a partial metadata json file, if configured at Maven Plugin level.
-     *
-     * @throws MojoExecutionException
      */
     private void tryImportingPartialJSON() throws MojoExecutionException {
         File template;

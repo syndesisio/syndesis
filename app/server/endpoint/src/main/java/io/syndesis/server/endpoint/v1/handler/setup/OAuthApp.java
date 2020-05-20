@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
@@ -53,10 +52,10 @@ public interface OAuthApp extends WithId<OAuthApp>, WithName, WithProperties {
     class Builder extends ImmutableOAuthApp.Builder {
 
         Builder withTaggedPropertyFrom(final Connector connector, final String tag) {
-            final Optional<Entry<String, ConfigurationProperty>> maybeProperty = connector.propertyEntryTaggedWith(tag);
+            final Optional<Map.Entry<String, ConfigurationProperty>> maybeProperty = connector.propertyEntryTaggedWith(tag);
 
             if (maybeProperty.isPresent()) {
-                final Entry<String, ConfigurationProperty> property = maybeProperty.get();
+                final Map.Entry<String, ConfigurationProperty> property = maybeProperty.get();
 
                 final ConfigurationProperty configuration = property.getValue();
                 if ("hidden".equals(configuration.getType())) {
@@ -81,7 +80,7 @@ public interface OAuthApp extends WithId<OAuthApp>, WithName, WithProperties {
         final Map<String, String> current = getConfiguredProperties();
         final Map<String, String> replacement = new HashMap<>();
 
-        for (final Entry<String, ConfigurationProperty> property : getProperties().entrySet()) {
+        for (final Map.Entry<String, ConfigurationProperty> property : getProperties().entrySet()) {
             final ConfigurationProperty configurationProperty = property.getValue();
             final SortedSet<String> tags = configurationProperty.getTags();
 
@@ -121,10 +120,10 @@ public interface OAuthApp extends WithId<OAuthApp>, WithName, WithProperties {
         final Map<String, String> updated = new HashMap<>(current);
 
         for (final String tag : OAUTH_TAGS) {
-            final Optional<Entry<String, ConfigurationProperty>> maybeProperty = connector.propertyEntryTaggedWith(tag);
+            final Optional<Map.Entry<String, ConfigurationProperty>> maybeProperty = connector.propertyEntryTaggedWith(tag);
 
             if (maybeProperty.isPresent()) {
-                final Entry<String, ConfigurationProperty> property = maybeProperty.get();
+                final Map.Entry<String, ConfigurationProperty> property = maybeProperty.get();
                 final ConfigurationProperty propertyDefinition = property.getValue();
                 final String propertyName = property.getKey();
 

@@ -18,8 +18,8 @@ package io.syndesis.common.model.validation.connection;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
+import java.util.NavigableSet;
 import java.util.Optional;
-import java.util.SortedSet;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.environment.Organization;
@@ -92,7 +92,7 @@ public class ConnectionWithDomain extends TargetWithDomain<Connection> implement
     }
 
     @Override
-    public SortedSet<String> getTags() {
+    public NavigableSet<String> getTags() {
         return getTarget().getTags();
     }
 

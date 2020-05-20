@@ -25,6 +25,7 @@ import org.apache.camel.Service;
 import org.apache.camel.api.management.ManagedAttribute;
 import org.apache.camel.api.management.ManagedCamelContext;
 import org.apache.camel.api.management.ManagedResource;
+import org.apache.camel.api.management.mbean.ManagedCamelContextMBean;
 import org.apache.camel.management.DefaultManagementObjectNameStrategy;
 import org.apache.camel.spi.ManagementObjectNameStrategy;
 import org.slf4j.Logger;
@@ -45,27 +46,22 @@ public class CamelContextMetadataMBean implements Service, CamelContextAware {
 
     @ManagedAttribute
     public Long getStartTimestamp() {
-        return camelContext.getExtension(ManagedCamelContext.class).getManagedCamelContext().getStartTimestamp().getTime();
+        return timestampOf(managedContext().getStartTimestamp());
     }
 
     @ManagedAttribute
     public Long getResetTimestamp() {
-        final Date resetTimestamp = camelContext.getExtension(ManagedCamelContext.class).getManagedCamelContext().getResetTimestamp();
-        return resetTimestamp == null ? null : resetTimestamp.getTime();
+        return timestampOf(managedContext().getResetTimestamp());
     }
 
     @ManagedAttribute
     public Long getLastExchangeCompletedTimestamp() {
-        final Date timestamp = camelContext.getExtension(ManagedCamelContext.class).getManagedCamelContext()
-                .getLastExchangeCompletedTimestamp();
-        return timestamp == null ? null : timestamp.getTime();
+        return timestampOf(managedContext().getLastExchangeCompletedTimestamp());
     }
 
     @ManagedAttribute
     public Long getLastExchangeFailureTimestamp() {
-        final Date timestamp = camelContext.getExtension(ManagedCamelContext.class).getManagedCamelContext()
-                .getLastExchangeFailureTimestamp();
-        return timestamp == null ? null : timestamp.getTime();
+        return timestampOf(managedContext().getLastExchangeFailureTimestamp());
     }
 
     @Override
@@ -86,9 +82,9 @@ public class CamelContextMetadataMBean implements Service, CamelContextAware {
             public ObjectName getObjectName(Object managedObject) throws MalformedObjectNameException {
                 if (currentInstance.equals(managedObject)) {
                     return instanceName;
-                } else {
-                    return super.getObjectName(managedObject);
                 }
+
+                return super.getObjectName(managedObject);
             }
         });
         try {
@@ -121,4 +117,18 @@ public class CamelContextMetadataMBean implements Service, CamelContextAware {
     public CamelContext getCamelContext() {
         return this.camelContext;
     }
+
+    private ManagedCamelContextMBean managedContext() {
+        return camelContext.getExtension(ManagedCamelContext.class).getManagedCamelContext();
+    }
+
+    @SuppressWarnings("JdkObsolete") // this API Camel giveth
+    private static Long timestampOf(final Date date) {
+        if (date == null) {
+            return null;
+        }
+
+        return date.getTime();
+    }
+
 }

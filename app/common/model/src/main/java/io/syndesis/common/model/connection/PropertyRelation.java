@@ -24,7 +24,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = PropertyRelation.Builder.class)
-@SuppressWarnings("immutables")
 public interface PropertyRelation extends Serializable {
 
     class Builder extends ImmutablePropertyRelation.Builder {

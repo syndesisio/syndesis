@@ -42,13 +42,14 @@ class FreeMarkerTemplatePreProcessor extends AbstractTemplatePreProcessor {
     }
 
     @Override
+    @SuppressWarnings("JdkObsolete") // j.u.Matcher accepts only StringBuffer
     protected void parseSymbol(String literal) throws TemplateProcessingException {
         //
         // Scanner does not delineate between two symbols
         // with no whitespace between so match and loop
         //
         Matcher m = LITERAL_PATTERN.matcher(literal);
-        while (m.find()) {;
+        while (m.find()) {
             String leading = labelledGroup(m, "leading");
             String otag = labelledGroup(m, "otag");
             String symbol = labelledGroup(m, "symbol");

@@ -44,6 +44,7 @@ public class FhirTransactionTest extends FhirTestBase {
     }
 
     @Test
+    @SuppressWarnings("JdkObsolete")
     public void transactionTest() {
         Bundle bundle = new Bundle();
         bundle.addEntry(new Bundle.BundleEntryComponent().setResource(new Account().setId("1").setMeta(new Meta().setLastUpdated(new Date()))));

@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -142,7 +141,7 @@ public final class SalesforceMetadataRetrieval extends ComponentMetadataRetrieva
         return schema;
     }
 
-    static PropertyPair createFieldPairPropertyFromSchemaEntry(final Entry<String, JsonSchema> e) {
+    static PropertyPair createFieldPairPropertyFromSchemaEntry(final Map.Entry<String, JsonSchema> e) {
         return new PropertyPair(e.getKey(), ((SimpleTypeSchema) e.getValue()).getTitle());
     }
 

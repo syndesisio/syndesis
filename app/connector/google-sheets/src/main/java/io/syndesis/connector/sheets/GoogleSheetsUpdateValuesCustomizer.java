@@ -75,7 +75,6 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
 
     /**
      * Gets the api method name. Subclasses may override method names here.
-     * @return
      */
     protected String getApiMethodName() {
         return "update";

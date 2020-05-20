@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.util.Converter;
  *
  * You can enable it on a {@code Optional<String>} field like:
  * <pre>
- *   @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
+ *   {@literal @}JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
  *   Optional<String> value;
  * </pre>
  *

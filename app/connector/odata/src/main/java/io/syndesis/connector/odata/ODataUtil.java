@@ -76,7 +76,6 @@ public class ODataUtil implements ODataConstants {
     }
 
     /**
-     * @param url
      * @return whether url is an ssl (https) url or not.
      */
     public static boolean isServiceSSL(String url) {
@@ -133,8 +132,6 @@ public class ODataUtil implements ODataConstants {
     /**
      * Creates a new {@link HttpClientBuilder} for the given options.
      *
-     * @param options
-     *
      * @return the new http client builder
      */
     public static HttpClientBuilder createHttpClientBuilder(Map<String, Object> options) {
@@ -159,11 +156,7 @@ public class ODataUtil implements ODataConstants {
     /**
      * Creates a new {@link HttpClientBuilder} for the given options.
      *
-     * @param options
-     *
      * @return the new http client builder
-     *
-     * @throws Exception
      */
     public static HttpAsyncClientBuilder createHttpAsyncClientBuilder(Map<String, Object> options) {
         HttpAsyncClientBuilder builder = HttpAsyncClientBuilder.create();
@@ -186,11 +179,8 @@ public class ODataUtil implements ODataConstants {
 
     /**
      * Creates a new {@link CloseableHttpClient} for the given options.
-     * @param options
      *
      * @return the new http(s) client
-     *
-     * @throws Exception
      */
     public static CloseableHttpClient createHttpClient(Map<String, Object> options) {
         return createHttpClientBuilder(options).build();
@@ -203,7 +193,6 @@ public class ODataUtil implements ODataConstants {
     /**
      * Remove the slashes at the end of the given string
      *
-     * @param path
      * @return string sans slashes
      */
     public static String removeEndSlashes(String path) {

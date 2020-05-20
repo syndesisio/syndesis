@@ -15,6 +15,9 @@
  */
 package io.syndesis.server.endpoint.v1.handler.tags;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -24,7 +27,7 @@ import org.springframework.stereotype.Component;
 
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.ListResult;
-import io.syndesis.common.model.TagFinder;
+import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
@@ -43,11 +46,18 @@ public class TagHandler extends BaseHandler {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public ListResult<String> listTags() {
+        final ListResult<Integration> integrations = getDataManager().fetchAll(Integration.class);
+        final ListResult<Connection> connections = getDataManager().fetchAll(Connection.class);
 
-        return new TagFinder()
-                .add(getDataManager().fetchAll(Integration.class))
-                .add(getDataManager().fetchAll(Connection.class))
-                .getResult();
+        return ListResult.of(Stream.concat(
+                tagsOf(integrations),
+                tagsOf(connections)
+            ).collect(Collectors.toSet()));
+    }
+
+    private static Stream<String> tagsOf(ListResult<? extends WithTags> hasTags) {
+        return hasTags.getItems().stream()
+            .flatMap(t -> t.getTags().stream());
     }
 
 }

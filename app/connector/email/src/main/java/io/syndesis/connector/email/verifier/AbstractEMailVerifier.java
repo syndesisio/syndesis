@@ -82,10 +82,6 @@ public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExte
      * Sets the connection timeout property, eg. mail.imap.connectiontimeout, to 'value' seconds.
      * This is necessary for situations where requests to initiate mail connections have themselves a
      * default timeout, eg. http requests, and therefore this timeout needs to be shortened.
-     *
-     * @param parameters
-     * @param configuration
-     * @param value
      */
     protected void setConnectionTimeoutProperty(Map<String, Object> parameters,
                                                 MailConfiguration configuration, String timeoutValue) {

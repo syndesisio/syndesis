@@ -52,7 +52,7 @@ public final class JsonSchemaUtils {
      * In case the provided schema specification to read uses draft-04 and draft-06 specific features such as "examples" or a list of "required"
      * properties as array these information is more or less lost and auto converted to draft-03 compatible defaults. This way we can
      * read the specification to draft-03 compatible objects and use those.
-     * @return
+     * @return duplicated ObjectR
      */
     public static ObjectReader reader() {
         return JsonUtils.copyObjectMapperConfiguration()
@@ -67,7 +67,7 @@ public final class JsonSchemaUtils {
                             return null;
                         }
 
-                        return super.handleUnexpectedToken(ctxt, targetType, t, p, failureMsg);
+                        return super.handleUnexpectedToken(ctxt, ctxt.constructType(targetType), t, p, failureMsg);
                     }
                 })
                 .addMixIn(JsonSchema.class, MixIn.Draft6.class)

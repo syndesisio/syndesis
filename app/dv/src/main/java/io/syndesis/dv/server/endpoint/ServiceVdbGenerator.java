@@ -38,7 +38,6 @@ import org.teiid.language.SQLConstants;
 import org.teiid.metadata.AbstractMetadataRecord;
 import org.teiid.metadata.Column;
 import org.teiid.metadata.KeyRecord;
-import org.teiid.metadata.KeyRecord.Type;
 import org.teiid.metadata.Schema;
 import org.teiid.metadata.Table;
 import org.teiid.query.metadata.DDLConstants;
@@ -90,8 +89,6 @@ public final class ServiceVdbGenerator {
 
     /**
      * Constructs a ServiceVdbGenerator instance
-     *
-     * @param finder
      */
     public ServiceVdbGenerator( final SchemaFinder finder ) {
         this.finder = finder;
@@ -99,7 +96,6 @@ public final class ServiceVdbGenerator {
 
     /**
      * Creates the service vdb - must be valid
-     * @throws KException
      */
     @SuppressWarnings("PMD.NPathComplexity") // TODO refactor
     public VDBMetaData createServiceVdb(String virtualizationName, TeiidVdb previewVDB, List<? extends ViewDefinition> editorStates, List<TablePrivileges> tablePrivileges) {
@@ -332,7 +328,7 @@ public final class ServiceVdbGenerator {
                   .append(StringConstants.SPACE);
             }
             List<Column> keyCols = constraint.getColumns();
-            sb.append(constraint.getType() == Type.Primary ? DDLConstants.PRIMARY_KEY : SQLConstants.Reserved.UNIQUE)
+            sb.append(constraint.getType() == KeyRecord.Type.Primary ? DDLConstants.PRIMARY_KEY : SQLConstants.Reserved.UNIQUE)
                     .append(StringConstants.OPEN_BRACKET);
             for (int i = 0; i < keyCols.size(); i++) {
                 if (i > 0) {

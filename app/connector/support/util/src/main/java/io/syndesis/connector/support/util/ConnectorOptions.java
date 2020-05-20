@@ -36,9 +36,6 @@ public final class ConnectorOptions {
      *
      * Note. Don't use this if the value is not expected to a {@link String}
      *
-     * @param options
-     * @param key
-     * @param defaultValue
      * @return {@link String} object belonging to the given key in the options map
      */
     public static String extractOption(Map<String, ?> options, String key, String defaultValue) {
@@ -56,8 +53,6 @@ public final class ConnectorOptions {
      * Gets the value mapped to the given key & converts to {@link String} if present,
      * or null otherwise.
      *
-     * @param options
-     * @param key
      * @return {@link String} object belonging to the given key in the options map
      */
     public static String extractOption(Map<String, ?> options, String key) {
@@ -68,8 +63,6 @@ public final class ConnectorOptions {
      * Gets & removes the value mapped to the given key & converts to {@link String} if present,
      * or null otherwise.
      *
-     * @param options
-     * @param key
      * @return {@link String} object that used to belong to the given key in the options map
      */
     public static String popOption(Map<String, ?> options, String key) {
@@ -91,8 +84,6 @@ public final class ConnectorOptions {
      * Note. This will only work for values that can be converted to strings so Strings and primitives.
      *            The mappingFn should be able to handle null values.
      *
-     * @param options
-     * @param key
      * @return Mapped object converted from value belonging to the given key in the options map
      */
     public static <T> T extractOptionAndMap(Map<String, ?> options, String key,
@@ -120,8 +111,6 @@ public final class ConnectorOptions {
      *
      * Note. mappingFn should be able to handle null values.
      *
-     * @param options
-     * @param key
      * @return Mapped object converted from value belonging to the given key in the options map
      * @throws any exception that may result from the mapping function
      */
@@ -162,11 +151,6 @@ public final class ConnectorOptions {
      * Gets the value mapped to the given key, checks it is the required class
      * and returns. Otherwise return defaultValue.
      *
-     * @param options
-     * @param key
-     * @param requiredClass
-     * @param defaultValue
-     *
      * @return value from options
      */
     public static <T> T extractOptionAsType(Map<String, ?> options,
@@ -185,9 +169,6 @@ public final class ConnectorOptions {
      * Gets the value mapped to the given key, checks it is the required class
      * and returns. Otherwise return null.
      *
-     * @param options
-     * @param key
-     * @param requiredClass
      * @return value from options
      */
     public static <T> T extractOptionAsType(Map<String, ?> options,

@@ -39,7 +39,7 @@ public class SqlMetaDataITCase {
 
     @Rule
     public JdbcDatabaseContainer<?> database;
-    
+
     public SqlMetaDataITCase(final JdbcDatabaseContainer<?> database) {
         this.database = database;
     }

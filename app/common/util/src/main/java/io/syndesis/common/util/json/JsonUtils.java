@@ -54,7 +54,7 @@ public final class JsonUtils {
         OBJECT_MAPPER = new ObjectMapper()
                 .registerModules(new Jdk8Module(), new JavaTimeModule())
                 // keep using the deprecated method here in order to align with the jackson version (2.8.11) being used at integration runtime
-                .setPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY))
+                .setDefaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY))
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
                 .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
@@ -69,7 +69,7 @@ public final class JsonUtils {
 
     /**
      * Returns an immutable and thread-safe instance of an ObjectReader, used for object deserialization.
-     * @return
+     * @return globally configured JSON reader
      */
     public static ObjectReader reader() {
         return OBJECT_READER;
@@ -81,7 +81,7 @@ public final class JsonUtils {
 
     /**
      * Returns an immutable and thread-safe instance of an ObjectWriter, used for object serialization
-     * @return
+     * @return globally configured JSON writer
      */
     public static ObjectWriter writer() {
         return OBJECT_WRITER;
@@ -92,7 +92,7 @@ public final class JsonUtils {
      * It's main usage is in tests, where you might have reason to configure differently advanced parameters.
      *
      * This method creates a copy of an ObjectMapper.
-     * @return
+     * @return a copy of the configured {@link ObjectMapper}
      */
     public static ObjectMapper copyObjectMapperConfiguration() {
         return OBJECT_MAPPER.copy();
@@ -124,9 +124,9 @@ public final class JsonUtils {
     }
 
     /**
-     * Checks given value to be a Json array of object representation.
-     * @param value
-     * @return
+     * Checks given value to be a JSON array of object representation.
+     * @param value possible JSON serialized to string
+     * @return true if the given string might be JSON
      */
     public static boolean isJson(String value) {
         if (value == null) {
@@ -138,8 +138,8 @@ public final class JsonUtils {
 
     /**
      * Checks given value could be JSON object string.
-     * @param value
-     * @return
+     * @param value possible JSON object serialized to string
+     * @return true if the given string might be a JSON object
      */
     public static boolean isJsonObject(String value) {
         if (Strings.isEmptyOrBlank(value)) {
@@ -153,8 +153,8 @@ public final class JsonUtils {
 
     /**
      * Checks given value could be JSON array string.
-     * @param value
-     * @return
+     * @param value possible JSON array serialized to string
+     * @return true if the given string might be a JSON array
      */
     public static boolean isJsonArray(String value) {
         if (Strings.isEmptyOrBlank(value)) {
@@ -167,11 +167,11 @@ public final class JsonUtils {
     }
 
     /**
-     * Converts array json node to a list of json object strings. Used when splitting a
-     * json array with split EIP.
-     * @param json
-     * @return
-     * @throws JsonProcessingException
+     * Converts array JSON node to a list of JSON object strings. Used when splitting a
+     * JSON array with split EIP.
+     * @param json a JSON node that {@link JsonNode#isArray() is an array}
+     * @return each element of the given JSON array serialized as a String
+     * @throws JsonProcessingException when serialization fails
      */
     public static List<String> arrayToJsonBeans(JsonNode json) throws JsonProcessingException {
         List<String> jsonBeans = new ArrayList<>();
@@ -189,9 +189,9 @@ public final class JsonUtils {
     }
 
     /**
-     * Converts list of json object strings to a json array string.
-     * @param jsonBeans
-     * @return
+     * Converts list of JSON object strings to a JSON array string.
+     * @param jsonBeans list of objects to serialize
+     * @return comma separated elements of given list serialized via {@link String#valueOf(Object)} in square brackets
      */
     public static String jsonBeansToArray(List<?> jsonBeans) {
         final StringJoiner joiner = new StringJoiner(",", "[", "]");

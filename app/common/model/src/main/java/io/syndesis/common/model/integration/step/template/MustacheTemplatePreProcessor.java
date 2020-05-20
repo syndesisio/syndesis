@@ -68,6 +68,7 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
     }
 
     @Override
+    @SuppressWarnings("JdkObsolete") // j.u.Matcher accepts only StringBuffer
     protected void parseSymbol(String literal) throws TemplateProcessingException {
         //
         // Scanner does not delineate between two symbols

@@ -54,11 +54,6 @@ public interface RepositoryManager {
 
     /**
      * Run the callable in the given transaction
-     * @param rollbackOnly
-     * @param callable
-     * @param <T>
-     * @return
-     * @throws Exception
      */
     <T> T runInTransaction(boolean rollbackOnly, Task<T> callable);
 
@@ -107,8 +102,6 @@ public interface RepositoryManager {
 
     /**
      * Create a new published edition, with an automatically assigned revision number
-     * @param virtualization
-     * @return
      */
     Edition createEdition(String virtualization);
 

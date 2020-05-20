@@ -85,6 +85,7 @@ public final class Urls {
         final String origin = httpRequest.getHeader(ORIGIN_HEADER);
         final Optional<URI> maybeOriginUri = parseOrigin(origin);
 
+        @SuppressWarnings("JdkObsolete")
         final URI currentUri = URI.create(httpRequest.getRequestURL().toString());
 
         if (maybeOriginUri.isPresent()) {

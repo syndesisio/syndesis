@@ -223,8 +223,6 @@ public class SqlStatementParser {
      *
      * INSERT INTO table_name
      * VALUES (value1, value2, value3, ...);
-     * @param tableName
-     * @return
      */
     List<SqlParam> findInsertParams(String tableName) {
         boolean isColumnName = false;

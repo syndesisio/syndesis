@@ -97,7 +97,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
@@ -178,8 +177,6 @@ public class TeiidOpenShiftClient {
     /**
      * Get the OpenShift name, requires lower case and must start/end with
      * alpha - which we have already validated
-     * @param name
-     * @return
      */
     public static String getOpenShiftName(String name) {
         return "dv-" + name.toLowerCase(Locale.US); //$NON-NLS-1$
@@ -694,9 +691,6 @@ public class TeiidOpenShiftClient {
     /**
      * Create a unique and valid name the syndesis connection.  The name will be suitable
      * as a schema name as well.
-     * @param scd
-     * @param syndesisName
-     * @throws Exception
      */
     public String getUniqueTeiidName(DefaultSyndesisDataSource scd, String syndesisName) {
         return repositoryManager.runInTransaction(false, () -> {
@@ -1310,9 +1304,7 @@ public class TeiidOpenShiftClient {
 
     /**
      * Get the current build and deployment status for a virtualization
-     * @param virtualization
      * @return the status, never null
-     * @throws KException
      */
     public VirtualizationStatus getVirtualizationStatus(String virtualization) {
         String openShiftName = getOpenShiftName(virtualization);
@@ -1676,7 +1668,6 @@ public class TeiidOpenShiftClient {
      * This method generates the pom.xml file, that needs to be saved in the root of the project.
      * @param vdb - VDB for which pom.xml is generated
      * @return pom.xml contents
-     * @throws KException
      */
     @SuppressWarnings("PMD.ConsecutiveLiteralAppends") // more readable
     protected String generatePomXml(VDBMetaData vdb, boolean enableOdata, boolean enableSecurity) {
@@ -1709,7 +1700,7 @@ public class TeiidOpenShiftClient {
 
             StringBuilder mavenRepositories = new StringBuilder(200);
             if (this.mavenRepos != null) {
-                for (Entry<String, String> repository: this.mavenRepos.entrySet()) {
+                for (Map.Entry<String, String> repository: this.mavenRepos.entrySet()) {
                     final String key = repository.getKey();
                     mavenRepositories.append(StringConstants.NEW_LINE).append("<repository>\n")
                         .append("<id>").append(key).append("</id>\n")

@@ -33,6 +33,8 @@ import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.common.model.ModelData;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 public class ReadApiClientData {
 
     private static final TypeReference<List<ModelData<?>>> MODEL_DATA_TYPE = new TypeReference<List<ModelData<?>>>() {
@@ -51,14 +53,7 @@ public class ReadApiClientData {
         this.encryptionComponent = encryptionComponent;
     }
 
-    /**
-     *
-     * @param fileName
-     * @return
-     * @throws JsonParseException
-     * @throws JsonMappingException
-     * @throws IOException
-     */
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE") // https://github.com/spotbugs/spotbugs/issues/259
     public List<ModelData<?>> readDataFromFile(String fileName) throws JsonParseException, JsonMappingException, IOException {
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName)) {
             if (is==null) {

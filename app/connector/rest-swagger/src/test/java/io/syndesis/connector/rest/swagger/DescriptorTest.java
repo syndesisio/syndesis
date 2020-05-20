@@ -23,12 +23,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.syndesis.common.model.Dependency;
-import io.syndesis.common.model.Dependency.Type;
 import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.connector.rest.swagger.auth.apikey.ApiKey.Placement;
+import io.syndesis.connector.rest.swagger.auth.apikey.ApiKey;
 
 import org.apache.camel.CamelContext;
 import org.junit.Test;
@@ -74,9 +72,9 @@ public class DescriptorTest {
                 .build())
             .putProperty("authenticationParameterPlacement", new ConfigurationProperty.Builder()
                 .displayName("Placement of the API key parameter")
-                .addAllEnum(Stream.of(Placement.values())
+                .addAllEnum(Stream.of(ApiKey.Placement.values())
                     .sorted()
-                    .map(p -> new PropertyValue.Builder().label(p.toString()).value(p.toString()).build())::iterator)
+                    .map(p -> new ConfigurationProperty.PropertyValue.Builder().label(p.toString()).value(p.toString()).build())::iterator)
                 .javaType("java.lang.String")
                 .order(4)
                 .required(true)
@@ -98,7 +96,7 @@ public class DescriptorTest {
                 .order(1)
                 .addAllEnum(Stream.of(AuthenticationType.values())
                     .sorted()
-                    .map(v -> PropertyValue.Builder.of(v.name(), v.name()))
+                    .map(v -> ConfigurationProperty.PropertyValue.Builder.of(v.name(), v.name()))
                     .collect(Collectors.toList()))
                 .build())
             .putProperty("authorizationEndpoint", new ConfigurationProperty.Builder()
@@ -235,7 +233,7 @@ public class DescriptorTest {
     static Dependency mavenDependency(final String id) {
         return new Dependency.Builder()
             .id(id)
-            .type(Type.MAVEN)
+            .type(Dependency.Type.MAVEN)
             .build();
     }
 }

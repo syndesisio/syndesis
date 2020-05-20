@@ -62,6 +62,7 @@ public final class Utils {
         return OBJECT_READER;
     }
 
+    @SuppressWarnings("JdkObsolete")
     public static class EpochMillisTimeModule extends SimpleModule {
         public EpochMillisTimeModule() {
             super();

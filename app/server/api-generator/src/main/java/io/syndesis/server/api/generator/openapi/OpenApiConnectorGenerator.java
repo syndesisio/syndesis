@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -223,7 +222,7 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
         for (final OasPathItem path : OasModelHelper.getPathItems(paths)) {
             final Map<String, OasOperation> operationMap = OasModelHelper.getOperationMap(path);
 
-            for (final Entry<String, OasOperation> entry : operationMap.entrySet()) {
+            for (final Map.Entry<String, OasOperation> entry : operationMap.entrySet()) {
                 final OasOperation operation = entry.getValue();
                 final String operationId = operation.operationId;
                 if (operationId == null) {

@@ -26,7 +26,6 @@ import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.model.Dependency;
-import io.syndesis.common.model.Dependency.Type;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithDependencies;
@@ -126,7 +125,7 @@ public interface Step extends WithId<Step>, WithConfiguredProperties, WithDepend
     @JsonIgnore
     default Set<String> getExtensionIds() {
         final Set<String> collected = getDependencies().stream()
-            .filter(d -> d.getType() == Type.EXTENSION)
+            .filter(d -> d.getType() == Dependency.Type.EXTENSION)
             .map(Dependency::getId)
             .collect(Collectors.toSet());
 

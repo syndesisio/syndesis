@@ -24,8 +24,8 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -48,6 +48,8 @@ import io.syndesis.server.dao.DaoException;
  */
 @SuppressWarnings("PMD.GodClass")
 public class SqlFileStore {
+
+    private static final DateTimeFormatter TMP_FILE_DATE_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
 
     enum DatabaseKind {
         PostgreSQL, H2, Apache_Derby
@@ -271,8 +273,7 @@ public class SqlFileStore {
      * Postgres does not allow to read from the large object after the connection has been closed.
      */
     private InputStream doReadPostgres(String path) {
-        Handle h = dbi.open();
-        try {
+        try (Handle h = dbi.open()) {
             h.getConnection().setAutoCommit(false);
 
             List<Map<String, Object>> res = h.select("SELECT data FROM filestore WHERE path=?", path);
@@ -286,13 +287,10 @@ public class SqlFileStore {
                 LargeObjectManager lobj = getPostgresConnection(h.getConnection()).getLargeObjectAPI();
                 LargeObject obj = lobj.open(oid.get(), LargeObjectManager.READ);
                 return new HandleCloserInputStream(h, obj.getInputStream());
-            } else {
-                h.close();
-                return null;
             }
 
+            return null;
         } catch (SQLException e) {
-            IOUtils.closeQuietly(h);
             throw DaoException.launderThrowable(e);
         }
     }
@@ -309,8 +307,7 @@ public class SqlFileStore {
     }
 
     private static String newRandomTempFilePath() {
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd-HH-mm", Locale.ROOT);
-        return "/tmp/" + fmt.format(new Date()) + "_" + UUID.randomUUID();
+        return "/tmp/" + TMP_FILE_DATE_PATTERN.format(Instant.now()) + "_" + UUID.randomUUID();
     }
 
     private boolean tableExists(Handle h, String tableName) {

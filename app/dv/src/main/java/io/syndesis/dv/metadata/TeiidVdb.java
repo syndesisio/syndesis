@@ -72,8 +72,6 @@ public interface TeiidVdb {
     List<String> getValidityErrors();
 
     /**
-     * @param key
-     *
      * @return value of property or null
      */
     String getPropertyValue(String key);
@@ -83,8 +81,6 @@ public interface TeiidVdb {
     /**
      * Return the live metadata {@link Schema} instance
      * WARNING: do not modify
-     * @param name
-     * @return
      */
     Schema getSchema(String name);
 

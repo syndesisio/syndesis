@@ -29,16 +29,9 @@ public interface ProjectBuilder {
 
     /**
      * Builds the integration project sources.
-     * @param integrationSource
-     * @return
      */
     Project build(IntegrationSource integrationSource);
 
-    /**
-     * @param source
-     * @param integrationFile
-     * @throws IOException
-     */
     default void customizeIntegrationFile(IntegrationSource source, Path integrationFile) throws IOException {
         // subclasses can add integration file customizations
     };

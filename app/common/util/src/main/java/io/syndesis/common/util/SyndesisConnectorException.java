@@ -40,7 +40,7 @@ public class SyndesisConnectorException extends RuntimeException {
 
     /**
      * Obtains the category.
-     * @return
+     * @return category of error
      */
     public String getCategory() {
         return category;
@@ -60,25 +60,25 @@ public class SyndesisConnectorException extends RuntimeException {
 
     /**
      * Returns a SyndesysConnectorException
-     * @param cause
-     * @return SyndesysConnectorException
+     * @param cause original cause
+     * @return SyndesysConnectorException containing the cause, initialized with category and message
      */
-    public static SyndesisConnectorException from(Throwable exception) {
+    public static SyndesisConnectorException from(Throwable cause) {
 
-        if (exception instanceof SyndesisConnectorException) {
-            return (SyndesisConnectorException) exception;
+        if (cause instanceof SyndesisConnectorException) {
+            return (SyndesisConnectorException) cause;
         }
-        if (exception.getCause() != null && exception.getCause() instanceof SyndesisConnectorException) {
-            return (SyndesisConnectorException) exception.getCause();
+        if (cause.getCause() != null && cause.getCause() instanceof SyndesisConnectorException) {
+            return (SyndesisConnectorException) cause.getCause();
         }
-        if (exception.getCause() != null && exception.getCause().getMessage() != null) {
-            return new SyndesisConnectorException(ErrorCategory.SERVER_ERROR,exception.getCause().getMessage(), exception.getCause());
+        if (cause.getCause() != null && cause.getCause().getMessage() != null) {
+            return new SyndesisConnectorException(ErrorCategory.SERVER_ERROR,cause.getCause().getMessage(), cause.getCause());
         }
-        if (exception.getMessage()!=null) {
-            return new SyndesisConnectorException(ErrorCategory.SERVER_ERROR, exception.getMessage(), exception);
+        if (cause.getMessage()!=null) {
+            return new SyndesisConnectorException(ErrorCategory.SERVER_ERROR, cause.getMessage(), cause);
         }
-        if (exception.getCause() != null) {
-            return new SyndesisConnectorException(ErrorCategory.SERVER_ERROR,exception.getCause().getMessage(), exception.getCause());
+        if (cause.getCause() != null) {
+            return new SyndesisConnectorException(ErrorCategory.SERVER_ERROR,cause.getCause().getMessage(), cause.getCause());
         }
         return new SyndesisConnectorException(ErrorCategory.SERVER_ERROR);
     }

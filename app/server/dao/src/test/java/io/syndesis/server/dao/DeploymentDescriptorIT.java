@@ -22,7 +22,6 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Spliterator;
@@ -135,7 +134,7 @@ public class DeploymentDescriptorIT {
 
         final Map<String, Long> multipleCoordinates = coordinatesWithCount.entrySet().stream()
             .filter(e -> e.getValue() > 1)
-            .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         assertThat(multipleCoordinates).as("Expected connector GAV coordinates to be unique").isEmpty();
     }
@@ -148,7 +147,7 @@ public class DeploymentDescriptorIT {
             .map(action -> action.get("name").asText()).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
         final Map<String, Long> multipleNames = namesWithCount.entrySet().stream().filter(e -> e.getValue() > 1)
-            .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         assertThat(multipleNames).as("Expected unique action names").isEmpty();
     }

@@ -18,7 +18,6 @@ package io.syndesis.common.model.action;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -102,7 +101,7 @@ public interface Action extends WithResourceId, WithKind, WithName, WithTags, Wi
         return descriptor != null
             ? descriptor.getPropertyDefinitionSteps().stream()
                 .flatMap(step -> step.getProperties().entrySet().stream())
-                .collect(Collectors.toMap(Entry::getKey, Entry::getValue))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
             : Collections.emptyMap();
     }
 

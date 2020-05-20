@@ -132,7 +132,6 @@ public class IntegrationTest {
 
     /**
      * Tests a simple view layering with no sources
-     * @throws Exception
      */
     @Test
     public void testViewLayers() {
@@ -238,9 +237,6 @@ public class IntegrationTest {
 
     /**
      * Tests an update to source metadata
-     * @throws InterruptedException 
-     * @throws SQLException 
-     * @throws CloneNotSupportedException 
      */
     @Test
     public void testSourceRefresh() throws InterruptedException, SQLException, CloneNotSupportedException {

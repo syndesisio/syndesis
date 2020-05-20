@@ -338,8 +338,6 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
      * Despite split being set to false, the existence of a key predicate
      * forces the split since a predicate demands only 1 result which is
      * pointless putting into an array.
-     *
-     * @throws Exception
      */
     @Test
     public void testODataRouteWithKeyPredicate() throws Exception {
@@ -370,8 +368,6 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
      * Despite split being set to false, the existence of a key predicate
      * forces the split since a predicate demands only 1 result which is
      * pointless putting into an array.
-     *
-     * @throws Exception
      */
     @Test
     public void testODataRouteWithKeyPredicateWithBrackets() throws Exception {
@@ -477,8 +473,6 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
      * Despite split being set to false, the existence of a key predicate
      * forces the split since a predicate demands only 1 result which is
      * pointless putting into an array.
-     *
-     * @throws Exception
      */
     @Test
     public void testReferenceODataRouteAlreadySeenWithKeyPredicate() throws Exception {
