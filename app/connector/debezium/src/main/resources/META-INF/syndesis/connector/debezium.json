@@ -58,7 +58,9 @@
     }
   ],
   "componentScheme": "kafka",
-  "configuredProperties": {},
+  "configuredProperties": {
+    "transportProtocol": "PLAINTEXT"
+  },
   "dependencies": [
     {
       "id": "@project.groupId@:@project.artifactId@:@project.version@",
@@ -85,10 +87,11 @@
       "order": "1",
       "required": true,
       "secret": false,
-      "type": "string"
+      "type": "typeahead"
     }
   },
   "tags": [
-    "verifier"
+    "verifier",
+    "dynamic"
   ]
 }

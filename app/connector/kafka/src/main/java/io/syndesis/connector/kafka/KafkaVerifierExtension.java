@@ -51,7 +51,8 @@ public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
     @Override
     protected Result verifyParameters(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
-            .error(ResultErrorHelper.requiresOption("brokers", parameters));
+            .error(ResultErrorHelper.requiresOption("brokers", parameters))
+            .error(ResultErrorHelper.requiresOption("transportProtocol", parameters));
 
         return builder.build();
     }
