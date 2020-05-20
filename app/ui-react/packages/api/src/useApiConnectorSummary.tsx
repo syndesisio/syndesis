@@ -1,26 +1,38 @@
-import { APISummary } from '@syndesis/models';
+import { IApiSummarySoap } from '@syndesis/models';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
 
-export function useApiConnectorSummary(specification: string) {
+export function useApiConnectorSummary(
+  specification: string,
+  connectorTemplateId?: string,
+  portName?: string,
+  serviceName?: string
+) {
   const apiContext = React.useContext(ApiContext);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<false | Error>(false);
-  const [apiSummary, setApiSummary] = React.useState<APISummary | undefined>(
-    undefined
-  );
+  const [apiSummary, setApiSummary] = React.useState<
+    IApiSummarySoap | undefined
+  >(undefined);
 
   React.useEffect(() => {
+    if (!specification) {
+      return;
+    }
     const fetchSummary = async () => {
       setLoading(true);
       try {
         const response = await callFetch({
           body: {
             configuredProperties: {
+              portName,
+              serviceName,
               specification,
             },
-            connectorTemplateId: 'swagger-connector-template',
+            connectorTemplateId: connectorTemplateId
+              ? connectorTemplateId
+              : 'swagger-connector-template',
           },
           headers: apiContext.headers,
           includeAccept: true,
@@ -45,7 +57,7 @@ export function useApiConnectorSummary(specification: string) {
           }
           throw new Error(errorMessage);
         }
-        setApiSummary(summary as APISummary);
+        setApiSummary(summary as IApiSummarySoap);
       } catch (e) {
         setError(e as Error);
       } finally {

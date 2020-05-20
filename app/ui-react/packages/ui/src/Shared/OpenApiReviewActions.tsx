@@ -37,26 +37,23 @@ export interface IApiProviderReviewActionsProps {
   warningMessages?: string[];
 }
 
-export const OpenApiReviewActions: React.FunctionComponent<
-  IApiProviderReviewActionsProps
-> = (
-  {
-    actions,
-    alert,
-    errorMessages,
-    i18nApiDefinitionHeading,
-    i18nDescriptionLabel,
-    i18nErrorsHeading,
-    i18nImportedHeading,
-    i18nNameLabel,
-    i18nOperationsHtmlMessage,
-    i18nOperationTagHtmlMessages,
-    i18nValidationFallbackMessage,
-    i18nWarningsHeading,
-    apiProviderDescription,
-    apiProviderName,
-    warningMessages,
-  }) => {
+export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewActionsProps> = ({
+  actions,
+  alert,
+  apiProviderDescription,
+  apiProviderName,
+  errorMessages,
+  i18nApiDefinitionHeading,
+  i18nDescriptionLabel,
+  i18nErrorsHeading,
+  i18nImportedHeading,
+  i18nNameLabel,
+  i18nOperationsHtmlMessage,
+  i18nOperationTagHtmlMessages,
+  i18nValidationFallbackMessage,
+  i18nWarningsHeading,
+  warningMessages,
+}) => {
   return (
     <Stack className={'open-api-review-actions'}>
       <StackItem>
@@ -139,13 +136,11 @@ export const OpenApiReviewActions: React.FunctionComponent<
             )}
             <div className={'review-actions__errors'}>
               {errorMessages
-                ? errorMessages.map(
-                  (errorMsg: string, index: number) => (
+                ? errorMessages.map((errorMsg: string, index: number) => (
                     <Text component={TextVariants.p} key={index}>
                       {index + 1}. {errorMsg}
                     </Text>
-                  )
-                )
+                  ))
                 : null}
             </div>
 
@@ -168,13 +163,11 @@ export const OpenApiReviewActions: React.FunctionComponent<
             )}
             <div className={'review-actions__warnings'}>
               {warningMessages
-                ? warningMessages.map(
-                  (warningMsg: string, index: number) => (
+                ? warningMessages.map((warningMsg: string, index: number) => (
                     <Text key={index} component={TextVariants.p}>
                       {index + 1}. {warningMsg}
                     </Text>
-                  )
-                )
+                  ))
                 : null}
             </div>
           </TextContent>
@@ -188,4 +181,4 @@ export const OpenApiReviewActions: React.FunctionComponent<
       </StackItem>
     </Stack>
   );
-}
+};
