@@ -114,8 +114,8 @@
     </dependency>
     <!-- play nice with AMQP connector, JMS 2.0 is backwards compatible -->
     <dependency>
-      <groupId>org.apache.geronimo.specs</groupId>
-      <artifactId>geronimo-jms_2.0_spec</artifactId>
+      <groupId>jakarta.jms</groupId>
+      <artifactId>jakarta.jms-api</artifactId>
     </dependency>
     <dependency>
       <groupId>com.github.spotbugs</groupId>

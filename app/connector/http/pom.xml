@@ -158,6 +158,11 @@
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.sun.activation</groupId>
+      <artifactId>jakarta.activation</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

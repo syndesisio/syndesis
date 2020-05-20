@@ -51,6 +51,10 @@
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>javax.xml.soap</groupId>
+            <artifactId>javax.xml.soap-api</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
     </dependencies>

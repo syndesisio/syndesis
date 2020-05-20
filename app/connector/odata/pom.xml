@@ -90,6 +90,17 @@
         <artifactId>camel-olingo4</artifactId>
         <version>${camel.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.apache.camel.springboot</groupId>
+        <artifactId>camel-spring-boot</artifactId>
+        <version>${camel.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.xml.soap</groupId>
+            <artifactId>javax.xml.soap-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

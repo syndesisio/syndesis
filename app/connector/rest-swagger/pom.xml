@@ -152,6 +152,12 @@
       <classifier>annotations</classifier>
     </dependency>
 
+    <dependency>
+      <groupId>jakarta.activation</groupId>
+      <artifactId>jakarta.activation-api</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- testing -->
     <dependency>
       <groupId>junit</groupId>
