@@ -15,6 +15,7 @@
         <include>checkstyle.xml</include>
         <include>checkstyle-suppressions.xml</include>
         <include>checkstyle-suppressions-xpath.xml</include>
+        <include>spotbugs-filter.xml</include>
       </includes>
     </fileSet>
     <fileSet>

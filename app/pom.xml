@@ -116,6 +116,8 @@
       https://github.com/pmd/pmd/issues/1969
     -->
     <dep.pmd.version>6.23.0</dep.pmd.version>
+    <dep.spotbugs.version>4.0.3</dep.spotbugs.version>
+    <dep.plugin.spotbugs.version>4.0.0</dep.plugin.spotbugs.version>
     <!-- TODO: revisit when we upgrade basepom version -->
     <dep.plugin.git-commit-id.version>4.0.0</dep.plugin.git-commit-id.version>
 
@@ -1139,6 +1141,22 @@
             <skipPoms>false</skipPoms>
             <useNativeGit>true</useNativeGit>
           </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <configuration>
+            <excludeFilterFile>syndesis/spotbugs-filter.xml</excludeFilterFile>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>io.syndesis</groupId>
+              <artifactId>syndesis-parent</artifactId>
+              <classifier>tools</classifier>
+              <version>${project.version}</version>
+            </dependency>
+          </dependencies>
         </plugin>
 
       </plugins>
@@ -2579,12 +2597,7 @@
       <dependency>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-annotations</artifactId>
-        <!-- we were using ${dep.plugin.spotbugs.version} and this broke
-          as the plugin version differed from the spotbug-annotations
-          version, keep in mind when upgrading the plugin also to set
-          this version
-        -->
-        <version>3.1.12</version>
+        <version>${dep.spotbugs.version}</version>
         <scope>provided</scope>
       </dependency>
 
