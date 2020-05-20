@@ -11,9 +11,6 @@
   <rule ref="category/java/codestyle.xml/ControlStatementBraces">
     <priority>3</priority>
   </rule>
-  <rule ref="category/java/codestyle.xml/UnnecessaryModifier">
-    <priority>3</priority>
-  </rule>
   <rule ref="category/java/errorprone.xml/AvoidCatchingNPE">
     <priority>3</priority>
   </rule>
@@ -249,7 +246,7 @@
   <rule ref="category/java/performance.xml/UselessStringValueOf">
     <priority>3</priority>
   </rule>
-  <rule ref="category/java/errorprone.xml/InvalidSlf4jMessageFormat">
+  <rule ref="category/java/errorprone.xml/InvalidLogMessageFormat">
     <priority>4</priority>
   </rule>
   <rule ref="category/java/errorprone.xml/FinalizeOverloaded">
@@ -377,9 +374,6 @@
   </rule>
   <rule ref="category/java/design.xml/SimplifyBooleanAssertion">
     <priority>3</priority>
-  </rule>
-  <rule ref="category/java/errorprone.xml/EmptyInitializer">
-    <priority>4</priority>
   </rule>
   <rule ref="category/java/errorprone.xml/CompareObjectsWithEquals">
     <priority>3</priority>
@@ -614,9 +608,6 @@
   </rule>
   <rule ref="category/java/errorprone.xml/DoNotCallSystemExit">
     <priority>3</priority>
-  </rule>
-  <rule ref="category/java/bestpractices.xml/GuardLogStatement">
-    <priority>5</priority>
   </rule>
   <rule ref="category/java/codestyle.xml/DontImportJavaLang">
     <priority>4</priority>

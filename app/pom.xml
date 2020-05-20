@@ -115,7 +115,7 @@
     <!-- FIXME: update to 6.19 when released we're seeing:
       https://github.com/pmd/pmd/issues/1969
     -->
-    <dep.pmd.version>6.17.0</dep.pmd.version>
+    <dep.pmd.version>6.23.0</dep.pmd.version>
     <!-- TODO: revisit when we upgrade basepom version -->
     <dep.plugin.git-commit-id.version>4.0.0</dep.plugin.git-commit-id.version>
 
