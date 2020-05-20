@@ -77,6 +77,7 @@ import io.syndesis.dv.utils.StringUtils;
 @RestController
 @RequestMapping( V1Constants.APP_PATH+StringConstants.FS+V1Constants.METADATA_SEGMENT )
 @Api( tags = {V1Constants.METADATA_SEGMENT} )
+@SuppressWarnings("PMD.GodClass")
 public class MetadataService extends DvService implements ServiceVdbGenerator.SchemaFinder {
 
     private static final String FAILED_DDL = "--failed: "; //$NON-NLS-1$

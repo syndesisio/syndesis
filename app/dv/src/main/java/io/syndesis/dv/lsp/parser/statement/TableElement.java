@@ -25,6 +25,7 @@ import org.teiid.query.parser.Token;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
+@SuppressWarnings({"PMD.GodClass", "PMD.CyclomaticComplexity"})
 public class TableElement extends AbstractStatementObject {
     private Token nameToken;
     private List<Token> datatypeTokens;

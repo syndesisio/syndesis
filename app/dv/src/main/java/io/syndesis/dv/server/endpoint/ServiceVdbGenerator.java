@@ -62,6 +62,7 @@ import io.syndesis.dv.utils.PathUtils;
  * Each model is created via generating DDL and calling setModelDefinition() method
  *
  */
+@SuppressWarnings("PMD.GodClass")
 public final class ServiceVdbGenerator {
 
     public static final String ANY_AUTHENTICATED = "any authenticated"; //$NON-NLS-1$

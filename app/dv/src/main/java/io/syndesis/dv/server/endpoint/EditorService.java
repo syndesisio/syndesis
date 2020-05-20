@@ -54,6 +54,7 @@ import io.syndesis.dv.utils.StringUtils;
 @RestController
 @RequestMapping(value=V1Constants.APP_PATH+StringConstants.FS+V1Constants.EDITORS_SEGMENT)
 @Api( tags = {V1Constants.EDITORS_SEGMENT} )
+@SuppressWarnings("PMD.GodClass")
 public final class EditorService extends DvService {
 
     private static final String SUCCESS = "SUCCESS"; //$NON-NLS-1$

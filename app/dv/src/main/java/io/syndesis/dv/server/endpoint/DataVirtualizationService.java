@@ -117,7 +117,7 @@ import io.syndesis.dv.utils.StringUtils;
 @RequestMapping(value = V1Constants.APP_PATH
         + StringConstants.FS + V1Constants.VIRTUALIZATIONS_SEGMENT)
 @Api(tags = { V1Constants.VIRTUALIZATIONS_SEGMENT })
-@SuppressWarnings("PMD.ExcessiveClassLength") // TODO refactor
+@SuppressWarnings({"PMD.ExcessiveClassLength", "PMD.GodClass"}) // TODO refactor
 public final class DataVirtualizationService extends DvService {
 
     private static final String DV_JSON = "dv.json"; //$NON-NLS-1$

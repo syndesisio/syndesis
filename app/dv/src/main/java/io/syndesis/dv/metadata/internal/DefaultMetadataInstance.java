@@ -97,6 +97,7 @@ import io.syndesis.dv.metadata.query.QSRow;
 import io.syndesis.dv.utils.KLog;
 
 @Component
+@SuppressWarnings("PMD.GodClass")
 public class DefaultMetadataInstance implements MetadataInstance {
 
     public static final String DEFAULT_VDB_VERSION = "1"; //$NON-NLS-1$
