@@ -93,18 +93,17 @@ export interface IWithConfigurationFormProps {
 /**
  * A really specific helper function to apply collected error keys to
  * an error mapping form
- * @param action
+ * @param definition
  * @param errorKeys
  */
-function applyErrorKeysToForm(action: Action, errorKeys: ErrorKey[]) {
-  const definition = {
-    ...action.descriptor!.propertyDefinitionSteps![0],
-  } as any;
-  const errorResponseCodes = definition!.properties!
-    .errorResponseCodes as IConfigurationProperty;
+function applyErrorKeysToForm(
+  definition: IConfigurationProperties,
+  errorKeys: ErrorKey[]
+) {
+  const errorResponseCodes = definition.errorResponseCodes as IConfigurationProperty;
   // TODO compatibility, remove when this property is defined
   if (!errorResponseCodes) {
-    return definition.properties;
+    return definition;
   }
   const extProperties =
     typeof errorResponseCodes.extendedProperties === 'string'
@@ -115,7 +114,7 @@ function applyErrorKeysToForm(action: Action, errorKeys: ErrorKey[]) {
     mapsetKeys: errorKeys,
   });
   return {
-    ...definition.properties,
+    ...definition,
     errorResponseCodes: {
       ...errorResponseCodes,
       extendedProperties: newExtendedProperties,
@@ -144,12 +143,13 @@ export const WithConfigurationForm: React.FunctionComponent<IWithConfigurationFo
 
   // The API provider end action gets some special treatment
   if (isApiProvider) {
-    const definitionOverride = applyErrorKeysToForm(action, props.errorKeys!);
     return (
       <ConfigurationForm
         action={action}
         descriptor={action.descriptor!}
-        definitionOverride={definitionOverride}
+        definitionCustomizer={definition => {
+          return applyErrorKeysToForm(definition, props.errorKeys!);
+        }}
         {...props}
       >
         <NothingToConfigure
@@ -161,10 +161,6 @@ export const WithConfigurationForm: React.FunctionComponent<IWithConfigurationFo
     );
   }
 
-  const webhookDefinitionOverride = isWebHook
-    ? applyErrorKeysToForm(action, props.errorKeys!)
-    : null;
-
   // For all other actions, the descriptor is fetched from the meta service
   return (
     <WithActionDescriptor
@@ -173,38 +169,44 @@ export const WithConfigurationForm: React.FunctionComponent<IWithConfigurationFo
       initialValue={action.descriptor}
       configuredProperties={props.initialValue || {}}
     >
-      {({ data, error, errorMessage, loading }) => (
-        <WithLoader
-          error={error}
-          loading={loading}
-          loaderChildren={<PageLoader />}
-          errorChildren={
-            <PageSection>
-              <ActionDescriptorFetchError
-                connectionDetailHref={resolvers.connection.details({
-                  connection: props.connection,
-                })}
-                error={errorMessage!}
-              />
-            </PageSection>
-          }
-        >
-          {() => (
-            <ConfigurationForm
-              action={action}
-              definitionOverride={webhookDefinitionOverride}
-              descriptor={data}
-              {...props}
-            >
-              <NothingToConfigure
+      {({ data, error, errorMessage, loading }) => {
+        return (
+          <WithLoader
+            error={error}
+            loading={loading}
+            loaderChildren={<PageLoader />}
+            errorChildren={
+              <PageSection>
+                <ActionDescriptorFetchError
+                  connectionDetailHref={resolvers.connection.details({
+                    connection: props.connection,
+                  })}
+                  error={errorMessage!}
+                />
+              </PageSection>
+            }
+          >
+            {() => (
+              <ConfigurationForm
                 action={action}
+                definitionCustomizer={definition => {
+                  return isWebHook
+                    ? applyErrorKeysToForm(definition, props.errorKeys!)
+                    : definition;
+                }}
                 descriptor={data}
                 {...props}
-              />
-            </ConfigurationForm>
-          )}
-        </WithLoader>
-      )}
+              >
+                <NothingToConfigure
+                  action={action}
+                  descriptor={data}
+                  {...props}
+                />
+              </ConfigurationForm>
+            )}
+          </WithLoader>
+        );
+      }}
     </WithActionDescriptor>
   );
 };
