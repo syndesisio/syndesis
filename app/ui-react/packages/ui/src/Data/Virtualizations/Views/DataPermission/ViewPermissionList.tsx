@@ -365,6 +365,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
               i18nRoleExists={props.i18nRoleExists}
               viewRolePermissionList={[]}
               roles={props.dvRoles}
+              selectedRoles= {Array.from(rolePermissionModel.keys())}
               updateRolePermissionModel={updateRolePermissionModel}
               deleteRoleFromPermissionModel={deleteRoleFromPermissionModel}
             />
