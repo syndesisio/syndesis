@@ -20,13 +20,13 @@ import './RolePermissionListItem.css';
 
 export interface IRolePermissionListItemProps {
   index: string;
-  role: string[];
+  availableRoles: string[];
+  roles: string[];
   selectedRole: string | undefined;
   selectedPermissions: string[];
   i18nSelectRole: string;
   i18nRemoveRoleRow: string;
   i18nRoleExists: string;
-  addRole: (roleName: string) => void;
   updateRolePermissionModel: (
     roleName: string | undefined,
     permissions: string[],
@@ -98,6 +98,14 @@ const getRolePermissionsModel = (checkState: any) => {
   }
 };
 
+const getRoles = (roles: string[]) =>{
+    const roleList: IRoleOption[] = [];
+    roles.map((role: any) => {
+      roleList.push({ value: role });
+    });
+    return roleList;
+}
+
 export const RolePermissionListItem: React.FunctionComponent<IRolePermissionListItemProps> = props => {
   const [checkState, setCheckState] = React.useState(
     getCheckInitial(props.selectedPermissions)
@@ -105,7 +113,7 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
 
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
   const [selected, setSelected] = React.useState<any>(null);
-  const [options, setOptions] = React.useState<IRoleOption[]>([]);
+  const [options, setOptions] = React.useState<IRoleOption[]>(getRoles(props.availableRoles));
   const [showErrorAlert, setShowErrorAlert] = React.useState<boolean>(false);
 
   const prevSelectedRef = React.useRef();
@@ -130,12 +138,11 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
 
   const onCreateOption = (newValue: string) => {
     // determine if requested rolename already exists
-    const existingOption = options.find(option => option.value === newValue);
-    if (existingOption) {
+    const existingRole = props.roles.find(role => role.toLowerCase() === newValue.toLowerCase());
+    if (existingRole) {
       setShowErrorAlert(true);
       return;
     }
-    props.addRole(newValue);
   };
 
   const clearSelection = () => {
@@ -164,13 +171,13 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
   }, [props.selectedRole]);
 
   React.useEffect(() => {
-    const roleCopy = [...props.role];
+    const roleCopy = [...props.availableRoles];
     const roleList: IRoleOption[] = [];
     roleCopy.map(role => {
       roleList.push({ value: role });
     });
     setOptions(roleList);
-  }, [props.role]);
+  }, [props.availableRoles]);
 
   React.useEffect(() => {
     const newState = { ...checkState };
@@ -244,6 +251,7 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   placeholderText={props.i18nSelectRole}
                   isCreatable={true}
                   onCreateOption={onCreateOption}
+                  className={'role-permission-list-item_select'}
                 >
                   {options.map((option, index) => (
                     <SelectOption key={index} value={option.value} />
