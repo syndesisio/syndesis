@@ -1000,19 +1000,18 @@ public class TeiidOpenShiftClient {
         return null;
     }
 
-    private static boolean asBoolean(DeploymentCondition cond) {
+    private static boolean statusEquals(DeploymentCondition cond, String value) {
         if (cond == null) {
             return false;
         }
-
-        return Boolean.valueOf(cond.getStatus());
+        return cond.getStatus().equals(value);
     }
 
     /**
      * We'll consider things progressing if true or unknown
      */
     private static boolean isDeploymentProgressing(DeploymentCondition progressing) {
-        return !asBoolean(progressing);
+        return !statusEquals(progressing, "False");
     }
 
     /**
@@ -1020,9 +1019,8 @@ public class TeiidOpenShiftClient {
      */
     private static boolean isDeploymentAvailable(DeploymentCondition available,
             DeploymentCondition progressing) {
-        return asBoolean(available) &&
-                (asBoolean(progressing)
-                        || progressing == null
+        return statusEquals(available, "True") &&
+                (!statusEquals(progressing, "False")
                         || available.getLastTransitionTime().compareTo(progressing.getLastTransitionTime()) > 0);
     }
 
