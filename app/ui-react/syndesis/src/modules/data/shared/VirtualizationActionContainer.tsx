@@ -36,6 +36,7 @@ export enum VirtualizationActionId {
 }
 
 /**
+ * @property {string} buttonStyle - the i18n confirm button style
  * @property {string} buttonText - the i18n confirm button text
  * @property {ConfirmationIconType} icon - the dialog icon
  * @property {string} message - the i18n dialog message text
@@ -43,6 +44,7 @@ export enum VirtualizationActionId {
  * @property handleAction - callback for executing the action
  */
 interface IPromptActionOptions {
+  buttonStyle: ConfirmationButtonStyle;
   buttonText: string;
   icon: ConfirmationIconType;
   message: string;
@@ -182,6 +184,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       id: VirtualizationActionId.Delete,
       onClick: async () => {
         setPromptActionOptions({
+          buttonStyle: ConfirmationButtonStyle.DANGER,
           buttonText: t('shared:Delete'),
           handleAction: async () => {
             await deleteVirtualization(props.virtualization.name).catch(
@@ -202,9 +205,9 @@ export const VirtualizationActionContainer: React.FunctionComponent<
               history.push(props.postDeleteHref);
             }
           },
-          icon: ConfirmationIconType.DANGER,
-          message: 'Are you sure you want to delete?',
-          title: 'Confirm Delete?',
+          icon: ConfirmationIconType.WARNING,
+          message: t('deleteVirtualizationModalMessage',{name: props.virtualization.name}),
+          title: t('deleteVirtualizationModalTitle'),
         });
         setShowDialog(true);
       },
@@ -355,6 +358,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       id: VirtualizationActionId.Revert,
       onClick: async () => {
         setPromptActionOptions({
+          buttonStyle: ConfirmationButtonStyle.NORMAL,
           buttonText: t('ReplaceDraft'),
           handleAction: async () => {
             const status = await revertVirtualization(
@@ -381,7 +385,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
               );
             }
           },
-          icon: ConfirmationIconType.DANGER,
+          icon: ConfirmationIconType.WARNING,
           message: t('replaceDraftVirtualizationConfirmMsg', {
             name: props.virtualization.name,
             version: props.revision,
@@ -424,13 +428,14 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       i18nLabel: t('shared:Start'),
       id: VirtualizationActionId.Start,
       onClick: async () => {
-        pushNotification(
-          (t('publishInProgress')),
-          'info'
-        );
         setPromptActionOptions({
+          buttonStyle: ConfirmationButtonStyle.NORMAL,
           buttonText: t('shared:Start'),
           handleAction: async () => {
+            pushNotification(
+              (t('publishInProgress')),
+              'info'
+            );
             await startVirtualization(
               props.virtualization.name,
               props.revision!
@@ -445,7 +450,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
               );
             });
           },
-          icon: ConfirmationIconType.DANGER,
+          icon: ConfirmationIconType.NONE,
           message: t('startVirtualizationConfirmMsg', {
             name: props.virtualization.name,
             version: props.revision,
@@ -681,10 +686,11 @@ export const VirtualizationActionContainer: React.FunctionComponent<
     <>
       {promptActionOptions && (
         <ConfirmationDialog
-          buttonStyle={ConfirmationButtonStyle.NORMAL}
+          buttonStyle={promptActionOptions.buttonStyle}
           i18nCancelButtonText={t('shared:Cancel')}
           i18nConfirmButtonText={promptActionOptions.buttonText}
-          i18nConfirmationMessage={promptActionOptions.message}
+          i18nConfirmationMessage={promptActionOptions.title}
+          i18nDetailsMessage={promptActionOptions.message}
           i18nTitle={promptActionOptions.title}
           icon={promptActionOptions.icon}
           showDialog={showDialog}
