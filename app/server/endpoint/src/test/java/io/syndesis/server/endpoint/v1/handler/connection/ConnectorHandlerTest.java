@@ -24,9 +24,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -278,6 +280,34 @@ public class ConnectorHandlerTest {
             .build();
 
         assertThat(withDynamicProperties).isEqualTo(expected);
+    }
+
+    @Test
+    public void shouldVerifyConfiguredProperties() {
+        final EncryptionComponent encryptionComponent = mock(EncryptionComponent.class);
+        final Verifier verifier = new Verifier() {
+            @Override
+            public List<Result> verify(String connectorId, Map<String, String> parameters) {
+                assertThat(parameters).containsEntry("configuredProperty","val0");
+                assertThat(parameters).containsEntry("userProperty","val1");
+                return null;
+            }
+        };
+        final ConnectorHandler connectorHandler = new ConnectorHandler(dataManager, verifier , NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
+            encryptionComponent, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
+            NO_METADATA_CONFIGURATION_PROPERTIES);
+
+        final Connector connector = new Connector.Builder()
+            .id("connectorId")
+            .putConfiguredProperty("configuredProperty","val0")
+            .build();
+        when(dataManager.fetch(Connector.class,"connectorId")).thenReturn(connector);
+        when(dataManager.fetchAll(Integration.class)).thenReturn(() -> 0);
+        Map<String, String> mutableMapParams = new HashMap<>(10);
+        mutableMapParams.put("userProperty", "val1");
+        when(encryptionComponent.decrypt(mutableMapParams)).thenReturn(mutableMapParams);
+
+        connectorHandler.verifyConnectionParameters("connectorId", mutableMapParams);
     }
 
     private static ConnectorAction newActionBy(final Connector connector) {
