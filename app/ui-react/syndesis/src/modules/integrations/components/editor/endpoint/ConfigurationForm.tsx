@@ -32,7 +32,16 @@ export interface IConfigurationFormProps
     Pick<IWithConfigurationFormProps, 'chooseActionHref'> {
   action: Action;
   descriptor: ActionDescriptor;
-  definitionOverride?: IConfigurationProperties;
+  /**
+   * A function that accepts the definition
+   * and, depending on the action ID (e.g. webhook), returns
+   * itself or a mutated version of itself with its respective
+   * error keys.
+   * @param definition
+   */
+  definitionCustomizer: (
+    definition: IConfigurationProperties
+  ) => IConfigurationProperties;
   children: any;
   isBackAllowed: boolean;
 }
@@ -41,7 +50,7 @@ export const ConfigurationForm: React.FunctionComponent<IConfigurationFormProps>
   action,
   configurationPage,
   descriptor,
-  definitionOverride,
+  definitionCustomizer,
   isBackAllowed,
   initialValue,
   oldAction,
@@ -52,10 +61,28 @@ export const ConfigurationForm: React.FunctionComponent<IConfigurationFormProps>
   const { t } = useTranslation('shared');
   const [error, setError] = React.useState();
   try {
-    const steps = getActionSteps(descriptor);
-    const step = getActionStep(steps, configurationPage);
-    const definition = definitionOverride || getActionStepDefinition(step);
-    const moreConfigurationSteps = configurationPage < steps.length - 1;
+    const propertyDefinitionSteps = getActionSteps(descriptor);
+    const propertyDefinitionStep = getActionStep(
+      propertyDefinitionSteps,
+      configurationPage
+    );
+
+    /**
+     * Fetches the form definition (using the property
+     * definition step) from the API.
+     */
+    const actionStepDefinition = getActionStepDefinition(
+      propertyDefinitionStep
+    );
+
+    /**
+     * Definition that is later mapped to an AutoForm
+     * object.
+     */
+    const definition = definitionCustomizer(actionStepDefinition);
+
+    const moreConfigurationSteps =
+      configurationPage < propertyDefinitionSteps.length - 1;
     const onSave = async (
       values: { [key: string]: string },
       actions: any
@@ -92,9 +119,9 @@ export const ConfigurationForm: React.FunctionComponent<IConfigurationFormProps>
         values
       );
     const formTitle =
-      typeof step.description === 'undefined'
+      typeof propertyDefinitionStep.description === 'undefined'
         ? action.name
-        : `${action.name} - ${step.description}`;
+        : `${action.name} - ${propertyDefinitionStep.description}`;
     return (
       <AutoForm<IFormValue>
         i18nRequiredProperty={t('shared:requiredFieldMessage')}
@@ -109,25 +136,23 @@ export const ConfigurationForm: React.FunctionComponent<IConfigurationFormProps>
       >
         {({ fields, handleSubmit, isValid, isSubmitting, submitForm }) => {
           return (
-            <>
-              <IntegrationEditorForm
-                i18nFormTitle={formTitle}
-                i18nBackAction={'Choose Action'}
-                i18nNext={'Next'}
-                isBackAllowed={isBackAllowed}
-                isValid={isValid}
-                isLoading={isSubmitting}
-                submitForm={() => {
-                  setError(undefined);
-                  submitForm();
-                }}
-                handleSubmit={handleSubmit}
-                backActionHref={chooseActionHref}
-                error={error}
-              >
-                {fields}
-              </IntegrationEditorForm>
-            </>
+            <IntegrationEditorForm
+              i18nFormTitle={formTitle}
+              i18nBackAction={'Choose Action'}
+              i18nNext={'Next'}
+              isBackAllowed={isBackAllowed}
+              isValid={isValid}
+              isLoading={isSubmitting}
+              submitForm={() => {
+                setError(undefined);
+                submitForm();
+              }}
+              handleSubmit={handleSubmit}
+              backActionHref={chooseActionHref}
+              error={error}
+            >
+              {fields}
+            </IntegrationEditorForm>
           );
         }}
       </AutoForm>
