@@ -146,7 +146,7 @@
       "javaType": "java.lang.String",
       "kind": "property",
       "label": "security",
-      "labelHint": "Self-signed certificate",
+      "labelHint": "TLS broker certificate",
       "order": "3",
       "required": false,
       "secret": false,
