@@ -22,11 +22,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Data
 public class SqlStatementMetaData {
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlStatementMetaData.class);
 
@@ -34,16 +32,15 @@ public class SqlStatementMetaData {
     private List<SqlParam> inParams = new ArrayList<>();
     private List<SqlParam> outParams = new ArrayList<>();
     private List<String> tableNames = new ArrayList<>();
-    private String sqlStatement;
+    private final String sqlStatement;
     private String camelSqlStatement;
     private Set<String> tablesInSchema;
-    private String schema;
+    private final String schema;
     private String defaultedSqlStatement;
     private String autoIncrementColumnName;
     private boolean batch;
 
     public SqlStatementMetaData(String sqlStatement, String schema) {
-        super();
         this.sqlStatement = sqlStatement;
         this.schema = schema;
     }
@@ -64,7 +61,7 @@ public class SqlStatementMetaData {
 
     public int numberOfInputParams() {
         int fromIndex = 0;
-        int numberOfInputParams=0;
+        int numberOfInputParams = 0;
         while (fromIndex >= 0) {
             fromIndex = sqlStatement.indexOf(':', fromIndex);
             numberOfInputParams++;
@@ -90,10 +87,10 @@ public class SqlStatementMetaData {
             for (SqlParam param : inParams) {
                 if (stringTypes.contains(param.getTypeValue().getClazz())) {
                     defaultedSqlStatement = defaultedSqlStatement.replace(":#" +
-                            param.getName(), "'" + param.getTypeValue().getSampleValue().toString() + "'");
+                        param.getName(), "'" + param.getTypeValue().getSampleValue().toString() + "'");
                 } else {
                     defaultedSqlStatement = defaultedSqlStatement.replace(":#" +
-                            param.getName(), param.getTypeValue().getSampleValue().toString());
+                        param.getName(), param.getTypeValue().getSampleValue().toString());
                 }
             }
         }
@@ -114,6 +111,62 @@ public class SqlStatementMetaData {
         }
 
         return batch;
+    }
+
+    public void setTablesInSchema(Set<String> tablesInSchema) {
+        this.tablesInSchema = tablesInSchema;
+    }
+
+    public String getSqlStatement() {
+        return sqlStatement;
+    }
+
+    public List<SqlParam> getInParams() {
+        return inParams;
+    }
+
+    public void setStatementType(StatementType statementType) {
+        this.statementType = statementType;
+    }
+
+    public Set<String> getTablesInSchema() {
+        return tablesInSchema;
+    }
+
+    public void setInParams(List<SqlParam> inParams) {
+        this.inParams = inParams;
+    }
+
+    public void setOutParams(List<SqlParam> outParams) {
+        this.outParams = outParams;
+    }
+
+    public List<SqlParam> getOutParams() {
+        return outParams;
+    }
+
+    public void setAutoIncrementColumnName(String autoIncrementColumnName) {
+        this.autoIncrementColumnName = autoIncrementColumnName;
+    }
+
+    public void setTableNames(List<String> tableNames) {
+        this.tableNames = tableNames;
+    }
+
+    public List<String> getTableNames() {
+        return tableNames;
+    }
+
+    public String getAutoIncrementColumnName() {
+        return autoIncrementColumnName;
+    }
+
+    public void setBatch(boolean batch) {
+        this.batch = batch;
+    }
+
+    public StatementType getStatementType() {
+        return statementType;
     }
 
 }

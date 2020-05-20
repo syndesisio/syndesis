@@ -883,6 +883,12 @@
       <scope>runtime</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
+      <classifier>annotations</classifier>
+    </dependency>
+
     <!--  ==== Test Scope === -->
     <dependency>
       <groupId>io.fabric8</groupId>

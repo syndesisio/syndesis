@@ -17,14 +17,37 @@ package io.syndesis.connector.sql.common;
 
 import java.sql.JDBCType;
 
-import lombok.Data;
-
-@Data
 public class ColumnMetaData {
 
-    private String name;
-    private JDBCType type;
-    private int position;
-    private boolean isAutoIncrement;
+    private final boolean isAutoIncrement;
+
+    private final String name;
+
+    private final int position;
+
+    private final JDBCType type;
+
+    public ColumnMetaData(final String name, final JDBCType type, final int position, final boolean isAutoIncrement) {
+        this.name = name;
+        this.type = type;
+        this.position = position;
+        this.isAutoIncrement = isAutoIncrement;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public JDBCType getType() {
+        return type;
+    }
+
+    public boolean isAutoIncrement() {
+        return isAutoIncrement;
+    }
 
 }
