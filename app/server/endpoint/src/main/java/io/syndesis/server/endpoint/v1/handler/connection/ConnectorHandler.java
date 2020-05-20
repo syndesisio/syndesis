@@ -281,7 +281,9 @@ public class ConnectorHandler extends BaseHandler implements Getter<Connector>, 
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}/verifier")
-    public List<Verifier.Result> verifyConnectionParameters(@NotNull @PathParam("id") final String connectorId, final Map<String, String> props) {
+    public List<Verifier.Result> verifyConnectionParameters(@NotNull @PathParam("id") final String connectorId, Map<String, String> props) {
+        final Connector connector = get(connectorId);
+        props.putAll(connector.getConfiguredProperties());
         return verifier.verify(connectorId, encryptionComponent.decrypt(props));
     }
 
@@ -289,7 +291,6 @@ public class ConnectorHandler extends BaseHandler implements Getter<Connector>, 
         if (connector == null) {
             return null;
         }
-
         return augmentedWithUsage(Collections.singletonList(connector)).get(0);
     }
 
