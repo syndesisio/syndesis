@@ -58,11 +58,13 @@ import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
 import org.junit.Test;
+import org.mockito.AdditionalAnswers;
 import org.springframework.context.ApplicationContext;
 
 import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -305,7 +307,34 @@ public class ConnectorHandlerTest {
         when(dataManager.fetchAll(Integration.class)).thenReturn(() -> 0);
         Map<String, String> mutableMapParams = new HashMap<>(10);
         mutableMapParams.put("userProperty", "val1");
-        when(encryptionComponent.decrypt(mutableMapParams)).thenReturn(mutableMapParams);
+        when(encryptionComponent.decrypt(anyMap())).then(AdditionalAnswers.returnsFirstArg());
+
+        connectorHandler.verifyConnectionParameters("connectorId", mutableMapParams);
+    }
+
+    @Test
+    public void shouldVerifyUserPropertiesOverrideConfiguredProperties() {
+        final EncryptionComponent encryptionComponent = mock(EncryptionComponent.class);
+        final Verifier verifier = new Verifier() {
+            @Override
+            public List<Result> verify(String connectorId, Map<String, String> parameters) {
+                assertThat(parameters).containsEntry("configuredProperty","val2");
+                return null;
+            }
+        };
+        final ConnectorHandler connectorHandler = new ConnectorHandler(dataManager, verifier , NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
+            encryptionComponent, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
+            NO_METADATA_CONFIGURATION_PROPERTIES);
+
+        final Connector connector = new Connector.Builder()
+            .id("connectorId")
+            .putConfiguredProperty("configuredProperty","val1")
+            .build();
+        when(dataManager.fetch(Connector.class,"connectorId")).thenReturn(connector);
+        when(dataManager.fetchAll(Integration.class)).thenReturn(() -> 0);
+        Map<String, String> mutableMapParams = new HashMap<>(10);
+        mutableMapParams.put("configuredProperty", "val2");
+        when(encryptionComponent.decrypt(anyMap())).then(AdditionalAnswers.returnsFirstArg());
 
         connectorHandler.verifyConnectionParameters("connectorId", mutableMapParams);
     }

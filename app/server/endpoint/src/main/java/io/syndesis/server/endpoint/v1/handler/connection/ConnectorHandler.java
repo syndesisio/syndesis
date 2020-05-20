@@ -281,10 +281,13 @@ public class ConnectorHandler extends BaseHandler implements Getter<Connector>, 
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id}/verifier")
-    public List<Verifier.Result> verifyConnectionParameters(@NotNull @PathParam("id") final String connectorId, Map<String, String> props) {
+    public List<Verifier.Result> verifyConnectionParameters(@NotNull @PathParam("id") final String connectorId, final Map<String, String> props) {
         final Connector connector = get(connectorId);
-        props.putAll(connector.getConfiguredProperties());
-        return verifier.verify(connectorId, encryptionComponent.decrypt(props));
+        Map<String, String> verifierProperties = new HashMap<>();
+        verifierProperties.putAll(connector.getConfiguredProperties());
+        // User properties will override configured properties with same name
+        verifierProperties.putAll(props);
+        return verifier.verify(connectorId, encryptionComponent.decrypt(verifierProperties));
     }
 
     Connector augmentedWithUsage(final Connector connector) {
