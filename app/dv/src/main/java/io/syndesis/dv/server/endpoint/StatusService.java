@@ -16,15 +16,6 @@
 
 package io.syndesis.dv.server.endpoint;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -34,6 +25,13 @@ import io.syndesis.dv.server.DvConfigurationProperties;
 import io.syndesis.dv.server.DvService;
 import io.syndesis.dv.server.SSOConfigurationProperties;
 import io.syndesis.dv.server.V1Constants;
+import java.util.Set;
+import java.util.TreeSet;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = V1Constants.APP_PATH
@@ -48,12 +46,12 @@ public class StatusService extends DvService {
 
     @GetMapping(path = V1Constants.ROLES, produces= { MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation(value = "Return all role names in use",
-        response = String.class, responseContainer = "List")
+        response = String.class, responseContainer = "Set")
     @ApiResponses(value = { @ApiResponse(code = 403, message = "An error has occurred."),
     @ApiResponse(code = 503, message = "Security Not Configured")})
-    public List<String> getRoles() {
+    public Set<String> getRoles() {
         return repositoryManager.runInTransaction(false, () -> {
-            ArrayList<String> result = new ArrayList<>(repositoryManager
+            TreeSet<String> result = new TreeSet<>(repositoryManager
                     .findRoleNames());
             //without explicit role management, any authenticated becomes
             //a special / reserved role name
