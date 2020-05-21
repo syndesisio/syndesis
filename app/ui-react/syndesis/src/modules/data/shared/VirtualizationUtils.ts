@@ -20,6 +20,12 @@ interface IColumn {
   label: string;
 }
 
+export interface IPublishStateLabelInfo {
+  message: string;
+  style: 'primary' | 'danger' | 'default';
+  text: string;
+}
+
 export enum DvConnectionStatus {
   ACTIVE = 'ACTIVE',
   FAILED = 'FAILED',
@@ -413,6 +419,7 @@ export function getPublishingDetails(
   const publishStepDetails: VirtualizationPublishingDetails = {
     modified: virtualization.modified,
     state: virtualization.publishedState,
+    stateMessage: virtualization.publishedMessage,
     stepNumber: 0,
     stepText: i18n.t('data:buildStatus.' + virtualization.publishedState),
     stepTotal: 3,
@@ -442,64 +449,51 @@ export function getPublishingDetails(
 }
 
 /**
- *
  * @param currDetails the current publishing details
- * @returns a suitable `Label` style for the publishing state
+ * @returns info (style/text/message) for label representing the publish state
  */
-export function getStateLabelStyle(
+export function getPublishStateLabelInfo(
   currDetails: VirtualizationPublishingDetails
-): 'primary' | 'danger' | 'default' {
-  let result: 'primary' | 'danger' | 'default';
+): IPublishStateLabelInfo {
+  const info: IPublishStateLabelInfo = {
+    message: '',
+    style: 'default',
+    text: ''
+  };
   switch (currDetails.state) {
     case 'RUNNING':
-      result = 'primary';
+      info.style = 'primary';
+      info.text = i18n.t('data:publishedDataVirtualization');
+      info.message = i18n.t('data:publishedDataVirtualizationMessage');
       break;
     case 'FAILED':
-      result = 'danger';
-      break;
-    default:
-      // in-progress
-      result = 'default';
-      break;
-  }
-  return result;
-}
-
-/**
- * @param currDetails the current publishing details
- * @returns the `Label` text representing the publish state
- */
-export function getStateLabelText(
-  currDetails: VirtualizationPublishingDetails
-): string {
-  let result = '';
-  switch (currDetails.state) {
-    case 'RUNNING':
-      result = i18n.t('data:publishedDataVirtualization');
-      break;
-    case 'FAILED':
-      result = i18n.t('shared:Error');
+      info.style = 'danger';
+      info.text = i18n.t('shared:Error');
+      info.message = currDetails.stateMessage ? currDetails.stateMessage : i18n.t('data:publishErrorMessage');
       break;
     case 'NOTFOUND':
-      result = i18n.t('data:stoppedDataVirtualization');
+      info.text = i18n.t('data:stoppedDataVirtualization');
+      info.message = i18n.t('data:stoppedDataVirtualizationMessage');
       break;
     case 'BUILDING':
     case 'CONFIGURING':
     case 'DEPLOYING':
     case 'SUBMITTED':
-      result = i18n.t('data:publishInProgress');
+      info.text = i18n.t('data:publishInProgress');
+      info.message = i18n.t('data:publishInProgressMessage');
       break;
     case 'CANCELLED':
     case 'DELETE_SUBMITTED':
     case 'DELETE_REQUEUE':
     case 'DELETE_DONE':
-      result = i18n.t('data:stopInProgress');
+      info.text = i18n.t('data:stopInProgress');
+      info.message = i18n.t('data:stopInProgressMessage');
       break;
     default:
       // should not get here as exhausted all cases
       break;
   }
-  return result;
+  return info;
 }
 
 /**
