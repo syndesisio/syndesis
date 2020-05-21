@@ -291,7 +291,8 @@ public final class ServiceVdbGenerator {
     /*
      * Generates DDL for a view definition based on properties and supplied array of TableInfo from one or more sources
      */
-    private static String getODataViewDdl(ViewDefinition viewDef, TableInfo[] sourceTableInfos) {
+    @SuppressWarnings({"PMD.NPathComplexity", "PMD.ExcessiveMethodLength"}) // TODO refactor
+    private static String getODataViewDdl(ViewDefinition viewDef, TableInfo... sourceTableInfos) {
 
         String viewName = viewDef.getName();
 
@@ -412,9 +413,9 @@ public final class ServiceVdbGenerator {
     }
 
     private static void startView(String viewName, StringBuilder sb) {
-        sb.append("CREATE VIEW "); //$NON-NLS-1$
-        sb.append(SQLStringVisitor.escapeSinglePart(viewName));
-        sb.append(SPACE);
+        sb.append("CREATE VIEW ") //$NON-NLS-1$
+          .append(SQLStringVisitor.escapeSinglePart(viewName))
+          .append(StringConstants.SPACE);
     }
 
     /**

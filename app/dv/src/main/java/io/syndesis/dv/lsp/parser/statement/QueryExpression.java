@@ -87,6 +87,7 @@ public class QueryExpression extends AbstractStatementObject {
             }
         }
 
-        return new TokenContext(position, tkn, DdlAnalyzerConstants.CONTEXT.QUERY_EXPRESSION, this);
+        Token tkn = this.analyzer.getTokenFor(position);
+        return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.QUERY_EXPRESSION, this);
     }
 }

@@ -40,7 +40,7 @@ public class RestSourceTable {
     /*
      * The columns for this table
      */
-    private final RestSourceColumn[] columns;
+    private final List<RestSourceColumn> columns;
 
     /**
      * Constructor for use when de-serializing

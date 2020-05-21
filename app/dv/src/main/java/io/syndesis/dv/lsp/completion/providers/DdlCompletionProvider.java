@@ -35,7 +35,7 @@ public class DdlCompletionProvider extends CompletionItemBuilder {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DdlCompletionProvider.class);
 
-    private final boolean doPrintToConsole = false;
+    private static final boolean DO_PRINT_TO_CONSOLE = false;
 
     @SuppressWarnings("PMD.CyclomaticComplexity")
     public List<CompletionItem> getCompletionItems(String statement, Position position) {
@@ -93,16 +93,13 @@ public class DdlCompletionProvider extends CompletionItemBuilder {
                     } break;
                     // Context is the Table body surrounded by (....) and before OPTIONS() or AS
                     case QUERY_EXPRESSION: {
-                        switch(previousToken.kind) {
-                            case SQLParserConstants.AS:
-                                String[] values = {"SELECT"};
-                                items.addAll(generateCompletionItems(values));
-                                break;
-                            default: {
-                                // TODO:  SHOW REAL SCHEMA DATA HERE
-                                items.addAll(getItemLoader().getFunctionCompletionItems());
-                                items.addAll(getItemLoader().getQueryExpressionKeywordItems());
-                            } break;
+                        if (previousToken.kind == SQLParserConstants.AS) {
+                            String[] values = {"SELECT"};
+                            items.addAll(generateCompletionItems(values));
+                        } else {
+                            // TODO:  SHOW REAL SCHEMA DATA HERE
+                            items.addAll(getItemLoader().getFunctionCompletionItems());
+                            items.addAll(getItemLoader().getQueryExpressionKeywordItems());
                         }
                     } break;
                     case SELECT_CLAUSE: {

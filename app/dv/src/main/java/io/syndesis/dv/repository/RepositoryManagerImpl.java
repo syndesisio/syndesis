@@ -60,8 +60,8 @@ public class RepositoryManagerImpl implements RepositoryManager {
     private PlatformTransactionManager platformTransactionManager;
 
     @Override
-    @SuppressWarnings("Finally")
-    public <T> T runInTransaction(boolean rollbackOnly, Callable<T> callable) throws Exception {
+    @SuppressWarnings({"Finally", "PMD.DoNotThrowExceptionInFinally"})
+    public <T> T runInTransaction(boolean rollbackOnly, Task<T> callable) {
         TransactionStatus transactionStatus = platformTransactionManager.getTransaction(NEW_TRANSACTION_DEFINITION);
 
         boolean shouldRollback = rollbackOnly;

@@ -25,6 +25,7 @@ import java.security.GeneralSecurityException;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,6 +76,8 @@ public final class HttpClientUtils {
         return createHttpClient(config, b -> b.protocols(Collections.singletonList(Protocol.HTTP_1_1)), httpClientBuilder);
     }
 
+    @SuppressFBWarnings("REC_CATCH_EXCEPTION")
+    @SuppressWarnings({"PMD.NPathComplexity", "PMD.ExcessiveMethodLength", "PMD.CyclomaticComplexity"}) // TODO refactor
     private static OkHttpClient createHttpClient(final Config config, final Consumer<OkHttpClient.Builder> additionalConfig,
         OkHttpClient.Builder httpClientBuilder) {
         try {
@@ -96,13 +99,17 @@ public final class HttpClientUtils {
 
             try {
                 SSLContext sslContext = SSLUtils.sslContext(keyManagers, trustManagers);
-                httpClientBuilder.sslSocketFactory(sslContext.getSocketFactory(), trustManager);
+                if (trustManager != null) {
+                    httpClientBuilder.sslSocketFactory(sslContext.getSocketFactory(), trustManager);
+                } else {
+                    // trustManager can be null, and sslSocketFactory throws NPE in that case
+                    httpClientBuilder.sslSocketFactory(sslContext.getSocketFactory());
+                }
             } catch (GeneralSecurityException e) {
                 throw new IllegalStateException("Unable to setup TLS", e);
             }
 
             httpClientBuilder.addInterceptor(chain -> {
-                Request request = chain.request();
                 if (Utils.isNotNullOrEmpty(config.getUsername()) && Utils.isNotNullOrEmpty(config.getPassword())) {
                     Request authReq = chain.request().newBuilder().addHeader("Authorization", Credentials.basic(config.getUsername(), config.getPassword()))
                         .build();
@@ -111,6 +118,8 @@ public final class HttpClientUtils {
                     Request authReq = chain.request().newBuilder().addHeader("Authorization", "Bearer " + config.getOauthToken()).build();
                     return chain.proceed(authReq);
                 }
+
+                Request request = chain.request();
                 return chain.proceed(request);
             }).addInterceptor(new ImpersonatorInterceptor(config))
                 .addInterceptor(new BackwardsCompatibilityInterceptor());

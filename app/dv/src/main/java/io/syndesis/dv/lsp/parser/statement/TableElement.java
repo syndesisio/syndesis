@@ -454,11 +454,11 @@ public class TableElement extends AbstractStatementObject {
             if (tkn.kind == SQLParserConstants.COMMA && getTokens().get(getLastTknIndex()).kind == SQLParserConstants.COMMA
                     && getTokenIndex(tkn) == getLastTknIndex()) {
                 // return the TableBody context to show new column definition item
-                return new TokenContext(position, tkn, DdlAnalyzerConstants.CONTEXT.TABLE_BODY, this);
+                return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_BODY, this);
             }
 
             if (tkn.kind == SQLParserConstants.RPAREN) {
-                return new TokenContext(position, tkn, DdlAnalyzerConstants.CONTEXT.TABLE_ELEMENT, this);
+                return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_ELEMENT, this);
             }
 
             if (optionsClause != null) {
@@ -467,7 +467,7 @@ public class TableElement extends AbstractStatementObject {
                     return context;
                 }
             }
-            return new TokenContext(position, tkn, DdlAnalyzerConstants.CONTEXT.TABLE_ELEMENT, this);
+            return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_ELEMENT, this);
         }
 
         return null;
@@ -493,7 +493,7 @@ public class TableElement extends AbstractStatementObject {
         StringBuilder sb = new StringBuilder();
         sb.append("RAW TOKENS: ");
         for (int i = getFirstTknIndex(); i < getLastTknIndex() + 1; i++) {
-            sb.append(" " + getTokens().get(i));
+            sb.append(' ').append(getTokens().get(i));
         }
         return sb.toString();
     }

@@ -29,11 +29,12 @@ import org.teiid.query.parser.Token;
 
 import io.syndesis.dv.lsp.completion.DdlCompletionConstants;
 
+@SuppressWarnings("PMD.GodClass")
 public class DdlTokenAnalyzer {
 
     private final String statement;
-    private final Token[] tokens;
-    private final STATEMENT_TYPE statementType;
+    private final List<Token> tokens;
+    private final DdlAnalyzerConstants.StatementType statementType;
 
     private final DdlTokenParserReport report;
 
@@ -49,10 +50,10 @@ public class DdlTokenAnalyzer {
         return this.statement;
     }
 
-    private static Token[] init(final String statement) {
+    private static List<Token> init(final String statement) {
 
         JavaCharStream jcs = new JavaCharStream(new StringReader(statement));
-        TeiidDdlParserTokenManager token_source = new TeiidDdlParserTokenManager(jcs);
+        TeiidDdlParserTokenManager tokenSource = new TeiidDdlParserTokenManager(jcs);
 
         List<Token> tokensList = new ArrayList<Token>();
 
@@ -80,7 +81,7 @@ public class DdlTokenAnalyzer {
             }
         }
 
-        return tokensList.toArray(new Token[0]);
+        return tokensList;
     }
 
     private static void convertToken(Token token) {
@@ -161,54 +162,47 @@ public class DdlTokenAnalyzer {
         return stringListToArray(words);
     }
 
+    @SuppressWarnings("PMD.OptimizableToArrayCall") // false positive
     private static String[] stringListToArray(List<String> array) {
         return array.toArray(new String[array.size()]);
     }
 
-    public DdlAnalyzerConstants.STATEMENT_TYPE getStatementType() {
+    public final DdlAnalyzerConstants.StatementType getStatementType() {
         // walk through start of token[] array and return the type
         if( tokens.size() < 2 ) {
-            return DdlAnalyzerConstants.STATEMENT_TYPE.UNKNOWN_STATEMENT_TYPE;
+            return DdlAnalyzerConstants.StatementType.UNKNOWN_STATEMENT_TYPE;
         }
 
         if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_VIRTUAL_VIEW_STATEMENT) ) {
-            return DdlAnalyzerConstants.STATEMENT_TYPE.CREATE_VIRTUAL_VIEW_TYPE;
+            return DdlAnalyzerConstants.StatementType.CREATE_VIRTUAL_VIEW_TYPE;
         }
 
         if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_VIEW_STATEMENT) ) {
-            return DdlAnalyzerConstants.STATEMENT_TYPE.CREATE_VIEW_TYPE;
+            return DdlAnalyzerConstants.StatementType.CREATE_VIEW_TYPE;
         }
 
         if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_GLOBAL_TEMPORARY_TABLE_STATEMENT) ) {
-            return DdlAnalyzerConstants.STATEMENT_TYPE.CREATE_GLOBAL_TEMPORARY_TABLE_TYPE;
+            return DdlAnalyzerConstants.StatementType.CREATE_GLOBAL_TEMPORARY_TABLE_TYPE;
         }
 
         if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_FOREIGN_TEMPORARY_TABLE_STATEMENT) ) {
-            return DdlAnalyzerConstants.STATEMENT_TYPE.CREATE_FOREIGN_TEMPORARY_TABLE_TYPE;
+            return DdlAnalyzerConstants.StatementType.CREATE_FOREIGN_TEMPORARY_TABLE_TYPE;
         }
 
         if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_FOREIGN_TABLE_STATEMENT) ) {
-            return DdlAnalyzerConstants.STATEMENT_TYPE.CREATE_FOREIGN_TABLE_TYPE;
+            return DdlAnalyzerConstants.StatementType.CREATE_FOREIGN_TABLE_TYPE;
         }
 
         if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_TABLE_STATEMENT) ) {
-            return DdlAnalyzerConstants.STATEMENT_TYPE.CREATE_TABLE_TYPE;
+            return DdlAnalyzerConstants.StatementType.CREATE_TABLE_TYPE;
         }
 
-        return DdlAnalyzerConstants.STATEMENT_TYPE.UNKNOWN_STATEMENT_TYPE;
+        return DdlAnalyzerConstants.StatementType.UNKNOWN_STATEMENT_TYPE;
     }
 
-    private static boolean isStatementType(Token[] tkns, int[] statementTokens) {
-        int iTkn = 0;
-        for(int kind : statementTokens ) {
-            // Check each token for kind
-            if( tkns.get(iTkn).kind == kind) {
-                if( ++iTkn == statementTokens.length) {
-                    return true;
-                }
-                continue;
-            }
-            break;
+    private static boolean isStatementType(List<Token> tokens, int... statementTokens) {
+        if (tokens.size() < statementTokens.length) {
+            return false;
         }
 
         for (int i = 0; i < statementTokens.length; i++) {
@@ -371,19 +365,6 @@ public class DdlTokenAnalyzer {
 
     public String positionToString(Position position) {
         return "Line " + (position.getLine()+1) + " Column " + (position.getCharacter()+1);
-    }
-
-    private static void printTokens(Token[] tkns, String headerMessage) {
-        System.out.println(headerMessage);
-        for (Token token : tkns) {
-            System.out.println("  >> Token = " + token.image +
-                    "\n\t   >> KIND = " + token.kind +
-                    "\n\t   >> begins at ( " +
-                    token.beginLine + ", " + token.beginColumn + " )" +
-                    "\n\t   >> ends   at ( " +
-                    token.endLine + ", " + token.endColumn + " )");
-
-        }
     }
 
     public String[] getKeywordLabels(int[] keywordIds, boolean upperCase) {

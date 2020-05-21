@@ -32,7 +32,7 @@ public class TableOptionsClause extends OptionsClause {
         boolean isInOptions = isBetween(getFirstTknIndex(), getLastTknIndex(), position);
         if( isInOptions ) {
             Token tkn = this.analyzer.getTokenFor(position);
-            return new TokenContext(position, tkn, DdlAnalyzerConstants.CONTEXT.TABLE_OPTIONS, this);
+            return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_OPTIONS, this);
         }
         return null;
     }

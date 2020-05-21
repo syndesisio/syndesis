@@ -29,11 +29,8 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import io.syndesis.dv.lsp.completion.DdlCompletionConstants;
 import io.syndesis.dv.lsp.completion.providers.items.DdlCompletionItemLoader;
 
-public class CompletionItemBuilder implements DdlCompletionConstants {
+public class CompletionItemBuilder {
     private final DdlCompletionItemLoader loader = DdlCompletionItemLoader.getInstance();
-
-    public CompletionItemBuilder() {
-    }
 
     public DdlCompletionItemLoader getItemLoader() {
         return loader;
@@ -147,23 +144,13 @@ public class CompletionItemBuilder implements DdlCompletionConstants {
         String[4] insertTextFormat;
      */
     public String[] getItemData(String label) {
-        String[] result = DdlCompletionConstants.KEYWORDS_ITEM_DATA.get(label.toUpperCase());
+        String[] result = DdlCompletionConstants.KEYWORDS_ITEM_DATA.get(label.toUpperCase(Locale.US));
 
         if( result == null ) {
             result = DdlCompletionConstants.DATATYPES_ITEM_DATA.get(label);
         }
 
         return result;
-    }
-
-    public String[] getKeywordLabels(int[] keywordIds, boolean upperCase) {
-        List<String> labels = new ArrayList<String>();
-
-        for( int id: keywordIds) {
-            labels.add(getKeywordLabel(id, upperCase));
-        }
-
-        return labels.toArray(new String[0]);
     }
 
     /**

@@ -20,12 +20,16 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.tomcat.util.json.JSONParser;
 import org.apache.tomcat.util.json.ParseException;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.InsertTextFormat;
+import org.teiid.core.types.DataTypeManager;
+import org.teiid.language.SQLConstants;
+import org.teiid.query.parser.SQLParserConstants;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -76,21 +80,6 @@ public final class DdlCompletionItemLoader extends CompletionItemBuilder {
         return INSTANCE;
     }
 
-    private static final ImmutableMap<String, CompletionItemKind> STRING_TO_KIND_MAP = ImmutableMap.<String, CompletionItemKind>builder()
-            .put(KINDS[0], CompletionItemKind.Text).put(KINDS[1], CompletionItemKind.Method)
-            .put(KINDS[2], CompletionItemKind.Function).put(KINDS[3], CompletionItemKind.Constructor)
-            .put(KINDS[4], CompletionItemKind.Field).put(KINDS[5], CompletionItemKind.Variable)
-            .put(KINDS[6], CompletionItemKind.Class).put(KINDS[7], CompletionItemKind.Interface)
-            .put(KINDS[8], CompletionItemKind.Module).put(KINDS[9], CompletionItemKind.Property)
-            .put(KINDS[10], CompletionItemKind.Unit).put(KINDS[11], CompletionItemKind.Value)
-            .put(KINDS[12], CompletionItemKind.Enum).put(KINDS[13], CompletionItemKind.Keyword)
-            .put(KINDS[14], CompletionItemKind.Snippet).put(KINDS[15], CompletionItemKind.Color)
-            .put(KINDS[16], CompletionItemKind.File).put(KINDS[17], CompletionItemKind.Reference)
-            .put(KINDS[18], CompletionItemKind.Folder).put(KINDS[19], CompletionItemKind.EnumMember)
-            .put(KINDS[20], CompletionItemKind.Constant).put(KINDS[21], CompletionItemKind.Operator)
-            .put(KINDS[22], CompletionItemKind.Struct).put(KINDS[23], CompletionItemKind.Event)
-            .put(KINDS[24], CompletionItemKind.TypeParameter).build();
-
     @SuppressWarnings("unchecked")
     private List<CompletionItem> loadItemsFromFile(String fileName) {
         List<CompletionItem> items = new ArrayList<CompletionItem>();
@@ -110,7 +99,7 @@ public final class DdlCompletionItemLoader extends CompletionItemBuilder {
                     LinkedHashMap<String, Object> itemInfo = (LinkedHashMap<String, Object>) item;
                     CompletionItem newItem = new CompletionItem();
                     newItem.setLabel((String) itemInfo.get("label"));
-                    newItem.setKind(STRING_TO_KIND_MAP.get(((String) itemInfo.get("kind")).toUpperCase()));
+                    newItem.setKind(STRING_TO_KIND_MAP.get(((String) itemInfo.get("kind")).toUpperCase(Locale.US)));
 
                     String detail = (String) itemInfo.get("detail");
                     if (detail != null) {

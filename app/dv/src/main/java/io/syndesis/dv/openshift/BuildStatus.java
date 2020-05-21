@@ -125,23 +125,6 @@ public class BuildStatus {
         }
     }
 
-    private volatile Status status = Status.NOTFOUND;
-    @JsonIgnore
-    private volatile PublishConfiguration publishConfiguration;
-    private volatile String name;
-    private volatile String namespace;
-    @JsonIgnore
-    private volatile String publishPodName;
-    private volatile long lastUpdated = 0L;
-    private volatile String statusMessage;
-
-    private final String openShiftName;
-    private String dataVirtualizationName;
-    private Long version;
-
-    @JsonIgnore
-    private final DeploymentStatus deploymentStatus = new DeploymentStatus();
-
     public BuildStatus(String openShiftName) {
         this.openShiftName = openShiftName;
     }

@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import io.syndesis.dv.StringConstants;
 import io.syndesis.dv.server.V1Constants;
 
 /**

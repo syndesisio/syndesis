@@ -21,7 +21,7 @@ import org.teiid.query.parser.Token;
 
 import java.util.List;
 
-import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.STATEMENT_TYPE;
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.StatementType;
 
 public class DdlTokenWalker implements SQLParserConstants {
     private final List<Token> tokens;
@@ -116,7 +116,7 @@ public class DdlTokenWalker implements SQLParserConstants {
         int line;
         int column;
 
-        private TokenCursorLocator(Token token, int index, int line, int column) {
+        TokenCursorLocator(Token token, int index, int line, int column) {
             this.token = token;
             this.tokenIndex = index;
             this.line = line;
@@ -187,15 +187,15 @@ public class DdlTokenWalker implements SQLParserConstants {
         @Override
         @SuppressWarnings("PMD.InsufficientStringBufferDeclaration") // false positive
         public String toString() {
-            StringBuilder sb = new StringBuilder(token.image);
-            sb.append("\n\t CURSOR: (" + this.line + ", " + this.column + ")");
-            sb.append("\n\t SPAN  : (" + this.token.beginLine + ", " + this.token.beginColumn + ")" + " >>> ("
-                    + this.token.endLine + ", " + this.token.endColumn + ") ");
-            sb.append("\n\t   isCursorBefore()        = " + isCursorBefore());
-            sb.append("\n\t   isCursorInside()        = " + isCursorInside());
-            sb.append("\n\t   isCursorAfter()         = " + isCursorAfter());
-            sb.append("\n\t   isCursorFreeFromToken() = " + isCursorFreeFromToken());
-            return sb.toString();
+            StringBuilder sb = new StringBuilder(200).append(token.image)
+                .append("\n\t CURSOR: (").append(this.line).append(", ").append(this.column).append(")")
+                .append("\n\t SPAN  : (").append(this.token.beginLine).append(", ").append(this.token.beginColumn + ")").append(" >>> (").append(this.token.endLine).append(", ").append(this.token.endColumn).append(") ")
+                .append("\n\t   isCursorBefore()        = ").append(isCursorBefore())
+                .append("\n\t   isCursorInside()        = ").append(isCursorInside())
+                .append("\n\t   isCursorAfter()         = ").append(isCursorAfter())
+                .append("\n\t   isCursorFreeFromToken() = ").append(isCursorFreeFromToken());
+
+                return sb.toString();
         }
     }
 }

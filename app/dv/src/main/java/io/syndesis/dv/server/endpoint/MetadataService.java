@@ -158,7 +158,6 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
      * Query the teiid server
      * @param kqa the query attribute (never <code>null</code>)
      * @return a JSON representation of the Query results (never <code>null</code>)
-     * @throws Exception
      */
     @SuppressWarnings( "nls" )
     @RequestMapping(value = V1Constants.QUERY_SEGMENT, method = RequestMethod.POST,
@@ -242,7 +241,6 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
     /**
      * Initiate schema refresh for a syndesis source.
      * @param teiidSourceName the syndesis source name (cannot be empty)
-     * @throws Exception
      */
     @RequestMapping(value = StringConstants.FS + V1Constants.REFRESH_SCHEMA_SEGMENT
             + StringConstants.FS
@@ -371,7 +369,6 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
 
     /**
      * @return the JSON representation of the schema collection (never <code>null</code>)
-     * @throws Exception
      */
     @RequestMapping(value = {"sourceSchema", "sourceSchema" + StringConstants.FS + TEIID_SOURCE_PLACEHOLDER}, method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation( value = "Get the native schema for a teiid source.  In no teiidSource supplied, all schema are returned",
@@ -388,7 +385,6 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
         SyndesisConnectionMonitor.setUpdate(true);
         return repositoryManager.runInTransaction(true, () -> {
 
-            List<RestSchemaNode> rootNodes = new ArrayList<RestSchemaNode>();
             Collection<TeiidDataSource> resultTeiidSources = new ArrayList<>();
             if (teiidSourceName != null) {
                 // Find the bound teiid source corresponding to the syndesis source
@@ -431,7 +427,6 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
     /**
      * Get status for the available syndesis sources.
      * @return a JSON document representing the statuses of the sources (never <code>null</code>)
-     * @throws Exception
      */
     @RequestMapping(value = V1Constants.SOURCE_STATUSES, method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation(value = "Return the source statuses",
@@ -468,7 +463,6 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
     /**
      * Find and return all runtime metadata
      * @return source schema object array
-     * @throws Exception
      */
     @RequestMapping(value = V1Constants.RUNTIME_METADATA + StringConstants.FS
             + V1Constants.VIRTUALIZATION_PLACEHOLDER, method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -777,7 +771,6 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
     /**
      * Set the schema availability for the provided RestSyndesisSourceStatus
      * @param status the RestSyndesisSourceStatus
-     * @throws Exception if error occurs
      */
     private void setSchemaStatus(String schemaId, final RestSyndesisSourceStatus status ) {
         // Get the workspace schema VDB

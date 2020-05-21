@@ -23,10 +23,10 @@ import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 public class TokenContext {
     private final Position position;
     private final Token token;
-    private DdlAnalyzerConstants.CONTEXT context;
+    private DdlAnalyzerConstants.Context context;
     private final AbstractStatementObject targetObject;
 
-    public TokenContext(Position position, Token token, DdlAnalyzerConstants.CONTEXT context, AbstractStatementObject statementObject) {
+    public TokenContext(Position position, Token token, DdlAnalyzerConstants.Context context, AbstractStatementObject statementObject) {
         super();
         this.position = position;
         this.token = token;
@@ -42,11 +42,11 @@ public class TokenContext {
         return token;
     }
 
-    public DdlAnalyzerConstants.CONTEXT getContext() {
+    public DdlAnalyzerConstants.Context getContext() {
         return context;
     }
 
-    public DdlAnalyzerConstants.CONTEXT setContext(DdlAnalyzerConstants.CONTEXT context) {
+    public DdlAnalyzerConstants.Context setContext(DdlAnalyzerConstants.Context context) {
         return this.context = context;
     }
 

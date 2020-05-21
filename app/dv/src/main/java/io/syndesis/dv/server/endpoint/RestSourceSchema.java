@@ -40,7 +40,7 @@ public class RestSourceSchema {
     /*
      * The source table objects for this schema
      */
-    private final RestSourceTable[] tables;
+    private final List<RestSourceTable> tables;
 
     public RestSourceSchema(Schema schema) {
         this.name = schema.getName();

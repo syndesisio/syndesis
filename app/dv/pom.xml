@@ -318,22 +318,12 @@
         <groupId>org.teiid</groupId>
         <artifactId>teiid-api</artifactId>
         <version>${version.org.teiid}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>javax.transaction</groupId>
-            <artifactId>javax.transaction-api</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.teiid</groupId>
         <artifactId>teiid-engine</artifactId>
         <version>${version.org.teiid}</version>
         <exclusions>
-          <exclusion>
-            <groupId>javax.transaction</groupId>
-            <artifactId>javax.transaction-api</artifactId>
-          </exclusion>
           <exclusion>
             <groupId>org.wololo</groupId>
             <artifactId>jts2geojson</artifactId>
@@ -357,10 +347,6 @@
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
           </exclusion>
-          <exclusion>
-            <groupId>javax.transaction</groupId>
-            <artifactId>javax.transaction-api</artifactId>
-          </exclusion>
         </exclusions>
       </dependency>
       <dependency>
@@ -372,12 +358,6 @@
         <groupId>org.teiid.connectors</groupId>
         <artifactId>translator-jdbc</artifactId>
         <version>${version.org.teiid}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>javax.persistence</groupId>
-            <artifactId>javax.persistence-api</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <groupId>io.fabric8</groupId>
@@ -459,10 +439,6 @@
         <version>5.4.12.Final</version>
         <exclusions>
           <exclusion>
-            <groupId>javax.persistence</groupId>
-            <artifactId>javax.persistence-api</artifactId>
-          </exclusion>
-          <exclusion>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
           </exclusion>
@@ -542,12 +518,8 @@
       <artifactId>spring-boot-test</artifactId>
     </dependency>
     <dependency>
-      <groupId>jakarta.annotation</groupId>
-      <artifactId>jakarta.annotation-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.persistence</groupId>
-      <artifactId>jakarta.persistence-api</artifactId>
+      <groupId>javax.persistence</groupId>
+      <artifactId>javax.persistence-api</artifactId>
     </dependency>
     <dependency>
       <groupId>io.fabric8</groupId>
@@ -564,10 +536,6 @@
     <dependency>
       <groupId>com.squareup.okhttp3</groupId>
       <artifactId>okhttp</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.transaction</groupId>
-      <artifactId>jakarta.transaction-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.data</groupId>

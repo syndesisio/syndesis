@@ -272,8 +272,8 @@ public class DefaultMetadataInstance implements MetadataInstance {
 
     @Override
     // OBL_UNSATISFIED_OBLIGATION seems to be false positive
-    @SuppressFBWarnings({"SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE", "OBL_UNSATISFIED_OBLIGATION"}) 
-    public QSResult query(String vdb, String query, int offset, int limit) throws KException {
+    @SuppressFBWarnings({"SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE", "OBL_UNSATISFIED_OBLIGATION"})
+    public QSResult query(String vdb, String query, int offset, int limit) {
         ObjectMapper mapper = new ObjectMapper();
 
         QSResult result = new QSResult();
@@ -296,26 +296,10 @@ public class DefaultMetadataInstance implements MetadataInstance {
                 queryToRun = "SELECT * FROM (" + query + ") x LIMIT " + Math.max(0, offset) + ", " + (limit < 0?Integer.MAX_VALUE:limit);
             }
 
-            try {
-                rs = statement.executeQuery(query);
-            } catch (SQLException e) {
-                KLog.getLogger().warn(e, "Could not execute query: %s", query);
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
-            }
-
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int columns = rsmd.getColumnCount();
-
-            //
-            // Populate the columns
-            //
-            for (int i = 1; i <= columns; ++i) {
-                String columnName = rsmd.getColumnName(i);
-                String columnLabel = rsmd.getColumnLabel(i);
-                String colTypeName = rsmd.getColumnTypeName(i);
-                QSColumn column = new QSColumn(colTypeName, columnName, columnLabel);
-                result.addColumn(column);
-            }
+            KLog.getLogger().debug("Commencing query execution: %s", queryToRun);
+            try (ResultSet rs = statement.executeQuery(queryToRun)) {
+                ResultSetMetaData rsmd = rs.getMetaData();
+                int columns = rsmd.getColumnCount();
 
                 //
                 // Populate the columns
@@ -334,12 +318,12 @@ public class DefaultMetadataInstance implements MetadataInstance {
                         Object value = rs.getObject(i);
                         if (value instanceof ArrayImpl) {
                             row.add(mapper.writeValueAsString(((ArrayImpl)value).getArray()));
-                        } else if (value instanceof java.sql.Blob) {
+                        } else if (value instanceof Blob) {
                             row.add("blob");
-                        }  else if (value instanceof java.sql.Clob) {
+                        }  else if (value instanceof Clob) {
                             row.add("clob");
-                        }  else if (value instanceof org.teiid.core.types.AbstractGeospatialType) {
-                            Clob clob = GeometryUtils.geometryToClob((org.teiid.core.types.AbstractGeospatialType)value, true);
+                        }  else if (value instanceof AbstractGeospatialType) {
+                            Clob clob = GeometryUtils.geometryToClob((AbstractGeospatialType)value, true);
                             ClobToStringTransform transform = new ClobToStringTransform();
                             row.add(transform.transform(clob, String.class));
                         } else {
@@ -349,8 +333,8 @@ public class DefaultMetadataInstance implements MetadataInstance {
                     result.addRow(row);
                 }
             } catch (SQLException e) {
-                KLog.getLogger().warn(e, "Could not execute query: %s", query);
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+                KLog.getLogger().warn(e, "Could not execute query: %s", queryToRun);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
             }
 
             KLog.getLogger().debug("Query executed and returning %d results", result.getRows().size());

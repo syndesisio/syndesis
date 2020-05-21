@@ -60,8 +60,6 @@ public class AuthHandlingFilter implements HandlerInterceptor {
         }
     }
 
-    private static final ThreadLocal<OAuthCredentials> THREAD_OAUTH_CREDENTIALS  = new ThreadLocal<OAuthCredentials>();
-
     @Override
     public boolean preHandle(HttpServletRequest request,
             HttpServletResponse response, Object contentHandler) {

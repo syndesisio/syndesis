@@ -28,32 +28,7 @@ import io.syndesis.dv.KException;
 import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
 import io.syndesis.dv.metadata.query.QSResult;
 
-public interface MetadataInstance extends StringConstants {
-
-    public static class ValidationResult {
-        private final ValidatorReport report;
-        private final Schema schema;
-        private final MetadataException metadataException;
-
-        public ValidationResult(ValidatorReport report, Schema schema, MetadataException metadataException) {
-            this.report = report;
-            this.schema = schema;
-            this.metadataException = metadataException;
-        }
-
-        public ValidatorReport getReport() {
-            return report;
-        }
-
-        public Schema getSchema() {
-            return schema;
-        }
-
-        public MetadataException getMetadataException() {
-            return metadataException;
-        }
-
-    }
+public interface MetadataInstance {
 
     /**
      * The host of the metadata instance
