@@ -18,6 +18,7 @@ package io.syndesis.connector.debezium;
 import java.io.IOException;
 import java.util.Map;
 
+import io.syndesis.connector.kafka.KafkaConnectionCustomizer;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
@@ -31,11 +32,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class DebeziumConsumerCustomizer implements ComponentProxyCustomizer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DebeziumConsumerCustomizer.class);
-
     private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    // Debezium is based on Kafka connector
+    private final KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer();
 
     @Override
     public void customize(final ComponentProxyComponent component, final Map<String, Object> options) {
+        kafkaConnectionCustomizer.customize(component, options);
         component.setBeforeConsumer(DebeziumConsumerCustomizer::convertToDebeziumFormat);
     }
 

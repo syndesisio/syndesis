@@ -18,7 +18,7 @@ package io.syndesis.connector.debezium;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,13 +28,15 @@ import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.connector.kafka.KafkaMetaDataRetrieval;
 import io.syndesis.connector.support.util.ConnectorOptions;
+import io.syndesis.connector.support.util.KeyStoreHelper;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -43,8 +45,6 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class DebeziumMetaDataRetrieval extends KafkaMetaDataRetrieval {
 
@@ -56,10 +56,9 @@ public class DebeziumMetaDataRetrieval extends KafkaMetaDataRetrieval {
 
     @Override
     protected SyndesisMetadata adapt(final CamelContext context, final String componentId, final String actionId, final Map<String, Object> properties,
-        final MetaDataExtension.MetaData metadata) {
+                                     final MetaDataExtension.MetaData metadata) {
         // Retrieve the list of topics
-        @SuppressWarnings("unchecked")
-        final Set<String> topicsNames = (Set<String>) metadata.getPayload();
+        @SuppressWarnings("unchecked") final Set<String> topicsNames = (Set<String>) metadata.getPayload();
         final List<PropertyPair> topicsResult = new ArrayList<>();
         topicsNames.stream().forEach(
             t -> topicsResult.add(new PropertyPair(t, t)));
@@ -68,11 +67,7 @@ public class DebeziumMetaDataRetrieval extends KafkaMetaDataRetrieval {
         dynamicProperties.put("topic", topicsResult);
         dynamicProperties.put("schemaChange", topicsResult);
 
-        final String brokers = ConnectorOptions.extractOption(properties, "brokers");
-        final String topicSelected = ConnectorOptions.extractOption(properties, "topic");
-        final String schemaChangeSelected = ConnectorOptions.extractOption(properties, "schemaChange");
-
-        final DataShape outputDataShape = topicSelected != null ? getDatashape(brokers, topicSelected, schemaChangeSelected) : ANY;
+        final DataShape outputDataShape = ConnectorOptions.extractOption(properties, "topic") != null ? getDatashape(properties) : ANY;
         return new SyndesisMetadata(
             dynamicProperties,
             null,
@@ -106,32 +101,20 @@ public class DebeziumMetaDataRetrieval extends KafkaMetaDataRetrieval {
         return buildJsonSchema(tableName, properties);
     }
 
-    private static DataShape getDatashape(final String brokers, final String topicSelected, final String topicSchemaChange) {
+    private static DataShape getDatashape(final Map<String, Object> params) {
+        final String brokers = ConnectorOptions.extractOption(params, "brokers");
+        final String topicSelected = ConnectorOptions.extractOption(params, "topic");
+        final String topicSchemaChange = ConnectorOptions.extractOption(params, "schemaChange");
+        final String certificate = ConnectorOptions.extractOption(params, "brokerCertificate");
+        final String transportProtocol = ConnectorOptions.extractOption(params, "transportProtocol");
+
         final String topicTableName = topicSelected.split("\\.", -1)[2];
         String ddlTableExpected = null;
 
-        final Properties properties = new Properties();
-        properties.put("bootstrap.servers", brokers);
-        properties.put("group.id", "syndesis-x");
-        properties.put("enable.auto.commit", "false");
-        properties.put("auto.offset.reset", "earliest");
-        properties.put("key.deserializer", StringDeserializer.class.getName());
-        properties.put("value.deserializer", StringDeserializer.class.getName());
-
+        final Properties properties = kafkaConsumerProperties(brokers, transportProtocol, certificate);
+        LOGGER.debug("Calling kafka consumer with params {}", properties);
         try (KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties)) {
-            // Seek the offset to the beginning in case any offset was committed
-            // previously
-            consumer.subscribe(Arrays.asList(topicSchemaChange));
-            consumer.seekToBeginning(consumer.assignment());
-            // We assume we get the structure query in one poll
-            final ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(15));
-            for (final ConsumerRecord<String, String> record : records) {
-                final String ddl = MAPPER.readTree(record.value()).get("ddl").asText();
-                final String matchingDDL = String.format("CREATE TABLE `%s`", topicTableName);
-                if (ddl.startsWith(matchingDDL)) {
-                    ddlTableExpected = ddl;
-                }
-            }
+            ddlTableExpected = pollDDLTableSchema(consumer, topicSchemaChange, topicTableName);
         } catch (final IOException e) {
             LOGGER.error("Issue while parsing a record", e);
         }
@@ -151,6 +134,49 @@ public class DebeziumMetaDataRetrieval extends KafkaMetaDataRetrieval {
             .kind(DataShapeKinds.JSON_SCHEMA)
             .specification(jsonSchema)
             .build();
+    }
+
+    private static String pollDDLTableSchema(KafkaConsumer<String, String> consumer, String topicSchemaChange, String topicTableName) throws JsonProcessingException {
+        String ddlTableExpected = null;
+        // Seek the offset to the beginning in case any offset was committed
+        // previously
+        consumer.subscribe(Collections.singletonList(topicSchemaChange));
+        consumer.seekToBeginning(consumer.assignment());
+        // We assume we get the structure query in one poll
+        final ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(15));
+        for (final ConsumerRecord<String, String> record : records) {
+            final String ddl = MAPPER.readTree(record.value()).get("ddl").asText();
+            final String matchingDDL = String.format("CREATE TABLE `%s`", topicTableName);
+            if (ddl.startsWith(matchingDDL)) {
+                ddlTableExpected = ddl;
+            }
+        }
+        return ddlTableExpected;
+    }
+
+    private static Properties kafkaConsumerProperties(String brokers, String transportProtocol, String certificate) {
+        Properties properties = new Properties();
+        properties.put("bootstrap.servers", brokers);
+        properties.put("group.id", "syndesis-x");
+        properties.put("enable.auto.commit", "false");
+        properties.put("auto.offset.reset", "earliest");
+        properties.put("key.deserializer", StringDeserializer.class.getName());
+        properties.put("value.deserializer", StringDeserializer.class.getName());
+        // SSL support
+        if (!"PLAINTEXT".equals(transportProtocol)) {
+            KeyStoreHelper brokerKeyStoreHelper = certificate != null ? new KeyStoreHelper(certificate, "brokerCertificate").store() : null;
+            properties.put("security.protocol", "SSL");
+            if (brokerKeyStoreHelper != null) {
+                properties.put("ssl.endpoint.identification.algorithm", "");
+                properties.put("ssl.keystore.location", brokerKeyStoreHelper.getKeyStorePath());
+                properties.put("ssl.keystore.password", brokerKeyStoreHelper.getPassword());
+                properties.put("ssl.key.password", brokerKeyStoreHelper.getPassword());
+                properties.put("ssl.truststore.location", brokerKeyStoreHelper.getKeyStorePath());
+                properties.put("ssl.truststore.password", brokerKeyStoreHelper.getPassword());
+            }
+        }
+
+        return properties;
     }
 
     private static String getType(final String type) {
