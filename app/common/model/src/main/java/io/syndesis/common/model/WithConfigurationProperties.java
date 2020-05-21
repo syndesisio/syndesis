@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -199,7 +198,7 @@ public interface WithConfigurationProperties {
     /**
      * Filters the properties that the {@link Connector} considers sensitive / secret.
      * @param properties        The specified configuration.
-     * @param valueConverter    A {@link Function} that is applies to each {@link Entry} of the configuration.
+     * @param valueConverter    A {@link Function} that is applies to each {@link Map.Entry} of the configuration.
      * @return                  A map with just the sensitive data.
      */
     default Map<String, String> filterSecrets(Map<String, String> properties, Function<Map.Entry<String, String>, String> valueConverter) {

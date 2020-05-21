@@ -16,7 +16,6 @@
 package io.syndesis.common.model;
 
 import java.io.IOException;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
@@ -73,7 +72,7 @@ public class ModelData<T extends WithId<T>> implements ToJson {
     public T getData() throws IOException {
         if (data == null && kind != null && json != null) {
             @SuppressWarnings("unchecked")
-            final Class<T> modelClass = (Class<T>) kind.getModelClass();
+            final Class<T> modelClass = kind.getModelClass();
             data = JsonUtils.reader().forType(modelClass).readValue(json);
         }
         return data;
