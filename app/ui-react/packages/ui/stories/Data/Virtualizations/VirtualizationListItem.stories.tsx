@@ -1,6 +1,4 @@
-import { Bullseye } from '@patternfly/react-core';
 import { boolean, text } from '@storybook/addon-knobs';
-import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -55,7 +53,7 @@ const publishedVirtualizationNotes =
 stories
   .add(
     'sample virtualization item',
-    withNotes(publishedVirtualizationNotes)(() => (
+    () => (
       <Router>
           <VirtualizationListItem
             dropdownActions={virtualizationActions}
@@ -82,7 +80,8 @@ stories
             secured={true}
           />
       </Router>
-    ))
+    ),
+    { notes: publishedVirtualizationNotes }
   )
 
   .add('virtualization item with odata', () => (

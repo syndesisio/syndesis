@@ -24,6 +24,7 @@ export interface IRolePermissionListProps {
   i18nRemoveRoleRow: string;
   i18nRoleExists: string;
   viewRolePermissionList: ITablePrivilege[];
+  selectedRoles: string[];
   updateRolePermissionModel: (
     roleName: string | undefined,
     permissions: string[],
@@ -37,10 +38,6 @@ export interface IRolePermissionListProps {
 export const RolePermissionList: React.FunctionComponent<IRolePermissionListProps> = props => {
   const [roleRowList, setRoleRowList] = React.useState<string[]>(['role0']);
   const [currentRoles, setCurrentRoles] = React.useState<string[]>(props.roles);
-
-  const addRole = (roleName: string) => {
-    setCurrentRoles([...currentRoles, roleName]);
-  };
 
   const removeRolePermission = (index: string) => {
     const rolelistCopy = roleRowList.slice();
@@ -57,6 +54,13 @@ export const RolePermissionList: React.FunctionComponent<IRolePermissionListProp
       setRoleRowList([...roleRowList, 'role' + roleRowNo]);
     }
   };
+
+  React.useEffect(() => {
+    const updatedRoles = props.roles.filter(role => {
+      return !props.selectedRoles.includes(role);
+    });
+    setCurrentRoles(updatedRoles);
+  }, [props.selectedRoles]);
 
   return (
     <>
@@ -98,8 +102,8 @@ export const RolePermissionList: React.FunctionComponent<IRolePermissionListProp
         {roleRowList.map((roleNumber: string) => (
           <RolePermissionListItem
             index={roleNumber}
-            role={currentRoles}
-            addRole={addRole}
+            availableRoles={currentRoles}
+            roles={props.roles}
             removeRolePermission={removeRolePermission}
             selectedRole=""
             selectedPermissions={[]}

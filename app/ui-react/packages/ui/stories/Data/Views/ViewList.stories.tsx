@@ -1,6 +1,5 @@
 import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
-import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -145,7 +144,7 @@ stories
 
   .add(
     'no Views',
-    withNotes(noViewsTestNotes)(() => (
+    () => (
       <Router>
         <ViewList
           activeFilters={[]}
@@ -194,12 +193,13 @@ stories
           hasListData={false}
         />
       </Router>
-    ))
+    ),
+    { notes: noViewsTestNotes }
   )
 
   .add(
     'has Views',
-    withNotes(hasViewsTestNotes)(() => (
+    () => (
       <Router>
         <ViewList
           activeFilters={[]}
@@ -251,5 +251,6 @@ stories
           hasListData={true}
         />
       </Router>
-    ))
+    ),
+    { notes: hasViewsTestNotes }
   );

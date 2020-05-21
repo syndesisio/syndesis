@@ -70,6 +70,8 @@ export interface IViewPermissionList extends IListViewToolbarProps {
   i18nClearPermissionMsg: string;
   i18nSelectRole: string;
   i18nRemoveRoleRow: string;
+  i18nShowLess: string;
+  i18nShowMore: string;
   i18nSsoConfigWarning: string;
   i18nSsoConfigWarningTitle: string;
   status: any;
@@ -315,7 +317,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
                     // tslint:disable-next-line: jsx-no-lambda
                     onClick={() => setShowMore(!showMore)}
                   >
-                    {showMore ? 'show more' : 'show less'}
+                    {showMore ? `${props.i18nShowMore}` : `${props.i18nShowLess}`}
                   </Button>
                 )}
               </h3>
@@ -363,6 +365,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
               i18nRoleExists={props.i18nRoleExists}
               viewRolePermissionList={[]}
               roles={props.dvRoles}
+              selectedRoles= {Array.from(rolePermissionModel.keys())}
               updateRolePermissionModel={updateRolePermissionModel}
               deleteRoleFromPermissionModel={deleteRoleFromPermissionModel}
             />
