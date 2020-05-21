@@ -687,6 +687,12 @@
         <groupId>org.springframework</groupId>
         <artifactId>spring-webmvc</artifactId>
     </dependency>
+    <!-- used for container probes -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+      <scope>runtime</scope>
+    </dependency>
     <dependency>
         <groupId>io.springfox</groupId>
         <artifactId>springfox-swagger2</artifactId>
