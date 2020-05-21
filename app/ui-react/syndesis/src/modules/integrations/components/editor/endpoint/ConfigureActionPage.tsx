@@ -7,6 +7,7 @@ import {
   isStartStep,
   requiresInputDescribeDataShape,
   requiresOutputDescribeDataShape,
+  WEBHOOK_INCOMING_ACTION_ID,
   WithIntegrationHelpers,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
@@ -24,7 +25,12 @@ import {
   IDescribeDataShapeRouteState,
   IPageWithEditorBreadcrumb,
 } from '../interfaces';
-import { collectErrorKeys, toUIStep, toUIStepCollection } from '../utils';
+import {
+  actionsFromFlow,
+  collectErrorKeysFromActions,
+  toUIStep,
+  toUIStepCollection,
+} from '../utils';
 import {
   IOnUpdatedIntegrationProps,
   WithConfigurationForm,
@@ -86,13 +92,31 @@ export class ConfigureActionPage extends React.Component<
                 params.flowId,
                 positionAsNumber
               );
-              const errorKeys = collectErrorKeys(
-                getFlow(
-                  state.updatedIntegration || state.integration,
-                  params.flowId
-                )!,
+
+              const flow = getFlow(
+                state.updatedIntegration || state.integration,
+                params.flowId
+              )!;
+
+              /**
+               * Webhooks are treated differently because the `actions` that
+               * are used to extract `errorKeys` are located in the `connector`,
+               * whereas they are usually in the `flow` and have be
+               * extracted beforehand.
+               */
+
+              const isWebHook = params.actionId === WEBHOOK_INCOMING_ACTION_ID;
+
+              const getFlowActions = actionsFromFlow(
+                flow.steps!,
                 positionAsNumber
               );
+
+              const actions = isWebHook
+                ? state.connection!.connector!.actions
+                : getFlowActions;
+              const errorKeys = collectErrorKeysFromActions(actions);
+
               /**
                * It's possible for this to be mismatched if we come into
                * this controller after deleting a start or end connection,
@@ -124,7 +148,6 @@ export class ConfigureActionPage extends React.Component<
                * whether or not to allow the user to press back on the Configure
                * Action page.
                */
-              const flow = getFlow(state.integration, params.flowId);
               const allowBack = !isApiProviderFlow(flow!);
 
               const onUpdatedIntegration = async ({
@@ -258,9 +281,7 @@ export class ConfigureActionPage extends React.Component<
                     })}
                     content={
                       <WithConfigurationForm
-                        key={`${positionAsNumber}:${
-                          params.actionId
-                        }:${pageAsNumber}`}
+                        key={`${positionAsNumber}:${params.actionId}:${pageAsNumber}`}
                         connection={state.connection}
                         actionId={params.actionId}
                         configurationPage={pageAsNumber}
