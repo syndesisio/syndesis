@@ -89,7 +89,7 @@ public class ActivityTrackingControllerTest {
         }
 
         @Override
-        protected void watchLog(String podName, Consumer<InputStream> handler, String sinceTime) throws IOException {
+        protected void watchLog(String podName, Consumer<InputStream> handler, String sinceTime) {
             execute("test", ()->{
                 handler.accept(podLogs);
             });
@@ -205,7 +205,7 @@ public class ActivityTrackingControllerTest {
             ).getBytes(StandardCharsets.UTF_8);
 
             @Override
-            public int read() throws IOException {
+            public int read() {
                 if (buffy == null || buffy.length == idx) {
                     if (exchanges++ > totalExchanges) {
                         return -1;

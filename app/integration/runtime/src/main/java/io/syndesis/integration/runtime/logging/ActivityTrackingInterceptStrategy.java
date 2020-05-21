@@ -46,7 +46,7 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
     }
 
     @Override
-    public Processor wrapProcessorInInterceptors(CamelContext context, NamedNode definition, Processor target, Processor nextTarget) throws Exception {
+    public Processor wrapProcessorInInterceptors(CamelContext context, NamedNode definition, Processor target, Processor nextTarget) {
         if (this.tracker == null) {
             return target;
         }

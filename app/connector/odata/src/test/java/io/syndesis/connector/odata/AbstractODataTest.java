@@ -15,26 +15,16 @@
  */
 package io.syndesis.connector.odata;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-import org.apache.camel.CamelContext;
-import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.component.properties.DefaultPropertiesParser;
-import org.apache.camel.component.properties.PropertiesComponent;
-import org.apache.camel.component.properties.PropertiesLookup;
-import org.apache.camel.component.properties.PropertiesParser;
-import org.apache.camel.spring.SpringCamelContext;
-import org.junit.BeforeClass;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.PropertyResolver;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -49,8 +39,19 @@ import io.syndesis.connector.odata.server.ODataTestServer;
 import io.syndesis.connector.odata.server.ODataTestServer.Options;
 import io.syndesis.connector.support.util.PropertyBuilder;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import org.apache.camel.CamelContext;
+import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.component.properties.DefaultPropertiesParser;
+import org.apache.camel.component.properties.PropertiesComponent;
+import org.apache.camel.component.properties.PropertiesLookup;
+import org.apache.camel.component.properties.PropertiesParser;
+import org.apache.camel.spring.SpringCamelContext;
+import org.junit.BeforeClass;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.PropertyResolver;
 
 public abstract class AbstractODataTest implements ODataConstants {
 
@@ -190,7 +191,7 @@ public abstract class AbstractODataTest implements ODataConstants {
     protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration) {
         return new IntegrationRouteBuilder("") {
             @Override
-            protected Integration loadIntegration() throws IOException {
+            protected Integration loadIntegration() {
                 return integration;
             }
         };

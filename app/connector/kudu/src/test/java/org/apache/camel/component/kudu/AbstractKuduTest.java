@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.spring.SpringCamelContext;
@@ -43,7 +42,7 @@ public class AbstractKuduTest extends CamelTestSupport {
     protected ApplicationContext applicationContext;
 
     @Override
-    protected CamelContext createCamelContext() throws Exception {
+    protected CamelContext createCamelContext() {
         applicationContext = new AnnotationConfigApplicationContext(MockedKuduConfiguration.class);
 
         final CamelContext ctx = new SpringCamelContext(applicationContext);

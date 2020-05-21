@@ -132,7 +132,7 @@ public class ActivityTracingWithSplitTest {
     }
 
     @After
-    public void after() throws Exception {
+    public void after() {
         context.stop();
     }
 
@@ -147,7 +147,7 @@ public class ActivityTracingWithSplitTest {
     }
 
     @Test
-    public void testLoggingWithErrorStep() throws Exception {
+    public void testLoggingWithErrorStep() {
         assertThatExceptionOfType(CamelExecutionException.class)
             .isThrownBy(() -> context.createProducerTemplate().sendBody("direct:start", new String[] {"error"}))
             .withMessageStartingWith("Exception occurred during execution on the exchange: Exchange")

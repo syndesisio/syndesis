@@ -78,7 +78,7 @@ public class ODataReadTests extends AbstractODataRouteTest {
     }
 
     @Override
-    protected ConnectorAction createConnectorAction() throws Exception {
+    protected ConnectorAction createConnectorAction() {
         ConnectorAction odataAction = new ConnectorAction.Builder()
             .description("Read resource entities from the server subject to keyPredicates")
              .id("io.syndesis:" + Methods.READ.actionIdentifierRoot() + HYPHEN + TO)
