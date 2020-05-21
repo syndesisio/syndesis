@@ -23,8 +23,7 @@ import {
 import {
   getOdataUrl,
   getPublishingDetails,
-  getStateLabelStyle,
-  getStateLabelText,
+  getPublishStateLabelInfo,
   isPublishStep,
 } from '../shared/VirtualizationUtils';
 
@@ -191,17 +190,15 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                         const isProgressWithLink = isPublishStep(
                           publishingDetails,
                         );
-                        const labelType = getStateLabelStyle(publishingDetails);
-                        const publishStateText = getStateLabelText(
-                          publishingDetails
-                        );
+                        const publishStateInfo = getPublishStateLabelInfo(publishingDetails);
 
                         return (
                           <VirtualizationListItem
                             key={index}
                             isProgressWithLink={isProgressWithLink}
-                            i18nPublishState={publishStateText}
-                            labelType={labelType}
+                            i18nPublishState={publishStateInfo.text}
+                            i18nPublishStateMessage={publishStateInfo.message}
+                            labelType={publishStateInfo.style}
                             detailsPageLink={resolvers.virtualizations.views.root(
                               { virtualization },
                             )}

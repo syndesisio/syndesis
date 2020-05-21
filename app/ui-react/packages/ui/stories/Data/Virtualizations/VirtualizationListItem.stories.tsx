@@ -59,6 +59,7 @@ stories
             dropdownActions={virtualizationActions}
             isProgressWithLink={true}
             i18nPublishState={'Unpublishing...'}
+            i18nPublishStateMessage={'The virtualization is stopping'}
             labelType={'default'}
             publishingStepText={'Building'}
             virtualizationName={virtualizationName}
@@ -90,6 +91,7 @@ stories
           dropdownActions={virtualizationActions}
           isProgressWithLink={false}
           i18nPublishState={publishedText}
+          i18nPublishStateMessage={'The virtualization is running'}
           labelType={'primary'}
           virtualizationName={virtualizationName}
           virtualizationDescription={virtualizationDescription}

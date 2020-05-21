@@ -9,6 +9,10 @@
     margin-right: 15px;
 }
 
+.publish-status-with-progress_Label:hover {
+    cursor: pointer;
+}
+  
 .publish-status-with-progress-ok-icon {
     margin-right: 10px;
     margin-top: 10px;
