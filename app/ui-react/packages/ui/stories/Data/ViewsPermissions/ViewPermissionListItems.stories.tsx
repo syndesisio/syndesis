@@ -39,7 +39,7 @@ const tablePrivileges = [
     viewDefinitionIds: ['1'],
   }
 ];
-const map = new Map<string,string>([['1', 'view1'],['2', 'view2'],['3', 'view3']]);
+const map = new Map<string,string>([['1', 'View_1'],['2', 'view2'],['3', 'view3']]);
 
 const sampleViewPermissionListItemsNotes =
   '- Verify one view item is shown\n' +
@@ -47,8 +47,12 @@ const sampleViewPermissionListItemsNotes =
   '- Verify click "2 more.." link displays all 6 roles"\n' +
   '- Verify click "Show less" link will change from 6 roles displayed back to 4 roles displayed';
 
+const sampleViewPermissionListItemsNotes2 =
+  '- Verify one view item is shown\n' +
+  '- Verify the view has no Permission \n';
+
 stories.add(
-  'sample ViewPermissionListItems',
+  'View with applied Permission',
   () => (
     <PageSection>
       <ViewPermissionListItems
@@ -62,7 +66,7 @@ stories.add(
         // i18nAddNewRole={t('addNewRole')}
         itemSelected={map}
         viewId={'1'}
-        viewName={'view1'}
+        viewName={'View_1'}
         i18nPermissionNotSet={'permission not set'}
         i18nShowLess={'Show less'}
         viewRolePermissionList={tablePrivileges}
@@ -73,4 +77,31 @@ stories.add(
     </PageSection>
   ),
   { notes: sampleViewPermissionListItemsNotes }
+)
+.add(
+  'View with no Permission',
+  () => (
+    <PageSection>
+      <ViewPermissionListItems
+        key={0}
+        // i18nSelect={t('shared:Select')}
+        // i18nInsert={t('shared:Insert')}
+        // i18nUpdate={t('shared:Update')}
+        // i18nDelete={t('shared:Delete')}
+        // i18nAllAccess={t('allAccess')}
+        // i18nRole={t('permissionRole')}
+        // i18nAddNewRole={t('addNewRole')}
+        itemSelected={map}
+        viewId={'1'}
+        viewName={'View_1'}
+        i18nPermissionNotSet={'permission not set'}
+        i18nShowLess={'Show less'}
+        viewRolePermissionList={[]}
+        // status={dvStatus.attributes}
+        onSelectedViewChange={action(onSelectedViewChangeActionText)}
+        // dvRoles={dvRoles}
+      />
+    </PageSection>
+  ),
+  { notes: sampleViewPermissionListItemsNotes2 }
 );
