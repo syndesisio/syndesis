@@ -190,7 +190,6 @@ public final class RestDataVirtualization {
 
     /**
      * If there is nothing defined in this data virtualization
-     * @return
      */
     public boolean isEmpty() {
         return empty;

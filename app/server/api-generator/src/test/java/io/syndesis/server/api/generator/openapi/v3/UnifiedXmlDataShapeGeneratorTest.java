@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -63,7 +62,7 @@ public class UnifiedXmlDataShapeGeneratorTest {
     @Test
     public void shouldCreateArrayFromExamples() throws IOException {
         final Map<String, Oas30Schema> namedPropertyMap = propertyFrom(jsonSchemaSnippet);
-        final Entry<String, Oas30Schema> namedProperty = namedPropertyMap.entrySet().iterator().next();
+        final Map.Entry<String, Oas30Schema> namedProperty = namedPropertyMap.entrySet().iterator().next();
 
         final String propertyName = namedProperty.getKey();
         final Oas30Schema array = namedProperty.getValue();

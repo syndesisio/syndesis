@@ -156,8 +156,6 @@ public class ActionProcessor extends AbstractProcessor {
 
     /**
      * Explicitly add properties that elude reflection implicit strategy
-     * @param element
-     * @param root
      */
     private boolean augmentProperties(ObjectNode root, TypeElement element) throws InvocationTargetException, IllegalAccessException {
         final Elements elements = processingEnv.getElementUtils();
@@ -216,8 +214,6 @@ public class ActionProcessor extends AbstractProcessor {
 
     /**
      * Explicitly add properties that elude reflection implicit strategy
-     * @param root
-     * @param element
      */
     @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
     private void augmentProperties(ObjectNode root, ExecutableElement element) {
@@ -233,8 +229,6 @@ public class ActionProcessor extends AbstractProcessor {
 
     /**
      * Add action properties to the global properties.
-     * @param root
-     * @param element
      */
     private void addActionProperties(ObjectNode root, Element element) throws InvocationTargetException, IllegalAccessException {
 

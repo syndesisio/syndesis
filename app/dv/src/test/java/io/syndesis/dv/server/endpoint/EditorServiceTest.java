@@ -31,7 +31,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.server.ResponseStatusException;
-import org.teiid.adminapi.Model.Type;
+import org.teiid.adminapi.Model;
 import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.adminapi.impl.VDBMetaData;
 
@@ -133,7 +133,7 @@ public class EditorServiceTest {
         ModelMetaData m = new ModelMetaData();
         m.setName("dummy");
         vdb.addModel(m);
-        m.setModelType(Type.VIRTUAL);
+        m.setModelType(Model.Type.VIRTUAL);
         m.addSourceMetadata("DDL", "create view v as select 1");
         if (hidden) {
             m.setVisible(false);

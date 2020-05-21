@@ -40,8 +40,6 @@ public final class Messages {
     /**
      * Get message string
      *
-     * @param key
-     *
      * @return i18n string
      */
     @SuppressWarnings("PMD.AvoidCatchingNPE")
@@ -70,9 +68,6 @@ public final class Messages {
 
     /**
      * Get message string with parameters
-     *
-     * @param key
-     * @param parameters
      *
      * @return i18n string
      */

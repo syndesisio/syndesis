@@ -95,7 +95,6 @@ public interface MetadataInstance {
         JDBC;
 
         /**
-         * @param type
          * @return the {@link ConnectivityType} for the given type
          */
         public static ConnectivityType findType(String type) {
@@ -146,49 +145,36 @@ public interface MetadataInstance {
      * @param offset  an offset of the results to return
      * @param limit   a limit on the number of results to return
      * @return the set of results
-     * @throws KException
      */
     QSResult query(String vdbName, String query, int offset, int limit);
 
     /**
      * @return the collection of deployed vdbs
-     * @throws KException
      */
     Collection<TeiidVdb> getVdbs();
 
     /**
-     * @param vdbDeploymentName
      * @return the deployed vdb
-     * @throws KException
      */
     TeiidVdb getVdb(String vdbDeploymentName);
 
     /**
-     * @param vdbName
-     * @param modelName
      * @return the schema from the given model in the vdb with the given name
-     * @throws KException
      */
     String getSchema(String vdbName, String modelName);
 
     /**
      * Undeploy the dynamic vdb with the given name
-     *
-     * @param name
-     * @throws KException
      */
     void undeployDynamicVdb(String name);
 
     /**
      * @return the collection of data sources
-     * @throws KException
      */
     Collection<? extends TeiidDataSource> getDataSources();
 
     /**
-     * @param sourceName
      * @return the data source with the given name
-     * @throws KException
      */
     TeiidDataSource getDataSource(String sourceName);
 
@@ -200,9 +186,6 @@ public interface MetadataInstance {
      */
     void deleteDataSource(String dsName);
 
-    /**
-     * @param vdb
-     */
     void deploy(VDBMetaData vdb);
 
     Collection<String> getDataSourceNames() throws AdminException;

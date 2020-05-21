@@ -30,11 +30,11 @@ public class NoopVerifierExtensionUploader implements VerifierExtensionUploader 
 
     @Override
     public void uploadToVerifier(Extension extension) {
-        LOGGER.info("Upload %4 extension to verifier", ExtensionActivator.getConnectorIdForExtension(extension));
+        LOGGER.info("Upload {} extension to verifier", ExtensionActivator.getConnectorIdForExtension(extension));
     }
 
     @Override
     public void deleteFromVerifier(Extension extension) {
-        LOGGER.info("Delete %4 extension from verifier", ExtensionActivator.getConnectorIdForExtension(extension));
+        LOGGER.info("Delete {} extension from verifier", ExtensionActivator.getConnectorIdForExtension(extension));
     }
 }

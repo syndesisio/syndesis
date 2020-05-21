@@ -93,7 +93,6 @@ public interface DataAccessObject<T extends WithId<T>> {
     /**
      * Creates or Updates the specified entity.
      * @param entity    The entity.
-     * @return          The previous value or null.
      */
     default void set(T entity) {
         T fetched = fetch(entity.getId().get());

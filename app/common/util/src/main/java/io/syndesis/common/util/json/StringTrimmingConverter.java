@@ -24,13 +24,13 @@ import com.fasterxml.jackson.databind.util.Converter;
  *
  * You can enable it on a String field like:
  * <pre>
- *   @JsonDeserialize(converter = StringTrimmingConverter.class)
+ *  {@literal @}JsonDeserialize(converter = StringTrimmingConverter.class)
  *   String value;
  * </pre>
  *
  * Or on a String array:
  * <pre>
- *   @JsonDeserialize(contentConverter = StringTrimmingConverter.class)
+ *   {@literal @}JsonDeserialize(contentConverter = StringTrimmingConverter.class)
  *   String[] value;
  * </pre>
  */

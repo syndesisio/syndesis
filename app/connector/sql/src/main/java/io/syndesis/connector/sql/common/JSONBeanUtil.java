@@ -110,8 +110,6 @@ public final class JSONBeanUtil {
 
     /**
      * Validate JSON bean for being a proper parameter information object.
-     * @param json
-     * @return
      */
     private static boolean isValidJSONBean(String json) {
         return json != null && !json.isEmpty() && json.trim().startsWith("{") && json.trim().endsWith("}");
@@ -120,7 +118,6 @@ public final class JSONBeanUtil {
     /**
      * Convenience method to convert a Camel Map output to a JSON Bean String.
      *
-     * @param list
      * @return JSON bean String
      */
     @SuppressWarnings("unchecked")
@@ -147,7 +144,6 @@ public final class JSONBeanUtil {
     /**
      * Convenience method to convert a Camel Map output to a JSON Bean String.
      *
-     * @param map
      * @return JSON bean String
      */
     public static String toJSONBean(final Map<String, Object> map) {
@@ -170,8 +166,6 @@ public final class JSONBeanUtil {
     /**
      * Converts Camel Map output representing DB result set to a list of JSON Bean Strings.
      *
-     * @param in
-     * @return
      */
     public static List<String> toJSONBeans(Message in) {
         final List<String> jsonBeans = new ArrayList<>();
@@ -205,7 +199,6 @@ public final class JSONBeanUtil {
     /**
      * Converts Camel Generated Key output to a list of JSON Bean Strings.
      *
-     * @param in
      * @param autoIncrementColumnName the name of the auto increment column name
      * @return List of JSON beans.
      */

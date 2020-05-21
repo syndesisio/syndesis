@@ -33,8 +33,6 @@ public class KuduTable {
 
     /**
      * Specifies the name of the table
-     *
-     * @param name
      */
     public void setName(String name) {
         this.name = name;

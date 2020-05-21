@@ -85,6 +85,7 @@ import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.PAYLO
 /**
  * Parses SOAP WSDL specification.
  */
+@SuppressWarnings("PMD.GodClass")
 public final class SoapApiModelParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(SoapApiModelParser.class);

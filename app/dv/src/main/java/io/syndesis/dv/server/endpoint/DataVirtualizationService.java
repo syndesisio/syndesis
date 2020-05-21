@@ -117,7 +117,7 @@ import io.syndesis.dv.utils.StringUtils;
 @RequestMapping(value = V1Constants.APP_PATH
         + StringConstants.FS + V1Constants.VIRTUALIZATIONS_SEGMENT)
 @Api(tags = { V1Constants.VIRTUALIZATIONS_SEGMENT })
-@SuppressWarnings("PMD.ExcessiveClassLength") // TODO refactor
+@SuppressWarnings({"PMD.ExcessiveClassLength", "PMD.GodClass"}) // TODO refactor
 public final class DataVirtualizationService extends DvService {
 
     private static final String DV_JSON = "dv.json"; //$NON-NLS-1$
@@ -148,7 +148,6 @@ public final class DataVirtualizationService extends DvService {
     /**
      * Get the virtualizations from the repository
      * @return a JSON document representing all the virtualizations
-     * @throws Exception
      */
     @RequestMapping(method = RequestMethod.GET, produces= { MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation(value = "Return the collection of data services",
@@ -209,7 +208,6 @@ public final class DataVirtualizationService extends DvService {
     /**
      * @param virtualization the name of the virtualization being retrieved (cannot be empty)
      * @return the JSON representation of the virtualization (never <code>null</code>)
-     * @throws Exception
      */
     @RequestMapping(value = V1Constants.VIRTUALIZATION_PLACEHOLDER, method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE })
@@ -251,8 +249,6 @@ public final class DataVirtualizationService extends DvService {
 
     /**
      * Create a new virtualization in the repository
-     *
-     * @throws Exception
      */
     @RequestMapping(method = RequestMethod.POST,
             produces= { MediaType.APPLICATION_JSON_VALUE },
@@ -292,7 +288,6 @@ public final class DataVirtualizationService extends DvService {
      *
      * @param virtualization the name of the virtualization to remove (cannot be <code>null</code>)
      * @return a JSON document representing the results of the removal
-     * @throws Exception
      */
     @RequestMapping(value = V1Constants.VIRTUALIZATION_PLACEHOLDER, method = RequestMethod.DELETE, produces = {
             MediaType.APPLICATION_JSON_VALUE })
@@ -423,7 +418,6 @@ public final class DataVirtualizationService extends DvService {
 
     /**
      * Get OData hostname from the deployment status
-     * @param status
      * @return the odata hostname
      */
     private static String getOdataHost(final DeploymentStatus status) {
@@ -445,7 +439,6 @@ public final class DataVirtualizationService extends DvService {
      * Update the specified virtualization from the repository
      * @param virtualization the virtualization name (cannot be empty)
      * @return a JSON representation of the new connection (never <code>null</code>)
-     * @throws Exception
      */
     @RequestMapping(value = StringConstants.FS + V1Constants.VIRTUALIZATION_PLACEHOLDER, method = RequestMethod.PUT, produces = {
             MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
@@ -485,9 +478,6 @@ public final class DataVirtualizationService extends DvService {
 
     /**
      * Export the virtualization to a zip file
-     * @param virtualization
-     * @return
-     * @throws Exception
      */
     @RequestMapping(value = {VIRTUALIZATION_PLACEHOLDER + StringConstants.FS + "export",
             VIRTUALIZATION_PLACEHOLDER + StringConstants.FS + "export" + StringConstants.FS + REVISION_PLACEHOLDER}, method = RequestMethod.GET, produces = {
@@ -535,10 +525,6 @@ public final class DataVirtualizationService extends DvService {
 
     /**
      * Create an export of the current workspace.  Optionally including the full vdb.
-     * @param dv
-     * @param theVdb
-     * @return
-     * @throws KException
      */
     private StreamingResponseBody createExportStream(DataVirtualization dv, VDBMetaData theVdb, Long revision)
             {
@@ -608,10 +594,6 @@ public final class DataVirtualizationService extends DvService {
 
     /**
      * Import a virtualization from a zip file
-     * @param virtualization
-     * @param file
-     * @return
-     * @throws IOException
      */
     @PostMapping()
     @ApiOperation(value = "Import a single data virtualization", response = StatusObject.class)
@@ -715,7 +697,6 @@ public final class DataVirtualizationService extends DvService {
     /**
      * Get all view editor states from the user's profile
      * @return a JSON document representing the view editor states in the user profile (never <code>null</code>)
-     * @throws Exception
      */
     @RequestMapping( value = V1Constants.VIRTUALIZATION_PLACEHOLDER + StringConstants.FS + VIEWS_SEGMENT, method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE })
@@ -930,7 +911,6 @@ public final class DataVirtualizationService extends DvService {
     /**
      * Get the editions from the repository
      * @return a JSON document representing all the editions
-     * @throws Exception
      */
     @GetMapping(value = V1Constants.PUBLISH + StringConstants.FS
             + VIRTUALIZATION_PLACEHOLDER, produces = {
@@ -949,10 +929,6 @@ public final class DataVirtualizationService extends DvService {
 
     /**
      * Get a single edition
-     * @param virtualization
-     * @param revision
-     * @return
-     * @throws Exception
      *
      * TODO: there's not yet more detail here than what is in the list
      */
@@ -979,10 +955,6 @@ public final class DataVirtualizationService extends DvService {
 
     /**
      * Start (re-publish) the given revision
-     * @param virtualization
-     * @param revision
-     * @return
-     * @throws Exception
      */
     @PostMapping(value = V1Constants.PUBLISH + StringConstants.FS + VIRTUALIZATION_PLACEHOLDER
             + StringConstants.FS + REVISION_PLACEHOLDER + StringConstants.FS + START, produces = {
@@ -1059,9 +1031,6 @@ public final class DataVirtualizationService extends DvService {
 
     /**
      * Get the published virtualization metrics
-     * @param virtualization
-     * @return
-     * @throws IOException
      */
     @RequestMapping(value = {VIRTUALIZATION_PLACEHOLDER + StringConstants.FS + "metrics"}, method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE })

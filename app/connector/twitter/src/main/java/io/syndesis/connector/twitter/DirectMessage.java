@@ -15,7 +15,7 @@
  */
 package io.syndesis.connector.twitter;
 
-import java.util.Date;
+import java.time.Instant;
 
 public class DirectMessage {
 
@@ -23,7 +23,7 @@ public class DirectMessage {
     private String text;
     private long senderId;
     private long recipientId;
-    private Date createdAt;
+    private Instant createdAt;
 
     public long getId() {
         return id;
@@ -57,14 +57,12 @@ public class DirectMessage {
         this.recipientId = recipientId;
     }
 
-    public Date getCreatedAt() {
-        // do not expose the internal representation
-        return new Date(createdAt.getTime());
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        // do not expose the internal representation
-        this.createdAt = new Date(createdAt.getTime());
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override

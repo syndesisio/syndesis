@@ -56,6 +56,7 @@ public class VerifierExceptionMapper implements ExceptionMapper<Throwable> {
     }
 
     @Override
+    @SuppressWarnings("JdkObsolete")
     public Response toResponse(final Throwable exception) {
         // the proxy @Context would provide would not let us access the wrapped
         // request

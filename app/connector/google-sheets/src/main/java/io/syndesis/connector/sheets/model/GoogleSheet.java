@@ -28,8 +28,6 @@ public class GoogleSheet {
 
     /**
      * Specifies the index.
-     *
-     * @param index
      */
     public void setIndex(Integer index) {
         this.index = index;
@@ -41,8 +39,6 @@ public class GoogleSheet {
 
     /**
      * Specifies the sheetId.
-     *
-     * @param sheetId
      */
     public void setSheetId(Integer sheetId) {
         this.sheetId = sheetId;
@@ -54,8 +50,6 @@ public class GoogleSheet {
 
     /**
      * Specifies the title.
-     *
-     * @param title
      */
     public void setTitle(String title) {
         this.title = title;

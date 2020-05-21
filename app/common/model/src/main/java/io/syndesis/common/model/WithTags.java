@@ -15,7 +15,7 @@
  */
 package io.syndesis.common.model;
 
-import java.util.SortedSet;
+import java.util.NavigableSet;
 
 import io.syndesis.common.util.immutable.SkipNulls;
 import io.syndesis.common.util.json.StringTrimmingConverter;
@@ -30,6 +30,6 @@ public interface WithTags {
     @JsonDeserialize(contentConverter = StringTrimmingConverter.class)
     @Value.NaturalOrder
     @SkipNulls
-    SortedSet<String> getTags();
+    NavigableSet<String> getTags();
 
 }

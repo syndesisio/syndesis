@@ -16,7 +16,6 @@
 package io.syndesis.common.model.filter;
 
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.apache.camel.language.simple.types.BinaryOperatorType;
 import org.junit.Test;
@@ -27,14 +26,14 @@ public class OpTest {
 
     @Test
     public void allOperationsShouldBeKnownCamelSimpleOperations() {
-        assertThat(Stream.of(Op.DEFAULT_OPTS)
+        assertThat(Op.DEFAULT_OPTS.stream()
             .map(Op::getOperator))
                 .allSatisfy(BinaryOperatorType::asOperator);
     }
 
     @Test
     public void allOperationsShouldHaveDistinctBinaryOperator() {
-        assertThat(Stream.of(Op.DEFAULT_OPTS)
+        assertThat(Op.DEFAULT_OPTS.stream()
             .map(Op::getOperator)
             .collect(Collectors.toSet()))
                 .hasSameSizeAs(Op.DEFAULT_OPTS);
@@ -42,7 +41,7 @@ public class OpTest {
 
     @Test
     public void allOperationsShouldHaveDistinctLabels() {
-        assertThat(Stream.of(Op.DEFAULT_OPTS)
+        assertThat(Op.DEFAULT_OPTS.stream()
             .map(Op::getLabel)
             .collect(Collectors.toSet()))
                 .hasSameSizeAs(Op.DEFAULT_OPTS);

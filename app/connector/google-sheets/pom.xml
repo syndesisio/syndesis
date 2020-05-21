@@ -155,6 +155,11 @@
       <artifactId>common-model</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
+      <classifier>annotations</classifier>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.camel</groupId>
@@ -259,6 +264,11 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.activation</groupId>
+      <artifactId>jakarta.activation</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

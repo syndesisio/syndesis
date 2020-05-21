@@ -424,9 +424,10 @@ public class PublicApiHandlerTest {
             .thenReturn(Optional.of(env2));
         when(dataManager.fetch(Environment.class, env2.getId().get())).thenReturn(env2);
 
+        @SuppressWarnings("JdkObsolete") final Date epoh = new Date(0);
         final ContinuousDeliveryEnvironment existingContinuousDeliveryEntry = new ContinuousDeliveryEnvironment.Builder()
             .environmentId(env1.getId().get())
-            .lastTaggedAt(new Date(0))
+            .lastTaggedAt(epoh)
             .build();
         final Integration integration = new Integration.Builder()
             .putContinuousDeliveryState(env1.getId().get(), existingContinuousDeliveryEntry)

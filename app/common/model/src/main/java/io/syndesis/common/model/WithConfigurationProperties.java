@@ -16,7 +16,6 @@
 package io.syndesis.common.model;
 
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -34,22 +33,22 @@ public interface WithConfigurationProperties {
     Map<String, ConfigurationProperty> getProperties();
 
     @JsonIgnore
-    default boolean isEndpointProperty(Entry<String, String> e) {
+    default boolean isEndpointProperty(Map.Entry<String, String> e) {
         return this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && !this.getProperties().get(e.getKey()).componentProperty();
     }
 
     @JsonIgnore
-    default Predicate<Entry<String, String>> isEndpointProperty() {
+    default Predicate<Map.Entry<String, String>> isEndpointProperty() {
         return e -> this.isEndpointProperty(e);
     }
 
     @JsonIgnore
-    default boolean isComponentProperty(Entry<String, String> e) {
+    default boolean isComponentProperty(Map.Entry<String, String> e) {
         return this.getProperties() != null && this.getProperties().containsKey(e.getKey()) && this.getProperties().get(e.getKey()).componentProperty();
     }
 
     @JsonIgnore
-    default Predicate<Entry<String, String>> isComponentProperty() {
+    default Predicate<Map.Entry<String, String>> isComponentProperty() {
         return e -> this.isComponentProperty(e);
     }
 
@@ -63,42 +62,42 @@ public interface WithConfigurationProperties {
     }
 
     @JsonIgnore
-    default boolean isSecret(Entry<String, String> e) {
+    default boolean isSecret(Map.Entry<String, String> e) {
         return this.isSecret(e.getKey());
     }
 
     @JsonIgnore
-    default Predicate<Entry<String, String>> isSecret() {
+    default Predicate<Map.Entry<String, String>> isSecret() {
         return e -> this.isSecret(e.getKey());
     }
 
     @JsonIgnore
-    default boolean isSecretEndpointProperty(Entry<String, String> e) {
+    default boolean isSecretEndpointProperty(Map.Entry<String, String> e) {
         return this.isEndpointProperty(e) && this.isSecret(e);
     }
 
     @JsonIgnore
-    default Predicate<Entry<String, String>> isSecretEndpointProperty() {
+    default Predicate<Map.Entry<String, String>> isSecretEndpointProperty() {
         return e -> isSecretEndpointProperty(e);
     }
 
     @JsonIgnore
-    default boolean isSecretComponentProperty(Entry<String, String> e) {
+    default boolean isSecretComponentProperty(Map.Entry<String, String> e) {
         return this.isComponentProperty(e) && this.isSecret(e);
     }
 
     @JsonIgnore
-    default Predicate<Entry<String, String>> isSecretComponentProperty() {
+    default Predicate<Map.Entry<String, String>> isSecretComponentProperty() {
         return e -> this.isSecretComponentProperty(e);
     }
 
     @JsonIgnore
-    default boolean isSecretOrComponentProperty(Entry<String, String> e) {
+    default boolean isSecretOrComponentProperty(Map.Entry<String, String> e) {
         return this.isComponentProperty(e) || this.isSecret(e);
     }
 
     @JsonIgnore
-    default Predicate<Entry<String, String>> isSecretOrComponentProperty() {
+    default Predicate<Map.Entry<String, String>> isSecretOrComponentProperty() {
         return e -> isSecretOrComponentProperty(e);
     }
 
@@ -112,32 +111,32 @@ public interface WithConfigurationProperties {
     }
 
     @JsonIgnore
-    default boolean isRaw(Entry<String, String> e) {
+    default boolean isRaw(Map.Entry<String, String> e) {
         return this.isRaw(e.getKey());
     }
 
     @JsonIgnore
-    default Predicate<Entry<String, String>> isRaw() {
+    default Predicate<Map.Entry<String, String>> isRaw() {
         return e -> this.isRaw(e.getKey());
     }
 
     @JsonIgnore
-    default boolean isRawEndpointProperty(Entry<String, String> e) {
+    default boolean isRawEndpointProperty(Map.Entry<String, String> e) {
         return this.isEndpointProperty(e) && this.isRaw(e);
     }
 
     @JsonIgnore
-    default Predicate<Entry<String, String>> isRawEndpointProperty() {
+    default Predicate<Map.Entry<String, String>> isRawEndpointProperty() {
         return e -> isRawEndpointProperty(e);
     }
 
     @JsonIgnore
-    default boolean isRawComponentProperty(Entry<String, String> e) {
+    default boolean isRawComponentProperty(Map.Entry<String, String> e) {
         return this.isComponentProperty(e) && this.isRaw(e);
     }
 
     @JsonIgnore
-    default Predicate<Entry<String, String>> isRawComponentProperty() {
+    default Predicate<Map.Entry<String, String>> isRawComponentProperty() {
         return e -> this.isRawComponentProperty(e);
     }
 
@@ -151,9 +150,9 @@ public interface WithConfigurationProperties {
      * @param valueConverter    The {@link Function} to apply to values.
      * @return                  A map with the properties that match the {@link Predicate}, and converted values.
      */
-    default Map<String, String> filterProperties(Map<String, String> properties, Predicate<Entry<String, String>> predicate,
-                                                 Function<Entry<String, String>, String> keyConverter,
-                                                 Function<Entry<String, String>, String> valueConverter) {
+    default Map<String, String> filterProperties(Map<String, String> properties, Predicate<Map.Entry<String, String>> predicate,
+                                                 Function<Map.Entry<String, String>, String> keyConverter,
+                                                 Function<Map.Entry<String, String>, String> valueConverter) {
         return properties.entrySet()
             .stream()
             .filter(predicate)
@@ -168,7 +167,7 @@ public interface WithConfigurationProperties {
 
      * @return                  A map with the properties that match the {@link Predicate}, and converted values.
      */
-    default Map<String, String> filterProperties(Map<String, String> properties, Predicate<Entry<String, String>> predicate) {
+    default Map<String, String> filterProperties(Map<String, String> properties, Predicate<Map.Entry<String, String>> predicate) {
         return filterProperties(properties, predicate, Map.Entry::getKey, Map.Entry::getValue);
     }
 
@@ -203,7 +202,7 @@ public interface WithConfigurationProperties {
      * @param valueConverter    A {@link Function} that is applies to each {@link Entry} of the configuration.
      * @return                  A map with just the sensitive data.
      */
-    default Map<String, String> filterSecrets(Map<String, String> properties, Function<Entry<String, String>, String> valueConverter) {
+    default Map<String, String> filterSecrets(Map<String, String> properties, Function<Map.Entry<String, String>, String> valueConverter) {
         return properties.entrySet()
             .stream()
             .filter(isSecret())
@@ -216,7 +215,7 @@ public interface WithConfigurationProperties {
      * @param tag               The looked after tag
      * @return                  First property tagged with the supplied tag, if any
      */
-    default Optional<Entry<String, ConfigurationProperty>> propertyEntryTaggedWith(final String tag) {
+    default Optional<Map.Entry<String, ConfigurationProperty>> propertyEntryTaggedWith(final String tag) {
         return getProperties().entrySet().stream().filter(entry -> entry.getValue().getTags().contains(tag))
             .findFirst();
     }

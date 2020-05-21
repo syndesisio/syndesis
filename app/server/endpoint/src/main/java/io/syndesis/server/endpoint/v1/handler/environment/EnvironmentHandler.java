@@ -281,7 +281,7 @@ public class EnvironmentHandler extends BaseHandler {
         final Integration integration = getIntegration(integrationId);
         final HashMap<String, ContinuousDeliveryEnvironment> deliveryState = new HashMap<>(integration.getContinuousDeliveryState());
 
-        Date lastTaggedAt = new Date();
+        @SuppressWarnings("JdkObsolete") Date lastTaggedAt = new Date();
         for (String envId : ids) {
             // create or update tag
             deliveryState.put(envId, createOrUpdateTag(deliveryState, envId, lastTaggedAt));

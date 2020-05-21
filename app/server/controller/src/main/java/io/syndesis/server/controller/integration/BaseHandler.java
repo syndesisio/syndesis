@@ -63,24 +63,28 @@ public class BaseHandler {
         return validator;
     }
 
+    @SuppressWarnings("PMD.InvalidLogMessageFormat")
     protected void logInfo(IntegrationDeployment integrationDeployment, String format, Object ... args) {
         if (log.isInfoEnabled()) {
             log.info(getLabel(integrationDeployment) + ": " + format, args);
         }
     }
 
+    @SuppressWarnings("PMD.InvalidLogMessageFormat")
     protected void logInfo(Integration integration, String format, Object ... args) {
         if (log.isInfoEnabled()) {
             log.info(getLabel(integration) + ": " + format, args);
         }
     }
 
+    @SuppressWarnings("PMD.InvalidLogMessageFormat")
     protected void logError(Integration integration, String format, Object ... args) {
         if (log.isErrorEnabled()) {
             log.error(getLabel(integration) + ": " + format, args);
         }
     }
 
+    @SuppressWarnings("PMD.InvalidLogMessageFormat")
     protected void logError(IntegrationDeployment integrationDeployment, String format, Object ... args) {
         if (log.isErrorEnabled()) {
             log.error(getLabel(integrationDeployment) + ": " + format, args);

@@ -72,13 +72,6 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
 
     /**
      * Uses Spring Boot Maven build to run the integration project. Much faster as S2i build because we can directly use the project sources.
-     *
-     * @param imageTag
-     * @param integrationName
-     * @param projectDir
-     * @param envProperties
-     * @param runCommand
-     * @param deleteOnExit
      */
     protected SyndesisIntegrationRuntimeContainer(String imageTag, String integrationName, Path projectDir,
                                                 Map<String, String> envProperties, String runCommand, boolean deleteOnExit) {
@@ -98,12 +91,6 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
 
     /**
      * Uses project fat jar to run integration. Runs the Java application with run script provided by the Syndesis S2i image.
-     * @param imageTag
-     * @param integrationName
-     * @param projectJar
-     * @param envProperties
-     * @param runCommand
-     * @param deleteOnExit
      */
     protected SyndesisIntegrationRuntimeContainer(String imageTag, String integrationName, Path projectDir, File projectJar,
                                                 Map<String, String> envProperties, String runCommand, boolean deleteOnExit) {

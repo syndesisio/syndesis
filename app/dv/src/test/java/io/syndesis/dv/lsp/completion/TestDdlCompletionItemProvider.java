@@ -31,13 +31,12 @@ public class TestDdlCompletionItemProvider {
 
     private final DdlCompletionProvider itemProvider = new DdlCompletionProvider();
 
-    /*
-    * The tokenImage[...] call is returning strings wrapped in double-quotes
-    * 
-    * Need to return a simple string
-    * @param tokenImageString string
-    * @return string without double quotes
-    */
+    /**
+     * The tokenImage[...] call is returning strings wrapped in double-quotes
+     * 
+     * Need to return a simple string
+     * @return string without double quotes
+     */
     public static String getLabel(int keywordId) {
         String tokenImageStr = SQLParserConstants.tokenImage[keywordId];
         return tokenImageStr.substring(1, tokenImageStr.length()-1);

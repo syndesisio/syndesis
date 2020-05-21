@@ -126,11 +126,13 @@ public final class ErrorCategory {
     public static boolean isCategorized(Throwable exception) {
         return ErrorCategory.RUNTIME_EXCEPTION_CATEGORY_MAP.containsKey(exception.getClass().getName());
     }
+
     /**
+     * Determines the error category for the given exception and subset of categories.
      *
-     * @param exception
-     * @param integrationCategories
-     * @return
+     * @param exception needed to be categorized
+     * @param integrationCategories subset of categories to categorize the exception to
+     * @return category name
      */
     public static String getCategory(Throwable exception, Set<String> integrationCategories) {
         if (isCategorized(exception)) {

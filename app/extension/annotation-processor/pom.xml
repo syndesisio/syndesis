@@ -27,6 +27,22 @@
   <artifactId>extension-annotation-processor</artifactId>
   <name>Extension :: Annotation Processor</name>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.google.testing.compile</groupId>
+        <artifactId>compile-testing</artifactId>
+        <version>0.12</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.sun</groupId>
+            <artifactId>tools</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -75,7 +91,6 @@
     <dependency>
       <groupId>com.google.testing.compile</groupId>
       <artifactId>compile-testing</artifactId>
-      <version>0.12</version>
       <scope>test</scope>
     </dependency>
     <dependency>

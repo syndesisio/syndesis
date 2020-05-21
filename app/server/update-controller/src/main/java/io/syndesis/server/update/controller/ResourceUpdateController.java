@@ -94,7 +94,7 @@ public class ResourceUpdateController {
 
     // FutureReturnValueIgnored: there should not be any exceptions from logging
     // PMD.InvalidSlf4jMessageFormat: https://github.com/pmd/pmd/issues/939
-    @SuppressWarnings({"FutureReturnValueIgnored", "PMD.InvalidSlf4jMessageFormat"})
+    @SuppressWarnings({"FutureReturnValueIgnored", "PMD.InvalidLogMessageFormat"})
     void onEvent(final String event, final String data) {
         onEventInternal(event, data)
             .whenComplete((x, t) -> {
@@ -135,7 +135,7 @@ public class ResourceUpdateController {
         return done;
     }
 
-    @SuppressWarnings("FutureReturnValueIgnored")
+    @SuppressWarnings({"FutureReturnValueIgnored", "PMD.InvalidLogMessageFormat"})
     final Supplier<ScheduledExecutorService> schedulerConfiguredFrom(final ResourceUpdateConfiguration configuration) {
         return () -> {
             final ScheduledExecutorService configuredScheduler = Executors.newScheduledThreadPool(1,

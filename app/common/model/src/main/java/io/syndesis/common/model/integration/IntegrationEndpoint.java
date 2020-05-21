@@ -18,7 +18,6 @@ package io.syndesis.common.model.integration;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.WithKind;
 import org.immutables.value.Value;
 
 import java.util.Optional;
@@ -26,7 +25,7 @@ import java.util.Optional;
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationEndpoint.Builder.class)
 @SuppressWarnings("immutables")
-public interface IntegrationEndpoint extends WithId<IntegrationEndpoint>, WithKind  {
+public interface IntegrationEndpoint extends WithId<IntegrationEndpoint>  {
 
     @Override
     default Kind getKind() {

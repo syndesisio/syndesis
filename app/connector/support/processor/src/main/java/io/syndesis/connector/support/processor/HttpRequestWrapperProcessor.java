@@ -33,6 +33,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 public class HttpRequestWrapperProcessor implements Processor {
     private final Set<String> parameters;
 
@@ -43,6 +45,7 @@ public class HttpRequestWrapperProcessor implements Processor {
     }
 
     @Override
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE") // https://github.com/spotbugs/spotbugs/issues/259
     public void process(Exchange exchange) throws Exception {
         final Message message = exchange.getIn();
         final Object body = message.getBody();

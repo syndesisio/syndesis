@@ -53,7 +53,7 @@ import org.apache.maven.project.MavenProject;
  *
  * Currently it supports only xml schemas with .xsd extension.
  *
- * It is possible to provide resourcesProcessorClass, which points to a class implementing BiConsumer<Path, Path>.
+ * It is possible to provide resourcesProcessorClass, which points to a class implementing BiConsumer&lt;Path, Path&gt;.
  * It can implement any processing on resources before running inspections and accepts input and output directories.
  * When the class is provided within the same project, the plugin must be run no sooner than in the process-classes
  * phase so that the class is available on the classpath.

@@ -39,8 +39,6 @@ public abstract class AbstractGoogleSheetsCustomizerTestSupport extends CamelTes
 
     /**
      * Gets the test component that is about to be customized.
-     *
-     * @return
      */
     public ComponentProxyComponent getComponent() {
         return component;
@@ -48,8 +46,6 @@ public abstract class AbstractGoogleSheetsCustomizerTestSupport extends CamelTes
 
     /**
      * Gets the test spreadsheetId.
-     *
-     * @return
      */
     public String getSpreadsheetId() {
         return spreadsheetId;

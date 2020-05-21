@@ -16,7 +16,7 @@
 package io.syndesis.server.inspector;
 
 import java.io.IOException;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.Optional;
 
 import io.syndesis.common.util.json.JsonUtils;
@@ -60,7 +60,7 @@ public final class SpecificationClassInspector extends DataMapperBaseInspector<J
     }
 
     private static JsonNode findClassNode(final String fullyQualifiedName, final JsonNode root) {
-        for (final Entry<String, JsonNode> pair : (Iterable<Entry<String, JsonNode>>) root::fields) {
+        for (final Map.Entry<String, JsonNode> pair : (Iterable<Map.Entry<String, JsonNode>>) root::fields) {
             final String fieldName = pair.getKey();
             final JsonNode value = pair.getValue();
 

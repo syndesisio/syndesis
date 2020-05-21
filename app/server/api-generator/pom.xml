@@ -98,8 +98,14 @@
     </dependency>
 
     <dependency>
+      <groupId>jakarta.jws</groupId>
+      <artifactId>jakarta.jws-api</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
+      <classifier>annotations</classifier>
     </dependency>
 
     <dependency>

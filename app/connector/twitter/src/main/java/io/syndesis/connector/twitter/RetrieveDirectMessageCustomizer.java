@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.twitter;
 
+import java.time.Instant;
 import java.util.Map;
 
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
@@ -29,7 +30,9 @@ public class RetrieveDirectMessageCustomizer implements ComponentProxyCustomizer
             // wrapper for twitter4j.DirectMessage to suppress deprecated fields on atlas map step,
             // that can lead to mapping errors
             DirectMessage message = new DirectMessage();
-            message.setCreatedAt(twitterMessage.getCreatedAt());
+            @SuppressWarnings("JdkObsolete")
+            final Instant createdAt = twitterMessage.getCreatedAt().toInstant();
+            message.setCreatedAt(createdAt);
             message.setId(twitterMessage.getId());
             message.setRecipientId(twitterMessage.getRecipientId());
             message.setSenderId(twitterMessage.getSenderId());

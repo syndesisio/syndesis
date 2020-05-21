@@ -39,12 +39,20 @@ public final class IOStreams {
     }
 
     public static byte[] readBytes(InputStream is) throws IOException {
+        if (is == null) {
+            return null;
+        }
+
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         copy(is, os);
         return os.toByteArray();
     }
 
     public static String readText(InputStream is) throws IOException {
+        if (is == null) {
+            return null;
+        }
+
         return utf8(readBytes(is));
     }
 

@@ -100,10 +100,6 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
 
     /**
      * For each Kafka container definition found, process it.
-     *
-     * @param brokers
-     * @param client
-     * @param crd
      */
     private static void processKafkaCustomResourceDefinition(List<PropertyPair> brokers, KubernetesClient client, CustomResourceDefinition crd) {
         KafkaResourceList list = client.customResources(crd,
@@ -119,9 +115,6 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
     /**
      * For each Kafka resource found on Kubernetes, extract the listeners and
      * add them to the brokers list.
-     *
-     * @param brokers
-     * @param item
      */
     private static void processKafkaResource(List<PropertyPair> brokers, Kafka item) {
         //Extract an identifier of this broker

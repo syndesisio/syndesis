@@ -93,7 +93,7 @@ public class UserHandler extends BaseHandler implements Lister<User>, Getter<Use
     /**
      * Counts active integrations (in DB) of the owner of the specified integration.
      *
-     * @param deployment The specified IntegrationDeployment.
+     * @param username The specified user
      * @return The number of integrations (excluding the current).
      */
     private int countActiveIntegrations(String username) {

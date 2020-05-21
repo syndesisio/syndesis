@@ -51,9 +51,6 @@ public final class FilterUtil {
 
     /**
      * Check whether the filter contains any parameter or is a static one
-     *
-     * @param filter
-     * @return
      */
     public static boolean hasAnyParameter(String filter) {
         return filter != null && filter.contains(":#");
@@ -64,7 +61,6 @@ public final class FilterUtil {
      *
      * @param filter an expression containing :#variable parameters
      * @param jsonMessage a message formatted as JSON
-     * @return
      */
     public static String merge(String filter, String jsonMessage) {
         if (filter == null){

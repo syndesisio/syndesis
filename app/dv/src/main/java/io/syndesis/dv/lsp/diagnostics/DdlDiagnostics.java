@@ -45,10 +45,6 @@ public class DdlDiagnostics {
 
     /**
      * Do basic validation to check the no XML valid.
-     *
-     * @param ddlDocument
-     * @param diagnostics
-     * @throws BadLocationException
      */
     private static void doBasicDiagnostics(TextDocumentItem ddlDocument, List<Diagnostic> diagnostics)
             throws BadLocationException {

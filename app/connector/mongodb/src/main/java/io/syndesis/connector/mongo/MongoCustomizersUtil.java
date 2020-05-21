@@ -39,8 +39,6 @@ public final class MongoCustomizersUtil {
     /**
      * Used to convert any result MongoOperation (either {@link DeleteResult} or {@link UpdateResult}
      * to a {@link Long}
-     *
-     * @param exchange
      */
     static void convertMongoResultToLong(Exchange exchange) {
         Message in = exchange.getIn();
@@ -57,8 +55,6 @@ public final class MongoCustomizersUtil {
 
     /**
      * Used to convert any {@link Document} object to Json text list
-     *
-     * @param exchange
      */
     static void convertMongoDocumentsToJsonTextList(Exchange exchange) {
         List<String> convertedToJson = new ArrayList<>();
@@ -79,8 +75,6 @@ public final class MongoCustomizersUtil {
     /**
      * Utility method used to replace the adminDB parameter if it was not provided
      * by user
-     *
-     * @param params
      */
     public static void replaceAdminDBIfMissing(Map<String, Object> params) {
         // Fallback admin database parameter
@@ -93,9 +87,6 @@ public final class MongoCustomizersUtil {
 
     /**
      * Merge the filter expression with body and set the result as the new body
-     *
-     * @param exchange
-     * @param filter
      */
     static void executeFilterComponent(Exchange exchange, String filter) {
         executeFilterComponent(exchange, filter, null);
@@ -103,10 +94,6 @@ public final class MongoCustomizersUtil {
 
     /**
      * Merge the filter expression with body and set the result as an header
-     *
-     * @param exchange
-     * @param filter
-     * @param header
      */
     static void executeFilterComponent(Exchange exchange, String filter, String header) {
         // Merge the filter parameter expression with values coming in the input body

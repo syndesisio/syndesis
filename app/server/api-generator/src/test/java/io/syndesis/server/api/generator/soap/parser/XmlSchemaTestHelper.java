@@ -43,7 +43,7 @@ import static org.assertj.core.api.Assertions.fail;
  */
 public final class XmlSchemaTestHelper {
 
-    protected static final String NAME_ATTRIBUTE = "name";
+    static final String NAME_ATTRIBUTE = "name";
     private static SchemaFactory schemaFactory;
     private static Validator validator;
     private static Validator schemaSetValidator;

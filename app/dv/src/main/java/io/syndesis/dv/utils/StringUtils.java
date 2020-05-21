@@ -34,7 +34,6 @@ public final class StringUtils {
     }
 
     /**
-     * @param throwable
      * @return The stack trace of the given throwable as a string
      */
     public static String exceptionToString(Throwable throwable) {

@@ -61,6 +61,7 @@ class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
     }
 
     @Override
+    @SuppressWarnings("JdkObsolete") // j.u.Matcher accepts only StringBuffer
     protected void parseSymbol(String literal) throws TemplateProcessingException {
         if (vSymbolDeclaration) {
             vOnlySymbols.add(literal);

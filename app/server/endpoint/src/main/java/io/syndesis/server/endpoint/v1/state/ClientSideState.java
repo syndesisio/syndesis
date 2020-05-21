@@ -174,6 +174,7 @@ public final class ClientSideState {
         this.timeout = timeout;
     }
 
+    @SuppressWarnings("JdkObsolete")
     public NewCookie persist(final String key, final String path, final Object value) {
         final Date expiry = Date.from(ZonedDateTime.now(ZoneOffset.UTC).plusSeconds(timeout).toInstant());
         return new NewCookie(key, protect(value), path, null, Cookie.DEFAULT_VERSION, null, timeout, expiry, true, false);

@@ -28,9 +28,6 @@ public class QSRow {
 
     private final List<Object> row = new ArrayList<Object>();
 
-    /**
-     * @param value
-     */
     public void add(Object value) {
         row.add(value);
     }

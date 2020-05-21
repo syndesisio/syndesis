@@ -19,6 +19,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Value.Immutable
 @JsonDeserialize(builder = Op.Builder.class)
@@ -42,13 +45,12 @@ public interface Op extends Serializable {
     Op IN = new Op.Builder().label("in").operator("in").build();
     Op NOT_IN = new Op.Builder().label("not in").operator("not in").build();
 
-    Op[] DEFAULT_OPTS = new Op[] {
+    List<Op> DEFAULT_OPTS = Collections.unmodifiableList(Arrays.asList(
         EQUALS, EQUALS_IGNORE_CASE, NOT_EQUALS,
         LESS_THAN, LESS_THAN_OR_EQUALS, GREATER_THAN, GREATER_THAN_OR_EQUALS,
         CONTAINS, CONTAINS_IGNORE_CASE, NOT_CONTAINS,
         MATCHES, NOT_MATCHES,
-        IN, NOT_IN
-    };
+        IN, NOT_IN));
 
     String getLabel();
 

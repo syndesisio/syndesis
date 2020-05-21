@@ -16,7 +16,7 @@
 package io.syndesis.common.model;
 
 import java.io.IOException;
-import java.util.SortedSet;
+import java.util.NavigableSet;
 import java.util.TreeSet;
 
 import io.syndesis.common.model.integration.Integration;
@@ -32,7 +32,7 @@ public class StringTrimmingConverterTest {
 
     @Test
     public void testTrimming() throws IOException {
-        final SortedSet<String> tags = new TreeSet<>();
+        final NavigableSet<String> tags = new TreeSet<>();
         tags.add("");
         tags.add(" tag");
         tags.add("\tTaggy McTagface\t");

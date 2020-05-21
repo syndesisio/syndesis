@@ -40,7 +40,7 @@ import io.syndesis.server.jsondb.GetOptions;
 import io.syndesis.server.jsondb.JsonDB;
 
 /**
- * Implements a DataAccessObject using the {@see: JsonDB}.
+ * Implements a DataAccessObject using the {@see JsonDB}.
  */
 public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject<T> {
 

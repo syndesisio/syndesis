@@ -41,7 +41,6 @@ public interface BinaryExtensionAnalyzer {
     /**
      * Get the icon file from the binary extension.
      *
-     * @param binaryExtension
      * @param path the icon path, it must be an allowed icon path
      * @return the icon of the extension or an empty option
      */

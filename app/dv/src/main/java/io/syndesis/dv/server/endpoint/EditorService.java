@@ -54,6 +54,7 @@ import io.syndesis.dv.utils.StringUtils;
 @RestController
 @RequestMapping(value=V1Constants.APP_PATH+StringConstants.FS+V1Constants.EDITORS_SEGMENT)
 @Api( tags = {V1Constants.EDITORS_SEGMENT} )
+@SuppressWarnings("PMD.GodClass")
 public final class EditorService extends DvService {
 
     private static final String SUCCESS = "SUCCESS"; //$NON-NLS-1$
@@ -71,7 +72,6 @@ public final class EditorService extends DvService {
     /**
      * Get the view editor state with the given id from the user's profile
      * @return a JSON document representing the view editor state in the user profile (never <code>null</code>)
-     * @throws Exception
      */
     @RequestMapping(value = V1Constants.ID_PLACEHOLDER,
             method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -104,7 +104,6 @@ public final class EditorService extends DvService {
     /**
      * upsert a view definition
      * @return saved/validate view definition
-     * @throws Exception
      */
     @RequestMapping(method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation( value = "Store view editor state", response = StatusObject.class)
@@ -225,7 +224,6 @@ public final class EditorService extends DvService {
      * Upserts the view editor state
      * @param restViewDefn the state
      * @return the ViewDefinition repo object
-     * @throws Exception exception if a problem is encountered
      *
      * TODO: could refactor to directly save / merge, rather than copy
      */
@@ -326,7 +324,6 @@ public final class EditorService extends DvService {
 
     /**
      * @return a JSON document representing the results of the removal
-     * @throws Exception
      */
     @RequestMapping(value = V1Constants.ID_PLACEHOLDER, method = RequestMethod.DELETE,
             produces = {MediaType.APPLICATION_JSON_VALUE })

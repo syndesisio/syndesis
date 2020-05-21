@@ -33,8 +33,6 @@ public class DataVirtualization extends BaseDataVirtualization {
      * Get the preview vdb name for the virtualization name -
      * the suffix is added to not conflict with the source and
      * main preview vdbs
-     * @param name
-     * @return
      */
     public static String getPreviewVdbName(String name) {
         return name + StringConstants.SERVICE_VDB_SUFFIX;

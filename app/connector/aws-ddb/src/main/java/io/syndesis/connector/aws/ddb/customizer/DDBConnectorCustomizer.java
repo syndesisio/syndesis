@@ -51,8 +51,6 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
 
     /**
      * Extract results and place them on the body.
-     *
-     * @param exchange
      */
     @SuppressWarnings("unchecked")
     protected void doAfterProducer(Exchange exchange) {
@@ -99,8 +97,6 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
 
     /**
      * Setup the common headers for all operations.
-     *
-     * @param exchange
      */
     @SuppressWarnings("unchecked")
     protected void doBeforeProducer(Exchange exchange) {
@@ -158,9 +154,6 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
 
     /**
      * Customizations for each operation.
-     *
-     * @param exchange
-     * @param options
      */
     abstract void customize(Exchange exchange, Map<String,
         Object> options);

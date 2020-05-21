@@ -272,26 +272,6 @@
       </dependency>
 
       <dependency>
-        <groupId>io.fabric8</groupId>
-        <artifactId>kubernetes-client-bom-with-deps</artifactId>
-        <version>${kubernetes.client.version}</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-
-      <dependency>
-        <groupId>io.fabric8</groupId>
-        <artifactId>kubernetes-model</artifactId>
-        <version>${kubernetes.client.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-
-      <dependency>
         <groupId>org.jboss.shrinkwrap.resolver</groupId>
         <artifactId>shrinkwrap-resolver-bom</artifactId>
         <version>${shrinkwrap.version}</version>

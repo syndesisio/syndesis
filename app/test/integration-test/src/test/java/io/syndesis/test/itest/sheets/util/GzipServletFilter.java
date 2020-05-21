@@ -64,7 +64,6 @@ public class GzipServletFilter extends OncePerRequestFilter {
         /**
          * Constructs a request adaptor wrapping the given request.
          *
-         * @param request
          * @throws IllegalArgumentException if the request is null
          */
         GzipHttpServletRequestWrapper(HttpServletRequest request) {
@@ -84,9 +83,6 @@ public class GzipServletFilter extends OncePerRequestFilter {
 
             /**
              * Default constructor using wrapped input stream.
-             *
-             * @param request
-             * @throws IOException
              */
             GzipServletInputStream(ServletRequest request) throws IOException {
                 super();

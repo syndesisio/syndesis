@@ -45,7 +45,7 @@ public interface WithPropertiesBuilder<T extends WithPropertiesBuilder<T>> {
     /**
      * Sets property tagged with the given tag to the supplied value
      *
-     * @param properties The properties
+     * @param builder The properties builder
      * @param tag The looked after tag
      * @param value The value to set the property to
      * @return The previous value of the property, if any

@@ -377,13 +377,6 @@ public class DdlTokenAnalyzer {
         return labels.toArray(new String[0]);
     }
 
-    /*
-     * The tokenImage[...] call is returning strings wrapped in double-quotes
-     *
-     * Need to return a simple string
-     * @param tokenImageString string
-     * @return string without double quotes
-     */
     public String getKeywordLabel(int keywordId, boolean upperCase) {
         return DdlCompletionConstants.getLabel(keywordId, upperCase);
     }

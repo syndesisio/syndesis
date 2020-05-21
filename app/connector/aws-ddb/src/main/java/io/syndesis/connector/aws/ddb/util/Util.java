@@ -38,10 +38,6 @@ public final class Util {
 
     /**
      * Extract a map from a JSON in a header as AttributeValue. Useful for the headers.
-     *
-     * @param parameterName
-     * @param options
-     * @return
      */
     public static Map<String, AttributeValue> getAttributeValueMap(
     final String parameterName, Map<String, Object> options) {

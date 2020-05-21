@@ -40,7 +40,7 @@ import io.syndesis.server.jsondb.JsonDBException;
 /**
  * Converts a stream of JsonRecords to json sent to a OutputStream.
  */
-@SuppressWarnings("PMD.GodClass")
+@SuppressWarnings({"PMD.GodClass", "JdkObsolete"})
 class JsonRecordConsumer implements Consumer<JsonRecord>, Closeable {
 
     private final String base;

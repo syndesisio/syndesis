@@ -35,7 +35,6 @@ public class IntegrationSupportHandlerTest {
     @Test
     public void verifyJacksonBehaviorWithSourceStreams() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-       // disabling feature inline, skipt closing source stream
         try(InputStream fis = spy(new FileInputStream(new File(classLoader.getResource("model.json").getFile())))){
             ModelExport models = JsonUtils.reader().forType(ModelExport.class).readValue(fis);
             assertThat(models).isNotNull();

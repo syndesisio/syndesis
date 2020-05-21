@@ -35,6 +35,7 @@ import com.google.common.collect.ImmutableMap;
 
 import io.syndesis.dv.lsp.completion.providers.CompletionItemBuilder;
 
+@SuppressWarnings("PMD.GodClass")
 public final class DdlCompletionItemLoader extends CompletionItemBuilder {
     private static final DdlCompletionItemLoader INSTANCE = new DdlCompletionItemLoader();
     private static final String FUNCTION_JSON_FILE = "./functionCompletionItems.json";

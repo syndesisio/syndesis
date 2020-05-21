@@ -254,7 +254,7 @@ public interface OpenShiftService {
      * @param resourceType the type of T
      * @param resourceListType the type of L
      * @param doneableResourceType the type of D
-     * @param watcher a BiConsumer<Watcher.Action,T> function to be executed for each received Action on T
+     * @param watcher a {@code BiConsumer<Watcher.Action,T>} function to be executed for each received Action on T
      * @return the Watch
      */
     <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> Watch watchCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, BiConsumer<Watcher.Action,T> watcher);

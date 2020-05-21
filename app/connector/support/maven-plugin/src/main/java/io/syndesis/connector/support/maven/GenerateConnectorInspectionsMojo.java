@@ -63,6 +63,7 @@ import io.syndesis.common.model.connection.Connector;
     defaultPhase = LifecyclePhase.PROCESS_CLASSES,
     requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME,
     requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
+@SuppressWarnings("PMD.GodClass") // TODO refactor
 public class GenerateConnectorInspectionsMojo extends AbstractMojo {
     private static final String CONNECTORS_META_PATH = "META-INF/syndesis/connector/";
 
@@ -157,10 +158,9 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
     /**
      * Validate the given file against the connection schema
      *
-     * @param jsonStream {@link InputStream} of the file to validate.
+     * @param jsonFile {@link File} of the file to validate.
      *                                          Method will close the stream after use.
      * @return the {@link JsonNode} of the file content or throw exception if an error
-     * @throws MojoExecutionException
      */
     public JsonNode validateWithSchema(File jsonFile) throws MojoExecutionException {
         InputStream jsonStream = null;

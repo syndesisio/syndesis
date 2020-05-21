@@ -152,11 +152,10 @@ public final class DdlAnalyzerConstants {
         // utility class
     }
 
-    /*
-     * The getLabel(...] call is returning strings wrapped in double-quotes
+    /**
+     * The getLabel(...) call is returning strings wrapped in double-quotes
      *
      * Need to return a simple string
-     * @param tokenImageString string
      * @return string without double quotes
      */
     public static String getLabel(int keywordId, boolean upperCase) {

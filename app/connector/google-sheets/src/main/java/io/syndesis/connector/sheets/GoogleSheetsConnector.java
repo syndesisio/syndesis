@@ -72,8 +72,6 @@ public class GoogleSheetsConnector extends ComponentProxyComponent {
 
     /**
      * Specifies the rootUrl.
-     *
-     * @param rootUrl
      */
     public void setRootUrl(String rootUrl) {
         this.rootUrl = rootUrl;
@@ -85,8 +83,6 @@ public class GoogleSheetsConnector extends ComponentProxyComponent {
 
     /**
      * Specifies the serverCertificate.
-     *
-     * @param serverCertificate
      */
     public void setServerCertificate(String serverCertificate) {
         this.serverCertificate = serverCertificate;
@@ -98,8 +94,6 @@ public class GoogleSheetsConnector extends ComponentProxyComponent {
 
     /**
      * Specifies the validateCertificates.
-     *
-     * @param validateCertificates
      */
     public void setValidateCertificates(boolean validateCertificates) {
         this.validateCertificates = validateCertificates;

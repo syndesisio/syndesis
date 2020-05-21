@@ -19,7 +19,6 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import io.syndesis.common.model.connection.Connection;
@@ -57,7 +56,7 @@ public final class OAuth2CredentialProvider<S> extends BaseCredentialProvider {
         this.applicator = applicator;
         this.configured = configured;
         this.additionalQueryParameters = additionalQueryParameters.entrySet().stream()
-            .collect(Collectors.toMap(Entry::getKey, e -> Collections.singletonList(e.getValue())));
+            .collect(Collectors.toMap(Map.Entry::getKey, e -> Collections.singletonList(e.getValue())));
     }
 
     @Override

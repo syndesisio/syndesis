@@ -127,9 +127,6 @@ public class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
 
     /**
      * Extract columns of query and result to create a data shape.
-     *
-     * @param properties
-     * @return
      */
     private static SyndesisMetadata adaptForDDB(final Map<String, Object> properties,
         Map<String, List<PropertyPair>> enrichedProperties) {

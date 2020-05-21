@@ -23,8 +23,6 @@ import io.syndesis.common.model.WithId;
 /**
  * An object paired with a search domain allowing then to be passed
  * around as single objects.
- *
- * @param <T>
  */
 public abstract class TargetWithDomain<T extends WithId<T>> implements WithId<T> {
 
