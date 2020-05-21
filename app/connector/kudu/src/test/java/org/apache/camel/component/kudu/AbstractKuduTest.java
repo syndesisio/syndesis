@@ -97,8 +97,8 @@ public class AbstractKuduTest extends CamelTestSupport {
         return template().requestBody(endpoint, body);
     }
 
-    protected Object requestBodyAndHeaders(final String endpointUri, final Object body, final Map<String, Object> headers) {
-        return template().requestBodyAndHeaders(endpointUri, body, headers);
+    protected void requestBodyAndHeaders(final String endpointUri, final Object body, final Map<String, Object> headers) {
+        template().requestBodyAndHeaders(endpointUri, body, headers);
     }
 
     protected static void deleteTestTable(final String tableName, final String connection) throws KuduException {

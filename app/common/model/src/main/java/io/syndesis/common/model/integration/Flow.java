@@ -51,7 +51,7 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithM
     enum FlowType {
         PRIMARY,
         API_PROVIDER,
-        ALTERNATE;
+        ALTERNATE
     }
 
     @Value.Default

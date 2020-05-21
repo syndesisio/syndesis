@@ -30,11 +30,8 @@ public interface WithResourceId {
 
     default boolean idEquals(final String another) {
         final Optional<String> id = getId();
-        if (id.isPresent()) {
-            return id.get().equals(another);
-        }
+        return id.map(s -> s.equals(another)).orElse(false);
 
-        return false;
     }
 
     @JsonIgnore
