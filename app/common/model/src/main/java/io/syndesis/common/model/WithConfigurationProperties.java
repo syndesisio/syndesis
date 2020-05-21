@@ -38,7 +38,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isEndpointProperty() {
-        return e -> this.isEndpointProperty(e);
+        return this::isEndpointProperty;
     }
 
     @JsonIgnore
@@ -48,7 +48,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isComponentProperty() {
-        return e -> this.isComponentProperty(e);
+        return this::isComponentProperty;
     }
 
     // ***************************
@@ -77,7 +77,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isSecretEndpointProperty() {
-        return e -> isSecretEndpointProperty(e);
+        return this::isSecretEndpointProperty;
     }
 
     @JsonIgnore
@@ -87,7 +87,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isSecretComponentProperty() {
-        return e -> this.isSecretComponentProperty(e);
+        return this::isSecretComponentProperty;
     }
 
     @JsonIgnore
@@ -97,7 +97,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isSecretOrComponentProperty() {
-        return e -> isSecretOrComponentProperty(e);
+        return this::isSecretOrComponentProperty;
     }
 
     // ***************************
@@ -126,7 +126,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isRawEndpointProperty() {
-        return e -> isRawEndpointProperty(e);
+        return this::isRawEndpointProperty;
     }
 
     @JsonIgnore
@@ -136,7 +136,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isRawComponentProperty() {
-        return e -> this.isRawComponentProperty(e);
+        return this::isRawComponentProperty;
     }
 
 
@@ -192,7 +192,7 @@ public interface WithConfigurationProperties {
      * @return                  A map with just the sensitive data.
      */
     default Map<String, String> filterSecrets(Map<String, String> properties) {
-        return filterSecrets(properties, e -> e.getValue());
+        return filterSecrets(properties, Map.Entry::getValue);
     }
 
     /**
@@ -205,7 +205,7 @@ public interface WithConfigurationProperties {
         return properties.entrySet()
             .stream()
             .filter(isSecret())
-            .collect(Collectors.toMap(e -> e.getKey(), e -> valueConverter.apply(e)));
+            .collect(Collectors.toMap(Map.Entry::getKey, valueConverter));
     }
 
     /**

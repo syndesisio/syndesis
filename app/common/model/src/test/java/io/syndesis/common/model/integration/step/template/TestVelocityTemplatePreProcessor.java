@@ -17,7 +17,6 @@ package io.syndesis.common.model.integration.step.template;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 
 import io.syndesis.common.util.StringConstants;

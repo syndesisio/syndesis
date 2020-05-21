@@ -21,13 +21,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.common.util.immutable.ImmutablesStyle;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.WithProperties;
+import io.syndesis.common.util.immutable.ImmutablesStyle;
 import org.immutables.value.Value;
 
 @SuppressWarnings("immutables")
@@ -55,6 +54,6 @@ public interface ActionDescriptor {
 
     @JsonIgnore
     default Map<String, ActionDescriptorStep> getPropertyDefinitionStepsAsMap() {
-        return getPropertyDefinitionSteps().stream().collect(Collectors.toMap(p -> p.getName(), p -> p));
+        return getPropertyDefinitionSteps().stream().collect(Collectors.toMap(WithName::getName, p -> p));
     }
 }
