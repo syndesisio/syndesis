@@ -40,7 +40,7 @@ const apiSummarySoap = {
   name: 'HelloWorldImplService',
 };
 
-stories.add('Specify Service & Port (SOAP)', () => {
+stories.add('Review Actions', () => {
   return (
     <ApiConnectorCreatorLayout
       content={
