@@ -87,6 +87,7 @@
     <basepom.test.timeout>600</basepom.test.timeout>
     <basepom.git-id.skip>true</basepom.git-id.skip>
 
+    <basepom.check.skip-duplicate-finder>true</basepom.check.skip-duplicate-finder>
     <version.io.opentracing.contrib>1.0.1</version.io.opentracing.contrib>
 
     <version.org.teiid>${teiid.version}</version.org.teiid>
@@ -105,8 +106,6 @@
     <!-- Common dependencies -->
     <version.springfox>2.9.2</version.springfox>
     <shrinkwrap.version>3.1.4</shrinkwrap.version>
-
-    <version.tomcat>9.0.31</version.tomcat>
 
     <version.com.fasterxml.jackson.databind>2.9.10.1</version.com.fasterxml.jackson.databind>
     <version.com.fasterxml.jackson>2.9.10</version.com.fasterxml.jackson>
@@ -320,22 +319,12 @@
         <groupId>org.teiid</groupId>
         <artifactId>teiid-api</artifactId>
         <version>${version.org.teiid}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>javax.transaction</groupId>
-            <artifactId>javax.transaction-api</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.teiid</groupId>
         <artifactId>teiid-engine</artifactId>
         <version>${version.org.teiid}</version>
         <exclusions>
-          <exclusion>
-            <groupId>javax.transaction</groupId>
-            <artifactId>javax.transaction-api</artifactId>
-          </exclusion>
           <exclusion>
             <groupId>org.wololo</groupId>
             <artifactId>jts2geojson</artifactId>
@@ -359,10 +348,6 @@
             <groupId>xalan</groupId>
             <artifactId>xalan</artifactId>
           </exclusion>
-          <exclusion>
-            <groupId>javax.transaction</groupId>
-            <artifactId>javax.transaction-api</artifactId>
-          </exclusion>
         </exclusions>
       </dependency>
       <dependency>
@@ -374,12 +359,6 @@
         <groupId>org.teiid.connectors</groupId>
         <artifactId>translator-jdbc</artifactId>
         <version>${version.org.teiid}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>javax.persistence</groupId>
-            <artifactId>javax.persistence-api</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <groupId>io.fabric8</groupId>
@@ -544,12 +523,8 @@
       <artifactId>spring-boot-test</artifactId>
     </dependency>
     <dependency>
-      <groupId>jakarta.annotation</groupId>
-      <artifactId>jakarta.annotation-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.persistence</groupId>
-      <artifactId>jakarta.persistence-api</artifactId>
+      <groupId>javax.persistence</groupId>
+      <artifactId>javax.persistence-api</artifactId>
     </dependency>
     <dependency>
       <groupId>io.fabric8</groupId>
@@ -568,8 +543,8 @@
       <artifactId>okhttp</artifactId>
     </dependency>
     <dependency>
-      <groupId>jakarta.transaction</groupId>
-      <artifactId>jakarta.transaction-api</artifactId>
+      <groupId>javax.transaction</groupId>
+      <artifactId>javax.transaction-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.data</groupId>
