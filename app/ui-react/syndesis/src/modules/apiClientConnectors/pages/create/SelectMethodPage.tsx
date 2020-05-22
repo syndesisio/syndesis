@@ -1,9 +1,9 @@
 import { useApiConnectorSummary } from '@syndesis/api';
 import {
-  ApiConnectorCreateService,
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorLayout,
+  ApiConnectorCreatorService,
   ApiConnectorCreatorToggleList,
   OpenApiSelectMethod,
 } from '@syndesis/ui';
@@ -98,7 +98,7 @@ export const SelectMethodPage: React.FunctionComponent = () => {
                 )}
                 {/* Where users can specify a SOAP service and port if connector is WSDL file */}
                 {showSoapConfig && apiSummary && (
-                  <ApiConnectorCreateService
+                  <ApiConnectorCreatorService
                     handleNext={onServiceConfigured}
                     i18nBtnNext={t('shared:Next')}
                     i18nPort={t('apiClientConnectors:create:soap:port')}

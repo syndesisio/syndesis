@@ -3,8 +3,8 @@ import { boolean } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import {
-  ApiConnectorCreateService,
   ApiConnectorCreatorLayout,
+  ApiConnectorCreatorService,
 } from '../../../src';
 import {
   ApiConnectorCreatorBreadSteps,
@@ -88,7 +88,7 @@ stories.add('Specify Service & Port (SOAP)', () => {
   return (
     <ApiConnectorCreatorLayout
       content={
-        <ApiConnectorCreateService
+        <ApiConnectorCreatorService
           handleNext={action('onServiceConfigured')}
           i18nBtnNext={'Next'}
           i18nPort={'Port'}

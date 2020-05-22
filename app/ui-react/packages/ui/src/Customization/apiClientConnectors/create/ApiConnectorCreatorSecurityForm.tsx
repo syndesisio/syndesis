@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export interface IApiConnectorSecurityFormChildrenProps {
+export interface IApiConnectorCreatorSecurityFormChildrenProps {
   authUrl?: string;
   handleChangeAuthUrl: (params: string) => void;
   handleChangeSelectedType: (params: string) => void;
@@ -24,7 +24,7 @@ export interface IApiConnectorSecurityFormChildrenProps {
   valid: boolean;
 }
 
-export interface IApiConnectorSecurityFormProps {
+export interface IApiConnectorCreatorSecurityFormProps {
   /**
    * Access token, required for OAuth 2.0.
    */
@@ -39,7 +39,7 @@ export interface IApiConnectorSecurityFormProps {
    */
   initialAuthorizationUrl?: string;
 
-  children(props: IApiConnectorSecurityFormChildrenProps): any;
+  children(props: IApiConnectorCreatorSecurityFormChildrenProps): any;
 
   isValid(
     authenticationType?: string,
@@ -48,16 +48,13 @@ export interface IApiConnectorSecurityFormProps {
   ): boolean;
 }
 
-export const ApiConnectorSecurityForm: React.FunctionComponent<
-  IApiConnectorSecurityFormProps
-> = (
-  {
-    children,
-    initialAccessTokenUrl,
-    initialAuthorizationUrl,
-    initialAuthenticationType,
-    isValid,
-  }) => {
+export const ApiConnectorCreatorSecurityForm: React.FunctionComponent<IApiConnectorCreatorSecurityFormProps> = ({
+  children,
+  initialAccessTokenUrl,
+  initialAuthorizationUrl,
+  initialAuthenticationType,
+  isValid,
+}) => {
   const [tokenUrl, setTokenUrl] = React.useState(initialAccessTokenUrl);
   const [authUrl, setAuthUrl] = React.useState(initialAuthorizationUrl);
   const [selectedType, setSelectedType] = React.useState(
@@ -69,6 +66,7 @@ export const ApiConnectorSecurityForm: React.FunctionComponent<
   );
 
   const handleChangeSelectedType = (newType: string) => {
+    console.log('newType: ' + JSON.stringify(newType));
     setSelectedType(newType);
     setValid(isValid(newType, authUrl, tokenUrl));
   };
@@ -90,6 +88,6 @@ export const ApiConnectorSecurityForm: React.FunctionComponent<
     handleChangeTokenUrl,
     selectedType,
     tokenUrl,
-    valid
+    valid,
   });
 };
