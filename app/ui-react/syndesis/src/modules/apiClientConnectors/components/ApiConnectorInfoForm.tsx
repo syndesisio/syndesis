@@ -17,6 +17,7 @@ export interface IConnectorValues extends IFormValues {
 
 export interface IApiConnectorInfoFormChildrenProps {
   connectorName?: string;
+
   /**
    * the form (embedded in the right UI elements)
    */
@@ -58,8 +59,19 @@ export interface IApiConnectorInfoFormChildrenProps {
 export interface IApiConnectorInfoFormProps {
   name?: string;
   description?: string;
+  /**
+   * SOAP connectors can specify an `address`,
+   * OpenAPI connectors can specify a `host` and `basePath`
+   */
+  address?: string;
   host?: string;
   basePath?: string;
+
+  /**
+   * We use the `connectorTemplateId` to determine
+   * whether this is an OpenAPI or SOAP connector
+   */
+  connectorTemplateId?: string;
 
   /**
    * The connector icon.
@@ -82,9 +94,7 @@ export interface IApiConnectorInfoFormProps {
   children(props: IApiConnectorInfoFormChildrenProps): any;
 }
 
-export const ApiConnectorInfoForm: React.FunctionComponent<
-  IApiConnectorInfoFormProps
-> = props => {
+export const ApiConnectorInfoForm: React.FunctionComponent<IApiConnectorInfoFormProps> = props => {
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['apiClientConnectors', 'shared']);
   const [icon, setIcon] = React.useState<string | undefined>(
@@ -166,12 +176,7 @@ export const ApiConnectorInfoForm: React.FunctionComponent<
       }}
       onSave={onSave}
     >
-      {({
-          fields,
-          handleSubmit,
-          isSubmitting,
-          submitForm
-      }) => {
+      {({ fields, handleSubmit, isSubmitting, submitForm }) => {
         const connectorName = props.name;
         return props.children({
           connectorName,
@@ -181,7 +186,7 @@ export const ApiConnectorInfoForm: React.FunctionComponent<
           isUploadingImage,
           isSubmitting,
           onUploadImage,
-          submitForm
+          submitForm,
         });
       }}
     </AutoForm>

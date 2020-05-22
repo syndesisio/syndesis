@@ -6,8 +6,7 @@ import { callFetch } from './callFetch';
 export function useApiConnectorSummary(
   specification: string,
   connectorTemplateId?: string,
-  portName?: string,
-  serviceName?: string
+  configured?: any
 ) {
   const apiContext = React.useContext(ApiContext);
   const [loading, setLoading] = React.useState(true);
@@ -22,12 +21,12 @@ export function useApiConnectorSummary(
     }
     const fetchSummary = async () => {
       setLoading(true);
+
       try {
         const response = await callFetch({
           body: {
             configuredProperties: {
-              portName,
-              serviceName,
+              ...configured,
               specification,
             },
             connectorTemplateId: connectorTemplateId

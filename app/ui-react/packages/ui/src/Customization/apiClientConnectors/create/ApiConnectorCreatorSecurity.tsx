@@ -1,8 +1,10 @@
 import {
   Alert,
+  Checkbox,
   Form,
   FormGroup,
-  Radio,
+  FormSelect,
+  FormSelectOption,
   Stack,
   StackItem,
   TextInput,
@@ -10,98 +12,239 @@ import {
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { toValidHtmlId } from '../../../helpers';
+import { ICreateConnectorPropsUi } from './ApiConnectorCreatorSecurityForm';
 
-export interface IAuthenticationTypes {
+export interface IDropdownOption {
   value?: string;
   label?: string;
 }
 
+export interface IDropdownOptions {
+  [key: string]: IDropdownOption[];
+}
+
+export interface II18n {
+  [key: string]: string;
+}
+
 export interface IApiConnectorCreatorSecurityProps {
   /**
-   * The list of available authentication types for this specification.
+   * An object that contains arrays of enum key-value pairs to be
+   * used in dropdowns.
    */
-  authenticationTypes?: IAuthenticationTypes[];
-  authUrl?: string;
-  handleChangeAuthUrl: (params: string) => void;
-  handleChangeSelectedType: (params: string) => void;
-  handleChangeTokenUrl: (params: string) => void;
-  i18nAccessTokenUrl: string;
-  i18nAuthorizationUrl: string;
-  i18nAuthTypeLabel: string;
-  i18nDescription: string;
-  /**
-   * Locale string for when no security is specified
-   */
-  i18nNoSecurity: string;
-  i18nTitle: string;
-  selectedType?: string;
-  tokenUrl?: string;
-  extractAuthType(authType?: string): string;
+  authenticationTypes?: IDropdownOption[];
+  dropdowns?: IDropdownOptions;
+  handleChange?: (params?: any, event?: any) => void;
+  errors?: any;
+  i18n: II18n;
+  values: ICreateConnectorPropsUi;
 }
 
 export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorCreatorSecurityProps> = ({
-  authenticationTypes,
-  authUrl,
-  extractAuthType,
-  handleChangeAuthUrl,
-  handleChangeSelectedType,
-  handleChangeTokenUrl,
-  i18nAccessTokenUrl,
-  i18nAuthorizationUrl,
-  i18nAuthTypeLabel,
-  i18nDescription,
-  i18nNoSecurity,
-  i18nTitle,
-  selectedType,
-  tokenUrl,
+  dropdowns,
+  handleChange,
+  i18n,
+  values,
 }) => {
+  const extractAuthType = (authType?: string): string => {
+    // avoid npe
+    if (typeof authType === 'undefined') {
+      return 'unselected';
+    }
+    // mask out this special value
+    if (authType === 'none') {
+      return 'none';
+    }
+    // extract the type from the type:value scheme that this field uses
+    return authType.split(':')[0];
+  };
+
   return (
     <Stack style={{ maxWidth: '600px' }} gutter="md">
       <StackItem>
-        <Title size="2xl">{i18nTitle}</Title>
+        <Title size="2xl">{i18n.title}</Title>
       </StackItem>
       <StackItem>
         <Form data-testid={`api-client-connector-auth-type-form`}>
-          <Alert type={'info'} title={i18nDescription} isInline={true} />
-          <FormGroup fieldId={'authenticationType'}>
-            {authenticationTypes!.map((authType: IAuthenticationTypes, idx) => (
-              <Radio
-                key={authType.value + '-' + idx}
-                id={'authenticationType'}
-                data-testid={`api-client-connector-auth-type-${toValidHtmlId(
-                  authType!.value
-                )}`}
-                aria-label={authType.label || i18nNoSecurity}
-                label={authType.label || i18nNoSecurity}
-                isChecked={selectedType === authType.value}
-                name={'authenticationType'}
-                onChange={() => handleChangeSelectedType(authType.value!)}
-                value={authType.value}
-                readOnly={true}
-              />
-            ))}
+          <Alert type={'info'} title={i18n.description} isInline={true} />
+          <FormGroup
+            fieldId={'authenticationType'}
+            isRequired={true}
+            label={i18n.authenticationType}
+          >
+            <FormSelect
+              value={values.authenticationType}
+              onChange={handleChange}
+              id={'authenticationType'}
+              name={'authenticationType'}
+              aria-label={i18n.authenticationType}
+            >
+              {dropdowns!.authenticationTypes.map(
+                (
+                  authType: IDropdownOption,
+                  idx: string | number | undefined
+                ) => (
+                  <FormSelectOption
+                    data-testid={`api-client-connector-auth-type-${toValidHtmlId(
+                      authType!.value
+                    )}`}
+                    key={idx}
+                    value={authType.value}
+                    label={authType.label || i18n.noSecurity}
+                  />
+                )
+              )}
+            </FormSelect>
           </FormGroup>
-          {extractAuthType(selectedType) === 'oauth2' && (
+
+          {extractAuthType(values.authenticationType) === 'basic' && (
             <>
               <FormGroup
-                fieldId={'authorizationUrl'}
-                label={i18nAuthorizationUrl}
+                fieldId={'username'}
+                isRequired={true}
+                label={i18n.username}
               >
                 <TextInput
-                  id={'authorizationUrl'}
+                  id={'username'}
                   type={'text'}
-                  value={authUrl}
-                  onChange={value => handleChangeAuthUrl(value)}
+                  name={'username'}
+                  value={values.username || ''}
+                  onChange={handleChange}
                 />
               </FormGroup>
-              <FormGroup fieldId={'accessTokenUrl'} label={i18nAccessTokenUrl}>
+              <FormGroup
+                fieldId={'password'}
+                isRequired={true}
+                label={i18n.password}
+              >
                 <TextInput
-                  id={'accessTokenUrl'}
-                  type={'text'}
-                  value={tokenUrl}
-                  onChange={value => handleChangeTokenUrl(value)}
+                  id={'password'}
+                  name={'password'}
+                  type={'password'}
+                  value={values.password || ''}
+                  onChange={handleChange}
                 />
               </FormGroup>
+            </>
+          )}
+
+          {extractAuthType(values.authenticationType) === 'oauth2' && (
+            <>
+              <FormGroup
+                fieldId={'authorizationEndpoint'}
+                label={i18n.authorizationUrl}
+              >
+                <TextInput
+                  id={'authorizationEndpoint'}
+                  type={'text'}
+                  name={'authorizationEndpoint'}
+                  value={values.authorizationEndpoint || ''}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <FormGroup fieldId={'tokenEndpoint'} label={i18n.accessTokenUrl}>
+                <TextInput
+                  id={'tokenEndpoint'}
+                  name={'tokenEndpoint'}
+                  type={'text'}
+                  value={values.tokenEndpoint || ''}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+            </>
+          )}
+
+          {extractAuthType(values.authenticationType) === 'ws-security-ut' && (
+            <>
+              <FormGroup fieldId={'addTimestamp'}>
+                <Checkbox
+                  label={i18n.timestamp}
+                  id="addTimestamp"
+                  name="addTimestamp"
+                  aria-label="Timestamp"
+                  isChecked={!!values.addTimestamp}
+                  data-testid={'add-timestamp'}
+                  onChange={handleChange}
+                />
+              </FormGroup>
+              <FormGroup fieldId={'passwordType'} label={i18n.passwordType}>
+                <FormSelect
+                  value={values.passwordType}
+                  onChange={handleChange}
+                  id={'passwordType'}
+                  name={'passwordType'}
+                  aria-label={i18n.passwordType}
+                >
+                  {dropdowns!.passwordTypes.map(
+                    (
+                      passType: IDropdownOption,
+                      idx: string | number | undefined
+                    ) => (
+                      <FormSelectOption
+                        data-testid={`api-connector-password-type-${toValidHtmlId(
+                          passType!.value
+                        )}`}
+                        key={idx}
+                        value={passType.value}
+                        label={passType.label!}
+                      />
+                    )
+                  )}
+                </FormSelect>
+              </FormGroup>
+              {(values.passwordType === 'PasswordText' ||
+                values.passwordType === 'PasswordDigest') && (
+                <>
+                  <FormGroup fieldId={'addUsernameTokenNonce'}>
+                    <Checkbox
+                      label={i18n.usernameTokenNonce}
+                      id="addUsernameTokenNonce"
+                      name="addUsernameTokenNonce"
+                      aria-label={i18n.usernameTokenNonce}
+                      isChecked={!!values.addUsernameTokenNonce}
+                      data-testid={'add-username-token-nonce'}
+                      onChange={handleChange}
+                    />
+                  </FormGroup>
+                  <FormGroup fieldId={'addUsernameTokenCreated'}>
+                    <Checkbox
+                      label={i18n.usernameTokenCreated}
+                      id="addUsernameTokenCreated"
+                      name="addUsernameTokenCreated"
+                      aria-label={i18n.usernameTokenCreated}
+                      isChecked={!!values.addUsernameTokenCreated}
+                      data-testid={'add-username-token-created'}
+                      onChange={handleChange}
+                    />
+                  </FormGroup>
+                  <FormGroup
+                    fieldId={'username'}
+                    isRequired={true}
+                    label={i18n.username}
+                  >
+                    <TextInput
+                      id={'username'}
+                      type={'text'}
+                      name={'username'}
+                      value={values.username || ''}
+                      onChange={handleChange}
+                    />
+                  </FormGroup>
+                  <FormGroup
+                    fieldId={'password'}
+                    isRequired={true}
+                    label={i18n.password}
+                  >
+                    <TextInput
+                      id={'password'}
+                      name={'password'}
+                      type={'password'}
+                      value={values.password || ''}
+                      onChange={handleChange}
+                    />
+                  </FormGroup>
+                </>
+              )}
             </>
           )}
         </Form>

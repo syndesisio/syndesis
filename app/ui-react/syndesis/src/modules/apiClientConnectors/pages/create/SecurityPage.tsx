@@ -1,5 +1,5 @@
 import * as H from '@syndesis/history';
-import { IApiSummarySoap } from '@syndesis/models';
+import { IApiSummarySoap, ICreateConnectorProps } from '@syndesis/models';
 import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
@@ -18,6 +18,12 @@ import resolvers from '../../resolvers';
 import routes from '../../routes';
 
 export interface ISecurityPageRouteState {
+  /**
+   * `configured` property contains things such
+   * as the portName, serviceName used for SOAP connectors,
+   * and other configured properties.
+   */
+  configured?: ICreateConnectorProps;
   connectorTemplateId?: string;
   specification: IApiSummarySoap;
 }
@@ -29,58 +35,47 @@ export const SecurityPage: React.FunctionComponent = () => {
   const { portName, serviceName } = specification.configuredProperties!;
 
   const backHref = resolvers.create.review({
+    configured: { portName, serviceName },
     connectorTemplateId,
-    portName,
-    serviceName,
     specification: specification.configuredProperties!.specification,
   });
-  const onNext = (authType?: string, authUrl?: string, tokenUrl?: string) => {
-    if (authType === 'unselected') {
+
+  const defaultValues = {
+    accessTokenUrl:
+      properties!.tokenEndpoint && properties!.tokenEndpoint.defaultValue,
+    authenticationType: properties!.authenticationType.defaultValue,
+    authorizationUrl:
+      properties!.authorizationEndpoint &&
+      properties!.authorizationEndpoint.defaultValue,
+    passwordType:
+      properties!.passwordType && properties!.passwordType.defaultValue,
+  };
+
+  const dropdowns = {
+    authenticationTypes:
+      properties!.authenticationType &&
+      (properties!.authenticationType.enum || []).sort((a, b) =>
+        a.value!.localeCompare(b.value!)
+      ),
+    passwordTypes:
+      properties!.passwordType &&
+      (properties!.passwordType.enum || []).sort((a, b) =>
+        a.value!.localeCompare(b.value!)
+      ),
+  };
+
+  const onNext = (values?: any) => {
+    if (values.authenticationType === 'unselected') {
       throw new Error('Invalid authentication type allowed');
     }
 
     history.push(
       resolvers.create.save({
-        authenticationType: authType,
-        authorizationEndpoint: authUrl,
+        configured: { ...values, portName, serviceName },
         connectorTemplateId,
-        portName,
-        serviceName,
         specification,
       })
     );
-  };
-
-  const extractAuthType = (authType?: string): string => {
-    // avoid npe
-    if (typeof authType === 'undefined') {
-      return 'unselected';
-    }
-    // mask out this special value
-    if (authType === 'none') {
-      return 'none';
-    }
-    // extract the type from the type:value scheme that this field uses
-    return authType.split(':')[0];
-  };
-
-  const isValid = (authType?: string, authUrl?: string, tokenUrl?: string) => {
-    const type = extractAuthType(authType);
-    switch (type) {
-      case 'apiKey':
-      case 'basic':
-      case 'none':
-        return true;
-      case 'oauth2':
-        return (
-          typeof authUrl !== 'undefined' &&
-          typeof tokenUrl !== 'undefined' &&
-          authUrl !== '' &&
-          tokenUrl !== ''
-        );
-      default:
-        return false;
-    }
   };
 
   return (
@@ -111,111 +106,99 @@ export const SecurityPage: React.FunctionComponent = () => {
                   'apiClientConnectors:CreateApiConnector'
                 )}
               />
-              <ApiConnectorCreatorSecurityForm
-                initialAccessTokenUrl={
-                  properties!.tokenEndpoint &&
-                  properties!.tokenEndpoint.defaultValue
-                }
-                initialAuthenticationType={
-                  properties!.authenticationType.defaultValue
-                }
-                initialAuthorizationUrl={
-                  properties!.authorizationEndpoint &&
-                  properties!.authorizationEndpoint.defaultValue
-                }
-                isValid={isValid}
-              >
-                {({
-                  authUrl,
-                  handleChangeAuthUrl,
-                  handleChangeSelectedType,
-                  handleChangeTokenUrl,
-                  selectedType,
-                  tokenUrl,
-                  valid,
-                }) => (
-                  <ApiConnectorCreatorLayout
-                    content={
-                      <ApiConnectorCreatorSecurity
-                        authenticationTypes={
-                          properties!.authenticationType &&
-                          (
-                            properties!.authenticationType.enum || []
-                          ).sort((a, b) => a.value!.localeCompare(b.value!))
-                        }
-                        authUrl={authUrl}
-                        extractAuthType={extractAuthType}
-                        handleChangeAuthUrl={handleChangeAuthUrl}
-                        handleChangeSelectedType={handleChangeSelectedType}
-                        handleChangeTokenUrl={handleChangeTokenUrl}
-                        i18nAccessTokenUrl={t(
-                          'apiClientConnectors:create:security:accessTokenUrl'
-                        )}
-                        i18nAuthorizationUrl={t(
-                          'apiClientConnectors:create:security:authorizationUrl'
-                        )}
-                        i18nAuthTypeLabel={t(
-                          'apiClientConnectors:create:security:authTypeLabel'
-                        )}
-                        i18nDescription={t(
-                          'apiClientConnectors:create:security:description'
-                        )}
-                        i18nNoSecurity={t(
-                          'apiClientConnectors:create:security:noSecurity'
-                        )}
-                        i18nTitle={t(
-                          'apiClientConnectors:create:security:title'
-                        )}
-                        selectedType={selectedType}
-                        tokenUrl={tokenUrl}
-                      />
-                    }
-                    footer={
-                      <ApiConnectorCreatorFooter
-                        backHref={backHref}
-                        onNext={() => onNext(selectedType, authUrl, tokenUrl)}
-                        i18nBack={t('shared:Back')}
-                        i18nNext={t('shared:Next')}
-                        isNextLoading={false}
-                        isNextDisabled={!valid}
-                      />
-                    }
-                    navigation={
-                      <ApiConnectorCreatorBreadSteps
-                        step={3}
-                        i18nDetails={t(
-                          'apiClientConnectors:create:details:title'
-                        )}
-                        i18nReview={t(
-                          'apiClientConnectors:create:review:title'
-                        )}
-                        i18nSecurity={t(
-                          'apiClientConnectors:create:security:title'
-                        )}
-                        i18nSelectMethod={t(
-                          'apiClientConnectors:create:selectMethod:title'
-                        )}
-                      />
-                    }
-                    toggle={
-                      <ApiConnectorCreatorToggleList
-                        step={1}
-                        i18nDetails={t(
-                          'apiClientConnectors:create:details:title'
-                        )}
-                        i18nReview={t(
-                          'apiClientConnectors:create:review:title'
-                        )}
-                        i18nSecurity={t(
-                          'apiClientConnectors:create:security:title'
-                        )}
-                        i18nSelectMethod={t(
-                          'apiClientConnectors:create:selectMethod:title'
-                        )}
-                      />
-                    }
-                  />
-                )}
+              <ApiConnectorCreatorSecurityForm defaultValues={defaultValues}>
+                {({ errors, handleChange, values }) => {
+                  const i18nStrings = {
+                    accessTokenUrl: t(
+                      'apiClientConnectors:create:security:accessTokenUrl'
+                    ),
+                    authenticationType: t(
+                      'apiClientConnectors:create:security:authTypeLabel'
+                    ),
+                    authorizationUrl: t(
+                      'apiClientConnectors:create:security:authorizationUrl'
+                    ),
+                    description: t(
+                      'apiClientConnectors:create:security:description'
+                    ),
+                    noSecurity: t(
+                      'apiClientConnectors:create:security:noSecurity'
+                    ),
+                    password: t('apiClientConnectors:create:security:password'),
+                    passwordType: t(
+                      'apiClientConnectors:create:security:passwordType'
+                    ),
+                    timestamp: t(
+                      'apiClientConnectors:create:security:timestamp'
+                    ),
+                    title: t('apiClientConnectors:create:security:title'),
+                    username: t('apiClientConnectors:create:security:username'),
+                    usernameTokenCreated: t(
+                      'apiClientConnectors:create:security:usernameTokenCreated'
+                    ),
+                    usernameTokenNonce: t(
+                      'apiClientConnectors:create:security:usernameTokenNonce'
+                    ),
+                  };
+
+                  return (
+                    <ApiConnectorCreatorLayout
+                      content={
+                        <ApiConnectorCreatorSecurity
+                          dropdowns={dropdowns}
+                          errors={errors}
+                          handleChange={handleChange}
+                          i18n={i18nStrings}
+                          values={values}
+                        />
+                      }
+                      footer={
+                        <ApiConnectorCreatorFooter
+                          backHref={backHref}
+                          onNext={() => onNext(values)}
+                          i18nBack={t('shared:Back')}
+                          i18nNext={t('shared:Next')}
+                          isNextLoading={false}
+                          isNextDisabled={!errors}
+                        />
+                      }
+                      navigation={
+                        <ApiConnectorCreatorBreadSteps
+                          step={3}
+                          i18nDetails={t(
+                            'apiClientConnectors:create:details:title'
+                          )}
+                          i18nReview={t(
+                            'apiClientConnectors:create:review:title'
+                          )}
+                          i18nSecurity={t(
+                            'apiClientConnectors:create:security:title'
+                          )}
+                          i18nSelectMethod={t(
+                            'apiClientConnectors:create:selectMethod:title'
+                          )}
+                        />
+                      }
+                      toggle={
+                        <ApiConnectorCreatorToggleList
+                          step={1}
+                          i18nDetails={t(
+                            'apiClientConnectors:create:details:title'
+                          )}
+                          i18nReview={t(
+                            'apiClientConnectors:create:review:title'
+                          )}
+                          i18nSecurity={t(
+                            'apiClientConnectors:create:security:title'
+                          )}
+                          i18nSelectMethod={t(
+                            'apiClientConnectors:create:selectMethod:title'
+                          )}
+                        />
+                      }
+                    />
+                  );
+                }}
               </ApiConnectorCreatorSecurityForm>
             </>
           )}
