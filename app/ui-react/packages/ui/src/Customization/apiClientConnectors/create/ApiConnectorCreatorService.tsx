@@ -15,7 +15,7 @@ export interface IServiceAndPortTypes {
   label?: string;
 }
 
-export interface IApiConnectorCreateServiceProps {
+export interface IApiConnectorCreatorServiceProps {
   handleNext: (service: string, port: string) => void;
   i18nBtnNext: string;
   i18nPort: string;
@@ -36,7 +36,7 @@ export interface IApiConnectorCreateServiceProps {
  * They will be prompted to choose a service and port
  * before proceeding to the next step.
  */
-export const ApiConnectorCreateService: React.FunctionComponent<IApiConnectorCreateServiceProps> = ({
+export const ApiConnectorCreatorService: React.FunctionComponent<IApiConnectorCreatorServiceProps> = ({
   handleNext,
   i18nBtnNext,
   i18nPort,
