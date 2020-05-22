@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -39,7 +38,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isEndpointProperty() {
-        return e -> this.isEndpointProperty(e);
+        return this::isEndpointProperty;
     }
 
     @JsonIgnore
@@ -49,7 +48,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isComponentProperty() {
-        return e -> this.isComponentProperty(e);
+        return this::isComponentProperty;
     }
 
     // ***************************
@@ -78,7 +77,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isSecretEndpointProperty() {
-        return e -> isSecretEndpointProperty(e);
+        return this::isSecretEndpointProperty;
     }
 
     @JsonIgnore
@@ -88,7 +87,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isSecretComponentProperty() {
-        return e -> this.isSecretComponentProperty(e);
+        return this::isSecretComponentProperty;
     }
 
     @JsonIgnore
@@ -98,7 +97,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isSecretOrComponentProperty() {
-        return e -> isSecretOrComponentProperty(e);
+        return this::isSecretOrComponentProperty;
     }
 
     // ***************************
@@ -127,7 +126,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isRawEndpointProperty() {
-        return e -> isRawEndpointProperty(e);
+        return this::isRawEndpointProperty;
     }
 
     @JsonIgnore
@@ -137,7 +136,7 @@ public interface WithConfigurationProperties {
 
     @JsonIgnore
     default Predicate<Map.Entry<String, String>> isRawComponentProperty() {
-        return e -> this.isRawComponentProperty(e);
+        return this::isRawComponentProperty;
     }
 
 
@@ -193,20 +192,20 @@ public interface WithConfigurationProperties {
      * @return                  A map with just the sensitive data.
      */
     default Map<String, String> filterSecrets(Map<String, String> properties) {
-        return filterSecrets(properties, e -> e.getValue());
+        return filterSecrets(properties, Map.Entry::getValue);
     }
 
     /**
      * Filters the properties that the {@link Connector} considers sensitive / secret.
      * @param properties        The specified configuration.
-     * @param valueConverter    A {@link Function} that is applies to each {@link Entry} of the configuration.
+     * @param valueConverter    A {@link Function} that is applies to each {@link Map.Entry} of the configuration.
      * @return                  A map with just the sensitive data.
      */
     default Map<String, String> filterSecrets(Map<String, String> properties, Function<Map.Entry<String, String>, String> valueConverter) {
         return properties.entrySet()
             .stream()
             .filter(isSecret())
-            .collect(Collectors.toMap(e -> e.getKey(), e -> valueConverter.apply(e)));
+            .collect(Collectors.toMap(Map.Entry::getKey, valueConverter));
     }
 
     /**

@@ -17,10 +17,11 @@ package io.syndesis.common.model.integration.step.template;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+
+import io.syndesis.common.util.StringConstants;
 import org.junit.After;
 import org.junit.Test;
-import io.syndesis.common.util.StringConstants;
 
 public class TestMustacheTemplatePreProcessor implements StringConstants {
 
@@ -35,7 +36,7 @@ public class TestMustacheTemplatePreProcessor implements StringConstants {
     public void testBasicTemplate() throws Exception {
         String template = "{{text}}";
         String newTemplate = processor.preProcess(template);
-        assertFalse(template.equals(newTemplate));
+        assertNotEquals(template, newTemplate);
         assertEquals("[[body.text]]", newTemplate);
     }
 
@@ -52,7 +53,7 @@ public class TestMustacheTemplatePreProcessor implements StringConstants {
             "[[body.text]]";
 
         String newTemplate = processor.preProcess(template);
-        assertFalse(template.equals(newTemplate));
+        assertNotEquals(template, newTemplate);
         assertEquals(expected, newTemplate);
     }
 
@@ -60,7 +61,7 @@ public class TestMustacheTemplatePreProcessor implements StringConstants {
     public void test2SymbolsTogether() throws Exception {
         String template = "{{name}}{{description}}";
         String newTemplate = processor.preProcess(template);
-        assertFalse(template.equals(newTemplate));
+        assertNotEquals(template, newTemplate);
         assertEquals("[[body.name]][[body.description]]", newTemplate);
     }
 
@@ -81,21 +82,19 @@ public class TestMustacheTemplatePreProcessor implements StringConstants {
             "[[body.text]]";
 
         String newTemplate = processor.preProcess(template);
-        assertFalse(template.equals(newTemplate));
+        assertNotEquals(template, newTemplate);
         assertEquals(expected, newTemplate);
     }
 
     @Test
-    public void testDanglingSectionTemplate() throws Exception {
+    public void testDanglingSectionTemplate() {
         String template = EMPTY_STRING +
             "{{name}} passed the following courses:" + NEW_LINE +
             "{{#course}}" + NEW_LINE +
             "\t* {{name}}" + NEW_LINE +
             "{{text}}";
 
-        assertThatThrownBy(() -> {
-            processor.preProcess(template);
-        })
+        assertThatThrownBy(() -> processor.preProcess(template))
             .isInstanceOf(TemplateProcessingException.class)
             .hasMessageContaining("section has not been closed");
     }
@@ -118,34 +117,30 @@ public class TestMustacheTemplatePreProcessor implements StringConstants {
             "[[body.the text]]";
 
         String newTemplate = processor.preProcess(template);
-        assertFalse(template.equals(newTemplate));
+        assertNotEquals(template, newTemplate);
         assertEquals(expected, newTemplate);
     }
 
     @Test
-    public void testInvalidTemplateWrongSyntax() throws Exception {
+    public void testInvalidTemplateWrongSyntax() {
         // Using velocity syntax instead
         String template = EMPTY_STRING +
             "At ${time}, ${name}" + NEW_LINE +
             "submitted the following message:" + NEW_LINE +
             "${text}";
 
-        assertThatThrownBy(() -> {
-            processor.preProcess(template);
-        })
+        assertThatThrownBy(() -> processor.preProcess(template))
             .isInstanceOf(TemplateProcessingException.class)
             .hasMessageContaining("wrong language");
     }
 
     @Test
-    public void testInvalidTemplateNoEndTag() throws Exception {
+    public void testInvalidTemplateNoEndTag() {
         // Using velocity syntax instead
         String template = EMPTY_STRING +
             "At {{time}";
 
-        assertThatThrownBy(() -> {
-            processor.preProcess(template);
-        })
+        assertThatThrownBy(() -> processor.preProcess(template))
             .isInstanceOf(TemplateProcessingException.class)
             .hasMessageContaining("incomplete symbol");
     }

@@ -16,8 +16,8 @@
 package io.syndesis.common.model.support;
 
 import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
 import io.syndesis.common.util.StringConstants;
+import org.apache.commons.lang3.StringUtils;
 
 class EquivContext implements StringConstants {
 
@@ -72,15 +72,15 @@ class EquivContext implements StringConstants {
         // then include '...'
         //
         if (diffIndex > 0 && diffIndex <= TRUNCATE_LENGTH) {
-            truncated.append(fullText.substring(0, diffIndex));
+            truncated.append(fullText, 0, diffIndex);
         } else if (diffIndex > TRUNCATE_LENGTH) {
             truncated
-                .append(fullText.substring(0, TRUNCATE_LENGTH))
+                .append(fullText, 0, TRUNCATE_LENGTH)
                 .append(SPACE).append(ELLIPSE).append(SPACE);
         }
 
         if (diffText.length() > 70) {
-            truncated.append(diffText.substring(0, 70)).append(SPACE).append(ELLIPSE);
+            truncated.append(diffText, 0, 70).append(SPACE).append(ELLIPSE);
         } else {
             truncated.append(diffText);
         }

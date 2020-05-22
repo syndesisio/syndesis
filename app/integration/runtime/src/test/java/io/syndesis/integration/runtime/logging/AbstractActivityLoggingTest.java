@@ -68,7 +68,7 @@ public abstract class AbstractActivityLoggingTest {
     }
 
     @After
-    public void after() throws Exception {
+    public void after() {
         context.stop();
     }
 

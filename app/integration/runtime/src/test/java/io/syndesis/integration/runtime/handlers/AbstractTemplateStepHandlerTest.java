@@ -71,12 +71,12 @@ public abstract class AbstractTemplateStepHandlerTest {
     protected DefaultCamelContext context;
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         context = new DefaultCamelContext();
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         context.stop();
         context = null;
     }
@@ -252,7 +252,7 @@ public abstract class AbstractTemplateStepHandlerTest {
         testTemplate(symbols, template, testMessages, expectedMessages);
      }
 
-    protected void testTemplateStepNoSpacesInSymbolAllowed(Symbol[] symbols) throws Exception {
+    protected void testTemplateStepNoSpacesInSymbolAllowed(Symbol[] symbols) {
         String template = EMPTY_STRING +
             "At " + symbols[0] + ", " + symbols[1] + NEW_LINE +
             "stated submitted the following message:" + NEW_LINE +

@@ -17,10 +17,11 @@ package io.syndesis.common.model.integration.step.template;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+
+import io.syndesis.common.util.StringConstants;
 import org.junit.After;
 import org.junit.Test;
-import io.syndesis.common.util.StringConstants;
 
 public class TestFreeMarkerTemplatePreProcessor implements StringConstants {
 
@@ -35,7 +36,7 @@ public class TestFreeMarkerTemplatePreProcessor implements StringConstants {
     public void testBasicTemplate() throws Exception {
         String template = "${text}";
         String newTemplate = processor.preProcess(template);
-        assertFalse(template.equals(newTemplate));
+        assertNotEquals(template, newTemplate);
         assertEquals("${body.text}", newTemplate);
     }
 
@@ -52,7 +53,7 @@ public class TestFreeMarkerTemplatePreProcessor implements StringConstants {
             "${body.text}";
 
         String newTemplate = processor.preProcess(template);
-        assertFalse(template.equals(newTemplate));
+        assertNotEquals(template, newTemplate);
         assertEquals(expected, newTemplate);
     }
 
@@ -60,7 +61,7 @@ public class TestFreeMarkerTemplatePreProcessor implements StringConstants {
     public void test2SymbolsTogether() throws Exception {
         String template = "${name}${description}";
         String newTemplate = processor.preProcess(template);
-        assertFalse(template.equals(newTemplate));
+        assertNotEquals(template, newTemplate);
         assertEquals("${body.name}${body.description}", newTemplate);
     }
 
@@ -68,7 +69,7 @@ public class TestFreeMarkerTemplatePreProcessor implements StringConstants {
     public void testValidSymbolFormat() throws Exception {
         String template = "${name@_}";
         String newTemplate = processor.preProcess(template);
-        assertFalse(template.equals(newTemplate));
+        assertNotEquals(template, newTemplate);
         assertEquals("${body.name@_}", newTemplate);
     }
 
@@ -76,15 +77,13 @@ public class TestFreeMarkerTemplatePreProcessor implements StringConstants {
      * Freemarker does not allow numbers at the start of its symbols
      */
     @Test
-    public void testTemplateSymbolBeginningWithNumber() throws Exception {
+    public void testTemplateSymbolBeginningWithNumber() {
         String template = EMPTY_STRING +
             "At ${1the time}, ${the name}" + NEW_LINE +
             "submitted the following message:" + NEW_LINE +
             "${the text}";
 
-        assertThatThrownBy(() -> {
-            processor.preProcess(template);
-        })
+        assertThatThrownBy(() -> processor.preProcess(template))
             .isInstanceOf(TemplateProcessingException.class)
             .hasMessageContaining("not valid syntactically");
     }
@@ -93,15 +92,13 @@ public class TestFreeMarkerTemplatePreProcessor implements StringConstants {
      * Freemarker does not allow spaces in its symbols
      */
     @Test
-    public void testTemplateSymbolsWithSpaces() throws Exception {
+    public void testTemplateSymbolsWithSpaces() {
         String template = EMPTY_STRING +
             "At ${the time}, ${the name}" + NEW_LINE +
             "submitted the following message:" + NEW_LINE +
             "${the text}";
 
-        assertThatThrownBy(() -> {
-            processor.preProcess(template);
-        })
+        assertThatThrownBy(() -> processor.preProcess(template))
             .isInstanceOf(TemplateProcessingException.class)
             .hasMessageContaining("not valid syntactically");
     }

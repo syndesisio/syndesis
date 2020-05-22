@@ -134,7 +134,7 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
     }
 
     @Override
-    protected ConnectorAction createConnectorAction() throws Exception {
+    protected ConnectorAction createConnectorAction() {
         ConnectorAction odataAction = new ConnectorAction.Builder()
             .description("Patch resource entity in resource on the server")
              .id("io.syndesis:odata-patch-connector")

@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.syndesis.common.model.DataShape;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
@@ -27,8 +29,6 @@ import io.syndesis.connector.support.verifier.api.SyndesisMetadataProperties;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ActionDefinitionEndpointTest {
     private static final DataShape INPUT = new DataShape.Builder().build();
@@ -42,7 +42,7 @@ public class ActionDefinitionEndpointTest {
 
 
     @Test
-    public void shouldMetadata() throws Exception {
+    public void shouldMetadata() {
         final CamelContext context = new DefaultCamelContext();
         context.addComponent("petstore", new PetstoreComponent(PAYLOAD));
 
@@ -61,7 +61,7 @@ public class ActionDefinitionEndpointTest {
     }
 
     @Test
-    public void shouldDynamicProperties() throws Exception {
+    public void shouldDynamicProperties() {
         final CamelContext context = new DefaultCamelContext();
         context.addComponent("petstore", new PetstoreComponent(PAYLOAD));
 

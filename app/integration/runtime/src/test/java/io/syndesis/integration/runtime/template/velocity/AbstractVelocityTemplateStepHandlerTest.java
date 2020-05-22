@@ -60,7 +60,7 @@ public abstract class AbstractVelocityTemplateStepHandlerTest extends AbstractTe
      }
 
     @Test
-    public void testInvalidTemplate() throws Exception {
+    public void testInvalidTemplate() {
         SymbolSyntax mustacheSyntax = TemplateStepLanguage.MUSTACHE.getDefaultSymbolSyntax();
         Symbol[] symbols = {
             new Symbol("time", "string", mustacheSyntax),

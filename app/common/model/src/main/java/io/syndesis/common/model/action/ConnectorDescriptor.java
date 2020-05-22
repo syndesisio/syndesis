@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.WithConfiguredProperties;
@@ -163,8 +162,8 @@ public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredPro
 
     class PotentialStep {
 
-        int stepIdx;
-        ActionDescriptorStep step;
+        final int stepIdx;
+        final ActionDescriptorStep step;
 
         public PotentialStep(int stepIdx, ActionDescriptorStep step) {
             super();
