@@ -15,7 +15,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppContext } from '../../../app';
 import i18n from '../../../i18n';
-import { ApiError } from '../../../shared';
+import { ApiError, PageTitle } from '../../../shared';
 import resolvers from '../resolvers';
 import {
   VirtualizationActionContainer,
@@ -31,14 +31,14 @@ import {
 function getFilteredAndSortedVirtualizations(
   virtualizations: Virtualization[],
   activeFilters: IActiveFilter[],
-  isSortAscending: boolean
+  isSortAscending: boolean,
 ) {
   let filteredAndSorted = virtualizations;
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
     filteredAndSorted = filteredAndSorted.filter(
       (virtualization: Virtualization) =>
-        virtualization.name.toLowerCase().includes(valueToLower)
+        virtualization.name.toLowerCase().includes(valueToLower),
     );
   });
 
@@ -50,7 +50,7 @@ function getFilteredAndSortedVirtualizations(
 
       // sort descending
       return thatVirtualization.name.localeCompare(thisVirtualization.name);
-    }
+    },
   );
 
   return filteredAndSorted;
@@ -124,6 +124,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
     />
   ) : (
     <>
+      <PageTitle title={t('virtualizationsPageTitle')}/>
       <SimplePageHeader
         i18nTitle={t('virtualizationsPageTitle')}
         i18nDescription={t('virtualizationsPageDescription')}
@@ -145,15 +146,15 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
           const filteredAndSorted = getFilteredAndSortedVirtualizations(
             data,
             helpers.activeFilters,
-            helpers.isSortAscending
+            helpers.isSortAscending,
           );
           return (
             <PageSection>
               <WithLoader
                 error={error !== false}
                 loading={!hasData}
-                loaderChildren={<VirtualizationListSkeleton width={800} />}
-                errorChildren={<ApiError error={error as Error} />}
+                loaderChildren={<VirtualizationListSkeleton width={800}/>}
+                errorChildren={<ApiError error={error as Error}/>}
               >
                 {() => (
                   <VirtualizationList
@@ -163,7 +164,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                     {...helpers}
                     i18nCreateDataVirtualization={t('createDataVirtualization')}
                     i18nCreateDataVirtualizationTip={t(
-                      'createDataVirtualizationTip'
+                      'createDataVirtualizationTip',
                     )}
                     i18nEmptyStateInfo={t('emptyStateInfoMessage')}
                     i18nEmptyStateTitle={t('emptyStateTitle')}
@@ -172,7 +173,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                     i18nLinkCreateVirtualization={t('createDataVirtualization')}
                     i18nName={t('shared:Name')}
                     i18nNameFilterPlaceholder={t(
-                      'shared:nameFilterPlaceholder'
+                      'shared:nameFilterPlaceholder',
                     )}
                     i18nResultsCount={t('shared:resultsCount', {
                       count: filteredAndSorted.length,
@@ -185,10 +186,10 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                       (virtualization: Virtualization, index: number) => {
                         const publishingDetails = getPublishingDetails(
                           appContext.config.consoleUrl,
-                          virtualization
+                          virtualization,
                         );
                         const isProgressWithLink = isPublishStep(
-                          publishingDetails
+                          publishingDetails,
                         );
                         const labelType = getStateLabelStyle(publishingDetails);
                         const publishStateText = getStateLabelText(
@@ -202,12 +203,12 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             i18nPublishState={publishStateText}
                             labelType={labelType}
                             detailsPageLink={resolvers.virtualizations.views.root(
-                              { virtualization }
+                              { virtualization },
                             )}
                             modified={virtualization.modified}
                             virtualizationName={virtualization.name}
                             virtualizationDescription={getDescription(
-                              virtualization
+                              virtualization,
                             )}
                             odataUrl={getOdataUrl(virtualization)}
                             i18nViewODataUrlText={t('viewOData')}
@@ -217,7 +218,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             i18nLockPopover={t('dataPermissionPopover')}
                             i18nSecuredText={t('dataPermissionSecuredText')}
                             i18nInUseText={getUsedByMessage(
-                              virtualization.usedBy
+                              virtualization.usedBy,
                             )}
                             dropdownActions={getVirtualizationActions(virtualization)}
                             currentPublishedState={publishingDetails.state}
@@ -233,7 +234,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             secured={virtualization.secured}
                           />
                         );
-                      }
+                      },
                     )}
                   </VirtualizationList>
                 )}

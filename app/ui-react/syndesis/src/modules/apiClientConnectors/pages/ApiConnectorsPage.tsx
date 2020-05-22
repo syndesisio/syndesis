@@ -15,7 +15,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
-import { ApiError } from '../../../shared';
+import { ApiError, PageTitle } from '../../../shared';
 import resolvers from '../resolvers';
 import routes from '../routes';
 
@@ -100,6 +100,7 @@ export const ApiConnectorsPage: React.FunctionComponent = () => {
                     <Translation ns={['apiClientConnectors', 'shared']}>
                       {t => (
                         <>
+                          <PageTitle title={t('apiConnectorsPageTitle')}/>
                           <SimplePageHeader
                             i18nTitle={t('apiConnectorsPageTitle')}
                             i18nDescription={t(

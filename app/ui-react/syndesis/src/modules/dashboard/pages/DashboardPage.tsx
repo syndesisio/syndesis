@@ -22,7 +22,7 @@ import {
 } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { ApiError } from '../../../shared';
+import { ApiError, PageTitle } from '../../../shared';
 import { Connections } from '../../connections/components';
 import { Integrations } from '../../integrations/components';
 import resolvers from '../../resolvers';
@@ -35,7 +35,7 @@ export interface IIntegrationCountsByState {
 }
 
 export function getIntegrationsCountsByState(
-  integrations: IntegrationWithOverview[]
+  integrations: IntegrationWithOverview[],
 ): IIntegrationCountsByState {
   return integrations.reduce(
     (counts, mi) => {
@@ -50,7 +50,7 @@ export function getIntegrationsCountsByState(
       Pending: 0,
       Published: 0,
       Unpublished: 0,
-    } as IIntegrationCountsByState
+    } as IIntegrationCountsByState,
   );
 }
 
@@ -67,7 +67,7 @@ export function byTimestamp(a: IntegrationOverview, b: IntegrationOverview) {
 }
 
 export function getRecentlyUpdatedIntegrations(
-  integrations: IntegrationWithOverview[]
+  integrations: IntegrationWithOverview[],
 ): IntegrationOverview[] {
   return integrations
     .map(mi => mi.integration)
@@ -77,7 +77,7 @@ export function getRecentlyUpdatedIntegrations(
 
 export function getTopIntegrations(
   integrations: IntegrationWithOverview[],
-  topIntegrations: { [name: string]: number } = {}
+  topIntegrations: { [name: string]: number } = {},
 ): IntegrationWithOverview[] {
   const topIntegrationsArray = Object.keys(topIntegrations)
     .map(key => {
@@ -94,7 +94,7 @@ export function getTopIntegrations(
     .sort((miA, miB) => byTimestamp(miA.integration, miB.integration))
     .sort((a, b) => {
       const index = topIntegrationsArray.findIndex(
-        i => i.id === b.integration.id
+        i => i.id === b.integration.id,
       );
       return index === -1 ? topIntegrationsArray.length + 1 : index;
     })
@@ -105,206 +105,209 @@ export function getTopIntegrations(
 export default () => (
   <WithMonitoredIntegrations>
     {({
-      data: integrationsData,
-      hasData: hasIntegrations,
-      error: integrationsError,
-      errorMessage: integrationsErrorMessage,
-      loading: integrationsLoading,
-    }) => (
+        data: integrationsData,
+        hasData: hasIntegrations,
+        error: integrationsError,
+        errorMessage: integrationsErrorMessage,
+        loading: integrationsLoading,
+      }) => (
       <WithIntegrationsMetrics>
         {({ data: metricsData, loading: metricsLoading }) => (
           <WithConnections>
             {({
-              data: connectionsData,
-              hasData: hasConnections,
-              error: connectionsError,
-              errorMessage: connectionsErrorMessage,
-              loading: connectionsLoading,
-            }) => {
+                data: connectionsData,
+                hasData: hasConnections,
+                error: connectionsError,
+                errorMessage: connectionsErrorMessage,
+                loading: connectionsLoading,
+              }) => {
               const integrationStatesCount = getIntegrationsCountsByState(
-                integrationsData.items
+                integrationsData.items,
               );
               const recentlyUpdatedIntegrations = getRecentlyUpdatedIntegrations(
-                integrationsData.items
+                integrationsData.items,
               );
               const topIntegrations = getTopIntegrations(
                 integrationsData.items,
-                metricsData.topIntegrations
+                metricsData.topIntegrations,
               );
 
               const dashboardConnections = connectionsData.connectionsForDisplay.slice(
                 0,
-                8
+                8,
               );
 
               return (
                 <Translation ns={['dashboard', 'integrations', 'shared']}>
                   {t => (
-                    <Dashboard
-                      linkToIntegrations={resolvers.integrations.list()}
-                      linkToIntegrationCreation={resolvers.integrations.create.start.selectStep()}
-                      linkToConnections={resolvers.connections.connections()}
-                      linkToConnectionCreation={resolvers.connections.create.selectConnector()}
-                      noIntegrations={
-                        integrationsData.totalCount ===
-                        0 /* TODO makes the UI component hide the board and recent updates, needs a revisit */
-                      }
-                      integrationsOverview={
-                        <AggregatedMetricCard
-                          data-testid={'dashboard-page-total-integrations'}
-                          title={t('titleTotalIntegrations')}
-                          total={integrationsData.totalCount}
-                          ok={
-                            integrationsData.totalCount -
-                            integrationStatesCount.Error
-                          }
-                          error={integrationStatesCount.Error}
-                        />
-                      }
-                      connectionsOverview={
-                        <ConnectionsMetric
-                          i18nTitle={t('titleTotalConnections', {
-                            count: connectionsData.connectionsForDisplay.length,
-                          })}
-                        />
-                      }
-                      messagesOverview={
-                        <AggregatedMetricCard
-                          data-testid={'dashboard-page-total-messages'}
-                          title={t('titleTotalMessages')}
-                          total={metricsData.messages!}
-                          ok={metricsData.messages! - metricsData.errors!}
-                          error={metricsData.errors!}
-                        />
-                      }
-                      uptimeOverview={
-                        <UptimeMetric
-                          start={metricsData.start!}
-                          uptimeDuration={toUptimeDurationString(
-                            metricsData.uptimeDuration!,
-                            t('metricsNoDataAvailable')
-                          )}
-                          i18nTitle={t('titleUptimeMetric')}
-                          i18nSince={t('since')}
-                        />
-                      }
-                      topIntegrations={
-                        <TopIntegrationsCard
-                          i18nCreateIntegration={t(
-                            'shared:linkCreateIntegration'
-                          )}
-                          i18nCreateIntegrationTip={t(
-                            'integrations:integrationsEmptyState.createTip'
-                          )}
-                          i18nEmptyStateInfo={t(
-                            'integrations:integrationsEmptyState.info'
-                          )}
-                          i18nEmptyStateTitle={t(
-                            'integrations:integrationsEmptyState.title'
-                          )}
-                          i18nTitle={t('titleTopIntegrations', {
-                            count: 5,
-                          })}
-                          i18nLast30Days={t('lastNumberOfDays', {
-                            numberOfDays: 30,
-                          })}
-                          linkCreateIntegration={resolvers.integrations.create.start.selectStep()}
-                        >
-                          <Integrations
-                            error={integrationsError}
-                            loading={
-                              integrationsLoading &&
-                              metricsLoading &&
-                              !hasIntegrations
+                    <>
+                      <PageTitle title={t('title')}/>
+                      <Dashboard
+                        linkToIntegrations={resolvers.integrations.list()}
+                        linkToIntegrationCreation={resolvers.integrations.create.start.selectStep()}
+                        linkToConnections={resolvers.connections.connections()}
+                        linkToConnectionCreation={resolvers.connections.create.selectConnector()}
+                        noIntegrations={
+                          integrationsData.totalCount ===
+                          0 /* TODO makes the UI component hide the board and recent updates, needs a revisit */
+                        }
+                        integrationsOverview={
+                          <AggregatedMetricCard
+                            data-testid={'dashboard-page-total-integrations'}
+                            title={t('titleTotalIntegrations')}
+                            total={integrationsData.totalCount}
+                            ok={
+                              integrationsData.totalCount -
+                              integrationStatesCount.Error
                             }
-                            integrations={topIntegrations}
+                            error={integrationStatesCount.Error}
                           />
-                        </TopIntegrationsCard>
-                      }
-                      integrationBoard={
-                        <IntegrationBoard
-                          runningIntegrations={integrationStatesCount.Published}
-                          pendingIntegrations={integrationStatesCount.Pending}
-                          stoppedIntegrations={
-                            integrationStatesCount.Unpublished
-                          }
-                          i18nTitle={t('titleIntegrationBoard')}
-                          i18nIntegrationStatePending={t(
-                            'integrationStatePending'
-                          )}
-                          i18nIntegrationStateRunning={t(
-                            'integrationStateRunning'
-                          )}
-                          i18nIntegrationStateStopped={t(
-                            'integrationStateStopped'
-                          )}
-                          i18nIntegrations={t('shared:Integrations')}
-                        />
-                      }
-                      integrationUpdates={
-                        <RecentUpdatesCard
-                          i18nTitle={t('titleIntegrationUpdates')}
-                        >
-                          <WithLoader
-                            error={integrationsError}
-                            loading={
-                              integrationsLoading &&
-                              metricsLoading &&
-                              !hasIntegrations
-                            }
-                            loaderChildren={<RecentUpdatesSkeleton />}
-                            errorChildren={
-                              <ApiError error={integrationsErrorMessage!} />
-                            }
+                        }
+                        connectionsOverview={
+                          <ConnectionsMetric
+                            i18nTitle={t('titleTotalConnections', {
+                              count: connectionsData.connectionsForDisplay.length,
+                            })}
+                          />
+                        }
+                        messagesOverview={
+                          <AggregatedMetricCard
+                            data-testid={'dashboard-page-total-messages'}
+                            title={t('titleTotalMessages')}
+                            total={metricsData.messages!}
+                            ok={metricsData.messages! - metricsData.errors!}
+                            error={metricsData.errors!}
+                          />
+                        }
+                        uptimeOverview={
+                          <UptimeMetric
+                            start={metricsData.start!}
+                            uptimeDuration={toUptimeDurationString(
+                              metricsData.uptimeDuration!,
+                              t('metricsNoDataAvailable'),
+                            )}
+                            i18nTitle={t('titleUptimeMetric')}
+                            i18nSince={t('since')}
+                          />
+                        }
+                        topIntegrations={
+                          <TopIntegrationsCard
+                            i18nCreateIntegration={t(
+                              'shared:linkCreateIntegration',
+                            )}
+                            i18nCreateIntegrationTip={t(
+                              'integrations:integrationsEmptyState.createTip',
+                            )}
+                            i18nEmptyStateInfo={t(
+                              'integrations:integrationsEmptyState.info',
+                            )}
+                            i18nEmptyStateTitle={t(
+                              'integrations:integrationsEmptyState.title',
+                            )}
+                            i18nTitle={t('titleTopIntegrations', {
+                              count: 5,
+                            })}
+                            i18nLast30Days={t('lastNumberOfDays', {
+                              numberOfDays: 30,
+                            })}
+                            linkCreateIntegration={resolvers.integrations.create.start.selectStep()}
                           >
-                            {() =>
-                              recentlyUpdatedIntegrations.map(i => (
-                                <RecentUpdatesItem
-                                  key={i.id}
-                                  integrationName={i.name}
-                                  integrationCurrentState={i.currentState!}
-                                  integrationDate={toShortDateAndTimeString(
-                                    i.updatedAt! || i.createdAt!
-                                  )}
-                                  i18nError={t('shared:Error')}
-                                  i18nPublished={t('shared:Published')}
-                                  i18nUnpublished={t('shared:Unpublished')}
-                                />
-                              ))
+                            <Integrations
+                              error={integrationsError}
+                              loading={
+                                integrationsLoading &&
+                                metricsLoading &&
+                                !hasIntegrations
+                              }
+                              integrations={topIntegrations}
+                            />
+                          </TopIntegrationsCard>
+                        }
+                        integrationBoard={
+                          <IntegrationBoard
+                            runningIntegrations={integrationStatesCount.Published}
+                            pendingIntegrations={integrationStatesCount.Pending}
+                            stoppedIntegrations={
+                              integrationStatesCount.Unpublished
                             }
-                          </WithLoader>
-                        </RecentUpdatesCard>
-                      }
-                      connections={
-                        <Connections
-                          error={connectionsError}
-                          errorMessage={connectionsErrorMessage}
-                          includeConnectionMenu={false}
-                          loading={connectionsLoading && !hasConnections}
-                          connections={dashboardConnections}
-                          getConnectionHref={connection =>
-                            resolvers.connections.connection.details({
-                              connection,
-                            })
-                          }
-                          getConnectionEditHref={connection =>
-                            resolvers.connections.connection.edit({
-                              connection,
-                            })
-                          }
-                        />
-                      }
-                      i18nConnections={t('shared:Connections')}
-                      i18nLinkCreateConnection={t(
-                        'shared:CreateConnection'
-                      )}
-                      i18nLinkCreateIntegration={t(
-                        'shared:linkCreateIntegration'
-                      )}
-                      i18nLinkToConnections={t('linkToConnections')}
-                      i18nLinkToIntegrations={t('linkToIntegrations')}
-                      i18nTitle={t('title')}
-                    />
+                            i18nTitle={t('titleIntegrationBoard')}
+                            i18nIntegrationStatePending={t(
+                              'integrationStatePending',
+                            )}
+                            i18nIntegrationStateRunning={t(
+                              'integrationStateRunning',
+                            )}
+                            i18nIntegrationStateStopped={t(
+                              'integrationStateStopped',
+                            )}
+                            i18nIntegrations={t('shared:Integrations')}
+                          />
+                        }
+                        integrationUpdates={
+                          <RecentUpdatesCard
+                            i18nTitle={t('titleIntegrationUpdates')}
+                          >
+                            <WithLoader
+                              error={integrationsError}
+                              loading={
+                                integrationsLoading &&
+                                metricsLoading &&
+                                !hasIntegrations
+                              }
+                              loaderChildren={<RecentUpdatesSkeleton/>}
+                              errorChildren={
+                                <ApiError error={integrationsErrorMessage!}/>
+                              }
+                            >
+                              {() =>
+                                recentlyUpdatedIntegrations.map(i => (
+                                  <RecentUpdatesItem
+                                    key={i.id}
+                                    integrationName={i.name}
+                                    integrationCurrentState={i.currentState!}
+                                    integrationDate={toShortDateAndTimeString(
+                                      i.updatedAt! || i.createdAt!,
+                                    )}
+                                    i18nError={t('shared:Error')}
+                                    i18nPublished={t('shared:Published')}
+                                    i18nUnpublished={t('shared:Unpublished')}
+                                  />
+                                ))
+                              }
+                            </WithLoader>
+                          </RecentUpdatesCard>
+                        }
+                        connections={
+                          <Connections
+                            error={connectionsError}
+                            errorMessage={connectionsErrorMessage}
+                            includeConnectionMenu={false}
+                            loading={connectionsLoading && !hasConnections}
+                            connections={dashboardConnections}
+                            getConnectionHref={connection =>
+                              resolvers.connections.connection.details({
+                                connection,
+                              })
+                            }
+                            getConnectionEditHref={connection =>
+                              resolvers.connections.connection.edit({
+                                connection,
+                              })
+                            }
+                          />
+                        }
+                        i18nConnections={t('shared:Connections')}
+                        i18nLinkCreateConnection={t(
+                          'shared:CreateConnection',
+                        )}
+                        i18nLinkCreateIntegration={t(
+                          'shared:linkCreateIntegration',
+                        )}
+                        i18nLinkToConnections={t('linkToConnections')}
+                        i18nLinkToIntegrations={t('linkToIntegrations')}
+                        i18nTitle={t('title')}
+                      />
+                    </>
                   )}
                 </Translation>
               );
