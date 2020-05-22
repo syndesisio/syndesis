@@ -1,6 +1,6 @@
 import { useApiConnectorCreator } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { IApiSummarySoap } from '@syndesis/models';
+import { IApiSummarySoap, ICreateConnectorProps } from '@syndesis/models';
 import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
@@ -20,13 +20,9 @@ import resolvers from '../../resolvers';
 import routes from '../../routes';
 
 export interface IDetailsPageRouteState {
-  authenticationType?: string;
-  authorizationEndpoint?: string;
+  configured?: ICreateConnectorProps;
   connectorTemplateId?: string;
-  portName?: string;
-  serviceName?: string;
   specification: IApiSummarySoap;
-  tokenEndpoint?: string;
 }
 
 export const DetailsPage: React.FunctionComponent = () => {
@@ -53,16 +49,11 @@ export const DetailsPage: React.FunctionComponent = () => {
 
           try {
             await createApiConnector({
+              ...state.configured,
               ...values,
-              authenticationType: state.authenticationType,
-              authorizationEndpoint: state.authorizationEndpoint,
               connectorTemplateId: state.connectorTemplateId,
-              portName: state.specification.configuredProperties!.portName,
-              serviceName: state.specification.configuredProperties!
-                .serviceName,
               specification: state.specification.configuredProperties!
                 .specification,
-              tokenEndpoint: state.tokenEndpoint,
             });
             actions.setSubmitting(false);
             allowNavigation();
@@ -92,6 +83,7 @@ export const DetailsPage: React.FunctionComponent = () => {
             <ApiConnectorInfoForm
               name={state.specification.name}
               description={state.specification.description}
+              connectorTemplateId={state.connectorTemplateId}
               handleSubmit={onSubmit}
             >
               {({

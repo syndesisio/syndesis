@@ -62,13 +62,20 @@
       "title": "Edit API Definition"
     },
     "security": {
+      "address": "Address",
       "accessTokenUrl": "Access Token URL",
       "authTypeLabel": "Authentication Type",
       "authorizationUrl": "Authorization URL",
       "description": "$t(shared:project.name) reads the document to determine the information needed to configure the connector to meet the API’s security requirements. Connections created from this connector always use the authentication type that you select here.",
       "noSecurity": "No Security",
+      "password": "Password",
+      "passwordType": "Password Type",
       "required": "All fields are required.",
-      "title": "Specify Security"
+      "timestamp": "Timestamp",
+      "title": "Specify Security",
+      "username": "Username",
+      "usernameTokenCreated": "Username Token Created",
+      "usernameTokenNonce": "Username Token Nonce"
     },
     "details": {
       "title": "Review/Edit Connector Details",
