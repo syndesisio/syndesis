@@ -84,7 +84,7 @@ stories.add('Provide Document', () => {
   );
 });
 
-stories.add('On Providing WSDL (SOAP) Document', () => {
+stories.add('Specify Service & Port (SOAP)', () => {
   return (
     <ApiConnectorCreatorLayout
       content={

@@ -272,14 +272,19 @@ const soapSpec = {
     'data:image/svg+xml,%3Csvg%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22200%22%20r%3D%22200%22%20style%3D%22fill%3A%23fff%22%2F%3E%3Cpath%20d%3D%22m%20258%2E608%2C280%20%2D11%2E536%2C0%200%2C%2D80%2E528%20%2D95%2E648%2C0%200%2C80%2E528%20%2D11%2E424%2C0%200%2C%2D163%2E744%2011%2E424%2C0%200%2C72%2E688%2095%2E648%2C0%200%2C%2D72%2E688%2011%2E536%2C0%200%2C163%2E744%20z%22%20style%3D%22fill%3A%23fff%22%2F%3E%3C%2Fsvg%3E',
 };
 
-stories.add('Specify Security (SOAP)', () => {
+const component = (selectedType: string) => {
   return (
     <ApiConnectorCreatorLayout
       content={
         <ApiClientConnectorCreateSecurity
-          authenticationTypes={[]}
+          authenticationTypes={
+            soapSpec.properties!.authenticationType &&
+            (soapSpec.properties!.authenticationType.enum || []).sort((a, b) =>
+              a.value!.localeCompare(b.value!)
+            )
+          }
           authUrl={''}
-          extractAuthType={(params?: string) => ''}
+          extractAuthType={extractAuthType}
           handleChangeAuthUrl={action('handleChangeAuthUrl')}
           handleChangeSelectedType={action('handleChangeSelectedType')}
           handleChangeTokenUrl={action('handleChangeTokenUrl')}
@@ -290,14 +295,14 @@ stories.add('Specify Security (SOAP)', () => {
           }
           i18nNoSecurity={'No Security'}
           i18nTitle={'Specify Security'}
-          selectedType={'selectedType'}
+          selectedType={selectedType}
           tokenUrl={'tokenUrl'}
         />
       }
       footer={
         <ApiConnectorCreatorFooter
           backHref={''}
-          onNext={action('')}
+          onNext={action('onNext')}
           i18nBack={'Back'}
           i18nNext={'Next'}
           isNextLoading={boolean('isNextLoading', false)}
@@ -324,56 +329,35 @@ stories.add('Specify Security (SOAP)', () => {
       }
     />
   );
+};
+
+const extractAuthType = (authType?: string): string => {
+  // avoid npe
+  if (typeof authType === 'undefined') {
+    return 'unselected';
+  }
+  // mask out this special value
+  if (authType === 'none') {
+    return 'none';
+  }
+  // extract the type from the type:value scheme that this field uses
+  return authType.split(':')[0];
+};
+
+stories.add('HTTP Basic Auth', () => {
+  const selectedType = 'basic';
+
+  return component(selectedType);
 });
 
-stories.add('Specify Security (REST)', () => (
-  <ApiConnectorCreatorLayout
-    content={
-      <ApiClientConnectorCreateSecurity
-        authenticationTypes={[]}
-        authUrl={''}
-        extractAuthType={(params?: string) => ''}
-        handleChangeAuthUrl={action('handleChangeAuthUrl')}
-        handleChangeSelectedType={action('handleChangeSelectedType')}
-        handleChangeTokenUrl={action('handleChangeTokenUrl')}
-        i18nAccessTokenUrl={'Access Token URL'}
-        i18nAuthorizationUrl={'Authorization URL'}
-        i18nDescription={
-          '$t(shared:project.name) reads the document to determine the information needed to configure the connector to meet the API’s security requirements. Connections created from this connector always use the authentication type that you select here.'
-        }
-        i18nNoSecurity={'No Security'}
-        i18nTitle={'Specify Security'}
-        selectedType={'selectedType'}
-        tokenUrl={'tokenUrl'}
-      />
-    }
-    footer={
-      <ApiConnectorCreatorFooter
-        backHref={''}
-        onNext={action('')}
-        i18nBack={'Back'}
-        i18nNext={'Next'}
-        isNextLoading={boolean('isNextLoading', false)}
-        isNextDisabled={boolean('isNextDisabled', false)}
-      />
-    }
-    navigation={
-      <ApiConnectorCreatorBreadSteps
-        step={3}
-        i18nDetails={'Review/Edit Connector Details'}
-        i18nReview={'Imported Operations'}
-        i18nSecurity={'Specify Security'}
-        i18nSelectMethod={'Provide Document'}
-      />
-    }
-    toggle={
-      <ApiConnectorCreatorToggleList
-        step={1}
-        i18nDetails={'Review/Edit Connector Details'}
-        i18nReview={'Imported Operations'}
-        i18nSecurity={'Specify Security'}
-        i18nSelectMethod={'Provide Document'}
-      />
-    }
-  />
-));
+stories.add('None', () => {
+  const selectedType = 'none';
+
+  return component(selectedType);
+});
+
+stories.add('WS-Security Username Token (SOAP)', () => {
+  const selectedType = 'ws-security-ut';
+
+  return component(selectedType);
+});

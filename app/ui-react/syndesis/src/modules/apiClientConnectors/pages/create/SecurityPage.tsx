@@ -63,6 +63,7 @@ export const SecurityPage: React.FunctionComponent = () => {
     // extract the type from the type:value scheme that this field uses
     return authType.split(':')[0];
   };
+
   const isValid = (authType?: string, authUrl?: string, tokenUrl?: string) => {
     const type = extractAuthType(authType);
     switch (type) {
@@ -81,6 +82,7 @@ export const SecurityPage: React.FunctionComponent = () => {
         return false;
     }
   };
+
   return (
     <Translation ns={['apiClientConnectors', 'shared']}>
       {t => (
