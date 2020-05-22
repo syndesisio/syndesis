@@ -10,6 +10,7 @@ import './VirtualizationDetailsHeader.css';
 export interface IVirtualizationDetailsHeaderProps {
   isProgressWithLink: boolean;
   i18nPublishState: string;
+  i18nPublishStateMessage: string;
   i18nDescriptionPlaceholder: string;
   i18nPublishLogUrlText: string;
   i18nODataUrlText: string;
@@ -47,6 +48,7 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<IVirtualizatio
                   isProgressWithLink={props.isProgressWithLink}
                   inListView={false}
                   i18nPublishState={props.i18nPublishState}
+                  i18nPublishStateMessage={props.i18nPublishStateMessage}
                   i18nPublishLogUrlText={props.i18nPublishLogUrlText}
                   labelType={props.labelType}
                   modified={props.modified}

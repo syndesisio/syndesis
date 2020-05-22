@@ -17,6 +17,7 @@ stories
       <PublishStatusWithProgress
         i18nPublishLogUrlText={'log/url/goes/here'}
         i18nPublishState={'Running'}
+        i18nPublishStateMessage={'The virtualization is running'}
         isProgressWithLink={false}
         inListView={false}
         labelType={'primary'}
@@ -29,6 +30,7 @@ stories
       <PublishStatusWithProgress
         i18nPublishLogUrlText={'View Log'}
         i18nPublishState={'Publishing...'}
+        i18nPublishStateMessage={'The virtualization publish is in progress'}
         isProgressWithLink={false}
         inListView={false}
         labelType={'default'}
@@ -43,6 +45,7 @@ stories
           isProgressWithLink={true}
           inListView={false}
           i18nPublishState={'BUILDING'}
+          i18nPublishStateMessage={'The virtualization build is in progress'}
           i18nPublishLogUrlText={'View Log'}
           labelType={'default'}
           modified={false}

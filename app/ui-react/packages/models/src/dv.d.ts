@@ -209,6 +209,7 @@ export interface VirtualizationPublishingDetails {
     | 'NOTFOUND'
     | 'RUNNING'
     | 'SUBMITTED';
+  stateMessage?: string;
   stepNumber: number;
   stepText: string;
   stepTotal: number;

@@ -20,8 +20,7 @@ import {
 import {
   getOdataUrl,
   getPublishingDetails,
-  getStateLabelStyle,
-  getStateLabelText,
+  getPublishStateLabelInfo,
   isPublishStep,
 } from '../shared/VirtualizationUtils';
 import './VirtualizationEditorPage.css';
@@ -155,6 +154,11 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
   });
 
   /**
+   * State identifying the message that should be used by publish state label popover.
+   */
+  const [publishStateMessage, setPublishStateMessage] = React.useState('');
+
+  /**
    * Update publishing details and description whenever a virtualization state changes.
    */
   React.useEffect(() => {
@@ -189,8 +193,10 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
     setProgressWithLink(isPublishStep(currPublishedState));
 
     if (!isSubmitted) {
-      setLabelType(getStateLabelStyle(currPublishedState));
-      setPublishStateText(getStateLabelText(currPublishedState));
+      const labelInfo = getPublishStateLabelInfo(currPublishedState);
+      setLabelType(labelInfo.style);
+      setPublishStateText(labelInfo.text);
+      setPublishStateMessage(labelInfo.message);
     }
   }, [currPublishedState, isProgressWithLink, isSubmitted]);
 
@@ -277,6 +283,7 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
         <VirtualizationDetailsHeader
           isProgressWithLink={isProgressWithLink}
           i18nPublishState={publishStateText}
+          i18nPublishStateMessage={publishStateMessage}
           labelType={labelType}
           i18nDescriptionPlaceholder={t('descriptionPlaceholder')}
           i18nPublishLogUrlText={t('shared:viewLogs')}
