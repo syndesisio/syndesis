@@ -66,7 +66,6 @@ export const ApiConnectorCreatorSecurityForm: React.FunctionComponent<IApiConnec
   );
 
   const handleChangeSelectedType = (newType: string) => {
-    console.log('newType: ' + JSON.stringify(newType));
     setSelectedType(newType);
     setValid(isValid(newType, authUrl, tokenUrl));
   };
