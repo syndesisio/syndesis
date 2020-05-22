@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.debezium;
+package io.syndesis.connector.debezium.metadata;
 
 import java.util.Arrays;
 
@@ -21,11 +21,11 @@ import org.junit.Test;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
-public class DebeziumMetaDataRetrievalTest {
+public class DebeziumMySQLDatashapeStrategyTest {
 
     @Test
     public void shouldBuildJsonSchema() {
-        final String generated = DebeziumMetaDataRetrieval.buildJsonSchema("table",
+        final String generated = DebeziumMySQLDatashapeStrategy.buildJsonSchema("table",
             Arrays.asList("\"prop1\":{\"type\":\"string\"}", "\"prop2\":{\"type\":\"string\"}", "\"prop3\":{\"type\":\"string\"}"));
 
         final String expected = "{\n" +
@@ -61,7 +61,7 @@ public class DebeziumMetaDataRetrievalTest {
             "FULLTEXT KEY `scope_action_ids_idx` (`scope_action_ids`)\n" +
             ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 
-        final String generated = DebeziumMetaDataRetrieval.convertDDLtoJsonSchema(ddl, "roles");
+        final String generated = DebeziumMySQLDatashapeStrategy.convertDDLtoJsonSchema(ddl, "roles");
 
         final String expected = "{\n" +
             "  \"$schema\":\"http://json-schema.org/draft-07/schema#\",\n" +
