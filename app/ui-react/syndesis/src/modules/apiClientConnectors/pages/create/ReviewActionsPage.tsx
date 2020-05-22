@@ -143,10 +143,14 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                           connectorTemplateId: state.connectorTemplateId,
                           specification: apiSummary!,
                         })}
-                        reviewEditHref={resolvers.create.specification({
-                          specification: apiSummary!.configuredProperties!
-                            .specification,
-                        })}
+                        reviewEditHref={
+                          !state.connectorTemplateId
+                            ? resolvers.create.specification({
+                                specification: apiSummary!.configuredProperties!
+                                  .specification,
+                              })
+                            : ''
+                        }
                       />
                     }
                     navigation={
