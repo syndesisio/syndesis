@@ -3,11 +3,11 @@ import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { ApiConnectorCreatorLayout } from '../../../src';
+import { ApiConnectorCreatorLayout } from '../../../src/Customization/apiClientConnectors';
 import {
-  ApiClientConnectorCreateSecurity,
   ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorFooter,
+  ApiConnectorCreatorSecurity,
   ApiConnectorCreatorToggleList,
 } from '../../../src/Customization/apiClientConnectors/create';
 
@@ -276,7 +276,7 @@ const component = (selectedType: string) => {
   return (
     <ApiConnectorCreatorLayout
       content={
-        <ApiClientConnectorCreateSecurity
+        <ApiConnectorCreatorSecurity
           authenticationTypes={
             soapSpec.properties!.authenticationType &&
             (soapSpec.properties!.authenticationType.enum || []).sort((a, b) =>
@@ -290,6 +290,7 @@ const component = (selectedType: string) => {
           handleChangeTokenUrl={action('handleChangeTokenUrl')}
           i18nAccessTokenUrl={'Access Token URL'}
           i18nAuthorizationUrl={'Authorization URL'}
+          i18nAuthTypeLabel={'Authentication Type'}
           i18nDescription={
             '$t(shared:project.name) reads the document to determine the information needed to configure the connector to meet the API’s security requirements. Connections created from this connector always use the authentication type that you select here.'
           }

@@ -2,6 +2,8 @@ import {
   Alert,
   Form,
   FormGroup,
+  FormSelect,
+  FormSelectOption,
   Radio,
   Stack,
   StackItem,
@@ -16,7 +18,7 @@ export interface IAuthenticationTypes {
   label?: string;
 }
 
-export interface IApiClientConnectorCreateSecurityProps {
+export interface IApiConnectorCreatorSecurityProps {
   /**
    * The list of available authentication types for this specification.
    */
@@ -27,6 +29,7 @@ export interface IApiClientConnectorCreateSecurityProps {
   handleChangeTokenUrl: (params: string) => void;
   i18nAccessTokenUrl: string;
   i18nAuthorizationUrl: string;
+  i18nAuthTypeLabel: string;
   i18nDescription: string;
   /**
    * Locale string for when no security is specified
@@ -38,18 +41,19 @@ export interface IApiClientConnectorCreateSecurityProps {
   extractAuthType(authType?: string): string;
 }
 
-export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClientConnectorCreateSecurityProps> = ({
+export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorCreatorSecurityProps> = ({
   authenticationTypes,
   authUrl,
   extractAuthType,
   handleChangeAuthUrl,
   handleChangeSelectedType,
   handleChangeTokenUrl,
-  i18nTitle,
   i18nAccessTokenUrl,
   i18nAuthorizationUrl,
+  i18nAuthTypeLabel,
   i18nDescription,
   i18nNoSecurity,
+  i18nTitle,
   selectedType,
   tokenUrl,
 }) => {
@@ -78,6 +82,25 @@ export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClien
                 readOnly={true}
               />
             ))}
+          </FormGroup>
+          <FormGroup fieldId={'authenticationType'} label={i18nAuthTypeLabel}>
+            <FormSelect
+              value={selectedType}
+              onChange={handleChangeSelectedType}
+              id={'authenticationType'}
+              name={'authenticationType'}
+              aria-label={i18nAuthTypeLabel}
+            >
+              {authenticationTypes!.map(
+                (authType: IAuthenticationTypes, idx) => (
+                  <FormSelectOption
+                    key={idx}
+                    value={authType.value}
+                    label={authType.label || i18nNoSecurity}
+                  />
+                )
+              )}
+            </FormSelect>
           </FormGroup>
           {extractAuthType(selectedType) === 'oauth2' && (
             <>
