@@ -83,7 +83,11 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
               />
             ))}
           </FormGroup>
-          <FormGroup fieldId={'authenticationType'} label={i18nAuthTypeLabel}>
+          <FormGroup
+            fieldId={'authenticationType'}
+            isRequired={true}
+            label={i18nAuthTypeLabel}
+          >
             <FormSelect
               value={selectedType}
               onChange={handleChangeSelectedType}
