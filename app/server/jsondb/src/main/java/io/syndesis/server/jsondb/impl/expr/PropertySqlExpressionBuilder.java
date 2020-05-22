@@ -15,11 +15,10 @@
  */
 package io.syndesis.server.jsondb.impl.expr;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-
 import org.skife.jdbi.v2.Query;
 
 class PropertySqlExpressionBuilder extends SqlExpressionBuilder {
@@ -30,7 +29,7 @@ class PropertySqlExpressionBuilder extends SqlExpressionBuilder {
     }
 
     @Override
-    public void build(StringBuilder sql, ArrayList<Consumer<Query<Map<String, Object>>>> binds, AtomicInteger bindCounter) {
+    public void build(StringBuilder sql, List<Consumer<Query<Map<String, Object>>>> binds, AtomicInteger bindCounter) {
         int b1 = bindCounter.incrementAndGet();
         sql.append("idx = :f").append(b1).append(" AND value");
         binds.add(query -> {

@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @JsonInclude(Include.NON_NULL)
 public class RestSchemaNode {
 
-    private final LinkedHashSet<RestSchemaNode> children = new LinkedHashSet<RestSchemaNode>();
+    private final Set<RestSchemaNode> children = new LinkedHashSet<RestSchemaNode>();
 
     private String name;
 

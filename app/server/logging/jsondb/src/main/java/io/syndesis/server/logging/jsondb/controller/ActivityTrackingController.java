@@ -126,7 +126,7 @@ public class ActivityTrackingController implements BackendController, Closeable 
             LOG.info("Purging old activity logs");
 
             @SuppressWarnings("unchecked")
-            Map<String, Object> hashMap = dbGet(HashMap.class, "/activity/integrations");
+            Map<String, Object> hashMap = dbGet(Map.class, "/activity/integrations");
             if( hashMap!=null ) {
                 for (String integrationId : hashMap.keySet()) {
                     String integrationPath = "/activity/exchanges/" + integrationId + "/%";
