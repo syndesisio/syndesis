@@ -44,7 +44,7 @@ func New(parent *internal.Options) *cobra.Command {
 	}
 
 	cmd.PersistentFlags().StringVarP(&o.Path, "path", "p", ".", "Path where bundle files should be saved")
-	cmd.PersistentFlags().StringVarP(&o.Path, "operator-image", "o", "syndesis/syndesis-operator:latest", "Syndesis operator docker image")
+	cmd.PersistentFlags().StringVarP(&o.Operator, "operator-image", "o", "syndesis/syndesis-operator:latest", "Syndesis operator docker image")
 	cmd.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
 	return &cmd
 }
