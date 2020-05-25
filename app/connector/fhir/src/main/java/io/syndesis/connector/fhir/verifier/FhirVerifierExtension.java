@@ -34,6 +34,8 @@ import org.slf4j.LoggerFactory;
 public class FhirVerifierExtension extends DefaultComponentVerifierExtension {
 
     private static final Logger LOG = LoggerFactory.getLogger(FhirVerifierExtension.class);
+    public static final String FHIR_VERSION = "fhirVersion";
+    public static final String SERVER_URL = "serverUrl";
 
     protected FhirVerifierExtension(String defaultScheme, CamelContext context) {
         super(defaultScheme, context);
@@ -46,8 +48,8 @@ public class FhirVerifierExtension extends DefaultComponentVerifierExtension {
 
     @Override
     protected Result verifyParameters(Map<String, Object> parameters) {
-        ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS).error(ResultErrorHelper.requiresOption("serverUrl", parameters))
-            .error(ResultErrorHelper.requiresOption("fhirVersion", parameters));
+        ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS).error(ResultErrorHelper.requiresOption(SERVER_URL, parameters))
+            .error(ResultErrorHelper.requiresOption(FHIR_VERSION, parameters));
 
         return builder.build();
     }
@@ -67,12 +69,12 @@ public class FhirVerifierExtension extends DefaultComponentVerifierExtension {
     private static void verifyFhirVersion(ResultBuilder builder, Map<String, Object> parameters) {
         try {
             final FhirVersionEnum fhirVersionEnum = ConnectorOptions.extractOptionAndMap(
-                parameters, "fhirVersion", FhirVersionEnum::valueOf);
-            parameters.put("fhirVersion", fhirVersionEnum);
+                parameters, FHIR_VERSION, FhirVersionEnum::valueOf);
+            parameters.put(FHIR_VERSION, fhirVersionEnum);
         } catch (Exception e) {
             builder.error(
                 ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Invalid FHIR version")
-                    .parameterKey("fhirVersion")
+                    .parameterKey(FHIR_VERSION)
                     .build());
         }
     }
@@ -81,9 +83,9 @@ public class FhirVerifierExtension extends DefaultComponentVerifierExtension {
         if (!builder.build().getErrors().isEmpty()) {
             return;
         }
-        final String serverUrl = ConnectorOptions.extractOption(parameters, "serverUrl");
+        final String serverUrl = ConnectorOptions.extractOption(parameters, SERVER_URL);
         final FhirVersionEnum fhirVersion = ConnectorOptions.extractOptionAsType(
-            parameters, "fhirVersion", FhirVersionEnum.class);
+            parameters, FHIR_VERSION, FhirVersionEnum.class);
         final String username = ConnectorOptions.extractOption(parameters, "username");
         final String password = ConnectorOptions.extractOption(parameters, "password");
         final String accessToken = ConnectorOptions.extractOption(parameters, "accessToken");
@@ -120,15 +122,15 @@ public class FhirVerifierExtension extends DefaultComponentVerifierExtension {
                 builder.error(
                     ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_GROUP_COMBINATION, "Unable to connect to FHIR server")
                         .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e)
-                        .parameterKey("serverUrl")
-                        .parameterKey("fhirVersion")
+                        .parameterKey(SERVER_URL)
+                        .parameterKey(FHIR_VERSION)
                         .build()
                 );
             }
         } else {
             builder.error(
                 ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Invalid blank FHIR server URL")
-                    .parameterKey("serverUrl")
+                    .parameterKey(SERVER_URL)
                     .build()
             );
         }

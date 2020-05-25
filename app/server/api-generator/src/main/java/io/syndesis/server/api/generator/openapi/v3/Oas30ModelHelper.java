@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 final class Oas30ModelHelper {
 
     private static final Logger LOG = LoggerFactory.getLogger(Oas30ModelHelper.class);
+    public static final String HTTP = "http";
 
     private Oas30ModelHelper() {
         // utility class
@@ -170,7 +171,7 @@ final class Oas30ModelHelper {
         String basePath = "/";
 
         String serverUrl = resolveUrl(server);
-        if (serverUrl.startsWith("http")) {
+        if (serverUrl.startsWith(HTTP)) {
             try {
                 basePath = new URL(serverUrl).getPath();
             } catch (MalformedURLException e) {
@@ -190,7 +191,7 @@ final class Oas30ModelHelper {
      */
     static String getScheme(Server server) {
         String serverUrl = resolveUrl(server);
-        if (serverUrl.startsWith("http")) {
+        if (serverUrl.startsWith(HTTP)) {
             try {
                 return new URL(serverUrl).getProtocol();
             } catch (MalformedURLException e) {
@@ -198,7 +199,7 @@ final class Oas30ModelHelper {
             }
         }
 
-        return "http";
+        return HTTP;
     }
 
     /**
@@ -213,7 +214,7 @@ final class Oas30ModelHelper {
         }
 
         String serverUrl = resolveUrl(openApiDoc.servers.get(0));
-        if (serverUrl.startsWith("http")) {
+        if (serverUrl.startsWith(HTTP)) {
             try {
                 return new URL(serverUrl).getHost();
             } catch (MalformedURLException e) {

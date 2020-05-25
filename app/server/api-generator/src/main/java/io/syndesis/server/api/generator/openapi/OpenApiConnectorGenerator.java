@@ -63,6 +63,7 @@ import static java.util.Optional.ofNullable;
 
 public class OpenApiConnectorGenerator extends ConnectorGenerator {
 
+    public static final String SPECIFICATION = "specification";
     private final Supplier<String> operationIdGenerator;
 
     private static final Oas20ParameterGenerator OAS20_PARAMETER_GENERATOR = new Oas20ParameterGenerator();
@@ -102,7 +103,7 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
                 .warnings(modelInfo.getWarnings());
 
             if (modelInfo.getResolvedSpecification() != null) {
-                summaryBuilder.putConfiguredProperty("specification", modelInfo.getResolvedSpecification());
+                summaryBuilder.putConfiguredProperty(SPECIFICATION, modelInfo.getResolvedSpecification());
             }
 
             return summaryBuilder.build();
@@ -138,7 +139,7 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
             .errors(modelInfo.getErrors())
             .warnings(modelInfo.getWarnings())
             .putAllConfiguredProperties(connectorSettings.getConfiguredProperties())
-            .putConfiguredProperty("specification", modelInfo.getResolvedSpecification())
+            .putConfiguredProperty(SPECIFICATION, modelInfo.getResolvedSpecification())
             .build();
     }
 
@@ -262,7 +263,7 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
         actions.sort(ActionComparator.INSTANCE);
         builder.addAllActions(actions);
 
-        builder.putConfiguredProperty("specification", SpecificationOptimizer.minimizeForComponent(openApiDoc));
+        builder.putConfiguredProperty(SPECIFICATION, SpecificationOptimizer.minimizeForComponent(openApiDoc));
 
         return builder.build();
     }
@@ -332,7 +333,7 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
     private static String requiredSpecification(final ConnectorSettings connectorSettings) {
         final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
 
-        final String specification = configuredProperties.get("specification");
+        final String specification = configuredProperties.get(SPECIFICATION);
 
         if (specification == null) {
             throw new IllegalArgumentException(

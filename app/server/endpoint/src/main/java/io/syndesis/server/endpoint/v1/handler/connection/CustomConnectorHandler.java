@@ -45,6 +45,7 @@ import java.net.URLConnection;
 @Tag(name = "connector-template")
 public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler {
 
+    public static final String SPECIFICATION = "specification";
     private final IconDao iconDao;
 
     CustomConnectorHandler(final DataManager dataManager, final ApplicationContext applicationContext, final IconDao iconDao) {
@@ -79,7 +80,7 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
         }
 
         final ConnectorSettings connectorSettingsToUse;
-        if (connectorSettings.getConfiguredProperties().containsKey("specification")) {
+        if (connectorSettings.getConfiguredProperties().containsKey(SPECIFICATION)) {
             connectorSettingsToUse = connectorSettings;
         } else {
             final String specification;
@@ -87,7 +88,7 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
                 specification = source.readUtf8();
             }
 
-            connectorSettingsToUse = new ConnectorSettings.Builder().createFrom(connectorSettings).putConfiguredProperty("specification", specification).build();
+            connectorSettingsToUse = new ConnectorSettings.Builder().createFrom(connectorSettings).putConfiguredProperty(SPECIFICATION, specification).build();
         }
 
         Connector generatedConnector = withGeneratorAndTemplate(connectorSettingsToUse.getConnectorTemplateId(),
@@ -141,7 +142,7 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
 
             final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
                 .createFrom(connectorFormData.getConnectorSettings())
-                .putConfiguredProperty("specification", specification)
+                .putConfiguredProperty(SPECIFICATION, specification)
                 .build();
 
             return withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(),
@@ -158,7 +159,7 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
         @FormParam("icon")
         private InputStream iconInputStream;
 
-        @FormParam("specification")
+        @FormParam(SPECIFICATION)
         private InputStream specification;
 
         public ConnectorSettings getConnectorSettings() {

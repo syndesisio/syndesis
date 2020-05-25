@@ -32,6 +32,7 @@ import static java.util.stream.Collectors.toList;
 
 public final class MongoCustomizersUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoCustomizersUtil.class);
+    public static final String ADMIN_DB = "adminDB";
 
     private MongoCustomizersUtil() {
     }
@@ -78,10 +79,10 @@ public final class MongoCustomizersUtil {
      */
     public static void replaceAdminDBIfMissing(Map<String, Object> params) {
         // Fallback admin database parameter
-        if (!params.containsKey("adminDB")) {
-            params.put("adminDB", params.get("database"));
-        } else if (params.get("adminDB").equals("")) {
-            params.replace("adminDB", params.get("database"));
+        if (!params.containsKey(ADMIN_DB)) {
+            params.put(ADMIN_DB, params.get("database"));
+        } else if (params.get(ADMIN_DB).equals("")) {
+            params.replace(ADMIN_DB, params.get("database"));
         }
     }
 

@@ -65,6 +65,19 @@ import io.syndesis.connector.support.util.ConnectorOptions;
 @SuppressWarnings({"PMD.GodClass", "PMD.CyclomaticComplexity"})
 final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceNowMetaDataExtension.class);
+    public static final String OBJECT_TYPE = "objectType";
+    public static final String OBJECT_NAME = "objectName";
+    public static final String META_TYPE = "metaType";
+    public static final String TYPE = "type";
+    public static final String ADDITIONAL_PROPERTIES = "additionalProperties";
+    public static final String ID = "id";
+    public static final String SCHEMA = "$schema";
+    public static final String TABLE = "table";
+    public static final String SYS_DB_OBJECT = "sys_db_object";
+    public static final String NOW = "now";
+    public static final String SYSPARM_EXCLUDE_REFERENCE_LINK = "sysparm_exclude_reference_link";
+    public static final String SYSPARM_FIELDS = "sysparm_fields";
+    public static final String SYSPARM_QUERY = "sysparm_query";
     private final ConcurrentMap<String, String> properties;
 
     ServiceNowMetaDataExtension(CamelContext context) {
@@ -75,16 +88,16 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
 
     @Override
     public Optional<MetaData> meta(Map<String, Object> parameters) {
-        final String objectType = ConnectorOptions.extractOption(parameters, "objectType");
-        final String metaType = ConnectorOptions.extractOption(parameters, "metaType", "definition");
+        final String objectType = ConnectorOptions.extractOption(parameters, OBJECT_TYPE);
+        final String metaType = ConnectorOptions.extractOption(parameters, META_TYPE, "definition");
 
         // Retrieve the table definition as json-scheme
         if (ObjectHelper.equalIgnoreCase(objectType, ServiceNowConstants.RESOURCE_TABLE) && ObjectHelper.equalIgnoreCase(metaType, "definition")) {
             final MetaContext context = new MetaContext(parameters);
 
             // validate meta parameters
-            ObjectHelper.notNull(context.getObjectType(), "objectType");
-            ObjectHelper.notNull(context.getObjectName(), "objectName");
+            ObjectHelper.notNull(context.getObjectType(), OBJECT_TYPE);
+            ObjectHelper.notNull(context.getObjectName(), OBJECT_NAME);
 
             try {
                 return tableDefinition(context);
@@ -98,7 +111,7 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
             final MetaContext context = new MetaContext(parameters);
 
             // validate meta parameters
-            ObjectHelper.notNull(context.getObjectType(), "objectType");
+            ObjectHelper.notNull(context.getObjectType(), OBJECT_TYPE);
 
             try {
                 return tableList(context);
@@ -112,7 +125,7 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
             final MetaContext context = new MetaContext(parameters);
 
             // validate mate parameters
-            ObjectHelper.notNull(context.getObjectType(), "objectType");
+            ObjectHelper.notNull(context.getObjectType(), OBJECT_TYPE);
 
             try {
                 return importSetList(context);
@@ -131,10 +144,10 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
         final String baseUrn = ConnectorOptions.extractOption(context.getParameters(), "baseUrn", "org:apache:camel:component:servicenow");
 
         // Schema
-        root.put("$schema", "http://json-schema.org/schema#");
-        root.put("id", String.format("urn:jsonschema:%s:%s)", baseUrn, context.getObjectName()));
-        root.put("type", "object");
-        root.put("additionalProperties", false);
+        root.put(SCHEMA, "http://json-schema.org/schema#");
+        root.put(ID, String.format("urn:jsonschema:%s:%s)", baseUrn, context.getObjectName()));
+        root.put(TYPE, "object");
+        root.put(ADDITIONAL_PROPERTIES, false);
 
         // Schema sections
         root.putObject("properties");
@@ -169,13 +182,13 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
     private Optional<MetaData> importSetList(MetaContext context) throws Exception {
         Optional<JsonNode> response = context.getClient().reset()
             .types(MediaType.APPLICATION_JSON_TYPE)
-            .path("now")
+            .path(NOW)
             .path(context.getConfiguration().getApiVersion())
-            .path("table")
-            .path("sys_db_object")
-            .query("sysparm_exclude_reference_link", "true")
-            .query("sysparm_fields", "name%2Csys_id")
-            .query("sysparm_query", "name=sys_import_set_row")
+            .path(TABLE)
+            .path(SYS_DB_OBJECT)
+            .query(SYSPARM_EXCLUDE_REFERENCE_LINK, "true")
+            .query(SYSPARM_FIELDS, "name%2Csys_id")
+            .query(SYSPARM_QUERY, "name=sys_import_set_row")
             .trasform(HttpMethod.GET, ServiceNowMetaDataExtension::findResultNode);
 
         if (response.isPresent()) {
@@ -188,13 +201,13 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
 
             response = context.getClient().reset()
                 .types(MediaType.APPLICATION_JSON_TYPE)
-                .path("now")
+                .path(NOW)
                 .path(context.getConfiguration().getApiVersion())
-                .path("table")
-                .path("sys_db_object")
-                .query("sysparm_exclude_reference_link", "true")
-                .query("sysparm_fields", "name%2Csys_name")
-                .queryF("sysparm_query", "super_class=%s", sysId.textValue())
+                .path(TABLE)
+                .path(SYS_DB_OBJECT)
+                .query(SYSPARM_EXCLUDE_REFERENCE_LINK, "true")
+                .query(SYSPARM_FIELDS, "name%2Csys_name")
+                .queryF(SYSPARM_QUERY, "super_class=%s", sysId.textValue())
                 .trasform(HttpMethod.GET, ServiceNowMetaDataExtension::findResultNode);
 
             if (response.isPresent()) {
@@ -226,13 +239,13 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
     private Optional<MetaData> tableList(MetaContext context) throws Exception {
         Optional<JsonNode> response = context.getClient().reset()
             .types(MediaType.APPLICATION_JSON_TYPE)
-            .path("now")
+            .path(NOW)
             .path(context.getConfiguration().getApiVersion())
-            .path("table")
-            .path("sys_db_object")
-            .query("sysparm_exclude_reference_link", "true")
-            .query("sysparm_fields", "name%2Csys_id")
-            .query("sysparm_query", "name=sys_import_set_row")
+            .path(TABLE)
+            .path(SYS_DB_OBJECT)
+            .query(SYSPARM_EXCLUDE_REFERENCE_LINK, "true")
+            .query(SYSPARM_FIELDS, "name%2Csys_id")
+            .query(SYSPARM_QUERY, "name=sys_import_set_row")
             .trasform(HttpMethod.GET, ServiceNowMetaDataExtension::findResultNode);
 
         if (response.isPresent()) {
@@ -241,12 +254,12 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
 
             response = context.getClient().reset()
                 .types(MediaType.APPLICATION_JSON_TYPE)
-                .path("now")
+                .path(NOW)
                 .path(context.getConfiguration().getApiVersion())
-                .path("table")
-                .path("sys_db_object")
-                .query("sysparm_exclude_reference_link", "true")
-                .query("sysparm_fields", "name%2Csys_name%2Csuper_class")
+                .path(TABLE)
+                .path(SYS_DB_OBJECT)
+                .query(SYSPARM_EXCLUDE_REFERENCE_LINK, "true")
+                .query(SYSPARM_FIELDS, "name%2Csys_name%2Csuper_class")
                 .trasform(HttpMethod.GET, ServiceNowMetaDataExtension::findResultNode);
 
             if (response.isPresent()) {
@@ -308,14 +321,14 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
         while (true) {
             Response response = context.getClient().reset()
                 .types(MediaType.APPLICATION_JSON_TYPE)
-                .path("now")
+                .path(NOW)
                 .path(context.getConfiguration().getApiVersion())
-                .path("table")
+                .path(TABLE)
                 .path("sys_properties")
-                .query("sysparm_exclude_reference_link", "true")
-                .query("sysparm_fields", "name%2Cvalue")
+                .query(SYSPARM_EXCLUDE_REFERENCE_LINK, "true")
+                .query(SYSPARM_FIELDS, "name%2Cvalue")
                 .query("sysparm_offset", offset)
-                .query("sysparm_query", "name=glide.sys.date_format^ORname=glide.sys.time_format")
+                .query(SYSPARM_QUERY, "name=glide.sys.date_format^ORname=glide.sys.time_format")
                 .invoke(HttpMethod.GET);
 
             findResultNode(response).ifPresent(node -> processResult(node, n -> {
@@ -347,12 +360,12 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
         while (true) {
             Response response = context.getClient().reset()
                 .types(MediaType.APPLICATION_JSON_TYPE)
-                .path("now")
+                .path(NOW)
                 .path(context.getConfiguration().getApiVersion())
-                .path("table")
+                .path(TABLE)
                 .path("sys_dictionary")
                 .query("sysparm_display_value", "false")
-                .queryF("sysparm_query", "name=%s", name)
+                .queryF(SYSPARM_QUERY, "name=%s", name)
                 .query("sysparm_offset", offset)
                 .invoke(HttpMethod.GET);
 
@@ -420,42 +433,42 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
 
                     switch (entry.getInternalType().getValue()) {
                     case "integer":
-                        property.put("type", "integer");
+                        property.put(TYPE, "integer");
                         break;
                     case "float":
-                        property.put("type", "number");
+                        property.put(TYPE, "number");
                         break;
                     case "boolean":
-                        property.put("type", "boolean");
+                        property.put(TYPE, "boolean");
                         break;
                     case "guid":
                     case "GUID":
-                        property.put("type", "string");
+                        property.put(TYPE, "string");
                         property.put("pattern", "^[a-fA-F0-9]{32}");
                         break;
                     case "glide_date":
-                        property.put("type", "string");
+                        property.put(TYPE, "string");
                         property.put("format", "date");
                         break;
                     case "due_date":
                     case "glide_date_time":
                     case "glide_time":
                     case "glide_duration":
-                        property.put("type", "string");
+                        property.put(TYPE, "string");
                         property.put("format", "date-time");
                         break;
                     case "reference":
-                        property.put("type", "string");
+                        property.put(TYPE, "string");
                         property.put("pattern", "^[a-fA-F0-9]{32}");
 
                         if (entry.getReference().getValue() != null) {
                             // the referenced object type
-                            servicenow.put("sys_db_object", entry.getReference().getValue());
+                            servicenow.put(SYS_DB_OBJECT, entry.getReference().getValue());
                         }
 
                         break;
                     default:
-                        property.put("type", "string");
+                        property.put(TYPE, "string");
 
                         if (entry.getMaxLength() != null) {
                             property.put("maxLength", entry.getMaxLength());
@@ -496,13 +509,13 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
         while (true) {
             Optional<JsonNode> response = context.getClient().reset()
                 .types(MediaType.APPLICATION_JSON_TYPE)
-                .path("now")
+                .path(NOW)
                 .path(context.getConfiguration().getApiVersion())
-                .path("table")
-                .path("sys_db_object")
-                .query("sysparm_exclude_reference_link", "true")
-                .query("sysparm_fields", "name%2Csuper_class")
-                .query("sysparm_query", query)
+                .path(TABLE)
+                .path(SYS_DB_OBJECT)
+                .query(SYSPARM_EXCLUDE_REFERENCE_LINK, "true")
+                .query(SYSPARM_FIELDS, "name%2Csuper_class")
+                .query(SYSPARM_QUERY, query)
                 .trasform(HttpMethod.GET, ServiceNowMetaDataExtension::findResultNode);
 
             if (response.isPresent()) {
@@ -580,8 +593,8 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
             }
 
             this.instanceName = ConnectorOptions.extractOption(parameters, "instanceName");
-            this.objectType = ConnectorOptions.extractOption(parameters, "objectType", ServiceNowConstants.RESOURCE_TABLE);
-            this.objectName = ConnectorOptions.extractOption(parameters, "objectName", configuration.getTable());
+            this.objectType = ConnectorOptions.extractOption(parameters, OBJECT_TYPE, ServiceNowConstants.RESOURCE_TABLE);
+            this.objectName = ConnectorOptions.extractOption(parameters, OBJECT_NAME, configuration.getTable());
 
             ObjectHelper.notNull(instanceName, "instanceName");
 

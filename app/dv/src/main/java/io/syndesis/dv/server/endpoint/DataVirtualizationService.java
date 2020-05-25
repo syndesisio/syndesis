@@ -132,6 +132,7 @@ public final class DataVirtualizationService extends DvService {
     private static final Pattern DATAVIRTUALIZATION_PATTERN = Pattern.compile("[-a-z0-9]*[a-z0-9]", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
     private static final StringNameValidator VALIDATOR = new StringNameValidator();
+    public static final String AN_ERROR_HAS_OCCURRED = "An error has occurred.";
 
     @Autowired
     private TeiidOpenShiftClient openshiftClient;
@@ -152,7 +153,7 @@ public final class DataVirtualizationService extends DvService {
     @RequestMapping(method = RequestMethod.GET, produces= { MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation(value = "Return the collection of data services",
         response = RestDataVirtualization.class, responseContainer = "List")
-    @ApiResponses(value = { @ApiResponse(code = 403, message = "An error has occurred.") })
+    @ApiResponses(value = { @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED) })
     public List<RestDataVirtualization> getDataVirtualizations() {
 
         Iterable<? extends DataVirtualization> virtualizations = repositoryManager.runInTransaction(true, ()->{
@@ -214,7 +215,7 @@ public final class DataVirtualizationService extends DvService {
     @ApiOperation(value = "Find virtualization by name", response = RestDataVirtualization.class)
     @ApiResponses(value = { @ApiResponse(code = 404, message = "No virtualization could be found with name"),
             @ApiResponse(code = 406, message = "Only JSON is returned by this operation"),
-            @ApiResponse(code = 403, message = "An error has occurred.") })
+            @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED) })
     public RestDataVirtualization getDataVirtualization(
             @ApiParam(value = "name of the virtualization to be fetched - ignoring case",
             required = true) final @PathVariable(VIRTUALIZATION) String virtualization) {
@@ -255,7 +256,7 @@ public final class DataVirtualizationService extends DvService {
             consumes = { MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation(value = "Create a virtualization")
     @ApiResponses(value = { @ApiResponse(code = 406, message = "Only JSON is returned by this operation"),
-            @ApiResponse(code = 403, message = "An error has occurred.") })
+            @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED) })
     @SuppressWarnings("PMD.PreserveStackTrace") // no way to preserve
     public ResponseEntity<String> createDataVirtualization(
             @ApiParam(required = true) @RequestBody final RestDataVirtualization restDataVirtualization) {
@@ -293,7 +294,7 @@ public final class DataVirtualizationService extends DvService {
             MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation(value = "Delete a virtualization")
     @ApiResponses(value = { @ApiResponse(code = 406, message = "Only JSON is returned by this operation"),
-            @ApiResponse(code = 403, message = "An error has occurred.") })
+            @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED) })
     public StatusObject deleteDataVirtualization(@ApiParam(value = "Name of the virtualization to be deleted", required = true) final @PathVariable(VIRTUALIZATION) String virtualization) {
 
         StatusObject kso = repositoryManager.runInTransaction(false, ()->{
@@ -344,7 +345,7 @@ public final class DataVirtualizationService extends DvService {
             + V1Constants.TEIID_SOURCE_PLACEHOLDER, method = RequestMethod.PUT, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation(value = "Import views from a given source", response = StatusObject.class)
     @ApiResponses(value = { @ApiResponse(code = 406, message = "Only JSON is returned by this operation"),
-            @ApiResponse(code = 403, message = "An error has occurred.") })
+            @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED) })
     public StatusObject importViews(@ApiParam(value = "Name of the virtualization", required = true)
             final @PathVariable(V1Constants.VIRTUALIZATION)
             String virtualization,
@@ -443,7 +444,7 @@ public final class DataVirtualizationService extends DvService {
     @RequestMapping(value = StringConstants.FS + V1Constants.VIRTUALIZATION_PLACEHOLDER, method = RequestMethod.PUT, produces = {
             MediaType.APPLICATION_JSON_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation(value = "Update data service")
-    @ApiResponses(value = { @ApiResponse(code = 400, message = "An error has occurred.") })
+    @ApiResponses(value = { @ApiResponse(code = 400, message = AN_ERROR_HAS_OCCURRED) })
     public StatusObject updateDataVirtualization(
             @ApiParam(value = "Name of the data service", required = true)
             final @PathVariable(V1Constants.VIRTUALIZATION) String virtualization,
@@ -485,7 +486,7 @@ public final class DataVirtualizationService extends DvService {
     @ApiOperation(value = "Export virtualization by name.  Without a revision number, the current working state is exported.", response = RestDataVirtualization.class)
     @ApiResponses(value = { @ApiResponse(code = 404, message = "No virtualization could be found with name"),
             @ApiResponse(code = 406, message = "Only JSON is returned by this operation"),
-            @ApiResponse(code = 403, message = "An error has occurred.") })
+            @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED) })
     public ResponseEntity<StreamingResponseBody> exportDataVirtualization(
             @ApiParam(value = "name of the virtualization",
             required = true) final @PathVariable(VIRTUALIZATION) String virtualization,
@@ -786,7 +787,7 @@ public final class DataVirtualizationService extends DvService {
     @ApiResponses(value = {
         @ApiResponse(code = 404, message = "No virtualization could be found with name"),
         @ApiResponse(code = 406, message = "Only JSON returned by this operation"),
-        @ApiResponse(code = 403, message = "An error has occurred.")
+        @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED)
     })
     public BuildStatus deletePublishedVirtualization(
             @ApiParam(value = "Name of the virtualization")
@@ -799,7 +800,7 @@ public final class DataVirtualizationService extends DvService {
     @ApiResponses(value = {
         @ApiResponse(code = 404, message = "No Dataservice could be found with name"),
         @ApiResponse(code = 406, message = "Only JSON returned by this operation"),
-        @ApiResponse(code = 403, message = "An error has occurred.")
+        @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED)
     })
     @SuppressWarnings("PMD.NPathComplexity") // TODO refactor
     public StatusObject publishVirtualization(
@@ -917,7 +918,7 @@ public final class DataVirtualizationService extends DvService {
                     MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation(value = "Return the collection of editions", response = Edition.class, responseContainer = "List")
     @ApiResponses(value = {
-            @ApiResponse(code = 403, message = "An error has occurred.") })
+            @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED) })
     public List<Edition> getEditions(
             @ApiParam(value = "Name of the virtualization", required = true) final @PathVariable(VIRTUALIZATION) String virtualization)
             {
@@ -937,7 +938,7 @@ public final class DataVirtualizationService extends DvService {
                     MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation(value = "Return an edition", response = Edition.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 403, message = "An error has occurred.") })
+            @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED) })
     public Edition getEdition(
             @ApiParam(value = "Name of the virtualization", required = true) final @PathVariable(VIRTUALIZATION) String virtualization,
             @ApiParam(value = "Revision number", required = true) final @PathVariable(REVISION) long revision)
@@ -961,7 +962,7 @@ public final class DataVirtualizationService extends DvService {
                     MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation(value = "Start an edition", response = StatusObject.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 403, message = "An error has occurred.") })
+            @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED) })
     public StatusObject startEdition(
             @ApiParam(value = "Name of the virtualization to be deleted", required = true) final @PathVariable(VIRTUALIZATION) String virtualization,
             @ApiParam(value = "Revision number", required = true) final @PathVariable(REVISION) long revision)
@@ -1007,7 +1008,7 @@ public final class DataVirtualizationService extends DvService {
                     MediaType.APPLICATION_JSON_VALUE })
     @ApiOperation(value = "Revert to an edition", response = StatusObject.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 403, message = "An error has occurred.") })
+            @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED) })
     public StatusObject revertToEdition(
             @ApiParam(value = "Name of the virtualization to be deleted", required = true) final @PathVariable(VIRTUALIZATION) String virtualization,
             @ApiParam(value = "Revision number", required = true) final @PathVariable(REVISION) long revision) {
@@ -1037,7 +1038,7 @@ public final class DataVirtualizationService extends DvService {
     @ApiOperation(value = "Get the current metric values for the given virtualization.  Assumes only a single running pod.", response = PodMetrics.class)
     @ApiResponses(value = { @ApiResponse(code = 404, message = "No virtualization could be found with name"),
             @ApiResponse(code = 406, message = "Only JSON is returned by this operation"),
-            @ApiResponse(code = 403, message = "An error has occurred."),
+            @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED),
             @ApiResponse(code = 503, message = "Metrics are not available")})
     public PodMetrics getPublishedVirtualizationMetrics(
             @ApiParam(value = "name of the virtualization",
@@ -1108,7 +1109,7 @@ public final class DataVirtualizationService extends DvService {
     @ApiOperation(value = "Return all role information for the given virtualization", response = RoleInfo.class)
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Only JSON is returned by this operation"),
-            @ApiResponse(code = 403, message = "An error has occurred.") })
+            @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED) })
     public RoleInfo getRoles(
             @ApiParam(value = "name of the virtualization", required = true) final @PathVariable(VIRTUALIZATION) String virtualization)
             {
@@ -1131,7 +1132,7 @@ public final class DataVirtualizationService extends DvService {
     @ApiOperation(value = "Apply the role changes to the given virtualization")
     @ApiResponses(value = {
             @ApiResponse(code = 406, message = "Only JSON is returned by this operation"),
-            @ApiResponse(code = 403, message = "An error has occurred.") })
+            @ApiResponse(code = 403, message = AN_ERROR_HAS_OCCURRED) })
     public void applyRoles(
             @ApiParam(value = "name of the virtualization", required = true) final @PathVariable(VIRTUALIZATION) String virtualization,
             @ApiParam(value = "role info", required = true) final @RequestBody RoleInfo roleInfo)

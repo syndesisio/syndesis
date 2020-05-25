@@ -30,6 +30,10 @@ import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class MqttVerifierExtension extends DefaultComponentVerifierExtension {
 
+    public static final String BROKER_URL = "brokerUrl";
+    public static final String USER_NAME = "userName";
+    public static final String PASSWORD = "password";
+
     protected MqttVerifierExtension(String scheme, CamelContext context) {
         super(scheme, context);
     }
@@ -41,7 +45,7 @@ public class MqttVerifierExtension extends DefaultComponentVerifierExtension {
     @Override
     protected Result verifyParameters(Map<String, Object> parameters) {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
-            .error(ResultErrorHelper.requiresOption("brokerUrl", parameters))
+            .error(ResultErrorHelper.requiresOption(BROKER_URL, parameters))
             .build();
     }
 
@@ -57,9 +61,9 @@ public class MqttVerifierExtension extends DefaultComponentVerifierExtension {
     }
 
     private static void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
-        String brokerUrl = ConnectorOptions.extractOption(parameters, "brokerUrl");
-        String username = ConnectorOptions.extractOption(parameters, "userName");
-        String password = ConnectorOptions.extractOption(parameters, "password");
+        String brokerUrl = ConnectorOptions.extractOption(parameters, BROKER_URL);
+        String username = ConnectorOptions.extractOption(parameters, USER_NAME);
+        String password = ConnectorOptions.extractOption(parameters, PASSWORD);
 
         if (ObjectHelper.isNotEmpty(brokerUrl)) {
             try {
@@ -79,14 +83,14 @@ public class MqttVerifierExtension extends DefaultComponentVerifierExtension {
             } catch (MqttException e) {
                 builder.error(
                     ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Unable to connect to MQTT broker")
-                        .parameterKey("brokerUrl")
+                        .parameterKey(BROKER_URL)
                         .build()
                 );
             }
         } else {
             builder.error(
                 ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Invalid blank MQTT brokerUrl ")
-                    .parameterKey("brokerUrl")
+                    .parameterKey(BROKER_URL)
                     .build()
             );
         }

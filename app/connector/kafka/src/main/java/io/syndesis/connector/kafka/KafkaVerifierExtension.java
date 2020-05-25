@@ -39,6 +39,9 @@ import org.slf4j.LoggerFactory;
 public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
 
     private static final Logger LOG = LoggerFactory.getLogger(KafkaVerifierExtension.class);
+    public static final String BROKERS = "brokers";
+    public static final String TRANSPORT_PROTOCOL = "transportProtocol";
+    public static final String BROKER_CERTIFICATE = "brokerCertificate";
 
     protected KafkaVerifierExtension(String scheme, CamelContext context) {
         super(scheme, context);
@@ -51,8 +54,8 @@ public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
     @Override
     protected Result verifyParameters(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
-            .error(ResultErrorHelper.requiresOption("brokers", parameters))
-            .error(ResultErrorHelper.requiresOption("transportProtocol", parameters));
+            .error(ResultErrorHelper.requiresOption(BROKERS, parameters))
+            .error(ResultErrorHelper.requiresOption(TRANSPORT_PROTOCOL, parameters));
 
         if (parameters.getOrDefault("transportProtocol","").equals("SSL")){
             builder.error(ResultErrorHelper.requiresOption("brokerCertificate", parameters));
@@ -72,9 +75,9 @@ public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
     }
 
     private static void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
-        final String brokers = ConnectorOptions.extractOption(parameters, "brokers");
-        final String certificate = ConnectorOptions.extractOption(parameters, "brokerCertificate");
-        final String transportProtocol = ConnectorOptions.extractOption(parameters, "transportProtocol");
+        final String brokers = ConnectorOptions.extractOption(parameters, BROKERS);
+        final String certificate = ConnectorOptions.extractOption(parameters, BROKER_CERTIFICATE);
+        final String transportProtocol = ConnectorOptions.extractOption(parameters, TRANSPORT_PROTOCOL);
         LOG.debug("Validating Kafka connection to {} with protocol {}", brokers, transportProtocol);
         if (ObjectHelper.isNotEmpty(brokers)) {
             requireCertificateWhenSSL(builder, transportProtocol, certificate);
@@ -84,7 +87,7 @@ public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
             } catch (KafkaBrokerServiceException e) {
                 builder.error(
                     ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Unable to connect to Kafka broker")
-                        .parameterKey("brokers")
+                        .parameterKey(BROKERS)
                         .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e)
                         .detail(VerificationError.ExceptionAttribute.EXCEPTION_CLASS, e.getClass().getName())
                         .build()
@@ -93,7 +96,7 @@ public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
         } else {
             builder.error(
                 ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Invalid empty Kafka brokers")
-                    .parameterKey("brokers")
+                    .parameterKey(BROKERS)
                     .build()
             );
         }

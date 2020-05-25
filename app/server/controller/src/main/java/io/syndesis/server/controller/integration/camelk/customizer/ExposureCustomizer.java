@@ -32,6 +32,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ExposureCustomizer implements CamelKIntegrationCustomizer {
+
+    public static final String PROPERTY = "property";
+
     @Override
     public Integration customize(IntegrationDeployment deployment, Integration integration, EnumSet<Exposure> exposure) {
         IntegrationSpec.Builder spec = new IntegrationSpec.Builder();
@@ -51,20 +54,20 @@ public class ExposureCustomizer implements CamelKIntegrationCustomizer {
 
             spec.addConfiguration(
                 new ConfigurationSpec.Builder()
-                    .type("property")
+                    .type(PROPERTY)
                     .value("customizer.servlet.enabled=true")
                     .build()
             );
             spec.addConfiguration(
                 new ConfigurationSpec.Builder()
-                    .type("property")
+                    .type(PROPERTY)
                     .value("customizer.servlet.bindPort=" +OpenShiftService.INTEGRATION_SERVICE_PORT)
                     .build()
             );
 
-            spec.addConfiguration("property", "camel.rest.contextPath=/");
-            spec.addConfiguration("property", "camel.rest.component=servlet");
-            spec.addConfiguration("property", "camel.rest.endpointProperty.headerFilterStrategy=syndesisHeaderStrategy");
+            spec.addConfiguration(PROPERTY, "camel.rest.contextPath=/");
+            spec.addConfiguration(PROPERTY, "camel.rest.component=servlet");
+            spec.addConfiguration(PROPERTY, "camel.rest.endpointProperty.headerFilterStrategy=syndesisHeaderStrategy");
         }
 
         if (exposure.contains(Exposure.ROUTE)) {

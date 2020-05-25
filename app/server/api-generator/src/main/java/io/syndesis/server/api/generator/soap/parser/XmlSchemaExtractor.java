@@ -94,33 +94,51 @@ class XmlSchemaExtractor {
     // stack to save current namespace when creating object pairs
     private final Deque<String> currentNamespace;
 
+    public static final String ATTRIBUTES = "attributes";
+
+    public static final String NAME = "name";
+
+    public static final String ITEMS = "items";
+
+    public static final String CONTENT = "content";
+
+    public static final String BASE_TYPE = "baseType";
+
+    public static final String PARTICLE = "particle";
+
+    public static final String BASE_TYPE_NAME = "baseTypeName";
+
     static {
         // initialize properties map
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaAttribute.class, Arrays.asList("name", "form", "use", "schemaType", "schemaTypeName"));
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaAttributeGroup.class, Arrays.asList("name", "attributes"));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaAttribute.class, Arrays.asList(NAME, "form", "use", "schemaType", "schemaTypeName"));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaAttributeGroup.class, Arrays.asList(NAME, ATTRIBUTES));
 
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaSimpleContent.class, Arrays.asList("name", "content"));
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaComplexContent.class, Arrays.asList("name", "content"));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaSimpleContent.class, Arrays.asList(NAME, CONTENT));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaComplexContent.class, Arrays.asList(NAME, CONTENT));
 
         BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaSimpleTypeList.class, Arrays.asList("itemType", "itemTypeName"));
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaSimpleTypeRestriction.class, Arrays.asList("baseType", "baseTypeName"));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaSimpleTypeRestriction.class, Arrays.asList(BASE_TYPE, BASE_TYPE_NAME));
         BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaSimpleTypeUnion.class, Arrays.asList("baseTypes", "memberTypesSource", "memberTypesQNames"));
 
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaSimpleContentExtension.class, Arrays.asList("attributes", "baseTypeName"));
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaSimpleContentRestriction.class, Arrays.asList("attribute", "baseType", "baseTypeName"));
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaComplexContentExtension.class, Arrays.asList("attributes", "baseTypeName", "particle"));
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaComplexContentRestriction.class, Arrays.asList("attributes", "baseTypeName", "particle"));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaSimpleContentExtension.class, Arrays.asList(ATTRIBUTES, BASE_TYPE_NAME));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaSimpleContentRestriction.class, Arrays.asList("attribute", BASE_TYPE
+            , BASE_TYPE_NAME));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaComplexContentExtension.class, Arrays.asList(ATTRIBUTES,
+            BASE_TYPE_NAME, PARTICLE));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaComplexContentRestriction.class, Arrays.asList(ATTRIBUTES,
+            BASE_TYPE_NAME, PARTICLE));
 
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaElement.class, Arrays.asList("name", "form", "schemaType", "schemaTypeName"));
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaSimpleType.class, Arrays.asList("name", "content"));
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaComplexType.class, Arrays.asList("name", "attributes", "contentModel", "particle"));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaElement.class, Arrays.asList(NAME, "form", "schemaType", "schemaTypeName"));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaSimpleType.class, Arrays.asList(NAME, CONTENT));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaComplexType.class, Arrays.asList(NAME, ATTRIBUTES, "contentModel",
+            PARTICLE));
 
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaAll.class, Collections.singletonList("items"));
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaChoice.class, Collections.singletonList("items"));
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaSequence.class, Collections.singletonList("items"));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaAll.class, Collections.singletonList(ITEMS));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaChoice.class, Collections.singletonList(ITEMS));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaSequence.class, Collections.singletonList(ITEMS));
         BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaGroupRef.class, Collections.singletonList("refName"));
 
-        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaGroup.class, Collections.singletonList("particle"));
+        BLACK_LISTED_PROPERTIES_MAP.put(XmlSchemaGroup.class, Collections.singletonList(PARTICLE));
 
         // initialize handler map
         HANDLER_MAP.put(s -> s instanceof XmlSchemaItemWithRef && ((XmlSchemaItemWithRef<?>) s).isRef(),
