@@ -71,7 +71,6 @@ public class ModelData<T extends WithId<T>> implements ToJson {
     @JsonIgnore
     public T getData() throws IOException {
         if (data == null && kind != null && json != null) {
-            @SuppressWarnings("unchecked")
             final Class<T> modelClass = kind.getModelClass();
             data = JsonUtils.reader().forType(modelClass).readValue(json);
         }
