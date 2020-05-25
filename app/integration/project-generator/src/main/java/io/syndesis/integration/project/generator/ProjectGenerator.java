@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
@@ -179,7 +180,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                     final String propertyName = entry.getKey();
                     final ConfigurationProperty configurationProperty = entry.getValue();
 
-                    final String defaultValue = configurationProperty.getDefaultValue();
+                    final String defaultValue = Objects.toString(configurationProperty.getDefaultValue(), null);
                     boolean isSecret = connector.isSecret(propertyName) || action.isSecret(propertyName);
 
                     if (Strings.isEmptyOrBlank(defaultValue) && isSecret) {

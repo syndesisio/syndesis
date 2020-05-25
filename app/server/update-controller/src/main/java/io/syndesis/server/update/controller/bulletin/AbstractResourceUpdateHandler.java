@@ -164,7 +164,7 @@ abstract class AbstractResourceUpdateHandler<T extends WithId<T>> implements Res
         Supplier<LeveledMessage.Builder> supplier, Map<String, ConfigurationProperty> configurationProperties, Map<String, String> configuredProperties) {
 
         for (Map.Entry<String, ConfigurationProperty> entry: configurationProperties.entrySet()) {
-            if (entry.getValue().required() && Strings.isNullOrEmpty(entry.getValue().getDefaultValue()) && !configuredProperties.containsKey(entry.getKey())) {
+            if (entry.getValue().required() && Strings.isNullOrEmpty(Objects.toString(entry.getValue().getDefaultValue(),null)) && !configuredProperties.containsKey(entry.getKey())) {
                 return Collections.singletonList(
                     supplier.get()
                         .level(LeveledMessage.Level.WARN)
