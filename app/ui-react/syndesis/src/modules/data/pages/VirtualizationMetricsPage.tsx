@@ -11,6 +11,7 @@ import {
 } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { PageTitle } from '../../../shared';
 import {
   VirtualizationActionId,
 } from '../shared/VirtualizationActionContainer';
@@ -70,6 +71,7 @@ export const VirtualizationMetricsPage: React.FunctionComponent = () => {
       actions={[VirtualizationActionId.Publish]}
       publishActionCustomProps={{ as: 'default' }}
     >
+      <PageTitle title={t('metricsPageTitle')} />
       <PageSection>
         <WithLoader
           error={error !== false}

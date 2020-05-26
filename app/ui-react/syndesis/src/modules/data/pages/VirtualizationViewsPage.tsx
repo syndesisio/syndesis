@@ -21,7 +21,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
-import { ApiError } from '../../../shared';
+import { ApiError, PageTitle } from '../../../shared';
 import resolvers from '../../resolvers';
 import {
   VirtualizationActionId,
@@ -162,6 +162,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
       actions={[VirtualizationActionId.Publish]}
       publishActionCustomProps={{ as: 'default' }}
     >
+      <PageTitle title={t('viewsPageTitle')} />
       <WithListViewToolbarHelpers
         defaultFilterType={filterByName}
         defaultSortType={sortByName}

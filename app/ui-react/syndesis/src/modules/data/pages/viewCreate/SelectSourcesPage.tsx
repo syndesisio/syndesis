@@ -11,6 +11,7 @@ import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
+import { PageTitle } from '../../../../shared';
 import resolvers from '../../../resolvers';
 import { getQueryColumns, getQueryRows } from '../../shared';
 import {
@@ -143,6 +144,8 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
   };
 
   return (
+    <>
+    <PageTitle title={t('createViewPageTitle')} />
     <ViewCreateLayout
       header={
         <ViewWizardHeader
@@ -211,5 +214,6 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
         />
       }
     />
+  </>
   );
 };
