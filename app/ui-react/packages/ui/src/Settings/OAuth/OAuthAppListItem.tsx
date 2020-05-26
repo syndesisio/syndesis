@@ -1,10 +1,12 @@
 import {
+  Button,
+  DataListAction,
   DataListCell,
   DataListContent,
   DataListItem,
   DataListItemCells,
   DataListItemRow,
-  DataListToggle
+  DataListToggle,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { useState } from 'react';
@@ -17,6 +19,8 @@ export interface IOAuthAppListItemProps {
   expanded: boolean;
   icon: React.ReactNode;
   i18nNotConfiguredText: string;
+  i18nEditButtonText: string;
+  i18nCloseButtonText: string;
   name: string;
 }
 
@@ -26,11 +30,14 @@ export const OAuthAppListItem: React.FC<IOAuthAppListItemProps> = (
     configured,
     expanded,
     i18nNotConfiguredText,
+    i18nEditButtonText,
+    i18nCloseButtonText,
     icon,
     id,
-    name
+    name,
   }) => {
   const [rowExpanded, setRowExpanded] = useState(expanded);
+  const htmlId = toValidHtmlId(name);
 
   const doExpand = () => {
     setRowExpanded(!rowExpanded);
@@ -40,9 +47,7 @@ export const OAuthAppListItem: React.FC<IOAuthAppListItemProps> = (
     <DataListItem aria-labelledby={'app item'}
                   isExpanded={rowExpanded}
                   className={'oauth-app-list-item'}>
-      <DataListItemRow data-testid={`o-auth-app-list-item-${toValidHtmlId(
-        name
-      )}-list-item`}>
+      <DataListItemRow data-testid={`o-auth-app-list-item-${htmlId}-list-item`}>
         <DataListToggle
           onClick={doExpand}
           isExpanded={rowExpanded}
@@ -50,7 +55,7 @@ export const OAuthAppListItem: React.FC<IOAuthAppListItemProps> = (
         />
         <DataListItemCells
           dataListCells={[
-            <DataListCell id={'app-icon'} key={'icon'}  width={1}>
+            <DataListCell id={'app-icon'} key={'icon'} width={1}>
               {icon}
             </DataListCell>,
             <DataListCell id={'app-name'} key={'name'} width={4}>
@@ -63,6 +68,26 @@ export const OAuthAppListItem: React.FC<IOAuthAppListItemProps> = (
             </DataListCell>,
           ]}
         />
+        <DataListAction
+          id={`integration-list-item-${htmlId}-actions`}
+          aria-label={`${name} actions`}
+          aria-labelledby={`app=name`}
+        >
+          {!rowExpanded ? (<Button
+            data-testid={`o-auth-app-list-item-${htmlId}-list-item-edit-button`}
+            onClick={doExpand}
+            variant={'secondary'}
+          >
+            {i18nEditButtonText}
+          </Button>) : (<Button
+              data-testid={`o-auth-app-list-item-${htmlId}-list-item-close-button`}
+              onClick={doExpand}
+              variant={'secondary'}
+            >
+              {i18nCloseButtonText}
+            </Button>
+          )}
+        </DataListAction>
       </DataListItemRow>
       <DataListContent
         aria-label={'App Item Content'}
