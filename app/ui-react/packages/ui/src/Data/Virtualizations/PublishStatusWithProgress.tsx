@@ -78,7 +78,7 @@ export const PublishStatusWithProgress: React.FunctionComponent<IPublishStatusWi
             style={getLabelClass()}
             data-testid={'virtualization-publish-status-with-progress'}
           >
-            {props.i18nPublishState}
+            {props.i18nPublishState || ''}
           </Label>
         </Popover>
       </React.Fragment>
@@ -107,7 +107,7 @@ export const PublishStatusWithProgress: React.FunctionComponent<IPublishStatusWi
             data-testid={'virtualization-publish-status-with-progress'}
             style={getLabelClass()}
           >
-            {props.i18nPublishState}
+            {props.i18nPublishState || ''}
           </Label>
         </Popover>
         {props.publishVersion && ` version ${props.publishVersion}`}
