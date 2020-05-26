@@ -8,9 +8,9 @@ import {
 } from '../../../src';
 import {
   ApiConnectorCreatorBreadSteps,
+  ApiConnectorCreatorSelectMethod,
   ApiConnectorCreatorToggleList,
 } from '../../../src/Customization/apiClientConnectors/create';
-import { OpenApiSelectMethod } from '../../../src/Shared';
 
 const stories = storiesOf(
   'Customization/ApiClientConnector/CreateApiConnector/1 - Provide Document',
@@ -41,7 +41,7 @@ stories.add('Provide Document', () => {
   return (
     <ApiConnectorCreatorLayout
       content={
-        <OpenApiSelectMethod
+        <ApiConnectorCreatorSelectMethod
           disableDropzone={boolean('disableDropzone', false)}
           fileExtensions={'.json,.yaml,.yml,.wsdl'}
           i18nBtnNext={'Next'}
