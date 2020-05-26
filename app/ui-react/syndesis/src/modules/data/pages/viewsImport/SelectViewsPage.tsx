@@ -16,6 +16,7 @@ import * as React from 'react';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
+import { PageTitle } from '../../../../shared';
 import resolvers from '../../../resolvers';
 import { DvConnectionStatus, ViewInfosContent } from '../../shared';
 
@@ -169,43 +170,46 @@ export const SelectViewsPage: React.FunctionComponent<
   };
 
   return (
-    <ViewsImportLayout
-      header={
-        <ViewWizardHeader
-          step={2}
-          cancelHref={resolvers.data.virtualizations.views.root({
-            virtualization,
-          })}
-          backHref={resolvers.data.virtualizations.views.importSource.selectConnection(
-            { virtualization }
-          )}
-          onNext={handleCreateViews}
-          isNextDisabled={props.selectedViews.length < 1}
-          isNextLoading={saveInProgress}
-          isLastStep={true}
-          i18nStep1Text={t('data:importDataSourceWizardStep1')}
-          i18nStep2Text={t('data:importDataSourceWizardStep2')}
-          i18nBack={t('shared:Back')}
-          i18nDone={t('shared:Done')}
-          i18nNext={t('shared:Next')}
-          i18nCancel={t('shared:Cancel')}
-        />
-      }
-      content={
-        <ViewInfosContent
-          connectionLoading={getConnectionLoading(state.connectionId, connectionStatuses)}
-          connectionName={state.connectionId}
-          connectionStatus={getConnectionStatus(state.connectionId, connectionStatuses)}
-          connectionStatusMessage={''}
-          connectionTeiidName={getConnectionTeiidName(state.connectionId, connectionStatuses)}
-          existingViewNames={getExistingViewNames(viewDefinitionDescriptors)}
-          connectionLastLoad={getConnectionLastLoad(state.connectionId, connectionStatuses)}
-          onViewSelected={props.handleAddView}
-          onViewDeselected={props.handleRemoveView}
-          selectedViews={props.selectedViews}
-          handleSelectAll={props.handleSelectAll}
-        />
-      }
-    />
+    <>
+      <PageTitle title={t('importViewsPageTitle')} />
+      <ViewsImportLayout
+        header={
+          <ViewWizardHeader
+            step={2}
+            cancelHref={resolvers.data.virtualizations.views.root({
+              virtualization,
+            })}
+            backHref={resolvers.data.virtualizations.views.importSource.selectConnection(
+              { virtualization }
+            )}
+            onNext={handleCreateViews}
+            isNextDisabled={props.selectedViews.length < 1}
+            isNextLoading={saveInProgress}
+            isLastStep={true}
+            i18nStep1Text={t('data:importDataSourceWizardStep1')}
+            i18nStep2Text={t('data:importDataSourceWizardStep2')}
+            i18nBack={t('shared:Back')}
+            i18nDone={t('shared:Done')}
+            i18nNext={t('shared:Next')}
+            i18nCancel={t('shared:Cancel')}
+          />
+        }
+        content={
+          <ViewInfosContent
+            connectionLoading={getConnectionLoading(state.connectionId, connectionStatuses)}
+            connectionName={state.connectionId}
+            connectionStatus={getConnectionStatus(state.connectionId, connectionStatuses)}
+            connectionStatusMessage={''}
+            connectionTeiidName={getConnectionTeiidName(state.connectionId, connectionStatuses)}
+            existingViewNames={getExistingViewNames(viewDefinitionDescriptors)}
+            connectionLastLoad={getConnectionLastLoad(state.connectionId, connectionStatuses)}
+            onViewSelected={props.handleAddView}
+            onViewDeselected={props.handleRemoveView}
+            selectedViews={props.selectedViews}
+            handleSelectAll={props.handleSelectAll}
+          />
+        }
+      />
+    </>
   );
 };

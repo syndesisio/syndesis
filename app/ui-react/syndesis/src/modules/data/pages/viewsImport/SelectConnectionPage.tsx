@@ -4,6 +4,7 @@ import { ViewsImportLayout, ViewWizardHeader } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { PageTitle } from '../../../../shared';
 import resolvers from '../../../resolvers';
 import { DvConnectionsWithToolbar } from '../../shared';
 
@@ -45,42 +46,45 @@ export const SelectConnectionPage: React.FunctionComponent<
   } = useVirtualizationConnectionStatuses();
 
   return (
-    <ViewsImportLayout
-      header={
-        <ViewWizardHeader
-          step={1}
-          cancelHref={resolvers.data.virtualizations.views.root({
-            virtualization,
-          })}
-          nextHref={resolvers.data.virtualizations.views.importSource.selectViews({
-            connectionId,
-            virtualization,
-          })}
-          isNextDisabled={props.selectedConnection.length < 1}
-          isNextLoading={false}
-          isLastStep={false}
-          i18nStep1Text={t('data:importDataSourceWizardStep1')}
-          i18nStep2Text={t('data:importDataSourceWizardStep2')}
-          i18nBack={t('shared:Back')}
-          i18nDone={t('shared:Done')}
-          i18nNext={t('shared:Next')}
-          i18nCancel={t('shared:Cancel')}
-        />
-      }
-      content={
-        <DvConnectionsWithToolbar
-          error={connectionStatusesError !== false}
-          errorMessage={
-            connectionStatusesError === false
-              ? undefined
-              : (connectionStatusesError as Error).message
-          }
-          loading={!hasConnectionStatuses}
-          dvSourceStatuses={connectionStatuses}
-          onConnectionSelectionChanged={props.handleConnectionSelectionChanged}
-          selectedConnection={props.selectedConnection}
-        />
-      }
-    />
+    <>
+      <PageTitle title={t('importViewsPageTitle')} />
+      <ViewsImportLayout
+        header={
+          <ViewWizardHeader
+            step={1}
+            cancelHref={resolvers.data.virtualizations.views.root({
+              virtualization,
+            })}
+            nextHref={resolvers.data.virtualizations.views.importSource.selectViews({
+              connectionId,
+              virtualization,
+            })}
+            isNextDisabled={props.selectedConnection.length < 1}
+            isNextLoading={false}
+            isLastStep={false}
+            i18nStep1Text={t('data:importDataSourceWizardStep1')}
+            i18nStep2Text={t('data:importDataSourceWizardStep2')}
+            i18nBack={t('shared:Back')}
+            i18nDone={t('shared:Done')}
+            i18nNext={t('shared:Next')}
+            i18nCancel={t('shared:Cancel')}
+          />
+        }
+        content={
+          <DvConnectionsWithToolbar
+            error={connectionStatusesError !== false}
+            errorMessage={
+              connectionStatusesError === false
+                ? undefined
+                : (connectionStatusesError as Error).message
+            }
+            loading={!hasConnectionStatuses}
+            dvSourceStatuses={connectionStatuses}
+            onConnectionSelectionChanged={props.handleConnectionSelectionChanged}
+            selectedConnection={props.selectedConnection}
+          />
+        }
+      />
+    </>
   );
 };
