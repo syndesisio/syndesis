@@ -15,6 +15,7 @@ import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { PageTitle } from '../../../shared';
 import resolvers from '../../resolvers';
 
 export const VirtualizationCreatePage: React.FunctionComponent = () => {
@@ -139,6 +140,7 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
         </Link>
         <span>{t('createDataVirtualizationTitle')}</span>
       </Breadcrumb>
+      <PageTitle title={t('createDataVirtualizationTitle')}/>
       <PageSection variant={'light'}>
         <h1 className="pf-c-title pf-m-xl">
           {t('createDataVirtualizationTitle')}
