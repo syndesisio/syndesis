@@ -617,6 +617,7 @@
         },
         "authenticationType": {
           "componentProperty": true,
+          "defaultValue": "none",
           "description": "Authentication Type to use to invoke WSDL endpoint, one of [None|Basic|WS-Security Username Token].",
           "displayName": "Authentication Type",
           "enum": [
@@ -666,6 +667,7 @@
         },
         "passwordType": {
           "componentProperty": true,
+          "defaultValue": "PasswordNone",
           "description": "WS-Security Password Type.",
           "displayName": "Password Type",
           "enum": [
