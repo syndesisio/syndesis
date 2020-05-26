@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import {
   OpenApiReviewActions,
-  OpenApiSelectMethod,
+  ApiConnectorCreatorSelectMethod,
   SyndesisAlert,
   SyndesisAlertLevel,
 } from '../../../src';
@@ -22,7 +22,7 @@ const stories = storiesOf('Integration/Editor/ApiProvider', module);
 
 stories
   .add('Select Method', () => (
-    <OpenApiSelectMethod
+    <ApiConnectorCreatorSelectMethod
       i18nBtnNext={'Next'}
       i18nMethodFromFile={'Upload an OpenAPI file'}
       i18nMethodFromScratch2x={'Create a new OpenAPI 2.x document'}
