@@ -108,7 +108,7 @@
       },
       "project": {
         "name": "Syndesis",
-        "version": "7.5"
+        "version": "7.7"
       },
       "error": {
         "title": "Something is wrong",
