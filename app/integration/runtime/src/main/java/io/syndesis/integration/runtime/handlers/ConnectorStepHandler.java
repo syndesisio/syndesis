@@ -17,6 +17,7 @@ package io.syndesis.integration.runtime.handlers;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import io.syndesis.common.model.action.ConnectorAction;
@@ -89,7 +90,7 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         // Workaround for https://github.com/syndesisio/syndesis/issues/1713
         for (Map.Entry<String, ConfigurationProperty> entry: configurationProperties.entrySet()) {
             if (ObjectHelper.isNotEmpty(entry.getValue().getDefaultValue())) {
-                properties.putIfAbsent(entry.getKey(), entry.getValue().getDefaultValue());
+                properties.putIfAbsent(entry.getKey(), Objects.toString(entry.getValue().getDefaultValue(), null));
             }
         }
 
