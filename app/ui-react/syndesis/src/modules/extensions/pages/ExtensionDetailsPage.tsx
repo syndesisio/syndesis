@@ -13,7 +13,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { UIContext } from '../../../app';
-import { ApiError } from '../../../shared';
+import { ApiError, PageTitle } from '../../../shared';
 import resolvers from '../../resolvers';
 import { ExtensionIntegrations } from '../shared/ExtensionIntegrations';
 
@@ -113,6 +113,7 @@ export const ExtensionDetailsPage: React.FunctionComponent = () => {
             </Link>
             <span>{t('extension.extensionDetailPageTitle')}</span>
           </Breadcrumb>
+          <PageTitle title={t('extension.extensionDetailPageTitle')}/>
           <ExtensionDetail
             extensionName={extension.name}
             // TODO: Schema is currently wrong as it has 'uses` as an OptionalInt. Remove cast when schema is fixed.
