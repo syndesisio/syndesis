@@ -1,10 +1,6 @@
-import { Text, TextContent } from '@patternfly/react-core';
+import { Radio, Text, TextContent } from '@patternfly/react-core';
 import * as React from 'react';
-import {
-  LintFreemarker,
-  LintMustache,
-  LintVelocity,
-} from '../../../Shared/TextEditor';
+import { LintFreemarker, LintMustache, LintVelocity } from '../../../Shared/TextEditor';
 
 export type TemplateType = LintFreemarker | LintMustache | LintVelocity;
 
@@ -17,65 +13,49 @@ export interface ITemplateStepTypeSelectorProps {
   onTemplateTypeChange: (type: TemplateType) => void;
 }
 
-export class TemplateStepTypeSelector extends React.Component<
-  ITemplateStepTypeSelectorProps
-> {
-  constructor(props: ITemplateStepTypeSelectorProps) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-  }
-  public handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+export const TemplateStepTypeSelector: React.FunctionComponent<ITemplateStepTypeSelectorProps> = ({
+    i18nSpecifyTemplateType,
+    i18nFreemarkerLabel,
+    i18nMustacheLabel,
+    i18nVelocityLabel,
+    templateType,
+    onTemplateTypeChange,
+  }) => {
+  const handleChange = (event: React.FormEvent<HTMLInputElement>) => {
     const { value } = event.currentTarget;
-    this.props.onTemplateTypeChange(value as TemplateType);
-  }
-  public render() {
-    return (
-      <>
-        <TextContent>
-          <Text>{this.props.i18nSpecifyTemplateType}</Text>
-        </TextContent>
-        <div className="template-language-choices">
-          <div className="radio-inline">
-            <label htmlFor="freemarker-choice">
-              <input
-                type="radio"
-                id="freemarker-choice"
-                name="template-lang-choice"
-                value={'freemarker'}
-                checked={this.props.templateType === 'freemarker'}
-                onChange={this.handleChange}
-              />
-              {this.props.i18nFreemarkerLabel}
-            </label>
-          </div>
-          <div className="radio-inline">
-            <label htmlFor="mustache-choice">
-              <input
-                type="radio"
-                id="mustache-choice"
-                name="template-lang-choice"
-                value={'mustache'}
-                checked={this.props.templateType === 'mustache'}
-                onChange={this.handleChange}
-              />
-              {this.props.i18nMustacheLabel}
-            </label>
-          </div>
-          <div className="radio-inline">
-            <label htmlFor="velocity-choice">
-              <input
-                type="radio"
-                id="velocity-choice"
-                name="template-lang-choice"
-                value={'velocity'}
-                checked={this.props.templateType === 'velocity'}
-                onChange={this.handleChange}
-              />
-              {this.props.i18nVelocityLabel}
-            </label>
-          </div>
-        </div>
-      </>
-    );
-  }
-}
+    onTemplateTypeChange(value as TemplateType);
+  };
+  return (
+    <>
+      <TextContent>
+        <Text>{i18nSpecifyTemplateType}</Text>
+      </TextContent>
+      <div className="template-language-choices">
+        <Radio
+          id="freemarker-choice"
+          name="template-lang-choice"
+          value={'freemarker'}
+          label={i18nFreemarkerLabel}
+          isChecked={templateType === 'freemarker'}
+          onChange={(_, evt) => handleChange(evt)}
+        />
+        <Radio
+          id="mustache-choice"
+          name="template-lang-choice"
+          value={'mustache'}
+          label={i18nMustacheLabel}
+          checked={templateType === 'mustache'}
+          onChange={(_, evt) => handleChange(evt)}
+        />
+        <Radio
+          id="velocity-choice"
+          name="template-lang-choice"
+          value={'velocity'}
+          label={i18nVelocityLabel}
+          checked={templateType === 'velocity'}
+          onChange={(_, evt) => handleChange(evt)}
+        />
+      </div>
+    </>
+  );
+};
