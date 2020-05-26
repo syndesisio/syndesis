@@ -54,6 +54,7 @@ export const OAuthAppExpanderBody: React.FC<
           </Button>{' '}
           <Button
             data-testid={'o-auth-app-expander-body-remove-button'}
+            variant={'link'}
             onClick={onRemove}
             disabled={disableRemove}
           >
