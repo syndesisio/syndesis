@@ -237,6 +237,8 @@ export class OAuthAppsPage extends React.Component<{}, IOAuthAppsPageState> {
                                               i18nNotConfiguredText={t(
                                                 'settings:OAuthAppNotConfigured'
                                               )}
+                                              i18nEditButtonText={t('shared:Edit')}
+                                              i18nCloseButtonText={t('shared:Close')}
                                               id={oauthApp.id!}
                                               name={oauthApp.name!}
                                             >
