@@ -35,7 +35,7 @@ public abstract class ConnectorGenerator {
 
     private final Connector baseConnector;
 
-    public ConnectorGenerator(final Connector baseConnector) {
+    protected ConnectorGenerator(final Connector baseConnector) {
         // we want to inherit all the configuration metadata from the connector
         // the template only points to the connector and holds properties
         // metadata needs to be sourced from the connector implementation

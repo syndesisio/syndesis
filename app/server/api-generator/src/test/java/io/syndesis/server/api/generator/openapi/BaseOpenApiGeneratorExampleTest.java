@@ -60,7 +60,7 @@ public abstract class BaseOpenApiGeneratorExampleTest {
 
     protected final String specification;
 
-    public BaseOpenApiGeneratorExampleTest(final String connectorQualifier, final String name, final String version) throws IOException {
+    protected BaseOpenApiGeneratorExampleTest(final String connectorQualifier, final String name, final String version) throws IOException {
         specification = TestHelper.resource("/openapi/" + version + "/" + name + ".json", "/openapi/" + version + "/" + name + ".yaml");
         expected = JsonUtils.reader().forType(Connector.class)
             .readValue(resource("/openapi/" + version + "/" + name + "." + connectorQualifier + "_connector.json"));

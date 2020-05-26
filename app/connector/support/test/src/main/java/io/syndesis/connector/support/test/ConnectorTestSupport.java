@@ -49,7 +49,7 @@ import org.assertj.core.api.Assertions;
 public abstract class ConnectorTestSupport extends CamelTestSupport {
     private final ResourceManager resourceManager;
 
-    public ConnectorTestSupport() {
+    protected ConnectorTestSupport() {
         this.resourceManager = new ResourceManager();
     }
 

@@ -30,8 +30,7 @@ public abstract class AbstractODataReadRouteTest extends AbstractODataRouteTest 
 
     private final boolean splitResult;
 
-    public AbstractODataReadRouteTest(boolean splitResult) throws Exception {
-        super();
+    protected AbstractODataReadRouteTest(boolean splitResult) throws Exception {
         this.splitResult = splitResult;
     }
 

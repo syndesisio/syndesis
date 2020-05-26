@@ -58,8 +58,7 @@ public abstract class AbstractODataRouteTest extends AbstractODataTest {
 
     protected final ConnectorAction connectorAction;
 
-    public AbstractODataRouteTest() throws Exception {
-        super();
+    protected AbstractODataRouteTest() throws Exception {
         this.mockStep = createMockStep();
         this.connectorAction = createConnectorAction();
     }

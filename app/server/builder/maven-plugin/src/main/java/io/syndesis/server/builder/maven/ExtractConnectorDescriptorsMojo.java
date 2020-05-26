@@ -74,7 +74,7 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
     private String target;
 
     @Override
-    @SuppressWarnings({"PMD.EmptyCatchBlock", "PMD.CyclomaticComplexity"})
+    @SuppressWarnings({"PMD.EmptyCatchBlock", "PMD.CyclomaticComplexity", "EmptyCatch"})
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         ArrayNode root = new ArrayNode(JsonNodeFactory.instance);

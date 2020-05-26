@@ -38,7 +38,7 @@ public abstract class SyndesisCommand extends HelpAwarePicocliCommand {
 
     private final Map<String, Object> parameters = new HashMap<>();
 
-    public SyndesisCommand() {
+    protected SyndesisCommand() {
         final Command command = getClass().getAnnotation(Command.class);
 
         name = command.name();

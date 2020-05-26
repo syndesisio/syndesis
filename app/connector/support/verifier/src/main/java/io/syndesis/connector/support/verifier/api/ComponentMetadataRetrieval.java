@@ -29,11 +29,11 @@ public abstract class ComponentMetadataRetrieval implements MetadataRetrieval {
     private final Class<? extends MetaDataExtension> metaDataExtensionClass;
     private final Map<String, MetaDataExtension> metaDataExtensions;
 
-    public ComponentMetadataRetrieval() {
+    protected ComponentMetadataRetrieval() {
         this(MetaDataExtension.class);
     }
 
-    public ComponentMetadataRetrieval(Class<? extends MetaDataExtension> metaDataExtensionClass) {
+    protected ComponentMetadataRetrieval(Class<? extends MetaDataExtension> metaDataExtensionClass) {
         this.metaDataExtensionClass = metaDataExtensionClass;
         this.metaDataExtensions = new ConcurrentHashMap<>();
     }

@@ -47,7 +47,7 @@ public abstract class AbstractSoapExampleTest {
     protected final String specification;
     protected final ConnectorGenerator connectorGenerator;
 
-    public AbstractSoapExampleTest(String resource) throws IOException {
+    protected AbstractSoapExampleTest(String resource) throws IOException {
         if (resource.startsWith("http")) {
             this.specification = resource;
         } else {
