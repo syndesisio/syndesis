@@ -9,19 +9,15 @@ import {
 import * as React from 'react';
 import { ButtonLink } from '../../../Layout';
 import { DndFileChooser } from '../../../Shared/DndFileChooser';
-import './ApiConnectorCreatorSelectMethod.css';
+import './ApiProviderSelectMethod.css';
 
-export type ApiConnectorCreatorMethod =
-  | 'file'
-  | 'url'
-  | 'scratch2x'
-  | 'scratch3x';
+export type ApiProviderMethod = 'file' | 'url' | 'scratch2x' | 'scratch3x';
 const FILE = 'file';
 const URL = 'url';
 const SCRATCH_2X = 'scratch2x';
 const SCRATCH_3X = 'scratch3x';
 
-export interface IApiConnectorCreatorSelectMethodProps {
+export interface IApiProviderSelectMethodProps {
   allowFromScratch?: boolean;
   disableDropzone: boolean;
   fileExtensions?: string;
@@ -44,10 +40,10 @@ export interface IApiConnectorCreatorSelectMethodProps {
   /**
    * The action fired when the user presses the Next button
    */
-  onNext(specification?: string, connectorTemplateId?: string): void;
+  onNext(method?: string, specification?: string): void;
 }
 
-export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnectorCreatorSelectMethodProps> = ({
+export const ApiProviderSelectMethod: React.FunctionComponent<IApiProviderSelectMethodProps> = ({
   allowFromScratch = true,
   disableDropzone,
   fileExtensions,
@@ -65,7 +61,6 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
   i18nUrlNote,
   onNext,
 }) => {
-  const [connectorTemplateId, setConnectorTemplateId] = React.useState('');
   const [method, setMethod] = React.useState(FILE);
   const [specification, setSpecification] = React.useState('');
   const [url, setUrl] = React.useState('');
@@ -94,29 +89,12 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
   };
 
   /**
-   * Checks if the filename is .wsdl (SOAP)
-   * and sets the connector template ID.
-   * @param fileName
-   */
-  const checkDocStyle = (fileName: string) => {
-    return fileName
-      .split('.')
-      .pop()!
-      .toLowerCase();
-  };
-
-  /**
    * User has added a specification via a string URL, which will be
    * checked if is a valid HTTP/HTTPS string.
    * @param e
    */
   const onAddUrlSpecification = (e: React.FormEvent<HTMLInputElement>) => {
     const newUrl = e.currentTarget.value;
-    const fileExt = checkDocStyle(newUrl);
-
-    if (fileExt === 'wsdl' || fileExt.includes('?WSDL')) {
-      setConnectorTemplateId('soap-connector-template');
-    }
 
     setUrl(newUrl);
 
@@ -132,7 +110,7 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
    * to provide an OpenAPI specification.
    * @param newMethod
    */
-  const onSelectMethod = (newMethod: ApiConnectorCreatorMethod) => {
+  const onSelectMethod = (newMethod: ApiProviderMethod) => {
     setMethod(newMethod);
     setSpecification('');
     setUploadFailedMessage('');
@@ -144,11 +122,6 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
    * Callback for when one or more file uploads have been accepted.
    */
   const onUploadAccepted = (files: File[]): void => {
-    const fileExt = checkDocStyle(files[0].name);
-
-    if (fileExt === 'wsdl' || fileExt.includes('?WSDL')) {
-      setConnectorTemplateId('soap-connector-template');
-    }
     const reader = new FileReader();
     reader.readAsText(files[0]);
     buildUploadMessage(files[0].name, true);
@@ -174,9 +147,9 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
 
   const handleClickNext = () => {
     if (method === URL) {
-      onNext(url, connectorTemplateId);
+      onNext(method, url);
     } else {
-      onNext(specification, connectorTemplateId);
+      onNext(method, specification);
     }
   };
 
@@ -187,7 +160,7 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
 
   return (
     <Stack
-      className={'api-connector-creator-select-method'}
+      className={'api-provider-select-method'}
       data-testid={'openapi-select-method'}
     >
       <StackItem>
@@ -205,7 +178,7 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
           </SplitItem>
           <SplitItem>
             <div>{i18nMethodFromFile}</div>
-            <div className="api-connector-creator-select-method__dnd-container">
+            <div className="api-provider-select-method__dnd-container">
               <DndFileChooser
                 allowMultiple={false}
                 disableDropzone={disableDropzone || method !== FILE}
@@ -239,9 +212,7 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
           </SplitItem>
           <SplitItem>
             <div>{i18nMethodFromUrl}</div>
-            <div
-              className={'api-connector-creator-select-method__url-container'}
-            >
+            <div className={'api-provider-select-method__url-container'}>
               <TextInput
                 aria-label={'method url text input'}
                 id={'method-url-text-input'}

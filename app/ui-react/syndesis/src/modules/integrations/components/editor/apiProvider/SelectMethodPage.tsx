@@ -1,9 +1,8 @@
-// tslint:disable:no-console
 import * as H from '@syndesis/history';
 import {
+  ApiProviderMethod,
+  ApiProviderSelectMethod,
   IntegrationEditorLayout,
-  Method,
-  OpenApiSelectMethod,
   PageSection,
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
@@ -16,7 +15,7 @@ import {
   IPageWithEditorBreadcrumb,
 } from '../interfaces';
 
-export const EMPTY_API_20: string = `
+const EMPTY_API_20: string = `
 {
   "swagger": "2.0",
   "info": {
@@ -30,7 +29,7 @@ export const EMPTY_API_20: string = `
   "produces": [ "application/json" ]
 }`;
 
-export const EMPTY_API_30: string = `
+const EMPTY_API_30: string = `
 {
   "openapi": "3.0.2",
   "info": {
@@ -75,7 +74,10 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
             IBaseApiProviderRouteState
           >>
             {(params, state, { history }) => {
-              const onNext = (method: Method, specification: string) => {
+              const onNext = (
+                method: ApiProviderMethod,
+                specification: string
+              ) => {
                 switch (method) {
                   case 'file':
                   case 'url':
@@ -115,7 +117,7 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
                     )}
                     content={
                       <PageSection>
-                        <OpenApiSelectMethod
+                        <ApiProviderSelectMethod
                           disableDropzone={false}
                           fileExtensions={t(
                             'integrations:apiProvider:selectMethod:dndFileExtensions'
