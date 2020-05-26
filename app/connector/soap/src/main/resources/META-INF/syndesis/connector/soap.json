@@ -108,6 +108,7 @@
       "type": "string"
     },
     "authenticationType": {
+      "defaultValue": "none",
       "description": "Authentication Type to use to invoke WSDL endpoint, one of [None|Basic|WS-Security Username Token].",
       "displayName": "Authentication Type",
       "enum": [
@@ -155,6 +156,7 @@
       "type": "string"
     },
     "passwordType": {
+      "defaultValue": "PasswordNone",
       "description": "WS-Security Password Type.",
       "displayName": "Password Type",
       "enum": [
