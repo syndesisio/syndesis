@@ -7,17 +7,21 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 import * as React from 'react';
-import { ButtonLink } from '../Layout';
-import { DndFileChooser } from './DndFileChooser';
-import './OpenApiSelectMethod.css';
+import { ButtonLink } from '../../../Layout';
+import { DndFileChooser } from '../../../Shared/DndFileChooser';
+import './ApiConnectorCreatorSelectMethod.css';
 
-export type Method = 'file' | 'url' | 'scratch2x' | 'scratch3x';
+export type ApiConnectorCreatorMethod =
+  | 'file'
+  | 'url'
+  | 'scratch2x'
+  | 'scratch3x';
 const FILE = 'file';
 const URL = 'url';
 const SCRATCH_2X = 'scratch2x';
 const SCRATCH_3X = 'scratch3x';
 
-export interface IOpenApiSelectMethodProps {
+export interface IApiConnectorCreatorSelectMethodProps {
   allowFromScratch?: boolean;
   disableDropzone: boolean;
   fileExtensions?: string;
@@ -43,7 +47,7 @@ export interface IOpenApiSelectMethodProps {
   onNext(specification?: string, connectorTemplateId?: string): void;
 }
 
-export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodProps> = ({
+export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnectorCreatorSelectMethodProps> = ({
   allowFromScratch = true,
   disableDropzone,
   fileExtensions,
@@ -128,7 +132,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
    * to provide an OpenAPI specification.
    * @param newMethod
    */
-  const onSelectMethod = (newMethod: Method) => {
+  const onSelectMethod = (newMethod: ApiConnectorCreatorMethod) => {
     setMethod(newMethod);
     setSpecification('');
     setUploadFailedMessage('');
@@ -182,7 +186,10 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
   const handleSelectUrl = () => onSelectMethod(URL);
 
   return (
-    <Stack className={'open-api-select-method'} data-testid={'openapi-select-method'}>
+    <Stack
+      className={'api-connector-creator-select-method'}
+      data-testid={'openapi-select-method'}
+    >
       <StackItem>
         <Split onClick={handleSelectFile}>
           <SplitItem>
@@ -198,7 +205,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
           </SplitItem>
           <SplitItem>
             <div>{i18nMethodFromFile}</div>
-            <div className="open-api-select-method__dnd-container">
+            <div className="api-connector-creator-select-method__dnd-container">
               <DndFileChooser
                 allowMultiple={false}
                 disableDropzone={disableDropzone || method !== FILE}
@@ -232,7 +239,9 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
           </SplitItem>
           <SplitItem>
             <div>{i18nMethodFromUrl}</div>
-            <div className={'open-api-select-method__url-container'}>
+            <div
+              className={'api-connector-creator-select-method__url-container'}
+            >
               <TextInput
                 aria-label={'method url text input'}
                 id={'method-url-text-input'}

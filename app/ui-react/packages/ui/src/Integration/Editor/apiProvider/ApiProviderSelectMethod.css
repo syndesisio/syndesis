@@ -1,0 +1,13 @@
+.api-connector-creator-select-method .url-note {
+  color: gray;
+  font-size: smaller;
+  font-style: italic;
+}
+
+.api-connector-creator-select-method__dnd-container {
+  margin: 20px 0;
+}
+
+.api-connector-creator-select-method__url-container {
+  margin: 20px 0;
+}

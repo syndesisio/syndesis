@@ -4,8 +4,8 @@ import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorLayout,
+  ApiConnectorCreatorSelectMethod,
   ApiConnectorCreatorToggleList,
-  OpenApiSelectMethod,
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -59,7 +59,7 @@ export const SelectMethodPage: React.FunctionComponent = () => {
             content={
               <>
                 {!showSoapConfig && (
-                  <OpenApiSelectMethod
+                  <ApiConnectorCreatorSelectMethod
                     disableDropzone={false}
                     fileExtensions={t(
                       'apiClientConnectors:create:selectMethod:dndFileExtensions'
