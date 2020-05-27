@@ -41,14 +41,15 @@ public class WebhookOnExceptionHandler implements Processor, Properties {
 
     @Override
     public void process(Exchange exchange) {
+        Exception cause = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class);
         ErrorStatusInfo statusInfo =
-                ErrorMapper.mapError(exchange.getException(), errorResponseCodeMappings, httpResponseStatus);
-        exchange.getOut().removeHeaders("*");
-        exchange.getOut().setHeader(Exchange.HTTP_RESPONSE_CODE, statusInfo.getHttpResponseCode());
+                ErrorMapper.mapError(cause, errorResponseCodeMappings, httpResponseStatus);
+        exchange.getMessage().removeHeaders("*");
+        exchange.getMessage().setHeader(Exchange.HTTP_RESPONSE_CODE, statusInfo.getHttpResponseCode());
         if (isReturnBody) {
-            exchange.getOut().setBody(statusInfo.toJson());
+            exchange.getMessage().setBody(statusInfo.toJson());
         } else {
-            exchange.getOut().setBody("");
+            exchange.getMessage().setBody("");
         }
         LOGGER.info("Error response: " + statusInfo.getMessage());
     }
