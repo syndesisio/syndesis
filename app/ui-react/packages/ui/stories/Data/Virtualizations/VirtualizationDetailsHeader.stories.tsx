@@ -37,6 +37,7 @@ stories
       <VirtualizationDetailsHeader
         isProgressWithLink={false}
         i18nPublishState={'Running'}
+        i18nPublishStateMessage={'The virtualization is running'}
         labelType={'primary'}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
         i18nPublishLogUrlText={'View Logs'}
@@ -56,6 +57,7 @@ stories
       <VirtualizationDetailsHeader
         isProgressWithLink={false}
         i18nPublishState={'Draft'}
+        i18nPublishStateMessage={'The virtualization is in a draft state'}
         labelType={'default'}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
         i18nPublishLogUrlText={'View Logs'}
@@ -78,6 +80,7 @@ stories
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
+        i18nPublishStateMessage={'The virtualization publishing is in progress'}
         labelType={'default'}
         modified={boolean('modified', false)}
         publishedState={'SUBMITTED'}
@@ -97,6 +100,7 @@ stories
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
+        i18nPublishStateMessage={'The virtualization publishing is in progress'}
         labelType={'default'}
         modified={boolean('modified', false)}
         publishedState={'CONFIGURING'}
@@ -120,6 +124,7 @@ stories
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
+        i18nPublishStateMessage={'The virtualization publishing is in progress'}
         labelType={'default'}
         modified={boolean('modified', false)}
         publishedState={'BUILDING'}
@@ -143,6 +148,7 @@ stories
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
+        i18nPublishStateMessage={'The virtualization publishing is in progress'}
         labelType={'default'}
         modified={boolean('modified', false)}
         publishedState={'DEPLOYING'}
@@ -163,6 +169,7 @@ stories
       <VirtualizationDetailsHeader
         isProgressWithLink={false}
         i18nPublishState={'Published'}
+        i18nPublishStateMessage={'The virtualization is running'}
         labelType={'primary'}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
         i18nPublishLogUrlText={'View Logs'}

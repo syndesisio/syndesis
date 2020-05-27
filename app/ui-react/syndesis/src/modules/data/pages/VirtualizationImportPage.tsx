@@ -61,7 +61,7 @@ export const VirtualizationImportPage: React.FunctionComponent = () => {
 
   return (
     <>
-      <PageTitle title={t('shared:Import')} />
+      <PageTitle title={t('ImportVirtualization')} />
       <Breadcrumb>
         <Link
           data-testid={'virtualization-import-page-home-link'}

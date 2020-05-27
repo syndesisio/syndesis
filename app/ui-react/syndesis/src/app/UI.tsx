@@ -150,19 +150,6 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
     element.setAttribute('href', assetUrl);
   };
 
-  const [productBuild, setProductBuild] = React.useState(false);
-  React.useEffect(() => {
-    updateHref('favicon', !productBuild ? synFavicon : favicon);
-    updateHref(
-      'appleTouchIcon',
-      !productBuild ? synAppleTouchIcon : rhAppleTouchIcon
-    );
-    updateHref(
-      'safariPinnedTab',
-      !productBuild ? synSafariPinnedTabIcon : redHatSafariPinnedTabIcon
-    );
-  }, [productBuild]);
-
   return (
     <UIContext.Provider
       value={{
@@ -177,7 +164,15 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
             <AppContext.Consumer>
               {({ user, config }) => {
                 const isProductBuild = config && config.branding.productBuild;
-                setProductBuild(isProductBuild);
+                updateHref('favicon', !isProductBuild ? synFavicon : favicon);
+                updateHref(
+                  'appleTouchIcon',
+                  !isProductBuild ? synAppleTouchIcon : rhAppleTouchIcon
+                );
+                updateHref(
+                  'safariPinnedTab',
+                  !isProductBuild ? synSafariPinnedTabIcon : redHatSafariPinnedTabIcon
+                );
                 const productName = t('shared:project:name');
                 const features =
                   (config && config.features) || ({} as Map<string, any>);

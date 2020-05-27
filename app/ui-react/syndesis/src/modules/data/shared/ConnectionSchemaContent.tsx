@@ -220,7 +220,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
     >
       <WithLoader
         error={props.error || error !== false}
-        loading={props.error || !hasSchema}
+        loading={props.loading || !hasSchema}
         loaderChildren={<ConnectionSchemaListSkeleton width={800} />}
         errorChildren={
           <ApiError error={props.errorMessage || (error as Error)} />
