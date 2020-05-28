@@ -1,4 +1,4 @@
-## Syndesis
+## Syndesis 2
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.syndesis/syndesis-parent/badge.svg?style=flat-square)](https://maven-badges.herokuapp.com/maven-central/io.syndesis/syndesis/)
 [![CircleCI](https://circleci.com/gh/syndesisio/syndesis/tree/master.svg?style=svg)](https://circleci.com/gh/syndesisio/syndesis/tree/master)
