@@ -176,7 +176,7 @@ export const IntegrationDetailHeader: React.FunctionComponent<
                 />
               </PageSection>
             ))}
-            <PageSection variant={'light'} noPadding={true}>
+            <PageSection variant={'light'} style={{ paddingBottom: '0'}}>
               <IntegrationDetailNavBar integration={props.data.integration} />
             </PageSection>
           </>
