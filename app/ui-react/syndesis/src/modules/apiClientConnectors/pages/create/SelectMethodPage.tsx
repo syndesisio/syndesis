@@ -93,7 +93,6 @@ export const SelectMethodPage: React.FunctionComponent = () => {
                       'apiClientConnectors:create:selectMethod:urlNote'
                     )}
                     onNext={onNext}
-                    allowFromScratch={false}
                   />
                 )}
                 {/* Where users can specify a SOAP service and port if connector is WSDL file */}
