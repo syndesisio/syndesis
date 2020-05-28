@@ -94,7 +94,7 @@ public class RestSwaggerConnectorIntegrationTest {
     public void setup() throws Exception {
         connection = new Connection.Builder()
             .putConfiguredProperty("host", "http://localhost:" + wiremock.port())
-            .putConfiguredProperty("specification", readSpecification())
+            .putConfiguredProperty("specification", readSpecification("petstore.json"))
             .connector(REST_OPENAPI_CONNECTOR)
             .build();
 
@@ -592,9 +592,9 @@ public class RestSwaggerConnectorIntegrationTest {
         }
     }
 
-    private static String readSpecification() {
+    protected static String readSpecification(String filename) {
         try {
-            return Resources.getResourceAsText("petstore.json");
+            return Resources.getResourceAsText(filename);
         } catch (final IOException e) {
             throw new AssertionError(e);
         }
