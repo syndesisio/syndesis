@@ -1,0 +1,155 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api-key",
+    "description": "Example api-key API",
+    "version": "1.0.0"
+  },
+  "basePath": "/api",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "security": [
+    {
+      "api-key-header": [
+      ]
+    },
+    {
+      "api-key-parameter": [
+      ]
+    }
+  ],
+  "paths": {
+    "/test-key-header-or-param": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/test"
+            }
+          }
+        },
+        "security": [
+          {
+            "api-key-header": [
+            ]
+          },
+          {
+            "api-key-parameter": [
+            ]
+          }
+        ]
+      }
+    },
+    "/test-key-param": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/test"
+            }
+          }
+        },
+        "security": [
+          {
+            "api-key-parameter": []
+          }
+        ]
+      }
+    },
+    "/test-basic": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/test"
+            }
+          }
+        },
+        "security": [
+          {
+            "basic": [
+            ]
+          }
+        ]
+      }
+    },
+    "/test-oauth2": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/test"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth": ["read:user", "write:user"]
+          }
+        ]
+      }
+    },
+    "/test-none": {
+      "get": {
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/test"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "test": {
+      "title": "Root Type for api",
+      "description": "",
+      "type": "object",
+      "properties": {
+        "msg": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "msg": "hi"
+      }
+    }
+  },
+  "securityDefinitions": {
+    "api-key-header": {
+      "type": "apiKey",
+      "name": "API-KEY",
+      "in": "header"
+    },
+    "api-key-parameter": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "query"
+    },
+    "basic": {
+      "type": "basic"
+    },
+    "oauth": {
+      "type": "oauth2",
+      "authorizationUrl": "http://api.example.com/api/auth/",
+      "flow": "implicit",
+      "scopes": {
+        "read:user": "read user",
+        "write:user": "write user"
+      }
+    }
+  }
+}
