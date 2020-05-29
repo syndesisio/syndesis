@@ -93,6 +93,8 @@ integration from any other integrations.
 . Optionally, in the *Description* field, enter a description, for example, you can
 indicate what this integration does.
 
+.  Optionally, from the list of library extensions that you have imported, you can select one or more library extensions to associate with the integration. Note that you must have already imported a library `.jar` file as a {prodname} extension if you want it to appear in this list so that you can select it.
+
 . If you are ready to start running the integration, click *Save and publish*.
 +
 {prodname} displays the integration summary. You
