@@ -112,8 +112,8 @@
       "description": "Description",
       "lastUpdated": "Last Updated",
       "name": "Name",
-      "tableDescription": "Select extensions you want to associate with this integration. You may change your selection on the integration summary page.",
-      "tableName": "Extensions"
+      "tableDescription": "Select the library extensions that you want to associate with this integration.",
+      "tableName": "Library Extensions"
     },
     "selectStep": {
       "title": "Choose a connection",
