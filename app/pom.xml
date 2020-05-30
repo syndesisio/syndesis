@@ -82,7 +82,7 @@
     <maven.resolver.version>1.4.1</maven.resolver.version>
     <maven.shared.version>3.1.0</maven.shared.version>
 
-    <errorprone.version>2.3.5</errorprone.version>
+    <errorprone.version>2.4.0</errorprone.version>
     <commons.compress.version>1.18</commons.compress.version>
 
     <!-- opentracing dependencies -->
