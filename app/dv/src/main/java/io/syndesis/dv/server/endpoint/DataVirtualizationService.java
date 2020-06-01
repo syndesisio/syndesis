@@ -359,7 +359,7 @@ public final class DataVirtualizationService extends DvService {
                 throw notFound( virtualization );
             }
 
-            Schema s = metadataService.findSchema(teiidSourceName);
+            Schema s = metadataService.findConnectionSchema(teiidSourceName);
 
             if (s == null) {
                 throw notFound( teiidSourceName );
