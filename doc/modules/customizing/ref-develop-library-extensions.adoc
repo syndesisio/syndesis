@@ -8,28 +8,7 @@ A library extension provides a resource that an
 integration requires at runtime. A library extension does not contribute steps or 
 connectors to {prodname}. 
 
-Support for library extensions is evolving. In this release, in the 
-{prodname} web interface:
-
-*  When you create an integration, 
-you cannot select which library extension(s) an 
-integration should include. 
-+
-ifeval::["{location}" == "upstream"]
-For more information, see 
-https://github.com/syndesisio/syndesis/issues/2808[this GitHub issue]. 
-endif::[]
-
-* When you add a database connection to an integration, 
-{prodname} adds all extensions that 
-have the `jdbc-driver` tag to the integration runtime. 
-+
-ifeval::["{location}" == "upstream"]
-For more information, see 
-https://github.com/syndesisio/syndesis/issues/2809[this GitHub issue]. 
-
-endif::[]
-
+When you save an integration, you can optionally select one or more imported library extensions that you want to include with the integration.    
 
 A library extension does not define any actions. 
 Here is a sample definition for a library extension:
