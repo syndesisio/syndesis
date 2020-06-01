@@ -20,13 +20,14 @@ export class PageTitle extends React.PureComponent<IPageTitleProps> {
     return (
       <AppContext.Consumer>
         {({ config }) => {
+          // safety net
           const productName = config.branding.productBuild
             ? 'Fuse Online'
             : 'Syndesis';
           return (
             <Helmet>
               <title>
-                {`${this.props.title} - ${config.title || productName}`}
+                {`${this.props.title} - ${config.branding.appName || productName}`}
               </title>
             </Helmet>
           );
