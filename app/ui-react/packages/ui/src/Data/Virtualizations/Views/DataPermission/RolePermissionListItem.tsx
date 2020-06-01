@@ -106,7 +106,15 @@ const getRoles = (roles: string[]) =>{
     return roleList;
 }
 
-export const RolePermissionListItem: React.FunctionComponent<IRolePermissionListItemProps> = props => {
+const areEqual = (prevProps: any, nextProps: any) =>{
+  return (prevProps.roles === nextProps.roles &&
+    prevProps.availableRoles === nextProps.availableRoles &&
+    prevProps.index === nextProps.index &&
+    prevProps.selectedRole === nextProps.selectedRole);
+}
+
+export const RolePermissionListItem: React.FunctionComponent<IRolePermissionListItemProps> = React.memo( props => {
+  
   const [checkState, setCheckState] = React.useState(
     getCheckInitial(props.selectedPermissions)
   );
@@ -340,4 +348,4 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
       </DataListItem>
     </>
   );
-};
+},areEqual);
