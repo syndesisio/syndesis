@@ -109,6 +109,10 @@ const getUpdatePermissionsPayload = (
   return returnVal;
 };
 
+const viewRolePermissionList: ITablePrivilege[] = [];
+
+  let selectedRoles: string[] = [];
+
 export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = props => {
   /**
    * React useState Hook to handle state in component.
@@ -221,6 +225,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
   }, [props.itemSelected]);
 
   React.useEffect(() => {
+    selectedRoles = [...Array.from(rolePermissionModel.keys())];
     if (rolePermissionModel.size < 1 || showLoading) {
       setSaveEnabled(false);
       // Save button enables if one or more roles exist, and all have a permission checked
@@ -363,9 +368,9 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
               i18nSelectRole={props.i18nSelectRole}
               i18nRemoveRoleRow={props.i18nRemoveRoleRow}
               i18nRoleExists={props.i18nRoleExists}
-              viewRolePermissionList={[]}
+              viewRolePermissionList={viewRolePermissionList}
               roles={props.dvRoles}
-              selectedRoles= {Array.from(rolePermissionModel.keys())}
+              selectedRoles= {selectedRoles}
               updateRolePermissionModel={updateRolePermissionModel}
               deleteRoleFromPermissionModel={deleteRoleFromPermissionModel}
             />

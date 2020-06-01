@@ -35,7 +35,10 @@ export interface IRolePermissionListProps {
   roles: string[];
 }
 
+const selectedPermissions: string[] = [];
+
 export const RolePermissionList: React.FunctionComponent<IRolePermissionListProps> = props => {
+
   const [roleRowList, setRoleRowList] = React.useState<string[]>(['role0']);
   const [currentRoles, setCurrentRoles] = React.useState<string[]>(props.roles);
 
@@ -54,6 +57,9 @@ export const RolePermissionList: React.FunctionComponent<IRolePermissionListProp
       setRoleRowList([...roleRowList, 'role' + roleRowNo]);
     }
   };
+  React.useEffect(()=>{
+    setCurrentRoles(props.roles);
+  },[props.roles]);
 
   React.useEffect(() => {
     const updatedRoles = props.roles.filter(role => {
@@ -106,7 +112,7 @@ export const RolePermissionList: React.FunctionComponent<IRolePermissionListProp
             roles={props.roles}
             removeRolePermission={removeRolePermission}
             selectedRole=""
-            selectedPermissions={[]}
+            selectedPermissions={selectedPermissions}
             updateRolePermissionModel={props.updateRolePermissionModel}
             deleteRoleFromPermissionModel={props.deleteRoleFromPermissionModel}
             i18nSelectRole={props.i18nSelectRole}
