@@ -15,13 +15,19 @@
  */
 package io.syndesis.server.endpoint.v1.handler.tests;
 
-import java.io.IOException;
-import java.sql.DatabaseMetaData;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.ModelData;
+import io.syndesis.common.model.WithId;
+import io.syndesis.common.util.backend.BackendController;
+import io.syndesis.common.util.cache.CacheManager;
+import io.syndesis.server.dao.manager.DataAccessObject;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.openshift.OpenShiftService;
+
+import org.skife.jdbi.v2.DBI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -32,22 +38,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.syndesis.common.model.ListResult;
-import io.syndesis.common.model.ModelData;
-import io.syndesis.common.model.WithId;
-import io.syndesis.common.util.backend.BackendController;
-import io.syndesis.common.util.cache.CacheManager;
-import io.syndesis.server.dao.manager.DataAccessObject;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.openshift.OpenShiftService;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
+import java.sql.DatabaseMetaData;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import org.skife.jdbi.v2.DBI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import io.fabric8.openshift.api.model.DeploymentConfig;
 
 @Path("/test-support")
 @org.springframework.stereotype.Component
@@ -89,7 +87,6 @@ public class TestSupportHandler {
         deleteAllDBEntities();
         startControllers();
         dataMgr.resetDeploymentData();
-        resetDv();
 
         LOG.warn("user {} reset the DB", user);
     }
@@ -134,18 +131,6 @@ public class TestSupportHandler {
             return null;
         });
         cacheManager.evictAll();
-    }
-
-    private static void resetDv() {
-        final OkHttpClient httpClient = new OkHttpClient();
-        try (okhttp3.Response dvResponse = httpClient.newCall(new Request.Builder().get().url("http://syndesis-dv/dv/v1/test-support/reset-db").build()).execute()) {
-            if (!dvResponse.isSuccessful()) {
-                LOG.info("cannot reset dv - code {}", dvResponse.code());
-            }
-        } catch (IOException e) {
-            //more than likely it's not enabled
-            LOG.info("cannot reset dv", e);
-        }
     }
 
     private void startControllers() {
