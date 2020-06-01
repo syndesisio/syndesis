@@ -18,11 +18,8 @@ export type ApiConnectorCreatorMethod =
   | 'scratch3x';
 const FILE = 'file';
 const URL = 'url';
-const SCRATCH_2X = 'scratch2x';
-const SCRATCH_3X = 'scratch3x';
 
 export interface IApiConnectorCreatorSelectMethodProps {
-  allowFromScratch?: boolean;
   disableDropzone: boolean;
   fileExtensions?: string;
   /**
@@ -34,8 +31,6 @@ export interface IApiConnectorCreatorSelectMethodProps {
   i18nMethodFromFile: string;
   i18nMethodFromUrl: string;
   // These aren't needed if allowFromScratch is false
-  i18nMethodFromScratch2x?: string;
-  i18nMethodFromScratch3x?: string;
   i18nNoFileSelectedMessage: string;
   i18nSelectedFileLabel: string;
   i18nUploadFailedMessage?: string;
@@ -48,7 +43,6 @@ export interface IApiConnectorCreatorSelectMethodProps {
 }
 
 export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnectorCreatorSelectMethodProps> = ({
-  allowFromScratch = true,
   disableDropzone,
   fileExtensions,
   i18nBtnNext,
@@ -56,8 +50,6 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
   i18nInstructions,
   i18nMethodFromFile,
   i18nMethodFromUrl,
-  i18nMethodFromScratch2x,
-  i18nMethodFromScratch3x,
   i18nNoFileSelectedMessage,
   i18nSelectedFileLabel,
   i18nUploadFailedMessage,
@@ -69,7 +61,6 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
   const [method, setMethod] = React.useState(FILE);
   const [specification, setSpecification] = React.useState('');
   const [url, setUrl] = React.useState('');
-  const [valid, setValid] = React.useState(false);
   const [uploadSuccessMessage, setUploadSuccessMessage] = React.useState('');
   const [uploadFailedMessage, setUploadFailedMessage] = React.useState('');
 
@@ -88,7 +79,7 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
     }
   };
 
-  const checkValidUrl = (toCheck: string): boolean => {
+  const isValidUrl = (toCheck: string): boolean => {
     const regexp = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     return regexp.test(toCheck);
   };
@@ -119,12 +110,6 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
     }
 
     setUrl(newUrl);
-
-    if (method === URL && checkValidUrl(newUrl)) {
-      setValid(true);
-    } else {
-      setValid(false);
-    }
   };
 
   /**
@@ -137,7 +122,6 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
     setSpecification('');
     setUploadFailedMessage('');
     setUploadSuccessMessage('');
-    setValid(newMethod === SCRATCH_2X || newMethod === SCRATCH_3X);
   };
 
   /**
@@ -155,7 +139,6 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
 
     reader.onload = () => {
       setSpecification(reader.result as string);
-      setValid(true);
     };
   };
 
@@ -168,7 +151,6 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
   const onUploadRejected = (fileName: string): string => {
     buildUploadMessage(fileName, false);
     setSpecification('');
-    setValid(false);
     return `<span>File <strong>${fileName}</strong> could not be uploaded</span>`;
   };
 
@@ -184,6 +166,16 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
     onAddUrlSpecification(evt);
   const handleSelectFile = () => onSelectMethod(FILE);
   const handleSelectUrl = () => onSelectMethod(URL);
+
+  const isDisabled = () => {
+    if (method === FILE) {
+      return specification === '';
+    }
+    if (method === URL) {
+      return !isValidUrl(url);
+    }
+    return false;
+  }
 
   return (
     <Stack
@@ -257,52 +249,11 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
           </SplitItem>
         </Split>
       </StackItem>
-      {allowFromScratch && (
-        <>
-          <StackItem>
-            <Split onClick={() => onSelectMethod(SCRATCH_3X)}>
-              <SplitItem>
-                <Radio
-                  aria-label={'from scratch 3.x radio'}
-                  id={'method-scratch-3x'}
-                  data-testid={'method-scratch-3x'}
-                  name={'method'}
-                  isChecked={method === SCRATCH_3X}
-                  onClick={() => onSelectMethod(SCRATCH_3X)}
-                  readOnly={true}
-                />
-              </SplitItem>
-              <SplitItem>
-                <div>{i18nMethodFromScratch3x}</div>
-              </SplitItem>
-            </Split>
-          </StackItem>
-
-          <StackItem>
-            <Split onClick={() => onSelectMethod(SCRATCH_3X)}>
-              <SplitItem>
-                <Radio
-                  aria-label={'from scratch 2.x radio'}
-                  id={'method-scratch-2x'}
-                  data-testid={'method-scratch-2x'}
-                  name={'method'}
-                  isChecked={method === SCRATCH_2X}
-                  onClick={() => onSelectMethod(SCRATCH_2X)}
-                  readOnly={true}
-                />
-              </SplitItem>
-              <SplitItem>
-                <div>{i18nMethodFromScratch2x}</div>
-              </SplitItem>
-            </Split>
-          </StackItem>
-        </>
-      )}
       <StackItem>
         <ButtonLink
           id={'button-next'}
           data-testid={'button-next'}
-          disabled={!valid}
+          disabled={isDisabled()}
           as={'primary'}
           onClick={handleClickNext}
         >
