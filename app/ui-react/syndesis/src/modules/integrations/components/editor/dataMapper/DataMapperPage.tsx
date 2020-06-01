@@ -64,7 +64,6 @@ export const DataMapperPage: React.FunctionComponent<IDataMapperPageProps> = pro
         <WithRouteData<IDataMapperRouteParams, IDataMapperRouteState>>
           {(params, state, { history }) => {
             const positionAsNumber = parseInt(params.position, 10);
-
             const inputDocuments = getInputDocuments(
               state.integration,
               params.flowId,
@@ -77,8 +76,11 @@ export const DataMapperPage: React.FunctionComponent<IDataMapperPageProps> = pro
               state.step.id!,
               props.mode === 'adding'
             );
+            // preserve the initial document in case the user doesn't make any changes in the mapper
+            const initialMappings = (state.step.configuredProperties || {})[MAPPING_KEY];
 
             const saveMappingStep = async () => {
+              const newMappings = mappingsRef.current || initialMappings;
               const updatedIntegration = await (props.mode === 'adding'
                 ? addStep
                 : updateStep)(
@@ -99,7 +101,7 @@ export const DataMapperPage: React.FunctionComponent<IDataMapperPageProps> = pro
                 params.flowId,
                 positionAsNumber,
                 {
-                  [MAPPING_KEY]: mappingsRef.current,
+                  [MAPPING_KEY]: newMappings,
                 }
               );
               history.push(
@@ -136,9 +138,7 @@ export const DataMapperPage: React.FunctionComponent<IDataMapperPageProps> = pro
                         documentId={state.integration.id!}
                         inputDocuments={inputDocuments}
                         outputDocument={outputDocument}
-                        initialMappings={
-                          (state.step.configuredProperties || {})[MAPPING_KEY]
-                        }
+                        initialMappings={initialMappings}
                         {...appContext.config.datamapper}
                         onMappings={onMappings}
                       />
