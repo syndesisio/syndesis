@@ -15,11 +15,13 @@ import './SchemaNodeListItem.css';
 export interface ISchemaNodeListItemProps {
   name: string;
   connectionName: string;
+  isVirtualizationSchema: boolean;
   teiidName: string;
   nodePath: string[];
   selected: boolean;
   onSelectionChanged: (
     connectionName: string,
+    isVirtualizationSchema: boolean,
     name: string,
     teiidName: string,
     nodePath: string[],
@@ -36,13 +38,14 @@ export const SchemaNodeListItem: React.FunctionComponent<
     setItemSelected(props.selected);
   }, [props.selected]);
 
-  const doToggleCheckbox = (connectionName: string, name: string, teiidName: string, nodePath: string[]) => (
+  const doToggleCheckbox = (connectionName: string, isVirtualizationSchema: boolean, name: string, teiidName: string, nodePath: string[]) => (
     event: any
   ) => {
     setItemSelected(!itemSelected);
 
     props.onSelectionChanged(
       connectionName,
+      isVirtualizationSchema,
       name,
       teiidName,
       nodePath,
@@ -71,6 +74,7 @@ export const SchemaNodeListItem: React.FunctionComponent<
           checked={props.selected}
           onChange={doToggleCheckbox(
             props.connectionName,
+            props.isVirtualizationSchema,
             props.name,
             props.teiidName,
             props.nodePath

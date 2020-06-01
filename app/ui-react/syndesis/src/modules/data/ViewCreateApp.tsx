@@ -24,12 +24,14 @@ export const ViewCreateApp: React.FunctionComponent = () => {
 
   const handleNodeSelected = async (
     connName: string,
+    isVirtualizationSchema: boolean,
     name: string,
     teiidName: string,
     nodePath: string[]
   ) => {
     const srcInfo = {
       connectionName: connName,
+      isVirtualizationSchema,
       name,
       nodePath,
       teiidName,

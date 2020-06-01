@@ -20,6 +20,7 @@ stories.add('sample schema node item', () => (
     name={text('name', nodeName)}
     teiidName={text('teiidName', teiidName)}
     connectionName={'connection1'}
+    isVirtualizationSchema={false}
     nodePath={['public','customers']}
     selected={false}
     onSelectionChanged={action(selectionChangedActionText)}
