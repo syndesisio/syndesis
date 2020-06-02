@@ -111,8 +111,6 @@ const getUpdatePermissionsPayload = (
 
 const viewRolePermissionList: ITablePrivilege[] = [];
 
-  let selectedRoles: string[] = [];
-
 export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = props => {
   /**
    * React useState Hook to handle state in component.
@@ -139,31 +137,37 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
 
   let selectedViewText = Array.from(props.itemSelected.values()).join(', ');
 
-  const updateRolePermissionModel = (
-    roleName: string | undefined,
-    permissions: string[],
-    deleteRole: boolean,
-    prevSelected: string | undefined
-  ) => {
-    const rolePermissionModelCopy = new Map<string, string[]>(
-      rolePermissionModel
-    );
-    // tslint:disable-next-line: no-unused-expression
-    roleName && rolePermissionModelCopy.set(roleName, permissions);
-    if (deleteRole && prevSelected) {
-      rolePermissionModelCopy.delete(prevSelected);
-    }
-    setRolePermissionModel(rolePermissionModelCopy);
-  };
-
-  const deleteRoleFromPermissionModel = (roleName: string) => {
-    const rolePermissionModelCopy = new Map<string, string[]>(
-      rolePermissionModel
-    );
-    // tslint:disable-next-line: no-unused-expression
-    rolePermissionModelCopy.delete(roleName) &&
+  const updateRolePermissionModel = React.useCallback(
+    (
+      roleName: string | undefined,
+      permissions: string[],
+      deleteRole: boolean,
+      prevSelected: string | undefined
+    ) => {
+      const rolePermissionModelCopy = new Map<string, string[]>(
+        rolePermissionModel
+      );
+      // tslint:disable-next-line: no-unused-expression
+      roleName && rolePermissionModelCopy.set(roleName, permissions);
+      if (deleteRole && prevSelected) {
+        rolePermissionModelCopy.delete(prevSelected);
+      }
       setRolePermissionModel(rolePermissionModelCopy);
-  };
+    },
+    [rolePermissionModel, setRolePermissionModel]
+  );
+
+  const deleteRoleFromPermissionModel = React.useCallback(
+    (roleName: string) => {
+      const rolePermissionModelCopy = new Map<string, string[]>(
+        rolePermissionModel
+      );
+      // tslint:disable-next-line: no-unused-expression
+      rolePermissionModelCopy.delete(roleName) &&
+        setRolePermissionModel(rolePermissionModelCopy);
+    },
+    [rolePermissionModel, setRolePermissionModel],
+  );
 
   const clearRolePermissionModel = () => {
     setRolePermissionModel(new Map<string, string[]>());
@@ -225,7 +229,6 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
   }, [props.itemSelected]);
 
   React.useEffect(() => {
-    selectedRoles = [...Array.from(rolePermissionModel.keys())];
     if (rolePermissionModel.size < 1 || showLoading) {
       setSaveEnabled(false);
       // Save button enables if one or more roles exist, and all have a permission checked
@@ -370,7 +373,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
               i18nRoleExists={props.i18nRoleExists}
               viewRolePermissionList={viewRolePermissionList}
               roles={props.dvRoles}
-              selectedRoles= {selectedRoles}
+              selectedRoles= {rolePermissionModel}
               updateRolePermissionModel={updateRolePermissionModel}
               deleteRoleFromPermissionModel={deleteRoleFromPermissionModel}
             />
