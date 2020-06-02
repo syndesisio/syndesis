@@ -110,7 +110,8 @@ jobs:
       <<: *common_env
       DOCKER_IMAGES: syndesis-ui
       CHROME_BIN: "/usr/bin/google-chrome"
-      MAVEN_OPTS: -Xmx128m
+      MAVEN_OPTS: -Xmx256m
+      <<: *common_env
     steps:
       - setup_remote_docker
       - checkout
