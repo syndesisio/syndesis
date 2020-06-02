@@ -120,7 +120,7 @@ jobs:
           key: syndesis-yarn-ui-v2-{{ checksum "app/ui-react/yarn.lock" }}
       - run:
           name: Build UI
-          no_output_timeout: '20min'
+          no_output_timeout: 30m
           command: |
             echo "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
             curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
