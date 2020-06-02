@@ -1,3 +1,5 @@
+
+import rhiImage from '@rh-uxd/integration-core/styles/assets/Logo-Red_Hat-Managed_Integration-A-Reverse-RGB.png';
 import { WithApiVersion, WithUserHelpers } from '@syndesis/api';
 import { StringMap } from '@syndesis/models';
 import {
@@ -327,6 +329,15 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                         isProductBuild
                                           ? redHatFuseOnlineLogo
                                           : syndesisLogo
+                                      }
+                                      alt={productName}
+                                      className="pf-c-brand"
+                                    />
+                                  }
+                                  rhiPictograph={
+                                    <img
+                                      src={
+                                        rhiImage
                                       }
                                       alt={productName}
                                       className="pf-c-brand"

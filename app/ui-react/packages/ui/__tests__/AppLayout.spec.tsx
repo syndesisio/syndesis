@@ -26,6 +26,7 @@ export default describe('ConnectionCard', () => {
         onSelectSampleIntegrationTutorials={
           selectSampleIntegrationTutorialsHandler
         }
+        rhiPictograph={'RHIntegration'}
         onSelectUserGuide={selectUserGuideHandler}
         onSelectConnectorsGuide={selectConnectorsGuideHandler}
         onSelectContactUs={selectContactUsHandler}
