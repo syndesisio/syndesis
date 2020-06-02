@@ -2,8 +2,6 @@ import {
   Alert,
   Form,
   FormGroup,
-  FormSelect,
-  FormSelectOption,
   Radio,
   Stack,
   StackItem,
@@ -82,25 +80,6 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
                 readOnly={true}
               />
             ))}
-          </FormGroup>
-          <FormGroup fieldId={'authenticationType'} label={i18nAuthTypeLabel}>
-            <FormSelect
-              value={selectedType}
-              onChange={handleChangeSelectedType}
-              id={'authenticationType'}
-              name={'authenticationType'}
-              aria-label={i18nAuthTypeLabel}
-            >
-              {authenticationTypes!.map(
-                (authType: IAuthenticationTypes, idx) => (
-                  <FormSelectOption
-                    key={idx}
-                    value={authType.value}
-                    label={authType.label || i18nNoSecurity}
-                  />
-                )
-              )}
-            </FormSelect>
           </FormGroup>
           {extractAuthType(selectedType) === 'oauth2' && (
             <>
