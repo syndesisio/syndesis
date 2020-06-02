@@ -183,13 +183,20 @@ type VolumeOnlyResources struct {
 }
 
 type ServerFeatures struct {
-	IntegrationLimit              int               // Maximum number of integrations single user can create
-	IntegrationStateCheckInterval int               // Interval for checking the state of the integrations
-	DeployIntegrations            bool              // Whether we deploy integrations
-	TestSupport                   bool              // Enables test-support endpoint on backend API
-	OpenShiftMaster               string            // Public OpenShift master address
-	ManagementUrlFor3scale        string            // 3scale management URL
-	MavenRepositories             map[string]string // Set repositories for maven
+	IntegrationLimit              int                // Maximum number of integrations single user can create
+	IntegrationStateCheckInterval int                // Interval for checking the state of the integrations
+	DeployIntegrations            bool               // Whether we deploy integrations
+	TestSupport                   bool               // Enables test-support endpoint on backend API
+	OpenShiftMaster               string             // Public OpenShift master address
+	ManagementUrlFor3scale        string             // 3scale management URL
+	Maven                         MavenConfiguration // Maven settings
+}
+
+type MavenConfiguration struct {
+	// Should we append new repositories
+	Append bool
+	// Set repositories for maven
+	Repositories map[string]string `json:"repositories,omitempty"`
 }
 
 // Addons
@@ -319,7 +326,7 @@ func GetProperties(file string, ctx context.Context, client client.Client, synde
 		for _, c := range databaseDeployment.Spec.Template.Spec.Containers {
 			if c.Name == "postgresql" {
 				//
-				// Does deploment config already contain UPGRADE Env Var?
+				// Does deployment config already contain UPGRADE Env Var?
 				// if it does then DO NOT remove it.
 				//
 				for _, env := range c.Env {
@@ -594,6 +601,12 @@ func (config *Config) setSyndesisFromCustomResource(syndesis *v1beta1.Syndesis) 
 	if err := mergo.Merge(&config.Syndesis, c, mergo.WithOverride); err != nil {
 		return err
 	}
+
+	// If specified, we overwrite the maven repositories with cr repositories
+	if len(syndesis.Spec.Components.Server.Features.Maven.Repositories) > 0 && !syndesis.Spec.Components.Server.Features.Maven.Append {
+		config.Syndesis.Components.Server.Features.Maven.Repositories = syndesis.Spec.Components.Server.Features.Maven.Repositories
+	}
+
 	return nil
 }
 

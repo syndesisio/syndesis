@@ -177,11 +177,18 @@ type ServerFeatures struct {
 	// Whether we deploy integrations
 	DeployIntegrations bool `json:"deployIntegrations,omitempty"`
 
-	// Set repositories for maven
-	MavenRepositories map[string]string `json:"mavenRepositories,omitempty"`
+	// Maven settings
+	Maven MavenConfiguration `json:"maven"`
 
 	// 3scale management URL
 	ManagementUrlFor3scale string `json:"managementUrlFor3scale,omitempty"`
+}
+
+type MavenConfiguration struct {
+	// Should we append new repositories
+	Append bool `json:"append"`
+	// Set repositories for maven
+	Repositories map[string]string `json:"repositories,omitempty"`
 }
 
 type AddonsSpec struct {
