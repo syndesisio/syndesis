@@ -338,6 +338,39 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 	}
 }
 
+func Test_MavenSettings(t *testing.T) {
+	c := getConfigLiteral()
+	s := &v1beta1.Syndesis{
+		Spec: v1beta1.SyndesisSpec{
+			Components: v1beta1.ComponentsSpec{
+				Server: v1beta1.ServerConfiguration{
+					Features: v1beta1.ServerFeatures{
+						Maven: v1beta1.MavenConfiguration{
+							Append: false,
+							Repositories: map[string]string{
+								"rep1": "http://rep1",
+								"rep2": "http://rep2",
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	c.setSyndesisFromCustomResource(s)
+	assert.Equal(t, c.Syndesis.Components.Server.Features.Maven.Repositories, s.Spec.Components.Server.Features.Maven.Repositories)
+
+	s.Spec.Components.Server.Features.Maven.Append = true
+	c.Syndesis.Components.Server.Features.Maven.Repositories = map[string]string{"rep0": "http://rep0"}
+	c.setSyndesisFromCustomResource(s)
+	assert.Equal(t, c.Syndesis.Components.Server.Features.Maven.Repositories, map[string]string{
+		"rep0": "http://rep0",
+		"rep1": "http://rep1",
+		"rep2": "http://rep2",
+	})
+}
+
 func Test_generatePasswords(t *testing.T) {
 	tests := []struct {
 		name   string
@@ -461,10 +494,13 @@ func getConfigLiteral() *Config {
 						TestSupport:                   false,
 						OpenShiftMaster:               "https://localhost:8443",
 						AdditionalMavenArguments:      "-Daaaaa=bbbbb",
-						MavenRepositories: map[string]string{
-							"central":           "https://repo.maven.apache.org/maven2/",
-							"repo-02-redhat-ga": "https://maven.repository.redhat.com/ga/",
-							"repo-03-jboss-ea":  "https://repository.jboss.org/nexus/content/groups/ea/",
+						Maven: MavenConfiguration{
+							Append: false,
+							Repositories: map[string]string{
+								"central":           "https://repo.maven.apache.org/maven2/",
+								"repo-02-redhat-ga": "https://maven.repository.redhat.com/ga/",
+								"repo-03-jboss-ea":  "https://repository.jboss.org/nexus/content/groups/ea/",
+							},
 						},
 					},
 				},

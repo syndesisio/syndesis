@@ -191,14 +191,21 @@ type VolumeOnlyResources struct {
 }
 
 type ServerFeatures struct {
-	IntegrationLimit              int               // Maximum number of integrations single user can create
-	IntegrationStateCheckInterval int               // Interval for checking the state of the integrations
-	DeployIntegrations            bool              // Whether we deploy integrations
-	TestSupport                   bool              // Enables test-support endpoint on backend API
-	OpenShiftMaster               string            // Public OpenShift master address
-	ManagementURLFor3scale        string            // 3scale management URL
-	AdditionalMavenArguments      string            // User can set extra maven options
-	MavenRepositories             map[string]string // Set repositories for maven
+	IntegrationLimit              int                // Maximum number of integrations single user can create
+	IntegrationStateCheckInterval int                // Interval for checking the state of the integrations
+	DeployIntegrations            bool               // Whether we deploy integrations
+	TestSupport                   bool               // Enables test-support endpoint on backend API
+	OpenShiftMaster               string             // Public OpenShift master address
+	ManagementURLFor3scale        string             // 3scale management URL
+	AdditionalMavenArguments      string             // User can set extra maven options
+	Maven                         MavenConfiguration // Maven settings
+}
+
+type MavenConfiguration struct {
+	// Should we append new repositories
+	Append bool
+	// Set repositories for maven
+	Repositories map[string]string `json:"repositories,omitempty"`
 }
 
 // Addons
@@ -403,6 +410,7 @@ func SecretToEnvVars(secretName string, secretData map[string][]byte, indents in
 		}
 
 		envVars = append(envVars, envVar)
+
 	}
 
 	// Sort the environment variables
@@ -718,6 +726,12 @@ func (config *Config) setSyndesisFromCustomResource(syndesis *v1beta1.Syndesis) 
 	if err := mergo.Merge(&config.Syndesis, c, mergo.WithOverride); err != nil {
 		return err
 	}
+
+	// If specified, we overwrite the maven repositories with cr repositories
+	if len(syndesis.Spec.Components.Server.Features.Maven.Repositories) > 0 && !syndesis.Spec.Components.Server.Features.Maven.Append {
+		config.Syndesis.Components.Server.Features.Maven.Repositories = syndesis.Spec.Components.Server.Features.Maven.Repositories
+	}
+
 	return nil
 }
 
