@@ -17,14 +17,12 @@ package io.syndesis.dv.lsp.completion;
 
 import static org.junit.Assert.assertEquals;
 
+import io.syndesis.dv.lsp.completion.providers.DdlCompletionProvider;
 import java.util.List;
-
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.Position;
 import org.junit.Test;
 import org.teiid.query.parser.SQLParserConstants;
-
-import io.syndesis.dv.lsp.completion.providers.DdlCompletionProvider;
 
 @SuppressWarnings("nls")
 public class TestDdlCompletionItemProvider {
@@ -33,7 +31,7 @@ public class TestDdlCompletionItemProvider {
 
     /*
     * The tokenImage[...] call is returning strings wrapped in double-quotes
-    * 
+    *
     * Need to return a simple string
     * @param tokenImageString string
     * @return string without double quotes
@@ -85,8 +83,8 @@ public class TestDdlCompletionItemProvider {
     @Test
     public void testCreateViewCompletions() {
         //             01234567890123456789
-        String stmt = "CREATE VIEW winelist ( \n" + 
-                      "   wine string(255), price decimal(2, 15), vendor string(255) \n" + 
+        String stmt = "CREATE VIEW winelist ( \n" +
+                      "   wine string(255), price decimal(2, 15), vendor string(255) \n" +
                       ") AS SELECT * FROM PostgresDB.winelist";
 
         List<CompletionItem> items = itemProvider.getCompletionItems(stmt, new Position(0, 0));
@@ -116,10 +114,10 @@ public class TestDdlCompletionItemProvider {
 
     @Test
     public void testTableBody() {
-        String stmt = 
+        String stmt =
 //               01234567890123456789012345678901234567890123456789
                 "CREATE VIEW winelist (\n" +
-                "   wine string(255),\n" + 
+                "   wine string(255),\n" +
 //               01234567890123456789012345678901234567890123456789
                 ")\nAS SELECT * FROM winelist";
 
@@ -136,7 +134,7 @@ public class TestDdlCompletionItemProvider {
 
     @Test
     public void testNoTableBody() {
-        String stmt = 
+        String stmt =
 //               01234567890123456789012345678901234567890123456789
                 "CREATE VIEW winelist AS SELECT * FROM winelist";
 
@@ -148,6 +146,6 @@ public class TestDdlCompletionItemProvider {
 
         // after comma in table element
         items = itemProvider.getCompletionItems(stmt, new Position(1, 31));
-        assertEquals(359, items.size());
+        assertEquals(363, items.size());
     }
 }
