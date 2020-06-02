@@ -72,10 +72,10 @@
       {{- end}}
         service.name: syndesis-server
 {{- end}}
-{{- if .Syndesis.Components.Server.Features.MavenRepositories}}
+{{- if .Syndesis.Components.Server.Features.Maven.Repositories}}
       maven:
         repositories:
-    {{- range $id, $url := .Syndesis.Components.Server.Features.MavenRepositories}}
+    {{- range $id, $url := .Syndesis.Components.Server.Features.Maven.Repositories}}
           {{ $id }}: {{ $url }}
     {{- end }}
 {{- end}}
