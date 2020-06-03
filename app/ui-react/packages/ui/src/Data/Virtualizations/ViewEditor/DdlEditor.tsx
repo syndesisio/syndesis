@@ -28,6 +28,8 @@ export interface ITableInfo {
 
 export interface IDdlEditorProps {
   viewDdl: string;
+  virtualizationName: string;
+  editedViewName: string;
   i18nDoneLabel: string;
   i18nSaveLabel: string;
   i18nTitle: string;
@@ -179,6 +181,8 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = React.memo(
             >
               <ConnectionTreeComponent
                 metadataTree={memoisedValue}
+                virtualizationName={props.virtualizationName}
+                editedViewName={props.editedViewName}
                 i18nLoading={props.i18nLoading}
                 i18nKababAction={props.i18nKababAction}
                 i18nColumnActionTooltip={props.i18nColumnActionTooltip}
