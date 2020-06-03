@@ -1,3 +1,4 @@
+import { CubeIcon, DatabaseIcon } from '@patternfly/react-icons';
 import {
   ConnectionTable,
   SchemaNodeInfo,
@@ -54,6 +55,14 @@ export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> =
     ]);
   };
 
+  const getConnectionIcon = (schemaNodeInfo: SchemaNodeInfo) => {
+    return schemaNodeInfo.isVirtualizationSchema ? (
+      <CubeIcon />
+    ) : (
+      <DatabaseIcon />
+    );
+  };
+
   return (
     <SelectedConnectionTables
       selectedSchemaNodesLength={props.selectedSchemaNodes.length}
@@ -65,6 +74,7 @@ export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> =
         <SelectedConnectionListView
           key={index}
           name={info.teiidName}
+          connectionIcon={getConnectionIcon(info)}
           connectionName={info.connectionName}
           index={index}
           toggle={toggle}

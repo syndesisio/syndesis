@@ -33,6 +33,7 @@ export interface IConnectionSchemaListItemProps {
   i18nStatusErrorPopoverTitle: string;
   i18nStatusErrorPopoverLink: string;
   icon: React.ReactNode;
+  isVirtualizationSource: boolean;
   loading: boolean;
   refreshConnectionSchema: (connectionName: string) => void;
 }
@@ -87,36 +88,40 @@ export const ConnectionSchemaListItem: React.FunctionComponent<IConnectionSchema
             </DataListCell>,
           ]}
         />
-        <DataListAction
-          aria-labelledby={'connection schema list actions'}
-          id={'connection-schema-list-actions'}
-          aria-label={'Actions'}
-        >
-          <Grid>
-            <GridItem span={6}>{props.i18nLastUpdatedMessage}</GridItem>
-            <GridItem span={4}>
-              <DvConnectionStatus
-                dvStatus={props.dvStatus}
-                dvStatusMessage={props.dvStatusMessage}
-                i18nRefreshInProgress={props.i18nRefreshInProgress}
-                i18nStatusErrorPopoverTitle={props.i18nStatusErrorPopoverTitle}
-                i18nStatusErrorPopoverLink={props.i18nStatusErrorPopoverLink}
-                loading={props.loading}
-              />
-            </GridItem>
-            <GridItem span={2}>
-              <Button
-                data-testid={'connection-schema-list-item__refresh-button'}
-                variant={ButtonVariant.secondary}
-                onClick={handleRefreshClick}
-                isDisabled={props.loading}
-              >
-                {props.i18nRefresh}&nbsp;
-                {<SyncIcon />}
-              </Button>
-            </GridItem>
-          </Grid>
-        </DataListAction>
+        {!props.isVirtualizationSource && (
+          <DataListAction
+            aria-labelledby={'connection schema list actions'}
+            id={'connection-schema-list-actions'}
+            aria-label={'Actions'}
+          >
+            <Grid>
+              <GridItem span={6}>{props.i18nLastUpdatedMessage}</GridItem>
+              <GridItem span={4}>
+                <DvConnectionStatus
+                  dvStatus={props.dvStatus}
+                  dvStatusMessage={props.dvStatusMessage}
+                  i18nRefreshInProgress={props.i18nRefreshInProgress}
+                  i18nStatusErrorPopoverTitle={
+                    props.i18nStatusErrorPopoverTitle
+                  }
+                  i18nStatusErrorPopoverLink={props.i18nStatusErrorPopoverLink}
+                  loading={props.loading}
+                />
+              </GridItem>
+              <GridItem span={2}>
+                <Button
+                  data-testid={'connection-schema-list-item__refresh-button'}
+                  variant={ButtonVariant.secondary}
+                  onClick={handleRefreshClick}
+                  isDisabled={props.loading}
+                >
+                  {props.i18nRefresh}&nbsp;
+                  {<SyncIcon />}
+                </Button>
+              </GridItem>
+            </Grid>
+          </DataListAction>
+        )}
       </DataListItemRow>
       {props.children && props.dvStatus === ConnectionStatus.ACTIVE ? (
         <DataListContent
