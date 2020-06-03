@@ -8,6 +8,6 @@
 }
 
 .role-permission-list-item_select .pf-c-select__menu {
-    max-height: 250px;
+    max-height: 200px;
     overflow-y: auto;
 }

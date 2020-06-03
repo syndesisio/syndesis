@@ -32,6 +32,8 @@ export enum DvConnectionStatus {
   INACTIVE = 'INACTIVE',
 }
 
+const VIRTUALIZATION_PLACEHOLDER = '$dv';
+
 /**
  * Get the date and time display
  * @param numericTimestamp the numeric timestamp
@@ -174,6 +176,7 @@ export function generateSchemaNodeInfos(
       // Create SchemaNodeInfo
       const view: SchemaNodeInfo = {
         connectionName: schemaNode.connectionName,
+        isVirtualizationSchema: false,
         name: schemaNode.name,
         nodePath: sourcePath,
         teiidName: schemaNode.teiidName,
@@ -221,9 +224,10 @@ function loadPaths(schemaNodeInfo: SchemaNodeInfo[]): string[] {
 
   let index = 0;
   schemaNodeInfo.map(
-    item =>
-      (srcPaths[index++] =
-        'schema=' + item.connectionName + '/table=' + item.teiidName)
+    item => {
+      const connName = item.isVirtualizationSchema ? VIRTUALIZATION_PLACEHOLDER : item.connectionName;
+      return srcPaths[index++] = 'schema=' + connName + '/table=' + item.teiidName;
+    }
   );
 
   return srcPaths;
@@ -313,6 +317,7 @@ export function generateDvConnections(
         dvSelected: selectionState,
         dvSourceError: virtSrcStatus.errors[0],
         dvStatus: connStatus,
+        dvVirtualizationSource: virtSrcStatus.isVirtualizationSource ? 'true' : 'false',
       };
       dvConns.push(conn);
     }
@@ -376,6 +381,18 @@ export function isDvConnectionLoading(conn: Connection) {
   return conn.options &&
     conn.options.dvLoading &&
     conn.options.dvLoading === String(true)
+    ? true
+    : false;
+}
+
+/**
+ * Determine if the Connection is a virtualization source.  DV uses the options on a connection to set virtualization source
+ * @param connection the connection
+ */
+export function isDvConnectionVirtualizationSource(conn: Connection) {
+  return conn.options &&
+    conn.options.dvVirtualizationSource &&
+    conn.options.dvVirtualizationSource === String(true)
     ? true
     : false;
 }

@@ -4,6 +4,14 @@
   flex-direction: column;
 }
 
+.ddl-editor_tree_comp{
+  --pf-c-page__main-section--PaddingRight: 5px;
+}
+
+.ddl-editor_comp{
+  --pf-c-page__main-section--PaddingLeft: 5px;
+}
+
 .ddl-editor_metatree_table{
   overflow-y: auto;
 }
