@@ -133,6 +133,8 @@
   "publishErrorMessage": "The virtualization publishing failed.",
   "publishInProgress": "Publishing...",
   "publishInProgressMessage": "The virtualization publishing is in progress.",
+  "publishVirtualizationEnabledTip": "Publishing the virtualization will create a new version, superseding any currently running version.",
+  "publishVirtualizationDisabledTip": "The virtualization must have modifications before publish is enabled.",
   "publishVirtualizationFailed": "The virtualization \"{{name}}\" could not be published. Details: {{details}}",
   "publishVirtualizationNoViews": "Cannot publish virtualization \"{{name}}\" - No views are defined",
   "queryResultsTableEmptyStateInfo": "Query has not been executed.\nSelect a view and submit the query.",

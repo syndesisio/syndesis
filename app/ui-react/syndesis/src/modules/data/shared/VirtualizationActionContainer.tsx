@@ -290,6 +290,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       as: 'primary',
       disabled: false,
       i18nLabel: t('shared:Publish'),
+      i18nToolTip: t('publishVirtualizationEnabledTip'),
       id: VirtualizationActionId.Publish,
       onClick: async () => {
         setPublish(true);
@@ -569,7 +570,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
         case VirtualizationActionId.Publish:
           // The publish is included, but may be disabled
           if (!canPublish(props.virtualization)) {
-            actions.push(createPublishAction({ disabled: true }));
+            actions.push(createPublishAction({ disabled: true, i18nToolTip: t('data:publishVirtualizationDisabledTip') }));
           } else {
             actions.push(createPublishAction(props.publishActionProps));
           }
@@ -605,7 +606,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
     if (!props.includeItems) {
       // The publish is included, but may be disabled
       if (!canPublish(props.virtualization)) {
-        items.push(createPublishAction({ disabled: true }));
+        items.push(createPublishAction({ disabled: true, i18nToolTip: t('data:publishVirtualizationDisabledTip') }));
       } else {
         items.push(createPublishAction(props.publishActionProps));
       }

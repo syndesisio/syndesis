@@ -133,6 +133,8 @@
   "publishErrorMessage": "Публикация виртуализации не удалась.",
   "publishInProgress": "Публикация...",
   "publishInProgressMessage": "Публикация виртуализации продолжается.",
+  "publishVirtualizationEnabledTip": "Публикация виртуализации создаст новую версию, заменяющую любую текущую версию.",
+  "publishVirtualizationDisabledTip": "Виртуализация должна иметь изменения, прежде чем публикация будет включена.",
   "publishVirtualizationFailed": "Виртуализация \"{{name}}\" не может быть опубликована. Детали: {{details}}",
   "publishVirtualizationNoViews": "Нельзя опубликовать Виртуализацию \"{{name}}\" - не заданы Представления",
   "queryResultsTableEmptyStateInfo": "Запрос не был выполнен.\nВыберите представление и отправьте запрос.",
