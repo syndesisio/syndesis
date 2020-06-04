@@ -24,7 +24,7 @@ to target collection fields:
 image:images/integrating-applications/map-collections.png[mapping collection]
 
 In the source and target panels, the data mapper displays 
-image:images/integrating-applications/collection-icon.png[this icon] to indicate
+image:images/integrating-applications/collection-icon.png[the Collection icon] to indicate
 a collection. When a source collection or a target 
 collection contain only primitive types, the data mapper does not 
 display collection fields because there is no need to. You can map 
