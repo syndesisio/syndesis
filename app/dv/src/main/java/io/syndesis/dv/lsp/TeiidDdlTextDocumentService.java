@@ -73,8 +73,6 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
 
     private final DdlCompletionProvider completionProvider;
 
-    private boolean runningDiagnostics;
-
     public TeiidDdlTextDocumentService(TeiidDdlLanguageServer teiidLanguageServer) {
         this.teiidLanguageServer = teiidLanguageServer;
         this.completionProvider = new DdlCompletionProvider(teiidLanguageServer.getMetadataService(),
@@ -209,13 +207,7 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
         TextDocumentItem textDocument = params.getTextDocument();
         LOGGER.debug("didOpen: {}", textDocument);
         openedDocuments.put(textDocument.getUri(), textDocument);
-        if( !runningDiagnostics ) {
-            runningDiagnostics = true;
-            new DdlDiagnostics(this.teiidLanguageServer).publishDiagnostics(textDocument);
-            runningDiagnostics = false;
-        } else {
-            LOGGER.info("didOpen() diagnostics did not run because process already running", params.getTextDocument());
-        }
+        new DdlDiagnostics(this.teiidLanguageServer).publishDiagnostics(textDocument);
     }
 
     @Override
@@ -225,13 +217,7 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
         TextDocumentItem textDocument = openedDocuments.get(params.getTextDocument().getUri());
         if (!contentChanges.isEmpty()) {
             textDocument.setText(contentChanges.get(0).getText());
-            if( !runningDiagnostics ) {
-                runningDiagnostics = true;
-                new DdlDiagnostics(this.teiidLanguageServer).publishDiagnostics(textDocument);
-                runningDiagnostics = false;
-            } else {
-                LOGGER.info("didChange() diagnostics did not run because process already running", params.getTextDocument());
-            }
+            new DdlDiagnostics(this.teiidLanguageServer).publishDiagnostics(textDocument);
         }
     }
 

@@ -16,6 +16,7 @@
 package io.syndesis.dv.lsp.completion;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.eclipse.lsp4j.Position;
@@ -34,9 +35,9 @@ public class TestDdlTokenWalker {
     public void testFindToken() {
         // 01234567890123456789012
         String stmt = "CREATE VIEW winelist (\n" +
-        // 01234567890123456789012345678901234567890123456789
-            "   winename string(255), price decimal(2, 15), vendor string(255) \n" +
-            ") AS SELECT * FROM PostgresDB.winelist";
+                    // 01234567890123456789012345678901234567890123456789
+                      "   winename string(255), price decimal(2, 15), vendor string(255) \n"
+                    + ") AS SELECT * FROM PostgresDB.winelist";
 
         DdlTokenAnalyzer analyser = new DdlTokenAnalyzer(stmt);
         DdlTokenWalker walker = new DdlTokenWalker(analyser.getTokens());
@@ -162,16 +163,14 @@ public class TestDdlTokenWalker {
     public void testComplexCreateView() {
         String stmt =
             // 01234567890123456789012
-            "CREATE VIEW G1(\n" +
-                "e1 integer primary key,\n" +
-                "e2 varchar(10) unique,\n" +
-                "e3 date not null unique,\n" +
-                "e4 decimal(12,3) default 12.2 options (searchable 'unsearchable'),\n" +
-                "e5 integer auto_increment INDEX OPTIONS (UUID 'uuid', NAMEINSOURCE 'nis', SELECTABLE 'NO'),\n" +
-                "e6 varchar index default 'hello')\n" +
-                // 01234567890123456789012345678901234567890
-                "OPTIONS (CARDINALITY 12, UUID 'uuid2',  UPDATABLE 'true', FOO 'BAR', ANNOTATION 'Test Table')" +
-                " AS SELECT e1, e2, e3, e4, e5, e6 from  ";
+                "CREATE VIEW G1(\n" + "e1 integer primary key,\n" + "e2 varchar(10) unique,\n"
+              + "e3 date not null unique,\n"
+              + "e4 decimal(12,3) default 12.2 options (searchable 'unsearchable'),\n"
+              + "e5 integer auto_increment INDEX OPTIONS (UUID 'uuid', NAMEINSOURCE 'nis', SELECTABLE 'NO'),\n"
+              + "e6 varchar index default 'hello')\n" +
+              // 01234567890123456789012345678901234567890
+              "OPTIONS (CARDINALITY 12, UUID 'uuid2',  UPDATABLE 'true', FOO 'BAR', ANNOTATION 'Test Table')"
+            + " AS SELECT e1, e2, e3, e4, e5, e6 from  ";
 
         DdlTokenAnalyzer analyser = new DdlTokenAnalyzer(stmt);
         // analyser.printTokens();
@@ -190,7 +189,7 @@ public class TestDdlTokenWalker {
         // 01234567890123456789012
         String stmt = "CREATE VIEW winelist (\n" +
         // 01234567890123456789012345678901234567890123456789
-            ") AS SELECT * FROM PostgresDB.winelist";
+                ") AS SELECT * FROM PostgresDB.winelist";
 
         DdlTokenAnalyzer analyser = new DdlTokenAnalyzer(stmt);
         DdlTokenWalker walker = new DdlTokenWalker(analyser.getTokens());
@@ -201,5 +200,44 @@ public class TestDdlTokenWalker {
 
         token = walker.findToken(new Position(0, 7), DdlAnalyzerConstants.StatementType.CREATE_VIEW_TYPE);
         assertEquals(SQLParserConstants.CREATE, token.kind);
+    }
+
+    @Test
+    public void testFindCommaTokenAfterAliasTableSymbol() {
+        // 01234567890123456789012
+        String stmt = "CREATE VIEW winelist (\n" +
+        // |
+        // v
+        // 01234567890123456789012345678901234567890123456789
+                ") AS SELECT * FROM PostgresDB.winelist as t1, ";
+
+        DdlTokenAnalyzer analyser = new DdlTokenAnalyzer(stmt);
+        DdlTokenWalker walker = new DdlTokenWalker(analyser.getTokens());
+
+        // LINE 1 TESTS
+        Token token = walker.findToken(new Position(1, 45), DdlAnalyzerConstants.StatementType.CREATE_VIEW_TYPE);
+        assertNotNull(token);
+        assertEquals(SQLParserConstants.COMMA, token.kind);
+    }
+
+    @Test
+    public void testIsAfterFromClause() {
+        // 0123456789 123456789 123456789 123456789 123456789 123456789 123456789
+        String stmt = "CREATE VIEW winelist AS SELECT * FROM PostgresDB.winelist as t1 WHERE id > 2000";
+
+        DdlTokenAnalyzer analyser = new DdlTokenAnalyzer(stmt);
+        DdlTokenWalker walker = new DdlTokenWalker(analyser.getTokens());
+
+        // LINE 1 TESTS
+        Token token = walker.findToken(new Position(0, 63), DdlAnalyzerConstants.StatementType.CREATE_VIEW_TYPE);
+        assertNotNull(token);
+        assertEquals(SQLParserConstants.AS, token.kind);
+
+        token = walker.findToken(new Position(0, 64), DdlAnalyzerConstants.StatementType.CREATE_VIEW_TYPE);
+        assertNotNull(token);
+        assertEquals(SQLParserConstants.ID, token.kind);
+
+        token = analyser.getTokenAt(new Position(0, 65));
+        assertEquals(SQLParserConstants.WHERE, token.kind);
     }
 }

@@ -41,7 +41,7 @@ public class TableBodyCompletionProvider extends CompletionItemBuilder {
         Token targetToken = context.getToken();
 
         if (context.getContext() == Context.TABLE_OPTIONS) {
-            items = getItemLoader().getTableBodyOptionsCompletionItems();
+            items.addAll(getItemLoader().getTableBodyOptionsCompletionItems());
         } else {
             if (targetToken.kind == SQLParserConstants.RPAREN) {
                 items.add(getAs(1));
@@ -68,6 +68,7 @@ public class TableBodyCompletionProvider extends CompletionItemBuilder {
         ci.setDocumentation(CompletionItemBuilder.beautifyDocument(ci.getInsertText()));
         ci.setData(data);
         ci.setPreselect(true);
+        ci.setSortText("1100");
         return ci;
     }
 
@@ -80,6 +81,7 @@ public class TableBodyCompletionProvider extends CompletionItemBuilder {
         ci.setDocumentation(CompletionItemBuilder.beautifyDocument(ci.getInsertText()));
         ci.setData(data);
         ci.setPreselect(true);
+        ci.setSortText("1120");
         return ci;
     }
 

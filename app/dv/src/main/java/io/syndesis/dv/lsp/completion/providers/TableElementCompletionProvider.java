@@ -29,7 +29,8 @@ import io.syndesis.dv.lsp.parser.statement.TableElement;
 import io.syndesis.dv.lsp.parser.statement.TokenContext;
 
 /**
- * Provides completion items for a table element based on context of the targeted token
+ * Provides completion items for a table element based on context of the
+ * targeted token
  *
  */
 public class TableElementCompletionProvider extends CompletionItemBuilder {
@@ -38,6 +39,7 @@ public class TableElementCompletionProvider extends CompletionItemBuilder {
     public TableElementCompletionProvider(CreateViewStatement statement) {
         super();
         this.statement = statement;
+        ;
     }
 
     public List<CompletionItem> getCompletionItems(TokenContext context) {
@@ -49,37 +51,39 @@ public class TableElementCompletionProvider extends CompletionItemBuilder {
          * AUTO_INCREMENT, DEFAULT_KEYWORD, NOT, NULL, PRIMARY, KEY, INDEX, UNIQUE
          */
         switch (context.getContext()) {
-            case TABLE_ELEMENT_OPTIONS: {
-                items = getItemLoader().getTableElementOptionsCompletionItems();
-            } break;
-
-            case TABLE_ELEMENT_OPTION_SEARCHABLE: {
-                items = getItemLoader().getSearchableValuesCompletionItems();
-            } break;
-
-            default: {
-                switch (targetToken.kind) {
-                    case SQLParserConstants.NOT: {
-                        String[] notWords = { "NULL" };
-                        items.addAll(generateCompletionItems(notWords));
-                    }
-                        break;
-                    case SQLParserConstants.NULL: {
-                        items.addAll(getRemainingItems(targetToken));
-                    }
-                        break;
-                    case SQLParserConstants.STRINGVAL:
-                    case SQLParserConstants.ID: {
-                        items.addAll(setItemsSortText(getItemLoader().getDatatypesCompletionItems(), "00001"));
-                        items.addAll(getRemainingItems(targetToken));
-                    }
-                        break;
-                    default: {
-                        items.addAll(getRemainingItems(targetToken));
-                        return items;
-                    }
-                }
-            }
+	        case TABLE_ELEMENT_OPTIONS: {
+	            items = getItemLoader().getTableElementOptionsCompletionItems();
+	        }
+	            break;
+	
+	        case TABLE_ELEMENT_OPTION_SEARCHABLE: {
+	            items = getItemLoader().getSearchableValuesCompletionItems();
+	        }
+	            break;
+	
+	        default: {
+	            switch (targetToken.kind) {
+		            case SQLParserConstants.NOT: {
+		                String[] notWords = { "NULL" };
+		                items.addAll(generateCompletionItems(notWords));
+		            }
+		                break;
+		            case SQLParserConstants.NULL: {
+		                items.addAll(getRemainingItems(targetToken));
+		            }
+		                break;
+		            case SQLParserConstants.STRINGVAL:
+		            case SQLParserConstants.ID: {
+		                items.addAll(setItemsSortText(getItemLoader().getDatatypesCompletionItems(), "00001"));
+		                items.addAll(getRemainingItems(targetToken));
+		            }
+		                break;
+		            default: {
+		                items.addAll(getRemainingItems(targetToken));
+		                return items;
+		            }
+	            }
+	        }
         }
 
         return items;
@@ -99,13 +103,13 @@ public class TableElementCompletionProvider extends CompletionItemBuilder {
 
     public String getLabel(int keywordId) {
         String tokenImageStr = SQLParserConstants.tokenImage[keywordId].toUpperCase(Locale.US);
-        return tokenImageStr.substring(1, tokenImageStr.length()-1);
+        return tokenImageStr.substring(1, tokenImageStr.length() - 1);
     }
 
     private TableElement getTableElement(Token token) {
-        if( statement.getTableBody() != null && statement.getTableBody().getTableElements() != null) {
-            for( TableElement element: statement.getTableBody().getTableElements() ) {
-                if( element.isTokenInObject(token)) {
+        if (statement.getTableBody() != null && statement.getTableBody().getTableElements() != null) {
+            for (TableElement element : statement.getTableBody().getTableElements()) {
+                if (element.isTokenInObject(token)) {
                     return element;
                 }
             }
@@ -113,42 +117,42 @@ public class TableElementCompletionProvider extends CompletionItemBuilder {
         return null;
     }
 
-    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
+    @SuppressWarnings({ "PMD.CyclomaticComplexity", "PMD.NPathComplexity" })
     private List<CompletionItem> getRemainingItems(Token targetToken) {
         List<CompletionItem> remainingItems = new ArrayList<CompletionItem>();
         List<CompletionItem> allItems = getItemLoader().getTableElementCompletionItems();
         TableElement element = getTableElement(targetToken);
 
-        if( element != null ) {
-            for( CompletionItem item: allItems ) {
-                if( item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.NOT)) && element.getNotNullTokens() == null) {
+        if (element != null) {
+            for (CompletionItem item : allItems) {
+                if (item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.NOT))
+                        && element.getNotNullTokens() == null) {
                     remainingItems.add(item);
-                }
-                if( item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.NULL)) && element.getNotNullTokens() == null) {
+                } else if (item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.NULL))
+                        && element.getNotNullTokens() == null) {
                     remainingItems.add(item);
-                }
-                if( item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.PRIMARY)) && !statement.getTableBody().hasPrimaryKey()) {
+                } else if (item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.PRIMARY))
+                        && !statement.getTableBody().hasPrimaryKey()) {
                     remainingItems.add(item);
-                }
-                if( item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.KEY)) && !statement.getTableBody().hasPrimaryKey()) {
+                } else if (item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.KEY))
+                        && !statement.getTableBody().hasPrimaryKey()) {
                     remainingItems.add(item);
-                }
-                if( item.getLabel().equalsIgnoreCase("PRIMARY KEY") && !statement.getTableBody().hasPrimaryKey()) {
+                } else if (item.getLabel().equalsIgnoreCase("PRIMARY KEY") && !statement.getTableBody().hasPrimaryKey()) {
                     remainingItems.add(item);
-                }
-                if( item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.AUTO_INCREMENT)) && element.getAutoIncrementToken() == null) {
+                } else if (item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.AUTO_INCREMENT))
+                        && element.getAutoIncrementToken() == null) {
                     remainingItems.add(item);
-                }
-                if( item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.DEFAULT)) && element.getDatatypeTokens() == null) {
+                } else if (item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.DEFAULT))
+                        && element.getDatatypeTokens() == null) {
                     remainingItems.add(item);
-                }
-                if( item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.INDEX)) && element.getIndexToken() == null) {
+                } else if (item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.INDEX))
+                        && element.getIndexToken() == null) {
                     remainingItems.add(item);
-                }
-                if( item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.UNIQUE)) && element.getUniqueToken() == null) {
+                } else if (item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.UNIQUE))
+                        && element.getUniqueToken() == null) {
                     remainingItems.add(item);
-                }
-                if( item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.OPTIONS)) && element.getOptionClause() == null) {
+                } else if (item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.OPTIONS))
+                        && element.getOptionClause() == null) {
                     remainingItems.add(item);
                 }
             }
