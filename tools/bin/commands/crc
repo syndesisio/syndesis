@@ -113,6 +113,10 @@ crc::run() {
         echo "Switching to project \"$project\""
         oc project $project
 
+        # Login as admin to install CRDs
+        local user=$(oc whoami)
+        local revert_login=$(login_as_admin)
+
         # Install Syndesis CRD
         if ! $(oc get crd | grep "syndesises.syndesis.io" >/dev/null 2>&1); then
             echo "Installing Syndesis CRD"
@@ -120,12 +124,19 @@ crc::run() {
             check_error "$result"
         fi
 
+        echo "Grant user '$user' permissions"
+        local result=$($OPERATOR_BINARY grant --user $user)
+        check_error "$result"
+
         # Install Camel-K CRD
         if [ $(hasflag --camel-k) ]; then
           echo "Installing Camel-K CRDs"
           result=$(install_camel_k_crds "$(readopt --camel-k)")
           check_error "$result"
         fi
+
+        # Revert back to the original user whose been granted install rights
+        $revert_login
 
         # Deploy operator
         echo "Deploying Syndesis operator"
@@ -170,14 +181,26 @@ crc::run() {
 login_as_admin() {
     local user=$(oc whoami)
     local token=$(extract_current_token)
-    local project=$(oc project -q)
+
+    read -p "Please enter the user-name of a cluster-admin account?: " admin_user
+    echo
+    if [ -z "$admin_user" ]; then
+        check_error "Error: No admin account user-name was entered. Aborting."
+    fi
+
+    read -p "Please enter the password for ${admin_user}?: " password
+    echo
+    if [ -z "$password" ]; then
+        check_error "Error: No password for ${admin_user} was entered. Aborting."
+    fi
 
     # Login in as admin
-    oc login -u kubeadmin >/dev/null 2>&1
+    local result=$(oc login -u "$admin_user" -p "${password}" 2>&1)
+    check_error "$result"
 
     # Return the command to use to revert to the initial user
     if [ -n "${token}" ]; then
-        echo "oc login -u ${user} -p $token"
+        echo "oc login --token ${token}"
     else
         echo "oc login -u ${user}"
     fi
