@@ -138,6 +138,9 @@ public class TeiidDataSourceImpl implements Comparable<TeiidDataSourceImpl>, Tei
 
     @Override
     public Date getLastMetadataLoadTime() {
-        return new Date(this.lastLoad.toEpochMilli());
+        if (this.lastLoad != null) {
+            return new Date(this.lastLoad.toEpochMilli());
+        }
+        return null;
     }
 }
