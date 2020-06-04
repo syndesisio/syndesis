@@ -54,17 +54,9 @@ public class DdlDiagnostics {
     }
 
     /**
-<<<<<<< HEAD
-     * Do basic validation to check the no XML valid.
-     *
-     * @param ddlDocument
-     * @param diagnostics
-     * @throws BadLocationException
-=======
      * Generate and publish diagnostics for target document.
      *
      * @param ddlDocument
->>>>>>> f8a9aee733... draft 1 work on metadata schema items
      */
     public boolean publishDiagnostics(TextDocumentItem ddlDocument) {
         doPublishDiagnostics(ddlDocument);

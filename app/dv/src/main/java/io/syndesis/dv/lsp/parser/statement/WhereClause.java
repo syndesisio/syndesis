@@ -15,29 +15,64 @@
  */
 package io.syndesis.dv.lsp.parser.statement;
 
+import java.util.List;
+
 import org.eclipse.lsp4j.Position;
+import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 public class WhereClause extends AbstractStatementObject {
+    private final QueryExpression queryExpression;
 
-    public WhereClause(DdlTokenAnalyzer analyzer) {
+    public WhereClause(DdlTokenAnalyzer analyzer, QueryExpression queryExpression) {
         super(analyzer);
+        this.queryExpression = queryExpression;
+    }
+
+    public QueryExpression getQueryExpression() {
+        return this.queryExpression;
     }
 
     @Override
     protected void parseAndValidate() {
-        // TODO Auto-generated method stub
+        Token whereToken = findTokenByKind(SQLParserConstants.WHERE);
+        if (whereToken != null) {
+            setFirstTknIndex(getTokenIndex(whereToken));
+            setLastTknIndex(getTokenIndex(getTokens().get(getTokens().size() - 1)));
+        } else {
+            List<Token> tokens = getTokens();
+            if (tokens.get(tokens.size() - 1).kind == SQLParserConstants.SEMICOLON) {
+                setLastTknIndex(tokens.size() - 2);
+            } else {
+                setLastTknIndex(tokens.size() - 1);
+            }
+        }
     }
 
     @Override
     protected TokenContext getTokenContext(Position position) {
         boolean isInClause = isBetween(getFirstTknIndex(), getLastTknIndex(), position);
-        if( isInClause ) {
+        if (isInClause) {
             Token tkn = this.analyzer.getTokenFor(position);
-            return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.WHERE_CLAUSE, this);
+            if (tkn.kind == SQLParserConstants.PERIOD) {
+                Token aliasNamePrefixToken = getTokens().get(getTokenIndex(tkn) - 1);
+                // check previous token and look for valid table alias
+                for (TableSymbol nextSymbol : getQueryExpression().getFromClause().getTableSymbols()) {
+                    if (nextSymbol.isAliased() && nextSymbol.getAlias().equalsIgnoreCase(aliasNamePrefixToken.image)) {
+                        return new TokenContext(position, aliasNamePrefixToken,
+                                DdlAnalyzerConstants.Context.WHERE_CLAUSE_TABLE_ALIAS, this);
+                    }
+                }
+            }
+            if (this.analyzer.isPositionInToken(position, tkn)) {
+                return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.WHERE_CLAUSE, this);
+            } else {
+                return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.QUERY_EXPRESSION, this);
+            }
+
         }
         return null;
     }
