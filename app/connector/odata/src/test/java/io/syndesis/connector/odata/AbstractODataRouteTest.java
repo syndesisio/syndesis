@@ -16,6 +16,12 @@
 package io.syndesis.connector.odata;
 
 import java.io.IOException;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
 import org.apache.http.HttpHost;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
@@ -23,18 +29,13 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
-//import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpCoreContext;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.junit.After;
 import org.junit.Before;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.Connection;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
+
+//import org.apache.http.protocol.ExecutionContext;
 
 public abstract class AbstractODataRouteTest extends AbstractODataTest {
 
@@ -64,19 +65,19 @@ public abstract class AbstractODataRouteTest extends AbstractODataTest {
     }
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         context = createCamelContext();
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         if (context != null) {
             context.stop();
             context = null;
         }
     }
 
-    protected abstract ConnectorAction createConnectorAction() throws Exception;
+    protected abstract ConnectorAction createConnectorAction();
 
     protected Step.Builder odataStepBuilder(Connector odataConnector) {
         Step.Builder odataStepBuilder = new Step.Builder()

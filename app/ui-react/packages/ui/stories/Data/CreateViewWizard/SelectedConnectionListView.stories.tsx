@@ -4,6 +4,7 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
+import { DatabaseIcon } from '@patternfly/react-icons';
 import { SelectedConnectionListView } from '../../../src';
 
 const stories = storiesOf(
@@ -26,6 +27,7 @@ stories.add('expanded list', () => (
     <SelectedConnectionListView
       key={selectedConnectionIndex1}
       name={selectedConnectionTable1}
+      connectionIcon={<DatabaseIcon />}
       connectionName={selectedConnectionName1}
       index={0}
       toggle={action('On toggle')}

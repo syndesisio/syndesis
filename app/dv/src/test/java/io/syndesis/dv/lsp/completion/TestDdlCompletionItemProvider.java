@@ -17,14 +17,12 @@ package io.syndesis.dv.lsp.completion;
 
 import static org.junit.Assert.assertEquals;
 
+import io.syndesis.dv.lsp.completion.providers.DdlCompletionProvider;
 import java.util.List;
-
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.Position;
 import org.junit.Test;
 import org.teiid.query.parser.SQLParserConstants;
-
-import io.syndesis.dv.lsp.completion.providers.DdlCompletionProvider;
 
 @SuppressWarnings("nls")
 public class TestDdlCompletionItemProvider {
@@ -33,7 +31,7 @@ public class TestDdlCompletionItemProvider {
 
     /**
      * The tokenImage[...] call is returning strings wrapped in double-quotes
-     * 
+     *
      * Need to return a simple string
      * 
      * @return string without double quotes

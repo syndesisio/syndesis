@@ -51,8 +51,8 @@
         - name: syndesis-dv
           envFrom:
             - configMapRef:
-              name: dv-sso-config
-              optional: true
+                name: dv-sso-config
+                optional: true
           env:
           - name: JAVA_APP_DIR
             value: /deployments
@@ -89,7 +89,7 @@
           livenessProbe:
             httpGet:
               port: 8080
-              path: "/dv/v1/swagger.json"
+              path: "/dv/actuator/health"
               httpHeaders:
               - name: Accept
                 value: 'application/json'
@@ -98,7 +98,7 @@
             timeoutSeconds: 5
           readinessProbe:
             httpGet:
-              path: "/dv/v1/swagger.json"
+              path: "/dv/actuator/health"
               port: 8080
               httpHeaders:
               - name: Accept

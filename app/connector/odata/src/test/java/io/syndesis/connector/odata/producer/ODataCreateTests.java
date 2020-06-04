@@ -77,7 +77,7 @@ public class ODataCreateTests extends AbstractODataRouteTest {
     }
 
     @Override
-    protected ConnectorAction createConnectorAction() throws Exception {
+    protected ConnectorAction createConnectorAction() {
         ConnectorAction odataAction = new ConnectorAction.Builder()
             .description("Create resource entity in resource on the server")
              .id("io.syndesis:odata-create-connector")

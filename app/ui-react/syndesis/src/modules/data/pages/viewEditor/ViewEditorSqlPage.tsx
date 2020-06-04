@@ -19,7 +19,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { UIContext } from '../../../../app';
-import { ApiError } from '../../../../shared';
+import { ApiError, PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
 import resolvers from '../../../resolvers';
 import {
@@ -339,6 +339,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
         >
           {() => (
             <>
+              <PageTitle title={t('viewEditor.pageTitle')} />
               <Breadcrumb>
                 <Link to={resolvers.dashboard.root()}>{t('shared:Home')}</Link>
                 <Link to={resolvers.data.root()}>{t('shared:Data')}</Link>
@@ -353,28 +354,28 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
                 </Link>
                 <span>{t('viewNameBreadcrumb', { name: viewDefn.name })}</span>
               </Breadcrumb>
-                <DdlEditor
-                  viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
-                  i18nDoneLabel={t('shared:Done')}
-                  i18nSaveLabel={t('shared:Save')}
-                  i18nTitle={t('viewEditor.title')}
-                  i18nLoading={t('shared:Loading')}
-                  i18nKababAction={t('metadataTreeKababAction')}
-                  i18nColumnActionTooltip={t('metadataColumnTooltip')}
-                  previewExpanded={previewExpanded}
-                  i18nValidationResultsTitle={validationResultsTitle}
-                  showValidationMessage={validationMessageVisible}
-                  isSaving={isSaving}
-                  sourceTableInfos={sourceTableColumns}
-                  sourceInfo={sourceInfo}
-                  onCloseValidationMessage={handleHideValidationMessage}
-                  onFinish={handleEditFinished}
-                  onSave={handleSaveView}
-                  setDirty={handleDirtyStateChanged}
-                  validationResults={validationResults}
-                  didmount={monacoContext.didMountEditor}
-                  willMount={monacoContext.willMountEditor}
-                />
+              <DdlEditor
+                viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
+                i18nDoneLabel={t('shared:Done')}
+                i18nSaveLabel={t('shared:Save')}
+                i18nTitle={t('viewEditor.title')}
+                i18nLoading={t('shared:Loading')}
+                i18nKababAction={t('metadataTreeKababAction')}
+                i18nColumnActionTooltip={t('metadataColumnTooltip')}
+                previewExpanded={previewExpanded}
+                i18nValidationResultsTitle={validationResultsTitle}
+                showValidationMessage={validationMessageVisible}
+                isSaving={isSaving}
+                sourceTableInfos={sourceTableColumns}
+                sourceInfo={sourceInfo}
+                onCloseValidationMessage={handleHideValidationMessage}
+                onFinish={handleEditFinished}
+                onSave={handleSaveView}
+                setDirty={handleDirtyStateChanged}
+                validationResults={validationResults}
+                didmount={monacoContext.didMountEditor}
+                willMount={monacoContext.willMountEditor}
+              />
               <ExpandablePreview
                 i18nEmptyResultsTitle={noResultsTitle}
                 i18nEmptyResultsMsg={noResultsMessage}

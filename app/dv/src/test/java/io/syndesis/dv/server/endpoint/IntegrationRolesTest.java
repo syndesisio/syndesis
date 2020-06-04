@@ -19,12 +19,17 @@ package io.syndesis.dv.server.endpoint;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import io.syndesis.dv.model.TablePrivileges;
+import io.syndesis.dv.model.TablePrivileges.Privilege;
+import io.syndesis.dv.model.ViewDefinition;
+import io.syndesis.dv.server.Application;
+import io.syndesis.dv.server.endpoint.IntegrationTest.IntegrationTestConfiguration;
+import io.syndesis.dv.server.endpoint.RoleInfo.Operation;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +43,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import io.syndesis.dv.model.TablePrivileges;
-import io.syndesis.dv.model.TablePrivileges.Privilege;
-import io.syndesis.dv.model.ViewDefinition;
-import io.syndesis.dv.server.Application;
-import io.syndesis.dv.server.endpoint.IntegrationTest.IntegrationTestConfiguration;
-import io.syndesis.dv.server.endpoint.RoleInfo.Operation;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -103,7 +101,7 @@ public class IntegrationRolesTest {
         //check that it got added
         rolesResponse = restTemplate.getForEntity("/v1/status/roles", listOfAnything);
         assertEquals(HttpStatus.OK, rolesResponse.getStatusCode());
-        assertEquals("[x, any authenticated]", rolesResponse.getBody().toString());
+        assertEquals("[any authenticated, x]", rolesResponse.getBody().toString());
 
         statusResponse = restTemplate.getForEntity("/v1/virtualizations/{dv}/roles", RoleInfo.class, dvName);
         assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
@@ -177,6 +175,18 @@ public class IntegrationRolesTest {
         assertEquals(1, views.getBody().size());
         viewMap = (Map<?, ?>) views.getBody().get(0);
         assertEquals("[]", viewMap.get("tablePrivileges").toString());
+
+        //make sure any authenticated is not duplicated after a grant
+        toGrant = new RoleInfo();
+        toGrant.getTablePrivileges().add(new TablePrivileges("any authenticated", viewId, Privilege.S));
+        grant = restTemplate.exchange(
+                "/v1/virtualizations/{dv}/roles", HttpMethod.PUT,
+                new HttpEntity<RoleInfo>(toGrant), String.class, dvName);
+        assertEquals(HttpStatus.OK, grant.getStatusCode());
+
+        rolesResponse = restTemplate.getForEntity("/v1/status/roles", listOfAnything);
+        assertEquals(HttpStatus.OK, rolesResponse.getStatusCode());
+        assertEquals("[any authenticated]", rolesResponse.getBody().toString());
     }
 
     @Test public void testStatus() {

@@ -15,7 +15,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
-import { ApiError, EntityIcon } from '../../../shared';
+import { ApiError, EntityIcon, PageTitle } from '../../../shared';
 import resolvers from '../resolvers';
 import { getExtensionTypeName } from '../utils';
 
@@ -116,6 +116,7 @@ export const ExtensionsPage: React.FunctionComponent = () => {
 
         return (
           <>
+            <PageTitle title={t('extension.extensionsPageTitle')}/>
             <SimplePageHeader
               i18nTitle={t('extension.extensionsPageTitle')}
               i18nDescription={t('extension.extensionsPageDescription')}

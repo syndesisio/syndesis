@@ -103,10 +103,14 @@ format is described in link:https://docs.mongodb.com/manual/reference/method/db.
 |Updates one or more documents in the collection or creates a document if no documents match the *Upsert expression*. 
 |In the *Upsert expression* field, specify JSON notation that identifies one or more documents. The action uses this expression 
 to detect any matching documents. If the action finds a matching document(s) in the collection, it updates it. If the action does 
-not find a matching document, the action creates a new document. The data coming in to the MongoDB connection must contain 
-JSON notation that specifies the content to add or update. 
-|An instance of `com.mongodb.client.result.UpdateResult` that specifies either the number of updated documents or the ID of the new, inserted document.
+not find a matching document, the action creates a new document. 
+The data coming into the MongoDB connection must contain JSON notation that specifies:
 
+* An `_id` field to identify whether it is an insert or an update operation.
+
+* The content to add or update.
+
+|An instance of `com.mongodb.client.result.UpdateResult` that specifies either the number of updated documents or the ID of the new, inserted document.
 |===
 +
 Each action returns a response. If this is a finish connection, then 

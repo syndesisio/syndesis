@@ -28,7 +28,7 @@ public interface TemplateStepPreProcessor extends TemplateStepConstants {
      *
      * @param template the template
      * @return pre-processed template
-     * @throws exception if processing fails
+     * @throws TemplateProcessingException if processing fails
      */
     String preProcess(String template) throws TemplateProcessingException;
 

@@ -4,13 +4,14 @@ import {
   useVirtualizationHelpers,
   useVirtualizationRuntimeMetadata,
 } from '@syndesis/api';
-import { SchemaNodeInfo, TableInfo, Virtualization } from '@syndesis/models';
-import { QueryResults } from '@syndesis/models/src';
+import { Connection, SchemaNodeInfo, TableInfo, ViewSourceInfo, Virtualization } from '@syndesis/models';
+import { QueryResults, VirtualizationSourceStatus } from '@syndesis/models/src';
 import { PreviewData, ViewCreateLayout, ViewWizardHeader } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
+import { PageTitle } from '../../../../shared';
 import resolvers from '../../../resolvers';
 import { getQueryColumns, getQueryRows } from '../../shared';
 import {
@@ -36,6 +37,7 @@ export interface ISelectSourcesRouteState {
 export interface ISelectSourcesPageProps {
   handleNodeSelected: (
     connectionName: string,
+    isVirtualizationSchema: boolean,
     name: string,
     teiidName: string,
     nodePath: string[]
@@ -142,7 +144,44 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
     return undefined;
   };
 
+  /**
+   * Get schema for the virtualization
+   */
+  const getVirtualizationSchema = (sourceInfo: ViewSourceInfo) => {
+    return sourceInfo.schemas.find(schema => schema.name === virtualization.name);
+  };
+
+  /**
+   * Get the Connection Statuses - and add a connection status for the Virtualization
+   */
+  const getConnectionStatusesAddVirtualization = (statuses: VirtualizationSourceStatus[]) => {
+    const virtSourceStatus: VirtualizationSourceStatus = {
+      errors: [],
+      id: virtualization.name,
+      isVirtualizationSource: true,
+      lastLoad: 0,
+      loading: false,
+      schemaState: 'ACTIVE',
+      sourceName: virtualization.name,
+      teiidName: virtualization.name,
+    }
+    return [...statuses, virtSourceStatus];
+  };
+
+  /**
+   * Get the Connections - and include a connection for the Virtualization
+   */
+  const getConnectionsForDisplay = (conns: Connection[]) => {
+    const virtConnection: Connection = {
+      description: virtualization.description,
+      name: virtualization.name,
+    };
+    return [...conns, virtConnection];
+  };
+
   return (
+    <>
+    <PageTitle title={t('createViewPageTitle')} />
     <ViewCreateLayout
       header={
         <ViewWizardHeader
@@ -176,8 +215,9 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
           loading={
             !hasConnectionsData || !hasConnectionStatuses || !hasViewSourceInfo
           }
-          dvSourceStatuses={connectionStatuses}
-          connections={connectionsData.connectionsForDisplay}
+          dvSourceStatuses={getConnectionStatusesAddVirtualization(connectionStatuses)}
+          connections={getConnectionsForDisplay(connectionsData.connectionsForDisplay)}
+          virtualizationSchema={getVirtualizationSchema(viewSourceInfo)}
           onNodeSelected={props.handleNodeSelected}
           onNodeDeselected={onTableDeselect}
           selectedSchemaNodes={props.selectedSchemaNodes}
@@ -211,5 +251,6 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
         />
       }
     />
+  </>
   );
 };

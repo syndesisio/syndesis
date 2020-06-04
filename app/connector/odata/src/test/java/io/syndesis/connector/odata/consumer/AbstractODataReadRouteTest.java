@@ -52,7 +52,7 @@ public abstract class AbstractODataReadRouteTest extends AbstractODataRouteTest 
     }
 
     @Override
-    protected ConnectorAction createConnectorAction() throws Exception {
+    protected ConnectorAction createConnectorAction() {
         ConnectorAction odataAction = new ConnectorAction.Builder()
             .description("Read a resource from the server")
              .id("io.syndesis:" + Methods.READ.actionIdentifierRoot() + HYPHEN + FROM)

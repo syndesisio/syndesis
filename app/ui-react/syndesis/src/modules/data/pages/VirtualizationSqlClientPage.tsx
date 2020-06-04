@@ -4,7 +4,8 @@ import {
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { ApiError } from '../../../shared';
+import { useTranslation } from 'react-i18next';
+import { ApiError, PageTitle } from '../../../shared';
 import resolvers from '../../resolvers';
 import { 
   VirtualizationActionId,
@@ -29,8 +30,13 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   >();
 
   /**
+   * Hook to handle localization.
+   */
+  const { t } = useTranslation(['data', 'shared']);
+  /**
    * Hook to obtain the virtualization being edited. Also does polling to get virtualization descriptor updates.
    */
+
   const { model: virtualization } = useVirtualization(params.virtualizationId);
 
   /**
@@ -52,6 +58,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
       actions={[VirtualizationActionId.Publish]}
       publishActionCustomProps={{ as: 'default' }}
     >
+      <PageTitle title={t('sqlClientPageTitle')} />
       <WithLoader
         error={error !== false}
         loading={!hasViewDefinitionDescriptors}

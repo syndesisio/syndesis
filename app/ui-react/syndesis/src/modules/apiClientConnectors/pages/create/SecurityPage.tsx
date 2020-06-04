@@ -1,11 +1,12 @@
 import * as H from '@syndesis/history';
 import { IApiSummarySoap } from '@syndesis/models';
 import {
-  ApiClientConnectorCreateSecurity,
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorFooter,
   ApiConnectorCreatorLayout,
+  ApiConnectorCreatorSecurity,
+  ApiConnectorCreatorSecurityForm,
   ApiConnectorCreatorToggleList,
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
@@ -13,7 +14,6 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
-import { ApiConnectorSecurityForm } from '../../components';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
 
@@ -63,6 +63,7 @@ export const SecurityPage: React.FunctionComponent = () => {
     // extract the type from the type:value scheme that this field uses
     return authType.split(':')[0];
   };
+
   const isValid = (authType?: string, authUrl?: string, tokenUrl?: string) => {
     const type = extractAuthType(authType);
     switch (type) {
@@ -81,6 +82,7 @@ export const SecurityPage: React.FunctionComponent = () => {
         return false;
     }
   };
+
   return (
     <Translation ns={['apiClientConnectors', 'shared']}>
       {t => (
@@ -109,7 +111,7 @@ export const SecurityPage: React.FunctionComponent = () => {
                   'apiClientConnectors:CreateApiConnector'
                 )}
               />
-              <ApiConnectorSecurityForm
+              <ApiConnectorCreatorSecurityForm
                 initialAccessTokenUrl={
                   properties!.tokenEndpoint &&
                   properties!.tokenEndpoint.defaultValue
@@ -134,7 +136,7 @@ export const SecurityPage: React.FunctionComponent = () => {
                 }) => (
                   <ApiConnectorCreatorLayout
                     content={
-                      <ApiClientConnectorCreateSecurity
+                      <ApiConnectorCreatorSecurity
                         authenticationTypes={
                           properties!.authenticationType &&
                           (
@@ -151,6 +153,9 @@ export const SecurityPage: React.FunctionComponent = () => {
                         )}
                         i18nAuthorizationUrl={t(
                           'apiClientConnectors:create:security:authorizationUrl'
+                        )}
+                        i18nAuthTypeLabel={t(
+                          'apiClientConnectors:create:security:authTypeLabel'
                         )}
                         i18nDescription={t(
                           'apiClientConnectors:create:security:description'
@@ -211,7 +216,7 @@ export const SecurityPage: React.FunctionComponent = () => {
                     }
                   />
                 )}
-              </ApiConnectorSecurityForm>
+              </ApiConnectorCreatorSecurityForm>
             </>
           )}
         </WithLeaveConfirmation>

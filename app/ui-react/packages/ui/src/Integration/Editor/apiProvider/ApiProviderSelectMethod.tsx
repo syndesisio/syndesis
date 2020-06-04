@@ -1,24 +1,16 @@
-import {
-  Radio,
-  Split,
-  SplitItem,
-  Stack,
-  StackItem,
-  TextInput,
-} from '@patternfly/react-core';
+import { Radio, Split, SplitItem, Stack, StackItem, TextInput } from '@patternfly/react-core';
 import * as React from 'react';
-import { ButtonLink } from '../Layout';
-import { DndFileChooser } from './DndFileChooser';
-import './OpenApiSelectMethod.css';
+import { ButtonLink } from '../../../Layout';
+import { DndFileChooser } from '../../../Shared/DndFileChooser';
+import './ApiProviderSelectMethod.css';
 
-export type Method = 'file' | 'url' | 'scratch2x' | 'scratch3x';
+export type ApiProviderMethod = 'file' | 'url' | 'scratch2x' | 'scratch3x';
 const FILE = 'file';
 const URL = 'url';
 const SCRATCH_2X = 'scratch2x';
 const SCRATCH_3X = 'scratch3x';
 
-export interface IOpenApiSelectMethodProps {
-  allowFromScratch?: boolean;
+export interface IApiProviderSelectMethodProps {
   disableDropzone: boolean;
   fileExtensions?: string;
   /**
@@ -37,35 +29,34 @@ export interface IOpenApiSelectMethodProps {
   i18nUploadFailedMessage?: string;
   i18nUploadSuccessMessage?: string;
   i18nUrlNote: string;
+
   /**
    * The action fired when the user presses the Next button
    */
-  onNext(specification?: string, connectorTemplateId?: string): void;
+  onNext(method?: string, specification?: string): void;
 }
 
-export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodProps> = ({
-  allowFromScratch = true,
-  disableDropzone,
-  fileExtensions,
-  i18nBtnNext,
-  i18nHelpMessage,
-  i18nInstructions,
-  i18nMethodFromFile,
-  i18nMethodFromUrl,
-  i18nMethodFromScratch2x,
-  i18nMethodFromScratch3x,
-  i18nNoFileSelectedMessage,
-  i18nSelectedFileLabel,
-  i18nUploadFailedMessage,
-  i18nUploadSuccessMessage,
-  i18nUrlNote,
-  onNext,
-}) => {
-  const [connectorTemplateId, setConnectorTemplateId] = React.useState('');
+export const ApiProviderSelectMethod: React.FunctionComponent<IApiProviderSelectMethodProps> = (
+  {
+    disableDropzone,
+    fileExtensions,
+    i18nBtnNext,
+    i18nHelpMessage,
+    i18nInstructions,
+    i18nMethodFromFile,
+    i18nMethodFromUrl,
+    i18nMethodFromScratch2x,
+    i18nMethodFromScratch3x,
+    i18nNoFileSelectedMessage,
+    i18nSelectedFileLabel,
+    i18nUploadFailedMessage,
+    i18nUploadSuccessMessage,
+    i18nUrlNote,
+    onNext,
+  }) => {
   const [method, setMethod] = React.useState(FILE);
   const [specification, setSpecification] = React.useState('');
   const [url, setUrl] = React.useState('');
-  const [valid, setValid] = React.useState(false);
   const [uploadSuccessMessage, setUploadSuccessMessage] = React.useState('');
   const [uploadFailedMessage, setUploadFailedMessage] = React.useState('');
 
@@ -78,27 +69,15 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
    */
   const buildUploadMessage = (fileName: string, succeeded: boolean): void => {
     if (succeeded && fileName) {
-      setUploadSuccessMessage(i18nUploadSuccessMessage + "'" + fileName + "'");
+      setUploadSuccessMessage(i18nUploadSuccessMessage + '\'' + fileName + '\'');
     } else {
-      setUploadFailedMessage("'" + fileName + "'" + i18nUploadFailedMessage);
+      setUploadFailedMessage('\'' + fileName + '\'' + i18nUploadFailedMessage);
     }
   };
 
-  const checkValidUrl = (toCheck: string): boolean => {
+  const isValidUrl = (toCheck: string): boolean => {
     const regexp = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
     return regexp.test(toCheck);
-  };
-
-  /**
-   * Checks if the filename is .wsdl (SOAP)
-   * and sets the connector template ID.
-   * @param fileName
-   */
-  const checkDocStyle = (fileName: string) => {
-    return fileName
-      .split('.')
-      .pop()!
-      .toLowerCase();
   };
 
   /**
@@ -108,19 +87,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
    */
   const onAddUrlSpecification = (e: React.FormEvent<HTMLInputElement>) => {
     const newUrl = e.currentTarget.value;
-    const fileExt = checkDocStyle(newUrl);
-
-    if (fileExt === 'wsdl' || fileExt.includes('?WSDL')) {
-      setConnectorTemplateId('soap-connector-template');
-    }
-
     setUrl(newUrl);
-
-    if (method === URL && checkValidUrl(newUrl)) {
-      setValid(true);
-    } else {
-      setValid(false);
-    }
   };
 
   /**
@@ -128,30 +95,23 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
    * to provide an OpenAPI specification.
    * @param newMethod
    */
-  const onSelectMethod = (newMethod: Method) => {
+  const onSelectMethod = (newMethod: ApiProviderMethod) => {
     setMethod(newMethod);
     setSpecification('');
     setUploadFailedMessage('');
     setUploadSuccessMessage('');
-    setValid(newMethod === SCRATCH_2X || newMethod === SCRATCH_3X);
   };
 
   /**
    * Callback for when one or more file uploads have been accepted.
    */
   const onUploadAccepted = (files: File[]): void => {
-    const fileExt = checkDocStyle(files[0].name);
-
-    if (fileExt === 'wsdl' || fileExt.includes('?WSDL')) {
-      setConnectorTemplateId('soap-connector-template');
-    }
     const reader = new FileReader();
     reader.readAsText(files[0]);
     buildUploadMessage(files[0].name, true);
 
     reader.onload = () => {
       setSpecification(reader.result as string);
-      setValid(true);
     };
   };
 
@@ -164,15 +124,14 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
   const onUploadRejected = (fileName: string): string => {
     buildUploadMessage(fileName, false);
     setSpecification('');
-    setValid(false);
     return `<span>File <strong>${fileName}</strong> could not be uploaded</span>`;
   };
 
   const handleClickNext = () => {
     if (method === URL) {
-      onNext(url, connectorTemplateId);
+      onNext(method, url);
     } else {
-      onNext(specification, connectorTemplateId);
+      onNext(method, specification);
     }
   };
 
@@ -181,8 +140,21 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
   const handleSelectFile = () => onSelectMethod(FILE);
   const handleSelectUrl = () => onSelectMethod(URL);
 
+  const isDisabled = () => {
+    if (method === FILE) {
+      return specification === '';
+    }
+    if (method === URL) {
+      return !isValidUrl(url);
+    }
+    return false;
+  }
+
   return (
-    <Stack className={'open-api-select-method'} data-testid={'openapi-select-method'}>
+    <Stack
+      className={'api-provider-select-method'}
+      data-testid={'openapi-select-method'}
+    >
       <StackItem>
         <Split onClick={handleSelectFile}>
           <SplitItem>
@@ -198,7 +170,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
           </SplitItem>
           <SplitItem>
             <div>{i18nMethodFromFile}</div>
-            <div className="open-api-select-method__dnd-container">
+            <div className="api-provider-select-method__dnd-container">
               <DndFileChooser
                 allowMultiple={false}
                 disableDropzone={disableDropzone || method !== FILE}
@@ -232,7 +204,7 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
           </SplitItem>
           <SplitItem>
             <div>{i18nMethodFromUrl}</div>
-            <div className={'open-api-select-method__url-container'}>
+            <div className={'api-provider-select-method__url-container'}>
               <TextInput
                 aria-label={'method url text input'}
                 id={'method-url-text-input'}
@@ -242,58 +214,54 @@ export const OpenApiSelectMethod: React.FunctionComponent<IOpenApiSelectMethodPr
                 value={url}
                 onChange={handleAddSpec}
               />
-              <br />
+              <br/>
               <span className={'url-note'}>{i18nUrlNote}</span>
             </div>
           </SplitItem>
         </Split>
       </StackItem>
-      {allowFromScratch && (
-        <>
-          <StackItem>
-            <Split onClick={() => onSelectMethod(SCRATCH_3X)}>
-              <SplitItem>
-                <Radio
-                  aria-label={'from scratch 3.x radio'}
-                  id={'method-scratch-3x'}
-                  data-testid={'method-scratch-3x'}
-                  name={'method'}
-                  isChecked={method === SCRATCH_3X}
-                  onClick={() => onSelectMethod(SCRATCH_3X)}
-                  readOnly={true}
-                />
-              </SplitItem>
-              <SplitItem>
-                <div>{i18nMethodFromScratch3x}</div>
-              </SplitItem>
-            </Split>
-          </StackItem>
+      <StackItem>
+        <Split onClick={() => onSelectMethod(SCRATCH_3X)}>
+          <SplitItem>
+            <Radio
+              aria-label={'from scratch 3.x radio'}
+              id={'method-scratch-3x'}
+              data-testid={'method-scratch-3x'}
+              name={'method'}
+              isChecked={method === SCRATCH_3X}
+              onClick={() => onSelectMethod(SCRATCH_3X)}
+              readOnly={true}
+            />
+          </SplitItem>
+          <SplitItem>
+            <div>{i18nMethodFromScratch3x}</div>
+          </SplitItem>
+        </Split>
+      </StackItem>
 
-          <StackItem>
-            <Split onClick={() => onSelectMethod(SCRATCH_3X)}>
-              <SplitItem>
-                <Radio
-                  aria-label={'from scratch 2.x radio'}
-                  id={'method-scratch-2x'}
-                  data-testid={'method-scratch-2x'}
-                  name={'method'}
-                  isChecked={method === SCRATCH_2X}
-                  onClick={() => onSelectMethod(SCRATCH_2X)}
-                  readOnly={true}
-                />
-              </SplitItem>
-              <SplitItem>
-                <div>{i18nMethodFromScratch2x}</div>
-              </SplitItem>
-            </Split>
-          </StackItem>
-        </>
-      )}
+      <StackItem>
+        <Split onClick={() => onSelectMethod(SCRATCH_2X)}>
+          <SplitItem>
+            <Radio
+              aria-label={'from scratch 2.x radio'}
+              id={'method-scratch-2x'}
+              data-testid={'method-scratch-2x'}
+              name={'method'}
+              isChecked={method === SCRATCH_2X}
+              onClick={() => onSelectMethod(SCRATCH_2X)}
+              readOnly={true}
+            />
+          </SplitItem>
+          <SplitItem>
+            <div>{i18nMethodFromScratch2x}</div>
+          </SplitItem>
+        </Split>
+      </StackItem>
       <StackItem>
         <ButtonLink
           id={'button-next'}
           data-testid={'button-next'}
-          disabled={!valid}
+          disabled={isDisabled()}
           as={'primary'}
           onClick={handleClickNext}
         >

@@ -994,19 +994,18 @@ public class TeiidOpenShiftClient {
         return null;
     }
 
-    private static boolean asBoolean(DeploymentCondition cond) {
+    private static boolean statusEquals(DeploymentCondition cond, String value) {
         if (cond == null) {
             return false;
         }
-
-        return Boolean.valueOf(cond.getStatus());
+        return cond.getStatus().equals(value);
     }
 
     /**
      * We'll consider things progressing if true or unknown
      */
     private static boolean isDeploymentProgressing(DeploymentCondition progressing) {
-        return !asBoolean(progressing);
+        return !statusEquals(progressing, "False");
     }
 
     /**
@@ -1014,9 +1013,8 @@ public class TeiidOpenShiftClient {
      */
     private static boolean isDeploymentAvailable(DeploymentCondition available,
             DeploymentCondition progressing) {
-        return asBoolean(available) &&
-                (asBoolean(progressing)
-                        || progressing == null
+        return statusEquals(available, "True") &&
+                (!statusEquals(progressing, "False")
                         || available.getLastTransitionTime().compareTo(progressing.getLastTransitionTime()) > 0);
     }
 
@@ -1722,7 +1720,6 @@ public class TeiidOpenShiftClient {
                 vdbDependencies.append(StringConstants.NEW_LINE).append("<dependency>"
                         + "<groupId>org.teiid</groupId>"
                         + "<artifactId>spring-odata</artifactId>"
-                        + "<version>${version.springboot.teiid}</version>"
                         + "</dependency> ");
             }
 
@@ -1730,7 +1727,6 @@ public class TeiidOpenShiftClient {
                 vdbDependencies.append(StringConstants.NEW_LINE).append("<dependency>"
                         + "<groupId>org.teiid</groupId>"
                         + "<artifactId>spring-keycloak</artifactId>"
-                        + "<version>${version.springboot.teiid}</version>"
                         + "</dependency> ");
             }
 

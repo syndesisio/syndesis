@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -194,7 +195,7 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
                 builder.putProperty(propertyName, property);
 
                 if (!alreadyConfiguredProperties.containsKey(propertyName)) {
-                    final String defaultValue = property.getDefaultValue();
+                    final String defaultValue = Objects.toString(property.getDefaultValue(), null);
                     if (defaultValue != null) {
                         builder.putConfiguredProperty(propertyName, defaultValue);
                     }

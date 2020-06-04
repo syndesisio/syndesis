@@ -50,18 +50,6 @@ any relevant metadata as needed.
 .. Execute `./mvnw -pl :syndesis-library-jdbc-driver clean package` to build the extension.
 
 The generated `.jar` file is in the `syndesis-library-jdbc-driver/target`
-folder. Provide this `.jar` file for uploading to {prodname}.
+folder. Import this `.jar` file as an extension in {prodname}.
 
-[NOTE]
-====
-{prodname} does not yet offer a way to select which library extension(s) an
-integration should include. When you add a database connection to an
-integration, {prodname} adds all extensions that have
-the `jdbc-driver` tag to integration runtime. This is expected to
-improve in a future release.
-
-ifeval::["{location}" == "upstream"]
-For more information, see
-https://github.com/syndesisio/syndesis/issues/2809[this GitHub issue].
-endif::[]
-====
+After you import a library extension, when you save an integration in {prodname} you can optionally select the imported library extension and associate it with the integration.    

@@ -78,7 +78,7 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
     }
 
     @Override
-    protected ConnectorAction createConnectorAction() throws Exception {
+    protected ConnectorAction createConnectorAction() {
         ConnectorAction odataAction = new ConnectorAction.Builder()
             .description("Delete resource entities from the server")
              .id("io.syndesis:odata-delete-connector")

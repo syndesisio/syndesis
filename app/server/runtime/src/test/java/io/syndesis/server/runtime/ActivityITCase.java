@@ -38,7 +38,7 @@ public class ActivityITCase extends BaseITCase {
 
 
     @Test
-    public void requestFeature() throws IOException {
+    public void requestFeature() {
         ResponseEntity<Feature> re = get("/api/v1/activity/feature", Feature.class);
         Feature response = re.getBody();
         assertThat(response.isEnabled()).isTrue();

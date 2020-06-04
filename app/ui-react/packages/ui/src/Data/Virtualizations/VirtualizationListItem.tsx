@@ -32,6 +32,8 @@ export interface IVirtualizationListItemProps {
    * The text to use for the label.
    */
   i18nPublishState: string;
+  
+  i18nPublishStateMessage: string;
   /**
    * The type of label that shows to the left of the `Edit` button.
    */
@@ -184,6 +186,7 @@ export const VirtualizationListItem: React.FunctionComponent<IVirtualizationList
             isProgressWithLink={props.isProgressWithLink}
             inListView={true}
             i18nPublishState={publishStateText}
+            i18nPublishStateMessage={props.i18nPublishStateMessage}
             i18nPublishLogUrlText={props.i18nPublishLogUrlText}
             labelType={labelType}
             modified={props.modified}

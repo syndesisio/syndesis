@@ -10,7 +10,7 @@ import { useRouteData } from '@syndesis/utils';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ApiError } from '../../../shared';
+import { ApiError, PageTitle } from '../../../shared';
 import {
   VirtualizationActionContainer,
   VirtualizationActionId,
@@ -158,6 +158,7 @@ export const VirtualizationVersionsPage: React.FunctionComponent = () => {
       actions={[VirtualizationActionId.Publish]}
       publishActionCustomProps={{ as: 'default' }}
     >
+      <PageTitle title={t('versionsPageTitle')} />
       <PageSection>
         <WithLoader
           error={error !== false}

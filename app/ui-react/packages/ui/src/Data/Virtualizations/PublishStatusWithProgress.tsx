@@ -1,4 +1,4 @@
-import { Badge, Label } from '@patternfly/react-core';
+import { Badge, Label, Popover } from '@patternfly/react-core';
 import { OkIcon } from '@patternfly/react-icons';
 import { global_active_color_100, global_danger_color_100, global_default_color_100 } from '@patternfly/react-tokens';
 import * as React from 'react';
@@ -9,6 +9,7 @@ export interface IPublishStatusWithProgressProps {
   isProgressWithLink: boolean;
   inListView: boolean;
   i18nPublishState: string;
+  i18nPublishStateMessage: string;
   i18nPublishLogUrlText: string;
   labelType: 'danger' | 'primary' | 'default';
   modified: boolean;
@@ -67,13 +68,19 @@ export const PublishStatusWithProgress: React.FunctionComponent<IPublishStatusWi
   if (props.inListView) {
     return (
       <React.Fragment>
-        <Label
-          className={'publish-status-with-progress_Label'}
-          style={getLabelClass()}
-          data-testid={'virtualization-publish-status-with-progress'}
+        <Popover
+          aria-label={'Status detail popover'}
+          bodyContent={<div>{props.i18nPublishStateMessage}</div>}
+          closeBtnAriaLabel="close status detail"
         >
-          {props.i18nPublishState}
-        </Label>
+          <Label
+            className={'publish-status-with-progress_Label'}
+            style={getLabelClass()}
+            data-testid={'virtualization-publish-status-with-progress'}
+          >
+            {props.i18nPublishState || ''}
+          </Label>
+        </Popover>
       </React.Fragment>
     );
   }
@@ -90,13 +97,19 @@ export const PublishStatusWithProgress: React.FunctionComponent<IPublishStatusWi
         />
       )}
       <span className={'publish-status-with-progress_text'}>
-        <Label
-          className={'publish-status-with-progress_Label'}
-          data-testid={'virtualization-publish-status-with-progress'}
-          style={getLabelClass()}
+        <Popover
+          aria-label={'Status detail popover'}
+          bodyContent={<div>{props.i18nPublishStateMessage}</div>}
+          closeBtnAriaLabel="close status detail"
         >
-          {props.i18nPublishState}
-        </Label>
+          <Label
+            className={'publish-status-with-progress_Label'}
+            data-testid={'virtualization-publish-status-with-progress'}
+            style={getLabelClass()}
+          >
+            {props.i18nPublishState || ''}
+          </Label>
+        </Popover>
         {props.publishVersion && ` version ${props.publishVersion}`}
       </span>
       {(props.i18nPublishState === 'Stopped' ||

@@ -1,11 +1,11 @@
 import { useApiConnectorSummary } from '@syndesis/api';
 import {
-  ApiConnectorCreateService,
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorLayout,
+  ApiConnectorCreatorSelectMethod,
+  ApiConnectorCreatorService,
   ApiConnectorCreatorToggleList,
-  OpenApiSelectMethod,
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -59,7 +59,7 @@ export const SelectMethodPage: React.FunctionComponent = () => {
             content={
               <>
                 {!showSoapConfig && (
-                  <OpenApiSelectMethod
+                  <ApiConnectorCreatorSelectMethod
                     disableDropzone={false}
                     fileExtensions={t(
                       'apiClientConnectors:create:selectMethod:dndFileExtensions'
@@ -93,12 +93,11 @@ export const SelectMethodPage: React.FunctionComponent = () => {
                       'apiClientConnectors:create:selectMethod:urlNote'
                     )}
                     onNext={onNext}
-                    allowFromScratch={false}
                   />
                 )}
                 {/* Where users can specify a SOAP service and port if connector is WSDL file */}
                 {showSoapConfig && apiSummary && (
-                  <ApiConnectorCreateService
+                  <ApiConnectorCreatorService
                     handleNext={onServiceConfigured}
                     i18nBtnNext={t('shared:Next')}
                     i18nPort={t('apiClientConnectors:create:soap:port')}

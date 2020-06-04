@@ -87,6 +87,7 @@ export interface ViewInfo {
 
 export interface SchemaNodeInfo {
   connectionName: string;
+  isVirtualizationSchema: boolean;
   name: string;
   nodePath: string[];
   teiidName: string;
@@ -100,6 +101,7 @@ export interface VirtualizationSourceStatus {
   sourceName: string;
   teiidName: string;
   lastLoad: number;
+  isVirtualizationSource?: boolean;
 }
 
 export interface DVStatusObj {
@@ -209,6 +211,7 @@ export interface VirtualizationPublishingDetails {
     | 'NOTFOUND'
     | 'RUNNING'
     | 'SUBMITTED';
+  stateMessage?: string;
   stepNumber: number;
   stepText: string;
   stepTotal: number;

@@ -31,6 +31,7 @@
   "name": "SOAP Client",
   "properties": {
     "addTimestamp": {
+      "defaultValue": false,
       "description": "Add a Timestamp to WS-Security header.",
       "displayName": "Timestamp",
       "group": "security",
@@ -54,6 +55,7 @@
       "type": "boolean"
     },
     "addUsernameTokenCreated": {
+      "defaultValue": false,
       "description": "Add Created timestamp element to WS-Security Username Token header.",
       "displayName": "Username Token Created",
       "group": "security",
@@ -66,8 +68,8 @@
           "action": "ENABLE",
           "when": [
             {
-              "id": "passwordType",
-              "value": "PasswordText"
+              "id": "authenticationType",
+              "value": "ws-security-ut"
             }
           ]
         }
@@ -77,6 +79,7 @@
       "type": "boolean"
     },
     "addUsernameTokenNonce": {
+      "defaultValue": false,
       "description": "Add Nonce element to WS-Security Username Token header.",
       "displayName": "Username Token Nonce",
       "group": "security",
@@ -89,8 +92,8 @@
           "action": "ENABLE",
           "when": [
             {
-              "id": "passwordType",
-              "value": "PasswordText"
+              "id": "authenticationType",
+              "value": "ws-security-ut"
             }
           ]
         }
@@ -108,6 +111,7 @@
       "type": "string"
     },
     "authenticationType": {
+      "defaultValue": "none",
       "description": "Authentication Type to use to invoke WSDL endpoint, one of [None|Basic|WS-Security Username Token].",
       "displayName": "Authentication Type",
       "enum": [
@@ -155,6 +159,7 @@
       "type": "string"
     },
     "passwordType": {
+      "defaultValue": "PasswordText",
       "description": "WS-Security Password Type.",
       "displayName": "Password Type",
       "enum": [

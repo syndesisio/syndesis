@@ -233,7 +233,7 @@ func (o *Install) install(action string, resources []unstructured.Unstructured) 
 
 			switch result {
 			case controllerutil.OperationResultUpdated:
-				createCounter++
+				updateCounter++
 			case controllerutil.OperationResultCreated:
 				createCounter++
 			}

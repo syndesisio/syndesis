@@ -49,6 +49,7 @@ stories.add(
         i18nRoleExists={roleExistsText}
         viewRolePermissionList={rolePermissionList}
         updateRolePermissionModel={action(updateRolePermissionModelActionText)}
+        selectedRoles={[]}
         roles={roles}
         deleteRoleFromPermissionModel={action(
           deleteRoleFromPermissionModelActionText

@@ -16,7 +16,7 @@ export interface IAuthenticationTypes {
   label?: string;
 }
 
-export interface IApiClientConnectorCreateSecurityProps {
+export interface IApiConnectorCreatorSecurityProps {
   /**
    * The list of available authentication types for this specification.
    */
@@ -27,6 +27,7 @@ export interface IApiClientConnectorCreateSecurityProps {
   handleChangeTokenUrl: (params: string) => void;
   i18nAccessTokenUrl: string;
   i18nAuthorizationUrl: string;
+  i18nAuthTypeLabel: string;
   i18nDescription: string;
   /**
    * Locale string for when no security is specified
@@ -38,22 +39,22 @@ export interface IApiClientConnectorCreateSecurityProps {
   extractAuthType(authType?: string): string;
 }
 
-export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClientConnectorCreateSecurityProps> = (
-  {
-    authenticationTypes,
-    authUrl,
-    extractAuthType,
-    handleChangeAuthUrl,
-    handleChangeSelectedType,
-    handleChangeTokenUrl,
-    i18nTitle,
-    i18nAccessTokenUrl,
-    i18nAuthorizationUrl,
-    i18nDescription,
-    i18nNoSecurity,
-    selectedType,
-    tokenUrl
-  }) => {
+export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorCreatorSecurityProps> = ({
+  authenticationTypes,
+  authUrl,
+  extractAuthType,
+  handleChangeAuthUrl,
+  handleChangeSelectedType,
+  handleChangeTokenUrl,
+  i18nAccessTokenUrl,
+  i18nAuthorizationUrl,
+  i18nAuthTypeLabel,
+  i18nDescription,
+  i18nNoSecurity,
+  i18nTitle,
+  selectedType,
+  tokenUrl,
+}) => {
   return (
     <Stack style={{ maxWidth: '600px' }} gutter="md">
       <StackItem>
@@ -61,13 +62,15 @@ export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClien
       </StackItem>
       <StackItem>
         <Form data-testid={`api-client-connector-auth-type-form`}>
-          <Alert type={'info'} title={i18nDescription} isInline={true}/>
+          <Alert type={'info'} title={i18nDescription} isInline={true} />
           <FormGroup fieldId={'authenticationType'}>
             {authenticationTypes!.map((authType: IAuthenticationTypes, idx) => (
               <Radio
                 key={authType.value + '-' + idx}
                 id={'authenticationType'}
-                data-testid={`api-client-connector-auth-type-${toValidHtmlId(authType!.value)}`}
+                data-testid={`api-client-connector-auth-type-${toValidHtmlId(
+                  authType!.value
+                )}`}
                 aria-label={authType.label || i18nNoSecurity}
                 label={authType.label || i18nNoSecurity}
                 isChecked={selectedType === authType.value}

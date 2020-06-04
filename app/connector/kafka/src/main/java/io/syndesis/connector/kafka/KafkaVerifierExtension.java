@@ -54,6 +54,10 @@ public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
             .error(ResultErrorHelper.requiresOption("brokers", parameters))
             .error(ResultErrorHelper.requiresOption("transportProtocol", parameters));
 
+        if (parameters.getOrDefault("transportProtocol","").equals("SSL")){
+            builder.error(ResultErrorHelper.requiresOption("brokerCertificate", parameters));
+        }
+
         return builder.build();
     }
 
@@ -73,6 +77,7 @@ public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
         final String transportProtocol = ConnectorOptions.extractOption(parameters, "transportProtocol");
         LOG.debug("Validating Kafka connection to {} with protocol {}", brokers, transportProtocol);
         if (ObjectHelper.isNotEmpty(brokers)) {
+            requireCertificateWhenSSL(builder, transportProtocol, certificate);
             KafkaBrokerService kafkaBrokerService = new KafkaBrokerServiceImpl(brokers, transportProtocol, certificate);
             try {
                 kafkaBrokerService.ping();
@@ -87,8 +92,18 @@ public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
             }
         } else {
             builder.error(
-                ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Invalid blank Kafka brokers ")
+                ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Invalid empty Kafka brokers")
                     .parameterKey("brokers")
+                    .build()
+            );
+        }
+    }
+
+    private static void requireCertificateWhenSSL(ResultBuilder builder, String transportProtocol, String certificate) {
+        if ("SSL".equalsIgnoreCase(transportProtocol) && (certificate == null || certificate.isEmpty())) {
+            builder.error(
+                ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "You must provide a TLS certificate when using TLS protocol!")
+                    .parameterKey("brokerCertificate")
                     .build()
             );
         }

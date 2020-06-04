@@ -96,6 +96,7 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
             </Title>
             <div>
               <Text
+                data-testid={'api-provider-review-operations-number'}
                 component={TextVariants.p}
                 dangerouslySetInnerHTML={{
                   __html: i18nOperationsHtmlMessage,
@@ -127,6 +128,7 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
               >
                 {i18nErrorsHeading}
                 <Label
+                  data-testid={'api-provider-review-actions-error-number'}
                   style={{ background: global_danger_color_100.value }}
                   className={'heading__label'}
                 >
@@ -154,6 +156,7 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
               >
                 {i18nWarningsHeading}
                 <Label
+                  data-testid={'api-provider-review-actions-warning-number'}
                   style={{ background: global_warning_color_100.value }}
                   className={'heading__label'}
                 >

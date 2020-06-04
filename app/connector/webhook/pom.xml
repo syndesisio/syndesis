@@ -78,7 +78,10 @@
       <artifactId>value</artifactId>
       <classifier>annotations</classifier>
     </dependency>
-
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-base</artifactId>

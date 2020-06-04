@@ -56,7 +56,7 @@ export const VirtualizationNavBar: React.FunctionComponent<
           })}
         />
         <TabBarItem
-          label={'Data Permission'}
+          label={t('dataPermissions')}
           to={resolvers.virtualizations.dataPermission({
             virtualization,
           })}

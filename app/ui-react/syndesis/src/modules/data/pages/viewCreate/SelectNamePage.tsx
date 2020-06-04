@@ -15,6 +15,7 @@ import * as React from 'react';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
+import { PageTitle } from '../../../../shared';
 import resolvers from '../../../resolvers';
 import { generateViewDefinition } from '../../shared/VirtualizationUtils';
 
@@ -184,10 +185,12 @@ export const SelectNamePage: React.FunctionComponent = () => {
       }}
     >
       {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) => (
+      <>
+        <PageTitle title={t('createViewPageTitle')} />
         <ViewCreateLayout
           header={
             <ViewWizardHeader
-              step={2}
+               step={2}
               cancelHref={resolvers.data.virtualizations.views.root({
                 virtualization: state.virtualization,
               })}
@@ -215,6 +218,7 @@ export const SelectNamePage: React.FunctionComponent = () => {
             </ViewConfigurationForm>
           }
         />
+      </>
       )}
     </AutoForm>
   );

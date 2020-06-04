@@ -168,7 +168,7 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = React.memo(
           <PageSection
             isFilled={true}
             variant={'light'}
-            className={'ddl-editor'}
+            className={'ddl-editor ddl-editor_tree_comp'}
           >
             <div
               className={
@@ -191,7 +191,7 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = React.memo(
           <PageSection
             isFilled={true}
             variant={'light'}
-            className={'ddl-editor'}
+            className={'ddl-editor ddl-editor_comp'}
           >
             <Title headingLevel="h5" size="lg">
               {props.i18nTitle}
