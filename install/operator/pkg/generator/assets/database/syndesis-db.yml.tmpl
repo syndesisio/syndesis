@@ -245,6 +245,12 @@
                 - /bin/sh
                 - -c
                 - /var/lib/pgsql/sampledb/postStart.sh
+            preStop:
+              exec:
+                command:
+                  - /bin/sh
+                  - '-c'
+                  - 'PGDATA=/var/lib/pgsql/data/userdata pg_ctl stop --mode fast'
           livenessProbe:
             initialDelaySeconds: 60
             tcpSocket:
