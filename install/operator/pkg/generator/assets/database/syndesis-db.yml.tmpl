@@ -250,7 +250,7 @@
                 command:
                   - /bin/sh
                   - '-c'
-                  - 'PGDATA=/var/lib/pgsql/data/userdata /usr/bin/pg_ctl stop --mode fast'
+                  - 'PGDATA=/var/lib/pgsql/data/userdata pg_ctl stop --mode fast'
           livenessProbe:
             initialDelaySeconds: 60
             tcpSocket:
