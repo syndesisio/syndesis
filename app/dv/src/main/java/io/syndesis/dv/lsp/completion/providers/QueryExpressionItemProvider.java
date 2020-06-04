@@ -33,39 +33,38 @@ public class QueryExpressionItemProvider extends CompletionItemBuilder {
         this.metadataItemProvider = metadataItemProvider;
     }
 
+    @SuppressWarnings("PMD.MissingBreakInSwitch") // TODO refactor
     public List<CompletionItem> getCompletionItems(TokenContext tokenContext) {
         List<CompletionItem> items = new ArrayList<CompletionItem>();
         switch (tokenContext.getContext()) {
-	        case FUNCTION:
-	        case SELECT_COLUMN:
-	        case TABLE_ALIAS:
-	        case SELECT_CLAUSE: {
-	            items.addAll(getSelectClauseItems(tokenContext));
-	        }
-	            break;
-	        case TABLE_SYMBOL:
-	        case TABLE_SYMBOL_ID:
-	        case FROM_CLAUSE:
-	        case FROM_CLAUSE_START:
-	        case FROM_CLAUSE_AS_OR_WHERE:
-	        case FROM_CLAUSE_ALIAS:
-	        case FROM_CLAUSE_AS:
-	        case FROM_CLAUSE_ID: {
-	            items.addAll(getFromClauseItems(tokenContext));
-	        }
-	            break;
-	        case WHERE_CLAUSE:
-	        case WHERE_CLAUSE_START:
-	        case WHERE_CLAUSE_TABLE_ALIAS: {
-	            items.addAll(getWhereClauseItems(tokenContext));
-	        }
-	            break;
-	        case QUERY_EXPRESSION: {
-	            items.addAll(getQueryExpressionItems(tokenContext));
-	        }
-	            break;
-	        case NONE_FOUND:
-	        default: items.addAll(getItemLoader().getQueryExpressionKeywordItems());
+            case FUNCTION:
+            case SELECT_COLUMN:
+            case TABLE_ALIAS:
+            case SELECT_CLAUSE:
+                items.addAll(getSelectClauseItems(tokenContext));
+                break;
+            case TABLE_SYMBOL:
+            case TABLE_SYMBOL_ID:
+            case FROM_CLAUSE:
+            case FROM_CLAUSE_START:
+            case FROM_CLAUSE_AS_OR_WHERE:
+            case FROM_CLAUSE_ALIAS:
+            case FROM_CLAUSE_AS:
+            case FROM_CLAUSE_ID:
+                items.addAll(getFromClauseItems(tokenContext));
+                break;
+            case WHERE_CLAUSE:
+            case WHERE_CLAUSE_START:
+            case WHERE_CLAUSE_TABLE_ALIAS:
+                items.addAll(getWhereClauseItems(tokenContext));
+                break;
+            case QUERY_EXPRESSION:
+                items.addAll(getQueryExpressionItems(tokenContext));
+                break;
+            case NONE_FOUND:
+            default:
+                items.addAll(getItemLoader().getQueryExpressionKeywordItems());
+                break;
         }
 
         return items;
@@ -93,6 +92,7 @@ public class QueryExpressionItemProvider extends CompletionItemBuilder {
         return items;
     }
 
+    @SuppressWarnings("PMD.CyclomaticComplexity") // TODO refactor
     private List<CompletionItem> getFromClauseItems(TokenContext tokenContext) {
         List<CompletionItem> items = metadataItemProvider.getCompletionItems(tokenContext);
 
@@ -105,66 +105,42 @@ public class QueryExpressionItemProvider extends CompletionItemBuilder {
             CompletionItem whereItem = getItemLoader().cloneQueryExpressionKeywordItem("WHERE");
             whereItem.setSortText("900");
             items.add(whereItem);
-        }
-            break;
+        } break;
         case FROM_CLAUSE_START: {
             CompletionItem fromItem = getItemLoader().cloneQueryExpressionKeywordItem("FROM");
             fromItem.setSortText("900");
             items.add(fromItem);
-        }
-            break;
+        } break;
         case FROM_CLAUSE_ALIAS: {
             CompletionItem fromItem = getItemLoader().cloneQueryExpressionKeywordItem("WHERE");
             fromItem.setSortText("900");
             items.add(fromItem);
-        }
-            break;
+        } break;
         case FROM_CLAUSE_AS:
         case FROM_CLAUSE:
-		case COLUMN_NAME:
-			break;
-		case FUNCTION:
-			break;
-		case NONE_FOUND:
-			break;
-		case PREFIX:
-			break;
-		case QUERY_EXPRESSION:
-			break;
-		case SELECT_CLAUSE:
-			break;
-		case SELECT_CLAUSE_START:
-			break;
-		case SELECT_COLUMN:
-			break;
-		case TABLE_ALIAS:
-			break;
-		case TABLE_BODY:
-			break;
-		case TABLE_ELEMENT:
-			break;
-		case TABLE_ELEMENT_OPTIONS:
-			break;
-		case TABLE_ELEMENT_OPTION_SEARCHABLE:
-			break;
-		case TABLE_NAME:
-			break;
-		case TABLE_OPTIONS:
-			break;
-		case TABLE_SYMBOL:
-			break;
-		case TABLE_SYMBOL_AS:
-			break;
-		case TABLE_SYMBOL_ID:
-			break;
-		case WHERE_CLAUSE:
-			break;
-		case WHERE_CLAUSE_START:
-			break;
-		case WHERE_CLAUSE_TABLE_ALIAS:
-			break;
-		default:
-			break;
+        case COLUMN_NAME:
+        case FUNCTION:
+        case NONE_FOUND:
+        case PREFIX:
+        case QUERY_EXPRESSION:
+        case SELECT_CLAUSE:
+        case SELECT_CLAUSE_START:
+        case SELECT_COLUMN:
+        case TABLE_ALIAS:
+        case TABLE_BODY:
+        case TABLE_ELEMENT:
+        case TABLE_ELEMENT_OPTIONS:
+        case TABLE_ELEMENT_OPTION_SEARCHABLE:
+        case TABLE_NAME:
+        case TABLE_OPTIONS:
+        case TABLE_SYMBOL:
+        case TABLE_SYMBOL_AS:
+        case TABLE_SYMBOL_ID:
+        case WHERE_CLAUSE:
+        case WHERE_CLAUSE_START:
+        case WHERE_CLAUSE_TABLE_ALIAS:
+        default:
+            break;
 
         }
 

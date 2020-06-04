@@ -71,7 +71,6 @@ public class QueryExpression extends AbstractStatementObject {
     protected TokenContext getTokenContext(Position position) {
         boolean isInElement = isBetween(getFirstTknIndex(), getLastTknIndex(), position);
         if (isInElement) {
-            Token tkn = this.analyzer.getTokenFor(position);
             if (selectClause != null) {
                 TokenContext theContext = selectClause.getTokenContext(position);
                 if (theContext != null) {
@@ -92,9 +91,10 @@ public class QueryExpression extends AbstractStatementObject {
                     return theContext;
                 }
             } else {
+                Token tkn = this.analyzer.getTokenFor(position);
                 return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.WHERE_CLAUSE_START, this);
             }
-
+            Token tkn = this.analyzer.getTokenFor(position);
             return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.QUERY_EXPRESSION, this);
         }
 

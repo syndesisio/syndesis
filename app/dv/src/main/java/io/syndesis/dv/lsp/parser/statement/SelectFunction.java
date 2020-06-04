@@ -47,6 +47,7 @@ public class SelectFunction extends SelectColumn {
     }
 
     @Override
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"}) // TODO refactor
     protected void parseAndValidate() {
         // Find starting index
         int selectClauselastIndex = getSelectClause().getLastTknIndex();
@@ -83,6 +84,7 @@ public class SelectFunction extends SelectColumn {
                 if (currentTknIndex < selectClauselastIndex) {
                     tkn = this.getTokens().get(currentTknIndex);
                     if (tkn.kind == SQLParserConstants.LPAREN) {
+//                      int nParamTkns = handleFunctionParameters(tkn, currentTknIndex, selectClauselastIndex);
                         // Parse until we find a RPAREN or we hit the selectClauselastIndex
                         List<Token> functionParameterTkns = getBracketedTokens(getTokens(), currentTknIndex,
                                 SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
@@ -108,7 +110,7 @@ public class SelectFunction extends SelectColumn {
                                 }
                             }
                         }
-                        currentTknIndex = currentTknIndex + nTkns; // RPARENS token
+                        currentTknIndex = currentTknIndex + nTkns; // nParamTkns; // RPARENS token
                         tkn = this.getTokens().get(currentTknIndex);
                     }
                     if (tkn.kind == SQLParserConstants.AS) {
@@ -145,6 +147,35 @@ public class SelectFunction extends SelectColumn {
             currentTknIndex++;
         }
     }
+
+//    private int handleFunctionParameters(Token inToken, int currentTknIndex, int selectClauselastIndex) {
+//        // Parse until we find a RPAREN or we hit the selectClauselastIndex
+//        List<Token> functionParameterTkns = getBracketedTokens(getTokens(), currentTknIndex,
+//                SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
+//        // 1) check last index so it isn't past the SELECT clause
+//        int nTkns = functionParameterTkns.size();
+//        if (getTokenIndex(functionParameterTkns.get(nTkns - 1)) < selectClauselastIndex) {
+//            // now count the parameters
+//            for (Token paramTkn : functionParameterTkns) {
+//                if (paramTkn.kind == SQLParserConstants.ID) {
+//                    if (FunctionHelper.getInstance().isFunctionName(paramTkn.image)) {
+//                        Position startPosition = new Position(paramTkn.beginLine, paramTkn.beginColumn);
+//                        Position endPosition = new Position(paramTkn.endLine, paramTkn.endColumn + 1);
+//                        DdlAnalyzerException exception = new DdlAnalyzerException(
+//                                DiagnosticSeverity.Warning, "NESTED Functions are not yet supported",
+//                                new Range(startPosition, endPosition));
+//
+//                        this.analyzer.addException(exception);
+//                    } else {
+//                        this.parameters.add(paramTkn.image);
+//                    }
+//                } else if (paramTkn.kind == SQLParserConstants.UNSIGNEDINTEGER) {
+//                    this.parameters.add(paramTkn.image);
+//                }
+//            }
+//        }
+//        return nTkns;
+//    }
 
     @Override
     protected TokenContext getTokenContext(Position position) {

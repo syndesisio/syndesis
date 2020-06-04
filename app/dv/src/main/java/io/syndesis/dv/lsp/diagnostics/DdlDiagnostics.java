@@ -63,8 +63,14 @@ public class DdlDiagnostics {
         return true;
     }
 
-    private static List<Diagnostic> doBasicDiagnostics(TextDocumentItem ddlDocument) {
-        DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(ddlDocument.getText());
+    /**
+     * Performs actual parsing and diagnostics for a given ddl string
+     *
+     * @param documentText
+     * @return list of language server {@link Diagnostic}s
+     */
+    public static List<Diagnostic> doBasicDiagnostics(String documentText) {
+        DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(documentText);
         CreateViewStatement createStatement = new CreateViewStatement(analyzer);
         List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
         for (DdlAnalyzerException exception : createStatement.getExceptions()) {
@@ -77,7 +83,7 @@ public class DdlDiagnostics {
 
     @SuppressWarnings("FutureReturnValueIgnored")
     private void doPublishDiagnostics(TextDocumentItem ddlDocument) {
-        List<Diagnostic> diagnostics = doBasicDiagnostics(ddlDocument);
+        List<Diagnostic> diagnostics = doBasicDiagnostics(ddlDocument.getText());
         CompletableFuture.runAsync(() -> {
             this.languageServer.getClient()
                     .publishDiagnostics(new PublishDiagnosticsParams(ddlDocument.getUri(), diagnostics));

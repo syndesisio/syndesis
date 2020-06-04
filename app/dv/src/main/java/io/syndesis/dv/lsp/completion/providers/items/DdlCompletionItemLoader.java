@@ -253,7 +253,7 @@ public final class DdlCompletionItemLoader extends CompletionItemBuilder {
 
     /**
      * Clones a {@link CompletionItem} for the given label from the supplied items
-     * 
+     *
      * @param targetLabel
      * @return a completion item
      */

@@ -80,51 +80,51 @@ public class DdlCompletionProvider extends CompletionItemBuilder {
                 // completion items will be returned
 
                 switch (tokenContext.getContext()) {
-	                // Context is the prefix to the statement "CREATE VIEW xxxxx" statement
-	                case PREFIX: {
-	                    handlePrefixItems(tokenContext, items, analyzer);
-	                }
-	                    break;
-	
-	                // Context is the Table body surrounded by (....) and before OPTIONS() or AS
-	                case TABLE_BODY: {
-	                    items.addAll(
-	                            new TableBodyCompletionProvider().getCompletionItems(tokenContext));
-	                }
-	                    break;
-	                case TABLE_ELEMENT:
-	                case TABLE_ELEMENT_OPTIONS:
-	                case TABLE_ELEMENT_OPTION_SEARCHABLE: {
-	                    items.addAll(new TableElementCompletionProvider(createStatement).getCompletionItems(tokenContext));
-	                }
-	                    break;
-	                case TABLE_OPTIONS: {
-	                    items.addAll(
-	                            new TableBodyCompletionProvider().getCompletionItems(tokenContext));
-	                }
-	                    break;
-	                // Context is the Table body surrounded by (....) and before OPTIONS() or AS
-	                case QUERY_EXPRESSION:
-	                case SELECT_CLAUSE:
-	                case SELECT_COLUMN:
-	                case TABLE_SYMBOL:
-	                case TABLE_SYMBOL_AS:
-	                case TABLE_SYMBOL_ID:
-	                case TABLE_NAME:
-	                case TABLE_ALIAS:
-	                case FUNCTION:
-	                case FROM_CLAUSE:
-	                case FROM_CLAUSE_ALIAS:
-	                case FROM_CLAUSE_AS:
-	                case FROM_CLAUSE_AS_OR_WHERE:
-	                case FROM_CLAUSE_ID:
-	                case FROM_CLAUSE_START:
-	                case WHERE_CLAUSE:
-	                case WHERE_CLAUSE_START:
-	                case WHERE_CLAUSE_TABLE_ALIAS: {
-	                    items.addAll(
-	                            new QueryExpressionItemProvider(metadataItemProvider).getCompletionItems(tokenContext));
-	                }
+                    // Context is the prefix to the statement "CREATE VIEW xxxxx" statement
+                    case PREFIX: {
+                        handlePrefixItems(tokenContext, items, analyzer);
+                    }
+                        break;
+
+                    // Context is the Table body surrounded by (....) and before OPTIONS() or AS
+                    case TABLE_BODY: {
+                        items.addAll(
+                                new TableBodyCompletionProvider().getCompletionItems(tokenContext));
+                    }
+                        break;
+                    case TABLE_ELEMENT:
+                    case TABLE_ELEMENT_OPTIONS:
+                    case TABLE_ELEMENT_OPTION_SEARCHABLE: {
+                        items.addAll(new TableElementCompletionProvider(createStatement).getCompletionItems(tokenContext));
+                    }
+                        break;
+                    case TABLE_OPTIONS: {
+                        items.addAll(
+                                new TableBodyCompletionProvider().getCompletionItems(tokenContext));
+                    }
+                        break;
+                    // Context is the Table body surrounded by (....) and before OPTIONS() or AS
+                    case QUERY_EXPRESSION:
+                    case SELECT_CLAUSE:
+                    case SELECT_COLUMN:
+                    case TABLE_SYMBOL:
+                    case TABLE_SYMBOL_AS:
+                    case TABLE_SYMBOL_ID:
+                    case TABLE_NAME:
+                    case TABLE_ALIAS:
+                    case FUNCTION:
+                    case FROM_CLAUSE:
+                    case FROM_CLAUSE_ALIAS:
+                    case FROM_CLAUSE_AS:
+                    case FROM_CLAUSE_AS_OR_WHERE:
+                    case FROM_CLAUSE_ID:
+                    case FROM_CLAUSE_START:
+                    case WHERE_CLAUSE:
+                    case WHERE_CLAUSE_START:
+                    case WHERE_CLAUSE_TABLE_ALIAS: {
+                        items.addAll(
+                                new QueryExpressionItemProvider(metadataItemProvider).getCompletionItems(tokenContext));
+                    }
                     break;
                 case NONE_FOUND:
                 default: // RETURN ALL KEYWORDS

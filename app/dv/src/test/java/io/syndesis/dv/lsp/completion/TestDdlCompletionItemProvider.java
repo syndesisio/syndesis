@@ -18,6 +18,8 @@ package io.syndesis.dv.lsp.completion;
 import static org.junit.Assert.assertEquals;
 
 import io.syndesis.dv.lsp.completion.providers.DdlCompletionProvider;
+import io.syndesis.dv.lsp.parser.statement.CreateViewStatement;
+
 import java.util.List;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.Position;
@@ -227,10 +229,9 @@ public class TestDdlCompletionItemProvider {
         List<CompletionItem> items = itemProvider.getCompletionItems(stmt, new Position(4, 82));
         assertEquals(0, items.size());
     }
-    
+
     @Test
     public void testFromClause_3() {
-
         String stmt =
 //               0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
                 "CREATE VIEW xyz AS SELECT c1 FROM s1.table1 AS t1 O";
@@ -238,5 +239,23 @@ public class TestDdlCompletionItemProvider {
         List<CompletionItem> items = itemProvider.getCompletionItems(stmt, new Position(0, 61));
         assertEquals(612, items.size());
 
+    }
+
+    @Test
+    public void testCharAfterTableName() {
+	    String stmt =
+	        "CREATE VIEW contact AS SELECT company FROM PostgresDB.contact AS t1, PostgresDB.winelist a b c";
+	    //   0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
+	
+	    List<CompletionItem> items = itemProvider.getCompletionItems(stmt, new Position(0, 89));
+	    assertEquals(612, items.size());
+	    items = itemProvider.getCompletionItems(stmt, new Position(0, 90));
+	    assertEquals(612, items.size());
+	    items = itemProvider.getCompletionItems(stmt, new Position(0, 91));
+	    assertEquals(612, items.size());
+	    items = itemProvider.getCompletionItems(stmt, new Position(0, 92));
+	    assertEquals(612, items.size());
+	    items = itemProvider.getCompletionItems(stmt, new Position(0, 93));
+	    assertEquals(612, items.size());
     }
 }

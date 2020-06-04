@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2016 Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.syndesis.dv.lsp.parser.statement;
 
 import java.util.List;
@@ -33,9 +48,12 @@ public class TableSymbol extends AbstractStatementObject {
 
     private final FromClause fromClause;
 
+    private boolean nextTokenIsInvalid;
+
     public TableSymbol(DdlTokenAnalyzer analyzer, FromClause fromClause) {
         super(analyzer);
         this.fromClause = fromClause;
+        this.nextTokenIsInvalid = false;
     }
 
     @Override
@@ -98,12 +116,18 @@ public class TableSymbol extends AbstractStatementObject {
                         // Since there is a comma, another TableSymbol is expected
                         setLastTknIndex(getTokenIndex(tkn));
                         symbolEnded = true;
+                    } else {
+                        setLastTknIndex(currentTknIndex-1);
+                        symbolEnded = true;
+                        this.analyzer.addException(tkn, tkn, "Invalid token: [" + tkn.image + "]");
+                        setNextTokenIsInvalid(true);
                     }
                 } else {
                     setLastTknIndex(getTokenIndex(tkn));
                     symbolEnded = true;
                 }
             }
+
             currentTknIndex++;
         }
     }
@@ -195,6 +219,14 @@ public class TableSymbol extends AbstractStatementObject {
         return null;
     }
 
+    public boolean nextTokenIsInvalid() {
+        return nextTokenIsInvalid;
+    }
+
+    public void setNextTokenIsInvalid(boolean isValid) {
+        this.nextTokenIsInvalid = isValid;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder(75).append("TableSymbol:   ");
@@ -204,9 +236,8 @@ public class TableSymbol extends AbstractStatementObject {
             sb.append(getNameToken().image);
         }
 
-        sb.append("\n\tschemaName = ").append(getSchemaName());
-        sb.append("\n\ttableName = ").append(getTableName());
-        sb.append("\n\talias = ").append(getAlias());
+        sb.append("\n\tschemaName = ").append(getSchemaName()).append("\n\ttableName = ")
+        .append(getTableName()).append("\n\talias = ").append(getAlias());
 
         return sb.toString();
     }

@@ -107,21 +107,19 @@ public class DdlTokenAnalyzer {
 
     /**
      * Token at the row, character position
-     * 
+     *
      * @param pos
      * @return token - may be null
      */
     public Token getTokenAt(Position pos) {
         DdlTokenWalker walker = new DdlTokenWalker(this.tokens);
         Token targetToken = walker.findToken(pos, this.statementType);
-        if (targetToken != null) {
-            if (pos.getLine() > targetToken.beginLine || pos.getCharacter() > targetToken.endLine) {
-                int targetIndex = getTokenIndex(targetToken);
-                if (targetIndex < getTokens().size() - 1) {
-                    return getToken(targetIndex + 1);
-                }
-                return null;
+        if (targetToken != null && (pos.getLine() > targetToken.beginLine || pos.getCharacter() > targetToken.endLine)) {
+            int targetIndex = getTokenIndex(targetToken);
+            if (targetIndex < getTokens().size() - 1) {
+                return getToken(targetIndex + 1);
             }
+            return null;
         }
         return targetToken;
     }
@@ -138,42 +136,42 @@ public class DdlTokenAnalyzer {
         List<String> words = new ArrayList<String>();
 
         switch (kind) {
-	        case SQLParserConstants.CREATE:
-	            words.add(getKeywordLabel(SQLParserConstants.VIEW, true));
-	            words.add(getKeywordLabel(SQLParserConstants.VIRTUAL, true));
-	            words.add(getKeywordLabel(SQLParserConstants.PROCEDURE, true));
-	            break;
-	
-	        case SQLParserConstants.GLOBAL:
-	            words.add(getKeywordLabel(SQLParserConstants.TEMPORARY, true));
-	            break;
-	
-	        case SQLParserConstants.TEMPORARY:
-	            words.add(getKeywordLabel(SQLParserConstants.TABLE, true));
-	            break;
-	
-	        case SQLParserConstants.FOREIGN:
-	            words.add(getKeywordLabel(SQLParserConstants.TABLE, true));
-	            words.add(getKeywordLabel(SQLParserConstants.TEMPORARY, true));
-	            break;
-	
-	        case SQLParserConstants.VIRTUAL:
-	            words.add(getKeywordLabel(SQLParserConstants.VIEW, true));
-	            words.add(getKeywordLabel(SQLParserConstants.PROCEDURE, true));
-	            break;
-	
-	        case SQLParserConstants.ID:
-	            if (isStatementId) {
-	                words.add(getKeywordLabel(SQLParserConstants.LPAREN, false));
-	            }
-	            break;
-	
-	        case SQLParserConstants.SELECT:
-	            words.add(getKeywordLabel(SQLParserConstants.STAR, true));
-	            break;
-	
-	        default:
-	            break;
+            case SQLParserConstants.CREATE:
+                words.add(getKeywordLabel(SQLParserConstants.VIEW, true));
+                words.add(getKeywordLabel(SQLParserConstants.VIRTUAL, true));
+                words.add(getKeywordLabel(SQLParserConstants.PROCEDURE, true));
+                break;
+
+            case SQLParserConstants.GLOBAL:
+                words.add(getKeywordLabel(SQLParserConstants.TEMPORARY, true));
+                break;
+
+            case SQLParserConstants.TEMPORARY:
+                words.add(getKeywordLabel(SQLParserConstants.TABLE, true));
+                break;
+
+            case SQLParserConstants.FOREIGN:
+                words.add(getKeywordLabel(SQLParserConstants.TABLE, true));
+                words.add(getKeywordLabel(SQLParserConstants.TEMPORARY, true));
+                break;
+
+            case SQLParserConstants.VIRTUAL:
+                words.add(getKeywordLabel(SQLParserConstants.VIEW, true));
+                words.add(getKeywordLabel(SQLParserConstants.PROCEDURE, true));
+                break;
+
+            case SQLParserConstants.ID:
+                if (isStatementId) {
+                    words.add(getKeywordLabel(SQLParserConstants.LPAREN, false));
+                }
+                break;
+
+            case SQLParserConstants.SELECT:
+                words.add(getKeywordLabel(SQLParserConstants.STAR, true));
+                break;
+
+            default:
+                break;
         }
 
         return stringListToArray(words);

@@ -39,7 +39,6 @@ public class TableElementCompletionProvider extends CompletionItemBuilder {
     public TableElementCompletionProvider(CreateViewStatement statement) {
         super();
         this.statement = statement;
-        ;
     }
 
     public List<CompletionItem> getCompletionItems(TokenContext context) {
@@ -51,39 +50,39 @@ public class TableElementCompletionProvider extends CompletionItemBuilder {
          * AUTO_INCREMENT, DEFAULT_KEYWORD, NOT, NULL, PRIMARY, KEY, INDEX, UNIQUE
          */
         switch (context.getContext()) {
-	        case TABLE_ELEMENT_OPTIONS: {
-	            items = getItemLoader().getTableElementOptionsCompletionItems();
-	        }
-	            break;
-	
-	        case TABLE_ELEMENT_OPTION_SEARCHABLE: {
-	            items = getItemLoader().getSearchableValuesCompletionItems();
-	        }
-	            break;
-	
-	        default: {
-	            switch (targetToken.kind) {
-		            case SQLParserConstants.NOT: {
-		                String[] notWords = { "NULL" };
-		                items.addAll(generateCompletionItems(notWords));
-		            }
-		                break;
-		            case SQLParserConstants.NULL: {
-		                items.addAll(getRemainingItems(targetToken));
-		            }
-		                break;
-		            case SQLParserConstants.STRINGVAL:
-		            case SQLParserConstants.ID: {
-		                items.addAll(setItemsSortText(getItemLoader().getDatatypesCompletionItems(), "00001"));
-		                items.addAll(getRemainingItems(targetToken));
-		            }
-		                break;
-		            default: {
-		                items.addAll(getRemainingItems(targetToken));
-		                return items;
-		            }
-	            }
-	        }
+            case TABLE_ELEMENT_OPTIONS: {
+                items = getItemLoader().getTableElementOptionsCompletionItems();
+            }
+                break;
+
+            case TABLE_ELEMENT_OPTION_SEARCHABLE: {
+                items = getItemLoader().getSearchableValuesCompletionItems();
+            }
+                break;
+
+            default: {
+                switch (targetToken.kind) {
+                    case SQLParserConstants.NOT: {
+                        String[] notWords = { "NULL" };
+                        items.addAll(generateCompletionItems(notWords));
+                    }
+                        break;
+                    case SQLParserConstants.NULL: {
+                        items.addAll(getRemainingItems(targetToken));
+                    }
+                        break;
+                    case SQLParserConstants.STRINGVAL:
+                    case SQLParserConstants.ID: {
+                        items.addAll(setItemsSortText(getItemLoader().getDatatypesCompletionItems(), "00001"));
+                        items.addAll(getRemainingItems(targetToken));
+                    }
+                        break;
+                    default: {
+                        items.addAll(getRemainingItems(targetToken));
+                        return items;
+                    }
+                }
+            }
         }
 
         return items;

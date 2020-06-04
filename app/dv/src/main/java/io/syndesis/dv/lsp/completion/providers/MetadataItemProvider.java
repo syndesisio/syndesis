@@ -43,6 +43,7 @@ import io.syndesis.dv.server.endpoint.RestSourceSchema;
 import io.syndesis.dv.server.endpoint.RestSourceTable;
 import io.syndesis.dv.server.endpoint.RestViewSourceInfo;
 
+@SuppressWarnings("PMD.GodClass")
 public class MetadataItemProvider extends CompletionItemBuilder {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetadataItemProvider.class);
 
@@ -93,32 +94,32 @@ public class MetadataItemProvider extends CompletionItemBuilder {
             returnItems.addAll(filteredItems);
         } else {
             switch (context.getContext()) {
-	            case SELECT_CLAUSE:
-	            case SELECT_COLUMN:
-	            case FUNCTION: {
-	                processSelectClause(allMetadataItems, returnItems);
-	            }
-	                break;
-	            case FROM_CLAUSE:
-	            case TABLE_SYMBOL: {
-	                processFromClause(context, allMetadataItems, returnItems);
-	            }
-	                break;
-	            case WHERE_CLAUSE_TABLE_ALIAS:
-	            case WHERE_CLAUSE: {
-	                processWhereClause(context, allMetadataItems, returnItems);
-	            }
-	                break;
-	            case QUERY_EXPRESSION: {
-	                returnItems.addAll(filterCompletionItems(allMetadataItems, null, false));
-	            }
-	                break;
-	            case TABLE_ALIAS: {
-	                processForTableAlias(context, allMetadataItems, returnItems);
-	            }
-	                break;
-	            default:
-	                break;
+                case SELECT_CLAUSE:
+                case SELECT_COLUMN:
+                case FUNCTION: {
+                    processSelectClause(allMetadataItems, returnItems);
+                }
+                    break;
+                case FROM_CLAUSE:
+                case TABLE_SYMBOL: {
+                    processFromClause(context, allMetadataItems, returnItems);
+                }
+                    break;
+                case WHERE_CLAUSE_TABLE_ALIAS:
+                case WHERE_CLAUSE: {
+                    processWhereClause(context, allMetadataItems, returnItems);
+                }
+                    break;
+                case QUERY_EXPRESSION: {
+                    returnItems.addAll(filterCompletionItems(allMetadataItems, null, false));
+                }
+                    break;
+                case TABLE_ALIAS: {
+                    processForTableAlias(context, allMetadataItems, returnItems);
+                }
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -338,7 +339,7 @@ public class MetadataItemProvider extends CompletionItemBuilder {
      * This method filters the metadata items based on: 1) allowable types 2)
      * statement context based on position and relevant token(s) within the
      * statement 3)
-     * 
+     *
      * @param metadataItems
      * @param allowableTypes
      * @param checkSchemaScope - filter columns that aren't referenced in the
@@ -350,7 +351,7 @@ public class MetadataItemProvider extends CompletionItemBuilder {
         List<CompletionItem> filteredItems = new ArrayList<CompletionItem>();
 
         for (MetadataCompletionItem nextMI : metadataItems) {
-//            if (!nextMI.isCachedDuplicate()) {
+            // if (!nextMI.isCachedDuplicate()) {
                 if ((allowableTypes == null || allowableTypes.contains(nextMI.getMetadataType()))) {
                     if (checkSchemaScope && isSchemaTableInScope(nextMI)) {
                         filteredItems.add(nextMI.getCompletionItem());
@@ -358,7 +359,7 @@ public class MetadataItemProvider extends CompletionItemBuilder {
                         filteredItems.add(nextMI.getCompletionItem());
                     }
                 }
-//            }
+            // }
         }
         logDebug("  RETURNING [ " + filteredItems.size() + " ] METADATA ITEMS from filterCompletionItems() ");
         return filteredItems;
@@ -368,7 +369,7 @@ public class MetadataItemProvider extends CompletionItemBuilder {
      * This method filters the metadata items based on: 1) allowable types 2)
      * statement context based on position and relevant token(s) within the
      * statement 3)
-     * 
+     *
      * @param metadataItems
      * @param allowableTypes
      * @param checkSchemaScope - filter columns that aren't referenced in the
@@ -411,24 +412,20 @@ public class MetadataItemProvider extends CompletionItemBuilder {
                 logDebug("   ######## COLUMN MATCHES:  " + metadataItem.getColumnName());
                 return metadataItem.getTableName() != null && metadataItem.getTableName().equalsIgnoreCase(tName);
             }
-//            else {
-//                return metadataItem.getTableName() != null && metadataItem.getTableName().equalsIgnoreCase(tName);
-//            }
         }
 
         return false;
     }
 
     private boolean isSchemaTableInScope(MetadataCompletionItem item) {
-        boolean result = false;
-        FromClause fromClause = statement.getQueryExpression().getFromClause();
-
         if (item.getTableName() == null) {
-            return result;
+            return false;
         }
 
+        FromClause fromClause = statement.getQueryExpression().getFromClause();
+
+        boolean result = false;
         for (TableSymbol tableSymbol : fromClause.getTableSymbols()) {
-//        	logDebug("  isSchemaTableInScope() Checking TABLE SYMBOL" + tableSymbol);
             if (item.getSchemaName() != null && tableSymbol.getSchemaName() != null) {
                 result = tableSymbol.getSchemaName().equalsIgnoreCase(item.getSchemaName())
                         && tableSymbol.getTableName().equalsIgnoreCase(item.getTableName());
@@ -440,7 +437,6 @@ public class MetadataItemProvider extends CompletionItemBuilder {
                 break;
             }
         }
-//    	logDebug("  isSchemaTableInScope() = " + result + " for metadata item " + item);
         return result;
     }
 

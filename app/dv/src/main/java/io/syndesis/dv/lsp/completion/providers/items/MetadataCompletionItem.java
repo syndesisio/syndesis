@@ -79,11 +79,10 @@ public class MetadataCompletionItem {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(this.completionItem.getLabel());
-        sb.append("\n\tmetadataType = ").append(this.metadataType.name());
-        sb.append("\n\tschema = ").append(this.schemaName);
-        sb.append("\n\ttable  = ").append(this.tableName);
-        sb.append("\n\tcolumn = ").append(this.columnName);
+        StringBuilder sb = new StringBuilder(200);
+        sb.append(this.completionItem.getLabel()).append("\n\tmetadataType = ")
+        .append(this.metadataType.name()).append("\n\tschema = ").append(this.schemaName)
+        .append("\n\ttable  = ").append(this.tableName).append("\n\tcolumn = ").append(this.columnName);
         return sb.toString();
     }
 }

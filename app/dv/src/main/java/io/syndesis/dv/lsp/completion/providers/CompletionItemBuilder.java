@@ -31,12 +31,12 @@ import io.syndesis.dv.lsp.completion.providers.items.DdlCompletionItemLoader;
 
 public class CompletionItemBuilder {
     private final DdlCompletionItemLoader loader = DdlCompletionItemLoader.getInstance();
-    public final static String SORT_WEIGHT_1100 = "1100";
-    public final static String SORT_WEIGHT_1090 = "1090";
-    public final static String SORT_WEIGHT_1080 = "1080";
-    public final static String SORT_WEIGHT_1070 = "1070";
-    public final static String SORT_WEIGHT_1060 = "1060";
-    public final static String SORT_WEIGHT_1050 = "1050";
+    public static final String SORT_WEIGHT_1100 = "1100";
+    public static final String SORT_WEIGHT_1090 = "1090";
+    public static final String SORT_WEIGHT_1080 = "1080";
+    public static final String SORT_WEIGHT_1070 = "1070";
+    public static final String SORT_WEIGHT_1060 = "1060";
+    public static final String SORT_WEIGHT_1050 = "1050";
 
     public DdlCompletionItemLoader getItemLoader() {
         return loader;
@@ -166,7 +166,7 @@ public class CompletionItemBuilder {
      * The tokenImage[...] call is returning strings wrapped in double-quotes
      *
      * Need to return a simple string
-     * 
+     *
      * @return string without double quotes
      */
     public String getKeywordLabel(int keywordId, boolean upperCase) {

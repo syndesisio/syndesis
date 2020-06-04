@@ -145,13 +145,8 @@ public class SelectClause extends AbstractStatementObject {
     public boolean functionIsNext(int startIndex) {
         Token idToken = getAnalyzer().getToken(startIndex);
         Token parenToken = getAnalyzer().getToken(startIndex + 1);
-        if (parenToken != null && parenToken.kind == SQLParserConstants.LPAREN) {
-            if (FunctionHelper.getInstance().isFunctionName(idToken.image)) {
-                return true;
-            }
-        }
-
-        return false;
+        return parenToken != null && parenToken.kind == SQLParserConstants.LPAREN
+            && FunctionHelper.getInstance().isFunctionName(idToken.image);
     }
 
     @Override

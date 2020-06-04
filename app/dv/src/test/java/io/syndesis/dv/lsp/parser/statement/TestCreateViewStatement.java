@@ -67,10 +67,8 @@ public class TestCreateViewStatement {
         assertTrue(cvs.getExceptions().isEmpty());
 
         TableBody tb = cvs.getTableBody();
+        assertEquals(3, tb.getTableElements().length);
 
-        for (TableElement element : tb.getTableElements()) {
-            System.out.println(element);
-        }
     }
 
     @Test
@@ -299,4 +297,5 @@ public class TestCreateViewStatement {
         assertEquals("c2", cvs.getQueryExpression().getSelectClause().getSelectColumns()[1].getAliasNameToken().image);
         assertEquals(0, cvs.getExceptions().size());
     }
+
 }

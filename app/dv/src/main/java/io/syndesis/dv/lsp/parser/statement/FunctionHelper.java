@@ -25,9 +25,9 @@ import com.google.common.base.Splitter;
 import io.syndesis.dv.lsp.completion.providers.items.DdlCompletionItemLoader;
 
 /*
- * A Function 
+ * A helper class to hold and provide function definition info
  */
-public class FunctionHelper {
+public final class FunctionHelper {
 
     private static final FunctionHelper INSTANCE = new FunctionHelper();
 

@@ -49,6 +49,7 @@ public class SelectColumn extends AbstractStatementObject {
     }
 
     @Override
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"}) // TODO refactor
     protected void parseAndValidate() {
         // Find starting index
         int selectClauselastIndex = selectClause.getLastTknIndex();
@@ -94,8 +95,6 @@ public class SelectColumn extends AbstractStatementObject {
                             currentTknIndex++;
                         }
                     }
-                } else if (tkn.kind == SQLParserConstants.FUNCTION) {
-                    // TODO: Need to parse the function
                 }
                 // Check for alias (AS) token
                 if (currentTknIndex < selectClauselastIndex) {
