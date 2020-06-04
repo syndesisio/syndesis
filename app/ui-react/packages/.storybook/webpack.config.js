@@ -28,7 +28,7 @@ module.exports = ({ config, mode }) => {
     net: 'mock',
   };
   config.optimization.minimizer = [ new TerserPlugin({
-    parallel: 1
+    parallel: false
   })];
   return config;
 };
