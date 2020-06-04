@@ -107,9 +107,10 @@ jobs:
   ui:
     <<: *job_defaults
     environment:
+      <<: *common_env
       DOCKER_IMAGES: syndesis-ui
       CHROME_BIN: "/usr/bin/google-chrome"
-      <<: *common_env
+      MAVEN_OPTS: -Xmx128m
     steps:
       - setup_remote_docker
       - checkout
@@ -654,6 +655,8 @@ workflows:
           <<: *ignore_cherry_pick_branches
       - ui-doc:
           <<: *ignore_cherry_pick_branches
+          requires:
+            - ui
       - ui:
           <<: *ignore_cherry_pick_branches
       - common:
