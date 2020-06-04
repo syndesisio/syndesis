@@ -21,20 +21,17 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import io.syndesis.dv.metadata.MetadataInstance.ValidationResult;
+import io.syndesis.dv.metadata.TeiidVdb;
+import io.syndesis.dv.metadata.internal.DefaultMetadataInstance.TeiidVdbImpl;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
-
 import javax.xml.stream.XMLStreamException;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.teiid.adminapi.impl.VDBMetadataParser;
 import org.teiid.runtime.EmbeddedConfiguration;
-
-import io.syndesis.dv.metadata.MetadataInstance.ValidationResult;
-import io.syndesis.dv.metadata.TeiidVdb;
-import io.syndesis.dv.metadata.internal.DefaultMetadataInstance.TeiidVdbImpl;
 
 @SuppressWarnings("nls")
 public class DefaultMetadataInstanceTest {
@@ -124,6 +121,17 @@ public class DefaultMetadataInstanceTest {
         assertFalse(teiidVdb.hasValidationError("views", "tbl", "table"));
 
         assertTrue(teiidVdb.hasValidationError("views", "tbl2", "table"));
+    }
+
+    @Test
+    public void testTeiidDataSourceImpl() {
+        TeiidDataSourceImpl impl = new TeiidDataSourceImpl("x", "y", "z", null);
+
+        assertNull(impl.getLastMetadataLoadTime());
+
+        impl.loadingMetadata();
+
+        assertNotNull(impl.getLastMetadataLoadTime());
     }
 
 }
