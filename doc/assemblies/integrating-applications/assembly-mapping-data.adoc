@@ -24,6 +24,7 @@ data that you expect.
 
 Details for mapping data fields are in the following topics:
 
+* xref:view-mappings-in-a-step_{context}[]
 * xref:identify-where-data-mapping-is-needed_{context}[]
 * xref:find-the-field-you-want-to-map_{context}[]
 * xref:map-one-source-field-to-one-target-field_{context}[]
@@ -33,11 +34,13 @@ Details for mapping data fields are in the following topics:
 * xref:using-data-mapper-to-process-collections_{context}[]
 * xref:mapping-between-collections-and-non-collections_{context}[]
 * xref:transform-target-data_{context}[]
-* xref:applying-conditions-to-mappings_{context}[]
-* xref:view-mappings-in-a-step_{context}[]
-* xref:available-transformations_{context}[]
 * xref:about-transformations-on-multiple-source-values_{context}[]
+* xref:applying-conditions-to-mappings_{context}[]
+* xref:available-transformations_{context}[]
 * xref:troubleshooting-data-mapping_{context}[]
+
+
+include::../../modules/integrating-applications/proc-view-mappings-in-a-step.adoc[leveloffset=+1]
 
 include::../../modules/integrating-applications/proc-identify-where-data-mapping-is-needed.adoc[leveloffset=+1]
 
@@ -57,13 +60,11 @@ include::../../modules/integrating-applications/ref-mapping-between-collections-
 
 include::../../modules/integrating-applications/proc-transform-target-data.adoc[leveloffset=+1]
 
+include::../../modules/integrating-applications/ref-about-transformations-on-multiple-source-values.adoc[leveloffset=+1]
+
 include::../../modules/integrating-applications/proc-applying-conditions-to-mappings.adoc[leveloffset=+1]
 
-include::../../modules/integrating-applications/proc-view-mappings-in-a-step.adoc[leveloffset=+1]
-
 include::../../modules/integrating-applications/ref-available-transformations.adoc[leveloffset=+1]
-
-include::../../modules/integrating-applications/ref-about-transformations-on-multiple-source-values.adoc[leveloffset=+1]
 
 include::../../modules/integrating-applications/ref-troubleshooting-data-mapping.adoc[leveloffset=+1]
 
