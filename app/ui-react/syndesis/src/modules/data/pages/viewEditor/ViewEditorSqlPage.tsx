@@ -340,6 +340,8 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
               </Breadcrumb>
               <DdlEditor
                 viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
+                virtualizationName={virtualization.name}
+                editedViewName={viewDefn.name}
                 i18nDoneLabel={t('shared:Done')}
                 i18nSaveLabel={t('shared:Save')}
                 i18nTitle={t('viewEditor.title')}
