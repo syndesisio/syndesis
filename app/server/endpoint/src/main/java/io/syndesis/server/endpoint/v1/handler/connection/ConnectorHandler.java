@@ -15,17 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,9 +27,26 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -59,18 +65,18 @@ import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.file.IconDao;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
+import io.syndesis.server.endpoint.util.PaginationFilter;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import io.syndesis.server.endpoint.v1.operations.Deleter;
 import io.syndesis.server.endpoint.v1.operations.Getter;
 import io.syndesis.server.endpoint.v1.operations.Lister;
+import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.operations.Updater;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
+import io.syndesis.server.endpoint.v1.util.PredicateFilter;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import io.syndesis.server.verifier.Verifier;
-import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 @Path("/connectors")
 @Tag(name = "connectors")
@@ -226,6 +232,34 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @Override
     public ListResult<Connector> list(final UriInfo uriInfo) {
         final List<Connector> connectors = Lister.super.list(uriInfo).getItems().stream()
+            .map(c -> {
+                final APISummary summary = APISummary.Builder.createFrom(c).build();
+
+                return c.builder().actionsSummary(summary.getActionsSummary()).build();
+            })
+            .collect(Collectors.toList());
+
+        return ListResult.of(augmentedWithUsage(connectors));
+    }
+
+    @GET
+    @Path("/apiConnectors")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ListResult<Connector> listApiConnectors(
+        @Parameter(required = true, description = "Filter by matching connector group ids")
+        @QueryParam("connectorGroupIdList") List<String> connectorGroupIdList,
+        @Parameter(required = false, description = "Page number to return")
+        @QueryParam("page") @DefaultValue("1") int page,
+        @Parameter(required = false, description = "Number of records per page")
+        @QueryParam("per_page") @DefaultValue("20") int perPage) {
+
+        List<Connector> connectors = getDataManager().fetchAll(
+                Connector.class,
+                new PredicateFilter<>(connector -> connector.getConnectorGroupId().isPresent()
+                        && connectorGroupIdList.contains(connector.getConnectorGroupId().get())
+                ),
+                new PaginationFilter<>(new PaginationOptionsFromQueryParams(page, perPage)))
+            .getItems().stream()
             .map(c -> {
                 final APISummary summary = APISummary.Builder.createFrom(c).build();
 
