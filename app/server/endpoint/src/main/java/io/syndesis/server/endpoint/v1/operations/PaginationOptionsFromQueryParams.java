@@ -25,8 +25,12 @@ public class PaginationOptionsFromQueryParams implements PaginationOptions {
     private final int page;
     private final int perPage;
 
-
-    public PaginationOptionsFromQueryParams(int page, int perPage){
+    /**
+     * Create from pagination options.
+     * @param page    request page number.
+     * @param perPage results per page.
+     */
+    public PaginationOptionsFromQueryParams(int page, int perPage) {
         this.page = page;
         this.perPage = perPage;
     }
