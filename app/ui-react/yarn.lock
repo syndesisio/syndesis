@@ -2889,7 +2889,19 @@
     focus-trap-react "^4.0.1"
     tippy.js "5.1.2"
 
-"@patternfly/react-core@^3.122.4", "@patternfly/react-core@^3.153.13", "@patternfly/react-core@^3.77.2":
+"@patternfly/react-core@^3.131.4":
+  version "3.158.2"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.158.2.tgz#90c4937c99ad0e5107e5850fb2362ab39dd18950"
+  integrity sha512-rbPnp3Nzqo2Zspg0hJ7FoSEzjW5ILIM6M24NkArT/EZknhDMtRtIIrNGUyxT7BS48mRNxU5GrjSGHCckPSmuUw==
+  dependencies:
+    "@patternfly/react-icons" "^3.15.17"
+    "@patternfly/react-styles" "^3.7.14"
+    "@patternfly/react-tokens" "^2.8.14"
+    focus-trap "4.0.2"
+    react-dropzone "9.0.0"
+    tippy.js "5.1.2"
+
+"@patternfly/react-core@^3.153.13", "@patternfly/react-core@^3.77.2":
   version "3.153.13"
   resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.153.13.tgz#f05dead48f3fff7dae156798c6a5b4c244d77c9d"
   integrity sha512-OyssAlsdsHWXRuKXvkcagG8PcplpE02FSLClON+407Fzhj4t0BLGWECI8RQwZ0Tapr+qVXikKQRukM5MY9zIqg==
@@ -2915,14 +2927,14 @@
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^5.8.1"
 
-"@patternfly/react-icons@^3.14.34":
+"@patternfly/react-icons@^3.14.34", "@patternfly/react-icons@^3.15.17":
   version "3.15.17"
   resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-3.15.17.tgz#97a71fd6469a3f6c08dc46575a340b82cfc7e1db"
   integrity sha512-Q0JAlxEvSAl5kcMSUMItLiKi9fweO941g5+lS45t3o/Rv4Eg91Ig7AyK1YWw6m1ah+/eHslLfox0Uqw7m7usLg==
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^5.8.1"
 
-"@patternfly/react-styles@^3.5.7", "@patternfly/react-styles@^3.6.21", "@patternfly/react-styles@^3.6.26", "@patternfly/react-styles@^3.7.13":
+"@patternfly/react-styles@^3.5.7", "@patternfly/react-styles@^3.6.21", "@patternfly/react-styles@^3.6.26", "@patternfly/react-styles@^3.7.13", "@patternfly/react-styles@^3.7.14":
   version "3.7.14"
   resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-3.7.14.tgz#66a3b6c1cca34d37112485fc0492b12d71a4379e"
   integrity sha512-NVwbPP9JroulfQgj0LOLWKP4DumArW8RrP1FB1lLOCuw13KkuAcFbLN9MSF8ZBwJ8syxGEdux5mDC3jPjsrQiw==
@@ -2946,7 +2958,7 @@
     classnames "^2.2.5"
     lodash "^4.17.15"
 
-"@patternfly/react-tokens@^2.7.20":
+"@patternfly/react-tokens@^2.7.20", "@patternfly/react-tokens@^2.8.14":
   version "2.8.14"
   resolved "https://registry.yarnpkg.com/@patternfly/react-tokens/-/react-tokens-2.8.14.tgz#30b8bd90763fd2a443a875dee4d1d948928f32a1"
   integrity sha512-pha0XyZ3ZiXuQoKstuFsiEHARFQKUFsS6WxVuRSEyNbGTToRNJkKR9cW5swzHgXK6Fuw5EA2XFHLuu8osj52KA==

@@ -15,7 +15,7 @@
     "@dump247/storybook-state": "^1.6.1",
     "@patternfly/patternfly": "^2.60.1",
     "@patternfly/react-charts": "^5.2.21",
-    "@patternfly/react-core": "^3.122.4",
+    "@patternfly/react-core": "^3.131.4",
     "@patternfly/react-icons": "^3.14.42",
     "@patternfly/react-styles": "^3.6.26",
     "@patternfly/react-table": "^2.25.6",
@@ -72,13 +72,13 @@
     "build": "microbundle --format cjs --no-compress",
     "dev": "microbundle watch --format cjs --no-compress",
     "storybook": "start-storybook -p 9001",
-    "build-storybook": "NODE_OPTIONS=--max-old-space-size=1732 build-storybook -o ../../doc/ui"
+    "build-storybook": "NODE_OPTIONS=--max-old-space-size=2176 build-storybook -o ../../doc/ui"
   },
   "peerDependencies": {
     "@patternfly/patternfly": "^2.40.6",
     "@patternfly/react-charts": "^5.2.21",
-    "@patternfly/react-core": "^3.122.4",
-    "@patternfly/react-icons": "^3.14.18",
+    "@patternfly/react-core": "^3.131.4",
+    "@patternfly/react-icons": "^3.14.30",
     "@patternfly/react-styles": "^3.6.5",
     "@patternfly/react-table": "^2.24.17",
     "@patternfly/react-tokens": "^2.7.5",
