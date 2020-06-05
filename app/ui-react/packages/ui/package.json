@@ -72,7 +72,7 @@
     "build": "microbundle --format cjs --no-compress",
     "dev": "microbundle watch --format cjs --no-compress",
     "storybook": "start-storybook -p 9001",
-    "build-storybook": "NODE_OPTIONS=--max-old-space-size=2048 build-storybook -o ../../doc/ui"
+    "build-storybook": "NODE_OPTIONS=--max-old-space-size=1536 build-storybook -o ../../doc/ui"
   },
   "peerDependencies": {
     "@patternfly/patternfly": "^2.40.6",
