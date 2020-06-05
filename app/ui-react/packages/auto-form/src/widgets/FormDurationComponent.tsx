@@ -123,8 +123,8 @@ export const FormDurationComponent: React.FunctionComponent<
     >
       <InputGroup>
         <TextInput
-          min={'0'}
           {...props.property.fieldAttributes}
+          min={'0'}
           data-testid={id}
           id={id}
           type={'number'}
