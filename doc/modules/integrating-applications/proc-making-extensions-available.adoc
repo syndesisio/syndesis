@@ -27,9 +27,7 @@ developer to obtain an updated `.jar` file, which you can then try to upload.
 After {prodname} validates the file, it extracts and displays the extension's 
 name, ID, description, and type. The type indicates whether the extension
 defines a custom connector, or one or more custom steps for
-operating on data between connections, or a JDBC driver for a 
-proprietary database. An extension that provides a JDBC driver is 
-referred to as a library extension. 
+operating on data between connections, or a runtime library extension (including a JDBC driver).
 +
 For a connector extension, {prodname} displays
 the actions that are available to a connection that is created from this 

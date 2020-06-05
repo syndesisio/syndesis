@@ -17,14 +17,16 @@ Here is a sample definition for a library extension:
 ----
 {
   "schemaVersion" : "v1",
-  "name" : "Example JDBC Driver Library",
-  "description" : "Syndesis Extension for adding a custom JDBC Driver",
-  "extensionId" : "io.syndesis.extensions:syndesis-library-jdbc-driver",
+  "name" : "Example Library Extension",
+  "description" : "Syndesis Extension for adding a runtime library",
+  "extensionId" : "io.syndesis.extensions:syndesis-library",
   "version" : "1.0.0",
-  "tags" : [ "jdbc-driver" ],
+  "tags" : [ "my-libraries-extension" ],
   "extensionType" : "Libraries"
 }
 ----
+
+See also the sample library extension here:  https://github.com/syndesisio/syndesis-extensions
 
 Other than the lack of actions, the structure of a library extension 
 is the same as the structure of a step or connector extension. 
@@ -37,9 +39,9 @@ specify a `system` dependency, for example:
 ----
 <dependency>
     <groupId>com.company</groupId>
-    <artifactId>jdbc-driver</artifactId>
+    <artifactId>my-library-extension</artifactId>
     <version>1.0</version>
     <scope>system</scope>
-    <systemPath>${project.basedir}/lib/jdbc-driver-1.0.jar</systemPath>
+    <systemPath>${project.basedir}/lib/my-library-extension.jar</systemPath>
 </dependency>
 ----
