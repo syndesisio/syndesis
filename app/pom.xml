@@ -2471,7 +2471,7 @@
       <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-starter-security</artifactId>
-        <version>2.1.4.RELEASE</version>
+        <version>2.2.2.RELEASE</version>
         <exclusions>
           <exclusion>
             <groupId>javax.xml.bind</groupId>
