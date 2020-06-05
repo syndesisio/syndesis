@@ -19,7 +19,7 @@ module.exports = function({ env, paths }) {
           ...webpackConfig.optimization,
           minimizer: [
             new TerserPlugin({
-              parallel: 1,
+              parallel: false,
             }),
           ],
         },
