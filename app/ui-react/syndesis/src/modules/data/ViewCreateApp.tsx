@@ -47,18 +47,14 @@ export const ViewCreateApp: React.FunctionComponent = () => {
     teiidName: string
   ) => {
     const tempArray = selectedSchemaNodes.slice();
-    const index = getIndex(teiidName, tempArray, 'teiidName');
+
+    // find array index with element matching teiidName and connectionName
+    const index = tempArray.findIndex(
+      element => element.teiidName === teiidName && element.connectionName === connectionName
+    );
+
     tempArray.splice(index, 1);
     setSelectedSchemaNodes(tempArray);
-  };
-
-  const getIndex = (value: string, arr: SchemaNodeInfo[], prop: string) => {
-    for (let i = 0; i < arr.length; i++) {
-      if (arr[i][prop] === value) {
-        return i;
-      }
-    }
-    return -1; // to handle the case where the value doesn't exist
   };
 
   return (

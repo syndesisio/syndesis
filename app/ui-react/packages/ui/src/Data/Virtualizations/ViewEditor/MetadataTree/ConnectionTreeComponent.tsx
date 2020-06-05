@@ -6,6 +6,8 @@ import { TreeTableNodeComponent } from '..';
 
 export interface IConnectionTreeComponentProps {
   metadataTree: Map<string, any>;
+  virtualizationName: string;
+  editedViewName: string;
   i18nLoading: string;
   i18nKababAction: string;
   i18nColumnActionTooltip: string;
@@ -19,10 +21,13 @@ export const ConnectionTreeComponent: React.FunctionComponent<IConnectionTreeCom
   props => {
     const columns = [''];
 
-    const getTableTree = (sourceInfo: any): Map<string, any> => {
+    const getTableTree = (sourceInfo: any, currentDV: boolean): Map<string, any> => {
       const treeInfo = new Map<string, any>();
 
       for (const table of sourceInfo) {
+        if(currentDV && props.editedViewName === table.name){
+          continue;
+        }
         treeInfo.set(table.name, table.columns);
       }
       return treeInfo;
@@ -32,6 +37,7 @@ export const ConnectionTreeComponent: React.FunctionComponent<IConnectionTreeCom
       const tableRows: Array<IRow | string[]> = [];
       let index = 0;
       metadataTree.forEach((value, key) => {
+        const currentDV = key === props.virtualizationName;
         const theValue = {
           cells: [
             {
@@ -51,7 +57,7 @@ export const ConnectionTreeComponent: React.FunctionComponent<IConnectionTreeCom
             {
               title: (
                 <TreeTableNodeComponent
-                  metadataTreeTables={getTableTree(value)}
+                  metadataTreeTables={getTableTree(value,currentDV)}
                   i18nKababAction={props.i18nKababAction}
                   i18nColumnActionTooltip={props.i18nColumnActionTooltip}
                   copyToDdlEditor={props.copyToDdlEditor}

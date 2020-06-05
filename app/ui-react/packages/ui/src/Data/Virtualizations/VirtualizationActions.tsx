@@ -65,7 +65,7 @@ export const VirtualizationActions: React.FunctionComponent<
     if (action.i18nToolTip) {
       return (
         <Tooltip content={i18nToolTip} position={'auto'}>
-          <>
+          <div className="pf-u-display-inline-block">
             <ButtonLink
               className={'btn'}
               data-testid={`virtualization-actions-${toValidHtmlId(dataTestId)}`}
@@ -75,7 +75,7 @@ export const VirtualizationActions: React.FunctionComponent<
               {i18nLabel}
             </ButtonLink>
             &nbsp;&nbsp;
-          </>
+          </div>
         </Tooltip>
       );
     }
