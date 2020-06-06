@@ -59,4 +59,15 @@ public class RestSourceSchema {
         return this.tables;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("\nRestSouceSchema: NAME: ");
+        sb.append(getName());
+        for( RestSourceTable rst: getTables() ) {
+            sb.append("\n >>> ");
+            sb.append(rst.toString());
+        }
+        return sb.toString();
+    }
+
 }

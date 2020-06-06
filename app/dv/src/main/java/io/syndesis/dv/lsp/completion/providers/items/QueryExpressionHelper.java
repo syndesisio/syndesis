@@ -69,6 +69,25 @@ public final class QueryExpressionHelper {
             + "AS SELECT * FROM ${2:table1_name} AS t1\nJOIN ${3:table2_name} "
             + "AS t2\n\tON t2.${4:column_a} = t1.${5:column_b}\nORDER BY t2.${5:column_b};";
 
+    /*
+     * SIMPLE UNION with single source
+     *
+     * >> SAMPLE STATEMENT
+     *
+     * CREATE VIEW Contacts (names) AS SELECT first_name FROM PostgresDB.contact
+     * UNION SELECT last_name FROM PostgresDB.contact
+     *
+     * >> DESIRED TEMPLATE FORMAT
+     *
+     * CREATE VIEW view_name ( '/'* add column definitions *'/' ) AS SELECT * FROM
+     * table1_name AS t1 JOIN ${3:table2_name} AS t2 ON t2.column_a = t1.column_b
+     * ORDER BY t2.column_b
+     *
+     */
+    public static final String CREATE_VIEW_UNION_INSERT_TEXT = "CREATE VIEW ${1:view_name} (${2:view_column}) AS\n"
+            + "SELECT ${3:source_column} FROM ${4:table1_name}\n" + "UNION\n"
+            + "SELECT ${5:source_column} FROM ${6:table2_name};";
+
     private QueryExpressionHelper() {
         // utility class
     }

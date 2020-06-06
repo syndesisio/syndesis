@@ -38,8 +38,6 @@ public class DdlTokenWalker implements SQLParserConstants {
         int line = position.getLine();
         int column = position.getCharacter();
 
-        // System.out.println("\n DdlTokenWalker.findToken at:\n Cursor = ( " + (line) +
-        // ", " + column + " )");
         if (line == 0 && column == 0) {
             return null;
         }
@@ -159,9 +157,7 @@ public class DdlTokenWalker implements SQLParserConstants {
          * Example "CREATE  VIEW abcdefg" NO ^ YES ^
          */
         public boolean isCursorFreeFromToken() {
-            return line > token.endLine
-                || isSingleChar()
-                || (line == token.endLine && column > token.endColumn + 1);
+            return line > token.endLine || isSingleChar() || (line == token.endLine && column > token.endColumn + 1);
         }
 
         public boolean isWithinLines() {
@@ -187,15 +183,15 @@ public class DdlTokenWalker implements SQLParserConstants {
         @Override
         @SuppressWarnings("PMD.InsufficientStringBufferDeclaration") // false positive
         public String toString() {
-            StringBuilder sb = new StringBuilder(200).append(token.image)
-                .append("\n\t CURSOR: (").append(this.line).append(", ").append(this.column).append(")")
-                .append("\n\t SPAN  : (").append(this.token.beginLine).append(", ").append(this.token.beginColumn + ")").append(" >>> (").append(this.token.endLine).append(", ").append(this.token.endColumn).append(") ")
-                .append("\n\t   isCursorBefore()        = ").append(isCursorBefore())
-                .append("\n\t   isCursorInside()        = ").append(isCursorInside())
-                .append("\n\t   isCursorAfter()         = ").append(isCursorAfter())
-                .append("\n\t   isCursorFreeFromToken() = ").append(isCursorFreeFromToken());
+            StringBuilder sb = new StringBuilder(500).append(token.image).append("\n\t CURSOR: (").append(this.line)
+                    .append(", ").append(this.column).append(")").append("\n\t SPAN  : (").append(this.token.beginLine)
+                    .append(", ").append(this.token.beginColumn + ")").append(" >>> (").append(this.token.endLine)
+                    .append(", ").append(this.token.endColumn).append(") ").append("\n\t   isCursorBefore()        = ")
+                    .append(isCursorBefore()).append("\n\t   isCursorInside()        = ").append(isCursorInside())
+                    .append("\n\t   isCursorAfter()         = ").append(isCursorAfter())
+                    .append("\n\t   isCursorFreeFromToken() = ").append(isCursorFreeFromToken());
 
-                return sb.toString();
+            return sb.toString();
         }
     }
 }
