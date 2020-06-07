@@ -12,7 +12,7 @@
   "devDependencies": {
     "@babel/core": "^7.1.5",
     "@patternfly/patternfly": "^2.60.1",
-    "@patternfly/react-core": "^3.122.4",
+    "@patternfly/react-core": "^3.131.4",
     "@patternfly/react-icons": "^3.14.42",
     "@patternfly/react-styles": "^3.6.26",
     "@patternfly/react-table": "^2.25.6",
