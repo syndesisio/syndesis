@@ -6,7 +6,6 @@ import {
   Nav,
   NavList,
   Page,
-  PageHeader,
   PageSidebar,
   SkipToContent,
   Toolbar,
@@ -15,6 +14,8 @@ import {
 } from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
 import { global_breakpoint_lg } from '@patternfly/react-tokens';
+import { getAvailableApps, getSolutionExplorerServer } from '@rh-uxd/integration-core';
+import { CrossNavApp, CrossNavHeader } from '@rh-uxd/integration-react';
 import * as React from 'react';
 import { HelpDropdown } from '../Shared/HelpDropdown';
 import { AppLayoutContext } from './AppLayoutContext';
@@ -23,6 +24,7 @@ import { AppTopMenu } from './AppTopMenu';
 export interface ILayoutBase {
   avatar?: string;
   pictograph: any;
+  rhiPictograph: any;
   verticalNav: any[];
   logoOnClick: () => void;
   logoutItem: {
@@ -47,6 +49,7 @@ export interface ILayoutBase {
 export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
   avatar,
   pictograph,
+  rhiPictograph,
   verticalNav,
   logoOnClick,
   showNavigation,
@@ -67,6 +70,8 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
     : onNavigationExpand;
 
   const [breadcrumb, setHasBreadcrumb] = React.useState(null);
+  const [availableApps, setHasAvailableApps] = React.useState<CrossNavApp[] | null>(null);
+  const [showLogo, setShowLogo] = React.useState(false);
   const showBreadcrumb = (b: any) => setHasBreadcrumb(b);
   const PageSkipToContent = (
     <SkipToContent href="#main-content-page-layout-default-nav">
@@ -91,9 +96,24 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
     ),
     10
   );
+
   React.useEffect(() => {
     setIsTabletView(curViewportWidth <= LARGE_VIEWPORT_BREAKPOINT);
   }, [curViewportWidth]);
+
+  if(!availableApps) {
+    getAvailableApps(
+      process.env.REACT_APP_RHMI_SERVER_URL ? process.env.REACT_APP_RHMI_SERVER_URL : getSolutionExplorerServer(),
+      undefined,
+      process.env.REACT_APP_RHMI_SERVER_URL ? 'localhost:3006' : undefined,
+      ['3scale', 'fuse-managed'],
+      !!process.env.REACT_APP_RHMI_SERVER_URL
+    ).then(apps => {
+      setHasAvailableApps(apps);
+      setShowLogo(true);
+    });
+  }
+
   return (
     <AppLayoutContext.Provider
       value={{
@@ -104,9 +124,11 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
         skipToContent={PageSkipToContent}
         onPageResize={onPageResize}
         header={
-          <PageHeader
-            logo={pictograph}
-            logoProps={{ onClick: logoOnClick }}
+          <CrossNavHeader
+            apps={availableApps}
+            currentApp={{ id: 'fuse-managed', name: 'Red Hat Fuse Online', rootUrl: window.location.href }}
+            logo={showLogo ? (availableApps && availableApps.length > 0 ? rhiPictograph : pictograph) : null} 
+            logoProps={availableApps && availableApps.length > 0 ? { onClick: logoOnClick } : {}}
             toolbar={
               <Toolbar>
                 <ToolbarGroup
