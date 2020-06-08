@@ -84,6 +84,9 @@ export const DetailsPage: React.FunctionComponent = () => {
               name={state.specification.name}
               description={state.specification.description}
               connectorTemplateId={state.connectorTemplateId}
+              basePath={state.specification.configuredProperties!.basePath}
+              host={state.specification.configuredProperties!.host}
+              address={state.specification.configuredProperties!.address}
               handleSubmit={onSubmit}
             >
               {({

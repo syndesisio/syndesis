@@ -7,6 +7,7 @@ import { UIContext } from '../../../app';
 export interface IFormValues {
   name: string;
   description: string;
+  address: string;
   host: string;
   basePath: string;
 }
@@ -104,6 +105,9 @@ export const ApiConnectorInfoForm: React.FunctionComponent<IApiConnectorInfoForm
     false
   );
 
+  const isSoapConnector =
+    props.connectorTemplateId === 'soap-connector-template';
+
   // tslint:disable: object-literal-sort-keys
   const formDefinition = {
     name: {
@@ -117,17 +121,27 @@ export const ApiConnectorInfoForm: React.FunctionComponent<IApiConnectorInfoForm
       displayName: t('shared:Description'),
       type: 'textarea',
     },
-    host: {
+  } as IFormDefinition;
+
+  if (isSoapConnector) {
+    formDefinition.address = {
+      defaultValue: '',
+      displayName: t('apiClientConnectors:address'),
+      type: 'string',
+    };
+  } else {
+    formDefinition.host = {
       defaultValue: '',
       displayName: t('apiClientConnectors:Host'),
       type: 'string',
-    },
-    basePath: {
+    };
+
+    formDefinition.basePath = {
       defaultValue: '',
       displayName: t('apiClientConnectors:basePath'),
       type: 'string',
-    },
-  } as IFormDefinition;
+    };
+  }
 
   const onUploadImage = (event: React.ChangeEvent<HTMLInputElement>): void => {
     if (event.target.files && event.target.files.length === 1) {
@@ -171,6 +185,7 @@ export const ApiConnectorInfoForm: React.FunctionComponent<IApiConnectorInfoForm
       initialValue={{
         name: props.name || '',
         description: props.description || '',
+        address: props.address || '',
         host: props.host || '',
         basePath: props.basePath || '',
       }}
