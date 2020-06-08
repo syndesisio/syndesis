@@ -19,7 +19,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.WebApplicationException;
 
@@ -51,7 +50,7 @@ public class JaegerActivityTrackingServiceTest {
         // Instead of testing an online service, lets override to use static test data.
         JaegerActivityTrackingService service = new JaegerActivityTrackingService(new JaegerQueryAPI("http://localhost:16686/api") {
             @Override
-            public ArrayList<Trace> tracesForService(String service, int lookbackDays, int limit) {
+            public List<Trace> tracesForService(String service, int lookbackDays, int limit) {
                 try {
                     String json = resource("example-jaeger-trace-result.json");
                     Traces traces = JsonUtils.reader().forType(Traces.class).readValue(json);

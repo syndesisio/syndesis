@@ -43,6 +43,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
 
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(AggregateMetadataHandler.class);
+    public static final String BODY = "body";
 
     @Override
     public boolean canHandle(StepKind kind) {
@@ -235,11 +236,11 @@ class AggregateMetadataHandler implements StepMetadataHandler {
     private static String adaptUnifiedJsonBodySpecToSingleElement(String specification) throws IOException {
         JsonSchema schema = JsonSchemaUtils.reader().readValue(specification);
         if (schema.isObjectSchema()) {
-            JsonSchema bodySchema = schema.asObjectSchema().getProperties().get("body");
+            JsonSchema bodySchema = schema.asObjectSchema().getProperties().get(BODY);
             if (bodySchema != null && bodySchema.isArraySchema()) {
                 ArraySchema.Items items = bodySchema.asArraySchema().getItems();
                 if (items.isSingleItems()) {
-                    schema.asObjectSchema().getProperties().put("body", items.asSingleItems().getSchema());
+                    schema.asObjectSchema().getProperties().put(BODY, items.asSingleItems().getSchema());
                     return JsonUtils.writer().writeValueAsString(schema);
                 }
             }
@@ -256,12 +257,12 @@ class AggregateMetadataHandler implements StepMetadataHandler {
     private static String adaptUnifiedJsonBodySpecToCollection(String specification) throws IOException {
         JsonSchema schema = JsonSchemaUtils.reader().readValue(specification);
         if (schema.isObjectSchema()) {
-            JsonSchema bodySchema = schema.asObjectSchema().getProperties().get("body");
+            JsonSchema bodySchema = schema.asObjectSchema().getProperties().get(BODY);
             if (bodySchema != null && bodySchema.isObjectSchema()) {
                 ArraySchema arraySchema = new ArraySchema();
                 arraySchema.set$schema(JSON_SCHEMA_ORG_SCHEMA);
                 arraySchema.setItemsSchema(bodySchema);
-                schema.asObjectSchema().getProperties().put("body", arraySchema);
+                schema.asObjectSchema().getProperties().put(BODY, arraySchema);
                 return JsonUtils.writer().writeValueAsString(schema);
             }
         }

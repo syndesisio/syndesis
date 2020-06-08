@@ -67,6 +67,7 @@ public class ActivityTrackingController implements BackendController, Closeable 
     static final String IDLE_THREAD_NAME = "Logs Controller [idle]";
 
     private static final Logger LOG = LoggerFactory.getLogger(ActivityTrackingController.class);
+    public static final String ACTIVITY_PODS_PATH = "/activity/pods/";
 
     private final DBI dbi;
     private final KubernetesClient client;
@@ -126,7 +127,7 @@ public class ActivityTrackingController implements BackendController, Closeable 
             LOG.info("Purging old activity logs");
 
             @SuppressWarnings("unchecked")
-            Map<String, Object> hashMap = dbGet(HashMap.class, "/activity/integrations");
+            Map<String, Object> hashMap = dbGet(Map.class, "/activity/integrations");
             if( hashMap!=null ) {
                 for (String integrationId : hashMap.keySet()) {
                     String integrationPath = "/activity/exchanges/" + integrationId + "/%";
@@ -272,11 +273,11 @@ public class ActivityTrackingController implements BackendController, Closeable 
             }
 
             @SuppressWarnings("unchecked")
-            Map<String, Object> pods = dbGet(HashMap.class, "/activity/pods"); //NOPMD
+            Map<String, Object> pods = dbGet(HashMap.class, "ACTIVITY_PODS_PATH"); //NOPMD
             if (pods != null) {
                 pods.keySet().removeAll(podHandlers.keySet());
                 for (String o : pods.keySet()) {
-                    jsondb.delete("/activity/pods/" + o);
+                    jsondb.delete(ACTIVITY_PODS_PATH + o);
                     LOG.info("Pod state removed from db: {}", o);
                 }
             }
@@ -313,15 +314,15 @@ public class ActivityTrackingController implements BackendController, Closeable 
     }
 
     public void deletePodLogState(String podName) {
-        jsondb.delete("/activity/pods/" + podName);
+        jsondb.delete(ACTIVITY_PODS_PATH + podName);
     }
 
     public void setPodLogState(String podName, PodLogState state) throws IOException {
-        jsondb.set("/activity/pods/" + podName, JsonUtils.writer().writeValueAsBytes(state));
+        jsondb.set(ACTIVITY_PODS_PATH + podName, JsonUtils.writer().writeValueAsBytes(state));
     }
 
     public PodLogState getPodLogState(String podName) throws IOException {
-        return dbGet(PodLogState.class, "/activity/pods/" + podName);
+        return dbGet(PodLogState.class, ACTIVITY_PODS_PATH + podName);
     }
 
     private <T> T dbGet(Class<T> type, String path) throws IOException {

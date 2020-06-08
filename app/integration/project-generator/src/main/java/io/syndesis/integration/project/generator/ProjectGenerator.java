@@ -324,15 +324,16 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
             addTarEntry(tos, "src/main/resources/loader.properties", generateExtensionLoader(extensions));
 
             for (String extensionId : extensions) {
-                addTarEntry(
-                    tos,
-                    "extensions/" + Names.sanitize(extensionId) + ".jar",
-                    IOUtils.toByteArray(
-                        resourceManager.loadExtensionBLOB(extensionId).orElseThrow(
-                            () -> new IllegalStateException("No extension blob for extension with id:" + extensionId)
-                        )
-                    )
-                );
+                try (InputStream is =
+                         resourceManager.loadExtensionBLOB(extensionId).orElseThrow(
+                             () -> new IllegalStateException("No extension blob for extension with id:" + extensionId)
+                         )) {
+                    addTarEntry(
+                        tos,
+                        "extensions/" + Names.sanitize(extensionId) + ".jar",
+                        IOUtils.toByteArray(is)
+                    );
+                }
             }
         }
     }

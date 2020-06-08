@@ -168,10 +168,9 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
         try (Scanner lineScanner = new Scanner(template)) {
             while(lineScanner.hasNextLine()) {
                 String line = lineScanner.nextLine();
-                Scanner scanner = new Scanner(line);
-                scanner.useDelimiter(" ");
+                try(Scanner scanner = new Scanner(line)) {
+                     scanner.useDelimiter(" ");
 
-                try {
                     String completeToken = null;
                     while(scanner.hasNext()) {
                         String token = scanner.next();
@@ -216,8 +215,6 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
                         //
                         throw new TemplateProcessingException("the template is invalid due to an incomplete symbol");
                     }
-                } finally {
-                    scanner.close();
                 }
             }
 

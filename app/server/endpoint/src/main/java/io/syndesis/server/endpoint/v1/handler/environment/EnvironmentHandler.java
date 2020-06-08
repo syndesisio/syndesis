@@ -58,6 +58,7 @@ public class EnvironmentHandler extends BaseHandler {
     private static final Logger LOG = LoggerFactory.getLogger(EnvironmentHandler.class);
     private static final Pattern UNSAFE_CHARS = Pattern.compile("[<>\"#%{}|\\\\^~\\[\\]`;/?:@=&]");
     private static final String NAME_PROPERTY = "name";
+    public static final String ENVIRONMENT = "environment";
 
     public EnvironmentHandler(DataManager dataMgr) {
         super(dataMgr);
@@ -105,7 +106,7 @@ public class EnvironmentHandler extends BaseHandler {
     @POST
     @Path("{env}")
     public void addNewEnvironment(@NotNull @PathParam("env") @Parameter(required = true) String environment) {
-        validateEnvironment("environment", environment);
+        validateEnvironment(ENVIRONMENT, environment);
 
         // look for duplicate environment name
         if (fetchEnvironment(environment).isPresent()) {
@@ -122,7 +123,7 @@ public class EnvironmentHandler extends BaseHandler {
     @Path("{env}")
     public void deleteEnvironment(@NotNull @PathParam("env") @Parameter(required = true) String environment) {
 
-        validateEnvironment("environment", environment);
+        validateEnvironment(ENVIRONMENT, environment);
         final DataManager dataManager = getDataManager();
         final String envId = getEnvironment(environment).getId().orElse(null);
 
@@ -152,7 +153,7 @@ public class EnvironmentHandler extends BaseHandler {
     @Consumes(MediaType.APPLICATION_JSON)
     public void renameEnvironment(@NotNull @PathParam("env") @Parameter(required = true) String environment, @NotNull @Parameter(required = true) String newEnvironment) {
 
-        validateEnvironment("environment", environment);
+        validateEnvironment(ENVIRONMENT, environment);
         validateEnvironment("newEnvironment", newEnvironment);
 
         // ignore request if names are the same
@@ -193,7 +194,7 @@ public class EnvironmentHandler extends BaseHandler {
     public void deleteReleaseTag(@NotNull @PathParam("id") @Parameter(required = true) String integrationId, @NotNull @PathParam("env") @Parameter(required = true) String environment) {
 
         final Integration integration = getIntegration(integrationId);
-        validateEnvironment("environment", environment);
+        validateEnvironment(ENVIRONMENT, environment);
 
         final Environment env = getEnvironment(environment);
 

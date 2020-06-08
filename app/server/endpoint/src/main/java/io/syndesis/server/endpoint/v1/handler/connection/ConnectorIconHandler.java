@@ -84,43 +84,43 @@ public final class ConnectorIconHandler extends BaseHandler {
 
         try {
             InputPart filePart = dataInput.getParts().iterator().next();
-            InputStream result = filePart.getBody(InputStream.class, null);
+            try (InputStream result = filePart.getBody(InputStream.class, null)) {
+                if (result == null) {
+                    throw new IllegalArgumentException("Can't find a valid 'icon' part in the multipart request");
+                }
 
-            if (result == null) {
-                throw new IllegalArgumentException("Can't find a valid 'icon' part in the multipart request");
-            }
-
-            try (BufferedInputStream iconStream = new BufferedInputStream(result)) {
-                MediaType mediaType = filePart.getMediaType();
-                if (!mediaType.getType().equals("image")) {
-                    // URLConnection.guessContentTypeFromStream resets the stream after inspecting the media type so
-                    // can continue to be used, rather than being consumed.
-                    String guessedMediaType = URLConnection.guessContentTypeFromStream(iconStream);
-                    if (!guessedMediaType.startsWith("image/")) {
-                        throw new IllegalArgumentException("Invalid file contents for an image");
+                try (BufferedInputStream iconStream = new BufferedInputStream(result)) {
+                    MediaType mediaType = filePart.getMediaType();
+                    if (!mediaType.getType().equals("image")) {
+                        // URLConnection.guessContentTypeFromStream resets the stream after inspecting the media type so
+                        // can continue to be used, rather than being consumed.
+                        String guessedMediaType = URLConnection.guessContentTypeFromStream(iconStream);
+                        if (!guessedMediaType.startsWith("image/")) {
+                            throw new IllegalArgumentException("Invalid file contents for an image");
+                        }
+                        mediaType = MediaType.valueOf(guessedMediaType);
                     }
-                    mediaType = MediaType.valueOf(guessedMediaType);
+
+                    Icon.Builder iconBuilder = new Icon.Builder()
+                                                   .mediaType(mediaType.toString());
+
+                    Icon icon;
+                    String connectorIcon = connector.getIcon();
+                    if (connectorIcon != null && connectorIcon.startsWith("db:")) {
+                        String connectorIconId = connectorIcon.substring(3);
+                        iconBuilder.id(connectorIconId);
+                        icon = iconBuilder.build();
+                        getDataManager().update(icon);
+                    } else {
+                        icon = getDataManager().create(iconBuilder.build());
+                    }
+                    //write icon to (Sql)FileStore
+                    iconDao.write(icon.getId().get(), iconStream);
+
+                    Connector updatedConnector = new Connector.Builder().createFrom(connector).icon("db:" + icon.getId().get()).build();
+                    getDataManager().update(updatedConnector);
+                    return updatedConnector;
                 }
-
-                Icon.Builder iconBuilder = new Icon.Builder()
-                    .mediaType(mediaType.toString());
-
-                Icon icon;
-                String connectorIcon = connector.getIcon();
-                if (connectorIcon != null && connectorIcon.startsWith("db:")) {
-                    String connectorIconId = connectorIcon.substring(3);
-                    iconBuilder.id(connectorIconId);
-                    icon = iconBuilder.build();
-                    getDataManager().update(icon);
-                } else {
-                    icon = getDataManager().create(iconBuilder.build());
-                }
-                //write icon to (Sql)FileStore
-                iconDao.write(icon.getId().get(), iconStream);
-
-                Connector updatedConnector = new Connector.Builder().createFrom(connector).icon("db:" + icon.getId().get()).build();
-                getDataManager().update(updatedConnector);
-                return updatedConnector;
             }
         } catch (IOException e) {
             throw new IllegalArgumentException("Error while reading multipart request", e);

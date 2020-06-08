@@ -38,6 +38,8 @@ import org.apache.camel.util.ObjectHelper;
 
 public final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieval {
 
+    public static final String OBJECT_TYPE = "objectType";
+
     /**
      * TODO: use local extension, remove when switching to camel 2.22.x
      */
@@ -73,9 +75,9 @@ public final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieva
             // overriding properties with the same name provided by the user.
             //
             if (ObjectHelper.equal("io.syndesis:servicenow-action-retrieve-record", actionId)) {
-                props.put("objectType", ServiceNowConstants.RESOURCE_TABLE);
+                props.put(OBJECT_TYPE, ServiceNowConstants.RESOURCE_TABLE);
             } else if (ObjectHelper.equal("io.syndesis:servicenow-action-create-record", actionId)) {
-                props.put("objectType", ServiceNowConstants.RESOURCE_IMPORT);
+                props.put(OBJECT_TYPE, ServiceNowConstants.RESOURCE_IMPORT);
             } else {
                 throw new UnsupportedOperationException("Unsupported action: " + actionId);
             }
@@ -84,7 +86,7 @@ public final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieva
         }
 
         Map<String, Object> props = new HashMap<>(properties);
-        props.put("objectType", ServiceNowConstants.RESOURCE_TABLE);
+        props.put(OBJECT_TYPE, ServiceNowConstants.RESOURCE_TABLE);
         props.put("objectName", table);
         props.put("metaType", "definition");
 
@@ -94,7 +96,7 @@ public final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieva
     @Override
     protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
         if (metadata.getPayload() != null) {
-            final String objectType = ConnectorOptions.extractOption(properties, "objectType");
+            final String objectType = ConnectorOptions.extractOption(properties, OBJECT_TYPE);
             final String metaType = ConnectorOptions.extractOption(properties, "metaType");
 
             if (ServiceNowConstants.RESOURCE_TABLE.equalsIgnoreCase(objectType) && "definition".equals(metaType)) {

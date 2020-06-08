@@ -15,16 +15,16 @@
  */
 package io.syndesis.server.jsondb.impl.expr;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+
 import static io.syndesis.server.jsondb.impl.JsonRecordSupport.FALSE_VALUE_PREFIX;
 import static io.syndesis.server.jsondb.impl.JsonRecordSupport.NULL_VALUE_PREFIX;
 import static io.syndesis.server.jsondb.impl.JsonRecordSupport.STRING_VALUE_PREFIX;
 import static io.syndesis.server.jsondb.impl.JsonRecordSupport.TRUE_VALUE_PREFIX;
 import static io.syndesis.server.jsondb.impl.JsonRecordSupport.toLexSortableString;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
 import org.skife.jdbi.v2.Query;
 
@@ -36,7 +36,7 @@ class LiteralSqlExpressionBuilder extends SqlExpressionBuilder {
     }
 
     @Override
-    public void build(StringBuilder sql, ArrayList<Consumer<Query<Map<String, Object>>>> binds, AtomicInteger bindCounter) {
+    public void build(StringBuilder sql, List<Consumer<Query<Map<String, Object>>>> binds, AtomicInteger bindCounter) {
         int b1 = bindCounter.incrementAndGet();
         sql.append(":f").append(b1);
         binds.add(query -> {

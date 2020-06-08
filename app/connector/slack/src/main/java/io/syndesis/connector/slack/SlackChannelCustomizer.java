@@ -24,6 +24,8 @@ import org.apache.camel.Message;
 
 public class SlackChannelCustomizer implements ComponentProxyCustomizer {
 
+    public static final String CHANNEL = "channel";
+
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         component.setBeforeProducer(SlackChannelCustomizer::beforeProducer);
@@ -32,19 +34,19 @@ public class SlackChannelCustomizer implements ComponentProxyCustomizer {
 
     private static void sanitizeUserOrChannel(Map<String, Object> options) {
         String username = ConnectorOptions.extractOption(options, "receiver");
-        String channel = ConnectorOptions.popOption(options, "channel");
+        String channel = ConnectorOptions.popOption(options, CHANNEL);
 
         if (channel != null) {
             if (channel.trim().charAt(0) == '#') {
-                options.put("channel", channel.trim());
+                options.put(CHANNEL, channel.trim());
             } else {
-                options.put("channel", "#" + channel.trim());
+                options.put(CHANNEL, "#" + channel.trim());
             }
         } else if (username != null) {
             if (username.trim().charAt(0) == '@') {
-                options.put("channel", username.trim());
+                options.put(CHANNEL, username.trim());
             } else {
-                options.put("channel", "@" + username.trim());
+                options.put(CHANNEL, "@" + username.trim());
             }
         }
     }

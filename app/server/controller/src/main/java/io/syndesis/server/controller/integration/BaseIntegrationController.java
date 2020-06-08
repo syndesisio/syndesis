@@ -174,7 +174,7 @@ public abstract class BaseIntegrationController implements BackendController {
         IntegrationDeployment reconciled = reconcileDeployment(integrationDeployment);
         IntegrationDeploymentState desiredState = reconciled.getTargetState();
         IntegrationDeploymentState currentState = reconciled.getCurrentState();
-        if (currentState != IntegrationDeploymentState.Error && currentState != desiredState) {
+        if (!currentState.equals(IntegrationDeploymentState.Error) && !currentState.equals(desiredState)) {
                 reconciled.getId().ifPresent(integrationDeploymentId -> {
                     StateChangeHandler statusChangeHandler = handlers.get(desiredState);
                     if (statusChangeHandler != null) {

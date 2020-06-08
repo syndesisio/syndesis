@@ -33,6 +33,7 @@ public class DebeziumConsumerCustomizer implements ComponentProxyCustomizer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DebeziumConsumerCustomizer.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
+    public static final String DEBEZIUM_OPERATION = "debezium.OPERATION";
 
     // Debezium is based on Kafka connector
     private final KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer();
@@ -48,7 +49,7 @@ public class DebeziumConsumerCustomizer implements ComponentProxyCustomizer {
         if (body == null) {
             // we have a tombstone
             LOGGER.debug("Tombstone found with kafka key {}", exchange.getMessage().getHeader("kafka.KEY"));
-            exchange.getMessage().setHeader("debezium.OPERATION", "TOMBSTONE");
+            exchange.getMessage().setHeader(DEBEZIUM_OPERATION, "TOMBSTONE");
             return;
         }
         final JsonNode root = MAPPER.readTree(body);
@@ -57,13 +58,13 @@ public class DebeziumConsumerCustomizer implements ComponentProxyCustomizer {
         final String operation = root.get("op").asText();
 
         if ("c".equals(operation)) {
-            exchange.getMessage().setHeader("debezium.OPERATION", "CREATE");
+            exchange.getMessage().setHeader(DEBEZIUM_OPERATION, "CREATE");
             exchange.getMessage().setBody(after.toString());
         } else if ("d".equals(operation)) {
-            exchange.getMessage().setHeader("debezium.OPERATION", "DELETE");
+            exchange.getMessage().setHeader(DEBEZIUM_OPERATION, "DELETE");
             exchange.getMessage().setBody(before.toString());
         } else if ("u".equals(operation)) {
-            exchange.getMessage().setHeader("debezium.OPERATION", "UPDATE");
+            exchange.getMessage().setHeader(DEBEZIUM_OPERATION, "UPDATE");
             exchange.getMessage().setBody(after.toString());
             exchange.getMessage().setHeader("debezium.BEFORE", before.toString());
         } else {

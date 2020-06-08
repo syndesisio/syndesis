@@ -33,6 +33,7 @@ import io.syndesis.connector.support.util.ConnectorOptions;
 public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExtension implements EMailConstants {
 
     protected static final long DEFAULT_CONNECTION_TIMEOUT = 5000L;
+    public static final String MAIL_PREFIX = "mail.";
 
     public AbstractEMailVerifier(String defaultScheme) {
         super(defaultScheme);
@@ -62,8 +63,8 @@ public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExte
         switch (secureType) {
             case STARTTLS:
                 Properties properties = new Properties();
-                properties.put("mail." + protocol + ".starttls.enable", "true");
-                properties.put("mail." + protocol + ".starttls.required", "true");
+                properties.put(MAIL_PREFIX + protocol + ".starttls.enable", "true");
+                properties.put(MAIL_PREFIX + protocol + ".starttls.required", "true");
                 parameters.put(ADDITIONAL_MAIL_PROPERTIES, properties);
                 break;
             case SSL_TLS:
@@ -90,10 +91,10 @@ public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExte
         Protocol plainProtocol = protocol.toPlainProtocol();
         Protocol secureProtocol = protocol.toSecureProtocol();
 
-        setJavaMailProperty(configuration, "mail." + plainProtocol.id() + ".connectiontimeout", timeoutValue);
-        setJavaMailProperty(configuration, "mail." + plainProtocol.id() + ".timeout", timeoutValue);
-        setJavaMailProperty(configuration, "mail." + secureProtocol.id() + ".connectiontimeout", timeoutValue);
-        setJavaMailProperty(configuration, "mail." + secureProtocol.id() + ".timeout", timeoutValue);
+        setJavaMailProperty(configuration, MAIL_PREFIX + plainProtocol.id() + ".connectiontimeout", timeoutValue);
+        setJavaMailProperty(configuration, MAIL_PREFIX + plainProtocol.id() + ".timeout", timeoutValue);
+        setJavaMailProperty(configuration, MAIL_PREFIX + secureProtocol.id() + ".connectiontimeout", timeoutValue);
+        setJavaMailProperty(configuration, MAIL_PREFIX + secureProtocol.id() + ".timeout", timeoutValue);
     }
 
     protected MailConfiguration createConfiguration(Map<String, Object> parameters) {

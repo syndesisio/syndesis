@@ -55,6 +55,8 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     private static final String VALUE_INTEGRATION = "integration";
 
     public static final String OPERATOR_TOPK = "topk";
+    public static final String MIN = "min";
+    public static final String MAX = "max";
 
     private final String serviceName;
     private final String integrationIdLabel;
@@ -117,10 +119,10 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         final Map<String, Instant> lastProcessedTimeMap = Stream.concat(lastCompletedTimeMap.entrySet().stream(), lastFailedTimeMap.entrySet().stream())
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, PrometheusMetricsProviderImpl::max));
 
-        final Optional<Instant> startTime = getAggregateMetricValue(integrationId, METRIC_START_TIMESTAMP, Instant.class, "min");
+        final Optional<Instant> startTime = getAggregateMetricValue(integrationId, METRIC_START_TIMESTAMP, Instant.class, MIN);
 
-        final Optional<Instant> lastCompletedTime = getAggregateMetricValue(integrationId, METRIC_COMPLETED_TIMESTAMP, Instant.class, "max");
-        final Optional<Instant> lastFailureTime = getAggregateMetricValue(integrationId, METRIC_FAILURE_TIMESTAMP, Instant.class, "max");
+        final Optional<Instant> lastCompletedTime = getAggregateMetricValue(integrationId, METRIC_COMPLETED_TIMESTAMP, Instant.class, MAX);
+        final Optional<Instant> lastFailureTime = getAggregateMetricValue(integrationId, METRIC_FAILURE_TIMESTAMP, Instant.class, MAX);
         final Instant lastProcessedTime = max(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
 
         return createIntegrationMetricsSummary(totalMessagesMap, failedMessagesMap,
@@ -186,8 +188,8 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         }
 
         // compute last processed time
-        final Optional<Instant> lastCompletedTime = getAggregateMetricValue(METRIC_COMPLETED_TIMESTAMP, Instant.class, "max");
-        final Optional<Instant> lastFailureTime = getAggregateMetricValue(METRIC_FAILURE_TIMESTAMP, Instant.class, "max");
+        final Optional<Instant> lastCompletedTime = getAggregateMetricValue(METRIC_COMPLETED_TIMESTAMP, Instant.class, MAX);
+        final Optional<Instant> lastFailureTime = getAggregateMetricValue(METRIC_FAILURE_TIMESTAMP, Instant.class, MAX);
         final Optional<Instant> lastProcessedTime = Optional.ofNullable(max(lastCompletedTime.orElse(null), lastFailureTime.orElse(null)));
 
         // get top 5 integrations by total messages
