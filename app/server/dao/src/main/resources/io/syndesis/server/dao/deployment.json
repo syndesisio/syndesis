@@ -1,25 +1,6 @@
 [
   {
     "data": {
-      "configuredProperties": {
-        "password": "@ENC:POSTGRESQL_SAMPLEDB_PASSWORD@",
-        "schema": "sampledb",
-        "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
-        "user": "sampledb"
-      },
-      "connectorId": "sql",
-      "description": "Connection to SampleDB",
-      "icon": "assets:sql.svg",
-      "id": "5",
-      "name": "PostgresDB",
-      "tags": [
-        "sampledb"
-      ]
-    },
-    "kind": "connection"
-  },
-  {
-    "data": {
       "configuredProperties": {},
       "connectorId": "webhook",
       "description": "Create direct connections with external systems through Webhooks",
