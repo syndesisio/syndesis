@@ -21,26 +21,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.teiid.adminapi.impl.ModelMetaData;
-import org.teiid.adminapi.impl.VDBMetaData;
-import org.teiid.metadata.MetadataFactory;
-import org.teiid.metadata.Schema;
-import org.teiid.metadata.Table;
-import org.teiid.query.metadata.SystemMetadata;
-import org.teiid.query.parser.QueryParser;
-
 import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
 import io.syndesis.dv.metadata.MetadataInstance.ValidationResult;
 import io.syndesis.dv.metadata.TeiidDataSource;
@@ -50,6 +30,25 @@ import io.syndesis.dv.model.TablePrivileges;
 import io.syndesis.dv.model.TablePrivileges.Privilege;
 import io.syndesis.dv.model.ViewDefinition;
 import io.syndesis.dv.server.endpoint.ServiceVdbGenerator.SchemaFinder;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.teiid.adminapi.impl.ModelMetaData;
+import org.teiid.adminapi.impl.VDBMetaData;
+import org.teiid.metadata.Column;
+import org.teiid.metadata.MetadataFactory;
+import org.teiid.metadata.Schema;
+import org.teiid.metadata.Table;
+import org.teiid.query.metadata.SystemMetadata;
+import org.teiid.query.parser.QueryParser;
 
 @SuppressWarnings({ "javadoc", "nls" })
 public class ServiceVdbGeneratorTest {
@@ -587,7 +586,22 @@ public class ServiceVdbGeneratorTest {
                 "SELECT 1 as col;", vdbGenerator.getODataViewDdl(view));
     }
 
+    @Test
+    public void shouldGenerateVirtualSource() {
+        ViewDefinition view = new ViewDefinition("x", "y");
+        view.addSourcePath("schema=$dv/view=v");
+        view.setComplete(true);
 
+        ServiceVdbGenerator vdbGenerator = new ServiceVdbGenerator(schemaFinder());
+
+        assertEquals("CREATE VIEW y (\n" +
+                "  col\n" +
+                ") AS \n" +
+                "  SELECT \n" +
+                "    t1.col\n" +
+                "  FROM \n" +
+                "    v AS t1", vdbGenerator.getODataViewDdl(view));
+    }
     protected ServiceVdbGenerator.SchemaFinder schemaFinder() {
         return new SchemaFinder() {
 
@@ -597,8 +611,23 @@ public class ServiceVdbGeneratorTest {
             }
 
             @Override
-            public Schema findSchema(String connectionName) {
+            public Schema findConnectionSchema(String connectionName) {
                 return schemas.get(connectionName);
+            }
+
+            @Override
+            public Schema findVirtualSchema(String virtualization) {
+                Schema dummy = new Schema();
+                dummy.setPhysical(false);
+                Table table = new Table();
+                table.setName("v");
+                table.setVirtual(true);
+                Column c = new Column();
+                c.setName("col");
+                c.setDatatype(SystemMetadata.getInstance().getRuntimeTypeMap().get("string"));
+                table.addColumn(c);
+                dummy.addTable(table);
+                return dummy;
             }
 
         };

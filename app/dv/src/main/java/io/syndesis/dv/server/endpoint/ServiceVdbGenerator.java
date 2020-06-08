@@ -15,6 +15,15 @@
  */
 package io.syndesis.dv.server.endpoint;
 
+import io.syndesis.dv.KException;
+import io.syndesis.dv.StringConstants;
+import io.syndesis.dv.metadata.TeiidDataSource;
+import io.syndesis.dv.metadata.TeiidVdb;
+import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
+import io.syndesis.dv.model.TablePrivileges;
+import io.syndesis.dv.model.TablePrivileges.Privilege;
+import io.syndesis.dv.model.ViewDefinition;
+import io.syndesis.dv.utils.PathUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -25,7 +34,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
 import org.springframework.data.util.Pair;
 import org.teiid.adminapi.Admin.SchemaObjectType;
 import org.teiid.adminapi.DataPolicy.ResourceType;
@@ -44,16 +52,6 @@ import org.teiid.query.metadata.DDLConstants;
 import org.teiid.query.metadata.DDLStringVisitor;
 import org.teiid.query.sql.visitor.SQLStringVisitor;
 
-import io.syndesis.dv.KException;
-import io.syndesis.dv.StringConstants;
-import io.syndesis.dv.metadata.TeiidDataSource;
-import io.syndesis.dv.metadata.TeiidVdb;
-import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
-import io.syndesis.dv.model.TablePrivileges;
-import io.syndesis.dv.model.TablePrivileges.Privilege;
-import io.syndesis.dv.model.ViewDefinition;
-import io.syndesis.dv.utils.PathUtils;
-
 /**
  * This class provides methods to generate data service vdbs containing a view model
  * and one or more source models
@@ -63,6 +61,8 @@ import io.syndesis.dv.utils.PathUtils;
  */
 @SuppressWarnings("PMD.GodClass")
 public final class ServiceVdbGenerator {
+
+    private static final String VIRTUALIZATION_PLACEHOLDER = "$dv";
 
     public static final String ANY_AUTHENTICATED = "any authenticated"; //$NON-NLS-1$
 
@@ -474,18 +474,23 @@ public final class ServiceVdbGenerator {
         for(String path : sourceTablePaths) {
             List<Pair<String, String>> options = PathUtils.getOptions(path);
 
-            //format is connection=x/table=y
-            //NOTE: will eventually need to accomodate other object types, like
+            //format is schema=x/table=y
+            //NOTE: will eventually need to accommodate other object types, like
             //procedures
 
-            String connectionName = options.get(0).getSecond();
+            String schema = options.get(0).getSecond();
 
             // Find schema model based on the connection name (i.e. connection=pgConn)
-            final Schema schemaModel = finder.findSchema(connectionName);
+            Schema schemaModel = finder.findConnectionSchema(schema);
 
             // Get the tables from the schema and match them with the table name
             if ( schemaModel == null ) {
-                return null;
+                if (schema.equals(VIRTUALIZATION_PLACEHOLDER)) {
+                    schemaModel = finder.findVirtualSchema(viewDefinition.getDataVirtualizationName());
+                }
+                if (schemaModel == null) {
+                    return null;
+                }
             }
             String tableName = options.get(1).getSecond();
 
@@ -501,9 +506,11 @@ public final class ServiceVdbGenerator {
     }
 
     public interface SchemaFinder {
-        Schema findSchema(String connectionName);
+        Schema findConnectionSchema(String connectionName);
 
         TeiidDataSource findTeiidDatasource(String connectionName);
+
+        Schema findVirtualSchema(String virtualization);
     }
 
     /*
@@ -527,7 +534,11 @@ public final class ServiceVdbGenerator {
             this.table = table;
             this.name = SQLStringVisitor.escapeSinglePart(table.getName());
             Schema schemaModel = table.getParent();
-            this.fqname = SQLStringVisitor.escapeSinglePart(schemaModel.getName()) + StringConstants.DOT + this.name;
+            if (schemaModel.isPhysical()) {
+                this.fqname = SQLStringVisitor.escapeSinglePart(schemaModel.getName()) + StringConstants.DOT + this.name;
+            } else {
+                this.fqname = this.name;
+            }
             createColumnInfos(table);
             constraint = table.getPrimaryKey();
             if (constraint == null) {

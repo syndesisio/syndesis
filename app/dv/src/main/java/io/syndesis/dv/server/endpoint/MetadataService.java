@@ -15,40 +15,7 @@
  */
 package io.syndesis.dv.server.endpoint;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.locks.Lock;
-
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.ConcurrencyFailureException;
-import org.springframework.data.util.Pair;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-import org.teiid.adminapi.Model;
-import org.teiid.adminapi.VDB.Status;
-import org.teiid.adminapi.impl.ModelMetaData;
-import org.teiid.adminapi.impl.VDBImportMetadata;
-import org.teiid.adminapi.impl.VDBMetaData;
-import org.teiid.deployers.CompositeVDB;
-import org.teiid.deployers.VDBLifeCycleListener;
-import org.teiid.metadata.AbstractMetadataRecord;
-import org.teiid.metadata.Schema;
-
 import com.google.common.util.concurrent.Striped;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -71,6 +38,35 @@ import io.syndesis.dv.server.Messages;
 import io.syndesis.dv.server.V1Constants;
 import io.syndesis.dv.utils.PathUtils;
 import io.syndesis.dv.utils.StringUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.locks.Lock;
+import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.ConcurrencyFailureException;
+import org.springframework.data.util.Pair;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
+import org.teiid.adminapi.Model;
+import org.teiid.adminapi.VDB.Status;
+import org.teiid.adminapi.impl.ModelMetaData;
+import org.teiid.adminapi.impl.VDBImportMetadata;
+import org.teiid.adminapi.impl.VDBMetaData;
+import org.teiid.deployers.CompositeVDB;
+import org.teiid.deployers.VDBLifeCycleListener;
+import org.teiid.metadata.AbstractMetadataRecord;
+import org.teiid.metadata.Schema;
 /**
  * A REST service for obtaining information from a metadata instance.
  */
@@ -789,7 +785,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
     }
 
     @Override
-    public Schema findSchema(String connectionName) {
+    public Schema findConnectionSchema(String connectionName) {
         TeiidDataSource tds = findTeiidDatasource(connectionName);
         if (tds == null) {
             return null;
@@ -804,5 +800,14 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
 
     public Collection<? extends TeiidDataSource> getTeiidDatasources() {
         return getMetadataInstance().getDataSources();
+    }
+
+    @Override
+    public Schema findVirtualSchema(String virtualization) {
+        TeiidVdb vdb = updatePreviewVdb(virtualization);
+        if (vdb == null) {
+            return null;
+        }
+        return vdb.getSchema(virtualization);
     }
 }

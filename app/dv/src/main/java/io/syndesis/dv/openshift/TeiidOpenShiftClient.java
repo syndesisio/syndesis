@@ -19,11 +19,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.fabric8.kubernetes.api.builds.Builds;
 import io.fabric8.kubernetes.api.model.ContainerPort;
 import io.fabric8.kubernetes.api.model.ContainerStateRunning;
@@ -1561,7 +1559,13 @@ public class TeiidOpenShiftClient {
         }
 
         try {
-            // delete builds
+            // delete build pods and builds
+            BuildList builds = client.builds().inNamespace(namespace).withLabel("application", openshiftName).list();
+            if (builds != null) {
+                for (Build build : builds.getItems()) {
+                    client.pods().inNamespace(namespace).withLabel("openshift.io/build.name", build.getMetadata().getName()).delete();
+                }
+            }
             client.builds().inNamespace(namespace).withLabel("application", openshiftName).delete();
         } catch (KubernetesClientException e ) {
             error(openshiftName, e.getMessage());
