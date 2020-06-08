@@ -3,6 +3,7 @@
   "apiConnectorDetailsPageTitle": "Connector Details",
   "apiConnectorsPageDescription": "<strong>$t(shared:project.name)</strong> creates an API client connector when you upload a valid OpenAPI or WSDL document that describes the API you want to connect to.",
   "apiConnectorsPageTitle": "API Client Connectors",
+  "address": "Address",
   "basePath": "Base URL",
   "ConnectorIcon": "Connector Icon",
   "CreateApiConnector": "Create API Connector",
