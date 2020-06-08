@@ -8,7 +8,7 @@ Syndesis:
     DemoData: false
     Addons:
         Jaeger:
-            Enabled: true
+            Enabled: false
             SamplerType: "const"
             SamplerParam: "0"
             ImageAgent: "jaegertracing/jaeger-agent:1.13"
