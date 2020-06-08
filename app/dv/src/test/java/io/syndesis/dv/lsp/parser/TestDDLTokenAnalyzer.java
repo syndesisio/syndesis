@@ -29,82 +29,69 @@ public class TestDDLTokenAnalyzer {
     public void printTokens(List<Token> list, String headerMessage) {
         System.out.println(headerMessage);
         for (Token token : list) {
-            System.out.println(" tkn ==>   " + token.image
-                    + "\t @ ( " + 
-                    token.beginLine + ", " + token.beginColumn + ")");
+            System.out.println(
+                    " tkn ==>   " + token.image + "\t @ ( " + token.beginLine + ", " + token.beginColumn + ")");
         }
     }
+
     @Test
     public void testForeignTable() {
 
-        String stmt = "CREATE FOREIGN TABLE G1(\n" +
-                        "e1 integer primary key,\n" +
-                        "e4 decimal(12,3) default 12.2 options (searchable 'unsearchable'),\n" +
-                        "e5 integer auto_increment INDEX OPTIONS (UUID 'uuid', NAMEINSOURCE 'nis', SELECTABLE 'NO'),\n" +
-                        "e6 varchar index default 'hello')\n" +
-                        "OPTIONS (CARDINALITY 12, UUID 'uuid2',  UPDATABLE 'true', FOO 'BAR', ANNOTATION 'Test Table')";
-        
+        String stmt = "CREATE FOREIGN TABLE G1(\n" + "e1 integer primary key,\n"
+                + "e4 decimal(12,3) default 12.2 options (searchable 'unsearchable'),\n"
+                + "e5 integer auto_increment INDEX OPTIONS (UUID 'uuid', NAMEINSOURCE 'nis', SELECTABLE 'NO'),\n"
+                + "e6 varchar index default 'hello')\n"
+                + "OPTIONS (CARDINALITY 12, UUID 'uuid2',  UPDATABLE 'true', FOO 'BAR', ANNOTATION 'Test Table')";
 
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
-        printTokens(analyzer.getTokens(), "testForeignTable = nTokens  " + analyzer.getTokens().size());
-        
+
         assertEquals(StatementType.CREATE_FOREIGN_TABLE_TYPE, analyzer.getStatementType());
         assertEquals(64, analyzer.getTokens().size());
     }
-    
+
     @Test
     public void testCreateVirtualView() {
 
-        String stmt = "CREATE VIRTUAL VIEW winelist(\n" +
-                        "e1 integer primary key,\n" +
-                        "e2 varchar(10) unique,\n" +
-                        "e3 date not null unique,\n" +
-                        "e4 decimal(12,3) default 12.2 options (searchable 'unsearchable'),\n" +
-                        "e5 integer auto_increment INDEX OPTIONS (UUID 'uuid', SELECTABLE 'NO'),\n" +
-                        "e6 varchar index default 'hello')\n" +
-                        "OPTIONS (CARDINALITY 12, UUID 'uuid2',  UPDATABLE 'true', FOO 'BAR', ANNOTATION 'Test Table')";
-        
+        String stmt = "CREATE VIRTUAL VIEW winelist(\n" + "e1 integer primary key,\n" + "e2 varchar(10) unique,\n"
+                + "e3 date not null unique,\n" + "e4 decimal(12,3) default 12.2 options (searchable 'unsearchable'),\n"
+                + "e5 integer auto_increment INDEX OPTIONS (UUID 'uuid', SELECTABLE 'NO'),\n"
+                + "e6 varchar index default 'hello')\n"
+                + "OPTIONS (CARDINALITY 12, UUID 'uuid2',  UPDATABLE 'true', FOO 'BAR', ANNOTATION 'Test Table')";
+
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
-        printTokens(analyzer.getTokens(), "testCreateVirtualView nTokens  = " + analyzer.getTokens().size());
-        
+
         assertEquals(StatementType.CREATE_VIRTUAL_VIEW_TYPE, analyzer.getStatementType());
         assertEquals(74, analyzer.getTokens().size());
     }
-    
+
     @Test
     public void testViewName() {
-        String stmt = "CREATE VIEW \"wineList xxx\" (\n" +
-                        "e1 integer primary key,\n" +
-                        "e6 varchar index default 'hello')\n" +
-                        "OPTIONS (CARDINALITY 12, UUID 'uuid2',  UPDATABLE 'true', FOO 'BAR', ANNOTATION 'Test Table')";
+        String stmt = "CREATE VIEW \"wineList xxx\" (\n" + "e1 integer primary key,\n"
+                + "e6 varchar index default 'hello')\n"
+                + "OPTIONS (CARDINALITY 12, UUID 'uuid2',  UPDATABLE 'true', FOO 'BAR', ANNOTATION 'Test Table')";
 
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
-        printTokens(analyzer.getTokens(), "testViewName() nTokens = " + analyzer.getTokens().size());
 
         assertEquals(StatementType.CREATE_VIEW_TYPE, analyzer.getStatementType());
         assertEquals(32, analyzer.getTokens().size());
     }
-    
+
     @Test
     public void testCreateViewSimple() {
         String stmt = "CREATE VIEW winelist( e4 decimal(12,3) default 12.2 options (searchable 'unsearchable') )";
 
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
-        printTokens(analyzer.getTokens(), "testCreateViewWithDatatypes nTokens  = " + analyzer.getTokens().size());
 
         assertEquals(StatementType.CREATE_VIEW_TYPE, analyzer.getStatementType());
         assertEquals(19, analyzer.getTokens().size());
     }
-    
+
     @Test
     public void testCreateViewWithDatatypes() {
-        String stmt = "CREATE VIEW winelist(\n" +
-                        "e1 integer primary key,\n" +
-                        "e2 varchar(10) unique,\n" +
-                        "e4 decimal(12,3) default 12.2 options (searchable 'unsearchable'))";
-        
+        String stmt = "CREATE VIEW winelist(\n" + "e1 integer primary key,\n" + "e2 varchar(10) unique,\n"
+                + "e4 decimal(12,3) default 12.2 options (searchable 'unsearchable'))";
+
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
-        printTokens(analyzer.getTokens(), "testCreateViewWithDatatypes nTokens  = " + analyzer.getTokens().size());
 
         assertEquals(StatementType.CREATE_VIEW_TYPE, analyzer.getStatementType());
         assertEquals(31, analyzer.getTokens().size());
