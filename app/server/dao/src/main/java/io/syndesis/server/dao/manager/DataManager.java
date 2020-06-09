@@ -84,8 +84,9 @@ public class DataManager implements DataAccessObjectRegistry {
     @Value("${deployment.file:io/syndesis/server/dao/deployment.json}")
     @SuppressWarnings({"PMD.ImmutableField", "PMD.FinalFieldCouldBeStatic"}) // @Value cannot be applied to final properties
     private final String dataFileName = "io/syndesis/server/dao/deployment.json";
-    private static final String demoDataFileName = "io/syndesis/server/dao/demo-data.json";
+    private static final String DEMO_DATA_FILE_NAME = "io/syndesis/server/dao/demo-data.json";
     @Value("${deployment.load-demo-data:true}")
+    @SuppressWarnings("FieldCanBeFinal")
     private boolean loadDemoData = true;
 
     private final List<DataAccessObject<?>> dataAccessObjects = new ArrayList<>();
@@ -124,7 +125,7 @@ public class DataManager implements DataAccessObjectRegistry {
             loadData(this.dataFileName);
         }
         if (loadDemoData) {
-            loadData(demoDataFileName);
+            loadData(DEMO_DATA_FILE_NAME);
         }
     }
 
