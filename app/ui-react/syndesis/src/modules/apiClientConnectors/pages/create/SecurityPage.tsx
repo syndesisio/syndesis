@@ -1,5 +1,5 @@
 import * as H from '@syndesis/history';
-import { IApiSummarySoap, ICreateConnectorProps } from '@syndesis/models';
+import { IApiSummarySoap } from '@syndesis/models';
 import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
@@ -14,6 +14,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
+import { ICreateConnectorProps } from '../../models';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
 
@@ -40,28 +41,20 @@ export const SecurityPage: React.FunctionComponent = () => {
     specification: specification.configuredProperties!.specification,
   });
 
-  const defaultValues = {
-    accessTokenUrl:
-      properties!.tokenEndpoint && properties!.tokenEndpoint.defaultValue,
-    authenticationType: properties!.authenticationType.defaultValue,
-    authorizationUrl:
-      properties!.authorizationEndpoint &&
-      properties!.authorizationEndpoint.defaultValue,
-    passwordType:
-      properties!.passwordType && properties!.passwordType.defaultValue,
+  const defaultValues: ICreateConnectorProps = {
+    authenticationType: properties!.authenticationType?.defaultValue,
+    authorizationEndpoint: properties!.authorizationEndpoint?.defaultValue,
+    passwordType: properties!.passwordType?.defaultValue,
+    tokenEndpoint: properties!.tokenEndpoint?.defaultValue,
   };
 
   const dropdowns = {
-    authenticationTypes:
-      properties!.authenticationType &&
-      (properties!.authenticationType.enum || []).sort((a, b) =>
-        a.value!.localeCompare(b.value!)
-      ),
-    passwordTypes:
-      properties!.passwordType &&
-      (properties!.passwordType.enum || []).sort((a, b) =>
-        a.value!.localeCompare(b.value!)
-      ),
+    authenticationTypes: (
+      properties!.authenticationType?.enum || []
+    ).sort((a, b) => a.value!.localeCompare(b.value!)),
+    passwordTypes: (properties!.passwordType?.enum || []).sort((a, b) =>
+      a.value!.localeCompare(b.value!)
+    ),
   };
 
   const onNext = (values?: any) => {
@@ -107,48 +100,49 @@ export const SecurityPage: React.FunctionComponent = () => {
                 )}
               />
               <ApiConnectorCreatorSecurityForm defaultValues={defaultValues}>
-                {({ errors, handleChange, values }) => {
-                  const i18nStrings = {
-                    accessTokenUrl: t(
-                      'apiClientConnectors:create:security:accessTokenUrl'
-                    ),
-                    authenticationType: t(
-                      'apiClientConnectors:create:security:authTypeLabel'
-                    ),
-                    authorizationUrl: t(
-                      'apiClientConnectors:create:security:authorizationUrl'
-                    ),
-                    description: t(
-                      'apiClientConnectors:create:security:description'
-                    ),
-                    noSecurity: t(
-                      'apiClientConnectors:create:security:noSecurity'
-                    ),
-                    password: t('apiClientConnectors:create:security:password'),
-                    passwordType: t(
-                      'apiClientConnectors:create:security:passwordType'
-                    ),
-                    timestamp: t(
-                      'apiClientConnectors:create:security:timestamp'
-                    ),
-                    title: t('apiClientConnectors:create:security:title'),
-                    username: t('apiClientConnectors:create:security:username'),
-                    usernameTokenCreated: t(
-                      'apiClientConnectors:create:security:usernameTokenCreated'
-                    ),
-                    usernameTokenNonce: t(
-                      'apiClientConnectors:create:security:usernameTokenNonce'
-                    ),
-                  };
-
+                {({ handleChange, values }) => {
                   return (
                     <ApiConnectorCreatorLayout
                       content={
                         <ApiConnectorCreatorSecurity
                           dropdowns={dropdowns}
-                          errors={errors}
                           handleChange={handleChange}
-                          i18n={i18nStrings}
+                          i18nAccessTokenUrl={t(
+                            'apiClientConnectors:create:security:accessTokenUrl'
+                          )}
+                          i18nAuthenticationType={t(
+                            'apiClientConnectors:create:security:authTypeLabel'
+                          )}
+                          i18nAuthorizationUrl={t(
+                            'apiClientConnectors:create:security:authorizationUrl'
+                          )}
+                          i18nDescription={t(
+                            'apiClientConnectors:create:security:description'
+                          )}
+                          i18nNoSecurity={t(
+                            'apiClientConnectors:create:security:noSecurity'
+                          )}
+                          i18nPassword={t(
+                            'apiClientConnectors:create:security:password'
+                          )}
+                          i18nPasswordType={t(
+                            'apiClientConnectors:create:security:passwordType'
+                          )}
+                          i18nTimestamp={t(
+                            'apiClientConnectors:create:security:timestamp'
+                          )}
+                          i18nTitle={t(
+                            'apiClientConnectors:create:security:title'
+                          )}
+                          i18nUsername={t(
+                            'apiClientConnectors:create:security:username'
+                          )}
+                          i18nUsernameTokenCreated={t(
+                            'apiClientConnectors:create:security:usernameTokenCreated'
+                          )}
+                          i18nUsernameTokenNonce={t(
+                            'apiClientConnectors:create:security:usernameTokenNonce'
+                          )}
                           values={values}
                         />
                       }
@@ -159,7 +153,7 @@ export const SecurityPage: React.FunctionComponent = () => {
                           i18nBack={t('shared:Back')}
                           i18nNext={t('shared:Next')}
                           isNextLoading={false}
-                          isNextDisabled={!errors}
+                          isNextDisabled={false}
                         />
                       }
                       navigation={

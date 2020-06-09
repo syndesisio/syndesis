@@ -1,12 +1,39 @@
-import { ICreateConnectorProps } from '@syndesis/models';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
 
+/**
+ * Customizable properties in API Client Connector wizard
+ */
+interface ICreateApiConnectorProps {
+  addTimestamp?: boolean;
+  addUsernameTokenCreated?: boolean;
+  addUsernameTokenNonce?: boolean;
+  authenticationType?: string;
+  authorizationEndpoint?: string;
+  basePath?: string;
+  connectorTemplateId?: string;
+  description?: string;
+  host?: string;
+  icon?: string;
+  name?: string;
+  password?: string;
+  passwordType?: string;
+  /**
+   * portName & serviceName
+   * are used for SOAP documents
+   */
+  portName?: string;
+  serviceName?: string;
+  specification?: string;
+  tokenEndpoint?: string;
+  username?: string;
+}
+
 export function useApiConnectorCreator() {
   const apiContext = React.useContext(ApiContext);
 
-  const createConnector = async (connector: ICreateConnectorProps) => {
+  const createConnector = async (connector: ICreateApiConnectorProps) => {
     const body = new FormData();
 
     body.append(

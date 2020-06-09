@@ -1,5 +1,4 @@
 import * as React from 'react';
-import validateSecurity from './ApiConnectorValidationRules';
 
 /**
  * Customizable properties in API Client Connector wizard
@@ -10,12 +9,6 @@ export interface ICreateConnectorPropsUi {
   addUsernameTokenNonce?: boolean;
   authenticationType?: string;
   authorizationEndpoint?: string;
-  basePath?: string;
-  connectorTemplateId?: string;
-  description?: string;
-  host?: string;
-  icon?: string;
-  name?: string;
   password?: string;
   passwordType?: string;
   /**
@@ -24,13 +17,11 @@ export interface ICreateConnectorPropsUi {
    */
   portName?: string;
   serviceName?: string;
-  specification?: string;
   tokenEndpoint?: string;
   username?: string;
 }
 
 export interface IApiConnectorCreatorSecurityFormChildrenProps {
-  errors?: any;
   handleChange?: (param?: any, event?: any) => void;
   handleSubmit?: (param?: any) => void;
   values: ICreateConnectorPropsUi;
@@ -47,14 +38,11 @@ export const ApiConnectorCreatorSecurityForm: React.FunctionComponent<IApiConnec
   defaultValues,
 }) => {
   const [values, setValues] = React.useState(defaultValues);
-  const [errors, setErrors] = React.useState({});
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     if (event) {
       event.preventDefault();
     }
-
-    setErrors(validateSecurity(values));
   };
 
   const handleChange = (param: any, event: any) => {
@@ -76,7 +64,6 @@ export const ApiConnectorCreatorSecurityForm: React.FunctionComponent<IApiConnec
   };
 
   return children({
-    errors,
     handleChange,
     handleSubmit,
     values,
