@@ -5,7 +5,7 @@ import { ERROR, WARNING } from '../Shared';
 
 export interface IConnectorConfigurationFormValidationResult {
   message: string;
-  type: 'error' | 'success';
+  type: 'error' | 'success' | 'info';
 }
 
 export interface IConnectorConfigurationFormProps {
@@ -56,14 +56,14 @@ export const ConnectorConfigurationForm: React.FunctionComponent<IConnectorConfi
     </StackItem>
     <StackItem>
       {validationResults &&
-      validationResults.map((e, idx) => (
-        <Alert
-          title={e.message}
-          key={idx}
-          isInline={true}
-          variant={e.type === ERROR ? WARNING : e.type}
-        />
-      ))}
+        validationResults.map((e, idx) => (
+          <Alert
+            title={e.message}
+            key={idx}
+            isInline={true}
+            variant={e.type === ERROR ? WARNING : e.type}
+          />
+        ))}
     </StackItem>
     <StackItem>
       <Form
