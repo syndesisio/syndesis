@@ -19,7 +19,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
-import java.util.function.Consumer;
 
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.extension.Extension;
