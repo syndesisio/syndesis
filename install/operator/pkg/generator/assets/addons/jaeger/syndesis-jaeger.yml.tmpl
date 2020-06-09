@@ -11,7 +11,12 @@
   spec:
     strategy: allInOne
     allInOne:
+    {{- if not .ApiServer.OlmSupport }}
+      #
+      # Difficult to control the image version in an OperatorHub env
+      #
       image: '{{ .Syndesis.Addons.Jaeger.ImageAllInOne }}'
+    {{- end}}
       options:
         memory:
           max-traces: 100000
