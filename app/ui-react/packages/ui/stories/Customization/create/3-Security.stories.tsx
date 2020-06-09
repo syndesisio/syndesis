@@ -16,50 +16,21 @@ const stories = storiesOf(
   module
 );
 
-const i18n = {
-  accessTokenUrl: 'Access Token URL',
-  address: 'Address',
-  authenticationType: 'Authentication Type',
-  authorizationUrl: 'Authorization URL',
-  description:
-    '$t(shared:project.name) reads the document to determine the information needed to configure the connector to meet the API’s security requirements. Connections created from this connector always use the authentication type that you select here.',
-  noSecurity: 'No Security',
-  password: 'Password',
-  passwordType: 'Password Type',
-  required: 'All fields are required.',
-  timestamp: 'Timestamp',
-  title: 'Specify Security',
-  username: 'Username',
-  usernameTokenCreated: 'Username Token Created',
-  usernameTokenNonce: 'Username Token Nonce',
-};
-
 const preConfiguredValues = {
-  authenticationType:
-    soapSpec.properties!.authenticationType &&
-    soapSpec.properties!.authenticationType.defaultValue,
-  authorizationEndpoint:
-    soapSpec.properties!.authorizationEndpoint &&
-    soapSpec.properties!.authorizationEndpoint.defaultValue,
-  passwordType:
-    soapSpec.properties!.passwordType &&
-    soapSpec.properties!.passwordType.defaultValue,
-  tokenEndpoint:
-    soapSpec.properties!.tokenEndpoint &&
-    soapSpec.properties!.tokenEndpoint.defaultValue,
+  authenticationType: soapSpec.properties!.authenticationType.defaultValue,
+  authorizationEndpoint: soapSpec.properties!.authorizationEndpoint
+    .defaultValue,
+  passwordType: soapSpec.properties!.passwordType.defaultValue,
+  tokenEndpoint: soapSpec.properties!.tokenEndpoint.defaultValue,
 };
 
 const dropdownOptions = {
-  authenticationTypes:
-    soapSpec.properties!.authenticationType &&
-    (soapSpec.properties!.authenticationType.enum || []).sort((a, b) =>
-      a.value!.localeCompare(b.value!)
-    ),
-  passwordTypes:
-    soapSpec.properties!.passwordType &&
-    (soapSpec.properties!.passwordType.enum || []).sort((a, b) =>
-      a.value!.localeCompare(b.value!)
-    ),
+  authenticationTypes: (
+    soapSpec.properties!.authenticationType.enum || []
+  ).sort((a, b) => a.value!.localeCompare(b.value!)),
+  passwordTypes: (soapSpec.properties!.passwordType.enum || []).sort((a, b) =>
+    a.value!.localeCompare(b.value!)
+  ),
 };
 
 const component = (authenticationType: string) => {
@@ -91,7 +62,20 @@ const component = (authenticationType: string) => {
         <ApiConnectorCreatorSecurity
           dropdowns={dropdownOptions}
           handleChange={handleChange}
-          i18n={i18n}
+          i18nAccessTokenUrl={'Access Token URL'}
+          i18nAuthenticationType={'Authentication Type'}
+          i18nAuthorizationUrl={'Authorization URL'}
+          i18nDescription={
+            '$t(shared:project.name) reads the document to determine the information needed to configure the connector to meet the API’s security requirements. Connections created from this connector always use the authentication type that you select here.'
+          }
+          i18nNoSecurity={'No Security'}
+          i18nPassword={'Password'}
+          i18nPasswordType={'Password Type'}
+          i18nTimestamp={'Timestamp'}
+          i18nTitle={'Specify Security'}
+          i18nUsername={'Username'}
+          i18nUsernameTokenCreated={'Username Token Created'}
+          i18nUsernameTokenNonce={'Username Token Nonce'}
           values={values}
         />
       }

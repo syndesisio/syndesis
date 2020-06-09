@@ -1,6 +1,6 @@
 import { useApiConnectorCreator } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { IApiSummarySoap, ICreateConnectorProps } from '@syndesis/models';
+import { IApiSummarySoap } from '@syndesis/models';
 import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
@@ -16,6 +16,7 @@ import { UIContext } from '../../../../app';
 import { PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
 import { ApiConnectorInfoForm, IConnectorValues } from '../../components';
+import { ICreateConnectorProps } from '../../models';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
 

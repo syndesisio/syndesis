@@ -23,10 +23,6 @@ export interface IDropdownOptions {
   [key: string]: IDropdownOption[];
 }
 
-export interface II18n {
-  [key: string]: string;
-}
-
 export interface IApiConnectorCreatorSecurityProps {
   /**
    * An object that contains arrays of enum key-value pairs to be
@@ -35,15 +31,36 @@ export interface IApiConnectorCreatorSecurityProps {
   authenticationTypes?: IDropdownOption[];
   dropdowns?: IDropdownOptions;
   handleChange?: (params?: any, event?: any) => void;
-  errors?: any;
-  i18n: II18n;
+  i18nAccessTokenUrl: string;
+  i18nAuthenticationType: string;
+  i18nAuthorizationUrl: string;
+  i18nDescription: string;
+  i18nNoSecurity: string;
+  i18nPassword: string;
+  i18nPasswordType: string;
+  i18nTimestamp: string;
+  i18nTitle: string;
+  i18nUsername: string;
+  i18nUsernameTokenCreated: string;
+  i18nUsernameTokenNonce: string;
   values: ICreateConnectorPropsUi;
 }
 
 export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorCreatorSecurityProps> = ({
   dropdowns,
   handleChange,
-  i18n,
+  i18nAccessTokenUrl,
+  i18nAuthenticationType,
+  i18nAuthorizationUrl,
+  i18nDescription,
+  i18nNoSecurity,
+  i18nPassword,
+  i18nPasswordType,
+  i18nTimestamp,
+  i18nTitle,
+  i18nUsername,
+  i18nUsernameTokenCreated,
+  i18nUsernameTokenNonce,
   values,
 }) => {
   const extractAuthType = (authType?: string): string => {
@@ -62,22 +79,22 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
   return (
     <Stack style={{ maxWidth: '600px' }} gutter="md">
       <StackItem>
-        <Title size="2xl">{i18n.title}</Title>
+        <Title size="2xl">{i18nTitle}</Title>
       </StackItem>
       <StackItem>
         <Form data-testid={`api-client-connector-auth-type-form`}>
-          <Alert type={'info'} title={i18n.description} isInline={true} />
+          <Alert type={'info'} title={i18nDescription} isInline={true} />
           <FormGroup
             fieldId={'authenticationType'}
             isRequired={true}
-            label={i18n.authenticationType}
+            label={i18nAuthenticationType}
           >
             <FormSelect
               value={values.authenticationType}
               onChange={handleChange}
               id={'authenticationType'}
               name={'authenticationType'}
-              aria-label={i18n.authenticationType}
+              aria-label={i18nAuthenticationType}
             >
               {dropdowns!.authenticationTypes.map(
                 (
@@ -90,7 +107,7 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
                     )}`}
                     key={idx}
                     value={authType.value}
-                    label={authType.label || i18n.noSecurity}
+                    label={authType.label || i18nNoSecurity}
                   />
                 )
               )}
@@ -102,7 +119,7 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
               <FormGroup
                 fieldId={'username'}
                 isRequired={true}
-                label={i18n.username}
+                label={i18nUsername}
               >
                 <TextInput
                   id={'username'}
@@ -115,7 +132,7 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
               <FormGroup
                 fieldId={'password'}
                 isRequired={true}
-                label={i18n.password}
+                label={i18nPassword}
               >
                 <TextInput
                   id={'password'}
@@ -132,7 +149,7 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
             <>
               <FormGroup
                 fieldId={'authorizationEndpoint'}
-                label={i18n.authorizationUrl}
+                label={i18nAuthorizationUrl}
               >
                 <TextInput
                   id={'authorizationEndpoint'}
@@ -142,7 +159,7 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
                   onChange={handleChange}
                 />
               </FormGroup>
-              <FormGroup fieldId={'tokenEndpoint'} label={i18n.accessTokenUrl}>
+              <FormGroup fieldId={'tokenEndpoint'} label={i18nAccessTokenUrl}>
                 <TextInput
                   id={'tokenEndpoint'}
                   name={'tokenEndpoint'}
@@ -158,7 +175,7 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
             <>
               <FormGroup fieldId={'addTimestamp'}>
                 <Checkbox
-                  label={i18n.timestamp}
+                  label={i18nTimestamp}
                   id="addTimestamp"
                   name="addTimestamp"
                   aria-label="Timestamp"
@@ -167,13 +184,13 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
                   onChange={handleChange}
                 />
               </FormGroup>
-              <FormGroup fieldId={'passwordType'} label={i18n.passwordType}>
+              <FormGroup fieldId={'passwordType'} label={i18nPasswordType}>
                 <FormSelect
                   value={values.passwordType}
                   onChange={handleChange}
                   id={'passwordType'}
                   name={'passwordType'}
-                  aria-label={i18n.passwordType}
+                  aria-label={i18nPasswordType}
                 >
                   {dropdowns!.passwordTypes.map(
                     (
@@ -197,10 +214,10 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
                 <>
                   <FormGroup fieldId={'addUsernameTokenNonce'}>
                     <Checkbox
-                      label={i18n.usernameTokenNonce}
+                      label={i18nUsernameTokenNonce}
                       id="addUsernameTokenNonce"
                       name="addUsernameTokenNonce"
-                      aria-label={i18n.usernameTokenNonce}
+                      aria-label={i18nUsernameTokenNonce}
                       isChecked={!!values.addUsernameTokenNonce}
                       data-testid={'add-username-token-nonce'}
                       onChange={handleChange}
@@ -208,10 +225,10 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
                   </FormGroup>
                   <FormGroup fieldId={'addUsernameTokenCreated'}>
                     <Checkbox
-                      label={i18n.usernameTokenCreated}
+                      label={i18nUsernameTokenCreated}
                       id="addUsernameTokenCreated"
                       name="addUsernameTokenCreated"
-                      aria-label={i18n.usernameTokenCreated}
+                      aria-label={i18nUsernameTokenCreated}
                       isChecked={!!values.addUsernameTokenCreated}
                       data-testid={'add-username-token-created'}
                       onChange={handleChange}
@@ -220,7 +237,7 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
                   <FormGroup
                     fieldId={'username'}
                     isRequired={true}
-                    label={i18n.username}
+                    label={i18nUsername}
                   >
                     <TextInput
                       id={'username'}
@@ -233,7 +250,7 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
                   <FormGroup
                     fieldId={'password'}
                     isRequired={true}
-                    label={i18n.password}
+                    label={i18nPassword}
                   >
                     <TextInput
                       id={'password'}

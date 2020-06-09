@@ -1,6 +1,5 @@
 import { useApiConnectorSummary } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { ICreateConnectorProps } from '@syndesis/models';
 import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
@@ -16,6 +15,7 @@ import { Translation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import { ApiError, PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
+import { ICreateConnectorProps } from '../../models';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
 
