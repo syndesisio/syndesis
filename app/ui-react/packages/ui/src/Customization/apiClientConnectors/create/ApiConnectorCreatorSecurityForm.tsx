@@ -1,92 +1,71 @@
 import * as React from 'react';
 
-export interface IApiConnectorCreatorSecurityFormChildrenProps {
-  authUrl?: string;
-  handleChangeAuthUrl: (params: string) => void;
-  handleChangeSelectedType: (params: string) => void;
-  handleChangeTokenUrl: (params: string) => void;
+/**
+ * Customizable properties in API Client Connector wizard
+ */
+export interface ICreateConnectorPropsUi {
+  addTimestamp?: boolean;
+  addUsernameTokenCreated?: boolean;
+  addUsernameTokenNonce?: boolean;
+  authenticationType?: string;
+  authorizationEndpoint?: string;
+  password?: string;
+  passwordType?: string;
+  /**
+   * portName & serviceName
+   * are used for SOAP documents
+   */
+  portName?: string;
+  serviceName?: string;
+  tokenEndpoint?: string;
+  username?: string;
+}
 
-  /**
-   * Access token, required for OAuth 2.0.
-   */
-  initialAccessTokenUrl?: string;
-  /**
-   * Used specifically for determining the default type, mostly used
-   * for None and Basic types.
-   */
-  initialAuthenticationType?: string;
-  /**
-   * Authorization URL, required for OAuth 2.0.
-   */
-  initialAuthorizationUrl?: string;
-  selectedType?: string;
-  tokenUrl?: string;
-  valid: boolean;
+export interface IApiConnectorCreatorSecurityFormChildrenProps {
+  handleChange?: (param?: any, event?: any) => void;
+  handleSubmit?: (param?: any) => void;
+  values: ICreateConnectorPropsUi;
 }
 
 export interface IApiConnectorCreatorSecurityFormProps {
-  /**
-   * Access token, required for OAuth 2.0.
-   */
-  initialAccessTokenUrl?: string;
-  /**
-   * Used specifically for determining the default type, mostly used
-   * for None and Basic types.
-   */
-  initialAuthenticationType?: string;
-  /**
-   * Authorization URL, required for OAuth 2.0.
-   */
-  initialAuthorizationUrl?: string;
+  defaultValues?: any;
 
   children(props: IApiConnectorCreatorSecurityFormChildrenProps): any;
-
-  isValid(
-    authenticationType?: string,
-    authorizationUrl?: string,
-    tokenUrl?: string
-  ): boolean;
 }
 
 export const ApiConnectorCreatorSecurityForm: React.FunctionComponent<IApiConnectorCreatorSecurityFormProps> = ({
   children,
-  initialAccessTokenUrl,
-  initialAuthorizationUrl,
-  initialAuthenticationType,
-  isValid,
+  defaultValues,
 }) => {
-  const [tokenUrl, setTokenUrl] = React.useState(initialAccessTokenUrl);
-  const [authUrl, setAuthUrl] = React.useState(initialAuthorizationUrl);
-  const [selectedType, setSelectedType] = React.useState(
-    initialAuthenticationType
-  );
+  const [values, setValues] = React.useState(defaultValues);
 
-  const [valid, setValid] = React.useState(
-    isValid(selectedType, authUrl, tokenUrl)
-  );
-
-  const handleChangeSelectedType = (newType: string) => {
-    setSelectedType(newType);
-    setValid(isValid(newType, authUrl, tokenUrl));
+  const handleSubmit = (event: { preventDefault: () => void }) => {
+    if (event) {
+      event.preventDefault();
+    }
   };
 
-  const handleChangeAuthUrl = (newUrl: string) => {
-    setAuthUrl(newUrl);
-    setValid(isValid(selectedType, newUrl, tokenUrl));
-  };
+  const handleChange = (param: any, event: any) => {
+    const { checked, name, type } = event.target;
 
-  const handleChangeTokenUrl = (newUrl: string) => {
-    setTokenUrl(newUrl);
-    setValid(isValid(selectedType, authUrl, newUrl));
+    // Checkboxes require special treatment
+    const isCheckbox = type === 'checkbox';
+    const value = isCheckbox ? checked : event.target.value;
+
+    // If this is a change in the authentication type,
+    // clear any previous values.
+    const isAuthType = name === 'authenticationType';
+
+    if (isAuthType) {
+      setValues({ ...defaultValues, [name]: value });
+    } else {
+      setValues({ ...values, [name]: value });
+    }
   };
 
   return children({
-    authUrl,
-    handleChangeAuthUrl,
-    handleChangeSelectedType,
-    handleChangeTokenUrl,
-    selectedType,
-    tokenUrl,
-    valid,
+    handleChange,
+    handleSubmit,
+    values,
   });
 };

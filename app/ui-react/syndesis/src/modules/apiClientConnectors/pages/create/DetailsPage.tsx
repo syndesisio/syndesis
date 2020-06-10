@@ -16,17 +16,14 @@ import { UIContext } from '../../../../app';
 import { PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
 import { ApiConnectorInfoForm, IConnectorValues } from '../../components';
+import { ICreateConnectorProps } from '../../models';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
 
 export interface IDetailsPageRouteState {
-  authenticationType?: string;
-  authorizationEndpoint?: string;
+  configured?: ICreateConnectorProps;
   connectorTemplateId?: string;
-  portName?: string;
-  serviceName?: string;
   specification: IApiSummarySoap;
-  tokenEndpoint?: string;
 }
 
 export const DetailsPage: React.FunctionComponent = () => {
@@ -53,16 +50,11 @@ export const DetailsPage: React.FunctionComponent = () => {
 
           try {
             await createApiConnector({
+              ...state.configured,
               ...values,
-              authenticationType: state.authenticationType,
-              authorizationEndpoint: state.authorizationEndpoint,
               connectorTemplateId: state.connectorTemplateId,
-              portName: state.specification.configuredProperties!.portName,
-              serviceName: state.specification.configuredProperties!
-                .serviceName,
               specification: state.specification.configuredProperties!
                 .specification,
-              tokenEndpoint: state.tokenEndpoint,
             });
             actions.setSubmitting(false);
             allowNavigation();
@@ -92,6 +84,10 @@ export const DetailsPage: React.FunctionComponent = () => {
             <ApiConnectorInfoForm
               name={state.specification.name}
               description={state.specification.description}
+              connectorTemplateId={state.connectorTemplateId}
+              basePath={state.specification.configuredProperties!.basePath}
+              host={state.specification.configuredProperties!.host}
+              address={state.specification.configuredProperties!.address}
               handleSubmit={onSubmit}
             >
               {({
