@@ -31,6 +31,7 @@ import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.support.processor.HttpMessageToDefaultMessageProcessor;
 import io.syndesis.connector.support.processor.HttpRequestWrapperProcessor;
 import io.syndesis.connector.support.processor.util.SimpleJsonSchemaInspector;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
@@ -48,6 +49,7 @@ public class WebhookConnectorCustomizer implements ComponentProxyCustomizer, Cam
     private CamelContext camelContext;
     private DataShape inputDataShape;
     private DataShape outputDataShape;
+    private static final String HTTP_RESPONSE_CODE_PROPERTY        = "httpResponseCode";
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
@@ -79,19 +81,22 @@ public class WebhookConnectorCustomizer implements ComponentProxyCustomizer, Cam
 
         component.setBeforeConsumer(Pipeline.newInstance(camelContext, beforeConsumers));
 
+        Integer httpResponseStatus =
+                ConnectorOptions.extractOptionAndMap(options, HTTP_RESPONSE_CODE_PROPERTY, Integer::valueOf, 200);
+
         // Unconditionally we remove output in 7.1 release
-        component.setAfterConsumer(WebhookConnectorCustomizer::removeOutput);
+        component.setAfterConsumer(removeOutput(httpResponseStatus));
     }
 
-    private static void removeOutput(final Exchange exchange) {
-        exchange.getOut().setBody("");
-        exchange.getOut().removeHeaders("*");
-
-        if (exchange.getException() == null) {
-            // In case of exception, we leave the error code as is
-            exchange.getOut().setHeader(Exchange.HTTP_RESPONSE_CODE, 204);
-            exchange.getOut().setHeader(Exchange.HTTP_RESPONSE_TEXT, "No Content");
-        }
+    private static Processor removeOutput(final Integer httpResponseStatus) {
+        return exchange -> {
+            exchange.getMessage().setBody("");
+            exchange.getMessage().removeHeaders("*");
+            if (httpResponseStatus != null) {
+                exchange.getMessage().setHeader(Exchange.HTTP_RESPONSE_CODE, httpResponseStatus);
+            }
+            exchange.getMessage().setHeader(Exchange.HTTP_RESPONSE_TEXT, "No Content");
+        };
     }
 
     @Override
