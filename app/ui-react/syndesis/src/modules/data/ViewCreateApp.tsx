@@ -53,7 +53,9 @@ export const ViewCreateApp: React.FunctionComponent = () => {
       element => element.teiidName === teiidName && element.connectionName === connectionName
     );
 
-    tempArray.splice(index, 1);
+    if (index > -1) {
+      tempArray.splice(index, 1);
+    }
     setSelectedSchemaNodes(tempArray);
   };
 
