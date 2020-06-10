@@ -18,6 +18,8 @@
   "namePlaceholder": "Must enter a connection name...",
   "usedByOne": "Used by 1 integration",
   "usedByMulti": "Used by integrations {{count}} times",
+  "validationSuccessful": "{{name}} has been successfully validated",
+  "validationUnsupported": "{{name}} does not support validation",
   "create": {
     "unsavedChangesTitle": "Do you really want to cancel?",
     "unsavedChangesMessage": "You have not finished creating the connection. If you cancel now you will lose data you already entered. Do you still want to cancel?",

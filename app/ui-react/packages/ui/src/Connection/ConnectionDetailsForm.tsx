@@ -15,7 +15,7 @@ import './ConnectionDetailsForm.css';
 
 export interface IConnectionDetailsValidationResult {
   message: string;
-  type: 'error' | 'success';
+  type: 'error' | 'success' | 'info';
 }
 
 export interface IConnectionDetailsFormProps {
