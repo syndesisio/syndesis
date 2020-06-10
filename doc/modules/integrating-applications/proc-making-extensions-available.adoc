@@ -41,7 +41,7 @@ an icon in the extension, then {prodname} generates an icon.
 For a step extension, {prodname} displays
 the name of each custom step that the extension defines.
 +
-For a library extension, {prodname} includes the imported Maven dependencies into the integration runtime classpath. You must ensure that the imported Maven dependencies do not conflict with other dependencies that are already used in the integration (including any other library extension, such as a JDBC driver).
+For a library extension, {prodname} includes the imported Maven dependencies in the integration runtime classpath. You must ensure that the imported Maven dependencies do not conflict with other dependencies that are already used in the integration (including any other library extension, such as a JDBC driver).
 
 . Click *Import Extension*. {prodname} makes the custom connector or 
 custom step(s) available and displays the extension's details page. 

@@ -10,6 +10,8 @@ Transforming a data field defines how you want to store the data.
 For example, you could specify the *Capitalize* transformation to ensure that the first
 letter of a data value is uppercase.
 
+*Note:* If you want to add a condition to a mapping, you need to place any transformations within the conditional expression as described in link:{LinkSyndesisIntegrationGuide}#applying-conditions-to-mappings_map[Applying conditions to mappings].
+
 .Procedure
 
 . Map the fields. This can be a one-to-one mapping, a combination mapping,

@@ -33,9 +33,9 @@ syntax. A conditional expression can refer to an individual field or to a field 
 You can define zero or one condition for each mapping. 
 
 The following procedure gets you started with applying 
-conditions to mappings. As you work with mappings and 
-conditions, you can perform the required steps in the 
-order that is most convenient for you. 
+conditions to mappings. 
+
+*Note:* After you add a condition to a mapping, the Source and Target transformation options are disabled. If need to place any transformations within the conditional expression.
 
 .Prerequisites
 
@@ -77,6 +77,8 @@ mapping, `lastName` was selected first and then `firstName` was selected.
 expression that you want the data mapper to apply to the 
 mapping. Details about supported conditional expressions follow 
 this procedure.
++
+If you want to include a transformation in a conditional mapping, you must add the transformation to the conditional expression. 
 +
 As you specify the expression, you can type `@` and start to type the name of a field.
 The data mapper displays a list of the fields that match 
@@ -122,25 +124,6 @@ by clicking image:images/integrating-applications/preview-mapping-icon.png[the S
 to ensure that the target field or target fields
 get(s) the correct value. 
 
-. Optionally, apply transformations to one or more source or target fields
-that are in the mapping:
-.. In the *Mapping Details* panel, find the field that you want to apply 
-a transformation to. 
-.. Next to it, click image:images/integrating-applications/transformation-icon.png[the Transformation icon].
-.. Select the transformation that you want the data mapper to perform. 
-.. If needed, specify input parameters. 
-
-+
-For more information, see 
-link:{LinkSyndesisIntegrationGuide}#available-transformations_map[Descriptions of available transformations] and 
-link:{LinkSyndesisIntegrationGuide}#about-transformations-on-multiple-source-values_map[About transformations on multiple source values before mapping to one target field].
-
-+
-For example, in the same mapping presented in this procedure, in the 
-*Mapping Details* panel, you could apply the `Uppercase`
- transformation to the `firstName` field. You can test this by entering 
- data in the `firstName` field's preview input field. 
- 
 . Edit the conditional expression as needed to obtain the desired result.  
 
 .Supported functions in conditional expressions

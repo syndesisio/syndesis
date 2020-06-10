@@ -11,7 +11,7 @@ you have some background about how to use the data mapper.
 
 The data mapper displays two columns of data fields:
 
-* *Sources* is a list of the data fields that are obtained or
+* *Source* is a list of the data fields that are obtained or
 processed in all previous steps in the flow. 
 * *Target* is a list of the data fields that the next 
 connection in the flow expects and can process.
