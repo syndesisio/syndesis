@@ -55,7 +55,7 @@ public final class SqlConnectionRule extends ExternalResource {
         final String user = properties.getProperty("sql-connector.user");
         final String password = properties.getProperty("sql-connector.password");
         final String url = properties.getProperty("sql-connector.url");
-
+ 
         try {
             connection = DriverManager.getConnection(url, user, password);
             try (Statement stmt = connection.createStatement()) {
@@ -72,7 +72,11 @@ public final class SqlConnectionRule extends ExternalResource {
             throw new AssertionError("Exception during database startup.", e);
         }
 
-        schema = new DbMetaDataHelper(connection).getDefaultSchema(user);
+        if (connection.getSchema()==null) {
+            schema = new DbMetaDataHelper(connection).getDefaultSchema(user);
+        } else {
+            schema = connection.getSchema();
+        }
     }
 
 }
