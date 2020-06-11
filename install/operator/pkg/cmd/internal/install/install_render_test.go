@@ -24,6 +24,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 )
 
 func TestInstallResourcesRender(t *testing.T) {
@@ -45,6 +46,10 @@ func TestInstallResourcesRender(t *testing.T) {
 			continue // skip these.. Not testing the deployment..
 		}
 
+		apiServer := capabilities.ApiServerSpec{
+			OlmSupport: true,
+		}
+
 		o := Install{
 			Options: &internal.Options{
 				Namespace: "syndesis",
@@ -52,9 +57,12 @@ func TestInstallResourcesRender(t *testing.T) {
 			image:      "syndesis-operator",
 			tag:        "latest",
 			devSupport: true,
+			apiServer:  apiServer,
 		}
+
 		resources, err := o.render("./install/" + f.Name())
 		require.NoError(t, err)
-		assert.NotEqual(t, 0, len(resources))
+		assert.NotEqual(t, 0, len(resources), "Failed to render "+f.Name())
+
 	}
 }
