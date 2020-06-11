@@ -109,7 +109,7 @@
               "errorResponseCodes": {
                 "order": 5,
                 "componentProperty": false,
-                "defaultValue": "{}",
+                "defaultValue": "{\"SERVER_ERROR\":\"500\"}",
                 "deprecated": false,
                 "description": "The return code to set according to different error situations",
                 "displayName": "Error Response Codes",
