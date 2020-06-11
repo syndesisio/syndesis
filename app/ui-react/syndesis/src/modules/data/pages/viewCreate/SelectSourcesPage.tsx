@@ -172,11 +172,19 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
    * Get the Connections - and include a connection for the Virtualization
    */
   const getConnectionsForDisplay = (conns: Connection[]) => {
+    // If a virtualization has been published, it will have a connection.  If so, remove it - we will use virtualization metadata.
+    const tempConns = conns.slice();
+    const index = tempConns.findIndex(conn => conn.name === virtualization.name);
+    if (index > -1) {
+      tempConns.splice(index, 1);
+    }
+
+    // Add 'connection' for the virtualization
     const virtConnection: Connection = {
       description: virtualization.description,
       name: virtualization.name,
     };
-    return [...conns, virtConnection];
+    return [...tempConns, virtConnection];
   };
 
   return (
