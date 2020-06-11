@@ -14,6 +14,7 @@ import './SchemaNodeListItem.css';
 
 export interface ISchemaNodeListItemProps {
   name: string;
+  connectionIcon?: JSX.Element;
   connectionName: string;
   isVirtualizationSchema: boolean;
   teiidName: string;
@@ -25,7 +26,8 @@ export interface ISchemaNodeListItemProps {
     name: string,
     teiidName: string,
     nodePath: string[],
-    selected: boolean
+    selected: boolean,
+    connectionIcon?: JSX.Element
   ) => void;
 }
 
@@ -38,7 +40,7 @@ export const SchemaNodeListItem: React.FunctionComponent<
     setItemSelected(props.selected);
   }, [props.selected]);
 
-  const doToggleCheckbox = (connectionName: string, isVirtualizationSchema: boolean, name: string, teiidName: string, nodePath: string[]) => (
+  const doToggleCheckbox = (connectionName: string, isVirtualizationSchema: boolean, name: string, teiidName: string, nodePath: string[], connectionIcon?: JSX.Element) => (
     event: any
   ) => {
     setItemSelected(!itemSelected);
@@ -49,7 +51,8 @@ export const SchemaNodeListItem: React.FunctionComponent<
       name,
       teiidName,
       nodePath,
-      !itemSelected
+      !itemSelected,
+      connectionIcon
     );
   };
 
@@ -77,7 +80,8 @@ export const SchemaNodeListItem: React.FunctionComponent<
             props.isVirtualizationSchema,
             props.name,
             props.teiidName,
-            props.nodePath
+            props.nodePath,
+            props.connectionIcon
           )}
         />
         <DataListItemCells

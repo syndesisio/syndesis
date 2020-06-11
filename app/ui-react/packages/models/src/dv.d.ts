@@ -68,6 +68,7 @@ export interface SchemaNode {
   connectionName: string;
   queryable: boolean;
   children: SchemaNode[];
+  connectionIcon?: JSX.Element;
 }
 
 export interface TableInfo {
@@ -86,6 +87,7 @@ export interface ViewInfo {
 }
 
 export interface SchemaNodeInfo {
+  connectionIcon?: JSX.Element;
   connectionName: string;
   isVirtualizationSchema: boolean;
   name: string;

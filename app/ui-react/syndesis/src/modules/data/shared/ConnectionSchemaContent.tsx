@@ -62,7 +62,8 @@ export interface IConnectionSchemaContentProps {
     isVirtualizationSchema: boolean,
     name: string,
     teiidName: string,
-    nodePath: string[]
+    nodePath: string[],
+    connectionIcon?: JSX.Element
   ) => void;
   onNodeDeselected: (connectionName: string, teiidName: string) => void;
   selectedSchemaNodes: SchemaNodeInfo[];
@@ -84,10 +85,11 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
     name: string,
     teiidName: string,
     nodePath: string[],
-    selected: boolean
+    selected: boolean,
+    connectionIcon?: JSX.Element
   ) => {
     if (selected) {
-      props.onNodeSelected(connectionName, isVirtualizationSchema, name, teiidName, nodePath);
+      props.onNodeSelected(connectionName, isVirtualizationSchema, name, teiidName, nodePath, connectionIcon);
     } else {
       props.onNodeDeselected(connectionName, teiidName);
     }
@@ -206,20 +208,24 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
     return status ? status.teiidName : '';
   };
 
-  const getConnectionIcon = (conn: Connection) => {
-    return isDvConnectionVirtualizationSource(conn) ? (
-      <CubeIcon size={'lg'} />
-    ) : (
-      <EntityIcon entity={conn} alt={conn.name} width={23} />
-    );
+  const getConnectionIcon = (conn: Connection, isConnectionItem: boolean) => {
+    // The connection root item icons are larger
+    if (isDvConnectionVirtualizationSource(conn)) {
+      return isConnectionItem ? <CubeIcon size={'lg'} /> : <CubeIcon />;
+    } else {
+      return isConnectionItem ? <EntityIcon entity={conn} alt={conn.name} width={23} /> : <EntityIcon entity={conn} alt={conn.name} width={12} />;
+    }
   }
 
-  const getSchemaNodeInfos = (schemaNodes: SchemaNode[], connName: string, isVirtSource: boolean) => {
+  const getSchemaNodeInfos = (schemaNodes: SchemaNode[], connName: string, isVirtSource: boolean, connIcon?: JSX.Element) => {
     const schemaNodeInfos: SchemaNodeInfo[] = [];
     // Connection source - generate from schemaNodes
     if (!isVirtSource) {
       const rootNode = schemaNodes.find(node => node.name === connName);
       if (rootNode) {
+        if(connIcon) {
+          rootNode.connectionIcon = connIcon;
+        }
         generateSchemaNodeInfos(schemaNodeInfos, rootNode, []);
       }
     // Virtualization source - generate from runtime metadata
@@ -261,7 +267,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
           sortedConns.map((c, index) => {
             // get schema nodes for the connection
             const isVirtSource = isDvConnectionVirtualizationSource(c);
-            const srcInfos = getSchemaNodeInfos(schema, getConnectionTeiidName(c.name), isVirtSource);
+            const srcInfos = getSchemaNodeInfos(schema, getConnectionTeiidName(c.name), isVirtSource, getConnectionIcon(c, false));
             return (
               <ConnectionSchemaListItem
                 key={index}
@@ -279,7 +285,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
                 i18nRefreshInProgress={t('refreshInProgress')}
                 i18nStatusErrorPopoverLink={t('connectionStatusPopoverLink')}
                 i18nStatusErrorPopoverTitle={t('connectionStatusPopoverTitle')}
-                icon={getConnectionIcon(c)}
+                icon={getConnectionIcon(c, true)}
                 isVirtualizationSource={isVirtSource}
                 loading={isDvConnectionLoading(c)}
                 refreshConnectionSchema={handleRefreshSchema}
@@ -289,6 +295,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
                     key={index}
                     name={info.name}
                     teiidName={info.teiidName}
+                    connectionIcon={info.connectionIcon}
                     connectionName={info.connectionName}
                     isVirtualizationSchema={info.isVirtualizationSchema}
                     nodePath={info.nodePath}

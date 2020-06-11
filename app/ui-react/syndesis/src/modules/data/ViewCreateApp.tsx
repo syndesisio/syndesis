@@ -27,9 +27,11 @@ export const ViewCreateApp: React.FunctionComponent = () => {
     isVirtualizationSchema: boolean,
     name: string,
     teiidName: string,
-    nodePath: string[]
+    nodePath: string[],
+    connIcon?: JSX.Element
   ) => {
     const srcInfo = {
+      connectionIcon: connIcon,
       connectionName: connName,
       isVirtualizationSchema,
       name,

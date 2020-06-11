@@ -40,7 +40,8 @@ export interface ISelectSourcesPageProps {
     isVirtualizationSchema: boolean,
     name: string,
     teiidName: string,
-    nodePath: string[]
+    nodePath: string[],
+    connectionIcon?: JSX.Element
   ) => void;
   handleNodeDeselected: (connectionName: string, teiidName: string) => void;
   selectedSchemaNodes: SchemaNodeInfo[];

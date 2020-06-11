@@ -175,6 +175,7 @@ export function generateSchemaNodeInfos(
     if (schemaNode.queryable === true) {
       // Create SchemaNodeInfo
       const view: SchemaNodeInfo = {
+        connectionIcon: schemaNode.connectionIcon,
         connectionName: schemaNode.connectionName,
         isVirtualizationSchema: false,
         name: schemaNode.name,
@@ -190,6 +191,7 @@ export function generateSchemaNodeInfos(
     // Process this nodes children
     if (schemaNode.children && schemaNode.children.length > 0) {
       for (const childNode of schemaNode.children) {
+        childNode.connectionIcon = schemaNode.connectionIcon;
         generateSchemaNodeInfos(schemaNodeInfos, childNode, sourcePath);
       }
     }

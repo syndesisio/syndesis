@@ -56,11 +56,13 @@ export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> =
   };
 
   const getConnectionIcon = (schemaNodeInfo: SchemaNodeInfo) => {
-    return schemaNodeInfo.isVirtualizationSchema ? (
-      <CubeIcon />
-    ) : (
-      <DatabaseIcon />
-    );
+    if (schemaNodeInfo.connectionIcon) {
+      return schemaNodeInfo.connectionIcon;
+    } else if (schemaNodeInfo.isVirtualizationSchema) {
+      return <CubeIcon />;
+    } else {
+      return <DatabaseIcon />;
+    }
   };
 
   return (

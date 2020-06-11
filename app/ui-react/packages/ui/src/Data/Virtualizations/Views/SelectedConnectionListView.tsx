@@ -82,8 +82,8 @@ export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnec
                     >
                       {props.name}
                     </span>
-                    ({props.connectionIcon}
-                    &nbsp;<span>{props.connectionName})</span>
+                    (&nbsp;{props.connectionIcon}
+                    &nbsp;<span>{props.connectionName}&nbsp;)</span>
                   </Text>
                 </TextContent>
               </DataListCell>,
