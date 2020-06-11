@@ -1,4 +1,3 @@
-import { CubeIcon } from '@patternfly/react-icons';
 import { useVirtualizationConnectionSchema, useVirtualizationHelpers } from '@syndesis/api';
 import {
   Connection,
@@ -17,7 +16,7 @@ import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../app';
-import { ApiError, EntityIcon } from '../../../shared';
+import { ApiError } from '../../../shared';
 import resolvers from '../../resolvers';
 import {
   generateDvConnections,
@@ -53,6 +52,7 @@ export interface ILastRefreshMessage {
 
 export interface IConnectionSchemaContentProps {
   connections: Connection[];
+  connectionIcons: Map<string, React.ReactNode>;
   dvSourceStatuses: VirtualizationSourceStatus[];
   error: boolean;
   errorMessage?: string;
@@ -206,14 +206,6 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
     return status ? status.teiidName : '';
   };
 
-  const getConnectionIcon = (conn: Connection) => {
-    return isDvConnectionVirtualizationSource(conn) ? (
-      <CubeIcon size={'lg'} />
-    ) : (
-      <EntityIcon entity={conn} alt={conn.name} width={23} />
-    );
-  }
-
   const getSchemaNodeInfos = (schemaNodes: SchemaNode[], connName: string, isVirtSource: boolean) => {
     const schemaNodeInfos: SchemaNodeInfo[] = [];
     // Connection source - generate from schemaNodes
@@ -279,7 +271,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
                 i18nRefreshInProgress={t('refreshInProgress')}
                 i18nStatusErrorPopoverLink={t('connectionStatusPopoverLink')}
                 i18nStatusErrorPopoverTitle={t('connectionStatusPopoverTitle')}
-                icon={getConnectionIcon(c)}
+                icon={props.connectionIcons.get(c.name)}
                 isVirtualizationSource={isVirtSource}
                 loading={isDvConnectionLoading(c)}
                 refreshConnectionSchema={handleRefreshSchema}

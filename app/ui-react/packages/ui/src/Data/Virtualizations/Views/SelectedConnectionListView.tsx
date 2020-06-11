@@ -22,7 +22,7 @@ import './SelectedConnectionListView.css';
 export interface ISelectedConnectionListViewProps {
   expanded: string[];
   name: string;
-  connectionIcon: JSX.Element;
+  connectionIcon: React.ReactNode;
   connectionName: string;
   index: number;
   rows: string[][];
@@ -82,8 +82,8 @@ export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnec
                     >
                       {props.name}
                     </span>
-                    ({props.connectionIcon}
-                    &nbsp;<span>{props.connectionName})</span>
+                    (&nbsp;{props.connectionIcon}
+                    &nbsp;<span>{props.connectionName}&nbsp;)</span>
                   </Text>
                 </TextContent>
               </DataListCell>,

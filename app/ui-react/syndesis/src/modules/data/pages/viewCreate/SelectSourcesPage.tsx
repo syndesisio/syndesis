@@ -1,3 +1,4 @@
+import { CubeIcon } from '@patternfly/react-icons';
 import {
   useConnections,
   useVirtualizationConnectionStatuses,
@@ -11,7 +12,7 @@ import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
-import { PageTitle } from '../../../../shared';
+import { EntityIcon, PageTitle } from '../../../../shared';
 import resolvers from '../../../resolvers';
 import { getQueryColumns, getQueryRows } from '../../shared';
 import {
@@ -186,6 +187,23 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
     };
     return [...tempConns, virtConnection];
   };
+  
+  const getConnectionIcons = (conns: Connection[], small: boolean) => {
+    const iconMap: Map<string, JSX.Element> = new Map();
+    // Set icons for the connections
+    for(const theConn of conns) {
+      const icon = small ? (
+        <EntityIcon entity={theConn} alt={theConn.name} width={12} />
+      ) : (
+        <EntityIcon entity={theConn} alt={theConn.name} width={23} />
+      );
+      iconMap.set(theConn.name, icon);
+    }
+    // Add the virtualization icon
+    const virtIcon = small ? <CubeIcon /> : <CubeIcon size={'lg'} />;
+    iconMap.set(virtualization.name, virtIcon);
+    return iconMap;
+  };
 
   return (
     <>
@@ -225,6 +243,7 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
           }
           dvSourceStatuses={getConnectionStatusesAddVirtualization(connectionStatuses)}
           connections={getConnectionsForDisplay(connectionsData.connectionsForDisplay)}
+          connectionIcons={getConnectionIcons(connectionsData.connectionsForDisplay, false)}
           virtualizationSchema={getVirtualizationSchema(viewSourceInfo)}
           onNodeSelected={props.handleNodeSelected}
           onNodeDeselected={onTableDeselect}
@@ -234,6 +253,7 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
       selectedTables={
         <ConnectionTables
           selectedSchemaNodes={props.selectedSchemaNodes}
+          connectionIcons={getConnectionIcons(connectionsData.connectionsForDisplay, true)}
           onNodeDeselected={onTableDeselect}
           columnDetails={viewSourceInfo.schemas}
           setShowPreviewData={toggleShowPreviewData}

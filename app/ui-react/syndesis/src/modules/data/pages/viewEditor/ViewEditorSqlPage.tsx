@@ -102,8 +102,6 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
 
   const handleMetadataLoaded = async (): Promise<void> => {
     if (sourceTableColumns != null && sourceTableColumns.length > 0) {
-      // tslint:disable-next-line:no-console
-      console.log("  VESPage.handleMetadataLoaded() \n\t  virtualization.name = ", virtualization.name);
       monacoContext.setVirtualization(virtualization.name);
       setMetadataLoaded(true);
     }
