@@ -7,6 +7,22 @@ export default {
         'SOAP Endpoint address from WSDL SOAP Binding or user specified address.',
       displayName: 'Address',
     },
+    addTimestamp: {
+      defaultValue: false,
+      description: 'Add a Timestamp to WS-Security header.',
+      displayName: 'Timestamp',
+    },
+    addUsernameTokenCreated: {
+      defaultValue: false,
+      description:
+        'Add Created timestamp element to WS-Security Username Token header.',
+      displayName: 'Username Token Created',
+    },
+    addUsernameTokenNonce: {
+      defaultValue: false,
+      description: 'Add Nonce element to WS-Security Username Token header.',
+      displayName: 'Username Token Nonce',
+    },
     authenticationType: {
       defaultValue: 'none',
       description:
@@ -31,7 +47,7 @@ export default {
       defaultValue: 'auth-endpoint',
     },
     passwordType: {
-      defaultValue: 'PasswordText',
+      defaultValue: 'PasswordNone',
       displayName: 'Password Type',
       enum: [
         {
@@ -47,6 +63,10 @@ export default {
           value: 'PasswordDigest',
         },
       ],
+    },
+    tokenEndpoint: {
+      defaultValue: '',
+      displayName: 'Token Endpoint',
     },
   },
   configuredProperties: {
