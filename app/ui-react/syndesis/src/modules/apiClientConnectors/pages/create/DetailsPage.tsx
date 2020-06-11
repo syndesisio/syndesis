@@ -4,10 +4,10 @@ import { IApiSummarySoap } from '@syndesis/models';
 import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
+  ApiConnectorCreatorDetails,
   ApiConnectorCreatorFooter,
   ApiConnectorCreatorLayout,
   ApiConnectorCreatorToggleList,
-  ApiConnectorDetailsForm,
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -103,7 +103,7 @@ export const DetailsPage: React.FunctionComponent = () => {
                 <ApiConnectorCreatorLayout
                   content={
                     <div style={{ maxWidth: '600px' }}>
-                      <ApiConnectorDetailsForm
+                      <ApiConnectorCreatorDetails
                         apiConnectorIcon={icon}
                         apiConnectorName={connectorName}
                         i18nIconLabel={t('ConnectorIcon')}
