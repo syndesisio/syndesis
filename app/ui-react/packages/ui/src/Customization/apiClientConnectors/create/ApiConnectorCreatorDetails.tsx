@@ -1,8 +1,8 @@
 import { Form, Stack, StackItem, Title } from '@patternfly/react-core';
 import * as React from 'react';
-import './ApiConnectorDetailsForm.css';
+import './ApiConnectorCreatorDetails.css';
 
-export interface IApiConnectorDetailsFormProps {
+export interface IApiConnectorDetailsProps {
   /**
    * The optional icon of the API client connector.
    */
@@ -37,18 +37,15 @@ export interface IApiConnectorDetailsFormProps {
   onUploadImage: (event: any) => void;
 }
 
-export const ApiConnectorDetailsForm: React.FunctionComponent<
-  IApiConnectorDetailsFormProps
-> = (
-  {
-    apiConnectorIcon,
-    apiConnectorName,
-    fields,
-    handleSubmit,
-    i18nIconLabel,
-    isEditing,
-    onUploadImage
-  }) => {
+export const ApiConnectorCreatorDetails: React.FunctionComponent<IApiConnectorDetailsProps> = ({
+  apiConnectorIcon,
+  apiConnectorName,
+  fields,
+  handleSubmit,
+  i18nIconLabel,
+  isEditing,
+  onUploadImage,
+}) => {
   return (
     <Stack className="api-connector-details-form__card" gutter={'md'}>
       {apiConnectorName && (
@@ -90,4 +87,4 @@ export const ApiConnectorDetailsForm: React.FunctionComponent<
       </StackItem>
     </Stack>
   );
-}
+};

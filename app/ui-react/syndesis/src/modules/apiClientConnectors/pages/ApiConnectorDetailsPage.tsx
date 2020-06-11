@@ -1,8 +1,8 @@
 import { WithApiConnector, WithApiConnectorHelpers } from '@syndesis/api';
 import { Connector } from '@syndesis/models';
 import {
+  ApiConnectorCreatorDetails,
   ApiConnectorDetailCard,
-  ApiConnectorDetailsForm,
   ApiConnectorReview,
   Breadcrumb,
   ButtonLink,
@@ -32,11 +32,9 @@ export interface IApiConnectorDetailsPageProps {
   edit: boolean;
 }
 
-export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetailsPageProps> = (
-  {
-    edit,
-  }) => {
-
+export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetailsPageProps> = ({
+  edit,
+}) => {
   const getTagMessages = (apiConnector: Connector): string[] | undefined => {
     if (
       apiConnector.actionsSummary &&
@@ -46,12 +44,12 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
         tagName => {
           const numTagged = apiConnector.actionsSummary!.actionCountByTags![
             tagName
-            ];
+          ];
           return i18n.t('apiClientConnectors:reviewOperationsTaggedMessage', {
             count: numTagged,
             tag: tagName,
           });
-        },
+        }
       );
     }
 
@@ -63,21 +61,21 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
       <UIContext.Consumer>
         {({ pushNotification }) => {
           return (
-            <WithRouteData<IApiConnectorDetailsRouteParams,
-                IApiConnectorDetailsRouteState>>
+            <WithRouteData<
+              IApiConnectorDetailsRouteParams,
+              IApiConnectorDetailsRouteState
+            >>
               {(
                 { apiConnectorId },
                 { apiConnector },
-                { history, location },
+                { history, location }
               ) => (
                 <Translation ns={['apiClientConnectors', 'shared']}>
                   {t => (
                     <>
                       <Breadcrumb>
                         <Link
-                          data-testid={
-                            'api-connector-details-page-home-link'
-                          }
+                          data-testid={'api-connector-details-page-home-link'}
                           to={resolvers.dashboard.root()}
                         >
                           {t('shared:Home')}
@@ -90,13 +88,9 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                         >
                           {t('apiConnectorsPageTitle')}
                         </Link>
-                        <span>
-                                              {t(
-                                                'apiConnectorDetailsPageTitle',
-                                              )}
-                                            </span>
+                        <span>{t('apiConnectorDetailsPageTitle')}</span>
                       </Breadcrumb>
-                      <PageTitle title={t('apiConnectorDetailsPageTitle')}/>
+                      <PageTitle title={t('apiConnectorDetailsPageTitle')} />
                       <WithApiConnectorHelpers>
                         {({ saveApiConnector, updateApiConnector }) => {
                           const handleSave = async (updated: Connector) => {
@@ -112,7 +106,7 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                               {({ data, hasData, error, errorMessage }) => {
                                 const onSubmit = async (
                                   values: IConnectorValues,
-                                  actions: any,
+                                  actions: any
                                 ) => {
                                   const updated = updateApiConnector(
                                     data,
@@ -120,7 +114,7 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                     values.description,
                                     values.host,
                                     values.basePath,
-                                    values.icon,
+                                    values.icon
                                   );
 
                                   try {
@@ -130,15 +124,15 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                       resolvers.apiClientConnectors.apiConnector.details(
                                         {
                                           apiConnector: updated,
-                                        },
-                                      ),
+                                        }
+                                      )
                                     );
                                     return true;
                                   } catch (error) {
                                     actions.setSubmitting(false);
                                     pushNotification(
                                       t('errorSavingApiConnector'),
-                                      'error',
+                                      'error'
                                     );
                                     return false;
                                   }
@@ -149,8 +143,8 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                     resolvers.apiClientConnectors.apiConnector.details(
                                       {
                                         apiConnector: data,
-                                      },
-                                    ),
+                                      }
+                                    )
                                   );
                                 };
 
@@ -159,8 +153,8 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                     resolvers.apiClientConnectors.apiConnector.edit(
                                       {
                                         apiConnector: data,
-                                      },
-                                    ),
+                                      }
+                                    )
                                   );
                                 };
 
@@ -168,15 +162,17 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                   <WithLoader
                                     error={error}
                                     loading={!hasData}
-                                    loaderChildren={<PageLoader/>}
+                                    loaderChildren={<PageLoader />}
                                     errorChildren={
-                                      <ApiError error={errorMessage!}/>
+                                      <ApiError error={errorMessage!} />
                                     }
                                   >
                                     {() => {
                                       return (
                                         <>
-                                          <PageSection style={{ height: '10em' }}>
+                                          <PageSection
+                                            style={{ height: '10em' }}
+                                          >
                                             <ApiConnectorDetailCard
                                               description={data.description}
                                               icon={data.icon}
@@ -202,22 +198,30 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                                 handleSubmit={onSubmit}
                                               >
                                                 {({
-                                                    connectorName,
-                                                    fields,
-                                                    handleSubmit,
-                                                    icon,
-                                                    isSubmitting,
-                                                    isUploadingImage,
-                                                    onUploadImage,
-                                                  }) => {
+                                                  connectorName,
+                                                  fields,
+                                                  handleSubmit,
+                                                  icon,
+                                                  isSubmitting,
+                                                  isUploadingImage,
+                                                  onUploadImage,
+                                                }) => {
                                                   return (
                                                     <>
-                                                      <ApiConnectorDetailsForm
+                                                      <ApiConnectorCreatorDetails
                                                         apiConnectorIcon={icon}
-                                                        apiConnectorName={connectorName}
-                                                        i18nIconLabel={t('ConnectorIcon')}
-                                                        handleSubmit={handleSubmit}
-                                                        onUploadImage={onUploadImage}
+                                                        apiConnectorName={
+                                                          connectorName
+                                                        }
+                                                        i18nIconLabel={t(
+                                                          'ConnectorIcon'
+                                                        )}
+                                                        handleSubmit={
+                                                          handleSubmit
+                                                        }
+                                                        onUploadImage={
+                                                          onUploadImage
+                                                        }
                                                         isEditing={edit}
                                                         fields={fields}
                                                       />
@@ -232,7 +236,9 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                                               isSubmitting ||
                                                               isUploadingImage
                                                             }
-                                                            onClick={cancelEditing}
+                                                            onClick={
+                                                              cancelEditing
+                                                            }
                                                           >
                                                             {t('shared:Cancel')}
                                                           </ButtonLink>
@@ -246,7 +252,9 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                                               isSubmitting ||
                                                               isUploadingImage
                                                             }
-                                                            onClick={handleSubmit}
+                                                            onClick={
+                                                              handleSubmit
+                                                            }
                                                           >
                                                             {(isSubmitting ||
                                                               isUploadingImage) && (
@@ -281,22 +289,22 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                                   }
                                                   apiConnectorName={data.name}
                                                   i18nApiDefinitionHeading={t(
-                                                    'reviewApiDefinitionHeading',
+                                                    'reviewApiDefinitionHeading'
                                                   )}
                                                   i18nDescriptionLabel={t(
-                                                    'shared:Description',
+                                                    'shared:Description'
                                                   )}
                                                   i18nErrorsHeading={t(
                                                     'reviewErrorsHeading',
                                                     {
                                                       count: 0,
-                                                    },
+                                                    }
                                                   )} // TODO fix count
                                                   i18nImportedHeading={t(
-                                                    'reviewImportedHeading',
+                                                    'reviewImportedHeading'
                                                   )}
                                                   i18nNameLabel={t(
-                                                    'shared:Name',
+                                                    'shared:Name'
                                                   )}
                                                   i18nOperationsHtmlMessage={t(
                                                     'reviewOperationsMessage',
@@ -304,46 +312,46 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                                       count:
                                                         data.actionsSummary
                                                           .totalActions || 0,
-                                                    },
+                                                    }
                                                   )}
                                                   i18nOperationTagHtmlMessages={getTagMessages(
-                                                    data,
+                                                    data
                                                   )}
                                                   i18nTitle={t(
-                                                    'reviewActionsTitle',
+                                                    'reviewActionsTitle'
                                                   )}
                                                   i18nWarningsHeading={t(
                                                     'reviewWarningsHeading',
                                                     {
                                                       count: 0,
-                                                    },
+                                                    }
                                                   )} // TODO fix count
                                                 />
                                               ) : (
                                                 <ApiConnectorReview
                                                   i18nApiDefinitionHeading={t(
-                                                    'apiConnectorsPageTitle',
+                                                    'apiConnectorsPageTitle'
                                                   )}
                                                   i18nDescriptionLabel={t(
-                                                    'shared:Description',
+                                                    'shared:Description'
                                                   )}
                                                   i18nImportedHeading={t(
-                                                    'apiConnectorsPageTitle',
+                                                    'apiConnectorsPageTitle'
                                                   )}
                                                   i18nNameLabel={t(
-                                                    'shared:Name',
+                                                    'shared:Name'
                                                   )}
                                                   i18nOperationsHtmlMessage={t(
                                                     'reviewOperationsMessage',
                                                     {
                                                       count: 0,
-                                                    },
+                                                    }
                                                   )}
                                                   i18nTitle={t(
-                                                    'reviewActionsTitle',
+                                                    'reviewActionsTitle'
                                                   )}
                                                   i18nValidationFallbackMessage={t(
-                                                    'reviewValidationFallback',
+                                                    'reviewValidationFallback'
                                                   )}
                                                 />
                                               )}
