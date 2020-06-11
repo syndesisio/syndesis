@@ -35,7 +35,7 @@ You can define zero or one condition for each mapping.
 The following procedure gets you started with applying 
 conditions to mappings. 
 
-*Note:* After you add a condition to a mapping, the Source and Target transformation options are disabled. If need to place any transformations within the conditional expression.
+*Note:* After you add a condition to a mapping, the Source and Target transformation options are disabled. You must place any transformations within the conditional expression.
 
 .Prerequisites
 
