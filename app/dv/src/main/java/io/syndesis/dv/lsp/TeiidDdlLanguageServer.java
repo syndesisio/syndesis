@@ -30,6 +30,8 @@ import org.eclipse.lsp4j.services.WorkspaceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.syndesis.dv.server.endpoint.MetadataService;
+
 public class TeiidDdlLanguageServer implements LanguageServer, LanguageClientAware {
 
     private static final CompletionOptions DEFAULT_COMPLETION_OPTIONS = new CompletionOptions(Boolean.TRUE, Arrays.asList(".", "@", "#", "*"));
@@ -38,13 +40,15 @@ public class TeiidDdlLanguageServer implements LanguageServer, LanguageClientAwa
 
     private final WorkspaceService workspaceService;
     private final TeiidDdlTextDocumentService textDocumentService;
+    private final MetadataService metadataService;
 
     private LanguageClient client;
 
-    public TeiidDdlLanguageServer() {
-        this.textDocumentService = new TeiidDdlTextDocumentService(this);
+    public TeiidDdlLanguageServer(MetadataService metadataService) {
+        super();
         this.workspaceService = new TeiidDdlWorkspaceService();
-        LOGGER.debug("TeiidDdlLanguageServer()  doc and workspace services created");
+        this.metadataService = metadataService;
+        this.textDocumentService = new TeiidDdlTextDocumentService(this);
     }
 
     /**
@@ -92,11 +96,15 @@ public class TeiidDdlLanguageServer implements LanguageServer, LanguageClientAwa
         capabilities.setDocumentHighlightProvider(Boolean.TRUE);
         capabilities.setDocumentSymbolProvider(Boolean.TRUE);
         // TODO: define capabilities, usually the first provided is completion
-        capabilities.setCompletionProvider(DEFAULT_COMPLETION_OPTIONS); // new CompletionOptions(Boolean.TRUE, Arrays.asList(".","?","&", "\"", "=")));
+        capabilities.setCompletionProvider(DEFAULT_COMPLETION_OPTIONS);
         return capabilities;
     }
 
     public LanguageClient getClient() {
         return client;
+    }
+
+    public MetadataService getMetadataService() {
+        return metadataService;
     }
 }

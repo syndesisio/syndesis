@@ -65,6 +65,16 @@ public abstract class AbstractStatementObject {
         return new Position(token.endLine, token.endColumn);
     }
 
+    protected boolean isWithin(int firstTknIndex, int lastTknIndex, Position target) {
+        // get token for target position
+        Token token = analyzer.getTokenFor(target);
+        int tokenIndex = getTokenIndex(token);
+        if (tokenIndex >= firstTknIndex && tokenIndex <= lastTknIndex) {
+            return this.analyzer.isPositionInToken(target, token);
+        }
+        return false;
+    }
+
     protected boolean isBetween(int firstTknIndex, int lastTknIndex, Position target) {
         // get token for target position
         Token token = analyzer.getTokenFor(target);
@@ -73,13 +83,37 @@ public abstract class AbstractStatementObject {
         return tokenIndex >= firstTknIndex && tokenIndex <= lastTknIndex;
     }
 
+    protected boolean isWithinSingleToken(int firstTknIndex, int lastTknIndex, Position target) {
+        Token token = analyzer.getTokenFor(target);
+        int tokenIndex = getTokenIndex(token);
+
+        return firstTknIndex == lastTknIndex && tokenIndex == firstTknIndex;
+    }
+
     public boolean isTokenInObject(Token token) {
         int index = getTokenIndex(token);
         return index >= getFirstTknIndex() && index <= getLastTknIndex();
     }
 
+    public boolean isFirstToken(Token token) {
+        return getTokenIndex(token) == getFirstTknIndex();
+    }
+
+    public boolean isLastToken(Token token) {
+        return getTokenIndex(token) == getLastTknIndex();
+    }
+
+    public boolean isPositionInNextToken(Position pos, Token targetToken) {
+        int currentIndex = getTokenIndex(targetToken);
+        if (currentIndex < getTokens().size() - 1) {
+            Token nextTkn = getTokens().get(currentIndex + 1);
+            return getAnalyzer().isPositionInToken(pos, nextTkn);
+        }
+        return false;
+    }
+
     public int getTokenIndex(Token token) {
-        if (token == null)  {
+        if (token == null) {
             return 0;
         }
 
@@ -110,32 +144,33 @@ public abstract class AbstractStatementObject {
     }
 
     protected boolean hasAnotherToken(List<Token> tkns, int currentIndex) {
-        return currentIndex+2 < tkns.size();
+        return currentIndex + 2 < tkns.size();
     }
 
     protected boolean isNextTokenOfKind(List<Token> tkns, int currentIndex, int kind) {
-        return hasAnotherToken(tkns, currentIndex) && tkns.get(currentIndex+1).kind == kind;
+        return hasAnotherToken(tkns, currentIndex) && tkns.get(currentIndex + 1).kind == kind;
     }
 
-    public List<Token> getBracketedTokens(List<Token> tkns, int startTokenId, int bracketStartKind, int bracketEndKind) {
+    public List<Token> getBracketedTokens(List<Token> tkns, int startTokenId, int bracketStartKind,
+            int bracketEndKind) {
         int numUnmatchedParens = 0;
 
-        for(int iTkn = 0; iTkn<getTokens().size(); iTkn++) {
-            if( iTkn < startTokenId) {
+        for (int iTkn = 0; iTkn < getTokens().size(); iTkn++) {
+            if (iTkn < startTokenId) {
                 continue;
             }
             Token token = tkns.get(iTkn);
-            if( token.kind == bracketStartKind) {
+            if (token.kind == bracketStartKind) {
                 numUnmatchedParens++;
             }
-            if( token.kind == bracketEndKind) {
+            if (token.kind == bracketEndKind) {
                 numUnmatchedParens--;
             }
 
-            if( numUnmatchedParens == 0) {
+            if (numUnmatchedParens == 0) {
                 List<Token> bracketedTokens = new ArrayList<Token>(tkns.size());
                 bracketedTokens.add(tkns.get(startTokenId));
-                for(int jTkn = startTokenId+1; jTkn < iTkn; jTkn++) {
+                for (int jTkn = startTokenId + 1; jTkn < iTkn; jTkn++) {
                     bracketedTokens.add(tkns.get(jTkn));
                 }
                 bracketedTokens.add(tkns.get(startTokenId + bracketedTokens.size()));
@@ -146,7 +181,7 @@ public abstract class AbstractStatementObject {
     }
 
     public String positionToString(Position position) {
-        return "Line " + (position.getLine()+1) + " Column " + (position.getCharacter()+1);
+        return "Line " + (position.getLine() + 1) + " Column " + (position.getCharacter() + 1);
     }
 
     protected boolean isReservedKeywordToken(Token tkn) {

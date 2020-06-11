@@ -31,6 +31,12 @@ import io.syndesis.dv.lsp.completion.providers.items.DdlCompletionItemLoader;
 
 public class CompletionItemBuilder {
     private final DdlCompletionItemLoader loader = DdlCompletionItemLoader.getInstance();
+    public static final String SORT_WEIGHT_1100 = "1100";
+    public static final String SORT_WEIGHT_1090 = "1090";
+    public static final String SORT_WEIGHT_1080 = "1080";
+    public static final String SORT_WEIGHT_1070 = "1070";
+    public static final String SORT_WEIGHT_1060 = "1060";
+    public static final String SORT_WEIGHT_1050 = "1050";
 
     public DdlCompletionItemLoader getItemLoader() {
         return loader;
@@ -55,22 +61,22 @@ public class CompletionItemBuilder {
         ci.setLabel(label);
         ci.setKind(CompletionItemKind.Keyword);
 
-        if( itemData != null ) {
-            if( itemData.length > 1 ) {
+        if (itemData != null) {
+            if (itemData.length > 1) {
                 String detail = itemData[1];
                 if (detail != null) {
                     ci.setDetail(detail);
                 }
             }
 
-            if( itemData.length > 2 ) {
+            if (itemData.length > 2) {
                 String documentation = itemData[2];
                 if (documentation != null) {
                     ci.setDocumentation(documentation);
                 }
             }
 
-            if( itemData.length > 3 ) {
+            if (itemData.length > 3) {
                 String insertText = itemData[3];
                 if (insertText != null) {
                     ci.setInsertText(insertText);
@@ -82,8 +88,7 @@ public class CompletionItemBuilder {
         return ci;
     }
 
-    public CompletionItem createFieldItem(String label, String detail,
-            String documentation) {
+    public CompletionItem createFieldItem(String label, String detail, String documentation) {
         CompletionItem ci = new CompletionItem();
         ci.setLabel(label);
         ci.setKind(CompletionItemKind.Field);
@@ -96,8 +101,7 @@ public class CompletionItemBuilder {
         return ci;
     }
 
-    public CompletionItem createSnippetItem(String label, String detail,
-            String documentation, String insertText) {
+    public CompletionItem createSnippetItem(String label, String detail, String documentation, String insertText) {
         CompletionItem ci = new CompletionItem();
         ci.setLabel(label);
         ci.setKind(CompletionItemKind.Snippet);
@@ -118,33 +122,30 @@ public class CompletionItemBuilder {
     public List<CompletionItem> generateCompletionItems(String... words) {
         List<CompletionItem> items = new ArrayList<CompletionItem>();
 
-        for(String word: words ) {
+        for (String word : words) {
             items.add(createKeywordItemFromItemData(word));
         }
 
         return items;
     }
 
-    public CompletionItem generateCompletionItem(String label, String details, String documentation, String insertText) {
+    public CompletionItem generateCompletionItem(String label, String details, String documentation,
+            String insertText) {
         // String[] >> label, detail, documentation, insertText
-        if( insertText != null ) {
+        if (insertText != null) {
             return createSnippetItem(label, details, documentation, insertText);
         }
         return createKeywordItem(label, details, documentation);
     }
 
     /**
-     * @return    String[] array >>>>
-        String[0] label;
-        String[1] detail;
-        String[2] documentation;
-        String[3] insertText;
-        String[4] insertTextFormat;
+     * @return String[] array >>>> String[0] label; String[1] detail; String[2]
+     *         documentation; String[3] insertText; String[4] insertTextFormat;
      */
     public String[] getItemData(String label) {
         String[] result = DdlCompletionConstants.KEYWORDS_ITEM_DATA.get(label.toUpperCase(Locale.US));
 
-        if( result == null ) {
+        if (result == null) {
             result = DdlCompletionConstants.DATATYPES_ITEM_DATA.get(label);
         }
 
@@ -155,6 +156,7 @@ public class CompletionItemBuilder {
      * The tokenImage[...] call is returning strings wrapped in double-quotes
      *
      * Need to return a simple string
+     *
      * @return string without double quotes
      */
     public String getKeywordLabel(int keywordId, boolean upperCase) {
@@ -162,7 +164,7 @@ public class CompletionItemBuilder {
     }
 
     public List<CompletionItem> setItemsSortText(List<CompletionItem> items, String sortText) {
-        for( CompletionItem item: items ) {
+        for (CompletionItem item : items) {
             item.setSortText(sortText);
         }
         return items;
@@ -174,8 +176,7 @@ public class CompletionItemBuilder {
 
         MarkupContent markupContent = new MarkupContent();
         markupContent.setKind(MarkupKind.MARKDOWN);
-        markupContent.setValue(
-                String.format("```%s%n%s%n```", "java", escapedString));
+        markupContent.setValue(String.format("```%s%n%s%n```", "java", escapedString));
         return Either.forRight(markupContent);
     }
 

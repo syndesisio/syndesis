@@ -58,20 +58,20 @@ public final class DdlCompletionItemLoader extends CompletionItemBuilder {
             "INTERFACE", "MODULE", "PROPERTY", "UNIT", "VALUE", "ENUM", "KEYWORD", "SNIPPET", "COLOR", "FILE",
             "REFERENCE", "FOLDER", "ENUMMEMBER", "CONSTANT", "STRUCT", "EVENT", "OPERATOR", "TYPEPARAMETER" };
 
-    private static final ImmutableMap<String, CompletionItemKind> STRING_TO_KIND_MAP = ImmutableMap.<String, CompletionItemKind>builder()
-            .put(KINDS[0], CompletionItemKind.Text).put(KINDS[1], CompletionItemKind.Method)
-            .put(KINDS[2], CompletionItemKind.Function).put(KINDS[3], CompletionItemKind.Constructor)
-            .put(KINDS[4], CompletionItemKind.Field).put(KINDS[5], CompletionItemKind.Variable)
-            .put(KINDS[6], CompletionItemKind.Class).put(KINDS[7], CompletionItemKind.Interface)
-            .put(KINDS[8], CompletionItemKind.Module).put(KINDS[9], CompletionItemKind.Property)
-            .put(KINDS[10], CompletionItemKind.Unit).put(KINDS[11], CompletionItemKind.Value)
-            .put(KINDS[12], CompletionItemKind.Enum).put(KINDS[13], CompletionItemKind.Keyword)
-            .put(KINDS[14], CompletionItemKind.Snippet).put(KINDS[15], CompletionItemKind.Color)
-            .put(KINDS[16], CompletionItemKind.File).put(KINDS[17], CompletionItemKind.Reference)
-            .put(KINDS[18], CompletionItemKind.Folder).put(KINDS[19], CompletionItemKind.EnumMember)
-            .put(KINDS[20], CompletionItemKind.Constant).put(KINDS[21], CompletionItemKind.Operator)
-            .put(KINDS[22], CompletionItemKind.Struct).put(KINDS[23], CompletionItemKind.Event)
-            .put(KINDS[24], CompletionItemKind.TypeParameter).build();
+    private static final ImmutableMap<String, CompletionItemKind> STRING_TO_KIND_MAP = ImmutableMap
+            .<String, CompletionItemKind>builder().put(KINDS[0], CompletionItemKind.Text)
+            .put(KINDS[1], CompletionItemKind.Method).put(KINDS[2], CompletionItemKind.Function)
+            .put(KINDS[3], CompletionItemKind.Constructor).put(KINDS[4], CompletionItemKind.Field)
+            .put(KINDS[5], CompletionItemKind.Variable).put(KINDS[6], CompletionItemKind.Class)
+            .put(KINDS[7], CompletionItemKind.Interface).put(KINDS[8], CompletionItemKind.Module)
+            .put(KINDS[9], CompletionItemKind.Property).put(KINDS[10], CompletionItemKind.Unit)
+            .put(KINDS[11], CompletionItemKind.Value).put(KINDS[12], CompletionItemKind.Enum)
+            .put(KINDS[13], CompletionItemKind.Keyword).put(KINDS[14], CompletionItemKind.Snippet)
+            .put(KINDS[15], CompletionItemKind.Color).put(KINDS[16], CompletionItemKind.File)
+            .put(KINDS[17], CompletionItemKind.Reference).put(KINDS[18], CompletionItemKind.Folder)
+            .put(KINDS[19], CompletionItemKind.EnumMember).put(KINDS[20], CompletionItemKind.Constant)
+            .put(KINDS[21], CompletionItemKind.Operator).put(KINDS[22], CompletionItemKind.Struct)
+            .put(KINDS[23], CompletionItemKind.Event).put(KINDS[24], CompletionItemKind.TypeParameter).build();
 
     private DdlCompletionItemLoader() {
         // singleton
@@ -215,9 +215,10 @@ public final class DdlCompletionItemLoader extends CompletionItemBuilder {
     public List<CompletionItem> getCreateStatementTemplateCompletionItems() {
         if (createStatementTemplateItems == null) {
             createStatementTemplateItems = new ArrayList<CompletionItem>();
-            createStatementTemplateItems.add(getCreateViewCompletionItem(1));
-            createStatementTemplateItems.add(getCreateViewInnerJoinCompletionItem(2));
-            createStatementTemplateItems.add(getCreateViewJoinCompletionItem(3));
+            createStatementTemplateItems.add(getCreateViewCompletionItem(1, "1040"));
+            createStatementTemplateItems.add(getCreateViewInnerJoinCompletionItem(2, "1060"));
+            createStatementTemplateItems.add(getCreateViewJoinCompletionItem(3, "1080"));
+            createStatementTemplateItems.add(getCreateViewUnionCompletionItem(4, "1100"));
         }
         return createStatementTemplateItems;
     }
@@ -226,25 +227,58 @@ public final class DdlCompletionItemLoader extends CompletionItemBuilder {
         if (queryExpressionKeywordItems == null) {
             queryExpressionKeywordItems = new ArrayList<CompletionItem>();
 
-            for( int i = 0; i < SQLParserConstants.tokenImage.length; i++) {
+            for (int i = 0; i < SQLParserConstants.tokenImage.length; i++) {
                 String image = SQLParserConstants.tokenImage[i];
                 if (!image.startsWith("\"") || !image.endsWith("\"")) {
                     continue;
                 }
-                image = image.substring(1, image.length()-1);
-                //newer teiid versions won't require upper
+                image = image.substring(1, image.length() - 1);
+                // newer teiid versions won't require upper
                 String upper = image.toUpperCase(Locale.US);
-                if (DataTypeManager.DefaultDataTypes.OBJECT.equalsIgnoreCase(upper) ||
-                        DataTypeManager.getDataTypeClass(image) != DataTypeManager.DefaultDataClasses.OBJECT
+                if (DataTypeManager.DefaultDataTypes.OBJECT.equalsIgnoreCase(upper)
+                        || DataTypeManager.getDataTypeClass(image) != DataTypeManager.DefaultDataClasses.OBJECT
                         || !(SQLConstants.getReservedWords().contains(upper)
                                 || SQLConstants.getNonReservedWords().contains(upper))) {
-                    //it's a datatype keyword, or not a keyword (it's a token)
+                    // it's a datatype keyword, or not a keyword (it's a token)
                     continue;
                 }
                 queryExpressionKeywordItems.add(createKeywordItemFromItemData(getKeywordLabel(i, true)));
             }
         }
         return queryExpressionKeywordItems;
+    }
+
+    public CompletionItem cloneQueryExpressionKeywordItem(String targetLabel) {
+        return cloneCompletionItem(getQueryExpressionKeywordItems(), targetLabel);
+    }
+
+    /**
+     * Clones a {@link CompletionItem} for the given label from the supplied items
+     *
+     * @param targetLabel
+     * @return a completion item
+     */
+    private static CompletionItem cloneCompletionItem(List<CompletionItem> items, String targetLabel) {
+        for (CompletionItem item : items) {
+            if (item.getLabel().equalsIgnoreCase(targetLabel)) {
+                CompletionItem clone = new CompletionItem(targetLabel);
+                clone.setAdditionalTextEdits(item.getAdditionalTextEdits());
+                clone.setCommand(item.getCommand());
+                clone.setData(item.getData());
+                clone.setDetail(item.getDetail());
+                clone.setFilterText(item.getFilterText());
+                clone.setInsertText(item.getInsertText());
+                clone.setInsertTextFormat(item.getInsertTextFormat());
+                clone.setDocumentation(item.getDocumentation());
+                clone.setDeprecated(item.getDeprecated());
+                clone.setKind(item.getKind());
+                clone.setSortText(item.getSortText());
+                clone.setPreselect(item.getPreselect());
+                clone.setTextEdit(item.getTextEdit());
+                return clone;
+            }
+        }
+        return null;
     }
 
     public List<CompletionItem> getQueryExpressionItems() {
@@ -256,7 +290,7 @@ public final class DdlCompletionItemLoader extends CompletionItemBuilder {
         return queryExpressionItems;
     }
 
-    public CompletionItem getCreateViewCompletionItem(int data) {
+    public CompletionItem getCreateViewCompletionItem(int data, String sortValue) {
         CompletionItem ci = new CompletionItem();
         ci.setLabel("CREATE VIEW...");
         ci.setInsertText(QueryExpressionHelper.CREATE_VIEW_INSERT_TEXT);
@@ -266,11 +300,11 @@ public final class DdlCompletionItemLoader extends CompletionItemBuilder {
         ci.setDocumentation(CompletionItemBuilder.beautifyDocument(ci.getInsertText()));
         ci.setData(data);
         ci.setPreselect(true);
-        ci.setSortText("00003");
+        ci.setSortText(sortValue);
         return ci;
     }
 
-    public CompletionItem getCreateViewInnerJoinCompletionItem(int data) {
+    public CompletionItem getCreateViewInnerJoinCompletionItem(int data, String sortValue) {
         CompletionItem ci = new CompletionItem();
         ci.setLabel("CREATE VIEW with INNER JOIN");
         ci.setInsertText(QueryExpressionHelper.CREATE_VIEW_INNER_JOIN_INSERT_TEXT);
@@ -280,11 +314,11 @@ public final class DdlCompletionItemLoader extends CompletionItemBuilder {
         ci.setDocumentation(CompletionItemBuilder.beautifyDocument(ci.getInsertText()));
         ci.setData(data);
         ci.setPreselect(true);
-        ci.setSortText("00002");
+        ci.setSortText(sortValue);
         return ci;
     }
 
-    public CompletionItem getCreateViewJoinCompletionItem(int data) {
+    public CompletionItem getCreateViewJoinCompletionItem(int data, String sortValue) {
         CompletionItem ci = new CompletionItem();
         ci.setLabel("CREATE VIEW with JOIN");
         ci.setInsertText(QueryExpressionHelper.CREATE_VIEW_LEFT_OUTER_JOIN_INSERT_TEXT);
@@ -294,7 +328,21 @@ public final class DdlCompletionItemLoader extends CompletionItemBuilder {
         ci.setDocumentation(CompletionItemBuilder.beautifyDocument(ci.getInsertText()));
         ci.setData(data);
         ci.setPreselect(true);
-        ci.setSortText("00001");
+        ci.setSortText(sortValue);
+        return ci;
+    }
+
+    public CompletionItem getCreateViewUnionCompletionItem(int data, String sortValue) {
+        CompletionItem ci = new CompletionItem();
+        ci.setLabel("CREATE VIEW with UNION");
+        ci.setInsertText(QueryExpressionHelper.CREATE_VIEW_UNION_INSERT_TEXT);
+        ci.setKind(CompletionItemKind.Snippet);
+        ci.setInsertTextFormat(InsertTextFormat.Snippet);
+        ci.setDetail(" Union of two tables from single source");
+        ci.setDocumentation(CompletionItemBuilder.beautifyDocument(ci.getInsertText()));
+        ci.setData(data);
+        ci.setPreselect(true);
+        ci.setSortText(sortValue);
         return ci;
     }
 }
