@@ -187,10 +187,10 @@ XML instance document. The setting cannot be a reference to a document.
 The data shape `name` property specifies a human readable name for the
 data type. The data mapper displays this name in its user interface
 as the label for the data fields. In the following image, 
-*Twitter Mention* is an example of where you would see the value of
+*Person* is an example of where you would see the value of
 the `name` property.
 
-image:images/integrating-applications/TwitterMention.png[Name example]
+image:images/integrating-applications/PersonDataType.png[Name example]
 
 This name also appears in data type indicators in the {prodname} 
 flow visualization. 

@@ -1,0 +1,26 @@
+// This module is included in these assemblies:
+// as_how-to-process-a-collection-in-a-flow.adoc
+// as_mapping-data.adoc
+
+[id='about-data-types-and-collections_{context}']
+= About data types and collections in the data mapper
+
+In the data mapper, a field can be:
+
+* A *primitive* type that stores a single value. Examples of primitive types include `boolean`, `char`, `byte`, `short`, `int`, `long`, `float`, and `double`. A primitive type is not expandable because it is a single field.
+
+* A *complex* type that consists of multiple fields of different types. You define the child fields of a complex type at design time. In the data mapper, a complex type is expandable so that you can view its child fields.
+
+Each type of field (primitive and complex) can also be a collection. A collection is a single field that can have multiple values. The number of items in a collection is determined at runtime. At design time, in the data mapper, a collection is indicated by 
+image:images/integrating-applications/collection-icon.png[the Collection icon]. Whether a collection is expandable in the data mapper interface is determined by its type. When a collection is a primitive type, it is not expandable. When a collection is a complex type, then the data mapper is expandable to display the collection’s child fields. You can map from/to each field.  
+
+Here are some examples:
+
+* `ID` is a primitive type field (`int`). At runtime, an employee can have only one `ID`. For example, `ID=823`. Therefore, `ID` is a primitive type that is not also a collection. In the data mapper, `ID` is not expandable.
+
+* `email` is a primitive type field (string). At runtime, an employee can have multiple `email` values. For example, `email<0>=aslan@home.com` and `email<1>=aslan@business.com`. 
+Therefore, `email` is a primitive type that also is a collection. The data mapper uses  image:images/integrating-applications/collection-icon.png[the Collection icon] to indicate that the `email` field is a collection but `email` is not expandable because it is a primitive type (it does not have child fields). 
+
+* `employee` is a complex object field that has several child fields, including `ID` and `email`. At runtime, `employee` is also a collection, because the company has many employees. +
+At design time, the data mapper uses 
+image:images/integrating-applications/collection-icon.png[the Collection icon] to indicate that `employee` is a collection. The `employee` field is expandable because it is a complex type that has child fields.

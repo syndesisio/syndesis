@@ -11,7 +11,7 @@ you have some background about how to use the data mapper.
 
 The data mapper displays two columns of data fields:
 
-* *Sources* is a list of the data fields that are obtained or
+* *Source* is a list of the data fields that are obtained or
 processed in all previous steps in the flow. 
 * *Target* is a list of the data fields that the next 
 connection in the flow expects and can process.
@@ -25,14 +25,12 @@ The *Sources* panel and the *Target* panel each have
 a search field at the top. If the search field is not visible, click
 image:images/tutorials/magnifying-glass.png[Magnifying Glass] at the top
 right of the *Sources* or *Target* panel.
-
-* Enter the names of the fields that you want to map. 
 +
-To do this, 
-in the upper right of the *Configure Mapper* page, click the plus sign
-to display the *Mapping Details* panel. In the *Sources* section, enter
-the name of the source field. In the *Target* section, enter the name of the
+Type the names of the fields that you want to map. In the *Sources* search field, type
+the name of the source field. In the *Target* search field, type the name of the
 field that you want to map to. 
+
+* Use the image:images/integrating-applications/mapped-fields-icon.png[Show/hide mapped fields icon] and image:images/integrating-applications/unmapped-fields-icon.png[Show/hide unmapped fields icon] options to filter the visible fields.
 
 * Expand and collapse folders to limit the visible fields.
 +
@@ -44,7 +42,8 @@ indicate the order in which {prodname} processes the steps.
 When you are adding a data
 mapper step, the step numbers appear in the folder labels in the
 *Sources* panel and in the *Target* panel.
-+
+
+* If you want to view the data type for each field, click image:images/integrating-applications/show-types-icon.png[Show/hide types icon] to display (or hide) the data types in each field’s label. The folder label also displays the name of the data type that is output by that step. 
 The folder label also displays the name of the data type that is output
 by that step. Connections to applications such as Twitter, Salesforce,
 and SQL define their own data types. For connecting to applications
