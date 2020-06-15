@@ -4,7 +4,10 @@ import * as React from 'react';
 
 import { PageSection, ViewPermissionListItems } from '../../../src';
 
-const stories = storiesOf('Data/ViewsPermissions/ViewPermissionListItems', module);
+const stories = storiesOf(
+  'Data/ViewsPermissions/ViewPermissionListItems',
+  module
+);
 
 const onSelectedViewChangeActionText = 'onSelectedViewChange action';
 const tablePrivileges = [
@@ -37,9 +40,13 @@ const tablePrivileges = [
     grantPrivileges: ['SELECT', 'INSERT', 'UPDATE'],
     roleName: 'myRole6',
     viewDefinitionIds: ['1'],
-  }
+  },
 ];
-const map = new Map<string,string>([['1', 'View_1'],['2', 'view2'],['3', 'view3']]);
+const map = new Map<string, string>([
+  ['1', 'View_1'],
+  ['2', 'view2'],
+  ['3', 'view3'],
+]);
 
 const sampleViewPermissionListItemsNotes =
   '- Verify one view item is shown\n' +
@@ -51,57 +58,75 @@ const sampleViewPermissionListItemsNotes2 =
   '- Verify one view item is shown\n' +
   '- Verify the view has no Permission \n';
 
-stories.add(
-  'View with applied Permission',
-  () => (
-    <PageSection>
-      <ViewPermissionListItems
-        key={0}
-        // i18nSelect={t('shared:Select')}
-        // i18nInsert={t('shared:Insert')}
-        // i18nUpdate={t('shared:Update')}
-        // i18nDelete={t('shared:Delete')}
-        // i18nAllAccess={t('allAccess')}
-        // i18nRole={t('permissionRole')}
-        // i18nAddNewRole={t('addNewRole')}
-        itemSelected={map}
-        viewId={'1'}
-        viewName={'View_1'}
-        i18nPermissionNotSet={'permission not set'}
-        i18nShowLess={'Show less'}
-        viewRolePermissionList={tablePrivileges}
-        // status={dvStatus.attributes}
-        onSelectedViewChange={action(onSelectedViewChangeActionText)}
-        // dvRoles={dvRoles}
-      />
-    </PageSection>
-  ),
-  { notes: sampleViewPermissionListItemsNotes }
-)
-.add(
-  'View with no Permission',
-  () => (
-    <PageSection>
-      <ViewPermissionListItems
-        key={0}
-        // i18nSelect={t('shared:Select')}
-        // i18nInsert={t('shared:Insert')}
-        // i18nUpdate={t('shared:Update')}
-        // i18nDelete={t('shared:Delete')}
-        // i18nAllAccess={t('allAccess')}
-        // i18nRole={t('permissionRole')}
-        // i18nAddNewRole={t('addNewRole')}
-        itemSelected={map}
-        viewId={'1'}
-        viewName={'View_1'}
-        i18nPermissionNotSet={'permission not set'}
-        i18nShowLess={'Show less'}
-        viewRolePermissionList={[]}
-        // status={dvStatus.attributes}
-        onSelectedViewChange={action(onSelectedViewChangeActionText)}
-        // dvRoles={dvRoles}
-      />
-    </PageSection>
-  ),
-  { notes: sampleViewPermissionListItemsNotes2 }
-);
+stories
+  .add(
+    'View with applied Permission',
+    () => (
+      <PageSection>
+        <ViewPermissionListItems
+          key={0}
+          viewId={'1'}
+          viewName={'View_1'}
+          index={0}
+          i18nSelect={'Select'}
+          i18nAddNewRole={'Add new role'}
+          i18nRemoveRoleRow={'Remove role row'}
+          i18nSelectRole={'select role'}
+          i18nRoleExists={'Role allready exists'}
+          i18nInsert={'Insert'}
+          i18nUpdate={'Update'}
+          i18nDelete={'Delete'}
+          i18nAllAccess={'All access'}
+          i18nRole={'Permission role'}
+          i18nShowLess={'ShowLess'}
+          i18nPermissionNotSet={'Permission not set'}
+          i18nCancel={'Cancel'}
+          i18nSave={'Save'}
+          itemSelected={map}
+          viewRolePermissionList={tablePrivileges}
+          status={''}
+          onSelectedViewChange={action(onSelectedViewChangeActionText)}
+          dvRoles={['Developer']}
+          getUpdatedRole={action('get updated permission')}
+          // tslint:disable-next-line: jsx-no-lambda
+          updateViewsPermissions={() => Promise.resolve(true)}
+        />
+      </PageSection>
+    ),
+    { notes: sampleViewPermissionListItemsNotes }
+  )
+  .add(
+    'View with no Permission',
+    () => (
+      <PageSection>
+        <ViewPermissionListItems
+          key={0}
+          viewId={'1'}
+          viewName={'View_1'}
+          index={0}
+          i18nSelect={'Select'}
+          i18nAddNewRole={'Add new role'}
+          i18nRemoveRoleRow={'Remove role row'}
+          i18nSelectRole={'select role'}
+          i18nRoleExists={'Role allready exists'}
+          i18nInsert={'Insert'}
+          i18nUpdate={'Update'}
+          i18nDelete={'Delete'}
+          i18nAllAccess={'All access'}
+          i18nRole={'Permission role'}
+          i18nShowLess={'ShowLess'}
+          i18nPermissionNotSet={'Permission not set'}
+          i18nCancel={'Cancel'}
+          i18nSave={'Save'}
+          itemSelected={map}
+          viewRolePermissionList={tablePrivileges}
+          onSelectedViewChange={action(onSelectedViewChangeActionText)}
+          dvRoles={['Developer']}
+          getUpdatedRole={action('get updated permission')}
+          // tslint:disable-next-line: jsx-no-lambda
+          updateViewsPermissions={() => Promise.resolve(true)}
+        />
+      </PageSection>
+    ),
+    { notes: sampleViewPermissionListItemsNotes2 }
+  );

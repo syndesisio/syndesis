@@ -42,78 +42,59 @@ export interface IRoleOption {
 }
 const getCheckInitial = (selectedPermissions: string[]) => {
   const newState = {
-    allAccessCheck: false,
-    deleteCheck: false,
-    insertCheck: false,
-    selectCheck: false,
-    updateCheck: false,
+    ALLACCESS: false,
+    DELETE: false,
+    INSERT: false,
+    SELECT: false,
+    UPDATE: false,
   };
   for (const permission of selectedPermissions) {
-    if (permission === 'SELECT') {
-      newState.selectCheck = true;
-    } else if (permission === 'INSERT') {
-      newState.insertCheck = true;
-    } else if (permission === 'UPDATE') {
-      newState.updateCheck = true;
-    } else if (permission === 'DELETE') {
-      newState.deleteCheck = true;
-    }
+    newState[permission] = true;
   }
+  newState.ALLACCESS =
+    newState.SELECT && newState.INSERT && newState.UPDATE && newState.DELETE;
   return newState;
-};
-
-const getPermission = (permission: string): string[] => {
-  switch (permission) {
-    case 'selectCheck':
-      return ['SELECT'];
-    case 'insertCheck':
-      return ['INSERT'];
-    case 'updateCheck':
-      return ['UPDATE'];
-    case 'deleteCheck':
-      return ['DELETE'];
-    default:
-      return ['SELECT', 'INSERT', 'UPDATE', 'DELETE'];
-  }
 };
 
 const getRolePermissionsModel = (checkState: any) => {
   let returnVal: string[] = [];
-  if (checkState.allAccessCheck) {
-    return getPermission('allAccessCheck');
+  if (checkState.ALLACCESS) {
+    return ['SELECT', 'INSERT', 'UPDATE', 'DELETE'];
   } else {
-    if (checkState.selectCheck) {
-      returnVal = [...returnVal, ...getPermission('selectCheck')];
+    if (checkState.SELECT) {
+      returnVal = [...returnVal, 'SELECT'];
     }
-    if (checkState.insertCheck) {
-      returnVal = [...returnVal, ...getPermission('insertCheck')];
+    if (checkState.INSERT) {
+      returnVal = [...returnVal, 'INSERT'];
     }
-    if (checkState.updateCheck) {
-      returnVal = [...returnVal, ...getPermission('updateCheck')];
+    if (checkState.UPDATE) {
+      returnVal = [...returnVal, 'UPDATE'];
     }
-    if (checkState.deleteCheck) {
-      returnVal = [...returnVal, ...getPermission('deleteCheck')];
+    if (checkState.DELETE) {
+      returnVal = [...returnVal, 'DELETE'];
     }
     return returnVal;
   }
 };
 
-const getRoles = (roles: string[]) =>{
-    const roleList: IRoleOption[] = [];
-    roles.map((role: any) => {
-      roleList.push({ value: role });
-    });
-    return roleList;
-}
+const getRoles = (roles: string[]) => {
+  const roleList: IRoleOption[] = [];
+  roles.map((role: any) => {
+    roleList.push({ value: role });
+  });
+  return roleList;
+};
 
-export const RolePermissionListItem: React.FunctionComponent<IRolePermissionListItemProps> = React.memo( props => {
+export const RolePermissionListItem: React.FunctionComponent<IRolePermissionListItemProps> = props => {
   const [checkState, setCheckState] = React.useState(
     getCheckInitial(props.selectedPermissions)
   );
 
   const [isExpanded, setIsExpanded] = React.useState<boolean>(false);
   const [selected, setSelected] = React.useState<any>(null);
-  const [options, setOptions] = React.useState<IRoleOption[]>(getRoles(props.availableRoles));
+  const [options, setOptions] = React.useState<IRoleOption[]>(
+    getRoles(props.availableRoles)
+  );
   const [showErrorAlert, setShowErrorAlert] = React.useState<boolean>(false);
 
   const prevSelectedRef = React.useRef();
@@ -138,7 +119,9 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
 
   const onCreateOption = (newValue: string) => {
     // determine if requested rolename already exists
-    const existingRole = props.roles.find(role => role.toLowerCase() === newValue.toLowerCase());
+    const existingRole = props.roles.find(
+      role => role.toLowerCase() === newValue.toLowerCase()
+    );
     if (existingRole) {
       setShowErrorAlert(true);
       return;
@@ -154,9 +137,42 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
-    const newState = { ...checkState };
-    newState[name] = value;
+    let newState = {
+      ALLACCESS: false,
+      DELETE: false,
+      INSERT: false,
+      SELECT: false,
+      UPDATE: false,
+    };
+    if (name === 'ALLACCESS') {
+      if (value) {
+        newState = {
+          ALLACCESS: true,
+          DELETE: true,
+          INSERT: true,
+          SELECT: true,
+          UPDATE: true,
+        };
+      } else {
+        newState = {
+          ALLACCESS: false,
+          DELETE: false,
+          INSERT: false,
+          SELECT: false,
+          UPDATE: false,
+        };
+      }
+    } else {
+      newState = { ...checkState };
+      newState[name] = value;
+    }
     setCheckState(newState);
+    props.updateRolePermissionModel(
+      selected,
+      getRolePermissionsModel(newState),
+      false,
+      prevSelected
+    );
   };
 
   const removePermissionRow = () => {
@@ -164,6 +180,12 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
     // tslint:disable-next-line: no-unused-expression
     selected && props.deleteRoleFromPermissionModel(selected);
   };
+
+  React.useEffect(() => {
+    if (props.selectedPermissions.length !== 0) {
+      setCheckState(getCheckInitial(props.selectedPermissions));
+    }
+  }, [props.selectedPermissions]);
 
   React.useEffect(() => {
     // tslint:disable-next-line: no-unused-expression
@@ -181,28 +203,17 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
 
   React.useEffect(() => {
     const newState = { ...checkState };
-    if (checkState.allAccessCheck !== null) {
-      newState.selectCheck = checkState.allAccessCheck;
-      newState.insertCheck = checkState.allAccessCheck;
-      newState.updateCheck = checkState.allAccessCheck;
-      newState.deleteCheck = checkState.allAccessCheck;
-      setCheckState(newState);
-    }
-  }, [checkState.allAccessCheck]);
-
-  React.useEffect(() => {
-    const newState = { ...checkState };
-    newState.allAccessCheck =
-      checkState.selectCheck &&
-      checkState.insertCheck &&
-      checkState.updateCheck &&
-      checkState.deleteCheck;
+    newState.ALLACCESS =
+      checkState.SELECT &&
+      checkState.INSERT &&
+      checkState.UPDATE &&
+      checkState.DELETE;
     setCheckState(newState);
   }, [
-    checkState.selectCheck,
-    checkState.insertCheck,
-    checkState.updateCheck,
-    checkState.deleteCheck,
+    checkState.SELECT,
+    checkState.INSERT,
+    checkState.UPDATE,
+    checkState.DELETE,
   ]);
 
   React.useEffect(() => {
@@ -214,7 +225,7 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
       deleteRole,
       prevSelected
     );
-  }, [checkState, selected]);
+  }, [selected]);
 
   const titleId = 'role-select-id';
 
@@ -226,8 +237,10 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
           isInline={true}
           title={props.i18nRoleExists}
           action={
-            // tslint:disable-next-line: jsx-no-lambda
-            <AlertActionCloseButton onClose={() => setShowErrorAlert(false)} />
+            <AlertActionCloseButton
+              // tslint:disable-next-line: jsx-no-lambda
+              onClose={() => setShowErrorAlert(false)}
+            />
           }
         />
       )}
@@ -264,10 +277,10 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   className="role-permission-list-item_checkbox"
                   aria-label="select checkbox"
                   id="check-select"
-                  name="selectCheck"
-                  isChecked={checkState.selectCheck}
-                  checked={checkState.selectCheck}
-                  isDisabled={checkState.allAccessCheck || !selected}
+                  name="SELECT"
+                  isChecked={checkState.SELECT}
+                  checked={checkState.SELECT}
+                  isDisabled={checkState.ALLACCESS || !selected}
                   onChange={handleChange}
                 />
               </DataListCell>,
@@ -277,9 +290,9 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   className="role-permission-list-item_checkbox"
                   aria-label="insert checkbox"
                   id="check-insert"
-                  name="insertCheck"
-                  isChecked={checkState.insertCheck}
-                  isDisabled={checkState.allAccessCheck || !selected}
+                  name="INSERT"
+                  isChecked={checkState.INSERT}
+                  isDisabled={checkState.ALLACCESS || !selected}
                   onChange={handleChange}
                 />
               </DataListCell>,
@@ -289,9 +302,9 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   className="role-permission-list-item_checkbox"
                   aria-label="update checkbox"
                   id="check-update"
-                  name="updateCheck"
-                  isChecked={checkState.updateCheck}
-                  isDisabled={checkState.allAccessCheck || !selected}
+                  name="UPDATE"
+                  isChecked={checkState.UPDATE}
+                  isDisabled={checkState.ALLACCESS || !selected}
                   onChange={handleChange}
                 />
               </DataListCell>,
@@ -301,9 +314,9 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   className="role-permission-list-item_checkbox"
                   aria-label="delete checkbox"
                   id="check-delete"
-                  name="deleteCheck"
-                  isChecked={checkState.deleteCheck}
-                  isDisabled={checkState.allAccessCheck || !selected}
+                  name="DELETE"
+                  isChecked={checkState.DELETE}
+                  isDisabled={checkState.ALLACCESS || !selected}
                   onChange={handleChange}
                 />
               </DataListCell>,
@@ -313,8 +326,8 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
                   className="role-permission-list-item_checkbox"
                   aria-label="allAccess checkbox"
                   id="check-5"
-                  name="allAccessCheck"
-                  isChecked={checkState.allAccessCheck}
+                  name="ALLACCESS"
+                  isChecked={checkState.ALLACCESS}
                   isDisabled={!selected}
                   onChange={handleChange}
                 />
@@ -340,4 +353,4 @@ export const RolePermissionListItem: React.FunctionComponent<IRolePermissionList
       </DataListItem>
     </>
   );
-});
+};

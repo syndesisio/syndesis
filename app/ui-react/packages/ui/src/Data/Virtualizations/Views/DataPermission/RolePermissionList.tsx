@@ -25,6 +25,7 @@ export interface IRolePermissionListProps {
   i18nRoleExists: string;
   viewRolePermissionList: ITablePrivilege[];
   selectedRoles: Map<string, string[]>;
+  clearAction: boolean;
   updateRolePermissionModel: (
     roleName: string | undefined,
     permissions: string[],
@@ -35,42 +36,65 @@ export interface IRolePermissionListProps {
   roles: string[];
 }
 
-const selectedPermissions: string[] = [];
+const getRandomId = () => {
+  return 'role' + Math.floor(Math.random() * 100000);
+};
 
 export const RolePermissionList: React.FunctionComponent<IRolePermissionListProps> = props => {
-
-  const [roleRowList, setRoleRowList] = React.useState<string[]>(['role0']);
-  const [currentRoles, setCurrentRoles] = React.useState<string[]>(props.roles);
-
-  const removeRolePermission = React.useCallback(
-    (index) => {
-      const rolelistCopy = roleRowList.slice();
-      rolelistCopy.splice(rolelistCopy.indexOf(index), 1);
-      setRoleRowList(rolelistCopy);
-    },
-    [roleRowList, setRoleRowList],
+  const [roleRowList, setRoleRowList] = React.useState<Map<string, any>>(
+    new Map<string, any>()
+  );
+  const [availableRoles, setAvailableRoles] = React.useState<string[]>(
+    props.roles
   );
 
+  const removeRolePermission = React.useCallback(
+    index => {
+      const rolelistCopy = new Map<string, any>(roleRowList);
+      rolelistCopy.delete(index);
+      setRoleRowList(rolelistCopy);
+    },
+    [roleRowList, setRoleRowList]
+  );
 
   const addRolePermission = () => {
-    if (roleRowList.length === 0) {
-      setRoleRowList(['role0']);
-    } else {
-      const lastRowId = roleRowList[roleRowList.length - 1];
-      const roleRowNo = +lastRowId.substring(4, lastRowId.length) + 1;
-      setRoleRowList([...roleRowList, 'role' + roleRowNo]);
-    }
+    const rolelistCopy = new Map<string, any>(roleRowList);
+    rolelistCopy.set(getRandomId(), {});
+    setRoleRowList(rolelistCopy);
   };
-  React.useEffect(()=>{
-    setCurrentRoles(props.roles);
-  },[props.roles]);
+
+  const setAppliedPermissions = () => {
+    let rolelistCopy = new Map<string, any>();
+    for (const permissions of props.viewRolePermissionList) {
+      rolelistCopy.set(getRandomId(), permissions || {});
+    }
+    if (props.viewRolePermissionList.length === 0) {
+      rolelistCopy = new Map<string, any>();
+      rolelistCopy.set(getRandomId(), {});
+    }
+    setRoleRowList(rolelistCopy);
+  };
 
   React.useEffect(() => {
     const updatedRoles = props.roles.filter(role => {
       return !props.selectedRoles.has(role);
     });
-    setCurrentRoles(updatedRoles);
-  }, [props.selectedRoles]);
+    setAvailableRoles(updatedRoles);
+  }, [props.roles, props.selectedRoles]);
+
+  React.useEffect(() => {
+    if (props.viewRolePermissionList.length === 0 && roleRowList.size === 0) {
+      const rolelistCopy = new Map<string, any>();
+      rolelistCopy.set(getRandomId(), {});
+      setRoleRowList(rolelistCopy);
+    } else {
+      setAppliedPermissions();
+    }
+  }, [props.viewRolePermissionList]);
+
+  React.useEffect(() => {
+    setAppliedPermissions();
+  }, [props.clearAction]);
 
   return (
     <>
@@ -109,22 +133,26 @@ export const RolePermissionList: React.FunctionComponent<IRolePermissionListProp
             </DataListAction>
           </DataListItemRow>
         </DataListItem>
-        {roleRowList.map((roleNumber: string) => (
-          <RolePermissionListItem
-            index={roleNumber}
-            availableRoles={currentRoles}
-            roles={props.roles}
-            removeRolePermission={removeRolePermission}
-            selectedRole=""
-            selectedPermissions={selectedPermissions}
-            updateRolePermissionModel={props.updateRolePermissionModel}
-            deleteRoleFromPermissionModel={props.deleteRoleFromPermissionModel}
-            i18nSelectRole={props.i18nSelectRole}
-            i18nRemoveRoleRow={props.i18nRemoveRoleRow}
-            i18nRoleExists={props.i18nRoleExists}
-            key={roleNumber}
-          />
-        ))}
+        {Array.from(roleRowList.entries()).map(([key, value]) => {
+          return (
+            <RolePermissionListItem
+              index={key}
+              availableRoles={availableRoles}
+              roles={props.roles}
+              removeRolePermission={removeRolePermission}
+              selectedRole={value.roleName || ''}
+              selectedPermissions={value.grantPrivileges || []}
+              updateRolePermissionModel={props.updateRolePermissionModel}
+              deleteRoleFromPermissionModel={
+                props.deleteRoleFromPermissionModel
+              }
+              i18nSelectRole={props.i18nSelectRole}
+              i18nRemoveRoleRow={props.i18nRemoveRoleRow}
+              i18nRoleExists={props.i18nRoleExists}
+              key={key}
+            />
+          );
+        })}
       </DataList>
       <Button
         variant="link"
