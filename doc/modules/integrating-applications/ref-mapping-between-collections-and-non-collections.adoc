@@ -20,9 +20,7 @@ type that is a collection, such as an array. You cannot map a complex
 type container itself. You can map only the fields that are in the complex type. 
 
 To toggle the display of data types, such as `*(COMPLEX)*`, 
-`*STRING*`, `*INTEGER*`, in the upper right of the data mapper, click 
-image:images/tutorials/EditorSettings.png[settings] and click 
-*Show Types*. 
+`*STRING*`, `*INTEGER*`, click image:images/integrating-applications/show-types-icon.png[Show/hide types icon].
 
 .Collection to non-collection (many-to-one) mapping
 

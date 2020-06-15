@@ -23,11 +23,15 @@ handle collections, and what you want the flow to accomplish.
 You can then use the information in the 
 following topics to add steps to a flow that processes a collection: 
 
+* xref:about-data-types-and-collections_{context}[]
 * xref:about-processing-collections_{context}[]
 * xref:using-data-mapper-to-process-collections_{context}[]
 * xref:add-split-step_{context}[]
 * xref:add-aggregate-step_{context}[]
 * xref:example-processing-collection_{context}[]
+
+
+include::../../modules/integrating-applications/con-about-data-types-and-collections.adoc[leveloffset=+1]
 
 include::../../modules/integrating-applications/con-about-processing-collections.adoc[leveloffset=+1]
 

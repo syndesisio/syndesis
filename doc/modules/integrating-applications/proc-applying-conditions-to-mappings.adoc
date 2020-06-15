@@ -33,9 +33,9 @@ syntax. A conditional expression can refer to an individual field or to a field 
 You can define zero or one condition for each mapping. 
 
 The following procedure gets you started with applying 
-conditions to mappings. As you work with mappings and 
-conditions, you can perform the required steps in the 
-order that is most convenient for you. 
+conditions to mappings. 
+
+*Note:* After you add a condition to a mapping, the Source and Target transformation options are disabled. You must place any transformations within the conditional expression.
 
 .Prerequisites
 
@@ -46,9 +46,7 @@ to a mapping.
 
 .Procedure
 
-. If data types are not already visible, display them by clicking 
-image:images/tutorials/EditorSettings.png[Editor settings] and then 
-*Show Types*. 
+. If data types are not already visible, display them by clicking image:images/integrating-applications/show-types-icon.png[Show/hide types icon].
 +
 While this is not a requirement for specifying a condition, it is
 helpful to see the data types.
@@ -59,8 +57,8 @@ want to apply a condition to. For example, consider this mapping:
 +
 image:images/integrating-applications/first-conditional-mapping.png[lastName and firstName map to customerName]
 
-. In the upper right, click
-image:images/integrating-applications/add-condition-to-mapping.png[Add expression] to 
+. In the upper left, click
+image:images/integrating-applications/add-condition-to-mapping.png[the Add expression icon] to 
 display the conditional expression input field. 
 +
 In the expression field, the data mapper automatically displays 
@@ -80,17 +78,13 @@ expression that you want the data mapper to apply to the
 mapping. Details about supported conditional expressions follow 
 this procedure.
 +
-As you specify the expression, you can: 
+If you want to include a transformation in a conditional mapping, you must add the transformation to the conditional expression. 
 +
-* Enter `@` and start to enter the name of a field.
+As you specify the expression, you can type `@` and start to type the name of a field.
 The data mapper displays a list of the fields that match 
 what you entered. Select the field that you want to 
 specify in the expression. 
-
-* Drag a field from the mapping canvas into the expression input field. 
-
 +
-
 When you add a field name to the expression, the data mapper adds 
 that field to the mapping. For example, consider this conditional 
 expression: 
@@ -104,7 +98,7 @@ field is empty, it maps only the `firstName` field to the target
 `customerName` field.  If the `lastName` field contains a value, that is, 
 it is not empty, the data mapper concatenates the values in the 
 source `orderId` and `phone` fields, and inserts the result in 
-the `customerName` field. 
+the `customerName` field.  
 (This example shows how the logic works, but it is probably not a 
 useful example because when there is a value in the `lastName` field, 
 you most likely want the data mapper to simply perform the 
@@ -124,32 +118,12 @@ field from the mapping. In other words, every field name in the mapping
 must be in the conditional expression. 
 
 . If mapping preview fields are not already visible, display them 
-by clicking image:images/tutorials/EditorSettings.png[Editor settings] and then 
-*Show Mapping Preview*. 
+by clicking image:images/integrating-applications/preview-mapping-icon.png[the Show/Hide Preview Mapping icon]. 
 
-. Enter sample data in the source preview input field(s) 
+. Type sample data in the source preview input field(s) 
 to ensure that the target field or target fields
 get(s) the correct value. 
 
-. Optionally, apply transformations to one or more source or target fields
-that are in the mapping:
-.. In the *Mapping Details* panel, find the field that you want to apply 
-a transformation to. 
-.. Just below it, click *Add Transformation*. 
-.. Click the transformation that you want the data mapper to perform. 
-.. If needed, specify input parameters. 
-
-+
-For more information, see 
-link:{LinkFuseOnlineIntegrationGuide}#available-transformations_map[Descriptions of available transformations] and 
-link:{LinkFuseOnlineIntegrationGuide}#about-transformations-on-multiple-source-values_map[About transformations on multiple source values before mapping to one target field].
-
-+
-For example, in the same mapping presented in this procedure, in the 
-*Mapping Details* panel, you could apply the `Uppercase`
- transformation to the `firstName` field. You can test this by entering 
- data in the `firstName` field's preview input field. 
- 
 . Edit the conditional expression as needed to obtain the desired result.  
 
 .Supported functions in conditional expressions

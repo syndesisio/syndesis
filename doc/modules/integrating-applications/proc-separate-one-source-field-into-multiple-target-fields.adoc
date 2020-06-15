@@ -16,19 +16,13 @@ link:{LinkFuseOnlineIntegrationGuide}#example-missing-unwanted-data_map[Example 
 
 .Procedure
 
-. In the *Sources* panel, click the field whose content you want to separate.
-. In the *Target* panel, click the first field that you want to separate the
-source field data into.
-. In the *Target* panel, for each additional target field that you want
-to contain some of the data from the source field, hover over the field and 
-press *CTRL-Mouse1* (*CMD-Mouse1* on MacOS) to select it.
+. In the *Sources* panel, click the field whose content you want to separate and then click image:images/integrating-applications/create-mapping-icon.png[the Create new mapping icon]. 
+. In the *Mapping Details* panel, from the *Target* drop-down list, select the data fields that you want to map to.
 +
 When you are done selecting target fields, you should see lines from the 
 source field to each of the target fields that you selected. 
 +
-In the *Mapping Details* panel:
-+
-* Under *Sources*, the data mapper displays 
+At the top of the *Mapping Details* panel, the data mapper displays 
 *Split* to indicate that execution of the mapping splits the source 
 field value and maps it to multiple target fields. 
 * Under *Targets*, there is an entry for each target field that 
@@ -39,7 +33,7 @@ you selected.
 .. Under *Sources*, in the *Delimiter* field, accept or select the 
 character in the source field that indicates where to separate 
 the source field values. The default is a space.
-.. Optional. Click *Add Transformation* to apply a transformation 
+.. Optionally, click image:images/integrating-applications/transformation-icon.png[the Transformation icon] to apply a transformation 
 to the source field value before it gets mapped to the target field. 
 .. Under *Targets*, check the order of the entries for the target 
 fields that you selected. The entries must be in the same order 
@@ -47,9 +41,7 @@ as the corresponding content in the compound source field.
 It does not matter whether you did not specify a target field 
 for one or more parts of the content in the source field.
 +
-If the entries are not in the correct order, drag and drop target 
-field entries to achieve the same order. The data mapper automatically 
-updates the index numbers to reflect the new order.
+If the entries are not in the correct order, change the index number for the field entries to achieve the same order.
 +
 If you mapped each part of the compound source field to a target 
 field, then skip to the next step.
@@ -62,40 +54,33 @@ in the source field. The data mapper automatically adds
 padding fields as needed to indicate unwanted data.
 +
 See the example at the end of this procedure. 
-.. Optional. Click *Add Transformation* to map the content into 
-the target field and then apply a transformation.
+.. Optionally, click image:images/integrating-applications/transformation-icon.png[the Transformation icon] to map the content into 
+the target field and then apply a transformation as described in link:{LinkFuseOnlineIntegrationGuide}#transform-target-data_map[Transforming source or target data]. 
 
-. Optional. Preview the data mapping result: 
-.. In the upper right of the data mapper, click 
-image:images/tutorials/EditorSettings.png[Editor settings] and select 
-*Show Mapping Preview* to display a text input field on the source
+. Optionally, preview the data mapping result: 
+.. Click image:images/integrating-applications/preview-mapping-icon.png[the Show/Hide Preview Mapping icon] to display a text input field on the source
 field and read-only result fields on each target field. 
-.. In the source field's data input field, enter text. Be sure to enter
-the separator character between the parts of the field. Click outside 
-the text box to display the mapping result in the read-only fields 
-on the target fields.
+.. In the source field's data input field, type a smaple value. Be sure to enter
+the separator character between the parts of the field. The mapping result appears in the read-only fields for the target fields.
 +
 If you reorder the target fields or add a transformation to a target field 
 then the result fields on the target fields reflect this. If the data mapper
 detects any errors, it displays informative messages at the top of the 
 *Mapping Details* panel. 
 
-.. Hide the preview fields by clicking 
-image:images/tutorials/EditorSettings.png[Editor settings] again and selecting
-*Show Mapping Preview*. 
+.. Hide the preview fields by clicking image:images/integrating-applications/preview-mapping-icon.png[the Show/Hide Preview Mapping icon] again.
 +
 If you redisplay the preview fields, any data that you entered in them is 
 still there and it remains there until you exit the data mapper. 
 
 . To confirm that the mapping is correctly defined, click
-image:images/tutorials/grid.png[Grid] to display the mappings defined in
+image:images/tutorials/grid.png[the Mapping Table icon] to display the mappings defined in
 this step. A mapping that separates the value of a source field into
 multiple target fields looks like this:
 image:images/integrating-applications/SeparateMapping.png[Separate Fields Mapping]. 
 +
 You can also preview mapping results in this view. Click 
-image:images/tutorials/EditorSettings.png[Editor settings], select 
-*Show Mapping Preview*, and enter text as described in the previous step.
+image:images/integrating-applications/preview-mapping-icon.png[the Show/Hide Preview Mapping icon], and then type text as described in the previous step.
 Preview fields appear for only the selected mapping. Click another
 mapping in the table to view preview fields for it. 
 
@@ -147,7 +132,7 @@ zip
 
 To define the mapping, you do the following: 
 
-* Select the source field. 
+* Select the source field and then click image:images/integrating-applications/create-mapping-icon.png[the Create new mapping icon].
 * In the *Mapping Details* panel, in the *Sources* section, 
 select the delimiter, which is a comma in this example. 
 * Select the four target fields. 
@@ -162,8 +147,7 @@ they appear in the data mapper, which is alphabetical. You need to
 change this order so that it mirrors the order in the source field. 
 In this example, the source field contains the `number-and-street` 
 content before the `city` content. To correct the order of the 
-target entries, edit the `city` index field to be `2` 
-or drag the `city` entry so that it is after the `number-and-street` entry. 
+target entries, edit the `city` index field to be `2`. 
 The result looks like this: 
 
 image:images/integrating-applications/Example-Adding-Padding-Mapping-2.png[Example or reordered entries]. 
