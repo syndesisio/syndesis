@@ -18,14 +18,17 @@ package configuration
 
 import (
 	"context"
+	"encoding/base64"
 	"os"
 	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
+	"github.com/stretchr/testify/require"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func Test_GetAddons(t *testing.T) {
@@ -620,4 +623,43 @@ func Test_setIntFromEnv(t *testing.T) {
 			}
 		})
 	}
+}
+
+func Test_secretToEnvVars(t *testing.T) {
+	secret := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-secret",
+			Namespace: "default",
+		},
+		Data: map[string][]byte{
+			"KEY_1": []byte(base64.StdEncoding.EncodeToString([]byte("example1key1"))),
+			"KEY_2": []byte(base64.StdEncoding.EncodeToString([]byte("example1key2"))),
+			"KEY_3": []byte(base64.StdEncoding.EncodeToString([]byte("example1key3"))),
+		},
+	}
+
+	//
+	// Note indenting by 2 tabs or 4 spaces
+	//
+	data, err := SecretToEnvVars(secret.Name, secret.Data, 2)
+	require.NoError(t, err)
+
+	expected := "" +
+		"    - name: KEY_1\n" +
+		"      valueFrom:\n" +
+		"        secretKeyRef:\n" +
+		"          key: KEY_1\n" +
+		"          name: my-secret\n" +
+		"    - name: KEY_2\n" +
+		"      valueFrom:\n" +
+		"        secretKeyRef:\n" +
+		"          key: KEY_2\n" +
+		"          name: my-secret\n" +
+		"    - name: KEY_3\n" +
+		"      valueFrom:\n" +
+		"        secretKeyRef:\n" +
+		"          key: KEY_3\n" +
+		"          name: my-secret\n"
+
+	assert.Equal(t, expected, string(data))
 }

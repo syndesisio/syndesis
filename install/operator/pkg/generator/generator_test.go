@@ -2,6 +2,7 @@ package generator_test
 
 import (
 	"context"
+	"encoding/base64"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -14,6 +15,8 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
 	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestGenerator(t *testing.T) {
@@ -485,4 +488,31 @@ func TestGeneratorDBNoVolumeLabels(t *testing.T) {
 		_, exists, _ := unstructured.NestedMap(resource.UnstructuredContent(), "spec", "matchLabels")
 		assert.False(t, exists)
 	})
+}
+
+func TestGeneratorNonEmbeddedOAuthSecretConversion(t *testing.T) {
+	s, _ := v1beta1.NewSyndesis("syndesis")
+	clientTools := syntesting.FakeClientTools()
+	configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config.yaml", clientTools, s)
+	require.NoError(t, err)
+
+	secret := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-credentials-secret",
+			Namespace: "syndesis",
+		},
+		Data: map[string][]byte{
+			"OAUTH2_PROXY_CLIENT_ID":     []byte(base64.StdEncoding.EncodeToString([]byte("123456789"))),
+			"OAUTH2_PROXY_CLIENT_SECRET": []byte(base64.StdEncoding.EncodeToString([]byte("aaabbbcccdddeeefff"))),
+			"OAUTH2_PROXY_PROVIDER":      []byte(base64.StdEncoding.EncodeToString([]byte("github"))),
+		},
+	}
+
+	configuration.ApiServer.EmbeddedProvider = false
+	configuration.Syndesis.Components.Oauth.CredentialsSecret = secret.Name
+	configuration.Syndesis.Components.Oauth.CredentialsSecretData = secret.Data
+
+	resources, err := generator.Render("./infrastructure/04-syndesis-oauth-proxy-no-embedded.yml.tmpl", configuration)
+	require.NoError(t, err)
+	assert.True(t, len(resources) > 0)
 }

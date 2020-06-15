@@ -65,6 +65,7 @@
             - --skip-auth-regex=/api/v1/version
             - --skip-auth-regex=/config.json
             - --skip-auth-preflight
+            - --ssl-insecure-skip-verify
             - --email-domain=*
             - --https-address=:8443
             # Disabled for now: --pass-user-bearer-token as this requires extra permission which only
@@ -75,26 +76,17 @@
           # which should be loaded prior to the installation of the operator
           #
           env:
-          - name: OAUTH2_PROXY_PROVIDER
-            valueFrom:
-              secretKeyRef:
-                name: {{.Syndesis.Components.Oauth.CredentialsSecret}}
-                key: OAUTH_PROVIDER
           - name: OAUTH2_PROXY_COOKIE_SECRET
             valueFrom:
               secretKeyRef:
                 name: syndesis-global-config
                 key: OAUTH_COOKIE_SECRET
-          - name: OAUTH2_PROXY_CLIENT_ID
-            valueFrom:
-              secretKeyRef:
-                name: {{.Syndesis.Components.Oauth.CredentialsSecret}}
-                key: OAUTH_CLIENT_ID
-          - name: OAUTH2_PROXY_CLIENT_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: {{.Syndesis.Components.Oauth.CredentialsSecret}}
-                key: OAUTH_CLIENT_SECRET
+#
+# This will append all the data from the credentials secret as env vars
+# by first converting it to an object then to yaml then to string. The
+# indent is important to position the env vars so the syntax is correct.
+#
+{{ secretToEnvVars .Syndesis.Components.Oauth.CredentialsSecret .Syndesis.Components.Oauth.CredentialsSecretData 5 }}
           ports:
           - containerPort: 8443
             name: public

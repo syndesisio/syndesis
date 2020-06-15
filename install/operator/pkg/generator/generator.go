@@ -85,6 +85,9 @@ var templateFunctions = template.FuncMap{
 		}
 		return splits[len(splits)-1]
 	},
+	"secretToEnvVars": func(secretName string, secretData map[string][]byte, indents int) (string, error) {
+		return configuration.SecretToEnvVars(secretName, secretData, indents)
+	},
 }
 
 func RenderFSDir(assets http.FileSystem, directory string, context interface{}) ([]unstructured.Unstructured, error) {
