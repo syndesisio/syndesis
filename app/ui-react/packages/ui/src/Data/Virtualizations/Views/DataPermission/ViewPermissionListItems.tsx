@@ -3,31 +3,43 @@ import {
   Button,
   DataListCell,
   DataListCheck,
+  DataListContent,
   DataListItem,
   DataListItemCells,
   DataListItemRow,
+  DataListToggle,
+  Radio,
+  Split,
+  SplitItem,
 } from '@patternfly/react-core';
 import * as React from 'react';
-import { ITablePrivilege } from '..';
-// import { RolePermissionList } from './RolePermissionList';
+import { IRoleInfo, ITablePrivilege, RolePermissionList } from '..';
+import { ButtonLink, Loader } from '../../../../Layout';
 import './ViewPermissionListItems.css';
 
 export interface IViewPermissionListItemsProps {
-  // i18nAddNewRole: string;
-  // i18nSelect: string;
-  // i18nInsert: string;
-  // i18nUpdate: string;
-  // i18nDelete: string;
-  // i18nAllAccess: string;
-  // i18nRole: string;
+  index: number;
+  i18nAddNewRole: string;
+  i18nSelect: string;
+  i18nSelectRole: string;
+  i18nRemoveRoleRow: string;
+  i18nRoleExists: string;
+  i18nInsert: string;
+  i18nUpdate: string;
+  i18nDelete: string;
+  i18nAllAccess: string;
+  i18nRole: string;
+  i18nPermissionNotSet: string;
+  i18nShowLess: string;
+  i18nCancel: string;
+  i18nSave: string;
   viewId: string;
   viewName: string;
   viewRolePermissionList: ITablePrivilege[];
   itemSelected: Map<string, string>;
-  i18nPermissionNotSet: string;
-  i18nShowLess: string;
-  // status: any;
-  // dvRoles: string[];
+  dvRoles: string[];
+  updateViewsPermissions: (roleInfo: IRoleInfo) => Promise<boolean>;
+  getUpdatedRole: () => void;
   onSelectedViewChange: (
     checked: boolean,
     event: any,
@@ -36,24 +48,117 @@ export interface IViewPermissionListItemsProps {
   ) => void;
 }
 
+const getUpdatePermissionsPayload = (
+  permissionsModel: Map<string, string[]>,
+  viewSelected: string
+) => {
+  const returnVal: ITablePrivilege[] = [];
+  permissionsModel.forEach((value: string[], key: string) => {
+    returnVal.push({
+      grantPrivileges: value,
+      roleName: key,
+      viewDefinitionIds: [viewSelected],
+    });
+  });
+
+  return returnVal;
+};
+
 export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = props => {
   /**
    * React useState Hook to handle state in component.
    */
-  // const [show, setShow] = React.useState<boolean>(false);
+  const [show, setShow] = React.useState<boolean>(false);
+
+  const [showLoading, setShowLoading] = React.useState<boolean>(false);
+
+  const [grantOperation, setGrantOperation] = React.useState<boolean>(true);
 
   const [trimPermissionList, setTrimPermissionList] = React.useState<
     ITablePrivilege[]
   >([]);
 
-  // const [rolePermissionModel,setRolePermissionModel ] = React.useState<Map<string, string[]>>( new Map());
+  const [rolePermissionModel, setRolePermissionModel] = React.useState<
+    Map<string, string[]>
+  >(new Map());
 
   const [showAll, setShowAll] = React.useState<boolean>(false);
+  const [saveEnabled, setSaveEnabled] = React.useState<boolean>(false);
 
-  // const updateRolePermissionModel = (roleName: string, permissions: string[]) => {
-  //   const rolePermissionModelCopy = new Map(rolePermissionModel);
-  //   setRolePermissionModel(rolePermissionModelCopy.set(roleName,permissions));
-  // }
+  const [clearAction, setClearAction] = React.useState<boolean>(false);
+
+  const updateRolePermissionModel = React.useCallback(
+    (
+      roleName: string | undefined,
+      permissions: string[],
+      deleteRole: boolean,
+      prevSelected: string | undefined
+    ) => {
+      const rolePermissionModelCopy = new Map<string, string[]>(
+        rolePermissionModel
+      );
+      // tslint:disable-next-line: no-unused-expression
+      roleName && rolePermissionModelCopy.set(roleName, permissions);
+      if (deleteRole && prevSelected) {
+        rolePermissionModelCopy.delete(prevSelected);
+      }
+      setRolePermissionModel(rolePermissionModelCopy);
+    },
+    [rolePermissionModel, setRolePermissionModel]
+  );
+
+  const deleteRoleFromPermissionModel = React.useCallback(
+    (roleName: string) => {
+      const rolePermissionModelCopy = new Map<string, string[]>(
+        rolePermissionModel
+      );
+      // tslint:disable-next-line: no-unused-expression
+      rolePermissionModelCopy.delete(roleName) &&
+        setRolePermissionModel(rolePermissionModelCopy);
+    },
+    [rolePermissionModel, setRolePermissionModel]
+  );
+
+  const clearRolePermissionModel = () => {
+    setRolePermissionModel(new Map<string, string[]>());
+  };
+
+  const handleCancel = () => {
+    clearRolePermissionModel();
+    setGrantOperation(true);
+    setClearAction(!clearAction);
+    setShow(!show);
+  };
+
+  const handleUpdateRoles = async () => {
+    setShowLoading(true);
+    const callSucess = await props.updateViewsPermissions({
+      operation: grantOperation ? 'GRANT' : 'REVOKE',
+      tablePrivileges: getUpdatePermissionsPayload(
+        rolePermissionModel,
+        props.viewId
+      ),
+    });
+    if (callSucess) {
+      props.getUpdatedRole();
+      setShowLoading(false);
+      clearRolePermissionModel();
+      setGrantOperation(true);
+    }
+  };
+
+  const setBulkRolePermissionModel = () => {
+    const rolePermissionModelCopy = new Map<string, string[]>();
+    for (const permissions of props.viewRolePermissionList) {
+      // tslint:disable-next-line: no-unused-expression
+      permissions.roleName &&
+        rolePermissionModelCopy.set(
+          permissions.roleName,
+          permissions.grantPrivileges
+        );
+    }
+    setRolePermissionModel(rolePermissionModelCopy);
+  };
 
   React.useEffect(() => {
     if (props.viewRolePermissionList.length > 4) {
@@ -63,21 +168,37 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
     } else {
       setTrimPermissionList([]);
     }
-  },[props.viewRolePermissionList]);
+    setBulkRolePermissionModel();
+  }, [props.viewRolePermissionList]);
+
+  React.useEffect(() => {
+    if (rolePermissionModel.size < 1 || showLoading) {
+      setSaveEnabled(false);
+      // Save button enables if one or more roles exist, and all have a permission checked
+    } else if (rolePermissionModel.size > 0) {
+      let allHaveSelection = true;
+      for (const entry of Array.from(rolePermissionModel.entries())) {
+        if (entry[1].length === 0) {
+          allHaveSelection = false;
+          break;
+        }
+      }
+      setSaveEnabled(allHaveSelection);
+    } else {
+      setSaveEnabled(false);
+    }
+  }, [rolePermissionModel, showLoading]);
 
   return (
-    <DataListItem
-      aria-labelledby="width-ex3-item1"
-      // isExpanded={show}
-    >
+    <DataListItem aria-labelledby="width-ex3-item1" isExpanded={show}>
       <DataListItemRow>
-        {/* <DataListToggle
+        <DataListToggle
           isExpanded={show}
           id="width-ex3-toggle1"
           aria-controls="width-ex3-expand1"
           // tslint:disable-next-line: jsx-no-lambda
           onClick={() => setShow(!show)}
-        /> */}
+        />
         <DataListCheck
           aria-labelledby="width-ex3-item1"
           name="width-ex3-item1"
@@ -140,19 +261,39 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
           ]}
         />
       </DataListItemRow>
-      {/* <DataListContent
+      <DataListContent
         aria-label="Primary Content Details"
         id="width-ex3-expand1"
         isHidden={!show}
       >
         <>
-          {props.status.ssoConfigured === 'false' && (
-            <Alert
-              variant={AlertVariant.warning}
-              isInline={true}
-              title="SSO not configured: Edited role won't be used for publishishing until sso is configured."
-            />
-          )}
+          <Split gutter="sm" className={'view-permission-list_set-model_grant'}>
+            <SplitItem>
+              <Radio
+                aria-label={'View-grant'}
+                id={'view-operation-grant' + props.index}
+                data-testid={'view-operation-grant' + props.index}
+                name={'view-operation' + props.index}
+                label="GRANT"
+                // tslint:disable-next-line: jsx-no-lambda
+                onClick={() => setGrantOperation(true)}
+                isChecked={grantOperation}
+              />
+            </SplitItem>
+            <SplitItem>
+              <Radio
+                aria-label={'view-revoke'}
+                id={'view-operation-revoke' + props.index}
+                className={'view-permission-list_radios' + props.index}
+                data-testid={'view-operation-revoke' + props.index}
+                name={'view-operation' + props.index}
+                label="REVOKE"
+                // tslint:disable-next-line: jsx-no-lambda
+                onClick={() => setGrantOperation(false)}
+                isChecked={!grantOperation}
+              />
+            </SplitItem>
+          </Split>
           <RolePermissionList
             i18nRole={props.i18nRole}
             i18nSelect={props.i18nSelect}
@@ -161,12 +302,36 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
             i18nDelete={props.i18nDelete}
             i18nAllAccess={props.i18nAllAccess}
             i18nAddNewRole={props.i18nAddNewRole}
+            i18nSelectRole={props.i18nSelectRole}
+            i18nRemoveRoleRow={props.i18nRemoveRoleRow}
+            i18nRoleExists={props.i18nRoleExists}
             viewRolePermissionList={props.viewRolePermissionList}
-            updateRolePermissionModel={updateRolePermissionModel}
             roles={props.dvRoles}
+            clearAction={clearAction}
+            selectedRoles={rolePermissionModel}
+            updateRolePermissionModel={updateRolePermissionModel}
+            deleteRoleFromPermissionModel={deleteRoleFromPermissionModel}
           />
+          <Split gutter="sm" style={{ paddingTop: '15px' }}>
+            <SplitItem>
+              <ButtonLink
+                key="confirm"
+                onClick={handleUpdateRoles}
+                as={'primary'}
+                disabled={!saveEnabled}
+              >
+                {showLoading ? <Loader size={'xs'} inline={true} /> : null}
+                {props.i18nSave}
+              </ButtonLink>
+            </SplitItem>
+            <SplitItem>
+              <Button variant="link" onClick={handleCancel}>
+                {props.i18nCancel}
+              </Button>
+            </SplitItem>
+          </Split>
         </>
-      </DataListContent> */}
+      </DataListContent>
     </DataListItem>
   );
 };

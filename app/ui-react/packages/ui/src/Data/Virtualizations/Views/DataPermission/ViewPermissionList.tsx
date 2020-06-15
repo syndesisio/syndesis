@@ -166,7 +166,7 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
       rolePermissionModelCopy.delete(roleName) &&
         setRolePermissionModel(rolePermissionModelCopy);
     },
-    [rolePermissionModel, setRolePermissionModel],
+    [rolePermissionModel, setRolePermissionModel]
   );
 
   const clearRolePermissionModel = () => {
@@ -325,7 +325,9 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
                     // tslint:disable-next-line: jsx-no-lambda
                     onClick={() => setShowMore(!showMore)}
                   >
-                    {showMore ? `${props.i18nShowMore}` : `${props.i18nShowLess}`}
+                    {showMore
+                      ? `${props.i18nShowMore}`
+                      : `${props.i18nShowLess}`}
                   </Button>
                 )}
               </h3>
@@ -373,7 +375,8 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
               i18nRoleExists={props.i18nRoleExists}
               viewRolePermissionList={viewRolePermissionList}
               roles={props.dvRoles}
-              selectedRoles= {rolePermissionModel}
+              clearAction={false}
+              selectedRoles={rolePermissionModel}
               updateRolePermissionModel={updateRolePermissionModel}
               deleteRoleFromPermissionModel={deleteRoleFromPermissionModel}
             />
