@@ -26,8 +26,8 @@ data source can interpret.
 . From the navigation sidebar in {prodname}, click *Data*.
 . On the *Data Virtualizations* page, click *Edit* in the entry for the virtual database 
 that contains the view that you want to test.
-. Click the *SQL Client* tab.
+. Click the *SQL client* tab.
 . From the *View* field, select the view that you want to test.
-. In the *Row Limit* field, specify the number of rows to display.
-. In the *Row Offset* field, specify the number of rows to skip. 
-. Click *Submit*. The *Query Results* table displays the result set.
+. In the *Row limit* field, specify the number of rows to display.
+. In the *Row offset* field, specify the number of rows to skip. 
+. Click *Submit*. The *Query results* table displays the result set.

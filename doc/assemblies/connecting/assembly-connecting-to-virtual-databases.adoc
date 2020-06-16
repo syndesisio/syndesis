@@ -9,6 +9,8 @@ In {prodname}, you can create a virtual database that integrates data from multi
 data sources that you choose. After you deploy the resulting virtual database service, 
 you can connect to as if it were a single physical database.
 
+
+ifeval::["{location}" == "downstream"]
 [IMPORTANT]
 ====
 Data virtualization in {prodname} is a Technology Preview feature only. 
@@ -20,6 +22,7 @@ customers to test functionality and provide feedback during the development proc
 For more information about the support scope of Red Hat Technology Preview features,
 see https://access.redhat.com/support/offerings/techpreview/.
 ====
+endif::[]
 
 After you create a virtual database in {prodname}, you can use {prodname} tools to:
 
@@ -32,7 +35,7 @@ After you create a virtual database in {prodname}, you can use {prodname} tools 
   
 .Prerequisites
  
-* The data virtualization UI for {version} was enabled during installation. 
+* The data virtualization UI was enabled during installation. 
 
 ifeval::["{location}" == "downstream"]
 For {prodname} on OCP installations, see 

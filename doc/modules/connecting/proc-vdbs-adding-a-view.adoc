@@ -8,11 +8,8 @@ Add a view to a virtual database to provide a view of the data in a new table.
 
 After you first create a virtual database, it contains only the views 
 that you imported from the initial data source. Add views to the virtual database if 
-you want to incorporate data from other tables. You can add views based on tables in the original 
-data source, or from other data sources. 
+you want to incorporate data from other tables. You can add views based on tables in the original data source or from other data sources. 
 //When you add a view you can join tables from previously imported data sources and new data sources.
-
-NOTE: In this Technology Preview release, you can only add one table to each view. 
 
 // To add a view 
 //that merges data from a new source with an existing source, requires you to add two views:
@@ -21,7 +18,7 @@ NOTE: In this Technology Preview release, you can only add one table to each vie
 //* Add a second view to combine tables from the different sources.     
 
 .Prerequisites
-* The virtual database that you want to add a view to is available in {prodname} in a _Draft_ or _Published_ state. 
+* The virtual database that you want to add a view to is available in {prodname} in a _Stopped_ or _Published_ state. 
 You cannot use {prodname} to add views to virtual databases that were created outside of {prodname}.
 * A {prodname} connection exists to the data source that contains the table that you want integrate.
 * You know the name of the table that you want to use in the view.
@@ -43,18 +40,18 @@ to modify and click *Edit*.
 //the page for your virtualization. 
 //* *Add views from an existing data source* 
 //+
-. Click *Create a View*.
+. Click *Create a view*.
 . Expand a data source to view the tables that it contains. 
 . Select the table that you want to add to the virtual database, and then click *Next*. 
 //
 //+
 //If you select multiple tables, {prodname} creates a view that combines data from 
 //all of the selected tables. 
-. On the *Create a View* page, type a name in the *View Name* field, and then click *Done*.
+. On the *Name your view* page, type a name in the *View Name* field, and then click *Done*.
 +
-The *View Editor* displays the SQL for the view that you created. The *Preview* panel displays 
+The *View editor* displays the SQL for the view that you created. The *Preview* panel displays 
 the data in the view.
-. If no data displays, click *Refresh*. 
+. If no data displays, click the *Refresh* icon. 
 . Click *Done* to close the view.
 +
 If the virtual database was previously published, you must republish it 

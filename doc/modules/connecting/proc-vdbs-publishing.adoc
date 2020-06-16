@@ -22,7 +22,7 @@ into {prodname} integration workflows, and it is available to JDBC and OData cli
 .Procedure
 . From the navigation sidebar in {prodname}, click *Data*.
 . On the *Data Virtualizations* page, find a virtual database that you 
-want to publish, and from the overflow menu, click *Publish*.
+want to publish, click image:images/tutorials/ThreeVerticalDotsKebab.png[Three Vertical Dots] and then click *Publish*.
 +
 A confirmation message notifies you that the virtual database was submitted for 
 publishing, and a progress bar reports the status of the process. 
@@ -30,7 +30,7 @@ publishing, and a progress bar reports the status of the process.
 * If the publishing process succeeds, {prodname} makes the following updates:
 +
 ** The status label of the virtual database entry on the *Data virtualizations* page changes 
-from *Draft* to *Published*. 
+from *Stopped* to *Running*. 
 ** The virtual database entry displays a URL link to the OData endpoint for the virtual database.
 ** The virtual database service is added to the *Connections* page, and a JDBC connection 
 to it is created.

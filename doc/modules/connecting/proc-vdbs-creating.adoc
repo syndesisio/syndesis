@@ -11,7 +11,7 @@ tables from each data source that you want to include. The views in the resultin
 map directly to the database tables that you import. After the initial creation, 
 you can add views to a virtual database that join data from more than one table. 
 
-NOTE: In this Technology Preview, you can create virtual databases in {prodname} only 
+NOTE: In this release, you can create virtual databases in {prodname} only 
 from relational databases, MongoDB, and Salesforce.
 
 .Prerequisites
@@ -25,18 +25,16 @@ from relational databases, MongoDB, and Salesforce.
 
 . From the navigation sidebar in {prodname}, click *Data*.
 . Click *Create Data Virtualization*.
-. On the *Create New Data Virtualization* page, type a name for the virtual database and 
-click *Create*. 
+. On the *Create new Data Virtualization* page, type a name for the virtual database and then click *Create*. 
 +
 * Provide a name that informs people about the database contents or purpose, 
 and that is short enough for application developers and SQL users to easily insert 
 in their code. 
 * Names can include only alphanumeric ([a-z]|[A-Z], [0-9]), and hyphen (-) characters. 
 
-. On the page for your virtualization, click *Import Data Source*.       
-. On the *Import Data Source* page, click the tile for an active data source, and then click *Next*.  
-. From the list of tables that are available, select one or more tables to include in your virtual database 
-and then click *Done*. 
+. On the *Create views* page, click *Import views*.
+. On the *Select connection* page, click the tile for an active data source, and then click *Next*.  
+. On the *Select views* page, select one or more tables to include in your virtual database and then click *Done*. 
 +
 A confirmation message reports when the import completes. The *Views* tab for the 
 draft virtualization lists a view for each table that you imported. 
