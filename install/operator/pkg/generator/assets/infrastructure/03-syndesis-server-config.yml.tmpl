@@ -83,7 +83,11 @@
         apiBaseUrl: '{{.Syndesis.Components.Server.Features.OpenShiftMaster}}/oapi/v1'
         namespace: '{{.OpenShiftProject}}'
         imageStreamNamespace: '{{.OpenShiftProject}}'
+{{- if .DevSupport}}
+        builderImageStreamTag: syndesis-s2i:latest
+{{- else}}
         builderImageStreamTag: syndesis-s2i:{{ tagOf .Syndesis.Components.S2I.Image }}
+{{- end}}
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
