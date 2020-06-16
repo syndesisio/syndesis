@@ -113,9 +113,11 @@ function applyErrorKeysToForm(
     ...extProperties,
     mapsetKeys: errorKeys,
   });
+  const defaultValue = JSON.stringify(errorKeys.reduce((acc, key) => ({ ...acc, [key.name]: '500'}), {} ));
   return {
     ...definition,
     errorResponseCodes: {
+      defaultValue,
       ...errorResponseCodes,
       extendedProperties: newExtendedProperties,
     },
