@@ -4,6 +4,7 @@
 
 [id="connecting-to-virtual-databases_{context}"]
 = Connecting to virtual databases
+:context: vdbs
 
 In {prodname}, you can create a virtual database that integrates data from multiple 
 data sources that you choose. After you deploy the resulting virtual database service, 
