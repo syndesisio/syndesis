@@ -134,7 +134,7 @@
   "publishInProgress": "Le Editoria...",
   "publishInProgressMessage": "La pubblicazione di virtualizzazione è in corso.",
   "publishVirtualizationEnabledTip": "La pubblicazione della virtualizzazione creerà una nuova versione, sostituendo qualsiasi versione attualmente in esecuzione.",
-  "publishVirtualizationDisabledTip": "La virtualizzazione deve avere modifiche prima che la pubblicazione sia abilitata.",
+  "publishVirtualizationDisabledTip": "La pubblicazione sarà abilitata se la virtualizzazione presenta delle modifiche. Per pubblicare una versione precedente, avviarla dalla scheda Versioni.",
   "publishVirtualizationFailed": "La virtualizzazione \"{{name}}\" non può essere pubblicata. Dettagli: {{details}}",
   "publishVirtualizationNoViews": "Impossibile pubblicare la virtualizzazione \"{{name}}\" - Nessuna vista definita",
   "queryResultsTableEmptyStateInfo": "La query non è stata eseguita.\nSeleziona una vista e invia la query.",
