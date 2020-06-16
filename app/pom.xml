@@ -2498,6 +2498,7 @@
         </exclusions>
       </dependency>
 
+      <!-- Override undertow version to fix CVEs -->
       <dependency>
         <groupId>io.undertow</groupId>
         <artifactId>undertow-core</artifactId>
