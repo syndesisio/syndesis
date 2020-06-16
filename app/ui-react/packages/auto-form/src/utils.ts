@@ -62,7 +62,11 @@ export function massageType(property: IFormDefinitionProperty) {
     case 'boolean':
       type = 'checkbox';
   }
-  if (typeof property.enum !== 'undefined' && property.enum.length && type !== 'typeahead') {
+  if (
+    typeof property.enum !== 'undefined' &&
+    property.enum.length &&
+    type !== 'typeahead'
+  ) {
     /**
      * Default to `select` unless property.type === 'typeahead'
      */
@@ -174,12 +178,11 @@ export function massageValue(
       // select controls in syndesis need to default
       // to the first available value if no value
       // is set
-      return (
-        value ||
+      return value ||
         defaultValue ||
-        (property.enum && property.enum.length > 0 && property.enum[0].value) ||
-        ''
-      );
+        (property.enum && property.enum.length > 0)
+        ? property.enum![0].value
+        : '';
     }
     default: {
       return value || defaultValue || '';
