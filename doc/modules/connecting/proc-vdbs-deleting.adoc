@@ -1,0 +1,23 @@
+//Assembly: assembly-connecting-to-virtual-databases.adoc
+
+[id="deleting-a-vdbs_{context}"]
+= Deleting a virtual database in {prodname}
+
+You can permanently delete virtual databases that you create in {prodname}. You can
+delete virtual databases whether they are published or in draft. 
+
+The data sources that a virtual database consumes are not affected by the deletion. Connections 
+between {prodname} and the data sources remain in place.    
+
+.Prerequisites
+
+* You have a virtual database that was created in {prodname} and you want to remove it. 
+
+.Procedure
+
+. From the navigation sidebar in {prodname}, click *Data*.
+. On the *Data Virtualizations* page, click the overflow menu for 
+the virtual database that you want to delete, and then click *Delete*.
+. When prompted, click *Delete* to confirm that you want to delete the virtual database.
++
+A confirmation message reports when the virtualization is deleted.

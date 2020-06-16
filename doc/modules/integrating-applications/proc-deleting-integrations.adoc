@@ -14,6 +14,6 @@ the imported integration.
 . In the left {prodname} panel, click *Integrations*.
 . In the list of integrations, at the right of the entry for the integration
 that you want to delete, click
-image:images/tutorials/ThreeVerticalDotsKebab.png[Kebab] and select
+image:images/tutorials/ThreeVerticalDotsKebab.png[Three Vertical Dots] and select
 *Delete*.
 . In the popup, click *OK* to confirm that you want to delete the integration.

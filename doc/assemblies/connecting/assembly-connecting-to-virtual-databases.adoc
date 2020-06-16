@@ -1,0 +1,51 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id="connecting-to-virtual-databases_{context}"]
+= Connecting to virtual databases
+
+In {prodname}, you can create a virtual database that integrates data from multiple 
+data sources that you choose. After you deploy the resulting virtual database service, 
+you can connect to as if it were a single physical database.
+
+
+ifeval::["{location}" == "downstream"]
+[IMPORTANT]
+====
+Data virtualization in {prodname} is a Technology Preview feature only. 
+Technology Preview features are
+not supported with Red Hat production service level agreements (SLAs) and might not be
+functionally complete. Red Hat does not recommend using them in production.
+These features provide early access to upcoming product features, enabling
+customers to test functionality and provide feedback during the development process.
+For more information about the support scope of Red Hat Technology Preview features,
+see https://access.redhat.com/support/offerings/techpreview/.
+====
+endif::[]
+
+After you create a virtual database in {prodname}, you can use {prodname} tools to:
+
+* Add or remove data sources.
+* Add or edit views of data from different tables or sources.
+* Submit SQL queries to test that views return the expected results.
+* Modify the schema that defines the virtual database.
+* Publish the virtual database to make it available on OpenShift.
+* Delete the virtual database.
+  
+.Prerequisites
+ 
+* The data virtualization UI was enabled during installation. 
+
+ifeval::["{location}" == "downstream"]
+For {prodname} on OCP installations, see 
+link:{LinkFuseOnlineOCPInstallationGuide}#enabling-data-virtualization_install[Enabling data virtualization in {prodname} on OCP] 
+in the {NameOfFuseOnlineOCPInstallationGuide}. 
+endif::[]
+
+include::../../modules/connecting/proc-vdbs-creating.adoc[leveloffset=+1]
+include::../../modules/connecting/proc-vdbs-adding-a-view.adoc[leveloffset=+1]
+include::../../modules/connecting/proc-vdbs-editing-the-ddl.adoc[leveloffset=+1]
+include::../../modules/connecting/proc-vdbs-previewing-by-submitting-queries.adoc[leveloffset=+1]
+include::../../modules/connecting/proc-vdbs-publishing.adoc[leveloffset=+1]
+include::../../modules/connecting/proc-vdbs-deleting.adoc[leveloffset=+1]

@@ -1,0 +1,41 @@
+//Assembly: assembly-connecting-to-virtual-databases.adoc
+
+[id="publishing-a-vdbs_{context}"]
+= Publishing virtual databases in {prodname} to make them available for access
+
+After you define a virtual database in {prodname}, you must publish it to make 
+it available for users and applications to access. 
+
+Publishing a virtual database builds the schema definition that you implemented by 
+importing data sources and views into a runtime image. {prodname} deploys the runtime 
+image to OpenShift as a virtual database container image that you can scale independently. 
+
+After you publish the virtual database, it becomes available as a service and is represented 
+on the {prodname} *Connections* page. The service behaves like any relational 
+database, and clients can connect to it over standard interfaces. It can be incorporated 
+into {prodname} integration workflows, and it is available to JDBC and OData clients.
+
+.Prerequisites
+* You created a virtual database in {prodname}.
+* You added any views that you want to the virtual database.
+
+.Procedure
+. From the navigation sidebar in {prodname}, click *Data*.
+. On the *Data Virtualizations* page, find a virtual database that you 
+want to publish, click image:images/tutorials/ThreeVerticalDotsKebab.png[Three Vertical Dots] and then click *Publish*.
++
+A confirmation message notifies you that the virtual database was submitted for 
+publishing, and a progress bar reports the status of the process. 
++
+* If the publishing process succeeds, {prodname} makes the following updates:
++
+** The status label of the virtual database entry on the *Data virtualizations* page changes 
+from *Stopped* to *Running*. 
+** The virtual database entry displays a URL link to the OData endpoint for the virtual database.
+** The virtual database service is added to the *Connections* page, and a JDBC connection 
+to it is created.
++ 
+You can verify the JDBC URL by opening the entry for the virtual database service from 
+the *Connections* page.       
++ 
+* If the publishing process fails, the entry is flagged with the label *Error*. 

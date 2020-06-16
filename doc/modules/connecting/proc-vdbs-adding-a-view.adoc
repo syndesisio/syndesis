@@ -1,0 +1,62 @@
+//Assembly: assembly-connecting-to-virtual-databases.adoc
+
+[id="adding-a-view-to-a-vdbs_{context}"]
+= Adding a view to a virtual database
+:context: vdbs
+
+Add a view to a virtual database to provide a view of the data in a new table. 
+
+After you first create a virtual database, it contains only the views 
+that you imported from the initial data source. Add views to the virtual database if 
+you want to incorporate data from other tables. You can add views based on tables in the original data source or from other data sources. 
+//When you add a view you can join tables from previously imported data sources and new data sources.
+
+// To add a view 
+//that merges data from a new source with an existing source, requires you to add two views:
+
+//* Add one view to import tables from the new source.
+//* Add a second view to combine tables from the different sources.     
+
+.Prerequisites
+* The virtual database that you want to add a view to is available in {prodname} in a _Stopped_ or _Published_ state. 
+You cannot use {prodname} to add views to virtual databases that were created outside of {prodname}.
+* A {prodname} connection exists to the data source that contains the table that you want integrate.
+* You know the name of the table that you want to use in the view.
+ 
+.Procedure 
+. From the navigation sidebar in {prodname}, click *Data*.
+. From the list on the *Data Virtualizations* page, find the virtual database that you want 
+to modify and click *Edit*.
+//. Choose one of the following methods to create a view:
+//* *Add views for tables in a new data source* 
+//+
+//.. Click *Import Data Source*.
+//.. From the *Import Data Source* page, click the tile for an active data source, and then click *Next*.  
+//.. Select one or more tables to include in your virtual database, and then click *Done*. 
+//+
+//If you select multiple tables, {prodname} creates a view for each table.  
+//+
+//A confirmation message reports when the import completes, and you are returned to 
+//the page for your virtualization. 
+//* *Add views from an existing data source* 
+//+
+. Click *Create a view*.
+. Expand a data source to view the tables that it contains. 
+. Select the table that you want to add to the virtual database, and then click *Next*. 
+//
+//+
+//If you select multiple tables, {prodname} creates a view that combines data from 
+//all of the selected tables. 
+. On the *Name your view* page, type a name in the *View Name* field, and then click *Done*.
++
+The *View editor* displays the SQL for the view that you created. The *Preview* panel displays 
+the data in the view.
+. If no data displays, click the *Refresh* icon. 
+. Click *Done* to close the view.
++
+If the virtual database was previously published, you must republish it 
+to make the new view available. 
+
+.Additional resources
+* Experienced SQL programmers can also add views by directly editing the default SQL statements for the virtual database. For more information, see 
+link:{LinkFuseOnlineConnectorGuide}#editing-the-ddl-for-a-vdbs_vdbs[Using the View Editor in {prodname} to modify the DDL that defines a virtual database]. 

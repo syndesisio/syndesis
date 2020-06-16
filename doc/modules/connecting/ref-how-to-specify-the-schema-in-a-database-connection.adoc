@@ -83,9 +83,7 @@ link:https://www.postgresql.org/docs/9.1/ddl-schemas.html[PostgreSQL schema docu
 *Password*: any value +
 *Schema*:
 |The virtual database must have already been created, for example by using 
-the 
-link:{LinkIntegrationData}#creating-vdbs[Data Virtualization] 
-feature. In the connection URL, replace `<vdb-name>` 
+the link:{LinkFuseOnlineConnectorGuide}#connecting-to-virtual-databases_vdbs[Data Virtualization] feature. In the connection URL, replace `<vdb-name>` 
 with the name of the virtual database. No security has been implemented yet 
 for connections to Teiid. 
 Specify any value in the *Username* and *Password* fields. Leave the *Schema* field blank. 

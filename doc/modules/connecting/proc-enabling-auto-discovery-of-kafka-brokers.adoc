@@ -76,7 +76,7 @@ oc wait kafka/mycluster --for=condition=Ready --timeout=300s -n myproject
 . Create a producer for the Kafka broker that you specify. For example, 
 in the following command: 
 +
-** `myproject` is the name of the project in which Fuse Online is running. 
+** `myproject` is the name of the project in which {prodname} is running. 
 ** `my-cluster-kafka-bootstrap:9092` identifies a Kafka broker.
 ** `my-topic` is the name of the Kafka topic that a Kafka connection will be subscribed to.
 +
