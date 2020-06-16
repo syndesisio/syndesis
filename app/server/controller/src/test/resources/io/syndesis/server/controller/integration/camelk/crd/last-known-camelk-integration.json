@@ -1,98 +1,163 @@
 {
-    "apiVersion": "camel.apache.org/v1",
-    "kind": "Integration",
-    "metadata": {
-        "annotations": {
-            "prometheus.io/port": "9779",
-            "prometheus.io/scrape": "true",
-            "syndesis.io/deploy-id": "i-M0SZstrdU_fCuujYkqGz:4",
-            "syndesis.io/deployment-version": "4",
-            "syndesis.io/integration-id": "i-M0SZstrdU_fCuujYkqGz",
-            "syndesis.io/integration-name": "t2l"
-        },
-        "creationTimestamp": "2020-02-19T13:38:05Z",
-        "generation": 1,
-        "labels": {
-            "syndesis.io/app": "syndesis",
-            "syndesis.io/component": "integration",
-            "syndesis.io/deployment-version": "4",
-            "syndesis.io/integration": "t2l",
-            "syndesis.io/integration-id": "i-M0SZstrdU_fCuujYkqGz",
-            "syndesis.io/type": "integration",
-            "syndesis.io/username": "user"
-        },
-        "name": "i-t2l",
-        "namespace": "demo",
-        "resourceVersion": "37327326",
-        "selfLink": "/apis/camel.apache.org/v1/namespaces/demo/integrations/i-t2l",
-        "uid": "0edb4cd1-531d-11ea-8f19-0ac60ceac538"
+  "apiVersion": "camel.apache.org/v1",
+  "kind": "Integration",
+  "metadata": {
+    "annotations": {
+      "prometheus.io/port": "9779",
+      "prometheus.io/scrape": "true",
+      "syndesis.io/deploy-id": "i-M9SoYXM3A2HFpvZT_O1z:1",
+      "syndesis.io/deployment-version": "1",
+      "syndesis.io/integration-id": "i-M9SoYXM3A2HFpvZT_O1z",
+      "syndesis.io/integration-name": "dsadsa"
     },
-    "spec": {
-        "configuration": [
-            {
-                "type": "env",
-                "value": "AB_JMX_EXPORTER_CONFIG=/etc/camel/resources/prometheus-config.yml"
-            },
-            {
-                "type": "property",
-                "value": "camel.context.streamCaching=true"
-            },
-            {
-                "type": "secret",
-                "value": "i-t2l"
-            }
-        ],
-        "dependencies": [
-            "bom:io.syndesis.integration/integration-bom-camel-k/pom/2.0-SNAPSHOT",
-            "mvn:io.syndesis.integration/integration-runtime-camelk",
-            "mvn:org.apache.camel/camel-quartz",
-            "mvn:io.syndesis.connector/connector-timer"
-        ],
-        "repositories": [
-        ],
-        "resources": [
-            {
-                "contentKey": "prometheus-config.yml",
-                "contentRef": "syndesis-prometheus-agent-config",
-                "mountPath": "/etc/camel/resources",
-                "name": "prometheus-config.yml",
-                "type": "data"
-            }
-        ],
-        "sources": [
-            {
-                "compression": false,
-                "content": "{\"id\":\"i-M0SZstrdU_fCuujYkqGz\",\"version\":4,\"createdAt\":1582117916278,\"updatedAt\":1582119485136,\"tags\":[\"timer\"],\"name\":\"t2l\",\"flows\":[{\"id\":\"-M0SZoUYjer-CsG0k31I\",\"tags\":[\"timer\"],\"steps\":[{\"id\":\"-M0SZqKPjer-CsG0k31I\",\"configuredProperties\":{\"period\":\"60000\"},\"metadata\":{\"configured\":\"true\"},\"action\":{\"id\":\"io.syndesis:timer-action\",\"name\":\"Simple\",\"description\":\"Specify an amount of time and its unit to periodically trigger integration execution. \",\"descriptor\":{\"inputDataShape\":{\"kind\":\"none\"},\"outputDataShape\":{\"kind\":\"none\"},\"propertyDefinitionSteps\":[{\"name\":\"Period\",\"properties\":{\"period\":{\"componentProperty\":false,\"defaultValue\":\"60000\",\"deprecated\":false,\"description\":\"Period\",\"displayName\":\"Period\",\"javaType\":\"long\",\"kind\":\"parameter\",\"labelHint\":\"Delay between each execution of the integration.\",\"required\":true,\"secret\":false,\"type\":\"duration\"}}}],\"configuredProperties\":{\"timerName\":\"syndesis-timer\"},\"componentScheme\":\"timer\"},\"actionType\":\"connector\",\"pattern\":\"From\"},\"connection\":{\"uses\":0,\"id\":\"timer\",\"name\":\"Timer\",\"metadata\":{\"hide-from-connection-pages\":\"true\"},\"connector\":{\"id\":\"timer\",\"version\":8,\"name\":\"Timer\",\"dependencies\":[{\"type\":\"MAVEN\",\"id\":\"io.syndesis.connector:connector-timer:2.0-SNAPSHOT\"},{\"type\":\"MAVEN\",\"id\":\"org.apache.camel:camel-quartz:3.1.0-SNAPSHOT\"}],\"metadata\":{\"hide-from-connection-pages\":\"true\"},\"description\":\"Trigger events based on an interval or a quartz expression\"},\"connectorId\":\"timer\",\"description\":\"Trigger integration execution based on an interval or a cron expression\",\"isDerived\":false},\"stepKind\":\"endpoint\"},{\"id\":\"-M0SZr14jer-CsG0k31I\",\"configuredProperties\":{\"bodyLoggingEnabled\":\"false\",\"contextLoggingEnabled\":\"false\"},\"metadata\":{\"configured\":\"true\"},\"stepKind\":\"log\",\"name\":\"Log\"}],\"type\":\"PRIMARY\"}]}",
-                "language": "syndesis",
-                "name": "i-m0szstrdu-fcuujykqgz"
-            }
-        ],
-        "traits": {
-            "camel": {
-                "configuration": {
-                    "runtime-version": "1.0.9",
-                    "version": "3.1.0-SNAPSHOT"
-                }
-            },
-            "jolokia": {
-                "configuration": {
-                    "enabled": "true",
-                    "port": "8778"
-                }
-            },
-            "owner": {
-                "configuration": {
-                    "target-annotations": "prometheus.io/port,prometheus.io/scrape",
-                    "target-labels": "syndesis.io/component,syndesis.io/integration-id,syndesis.io/deployment-version,syndesis.io/username,syndesis.io/integration,syndesis.io/type,syndesis.io/app"
-                }
-            },
-            "prometheus": {
-                "configuration": {
-                    "enabled": "true",
-                    "port": "9779",
-                    "service-monitor": "false"
-                }
-            }
+    "creationTimestamp": "2020-06-10T12:56:07Z",
+    "generation": 1,
+    "labels": {
+      "syndesis.io/app": "syndesis",
+      "syndesis.io/component": "integration",
+      "syndesis.io/deployment-version": "1",
+      "syndesis.io/integration": "dsadsa",
+      "syndesis.io/integration-id": "i-M9SoYXM3A2HFpvZT_O1z",
+      "syndesis.io/type": "integration",
+      "syndesis.io/username": "developer"
+    },
+    "name": "i-dsadsa",
+    "namespace": "syndesis",
+    "resourceVersion": "371724",
+    "selfLink": "/apis/camel.apache.org/v1/namespaces/syndesis/integrations/i-dsadsa",
+    "uid": "1fd63e06-2bb4-4ce1-9af8-11478cbdb67c"
+  },
+  "spec": {
+    "configuration": [
+      {
+        "type": "env",
+        "value": "AB_JMX_EXPORTER_CONFIG=/etc/camel/resources/prometheus-config.yml"
+      },
+      {
+        "type": "property",
+        "value": "camel.context.streamCaching=true"
+      },
+      {
+        "type": "secret",
+        "value": "i-dsadsa"
+      },
+      {
+        "type": "property",
+        "value": "customizer.tracing.serviceName=i-M9SoYXM3A2HFpvZT_O1z"
+      },
+      {
+        "type": "env",
+        "value": "JAEGER_ENDPOINT=http://syndesis-jaeger-collector:14268/api/traces"
+      },
+      {
+        "type": "env",
+        "value": "JAEGER_TAGS=integration.version=1"
+      },
+      {
+        "type": "env",
+        "value": "JAEGER_SAMPLER_TYPE=const"
+      },
+      {
+        "type": "env",
+        "value": "JAEGER_SAMPLER_PARAM=1"
+      }
+    ],
+    "dependencies": [
+      "bom:io.syndesis.integration/integration-bom-camel-k/pom/2.0.0-20200608",
+      "mvn:io.syndesis.integration/integration-runtime-camelk",
+      "mvn:io.syndesis.connector/connector-timer",
+      "mvn:org.apache.camel/camel-quartz"
+    ],
+    "repositories": [],
+    "resources": [
+      {
+        "contentKey": "prometheus-config.yml",
+        "contentRef": "syndesis-prometheus-agent-config",
+        "mountPath": "/etc/camel/resources",
+        "name": "prometheus-config.yml",
+        "type": "data"
+      }
+    ],
+    "sources": [
+      {
+        "compression": false,
+        "content": "{\"id\":\"i-M9SoYXM3A2HFpvZT_O1z\",\"version\":1,\"createdAt\":1591785699475,\"updatedAt\":0,\"tags\":[\"timer\"],\"name\":\"dsadsa\",\"flows\":[{\"id\":\"-M9SoUyP3_cknB2jECFT\",\"tags\":[\"timer\"],\"steps\":[{\"id\":\"-M9SoWuz3_cknB2jECFT\",\"configuredProperties\":{\"period\":\"1000\"},\"metadata\":{\"configured\":\"true\"},\"action\":{\"id\":\"io.syndesis:timer-action\",\"name\":\"Simple\",\"description\":\"Specify an amount of time and its unit to periodically trigger integration execution. \",\"descriptor\":{\"inputDataShape\":{\"kind\":\"none\"},\"outputDataShape\":{\"kind\":\"none\"},\"propertyDefinitionSteps\":[{\"name\":\"Period\",\"properties\":{\"period\":{\"componentProperty\":false,\"defaultValue\":60000,\"deprecated\":false,\"description\":\"Period\",\"displayName\":\"Period\",\"javaType\":\"long\",\"kind\":\"parameter\",\"labelHint\":\"Delay between each execution of the integration.\",\"required\":true,\"secret\":false,\"type\":\"duration\"}},\"description\":\"Period\"}],\"configuredProperties\":{\"timerName\":\"syndesis-timer\"},\"componentScheme\":\"timer\"},\"actionType\":\"connector\",\"pattern\":\"From\"},\"connection\":{\"uses\":0,\"id\":\"timer\",\"name\":\"Timer\",\"metadata\":{\"hide-from-connection-pages\":\"true\"},\"connector\":{\"id\":\"timer\",\"version\":3,\"name\":\"Timer\",\"dependencies\":[{\"type\":\"MAVEN\",\"id\":\"io.syndesis.connector:connector-timer:2.0.0-20200608\"},{\"type\":\"MAVEN\",\"id\":\"org.apache.camel:camel-quartz:3.1.0\"}],\"metadata\":{\"hide-from-connection-pages\":\"true\"},\"description\":\"Trigger events based on an interval or a quartz expression\"},\"connectorId\":\"timer\",\"description\":\"Trigger integration execution based on an interval or a cron expression\",\"isDerived\":false},\"stepKind\":\"endpoint\"},{\"id\":\"-M9SoXk03_cknB2jECFT\",\"configuredProperties\":{\"bodyLoggingEnabled\":\"false\",\"contextLoggingEnabled\":\"false\",\"customText\":\"dsadsadasdas\"},\"metadata\":{\"configured\":\"true\"},\"stepKind\":\"log\",\"name\":\"Log\"}],\"type\":\"PRIMARY\"}]}",
+        "language": "syndesis",
+        "name": "i-m9soyxm3a2hfpvzt-o1z"
+      }
+    ],
+    "traits": {
+      "camel": {
+        "configuration": {
+          "runtime-version": "1.1.0",
+          "version": "3.1.0"
         }
+      },
+      "jolokia": {
+        "configuration": {
+          "enabled": "true",
+          "port": "8778"
+        }
+      },
+      "owner": {
+        "configuration": {
+          "target-annotations": "prometheus.io/port,prometheus.io/scrape",
+          "target-labels": "syndesis.io/component,syndesis.io/integration-id,syndesis.io/deployment-version,syndesis.io/username,syndesis.io/integration,syndesis.io/type,syndesis.io/app"
+        }
+      },
+      "prometheus": {
+        "configuration": {
+          "enabled": "true",
+          "port": "9779",
+          "service-monitor": "false"
+        }
+      }
     }
+  },
+  "status": {
+    "conditions": [
+      {
+        "lastTransitionTime": "2020-06-10T12:56:07Z",
+        "lastUpdateTime": "2020-06-10T12:56:07Z",
+        "message": "camel-k",
+        "reason": "IntegrationPlatformAvailable",
+        "status": "True",
+        "type": "IntegrationPlatformAvailable"
+      },
+      {
+        "lastTransitionTime": "2020-06-10T12:56:07Z",
+        "lastUpdateTime": "2020-06-10T12:56:07Z",
+        "message": "creating a new integration kit",
+        "reason": "IntegrationKitAvailable",
+        "status": "False",
+        "type": "IntegrationKitAvailable"
+      }
+    ],
+    "dependencies": [
+      "bom:io.syndesis.integration/integration-bom-camel-k/pom/2.0.0-20200608",
+      "mvn:io.syndesis.connector/connector-timer",
+      "mvn:io.syndesis.integration/integration-runtime-camelk",
+      "mvn:org.apache.camel.k/camel-k-runtime-main",
+      "mvn:org.apache.camel/camel-quartz",
+      "mvn:org.apache.camel/camel-management",
+      "mvn:org.jolokia/jolokia-jvm:jar:agent:1.6.2",
+      "mvn:io.prometheus.jmx/jmx_prometheus_javaagent:0.3.1"
+    ],
+    "digest": "vSXZ0AUr8mI30XbY1XTYilhmTFWL3z5UsafZyK6usIaw",
+    "generatedResources": [
+      {
+        "contentRef": "i-dsadsa-prometheus",
+        "mountPath": "/etc/prometheus",
+        "name": "prometheus-jmx-exporter.yaml",
+        "type": "data"
+      }
+    ],
+    "kit": "kit-brgdgpql5pj6mj5r9itg",
+    "phase": "Error",
+    "platform": "camel-k",
+    "profile": "OpenShift",
+    "runtimeProvider": "main",
+    "runtimeVersion": "1.1.0",
+    "version": "1.0.0-RC2"
+  }
 }

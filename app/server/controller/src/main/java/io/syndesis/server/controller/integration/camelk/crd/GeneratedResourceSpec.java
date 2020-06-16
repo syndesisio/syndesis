@@ -15,8 +15,6 @@
  */
 package io.syndesis.server.controller.integration.camelk.crd;
 
-import java.io.Serializable;
-import java.util.List;
 import javax.annotation.Nullable;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -25,33 +23,22 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonDeserialize(builder = IntegrationStatus.Builder.class)
+@JsonDeserialize(builder = GeneratedResourceSpec.Builder.class)
 // Immutables generates code that fails these checks
 @SuppressWarnings({ "ArrayEquals", "ArrayHashCode", "ArrayToString" })
-public interface IntegrationStatus extends Serializable {
+public interface GeneratedResourceSpec {
 
-    List<ConditionSpec> getConditions();
-    List<String> getDependencies();
     @Nullable
-    String getDigest();
-    List<GeneratedResourceSpec> getGeneratedResources();
+    String getContentRef();
     @Nullable
-    String getKit();
+    String getMountPath();
     @Nullable
-    String getPhase();
+    String getName();
     @Nullable
-    String getPlatform();
-    @Nullable
-    String getProfile();
-    @Nullable
-    String getRuntimeProvider();
-    @Nullable
-    String getRuntimeVersion();
-    @Nullable
-    String getVersion();
+    String getType();
 
-    class Builder extends ImmutableIntegrationStatus.Builder {
-        // make ImmutableIntegrationStatus.Builder which is package private
+    class Builder extends ImmutableGeneratedResourceSpec.Builder {
+        // make ImmutableConditionSpec.Builder which is package private
         // accessible
     }
 }
