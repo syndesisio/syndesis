@@ -6,24 +6,6 @@
  */
 import { IFormDefinition, IFormDefinitionProperty } from './models';
 
-export function applyInitialValues<T>(
-  properties: IFormDefinition,
-  initial?: T
-): T {
-  const configuredProperties =
-    typeof initial !== 'undefined' ? { ...initial } : {};
-  Object.keys(properties).forEach(key => {
-    const property = properties[key];
-    if (
-      typeof property.defaultValue !== 'undefined' &&
-      typeof configuredProperties[key] === 'undefined'
-    ) {
-      configuredProperties[key] = property.defaultValue;
-    }
-  });
-  return configuredProperties as T;
-}
-
 /**
  * Ensure that the input values match the property definitions
  */
@@ -169,8 +151,21 @@ export function massageValue(
         minElements
       );
     case 'mapset': {
-      const answer: any = value || defaultValue || {};
-      return typeof answer === 'string' ? JSON.parse(answer) : answer;
+      const answer = value;
+      const defaultValueObject =
+        typeof defaultValue === 'string'
+          ? JSON.parse(defaultValue)
+          : defaultValue;
+      if (typeof answer === 'undefined') {
+        return defaultValueObject;
+      }
+      if (typeof answer === 'string') {
+        const answerObject = JSON.parse(answer);
+        if (Object.keys(answerObject).length === 0) {
+          return defaultValueObject;
+        }
+      }
+      return answer;
     }
     case 'select': {
       if (property.fieldAttributes && property.fieldAttributes.multiple) {
