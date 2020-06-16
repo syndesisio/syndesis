@@ -20,6 +20,28 @@ token that {prodname} generates for this integration.
 When you construct the HTTP request, this token is the last part of the URL. 
 After you publish this integration and it is running, {prodname} displays
 the {prodname} external URL, which has this token at the end. 
++
+The *Webhook Configuration* page also includes *Default Response* and *Error Handling* sections. The webhook step sends a response to the HTTP client that invoked it. The response contains one of the return codes and, by default, the error message in the body of the returned message.
+
+. Under *Default Response*, in the *Return Code* field, accept the default response that {prodname} displays, or use the drop-down list to select the default response that you want. The flow sends this response when execution of the operation flow does not return any of the configured error responses. Typically, the default response return code indicates a successful operation. 
+
+. Under *Error Handling*, indicate whether you want to include the error message in the body of the returned message. 
++
+During development, you typically want to return the error message. In production, however, you might want to hide the error message if it contains sensitive or proprietary information. The error message is a JSON-formatted string that contains `responseCode`, `category`, `message`, and `error` elements, for example: 
++
+[source,json]
+----
+   {
+      responseCode: 404,
+      category:  "ENTITY_NOT_FOUND_ERROR",
+      message: "SQL SELECT did not SELECT any records"
+      error: SYNDESIS_CONNECTION_ERROR
+    }
+----
++
+Note that during development, the most reliable way to know that an error happened is to check the `HTTP_RESPONSE STATUS` header in the response to the caller. You can also check the integration pod’s log for `INFO` messages. The integration’s *Activity* log shows a successful exchange and errors are not always visible in the *Activity* log.
+
+. For each error that the webhook step might return, accept the default return code or use the drop-down list to select another HTTP status return code. 
 
 . Click *Next*. 
 . In the *Specify Output Data Type* page:
