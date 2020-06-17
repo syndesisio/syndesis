@@ -38,11 +38,15 @@ public class BasicAuthIntegrationTest extends IntegrationTestBase {
 
     @Override
     protected String requestEnvelopePattern(String body) {
-        return  ("<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"  +
+        return  ("<soap:Envelope xmlns:soap=\"" + getSoapNamespace() + "\">" +
                     "<soap:Body>" +
                         body +
                     "</soap:Body>" +
                 "</soap:Envelope>").replaceAll("/", "\\\\/").replaceAll("([^\\\\])\\.", "$1\\\\.");
+    }
+
+    protected String getSoapVersion() {
+        return "1.1";
     }
 
     @Override
@@ -50,7 +54,7 @@ public class BasicAuthIntegrationTest extends IntegrationTestBase {
         connection = new Connection.Builder()
             .putConfiguredProperty(ADDRESS, "http://localhost:" + wiremock.port())
             .putConfiguredProperty(SPECIFICATION, readSpecification())
-            .putConfiguredProperty(SOAP_VERSION, "1.1")
+            .putConfiguredProperty(SOAP_VERSION, getSoapVersion())
             .putConfiguredProperty(AUTHENTICATION_TYPE, AuthenticationType.BASIC.getValue())
             .putConfiguredProperty(USERNAME, TEST_USER)
             .putConfiguredProperty(PASSWORD, TEST_PASSWORD)
