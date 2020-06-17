@@ -82,12 +82,16 @@ stories
           i18nPermissionNotSet={'Permission not set'}
           i18nCancel={'Cancel'}
           i18nSave={'Save'}
+          i18nEditPolicies={'Edit policies'}
+          i18nEditPoliciesTip={'Edit policies tooltip'}
+          i18nEditPoliciesTitle={'View_1: Configure policies'}
           itemSelected={map}
           viewRolePermissionList={tablePrivileges}
-          status={''}
           onSelectedViewChange={action(onSelectedViewChangeActionText)}
           dvRoles={['Developer']}
           getUpdatedRole={action('get updated permission')}
+          // tslint:disable-next-line: jsx-no-lambda
+          updateViewPolicies={() => Promise.resolve(true)}
           // tslint:disable-next-line: jsx-no-lambda
           updateViewsPermissions={() => Promise.resolve(true)}
         />
@@ -118,11 +122,16 @@ stories
           i18nPermissionNotSet={'Permission not set'}
           i18nCancel={'Cancel'}
           i18nSave={'Save'}
+          i18nEditPolicies={'Edit policies'}
+          i18nEditPoliciesTip={'Edit policies tooltip'}
+          i18nEditPoliciesTitle={'View_1: Configure policies'}
           itemSelected={map}
           viewRolePermissionList={tablePrivileges}
           onSelectedViewChange={action(onSelectedViewChangeActionText)}
           dvRoles={['Developer']}
           getUpdatedRole={action('get updated permission')}
+          // tslint:disable-next-line: jsx-no-lambda
+          updateViewPolicies={() => Promise.resolve(true)}
           // tslint:disable-next-line: jsx-no-lambda
           updateViewsPermissions={() => Promise.resolve(true)}
         />
