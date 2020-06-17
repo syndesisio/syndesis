@@ -43,7 +43,9 @@ import org.apache.cxf.staxutils.StaxSource;
 import org.apache.cxf.staxutils.StaxUtils;
 import org.w3c.dom.Node;
 
-public final class ResponseSoapPayloadConverter extends AbstractSoapPayloadConverter {
+public class ResponseSoapPayloadConverter extends AbstractSoapPayloadConverter {
+
+    protected static final String SOAP_PREFIX = "soap";
 
     @Override
     protected void convertMessage(Message in) {
@@ -57,38 +59,17 @@ public final class ResponseSoapPayloadConverter extends AbstractSoapPayloadConve
             final List<?> headers = cxfPayload.getHeaders();
             final List<Source> body = cxfPayload.getBodySources();
 
-            // create byte stream for output
-            final OutputStream outputStream;
-            if (cxfPayload instanceof CachedCxfPayload) {
-                // use Camel CachedOutputStream for large messages
-                outputStream = new CachedOutputStream(in.getExchange());
-            } else {
-                outputStream = new ByteArrayOutputStream();
-            }
-
-            // use XML stream to write arbitrarily large SOAP messages
-            final XMLStreamWriter writer = XML_OUTPUT_FACTORY.createXMLStreamWriter(new StreamResult(outputStream));
+            final OutputStream outputStream = newOutputStream(in, cxfPayload);
+            final XMLStreamWriter writer = newXmlStreamWriter(outputStream);
 
             // serialize headers and body into an envelope
-            writer.writeStartDocument();
-            writer.writeStartElement("soap",  soapVersion.getEnvelope().getLocalPart(), soapVersion.getNamespace());
-            if (headers != null && !headers.isEmpty()) {
-                writeHeaders(writer, headers, soapVersion);
-            }
+            writeStartEnvelopeAndHeaders(soapVersion, headers, writer);
             if (body != null && !body.isEmpty()) {
                 writeBody(writer, body, soapVersion);
             }
             writer.writeEndDocument();
 
-            writer.close();
-            outputStream.close();
-
-            final InputStream inputStream;
-            if (outputStream instanceof CachedOutputStream) {
-                inputStream = ((CachedOutputStream) outputStream).getInputStream();
-            } else {
-                inputStream = ((ByteArrayOutputStream) outputStream).toInputStream();
-            }
+            final InputStream inputStream = getInputStream(outputStream, writer);
 
             // set the input stream as the Camel message body
             in.setBody(inputStream);
@@ -98,8 +79,46 @@ public final class ResponseSoapPayloadConverter extends AbstractSoapPayloadConve
         }
     }
 
-    private static void writeHeaders(XMLStreamWriter writer, List<?> headers, SoapVersion soapVersion) throws XMLStreamException {
-        writer.writeStartElement("soap",  soapVersion.getHeader().getLocalPart(), soapVersion.getNamespace());
+    protected static void writeStartEnvelopeAndHeaders(SoapVersion soapVersion, List<?> headers, XMLStreamWriter writer) throws XMLStreamException {
+        writer.writeStartDocument();
+        writer.writeStartElement(SOAP_PREFIX,  soapVersion.getEnvelope().getLocalPart(), soapVersion.getNamespace());
+        if (headers != null && !headers.isEmpty()) {
+            writeHeaders(writer, headers, soapVersion);
+        }
+    }
+
+    protected static InputStream getInputStream(OutputStream outputStream, XMLStreamWriter writer) throws XMLStreamException, IOException {
+        writer.close();
+        outputStream.close();
+
+        final InputStream inputStream;
+        if (outputStream instanceof CachedOutputStream) {
+            inputStream = ((CachedOutputStream) outputStream).getInputStream();
+        } else {
+            inputStream = ((ByteArrayOutputStream) outputStream).toInputStream();
+        }
+        return inputStream;
+    }
+
+    protected static XMLStreamWriter newXmlStreamWriter(OutputStream outputStream) throws XMLStreamException {
+        // use XML stream to write arbitrarily large SOAP messages
+        return XML_OUTPUT_FACTORY.createXMLStreamWriter(new StreamResult(outputStream));
+    }
+
+    protected static OutputStream newOutputStream(Message in, CxfPayload<?> cxfPayload) {
+        // create byte stream for output
+        final OutputStream outputStream;
+        if (cxfPayload instanceof CachedCxfPayload) {
+            // use Camel CachedOutputStream for large messages
+            outputStream = new CachedOutputStream(in.getExchange());
+        } else {
+            outputStream = new ByteArrayOutputStream();
+        }
+        return outputStream;
+    }
+
+    protected static void writeHeaders(XMLStreamWriter writer, List<?> headers, SoapVersion soapVersion) throws XMLStreamException {
+        writer.writeStartElement(SOAP_PREFIX,  soapVersion.getHeader().getLocalPart(), soapVersion.getNamespace());
         writePartSources(writer, headers.stream()
             .map(h -> h instanceof Source ? (Source) h : new DOMSource((Node)h))
             .collect(Collectors.toList()));
@@ -107,7 +126,7 @@ public final class ResponseSoapPayloadConverter extends AbstractSoapPayloadConve
     }
 
     private static void writeBody(XMLStreamWriter writer, List<Source> body, SoapVersion soapVersion) throws XMLStreamException {
-        writer.writeStartElement("soap",  soapVersion.getBody().getLocalPart(), soapVersion.getNamespace());
+        writer.writeStartElement(SOAP_PREFIX,  soapVersion.getBody().getLocalPart(), soapVersion.getNamespace());
         writePartSources(writer, body);
         writer.writeEndElement();
     }

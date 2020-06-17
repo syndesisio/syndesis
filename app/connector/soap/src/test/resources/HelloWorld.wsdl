@@ -30,8 +30,14 @@
           <xs:element minOccurs="0" name="return" type="xs:string"/>
         </xs:sequence>
       </xs:complexType>
+      <xs:complexType name="sayHiError">
+          <xs:sequence>
+              <xs:element minOccurs="0" name="error" type="xs:string"/>
+          </xs:sequence>
+      </xs:complexType>
       <xs:element name="sayHi" nillable="true" type="sayHi"/>
       <xs:element name="sayHiResponse" nillable="true" type="sayHiResponse"/>
+      <xs:element name="sayHiError" nillable="true" type="sayHiError"/>
     </xs:schema>
   </wsdl:types>
   <wsdl:message name="sayHi">
@@ -42,12 +48,18 @@
     <wsdl:part element="tns:sayHiResponse" name="parameters">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="sayHiError">
+      <wsdl:part element="tns:sayHiError" name="parameters">
+      </wsdl:part>
+  </wsdl:message>
   <wsdl:portType name="HelloWorld">
     <wsdl:operation name="sayHi">
       <wsdl:input message="tns:sayHi" name="sayHi">
       </wsdl:input>
       <wsdl:output message="tns:sayHiResponse" name="sayHiResponse">
       </wsdl:output>
+      <wsdl:fault message="tns:sayHiError" name="sayHiError">
+      </wsdl:fault>
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="HelloWorldServiceSoapBinding" type="tns:HelloWorld">
@@ -60,6 +72,9 @@
       <wsdl:output name="sayHiResponse">
         <soap:body use="literal"/>
       </wsdl:output>
+      <wsdl:fault name="sayHiError">
+        <soap:body use="literal"/>
+      </wsdl:fault>
     </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="HelloWorldService">
