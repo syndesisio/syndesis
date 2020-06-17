@@ -100,7 +100,9 @@ export const SecurityPage: React.FunctionComponent = () => {
                 )}
               />
               <ApiConnectorCreatorSecurityForm defaultValues={defaultValues}>
-                {({ handleChange, values }) => {
+                {({ errors, handleChange, values }) => {
+                  const isValid = !errors?.username && !errors.password;
+
                   return (
                     <ApiConnectorCreatorLayout
                       content={
@@ -153,7 +155,7 @@ export const SecurityPage: React.FunctionComponent = () => {
                           i18nBack={t('shared:Back')}
                           i18nNext={t('shared:Next')}
                           isNextLoading={false}
-                          isNextDisabled={false}
+                          isNextDisabled={!isValid}
                         />
                       }
                       navigation={
