@@ -94,6 +94,8 @@
     <camel.version>2.23.2.fuse-760024</camel.version>
     <camel-k-runtime.version>0.3.4.fuse-740009-redhat-00002</camel-k-runtime.version>
 
+    <undertow.version>2.0.30.Final</undertow.version>
+
     <!-- CXF version, to be kept in sync with the one referenced by camel version above -->
     <cxf.version>3.2.7.fuse-sb2-760012</cxf.version>
     <wss4j.version>2.2.2</wss4j.version>
@@ -1828,14 +1830,26 @@
 
       <dependency>
         <groupId>io.undertow</groupId>
+        <artifactId>undertow-core</artifactId>
+        <version>${undertow.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.undertow</groupId>
         <artifactId>undertow-servlet</artifactId>
-        <version>2.0.28.Final</version>
+        <version>${undertow.version}</version>
         <exclusions>
           <exclusion>
             <groupId>org.jboss.spec.javax.servlet</groupId>
             <artifactId>jboss-servlet-api_4.0_spec</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>io.undertow</groupId>
+        <artifactId>undertow-websockets-jsr</artifactId>
+        <version>${undertow.version}</version>
       </dependency>
 
       <!-- TODO: Maybe import BOM ? -->
