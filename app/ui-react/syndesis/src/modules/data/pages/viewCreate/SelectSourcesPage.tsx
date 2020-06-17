@@ -188,19 +188,16 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
     return [...tempConns, virtConnection];
   };
   
-  const getConnectionIcons = (conns: Connection[], small: boolean) => {
+  const getConnectionIcons = (conns: Connection[], size: number) => {
     const iconMap: Map<string, JSX.Element> = new Map();
     // Set icons for the connections
     for(const theConn of conns) {
-      const icon = small ? (
-        <EntityIcon entity={theConn} alt={theConn.name} width={12} />
-      ) : (
-        <EntityIcon entity={theConn} alt={theConn.name} width={23} />
-      );
+      const icon = <EntityIcon entity={theConn} alt={theConn.name} width={size} />;
       iconMap.set(theConn.name, icon);
     }
     // Add the virtualization icon
-    const virtIcon = small ? <CubeIcon /> : <CubeIcon size={'lg'} />;
+    const iconsize = size>15 ? size>20 ? 'lg': 'md' : 'sm';
+    const virtIcon = <CubeIcon size={iconsize} />;
     iconMap.set(virtualization.name, virtIcon);
     return iconMap;
   };
@@ -243,7 +240,7 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
           }
           dvSourceStatuses={getConnectionStatusesAddVirtualization(connectionStatuses)}
           connections={getConnectionsForDisplay(connectionsData.connectionsForDisplay)}
-          connectionIcons={getConnectionIcons(connectionsData.connectionsForDisplay, false)}
+          connectionIcons={getConnectionIcons(connectionsData.connectionsForDisplay, 23)}
           virtualizationSchema={getVirtualizationSchema(viewSourceInfo)}
           onNodeSelected={props.handleNodeSelected}
           onNodeDeselected={onTableDeselect}
@@ -253,7 +250,7 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
       selectedTables={
         <ConnectionTables
           selectedSchemaNodes={props.selectedSchemaNodes}
-          connectionIcons={getConnectionIcons(connectionsData.connectionsForDisplay, true)}
+          connectionIcons={getConnectionIcons(connectionsData.connectionsForDisplay, 12)}
           onNodeDeselected={onTableDeselect}
           columnDetails={viewSourceInfo.schemas}
           setShowPreviewData={toggleShowPreviewData}
@@ -270,9 +267,10 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
           i18nHidePreview={t('preview.hidePreview')}
           i18nShowPreview={t('preview.showPreview')}
           i18nPreviewHeading={t('preview.previewHeading', {
-            connection: previewTable.connectionName,
             name: previewTable.tableName
           })}
+          connectionName={previewTable.connectionName}
+          connectionIcon={getConnectionIcons(connectionsData.connectionsForDisplay, 17).get(previewTable.connectionName)}
           isLoadingPreview={isLoadingPreview}
           isExpanded={isExpanded}
           onToggle={onToggle}

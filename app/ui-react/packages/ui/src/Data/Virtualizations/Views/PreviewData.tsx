@@ -18,6 +18,8 @@ export interface IPreviewDataProps {
   i18nShowPreview: string;
   isLoadingPreview: boolean;
   isExpanded: boolean;
+  connectionIcon: React.ReactNode;
+  connectionName: string;
   onToggle: () => void;
 }
 
@@ -26,7 +28,8 @@ export const PreviewData: React.FunctionComponent<IPreviewDataProps> = props => 
     <>
       <TextContent>
         <Text component={TextVariants.h2}>
-          <span>{props.i18nPreviewHeading}</span>
+          <span>{props.i18nPreviewHeading} (&nbsp;{props.connectionIcon}
+                    &nbsp;{props.connectionName}&nbsp;)</span>
         </Text>
       </TextContent>
       <Expandable
