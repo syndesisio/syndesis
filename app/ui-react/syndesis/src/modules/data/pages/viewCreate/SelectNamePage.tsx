@@ -133,7 +133,6 @@ export const SelectNamePage: React.FunctionComponent = () => {
             virtualization: state.virtualization,
             // tslint:disable-next-line: object-literal-sort-keys
             viewDefinitionId: newView.id!, // id should be defined
-            viewDefinition: undefined,
           })
         );
       } else {
