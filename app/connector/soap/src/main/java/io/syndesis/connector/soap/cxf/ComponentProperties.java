@@ -29,6 +29,8 @@ public final class ComponentProperties {
     public static final String PASSWORD = "password";
     public static final String ADD_TIMESTAMP = "addTimestamp";
 
+    public static final String EXCEPTION_MESSAGE_CAUSE_ENABLED = "exceptionMessageCauseEnabled";
+
     private ComponentProperties() {
         // singleton
     }
