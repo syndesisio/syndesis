@@ -17,7 +17,6 @@ package io.syndesis.connector.soap.cxf.payload;
 
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.cxf.binding.soap.Soap11;
 import org.apache.cxf.binding.soap.SoapVersion;
@@ -33,21 +32,23 @@ public final class RequestCustomizer implements ComponentProxyCustomizer {
     @Override
     public void customize(final ComponentProxyComponent component, final Map<String, Object> options) {
 
-        final AtomicReference<SoapVersion> soapVersion = new AtomicReference<>(Soap11.getInstance());
-        consumeOption(options, ComponentProperties.SOAP_VERSION, value -> {
-            final double versionNumber = Double.parseDouble((String) value);
+        // read version without removing it from options, it's removed in proxy component
+        SoapVersion soapVersion = Soap11.getInstance();
+        final Object value = options.get(ComponentProperties.SOAP_VERSION);
+        if (value != null) {
+            final double versionNumber = Double.parseDouble(value.toString());
             final Iterator<SoapVersion> versions = SoapVersionFactory.getInstance().getVersions();
 
             while (versions.hasNext()) {
                 final SoapVersion version = versions.next();
                 if (version.getVersion() == versionNumber) {
-                    soapVersion.set(version);
+                    soapVersion = version;
                     break;
                 }
             }
-        });
+        }
 
-        Processors.addBeforeProducer(component, new RequestSoapPayloadConverter(soapVersion.get()));
+        Processors.addBeforeProducer(component, new RequestSoapPayloadConverter(soapVersion));
     }
 
 }
