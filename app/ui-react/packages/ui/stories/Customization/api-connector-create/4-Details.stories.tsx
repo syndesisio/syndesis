@@ -12,7 +12,7 @@ import {
   ApiConnectorCreatorFooter,
   ApiConnectorCreatorToggleList,
 } from '../../../src/Customization/apiClientConnectors/create';
-import icons from '../icons';
+import icons from '../../Shared/icons';
 
 const stories = storiesOf(
   'Customization/ApiClientConnector/CreateApiConnector/4 - Details',
@@ -111,7 +111,6 @@ stories.add(
       handleSubmit={action(submitText)}
       onUploadImage={action(uploadImageText)}
       fields={<div>fields</div>}
-      footer={<div>footer</div>}
     />
   ),
   { notes: storyNotes }
