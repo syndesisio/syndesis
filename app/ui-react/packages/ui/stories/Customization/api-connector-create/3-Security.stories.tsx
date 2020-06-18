@@ -15,7 +15,7 @@ import {
 import validateSecurity, {
   IErrorValidation,
 } from '../../../src/Customization/apiClientConnectors/create/securityValidation';
-import soapSpec from './soap';
+import soapSpec from '../soap-connector';
 
 const stories = storiesOf(
   'Customization/ApiClientConnector/CreateApiConnector/3 - Select Security',

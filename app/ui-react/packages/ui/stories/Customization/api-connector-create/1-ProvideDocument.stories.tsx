@@ -59,7 +59,6 @@ stories.add('Provide Document', () => {
             '* Note: After uploading this document, updates to it are not automatically obtained.'
           }
           onNext={action('onNext')}
-          allowFromScratch={boolean('allowFromScratch', false)}
         />
       }
       navigation={

@@ -2,13 +2,15 @@ import { WithApiConnector, WithApiConnectorHelpers } from '@syndesis/api';
 import { Connector } from '@syndesis/models';
 import {
   ApiConnectorCreatorDetails,
-  ApiConnectorDetailCard,
+  // ApiConnectorDetailCard,
+  ApiConnectorDetailHeader,
   ApiConnectorReview,
   Breadcrumb,
   ButtonLink,
+  // ConnectionDetailsHeader,
   Loader,
   PageLoader,
-  PageSection,
+  // PageSection,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -73,6 +75,7 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                 <Translation ns={['apiClientConnectors', 'shared']}>
                   {t => (
                     <>
+                      <PageTitle title={t('apiConnectorDetailsPageTitle')} />
                       <Breadcrumb>
                         <Link
                           data-testid={'api-connector-details-page-home-link'}
@@ -90,7 +93,6 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                         </Link>
                         <span>{t('apiConnectorDetailsPageTitle')}</span>
                       </Breadcrumb>
-                      <PageTitle title={t('apiConnectorDetailsPageTitle')} />
                       <WithApiConnectorHelpers>
                         {({ saveApiConnector, updateApiConnector }) => {
                           const handleSave = async (updated: Connector) => {
@@ -158,6 +160,18 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                   );
                                 };
 
+                                const getUsedByMessage = (
+                                  c: Connector
+                                ): string => {
+                                  const numUsedBy = c.uses as number;
+                                  if (numUsedBy === 1) {
+                                    return i18n.t('usedByOne');
+                                  }
+                                  return i18n.t('usedByMulti', {
+                                    count: numUsedBy,
+                                  });
+                                };
+
                                 return (
                                   <WithLoader
                                     error={error}
@@ -170,193 +184,192 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                     {() => {
                                       return (
                                         <>
-                                          <PageSection
-                                            style={{ height: '10em' }}
-                                          >
-                                            <ApiConnectorDetailCard
-                                              description={data.description}
-                                              icon={data.icon}
+                                          <ApiConnectorDetailHeader
+                                            i18nDescription={t(
+                                              'shared:Description'
+                                            )}
+                                            i18nUsageLabel={t('shared:Usage')}
+                                            i18nUsageMessage={getUsedByMessage(
+                                              data
+                                            )}
+                                            connectorIcon={data.icon}
+                                            connectorDescription={
+                                              data.description
+                                            }
+                                            connectorName={data.name}
+                                          />
+                                          <>
+                                            <ApiConnectorInfoForm
                                               name={data.name}
-                                            />
-                                            <>
-                                              <ApiConnectorInfoForm
-                                                name={data.name}
-                                                description={data.description}
-                                                basePath={
-                                                  (
-                                                    data.configuredProperties ||
-                                                    {}
-                                                  ).basePath
-                                                }
-                                                host={
-                                                  (
-                                                    data.configuredProperties ||
-                                                    {}
-                                                  ).host
-                                                }
-                                                apiConnectorIcon={data.icon}
-                                                handleSubmit={onSubmit}
-                                              >
-                                                {({
-                                                  connectorName,
-                                                  fields,
-                                                  handleSubmit,
-                                                  icon,
-                                                  isSubmitting,
-                                                  isUploadingImage,
-                                                  onUploadImage,
-                                                }) => {
-                                                  return (
-                                                    <>
-                                                      <ApiConnectorCreatorDetails
-                                                        apiConnectorIcon={icon}
-                                                        apiConnectorName={
-                                                          connectorName
-                                                        }
-                                                        i18nIconLabel={t(
-                                                          'ConnectorIcon'
-                                                        )}
-                                                        handleSubmit={
-                                                          handleSubmit
-                                                        }
-                                                        onUploadImage={
-                                                          onUploadImage
-                                                        }
-                                                        isEditing={edit}
-                                                        fields={fields}
-                                                      />
-                                                      {edit ? (
-                                                        <>
-                                                          <ButtonLink
-                                                            data-testid={
-                                                              'api-connector-details-form-cancel-button'
-                                                            }
-                                                            className="api-connector-details-form__editButton"
-                                                            disabled={
-                                                              isSubmitting ||
-                                                              isUploadingImage
-                                                            }
-                                                            onClick={
-                                                              cancelEditing
-                                                            }
-                                                          >
-                                                            {t('shared:Cancel')}
-                                                          </ButtonLink>
-                                                          <ButtonLink
-                                                            data-testid={
-                                                              'api-connector-details-form-save-button'
-                                                            }
-                                                            as="primary"
-                                                            className="api-connector-details-form__editButton"
-                                                            disabled={
-                                                              isSubmitting ||
-                                                              isUploadingImage
-                                                            }
-                                                            onClick={
-                                                              handleSubmit
-                                                            }
-                                                          >
-                                                            {(isSubmitting ||
-                                                              isUploadingImage) && (
-                                                              <Loader
-                                                                size={'sm'}
-                                                                inline={true}
-                                                              />
-                                                            )}
-                                                            {t('shared:Save')}
-                                                          </ButtonLink>
-                                                        </>
-                                                      ) : (
+                                              description={data.description}
+                                              basePath={
+                                                (
+                                                  data.configuredProperties ||
+                                                  {}
+                                                ).basePath
+                                              }
+                                              host={
+                                                (
+                                                  data.configuredProperties ||
+                                                  {}
+                                                ).host
+                                              }
+                                              apiConnectorIcon={data.icon}
+                                              handleSubmit={onSubmit}
+                                            >
+                                              {({
+                                                connectorName,
+                                                fields,
+                                                handleSubmit,
+                                                icon,
+                                                isSubmitting,
+                                                isUploadingImage,
+                                                onUploadImage,
+                                              }) => {
+                                                return (
+                                                  <>
+                                                    <ApiConnectorCreatorDetails
+                                                      apiConnectorIcon={icon}
+                                                      apiConnectorName={
+                                                        connectorName
+                                                      }
+                                                      i18nIconLabel={t(
+                                                        'ConnectorIcon'
+                                                      )}
+                                                      handleSubmit={
+                                                        handleSubmit
+                                                      }
+                                                      onUploadImage={
+                                                        onUploadImage
+                                                      }
+                                                      isEditing={edit}
+                                                      fields={fields}
+                                                    />
+                                                    {edit ? (
+                                                      <>
                                                         <ButtonLink
                                                           data-testid={
-                                                            'api-connector-details-form-edit-button'
+                                                            'api-connector-details-form-cancel-button'
+                                                          }
+                                                          className="api-connector-details-form__editButton"
+                                                          disabled={
+                                                            isSubmitting ||
+                                                            isUploadingImage
+                                                          }
+                                                          onClick={
+                                                            cancelEditing
+                                                          }
+                                                        >
+                                                          {t('shared:Cancel')}
+                                                        </ButtonLink>
+                                                        <ButtonLink
+                                                          data-testid={
+                                                            'api-connector-details-form-save-button'
                                                           }
                                                           as="primary"
-                                                          onClick={startEditing}
+                                                          className="api-connector-details-form__editButton"
+                                                          disabled={
+                                                            isSubmitting ||
+                                                            isUploadingImage
+                                                          }
+                                                          onClick={handleSubmit}
                                                         >
-                                                          {t('shared:Edit')}
+                                                          {(isSubmitting ||
+                                                            isUploadingImage) && (
+                                                            <Loader
+                                                              size={'sm'}
+                                                              inline={true}
+                                                            />
+                                                          )}
+                                                          {t('shared:Save')}
                                                         </ButtonLink>
-                                                      )}
-                                                    </>
-                                                  );
-                                                }}
-                                              </ApiConnectorInfoForm>
-                                              &nbsp;
-                                              {data.actionsSummary ? (
-                                                <ApiConnectorReview
-                                                  apiConnectorDescription={
-                                                    data.description
+                                                      </>
+                                                    ) : (
+                                                      <ButtonLink
+                                                        data-testid={
+                                                          'api-connector-details-form-edit-button'
+                                                        }
+                                                        as="primary"
+                                                        onClick={startEditing}
+                                                      >
+                                                        {t('shared:Edit')}
+                                                      </ButtonLink>
+                                                    )}
+                                                  </>
+                                                );
+                                              }}
+                                            </ApiConnectorInfoForm>
+                                            &nbsp;
+                                            {data.actionsSummary ? (
+                                              <ApiConnectorReview
+                                                apiConnectorDescription={
+                                                  data.description
+                                                }
+                                                apiConnectorName={data.name}
+                                                i18nApiDefinitionHeading={t(
+                                                  'reviewApiDefinitionHeading'
+                                                )}
+                                                i18nDescriptionLabel={t(
+                                                  'shared:Description'
+                                                )}
+                                                i18nErrorsHeading={t(
+                                                  'reviewErrorsHeading',
+                                                  {
+                                                    count: 0,
                                                   }
-                                                  apiConnectorName={data.name}
-                                                  i18nApiDefinitionHeading={t(
-                                                    'reviewApiDefinitionHeading'
-                                                  )}
-                                                  i18nDescriptionLabel={t(
-                                                    'shared:Description'
-                                                  )}
-                                                  i18nErrorsHeading={t(
-                                                    'reviewErrorsHeading',
-                                                    {
-                                                      count: 0,
-                                                    }
-                                                  )} // TODO fix count
-                                                  i18nImportedHeading={t(
-                                                    'reviewImportedHeading'
-                                                  )}
-                                                  i18nNameLabel={t(
-                                                    'shared:Name'
-                                                  )}
-                                                  i18nOperationsHtmlMessage={t(
-                                                    'reviewOperationsMessage',
-                                                    {
-                                                      count:
-                                                        data.actionsSummary
-                                                          .totalActions || 0,
-                                                    }
-                                                  )}
-                                                  i18nOperationTagHtmlMessages={getTagMessages(
-                                                    data
-                                                  )}
-                                                  i18nTitle={t(
-                                                    'reviewActionsTitle'
-                                                  )}
-                                                  i18nWarningsHeading={t(
-                                                    'reviewWarningsHeading',
-                                                    {
-                                                      count: 0,
-                                                    }
-                                                  )} // TODO fix count
-                                                />
-                                              ) : (
-                                                <ApiConnectorReview
-                                                  i18nApiDefinitionHeading={t(
-                                                    'apiConnectorsPageTitle'
-                                                  )}
-                                                  i18nDescriptionLabel={t(
-                                                    'shared:Description'
-                                                  )}
-                                                  i18nImportedHeading={t(
-                                                    'apiConnectorsPageTitle'
-                                                  )}
-                                                  i18nNameLabel={t(
-                                                    'shared:Name'
-                                                  )}
-                                                  i18nOperationsHtmlMessage={t(
-                                                    'reviewOperationsMessage',
-                                                    {
-                                                      count: 0,
-                                                    }
-                                                  )}
-                                                  i18nTitle={t(
-                                                    'reviewActionsTitle'
-                                                  )}
-                                                  i18nValidationFallbackMessage={t(
-                                                    'reviewValidationFallback'
-                                                  )}
-                                                />
-                                              )}
-                                            </>
-                                          </PageSection>
+                                                )} // TODO fix count
+                                                i18nImportedHeading={t(
+                                                  'reviewImportedHeading'
+                                                )}
+                                                i18nNameLabel={t('shared:Name')}
+                                                i18nOperationsHtmlMessage={t(
+                                                  'reviewOperationsMessage',
+                                                  {
+                                                    count:
+                                                      data.actionsSummary
+                                                        .totalActions || 0,
+                                                  }
+                                                )}
+                                                i18nOperationTagHtmlMessages={getTagMessages(
+                                                  data
+                                                )}
+                                                i18nTitle={t(
+                                                  'reviewActionsTitle'
+                                                )}
+                                                i18nWarningsHeading={t(
+                                                  'reviewWarningsHeading',
+                                                  {
+                                                    count: 0,
+                                                  }
+                                                )} // TODO fix count
+                                              />
+                                            ) : (
+                                              <ApiConnectorReview
+                                                i18nApiDefinitionHeading={t(
+                                                  'apiConnectorsPageTitle'
+                                                )}
+                                                i18nDescriptionLabel={t(
+                                                  'shared:Description'
+                                                )}
+                                                i18nImportedHeading={t(
+                                                  'apiConnectorsPageTitle'
+                                                )}
+                                                i18nNameLabel={t('shared:Name')}
+                                                i18nOperationsHtmlMessage={t(
+                                                  'reviewOperationsMessage',
+                                                  {
+                                                    count: 0,
+                                                  }
+                                                )}
+                                                i18nTitle={t(
+                                                  'reviewActionsTitle'
+                                                )}
+                                                i18nValidationFallbackMessage={t(
+                                                  'reviewValidationFallback'
+                                                )}
+                                              />
+                                            )}
+                                          </>
                                         </>
                                       );
                                     }}

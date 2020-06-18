@@ -1,0 +1,11 @@
+.api-connector-detail-header__row {
+    align-items: center;
+}
+
+.api-connector-detail-header__name {
+    font-size: 2em;
+}
+
+.api-connector-detail-header__icon {
+    width: 46px;
+}
