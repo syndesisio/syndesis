@@ -1,6 +1,7 @@
 import {
   Badge,
   Button,
+  DataListAction,
   DataListCell,
   DataListCheck,
   DataListContent,
@@ -11,15 +12,20 @@ import {
   Radio,
   Split,
   SplitItem,
+  Tooltip,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { IRoleInfo, ITablePrivilege, RolePermissionList } from '..';
 import { ButtonLink, Loader } from '../../../../Layout';
+import { EditPoliciesModal } from '../Policies/EditPoliciesModal';
 import './ViewPermissionListItems.css';
 
 export interface IViewPermissionListItemsProps {
   index: number;
   i18nAddNewRole: string;
+  i18nEditPolicies: string;
+  i18nEditPoliciesTip: string;
+  i18nEditPoliciesTitle: string;
   i18nSelect: string;
   i18nSelectRole: string;
   i18nRemoveRoleRow: string;
@@ -38,6 +44,7 @@ export interface IViewPermissionListItemsProps {
   viewRolePermissionList: ITablePrivilege[];
   itemSelected: Map<string, string>;
   dvRoles: string[];
+  updateViewPolicies: () => Promise<boolean>;
   updateViewsPermissions: (roleInfo: IRoleInfo) => Promise<boolean>;
   getUpdatedRole: () => void;
   onSelectedViewChange: (
@@ -72,6 +79,8 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
 
   const [showLoading, setShowLoading] = React.useState<boolean>(false);
 
+  const [policiesUpdating, setPoliciesUpdating] = React.useState<boolean>(false);
+
   const [grantOperation, setGrantOperation] = React.useState<boolean>(true);
 
   const [trimPermissionList, setTrimPermissionList] = React.useState<
@@ -86,6 +95,8 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
   const [saveEnabled, setSaveEnabled] = React.useState<boolean>(false);
 
   const [clearAction, setClearAction] = React.useState<boolean>(false);
+
+  const [policiesModalOpen, setPoliciesModalOpen] = React.useState<boolean>(false);
 
   const updateRolePermissionModel = React.useCallback(
     (
@@ -128,6 +139,15 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
     setGrantOperation(true);
     setClearAction(!clearAction);
     setShow(!show);
+  };
+
+  const handleUpdatePolicies = async () => {
+    setPoliciesUpdating(true);
+    const callSucess = await props.updateViewPolicies();
+    if (callSucess) {
+      setPoliciesUpdating(false);
+      setPoliciesModalOpen(false);
+    }
   };
 
   const handleUpdateRoles = async () => {
@@ -189,149 +209,187 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
     }
   }, [rolePermissionModel, showLoading]);
 
+  const handlePoliciesModalToggle = () => {
+    setPoliciesModalOpen(!policiesModalOpen);
+  };
+
   return (
-    <DataListItem aria-labelledby="width-ex3-item1" isExpanded={show}>
-      <DataListItemRow>
-        <DataListToggle
-          isExpanded={show}
-          id="width-ex3-toggle1"
-          aria-controls="width-ex3-expand1"
-          // tslint:disable-next-line: jsx-no-lambda
-          onClick={() => setShow(!show)}
-        />
-        <DataListCheck
-          aria-labelledby="width-ex3-item1"
-          name="width-ex3-item1"
-          checked={Array.from(props.itemSelected.values()).includes(
-            props.viewName
-          )}
-          // tslint:disable-next-line: jsx-no-lambda
-          onChange={(checked: boolean, event: any) =>
-            props.onSelectedViewChange(
-              checked,
-              event,
-              props.viewName,
-              props.viewId
-            )
-          }
-        />
-        <DataListItemCells
-          dataListCells={[
-            <DataListCell width={1} key={props.viewId}>
-              <span id="check-action-item2">{props.viewName}</span>
-            </DataListCell>,
-            <DataListCell width={5} key={`temp-${props.viewId}`}>
-              {props.viewRolePermissionList.length > 4 && !showAll
-                ? trimPermissionList.map((permissionSet, index) => (
-                    <Badge
-                      key={`temp2-${index}`}
-                      isRead={true}
-                      className={'view-permission-list-items-permission_badge'}
-                    >
-                      {permissionSet.roleName +
-                        ' : ' +
-                        permissionSet.grantPrivileges.join(' / ')}
-                    </Badge>
-                  ))
-                : props.viewRolePermissionList.map((permissionSet, index) => (
-                    <Badge
-                      key={`temp2-${index}`}
-                      isRead={true}
-                      className={'view-permission-list-items-permission_badge'}
-                    >
-                      {permissionSet.roleName +
-                        ' : ' +
-                        permissionSet.grantPrivileges.join(' / ')}
-                    </Badge>
-                  ))}
-              {trimPermissionList.length > 0 && (
-                // tslint:disable-next-line: jsx-no-lambda
-                <Button variant={'link'} onClick={() => setShowAll(!showAll)}>
-                  {showAll
-                    ? `${props.i18nShowLess}`
-                    : `${props.viewRolePermissionList.length - 4} more...`}{' '}
-                </Button>
-              )}
-              {props.viewRolePermissionList.length === 0 && (
-                <span className={'view-permission-list-items-disabled_text'}>
-                  <i>{props.i18nPermissionNotSet}</i>
-                </span>
-              )}
-            </DataListCell>,
-          ]}
-        />
-      </DataListItemRow>
-      <DataListContent
-        aria-label="Primary Content Details"
-        id="width-ex3-expand1"
-        isHidden={!show}
-      >
-        <>
-          <Split gutter="sm" className={'view-permission-list_set-model_grant'}>
-            <SplitItem>
-              <Radio
-                aria-label={'View-grant'}
-                id={'view-operation-grant' + props.index}
-                data-testid={'view-operation-grant' + props.index}
-                name={'view-operation' + props.index}
-                label="GRANT"
-                // tslint:disable-next-line: jsx-no-lambda
-                onClick={() => setGrantOperation(true)}
-                isChecked={grantOperation}
-              />
-            </SplitItem>
-            <SplitItem>
-              <Radio
-                aria-label={'view-revoke'}
-                id={'view-operation-revoke' + props.index}
-                className={'view-permission-list_radios' + props.index}
-                data-testid={'view-operation-revoke' + props.index}
-                name={'view-operation' + props.index}
-                label="REVOKE"
-                // tslint:disable-next-line: jsx-no-lambda
-                onClick={() => setGrantOperation(false)}
-                isChecked={!grantOperation}
-              />
-            </SplitItem>
-          </Split>
-          <RolePermissionList
-            i18nRole={props.i18nRole}
-            i18nSelect={props.i18nSelect}
-            i18nInsert={props.i18nInsert}
-            i18nUpdate={props.i18nUpdate}
-            i18nDelete={props.i18nDelete}
-            i18nAllAccess={props.i18nAllAccess}
-            i18nAddNewRole={props.i18nAddNewRole}
-            i18nSelectRole={props.i18nSelectRole}
-            i18nRemoveRoleRow={props.i18nRemoveRoleRow}
-            i18nRoleExists={props.i18nRoleExists}
-            viewRolePermissionList={props.viewRolePermissionList}
-            roles={props.dvRoles}
-            clearAction={clearAction}
-            selectedRoles={rolePermissionModel}
-            updateRolePermissionModel={updateRolePermissionModel}
-            deleteRoleFromPermissionModel={deleteRoleFromPermissionModel}
+    <>
+      <EditPoliciesModal
+        i18nTitle={props.i18nEditPoliciesTitle}
+        i18nCancel={props.i18nCancel}
+        i18nSave={props.i18nSave}
+        onClose={handlePoliciesModalToggle}
+        isOpen={policiesModalOpen}
+        isUpdating={policiesUpdating}
+        onSetPolicies={handleUpdatePolicies}
+      />
+      <DataListItem aria-labelledby="width-ex3-item1" isExpanded={show}>
+        <DataListItemRow>
+          <DataListToggle
+            isExpanded={show}
+            id="width-ex3-toggle1"
+            aria-controls="width-ex3-expand1"
+            // tslint:disable-next-line: jsx-no-lambda
+            onClick={() => setShow(!show)}
           />
-          <Split gutter="sm" style={{ paddingTop: '15px' }}>
-            <SplitItem>
-              <ButtonLink
-                key="confirm"
-                onClick={handleUpdateRoles}
-                as={'primary'}
-                disabled={!saveEnabled}
-              >
-                {showLoading ? <Loader size={'xs'} inline={true} /> : null}
-                {props.i18nSave}
-              </ButtonLink>
-            </SplitItem>
-            <SplitItem>
-              <Button variant="link" onClick={handleCancel}>
-                {props.i18nCancel}
+          <DataListCheck
+            aria-labelledby="width-ex3-item1"
+            name="width-ex3-item1"
+            checked={Array.from(props.itemSelected.values()).includes(
+              props.viewName
+            )}
+            // tslint:disable-next-line: jsx-no-lambda
+            onChange={(checked: boolean, event: any) =>
+              props.onSelectedViewChange(
+                checked,
+                event,
+                props.viewName,
+                props.viewId
+              )
+            }
+          />
+          <DataListItemCells
+            dataListCells={[
+              <DataListCell width={1} key={props.viewId}>
+                <span id="check-action-item2">{props.viewName}</span>
+              </DataListCell>,
+              <DataListCell width={5} key={`temp-${props.viewId}`}>
+                {props.viewRolePermissionList.length > 4 && !showAll
+                  ? trimPermissionList.map((permissionSet, index) => (
+                      <Badge
+                        key={`temp2-${index}`}
+                        isRead={true}
+                        className={
+                          'view-permission-list-items-permission_badge'
+                        }
+                      >
+                        {permissionSet.roleName +
+                          ' : ' +
+                          permissionSet.grantPrivileges.join(' / ')}
+                      </Badge>
+                    ))
+                  : props.viewRolePermissionList.map((permissionSet, index) => (
+                      <Badge
+                        key={`temp2-${index}`}
+                        isRead={true}
+                        className={
+                          'view-permission-list-items-permission_badge'
+                        }
+                      >
+                        {permissionSet.roleName +
+                          ' : ' +
+                          permissionSet.grantPrivileges.join(' / ')}
+                      </Badge>
+                    ))}
+                {trimPermissionList.length > 0 && (
+                  // tslint:disable-next-line: jsx-no-lambda
+                  <Button variant={'link'} onClick={() => setShowAll(!showAll)}>
+                    {showAll
+                      ? `${props.i18nShowLess}`
+                      : `${props.viewRolePermissionList.length -
+                          4} more...`}{' '}
+                  </Button>
+                )}
+                {props.viewRolePermissionList.length === 0 && (
+                  <span className={'view-permission-list-items-disabled_text'}>
+                    <i>{props.i18nPermissionNotSet}</i>
+                  </span>
+                )}
+              </DataListCell>,
+            ]}
+          />
+          <DataListAction
+            aria-labelledby={'view permission actions'}
+            id={'view-permission-action'}
+            aria-label={'Actions'}
+          >
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={<div id={'detailsTip'}>{props.i18nEditPoliciesTip}</div>}
+            >
+              <Button variant="secondary" onClick={handlePoliciesModalToggle}>
+                {props.i18nEditPolicies}
               </Button>
-            </SplitItem>
-          </Split>
-        </>
-      </DataListContent>
-    </DataListItem>
+            </Tooltip>
+          </DataListAction>
+        </DataListItemRow>
+        <DataListContent
+          aria-label="Primary Content Details"
+          id="width-ex3-expand1"
+          isHidden={!show}
+        >
+          <>
+            <Split
+              gutter="sm"
+              className={'view-permission-list_set-model_grant'}
+            >
+              <SplitItem>
+                <Radio
+                  aria-label={'View-grant'}
+                  id={'view-operation-grant' + props.index}
+                  data-testid={'view-operation-grant' + props.index}
+                  name={'view-operation' + props.index}
+                  label="GRANT"
+                  // tslint:disable-next-line: jsx-no-lambda
+                  onClick={() => setGrantOperation(true)}
+                  isChecked={grantOperation}
+                />
+              </SplitItem>
+              <SplitItem>
+                <Radio
+                  aria-label={'view-revoke'}
+                  id={'view-operation-revoke' + props.index}
+                  className={'view-permission-list_radios' + props.index}
+                  data-testid={'view-operation-revoke' + props.index}
+                  name={'view-operation' + props.index}
+                  label="REVOKE"
+                  // tslint:disable-next-line: jsx-no-lambda
+                  onClick={() => setGrantOperation(false)}
+                  isChecked={!grantOperation}
+                />
+              </SplitItem>
+            </Split>
+            <RolePermissionList
+              i18nRole={props.i18nRole}
+              i18nSelect={props.i18nSelect}
+              i18nInsert={props.i18nInsert}
+              i18nUpdate={props.i18nUpdate}
+              i18nDelete={props.i18nDelete}
+              i18nAllAccess={props.i18nAllAccess}
+              i18nAddNewRole={props.i18nAddNewRole}
+              i18nSelectRole={props.i18nSelectRole}
+              i18nRemoveRoleRow={props.i18nRemoveRoleRow}
+              i18nRoleExists={props.i18nRoleExists}
+              viewRolePermissionList={props.viewRolePermissionList}
+              roles={props.dvRoles}
+              clearAction={clearAction}
+              selectedRoles={rolePermissionModel}
+              updateRolePermissionModel={updateRolePermissionModel}
+              deleteRoleFromPermissionModel={deleteRoleFromPermissionModel}
+            />
+            <Split gutter="sm" style={{ paddingTop: '15px' }}>
+              <SplitItem>
+                <ButtonLink
+                  key="confirm"
+                  onClick={handleUpdateRoles}
+                  as={'primary'}
+                  disabled={!saveEnabled}
+                >
+                  {showLoading ? <Loader size={'xs'} inline={true} /> : null}
+                  {props.i18nSave}
+                </ButtonLink>
+              </SplitItem>
+              <SplitItem>
+                <Button variant="link" onClick={handleCancel}>
+                  {props.i18nCancel}
+                </Button>
+              </SplitItem>
+            </Split>
+          </>
+        </DataListContent>
+      </DataListItem>
+    </>
   );
 };

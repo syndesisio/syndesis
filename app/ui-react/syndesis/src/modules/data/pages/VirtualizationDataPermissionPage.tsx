@@ -200,6 +200,23 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
     }
   };
 
+  const updateViewPolicies = async () => {
+    // TODO: Implement backend call when available
+    return true;
+    // try {
+    //   await updateVirtualizationRoles(params.virtualizationId, roleInfo);
+    //   return true;
+    // } catch {
+    //   pushNotification(
+    //     t('errorUpdatingViewPolicies', {
+    //       name: params.virtualizationId,
+    //     }),
+    //     'error'
+    //   );
+    //   return false;
+    // }
+  };
+
   React.useEffect(() => {
     checkIfAllPageViewSelected(filteredAndSortedPerPage, itemSelected)
       ? setAllPageViewsSelected(true)
@@ -359,6 +376,9 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                             i18nPermissionNotSet={t('permissionNotSet')}
                             i18nCancel={t('shared:Cancel')}
                             i18nSave={t('shared:Save')}
+                            i18nEditPolicies={t('editViewPolicies')}
+                            i18nEditPoliciesTip={t('editViewPoliciesTip')}
+                            i18nEditPoliciesTitle={t('editViewPoliciesTitle', {viewName: viewDefinitionDescriptor.name})}
                             itemSelected={itemSelected}
                             viewId={viewDefinitionDescriptor.id}
                             viewName={viewDefinitionDescriptor.name}
@@ -368,6 +388,7 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                             onSelectedViewChange={onSelectedViewChange}
                             dvRoles={dvRoles}
                             getUpdatedRole={getUpdatedRole}
+                            updateViewPolicies={updateViewPolicies}
                             updateViewsPermissions={updateViewsPermissions}
                           />
                         )
