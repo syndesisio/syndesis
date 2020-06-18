@@ -16,13 +16,17 @@
 
 package io.syndesis.dv.server.endpoint;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
+import io.syndesis.dv.model.ViewDefinition;
+import io.syndesis.dv.repository.RepositoryConfiguration;
+import io.syndesis.dv.repository.RepositoryManagerImpl;
 import java.util.Arrays;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +38,6 @@ import org.springframework.web.server.ResponseStatusException;
 import org.teiid.adminapi.Model;
 import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.adminapi.impl.VDBMetaData;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
-import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
-import io.syndesis.dv.model.ViewDefinition;
-import io.syndesis.dv.repository.RepositoryConfiguration;
-import io.syndesis.dv.repository.RepositoryManagerImpl;
 
 @SuppressWarnings("nls")
 @RunWith(SpringRunner.class)
@@ -125,6 +122,22 @@ public class EditorServiceTest {
         for (ViewListing vl : dvService.getViewList("x")) {
             assertTrue(vl.isValid());
         }
+
+        //invalid
+        vd.setDdl("create view y as * from dummy.v");
+        vd.setComplete(false);
+        saved = utilService.upsertViewEditorState(vd);
+        assertFalse(saved.isParsable());
+
+        //still invalid
+        vd.setComplete(true);
+        saved = utilService.upsertViewEditorState(vd);
+        assertFalse(saved.isParsable());
+
+        //still invalid - parse error after main ddl
+        vd.setDdl("create view y as select * from dummy.v abc 123");
+        saved = utilService.upsertViewEditorState(vd);
+        assertFalse(saved.isParsable());
     }
 
     static VDBMetaData dummyPreviewVdb(boolean hidden) {

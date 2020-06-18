@@ -248,10 +248,8 @@ public final class EditorService extends DvService {
         }
 
         boolean pathsSame = false;
-        boolean updateDv = false;
         // Add a new ViewDefinition
         if (viewDefn == null) {
-            updateDv = true;
             viewDefn = getWorkspaceManager().createViewDefiniton(restViewDefn.getDataVirtualizationName(), restViewDefn.getName());
         } else {
             if (!restViewDefn.getName().equals(viewDefn.getName()) || !restViewDefn.getDataVirtualizationName().equals(viewDefn.getDataVirtualizationName())) {
@@ -270,21 +268,26 @@ public final class EditorService extends DvService {
         for (String restSourcePath: restViewDefn.getSourcePaths()) {
             viewDefn.addSourcePath(restSourcePath);
         }
-        viewDefn.setComplete(restViewDefn.isComplete());
         viewDefn.setUserDefined(restViewDefn.isUserDefined());
+
+        boolean wasParsable = viewDefn.isParsable();
+        boolean wasComplete = viewDefn.isComplete();
+
+        viewDefn.setComplete(restViewDefn.isComplete());
+        boolean updateDv = false;
 
         if (viewDefn.isComplete()) {
             if (!viewDefn.isUserDefined()) {
                 //regenerate if needed
-                if (viewDefn.getDdl() == null || !pathsSame || !viewDefn.isParsable()) {
+                if (viewDefn.getDdl() == null || !pathsSame || !wasParsable) {
                     String ddl = new ServiceVdbGenerator(metadataService).getODataViewDdl(viewDefn);
                     viewDefn.setDdl(ddl);
                     viewDefn.setParsable(true);
                     updateDv = true;
                 }
                 // else we're trusting the ui
-            } else if (viewDefn.getDdl() != null && !Objects.equals(oldDdl, viewDefn.getDdl())) {
-
+            } else if (viewDefn.getDdl() != null && (!Objects.equals(oldDdl, viewDefn.getDdl()) || !wasComplete)) {
+                viewDefn.setParsable(false);
                 //TODO: could pro-actively validate if we're in a good state
                 viewDefn.getSourcePaths().clear();
                 ValidationResult result = metadataInstance.parse(viewDefn.getDdl());
@@ -304,19 +307,17 @@ public final class EditorService extends DvService {
                         //for now we'll redo everything
                         updateDv = true;
                     }
-                } else {
-                    //not actually usable - perhaps come other ddl statement
-                    if (viewDefn.isParsable()) {
-                        updateDv = true;
-                    }
-                    viewDefn.setParsable(false);
                 }
             }
+        } else {
+            //could be anything, so also toggle the parsable flag
+            viewDefn.setParsable(false);
+        }
 
-            if (updateDv) {
-                DataVirtualization dv = getWorkspaceManager().findDataVirtualization(viewDefn.getDataVirtualizationName());
-                dv.touch();
-            }
+        //if there was a change that may have affected the metadata, we need to update the preview vdb
+        if (updateDv || (viewDefn.isComplete() ^ wasComplete) || (viewDefn.isParsable() ^ wasParsable)) {
+            DataVirtualization dv = getWorkspaceManager().findDataVirtualization(viewDefn.getDataVirtualizationName());
+            dv.touch();
         }
 
         return viewDefn;
