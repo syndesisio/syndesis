@@ -1,27 +1,28 @@
 import {
   Button,
   DataList,
+  DataListAction,
   DataListCell,
   DataListCheck,
   DataListItem,
   DataListItemCells,
   DataListItemRow,
-  // DataListToggle,
+  DataListToggle,
   Modal,
   Popover,
   Radio,
   Split,
   SplitItem,
   Text,
-  TextVariants,
+  TextVariants
 } from '@patternfly/react-core';
 import { WarningTriangleIcon } from '@patternfly/react-icons';
 import { global_warning_color_100 } from '@patternfly/react-tokens';
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { EmptyViewsState, RolePermissionList } from '..';
-import { ButtonLink, Loader, PageSection } from '../../../../Layout';
-import { IListViewToolbarProps } from '../../../../Shared';
+import { ButtonLink, Loader, PageSection } from '../../../Layout';
+import { IListViewToolbarProps } from '../../../Shared';
 import './ViewPermissionList.css';
 import { ViewPermissionToolbar } from './ViewPermissionToolbar';
 
@@ -419,16 +420,16 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
               isExpanded={false}
             >
               <DataListItemRow>
-                {/* <DataListToggle
+                <DataListToggle
                   isExpanded={false}
                   id="view-permission-heading-toggle"
                   aria-controls="view-permission-heading-expand"
-                  className={'view-permission-list-list_heading'}
-                /> */}
+                  className={'view-permission-list-hidden'}
+                />
                 <DataListCheck
                   aria-labelledby="view-permission-heading-check"
                   checked={false}
-                  className={'view-permission-list-list_heading'}
+                  className={'view-permission-list-hidden'}
                 />
                 <DataListItemCells
                   dataListCells={[
@@ -450,6 +451,13 @@ export const ViewPermissionList: React.FunctionComponent<IViewPermissionList> = 
                     </DataListCell>,
                   ]}
                 />
+                <DataListAction
+                  aria-labelledby={'view permission actions'}
+                  id={'view-permission-action'}
+                  aria-label={'Actions'}
+                >
+                  <Button variant="secondary" className={'view-permission-list-hidden'}>Edit policies</Button>
+                </DataListAction>
               </DataListItemRow>
             </DataListItem>
             {props.children}
