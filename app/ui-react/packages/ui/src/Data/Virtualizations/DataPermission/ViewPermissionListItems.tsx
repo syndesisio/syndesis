@@ -23,6 +23,8 @@ import './ViewPermissionListItems.css';
 export interface IViewPermissionListItemsProps {
   index: number;
   i18nAddNewRole: string;
+  i18nColumnMasking: string;
+  i18nColumnPermissions: string;
   i18nEditPolicies: string;
   i18nEditPoliciesTip: string;
   i18nEditPoliciesTitle: string;
@@ -35,6 +37,7 @@ export interface IViewPermissionListItemsProps {
   i18nDelete: string;
   i18nAllAccess: string;
   i18nRole: string;
+  i18nRowBasedFiltering: string;
   i18nPermissionNotSet: string;
   i18nShowLess: string;
   i18nCancel: string;
@@ -219,6 +222,9 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
         i18nTitle={props.i18nEditPoliciesTitle}
         i18nCancel={props.i18nCancel}
         i18nSave={props.i18nSave}
+        i18nColumnMasking={props.i18nColumnMasking}
+        i18nColumnPermissions={props.i18nColumnPermissions}
+        i18nRowBasedFiltering={props.i18nRowBasedFiltering}
         onClose={handlePoliciesModalToggle}
         isOpen={policiesModalOpen}
         isUpdating={policiesUpdating}
@@ -306,7 +312,6 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
           >
             <Tooltip
               position={'top'}
-              enableFlip={true}
               content={<div id={'detailsTip'}>{props.i18nEditPoliciesTip}</div>}
             >
               <Button variant="secondary" onClick={handlePoliciesModalToggle}>

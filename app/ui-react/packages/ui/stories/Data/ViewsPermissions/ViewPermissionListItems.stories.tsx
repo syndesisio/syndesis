@@ -82,9 +82,12 @@ stories
           i18nPermissionNotSet={'Permission not set'}
           i18nCancel={'Cancel'}
           i18nSave={'Save'}
+          i18nColumnMasking={'Column masking'}
+          i18nColumnPermissions={'Column permissions'}
+          i18nRowBasedFiltering={'Row-based filtering'}
           i18nEditPolicies={'Edit policies'}
           i18nEditPoliciesTip={'Edit policies tooltip'}
-          i18nEditPoliciesTitle={'View_1: Configure policies'}
+          i18nEditPoliciesTitle={'Edit policies of view View_1'}
           itemSelected={map}
           viewRolePermissionList={tablePrivileges}
           onSelectedViewChange={action(onSelectedViewChangeActionText)}
@@ -122,9 +125,12 @@ stories
           i18nPermissionNotSet={'Permission not set'}
           i18nCancel={'Cancel'}
           i18nSave={'Save'}
+          i18nColumnMasking={'Column masking'}
+          i18nColumnPermissions={'Column permissions'}
+          i18nRowBasedFiltering={'Row-based filtering'}
           i18nEditPolicies={'Edit policies'}
           i18nEditPoliciesTip={'Edit policies tooltip'}
-          i18nEditPoliciesTitle={'View_1: Configure policies'}
+          i18nEditPoliciesTitle={'Edit policies of view View_1'}
           itemSelected={map}
           viewRolePermissionList={tablePrivileges}
           onSelectedViewChange={action(onSelectedViewChangeActionText)}
