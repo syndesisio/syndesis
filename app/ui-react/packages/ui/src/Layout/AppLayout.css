@@ -1,0 +1,9 @@
+.app__loading-container {
+  background-color: var(--pf-global--BackgroundColor--200);
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 700 !important;
+}
