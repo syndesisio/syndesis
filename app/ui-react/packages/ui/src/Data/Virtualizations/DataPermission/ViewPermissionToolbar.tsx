@@ -26,7 +26,7 @@ import {
   IFilterValue,
   IListViewToolbarProps,
   ISortType,
-} from '../../../../Shared';
+} from '../../../Shared';
 import './ViewPermissionToolbar.css';
 
 export interface IViewPermissionToolbarProps extends IListViewToolbarProps {

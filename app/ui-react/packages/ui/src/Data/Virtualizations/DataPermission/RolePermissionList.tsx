@@ -9,7 +9,7 @@ import {
 } from '@patternfly/react-core';
 import { PlusCircleIcon } from '@patternfly/react-icons';
 import * as React from 'react';
-import { ITablePrivilege, RolePermissionListItem } from '..';
+import { ITablePrivilege, RolePermissionListItem } from '.';
 import './RolePermissionList.css';
 
 export interface IRolePermissionListProps {

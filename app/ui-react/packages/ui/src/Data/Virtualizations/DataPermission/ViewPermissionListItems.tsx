@@ -16,8 +16,8 @@ import {
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { IRoleInfo, ITablePrivilege, RolePermissionList } from '..';
-import { ButtonLink, Loader } from '../../../../Layout';
-import { EditPoliciesModal } from '../Policies/EditPoliciesModal';
+import { ButtonLink, Loader } from '../../../Layout';
+import { EditPoliciesModal } from './Policies/EditPoliciesModal';
 import './ViewPermissionListItems.css';
 
 export interface IViewPermissionListItemsProps {
@@ -320,7 +320,7 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
           id="width-ex3-expand1"
           isHidden={!show}
         >
-          <>
+          <div className={'view-permission-list_set-expanded_row'}>
             <Split
               gutter="sm"
               className={'view-permission-list_set-model_grant'}
@@ -387,7 +387,7 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
                 </Button>
               </SplitItem>
             </Split>
-          </>
+          </div>
         </DataListContent>
       </DataListItem>
     </>
