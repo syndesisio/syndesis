@@ -376,6 +376,9 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                             i18nPermissionNotSet={t('permissionNotSet')}
                             i18nCancel={t('shared:Cancel')}
                             i18nSave={t('shared:Save')}
+                            i18nColumnMasking={t('columnMasking')}
+                            i18nColumnPermissions={t('columnPermissions')}
+                            i18nRowBasedFiltering={t('rowBasedFiltering')}
                             i18nEditPolicies={t('editViewPolicies')}
                             i18nEditPoliciesTip={t('editViewPoliciesTip')}
                             i18nEditPoliciesTitle={t('editViewPoliciesTitle', {viewName: viewDefinitionDescriptor.name})}
