@@ -18,8 +18,8 @@ package io.syndesis.dv.lsp.parser.statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.syndesis.dv.lsp.Messages;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
-import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 import org.eclipse.lsp4j.Position;
@@ -58,7 +58,11 @@ public class SelectClause extends AbstractStatementObject {
         if (selectToken != null) {
             setFirstTknIndex(getTokenIndex(selectToken));
         } else {
-            this.analyzer.addException(new DdlAnalyzerException("There is no 'SELECT' in your query expression"));
+            Token firstQETkn = queryExpression.getFirstToken();
+            this.analyzer.addException(
+                    firstQETkn,
+                    firstQETkn,
+                    Messages.getString(Messages.Error.NO_SELECT_CLAUSE_FOUND));
         }
 
         // We have the SELECT
@@ -78,6 +82,23 @@ public class SelectClause extends AbstractStatementObject {
 
         // Parse SelectColumn's
         processSelectTokens();
+
+        // Check number of select columns versus number of table elements in table body
+        int nViewColumns = getQueryExpression().getCreateViewStatement().getTableBody().getTableElements().length;
+        int nSelectColumns = getSelectColumns().length;
+        if( !isStar && nViewColumns != nSelectColumns ) {
+            Token firstToken = this.getFirstToken();
+            Token lastToken = this.getLastToken();
+            if( getSelectColumns().length > 0 ) {
+                firstToken = getSelectColumns()[0].getFirstToken();
+                lastToken = getSelectColumns()[getSelectColumns().length-1].getLastToken();
+            }
+            this.analyzer.addException(
+                    firstToken,
+                    lastToken,
+                    Messages.getString(Messages.Error.PROJECTED_SYMBOLS_VIEW_COLUMNS_MISMATCH,
+                    nSelectColumns, nViewColumns));
+        }
     }
 
 
@@ -135,6 +156,8 @@ public class SelectClause extends AbstractStatementObject {
                     }
 
                     this.addSelectColumn(selectColumn);
+                } else {
+                    isDone = true;
                 }
             }
         }

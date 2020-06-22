@@ -142,6 +142,13 @@ public abstract class AbstractStatementObject {
         this.lastTknIndex = lastTknIndex;
     }
 
+    protected Token getFirstToken() {
+        return this.analyzer.getToken(getFirstTknIndex());
+    }
+
+    protected Token getLastToken() {
+        return this.analyzer.getToken(getLastTknIndex());
+    }
     protected boolean hasAnotherToken(List<Token> tkns, int currentIndex) {
         return currentIndex + 2 < tkns.size();
     }

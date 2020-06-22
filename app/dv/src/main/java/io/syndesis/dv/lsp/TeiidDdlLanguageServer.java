@@ -18,6 +18,8 @@ package io.syndesis.dv.lsp;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
 
+import org.eclipse.lsp4j.CodeActionKind;
+import org.eclipse.lsp4j.CodeActionOptions;
 import org.eclipse.lsp4j.CompletionOptions;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
@@ -97,6 +99,7 @@ public class TeiidDdlLanguageServer implements LanguageServer, LanguageClientAwa
         capabilities.setDocumentSymbolProvider(Boolean.TRUE);
         // TODO: define capabilities, usually the first provided is completion
         capabilities.setCompletionProvider(DEFAULT_COMPLETION_OPTIONS);
+        capabilities.setCodeActionProvider(new CodeActionOptions(Arrays.asList(CodeActionKind.QuickFix)));
         return capabilities;
     }
 

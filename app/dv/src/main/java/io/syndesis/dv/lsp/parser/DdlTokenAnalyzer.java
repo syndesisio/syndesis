@@ -27,6 +27,7 @@ import org.teiid.query.parser.JavaCharStream;
 import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
+import io.syndesis.dv.lsp.Messages;
 import io.syndesis.dv.lsp.completion.DdlCompletionConstants;
 
 @SuppressWarnings("PMD.GodClass")
@@ -124,7 +125,7 @@ public class DdlTokenAnalyzer {
         return targetToken;
     }
 
-    protected String[] getDatatypesList() {
+    protected List<String> getDatatypesList() {
         return DdlAnalyzerConstants.DATATYPE_LIST;
     }
 
@@ -332,12 +333,35 @@ public class DdlTokenAnalyzer {
         }
     }
 
-    public void addException(Token startToken, Token endToken, String errorMessage) {
+    public DdlAnalyzerException addException(
+            Token startToken,
+            Token endToken,
+            String errorMessage) {
         Position startPosition = new Position(startToken.beginLine, startToken.beginColumn);
-        Position endPosition = new Position(endToken.endLine, endToken.endColumn + 1);
-        DdlAnalyzerException exception = new DdlAnalyzerException(DiagnosticSeverity.Error, errorMessage,
-                new Range(startPosition, endPosition)); // $NON-NLS-1$);
+        Position endPosition = new Position(endToken.endLine, endToken.endColumn+1);
+        DdlAnalyzerException exception =
+                new DdlAnalyzerException(
+                        DiagnosticSeverity.Error,
+                        errorMessage,
+                        new Range(startPosition, endPosition)); //$NON-NLS-1$);
         this.addException(exception);
+        return exception;
+    }
+
+    public DdlAnalyzerException addException(
+            Token startToken,
+            Token endToken,
+            Enum< ? > messageId,
+            Object... params) {
+        Position startPosition = new Position(startToken.beginLine, startToken.beginColumn);
+        Position endPosition = new Position(endToken.endLine, endToken.endColumn+1);
+        DdlAnalyzerException exception =
+                new DdlAnalyzerException(
+                        DiagnosticSeverity.Error,
+                        Messages.getString(messageId, params),
+                        new Range(startPosition, endPosition)); //$NON-NLS-1$);
+        this.addException(exception);
+        return exception;
     }
 
     public List<DdlAnalyzerException> getExceptions() {

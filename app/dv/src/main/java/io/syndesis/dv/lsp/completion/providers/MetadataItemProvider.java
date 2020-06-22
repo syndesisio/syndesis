@@ -439,14 +439,19 @@ public class MetadataItemProvider extends CompletionItemBuilder {
     }
 
     private RestViewSourceInfo getRuntimeMetadata(String virtualizationName) {
-        if (virtualizationName != null && this.metadataService != null) {
+        if( this.metadataService == null) {
+            LOGGER.error("getRuntimeMetadata() ERROR metadata service is NULL");
+            return null;
+        }
+
+        if (virtualizationName != null) {
             try {
                 return this.metadataService.getRuntimeMetadata(virtualizationName);
             } catch (Exception e) {
                 LOGGER.error("MetadataItemProvider.getRuntimeMetadata() ERROR accessing runtime metadata", e);
             }
         } else {
-            LOGGER.error("MetadataItemProvider.getRuntimeMetadata() virtualizationName == NULL");
+            LOGGER.warn("getRuntimeMetadata() virtualizationName == NULL");
         }
 
         return null;

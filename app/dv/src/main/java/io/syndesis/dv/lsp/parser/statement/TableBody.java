@@ -18,7 +18,10 @@ package io.syndesis.dv.lsp.parser.statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.syndesis.dv.lsp.Messages;
+import io.syndesis.dv.lsp.codeactions.QuickFixFactory;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
+import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 import org.eclipse.lsp4j.Position;
@@ -29,10 +32,12 @@ public class TableBody extends AbstractStatementObject {
     private final List<TableElement> elements;
     private TableOptionsClause options;
     private boolean hasPrimaryKey;
+    CreateViewStatement createViewStatement;
 
-    public TableBody(DdlTokenAnalyzer analyzer) {
+    public TableBody(DdlTokenAnalyzer analyzer, CreateViewStatement createViewStatement) {
         super(analyzer);
         this.elements = new ArrayList<TableElement>();
+        this.createViewStatement = createViewStatement;
     }
 
     public TableElement[] getTableElements() {
@@ -123,6 +128,20 @@ public class TableBody extends AbstractStatementObject {
                 }
             }
         }
+
+        // Check to see if last TableElement ends with a ',' token and add exception
+        // if it does
+        if( getTableElements().length > 0 ) {
+            TableElement lastElement = getTableElements()[getTableElements().length-1];
+            if( lastElement.getLastToken().kind == SQLParserConstants.COMMA) {
+                DdlAnalyzerException exception = this.analyzer.addException(
+                        lastElement.getLastToken(),
+                        lastElement.getLastToken(),
+                        Messages.getString(Messages.Error.UNEXPECTED_COMMA));
+                exception.setErrorCode(
+                        QuickFixFactory.DiagnosticErrorId.UNEXPECTED_COMMA.getErrorCode());
+            }
+        }
     }
 
     public static boolean isDatatype(Token token) {
@@ -165,4 +184,9 @@ public class TableBody extends AbstractStatementObject {
 
         return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.TABLE_BODY, this);
     }
+
+    public CreateViewStatement getCreateViewStatement() {
+        return createViewStatement;
+    }
+
 }

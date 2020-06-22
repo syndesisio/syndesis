@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+//import javax.swing.text.BadLocationException;
+
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.TextDocumentItem;
@@ -31,62 +33,55 @@ import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 import io.syndesis.dv.lsp.parser.statement.CreateViewStatement;
 
-public class DdlDiagnostics {
+public final class DdlDiagnostics {
     private static final Logger LOGGER = LoggerFactory.getLogger(DdlDiagnostics.class);
-    private final TeiidDdlLanguageServer languageServer;
-
-    private final Object diagnosticsLock = new Object();
-
-    public DdlDiagnostics(TeiidDdlLanguageServer languageServer) {
-        super();
-        this.languageServer = languageServer;
-    }
-
-    /**
-     * Clear diagnostics for a given document URI.
-     *
-     * @param uri - uri of the document
-     */
-    public void clearDiagnostics(String uri) {
-        synchronized(diagnosticsLock) {
-            this.languageServer.getClient().publishDiagnostics(new PublishDiagnosticsParams(uri, Collections.emptyList()));
-        }
-    }
-
-    /**
-     * Generate and publish diagnostics for target document.
-     *
-     * @param ddlDocument - document to diagnose
-     */
-    public boolean publishDiagnostics(TextDocumentItem ddlDocument) {
-        doPublishDiagnostics(ddlDocument);
-        return true;
-    }
-
-    /**
-     * Performs actual parsing and diagnostics for a given ddl string
-     *
-     * @param documentText - text to process
-     * @return list of language server {@link Diagnostic}s
-     */
-    public static List<Diagnostic> doBasicDiagnostics(String documentText) {
-        DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(documentText);
-        CreateViewStatement createStatement = new CreateViewStatement(analyzer);
-        List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
-        for (DdlAnalyzerException exception : createStatement.getExceptions()) {
-            diagnostics.add(exception.getDiagnostic());
-            LOGGER.debug(diagnostics.toString());
-        }
-
-        return diagnostics;
-    }
 
     @SuppressWarnings("FutureReturnValueIgnored")
-    private void doPublishDiagnostics(TextDocumentItem ddlDocument) {
-        List<Diagnostic> diagnostics = doBasicDiagnostics(ddlDocument.getText());
+    public static void publishDiagnostics(TextDocumentItem ddlDocument, TeiidDdlLanguageServer languageServer) {
         CompletableFuture.runAsync(() -> {
-            this.languageServer.getClient()
-                    .publishDiagnostics(new PublishDiagnosticsParams(ddlDocument.getUri(), diagnostics));
+            LOGGER.debug("  >>> runAsync() STARTED");
+
+            List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
+
+            DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(ddlDocument.getText());
+            CreateViewStatement createStatement = new CreateViewStatement(analyzer);
+            for (DdlAnalyzerException exception : createStatement.getExceptions()) {
+                diagnostics.add(exception.getDiagnostic());
+            }
+            if( !diagnostics.isEmpty() ) {
+                languageServer.getClient().publishDiagnostics(new PublishDiagnosticsParams(ddlDocument.getUri(), diagnostics));
+            } else {
+                languageServer.getClient().publishDiagnostics(new PublishDiagnosticsParams(ddlDocument.getUri(), Collections.emptyList()));
+            }
+            LOGGER.debug("  >>>  runAsync() FINISHIED ## diagnostics = " + diagnostics.size());
         });
+    }
+
+    public static List<Diagnostic> getCurrentDiagnostics(String ddlDocumentText) {
+      return getCurrentDiagnostics(getCurrentExceptions(ddlDocumentText));
+    }
+
+    public static List<Diagnostic> getCurrentDiagnostics(List<DdlAnalyzerException> exceptions) {
+        List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
+      for (DdlAnalyzerException exception : exceptions) {
+          diagnostics.add(exception.getDiagnostic());
+          LOGGER.debug(diagnostics.toString());
+      }
+      return diagnostics;
+    }
+
+    public static List<DdlAnalyzerException> getCurrentExceptions(String ddlDocumentText) {
+        CreateViewStatement createStatement =
+                new CreateViewStatement(new DdlTokenAnalyzer(ddlDocumentText));
+        return createStatement.getExceptions();
+    }
+
+    public static void clear(TextDocumentItem ddlDocument, TeiidDdlLanguageServer languageServer) {
+        LOGGER.debug("clear diagnostics");
+        languageServer.getClient().publishDiagnostics(new PublishDiagnosticsParams(ddlDocument.getUri(), Collections.emptyList()));
+    }
+
+    private DdlDiagnostics() {
+        // utility class
     }
 }

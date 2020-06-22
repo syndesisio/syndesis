@@ -29,19 +29,11 @@ public class DdlAnalyzerException extends Exception {
     private static final long serialVersionUID = 1L;
 
     private final Diagnostic diagnostic;
+    private String targetedString;
 
-    /**
-     * The following constructors are for use by you for whatever
-     * purpose you can think of.  Constructing the exception in this
-     * manner makes the exception behave in the normal way - i.e., as
-     * documented in the class "Throwable".  The fields "errorToken",
-     * "expectedTokenSequences", and "tokenImage" do not contain
-     * relevant information.  The JavaCC generated code does not use
-     * these constructors.
-     */
     public DdlAnalyzerException() {
       super();
-      diagnostic = null;
+      this.diagnostic = null;
     }
 
     /** Constructor with message. */
@@ -53,15 +45,29 @@ public class DdlAnalyzerException extends Exception {
 
     /** Constructor with message. */
     public DdlAnalyzerException(DiagnosticSeverity severity, String message, Range range) {
-      super(message);
-      this.diagnostic = new Diagnostic();
+      this(message);
       this.diagnostic.setSeverity(severity);
-      this.diagnostic.setMessage(message);
       this.diagnostic.setRange(range);
     }
-
 
     public Diagnostic getDiagnostic() {
         return diagnostic;
     }
+
+    public void setErrorCode(String code) {
+        this.diagnostic.setCode(code);
+    }
+
+    public String getErrorCode() {
+        return this.diagnostic.getCode();
+    }
+
+    public String getTargetedString() {
+        return targetedString;
+    }
+
+    public void setTargetedString(String targetedString) {
+        this.targetedString = targetedString ;
+    }
+
 }

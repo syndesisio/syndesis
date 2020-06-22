@@ -23,7 +23,10 @@ import org.teiid.query.parser.Token;
 
 import com.google.common.base.Splitter;
 
+import io.syndesis.dv.lsp.Messages;
+import io.syndesis.dv.lsp.codeactions.QuickFixFactory;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
+import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 /*
@@ -127,6 +130,17 @@ public class SelectColumn extends AbstractStatementObject {
                         setLastTknIndex(getTokenIndex(tkn));
                         columnEnded = true;
                     }
+                } else if (tkn.kind == SQLParserConstants.COMMA) {
+                    // looks like there's an extra comma which should be ignored
+                    columnEnded = true;
+                    setFirstTknIndex(0);
+                    setLastTknIndex(0);
+                    DdlAnalyzerException exception = this.analyzer.addException(
+                            tkn,
+                            tkn,
+                            Messages.getString(Messages.Error.UNEXPECTED_COMMA));
+                    exception.setErrorCode(
+                            QuickFixFactory.DiagnosticErrorId.UNEXPECTED_COMMA.getErrorCode());
                 } else {
                     setLastTknIndex(getTokenIndex(tkn));
                     columnEnded = true;

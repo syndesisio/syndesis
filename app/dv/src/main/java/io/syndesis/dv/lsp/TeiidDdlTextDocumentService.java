@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import org.eclipse.lsp4j.CodeAction;
+import org.eclipse.lsp4j.CodeActionContext;
+import org.eclipse.lsp4j.CodeActionKind;
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.CodeLens;
 import org.eclipse.lsp4j.CodeLensParams;
@@ -51,7 +53,6 @@ import org.eclipse.lsp4j.RenameParams;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
-import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
@@ -61,6 +62,7 @@ import org.eclipse.lsp4j.services.TextDocumentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.syndesis.dv.lsp.codeactions.QuickFixFactory;
 import io.syndesis.dv.lsp.completion.providers.DdlCompletionProvider;
 import io.syndesis.dv.lsp.diagnostics.DdlDiagnostics;
 
@@ -73,6 +75,8 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
 
     private final DdlCompletionProvider completionProvider;
 
+    private static final boolean DO_PRINT_TO_CONSOLE = false;
+
     public TeiidDdlTextDocumentService(TeiidDdlLanguageServer teiidLanguageServer) {
         this.teiidLanguageServer = teiidLanguageServer;
         this.completionProvider = new DdlCompletionProvider(teiidLanguageServer.getMetadataService(),
@@ -83,7 +87,7 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
     public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(
             CompletionParams completionParams) {
         String uri = completionParams.getTextDocument().getUri();
-        LOGGER.debug("completion: {}", uri);
+        logDebug("\ncompletion: {} URI = " + uri);
         TextDocumentItem doc = openedDocuments.get(uri);
 
         // get applicable completion items
@@ -101,20 +105,20 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
 
     @Override
     public CompletableFuture<CompletionItem> resolveCompletionItem(CompletionItem unresolved) {
-        LOGGER.debug("resolveCompletionItem: {}", unresolved.getLabel());
+        logDebug("\nresolveCompletionItem: {}");
         return CompletableFuture.completedFuture(unresolved);
     }
 
     @Override
     public CompletableFuture<Hover> hover(TextDocumentPositionParams position) {
         /*
-         * LOGGER.debug("hover: {}", position.getTextDocument()); TextDocumentItem
+         * logDebug("hover: {}", position.getTextDocument()); TextDocumentItem
          * textDocumentItem = openedDocuments.get(position.getTextDocument().getUri());
          * String htmlContent = new
          * HoverProcessor(textDocumentItem).getHover(position.getPosition()); Hover
          * hover = new Hover();
          * hover.setContents(Collections.singletonList((Either.forLeft(htmlContent))));
-         * LOGGER.debug("hover: {}", position.getTextDocument()); Hover hover = new
+         * logDebug("hover: {}", position.getTextDocument()); Hover hover = new
          * Hover(); hover.setContents(Collections.singletonList((Either.
          * forLeft("HELLO HOVER WORLD!!!!"))));
          */
@@ -124,15 +128,14 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
 
     @Override
     public CompletableFuture<SignatureHelp> signatureHelp(TextDocumentPositionParams position) {
-        LOGGER.debug("signatureHelp: {}", position.getTextDocument());
+        logDebug("\nsignatureHelp: {}");
         return CompletableFuture.completedFuture(null);
     }
 
     @Override
     public CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definition(
             TextDocumentPositionParams params) {
-        TextDocumentIdentifier textDocument = params.getTextDocument();
-        LOGGER.debug("definition: {}", textDocument);
+        logDebug("\ndefinition: {}");
         return CompletableFuture.completedFuture(null);
     }
 
@@ -143,7 +146,7 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
 
     @Override
     public CompletableFuture<List<? extends DocumentHighlight>> documentHighlight(TextDocumentPositionParams position) {
-        LOGGER.debug("documentHighlight: {}", position.getTextDocument());
+        logDebug("\ndocumentHighlight: {}");
         List<DocumentHighlight> result = new ArrayList<DocumentHighlight>();
         return CompletableFuture.completedFuture(result);
     }
@@ -156,74 +159,83 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
     @Override
     public CompletableFuture<List<Either<SymbolInformation, DocumentSymbol>>> documentSymbol(
             DocumentSymbolParams params) {
-        LOGGER.debug("documentSymbol: {}", params.getTextDocument());
+        logDebug("\ndocumentSymbol: {}");
         return CompletableFuture.completedFuture(Collections.emptyList());
     }
 
     @Override
     public CompletableFuture<List<Either<Command, CodeAction>>> codeAction(CodeActionParams params) {
-        LOGGER.debug("codeAction: {}", params.getTextDocument());
-        return CompletableFuture.completedFuture(Collections.emptyList());
+        logDebug("\ncodeAction() Called");
+        CodeActionContext context = params.getContext();
+        String uri = params.getTextDocument().getUri();
+        TextDocumentItem doc = openedDocuments.get(uri);
+        if (context != null && (context.getOnly() == null || context.getOnly().contains(CodeActionKind.QuickFix))) {
+            return CompletableFuture.supplyAsync(() -> {
+                return QuickFixFactory.getInstance().getQuickFixCodeActions(params, doc);
+            });
+        } else {
+            return CompletableFuture.completedFuture(Collections.emptyList());
+        }
     }
 
     @Override
     public CompletableFuture<List<? extends CodeLens>> codeLens(CodeLensParams params) {
-        LOGGER.debug("codeLens: {}", params.getTextDocument());
+        logDebug("\ncodeLens: {}");
         return CompletableFuture.completedFuture(Collections.emptyList());
     }
 
     @Override
     public CompletableFuture<CodeLens> resolveCodeLens(CodeLens unresolved) {
-        LOGGER.debug("resolveCodeLens: {}", unresolved.getCommand().getCommand());
+        logDebug("\nresolveCodeLens: {}");
         return CompletableFuture.completedFuture(null);
     }
 
     @Override
     public CompletableFuture<List<? extends TextEdit>> formatting(DocumentFormattingParams params) {
-        LOGGER.debug("formatting: {}", params.getTextDocument());
+        logDebug("\nformatting: {}");
         return CompletableFuture.completedFuture(Collections.emptyList());
     }
 
     @Override
     public CompletableFuture<List<? extends TextEdit>> rangeFormatting(DocumentRangeFormattingParams params) {
-        LOGGER.debug("rangeFormatting: {}", params.getTextDocument());
+        logDebug("\nrangeFormatting: {}");
         return CompletableFuture.completedFuture(Collections.emptyList());
     }
 
     @Override
     public CompletableFuture<List<? extends TextEdit>> onTypeFormatting(DocumentOnTypeFormattingParams params) {
-        LOGGER.debug("onTypeFormatting: {}", params.getTextDocument());
+        logDebug("\nonTypeFormatting: {}");
         return CompletableFuture.completedFuture(Collections.emptyList());
     }
 
     @Override
     public CompletableFuture<WorkspaceEdit> rename(RenameParams params) {
-        LOGGER.debug("rename: {}", params.getTextDocument());
+        logDebug("\nrename: {}");
         return CompletableFuture.completedFuture(null);
     }
 
     @Override
     public void didOpen(DidOpenTextDocumentParams params) {
         TextDocumentItem textDocument = params.getTextDocument();
-        LOGGER.debug("didOpen: {}", textDocument);
+        logDebug("\ndidOpen: {}");
         openedDocuments.put(textDocument.getUri(), textDocument);
-        new DdlDiagnostics(this.teiidLanguageServer).publishDiagnostics(textDocument);
+        DdlDiagnostics.publishDiagnostics(textDocument, teiidLanguageServer);
     }
 
     @Override
     public void didChange(DidChangeTextDocumentParams params) {
-        LOGGER.debug("didChange: {}", params.getTextDocument());
+        logDebug("\ndidChange: {}");
         List<TextDocumentContentChangeEvent> contentChanges = params.getContentChanges();
         TextDocumentItem textDocument = openedDocuments.get(params.getTextDocument().getUri());
         if (!contentChanges.isEmpty()) {
             textDocument.setText(contentChanges.get(0).getText());
-            new DdlDiagnostics(this.teiidLanguageServer).publishDiagnostics(textDocument);
+            DdlDiagnostics.publishDiagnostics(textDocument, teiidLanguageServer);
         }
     }
 
     @Override
     public void didClose(DidCloseTextDocumentParams params) {
-        LOGGER.debug("didClose: {}", params.getTextDocument());
+        logDebug("\ndidClose: {}");
         String uri = params.getTextDocument().getUri();
 
         /*
@@ -235,14 +247,14 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
          * clear diagnostics before removing document.
          */
 
-        new DdlDiagnostics(this.teiidLanguageServer).clearDiagnostics(uri);
+        DdlDiagnostics.clear(getOpenedDocument(uri), teiidLanguageServer);
 
         openedDocuments.remove(uri);
     }
 
     @Override
     public void didSave(DidSaveTextDocumentParams params) {
-        LOGGER.debug("didSave: {}", params.getTextDocument());
+        logDebug("\ndidSave: {}");
     }
 
     public TextDocumentItem getOpenedDocument(String uri) {
@@ -251,5 +263,14 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
 
     public Collection<TextDocumentItem> getAllOpenedDocuments() {
         return openedDocuments.values();
+    }
+
+    @SuppressWarnings("PMD.SystemPrintln")
+    private static void logDebug(String msg) {
+        if (DO_PRINT_TO_CONSOLE) {
+            LOGGER.info(msg);
+        } else if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(msg);
+        }
     }
 }
