@@ -4,7 +4,7 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import {
   ApiConnectorCreatorLayout,
-  ApiConnectorDetailCard,
+  ApiConnectorDetailBody,
 } from '../../../src';
 import {
   ApiConnectorCreatorBreadSteps,
@@ -117,7 +117,7 @@ stories.add(
 );
 
 stories.add('ApiConnectorDetailCard', () => (
-  <ApiConnectorDetailCard
+  <ApiConnectorDetailBody
     description={'An OpenAPI 2.0 version of the Beer API.'}
     icon={icons.beer}
     name={'Beer API 2.0'}
@@ -125,5 +125,5 @@ stories.add('ApiConnectorDetailCard', () => (
 ));
 
 stories.add('ApiConnectorDetailCard (no icon, no description)', () => (
-  <ApiConnectorDetailCard name={name} />
+  <ApiConnectorDetailBody name={name} />
 ));
