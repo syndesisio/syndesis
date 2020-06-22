@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import {
-  ApiConnectorDetailCard,
+  ApiConnectorDetailBody,
   ApiConnectorDetailHeader,
 } from '../../../src/Customization/apiClientConnectors/detail';
 import icons from '../../Shared/icons';
@@ -30,13 +30,17 @@ stories.add('API Connector Detail Header', () => {
   );
 });
 
-stories.add('API Connector Detail Card', () => {
+stories.add('API Connector Detail Body', () => {
   return (
-    <ApiConnectorDetailCard
+    <ApiConnectorDetailBody
       name={connector.name}
       description={connector.description}
       icon={icons.beer}
       i18nCancelLabel={'Cancel'}
+      i18nEditLabel={'Edit'}
+      i18nSaveLabel={'Save'}
+      i18nTitle={connector.name + ' Configuration'}
+      i18nValidateLabel={'Validate'}
     />
   );
 });

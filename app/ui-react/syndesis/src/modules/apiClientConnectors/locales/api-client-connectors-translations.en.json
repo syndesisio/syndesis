@@ -11,6 +11,7 @@
   "deleteModalMessage": "Are you sure you want to delete the \"{{name}}\" API client connector?",
   "deleteModalTitle": "Confirm Delete?",
   "detailsApiConnectorTip": "View API connector details",
+  "detailsSectionTitle": "{{connectionName}} Configuration",
   "emptyStateInfo": "There are no currently available API connectors. Click the button below to create one.",
   "errorDeletingApiConnector": "Unexpected server error deleting API client connector \"{{connectorId}}\".",
   "errorSavingApiConnector": "Unexpected server error saving the API client connector.",

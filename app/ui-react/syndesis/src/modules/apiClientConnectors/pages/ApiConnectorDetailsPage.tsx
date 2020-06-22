@@ -1,7 +1,7 @@
 import { WithApiConnector, WithApiConnectorHelpers } from '@syndesis/api';
 import { Connector } from '@syndesis/models';
 import {
-  ApiConnectorDetailCard,
+  ApiConnectorDetailBody,
   ApiConnectorDetailHeader,
   ApiConnectorReview,
   Breadcrumb,
@@ -205,23 +205,37 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                             connectorName={data.name}
                                           />
                                           <>
-                                            <ApiConnectorDetailCard
-                                              name={data.name}
-                                              description={data.description}
+                                            <ApiConnectorDetailBody
                                               basePath={
                                                 (
                                                   data.configuredProperties ||
                                                   {}
                                                 ).basePath
                                               }
+                                              description={data.description}
+                                              handleSubmit={onSubmit}
                                               host={
                                                 (
                                                   data.configuredProperties ||
                                                   {}
                                                 ).host
                                               }
+                                              i18nCancelLabel={t(
+                                                'shared:Cancel'
+                                              )}
+                                              i18nEditLabel={t('shared:Edit')}
+                                              i18nSaveLabel={t('shared:Save')}
+                                              i18nTitle={t(
+                                                'detailsSectionTitle',
+                                                {
+                                                  connectionName: data.name,
+                                                }
+                                              )}
+                                              i18nValidateLabel={t(
+                                                'shared:Validate'
+                                              )}
                                               icon={data.icon}
-                                              handleSubmit={onSubmit}
+                                              name={data.name}
                                             />
                                             &nbsp;
                                             {data.actionsSummary ? (

@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
-import { ApiConnectorDetailCard } from '../../src/Customization/apiClientConnectors';
+import { ApiConnectorDetailBody } from '../../src/Customization/apiClientConnectors';
 import icons from '../icons';
 
 it('Renders the expected connector name and description', () => {
@@ -9,7 +9,7 @@ it('Renders the expected connector name and description', () => {
   const expectedDescription = 'This is a description.';
 
   const { getByText } = render(
-    <ApiConnectorDetailCard
+    <ApiConnectorDetailBody
       description={expectedDescription}
       icon={expectedIcon}
       name={expectedName}
