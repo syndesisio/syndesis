@@ -365,7 +365,7 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                             i18nSelect={t('shared:Select')}
                             i18nAddNewRole={t('addNewRole')}
                             i18nRemoveRoleRow={t('removeRoleRow')}
-                            i18nSelectRole={t('selectARole')}
+                            i18nSelectARole={t('selectARole')}
                             i18nRoleExists={t('roleAlreadyExistsText')}
                             i18nInsert={t('shared:Insert')}
                             i18nUpdate={t('shared:Update')}
@@ -381,7 +381,17 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                             i18nRowBasedFiltering={t('rowBasedFiltering')}
                             i18nEditPolicies={t('editViewPolicies')}
                             i18nEditPoliciesTip={t('editViewPoliciesTip')}
-                            i18nEditPoliciesTitle={t('editViewPoliciesTitle', {viewName: viewDefinitionDescriptor.name})}
+                            i18nAddPolicy={t('addPolicy')}
+                            i18nCondition={t('condition')}
+                            i18nOperation={t('operation')}
+                            i18nSelectOperation={t('selectOperation')}
+                            i18nUserRole={t('userRole')}
+                            i18nValidate={t('validate')}
+                            i18nRemoveRow={t('removeRow')}
+                            i18nSelectRole={t('selectRole')}
+                            i18nEditPoliciesTitle={t('editViewPoliciesTitle', {
+                              viewName: viewDefinitionDescriptor.name,
+                            })}
                             itemSelected={itemSelected}
                             viewId={viewDefinitionDescriptor.id}
                             viewName={viewDefinitionDescriptor.name}
