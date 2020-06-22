@@ -71,6 +71,7 @@ stories
           i18nSelect={'Select'}
           i18nAddNewRole={'Add new role'}
           i18nRemoveRoleRow={'Remove role row'}
+          i18nSelectARole={'select a role'}
           i18nSelectRole={'select role'}
           i18nRoleExists={'Role allready exists'}
           i18nInsert={'Insert'}
@@ -88,6 +89,13 @@ stories
           i18nEditPolicies={'Edit policies'}
           i18nEditPoliciesTip={'Edit policies tooltip'}
           i18nEditPoliciesTitle={'Edit policies of view View_1'}
+          i18nAddPolicy={'Add policy'}
+          i18nCondition={'Condition'}
+          i18nOperation={'Operation'}
+          i18nSelectOperation={'Select operation'}
+          i18nUserRole={'User Role'}
+          i18nValidate={'Validate'}
+          i18nRemoveRow={'Remove row'}
           itemSelected={map}
           viewRolePermissionList={tablePrivileges}
           onSelectedViewChange={action(onSelectedViewChangeActionText)}
@@ -114,6 +122,7 @@ stories
           i18nSelect={'Select'}
           i18nAddNewRole={'Add new role'}
           i18nRemoveRoleRow={'Remove role row'}
+          i18nSelectARole={'select a role'}
           i18nSelectRole={'select role'}
           i18nRoleExists={'Role allready exists'}
           i18nInsert={'Insert'}
@@ -131,6 +140,13 @@ stories
           i18nEditPolicies={'Edit policies'}
           i18nEditPoliciesTip={'Edit policies tooltip'}
           i18nEditPoliciesTitle={'Edit policies of view View_1'}
+          i18nAddPolicy={'Add policy'}
+          i18nCondition={'Condition'}
+          i18nOperation={'Operation'}
+          i18nSelectOperation={'Select operation'}
+          i18nUserRole={'User Role'}
+          i18nValidate={'Validate'}
+          i18nRemoveRow={'Remove row'}
           itemSelected={map}
           viewRolePermissionList={tablePrivileges}
           onSelectedViewChange={action(onSelectedViewChangeActionText)}

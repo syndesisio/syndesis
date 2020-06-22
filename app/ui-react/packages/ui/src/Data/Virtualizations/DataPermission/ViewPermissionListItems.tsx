@@ -30,6 +30,7 @@ export interface IViewPermissionListItemsProps {
   i18nEditPoliciesTitle: string;
   i18nSelect: string;
   i18nSelectRole: string;
+  i18nSelectARole: string;
   i18nRemoveRoleRow: string;
   i18nRoleExists: string;
   i18nInsert: string;
@@ -42,6 +43,13 @@ export interface IViewPermissionListItemsProps {
   i18nShowLess: string;
   i18nCancel: string;
   i18nSave: string;
+  i18nAddPolicy: string;
+  i18nCondition: string;
+  i18nOperation: string;
+  i18nSelectOperation: string;
+  i18nUserRole: string;
+  i18nValidate: string;
+  i18nRemoveRow: string;
   viewId: string;
   viewName: string;
   viewRolePermissionList: ITablePrivilege[];
@@ -82,7 +90,9 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
 
   const [showLoading, setShowLoading] = React.useState<boolean>(false);
 
-  const [policiesUpdating, setPoliciesUpdating] = React.useState<boolean>(false);
+  const [policiesUpdating, setPoliciesUpdating] = React.useState<boolean>(
+    false
+  );
 
   const [grantOperation, setGrantOperation] = React.useState<boolean>(true);
 
@@ -99,7 +109,9 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
 
   const [clearAction, setClearAction] = React.useState<boolean>(false);
 
-  const [policiesModalOpen, setPoliciesModalOpen] = React.useState<boolean>(false);
+  const [policiesModalOpen, setPoliciesModalOpen] = React.useState<boolean>(
+    false
+  );
 
   const updateRolePermissionModel = React.useCallback(
     (
@@ -229,6 +241,14 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
         isOpen={policiesModalOpen}
         isUpdating={policiesUpdating}
         onSetPolicies={handleUpdatePolicies}
+        i18nAddPolicy={props.i18nAddPolicy}
+        i18nCondition={props.i18nCondition}
+        i18nOperation={props.i18nOperation}
+        i18nSelectOperation={props.i18nSelectOperation}
+        i18nUserRole={props.i18nUserRole}
+        i18nValidate={props.i18nValidate}
+        i18nRemoveRow={props.i18nRemoveRow}
+        i18nSelectRole={props.i18nSelectRole}
       />
       <DataListItem aria-labelledby="width-ex3-item1" isExpanded={show}>
         <DataListItemRow>
@@ -364,7 +384,7 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
               i18nDelete={props.i18nDelete}
               i18nAllAccess={props.i18nAllAccess}
               i18nAddNewRole={props.i18nAddNewRole}
-              i18nSelectRole={props.i18nSelectRole}
+              i18nSelectRole={props.i18nSelectARole}
               i18nRemoveRoleRow={props.i18nRemoveRoleRow}
               i18nRoleExists={props.i18nRoleExists}
               viewRolePermissionList={props.viewRolePermissionList}
