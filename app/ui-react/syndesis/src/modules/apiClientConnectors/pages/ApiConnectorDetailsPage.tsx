@@ -1,16 +1,11 @@
 import { WithApiConnector, WithApiConnectorHelpers } from '@syndesis/api';
 import { Connector } from '@syndesis/models';
 import {
-  ApiConnectorCreatorDetails,
-  // ApiConnectorDetailCard,
+  ApiConnectorDetailCard,
   ApiConnectorDetailHeader,
   ApiConnectorReview,
   Breadcrumb,
-  ButtonLink,
-  // ConnectionDetailsHeader,
-  Loader,
   PageLoader,
-  // PageSection,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -20,7 +15,6 @@ import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
 import { ApiError, PageTitle } from '../../../shared';
 import resolvers from '../../resolvers';
-import { ApiConnectorInfoForm, IConnectorValues } from '../components';
 
 export interface IApiConnectorDetailsRouteParams {
   apiConnectorId: string;
@@ -95,9 +89,11 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                       </Breadcrumb>
                       <WithApiConnectorHelpers>
                         {({ saveApiConnector, updateApiConnector }) => {
+                          /*
                           const handleSave = async (updated: Connector) => {
                             await saveApiConnector(updated);
                           };
+                          */
 
                           return (
                             <WithApiConnector
@@ -106,6 +102,13 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                               key={location.key}
                             >
                               {({ data, hasData, error, errorMessage }) => {
+                                // tslint:disable:jsdoc-format
+                                // tslint:disable
+
+                                const onSubmit = () => {
+                                  console.log('submitted..');
+                                };
+                                /**
                                 const onSubmit = async (
                                   values: IConnectorValues,
                                   actions: any
@@ -139,7 +142,9 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                     return false;
                                   }
                                 };
+                                 **/
 
+                                /*
                                 const cancelEditing = () => {
                                   history.push(
                                     resolvers.apiClientConnectors.apiConnector.details(
@@ -159,6 +164,7 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                     )
                                   );
                                 };
+                                 */
 
                                 const getUsedByMessage = (
                                   c: Connector
@@ -199,7 +205,7 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                             connectorName={data.name}
                                           />
                                           <>
-                                            <ApiConnectorInfoForm
+                                            <ApiConnectorDetailCard
                                               name={data.name}
                                               description={data.description}
                                               basePath={
@@ -214,91 +220,9 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                                   {}
                                                 ).host
                                               }
-                                              apiConnectorIcon={data.icon}
+                                              icon={data.icon}
                                               handleSubmit={onSubmit}
-                                            >
-                                              {({
-                                                connectorName,
-                                                fields,
-                                                handleSubmit,
-                                                icon,
-                                                isSubmitting,
-                                                isUploadingImage,
-                                                onUploadImage,
-                                              }) => {
-                                                return (
-                                                  <>
-                                                    <ApiConnectorCreatorDetails
-                                                      apiConnectorIcon={icon}
-                                                      apiConnectorName={
-                                                        connectorName
-                                                      }
-                                                      i18nIconLabel={t(
-                                                        'ConnectorIcon'
-                                                      )}
-                                                      handleSubmit={
-                                                        handleSubmit
-                                                      }
-                                                      onUploadImage={
-                                                        onUploadImage
-                                                      }
-                                                      isEditing={edit}
-                                                      fields={fields}
-                                                    />
-                                                    {edit ? (
-                                                      <>
-                                                        <ButtonLink
-                                                          data-testid={
-                                                            'api-connector-details-form-cancel-button'
-                                                          }
-                                                          className="api-connector-details-form__editButton"
-                                                          disabled={
-                                                            isSubmitting ||
-                                                            isUploadingImage
-                                                          }
-                                                          onClick={
-                                                            cancelEditing
-                                                          }
-                                                        >
-                                                          {t('shared:Cancel')}
-                                                        </ButtonLink>
-                                                        <ButtonLink
-                                                          data-testid={
-                                                            'api-connector-details-form-save-button'
-                                                          }
-                                                          as="primary"
-                                                          className="api-connector-details-form__editButton"
-                                                          disabled={
-                                                            isSubmitting ||
-                                                            isUploadingImage
-                                                          }
-                                                          onClick={handleSubmit}
-                                                        >
-                                                          {(isSubmitting ||
-                                                            isUploadingImage) && (
-                                                            <Loader
-                                                              size={'sm'}
-                                                              inline={true}
-                                                            />
-                                                          )}
-                                                          {t('shared:Save')}
-                                                        </ButtonLink>
-                                                      </>
-                                                    ) : (
-                                                      <ButtonLink
-                                                        data-testid={
-                                                          'api-connector-details-form-edit-button'
-                                                        }
-                                                        as="primary"
-                                                        onClick={startEditing}
-                                                      >
-                                                        {t('shared:Edit')}
-                                                      </ButtonLink>
-                                                    )}
-                                                  </>
-                                                );
-                                              }}
-                                            </ApiConnectorInfoForm>
+                                            />
                                             &nbsp;
                                             {data.actionsSummary ? (
                                               <ApiConnectorReview
