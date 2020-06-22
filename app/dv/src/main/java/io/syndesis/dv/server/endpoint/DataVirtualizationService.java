@@ -1151,9 +1151,13 @@ public final class DataVirtualizationService extends DvService {
                                     tablePrivileges.getRoleName());
                     switch (op) {
                     case GRANT:
+                    case SET:
                         if (existing == null) {
                             existing = repositoryManager.createTablePrivileges(
                                     viewId, tablePrivileges.getRoleName());
+                        } else if (op == Operation.SET) {
+                            //set will remove all existing
+                            existing.getGrantPrivileges().clear();
                         }
                         existing.getGrantPrivileges()
                                 .addAll(tablePrivileges.getGrantPrivileges());
@@ -1168,6 +1172,7 @@ public final class DataVirtualizationService extends DvService {
                         } // else currently not implemented
                           // there are no schema level permissions to remove from
                         break;
+
                     default:
                         throw new AssertionError();
                     }

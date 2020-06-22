@@ -16,6 +16,8 @@
 
 package io.syndesis.dv.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,7 +26,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-
 import javax.persistence.AttributeConverter;
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -33,9 +34,6 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 class TablePrivilegesId implements Serializable {
     private String viewDefinitionId;
@@ -180,7 +178,7 @@ public class TablePrivileges {
 
     @Override
     public String toString() {
-        return String.join(" ", viewDefinitionId, roleName, grantPrivileges.toString()); //$NON-NLS-1$
+        return String.join(" ", getViewDefinitionIds().toString(), roleName, grantPrivileges.toString()); //$NON-NLS-1$
     }
 
     public List<String> getViewDefinitionIds() {
