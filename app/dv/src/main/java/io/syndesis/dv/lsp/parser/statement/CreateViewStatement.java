@@ -23,11 +23,14 @@ import org.eclipse.lsp4j.Range;
 import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
+import io.syndesis.dv.lsp.Messages;
+import io.syndesis.dv.lsp.codeactions.QuickFixFactory;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 public class CreateViewStatement extends AbstractStatementObject {
+
     private Token viewNameToken;
     private TableBody tableBody;
     private QueryExpression queryExpression;
@@ -36,8 +39,8 @@ public class CreateViewStatement extends AbstractStatementObject {
     public CreateViewStatement(DdlTokenAnalyzer analyzer) {
         super(analyzer);
 
-        tableBody = new TableBody(analyzer);
-        queryExpression = new QueryExpression(analyzer);
+        tableBody = new TableBody(analyzer, this);
+        queryExpression = new QueryExpression(analyzer, this);
         this.numTokens = this.analyzer.getTokens().size();
 
         parseAndValidate();
@@ -74,85 +77,21 @@ public class CreateViewStatement extends AbstractStatementObject {
     @SuppressWarnings({"PMD.NPathComplexity", "PMD.ExcessiveMethodLength"}) // TODO refactor
     @Override
     protected final void parseAndValidate() {
+
         // Check statement
-        boolean prefixOK = true;
-
-        // Check view name exists
-        if( numTokens == 1) {
-            setFirstTknIndex(0);
-            setLastTknIndex(0);
-
-            Token onlyToken = this.analyzer.getTokens().get(0);
-            prefixOK = !"CREATE".equalsIgnoreCase(onlyToken.image);
-            Position startPosition = new Position(onlyToken.beginLine, onlyToken.beginColumn);
-            Position endPosition = new Position(onlyToken.endLine, onlyToken.endColumn+1);
-            DdlAnalyzerException exception =
-                    new DdlAnalyzerException(
-                            DiagnosticSeverity.Error,
-                            "CREATE VIEW STATEMENT is INCOMPLETE",
-                            new Range(startPosition, endPosition)); //$NON-NLS-1$);
-
-            this.analyzer.addException(exception);
+        if(!prefixedParsedOk()) {
             return;
         }
-
-        if( prefixOK && numTokens == 2) {
-            setFirstTknIndex(0);
-            setLastTknIndex(1);
-
-            Token firstToken = this.analyzer.getTokens().get(0);
-            Token lastToken = this.analyzer.getTokens().get(0);
-            prefixOK = !"VIEW".equalsIgnoreCase(lastToken.image);
-            this.analyzer.addException(
-                    firstToken,
-                    lastToken,
-                    "CREATE VIEW STATEMENT is INCOMPLETE");
-
-            return;
-        }
-
-        if(!prefixOK) {
-            Token firstToken = this.analyzer.getTokens().get(0);
-            Token lastToken = this.analyzer.getTokens().get(1);
-            this.analyzer.addException(
-                    firstToken,
-                    lastToken,
-                    "Statement must start with CREATE VIEW");
-        }
-
-        this.viewNameToken = getToken(2);
-        Token token = getToken(2);
-        if( token == null) {
-            Token firstToken = getToken(2);
-            Token lastToken = getToken(2);
-            this.analyzer.addException(
-                    firstToken,
-                    lastToken,
-                    "Valid view name is missing after : " + getToken(1));
-        } else {
-            if( token.kind == SQLParserConstants.ID || token.kind == SQLParserConstants.STRINGVAL ) {
-                this.viewNameToken = token;
-            } else {
-                String msg = "View name '" + viewNameToken.image + "' is invalid ";
-                if( isReservedKeywordToken(viewNameToken) ) {
-                    msg = "View name '" + viewNameToken.image + "' is a reserved word and must be wrapped in double quotes \"\" ";
-                }
-                this.analyzer.addException(this.viewNameToken, this.viewNameToken, msg);
-            }
-        }
-
-        setFirstTknIndex(0);
-        setLastTknIndex(2);
 
         // Check brackets match
         if( !isOk(this.analyzer.checkAllParens()) ) {
             this.analyzer.addException(
-                    getToken(3), getToken(numTokens-1), "All parenthesis DO NOT MATCH");
+                    getToken(3), getToken(numTokens-1), Messages.Error.ALL_PARENS_DO_NOT_MATCH);
             this.analyzer.getReport().setParensMatch(false);
         }
 
         if( !isOk(this.analyzer.checkAllBrackets(SQLParserConstants.LBRACE, SQLParserConstants.RBRACE)) ) {
-            this.analyzer.addException(new DdlAnalyzerException("All braces DO NOT MATCH"));
+            this.analyzer.addException(new DdlAnalyzerException(Messages.getString(Messages.Error.ALL_BRACES_DO_NOT_MATCH)));
             this.analyzer.getReport().setBracesMatch(false);
         }
 
@@ -164,7 +103,7 @@ public class CreateViewStatement extends AbstractStatementObject {
             this.analyzer.addException(
                     firstToken,
                     lastToken,
-                    "The CREATE VIEW... statement is incomplete");
+                    Messages.Error.INCOMPLETE_CREATE_VIEW_STATEMENT);
         }
 
         if( numTokens > 3) {
@@ -181,10 +120,107 @@ public class CreateViewStatement extends AbstractStatementObject {
                     this.analyzer.addException(
                             firstToken,
                             lastToken,
-                            "The CREATE VIEW... statement is incomplete");
+                            Messages.Error.INCOMPLETE_CREATE_VIEW_STATEMENT);
                 }
             }
         }
+    }
+
+    private boolean prefixedParsedOk() {
+
+        boolean prefixOK = true;
+        // Check view name exists
+        switch(numTokens) {
+        case 0:
+            this.analyzer.addException( new DdlAnalyzerException(
+                    DiagnosticSeverity.Error,
+                    Messages.getString(Messages.Error.EMPTY_STATEMENT),
+                    new Range(new Position(0,0), new Position(0,0))));
+            prefixOK = false;
+            break;
+        case 1:
+            setFirstTknIndex(0);
+            setLastTknIndex(0);
+            if( !"CREATE".equalsIgnoreCase(getToken(0).image) ) {
+                this.analyzer.addException(
+                        getToken(0),
+                        getToken(0),
+                        Messages.Error.STATEMENT_MUST_START_WITH_CREATE_VIEW);
+            }
+            this.analyzer.addException(
+                    getToken(0),
+                    getToken(0),
+                    Messages.Error.INCOMPLETE_CREATE_VIEW_STATEMENT);
+            prefixOK = false;
+            break;
+        case 2:
+            setFirstTknIndex(0);
+            setLastTknIndex(1);
+            Token firstToken = getToken(0);
+            Token secondToken = getToken(1);
+            if(!"VIEW".equalsIgnoreCase(secondToken.image)) {
+                this.analyzer.addException(
+                        getToken(0),
+                        getToken(0),
+                        Messages.Error.STATEMENT_MUST_START_WITH_CREATE_VIEW);
+            }
+            this.analyzer.addException(
+                    firstToken,
+                    secondToken,
+                    Messages.Error.INCOMPLETE_CREATE_VIEW_STATEMENT);
+            prefixOK = false;
+            break;
+        default:
+        }
+
+        if (!prefixOK) {
+            return false;
+        }
+        // numTokens >= 3
+
+        Token firstToken = getToken(0);
+        Token secondToken = getToken(1);
+        this.viewNameToken = getToken(2);
+
+        if(!"CREATE".equalsIgnoreCase(firstToken.image) ||
+           !"VIEW".equalsIgnoreCase(secondToken.image)) {
+            this.analyzer.addException(
+                    firstToken,
+                    secondToken,
+                    Messages.Error.STATEMENT_MUST_START_WITH_CREATE_VIEW);
+        }
+
+        if( this.viewNameToken.kind == SQLParserConstants.ID || this.viewNameToken.kind == SQLParserConstants.STRINGVAL ) {
+            // ALL OK with first 3 Tokens
+            setFirstTknIndex(0);
+            setLastTknIndex(2);
+        } else {
+            // view name is invalid. log exception and return to continue parsing
+            if( isReservedKeywordToken(viewNameToken) ) {
+                DdlAnalyzerException exception = this.analyzer.addException(
+                        this.viewNameToken,
+                        this.viewNameToken,
+                        Messages.getString(Messages.Error.VIEW_NAME_RESERVED_WORD, viewNameToken.image));
+                exception.setErrorCode(
+                		QuickFixFactory.DiagnosticErrorId.VIEW_NAME_RESERVED_WORD.getErrorCode());
+                exception.setTargetedString(this.viewNameToken.image);
+            } else if( isNonReservedKeywordToken(viewNameToken) ) {
+                DdlAnalyzerException exception = this.analyzer.addException(
+                        this.viewNameToken,
+                        this.viewNameToken,
+                        Messages.getString(Messages.Error.VIEW_NAME_NON_RESERVED_WORD, viewNameToken.image));
+                exception.setErrorCode(QuickFixFactory.DiagnosticErrorId.VIEW_NAME_NON_RESERVED_WORD.getErrorCode());
+                exception.setTargetedString(this.viewNameToken.image);
+                exception.getDiagnostic().setSeverity(DiagnosticSeverity.Warning);
+            } else {
+                this.analyzer.addException(
+                        this.viewNameToken,
+                        this.viewNameToken,
+                        Messages.getString(Messages.Error.VIEW_NAME_IS_INVALID, viewNameToken.image));
+            }
+        }
+
+        return true;
     }
 
     private void parseTableBody() {

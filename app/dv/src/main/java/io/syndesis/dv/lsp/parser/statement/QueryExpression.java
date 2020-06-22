@@ -29,9 +29,11 @@ public class QueryExpression extends AbstractStatementObject {
     SelectClause selectClause;
     FromClause fromClause;
     WhereClause whereClause;
+    CreateViewStatement createViewStatement;
 
-    public QueryExpression(DdlTokenAnalyzer analyzer) {
+    public QueryExpression(DdlTokenAnalyzer analyzer, CreateViewStatement createViewStatement) {
         super(analyzer);
+        this.createViewStatement = createViewStatement;
     }
 
     @Override
@@ -111,6 +113,10 @@ public class QueryExpression extends AbstractStatementObject {
 
     public WhereClause getWhereClause() {
         return whereClause;
+    }
+
+    public CreateViewStatement getCreateViewStatement() {
+        return createViewStatement;
     }
 
 }

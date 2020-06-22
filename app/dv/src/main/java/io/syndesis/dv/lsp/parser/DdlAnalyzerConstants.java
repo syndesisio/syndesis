@@ -15,9 +15,11 @@
  */
 package io.syndesis.dv.lsp.parser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -52,7 +54,8 @@ public final class DdlAnalyzerConstants {
             SQLParserConstants.CLOB, SQLParserConstants.XML, SQLParserConstants.JSON, SQLParserConstants.GEOMETRY,
             SQLParserConstants.GEOGRAPHY, SQLParserConstants.OBJECT)));
 
-    static final String[] DATATYPE_LIST = { getLabel(SQLParserConstants.STRING, false),
+    public static final List<String> DATATYPE_LIST = Collections.unmodifiableList(new ArrayList<>(Arrays.asList(
+            getLabel(SQLParserConstants.STRING, false),
             getLabel(SQLParserConstants.VARBINARY, false), getLabel(SQLParserConstants.VARCHAR, false),
             getLabel(SQLParserConstants.BOOLEAN, false), getLabel(SQLParserConstants.BYTE, false),
             getLabel(SQLParserConstants.TINYINT, false), getLabel(SQLParserConstants.SHORT, false),
@@ -66,7 +69,7 @@ public final class DdlAnalyzerConstants {
             getLabel(SQLParserConstants.BLOB, false), getLabel(SQLParserConstants.CLOB, false),
             getLabel(SQLParserConstants.XML, false), getLabel(SQLParserConstants.JSON, false),
             getLabel(SQLParserConstants.GEOMETRY, false), getLabel(SQLParserConstants.GEOGRAPHY, false),
-            getLabel(SQLParserConstants.OBJECT, false) };
+            getLabel(SQLParserConstants.OBJECT, false))));
 
     /*
      * Array of tokens that match the start of a CREATE TABLE statement

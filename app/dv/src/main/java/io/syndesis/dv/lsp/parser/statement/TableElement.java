@@ -18,11 +18,15 @@ package io.syndesis.dv.lsp.parser.statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.Position;
 import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
+import io.syndesis.dv.lsp.Messages;
+import io.syndesis.dv.lsp.codeactions.QuickFixFactory;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
+import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 @SuppressWarnings({"PMD.GodClass", "PMD.CyclomaticComplexity"})
@@ -89,18 +93,25 @@ public class TableElement extends AbstractStatementObject {
                         currentTknIndex = parsePrimaryKeyTokens(currentTknIndex, tkn);
                         setPKElement(true);
                     } else if( isReservedKeywordToken(tkn)) {
-                        this.analyzer.addException(
-                            tkn, tkn,"Token: '" + tkn.image + "' is a reserved word and must be wrapped in double quotes \"\" ");
+                        DdlAnalyzerException exception = this.analyzer.addException(
+                            tkn, tkn,
+                            Messages.getString(Messages.Error.COLUMN_NAME_RESERVED_WORD, tkn.image));
+                        exception.setErrorCode(
+                                QuickFixFactory.DiagnosticErrorId.COLUMN_NAME_RESERVED_WORD.getErrorCode());
+                        exception.setTargetedString(tkn.image);
                     } else if( isNonReservedKeywordToken(tkn) ) {
                         setNameToken(tkn);
                         if (getFirstTknIndex() == 0) {
                             setFirstTknIndex(getTokenIndex(tkn));
                         }
+                        DdlAnalyzerException exception = this.analyzer.addException(
+                                tkn, tkn,
+                                Messages.getString(Messages.Error.COLUMN_NAME_NON_RESERVED_WORD, tkn.image));
+                            exception.setErrorCode(QuickFixFactory.DiagnosticErrorId.COLUMN_NAME_NON_RESERVED_WORD.getErrorCode());
+                            exception.setTargetedString(tkn.image);
+                            exception.getDiagnostic().setSeverity(DiagnosticSeverity.Warning);
                     } else {
-                        Token firstToken = tkn;
-                        Token lastToken = tkn;
-                        this.analyzer.addException(firstToken, lastToken, "column name '" + tkn.image
-                                + "' is invalid at: " + positionToString(getBeginPosition(tkn)));
+                        this.analyzer.addException(tkn, tkn, Messages.getString(Messages.Error.INVALID_COLUMN_NAME, tkn.image));;
                     }
                     currentTknIndex++;
                 }
@@ -224,9 +235,11 @@ public class TableElement extends AbstractStatementObject {
                         setLastTknIndex(getTokenIndex(tkn));
                         elementEnded = true;
                     } else if(count == 2) {
-                        this.analyzer.addException(tkn, tkn, "Invalid datatype: '"
+                        DdlAnalyzerException exception = this.analyzer.addException(tkn, tkn, "Invalid datatype: '"
                                 + tkn.image + "' at: " + positionToString(getBeginPosition(tkn)));
-                    } else{
+                        exception.setErrorCode(QuickFixFactory.DiagnosticErrorId.INVALID_DATATYPE.getErrorCode());
+                        exception.setTargetedString(tkn.image);
+                    } else {
                         // IF THERE IS EXTRA add exception with text of unknown TOKEN
                         Token firstToken = tkn;
                         Token lastToken = tkn;
