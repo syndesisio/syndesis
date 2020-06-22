@@ -1,9 +1,9 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { ApiConnectorReview } from '../../src';
+import { ApiConnectorReview } from '../../../src';
 
 const stories = storiesOf(
-  'Customization/ApiClientConnector/ApiConnectorReview',
+  'Customization/ApiClientConnector/Detail/Operations',
   module
 );
 

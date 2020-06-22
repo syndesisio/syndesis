@@ -1,5 +1,4 @@
 export * from './ApiConnectorCreatorLayout';
-export * from './ApiConnectorDetailCard';
 export * from './ApiConnectorListItem';
 export * from './ApiConnectorListSkeleton';
 export * from './ApiConnectorListView';

@@ -1,6 +1,9 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { ApiConnectorDetailHeader } from '../../../src/Customization/apiClientConnectors/detail';
+import {
+  ApiConnectorDetailCard,
+  ApiConnectorDetailHeader,
+} from '../../../src/Customization/apiClientConnectors/detail';
 import icons from '../../Shared/icons';
 import connector from '../openapi-connector';
 
@@ -10,11 +13,9 @@ stories.add('API Connector Detail Header', () => {
   const getUsedByMessage = (c: any): string => {
     const numUsedBy = c.uses as number;
     if (numUsedBy === 1) {
-      // return i18n.t('apiConnector:usedByOne');
       return 'Used by 1 integration';
     }
     return 'Used by integrations ' + numUsedBy + 'times';
-    // return i18n.t('apiConnector:usedByMulti', { count: numUsedBy });
   };
 
   return (
@@ -25,6 +26,17 @@ stories.add('API Connector Detail Header', () => {
       connectorName={connector.name}
       connectorDescription={connector.description}
       connectorIcon={icons.beer}
+    />
+  );
+});
+
+stories.add('API Connector Detail Card', () => {
+  return (
+    <ApiConnectorDetailCard
+      name={connector.name}
+      description={connector.description}
+      icon={icons.beer}
+      i18nCancelLabel={'Cancel'}
     />
   );
 });
