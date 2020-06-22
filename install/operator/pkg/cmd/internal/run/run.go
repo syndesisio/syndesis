@@ -17,12 +17,11 @@
 package run
 
 import (
-    "context"
-    "fmt"
-    "k8s.io/client-go/rest"
-    "runtime"
-
+	"context"
+	"fmt"
 	"github.com/prometheus/client_golang/prometheus"
+	"k8s.io/client-go/rest"
+	"runtime"
 
 	kubemetrics "github.com/operator-framework/operator-sdk/pkg/kube-metrics"
 
