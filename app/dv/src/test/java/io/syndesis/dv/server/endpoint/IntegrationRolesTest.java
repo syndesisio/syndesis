@@ -200,6 +200,19 @@ public class IntegrationRolesTest {
         rolesResponse = restTemplate.getForEntity("/v1/status/roles", listOfAnything);
         assertEquals(HttpStatus.OK, rolesResponse.getStatusCode());
         assertEquals("[any authenticated]", rolesResponse.getBody().toString());
+
+        //set should remove the existing privilege
+        toGrant = new RoleInfo();
+        toGrant.setOperation(Operation.SET);
+        toGrant.getTablePrivileges().add(new TablePrivileges("any authenticated", viewId, Privilege.D));
+        grant = restTemplate.exchange(
+                "/v1/virtualizations/{dv}/roles", HttpMethod.PUT,
+                new HttpEntity<RoleInfo>(toGrant), String.class, dvName);
+        assertEquals(HttpStatus.OK, grant.getStatusCode());
+
+        statusResponse = restTemplate.getForEntity("/v1/virtualizations/{dv}/roles", RoleInfo.class, dvName);
+        assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
+        assertEquals("[DELETE]", statusResponse.getBody().getTablePrivileges().get(0).getGrantPrivileges().toString());
     }
 
     @Test public void testStatus() {

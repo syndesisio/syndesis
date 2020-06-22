@@ -15,15 +15,14 @@
  */
 package io.syndesis.dv.server.endpoint;
 
+import io.syndesis.dv.model.TablePrivileges;
 import java.util.ArrayList;
 import java.util.List;
-
-import io.syndesis.dv.model.TablePrivileges;
 
 public class RoleInfo {
 
     public enum Operation {
-        GRANT, REVOKE
+        GRANT, REVOKE, SET
     }
 
     private List<TablePrivileges> tablePrivileges = new ArrayList<TablePrivileges>();
