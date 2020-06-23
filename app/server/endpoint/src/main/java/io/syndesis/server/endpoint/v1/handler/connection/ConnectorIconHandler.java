@@ -85,9 +85,6 @@ public final class ConnectorIconHandler extends BaseHandler {
         try {
             InputPart filePart = dataInput.getParts().iterator().next();
             try (InputStream result = filePart.getBody(InputStream.class, null)) {
-                if (result == null) {
-                    throw new IllegalArgumentException("Can't find a valid 'icon' part in the multipart request");
-                }
 
                 try (BufferedInputStream iconStream = new BufferedInputStream(result)) {
                     MediaType mediaType = filePart.getMediaType();
