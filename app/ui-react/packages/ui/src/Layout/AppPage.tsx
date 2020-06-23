@@ -1,3 +1,4 @@
+
 import accessibleStyles from '@patternfly/patternfly/utilities/Accessibility/accessibility.css';
 import {
   Avatar,
@@ -17,9 +18,9 @@ import { css } from '@patternfly/react-styles';
 import { global_breakpoint_lg } from '@patternfly/react-tokens';
 import React from 'react';
 import { HelpDropdown } from '../Shared/HelpDropdown';
+import './AppLayout.css';
 import { AppLayoutContext } from './AppLayoutContext';
 import { AppTopMenu } from './AppTopMenu';
-import './AppLayout.css';
 
 export interface ILayoutBase {
   avatar?: string;
@@ -66,7 +67,7 @@ export const AppPage: React.FunctionComponent<ILayoutBase> = ({
   const onNavToggle = showNavigation
     ? onNavigationCollapse
     : onNavigationExpand;
-
+  
   const [breadcrumb, setHasBreadcrumb] = React.useState(null);
   const showBreadcrumb = (b: any) => setHasBreadcrumb(b);
   const PageSkipToContent = (
@@ -97,104 +98,104 @@ export const AppPage: React.FunctionComponent<ILayoutBase> = ({
   }, [curViewportWidth]);
 
   return (
-    <AppLayoutContext.Provider
-      value={{
-        showBreadcrumb,
-      }}
-    >
-      <Page
-        skipToContent={PageSkipToContent}
-        onPageResize={onPageResize}
-        header={
-          <PageHeader
-            logo={pictograph}
-            logoProps={{ onClick: logoOnClick }}
-            toolbar={
-              <Toolbar>
-                <ToolbarGroup
-                  className={css(
-                    accessibleStyles.screenReader,
-                    accessibleStyles.visibleOnLg
-                  )}
-                >
-                  <ToolbarItem>
-                    <HelpDropdown
-                      isTabletView={isTabletView}
-                      className="syn-help-dropdown"
-                      isOpen={false}
-                      launchSupportPage={onSelectSupport}
-                      launchAboutModal={onShowAboutModal}
-                      launchSampleIntegrationTutorials={
-                        onSelectSampleIntegrationTutorials
-                      }
-                      launchConnectorsGuide={onSelectConnectorsGuide}
-                      launchUserGuide={onSelectUserGuide}
-                      launchContactUs={onSelectContactUs}
-                      additionalDropdownItems={[
-                        <DropdownSeparator
-                          key="separator"
-                          className="pf-u-display-none-on-lg"
-                        />,
+        <AppLayoutContext.Provider
+        value={{
+          showBreadcrumb,
+        }}
+      >
+        <Page
+          skipToContent={PageSkipToContent}
+          onPageResize={onPageResize}
+          header={
+            <PageHeader
+              logo={pictograph}
+              logoProps={{ onClick: logoOnClick }}
+              toolbar={
+                <Toolbar>
+                  <ToolbarGroup
+                    className={css(
+                      accessibleStyles.screenReader,
+                      accessibleStyles.visibleOnLg
+                    )}
+                  >
+                    <ToolbarItem>
+                      <HelpDropdown
+                        isTabletView={isTabletView}
+                        className="syn-help-dropdown"
+                        isOpen={false}
+                        launchSupportPage={onSelectSupport}
+                        launchAboutModal={onShowAboutModal}
+                        launchSampleIntegrationTutorials={
+                          onSelectSampleIntegrationTutorials
+                        }
+                        launchConnectorsGuide={onSelectConnectorsGuide}
+                        launchUserGuide={onSelectUserGuide}
+                        launchContactUs={onSelectContactUs}
+                        additionalDropdownItems={[
+                          <DropdownSeparator
+                            key="separator"
+                            className="pf-u-display-none-on-lg"
+                          />,
+                          <DropdownItem
+                            className={'pf-u-display-none-on-lg'}
+                            key={`mobile-${logoutItem.key}`}
+                            onClick={logoutItem.onClick}
+                          >
+                            <button
+                              type="button"
+                              role="menuitem"
+                              id={`mobile-${logoutItem.id}`}
+                              data-testid={`mobile-${logoutItem.id}`}
+                              className={logoutItem.className}
+                            >
+                              {logoutItem.children}
+                            </button>
+                          </DropdownItem>,
+                        ]}
+                      />
+                    </ToolbarItem>
+                    <ToolbarItem className="pf-u-display-none pf-u-display-block-on-lg">
+                      <AppTopMenu username={username}>
                         <DropdownItem
-                          className={'pf-u-display-none-on-lg'}
-                          key={`mobile-${logoutItem.key}`}
+                          key={logoutItem.key}
                           onClick={logoutItem.onClick}
                         >
                           <button
                             type="button"
                             role="menuitem"
-                            id={`mobile-${logoutItem.id}`}
-                            data-testid={`mobile-${logoutItem.id}`}
+                            id={logoutItem.id}
+                            data-testid={logoutItem.id}
                             className={logoutItem.className}
                           >
                             {logoutItem.children}
                           </button>
-                        </DropdownItem>,
-                      ]}
-                    />
-                  </ToolbarItem>
-                  <ToolbarItem className="pf-u-display-none pf-u-display-block-on-lg">
-                    <AppTopMenu username={username}>
-                      <DropdownItem
-                        key={logoutItem.key}
-                        onClick={logoutItem.onClick}
-                      >
-                        <button
-                          type="button"
-                          role="menuitem"
-                          id={logoutItem.id}
-                          data-testid={logoutItem.id}
-                          className={logoutItem.className}
-                        >
-                          {logoutItem.children}
-                        </button>
-                      </DropdownItem>
-                    </AppTopMenu>
-                  </ToolbarItem>
-                </ToolbarGroup>
-              </Toolbar>
-            }
-            avatar={avatar && <Avatar src={avatar} alt="User Avatar" />}
-            showNavToggle={true}
-            onNavToggle={isMobileView ? onNavToggleMobile : onNavToggle}
-            isNavOpen={isMobileView ? isNavOpenMobile : showNavigation}
-          />
-        }
-        sidebar={
-          <PageSidebar
-            theme="dark"
-            nav={
-              <Nav theme="dark">
-                <NavList>{verticalNav}</NavList>
-              </Nav>
-            }
-            isNavOpen={isMobileView ? isNavOpenMobile : showNavigation}
-          />
-        }
-        breadcrumb={breadcrumb}
-      >
-        {children}
-      </Page>
-    </AppLayoutContext.Provider>
+                        </DropdownItem>
+                      </AppTopMenu>
+                    </ToolbarItem>
+                  </ToolbarGroup>
+                </Toolbar>
+              }
+              avatar={avatar && <Avatar src={avatar} alt="User Avatar" />}
+              showNavToggle={true}
+              onNavToggle={isMobileView ? onNavToggleMobile : onNavToggle}
+              isNavOpen={isMobileView ? isNavOpenMobile : showNavigation}
+            />
+          }
+          sidebar={
+            <PageSidebar
+              theme="dark"
+              nav={
+                <Nav theme="dark">
+                  <NavList>{verticalNav}</NavList>
+                </Nav>
+              }
+              isNavOpen={isMobileView ? isNavOpenMobile : showNavigation}
+            />
+          }
+          breadcrumb={breadcrumb}
+        >
+          {children}
+        </Page>
+      </AppLayoutContext.Provider>
   );
 };
