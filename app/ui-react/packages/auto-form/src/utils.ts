@@ -167,6 +167,8 @@ export function massageValue(
         const answerObject = JSON.parse(answer);
         if (Object.keys(answerObject).length === 0) {
           return defaultValueObject;
+        } else {
+          return answerObject;
         }
       }
       return answer;
