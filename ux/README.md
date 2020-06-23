@@ -3,6 +3,8 @@
 
 Access UX design resource and documentation for Syndesis.
 
+Info on the icons are [here](connections_icons/svg/README.md)
+
 ## Navigation
 * ### [Integration Breadcrumb](designs/navigation/navigation_breadcrumb_integration.md)
 * ### [Support Page](designs/support-page/support-page.md)
