@@ -104,7 +104,7 @@ public class TeiidDdlLanguageServerRunner {
             }
         } else {
             LOGGER.info("   --  >>>  Started Teiid LS as JAVA SERVER");
-            server = new TeiidDdlLanguageServer();
+            server = new TeiidDdlLanguageServer(null);
 
             Launcher<LanguageClient> launcher = LSPLauncher.createServerLauncher(server, System.in, System.out);
 

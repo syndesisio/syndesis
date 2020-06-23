@@ -236,7 +236,6 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                                 virtualization,
                                 // tslint:disable-next-line: object-literal-sort-keys
                                 viewDefinitionId: viewDefinitionDescriptor.id,
-                                viewDefinition: undefined,
                               }
                             )}
                             i18nCancelText={t('shared:Cancel')}

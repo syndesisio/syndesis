@@ -71,12 +71,12 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
     private final Map<String, TextDocumentItem> openedDocuments = new HashMap<>();
     private final TeiidDdlLanguageServer teiidLanguageServer;
 
-    private final DdlCompletionProvider completionProvider = new DdlCompletionProvider();
-
-    private final DdlDiagnostics diagnostics = new DdlDiagnostics();
+    private final DdlCompletionProvider completionProvider;
 
     public TeiidDdlTextDocumentService(TeiidDdlLanguageServer teiidLanguageServer) {
         this.teiidLanguageServer = teiidLanguageServer;
+        this.completionProvider = new DdlCompletionProvider(teiidLanguageServer.getMetadataService(),
+                (TeiidDdlWorkspaceService) teiidLanguageServer.getWorkspaceService());
     }
 
     @Override
@@ -86,23 +86,17 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
         LOGGER.debug("completion: {}", uri);
         TextDocumentItem doc = openedDocuments.get(uri);
 
-
         // get applicable completion items
         List<CompletionItem> items = completionProvider.getCompletionItems(doc.getText(),
                 completionParams.getPosition());
 
         // if items exist, return them
-        if( items != null && !items.isEmpty()) {
-            LOGGER.debug(" CompletionItems = " + items);
+        if (items != null && !items.isEmpty()) {
             return CompletableFuture.completedFuture(Either.forLeft(items));
         }
 
-        // create an empty results array
-        List<CompletionItem> emptyResults = new ArrayList<CompletionItem>();
-
         // if items do no exist return empty results
-        LOGGER.debug(" CompletionItems = " + emptyResults);
-        return CompletableFuture.completedFuture(Either.forLeft(emptyResults));
+        return CompletableFuture.completedFuture(Either.forLeft(Collections.emptyList()));
     }
 
     @Override
@@ -114,15 +108,16 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
     @Override
     public CompletableFuture<Hover> hover(TextDocumentPositionParams position) {
         /*
-        LOGGER.debug("hover: {}", position.getTextDocument());
-        TextDocumentItem textDocumentItem = openedDocuments.get(position.getTextDocument().getUri());
-        String htmlContent = new HoverProcessor(textDocumentItem).getHover(position.getPosition());
-        Hover hover = new Hover();
-        hover.setContents(Collections.singletonList((Either.forLeft(htmlContent))));
-        LOGGER.debug("hover: {}", position.getTextDocument());
-        Hover hover = new Hover();
-        hover.setContents(Collections.singletonList((Either.forLeft("HELLO HOVER WORLD!!!!"))));
-        */
+         * LOGGER.debug("hover: {}", position.getTextDocument()); TextDocumentItem
+         * textDocumentItem = openedDocuments.get(position.getTextDocument().getUri());
+         * String htmlContent = new
+         * HoverProcessor(textDocumentItem).getHover(position.getPosition()); Hover
+         * hover = new Hover();
+         * hover.setContents(Collections.singletonList((Either.forLeft(htmlContent))));
+         * LOGGER.debug("hover: {}", position.getTextDocument()); Hover hover = new
+         * Hover(); hover.setContents(Collections.singletonList((Either.
+         * forLeft("HELLO HOVER WORLD!!!!"))));
+         */
         Hover result = null;
         return CompletableFuture.completedFuture(result);
     }
@@ -212,7 +207,7 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
         TextDocumentItem textDocument = params.getTextDocument();
         LOGGER.debug("didOpen: {}", textDocument);
         openedDocuments.put(textDocument.getUri(), textDocument);
-        this.diagnostics.publishDiagnostics(textDocument, teiidLanguageServer);
+        new DdlDiagnostics(this.teiidLanguageServer).publishDiagnostics(textDocument);
     }
 
     @Override
@@ -222,7 +217,7 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
         TextDocumentItem textDocument = openedDocuments.get(params.getTextDocument().getUri());
         if (!contentChanges.isEmpty()) {
             textDocument.setText(contentChanges.get(0).getText());
-            this.diagnostics.publishDiagnostics(textDocument, teiidLanguageServer);
+            new DdlDiagnostics(this.teiidLanguageServer).publishDiagnostics(textDocument);
         }
     }
 
@@ -240,7 +235,7 @@ public class TeiidDdlTextDocumentService implements TextDocumentService {
          * clear diagnostics before removing document.
          */
 
-        this.diagnostics.clearDiagnostics(uri, teiidLanguageServer);
+        new DdlDiagnostics(this.teiidLanguageServer).clearDiagnostics(uri);
 
         openedDocuments.remove(uri);
     }

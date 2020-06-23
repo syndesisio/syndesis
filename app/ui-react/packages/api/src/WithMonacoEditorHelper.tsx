@@ -2,6 +2,8 @@ import * as monaco from 'monaco-editor-core';
 import {
   CloseAction,
   createConnection,
+  DidChangeConfigurationNotification,
+  DidChangeConfigurationParams,
   ErrorAction,
   MonacoLanguageClient,
   MonacoServices,
@@ -18,18 +20,21 @@ export interface IWithMonacoEditorHelperProps {
 
 export interface IWithMonacoEditorHelperChildrenProps {
   didMountEditor: (valueGetter: any, editor: any) => void;
+  setVirtualization: (virtId: string) => void;
   willMountEditor: () => void;
 }
 
 const LANGUAGE_ID = 'sql'; // 'teiid-ddl';
 const LANGUAGE_SERVER_ID = 'teiid-ddl-language-server';
 let webSocket: WebSocket;
+let languageClient: MonacoLanguageClient;
+let virtId: string;
 
 export class WithMonacoEditorHelper extends React.Component<
   IWithMonacoEditorHelperProps
 > {
 
-  public state = { editorInstalled: false };
+  public state = { editorInstalled: false, clientIsReady: false  };
 
   /*
    * When the text editor has been rendered, we need to create the language server connection and wire
@@ -67,8 +72,16 @@ export class WithMonacoEditorHelper extends React.Component<
         // tslint:disable-next-line:object-literal-sort-keys
         onConnection: connection => {
           // create and start the language client
-          const languageClient = this.createLanguageClient(connection);
+          languageClient = this.createLanguageClient(connection);
           const disposable = languageClient.start();
+
+          // Need to handle setting virtualization ID and
+          // setting the clientIsReady state for subsequent re-opening
+          // of DDL Editor
+          languageClient.onReady().then(() => {
+            this.setState({ clientIsReady: true });
+          });
+
           connection.onClose(() => disposable.dispose());
         },
       });
@@ -77,7 +90,7 @@ export class WithMonacoEditorHelper extends React.Component<
   };
 
   public createLanguageClient = (connection: MessageConnection) => {
-    return new MonacoLanguageClient({
+    const mlc: MonacoLanguageClient = new MonacoLanguageClient({
       name: 'Monaco Language Client',
       // tslint:disable-next-line:object-literal-sort-keys
       clientOptions: {
@@ -98,22 +111,47 @@ export class WithMonacoEditorHelper extends React.Component<
         },
       },
     });
+
+    return mlc;
   };
+
+    /*
+    * When the text editor has been rendered, we need to create the language server connection and wire
+    * it up to a new code mirror adapter
+    */
+    public handleEditorWillMount = () => {
+      monaco.languages.register({
+        extensions: ['.ddl'],
+        id: LANGUAGE_ID,
+      });
+    };
 
   /*
    * When the text editor has been rendered, we need to create the language server connection and wire
    * it up to a new code mirror adapter
    */
-  public handleEditorWillMount = () => {
-    monaco.languages.register({
-      extensions: ['.ddl'],
-      id: LANGUAGE_ID,
-    });
+  public handleVirtualizationChanged = (id: string) => {
+    virtId = id;
+    if( this.state.clientIsReady && virtId ) {
+      this.handleConfigurationChange(virtId);
+    }
   };
+
+  // ==========================================================
+  public handleConfigurationChange = (id : string ) => {
+    const param: DidChangeConfigurationParams = {
+			settings: { "virtualiation-name": id }
+		};
+    languageClient.sendNotification(DidChangeConfigurationNotification.type, param);
+  }
+  // ==========================================================
+
+
 
   public render() {
     return this.props.children({
       didMountEditor: this.handleEditorDidMount,
+      setVirtualization: this.handleVirtualizationChanged,
       willMountEditor: this.handleEditorWillMount,
     });
   }

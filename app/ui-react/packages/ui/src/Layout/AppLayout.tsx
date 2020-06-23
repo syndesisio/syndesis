@@ -5,6 +5,7 @@ import './AppLayout.css';
 export interface ILayoutBase {
   avatar?: string;
   pictograph: any;
+  rhiPictograph: any;
   verticalNav: any[];
   logoOnClick: () => void;
   logoutItem: {
@@ -29,6 +30,7 @@ export interface ILayoutBase {
 export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
   avatar,
   pictograph,
+  rhiPictograph,
   verticalNav,
   logoOnClick,
   showNavigation,

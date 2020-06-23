@@ -15,12 +15,10 @@
  */
 package io.syndesis.server.jsondb.impl.expr;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-
 import org.skife.jdbi.v2.Query;
 
 class LogicalSqlExpressionBuilder extends SqlExpressionBuilder {
@@ -34,7 +32,7 @@ class LogicalSqlExpressionBuilder extends SqlExpressionBuilder {
     }
 
     @Override
-    public void build(StringBuilder sql, ArrayList<Consumer<Query<Map<String, Object>>>> binds, AtomicInteger bindCounter) {
+    public void build(StringBuilder sql, List<Consumer<Query<Map<String, Object>>>> binds, AtomicInteger bindCounter) {
         for (int i = 0; i < builders.size(); i++) {
             SqlExpressionBuilder builder = builders.get(i);
             if ( i!=0 ) {

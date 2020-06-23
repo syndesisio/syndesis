@@ -76,6 +76,13 @@ public class IntegrationRolesTest {
 
         assertEquals(HttpStatus.OK, stashStatus.getStatusCode());
 
+        vd.setName("myotherview");
+        ResponseEntity<RestViewDefinitionStatus> stashStatus1 = restTemplate.exchange(
+                "/v1/editors", HttpMethod.PUT,
+                new HttpEntity<ViewDefinition>(vd), RestViewDefinitionStatus.class);
+
+        assertEquals(HttpStatus.OK, stashStatus1.getStatusCode());
+
         @SuppressWarnings({"rawtypes", "unchecked"})
         final Class<List<?>> listOfAnything = (Class) List.class;
 
@@ -90,7 +97,10 @@ public class IntegrationRolesTest {
 
         RoleInfo toGrant = new RoleInfo();
         String viewId = stashStatus.getBody().getViewDefinition().getId();
-        toGrant.getTablePrivileges().add(new TablePrivileges("x", viewId, Privilege.S));
+        String viewId1 = stashStatus1.getBody().getViewDefinition().getId();
+        TablePrivileges tablePrivileges = new TablePrivileges("x", viewId, Privilege.S);
+        tablePrivileges.setViewDefinitionIds(Arrays.asList(viewId, viewId1));
+        toGrant.getTablePrivileges().add(tablePrivileges);
 
         //grant a privilege
         ResponseEntity<String> grant = restTemplate.exchange(
@@ -120,6 +130,9 @@ public class IntegrationRolesTest {
         statusResponse = restTemplate.getForEntity("/v1/virtualizations/{dv}/roles", RoleInfo.class, dvName);
         assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
         assertTrue(statusResponse.getBody().getTablePrivileges().isEmpty());
+
+        //just deal with a single view now
+        toGrant.getTablePrivileges().get(0).setViewDefinitionId(viewId);
 
         //add it back
         toGrant.setOperation(Operation.GRANT);
@@ -158,7 +171,7 @@ public class IntegrationRolesTest {
         ResponseEntity<List<?>> views = restTemplate.getForEntity(
                 "/v1/virtualizations/{name}/views", listOfAnything, dvName);
         assertEquals(HttpStatus.OK, views.getStatusCode());
-        assertEquals(1, views.getBody().size());
+        assertEquals(2, views.getBody().size());
         Map<?, ?> viewMap = (Map<?, ?>) views.getBody().get(0);
         assertEquals("[{viewDefinitionIds=["+viewId+"], roleName=x, grantPrivileges=[SELECT]}]", viewMap.get("tablePrivileges").toString());
 
@@ -172,7 +185,7 @@ public class IntegrationRolesTest {
         views = restTemplate.getForEntity(
                 "/v1/virtualizations/{name}/views", listOfAnything, dvName);
         assertEquals(HttpStatus.OK, views.getStatusCode());
-        assertEquals(1, views.getBody().size());
+        assertEquals(2, views.getBody().size());
         viewMap = (Map<?, ?>) views.getBody().get(0);
         assertEquals("[]", viewMap.get("tablePrivileges").toString());
 
@@ -187,6 +200,19 @@ public class IntegrationRolesTest {
         rolesResponse = restTemplate.getForEntity("/v1/status/roles", listOfAnything);
         assertEquals(HttpStatus.OK, rolesResponse.getStatusCode());
         assertEquals("[any authenticated]", rolesResponse.getBody().toString());
+
+        //set should remove the existing privilege
+        toGrant = new RoleInfo();
+        toGrant.setOperation(Operation.SET);
+        toGrant.getTablePrivileges().add(new TablePrivileges("any authenticated", viewId, Privilege.D));
+        grant = restTemplate.exchange(
+                "/v1/virtualizations/{dv}/roles", HttpMethod.PUT,
+                new HttpEntity<RoleInfo>(toGrant), String.class, dvName);
+        assertEquals(HttpStatus.OK, grant.getStatusCode());
+
+        statusResponse = restTemplate.getForEntity("/v1/virtualizations/{dv}/roles", RoleInfo.class, dvName);
+        assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
+        assertEquals("[DELETE]", statusResponse.getBody().getTablePrivileges().get(0).getGrantPrivileges().toString());
     }
 
     @Test public void testStatus() {

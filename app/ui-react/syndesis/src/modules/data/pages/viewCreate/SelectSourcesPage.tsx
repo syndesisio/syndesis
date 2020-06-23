@@ -1,3 +1,4 @@
+import { CubeIcon } from '@patternfly/react-icons';
 import {
   useConnections,
   useVirtualizationConnectionStatuses,
@@ -11,7 +12,7 @@ import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
-import { PageTitle } from '../../../../shared';
+import { EntityIcon, PageTitle } from '../../../../shared';
 import resolvers from '../../../resolvers';
 import { getQueryColumns, getQueryRows } from '../../shared';
 import {
@@ -172,11 +173,33 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
    * Get the Connections - and include a connection for the Virtualization
    */
   const getConnectionsForDisplay = (conns: Connection[]) => {
+    // If a virtualization has been published, it will have a connection.  If so, remove it - we will use virtualization metadata.
+    const tempConns = conns.slice();
+    const index = tempConns.findIndex(conn => conn.name === virtualization.name);
+    if (index > -1) {
+      tempConns.splice(index, 1);
+    }
+
+    // Add 'connection' for the virtualization
     const virtConnection: Connection = {
       description: virtualization.description,
       name: virtualization.name,
     };
-    return [...conns, virtConnection];
+    return [...tempConns, virtConnection];
+  };
+  
+  const getConnectionIcons = (conns: Connection[], size: number) => {
+    const iconMap: Map<string, JSX.Element> = new Map();
+    // Set icons for the connections
+    for(const theConn of conns) {
+      const icon = <EntityIcon entity={theConn} alt={theConn.name} width={size} />;
+      iconMap.set(theConn.name, icon);
+    }
+    // Add the virtualization icon
+    const iconsize = size>15 ? size>20 ? 'lg': 'md' : 'sm';
+    const virtIcon = <CubeIcon size={iconsize} />;
+    iconMap.set(virtualization.name, virtIcon);
+    return iconMap;
   };
 
   return (
@@ -217,6 +240,7 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
           }
           dvSourceStatuses={getConnectionStatusesAddVirtualization(connectionStatuses)}
           connections={getConnectionsForDisplay(connectionsData.connectionsForDisplay)}
+          connectionIcons={getConnectionIcons(connectionsData.connectionsForDisplay, 23)}
           virtualizationSchema={getVirtualizationSchema(viewSourceInfo)}
           onNodeSelected={props.handleNodeSelected}
           onNodeDeselected={onTableDeselect}
@@ -226,6 +250,7 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
       selectedTables={
         <ConnectionTables
           selectedSchemaNodes={props.selectedSchemaNodes}
+          connectionIcons={getConnectionIcons(connectionsData.connectionsForDisplay, 12)}
           onNodeDeselected={onTableDeselect}
           columnDetails={viewSourceInfo.schemas}
           setShowPreviewData={toggleShowPreviewData}
@@ -242,9 +267,10 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
           i18nHidePreview={t('preview.hidePreview')}
           i18nShowPreview={t('preview.showPreview')}
           i18nPreviewHeading={t('preview.previewHeading', {
-            connection: previewTable.connectionName,
             name: previewTable.tableName
           })}
+          connectionName={previewTable.connectionName}
+          connectionIcon={getConnectionIcons(connectionsData.connectionsForDisplay, 17).get(previewTable.connectionName)}
           isLoadingPreview={isLoadingPreview}
           isExpanded={isExpanded}
           onToggle={onToggle}

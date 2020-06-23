@@ -40,11 +40,9 @@ export interface IViewEditorSqlRouteParams {
 
 /**
  * @param virtualization - the Virtualization
- * @param viewDefinition - the ViewDefinition
  */
 export interface IViewEditorSqlRouteState {
   virtualization: Virtualization;
-  viewDefinition: ViewDefinition;
 }
 
 export const ViewEditorSqlPage: React.FunctionComponent = () => {
@@ -88,8 +86,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     params.virtualizationId
   );
   const { resource: viewDefn, loading, error } = useViewDefinition(
-    params.viewDefinitionId,
-    state.viewDefinition
+    params.viewDefinitionId
   );
   const [viewVersion, setViewVersion] = React.useState(viewDefn.version);
   const [noResultsTitle, setNoResultsTitle] = React.useState<string>(
@@ -102,6 +99,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
 
   const handleMetadataLoaded = async (): Promise<void> => {
     if (sourceTableColumns != null && sourceTableColumns.length > 0) {
+      monacoContext.setVirtualization(virtualization.name);
       setMetadataLoaded(true);
     }
   };

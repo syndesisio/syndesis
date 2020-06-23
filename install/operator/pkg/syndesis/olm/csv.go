@@ -21,6 +21,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
@@ -136,8 +137,9 @@ type Install struct {
 }
 
 type InstallSpec struct {
-	Permissions []InstallSpecPermission
-	Deployments []InstallSpecDeployment
+	ClusterPermissions []InstallSpecPermission
+	Permissions        []InstallSpecPermission
+	Deployments        []InstallSpecDeployment
 }
 
 type InstallSpecPermission struct {
@@ -200,6 +202,11 @@ func (c *csv) build() (err error) {
 	descriptionLong, _ := ioutil.ReadFile(filepath.Join("pkg", "syndesis", "olm", "assets", target, "description"))
 	icon, _ := ioutil.ReadFile(filepath.Join("pkg", "syndesis", "olm", "assets", "icon"))
 	rules, err := c.loadRoleFromTemplate()
+	if err != nil {
+		return err
+	}
+
+	clusterrules, err := c.loadClusterRoleFromTemplate()
 	if err != nil {
 		return err
 	}
@@ -278,6 +285,10 @@ func (c *csv) build() (err error) {
 			Install: Install{
 				Strategy: "deployment",
 				Spec: InstallSpec{
+					ClusterPermissions: []InstallSpecPermission{{
+						ServiceAccountName: "syndesis-operator",
+						Rules:              clusterrules,
+					}},
 					Permissions: []InstallSpecPermission{{
 						ServiceAccountName: "syndesis-operator",
 						Rules:              rules,
@@ -318,6 +329,43 @@ func (c *csv) loadRoleFromTemplate() (r interface{}, err error) {
 	g, err := generator.Render("./install/role.yml.tmpl", context)
 	if err != nil {
 		return nil, err
+	}
+
+	mjson, err := g[0].MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+
+	m := make(map[string]interface{})
+	if err := yaml.Unmarshal(mjson, &m); err != nil {
+		return nil, err
+	}
+
+	r = m["rules"]
+	return
+}
+
+// Load cluster role to apply to syndesis operator, from template file. This role
+// is later applied to the syndesis-operator service account, by OLM and allows
+// the operator to query for OLM artifacts across namespaces, eg. subscriptions.
+func (c *csv) loadClusterRoleFromTemplate() (r interface{}, err error) {
+	context := struct {
+		Kind      string
+		Role      string
+		ApiServer capabilities.ApiServerSpec
+	}{
+		Kind:      "",
+		Role:      "",
+		ApiServer: c.config.ApiServer,
+	}
+
+	g, err := generator.Render("./install/olm_cluster_role.yml.tmpl", context)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(g) == 0 {
+		return r, nil
 	}
 
 	mjson, err := g[0].MarshalJSON()

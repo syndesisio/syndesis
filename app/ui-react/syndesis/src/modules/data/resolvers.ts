@@ -1,7 +1,6 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
 import {
   SchemaNodeInfo,
-  ViewDefinition,
   Virtualization,
 } from '@syndesis/models';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
@@ -57,17 +56,15 @@ export default {
         sql: makeResolver<{
           virtualization: Virtualization;
           viewDefinitionId: string;
-          viewDefinition?: ViewDefinition;
         }>(
           routes.virtualizations.virtualization.views.edit.sql,
-          ({ virtualization, viewDefinitionId, viewDefinition }) => ({
+          ({ virtualization, viewDefinitionId }) => ({
             params: {
               virtualizationId: virtualization.name,
               viewDefinitionId,
             },
             state: {
               virtualization,
-              viewDefinition,
             },
           })
         ),

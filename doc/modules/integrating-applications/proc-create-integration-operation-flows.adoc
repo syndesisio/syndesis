@@ -97,17 +97,19 @@ the error message in the body of the returned message.
 During development, you typically want to return the error message.
 In production, however, you might want to hide the error message if
 it contains sensitive or proprietary information. The error message
-is a JSON formatted string that contains `responseCode`, `category`,
-and `message` elements, for example:
+is a JSON formatted string that contains `responseCode`, `category`, `message`, and `error` elements, for example:
 +
 [source,json]
 ----
    {
       responseCode: 404,
-      category:  "SQL_ENTITY_NOT_FOUND_ERROR",
+      category:  "ENTITY_NOT_FOUND_ERROR",
       message: "SQL SELECT did not SELECT any records"
+      error: SYNDESIS_CONNECTION_ERROR
     }
 ----
++
+Note that during development, the most reliable way to know that an error happened is to check the `HTTP_RESPONSE STATUS` header in the response to the caller. You can also check the integration pod’s log for `INFO` messages. The integration’s *Activity* log shows a successful exchange and errors are not always visible in the *Activity* log.
 
 .. Under *Error Response Codes*, {prodname} displays an entry for
 each error that a connection in the flow might return. For each

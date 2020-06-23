@@ -45,6 +45,8 @@ import com.fasterxml.jackson.module.jsonSchema.types.SimpleTypeSchema;
 
 public final class SalesforceMetadataRetrieval extends ComponentMetadataRetrieval {
 
+    public static final String SALESFORCE = "Salesforce ";
+
     @Override
     public RuntimeException handle(final Exception e) {
         Throwable current = e;
@@ -101,13 +103,13 @@ public final class SalesforceMetadataRetrieval extends ComponentMetadataRetrieva
                     enrichedProperties, //
                     new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA)//
                         .type(inputOutputSchema.getTitle())//
-                        .name("Salesforce " + objectName)//
-                        .description("Salesforce " + objectName)//
+                        .name(SALESFORCE + objectName)//
+                        .description(SALESFORCE + objectName)//
                         .specification(specification).build(), //
                     new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA)//
                         .type(inputOutputSchema.getTitle())//
-                        .name("Salesforce " + objectName)//
-                        .description("Salesforce " + objectName)//
+                        .name(SALESFORCE + objectName)//
+                        .description(SALESFORCE + objectName)//
                         .specification(specification).build());
             } catch (final JsonProcessingException e) {
                 throw new IllegalStateException(e);

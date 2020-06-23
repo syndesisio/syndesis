@@ -2,6 +2,7 @@ export * from './Versions';
 export * from './Metrics';
 export * from './Views';
 export * from './ViewEditor';
+export * from './DataPermission';
 export * from './PublishStatusWithProgress';
 export * from './SqlClientContent';
 export * from './SqlClientContentSkeleton';

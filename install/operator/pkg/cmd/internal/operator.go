@@ -23,3 +23,7 @@ func (o *Options) ClientTools() *clienttools.ClientTools {
 	}
 	return o.clientTools
 }
+
+func (o *Options) SetClientTools(clientTools *clienttools.ClientTools) {
+	o.clientTools = clientTools
+}

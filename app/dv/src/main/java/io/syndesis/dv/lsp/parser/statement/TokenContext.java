@@ -25,21 +25,29 @@ public class TokenContext {
     private final Token token;
     private DdlAnalyzerConstants.Context context;
     private final AbstractStatementObject targetObject;
+    private String virtualizationId;
 
-    public TokenContext(Position position, Token token, DdlAnalyzerConstants.Context context, AbstractStatementObject statementObject) {
+    public TokenContext(Position position, Token token, DdlAnalyzerConstants.Context context,
+            AbstractStatementObject statementObject) {
+        this(position, token, context, statementObject, null);
+    }
+
+    public TokenContext(Position position, Token token, DdlAnalyzerConstants.Context context,
+            AbstractStatementObject statementObject, String virtualizationId) {
         super();
         this.position = position;
         this.token = token;
         this.context = context;
         this.targetObject = statementObject;
+        this.virtualizationId = virtualizationId;
     }
 
     public Position getPosition() {
-        return position;
+        return this.position;
     }
 
     public Token getToken() {
-        return token;
+        return this.token;
     }
 
     public DdlAnalyzerConstants.Context getContext() {
@@ -51,21 +59,74 @@ public class TokenContext {
     }
 
     public AbstractStatementObject getTargetObject() {
-        return targetObject;
+        return this.targetObject;
     }
 
+    public String getVirtualizationId() {
+        return this.virtualizationId;
+    }
+
+    public void setVirtualizationId(String id) {
+        this.virtualizationId = id;
+    }
+
+    @SuppressWarnings("PMD.CyclomaticComplexity") // TODO refactor
     public String contextToString() {
-        switch(context) {
-            case PREFIX: return "PREFIX";
-            case TABLE_BODY: return "TABLE_BODY";
-            case TABLE_OPTIONS: return "TABLE_OPTIONS";
-            case TABLE_ELEMENT: return "TABLE_ELEMENT";
-            case TABLE_ELEMENT_OPTIONS: return "TABLE_ELEMENT_OPTIONS";
-            case QUERY_EXPRESSION: return "QUERY_EXPRESSION";
-            case SELECT_CLAUSE: return "SELECT_CLAUSE";
-            case FROM_CLAUSE: return "FROM_CLAUSE";
-            case WHERE_CLAUSE: return "WHERE_CLAUSE";
-            default:  return "NONE_FOUND";
+        switch (context) {
+            case PREFIX:
+                return "PREFIX";
+            case TABLE_BODY:
+                return "TABLE_BODY";
+            case TABLE_OPTIONS:
+                return "TABLE_OPTIONS";
+            case TABLE_ELEMENT:
+                return "TABLE_ELEMENT";
+            case TABLE_ELEMENT_OPTIONS:
+                return "TABLE_ELEMENT_OPTIONS";
+            case TABLE_ELEMENT_OPTION_SEARCHABLE:
+                return "TABLE_ELEMENT_OPTION_SEARCHABLE";
+            case QUERY_EXPRESSION:
+                return "QUERY_EXPRESSION";
+            case SELECT_CLAUSE:
+                return "SELECT_CLAUSE";
+            case SELECT_CLAUSE_START:
+                return "SELECT_CLAUSE_START";
+            case SELECT_COLUMN:
+                return "SELECT_COLUMN";
+            case FUNCTION:
+                return "FUNCTION";
+            case TABLE_ALIAS:
+                return "TABLE_ALIAS";
+            case COLUMN_NAME:
+                return "COLUMN_NAME";
+            case FROM_CLAUSE:
+                return "FROM_CLAUSE";
+            case FROM_CLAUSE_ALIAS:
+                return "FROM_CLAUSE_ALIAS";
+            case FROM_CLAUSE_AS:
+                return "FROM_CLAUSE_AS";
+            case FROM_CLAUSE_START:
+                return "FROM_CLAUSE_START";
+            case FROM_CLAUSE_AS_OR_WHERE:
+                return "FROM_CLAUSE_AS_OR_WHERE";
+            case FROM_CLAUSE_ID:
+                return "FROM_CLAUSE_ID";
+            case TABLE_SYMBOL:
+                return "TABLE_SYMBOL";
+            case TABLE_SYMBOL_ID:
+                return "TABLE_SYMBOL_ID";
+            case TABLE_SYMBOL_AS:
+                return "TABLE_SYMBOL_AS";
+            case TABLE_NAME:
+                return "TABLE_NAME";
+            case WHERE_CLAUSE:
+                return "WHERE_CLAUSE";
+            case WHERE_CLAUSE_START:
+                return "WHERE_CLAUSE_START";
+            case WHERE_CLAUSE_TABLE_ALIAS:
+                return "WHERE_CLAUSE_TABLE_ALIAS";
+            default:
+                return "NONE_FOUND";
         }
     }
 
@@ -73,16 +134,13 @@ public class TokenContext {
     public String toString() {
         StringBuilder sb = new StringBuilder(75);
         sb.append("TokenContext: ");
-        if( token != null ) {
+        if (token != null) {
             sb.append(token.image);
         } else {
             sb.append(" NONE ");
         }
-        sb.append(" at (")
-            .append(position.getLine())
-            .append(", ")
-            .append(position.getCharacter())
-            .append(") Context: ").append(contextToString());
+        sb.append(" at (").append(position.getLine()).append(", ").append(position.getCharacter()).append(") Context: ")
+                .append(contextToString());
 
         return sb.toString();
     }

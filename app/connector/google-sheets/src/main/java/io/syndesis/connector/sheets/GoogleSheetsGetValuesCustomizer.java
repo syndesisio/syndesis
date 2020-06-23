@@ -39,6 +39,7 @@ import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer {
 
     private static final String ROW_PREFIX = "#";
+    public static final String SPREADSHEET_ID = "spreadsheetId";
 
     private String spreadsheetId;
     private String range;
@@ -53,7 +54,7 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
     }
 
     private void setApiMethod(Map<String, Object> options) {
-        spreadsheetId = ConnectorOptions.extractOption(options, "spreadsheetId");
+        spreadsheetId = ConnectorOptions.extractOption(options, SPREADSHEET_ID);
         range = ConnectorOptions.extractOption(options, "range");
         majorDimension = ConnectorOptions.extractOption(options, "majorDimension", RangeCoordinate.DIMENSION_ROWS);
         columnNames = ConnectorOptions.extractOptionAndMap(options, "columnNames",
@@ -94,7 +95,7 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
             if (ObjectHelper.equal(RangeCoordinate.DIMENSION_ROWS, majorDimension)) {
                 for (List<Object> values : valueRange.getValues()) {
                     final Map<String, Object> model = new HashMap<>();
-                    model.put("spreadsheetId", spreadsheetId);
+                    model.put(SPREADSHEET_ID, spreadsheetId);
                     int columnIndex = rangeCoordinate.getColumnStartIndex();
                     for (Object value : values) {
                         model.put(CellCoordinate.getColumnName(columnIndex, rangeCoordinate.getColumnStartIndex(), columnNames), value);
@@ -105,7 +106,7 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
             } else if (ObjectHelper.equal(RangeCoordinate.DIMENSION_COLUMNS, majorDimension)) {
                 for (List<Object> values : valueRange.getValues()) {
                     final Map<String, Object> model = new HashMap<>();
-                    model.put("spreadsheetId", spreadsheetId);
+                    model.put(SPREADSHEET_ID, spreadsheetId);
                     int rowIndex = rangeCoordinate.getRowStartIndex() + 1;
                     for (Object value : values) {
                         model.put(ROW_PREFIX + rowIndex, value);
@@ -123,7 +124,7 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
         final List<?> values = in.getBody(List.class);
 
         final Map<String, Object> model = new HashMap<>();
-        model.put("spreadsheetId", spreadsheetId);
+        model.put(SPREADSHEET_ID, spreadsheetId);
 
         if (values != null) {
             if (ObjectHelper.isNotEmpty(in.getHeader(GoogleSheetsStreamConstants.RANGE))) {

@@ -15,32 +15,28 @@ import { Translation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import { ApiError, PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
+import { ICreateConnectorProps } from '../../models';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
 
 export interface IReviewActionsRouteState {
+  configured?: ICreateConnectorProps;
   /**
    * connectorTemplateId indicates whether
    * this is a SOAP or REST style web service
    */
   connectorTemplateId?: string;
-  /**
-   * portName & serviceName
-   * are used for SOAP documents
-   */
-  portName?: string;
-  serviceName?: string;
   specification: string;
 }
 
 export const ReviewActionsPage: React.FunctionComponent = () => {
   const uiContext = React.useContext(UIContext);
   const { state, history } = useRouteData<null, IReviewActionsRouteState>();
+
   const { apiSummary, loading, error } = useApiConnectorSummary(
     state.specification,
     state.connectorTemplateId,
-    state.serviceName,
-    state.portName
+    state.configured
   );
 
   React.useEffect(() => {

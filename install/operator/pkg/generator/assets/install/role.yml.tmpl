@@ -345,3 +345,9 @@
     resources:
     - channels
     verbs: [ get, list, watch]
+  - apiGroups:
+    - jaegertracing.io
+    resources:
+    - '*'
+    verbs:
+    - '*'

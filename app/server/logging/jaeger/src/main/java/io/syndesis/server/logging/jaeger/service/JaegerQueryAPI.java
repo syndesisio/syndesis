@@ -28,7 +28,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -55,7 +55,7 @@ public class JaegerQueryAPI {
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Traces extends JsonBase {
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
-        public ArrayList<Trace> data;
+        public List<Trace> data;
 
     }
 
@@ -64,9 +64,9 @@ public class JaegerQueryAPI {
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public String traceID;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
-        public ArrayList<Span> spans;
+        public List<Span> spans;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
-        public HashMap<String, JaegerProcess> processes;
+        public Map<String, JaegerProcess> processes;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -80,16 +80,16 @@ public class JaegerQueryAPI {
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public String operationName;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
-        public ArrayList<Reference> references;
+        public List<Reference> references;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public long startTime;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public long duration;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
-        public ArrayList<Tag> tags;
+        public List<Tag> tags;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         @SuppressWarnings("PMD.ProperLogger")
-        public ArrayList<Log> logs;
+        public List<Log> logs;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public String processID;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
@@ -135,7 +135,7 @@ public class JaegerQueryAPI {
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public long timestamp;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
-        public ArrayList<Tag> fields;
+        public List<Tag> fields;
 
         public <T> T findField(String key, Class<T> type) {
             return JaegerQueryAPI.findTag(fields, key, type);
@@ -151,7 +151,7 @@ public class JaegerQueryAPI {
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public String serviceName;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
-        public ArrayList<Tag> tags;
+        public List<Tag> tags;
 
         public <T> T findTag(String key, Class<T> type) {
             return JaegerQueryAPI.findTag(tags, key, type);
@@ -167,16 +167,16 @@ public class JaegerQueryAPI {
         api = client.target(jaegerApiURL);
     }
 
-    private static <T> T findTag(ArrayList<Tag> tags, String key, Class<T> type) {
+    private static <T> T findTag(List<Tag> tags, String key, Class<T> type) {
         return tags.stream().filter(x -> x.key.equals(key)).map(x -> type.cast(x.value)).findFirst().orElse(null);
     }
 
-    private static <T> List<T> findTags(ArrayList<Tag> tags, String key, Class<T> type) {
+    private static <T> List<T> findTags(List<Tag> tags, String key, Class<T> type) {
         return tags.stream().filter(x -> x.key.equals(key)).map(x -> type.cast(x.value)).collect(Collectors.toList());
     }
 
 
-    public ArrayList<Trace> tracesForService(String service, int lookbackDays, int limit) {
+    public List<Trace> tracesForService(String service, int lookbackDays, int limit) {
 
         long now = System.currentTimeMillis();
         long start = now - TimeUnit.DAYS.toMillis(lookbackDays);

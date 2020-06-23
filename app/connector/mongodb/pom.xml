@@ -46,7 +46,7 @@
       <dependency>
         <groupId>de.flapdoodle.embed</groupId>
         <artifactId>de.flapdoodle.embed.process</artifactId>
-        <version>2.0.5</version>
+        <version>2.1.2</version>
       </dependency>
       <dependency>
         <groupId>org.mongodb</groupId>

@@ -29,37 +29,29 @@ import org.immutables.value.Value;
 // Immutables generates code that fails these checks
 @SuppressWarnings({ "ArrayEquals", "ArrayHashCode", "ArrayToString" })
 public interface IntegrationStatus extends Serializable {
-    //type IntegrationStatus struct {
-    //    Phase            IntegrationPhase `json:"phase,omitempty"`
-    //    Digest           string           `json:"digest,omitempty"`
-    //    Image            string           `json:"image,omitempty"`
-    //    Dependencies     []string         `json:"dependencies,omitempty"`
-    //    Context          string           `json:"context,omitempty"`
-    //    GeneratedSources []SourceSpec     `json:"generatedSources,omitempty"`
-    //    Failure          *Failure         `json:"failure,omitempty"`
-    //    CamelVersion     string           `json:"camelVersion,omitempty"`
-    //    RuntimeVersion   string           `json:"runtimeVersion,omitempty"`
 
+    List<ConditionSpec> getConditions();
+    List<String> getDependencies();
+    @Nullable
+    String getDigest();
+    List<GeneratedResourceSpec> getGeneratedResources();
+    @Nullable
+    String getKit();
     @Nullable
     String getPhase();
     @Nullable
-    String getDigest();
+    String getPlatform();
     @Nullable
-    String getImage();
-    List<String> getDependencies();
+    String getProfile();
     @Nullable
-    String getContext();
-    List<SourceSpec> getGeneratedSources();
-    @Nullable
-    Failure getFailure();
-    @Nullable
-    String getCamelVersion();
+    String getRuntimeProvider();
     @Nullable
     String getRuntimeVersion();
+    @Nullable
+    String getVersion();
 
     class Builder extends ImmutableIntegrationStatus.Builder {
         // make ImmutableIntegrationStatus.Builder which is package private
         // accessible
     }
 }
-

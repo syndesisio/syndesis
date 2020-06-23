@@ -59,7 +59,7 @@ public class DdlTokenAnalyzer {
 
         Token currentToken = tokenSource.getNextToken();
 
-        if( currentToken != null ) {
+        if (currentToken != null) {
             convertToken(currentToken);
 
             // Add current token to simple list
@@ -67,12 +67,12 @@ public class DdlTokenAnalyzer {
 
             boolean done = false;
 
-            while ( !done ) {
+            while (!done) {
                 // Get next token
                 currentToken = tokenSource.getNextToken();
 
                 // Check if next token exists
-                if( currentToken != null && (currentToken.image.length() > 0) ) {
+                if (currentToken != null && (currentToken.image.length() > 0)) {
                     convertToken(currentToken);
                     tokensList.add(currentToken);
                 } else {
@@ -100,6 +100,30 @@ public class DdlTokenAnalyzer {
         return walker.findToken(pos, this.statementType);
     }
 
+    public boolean isPositionInToken(Position pos, Token tkn) {
+        Token tknAt = getTokenAt(pos);
+        return getTokenIndex(tknAt) == getTokenIndex(tkn);
+    }
+
+    /**
+     * Token at the row, character position
+     *
+     * @param pos
+     * @return token - may be null
+     */
+    public Token getTokenAt(Position pos) {
+        DdlTokenWalker walker = new DdlTokenWalker(this.tokens);
+        Token targetToken = walker.findToken(pos, this.statementType);
+        if (targetToken != null && (pos.getLine() > targetToken.beginLine || pos.getCharacter() > targetToken.endLine)) {
+            int targetIndex = getTokenIndex(targetToken);
+            if (targetIndex < getTokens().size() - 1) {
+                return getToken(targetIndex + 1);
+            }
+            return null;
+        }
+        return targetToken;
+    }
+
     protected String[] getDatatypesList() {
         return DdlAnalyzerConstants.DATATYPE_LIST;
     }
@@ -115,41 +139,32 @@ public class DdlTokenAnalyzer {
             case SQLParserConstants.CREATE:
                 words.add(getKeywordLabel(SQLParserConstants.VIEW, true));
                 words.add(getKeywordLabel(SQLParserConstants.VIRTUAL, true));
-//                words.add(getKeywordLabel(GLOBAL, true));
-//                words.add(getKeywordLabel(FOREIGN, true));
-//                words.add(getKeywordLabel(TABLE, true));
-//                words.add(getKeywordLabel(TRIGGER, true));
-//                words.add(getKeywordLabel(TEMPORARY, true));
-//                words.add(getKeywordLabel(ROLE, true));
-//                words.add(getKeywordLabel(SCHEMA, true));
-//                words.add(getKeywordLabel(SERVER, true));
-//                words.add(getKeywordLabel(DATABASE, true));
                 words.add(getKeywordLabel(SQLParserConstants.PROCEDURE, true));
-            break;
+                break;
 
             case SQLParserConstants.GLOBAL:
                 words.add(getKeywordLabel(SQLParserConstants.TEMPORARY, true));
-            break;
+                break;
 
             case SQLParserConstants.TEMPORARY:
                 words.add(getKeywordLabel(SQLParserConstants.TABLE, true));
-            break;
+                break;
 
             case SQLParserConstants.FOREIGN:
                 words.add(getKeywordLabel(SQLParserConstants.TABLE, true));
                 words.add(getKeywordLabel(SQLParserConstants.TEMPORARY, true));
-            break;
+                break;
 
             case SQLParserConstants.VIRTUAL:
                 words.add(getKeywordLabel(SQLParserConstants.VIEW, true));
                 words.add(getKeywordLabel(SQLParserConstants.PROCEDURE, true));
-            break;
+                break;
 
             case SQLParserConstants.ID:
-                if( isStatementId ) {
+                if (isStatementId) {
                     words.add(getKeywordLabel(SQLParserConstants.LPAREN, false));
                 }
-            break;
+                break;
 
             case SQLParserConstants.SELECT:
                 words.add(getKeywordLabel(SQLParserConstants.STAR, true));
@@ -169,31 +184,31 @@ public class DdlTokenAnalyzer {
 
     public final DdlAnalyzerConstants.StatementType getStatementType() {
         // walk through start of token[] array and return the type
-        if( tokens.size() < 2 ) {
+        if (tokens.size() < 2) {
             return DdlAnalyzerConstants.StatementType.UNKNOWN_STATEMENT_TYPE;
         }
 
-        if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_VIRTUAL_VIEW_STATEMENT) ) {
+        if (isStatementType(tokens, DdlAnalyzerConstants.CREATE_VIRTUAL_VIEW_STATEMENT)) {
             return DdlAnalyzerConstants.StatementType.CREATE_VIRTUAL_VIEW_TYPE;
         }
 
-        if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_VIEW_STATEMENT) ) {
+        if (isStatementType(tokens, DdlAnalyzerConstants.CREATE_VIEW_STATEMENT)) {
             return DdlAnalyzerConstants.StatementType.CREATE_VIEW_TYPE;
         }
 
-        if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_GLOBAL_TEMPORARY_TABLE_STATEMENT) ) {
+        if (isStatementType(tokens, DdlAnalyzerConstants.CREATE_GLOBAL_TEMPORARY_TABLE_STATEMENT)) {
             return DdlAnalyzerConstants.StatementType.CREATE_GLOBAL_TEMPORARY_TABLE_TYPE;
         }
 
-        if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_FOREIGN_TEMPORARY_TABLE_STATEMENT) ) {
+        if (isStatementType(tokens, DdlAnalyzerConstants.CREATE_FOREIGN_TEMPORARY_TABLE_STATEMENT)) {
             return DdlAnalyzerConstants.StatementType.CREATE_FOREIGN_TEMPORARY_TABLE_TYPE;
         }
 
-        if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_FOREIGN_TABLE_STATEMENT) ) {
+        if (isStatementType(tokens, DdlAnalyzerConstants.CREATE_FOREIGN_TABLE_STATEMENT)) {
             return DdlAnalyzerConstants.StatementType.CREATE_FOREIGN_TABLE_TYPE;
         }
 
-        if( isStatementType(tokens, DdlAnalyzerConstants.CREATE_TABLE_STATEMENT) ) {
+        if (isStatementType(tokens, DdlAnalyzerConstants.CREATE_TABLE_STATEMENT)) {
             return DdlAnalyzerConstants.StatementType.CREATE_TABLE_TYPE;
         }
 
@@ -231,14 +246,14 @@ public class DdlTokenAnalyzer {
 
         // TODO: Add logic to check for the scenarios like the first bracket
 
-        for(int iTkn= 0; iTkn<tokens.size(); iTkn++) {
+        for (int iTkn = 0; iTkn < tokens.size(); iTkn++) {
             Token token = tokens.get(iTkn);
-            if( token.kind == leftBracketKind)  {
-                if( diagStartPosition == null ) {
+            if (token.kind == leftBracketKind) {
+                if (diagStartPosition == null) {
                     diagStartPosition = new Position(token.beginLine, token.beginColumn);
                 }
                 numUnmatchedParens++;
-            } else if( token.kind == rightBracketKind && diagStartPosition == null ) {
+            } else if (token.kind == rightBracketKind && diagStartPosition == null) {
                 diagStartPosition = new Position(token.beginLine, token.beginColumn);
                 exception = new DdlAnalyzerException("Bracket at location " //$NON-NLS-1$
                         + getPositionString(token) + " does not properly match previous bracket"); //$NON-NLS-1$
@@ -247,19 +262,19 @@ public class DdlTokenAnalyzer {
                 exception.getDiagnostic().setRange(new Range(diagStartPosition, diagStartPosition));
             }
 
-            if( exception != null ) {
+            if (exception != null) {
                 break;
             }
 
-            if( token.kind == rightBracketKind) {
+            if (token.kind == rightBracketKind) {
                 numUnmatchedParens--;
             }
 
             // If the ## goes < 0 throw exception because they should be correctly nested
-            //  VALID:  (  () () )
-            //  INVALID (  )) () (
-            //              ^ would occur here
-            if( diagStartPosition != null && numUnmatchedParens < 0 ) {
+            // VALID: ( () () )
+            // INVALID ( )) () (
+            // ^ would occur here
+            if (diagStartPosition != null && numUnmatchedParens < 0) {
                 Position diagEndPosition = new Position(token.endLine, token.beginLine);
                 exception = new DdlAnalyzerException("Bracket at location " //$NON-NLS-1$
                         + getPositionString(token) + " does not properly match previous bracket"); //$NON-NLS-1$
@@ -267,16 +282,16 @@ public class DdlTokenAnalyzer {
                 exception.getDiagnostic().setSeverity(DiagnosticSeverity.Error);
                 exception.getDiagnostic().setRange(new Range(diagStartPosition, diagEndPosition));
             }
-            if( exception != null ) {
+            if (exception != null) {
                 break;
             }
         }
 
-        if( numUnmatchedParens != 0 ) {
+        if (numUnmatchedParens != 0) {
             exception = new DdlAnalyzerException("Missing or mismatched brackets"); //$NON-NLS-1$
             exception.getDiagnostic().setMessage(exception.getMessage());
             exception.getDiagnostic().setSeverity(DiagnosticSeverity.Error);
-            Token lastToken = tokens.get(tokens.size()-1);
+            Token lastToken = tokens.get(tokens.size() - 1);
             Position diagEndPosition = new Position(lastToken.endLine, lastToken.endColumn);
             exception.getDiagnostic().setRange(new Range(diagStartPosition, diagEndPosition));
         }
@@ -291,16 +306,16 @@ public class DdlTokenAnalyzer {
     public boolean bracketsMatch(Token[] tkns, int startTokenId, int leftBracket, int rightBracket) {
         int numUnmatchedParens = 0;
 
-        for(int iTkn= 0; iTkn<tokens.size(); iTkn++) {
-            if( iTkn < startTokenId) {
+        for (int iTkn = 0; iTkn < tokens.size(); iTkn++) {
+            if (iTkn < startTokenId) {
                 continue;
             }
 
             Token token = tkns[iTkn];
-            if( token.kind == leftBracket) {
+            if (token.kind == leftBracket) {
                 numUnmatchedParens++;
             }
-            if( token.kind == rightBracket) {
+            if (token.kind == rightBracket) {
                 numUnmatchedParens--;
             }
         }
@@ -317,17 +332,11 @@ public class DdlTokenAnalyzer {
         }
     }
 
-    public void addException(
-            Token startToken,
-            Token endToken,
-            String errorMessage) {
+    public void addException(Token startToken, Token endToken, String errorMessage) {
         Position startPosition = new Position(startToken.beginLine, startToken.beginColumn);
-        Position endPosition = new Position(endToken.endLine, endToken.endColumn+1);
-        DdlAnalyzerException exception =
-                new DdlAnalyzerException(
-                        DiagnosticSeverity.Error,
-                        errorMessage,
-                        new Range(startPosition, endPosition)); //$NON-NLS-1$);
+        Position endPosition = new Position(endToken.endLine, endToken.endColumn + 1);
+        DdlAnalyzerException exception = new DdlAnalyzerException(DiagnosticSeverity.Error, errorMessage,
+                new Range(startPosition, endPosition)); // $NON-NLS-1$);
         this.addException(exception);
     }
 
@@ -348,7 +357,7 @@ public class DdlTokenAnalyzer {
     }
 
     public int getTokenIndex(Token token) {
-        if (token == null)  {
+        if (token == null) {
             return 0;
         }
 
@@ -364,13 +373,13 @@ public class DdlTokenAnalyzer {
     }
 
     public String positionToString(Position position) {
-        return "Line " + (position.getLine()+1) + " Column " + (position.getCharacter()+1);
+        return "Line " + (position.getLine() + 1) + " Column " + (position.getCharacter() + 1);
     }
 
     public String[] getKeywordLabels(int[] keywordIds, boolean upperCase) {
         List<String> labels = new ArrayList<String>();
 
-        for( int id: keywordIds) {
+        for (int id : keywordIds) {
             labels.add(getKeywordLabel(id, upperCase));
         }
 

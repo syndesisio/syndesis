@@ -29,6 +29,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
+
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
 
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -51,6 +60,7 @@ import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import io.syndesis.server.verifier.Verifier;
+
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okio.Buffer;
@@ -65,6 +75,8 @@ import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -157,6 +169,41 @@ public class ConnectorHandlerTest {
         final List<Connector> augmented = handler.augmentedWithUsage(Arrays.asList(connector1, connector2, connector3));
 
         assertThat(augmented).contains(usedConnector(connector1, 1), usedConnector(connector2, 2), usedConnector(connector3, 0));
+    }
+
+    @Test
+    public void shouldListApiConnectors() {
+        final Connector connector1 = new Connector.Builder().id("1").connectorGroupId("1").build();
+        final Connector connector2 = new Connector.Builder().id("2").connectorGroupId("2").build();
+
+        final List<Connector> connectors = Arrays.asList(
+            connector1,
+            connector2,
+            new Connector.Builder().id("3").build(),
+            new Connector.Builder().id("4").connectorGroupId("4").build());
+
+        // verify predicates in listApiConnectors()
+        when(dataManager.fetchAll(eq(Connector.class), any()))
+            .then(a -> {
+                ListResult<Connector> result = ListResult.of(connectors);
+                final Object[] operators = a.getArguments();
+                for (int i = 1; i < operators.length; i++) {
+                    @SuppressWarnings("unchecked")
+                    Function<ListResult<Connector>, ListResult<Connector>> operator = (Function<ListResult<Connector>
+                        , ListResult<Connector>>) operators[i];
+                    result = operator.apply(result);
+                }
+                return result;
+            });
+
+        // no integrations, 0 usage for all connectors
+        when(dataManager.fetchAll(Integration.class))
+            .thenReturn(ListResult.of(Collections.emptyList()));
+
+        final ListResult<Connector> result = handler.listApiConnectors(Arrays.asList("1", "2"), 1, 50);
+
+        assertThat(result).size().isEqualTo(2);
+        assertThat(result).contains(connector1, connector2);
     }
 
     @Test

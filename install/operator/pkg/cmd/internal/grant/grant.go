@@ -25,6 +25,7 @@ import (
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 )
 
@@ -32,10 +33,11 @@ const RoleName = "syndesis-installer"
 
 type Grant struct {
 	*internal.Options
-	Role    string
-	Kind    string
-	User    string
-	cluster bool
+	Role      string
+	Kind      string
+	User      string
+	cluster   bool
+	ApiServer capabilities.ApiServerSpec
 }
 
 func New(parent *internal.Options) *cobra.Command {
@@ -58,6 +60,13 @@ func New(parent *internal.Options) *cobra.Command {
 }
 
 func (o *Grant) grant() error {
+
+	apiServer, err := capabilities.ApiCapabilities(o.ClientTools())
+	if err != nil {
+		return err
+	}
+
+	o.ApiServer = *apiServer
 	o.Role = RoleName
 
 	grp := "./install/grant/grant_cluster_role.yml.tmpl"
@@ -78,6 +87,26 @@ func (o *Grant) grant() error {
 	}
 	resources = append(resources, gr...)
 
+	//
+	// Create & bind the cluster role for reading
+	// operation-lifecycle-manager artifacts if they are available
+	// If not available then resources will be empty
+	//
+	olm, err := generator.Render("./install/olm_cluster_role.yml.tmpl", o)
+	if err != nil {
+		return err
+	}
+	resources = append(resources, olm...)
+
+	grolm, err := generator.Render("./install/grant/grant_olm_cluster_role.yml.tmpl", o)
+	if err != nil {
+		return err
+	}
+	resources = append(resources, grolm...)
+
+	//
+	// Will only render anything if there is NOT olm support
+	//
 	jaegerRole, err := generator.Render("./install/grant/grant_jaeger_cluster_role.yml.tmpl", o)
 	if err != nil {
 		return err

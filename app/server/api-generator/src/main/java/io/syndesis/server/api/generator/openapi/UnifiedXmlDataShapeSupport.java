@@ -51,6 +51,12 @@ public abstract class UnifiedXmlDataShapeSupport<T extends OasDocument, O extend
     protected static final String SYNDESIS_PARAMETERS_NS = "http://syndesis.io/v1/swagger-connector-template/parameters";
 
     protected static final String SYNDESIS_REQUEST_NS = "http://syndesis.io/v1/swagger-connector-template/request";
+    public static final String ELEMENT = "element";
+    public static final String NAME = "name";
+    public static final String COMPLEX_TYPE = "complexType";
+    public static final String REF = "ref";
+    public static final String TYPE = "type";
+    public static final String SEQUENCE = "sequence";
 
     public static class SchemaPrefixAndElement {
         public final String prefix;
@@ -84,33 +90,33 @@ public abstract class UnifiedXmlDataShapeSupport<T extends OasDocument, O extend
             return DATA_SHAPE_NONE;
         }
 
-        final Element element = XmlSchemaHelper.addElement(schema, "element");
-        element.addAttribute("name", "request");
-        final Element sequence = XmlSchemaHelper.addElement(element, "complexType", "sequence");
+        final Element element = XmlSchemaHelper.addElement(schema, ELEMENT);
+        element.addAttribute(NAME, "request");
+        final Element sequence = XmlSchemaHelper.addElement(element, COMPLEX_TYPE, SEQUENCE);
 
         final Element additionalSchemas = schemaSet.addElement("d:AdditionalSchemas");
 
         if (parametersSchema != null) {
-            final Element parameters = XmlSchemaHelper.addElement(sequence, "element");
+            final Element parameters = XmlSchemaHelper.addElement(sequence, ELEMENT);
             parameters.addNamespace("p", SYNDESIS_PARAMETERS_NS);
-            parameters.addAttribute("ref", "p:parameters");
+            parameters.addAttribute(REF, "p:parameters");
 
             additionalSchemas.add(parametersSchema.detach());
         }
 
         if (bodySchema != null) {
-            final Element bodyElement = XmlSchemaHelper.addElement(sequence, "element");
-            bodyElement.addAttribute("name", "body");
+            final Element bodyElement = XmlSchemaHelper.addElement(sequence, ELEMENT);
+            bodyElement.addAttribute(NAME, "body");
 
-            final Element body = XmlSchemaHelper.addElement(bodyElement, "complexType", "sequence", "element");
+            final Element body = XmlSchemaHelper.addElement(bodyElement, COMPLEX_TYPE, SEQUENCE, ELEMENT);
             final String bodyTargetNamespace = bodySchema.attributeValue("targetNamespace");
 
-            final String bodyElementName = bodySchema.element("element").attributeValue("name");
+            final String bodyElementName = bodySchema.element(ELEMENT).attributeValue(NAME);
             if (bodyTargetNamespace != null) {
                 body.addNamespace("b", bodyTargetNamespace);
-                body.addAttribute("ref", "b:" + bodyElementName);
+                body.addAttribute(REF, "b:" + bodyElementName);
             } else {
-                body.addAttribute("ref", bodyElementName);
+                body.addAttribute(REF, bodyElementName);
             }
 
             additionalSchemas.add(bodySchema.detach());
@@ -199,11 +205,11 @@ public abstract class UnifiedXmlDataShapeSupport<T extends OasDocument, O extend
 
         final Element schema = XmlSchemaHelper.newXmlSchema(targetNamespace);
 
-        final Element bodyElement = XmlSchemaHelper.addElement(schema, "element");
-        bodyElement.addAttribute("name", XmlSchemaHelper.xmlNameOrDefault(bodySchemaToUse.xml, getName(bodySchemaToUse)));
+        final Element bodyElement = XmlSchemaHelper.addElement(schema, ELEMENT);
+        bodyElement.addAttribute(NAME, XmlSchemaHelper.xmlNameOrDefault(bodySchemaToUse.xml, getName(bodySchemaToUse)));
 
-        final Element complexBody = XmlSchemaHelper.addElement(bodyElement, "complexType");
-        final Element bodySequence = XmlSchemaHelper.addElement(complexBody, "sequence");
+        final Element complexBody = XmlSchemaHelper.addElement(bodyElement, COMPLEX_TYPE);
+        final Element bodySequence = XmlSchemaHelper.addElement(complexBody, SEQUENCE);
 
         defineElementPropertiesOf(bodySequence, bodySchemaToUse, openApiDoc, moreSchemas);
 
@@ -233,11 +239,11 @@ public abstract class UnifiedXmlDataShapeSupport<T extends OasDocument, O extend
         if (arrayXml != null && Boolean.TRUE.equals(arrayXml.wrapped)) {
             final String arrayElementName = determineArrayElementName(propertyName, property);
 
-            final Element arrayElement = XmlSchemaHelper.addElement(parent, "element");
-            arrayElement.addAttribute("name", requireNonNull(arrayElementName, "missing array property name"));
+            final Element arrayElement = XmlSchemaHelper.addElement(parent, ELEMENT);
+            arrayElement.addAttribute(NAME, requireNonNull(arrayElementName, "missing array property name"));
 
-            final Element arrayComplex = XmlSchemaHelper.addElement(arrayElement, "complexType");
-            sequence = XmlSchemaHelper.addElement(arrayComplex, "sequence");
+            final Element arrayComplex = XmlSchemaHelper.addElement(arrayElement, COMPLEX_TYPE);
+            sequence = XmlSchemaHelper.addElement(arrayComplex, SEQUENCE);
         } else {
             sequence = parent;
         }
@@ -248,9 +254,9 @@ public abstract class UnifiedXmlDataShapeSupport<T extends OasDocument, O extend
         if (OasModelHelper.isReferenceType(items)) {
             itemsElement = defineComplexElement(items, sequence, openApiDoc, moreSchemas);
         } else {
-            itemsElement = XmlSchemaHelper.addElement(sequence, "element");
-            itemsElement.addAttribute("name", determineArrayItemName(propertyName, property));
-            itemsElement.addAttribute("type", XmlSchemaHelper.toXsdType(items.type));
+            itemsElement = XmlSchemaHelper.addElement(sequence, ELEMENT);
+            itemsElement.addAttribute(NAME, determineArrayItemName(propertyName, property));
+            itemsElement.addAttribute(TYPE, XmlSchemaHelper.toXsdType(items.type));
         }
 
         if (property.maxItems == null) {
@@ -300,7 +306,7 @@ public abstract class UnifiedXmlDataShapeSupport<T extends OasDocument, O extend
     protected static void addEnumerationsTo(final Element element, final List<?> enums) {
         final Element simpleType = XmlSchemaHelper.addElement(element, "simpleType");
         final Element restriction = XmlSchemaHelper.addElement(simpleType, "restriction");
-        restriction.addAttribute("base", element.attributeValue("type"));
+        restriction.addAttribute("base", element.attributeValue(TYPE));
 
         for (final Object enumValue : enums) {
             final Element enumeration = XmlSchemaHelper.addElement(restriction, "enumeration");
@@ -342,9 +348,9 @@ public abstract class UnifiedXmlDataShapeSupport<T extends OasDocument, O extend
         final String type = property.type;
 
         final Element propertyElement = XmlSchemaHelper.addElement(parent, "attribute");
-        propertyElement.addAttribute("name", requireNonNull(propertyName, "missing property name"));
+        propertyElement.addAttribute(NAME, requireNonNull(propertyName, "missing property name"));
 
-        propertyElement.addAttribute("type", XmlSchemaHelper.toXsdType(type));
+        propertyElement.addAttribute(TYPE, XmlSchemaHelper.toXsdType(type));
     }
 
     private Element defineComplexElement(final OasSchema property, final Element parent, final T openApiDoc,
@@ -364,29 +370,29 @@ public abstract class UnifiedXmlDataShapeSupport<T extends OasDocument, O extend
                 return new SchemaPrefixAndElement("p" + moreSchemas.size(), XmlSchemaHelper.newXmlSchema(n));
             });
 
-            elementToDeclareIn = XmlSchemaHelper.addElement(schemaPrefixAndElement.schema, "element");
-            elementToDeclareIn.addAttribute("name", name);
+            elementToDeclareIn = XmlSchemaHelper.addElement(schemaPrefixAndElement.schema, ELEMENT);
+            elementToDeclareIn.addAttribute(NAME, name);
 
-            ret = XmlSchemaHelper.addElement(parent, "element");
-            ret.addAttribute("ref", schemaPrefixAndElement.prefix + ":" + name);
+            ret = XmlSchemaHelper.addElement(parent, ELEMENT);
+            ret.addAttribute(REF, schemaPrefixAndElement.prefix + ":" + name);
             ret.addNamespace(schemaPrefixAndElement.prefix, namespace);
         } else {
             if (parent == null) {
                 // this is the top level element (in a new namespace)
                 ret = XmlSchemaHelper.newXmlSchema(namespace);
-                elementToDeclareIn = XmlSchemaHelper.addElement(ret, "element");
-                elementToDeclareIn.addAttribute("name", name);
+                elementToDeclareIn = XmlSchemaHelper.addElement(ret, ELEMENT);
+                elementToDeclareIn.addAttribute(NAME, name);
             } else {
                 // this is a nested element in the same namespace
-                ret = XmlSchemaHelper.addElement(parent, "element");
-                ret.addAttribute("name", name);
+                ret = XmlSchemaHelper.addElement(parent, ELEMENT);
+                ret.addAttribute(NAME, name);
 
                 elementToDeclareIn = ret;
             }
         }
 
-        final Element complex = XmlSchemaHelper.addElement(elementToDeclareIn, "complexType");
-        final Element sequence = XmlSchemaHelper.addElement(complex, "sequence");
+        final Element complex = XmlSchemaHelper.addElement(elementToDeclareIn, COMPLEX_TYPE);
+        final Element sequence = XmlSchemaHelper.addElement(complex, SEQUENCE);
 
         defineElementPropertiesOf(sequence, model, openApiDoc, moreSchemas);
 
@@ -416,9 +422,9 @@ public abstract class UnifiedXmlDataShapeSupport<T extends OasDocument, O extend
         } else if (OasModelHelper.isArrayType(property)) {
             defineArrayElement(property, propertyName, parent, openApiDoc, moreSchemas);
         } else {
-            final Element propertyElement = XmlSchemaHelper.addElement(parent, "element");
-            propertyElement.addAttribute("name", requireNonNull(propertyName, "missing property name"));
-            propertyElement.addAttribute("type", XmlSchemaHelper.toXsdType(property.type));
+            final Element propertyElement = XmlSchemaHelper.addElement(parent, ELEMENT);
+            propertyElement.addAttribute(NAME, requireNonNull(propertyName, "missing property name"));
+            propertyElement.addAttribute(TYPE, XmlSchemaHelper.toXsdType(property.type));
         }
     }
 

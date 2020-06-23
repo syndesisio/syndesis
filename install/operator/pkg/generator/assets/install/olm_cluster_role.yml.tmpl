@@ -1,0 +1,37 @@
+{{- if .ApiServer.OlmSupport }}
+
+- kind: ClusterRole
+  apiVersion: rbac.authorization.k8s.io/v1
+  metadata:
+    name: {{.Role}}-olm
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: operator
+      syndesis.io/component: syndesis-operator
+  rules:
+  - apiGroups:
+    - rbac.authorization.k8s.io
+    resources:
+    - clusterroles
+    - clusterrolebindings
+    verbs: [ get, list, create, update ]
+  - apiGroups:
+    - packages.operators.coreos.com
+    resources:
+    - packagemanifests
+    verbs: [ get, list ]
+  - apiGroups:
+    - operators.coreos.com
+    resources:
+    - operatorgroups
+    - subscriptions
+    - installplans
+    verbs: [ create, delete, update, get, list, watch ]
+  - apiGroups:
+    - operators.coreos.com
+    resources:
+    - clusterserviceversions
+    verbs: [ get, list, watch ]
+
+{{end}}

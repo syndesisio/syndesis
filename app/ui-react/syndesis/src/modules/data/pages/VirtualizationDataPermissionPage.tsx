@@ -39,8 +39,8 @@ const checkIfAllPageViewSelected = (
   if (pageViews.length !== selectedViews.size) {
     return false;
   } else {
-    for(const view of pageViews){
-      if(!Array.from(selectedViews.keys()).includes(view.id)){
+    for (const view of pageViews) {
+      if (!Array.from(selectedViews.keys()).includes(view.id)) {
         return false;
       }
     }
@@ -97,7 +97,7 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
   /**
    * Hook to obtain the dv status is sso configured
    */
-  const { resource: dvStatus} = useDVStatus();
+  const { resource: dvStatus } = useDVStatus();
 
   /**
    * Hook to obtain the avalable roles.
@@ -174,8 +174,10 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
     // Make sure at least one selection has existing permission
     let anyHasPermissions = false;
     for (const entry of Array.from(itemSelected.entries())) {
-      const viewDescr = viewDefinitionDescriptors.find(view => view.id === entry[0])
-      if( viewDescr && viewDescr.tablePrivileges.length > 0 ) {
+      const viewDescr = viewDefinitionDescriptors.find(
+        view => view.id === entry[0]
+      );
+      if (viewDescr && viewDescr.tablePrivileges.length > 0) {
         anyHasPermissions = true;
         break;
       }
@@ -196,6 +198,23 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
       );
       return false;
     }
+  };
+
+  const updateViewPolicies = async () => {
+    // TODO: Implement backend call when available
+    return true;
+    // try {
+    //   await updateVirtualizationRoles(params.virtualizationId, roleInfo);
+    //   return true;
+    // } catch {
+    //   pushNotification(
+    //     t('errorUpdatingViewPolicies', {
+    //       name: params.virtualizationId,
+    //     }),
+    //     'error'
+    //   );
+    //   return false;
+    // }
   };
 
   React.useEffect(() => {
@@ -299,7 +318,7 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                     i18nClearPermission={t('permissionClear')}
                     i18nClearPermissionConfirm={t('permissionClearConfirmText')}
                     i18nClearFilters={t('permissionClearFilters')}
-                    i18nSelectRoleText={t('roleSelectText')} 
+                    i18nSelectRoleText={t('roleSelectText')}
                     i18nRoleExists={t('roleAlreadyExistsText')}
                     i18nSelectedViewsMsg={t('permissionSeletedViews')}
                     i18nShowLess={t('permissionShowLess')}
@@ -342,24 +361,48 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                         ) => (
                           <ViewPermissionListItems
                             key={index}
-                            // i18nSelect={t('shared:Select')}
-                            // i18nInsert={t('shared:Insert')}
-                            // i18nUpdate={t('shared:Update')}
-                            // i18nDelete={t('shared:Delete')}
-                            // i18nAllAccess={t('allAccess')}
-                            // i18nRole={t('permissionRole')}
-                            // i18nAddNewRole={t('addNewRole')}
+                            index={index}
+                            i18nSelect={t('shared:Select')}
+                            i18nAddNewRole={t('addNewRole')}
+                            i18nRemoveRoleRow={t('removeRoleRow')}
+                            i18nSelectARole={t('selectARole')}
+                            i18nRoleExists={t('roleAlreadyExistsText')}
+                            i18nInsert={t('shared:Insert')}
+                            i18nUpdate={t('shared:Update')}
+                            i18nDelete={t('shared:Delete')}
+                            i18nAllAccess={t('allAccess')}
+                            i18nRole={t('permissionRole')}
+                            i18nShowLess={t('permissionShowLess')}
+                            i18nPermissionNotSet={t('permissionNotSet')}
+                            i18nCancel={t('shared:Cancel')}
+                            i18nSave={t('shared:Save')}
+                            i18nColumnMasking={t('columnMasking')}
+                            i18nColumnPermissions={t('columnPermissions')}
+                            i18nRowBasedFiltering={t('rowBasedFiltering')}
+                            i18nEditPolicies={t('editViewPolicies')}
+                            i18nEditPoliciesTip={t('editViewPoliciesTip')}
+                            i18nAddPolicy={t('addPolicy')}
+                            i18nCondition={t('condition')}
+                            i18nOperation={t('operation')}
+                            i18nSelectOperation={t('selectOperation')}
+                            i18nUserRole={t('userRole')}
+                            i18nValidate={t('validate')}
+                            i18nRemoveRow={t('removeRow')}
+                            i18nSelectRole={t('selectRole')}
+                            i18nEditPoliciesTitle={t('editViewPoliciesTitle', {
+                              viewName: viewDefinitionDescriptor.name,
+                            })}
                             itemSelected={itemSelected}
                             viewId={viewDefinitionDescriptor.id}
                             viewName={viewDefinitionDescriptor.name}
-                            i18nPermissionNotSet={t('permissionNotSet')}
-                            i18nShowLess={t('permissionShowLess')}
                             viewRolePermissionList={
                               viewDefinitionDescriptor.tablePrivileges
                             }
-                            // status={dvStatus.attributes}
                             onSelectedViewChange={onSelectedViewChange}
-                            // dvRoles={dvRoles}
+                            dvRoles={dvRoles}
+                            getUpdatedRole={getUpdatedRole}
+                            updateViewPolicies={updateViewPolicies}
+                            updateViewsPermissions={updateViewsPermissions}
                           />
                         )
                       )}

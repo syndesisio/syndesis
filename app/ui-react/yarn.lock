@@ -226,19 +226,19 @@
   dependencies:
     tslib "^1.9.0"
 
-"@atlasmap/atlasmap@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap/-/atlasmap-2.0.3.tgz#7d4a2d593dc32a17615f211f936a15ff7a3a00d4"
-  integrity sha512-xfTYsiFLblySKxHE+tXYcirxaJTK3cCMwam/juqMu+pKQuQiqmmSI9Bc0z2WaUDLO40w2TxwCqOn4IBMcOEVVw==
+"@atlasmap/atlasmap@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap/-/atlasmap-2.0.5.tgz#66b134b6c801dd68e2a340df5bac224c65b49d42"
+  integrity sha512-Of91lhDO8I44l99LJlV5Mlms7Q27fVQsvkHfuXnI9n5c1h6YmDLUzRv3xx+Agzs4VeDkzS7BWgRmk2TzpcyFDg==
   dependencies:
-    "@atlasmap/core" "^2.0.3"
+    "@atlasmap/core" "^2.0.5"
     react-sage "^0.0.42"
     use-debounce "^3.4.2"
 
-"@atlasmap/core@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@atlasmap/core/-/core-2.0.3.tgz#fcf9d1c722db5d5e2237fd7f2a415701dcfe8f14"
-  integrity sha512-MIy5RGms6dHF1FdYHusxDELmUf0o2DQSxMWfE/LuDDIzfj75o1ku+GjfWyRy40SzIG2DP5WQLbfJNhVyXayrUw==
+"@atlasmap/core@^2.0.5":
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/@atlasmap/core/-/core-2.0.5.tgz#398cc365455116a5fe565a24c1431832a07dac32"
+  integrity sha512-HbHBHk7QGDzNYAsL9ZnNwzulLpwoc0b49eW3L/NBY8yZYl0KCxRKgE9YLeMyxO1jDDbehTx3CqRb4nqI9Vongg==
   dependencies:
     file-saver "2.0.2"
     loglevel "^1.6.7"
@@ -2889,7 +2889,19 @@
     focus-trap-react "^4.0.1"
     tippy.js "5.1.2"
 
-"@patternfly/react-core@^3.122.4", "@patternfly/react-core@^3.153.13", "@patternfly/react-core@^3.77.2":
+"@patternfly/react-core@^3.131.4":
+  version "3.158.2"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.158.2.tgz#90c4937c99ad0e5107e5850fb2362ab39dd18950"
+  integrity sha512-rbPnp3Nzqo2Zspg0hJ7FoSEzjW5ILIM6M24NkArT/EZknhDMtRtIIrNGUyxT7BS48mRNxU5GrjSGHCckPSmuUw==
+  dependencies:
+    "@patternfly/react-icons" "^3.15.17"
+    "@patternfly/react-styles" "^3.7.14"
+    "@patternfly/react-tokens" "^2.8.14"
+    focus-trap "4.0.2"
+    react-dropzone "9.0.0"
+    tippy.js "5.1.2"
+
+"@patternfly/react-core@^3.153.13", "@patternfly/react-core@^3.77.2":
   version "3.153.13"
   resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.153.13.tgz#f05dead48f3fff7dae156798c6a5b4c244d77c9d"
   integrity sha512-OyssAlsdsHWXRuKXvkcagG8PcplpE02FSLClON+407Fzhj4t0BLGWECI8RQwZ0Tapr+qVXikKQRukM5MY9zIqg==
@@ -2915,14 +2927,14 @@
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^5.8.1"
 
-"@patternfly/react-icons@^3.14.34":
+"@patternfly/react-icons@^3.14.34", "@patternfly/react-icons@^3.15.17":
   version "3.15.17"
   resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-3.15.17.tgz#97a71fd6469a3f6c08dc46575a340b82cfc7e1db"
   integrity sha512-Q0JAlxEvSAl5kcMSUMItLiKi9fweO941g5+lS45t3o/Rv4Eg91Ig7AyK1YWw6m1ah+/eHslLfox0Uqw7m7usLg==
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^5.8.1"
 
-"@patternfly/react-styles@^3.5.7", "@patternfly/react-styles@^3.6.21", "@patternfly/react-styles@^3.6.26", "@patternfly/react-styles@^3.7.13":
+"@patternfly/react-styles@^3.5.7", "@patternfly/react-styles@^3.6.21", "@patternfly/react-styles@^3.6.26", "@patternfly/react-styles@^3.7.13", "@patternfly/react-styles@^3.7.14":
   version "3.7.14"
   resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-3.7.14.tgz#66a3b6c1cca34d37112485fc0492b12d71a4379e"
   integrity sha512-NVwbPP9JroulfQgj0LOLWKP4DumArW8RrP1FB1lLOCuw13KkuAcFbLN9MSF8ZBwJ8syxGEdux5mDC3jPjsrQiw==
@@ -2946,7 +2958,7 @@
     classnames "^2.2.5"
     lodash "^4.17.15"
 
-"@patternfly/react-tokens@^2.7.20":
+"@patternfly/react-tokens@^2.7.20", "@patternfly/react-tokens@^2.8.14":
   version "2.8.14"
   resolved "https://registry.yarnpkg.com/@patternfly/react-tokens/-/react-tokens-2.8.14.tgz#30b8bd90763fd2a443a875dee4d1d948928f32a1"
   integrity sha512-pha0XyZ3ZiXuQoKstuFsiEHARFQKUFsS6WxVuRSEyNbGTToRNJkKR9cW5swzHgXK6Fuw5EA2XFHLuu8osj52KA==
@@ -2991,21 +3003,21 @@
   resolved "https://registry.yarnpkg.com/@react-dnd/shallowequal/-/shallowequal-2.0.0.tgz#a3031eb54129f2c66b2753f8404266ec7bf67f0a"
   integrity sha512-Pc/AFTdwZwEKJxFJvlxrSmGe/di+aAOBn60sremrpLo6VI/6cmiUYNNwlI5KNYttg7uypzA3ILPMPgxB2GYZEg==
 
-"@rh-uxd/integration-core@1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@rh-uxd/integration-core/-/integration-core-1.0.4.tgz#374439ae6beb811d176bf33a84de2a6fb5349562"
-  integrity sha512-XTKVk6cqKwcz0am3c+5oJ0DpsRhbeZG7zauJPY0tzlHdbVVp+N5AQ57eu1gwrsUCfcButry+awD6spL2FPTAeA==
+"@rh-uxd/integration-core@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@rh-uxd/integration-core/-/integration-core-1.0.3.tgz#a838b477e2eac66ad9c9227a10fc0f46d10e159b"
+  integrity sha512-Qd2oD8/ydcW14+h5Dnx47T4deh03aqV0TdYL0BKcN6VTPSnOfkHEVVVph3aE1yeb1jRwPMAZXuzhMP5dfzDBtQ==
   dependencies:
     axios "0.19.2"
 
-"@rh-uxd/integration-react@1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@rh-uxd/integration-react/-/integration-react-1.0.4.tgz#d5ec345bb55d81d25d3c0e323ae36dbe2c344d2c"
-  integrity sha512-w+LJIGVnr0UudkCI+vrbeG46k5BXREHt83Y5RsO3F8+2III+MvmVwwgDcidvCuNcw3MU8l/lIRBScoqJ56h8XA==
+"@rh-uxd/integration-react@1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@rh-uxd/integration-react/-/integration-react-1.0.3.tgz#57521a85cdd89ae9c74202aa60f71bef5bfd6120"
+  integrity sha512-Z6eGlH4Wnk2bIZUklwT8k6i6cHUFfr94yZdHTi11rxlWtRnz4NkoaE2maDq4y4bwiZobhfV0iQR3T7a8T2USaQ==
   dependencies:
     "@patternfly/react-core" "3.131.4"
     "@patternfly/react-icons" "3.14.30"
-    "@rh-uxd/integration-core" "1.0.4"
+    "@rh-uxd/integration-core" "1.0.3"
     react "16.13.1"
     react-dom "16.13.1"
 
@@ -23966,9 +23978,9 @@ websocket-driver@>=0.5.1:
     websocket-extensions ">=0.1.1"
 
 websocket-extensions@>=0.1.1:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.3.tgz#5d2ff22977003ec687a4b87073dfbbac146ccf29"
-  integrity sha512-nqHUnMXmBzT0w570r2JpJxfiSD1IzoI+HGVdd3aZ0yNi3ngvQ4jv1dtHt5VGxfI2yj5yqImPhOK4vmIh2xMbGg==
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.4.tgz#7f8473bc839dfd87608adb95d7eb075211578a42"
+  integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
 
 whatwg-encoding@^1.0.1, whatwg-encoding@^1.0.3, whatwg-encoding@^1.0.5:
   version "1.0.5"

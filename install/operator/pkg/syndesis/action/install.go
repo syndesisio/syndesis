@@ -26,6 +26,7 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/olm"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
@@ -46,6 +47,29 @@ func newInstallAction(mgr manager.Manager, clientTools *clienttools.ClientTools)
 	return &installAction{
 		newBaseAction(mgr, clientTools, "install"),
 	}
+}
+
+func (a *installAction) installResource(ctx context.Context, rtClient client.Client, syndesis *v1beta1.Syndesis, res unstructured.Unstructured) (*unstructured.Unstructured, error) {
+	operation.SetNamespaceAndOwnerReference(res, syndesis)
+	o, modificationType, err := util.CreateOrUpdate(ctx, rtClient, &res)
+	if err != nil {
+		if util.IsNoKindMatchError(err) {
+			gvk := res.GroupVersionKind()
+			if _, found := kindsReportedNotAvailable[gvk]; !found {
+				kindsReportedNotAvailable[gvk] = time.Now()
+				a.log.Info("optional custom resource definition is not installed.", "group", gvk.Group, "version", gvk.Version, "kind", gvk.Kind)
+			}
+		} else {
+			a.log.Info("failed to create or replace resource", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+			return nil, err
+		}
+	} else {
+		if modificationType != controllerutil.OperationResultNone {
+			a.log.Info("resource "+string(modificationType), "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+		}
+	}
+
+	return o, nil
 }
 
 func (a *installAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
@@ -150,28 +174,6 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		all = append(all, dbResources...)
 	}
 
-	addons := configuration.GetAddons(*config)
-	for _, addon := range addons {
-		if !addon.Enabled {
-			continue
-		}
-
-		addonDir := "./addons/" + addon.Name + "/"
-		f, err := generator.GetAssetsFS().Open(addonDir)
-		if err != nil {
-			a.log.Info("unsupported addon configured", "addon", addon.Name, "error", err)
-			continue
-		}
-		f.Close()
-
-		resources, err := generator.RenderDir(addonDir, config)
-		if err != nil {
-			return err
-		}
-
-		all = append(all, resources...)
-	}
-
 	// Link the image secret to service accounts
 	if secret != nil {
 		err = linkImageSecretToServiceAccounts(ctx, rtClient, syndesis, secret)
@@ -182,24 +184,62 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 
 	// Install the resources..
 	for _, res := range all {
-		operation.SetNamespaceAndOwnerReference(res, syndesis)
-		o, modificationType, err := util.CreateOrUpdate(ctx, rtClient, &res)
+		o, err := a.installResource(ctx, rtClient, syndesis, res)
 		if err != nil {
-			if util.IsNoKindMatchError(err) {
-				gvk := res.GroupVersionKind()
-				if _, found := kindsReportedNotAvailable[gvk]; !found {
-					kindsReportedNotAvailable[gvk] = time.Now()
-					a.log.Info("optional custom resource definition is not installed.", "group", gvk.Group, "version", gvk.Version, "kind", gvk.Kind)
-				}
-			} else {
-				a.log.Info("failed to create or replace resource", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
-				return err
+			return err // Fail-fast for core components
+		}
+		resourcesThatShouldExist[o.GetUID()] = true
+	}
+
+	addonsInfo := configuration.GetAddonsInfo(*config)
+	for _, addonInfo := range addonsInfo {
+		if !addonInfo.IsEnabled() {
+			continue
+		}
+
+		a.log.Info("Installing addon", "Name", addonInfo.Name())
+
+		if config.ApiServer.OlmSupport && addonInfo.GetOlmSpec() != nil {
+			//
+			// Using the operator hub is not mutally exclusive to loading the addon
+			// resources. Each addon should be tailored with conditionals to be
+			// compatible with using the operator hub or not, ie. operator installation
+			// should be delegated to the OLM & only if that's not possible should it
+			// be installed from syndesis' own resources.
+			//
+			err := olm.SubscribeOperator(ctx, a.clientTools, config, addonInfo.GetOlmSpec())
+			if err != nil {
+				a.log.Error(err, "A subscription to an OLM operator failed", "Addon Name", addonInfo.Name(), "Package", addonInfo.GetOlmSpec().Package)
+				continue
 			}
-		} else {
+		}
+
+		addonDir := "./addons/" + addonInfo.Name() + "/"
+		f, err := generator.GetAssetsFS().Open(addonDir)
+		if err != nil {
+			a.log.Info("unsupported addon configured", "addon", addonInfo.Name(), "error", err)
+			continue
+		}
+		f.Close()
+
+		resources, err := generator.RenderDir(addonDir, config)
+		if err != nil {
+			a.log.Info("Rendering of addon resources failed", "addon", addonInfo.Name(), "error message", err.Error())
+			continue
+		}
+
+		//
+		// Install the resources of this addon
+		// If there is an error do NOT fail-fast but
+		// try and continue to install the other addons
+		//
+		for _, res := range resources {
+			o, err := a.installResource(ctx, rtClient, syndesis, res)
+			if err != nil {
+				a.log.Info("Install of addon failed", "addon", addonInfo.Name(), "error message", err.Error())
+				break
+			}
 			resourcesThatShouldExist[o.GetUID()] = true
-			if modificationType != controllerutil.OperationResultNone {
-				a.log.Info("resource "+string(modificationType), "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
-			}
 		}
 	}
 
@@ -486,4 +526,3 @@ func linkSecret(sa *corev1.ServiceAccount, secret string) bool {
 
 	return false
 }
-

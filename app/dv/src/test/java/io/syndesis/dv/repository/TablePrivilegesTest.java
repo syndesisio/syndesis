@@ -21,18 +21,18 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import io.syndesis.dv.model.TablePrivileges;
+import io.syndesis.dv.model.TablePrivileges.Privilege;
+import io.syndesis.dv.model.ViewDefinition;
+import io.syndesis.dv.rest.JsonMarshaller;
+import java.util.Arrays;
 import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import io.syndesis.dv.model.TablePrivileges;
-import io.syndesis.dv.model.TablePrivileges.Privilege;
-import io.syndesis.dv.model.ViewDefinition;
 
 @SuppressWarnings("nls")
 @RunWith(SpringRunner.class)
@@ -80,6 +80,24 @@ public class TablePrivilegesTest {
         repositoryManagerImpl.deleteDataVirtualization("x");
 
         assertTrue(repositoryManagerImpl.findRoleNames().isEmpty());
+    }
+
+    @Test
+    public void testTablePrivilegesSerialization() {
+        TablePrivileges privileges = new TablePrivileges();
+        privileges.setRoleName("role");
+        privileges.setViewDefinitionIds(Arrays.asList("id", "id2"));
+        privileges.addPrivilege(Privilege.S).addPrivilege(Privilege.D);
+
+        String expected = "{\n" +
+                "  \"viewDefinitionIds\" : [ \"id\", \"id2\" ],\n" +
+                "  \"roleName\" : \"role\",\n" +
+                "  \"grantPrivileges\" : [ \"SELECT\", \"DELETE\" ]\n" +
+                "}";
+        assertEquals(expected, JsonMarshaller.marshall(privileges));
+
+        TablePrivileges privileges2 = JsonMarshaller.unmarshall(expected, TablePrivileges.class);
+        assertEquals(privileges.getViewDefinitionIds(), privileges2.getViewDefinitionIds());
     }
 
 }

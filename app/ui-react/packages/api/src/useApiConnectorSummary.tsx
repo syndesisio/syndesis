@@ -3,11 +3,21 @@ import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
 
+interface IApiConnectorSummaryOptions {
+  portName?: string;
+  serviceName?: string;
+}
+
 export function useApiConnectorSummary(
   specification: string,
   connectorTemplateId?: string,
-  portName?: string,
-  serviceName?: string
+  /**
+   * `configured` = an object that contains
+   * optional properties we want to send to the
+   * API when requesting an API connector summary.
+   * i.e.: portName + serviceName for SOAP connector
+   */
+  configured?: IApiConnectorSummaryOptions
 ) {
   const apiContext = React.useContext(ApiContext);
   const [loading, setLoading] = React.useState(true);
@@ -22,12 +32,12 @@ export function useApiConnectorSummary(
     }
     const fetchSummary = async () => {
       setLoading(true);
+
       try {
         const response = await callFetch({
           body: {
             configuredProperties: {
-              portName,
-              serviceName,
+              ...configured,
               specification,
             },
             connectorTemplateId: connectorTemplateId

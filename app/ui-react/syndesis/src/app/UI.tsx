@@ -1,3 +1,4 @@
+import rhiImage from '@rh-uxd/integration-core/styles/assets/Logo-Red_Hat-Managed_Integration-A-Reverse-RGB.png';
 import { WithApiVersion, WithUserHelpers } from '@syndesis/api';
 import { StringMap } from '@syndesis/models';
 import {
@@ -12,7 +13,7 @@ import {
   toValidHtmlId,
 } from '@syndesis/ui';
 import { WithLoader, WithRouter } from '@syndesis/utils';
-import React from 'react';
+import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Translation } from 'react-i18next';
 import { Route, Switch } from 'react-router-dom';
@@ -20,15 +21,15 @@ import resolvers from '../modules/resolvers';
 import { ApiError, PageNotFound, WithErrorBoundary } from '../shared';
 import favicon from '../shared/images/favicon.ico';
 import brandImg from '../shared/images/pf4-downstream-bg.svg';
-import rhAppleTouchIcon from '../shared/images/red-hat-apple-touch-icon.png'; // tslint:disable-line
 import redHatBrandLogo from '../shared/images/red-hat-brand-logo.png';
 import redHatFuseOnlineLogo from '../shared/images/red-hat-fuse-online-logo.png';
-import redHatSafariPinnedTabIcon from '../shared/images/red-hat-safari-pinned-tab.svg';
 import synAppleTouchIcon from '../shared/images/syn-apple-touch-icon.png';
-import synFavicon from '../shared/images/syn-favicon.ico';
-import synSafariPinnedTabIcon from '../shared/images/syn-safari-pinned-tab.svg';
 import syndesisLogoGraphic from '../shared/images/syndesis-logo-graphic.png';
 import syndesisLogo from '../shared/images/syndesis_logo_full_darkbkg.svg';
+import rhAppleTouchIcon from '../shared/images/red-hat-apple-touch-icon.png'; // tslint:disable-line
+import redHatSafariPinnedTabIcon from '../shared/images/red-hat-safari-pinned-tab.svg';
+import synFavicon from '../shared/images/syn-favicon.ico';
+import synSafariPinnedTabIcon from '../shared/images/syn-safari-pinned-tab.svg';
 import { IAppRoute, IAppRoutes, IAppRouteWithChildrens } from './App';
 import { AppContext } from './AppContext';
 import { UIContext } from './UIContext';
@@ -106,7 +107,6 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
     // tslint:disable
     if ('serviceWorker' in navigator) {
       const wb = new Workbox('/service-worker.js');
-
       const refreshApp = () => {
         wb.addEventListener('controlling', event => {
           window.location.reload();
@@ -115,7 +115,6 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
         // This will trigger the `controlling` event handler above.
         wb.messageSW({ type: 'SKIP_WAITING' });
       };
-
       wb.addEventListener('waiting', event => {
         if (!refreshNotificationDisplayed) {
           refreshNotificationDisplayed = true;
@@ -138,7 +137,6 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
           );
         }
       });
-
       wb.register();
     }
   }, []); // eslint-disable-line
@@ -250,119 +248,128 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                               );
                               const contactUsLink = t('shared:links:contactus');
                               return (
-                                  <AppLayout
-                                    onShowAboutModal={toggleAboutModal}
-                                    onSelectSupport={() => {
-                                      history.push(resolvers.support.root());
-                                    }}
-                                    onSelectSampleIntegrationTutorials={() => {
-                                      window.open(tutorialLink, '_blank');
-                                    }}
-                                    onSelectUserGuide={() => {
-                                      window.open(userGuideLink, '_blank');
-                                    }}
-                                    onSelectConnectorsGuide={() => {
-                                      window.open(connectorsGuideLink, '_blank');
-                                    }}
-                                    onSelectContactUs={() => {
-                                      window.open(contactUsLink, '_blank');
-                                    }}
-                                    logoutItem={{
-                                      children: t('Logout'),
-                                      className: 'pf-c-dropdown__menu-item',
-                                      id: 'ui-logout-link',
-                                      key: 'logoutMenuItem',
-                                      onClick: doLogout,
-                                    }}
-                                    username={user.username || 'developer'}
-                                    verticalNav={routes.map((route, index) =>
-                                      !(route as IAppRouteWithChildrens)
-                                        .childrens ? (
-                                        <PfVerticalNavItem
-                                          hidden={
-                                            !featureEnabled(
-                                              features,
-                                              route as IAppRoute
-                                            )
-                                          }
-                                          exact={(route as IAppRoute).exact}
-                                          label={t((route as IAppRoute).label)}
-                                          to={(route as IAppRoute).to}
-                                          key={index}
-                                          data-testid={`ui-${toValidHtmlId(
-                                            (route as IAppRoute).label
-                                          )}`}
-                                        />
-                                      ) : (
-                                        <PfVerticalNavItem
-                                          label={t(route.label)}
-                                          key={index}
-                                          to={'#'}
-                                        >
-                                          {(route as IAppRouteWithChildrens).childrens.map(
-                                            (subRoute, subIndex) => (
-                                              <PfVerticalNavItem
-                                                hidden={
-                                                  !featureEnabled(
-                                                    features,
-                                                    subRoute as IAppRoute
-                                                  )
-                                                }
-                                                exact={subRoute.exact}
-                                                label={t(subRoute.label)}
-                                                to={subRoute.to}
-                                                key={subIndex}
-                                                data-testid={`ui-${toValidHtmlId(
-                                                  subRoute.label
-                                                )}`}
-                                              />
-                                            )
-                                          )}
-                                        </PfVerticalNavItem>
-                                      )
-                                    )}
-                                    pictograph={
-                                      <img
-                                        src={
-                                          isProductBuild
-                                            ? redHatFuseOnlineLogo
-                                            : syndesisLogo
-                                        }
-                                        alt={productName}
-                                        className="pf-c-brand"
-                                      />
-                                    }
-                                    logoOnClick={() => history.push('/')}
-                                    showNavigation={showNavigation}
-                                    onNavigationCollapse={onHideNavigation}
-                                    onNavigationExpand={onShowNavigation}
-                                  >
-                                    <WithErrorBoundary key={match.url}>
-                                      <Switch>
-                                        {routes
-                                          .reduce(
-                                            (flattenedRoutes, route) => [
-                                              ...flattenedRoutes,
-                                              ...(!(route as IAppRouteWithChildrens)
-                                                .childrens
-                                                ? [route as IAppRoute]
-                                                : (route as IAppRouteWithChildrens)
-                                                    .childrens),
-                                            ],
-                                            [] as IAppRoute[]
+                                <AppLayout
+                                  onShowAboutModal={toggleAboutModal}
+                                  onSelectSupport={() => {
+                                    history.push(resolvers.support.root());
+                                  }}
+                                  onSelectSampleIntegrationTutorials={() => {
+                                    window.open(tutorialLink, '_blank');
+                                  }}
+                                  onSelectUserGuide={() => {
+                                    window.open(userGuideLink, '_blank');
+                                  }}
+                                  onSelectConnectorsGuide={() => {
+                                    window.open(connectorsGuideLink, '_blank');
+                                  }}
+                                  onSelectContactUs={() => {
+                                    window.open(contactUsLink, '_blank');
+                                  }}
+                                  logoutItem={{
+                                    children: t('Logout'),
+                                    className: 'pf-c-dropdown__menu-item',
+                                    id: 'ui-logout-link',
+                                    key: 'logoutMenuItem',
+                                    onClick: doLogout,
+                                  }}
+                                  username={user.username || 'developer'}
+                                  verticalNav={routes.map((route, index) =>
+                                    !(route as IAppRouteWithChildrens)
+                                      .childrens ? (
+                                      <PfVerticalNavItem
+                                        hidden={
+                                          !featureEnabled(
+                                            features,
+                                            route as IAppRoute
                                           )
-                                          .map((route, index) => (
-                                            <Route
-                                              path={route.to}
-                                              exact={route.exact}
-                                              component={route.component}
-                                              key={index}
+                                        }
+                                        exact={(route as IAppRoute).exact}
+                                        label={t((route as IAppRoute).label)}
+                                        to={(route as IAppRoute).to}
+                                        key={index}
+                                        data-testid={`ui-${toValidHtmlId(
+                                          (route as IAppRoute).label
+                                        )}`}
+                                      />
+                                    ) : (
+                                      <PfVerticalNavItem
+                                        label={t(route.label)}
+                                        key={index}
+                                        to={'#'}
+                                      >
+                                        {(route as IAppRouteWithChildrens).childrens.map(
+                                          (subRoute, subIndex) => (
+                                            <PfVerticalNavItem
+                                              hidden={
+                                                !featureEnabled(
+                                                  features,
+                                                  subRoute as IAppRoute
+                                                )
+                                              }
+                                              exact={subRoute.exact}
+                                              label={t(subRoute.label)}
+                                              to={subRoute.to}
+                                              key={subIndex}
+                                              data-testid={`ui-${toValidHtmlId(
+                                                subRoute.label
+                                              )}`}
                                             />
-                                          ))}
-                                        <Route component={PageNotFound} />
-                                      </Switch>
-                                    </WithErrorBoundary>
-                                  </AppLayout>
+                                          )
+                                        )}
+                                      </PfVerticalNavItem>
+                                    )
+                                  )}
+                                  pictograph={
+                                    <img
+                                      src={
+                                        isProductBuild
+                                          ? redHatFuseOnlineLogo
+                                          : syndesisLogo
+                                      }
+                                      alt={productName}
+                                      className="pf-c-brand"
+                                    />
+                                  }
+                                  rhiPictograph={
+                                    <img
+                                      src={
+                                        rhiImage
+                                      }
+                                      alt={productName}
+                                      className="pf-c-brand"
+                                    />
+                                  }
+                                  logoOnClick={() => history.push('/')}
+                                  showNavigation={showNavigation}
+                                  onNavigationCollapse={onHideNavigation}
+                                  onNavigationExpand={onShowNavigation}
+                                >
+                                  <WithErrorBoundary key={match.url}>
+                                    <Switch>
+                                      {routes
+                                        .reduce(
+                                          (flattenedRoutes, route) => [
+                                            ...flattenedRoutes,
+                                            ...(!(route as IAppRouteWithChildrens)
+                                              .childrens
+                                              ? [route as IAppRoute]
+                                              : (route as IAppRouteWithChildrens)
+                                                  .childrens),
+                                          ],
+                                          [] as IAppRoute[]
+                                        )
+                                        .map((route, index) => (
+                                          <Route
+                                            path={route.to}
+                                            exact={route.exact}
+                                            component={route.component}
+                                            key={index}
+                                          />
+                                        ))}
+                                      <Route component={PageNotFound} />
+                                    </Switch>
+                                  </WithErrorBoundary>
+                                </AppLayout>
                               );
                             }}
                           </WithUserHelpers>

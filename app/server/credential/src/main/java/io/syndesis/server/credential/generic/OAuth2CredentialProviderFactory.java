@@ -30,10 +30,12 @@ import org.springframework.web.client.RestOperations;
 
 public class OAuth2CredentialProviderFactory implements CredentialProviderFactory {
 
+    public static final String OAUTH_2 = "oauth2";
+
     @Override
     public CredentialProvider create(final SocialProperties properties) {
         if (properties instanceof UnconfiguredProperties) {
-            return new OAuth2CredentialProvider<>("oauth2");
+            return new OAuth2CredentialProvider<>(OAUTH_2);
         }
 
         if (!(properties instanceof OAuth2ConnectorProperties)) {
@@ -55,7 +57,7 @@ public class OAuth2CredentialProviderFactory implements CredentialProviderFactor
         final OAuth2ServiceProvider<RestOperations> serviceProvider = new GenericOAuth2ServiceProvider(appId, appSecret, authorizationUrl,
             authenticationUrl, accessTokenUrl, useParametersForClientCredentials, tokenStrategy);
 
-        final OAuth2ConnectionFactory<RestOperations> connectionFactory = new OAuth2ConnectionFactory<>("oauth2", serviceProvider, null);
+        final OAuth2ConnectionFactory<RestOperations> connectionFactory = new OAuth2ConnectionFactory<>(OAUTH_2, serviceProvider, null);
         connectionFactory.setScope(scope);
 
         final OAuth2Applicator applicator = new OAuth2Applicator(properties);
@@ -66,12 +68,12 @@ public class OAuth2CredentialProviderFactory implements CredentialProviderFactor
         applicator.setClientIdProperty("clientId");
         applicator.setClientSecretProperty("clientSecret");
 
-        return new OAuth2CredentialProvider<>("oauth2", connectionFactory, applicator, oauth2Properties.getAdditionalQueryParameters());
+        return new OAuth2CredentialProvider<>(OAUTH_2, connectionFactory, applicator, oauth2Properties.getAdditionalQueryParameters());
     }
 
     @Override
     public String id() {
-        return "oauth2";
+        return OAUTH_2;
     }
 
 }

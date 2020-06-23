@@ -24,6 +24,7 @@ import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -62,7 +63,7 @@ class PodLogMonitor implements Consumer<InputStream> {
     protected final String integrationId;
     protected final String deploymentVersion;
     protected PodLogState state;
-    protected HashMap<String, InflightData> inflightActivities = new HashMap<>();
+    protected Map<String, InflightData> inflightActivities = new HashMap<>();
 
     PodLogMonitor(ActivityTrackingController logsController, Pod pod) {
         this.logsController = logsController;
@@ -172,7 +173,7 @@ class PodLogMonitor implements Consumer<InputStream> {
 
     private static class InflightData {
         Activity activity = new Activity();
-        ArrayList<ActivityStep> doneSteps = new ArrayList<>();
+        List<ActivityStep> doneSteps = new ArrayList<>();
         Map<String, ActivityStep> activeSteps = new LinkedHashMap<>();
         Map<String, Object> metadata = new HashMap<>();
 

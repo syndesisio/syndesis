@@ -6,24 +6,6 @@
  */
 import { IFormDefinition, IFormDefinitionProperty } from './models';
 
-export function applyInitialValues<T>(
-  properties: IFormDefinition,
-  initial?: T
-): T {
-  const configuredProperties =
-    typeof initial !== 'undefined' ? { ...initial } : {};
-  Object.keys(properties).forEach(key => {
-    const property = properties[key];
-    if (
-      typeof property.defaultValue !== 'undefined' &&
-      typeof configuredProperties[key] === 'undefined'
-    ) {
-      configuredProperties[key] = property.defaultValue;
-    }
-  });
-  return configuredProperties as T;
-}
-
 /**
  * Ensure that the input values match the property definitions
  */
@@ -80,7 +62,11 @@ export function massageType(property: IFormDefinitionProperty) {
     case 'boolean':
       type = 'checkbox';
   }
-  if (typeof property.enum !== 'undefined' && property.enum.length && type !== 'typeahead') {
+  if (
+    typeof property.enum !== 'undefined' &&
+    property.enum.length &&
+    type !== 'typeahead'
+  ) {
     /**
      * Default to `select` unless property.type === 'typeahead'
      */
@@ -169,8 +155,23 @@ export function massageValue(
         minElements
       );
     case 'mapset': {
-      const answer: any = value || defaultValue || {};
-      return typeof answer === 'string' ? JSON.parse(answer) : answer;
+      const answer = value;
+      const defaultValueObject =
+        typeof defaultValue === 'string'
+          ? JSON.parse(defaultValue)
+          : defaultValue;
+      if (typeof answer === 'undefined') {
+        return defaultValueObject;
+      }
+      if (typeof answer === 'string') {
+        const answerObject = JSON.parse(answer);
+        if (Object.keys(answerObject).length === 0) {
+          return defaultValueObject;
+        } else {
+          return answerObject;
+        }
+      }
+      return answer;
     }
     case 'select': {
       if (property.fieldAttributes && property.fieldAttributes.multiple) {
@@ -179,12 +180,11 @@ export function massageValue(
       // select controls in syndesis need to default
       // to the first available value if no value
       // is set
-      return (
-        value ||
+      return value ||
         defaultValue ||
-        (property.enum && property.enum.length > 0 && property.enum[0].value) ||
-        ''
-      );
+        (property.enum && property.enum.length > 0)
+        ? property.enum![0].value
+        : '';
     }
     default: {
       return value || defaultValue || '';

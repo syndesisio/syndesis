@@ -15,16 +15,15 @@
  */
 package io.syndesis.server.jsondb.impl.expr;
 
-import static io.syndesis.server.jsondb.impl.SqlJsonDB.DatabaseKind.H2;
-
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import org.skife.jdbi.v2.Query;
+import static io.syndesis.server.jsondb.impl.SqlJsonDB.DatabaseKind.H2;
 
 import io.syndesis.server.jsondb.impl.SqlJsonDB;
+import org.skife.jdbi.v2.Query;
 
 class BinarySqlExpressionBuilder extends SqlExpressionBuilder {
     private final SqlJsonDB db;
@@ -40,7 +39,7 @@ class BinarySqlExpressionBuilder extends SqlExpressionBuilder {
     }
 
     @Override
-    public void build(StringBuilder sql, ArrayList<Consumer<Query<Map<String, Object>>>> binds, AtomicInteger bindCounter) {
+    public void build(StringBuilder sql, List<Consumer<Query<Map<String, Object>>>> binds, AtomicInteger bindCounter) {
         sql.append("SELECT ");
         if (db.getDatabaseKind() == H2) {
             sql.append("trim_suffix(path, split_part('#', idx, 2)||'/')");

@@ -17,7 +17,12 @@
 package testing
 
 import (
+	"fmt"
+	"reflect"
+	"strings"
+
 	osappsv1 "github.com/openshift/api/apps/v1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -29,21 +34,32 @@ import (
 	rtfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
-func openshiftApiClient() clientset.Interface {
+//
+// A fake API client that supports all required api
+//
+func allApiClient() clientset.Interface {
 	api := gofake.NewSimpleClientset()
 	fd := api.Discovery().(*discoveryfake.FakeDiscovery)
 
-	res1 := metav1.APIResourceList{
-		GroupVersion: "image.openshift.io/v1",
-	}
-	res2 := metav1.APIResourceList{
-		GroupVersion: "route.openshift.io/v1",
-	}
-	res3 := metav1.APIResourceList{
-		GroupVersion: "oauth.openshift.io/v1",
-	}
+	reqApi := capabilities.RequiredApi
+	v := reflect.ValueOf(reqApi)
 
-	fd.Resources = []*metav1.APIResourceList{&res1, &res2, &res3}
+	fd.Resources = []*metav1.APIResourceList{}
+	for i := 0; i < v.NumField(); i++ {
+		pkg := fmt.Sprintf("%v", v.Field(i))
+		nameGroup := strings.SplitN(pkg, ".", 2)
+
+		resList := &metav1.APIResourceList{
+			GroupVersion: nameGroup[1],
+			APIResources: []metav1.APIResource{
+				{
+					Name: nameGroup[0],
+				},
+			},
+		}
+
+		fd.Resources = append(fd.Resources, resList)
+	}
 
 	return api
 }
@@ -75,6 +91,6 @@ func fakeClient() client.Client {
 func FakeClientTools() *clienttools.ClientTools {
 	clientTools := &clienttools.ClientTools{}
 	clientTools.SetRuntimeClient(fakeClient())
-	clientTools.SetApiClient(openshiftApiClient())
+	clientTools.SetApiClient(allApiClient())
 	return clientTools
 }

@@ -1,3 +1,13 @@
+#
+# Don't want to install this operator if we have an operatorhub
+# which can be subscribed to and install the operator instead
+#
+{{- if not .ApiServer.OlmSupport }}
+
+#
+# If client only then platform already has a jaeger installation
+# in which case this operator is not required
+#
 {{- if not .Syndesis.Addons.Jaeger.ClientOnly}}
 - apiVersion: v1
   kind: ServiceAccount
@@ -55,4 +65,6 @@
           - containerPort: 6831
             name: jg-compact-trft
             protocol: UDP
+{{- end}}
+
 {{- end}}

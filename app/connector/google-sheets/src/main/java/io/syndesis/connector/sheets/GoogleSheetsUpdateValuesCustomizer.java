@@ -44,6 +44,7 @@ import org.apache.camel.util.ObjectHelper;
 
 public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomizer {
 
+    public static final String SPREADSHEET_ID = "spreadsheetId";
     private String spreadsheetId;
     private String range;
     private String[] columnNames;
@@ -57,7 +58,7 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
     }
 
     private void setApiMethod(Map<String, Object> options) {
-        spreadsheetId = ConnectorOptions.extractOption(options, "spreadsheetId");
+        spreadsheetId = ConnectorOptions.extractOption(options, SPREADSHEET_ID);
         range = ConnectorOptions.extractOption(options, "range");
 
         majorDimension = ConnectorOptions.extractOption(options, "majorDimension", RangeCoordinate.DIMENSION_ROWS);
@@ -105,8 +106,8 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
             for (String json : jsonBeans) {
                 Map<String, Object> dataShape = JsonUtils.reader().forType(Map.class).readValue(json);
 
-                if (dataShape.containsKey("spreadsheetId")) {
-                    spreadsheetId = Optional.ofNullable(dataShape.remove("spreadsheetId"))
+                if (dataShape.containsKey(SPREADSHEET_ID)) {
+                    spreadsheetId = Optional.ofNullable(dataShape.remove(SPREADSHEET_ID))
                             .map(Object::toString)
                             .orElse(spreadsheetId);
                 }
@@ -115,7 +116,7 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
                 spec.getProperties()
                         .entrySet()
                         .stream()
-                        .filter(specEntry -> !Objects.equals("spreadsheetId", specEntry.getKey()))
+                        .filter(specEntry -> !Objects.equals(SPREADSHEET_ID, specEntry.getKey()))
                         .forEach(specEntry -> rangeValues.add(Optional.ofNullable(dataShape.get(specEntry.getKey()))
                                                                       .orElse("")));
 

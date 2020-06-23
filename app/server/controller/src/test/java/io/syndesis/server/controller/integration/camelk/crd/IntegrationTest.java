@@ -30,6 +30,7 @@ public class IntegrationTest {
     public void shouldDeserializeFromAKnownIntegrationJson() throws IOException {
         // update the `last-known-camelk-integration.json` with the CR by doing
         // $ oc get integration i-t2l -o json
+        // where i-t2l is the name of your integration running with camel-k
         try (InputStream in = Integration.class.getResourceAsStream("last-known-camelk-integration.json")) {
             final Integration read = new ObjectMapper().readValue(in, Integration.class);
             assertThat(read).isNotNull();

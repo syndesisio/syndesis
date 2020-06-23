@@ -126,7 +126,7 @@
                 "order": 4,
                 "componentProperty": false,
                 "deprecated": false,
-                "defaultValue": "{}",
+                "defaultValue": "{\"SERVER_ERROR\":\"500\"}",
                 "description": "The return code to set according to different error situations",
                 "displayName": "Error Response Codes",
                 "javaType": "Map",

@@ -16,10 +16,9 @@
 package io.syndesis.dv.lsp.diagnostics;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
-import javax.swing.text.BadLocationException;
 
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
@@ -34,54 +33,60 @@ import io.syndesis.dv.lsp.parser.statement.CreateViewStatement;
 
 public class DdlDiagnostics {
     private static final Logger LOGGER = LoggerFactory.getLogger(DdlDiagnostics.class);
+    private final TeiidDdlLanguageServer languageServer;
 
-    public void clearDiagnostics(String uri, TeiidDdlLanguageServer languageServer) {
-        languageServer.getClient().publishDiagnostics(new PublishDiagnosticsParams(uri, new ArrayList<Diagnostic>(0)));
-    }
+    private final Object diagnosticsLock = new Object();
 
-    public void publishDiagnostics(TextDocumentItem ddlDocument, TeiidDdlLanguageServer languageServer) {
-        doAsyncPublishDiagnostics(ddlDocument, languageServer);
+    public DdlDiagnostics(TeiidDdlLanguageServer languageServer) {
+        super();
+        this.languageServer = languageServer;
     }
 
     /**
-     * Do basic validation to check the no XML valid.
+     * Clear diagnostics for a given document URI.
+     *
+     * @param uri
      */
-    private static void doBasicDiagnostics(TextDocumentItem ddlDocument, List<Diagnostic> diagnostics)
-            throws BadLocationException {
-        DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(ddlDocument.getText());
+    public void clearDiagnostics(String uri) {
+        synchronized(diagnosticsLock) {
+            this.languageServer.getClient().publishDiagnostics(new PublishDiagnosticsParams(uri, Collections.emptyList()));
+        }
+    }
+
+    /**
+     * Generate and publish diagnostics for target document.
+     *
+     * @param ddlDocument
+     */
+    public boolean publishDiagnostics(TextDocumentItem ddlDocument) {
+        doPublishDiagnostics(ddlDocument);
+        return true;
+    }
+
+    /**
+     * Performs actual parsing and diagnostics for a given ddl string
+     *
+     * @param documentText
+     * @return list of language server {@link Diagnostic}s
+     */
+    public static List<Diagnostic> doBasicDiagnostics(String documentText) {
+        DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(documentText);
         CreateViewStatement createStatement = new CreateViewStatement(analyzer);
+        List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
         for (DdlAnalyzerException exception : createStatement.getExceptions()) {
             diagnostics.add(exception.getDiagnostic());
             LOGGER.debug(diagnostics.toString());
         }
+
+        return diagnostics;
     }
 
     @SuppressWarnings("FutureReturnValueIgnored")
-    private void doAsyncPublishDiagnostics(TextDocumentItem ddlDocument, TeiidDdlLanguageServer languageServer) {
-        LOGGER.debug("publishDiagnostics() STARTED ");
-
-        String uri = ddlDocument.getUri();
-
+    private void doPublishDiagnostics(TextDocumentItem ddlDocument) {
+        List<Diagnostic> diagnostics = doBasicDiagnostics(ddlDocument.getText());
         CompletableFuture.runAsync(() -> {
-            clearDiagnostics(uri, languageServer);
-
-            List<Diagnostic> diagnostics = new ArrayList<Diagnostic>();
-
-            boolean success = false;
-            try {
-                doBasicDiagnostics(ddlDocument, diagnostics);
-                languageServer.getClient().publishDiagnostics(new PublishDiagnosticsParams(uri, diagnostics));
-                success = true;
-            } catch (BadLocationException e) {
-                LOGGER.error("BadLocationException thrown doing doAsyncPublishDiagnostics() in DdlDiagnostics.", e);
-            }
-
-            if( !success ) {
-                clearDiagnostics(uri, languageServer);
-            }
-        }).handleAsync((v, e) -> {
-            LOGGER.error("Failed in doAsyncPublishDiagnostics", e);
-            return v;
+            this.languageServer.getClient()
+                    .publishDiagnostics(new PublishDiagnosticsParams(ddlDocument.getUri(), diagnostics));
         });
     }
 }

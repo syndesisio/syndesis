@@ -69,6 +69,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     private static final Logger LOGGER = LoggerFactory.getLogger(OpenShiftServiceImpl.class);
 
     private static final String OPENSHIFT_PREFIX = "i-";
+    public static final String SECRET_VOLUME = "secret-volume";
+    public static final String IMAGE_STREAM_TAG = "ImageStreamTag";
+    public static final String IMAGE_CHANGE = "ImageChange";
+    public static final String MEMORY = "memory";
 
     private final NamespacedOpenShiftClient openShiftClient;
     private final OpenShiftConfigurationProperties config;
@@ -311,7 +315,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                                     .withName(name)
                                     .withEnv(envVars)
                                     .withPorts( newPorts)
-                                    .editMatchingVolumeMount(v -> "secret-volume".equals(v.getName()))
+                                    .editMatchingVolumeMount(v -> SECRET_VOLUME.equals(v.getName()))
                                         .withMountPath("/deployments/config")
                                         .withReadOnly(false)
                                     .endVolumeMount()
@@ -323,7 +327,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                                             .endHttpGet()
                                             .build())
                                 .endContainer()
-                                .editMatchingVolume(v -> "secret-volume".equals(v.getName()))
+                                .editMatchingVolume(v -> SECRET_VOLUME.equals(v.getName()))
                                     .withNewSecret()
                                         .withSecretName(name)
                                     .endSecret()
@@ -332,13 +336,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                         .endTemplate()
                         .withTriggers(
                             new DeploymentTriggerPolicyBuilder()
-                                .withType("ImageChange")
+                                .withType(IMAGE_CHANGE)
                                 .withNewImageChangeParams()
                                 // set automatic to 'true' when not performing the deployments on our own
                                 .withAutomatic(true)
                                 .addToContainerNames(name)
                                 .withNewFrom()
-                                .withKind("ImageStreamTag")
+                                .withKind(IMAGE_STREAM_TAG)
                                 .withName(name + ":" + deploymentData.getVersion())
                                 .endFrom()
                                 .endImageChangeParams()
@@ -360,8 +364,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                         .withNewStrategy()
                             .withType("Recreate")
                             .withNewResources()
-                            .addToLimits("memory", new Quantity(config.getDeploymentMemoryLimitMi()  + "Mi"))
-                            .addToRequests("memory", new Quantity(config.getDeploymentMemoryRequestMi() +  "Mi"))
+                            .addToLimits(MEMORY, new Quantity(config.getDeploymentMemoryLimitMi()  + "Mi"))
+                            .addToRequests(MEMORY, new Quantity(config.getDeploymentMemoryRequestMi() +  "Mi"))
                             .endResources()
                         .endStrategy()
                         .withRevisionHistoryLimit(0)
@@ -400,7 +404,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                                         .withContainerPort(8081)
                                     .endPort()
                                     .addNewVolumeMount()
-                                        .withName("secret-volume")
+                                        .withName(SECRET_VOLUME)
                                         .withMountPath("/deployments/config")
                                         .withReadOnly(false)
                                     .endVolumeMount()
@@ -413,7 +417,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                                             .build())
                                 .endContainer()
                                 .addNewVolume()
-                                    .withName("secret-volume")
+                                    .withName(SECRET_VOLUME)
                                     .withNewSecret()
                                         .withSecretName(name)
                                     .endSecret()
@@ -421,13 +425,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                             .endSpec()
                         .endTemplate()
                         .addNewTrigger()
-                            .withType("ImageChange")
+                            .withType(IMAGE_CHANGE)
                             .withNewImageChangeParams()
                                 // set automatic to 'true' when not performing the deployments on our own
                                 .withAutomatic(true)
                                 .addToContainerNames(name)
                                 .withNewFrom()
-                                .withKind("ImageStreamTag")
+                                .withKind(IMAGE_STREAM_TAG)
                                 .withName(name + ":" + deploymentData.getVersion())
                                 .endFrom()
                             .endImageChangeParams()
@@ -462,7 +466,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                   .withType("Source")
                   .withNewSourceStrategy()
                     .withNewFrom()
-                        .withKind("ImageStreamTag")
+                        .withKind(IMAGE_STREAM_TAG)
                         .withName(builderStreamTag)
                         .withNamespace(imageStreamNamespace)
                     .endFrom()
@@ -478,7 +482,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                 .endStrategy()
                 .withNewOutput()
                     .withNewTo()
-                    .withKind("ImageStreamTag")
+                    .withKind(IMAGE_STREAM_TAG)
                     .withName(name + ":" + deploymentData.getVersion())
                     .endTo()
                 .endOutput()

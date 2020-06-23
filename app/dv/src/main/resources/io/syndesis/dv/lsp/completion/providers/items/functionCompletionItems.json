@@ -45,7 +45,7 @@
 			"commitCharacters": ""
 		},
 		{
-			"label": "aes_encryptparam1, param2)",
+			"label": "aes_encrypt(param1, param2)",
 			"kind": "SNIPPET",
 			"detail": "",
 			"documentation": "",

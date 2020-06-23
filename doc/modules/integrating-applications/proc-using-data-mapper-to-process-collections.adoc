@@ -24,16 +24,10 @@ to target collection fields:
 image:images/integrating-applications/map-collections.png[mapping collection]
 
 In the source and target panels, the data mapper displays 
-image:images/integrating-applications/collection-icon.png[this icon] to indicate
-a collection. When a source collection or a target 
-collection contain only primitive types, the data mapper does not 
-display collection fields because there is no need to. You can map 
-from/to the collection itself. 
+image:images/integrating-applications/collection-icon.png[the Collection icon] to indicate
+a collection. 
 
-When a collection contains more 
-than one kind of primitive type or when it contains at least one complex 
-type then the data mapper displays the collection’s child fields. 
-You can map from/to each field.
+When a collection is a complex type, the data mapper displays the collection’s child fields. You can map from/to each field.
 
 When a source field is nested in a number of collections you can map 
 it to a target field that meets one of these conditions: 
