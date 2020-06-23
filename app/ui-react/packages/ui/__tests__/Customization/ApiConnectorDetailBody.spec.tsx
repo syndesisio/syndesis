@@ -11,6 +11,10 @@ it('Renders the expected connector name and description', () => {
   const { getByText } = render(
     <ApiConnectorDetailBody
       description={expectedDescription}
+      i18nLabelBaseUrl={'Base URL'}
+      i18nLabelDescription={'Description'}
+      i18nLabelHost={'Host'}
+      i18nLabelName={'Name'}
       icon={expectedIcon}
       name={expectedName}
     />

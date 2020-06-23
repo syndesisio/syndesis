@@ -3,7 +3,7 @@ import { Connector } from '@syndesis/models';
 import {
   ApiConnectorDetailBody,
   ApiConnectorDetailHeader,
-  ApiConnectorReview,
+  ApiConnectorDetailOperations,
   Breadcrumb,
   PageLoader,
 } from '@syndesis/ui';
@@ -105,9 +105,12 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                 // tslint:disable:jsdoc-format
                                 // tslint:disable
 
-                                const onSubmit = () => {
-                                  console.log('submitted..');
+                                const onSubmit = (e: any) => {
+                                  console.log(
+                                    'submitted..: ' + JSON.stringify(e)
+                                  );
                                 };
+
                                 /**
                                 const onSubmit = async (
                                   values: IConnectorValues,
@@ -224,6 +227,14 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                                 'shared:Cancel'
                                               )}
                                               i18nEditLabel={t('shared:Edit')}
+                                              i18nLabelBaseUrl={t(
+                                                'shared:BaseUrl'
+                                              )}
+                                              i18nLabelDescription={t(
+                                                'shared:Description'
+                                              )}
+                                              i18nLabelHost={t('shared:Host')}
+                                              i18nLabelName={t('shared:Name')}
                                               i18nSaveLabel={t('shared:Save')}
                                               i18nTitle={t(
                                                 'detailsSectionTitle',
@@ -231,15 +242,12 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                                   connectionName: data.name,
                                                 }
                                               )}
-                                              i18nValidateLabel={t(
-                                                'shared:Validate'
-                                              )}
                                               icon={data.icon}
                                               name={data.name}
                                             />
                                             &nbsp;
                                             {data.actionsSummary ? (
-                                              <ApiConnectorReview
+                                              <ApiConnectorDetailOperations
                                                 apiConnectorDescription={
                                                   data.description
                                                 }
@@ -282,7 +290,7 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                                 )} // TODO fix count
                                               />
                                             ) : (
-                                              <ApiConnectorReview
+                                              <ApiConnectorDetailOperations
                                                 i18nApiDefinitionHeading={t(
                                                   'apiConnectorsPageTitle'
                                                 )}

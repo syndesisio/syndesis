@@ -11,7 +11,19 @@ import { Container, PageSection } from '../../../Layout';
 import { ApiConnectorDetailConfig } from './ApiConnectorDetailConfig';
 import { ApiConnectorDetailConfigEdit } from './ApiConnectorDetailConfigEdit';
 
+export interface IApiConnectorDetailValues {
+  address?: string;
+  basePath?: string;
+  description?: string;
+  host?: string;
+  icon?: string;
+  name: string;
+}
+
 export interface IApiConnectorDetailBodyProps {
+  /**
+   * Properties
+   */
   address?: string;
   basePath?: string;
   description?: string;
@@ -20,40 +32,30 @@ export interface IApiConnectorDetailBodyProps {
   name: string;
 
   /**
-   * The localized text for the cancel button.
+   * Property Labels
    */
-  i18nCancelLabel?: string;
+  i18nLabelBaseUrl: string;
+  i18nLabelDescription: string;
+  i18nLabelHost: string;
+  i18nLabelName: string;
 
   /**
-   * The localized text for the edit button.
+   * The localized text for buttons
    */
-  i18nEditLabel?: string;
-
-  /**
-   * The localized text for the save button.
-   */
-  i18nSaveLabel?: string;
+  i18nCancelLabel: string;
+  i18nEditLabel: string;
+  i18nSaveLabel: string;
 
   /**
    * The localized text of the form title.
    */
-  i18nTitle?: string;
-
-  /**
-   * The localized text for the validate button.
-   */
-  i18nValidateLabel?: string;
+  i18nTitle: string;
 
   /**
    * The callback fired when submitting the form.
    * @param e
    */
-  handleSubmit?: (e?: any) => void;
-
-  /**
-   * The callback for when the validate button is clicked.
-   */
-  onValidate?: () => void;
+  handleSubmit: (e: any) => void;
 }
 
 export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetailBodyProps> = ({
@@ -62,101 +64,98 @@ export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetail
   description,
   handleSubmit,
   host,
+  i18nLabelBaseUrl,
+  i18nLabelDescription,
+  i18nLabelHost,
+  i18nLabelName,
   i18nCancelLabel,
   i18nEditLabel,
   i18nSaveLabel,
   i18nTitle,
-  i18nValidateLabel,
   icon,
   name,
-  onValidate,
 }) => {
   // tslint:disable:no-console
   const isValid = false;
+  const [configured, setConfigured] = React.useState<IApiConnectorDetailValues>(
+    { address, basePath, description, host, icon, name }
+  );
   const [isEditing, setIsEditing] = React.useState(false);
 
   const onCancelEditing = () => {
-    console.log('cancelled editing...');
     setIsEditing(false);
+  };
+
+  const onHandleChange = (fieldName: string, value: string) => {
+    setConfigured({ ...configured, [fieldName]: value });
   };
 
   const onStartEditing = () => {
-    console.log('started editing from ApiConnectorDetailConfig..');
     setIsEditing(true);
   };
 
-  const onSubmit = () => {
-    console.log('submitted...');
+  const onSubmit = (e: any) => {
     setIsEditing(false);
-    if (handleSubmit) {
-      handleSubmit();
-    }
-  };
-
-  const preConfiguredProps = {
-    address,
-    basePath,
-    description,
-    host,
-    icon,
-    name,
+    handleSubmit(e);
   };
 
   return (
     <PageSection>
       <Container>
-        <div className="row row-cards-pf">
+        <div className={'row row-cards-pf'}>
           <Card>
             <CardHeader>
-              <Title size="2xl">{i18nTitle}</Title>
+              <Title size={'2xl'}>{i18nTitle}</Title>
             </CardHeader>
             <CardBody>
               {isEditing ? (
                 <ApiConnectorDetailConfigEdit
-                  handleSubmit={onSubmit}
-                  i18nCancelLabel={i18nCancelLabel}
-                  i18nSaveLabel={i18nSaveLabel}
-                  i18nValidateLabel={i18nValidateLabel}
-                  onValidate={onValidate}
-                  properties={preConfiguredProps}
+                  handleOnChange={onHandleChange}
+                  i18nLabelBaseUrl={i18nLabelBaseUrl}
+                  i18nLabelDescription={i18nLabelDescription}
+                  i18nLabelHost={i18nLabelHost}
+                  i18nLabelName={i18nLabelName}
+                  properties={configured}
                 />
               ) : (
-                <>
-                  <ApiConnectorDetailConfig
-                    i18nEditLabel={i18nEditLabel}
-                    properties={preConfiguredProps}
-                  />
-                  <Button
-                    data-testid={'connection-details-form-edit-button'}
-                    variant="primary"
-                    onClick={onStartEditing}
-                  >
-                    {i18nEditLabel}
-                  </Button>
-                </>
+                <ApiConnectorDetailConfig
+                  i18nLabelBaseUrl={i18nLabelBaseUrl}
+                  i18nLabelDescription={i18nLabelDescription}
+                  i18nLabelHost={i18nLabelHost}
+                  i18nLabelName={i18nLabelName}
+                  properties={configured}
+                />
               )}
             </CardBody>
-            {isEditing && (
-              <CardFooter>
+            <CardFooter>
+              {isEditing ? (
+                <>
+                  <Button
+                    data-testid={'connector-details-form-save-button'}
+                    variant={'primary'}
+                    disabled={!isValid}
+                    onClick={onSubmit}
+                  >
+                    {i18nSaveLabel}
+                  </Button>{' '}
+                  <Button
+                    data-testid={'connector-details-form-cancel-button'}
+                    variant={'secondary'}
+                    onClick={onCancelEditing}
+                  >
+                    {i18nCancelLabel}
+                  </Button>
+                </>
+              ) : (
                 <Button
-                  data-testid={'connection-details-form-cancel-button'}
-                  variant="secondary"
-                  className="connection-details-form__editButton"
-                  onClick={onCancelEditing}
+                  data-testid={'connector-details-form-edit-button'}
+                  variant={'primary'}
+                  onClick={onStartEditing}
                 >
-                  {i18nCancelLabel}
+                  {i18nEditLabel}
                 </Button>
-                <Button
-                  data-testid={'connection-details-form-save-button'}
-                  variant="primary"
-                  className="connection-details-form__editButton"
-                  disabled={!isValid}
-                  onClick={onSubmit}
-                >
-                  {i18nSaveLabel}
-                </Button>
-              </CardFooter>
-            )}
+              )}
+            </CardFooter>
           </Card>
         </div>
       </Container>
