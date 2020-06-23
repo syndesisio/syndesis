@@ -14,3 +14,9 @@ Make sure to keep the `mapping.json` file up to date.
 To generate optmized SVGs in the `optimized` directory run:
 
     $ yarn optimize
+    
+To generate PNG files into the neighboring PNG directory run (install inkscape first):
+
+for each in *.svg; do inkscape $each --export-width=300 --export-filename=../png/`basename $each .svg`.png; done
+   
+   
