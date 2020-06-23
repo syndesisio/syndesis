@@ -9,7 +9,7 @@ Upload a WSDL file to enable {prodname} to create a SOAP API client connector.
 IMPORTANT: The SOAP API client connector is a Technology Preview feature only. Technology Preview features are not supported with Red Hat production service level agreements (SLAs) and might not be functionally complete. Red Hat does not recommend using them in production.These features provide early access to upcoming product features, enabling customers to test functionality and provide feedback during the development process.For more information about the support scope of Red Hat Technology Preview features, see https://access.redhat.com/support/offerings/techpreview/
 
 .Prerequisite
-You have a WSDL file for the connector that you want
+You have a WSDL file for the SOAP client connector that you want
 {prodname} to create.
 
 *Note:* For this release, the WSDL file’s extension (`.wsdl`) must be lowercase. If the file extension is uppercase (`.WSDL`) you must rename the file to have a lowercase extension before you import it into {prodname}.
@@ -30,18 +30,21 @@ in the input field.
 . On the *Specify service and port* page, verify the service and port.
 . Click *Next*. If there is invalid or missing content, {prodname} displays information about what needs to be corrected. Select a different WSDL file to upload or click *Cancel*, revise the WSDL file, and then upload the updated file. If the schema is valid, {prodname} displays a summary of the API definition (name and description) and a list of imported elements, such as the number of operations.
 . Click *Next*. 
-. Indicate the security requirements to use when invoking the WSDL endpoint. {prodname} reads the API definition to determine the information needed to configure the connector to meet the API’s security requirements. {prodname} can display any of the following: 
 +
-* *None* (no security)
-* *HTTP Basic Authorization* — If the API service uses HTTP basic authorization, select this checkbox. Later, when you use this connector to create a connection, {prodname} prompts you to enter a user name and password. 
-* *WS-Security Username Token* — {prodname} prompts you for the following information: 
-.. *Timestamp* - Select this option if you want {prodname} to add a timestamp to the WS-Security header.
-.. *Password Type* - Select `Digest`, `Text`, or `None`.
-+
-If you select `Text` or `Digest`:
-* Specify your *username* and *password*. 
-* Select *Username Token Nonce* if you want {prodname} to add a Nonce element to the WS-Security Username Token header.
-* Select *Username Token Created* if you want {prodname} to add a timestamp element to the WS-Security Username Token header.
+*Note:* For this release, the security requirements on this page are inactive. Instead, you can define the security options when you create a connection from the connector, as described in link:{LinkSyndesisConnectorGuide}#create-soap-api-connection_add-client-connector[{NameOfSyndesisConnectorGuide}, Creating a SOAP API client connection]. 
+
+//. Indicate the security requirements to use when invoking the WSDL endpoint. {prodname} reads the API definition to determine the information needed to configure the connector to meet the API’s security requirements. {prodname} can display any of the following: 
+//+
+//* *None* (no security)
+//* *HTTP Basic Authorization* — If the API service uses HTTP basic authorization, select this checkbox. Later, when you use this connector to create a connection, {prodname} prompts you to enter a user name and password. 
+//* *WS-Security Username Token* — {prodname} prompts you for the following information: 
+//.. *Timestamp* - Select this option if you want {prodname} to add a timestamp to the WS-Security header.
+//.. *Password Type* - Select `Digest`, `Text`, or `None`.
+//+
+//If you select `Text` or `Digest`:
+//* Specify your *username* and *password*. 
+//* Select *Username Token Nonce* if you want {prodname} to add a Nonce element to the WS-Security Username Token header.
+//* Select *Username Token Created* if you want {prodname} to add a "Created" timestamp element to the WS-Security Username Token header.
 
 . Click *Next*. {prodname} displays the connector’s name, description, and WSDL endpoint address.
 +

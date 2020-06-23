@@ -6,8 +6,6 @@
 = Adding and managing API client connectors
 :context: add-client-connector
 
-
-
 {prodname} can create these API client connectors:
 
 * A REST API client connector from an OpenAPI

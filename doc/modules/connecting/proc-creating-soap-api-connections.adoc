@@ -21,14 +21,17 @@ definition of the API determines what {prodname} prompts for.
 . On the connection configuration page:
 .. Accept or edit the SOAP Endpoint address.
 .. Select an Authentication type (None, Basic, or WS-Security Username Token) to use when invoking the WSDL endpoint. Typically, an API service has security requirements and {prodname} prompts for security input according to the particular security type that the WSDL file defines.
+document describes how to use the UsernameToken with the Web Services Security (WSS) specification. 
+
 .. Select a WS-Security Password Type (`None`, `Text`, or `Digest`).
 .. Specify *username* and *password*.
 .. Select *Timestamp* if you want Fuse Online to add a timestamp to the WS-Security header.
 .. Select *Username Token Nonce* if you want  {prodname} to add a Nonce element to the WS-Security Username Token header.
++ 
+For more information about how to use the UsernameToken with the Web Services Security (WSS) specification, see https://www.oasis-open.org/committees/download.php/13392/wss-v1.1-spec-pr-UsernameTokenProfile-01.htm[this OASIS document].
 .. Select *Username Token Created* if you want {prodname} to add a timestamp element to the WS-Security Username Token header.
-. Click *Validate*.
 +
-Note that not all SOAP connectors support validation.
+*Note:* Due to a lack of an OASIS/W3C standard for verifying connections to SOAP endpoints, SOAP connectors do not support validation.
 
 . Click *Next*.
 . On the *Name connection* page:

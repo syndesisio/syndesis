@@ -46,7 +46,7 @@ credentials were provided when the connector was created.
 
 |===
 
-. Click *Validate*.
+. Click *Validate*. {prodname} validates connection parameters. For example, it checks for valid host/address URLs. 
 . Click *Next*.
 . On the *Name connection* page:
 .. In the *Name* field, enter your choice of a name that
