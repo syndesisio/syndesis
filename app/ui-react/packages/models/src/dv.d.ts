@@ -51,7 +51,7 @@ export interface VirtualizationMetrics {
 }
 
 export interface RoleInfo {
-  operation: 'GRANT' | 'REVOKE';
+  operation: 'GRANT' | 'REVOKE' | 'SET';
   tablePrivileges: TablePrivilege[];
 }
 
