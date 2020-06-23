@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { ApiConnectorReview } from '../../../src';
+import { ApiConnectorDetailOperations } from '../../../src';
 
 const stories = storiesOf(
   'Customization/ApiClientConnector/Detail/Operations',
@@ -8,7 +8,7 @@ const stories = storiesOf(
 );
 
 stories.add('with description', () => (
-  <ApiConnectorReview
+  <ApiConnectorDetailOperations
     apiConnectorDescription={'the description'}
     apiConnectorName={'theName'}
     i18nApiDefinitionHeading={'API DEFINITION'}
@@ -21,7 +21,7 @@ stories.add('with description', () => (
 ));
 
 stories.add('no description', () => (
-  <ApiConnectorReview
+  <ApiConnectorDetailOperations
     apiConnectorName={'theName'}
     i18nApiDefinitionHeading={'API DEFINITION'}
     i18nDescriptionLabel={'Description'}
@@ -33,7 +33,7 @@ stories.add('no description', () => (
 ));
 
 stories.add('tagged messages', () => (
-  <ApiConnectorReview
+  <ApiConnectorDetailOperations
     apiConnectorDescription={'the description'}
     apiConnectorName={'theName'}
     i18nApiDefinitionHeading={'API DEFINITION'}
@@ -52,7 +52,7 @@ stories.add('tagged messages', () => (
 ));
 
 stories.add('errors and warnings', () => (
-  <ApiConnectorReview
+  <ApiConnectorDetailOperations
     apiConnectorDescription={'the description'}
     apiConnectorName={'theName'}
     errorMessages={[
@@ -77,7 +77,7 @@ stories.add('errors and warnings', () => (
 ));
 
 stories.add('validation fallback', () => (
-  <ApiConnectorReview
+  <ApiConnectorDetailOperations
     apiConnectorName={'theName'}
     i18nApiDefinitionHeading={'API DEFINITION'}
     i18nDescriptionLabel={'Description'}

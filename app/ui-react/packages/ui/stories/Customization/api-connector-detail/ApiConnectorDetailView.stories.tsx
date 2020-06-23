@@ -1,3 +1,4 @@
+import { action } from '@storybook/addon-actions';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import {
@@ -25,7 +26,7 @@ stories.add('API Connector Detail Header', () => {
       i18nUsageMessage={getUsedByMessage(connector)}
       connectorName={connector.name}
       connectorDescription={connector.description}
-      connectorIcon={icons.beer}
+      connectorIcon={icons.github}
     />
   );
 });
@@ -33,14 +34,20 @@ stories.add('API Connector Detail Header', () => {
 stories.add('API Connector Detail Body', () => {
   return (
     <ApiConnectorDetailBody
+      basePath={connector.configuredProperties.basePath}
       name={connector.name}
       description={connector.description}
-      icon={icons.beer}
+      host={connector.configuredProperties.host}
       i18nCancelLabel={'Cancel'}
       i18nEditLabel={'Edit'}
+      i18nLabelBaseUrl={'Base URL'}
+      i18nLabelDescription={'Description'}
+      i18nLabelHost={'Host'}
+      i18nLabelName={'Name'}
       i18nSaveLabel={'Save'}
       i18nTitle={connector.name + ' Configuration'}
-      i18nValidateLabel={'Validate'}
+      icon={icons.beer}
+      handleSubmit={action('submit')}
     />
   );
 });
