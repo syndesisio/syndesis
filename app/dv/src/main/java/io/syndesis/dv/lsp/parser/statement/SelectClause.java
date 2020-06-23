@@ -80,10 +80,8 @@ public class SelectClause extends AbstractStatementObject {
         processSelectTokens();
     }
 
-    /*
-     * SELECT ( ALL | DISTINCT )? ( <star> | ( <select sublist> ( <comma> <select
-     * sublist> )* ) )
-     */
+
+     // SELECT ( ALL | DISTINCT )? ( <star> | ( <select sublist> ( <comma> <select sublist> )* ) )
     private void processSelectTokens() {
         // first token after SELECT
         int currentIndex = getFirstTknIndex() + 1;

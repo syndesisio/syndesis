@@ -108,7 +108,7 @@ public class DdlTokenAnalyzer {
     /**
      * Token at the row, character position
      *
-     * @param pos
+     * @param pos - position of the character
      * @return token - may be null
      */
     public Token getTokenAt(Position pos) {

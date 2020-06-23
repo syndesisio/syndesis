@@ -340,11 +340,11 @@ public class MetadataItemProvider extends CompletionItemBuilder {
      * statement context based on position and relevant token(s) within the
      * statement 3)
      *
-     * @param metadataItems
-     * @param allowableTypes
+     * @param metadataItems - items to filter
+     * @param allowableTypes - filter
      * @param checkSchemaScope - filter columns that aren't referenced in the
      *                         FromClause
-     * @return
+     * @return the list of filtered items
      */
     private List<CompletionItem> filterCompletionItems(List<MetadataCompletionItem> metadataItems,
             List<MetadataType> allowableTypes, boolean checkSchemaScope) {
@@ -370,11 +370,9 @@ public class MetadataItemProvider extends CompletionItemBuilder {
      * statement context based on position and relevant token(s) within the
      * statement 3)
      *
-     * @param metadataItems
-     * @param allowableTypes
-     * @param checkSchemaScope - filter columns that aren't referenced in the
-     *                         FromClause
-     * @return
+     * @param metadataItems - items to filter
+     * @param aliasTableName - filter
+     * @return the list of filtered items.
      */
     public List<CompletionItem> filterCompletionItemsForTableAlias(List<MetadataCompletionItem> metadataItems,
             String aliasTableName) {
