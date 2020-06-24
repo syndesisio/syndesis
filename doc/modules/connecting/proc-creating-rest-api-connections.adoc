@@ -20,7 +20,7 @@ display any available connections.
 . Click *Create Connection* to display
 available connectors.
 . Click the connector for the API that you want to create a connection for.
-. Respond to prompts for additional information. The
+. On the configuration page, provide the requested information. The
 definition of the API determines what {prodname} prompts for.
 +
 Typically, an API service has security requirements and {prodname} 
@@ -46,10 +46,12 @@ credentials were provided when the connector was created.
 
 |===
 
-. In the *Name* field, enter your choice of a name that
+. Click *Validate*. {prodname} validates connection parameters. For example, it checks for valid host/address URLs. 
+. Click *Next*.
+. On the *Name connection* page:
+.. In the *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
-. In the *Description* field, optionally enter any information that
+.. In the *Description* field, optionally enter any information that
 is helpful to know about this connection.
-. Click *Save* to see that you can now
-choose the connection you
-created and add to an integration.
+.. Click *Save*. You can now choose the connection that you
+created and add it to an integration.
