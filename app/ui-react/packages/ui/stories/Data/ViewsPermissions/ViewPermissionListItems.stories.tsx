@@ -89,7 +89,11 @@ stories
           i18nEditPolicies={'Edit policies'}
           i18nEditPoliciesTip={'Edit policies tooltip'}
           i18nEditPoliciesTitle={'Edit policies of view View_1'}
-          i18nAddPolicy={'Add policy'}
+          i18nAddRowFilter={'Add row filter'}
+          i18nPermission={'Permissions'}
+          i18nSelectColumn={'Select column'}
+          i18nAddPermission={'Add permission'}
+          i18nColumn={'Column'}
           i18nCondition={'Condition'}
           i18nOperation={'Operation'}
           i18nSelectOperation={'Select operation'}
@@ -140,7 +144,11 @@ stories
           i18nEditPolicies={'Edit policies'}
           i18nEditPoliciesTip={'Edit policies tooltip'}
           i18nEditPoliciesTitle={'Edit policies of view View_1'}
-          i18nAddPolicy={'Add policy'}
+          i18nAddRowFilter={'Add row filter'}
+          i18nPermission={'Permissions'}
+          i18nSelectColumn={'Select column'}
+          i18nAddPermission={'Add permission'}
+          i18nColumn={'Column'}
           i18nCondition={'Condition'}
           i18nOperation={'Operation'}
           i18nSelectOperation={'Select operation'}

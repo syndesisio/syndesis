@@ -15,8 +15,6 @@ import {
 import { MinusCircleIcon } from '@patternfly/react-icons';
 import React from 'react';
 import './RowFilteringItem.css';
-
-// tslint:disable-next-line: no-empty-interface
 interface IRowFilteringItemProps {
   i18nCondition: string;
   i18nOperation: string;
@@ -24,7 +22,7 @@ interface IRowFilteringItemProps {
   i18nUserRole: string;
   i18nValidate: string;
   i18nRemoveRow: string;
-  i18nSelectRole:string;
+  i18nSelectRole: string;
   index: number;
   removeRow: (index: number) => void;
 }
@@ -93,7 +91,7 @@ export const RowFilteringItem: React.FunctionComponent<IRowFilteringItemProps> =
     { value: 'Ux' },
   ];
 
-  const titleIdOperator = 'title-id-operator';
+  const titleIdOperation = 'title-id-operation';
   const titleIdRole = 'title-id-role';
 
   return (
@@ -108,7 +106,7 @@ export const RowFilteringItem: React.FunctionComponent<IRowFilteringItemProps> =
         >
           {props.i18nOperation}
         </Text>
-        <span id={titleIdOperator} hidden={true}>
+        <span id={titleIdOperation} hidden={true}>
           {props.i18nSelectOperation}
         </span>
         <Select
@@ -118,7 +116,7 @@ export const RowFilteringItem: React.FunctionComponent<IRowFilteringItemProps> =
           onSelect={onOperationSelect}
           selections={operationSelected}
           isExpanded={isOperationOpen}
-          ariaLabelledBy={titleIdOperator}
+          ariaLabelledBy={titleIdOperation}
           placeholderText={props.i18nSelectOperation}
           className={'row-filtering-item-operation_select'}
         >
@@ -152,12 +150,15 @@ export const RowFilteringItem: React.FunctionComponent<IRowFilteringItemProps> =
           ))}
         </Select>
       </GridItem>
-      <GridItem span={2} className={'row-filtering-item-remove_icon'}>
-      <Tooltip
-              position={TooltipPosition.top}
-              content={<div>{props.i18nRemoveRow}</div>}
-            >
-        <MinusCircleIcon onClick={removeRow} />
+      <GridItem span={2} className={'row-filtering-item-remove'}>
+        <Tooltip
+          position={TooltipPosition.top}
+          content={<div>{props.i18nRemoveRow}</div>}
+        >
+          <MinusCircleIcon
+            onClick={removeRow}
+            className={'row-filtering-item-remove_icon'}
+          />
         </Tooltip>
       </GridItem>
       <GridItem span={10} className={'row-filtering-item-condition'}>

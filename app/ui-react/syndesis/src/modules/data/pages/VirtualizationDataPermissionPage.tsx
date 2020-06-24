@@ -381,7 +381,7 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                             i18nRowBasedFiltering={t('rowBasedFiltering')}
                             i18nEditPolicies={t('editViewPolicies')}
                             i18nEditPoliciesTip={t('editViewPoliciesTip')}
-                            i18nAddPolicy={t('addPolicy')}
+                            i18nAddRowFilter={t('addRowFilter')}
                             i18nCondition={t('condition')}
                             i18nOperation={t('operation')}
                             i18nSelectOperation={t('selectOperation')}
@@ -389,6 +389,10 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                             i18nValidate={t('validate')}
                             i18nRemoveRow={t('removeRow')}
                             i18nSelectRole={t('selectRole')}
+                            i18nSelectColumn={t('selectColumn')}
+                            i18nPermission={t('permissions')}
+                            i18nAddPermission={t('addPermission')}
+                            i18nColumn={t('column')}
                             i18nEditPoliciesTitle={t('editViewPoliciesTitle', {
                               viewName: viewDefinitionDescriptor.name,
                             })}

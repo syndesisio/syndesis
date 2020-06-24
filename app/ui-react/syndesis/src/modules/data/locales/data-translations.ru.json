@@ -2,7 +2,8 @@
   "activeConnectionsEmptyStateInfo": "Нет доступных активных соединений. Нажмите Создать соединение для нового соединения.",
   "activeConnectionsEmptyStateTitle": "Нет активных Соединений",
   "actionsColumnA11yMessage": "Колонка меню действий версии",
-  "addPolicy": "Добавить политику",
+  "addPermission": "Добавить разрешение",
+  "addRowFilter": "Добавить фильтр строк",
   "addNewRole": "Добавить новую роль",
   "allAccess": "Весь доступ",
   "buildStatus": {
@@ -19,6 +20,7 @@
     "SUBMITTED": "Отправлено"
   },
   "clearPermissionMsg": "Продолжить это действие очистит все существующие разрешения для выбранных представлений. Вы уверены, что хотите очистить разрешение?",
+  "column": "колонка",
   "columnMasking": "Маскировка колонки",
   "columnPermissions": "Разрешения столбца",
   "condition": "Состояние",
@@ -168,6 +170,7 @@
   "rowBasedFiltering": "Фильтрация на основе строк",
   "saveViewFailed": "Не удалось сохранить вид \"{{name}}\". Детали: {{details}}",
   "schemaLastRefresh": "Последнее обновление: {{refreshTime}}",
+  "selectColumn": "Выберите столбец",
   "selectOperation": "Выберите операцию",
   "selectARole": "Выберите роль",
   "selectRole": "Выберите роль",

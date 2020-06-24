@@ -2,7 +2,8 @@
   "activeConnectionsEmptyStateInfo": "Non ci sono connessioni attive disponibili. Fare clic su Crea connessione per una nuova connessione.",
   "activeConnectionsEmptyStateTitle": "Nessuna Connessione Attiva",
   "actionsColumnA11yMessage": "Colonna del menu azione versione",
-  "addPolicy": "Aggiungi politica",
+  "addPermission": "Aggiungi permesso",
+  "addRowFilter": "Aggiungi filtro di riga",
   "addNewRole": "Aggiungi nuovo ruolo",
   "allAccess": "Tutti gli accessi",
   "buildStatus": {
@@ -19,6 +20,7 @@
     "SUBMITTED": "Inserito"
   },
   "clearPermissionMsg": "Continua con questa azione cancellerà tutte le autorizzazioni esistenti per le viste selezionate. sei sicuro di voler cancellare il permesso?",
+  "column": "Colonna",
   "columnMasking": "Mascheratura delle colonne",
   "columnPermissions": "Autorizzazioni per le colonne",
   "condition": "Condizione",
@@ -168,6 +170,7 @@
   "rowBasedFiltering": "Filtraggio basato su righe",
   "saveViewFailed": "Impossibile salvare la vista \"{{name}}\". Dettagli: {{details}}",
   "schemaLastRefresh": "Ultimo aggiornamento: {{refreshTime}}",
+  "selectColumn": "Seleziona colonna",
   "selectOperation": "Seleziona operazione",
   "selectARole": "Seleziona un ruolo",
   "selectRole": "Seleziona il ruolo",

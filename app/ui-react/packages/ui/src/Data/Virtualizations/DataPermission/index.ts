@@ -6,3 +6,5 @@ export * from './RolePermissionList';
 export * from './Policies/EditPoliciesModal';
 export * from './Policies/RowFilteringTab';
 export * from './Policies/RowFilteringItem';
+export * from './Policies/ColumnPermissionTab';
+export * from './Policies/ColumnPermissionItem';

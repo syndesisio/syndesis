@@ -3,10 +3,8 @@ import { PlusCircleIcon } from '@patternfly/react-icons';
 import React from 'react';
 import { RowFilteringItem } from '..';
 import './RowFilteringTab.css';
-
-// tslint:disable-next-line: no-empty-interface
 interface IRowFilteringTabProps {
-  i18nAddPolicy: string;
+  i18nAddRowFilter: string;
   i18nCondition: string;
   i18nOperation: string;
   i18nSelectOperation: string;
@@ -14,6 +12,7 @@ interface IRowFilteringTabProps {
   i18nValidate: string;
   i18nRemoveRow: string;
   i18nSelectRole: string;
+  updateRowFilteringCount: (val: number) => void;
 }
 const getRandomId = () => {
   return Math.floor(Math.random() * 100000);
@@ -37,6 +36,10 @@ export const RowFilteringTab: React.FunctionComponent<IRowFilteringTabProps> = p
     setRowFilteringItems(rowFilteringItemsCopy);
   };
 
+  React.useEffect(() => {
+    props.updateRowFilteringCount(rowFilteringItems.length);
+  }, [rowFilteringItems]);
+
   return (
     <PageSection noPadding={false} className={'row-filtering-tab-section'}>
       {rowFilteringItems.map(rowFilteringItem => (
@@ -54,7 +57,7 @@ export const RowFilteringTab: React.FunctionComponent<IRowFilteringTabProps> = p
         />
       ))}
       <Button variant="link" icon={<PlusCircleIcon />} onClick={addrow}>
-        {props.i18nAddPolicy}
+        {props.i18nAddRowFilter}
       </Button>
     </PageSection>
   );
