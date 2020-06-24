@@ -2,7 +2,8 @@
   "activeConnectionsEmptyStateInfo": "There are no active connections available. Click Create Connection for a new connection.",
   "activeConnectionsEmptyStateTitle": "No Active Connections",
   "actionsColumnA11yMessage": "Version action menu column",
-  "addPolicy": "Add policy",
+  "addPermission": "Add permission",
+  "addRowFilter": "Add row filter",
   "addNewRole": "Add new role",
   "allAccess": "All Access",
   "buildStatus": {
@@ -19,6 +20,7 @@
     "SUBMITTED": "Submitted"
   },
   "clearPermissionMsg": "Continue with this action will clear all the existing permissions for selected views. are you sure you want to clear permission?",
+  "column": "Column",
   "columnMasking": "Column masking",
   "columnPermissions": "Column permissions",
   "condition": "Condition",
@@ -168,6 +170,7 @@
   "rowBasedFiltering": "Row-based filtering",
   "saveViewFailed": "Could not save the view \"{{name}}\". Details: {{details}}",
   "schemaLastRefresh": "Last updated: {{refreshTime}}",
+  "selectColumn": "Select column",
   "selectOperation": "Select operation",
   "selectARole": "Select a role",
   "selectRole": "Select role",

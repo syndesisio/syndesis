@@ -43,13 +43,17 @@ export interface IViewPermissionListItemsProps {
   i18nShowLess: string;
   i18nCancel: string;
   i18nSave: string;
-  i18nAddPolicy: string;
+  i18nAddRowFilter: string;
   i18nCondition: string;
   i18nOperation: string;
   i18nSelectOperation: string;
   i18nUserRole: string;
   i18nValidate: string;
   i18nRemoveRow: string;
+  i18nPermission: string;
+  i18nSelectColumn: string;
+  i18nAddPermission: string;
+  i18nColumn: string;
   viewId: string;
   viewName: string;
   viewRolePermissionList: ITablePrivilege[];
@@ -241,7 +245,7 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
         isOpen={policiesModalOpen}
         isUpdating={policiesUpdating}
         onSetPolicies={handleUpdatePolicies}
-        i18nAddPolicy={props.i18nAddPolicy}
+        i18nAddRowFilter={props.i18nAddRowFilter}
         i18nCondition={props.i18nCondition}
         i18nOperation={props.i18nOperation}
         i18nSelectOperation={props.i18nSelectOperation}
@@ -249,6 +253,10 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
         i18nValidate={props.i18nValidate}
         i18nRemoveRow={props.i18nRemoveRow}
         i18nSelectRole={props.i18nSelectRole}
+        i18nSelectColumn={props.i18nSelectColumn}
+        i18nPermission={props.i18nPermission}
+        i18nAddPermission={props.i18nAddPermission}
+        i18nColumn={props.i18nColumn}
       />
       <DataListItem aria-labelledby="width-ex3-item1" isExpanded={show}>
         <DataListItemRow>
