@@ -13,10 +13,10 @@ import {
   Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
-import { Container } from '../../../Layout';
-import './ApiConnectorDetailOperations.css';
+import { Container } from '../../Layout';
+import './ApiConnectorReview.css';
 
-export interface IApiConnectorDetailOperationsProps {
+export interface IApiConnectorReviewProps {
   apiConnectorDescription?: string;
   apiConnectorName?: string;
   errorMessages?: string[];
@@ -33,27 +33,27 @@ export interface IApiConnectorDetailOperationsProps {
   warningMessages?: string[];
 }
 
-export class ApiConnectorDetailOperations extends React.Component<
-  IApiConnectorDetailOperationsProps
+export class ApiConnectorReview extends React.Component<
+  IApiConnectorReviewProps
 > {
   public render() {
     return (
       <PageSection>
         <Card>
           <CardHeader>
-            <Title size={'lg'}>{this.props.i18nTitle}</Title>
+            <Title size="lg">{this.props.i18nTitle}</Title>
           </CardHeader>
           <CardBody>
             {this.props.i18nValidationFallbackMessage ? (
-              <h5 className={'api-connector-review__validationFallbackMessage'}>
+              <h5 className="api-connector-review__validationFallbackMessage">
                 {this.props.i18nValidationFallbackMessage}
               </h5>
             ) : (
               <TextContent>
                 <Title
-                  headingLevel={'h5'}
-                  size={'md'}
-                  className={'customization-details__heading'}
+                  headingLevel="h5"
+                  size="md"
+                  className="customization-details__heading"
                 >
                   {this.props.i18nApiDefinitionHeading}
                 </Title>
@@ -74,9 +74,9 @@ export class ApiConnectorDetailOperations extends React.Component<
                   </TextList>
                 </Container>
                 <Title
-                  headingLevel={'h5'}
-                  size={'md'}
-                  className={'customization-details__heading'}
+                  headingLevel="h5"
+                  size="md"
+                  className="customization-details__heading"
                 >
                   {this.props.i18nImportedHeading}
                 </Title>
@@ -91,7 +91,7 @@ export class ApiConnectorDetailOperations extends React.Component<
 
                 {/* tagged messages */}
                 {this.props.i18nOperationTagHtmlMessages && (
-                  <TextList className={'connector-review__tagMessageList'}>
+                  <TextList className="api-connector-review__tagMessageList">
                     {this.props.i18nOperationTagHtmlMessages.map(
                       (msg: string, index: number) => (
                         <TextListItem
@@ -106,9 +106,9 @@ export class ApiConnectorDetailOperations extends React.Component<
                 {/* error messages */}
                 {this.props.i18nErrorsHeading && this.props.errorMessages && (
                   <Title
-                    headingLevel={'h5'}
-                    size={'md'}
-                    className={'customization-details__heading'}
+                    headingLevel="h5"
+                    size="md"
+                    className="customization-details__heading"
                   >
                     {this.props.i18nErrorsHeading}
                   </Title>
@@ -126,9 +126,9 @@ export class ApiConnectorDetailOperations extends React.Component<
                 {/* warning messages */}
                 {this.props.i18nWarningsHeading && this.props.warningMessages && (
                   <Title
-                    headingLevel={'h5'}
-                    size={'md'}
-                    className={'customization-details__heading'}
+                    headingLevel="h5"
+                    size="md"
+                    className="customization-details__heading"
                   >
                     {this.props.i18nWarningsHeading}
                   </Title>

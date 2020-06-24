@@ -15,7 +15,10 @@ export interface IApiConnectorDetailConfig {
   i18nLabelHost: string;
   i18nLabelName: string;
 
-  // Initial Values
+  /**
+   * Initial values displayed,
+   * typically set when creating the connector
+   */
   properties: IApiConnectorDetailValues;
 }
 
@@ -26,11 +29,9 @@ export const ApiConnectorDetailConfig: React.FunctionComponent<IApiConnectorDeta
   i18nLabelName,
   properties,
 }) => {
-  // tslint:disable:no-console
-
   return (
     <>
-      <TextContent>
+      <TextContent data-testid={'api-connector-detail-config'}>
         <Container>
           <TextList component={TextListVariants.dl}>
             {properties.name && (

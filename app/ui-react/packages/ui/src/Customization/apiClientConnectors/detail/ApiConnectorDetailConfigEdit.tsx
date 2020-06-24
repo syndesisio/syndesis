@@ -3,15 +3,23 @@ import * as React from 'react';
 import { IApiConnectorDetailValues } from './ApiConnectorDetailBody';
 
 export interface IApiConnectorDetailConfigEdit {
-  handleOnChange: (value: string, event?: any) => void;
+  handleOnChange: (fieldName: string, value: string) => void;
 
-  // Property labels
+  /**
+   * Property labels
+   */
   i18nLabelBaseUrl: string;
   i18nLabelDescription: string;
   i18nLabelHost: string;
   i18nLabelName: string;
 
-  // Initial properties
+  i18nNameHelper: string;
+  i18nRequiredText: string;
+
+  /**
+   * Initial values displayed,
+   * typically set when creating the connector
+   */
   properties: IApiConnectorDetailValues;
 }
 
@@ -21,22 +29,40 @@ export const ApiConnectorDetailConfigEdit: React.FunctionComponent<IApiConnector
   i18nLabelDescription,
   i18nLabelHost,
   i18nLabelName,
+  i18nNameHelper,
+  i18nRequiredText,
   properties,
 }) => {
-  // tslint:disable:no-console
-  const onChange = (value: string, event: { target: HTMLInputElement }) => {
+  type IValidation = 'default' | 'error' | 'success' | undefined;
+  const [isValid, setIsValid] = React.useState<IValidation>('default');
+
+  const onChange = (value: string, event: { target: any }) => {
     const { name } = event.target;
     handleOnChange(name, value);
+
+    const isName = name === 'name';
+
+    if (isName) {
+      if (!value) {
+        setIsValid('error');
+        return;
+      }
+      if (properties.name !== value) {
+        setIsValid('success');
+      }
+    }
   };
 
   return (
     <>
       <Form isHorizontal={true} data-testid={'api-connector-details-form'}>
+        {i18nRequiredText}
         <FormGroup
           label={i18nLabelName}
           isRequired={true}
           fieldId="connector-name"
-          helperText="Please provide a name for the API Connector"
+          helperTextInvalid={i18nNameHelper}
+          validated={isValid}
         >
           <TextInput
             value={properties.name}
@@ -44,8 +70,10 @@ export const ApiConnectorDetailConfigEdit: React.FunctionComponent<IApiConnector
             type="text"
             id="connector-name"
             aria-describedby="horizontal-form-name-helper"
+            data-testid={'api-connector-name-field'}
             name="name"
             onChange={onChange}
+            validated={isValid}
           />
         </FormGroup>
         <FormGroup label={i18nLabelDescription} fieldId="connector-description">
@@ -60,7 +88,6 @@ export const ApiConnectorDetailConfigEdit: React.FunctionComponent<IApiConnector
           label={i18nLabelHost}
           isRequired={false}
           fieldId="connector-host"
-          helperText="Please provide a host for the API Connector"
         >
           <TextInput
             value={properties.host}
@@ -76,7 +103,6 @@ export const ApiConnectorDetailConfigEdit: React.FunctionComponent<IApiConnector
           label={i18nLabelBaseUrl}
           isRequired={false}
           fieldId="connector-baseurl"
-          helperText="Please provide a base URL for the API Connector"
         >
           <TextInput
             value={properties.basePath}
