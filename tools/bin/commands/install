@@ -34,6 +34,7 @@ install::usage() {
     --custom-resource         Provide a custom resource to be installed by the operator
     --app-options             Operator parameters when installing the app.
                               Use quotes and start with a space before appending the options (example: " --addons jaeger").
+    --dev                     Install the operator in developer-mode (for developer & debugging use)
 EOT
 }
 
@@ -61,26 +62,26 @@ is_role_granted() {
 }
 
 grant_role() {
-  local user_to_prepare="$1"
-  if [ -z "$user_to_prepare" ]; then
-    check_error "ERROR: Cannot perform grant as no user specified"
-  fi
+    local user_to_prepare="$1"
+    if [ -z "$user_to_prepare" ]; then
+        check_error "ERROR: Cannot perform grant as no user specified"
+    fi
 
-  #
-  # Check that the user calling --grant is a cluster-admin
-  #
-  if [ "$(is_cluster_admin)" != "OK" ]; then
-    check_error "ERROR: Can only execute --grant as cluster-admin."
-  fi
+    #
+    # Check that the user calling --grant is a cluster-admin
+    #
+    if [ "$(is_cluster_admin)" != "OK" ]; then
+        check_error "ERROR: Can only execute --grant as cluster-admin."
+    fi
 
-  echo "Grant syndesis-installer role to user $user_to_prepare"
+    echo "Grant syndesis-installer role to user $user_to_prepare"
 
-  if [ $(hasflag --cluster) ]; then
-      result=$($OPERATOR_BINARY grant --user $user_to_prepare --cluster)
-  else
-      result=$($OPERATOR_BINARY grant --user $user_to_prepare)
-  fi
-  check_error "$result"
+    if [ $(hasflag --cluster) ]; then
+        result=$($OPERATOR_BINARY grant --user $user_to_prepare --cluster)
+    else
+        result=$($OPERATOR_BINARY grant --user $user_to_prepare)
+    fi
+    check_error "$result"
 }
 
 install::init() {
@@ -140,7 +141,7 @@ install::run() {
             check_error "$result"
         fi
 
-        if [ -z ${revert_login} ]; then
+        if [ -z "${revert_login}" ]; then
             ${revert_login}
         fi
 
@@ -162,7 +163,7 @@ install::run() {
 
         grant_role "${user_to_prepare}"
 
-        if [ -z ${revert_login} ]; then
+        if [ -z "${revert_login}" ]; then
             ${revert_login}
         fi
 
@@ -187,7 +188,7 @@ install::run() {
     #
     curr_user="$(get_current_user)"
     if [ "$(is_role_granted)" != "OK" ]; then
-        echo "No syndesis-installer role has been granted so installing now"
+        echo "No syndesis-installer role has been granted to ${curr_user} so installing now"
         revert_login=$(login_as_admin)
         grant_role "${curr_user}"
         ${revert_login}
@@ -225,7 +226,13 @@ install::run() {
 
     # Deploy operator and wait until its up
     echo "Deploying Syndesis operator"
-    result=$($OPERATOR_BINARY install operator)
+    set +e
+    local install_options=""
+    if [ $(hasflag --dev) ]; then
+        install_options="--dev"
+    fi
+    result=$($OPERATOR_BINARY install operator ${install_options})
+    set -e
     check_error "$result"
 
     if [ $(hasflag --camel-k) ]; then
@@ -246,6 +253,8 @@ install::run() {
         if [ -n "${customcr}" ]; then
             echo "Deploying syndesis app with custom resource ${customcr}"
             app_options=$app_options" --custom-resource ${customcr}"
+        elif [ "${IS_OPENSHIFT}" != "YES" ]; then
+            check_error "ERROR: A kubernetes installation requires a custom resource be specified with the '--custom-resource' option"
         else
             echo "Deploying syndesis app."
         fi

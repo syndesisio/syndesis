@@ -44,13 +44,9 @@ login_oc_as_admin() {
     local user=$(oc whoami)
     local token=$(extract_current_token)
 
-    read -p "Please enter the user-name of a cluster-admin account?: " admin_user
-    echo
-    if [ -z "$admin_user" ]; then
-        check_error "Error: No admin account user-name was entered. Aborting."
-    fi
+    local admin_user=$(get_admin_user "${1:-}")
 
-    read -p -s "Please enter the password for ${admin_user}?: " password
+    read -p -s "Please enter the password for the cluster-admin ${admin_user}?: " password
     echo
     if [ -z "$password" ]; then
         check_error "Error: No password for ${admin_user} was entered. Aborting."

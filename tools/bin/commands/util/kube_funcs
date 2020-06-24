@@ -91,8 +91,17 @@ setup_kube() {
 login_kube_as_admin() {
     local ctx=$(current_context)
 
-    local admin=$(get_admin_user)
-    local admin_ctx=$(set_context "default" "${admin}")
+    #
+    # If admin specified to this function then passthrough
+    #
+    local admin=$(get_admin_user "${1:-}")
+
+    local nm=$(get_kube_namespace)
+    if [ $(contains_error "${nm}") == "YES" ]; then
+        nm="default"
+    fi
+
+    local admin_ctx=$(set_context "${nm}" "${admin}")
     local use_ctx=$(use_context "${admin_ctx}")
     check_error "${use_ctx}"
 
@@ -109,10 +118,67 @@ get_kube_user() {
     if [[ -z "${kube_user}" ]]; then
         check_error "ERROR: Cannot find current kube user"
     else
+        #
+        # If the user ends in the cluster name then drop it as
+        # the kubernetes cluster also drops it
+        #
+        local clexp="/$(get_cluster)"
+        kube_user="${kube_user%%$clexp}"
         echo "${kube_user}"
     fi
 }
 
+get_kube_config_user() {
+    local kuser="${1:-}"
+    if [ -z "${kuser}" ]; then
+        check_error "ERROR: A user name is required to test for a user in config."
+    fi
+    local cluster="$(get_cluster)"
+
+    #
+    # Try testing for the pattern user/cluster
+    #
+    local name=$(${KUBECTL} config view -o=jsonpath="{.users[?(@.name==\"${kuser}/${cluster}\")].name}")
+    if [ -n "${name}" ]; then
+        echo "${name}"
+        return
+    fi
+
+    #
+    # Try testing for user on its own but being careful not to return a user that
+    # might be the same value but be used by a different cluster
+    #
+    name=$(${KUBECTL} config view -o=jsonpath="{.users[?(@.name==\"${kuser}\")].name}")
+    if [ -n "${name}" ]; then
+        #
+        # So we've found a name but don't know if it is for the right cluster
+        # Loop through the contexts and analyse the cluster attribute
+        #
+        clusters=$(${KUBECTL} config view -o=jsonpath="{.contexts[?(@.context.user==\"${name}\")].context.cluster}")
+        for c in ${clusters}
+        do
+            if [ "${cluster}" == "${c}" ]; then
+                #
+                # Found a context with the username of 'name' and cluster or 'cluster'
+                #
+                echo "${name}"
+                return
+            fi
+        done
+    fi
+
+    #
+    # Failed to find a user name in the right cluster
+    #
+    echo ""
+}
+
+#
+# 1st arg is username (with or without cluster suffix)
+# 2nd arg is the optional namespace to switch to
+# 3rd arg optionally a CA certificate. If not then will try --cacert cli option
+# 4th arg optionally a CA key. If not then will try --cakey cli option
+#
 create_kube_user() {
     check_error $(check_for_command "mktemp")
 
@@ -120,32 +186,54 @@ create_kube_user() {
     if [ -z "${kuser}" ]; then
         check_error "ERROR: A user name is required to create a new user."
     fi
+    local kcfg_user=$(get_kube_config_user "${kuser}")
 
     local nm="${2:-$(get_kube_namespace)}"
     check_error "${nm}"
-    local cluster=$(get_kube_cluster)
 
-    local have_user=$(${KUBECTL} config view -o=jsonpath="{.users[?(@.name==\"${kuser}\")].name}")
-    echo "Changing to user \"$kuser\" with namespace \"${nm}\" on current cluster \"$cluster\""
+    local cacert="${3:-$(readopt --cacert)}"
+    local cakey="${4:-$(readopt --cakey)}"
 
-    if [ -z "${have_user}" ]; then
+    local have_user="YES"
+    if [ -z "${kcfg_user}" ]; then
+        #
+        # user does not exist in config at all or as part of this cluster
+        #
+        have_user="NO"
+
+    elif [ ! -z "${cacert}" ]; then
+        #
+        # If cacert passed in then definitely wanted user to be (re)created
+        #
+        have_user="NO"
+    fi
+
+    local cluster=$(get_cluster)
+    echo "Changing to user \"${kuser}\" with namespace \"${nm}\" on current cluster \"${cluster}\""
+    if [ "${have_user}" == "NO" ]; then
+        #
+        # Prefer appending the cluster to the user to delineate from other clusters
+        #`
+        if [[ "${kuser}" != "*/${cluster}" ]]; then
+            kuser="${kuser}/${cluster}"
+        fi
+
         # Change to the admin user
         local revert_login=$(login_as_admin)
 
         # Create the key and certficate for the new user
-        local key=$(mktemp --tmpdir --suffix=.key ${kuser}-XXXX)
-        local csr=$(mktemp --tmpdir --suffix=.csr ${kuser}-XXXX)
-        local cert=$(mktemp --tmpdir --suffix=.crt ${kuser}-XXXX)
+        local prefix="${kuser//\//-}-XXXX"
+        local key=$(mktemp --tmpdir --suffix=.key ${prefix})
+        local csr=$(mktemp --tmpdir --suffix=.csr ${prefix})
+        local cert=$(mktemp --tmpdir --suffix=.crt ${prefix})
 
         # Get the ca certificate from the cli
-        local cacert=$(readopt --cacert)
         if [ -z "${cacert}" ]; then
             $revert_login
             check_error "ERROR: A Certificate Authority certificate is required to create a new user."
         fi
 
         # Get the ca key from the cli
-        local cakey=$(readopt --cakey)
         if [ -z "${cakey}" ]; then
             $revert_login
             check_error "ERROR: A Certificate Authority key is required to create a new user."
@@ -161,7 +249,7 @@ create_kube_user() {
         openssl x509 -req -in "${csr}" -CA "${cacert}" -CAkey "${cakey}" -CAcreateserial -out "${cert}" -days 375
 
         # Set the credentials
-        ${KUBECTL} config set-credentials ${kuser} --client-certificate="${cert}"  --client-key="${key}" --embed-certs=true
+        ${KUBECTL} config set-credentials "${kuser}" --client-certificate="${cert}"  --client-key="${key}" --embed-certs=true
     fi
 
     # Create the namespace if it doesn't exist
@@ -173,16 +261,17 @@ create_kube_user() {
 }
 
 get_kube_namespace() {
-    nm="${1:-}"
+    local nm="${1:-}"
+    local kuser=$(get_admin_user)
+    check_error "${kuser}"
 
     if [ -n "${nm}" ]; then
-        echo $(${KUBECTL} get namespace "${nm}" -o=jsonpath="{.metadata.name}" 2>&1)
+        echo $(${KUBECTL} get namespace "${nm}" -o=jsonpath="{.metadata.name}" --user="${kuser}" 2>&1)
     else
         local cur_ctx
 
         cur_ctx="$(current_context)" || { echo "ERROR: getting current context"; return; }
         nm="$(${KUBECTL} config view -o=jsonpath="{.contexts[?(@.name==\"${cur_ctx}\")].context.namespace}")"
-
         if [[ -z "${nm}" ]]; then
             echo "ERROR: Cannot find current kube namespace"
         else
@@ -211,7 +300,6 @@ list_kube_namespaces() {
     cur_ctx_bg=${KUBECTX_CURRENT_BGCOLOR:-$darkbg}
 
     local nm="$(get_kube_namespace)"
-    check_error "${nm}"
     local nm_list=$(get_kube_namespaces)
     check_error "${nm_list}"
 
@@ -232,6 +320,7 @@ list_kube_namespaces() {
 delete_kube_namespace() {
     local nm="${1:-}"
     local kuser=$(get_kube_user)
+    check_error "${kuser}"
 
     if [ -z "${nm}" ]; then
         check_error "ERROR: No namespace specified to delete."
@@ -250,22 +339,6 @@ delete_kube_namespace() {
     use_context "${context}"
 }
 
-switch_kube_namespace() {
-    local nm="${1:-}"
-    local kuser="${2:-$(get_kube_user)}"
-    check_error "${kuser}"
-
-    if [ -z "${nm}" ]; then
-        check_error "ERROR: No namespace specified."
-    fi
-
-    # Set the new context & creates it in config if not already there
-    context=$(set_context "${nm}" "${kuser}")
-
-    # Use the new context
-    use_context "${context}"
-}
-
 apply_namespace_role() {
     local kuser="${1:-}"
     if [ -z "${kuser}" ]; then
@@ -277,9 +350,15 @@ apply_namespace_role() {
         check_error "ERROR: no namespace specified while applying namespace admin role"
     fi
 
-    local admintemplate=$(mktemp --tmpdir --suffix=.yml admin-role-${kuser}-XXXX)
-    trap "rm -f '${admintemplate}'" EXIT
+    local prefix="${kuser//\//-}-XXXX"
+    local admintemplate=$(mktemp --tmpdir --suffix=.yml admin-role-${prefix})
+    add_to_trap "rm -f '${admintemplate}'"
 
+    #
+    # Need to drop cluster name in order to apply the role
+    #
+    clexp="/$(get_cluster)"
+    kuser="${kuser%%$clexp}"
     cat << EOT > ${admintemplate}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -296,32 +375,66 @@ subjects:
   name: ${kuser}
 EOT
 
-    local apply=$(cat ${admintemplate} | ${KUBECTL} apply -f - 2>&1)
+    # Change to the admin user
+    local admin_user="$(get_admin_user)"
+    check_error "${admin_user}"
+
+    local apply=$(cat ${admintemplate} | ${KUBECTL} apply --user "${admin_user}" -f - 2>&1)
     check_error "${apply}"
+}
+
+switch_kube_namespace() {
+    local nm="${1:-}"
+    local kuser="${2:-$(get_kube_user)}"
+    check_error "${kuser}"
+
+    if [ -z "${nm}" ]; then
+        check_error "ERROR: No namespace specified."
+    fi
+
+    # Change to the admin user
+    local admin_user="$(get_admin_user)"
+    check_error "${admin_user}"
+
+    #
+    # Give the user of the namespace admin rights
+    #
+    if [ "${kuser}" != "${admin_user}" ]; then
+        # Apply the admin role to the namespace
+        apply_namespace_role "${kuser}" "${nm}"
+    fi
+
+    # Set the new context & creates it in config if not already there
+    context=$(set_context "${nm}" "${kuser}")
+
+    # Use the new context
+    use_context "${context}"
 }
 
 create_kube_namespace() {
     local nm="${1:-}"
     local kuser="${2:-$(get_kube_user)}"
+    check_error "${kuser}"
 
     if [ -z "${nm}" ]; then
         check_error "ERROR: No namespace specified to create."
     fi
 
-    if [ "$(get_kube_namespace "${nm}")" == "OK" ]; then
+    if [ "$(has_namespace "${nm}")" == "OK" ]; then
         check_error "ERROR: Cannot create namespace. Namespace exists."
     fi
 
     # Change to the admin user
-    local revert_login=$(login_as_admin)
+    local admin_user="$(get_admin_user)"
+    check_error "${admin_user}"
 
-    status=$(${KUBECTL} create namespace "${nm}" 2>&1)
+    status=$(${KUBECTL} create namespace "${nm}" --user "${admin_user}" 2>&1)
     check_error "${status}"
 
     #
     # Give the user of the namespace admin rights
     #
-    if [ "${kuser}" != "$(get_admin_user)" ]; then
+    if [ "${kuser}" != "${admin_user}" ]; then
         # Apply the admin role to the namespace
         apply_namespace_role "${kuser}" "${nm}"
     fi
@@ -331,37 +444,6 @@ create_kube_namespace() {
 
     # Use the new context
     use_context "${context}"
-}
-
-get_kube_cluster() {
-    cur_ctx="$(current_context)" || { echo "ERROR: getting current context"; return; }
-    cluster="$(${KUBECTL} config view -o=jsonpath="{.contexts[?(@.name==\"${cur_ctx}\")].context.cluster}")"
-
-    if [[ -z "${cluster}" ]]; then
-        echo "ERROR: Cannot find current kube cluster"
-    else
-        echo "${cluster}"
-    fi
-}
-
-get_kube_cluster_address() {
-  cluster_name=$(get_kube_cluster)
-  if [ -z "${cluster_name}" ]; then
-    check_error "ERROR: Cannot find current cluster"
-  fi
-
-  cluster="$(${KUBECTL} config view -o=jsonpath="{.clusters[?(@.name==\"${cluster_name}\")].cluster.server}")" \
-        || check_error "ERROR: getting current cluster address"
-
-  if [[ -z "${cluster}" ]]; then
-    echo "Cannot find cluster address"
-  else
-    echo "${cluster}"
-  fi
-}
-
-current_context() {
-    echo $(${KUBECTL} config current-context)
 }
 
 get_kube_contexts() {
@@ -400,14 +482,26 @@ list_kube_contexts() {
 set_context() {
     local nm="${1:-$(get_kube_namespace)}"
     local kube_user="${2:-$(get_kube_user)}"
-    local cluster="${3:-$(get_kube_cluster)}"
+    local cluster="${3:-$(get_cluster)}"
 
     check_error "${nm}"
     check_error "${kube_user}"
     check_error "${cluster}"
 
+    #
+    # Remove any cluster suffix from the user since
+    # the ctx tends to put them the other way around
+    #
+    clexp="/${cluster}"
+    kube_user="${kube_user%%$clexp}"
+
+    local ctx_user="$(get_kube_config_user "${kube_user}" "${cluster}")"
+    if [ -z "${ctx_user}" ]; then
+        ctx_user="${kube_user}/${cluster}"
+    fi
     local ctx_name="${nm}/${cluster}/${kube_user}"
-    ${KUBECTL} config set-context "${ctx_name}" --namespace "${nm}" --user="${kube_user}" --cluster="${cluster}" 2>&1 > /dev/null
+
+    ${KUBECTL} config set-context "${ctx_name}" --namespace "${nm}" --user="${ctx_user}" --cluster="${cluster}" 2>&1 > /dev/null
     if [ $? -eq 1 ]; then
         check_error "ERROR: failed to set the context of kubectl"
     fi

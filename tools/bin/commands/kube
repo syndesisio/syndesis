@@ -23,16 +23,12 @@ cluster                      Execute cluster-related functions
 contexts                     List the configured contexts.
 context <ctx name>           Switch context to the give context.
 secrets                      Generates the secrets and minimum example custom resource required to install app
-registry
-    Registry Switches:
-    --build                    Build a docker secure registry for use with minikube
-    --start                    Start a built docker secure registry for use with minikube
+registry                     Start a built docker secure kubernetes registry
 
 EOT
 }
 
 user_functions() {
-
     local newuser="${1:-$(get_kube_user)}"
     local kuser="$(get_kube_user)"
     local newnm="$(readopt -n --namespace)"
@@ -86,13 +82,13 @@ nm_functions() {
 }
 
 cluster_functions() {
-    local cluster="$(get_kube_cluster)"
+    local cluster="$(get_cluster)"
 
     #
     # Already switched to this cluster so just display it
     #
     if [[ $(hasflag -a --address) ]]; then
-        get_kube_cluster_address
+        get_cluster_address
     else
         echo "${cluster}"
     fi
@@ -114,48 +110,57 @@ context_functions() {
     fi
 }
 
-#
-# Creates the secrets necessary for oauth communication of syndesis app
-# in a kubernetes platform environment
-#
-# * Asks for credentials of oauth provider, ie. github, client-id, client-secret
-# * Generates the oauth-client-secret
-# * Asks for certificate-authority certificate and key
-# * Generates a new signed certificate (if not already exists)
-# * Generates the oauth-comms-secret
-# * Generates a customised CR
-#
-create_secrets_and_cr() {
+create_credentials_secret() {
+    if [ "$(has_secret "syndesis-oauth-credentials")" == "true" ]; then
+        read -p "The authentication credentials secret exists. Do you want to recreate it?: yes/[no] : " choice
+        echo
+        if [ "${choice}" == "no" ] || [ "${choice}" == "n" ]; then
+            return
+        fi
 
-    source "$(basedir)/commands/util/certificate_funcs"
-
-    check_error $(check_for_command "base64")
-
-    BASE64="base64 -w0"
-
-    #
-    # Creates the syndesis credentials secret
-    #
-    read -p 'Provider Id, eg. github: ' provider
-    echo
-    if [ -z "${provider}" ]; then
-        check_error "ERROR: provider not specified"
+        local delsec=$(delete_secret "syndesis-oauth-credentials")
+        check_error "${delsec}"
     fi
 
-    read -p 'Client Id (id received from provider): ' client_id
-    echo
-    if [ -z "${client_id}" ]; then
-        check_error "ERROR: client id not specified"
-    fi
+    local cls_file=""
 
-    read -p 'Client Secret (secret received from provider): ' client_secret
+    read -p "Would you like to provide your own authentication credentials secret: yes/[no] : " choice
     echo
-    if [ -z "${client_secret}" ]; then
-        check_error "ERROR: provider not specified"
-    fi
+    if [ "${choice}" == "yes" ] || [ "${choice}" == "y" ]; then
+        read -p "Please provide the path to the secret file: " path
+        echo
+        path="$(eval echo "${path}")"
+        if [ ! -f "${path}" ]; then
+            check_error "ERROR: Path to secret file is not valid"
+        fi
 
-    local cls_file=$(mktemp --tmpdir --suffix=.yml client-secret-XXXX)
-    cat << EOT > ${cls_file}
+        cls_file="${path}"
+    else
+        echo "Please provide values for the simpler credentials secret, eg. github & google"
+        echo
+        #
+        # Creates the syndesis credentials secret
+        #
+        read -p 'Provider Id, eg. github: ' provider
+        echo
+        if [ -z "${provider}" ]; then
+            check_error "ERROR: provider not specified"
+        fi
+
+        read -p 'Client Id (id received from provider): ' client_id
+        echo
+        if [ -z "${client_id}" ]; then
+            check_error "ERROR: client id not specified"
+        fi
+
+        read -p 'Client Secret (secret received from provider): ' client_secret
+        echo
+        if [ -z "${client_secret}" ]; then
+            check_error "ERROR: provider not specified"
+        fi
+
+        cls_file=$(mktemp --tmpdir --suffix=.yml client-secret-XXXX)
+        cat << EOT > ${cls_file}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -170,29 +175,33 @@ stringData:
   OAUTH2_PROXY_CLIENT_SECRET: "${client_secret}"
 EOT
 
-    if [ "$(has_secret "syndesis-oauth-credentials")" == "true" ]; then
-        local delsec=$(delete_secret "syndesis-oauth-credentials")
-        check_error "${delsec}"
+        add_to_trap "rm -f "${cls_file}""
+        # End of cls_file creation
     fi
 
     local applycls=$(cat "${cls_file}" | ${KUBECTL} apply -f - 2>&1)
     check_error "${applycls}"
-    rm -f "${cls_file}"
+}
 
-    #
-    # Process for creating the comms secret
-    # * Generate a signed certificate with key
-    # * Create a secret and import
-    #
+create_comms_secret() {
+    if [ "$(has_secret "syndesis-oauth-comms")" == "true" ]; then
+        read -p "The authentication comms secret exists. Do you want to recreate it?: yes/[no] : " choice
+        echo
+        if [ "${choice}" == "no" ] || [ "${choice}" == "n" ]; then
+            return
+        fi
 
-    #
-    # Generate the signed certificate
-    #
-    read -p 'Host name for external access to syndesis, eg. syndesis.dash: ' external_host
-    echo
-    if [ -z "${external_host}" ]; then
-        check_error "ERROR: host not specified"
+        local delsec=$(delete_secret "syndesis-oauth-comms")
+        check_error "${delsec}"
     fi
+
+    local external_host="${1:-}"
+    if [ -z "${external_host}" ]; then
+        check_error "ERROR: Host name not specified when creating comms secret"
+    fi
+
+    check_error $(check_for_command "base64")
+    local BASE64="base64 -w0"
 
     local oauth_dir=$(create_certificate_cache "oauth")
     check_error "${oauth_dir}"
@@ -230,25 +239,47 @@ data:
   tls.crt: ${oauth_cert}
 EOT
 
-    if [ "$(has_secret "syndesis-oauth-comms")" == "true" ]; then
-        local delsec=$(delete_secret "syndesis-oauth-comms")
-        check_error "${delsec}"
-    fi
-
     local applycos=$(cat "${cos_file}" | ${KUBECTL} apply -f - 2>&1)
     check_error "${applycos}"
     rm -f "${cos_file}"
+}
+#
+# Creates the secrets necessary for oauth communication of syndesis app
+# in a kubernetes platform environment
+#
+# * Asks for credentials of oauth provider, ie. github, client-id, client-secret
+# * Generates the oauth-client-secret
+# * Asks for certificate-authority certificate and key
+# * Generates a new signed certificate (if not already exists)
+# * Generates the oauth-comms-secret
+# * Generates a customised CR
+#
+# Optional argument of the external hostname
+#
+create_secrets_and_cr() {
+    local external_host="${1:-}"
+
+    source "$(basedir)/commands/util/certificate_funcs"
+
+    create_credentials_secret
+
+    if [ -z "${external_host}" ]; then
+        read -p 'Host name for external access to syndesis, eg. syndesis.dash: ' external_host
+        echo
+        if [ -z "${external_host}" ]; then
+            check_error "ERROR: host not specified"
+        fi
+    fi
+
+    create_comms_secret "${external_host}"
 
     #
     # Create a customised Custom Resource complete with the external hostname
     #
-    local share_dir=$(create_share_dir)
-    local cr_dir="${share_dir}/custom-resources"
-    mkdir -p "${cr_dir}"
-
+    local cr_dir=$(create_cr_dir)
     local cr_file="${cr_dir}/${external_host}-cr.yml"
     cat << EOT > ${cr_file}
-apiVersion: syndesis.io/v1alpha1
+apiVersion: syndesis.io/v1beta1
 kind: Syndesis
 metadata:
   name: app

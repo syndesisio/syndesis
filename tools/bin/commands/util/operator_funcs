@@ -157,6 +157,17 @@ install_built_operator() {
         echo "ERROR: Failed to copy built operator to ${OPERATOR_BINARY}."
     fi
 
+    local srcpd="${opdir}/dist/${pattern}/${PLATFORM_DETECT}"
+    if [ ! -f "${srcpd}" ]; then
+        echo "ERROR: Cannot copy built ${PLATFORM_DETECT} to ${PLATFORM_DETECT_BINARY}. Appears to be no built binary."
+        return
+    fi
+
+    cp -rf "${srcpd}" "${PLATFORM_DETECT_BINARY}"
+    if [ ! -f "${PLATFORM_DETECT_BINARY}" ]; then
+        echo "ERROR: Failed to copy built binary to ${PLATFORM_DETECT_BINARY}."
+    fi
+
     echo "OK"
 }
 

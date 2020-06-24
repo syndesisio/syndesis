@@ -4,6 +4,8 @@
 GO_MIN_VERSION=1.12
 
 # Version of the platform detect binary
+PLATFORM_DETECT="platform-detect"
+PLATFORM_DETECT_BINARY=$HOME/.syndesis/bin/${PLATFORM_DETECT}
 PLATFORM_DETECT_VERSION="0.1.0"
 
 # Var to hold result of detecting platform is openshift
@@ -90,6 +92,31 @@ contains_error() {
   fi
 }
 
+#
+# Collection of trap commnds
+#
+TRAP_CMDS=()
+
+#
+# Adds a command to the set of trap commands
+# to be executed on EXIT (see signal trap in syndesis script)
+#
+add_to_trap() {
+    local cmd="${1:-}"
+    if [ -z "${cmd}" ]; then
+        return
+    fi
+
+    TRAP_CMDS+=("${cmd}")
+}
+
+process_trap() {
+    for var in "${TRAP_CMDS[@]}"
+    do
+        eval "${var}"
+    done
+}
+
 check_error() {
     local msg="$*"
     if [ "$(contains_error "$msg")" == "YES" ]; then
@@ -171,11 +198,18 @@ syndesis_config_dir() {
 # Share directory for caching useful files
 create_share_dir() {
   local share_dir="$(syndesis_config_dir)/share"
-  if [ ! -d "${share_dir}" ]; then
-      mkdir -p "${share_dir}"
-  fi
+  mkdir -p "${share_dir}"
 
   echo "${share_dir}"
+}
+
+# Share directory for caching custom-resources
+create_cr_dir() {
+  local share_dir=$(create_share_dir)
+  local cr_dir="${share_dir}/custom-resources"
+  mkdir -p "${cr_dir}"
+
+  echo "${cr_dir}"
 }
 
 # ======================================================
@@ -218,9 +252,8 @@ has_changes() {
 # Download `platform-detect` binary
 #
 get_platform_detect_bin() {
-    local version=${1:-$PLATFORM_DETECT_VERSION}
-    local bin_name="platform-detect"
-    local binary="${bin_name}-${version}"
+    local version=${1:-"${PLATFORM_DETECT_VERSION}"}
+    local binary="${PLATFORM_DETECT}"
 
     check_error $(check_for_command "mktemp")
     check_error $(check_for_command "mkdir")
@@ -232,12 +265,8 @@ get_platform_detect_bin() {
     #
     # If its already downloaded, skip download
     #
-    local config_dir=$(syndesis_config_dir)
-    [ -d ${config_dir}/bin ] || mkdir -p ${config_dir}/bin
-
-    local detect_command="${config_dir}/bin/${binary}"
-    if [ -e ${detect_command} ]; then
-        echo ${detect_command}
+    if [ -e ${PLATFORM_DETECT_BINARY} ]; then
+        echo ${PLATFORM_DETECT_BINARY}
         return
     fi
 
@@ -254,10 +283,13 @@ get_platform_detect_bin() {
     #
     # Download from site
     #
+    local config_dir=$(syndesis_config_dir)
+    [ -d ${config_dir}/bin ] || mkdir -p ${config_dir}/bin
+
     local base_url="https://github.com/syndesisio/syndesis/releases/download/$version"
-    local download_url="${base_url}/platform-detect-$version-$os-amd64.tar.gz"
-    local archive=$(mktemp ${config_dir}/platform-detect-${version}.tar-XXXX)
-    curl -sL --fail -o ${archive} ${download_url} 2>/dev/null || { check_error "ERROR: Could not download ${binary} from ${download_url}"; }
+    local download_url="${base_url}/${PLATFORM_DETECT}-$version-$os-amd64.tar.gz"
+    local archive=$(mktemp ${config_dir}/${PLATFORM_DETECT}-${version}.tar-XXXX)
+    curl -sL --fail -o ${archive} ${download_url} 2>/dev/null || { check_error "ERROR: Could not download ${PLATFORM_DETECT} from ${download_url}"; }
 
     #
     # Extract binary and move to correct name
@@ -272,7 +304,7 @@ get_platform_detect_bin() {
         check_error "ERROR: Failed to extract ${bin_name} to ${tmp_dir}/"
     fi
 
-    mv ./${bin_name} ${detect_command}
+    mv ./${bin_name} ${PLATFORM_DETECT_BINARY}
 
     popd >/dev/null
 

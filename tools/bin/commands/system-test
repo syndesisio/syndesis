@@ -315,7 +315,7 @@ test_build() {
         project=$(get_free_pool_project)
         check_error $project
         local test_id=$(calc_test_id)
-        trap "release_project "$pool" "$test_id"" EXIT
+        add_to_trap "release_project "$pool" "$test_id""
     fi
 
     local minishift=$(is_minishift)

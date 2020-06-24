@@ -3,6 +3,7 @@
 DEFAULT_OPENSHIFT_VERSION="v3.11.0"
 DEFAULT_CPUS="4"
 DEFAULT_RAM="8192"
+ADMIN_USER="kubeadmin"
 
 crc::description() {
     echo "Initialize and manage a developer environment using OCP4 CodeReady Containers"
@@ -128,7 +129,7 @@ crc::run() {
 
         # Login as admin to install CRDs
         local user=$(oc whoami)
-        local revert_login=$(login_as_admin)
+        local revert_login=$(login_as_admin "${ADMIN_USER}")
 
         # Install Syndesis CRD
         if ! $(oc get crd | ${GREP} "syndesises.syndesis.io" >/dev/null 2>&1); then

@@ -1,21 +1,42 @@
 #!/bin/bash
 
+DEFAULT_DRIVER="kvm2"
+DEFAULT_CPUS=2
+DEFAULT_MEMORY="6GB"
+DEFAULT_DISK="60GB"
+ADMIN_USER="minikube"
+
 minikube::description() {
     echo "Provides helpful minikube functions"
 }
 
 minikube::usage() {
     cat <<"EOT"
-volumes                      Create volumes for syndesis installation
-start                        Start a new instance of minikube
-      Start Switches:
-       --reset                   Remove any old instance of minikube before starting
-       --driver                  The driver to use for accessing the VM (kvm2 by default)
-       --disk                    The size of disk to allocated in GB (60GB by default)
-       --memory                  The size of memory to allocate GB (12GB by default)
-       --cpus                    The number of CPUs to allocate (4 by default)
-       --registries              A file listing any registries the cluster should have access to
+    volumes                      Create volumes for syndesis installation
+    registry                     Start a built docker secure kubernetes registry signed with Minikube CA certificate
+
+    start                        Start a new instance of minikube
+      --reset                       Remove any old instance of minikube before starting
+      --driver                      The driver to use for accessing the VM (kvm2 by default)
+      --disk                        The size of disk to allocated in GB (60GB by default)
+      --memory                      The size of memory to allocate GB (12GB by default)
+      --cpus                        The number of CPUs to allocate (4 by default)
+      --registries                  A file listing any registries the cluster should have access to
+
+    install                      Install Syndesis on Minikube from scratch
 EOT
+}
+
+is_minikube_running() {
+    check_error $(check_for_command "minikube")
+
+    set +e
+    minikube status 2>&1 | ${GREP} -q "Running"
+    local stat=$?
+    set -e
+    if [ $stat -eq 0 ]; then
+      echo "true"
+    fi
 }
 
 #
@@ -27,16 +48,20 @@ volumes() {
     check_error $(check_for_command "chmod")
     check_error $(check_for_command "minikube")
 
-    local status=$(minikube status)
-    if [[ "${status}" == *"Stopped"* ]]; then
+    local status=$(is_minikube_running)
+    if [[ -z "${status}" ]]; then
         check_error "ERROR: minikube appears to be stopped"
     fi
 
     # Save the current context
     local ctx=$(current_context)
 
-    # Change to the admin user
-    local admin=$(get_admin_user)
+    #
+    # Change to the admin user.
+    # We know minikube's admin user so passthrough but
+    # will cache it for future operations
+    #
+    local admin=$(get_admin_user "${ADMIN_USER}")
     local admin_ctx=$(set_context "default" "${admin}")
     local use_ctx=$(use_context "${admin_ctx}")
     check_error "${use_ctx}"
@@ -49,12 +74,18 @@ volumes() {
         local pv="pv$i"
 
         # Create the directory inside the minikube VM
-        minikube ssh "sudo mkdir -p /mnt/${pv}"
+        minikube ssh "sudo mkdir -p /data/${pv}"
 
         # Create a PV in cluster
         local pvtemplate=$(mktemp --tmpdir --suffix=.yml syndesis-${pv}-XXXX)
-        trap "rm -f '${pvtemplate}'" EXIT
+        add_to_trap "rm -f '${pvtemplate}'"
 
+#
+# Creates the persistent volumes in /data which is one mount point
+# that is considered persistent in minikube. Other directories in
+# are not retained after stop/start and have their content and permissions
+# reset.
+#
         cat << EOT > ${pvtemplate}
 apiVersion: v1
 kind: PersistentVolume
@@ -64,13 +95,13 @@ metadata:
     type: local
 spec:
   storageClassName: standard
-  persistentVolumeReclaimPolicy: Retain
+  persistentVolumeReclaimPolicy: Recycle
   capacity:
     storage: 1Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mnt/${pv}"
+    path: "/data/${pv}"
 EOT
 
         local apply=$(cat ${pvtemplate} | ${KUBECTL} apply -f - 2>&1)
@@ -88,7 +119,7 @@ EOT
     # by users. Without this, we get a rather ugly "permission denied"
     # error message when spinning up the containers
     #
-    minikube ssh "sudo chmod 777 /mnt/*"
+    minikube ssh "sudo chmod 777 /data/*"
 }
 
 #
@@ -97,27 +128,35 @@ EOT
 #
 start() {
 
+    # Check that crc is installed
+    which minikube &>/dev/null
+    if [ $? -ne 0 ]; then
+        echo "ERROR: No 'minikube' found in path."
+        echo "Please install Kubernetes Minikube from https://kubernetes.io/docs/setup/learning-environment/minikube"
+        exit 1
+    fi
+
     local driver=$(readopt --driver)    # Modify to suit Operating System
     local disk=$(readopt   --disk)      # Modify to suit hdd size
     local memory=$(readopt 	--memory)   # Modify to suit physical installed RAM
     local cpus=$(readopt 		--cpus)     # Modify to suit number of CPUs
 
     if [ -z "${driver}" ]; then
-        driver="kvm2"
+        driver="${DEFAULT_DRIVER}"
     fi
     if [ -z "${disk}" ]; then
-        disk="60GB"
+        disk="${DEFAULT_DISK}"
     fi
     if [ -z "${memory}" ]; then
-        memory="12GB"
+        memory="${DEFAULT_MEMORY}"
     fi
     if [ -z "${cpus}" ]; then
-        cpus=4
+        cpus=${DEFAULT_CPUS}
     fi
 
     if [[ $(hasflag --reset) ]]; then
         echo "Resetting minikube configuration ... "
-        echo "Warning this deletes the ${HOME}/.minikube & $(syndesis_config_dir)/share directories ..."
+        echo "Warning this deletes the ${HOME}/.minikube, $(syndesis_config_dir)/share/oauth & registry directories ..."
         echo ============================================================
         read -p "Do you really want to continue ? yes/[no] : " choice
         echo
@@ -126,7 +165,8 @@ start() {
         fi
 
         minikube delete --purge=true
-        rm -f "$(syndesis_config_dir)/share"
+        rm -rf "$(syndesis_config_dir)/share/oauth"
+        rm -rf "$(syndesis_config_dir)/share/registry"
     fi
 
     local options="--bootstrapper=kubeadm --driver ${driver} --disk-size ${disk} --memory ${memory} --cpus ${cpus}"
@@ -143,8 +183,8 @@ start() {
         done < "$reg_file"
     fi
 
-    local status=$(minikube status)
-    if [[ "${status}" == *"Stopped"* ]]; then
+    local status=$(is_minikube_running)
+    if [[ -z "${status}" ]]; then
         # Start minikube (unsurprisingly!)
         minikube start ${options}
     fi
@@ -155,26 +195,108 @@ start() {
     local done=false
     while [ ! ${done} ]
     do
-        local status=$(minikube status)
-        if [[ "${status}" != *"Stopped"* ]]; then
+        local status=$(is_minikube_running)
+        if [[ -z "${status}" ]]; then
             done=true
         fi
 
         sleep 5
     done
 
-    #
-    # Ensure all volume mount directories are writeable
-    # by users. Without this, we get a rather ugly "permission denied"
-    # error message when spinning up the containers
-    #
+    # Enable addons
+    minikube addons enable dashboard # optional but useful for later development
+    minikube addons enable ingress
+    minikube addons enable ingress-dns
+}
 
-    echo "Performing work-around for persistent volume permissions"
-    minikube ssh "sudo chmod 777 /mnt/*"
+install() {
+
+    echo "Starting up minikube ..."
+    echo
+    start
+
+    local revert_login=$(login_as_admin "${ADMIN_USER}")
+
+    #
+    # Generate the persistent volumes
+    #
+    echo "Creating minikube persistent volumes ..."
+    echo
+    volumes
+
+    echo "Creating the developer user and syndesis namespace ..."
+    echo
+
+    #
+    # These are global variables so they might be detected by the certificate functions
+    #
+    CA_CERT="${HOME}/.minikube/ca.crt"
+    if [ ! -f "${CA_CERT}" ]; then
+        check_error "ERROR: Cannot locate the minikube Certificate Authority (CA) certificate"
+    fi
+
+    CA_KEY="${HOME}/.minikube/ca.key"
+    if [ ! -f "${CA_KEY}" ]; then
+        check_error "ERROR: Cannot locate the minikube Certificate Authority (CA) key"
+    fi
+
+    #
+    # Create the developer user and syndesis namespace
+    #
+    create_kube_user "developer" "syndesis" "${CA_CERT}" "${CA_KEY}"
+    local kuser=$(get_kube_user)
+    check_error "${kuser}"
+    if [ "${kuser}" != "developer" ]; then
+        check_error "ERROR: Failed to change to 'developer' user. Please check your ~/.kube/config file"
+    fi
+
+    echo "Creating secrets and custom resource ..."
+    echo
+
+    read -p 'Please specify the host name for external access to syndesis, eg. syndesis.dash: ' syndesis_hostname
+    echo
+    if [ -z "${syndesis_hostname}" ]; then
+        check_error "ERROR: external host not specified"
+    fi
+
+    create_secrets_and_cr "${syndesis_hostname}"
+
+    echo "Running install pre-requisites ..."
+    echo
+    create_kube_user "developer" "syndesis"
+    ARGS=("--setup" "--grant" "developer")
+    eval "install::run"
+
+    echo "Running install ..."
+    echo
+    create_kube_user "developer" "syndesis"
+    ARGS=("--dev" "--custom-resource" "$(create_cr_dir)/${syndesis_hostname}-cr.yml")
+    eval "install::run"
+}
+
+registry() {
+    #
+    # These are global variables so they might be detected by the certificate functions
+    #
+    CA_CERT="${HOME}/.minikube/ca.crt"
+    if [ ! -f "${CA_CERT}" ]; then
+        check_error "ERROR: Cannot locate the minikube Certificate Authority (CA) certificate"
+    fi
+
+    CA_KEY="${HOME}/.minikube/ca.key"
+    if [ ! -f "${CA_KEY}" ]; then
+        check_error "ERROR: Cannot locate the minikube Certificate Authority (CA) key"
+    fi
+
+    eval "start_registry"
 }
 
 minikube::init() {
     source "$(basedir)/commands/util/client_funcs"
+    source "$(basedir)/commands/util/camel_k_funcs"
+    source "$(basedir)/commands/util/operator_funcs"
+    source "$(basedir)/commands/install"
+    source "$(basedir)/commands/kube"
 
     #
     # minikube may not be running yet so override the 'determine platform'
@@ -190,10 +312,14 @@ minikube::init() {
 
 minikube::run() {
 
-    if [[ $(hasflag start) ]]; then
+    if [[ $(hasflag install) ]]; then
+        install
+    elif [[ $(hasflag start) ]]; then
         start
     elif [[ $(hasflag volumes) ]]; then
         volumes
+    elif [[ $(hasflag registry) ]]; then
+        start_registry
     else
         minikube::usage
     fi

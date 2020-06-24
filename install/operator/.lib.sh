@@ -270,7 +270,7 @@ build_image()
             # If registry defined then push image to docker registry
             #
             echo ======================================================
-            echo Tagging and Pushing image to docker registry
+            echo Pushing image to docker registry
             echo ======================================================
 
             #
@@ -295,7 +295,7 @@ build_image()
                 check_error "ERROR: Cannot verify image has been pushed to registry."
             else
                 echo ======================================================
-                echo "Operator Image Pushed to Regsitry: ${REGISTRY}"
+                echo "Operator Image Pushed to Registry: ${REGISTRY}"
                 echo ======================================================
             fi
         fi

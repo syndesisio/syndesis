@@ -146,7 +146,7 @@ minishift::run() {
 
         # Login as admin to install CRDs
         local user=$(oc whoami)
-        local revert_login=$(login_as_admin)
+        local revert_login=$(login_as_admin "${ADMIN_USER}")
 
         # Install Syndesis CRD globally (if required)
         if ! $(oc get crd | ${GREP} "syndesises.syndesis.io" >/dev/null 2>&1); then

@@ -68,36 +68,40 @@ create_signed_certificate() {
         #
         val="0${val}"
     fi
- 
+
     echo ${val} > "${parent_dir}/serial"
 
-    if [ ! -f "${openssl_cnf}" ]; then
+    if [ -z ${CA_KEY+x} ]; then
         #
         # Ask for path to certificate authority key
         #
-        read -p "Please specify the path to the certificate-authority key? : " ca_key
+        read -p "Please specify the path to the certificate-authority key? : " CA_KEY
         echo
-        if [ -z "${ca_key}" ]; then
+        if [ -z "${CA_KEY}" ]; then
             check_error "ERROR: CA key not specified. Aborting."
         else
-            ca_key=$(eval "echo -e \"${ca_key}\"") # echoing it to expand any env vars used, eg. ${HOME}
+            CA_KEY="$(eval echo "${CA_KEY}")" # echoing it to expand any env vars used, eg. ${HOME}
         fi
+    fi
 
+    if [ -z ${CA_CERT+x} ]; then
         #
         # Ask for path to certificate-authority certificate
         #
-        read -p "Please specify the path to the certificate-authority certificate? : " ca_cert
+        read -p "Please specify the path to the certificate-authority certificate? : " CA_CERT
         echo
-        if [ -z "${ca_cert}" ]; then
+        if [ -z "${CA_CERT}" ]; then
             check_error "ERROR: CA certificate not specified. Aborting."
         else
-            ca_cert=$(eval "echo -e \"${ca_cert}\"") # echoing it to expand any env vars used, eg. ${HOME}
+            CA_CERT="$(eval echo "${CA_CERT}")" # echoing it to expand any env vars used, eg. ${HOME}
+            echo "$CA_CERT"
         fi
+    fi
 
-        #
-        # Create openssl.cnf
-        #
-        cat <<EOT > ${openssl_cnf}
+    #
+    # Create openssl.cnf or updates its if it already exists
+    #
+    cat <<EOT > ${openssl_cnf}
 ####################################################################
 [ ca ]
 default_ca = CA_default            # The default ca section
@@ -107,9 +111,9 @@ default_ca = CA_default            # The default ca section
 dir = ${parent_dir}                     # top dir
 database = \$dir/index.txt              # index file.
 new_certs_dir = \$dir/certs             # new certs dir
-certificate = ${ca_cert}                # The CA cert
+certificate = ${CA_CERT}                # The CA cert
 serial = \$dir/serial                   # serial no file
-private_key = ${ca_key}                 # CA private key
+private_key = ${CA_KEY}                 # CA private key
 RANDFILE = \$dir/private/.rand          # random number file
 email_in_dn = no                        # Add email to cert DN
 
@@ -177,9 +181,8 @@ keyUsage = critical, digitalSignature, keyEncipherment
 extendedKeyUsage = clientAuth, serverAuth, emailProtection
 EOT
 
-        if [ ! -f ${openssl_cnf} ]; then
-            check_error "ERROR: Trying to create oauth certificate. Failed to create openssl.cnf file"
-        fi
+    if [ ! -f ${openssl_cnf} ]; then
+        check_error "ERROR: Trying to create oauth certificate. Failed to create openssl.cnf file"
     fi
 
     #

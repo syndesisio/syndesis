@@ -42,8 +42,9 @@ get_current_user() {
 }
 
 get_admin_user() {
+    local admin="${1:-}"
     local client_dir=$(create_client_cache)
-    local cache_file="${client_dir}/admin-${KUBE}-user"
+    local cache_file="${client_dir}/admin-${KUBE}--user"
 
     if [ -f "${cache_file}" ]; then
         local admin=$(head -n 1 "${cache_file}")
@@ -51,9 +52,11 @@ get_admin_user() {
         return
     fi
 
-    read -p "Please specify a cluster admin account to continue? : " admin
     if [ -z "${admin}" ]; then
-        check_error "ERROR: Admin account not specified. Aborting."
+        read -p "Please specify a cluster admin account to continue? : " admin
+        if [ -z "${admin}" ]; then
+            check_error "ERROR: Admin account not specified. Aborting."
+        fi
     fi
 
     #
@@ -68,9 +71,9 @@ get_admin_user() {
 
 login_as_admin() {
     if [ "${IS_OPENSHIFT}" == "YES" ]; then
-        echo $(login_oc_as_admin)
+        echo $(login_oc_as_admin "${1:-}")
     else
-        echo $(login_kube_as_admin)
+        echo $(login_kube_as_admin "${1:-}")
     fi
 }
 
@@ -341,7 +344,7 @@ has_secret() {
         check_error "ERROR: secret not specified."
     fi
 
-    local result=$(${KUBE} get secret "${secret}")
+    local result=$(${KUBE} get secret "${secret}" 2>&1)
     if [ "$(contains_error "${result}")" == "YES" ]; then
         echo "false"
     else
@@ -356,4 +359,35 @@ delete_secret() {
     fi
 
     local result=$(${KUBE} delete secret "${secret}" 2>&1)
+}
+
+current_context() {
+    echo $(${KUBE} config current-context)
+}
+
+get_cluster() {
+    cur_ctx="$(current_context)" || { echo "ERROR: getting current context"; return; }
+    cluster="$(${KUBECTL} config view -o=jsonpath="{.contexts[?(@.name==\"${cur_ctx}\")].context.cluster}")"
+
+    if [[ -z "${cluster}" ]]; then
+        echo "ERROR: Cannot find current kube cluster"
+    else
+        echo "${cluster}"
+    fi
+}
+
+get_cluster_address() {
+    cluster_name=$(get_cluster)
+    if [ -z "${cluster_name}" ]; then
+        check_error "ERROR: Cannot find current cluster"
+    fi
+
+    cluster="$(${KUBECTL} config view -o=jsonpath="{.clusters[?(@.name==\"${cluster_name}\")].cluster.server}")" \
+        || check_error "ERROR: getting current cluster address"
+
+    if [[ -z "${cluster}" ]]; then
+        echo "Cannot find cluster address"
+    else
+        echo "${cluster}"
+    fi
 }

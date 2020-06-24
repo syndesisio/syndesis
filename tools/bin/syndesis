@@ -185,7 +185,12 @@ run() {
 source "$(basedir)/commands/util/common_funcs"
 
 ERROR_FILE="$(mktemp /tmp/syndesis-output.XXXXXX)"
-trap "print_error $ERROR_FILE" EXIT
+add_to_trap "print_error ${ERROR_FILE}"
+#
+# This should be the only trap
+# Other instances should use add_to_trap
+#
+trap "process_trap" EXIT
 
 if [ $(hasflag --verbose) ]; then
     export PS4='+($(basename ${BASH_SOURCE[0]}):${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'

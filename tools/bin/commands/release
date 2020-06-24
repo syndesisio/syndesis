@@ -75,7 +75,7 @@ release::run() {
         touch $logfile
         tail -f $logfile > >(${GREP} ^====) &
         local tail_pid=$!
-        trap "kill $tail_pid" EXIT
+        add_to_trap "kill $tail_pid"
 
         exec >>$logfile 2>&1
         sleep 1
@@ -88,7 +88,7 @@ release::run() {
     local local_maven_repo=$(readopt --local-maven-repo)
     if [ -z "$local_maven_repo" ]; then
         local_maven_repo=$(mktemp -d 2>/dev/null || mktemp -d -t 'maven_repo')
-        trap "echo 'Removing temp maven repo $local_maven_repo' && rm -rf $local_maven_repo" "EXIT"
+        add_to_trap "echo 'Removing temp maven repo $local_maven_repo' && rm -rf $local_maven_repo"
     fi
 
     # Calculate common maven options
@@ -397,7 +397,7 @@ docker_login() {
     if [ -n "$(readopt --docker-user)" ] && [ -n "$(readopt --docker-password)" ]; then
         echo "==== Login to Docker Hub"
         docker login -u "$(readopt --docker-user)" -p "$(readopt --docker-password)"
-        trap "docker logout" "EXIT"
+        add_to_trap "docker logout"
     fi
 }
 
