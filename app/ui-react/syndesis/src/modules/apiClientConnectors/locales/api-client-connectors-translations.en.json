@@ -17,6 +17,7 @@
   "errorSavingApiConnector": "Unexpected server error saving the API client connector.",
   "Host": "Host",
   "invalidImageFileUpload": "Please select an image file",
+  "nameHelperText": "Please provide a name for the API Connector",
   "reviewActionsTitle": "Imported Operations",
   "reviewApiDefinitionHeading": "API DEFINITION",
   "reviewErrorsHeading": "Errors {{count}}",

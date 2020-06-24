@@ -46,10 +46,9 @@ export interface IApiConnectorDetailBodyProps {
   i18nEditLabel: string;
   i18nSaveLabel: string;
 
-  /**
-   * The localized text of the form title.
-   */
+  i18nNameHelper: string;
   i18nTitle: string;
+  i18nRequiredText: string;
 
   /**
    * The callback fired when submitting the form.
@@ -70,19 +69,20 @@ export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetail
   i18nLabelName,
   i18nCancelLabel,
   i18nEditLabel,
+  i18nNameHelper,
+  i18nRequiredText,
   i18nSaveLabel,
   i18nTitle,
   icon,
   name,
 }) => {
-  // tslint:disable:no-console
-  const isValid = false;
   const [configured, setConfigured] = React.useState<IApiConnectorDetailValues>(
     { address, basePath, description, host, icon, name }
   );
   const [isEditing, setIsEditing] = React.useState(false);
 
   const onCancelEditing = () => {
+    setConfigured({ address, basePath, description, host, icon, name });
     setIsEditing(false);
   };
 
@@ -94,15 +94,18 @@ export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetail
     setIsEditing(true);
   };
 
-  const onSubmit = (e: any) => {
+  const onSubmit = () => {
     setIsEditing(false);
-    handleSubmit(e);
+    handleSubmit(configured);
   };
 
   return (
     <PageSection>
       <Container>
-        <div className={'row row-cards-pf'}>
+        <div
+          className={'row row-cards-pf'}
+          data-testid={'api-connector-detail-body'}
+        >
           <Card>
             <CardHeader>
               <Title size={'2xl'}>{i18nTitle}</Title>
@@ -115,6 +118,8 @@ export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetail
                   i18nLabelDescription={i18nLabelDescription}
                   i18nLabelHost={i18nLabelHost}
                   i18nLabelName={i18nLabelName}
+                  i18nNameHelper={i18nNameHelper}
+                  i18nRequiredText={i18nRequiredText}
                   properties={configured}
                 />
               ) : (
@@ -133,7 +138,7 @@ export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetail
                   <Button
                     data-testid={'connector-details-form-save-button'}
                     variant={'primary'}
-                    disabled={!isValid}
+                    isDisabled={!configured.name}
                     onClick={onSubmit}
                   >
                     {i18nSaveLabel}

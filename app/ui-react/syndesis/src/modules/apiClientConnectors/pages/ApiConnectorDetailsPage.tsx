@@ -3,7 +3,7 @@ import { Connector } from '@syndesis/models';
 import {
   ApiConnectorDetailBody,
   ApiConnectorDetailHeader,
-  ApiConnectorDetailOperations,
+  ApiConnectorReview,
   Breadcrumb,
   PageLoader,
 } from '@syndesis/ui';
@@ -89,11 +89,9 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                       </Breadcrumb>
                       <WithApiConnectorHelpers>
                         {({ saveApiConnector, updateApiConnector }) => {
-                          /*
                           const handleSave = async (updated: Connector) => {
                             await saveApiConnector(updated);
                           };
-                          */
 
                           return (
                             <WithApiConnector
@@ -102,20 +100,7 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                               key={location.key}
                             >
                               {({ data, hasData, error, errorMessage }) => {
-                                // tslint:disable:jsdoc-format
-                                // tslint:disable
-
-                                const onSubmit = (e: any) => {
-                                  console.log(
-                                    'submitted..: ' + JSON.stringify(e)
-                                  );
-                                };
-
-                                /**
-                                const onSubmit = async (
-                                  values: IConnectorValues,
-                                  actions: any
-                                ) => {
+                                const onSubmit = async (values: any) => {
                                   const updated = updateApiConnector(
                                     data,
                                     values.name,
@@ -127,7 +112,6 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
 
                                   try {
                                     await handleSave(updated);
-                                    actions.setSubmitting(false);
                                     history.push(
                                       resolvers.apiClientConnectors.apiConnector.details(
                                         {
@@ -137,7 +121,6 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                     );
                                     return true;
                                   } catch (error) {
-                                    actions.setSubmitting(false);
                                     pushNotification(
                                       t('errorSavingApiConnector'),
                                       'error'
@@ -145,29 +128,6 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                     return false;
                                   }
                                 };
-                                 **/
-
-                                /*
-                                const cancelEditing = () => {
-                                  history.push(
-                                    resolvers.apiClientConnectors.apiConnector.details(
-                                      {
-                                        apiConnector: data,
-                                      }
-                                    )
-                                  );
-                                };
-
-                                const startEditing = () => {
-                                  history.push(
-                                    resolvers.apiClientConnectors.apiConnector.edit(
-                                      {
-                                        apiConnector: data,
-                                      }
-                                    )
-                                  );
-                                };
-                                 */
 
                                 const getUsedByMessage = (
                                   c: Connector
@@ -235,6 +195,12 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                               )}
                                               i18nLabelHost={t('shared:Host')}
                                               i18nLabelName={t('shared:Name')}
+                                              i18nNameHelper={t(
+                                                'nameHelperText'
+                                              )}
+                                              i18nRequiredText={t(
+                                                'shared:RequiredText'
+                                              )}
                                               i18nSaveLabel={t('shared:Save')}
                                               i18nTitle={t(
                                                 'detailsSectionTitle',
@@ -247,7 +213,7 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                             />
                                             &nbsp;
                                             {data.actionsSummary ? (
-                                              <ApiConnectorDetailOperations
+                                              <ApiConnectorReview
                                                 apiConnectorDescription={
                                                   data.description
                                                 }
@@ -290,7 +256,7 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                                 )} // TODO fix count
                                               />
                                             ) : (
-                                              <ApiConnectorDetailOperations
+                                              <ApiConnectorReview
                                                 i18nApiDefinitionHeading={t(
                                                   'apiConnectorsPageTitle'
                                                 )}

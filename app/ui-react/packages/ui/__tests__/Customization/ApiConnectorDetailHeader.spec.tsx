@@ -1,18 +1,21 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
-import { ApiConnectorDetailBody } from '../../src/Customization/apiClientConnectors';
-import icons from '../icons';
+import { ApiConnectorDetailHeader } from '../../src/Customization/apiClientConnectors';
 
 it('Renders the expected connector name and description', () => {
-  const expectedIcon = icons.beer;
-  const expectedName = 'Test';
   const expectedDescription = 'This is a description.';
+  const expectedIcon = 'some-icon';
+  const expectedName = 'Test';
+  const expectedUsageMessage = 'Used by integrations 2 times';
 
   const { getByText } = render(
-    <ApiConnectorDetailBody
-      description={expectedDescription}
-      icon={expectedIcon}
-      name={expectedName}
+    <ApiConnectorDetailHeader
+      connectorDescription={expectedDescription}
+      i18nDescription={'Description'}
+      i18nUsageLabel={'Usage'}
+      i18nUsageMessage={expectedUsageMessage}
+      connectorIcon={expectedIcon}
+      connectorName={expectedName}
     />
   );
 
@@ -21,7 +24,4 @@ it('Renders the expected connector name and description', () => {
 
   // Expect the connector description to be visible
   expect(getByText(expectedDescription)).toBeInTheDocument();
-
-  // Expect the connector icon to be visible
-  expect(getByText(expectedIcon)).toBeInTheDocument();
 });
