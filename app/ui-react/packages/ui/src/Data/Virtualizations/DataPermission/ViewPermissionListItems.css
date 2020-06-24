@@ -7,7 +7,9 @@
 .view-permission-list-items-disabled_text {
   color: var(--pf-c-button--disabled--Color);
 }
-
+.view-permission-list_expanded_content .pf-c-data-list__expandable-content-body{
+  padding-top: 0px !important;
+}
 
 .view-permission-list_set-expanded_row{
   max-width: 100%;

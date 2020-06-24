@@ -9,7 +9,6 @@ import {
   DataListItemCells,
   DataListItemRow,
   DataListToggle,
-  Radio,
   Split,
   SplitItem,
   Tooltip,
@@ -94,8 +93,6 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
     false
   );
 
-  const [grantOperation, setGrantOperation] = React.useState<boolean>(true);
-
   const [trimPermissionList, setTrimPermissionList] = React.useState<
     ITablePrivilege[]
   >([]);
@@ -151,7 +148,6 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
 
   const handleCancel = () => {
     clearRolePermissionModel();
-    setGrantOperation(true);
     setClearAction(!clearAction);
     setShow(!show);
   };
@@ -168,7 +164,7 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
   const handleUpdateRoles = async () => {
     setShowLoading(true);
     const callSucess = await props.updateViewsPermissions({
-      operation: grantOperation ? 'GRANT' : 'REVOKE',
+      operation: 'SET',
       tablePrivileges: getUpdatePermissionsPayload(
         rolePermissionModel,
         props.viewId
@@ -178,7 +174,6 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
       props.getUpdatedRole();
       setShowLoading(false);
       clearRolePermissionModel();
-      setGrantOperation(true);
     }
   };
 
@@ -344,38 +339,9 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
           aria-label="Primary Content Details"
           id="width-ex3-expand1"
           isHidden={!show}
+          className={'view-permission-list_expanded_content'}
         >
           <div className={'view-permission-list_set-expanded_row'}>
-            <Split
-              gutter="sm"
-              className={'view-permission-list_set-model_grant'}
-            >
-              <SplitItem>
-                <Radio
-                  aria-label={'View-grant'}
-                  id={'view-operation-grant' + props.index}
-                  data-testid={'view-operation-grant' + props.index}
-                  name={'view-operation' + props.index}
-                  label="GRANT"
-                  // tslint:disable-next-line: jsx-no-lambda
-                  onClick={() => setGrantOperation(true)}
-                  isChecked={grantOperation}
-                />
-              </SplitItem>
-              <SplitItem>
-                <Radio
-                  aria-label={'view-revoke'}
-                  id={'view-operation-revoke' + props.index}
-                  className={'view-permission-list_radios' + props.index}
-                  data-testid={'view-operation-revoke' + props.index}
-                  name={'view-operation' + props.index}
-                  label="REVOKE"
-                  // tslint:disable-next-line: jsx-no-lambda
-                  onClick={() => setGrantOperation(false)}
-                  isChecked={!grantOperation}
-                />
-              </SplitItem>
-            </Split>
             <RolePermissionList
               i18nRole={props.i18nRole}
               i18nSelect={props.i18nSelect}

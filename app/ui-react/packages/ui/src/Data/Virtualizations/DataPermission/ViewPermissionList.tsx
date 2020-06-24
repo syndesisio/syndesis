@@ -90,7 +90,7 @@ export interface ITablePrivilege {
 }
 
 export interface IRoleInfo {
-  operation: 'GRANT' | 'REVOKE';
+  operation: 'GRANT' | 'REVOKE' | 'SET';
   tablePrivileges: ITablePrivilege[];
 }
 
