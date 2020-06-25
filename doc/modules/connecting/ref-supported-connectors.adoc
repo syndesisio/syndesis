@@ -109,6 +109,9 @@ in {NameOfFuseOnlineIntegrationGuide}.
 |Obtain messages from a channel or send a message to a
 Slack channel or user.
 
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-api-clients_connectors[SOAP API clients]
+|Create a custom SOAP API client connector by uploading a WSDL file. You can then create a connection to that SOAP API client.
+
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-databases_connectors[SQL databases]
 |Invoke a SQL statement or a SQL stored procedure on an Apache Derby,
 MySQL, or PostgreSQL database. To connect to other types of SQL databases,
