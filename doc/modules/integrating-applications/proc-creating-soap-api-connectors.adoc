@@ -31,7 +31,7 @@ in the input field.
 . Click *Next*. If there is invalid or missing content, {prodname} displays information about what needs to be corrected. Select a different WSDL file to upload or click *Cancel*, revise the WSDL file, and then upload the updated file. If the schema is valid, {prodname} displays a summary of the API definition (name and description) and a list of imported elements, such as the number of operations.
 . Click *Next*. 
 +
-*Note:* For this release, the security requirements on this page are inactive. Instead, you can define the security options when you create a connection from the connector, as described in link:{LinkFuseOnlineConnectorGuide}#create-soap-api-connection_add-client-connector[{NameOfSyndesisConnectorGuide}, Creating a SOAP API client connection]. 
+*Note:* For this release, the security requirements on this page are inactive. Instead, you can define the security options when you create a connection from the connector, as described in link:{LinkFuseOnlineConnectorGuide}#create-soap-api-connection[{NameOfSyndesisConnectorGuide}, Creating a SOAP API client connection]. 
 
 //. Indicate the security requirements to use when invoking the WSDL endpoint. {prodname} reads the API definition to determine the information needed to configure the connector to meet the API’s security requirements. {prodname} can display any of the following: 
 //+
