@@ -21,8 +21,6 @@ definition of the API determines what {prodname} prompts for.
 . On the connection configuration page:
 .. Accept or edit the SOAP Endpoint address.
 .. Select an Authentication type (None, Basic, or WS-Security Username Token) to use when invoking the WSDL endpoint. Typically, an API service has security requirements and {prodname} prompts for security input according to the particular security type that the WSDL file defines.
-document describes how to use the UsernameToken with the Web Services Security (WSS) specification. 
-
 .. Select a WS-Security Password Type (`None`, `Text`, or `Digest`).
 .. Specify *username* and *password*.
 .. Select *Timestamp* if you want Fuse Online to add a timestamp to the WS-Security header.
