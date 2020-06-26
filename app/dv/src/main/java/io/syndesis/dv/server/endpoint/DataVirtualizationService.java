@@ -1152,15 +1152,24 @@ public final class DataVirtualizationService extends DvService {
                     switch (op) {
                     case GRANT:
                     case SET:
-                        if (existing == null) {
+                        if (existing == null && !tablePrivileges.getGrantPrivileges().isEmpty()) {
                             existing = repositoryManager.createTablePrivileges(
-                                    viewId, tablePrivileges.getRoleName());
-                        } else if (op == Operation.SET) {
-                            //set will remove all existing
-                            existing.getGrantPrivileges().clear();
+                                viewId, tablePrivileges.getRoleName());
                         }
-                        existing.getGrantPrivileges()
+
+                        if (existing != null) {
+                            if (tablePrivileges.getGrantPrivileges().isEmpty()) {
+                                repositoryManager.deleteTablePrivileges(existing);
+                            } else if (op == Operation.SET) {
+                                //set will remove all existing
+                                existing.getGrantPrivileges().clear();
+                                existing.getGrantPrivileges()
                                 .addAll(tablePrivileges.getGrantPrivileges());
+                            } else {
+                                existing.getGrantPrivileges()
+                                .addAll(tablePrivileges.getGrantPrivileges());
+                            }
+                        }
                         break;
                     case REVOKE:
                         if (existing != null) {

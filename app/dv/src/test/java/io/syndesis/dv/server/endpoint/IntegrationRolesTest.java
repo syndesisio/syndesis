@@ -213,6 +213,35 @@ public class IntegrationRolesTest {
         statusResponse = restTemplate.getForEntity("/v1/virtualizations/{dv}/roles", RoleInfo.class, dvName);
         assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
         assertEquals("[DELETE]", statusResponse.getBody().getTablePrivileges().get(0).getGrantPrivileges().toString());
+
+        // Add another role x with SELECT privilege
+        toGrant = new RoleInfo();
+        toGrant.getTablePrivileges().add(new TablePrivileges("x", viewId, Privilege.S));
+
+        //grant the privilege
+        grant = restTemplate.exchange(
+                "/v1/virtualizations/{dv}/roles", HttpMethod.PUT,
+                new HttpEntity<RoleInfo>(toGrant), String.class, dvName);
+        assertEquals(HttpStatus.OK, grant.getStatusCode());
+
+        //check that it got added
+        rolesResponse = restTemplate.getForEntity("/v1/status/roles", listOfAnything);
+        assertEquals(HttpStatus.OK, rolesResponse.getStatusCode());
+        assertEquals("[any authenticated, x]", rolesResponse.getBody().toString());
+
+        //set with empty privilege should remove role
+        toGrant = new RoleInfo();
+        toGrant.setOperation(Operation.SET);
+        toGrant.getTablePrivileges().add(new TablePrivileges("x", viewId));
+        grant = restTemplate.exchange(
+                "/v1/virtualizations/{dv}/roles", HttpMethod.PUT,
+                new HttpEntity<RoleInfo>(toGrant), String.class, dvName);
+        assertEquals(HttpStatus.OK, grant.getStatusCode());
+
+        //check that role x got removed
+        rolesResponse = restTemplate.getForEntity("/v1/status/roles", listOfAnything);
+        assertEquals(HttpStatus.OK, rolesResponse.getStatusCode());
+        assertEquals("[any authenticated]", rolesResponse.getBody().toString());
     }
 
     @Test public void testStatus() {
