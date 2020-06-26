@@ -8,7 +8,22 @@
     <link id="favicon" rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" type="image/x-icon">
     <link id="appleTouchIcon" rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/red-hat-apple-touch-icon.png">
     <link id="safariPinnedTab" rel="mask-icon" href="%PUBLIC_URL%/red-hat-safari-pinned-tab.svg" color="#cc0000">
+    <link rel="stylesheet" type="text/css" href="loading.css">
+    <link rel="preload" href="./loading-fonts/RedHatDisplay-Medium.woff2" as="font">
     <title>Syndesis</title>
+    <style>
+        @font-face {
+            font-family: "RedHatDisplay";
+            src: url("./loading-fonts/RedHatDisplay-Medium.woff2");
+            font-style: normal;
+            font-weight: 400;
+            text-rendering: optimizeLegibility;
+        }
+
+        .app__loading-container {
+            font-family: "RedHatDisplay";
+        }
+    </style>
 </head>
 <body>
 <noscript>
@@ -16,5 +31,21 @@
 </noscript>
 <div id="root"></div>
 <div id="modals"></div>
+<div class="app__loading-container" id="loading-page-spinner">
+    <div class="pf-l-bullseye">
+        <div class="pf-l-flex pf-m-column">
+            <div class="pf-m-spacer-xl pf-m-align-self-center">
+                <span class="pf-c-spinner pf-m-xl" role="progressbar" aria-valuetext="Loading...">
+                    <span class="pf-c-spinner__clipper"></span>
+                    <span class="pf-c-spinner__lead-ball"></span>
+                    <span class="pf-c-spinner__tail-ball"></span>
+                  </span>
+            </div>
+            <div class="pf-c-title pf-m-xl">
+                Loading Syndesis
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
