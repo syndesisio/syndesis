@@ -27,7 +27,6 @@ import { SettingsModule } from './modules/settings';
 import { SupportModule } from './modules/support';
 import { unregister } from './registerServiceWorker';
 
-
 ReactDOM.render(
   <Router history={createBrowserHistory()}>
     <I18nextProvider i18n={i18n}>
