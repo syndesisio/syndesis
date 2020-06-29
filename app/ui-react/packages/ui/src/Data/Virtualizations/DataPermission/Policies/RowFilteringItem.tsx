@@ -155,10 +155,9 @@ export const RowFilteringItem: React.FunctionComponent<IRowFilteringItemProps> =
           position={TooltipPosition.top}
           content={<div>{props.i18nRemoveRow}</div>}
         >
-          <MinusCircleIcon
-            onClick={removeRow}
-            className={'row-filtering-item-remove_icon'}
-          />
+          <Button variant="link" onClick={removeRow} icon={<MinusCircleIcon />}>
+            Delete
+          </Button>
         </Tooltip>
       </GridItem>
       <GridItem span={10} className={'row-filtering-item-condition'}>

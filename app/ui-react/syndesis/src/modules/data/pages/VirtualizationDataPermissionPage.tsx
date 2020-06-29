@@ -393,6 +393,12 @@ export const VirtualizationDataPermissionPage: React.FunctionComponent = () => {
                             i18nPermission={t('permissions')}
                             i18nAddPermission={t('addPermission')}
                             i18nColumn={t('column')}
+                            i18nAddACondition={t('addACondition')}
+                            i18nAddColumnMasking={t('addColumnMasking')}
+                            i18nDeleteCondition={t('deleteCondition')}
+                            i18nMaskings={t('maskings')}
+                            i18nMaskingLabel={t('maskingLabel')}
+                            i18nOrder={t('order')}
                             i18nEditPoliciesTitle={t('editViewPoliciesTitle', {
                               viewName: viewDefinitionDescriptor.name,
                             })}

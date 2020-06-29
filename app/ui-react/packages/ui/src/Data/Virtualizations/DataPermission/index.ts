@@ -8,3 +8,6 @@ export * from './Policies/RowFilteringTab';
 export * from './Policies/RowFilteringItem';
 export * from './Policies/ColumnPermissionTab';
 export * from './Policies/ColumnPermissionItem';
+export * from './Policies/ColumnMaskingTab';
+export * from './Policies/ColumnMaskingItems';
+export * from './Policies/ColumnMaskingItemsContitions';

@@ -42,10 +42,10 @@ export const ColumnPermissionTab: React.FunctionComponent<IColumnPermissionTabPr
 
   return (
     <PageSection noPadding={false} className={'column-permission-section'}>
-      {columnPermissionItems.map(rowFilteringItem => (
+      {columnPermissionItems.map(columnPermissionItem => (
         <ColumnPermissionItem
-          key={rowFilteringItem}
-          index={rowFilteringItem}
+          key={columnPermissionItem}
+          index={columnPermissionItem}
           removeRow={removeRow}
           i18nSelectColumn={props.i18nSelectColumn}
           i18nUserRole={props.i18nUserRole}

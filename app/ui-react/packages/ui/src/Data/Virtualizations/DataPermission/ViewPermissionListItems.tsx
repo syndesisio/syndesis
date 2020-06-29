@@ -53,6 +53,12 @@ export interface IViewPermissionListItemsProps {
   i18nSelectColumn: string;
   i18nAddPermission: string;
   i18nColumn: string;
+  i18nAddACondition: string;
+  i18nAddColumnMasking: string;
+  i18nDeleteCondition: string;
+  i18nMaskings: string;
+  i18nMaskingLabel: string;
+  i18nOrder: string;
   viewId: string;
   viewName: string;
   viewRolePermissionList: ITablePrivilege[];
@@ -252,6 +258,13 @@ export const ViewPermissionListItems: React.FC<IViewPermissionListItemsProps> = 
         i18nPermission={props.i18nPermission}
         i18nAddPermission={props.i18nAddPermission}
         i18nColumn={props.i18nColumn}
+        i18nAddACondition={props.i18nAddACondition}
+        i18nAddColumnMasking={props.i18nAddColumnMasking}
+        i18nDeleteCondition={props.i18nDeleteCondition}
+        i18nMaskings={props.i18nMaskings}
+        i18nMaskingLabel={props.i18nMaskingLabel}
+        i18nOrder={props.i18nOrder}
+        i18nDelete={props.i18nDelete}
       />
       <DataListItem aria-labelledby="width-ex3-item1" isExpanded={show}>
         <DataListItemRow>
