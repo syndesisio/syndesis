@@ -7,7 +7,7 @@ import {
   Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
-import { Container, PageSection } from '../../../Layout';
+import { PageSection } from '../../../Layout';
 import { ApiConnectorDetailConfig } from './ApiConnectorDetailConfig';
 import { ApiConnectorDetailConfigEdit } from './ApiConnectorDetailConfigEdit';
 
@@ -101,69 +101,67 @@ export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetail
 
   return (
     <PageSection>
-      <Container>
-        <div
-          className={'row row-cards-pf'}
-          data-testid={'api-connector-detail-body'}
-        >
-          <Card>
-            <CardHeader>
-              <Title size={'2xl'}>{i18nTitle}</Title>
-            </CardHeader>
-            <CardBody>
-              {isEditing ? (
-                <ApiConnectorDetailConfigEdit
-                  handleOnChange={onHandleChange}
-                  i18nLabelBaseUrl={i18nLabelBaseUrl}
-                  i18nLabelDescription={i18nLabelDescription}
-                  i18nLabelHost={i18nLabelHost}
-                  i18nLabelName={i18nLabelName}
-                  i18nNameHelper={i18nNameHelper}
-                  i18nRequiredText={i18nRequiredText}
-                  properties={configured}
-                />
-              ) : (
-                <ApiConnectorDetailConfig
-                  i18nLabelBaseUrl={i18nLabelBaseUrl}
-                  i18nLabelDescription={i18nLabelDescription}
-                  i18nLabelHost={i18nLabelHost}
-                  i18nLabelName={i18nLabelName}
-                  properties={configured}
-                />
-              )}
-            </CardBody>
-            <CardFooter>
-              {isEditing ? (
-                <>
-                  <Button
-                    data-testid={'connector-details-form-save-button'}
-                    variant={'primary'}
-                    isDisabled={!configured.name}
-                    onClick={onSubmit}
-                  >
-                    {i18nSaveLabel}
-                  </Button>{' '}
-                  <Button
-                    data-testid={'connector-details-form-cancel-button'}
-                    variant={'secondary'}
-                    onClick={onCancelEditing}
-                  >
-                    {i18nCancelLabel}
-                  </Button>
-                </>
-              ) : (
+      <div
+        className={'row row-cards-pf'}
+        data-testid={'api-connector-detail-body'}
+      >
+        <Card>
+          <CardHeader>
+            <Title size={'2xl'}>{i18nTitle}</Title>
+          </CardHeader>
+          <CardBody>
+            {isEditing ? (
+              <ApiConnectorDetailConfigEdit
+                handleOnChange={onHandleChange}
+                i18nLabelBaseUrl={i18nLabelBaseUrl}
+                i18nLabelDescription={i18nLabelDescription}
+                i18nLabelHost={i18nLabelHost}
+                i18nLabelName={i18nLabelName}
+                i18nNameHelper={i18nNameHelper}
+                i18nRequiredText={i18nRequiredText}
+                properties={configured}
+              />
+            ) : (
+              <ApiConnectorDetailConfig
+                i18nLabelBaseUrl={i18nLabelBaseUrl}
+                i18nLabelDescription={i18nLabelDescription}
+                i18nLabelHost={i18nLabelHost}
+                i18nLabelName={i18nLabelName}
+                properties={configured}
+              />
+            )}
+          </CardBody>
+          <CardFooter>
+            {isEditing ? (
+              <>
                 <Button
-                  data-testid={'connector-details-form-edit-button'}
+                  data-testid={'connector-details-form-save-button'}
                   variant={'primary'}
-                  onClick={onStartEditing}
+                  isDisabled={!configured.name}
+                  onClick={onSubmit}
                 >
-                  {i18nEditLabel}
+                  {i18nSaveLabel}
+                </Button>{' '}
+                <Button
+                  data-testid={'connector-details-form-cancel-button'}
+                  variant={'secondary'}
+                  onClick={onCancelEditing}
+                >
+                  {i18nCancelLabel}
                 </Button>
-              )}
-            </CardFooter>
-          </Card>
-        </div>
-      </Container>
+              </>
+            ) : (
+              <Button
+                data-testid={'connector-details-form-edit-button'}
+                variant={'primary'}
+                onClick={onStartEditing}
+              >
+                {i18nEditLabel}
+              </Button>
+            )}
+          </CardFooter>
+        </Card>
+      </div>
     </PageSection>
   );
 };
