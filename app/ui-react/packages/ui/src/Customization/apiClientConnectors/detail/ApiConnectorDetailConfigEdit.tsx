@@ -54,67 +54,65 @@ export const ApiConnectorDetailConfigEdit: React.FunctionComponent<IApiConnector
   };
 
   return (
-    <>
-      <Form isHorizontal={true} data-testid={'api-connector-details-form'}>
-        {i18nRequiredText}
-        <FormGroup
-          label={i18nLabelName}
+    <Form isHorizontal={true} data-testid={'api-connector-details-form'}>
+      {i18nRequiredText}
+      <FormGroup
+        label={i18nLabelName}
+        isRequired={true}
+        fieldId="connector-name"
+        helperTextInvalid={i18nNameHelper}
+        validated={isValid}
+      >
+        <TextInput
+          value={properties.name}
           isRequired={true}
-          fieldId="connector-name"
-          helperTextInvalid={i18nNameHelper}
+          type="text"
+          id="connector-name"
+          aria-describedby="horizontal-form-name-helper"
+          data-testid={'api-connector-name-field'}
+          name="name"
+          onChange={onChange}
           validated={isValid}
-        >
-          <TextInput
-            value={properties.name}
-            isRequired={true}
-            type="text"
-            id="connector-name"
-            aria-describedby="horizontal-form-name-helper"
-            data-testid={'api-connector-name-field'}
-            name="name"
-            onChange={onChange}
-            validated={isValid}
-          />
-        </FormGroup>
-        <FormGroup label={i18nLabelDescription} fieldId="connector-description">
-          <TextArea
-            value={properties.description}
-            onChange={onChange}
-            name="description"
-            id="connector-description"
-          />
-        </FormGroup>
-        <FormGroup
-          label={i18nLabelHost}
+        />
+      </FormGroup>
+      <FormGroup label={i18nLabelDescription} fieldId="connector-description">
+        <TextArea
+          value={properties.description}
+          onChange={onChange}
+          name="description"
+          id="connector-description"
+        />
+      </FormGroup>
+      <FormGroup
+        label={i18nLabelHost}
+        isRequired={false}
+        fieldId="connector-host"
+      >
+        <TextInput
+          value={properties.host}
           isRequired={false}
-          fieldId="connector-host"
-        >
-          <TextInput
-            value={properties.host}
-            isRequired={false}
-            type="text"
-            id="connector-host"
-            aria-describedby="horizontal-form-host-helper"
-            name="host"
-            onChange={onChange}
-          />
-        </FormGroup>
-        <FormGroup
-          label={i18nLabelBaseUrl}
+          type="text"
+          id="connector-host"
+          aria-describedby="horizontal-form-host-helper"
+          name="host"
+          onChange={onChange}
+        />
+      </FormGroup>
+      <FormGroup
+        label={i18nLabelBaseUrl}
+        isRequired={false}
+        fieldId="connector-baseurl"
+      >
+        <TextInput
+          value={properties.basePath}
           isRequired={false}
-          fieldId="connector-baseurl"
-        >
-          <TextInput
-            value={properties.basePath}
-            isRequired={false}
-            type="text"
-            id="connector-baseurl"
-            aria-describedby="horizontal-form-baseurl-helper"
-            name="basePath"
-            onChange={onChange}
-          />
-        </FormGroup>
-      </Form>
-    </>
+          type="text"
+          id="connector-baseurl"
+          aria-describedby="horizontal-form-baseurl-helper"
+          name="basePath"
+          onChange={onChange}
+        />
+      </FormGroup>
+    </Form>
   );
 };

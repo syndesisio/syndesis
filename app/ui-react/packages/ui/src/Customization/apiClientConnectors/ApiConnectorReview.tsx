@@ -13,7 +13,6 @@ import {
   Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
-import { Container } from '../../Layout';
 import './ApiConnectorReview.css';
 
 export interface IApiConnectorReviewProps {
@@ -57,22 +56,20 @@ export class ApiConnectorReview extends React.Component<
                 >
                   {this.props.i18nApiDefinitionHeading}
                 </Title>
-                <Container>
-                  <TextList component={TextListVariants.dl}>
-                    <TextListItem component={TextListItemVariants.dt}>
-                      {this.props.i18nNameLabel}
-                    </TextListItem>
-                    <TextListItem component={TextListItemVariants.dd}>
-                      {this.props.apiConnectorName}
-                    </TextListItem>
-                    <TextListItem component={TextListItemVariants.dt}>
-                      {this.props.i18nDescriptionLabel}
-                    </TextListItem>
-                    <TextListItem component={TextListItemVariants.dd}>
-                      {this.props.apiConnectorDescription}
-                    </TextListItem>
-                  </TextList>
-                </Container>
+                <TextList component={TextListVariants.dl}>
+                  <TextListItem component={TextListItemVariants.dt}>
+                    {this.props.i18nNameLabel}
+                  </TextListItem>
+                  <TextListItem component={TextListItemVariants.dd}>
+                    {this.props.apiConnectorName}
+                  </TextListItem>
+                  <TextListItem component={TextListItemVariants.dt}>
+                    {this.props.i18nDescriptionLabel}
+                  </TextListItem>
+                  <TextListItem component={TextListItemVariants.dd}>
+                    {this.props.apiConnectorDescription}
+                  </TextListItem>
+                </TextList>
                 <Title
                   headingLevel="h5"
                   size="md"
@@ -80,14 +77,12 @@ export class ApiConnectorReview extends React.Component<
                 >
                   {this.props.i18nImportedHeading}
                 </Title>
-                <Container>
-                  <Text
-                    component={TextVariants.p}
-                    dangerouslySetInnerHTML={{
-                      __html: this.props.i18nOperationsHtmlMessage,
-                    }}
-                  />
-                </Container>
+                <Text
+                  component={TextVariants.p}
+                  dangerouslySetInnerHTML={{
+                    __html: this.props.i18nOperationsHtmlMessage,
+                  }}
+                />
 
                 {/* tagged messages */}
                 {this.props.i18nOperationTagHtmlMessages && (
