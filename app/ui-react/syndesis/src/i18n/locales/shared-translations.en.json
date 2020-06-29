@@ -13,6 +13,7 @@
     "shared": {
       "Actions": "Actions",
       "Back": "Back",
+      "BaseUrl": "Base URL",
       "Cancel": "Cancel",
       "CiCd": "CI/CD",
       "ChooseTable": "Choose one or more tables",
@@ -51,6 +52,7 @@
       "filterByNamePlaceholder": "Filter by Name",
       "fieldRequired": "{{field}} is required",
       "Home": "Home",
+      "Host": "Host",
       "ID": "ID",
       "Import": "Import",
       "Insert": "Insert",
@@ -70,6 +72,7 @@
       "Read": "Read",
       "Remove": "Remove",
       "requiredFieldMessage": "* Required field",
+      "RequiredText": "The fields marked with * are required.",
       "resultsCount": "{{count}} Results",
       "Save": "Save",
       "Select": "Select",

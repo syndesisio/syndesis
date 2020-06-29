@@ -4,7 +4,7 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import {
   ApiConnectorCreatorLayout,
-  ApiConnectorDetailCard,
+  ApiConnectorDetailBody,
 } from '../../../src';
 import {
   ApiConnectorCreatorBreadSteps,
@@ -12,7 +12,7 @@ import {
   ApiConnectorCreatorFooter,
   ApiConnectorCreatorToggleList,
 } from '../../../src/Customization/apiClientConnectors/create';
-import icons from '../icons';
+import icons from '../../Shared/icons';
 
 const stories = storiesOf(
   'Customization/ApiClientConnector/CreateApiConnector/4 - Details',
@@ -111,14 +111,13 @@ stories.add(
       handleSubmit={action(submitText)}
       onUploadImage={action(uploadImageText)}
       fields={<div>fields</div>}
-      footer={<div>footer</div>}
     />
   ),
   { notes: storyNotes }
 );
 
 stories.add('ApiConnectorDetailCard', () => (
-  <ApiConnectorDetailCard
+  <ApiConnectorDetailBody
     description={'An OpenAPI 2.0 version of the Beer API.'}
     icon={icons.beer}
     name={'Beer API 2.0'}
@@ -126,5 +125,5 @@ stories.add('ApiConnectorDetailCard', () => (
 ));
 
 stories.add('ApiConnectorDetailCard (no icon, no description)', () => (
-  <ApiConnectorDetailCard name={name} />
+  <ApiConnectorDetailBody name={name} />
 ));

@@ -2,6 +2,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  PageSection,
   Text,
   TextContent,
   TextList,
@@ -12,7 +13,6 @@ import {
   Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
-import { Container } from '../../Layout/Container';
 import './ApiConnectorReview.css';
 
 export interface IApiConnectorReviewProps {
@@ -37,25 +37,25 @@ export class ApiConnectorReview extends React.Component<
 > {
   public render() {
     return (
-      <Card>
-        <CardHeader>
-          <Title size="lg">{this.props.i18nTitle}</Title>
-        </CardHeader>
-        <CardBody>
-          {this.props.i18nValidationFallbackMessage ? (
-            <h5 className="api-connector-review__validationFallbackMessage">
-              {this.props.i18nValidationFallbackMessage}
-            </h5>
-          ) : (
-            <TextContent>
-              <Title
-                headingLevel="h5"
-                size="md"
-                className="customization-details__heading"
-              >
-                {this.props.i18nApiDefinitionHeading}
-              </Title>
-              <Container>
+      <PageSection>
+        <Card>
+          <CardHeader>
+            <Title size="lg">{this.props.i18nTitle}</Title>
+          </CardHeader>
+          <CardBody>
+            {this.props.i18nValidationFallbackMessage ? (
+              <h5 className="api-connector-review__validationFallbackMessage">
+                {this.props.i18nValidationFallbackMessage}
+              </h5>
+            ) : (
+              <TextContent>
+                <Title
+                  headingLevel="h5"
+                  size="md"
+                  className="customization-details__heading"
+                >
+                  {this.props.i18nApiDefinitionHeading}
+                </Title>
                 <TextList component={TextListVariants.dl}>
                   <TextListItem component={TextListItemVariants.dt}>
                     {this.props.i18nNameLabel}
@@ -70,80 +70,78 @@ export class ApiConnectorReview extends React.Component<
                     {this.props.apiConnectorDescription}
                   </TextListItem>
                 </TextList>
-              </Container>
-              <Title
-                headingLevel="h5"
-                size="md"
-                className="customization-details__heading"
-              >
-                {this.props.i18nImportedHeading}
-              </Title>
-              <Container>
+                <Title
+                  headingLevel="h5"
+                  size="md"
+                  className="customization-details__heading"
+                >
+                  {this.props.i18nImportedHeading}
+                </Title>
                 <Text
                   component={TextVariants.p}
                   dangerouslySetInnerHTML={{
                     __html: this.props.i18nOperationsHtmlMessage,
                   }}
                 />
-              </Container>
 
-              {/* tagged messages */}
-              {this.props.i18nOperationTagHtmlMessages && (
-                <TextList className="api-connector-review__tagMessageList">
-                  {this.props.i18nOperationTagHtmlMessages.map(
-                    (msg: string, index: number) => (
-                      <TextListItem
-                        key={index}
-                        dangerouslySetInnerHTML={{ __html: msg }}
-                      />
-                    )
-                  )}
-                </TextList>
-              )}
+                {/* tagged messages */}
+                {this.props.i18nOperationTagHtmlMessages && (
+                  <TextList className="api-connector-review__tagMessageList">
+                    {this.props.i18nOperationTagHtmlMessages.map(
+                      (msg: string, index: number) => (
+                        <TextListItem
+                          key={index}
+                          dangerouslySetInnerHTML={{ __html: msg }}
+                        />
+                      )
+                    )}
+                  </TextList>
+                )}
 
-              {/* error messages */}
-              {this.props.i18nErrorsHeading && this.props.errorMessages && (
-                <Title
-                  headingLevel="h5"
-                  size="md"
-                  className="customization-details__heading"
-                >
-                  {this.props.i18nErrorsHeading}
-                </Title>
-              )}
-              {this.props.errorMessages
-                ? this.props.errorMessages.map(
-                    (errorMsg: string, index: number) => (
-                      <Text component={TextVariants.p} key={index}>
-                        {index + 1}. {errorMsg}
-                      </Text>
+                {/* error messages */}
+                {this.props.i18nErrorsHeading && this.props.errorMessages && (
+                  <Title
+                    headingLevel="h5"
+                    size="md"
+                    className="customization-details__heading"
+                  >
+                    {this.props.i18nErrorsHeading}
+                  </Title>
+                )}
+                {this.props.errorMessages
+                  ? this.props.errorMessages.map(
+                      (errorMsg: string, index: number) => (
+                        <Text component={TextVariants.p} key={index}>
+                          {index + 1}. {errorMsg}
+                        </Text>
+                      )
                     )
-                  )
-                : null}
+                  : null}
 
-              {/* warning messages */}
-              {this.props.i18nWarningsHeading && this.props.warningMessages && (
-                <Title
-                  headingLevel="h5"
-                  size="md"
-                  className="customization-details__heading"
-                >
-                  {this.props.i18nWarningsHeading}
-                </Title>
-              )}
-              {this.props.warningMessages
-                ? this.props.warningMessages.map(
-                    (warningMsg: string, index: number) => (
-                      <Text key={index} component={TextVariants.p}>
-                        {index + 1}. {warningMsg}
-                      </Text>
+                {/* warning messages */}
+                {this.props.i18nWarningsHeading && this.props.warningMessages && (
+                  <Title
+                    headingLevel="h5"
+                    size="md"
+                    className="customization-details__heading"
+                  >
+                    {this.props.i18nWarningsHeading}
+                  </Title>
+                )}
+                {this.props.warningMessages
+                  ? this.props.warningMessages.map(
+                      (warningMsg: string, index: number) => (
+                        <Text key={index} component={TextVariants.p}>
+                          {index + 1}. {warningMsg}
+                        </Text>
+                      )
                     )
-                  )
-                : null}
-            </TextContent>
-          )}
-        </CardBody>
-      </Card>
+                  : null}
+              </TextContent>
+            )}
+          </CardBody>
+        </Card>
+      </PageSection>
     );
   }
 }
