@@ -1,4 +1,5 @@
 import {
+  Button,
   Checkbox,
   Flex,
   FlexItem,
@@ -150,10 +151,9 @@ export const ColumnPermissionItem: React.FunctionComponent<IColumnPermissionItem
           position={TooltipPosition.top}
           content={<div>{props.i18nRemoveRow}</div>}
         >
-          <MinusCircleIcon
-            onClick={removeRow}
-            className={'column-permission-item-remove_icon'}
-          />
+          <Button variant="link" onClick={removeRow} icon={<MinusCircleIcon />}>
+            Delete
+          </Button>
         </Tooltip>
       </GridItem>
       <GridItem span={10} className={'column-permission-item-permissions'}>

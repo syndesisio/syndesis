@@ -1,6 +1,6 @@
 import { Button, Modal, Tab, Tabs } from '@patternfly/react-core';
 import * as React from 'react';
-import { ColumnPermissionTab, RowFilteringTab } from '..';
+import { ColumnMaskingTab, ColumnPermissionTab, RowFilteringTab } from '..';
 import { ButtonLink, Loader } from '../../../../Layout';
 
 export interface IEditPoliciesModalProps {
@@ -22,6 +22,13 @@ export interface IEditPoliciesModalProps {
   i18nPermission: string;
   i18nAddPermission: string;
   i18nColumn: string;
+  i18nAddACondition: string;
+  i18nAddColumnMasking: string;
+  i18nDeleteCondition: string;
+  i18nMaskings: string;
+  i18nMaskingLabel: string;
+  i18nDelete: string;
+  i18nOrder: string;
   isOpen: boolean;
   isUpdating: boolean;
   onClose: () => void;
@@ -32,7 +39,7 @@ export const EditPoliciesModal: React.FunctionComponent<IEditPoliciesModalProps>
   const [activeTabKey, setActiveTabKey] = React.useState<React.ReactText>();
 
   const [rowFilteringCount, setRowFilteringCount] = React.useState<number>(0);
-  const [columnMaskCount] = React.useState<number>(0);
+  const [columnMaskCount, setColumnMaskCount] = React.useState<number>(0);
   const [columnPermissionCount, setColumnPermissionCount] = React.useState<
     number
   >(0);
@@ -48,9 +55,12 @@ export const EditPoliciesModal: React.FunctionComponent<IEditPoliciesModalProps>
     [setRowFilteringCount]
   );
 
-  // const updateColumnMaskCount = ( val: number) => {
-  //   setColumnMaskCount(val);
-  // }
+  const updateColumnMaskCount = React.useCallback(
+    (val: number) => {
+      setColumnMaskCount(val);
+    },
+    [setColumnMaskCount]
+  );
 
   const updateColumnPermissionCount = React.useCallback(
     (val: number) => {
@@ -85,6 +95,21 @@ export const EditPoliciesModal: React.FunctionComponent<IEditPoliciesModalProps>
         <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
           <Tab
             eventKey={0}
+            title={`${props.i18nColumnPermissions} (${columnPermissionCount})`}
+          >
+            <ColumnPermissionTab
+              i18nSelectColumn={props.i18nSelectColumn}
+              i18nUserRole={props.i18nUserRole}
+              i18nRemoveRow={props.i18nRemoveRow}
+              i18nSelectRole={props.i18nSelectRole}
+              i18nPermission={props.i18nPermission}
+              i18nAddPermission={props.i18nAddPermission}
+              i18nColumn={props.i18nColumn}
+              updateColumnPermissionCount={updateColumnPermissionCount}
+            />
+          </Tab>
+          <Tab
+            eventKey={1}
             title={`${props.i18nRowBasedFiltering} (${rowFilteringCount})`}
           >
             <RowFilteringTab
@@ -100,24 +125,25 @@ export const EditPoliciesModal: React.FunctionComponent<IEditPoliciesModalProps>
             />
           </Tab>
           <Tab
-            eventKey={1}
+            eventKey={2}
             title={`${props.i18nColumnMasking} (${columnMaskCount})`}
           >
-            Column masking - coming soon!
-          </Tab>
-          <Tab
-            eventKey={2}
-            title={`${props.i18nColumnPermissions} (${columnPermissionCount})`}
-          >
-            <ColumnPermissionTab
+            <ColumnMaskingTab
+              updateColumnMaskCount={updateColumnMaskCount}
+              i18nAddACondition={props.i18nAddACondition}
+              i18nAddColumnMasking={props.i18nAddColumnMasking}
+              i18nDeleteCondition={props.i18nDeleteCondition}
+              i18nMaskings={props.i18nMaskings}
+              i18nMaskingLabel={props.i18nMaskingLabel}
+              i18nOrder={props.i18nOrder}
+              i18nColumn={props.i18nColumn}
               i18nSelectColumn={props.i18nSelectColumn}
               i18nUserRole={props.i18nUserRole}
               i18nRemoveRow={props.i18nRemoveRow}
               i18nSelectRole={props.i18nSelectRole}
-              i18nPermission={props.i18nPermission}
-              i18nAddPermission={props.i18nAddPermission}
-              i18nColumn={props.i18nColumn}
-              updateColumnPermissionCount={updateColumnPermissionCount}
+              i18nCondition={props.i18nCondition}
+              i18nValidate={props.i18nValidate}
+              i18nDelete={props.i18nDelete}
             />
           </Tab>
         </Tabs>

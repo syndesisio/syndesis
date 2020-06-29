@@ -100,6 +100,12 @@ stories
           i18nUserRole={'User Role'}
           i18nValidate={'Validate'}
           i18nRemoveRow={'Remove row'}
+          i18nAddACondition={'Add a condition'}
+          i18nAddColumnMasking={'Add column masking'}
+          i18nDeleteCondition={'Delete condition'}
+          i18nMaskings={'Masking'}
+          i18nMaskingLabel={'Masking expression'}
+          i18nOrder={'Order'}
           itemSelected={map}
           viewRolePermissionList={tablePrivileges}
           onSelectedViewChange={action(onSelectedViewChangeActionText)}
@@ -155,6 +161,12 @@ stories
           i18nUserRole={'User Role'}
           i18nValidate={'Validate'}
           i18nRemoveRow={'Remove row'}
+          i18nAddACondition={'Add a condition'}
+          i18nAddColumnMasking={'Add column masking'}
+          i18nDeleteCondition={'Delete condition'}
+          i18nMaskings={'Masking'}
+          i18nMaskingLabel={'Masking expression'}
+          i18nOrder={'Order'}
           itemSelected={map}
           viewRolePermissionList={tablePrivileges}
           onSelectedViewChange={action(onSelectedViewChangeActionText)}
