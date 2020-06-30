@@ -117,7 +117,7 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
 
         runner.then(http().client(webHookClient)
                 .receive()
-                .response(HttpStatus.NO_CONTENT));
+                .response(HttpStatus.OK));
 
         verifyRecordsInDb(runner, 1, "New hire for ${first_name} from ${company}");
     }
@@ -129,7 +129,7 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
 
         runner.variable("first_name", "Joanne");
         runner.variable("company", "Red Hat");
-        runner.variable("email", "joanne@syndesis.org");
+        runner.variable("email", "joan");
 
         runner.given(http().client(webHookClient)
                 .send()
