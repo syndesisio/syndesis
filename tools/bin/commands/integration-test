@@ -24,6 +24,10 @@ integration-test::run() {
     call_maven "$(maven_args)" ":test-parent,:test-support,:integration-test"
 }
 
+integration-test::init() {
+    echo "Running integration tests"
+}
+
 maven_args() {
     local args=" --no-transfer-progress"
 
