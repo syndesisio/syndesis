@@ -80,7 +80,7 @@ public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
 
         runner.then(http().client(webHookClient)
                 .receive()
-                .response(HttpStatus.NO_CONTENT));
+                .response(HttpStatus.OK));
 
         verifyRecordsInDb(runner, 2);
     }
@@ -97,7 +97,7 @@ public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
 
         runner.then(http().client(webHookClient)
                 .receive()
-                .response(HttpStatus.NO_CONTENT));
+                .response(HttpStatus.OK));
 
         verifyRecordsInDb(runner, 0);
     }
@@ -114,7 +114,7 @@ public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
 
         runner.then(http().client(webHookClient)
                 .receive()
-                .response(HttpStatus.NO_CONTENT));
+                .response(HttpStatus.OK));
 
         verifyRecordsInDb(runner, 0);
     }

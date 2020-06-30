@@ -74,7 +74,7 @@ public class Webhook2DB_IT extends SyndesisIntegrationTestSupport {
 
         runner.when(http().client(webHookClient)
                 .receive()
-                .response(HttpStatus.NO_CONTENT));
+                .response(HttpStatus.OK));
 
         runner.then(query(sampleDb)
                 .statement("select count(*) as found_records from todo where task = 'My new task!'")
