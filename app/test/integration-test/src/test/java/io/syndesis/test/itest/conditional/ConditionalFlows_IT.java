@@ -74,7 +74,7 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
 
         runner.http(builder -> builder.client(webHookClient)
                 .receive()
-                .response(HttpStatus.NO_CONTENT));
+                .response(HttpStatus.OK));
 
         verifyRecordInDb(runner, "Drink beer with John");
     }
@@ -89,7 +89,7 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
 
         runner.http(builder -> builder.client(webHookClient)
                 .receive()
-                .response(HttpStatus.NO_CONTENT));
+                .response(HttpStatus.OK));
 
         verifyRecordInDb(runner, "Drink coffee with Bill from Microsoft");
     }
@@ -104,7 +104,7 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
 
         runner.http(builder -> builder.client(webHookClient)
                 .receive()
-                .response(HttpStatus.NO_CONTENT));
+                .response(HttpStatus.OK));
 
         verifyRecordInDb(runner, "Meet Joanna from Red Hat");
     }
