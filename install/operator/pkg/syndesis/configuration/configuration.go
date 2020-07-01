@@ -872,7 +872,10 @@ func createNamespaceDashboardLink(name string, route action.Conduit, syndesis *v
 				Text: name,
 				Href: "https://" + route.Host(),
 			},
-			Location: consolev1.ApplicationMenu,
+			Location: consolev1.NamespaceDashboard,
+			NamespaceDashboard: &consolev1.NamespaceDashboardSpec{
+				Namespaces: []string{syndesis.Namespace},
+			},
 		},
 	}
 }

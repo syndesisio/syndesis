@@ -16,14 +16,14 @@ import (
 // Build encapsulates the inputs needed to produce a new deployable image, as well as
 // the status of the execution and a reference to the Pod which executed the build.
 type Build struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
+	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// spec is all the inputs used to execute the build.
 	Spec BuildSpec `json:"spec,omitempty" protobuf:"bytes,2,opt,name=spec"`
 
 	// status is the current status of the build.
+	// +optional
 	Status BuildStatus `json:"status,omitempty" protobuf:"bytes,3,opt,name=status"`
 }
 
@@ -84,6 +84,7 @@ type CommonSpec struct {
 	// If nil, it can be overridden by default build nodeselector values for the cluster.
 	// If set to an empty map or a map with any values, default build nodeselector values
 	// are ignored.
+	// +optional
 	NodeSelector OptionalNodeSelector `json:"nodeSelector" protobuf:"bytes,9,name=nodeSelector"`
 }
 
@@ -591,6 +592,7 @@ type BuildStrategy struct {
 	CustomStrategy *CustomBuildStrategy `json:"customStrategy,omitempty" protobuf:"bytes,4,opt,name=customStrategy"`
 
 	// JenkinsPipelineStrategy holds the parameters to the Jenkins Pipeline build strategy.
+	// Deprecated: use OpenShift Pipelines
 	JenkinsPipelineStrategy *JenkinsPipelineBuildStrategy `json:"jenkinsPipelineStrategy,omitempty" protobuf:"bytes,5,opt,name=jenkinsPipelineStrategy"`
 }
 
@@ -736,6 +738,7 @@ type SourceBuildStrategy struct {
 }
 
 // JenkinsPipelineBuildStrategy holds parameters specific to a Jenkins Pipeline build.
+// Deprecated: use OpenShift Pipelines
 type JenkinsPipelineBuildStrategy struct {
 	// JenkinsfilePath is the optional path of the Jenkinsfile that will be used to configure the pipeline
 	// relative to the root of the context (contextDir). If both JenkinsfilePath & Jenkinsfile are
@@ -874,14 +877,14 @@ type ImageLabel struct {
 //
 // Each build created by a build configuration is numbered and refers back to its parent configuration. Multiple builds can be triggered at once. Builds that do not have "output" set can be used to test code or run a verification build.
 type BuildConfig struct {
-	metav1.TypeMeta `json:",inline"`
-	// metadata for BuildConfig.
+	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// spec holds all the input necessary to produce a new build, and the conditions when
 	// to trigger them.
 	Spec BuildConfigSpec `json:"spec" protobuf:"bytes,2,opt,name=spec"`
 	// status holds any relevant information about a build config
+	// +optional
 	Status BuildConfigStatus `json:"status" protobuf:"bytes,3,opt,name=status"`
 }
 
@@ -1035,7 +1038,6 @@ const (
 // BuildList is a collection of Builds.
 type BuildList struct {
 	metav1.TypeMeta `json:",inline"`
-	// metadata for BuildList.
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// items is a list of builds
@@ -1047,7 +1049,6 @@ type BuildList struct {
 // BuildConfigList is a collection of BuildConfigs.
 type BuildConfigList struct {
 	metav1.TypeMeta `json:",inline"`
-	// metadata for BuildConfigList.
 	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// items is a list of build configs
@@ -1115,8 +1116,7 @@ type SourceStrategyOptions struct {
 
 // BuildRequest is the resource used to pass parameters to build generator
 type BuildRequest struct {
-	metav1.TypeMeta `json:",inline"`
-	// metadata for BuildRequest.
+	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// revision is the information from the source for a specific repo snapshot.
@@ -1154,8 +1154,7 @@ type BuildRequest struct {
 
 // BinaryBuildRequestOptions are the options required to fully speficy a binary build request
 type BinaryBuildRequestOptions struct {
-	metav1.TypeMeta `json:",inline"`
-	// metadata for BinaryBuildRequestOptions.
+	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
 	// asFile determines if the binary should be created as a file within the source rather than extracted as an archive
