@@ -18,6 +18,7 @@ dev::description() {
 
 dev::usage() {
     cat <<"EOT"
+    --bump <version>          Bump syndesis version.
     --debug <name>            Setup a port forwarding to <name> pod (default: server)
     --cookie                  Loads a local valid cookie to access Syndesis APIs when using Minishift
     --cleanup                 Removes 'Completed' pods
@@ -25,6 +26,7 @@ dev::usage() {
                               (both switches need to be specified)
     --refresh                 Used in conjuction with --cookie, forces a refresh of the cookie.
                               Ex: curl -k --cookie $(syndesis dev --cookie --refresh)  "https://$(oc get route syndesis  --template={{.spec.host}})/api/v1/connections"
+    --update-camel <version>  Updates the camel version on all dependent files (pom.xml, go, yaml)
     --update-manifest <name>  Updates the json manifest for the given connector
     --install-maven-mirror    Install Maven Nexus app as mirror to current cluster.
     --version                 Show running version of cluster
@@ -139,6 +141,84 @@ update_connector_manifest() {
     fi
 }
 
+update_camel_version() {
+    new_camel=$1
+    local topdir=$(appdir ".")
+    cd ${topdir}
+
+    # possible urls to test availability of camel
+    url1="https://repo1.maven.org/maven2/org/apache/camel/camel-core/${new_camel}/camel-core-${new_camel}.pom"
+    url2="https://repository.jboss.org/nexus/content/groups/ea/org/apache/camel/camel-core/${new_camel}/camel-core-${new_camel}.pom"
+    url3="https://maven.repository.redhat.com/ga/org/apache/camel/camel-core/${new_camel}/camel-core-${new_camel}.pom"
+
+    artifact_ok=-1
+    for artifact_url in ${url1} ${url2} ${url3}; do
+        # test if the new camel version is available on a public maven repo
+        artifact_ok=$(curl -s -k -X GET -I ${artifact_url} 2>/dev/null | head -n 1 | cut -d$' ' -f2)
+        if [ ${artifact_ok} == 200 ]; then
+            break
+        fi
+    done
+    if [ ${artifact_ok} != 200 ]; then
+        echo "Camel $new_camel is not available in ${artifact_url}, aborting."
+        echo "Camel version did not change."
+        exit 1
+    fi
+    # get the current camel version from app/pom.xml
+    current_camel=$(grep '<camel.version>' app/pom.xml  | head -1 | cut -d '>' -f 2|cut -d '<' -f 1)
+    echo "Changing camel version from \"$current_camel\" to \"$new_camel\""
+
+    # prepare the camel-catalog file, as the version is in the file name
+    current_camel_catalog=$(ls install/operator/pkg/generator/assets/addons/camelk/camel-catalog-*.tmpl)
+    new_camel_catalog=$(echo $current_camel_catalog | sed "s/${current_camel}/${new_camel}/g")
+
+    # replace camel version on pom.xml
+    sed -i "s/<camel.version>$current_camel/<camel.version>$new_camel/g" \
+        app/pom.xml \
+        app/extension/bom/pom.xml \
+        app/integration/bom-camel-k/pom.xml \
+        app/integration/bom/pom.xml
+
+    # replace CamelVersion property on operator project
+    sed -i "/CamelVersion/s/\"$current_camel/\"$new_camel/g" \
+        install/operator/build/conf/config.yaml \
+        install/operator/build/conf/config-test.yaml \
+        install/operator/pkg/generator/assets_vfsdata.go \
+        install/operator/pkg/syndesis/configuration/configuration_test.go \
+        ${current_camel_catalog}
+
+    sed -i "s/camel-catalog-$current_camel/camel-catalog-$new_camel/g;s/catalog.version: $current_camel/catalog.version: $new_camel/g;s/catalog.loader.version: $current_camel/catalog.loader.version: $new_camel/g;/^[[:space:]]*version/s/version: $current_camel/version: $new_camel/g" \
+        install/operator/pkg/generator/assets_vfsdata.go \
+        ${current_camel_catalog}
+
+    # rename camel-catalog file, as the version is in the file name
+    git mv ${current_camel_catalog} ${new_camel_catalog}
+
+    echo "Since go files were changed, lets regenerate them..."
+    cd install/operator
+    go generate ./pkg/...
+    cd -
+
+    git status
+    echo "==> You should use 'git add -A' to stage the files and commit them"
+    cd -
+}
+
+bump_syndesis_version() {
+    new_version=$1
+    local topdir=$(appdir ".")
+    cd ${topdir}
+
+    current_version=$(grep -A 1 syndesis-parent app/pom.xml |grep version |cut -d '>' -f 2|cut -d '<' -f 1)
+    echo "Changing Syndesis version from \"$current_version\" to \"$new_version\""
+
+    poms="app/pom.xml app/integration/bom/pom.xml app/integration/bom-camel-k/pom.xml app/extension/bom/pom.xml"
+    for pom in $poms; do
+        mvn versions:set -DgenerateBackupPoms=false -DnewVersion=${new_version} -f $pom
+    done
+    cd -
+}
+
 dev::run() {
     source "$(basedir)/commands/util/openshift_funcs"
 
@@ -223,5 +303,21 @@ dev::run() {
             exit 1
         fi
         update_connector_manifest $connector
+    elif [ $(hasflag --update-camel) ]; then
+        local camel_version=$(readopt --update-camel)
+        if [ -z "${camel_version}" ]; then
+            echo "Cannot get the Camel version parameter to change project files."
+            echo "Usage: syndesis dev --update-camel <camel version>"
+            exit 1
+        fi
+        update_camel_version $camel_version
+    elif [ $(hasflag --bump) ]; then
+        local syndesis_version=$(readopt --bump)
+        if [ -z "${syndesis_version}" ]; then
+            echo "Cannot get the Syndesis version parameter."
+            echo "Usage: syndesis dev --bump <syndesis version>"
+            exit 1
+        fi
+        bump_syndesis_version $syndesis_version
     fi
 }
