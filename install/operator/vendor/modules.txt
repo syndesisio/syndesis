@@ -12,6 +12,11 @@ github.com/Microsoft/hcsshim/osversion
 github.com/PuerkitoBio/purell
 # github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578
 github.com/PuerkitoBio/urlesc
+# github.com/RHsyseng/operator-utils v0.0.0-20200506183821-e3b4a2ba9c30
+## explicit
+github.com/RHsyseng/operator-utils/pkg/logs
+github.com/RHsyseng/operator-utils/pkg/resource
+github.com/RHsyseng/operator-utils/pkg/utils/kubernetes
 # github.com/aws/aws-sdk-go v1.30.24
 ## explicit
 github.com/aws/aws-sdk-go/aws
@@ -148,7 +153,7 @@ github.com/go-openapi/jsonreference
 # github.com/go-openapi/spec v0.19.8
 ## explicit
 github.com/go-openapi/spec
-# github.com/go-openapi/swag v0.19.5
+# github.com/go-openapi/swag v0.19.7
 github.com/go-openapi/swag
 # github.com/gogo/protobuf v1.3.1
 github.com/gogo/protobuf/proto
@@ -223,6 +228,7 @@ github.com/opencontainers/runc/libcontainer/user
 github.com/openshift/api/apps/v1
 github.com/openshift/api/authorization/v1
 github.com/openshift/api/build/v1
+github.com/openshift/api/console/v1
 github.com/openshift/api/image/docker10
 github.com/openshift/api/image/dockerpre012
 github.com/openshift/api/image/v1
@@ -231,6 +237,9 @@ github.com/openshift/api/pkg/serialization
 github.com/openshift/api/project/v1
 github.com/openshift/api/route/v1
 github.com/openshift/api/template/v1
+# github.com/openshift/client-go v3.9.0+incompatible
+github.com/openshift/client-go/image/clientset/versioned/scheme
+github.com/openshift/client-go/image/clientset/versioned/typed/image/v1
 # github.com/operator-framework/api v0.3.5
 ## explicit
 github.com/operator-framework/api/pkg/lib/version
@@ -339,7 +348,7 @@ golang.org/x/net/internal/socks
 golang.org/x/net/internal/timeseries
 golang.org/x/net/proxy
 golang.org/x/net/trace
-# golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45
+# golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 golang.org/x/oauth2
 golang.org/x/oauth2/google
 golang.org/x/oauth2/internal

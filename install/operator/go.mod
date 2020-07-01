@@ -8,6 +8,7 @@ module github.com/syndesisio/syndesis/install/operator
 
 require (
 	github.com/DATA-DOG/go-sqlmock v1.4.1
+	github.com/RHsyseng/operator-utils v0.0.0-20200506183821-e3b4a2ba9c30
 	github.com/aws/aws-sdk-go v1.30.24
 	github.com/chirino/hawtgo v0.0.1
 	github.com/docker/go-connections v0.4.0

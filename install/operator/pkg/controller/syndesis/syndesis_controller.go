@@ -2,13 +2,14 @@ package syndesis
 
 import (
 	"context"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"reflect"
 	"time"
 
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
-
+	consolev1 "github.com/openshift/api/console/v1"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -31,6 +32,10 @@ var (
 // and Start it when the Manager is Started.
 func Add(mgr manager.Manager) error {
 	reconciler, err := newReconciler(mgr)
+	if err != nil {
+		return err
+	}
+	err = consolev1.Install(mgr.GetScheme())
 	if err != nil {
 		return err
 	}
@@ -97,9 +102,18 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 			// Request object not found, could have been deleted after reconcile request.
 			// Owned objects are automatically garbage collected. For additional cleanup logic use finalizers.
 			// Return and don't requeue
+			syndesis.ObjectMeta = metav1.ObjectMeta{
+				Name:      request.Name,
+				Namespace: request.Namespace,
+			}
+
+			//Handle removal of cluster-scope object.
+			r.removeConsoleLink(ctx, syndesis)
+
 			return reconcile.Result{}, nil
 		}
 		// Error reading the object - requeue the request.
+
 		log.Error(err, "Cannot read object", request.NamespacedName)
 		return reconcile.Result{
 			Requeue:      true,
@@ -144,4 +158,22 @@ func (r *ReconcileSyndesis) isLatestVersion(ctx context.Context, syndesis *synde
 		return false, err
 	}
 	return refreshed.ResourceVersion == syndesis.ResourceVersion, nil
+}
+
+func (r *ReconcileSyndesis) removeConsoleLink(ctx context.Context, syndesis *syndesisv1beta1.Syndesis) (request reconcile.Result, err error) {
+	consoleLinkName := syndesis.Name + "-" + syndesis.Namespace
+	consoleLink := &consolev1.ConsoleLink{}
+	client, _ := r.clientTools.RuntimeClient()
+	err = client.Get(context.TODO(), types.NamespacedName{Name: consoleLinkName}, consoleLink)
+	if err != nil {
+		if !errors.IsNotFound(err) {
+			return reconcile.Result{}, err
+		}
+	} else {
+		err = client.Delete(context.TODO(), consoleLink)
+		if err != nil {
+			return reconcile.Result{}, err
+		}
+	}
+	return reconcile.Result{}, err
 }
