@@ -31,6 +31,7 @@ import javax.ws.rs.core.StreamingOutput;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -72,6 +73,7 @@ public final class ConnectorIconHandler extends BaseHandler {
     @ApiResponse(responseCode = "200", description = "Updated Connector icon")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @SuppressFBWarnings
     @SuppressWarnings("PMD.CyclomaticComplexity")
     public Connector create(MultipartFormDataInput dataInput) {
         if (dataInput == null || dataInput.getParts() == null || dataInput.getParts().isEmpty()) {
@@ -85,6 +87,10 @@ public final class ConnectorIconHandler extends BaseHandler {
         try {
             InputPart filePart = dataInput.getParts().iterator().next();
             try (InputStream result = filePart.getBody(InputStream.class, null)) {
+
+                if (result == null) {
+                    throw new IllegalArgumentException("Can't find a valid 'icon' part in the multipart request");
+                }
 
                 try (BufferedInputStream iconStream = new BufferedInputStream(result)) {
                     MediaType mediaType = filePart.getMediaType();
