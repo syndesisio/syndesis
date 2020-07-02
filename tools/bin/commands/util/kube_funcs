@@ -262,10 +262,10 @@ create_kube_user() {
 
 get_kube_namespace() {
     local nm="${1:-}"
-    local kuser=$(get_admin_user)
-    check_error "${kuser}"
 
     if [ -n "${nm}" ]; then
+        local kuser=$(get_admin_user)
+        check_error "${kuser}"
         echo $(${KUBECTL} get namespace "${nm}" -o=jsonpath="{.metadata.name}" --user="${kuser}" 2>&1)
     else
         local cur_ctx
