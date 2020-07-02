@@ -27,9 +27,10 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/component: syndesis-ui
+    matchLabels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-ui
   sessionAffinity: None
   type: ClusterIP
 status:

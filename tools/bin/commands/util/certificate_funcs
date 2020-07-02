@@ -1,0 +1,256 @@
+#!/bin/bash
+
+create_certificate_cache() {
+    local dir="${1:-}"
+    if [ -z "${dir}" ]; then
+        check_error "ERROR: No directory specified for certificate cache"
+    fi
+
+    local share_dir=$(create_share_dir)
+
+    #
+    # Create the share directory for caching created resources
+    #
+    local cache_dir="${share_dir}/${dir}"
+    if [ ! -d "${cache_dir}" ]; then
+        mkdir -p "${cache_dir}"
+    fi
+
+    echo "${cache_dir}"
+}
+
+create_signed_certificate() {
+    local parent_dir="${1:-}"
+    local host="${2:-}"
+    local altHost="${3:-${host}}"
+    local ip="${4:-}"
+
+    if [ -z "${parent_dir}" ]; then
+        check_error "Error: Cannot create certificate. No directory specified"
+    fi
+
+    if [ -z "${host}" ]; then
+        check_error "Error: Cannot create certificate. No host specified"
+    fi
+
+    local openssl_cnf="${parent_dir}/openssl.cnf"
+    local private="${parent_dir}/private"
+    local csr="${parent_dir}/csr"
+    local certs="${parent_dir}/certs"
+    local host_cn="${host}"
+    local long_cn="${host}.cluster.local"
+
+    check_error $(check_for_command "mkdir")
+    check_error $(check_for_command "touch")
+    check_error $(check_for_command "openssl")
+    check_error $(check_for_command "chmod")
+
+    #
+    # Create scaffolding
+    #
+    mkdir -p ${private}
+    mkdir -p ${csr}
+    mkdir -p ${certs}
+
+    if [ ! -f "${parent_dir}/index.txt" ]; then
+        touch "${parent_dir}/index.txt"
+    fi
+
+    #
+    # Ensure there is a serial file and that is contains a unique value
+    # Use the current date & time to generate this unique value
+    #
+    val=$(date +%Y%m%d%H%M%S%N)
+    vallen=${#val}
+    if [ $(( ${vallen} % 2)) -ne 0 ]; then
+        #
+        # val must have an even length
+        #
+        val="0${val}"
+    fi
+
+    echo ${val} > "${parent_dir}/serial"
+
+    if [ -z ${CA_KEY+x} ]; then
+        #
+        # Ask for path to certificate authority key
+        #
+        read -p "Please specify the path to the certificate-authority key? : " CA_KEY
+        echo
+        if [ -z "${CA_KEY}" ]; then
+            check_error "ERROR: CA key not specified. Aborting."
+        else
+            CA_KEY="$(eval echo "${CA_KEY}")" # echoing it to expand any env vars used, eg. ${HOME}
+        fi
+    fi
+
+    if [ -z ${CA_CERT+x} ]; then
+        #
+        # Ask for path to certificate-authority certificate
+        #
+        read -p "Please specify the path to the certificate-authority certificate? : " CA_CERT
+        echo
+        if [ -z "${CA_CERT}" ]; then
+            check_error "ERROR: CA certificate not specified. Aborting."
+        else
+            CA_CERT="$(eval echo "${CA_CERT}")" # echoing it to expand any env vars used, eg. ${HOME}
+            echo "$CA_CERT"
+        fi
+    fi
+
+    #
+    # Create openssl.cnf or updates its if it already exists
+    #
+    cat <<EOT > ${openssl_cnf}
+####################################################################
+[ ca ]
+default_ca = CA_default            # The default ca section
+
+####################################################################
+[ CA_default ]
+dir = ${parent_dir}                     # top dir
+database = \$dir/index.txt              # index file.
+new_certs_dir = \$dir/certs             # new certs dir
+certificate = ${CA_CERT}                # The CA cert
+serial = \$dir/serial                   # serial no file
+private_key = ${CA_KEY}                 # CA private key
+RANDFILE = \$dir/private/.rand          # random number file
+email_in_dn = no                        # Add email to cert DN
+
+x509_extensions	= usr_cert		          # The extensions to add to the cert
+copy_extensions = copy                  # Allows for the inclusion of alternative subject names
+
+default_days = 365                      # how long to certify for
+default_crl_days = 30                   # how long before next CRL
+default_md = md5                        # md to use
+
+policy         = policy_any             # default policy
+
+[ policy_any ]
+countryName            = optional
+stateOrProvinceName    = optional
+organizationName       = optional
+organizationalUnitName = optional
+commonName             = supplied
+emailAddress           = optional
+
+####################################################################
+[ req ]
+default_bits = 2048
+default_md = sha256
+default_keyfile = privkey.pem
+distinguished_name = req_distinguished_name
+x509_extensions	= v3_ca	                # The extensions to add to the self signed cert
+
+string_mask = utf8only
+
+req_extensions = v3_req                 # The extensions to add to a certificate request
+
+####################################################################
+[ req_distinguished_name ]
+commonName = Common Name (eg, your name or your server\'s hostname)
+commonName_max = 64
+
+####################################################################
+[ v3_req ]
+# Extensions to add to a certificate request
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+extendedKeyUsage = clientAuth, serverAuth, emailProtection
+
+####################################################################
+[ usr_cert ]
+# These extensions are added when 'ca' signs a request.
+# This goes against PKIX guidelines but some CAs do it and some software
+# requires this to avoid interpreting an end user certificate as a CA.
+basicConstraints=CA:FALSE
+
+# and for everything including object signing:
+nsCertType = client, server, objsign
+
+# This is typical in keyUsage for a client certificate.
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+
+# PKIX recommendations harmless if included in all certificates.
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer:always
+
+keyUsage = critical, digitalSignature, keyEncipherment
+
+# This is required for TSA certificates.
+extendedKeyUsage = clientAuth, serverAuth, emailProtection
+EOT
+
+    if [ ! -f ${openssl_cnf} ]; then
+        check_error "ERROR: Trying to create oauth certificate. Failed to create openssl.cnf file"
+    fi
+
+    #
+    # Create the host key if doesn't already exist
+    #
+    key_file="${private}/${host}.key.pem"
+    if [ ! -f "${key_file}" ]; then
+        openssl genrsa -out ${key_file} 2048
+        chmod 400 ${key_file}
+        if [ ! -f "${key_file}" ]; then
+            check_error "ERROR: Key failed to generate"
+        fi
+    fi
+
+    #
+    # Create certificate request for the host
+    #
+    csr_file="${csr}/${host}.csr.pem"
+    if [ ! -f "${csr_file}" ]; then
+        openssl req \
+        -key ${key_file} \
+        -new -sha256 \
+        -out ${csr_file} \
+        -subj "/CN=${host}" \
+        -addext "subjectAltName =  DNS:${altHost}, DNS:${long_cn}, DNS:${host_cn}"
+
+        if [ ! -f "${csr_file}" ]; then
+            check_error "ERROR: csr failed to generate"
+        fi
+    fi
+
+    #
+    # Generate the certificate by signing the csr with the ca key
+    #
+    cert_file="${certs}/${host}.cert.pem"
+    skip=0
+    if [ -f "${cert_file}" ]; then
+        if openssl x509 -checkend 86400 -noout -in "${cert_file}"; then
+            echo "Have a valid certificate so skipping generation"
+            skip=1;
+        else
+            echo "Certificate has expired or will do so within 24 hours! Removing ..."
+
+            rm -f ${cert_file}
+            if [ -f ${cert_file} ]; then
+                check_error "ERROR: Failed to remove old certificate"
+            fi
+        fi
+    fi
+
+    if [ "${skip}" == "0" ]; then
+        openssl ca \
+        -batch \
+        -config ${openssl_cnf} \
+        -days 375 -notext -md sha256 \
+        -extensions v3_req \
+        -in ${csr_file} \
+        -out ${cert_file}
+
+        if [ ! -f "${cert_file}" ]; then
+            check_error "ERROR: Certificate failed to generate."
+        fi
+
+        chmod 444 ${cert_file}
+
+        #
+        # Verify the certificate
+        #
+        openssl x509 -noout -text -in ${cert_file}
+    fi
+}

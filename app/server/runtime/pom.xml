@@ -983,6 +983,33 @@
       </build>
     </profile>
 
+    <!-- Profile for pushing a compiled image to a regsitry defined by the system property docker.push.registry -->
+    <profile>
+      <id>image-push</id>
+      <activation>
+        <property>
+          <name>::image.push</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>fabric8-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>push</id>
+                <goals>
+                  <goal>push</goal>
+                </goals>
+                <phase>install</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <profile>
       <id>flash</id>
       <activation>

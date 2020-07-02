@@ -1,3 +1,4 @@
+{{ if .ApiServer.ImageStreams }}
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
@@ -24,3 +25,4 @@
         scheduled: true
       {{end}}
       {{end}}
+{{end}}

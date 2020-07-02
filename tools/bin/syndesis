@@ -62,6 +62,7 @@ Examples:
 * Start OCP4 CodeReady Containers afresh         syndesis crc --full-reset --install
 * Start Minishift afresh                         syndesis minishift --full-reset --install
 * Setup debug port forward for rest pod          syndesis dev --debug rest
+* Create user in kubernetes                      syndesis kube user developer -n syndesis
 
 Prerequisites:
 
@@ -173,17 +174,32 @@ run() {
 
     source "$cmd_dir/$command"
 
+    #
+    # Execute any initialisation required
+    #
+    eval "${command}::init"
+
     eval "${command}::run"
 }
 
 source "$(basedir)/commands/util/common_funcs"
 
 ERROR_FILE="$(mktemp /tmp/syndesis-output.XXXXXX)"
-trap "print_error $ERROR_FILE" EXIT
+add_to_trap "print_error ${ERROR_FILE}"
+#
+# This should be the only trap
+# Other instances should use add_to_trap
+#
+trap "process_trap" EXIT
 
 if [ $(hasflag --verbose) ]; then
     export PS4='+($(basename ${BASH_SOURCE[0]}):${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
     set -x
 fi
+
+#
+# Set up the location of grep
+#
+gnugrep
 
 run "$@"

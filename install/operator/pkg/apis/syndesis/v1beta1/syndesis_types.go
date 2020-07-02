@@ -103,6 +103,13 @@ type OauthConfiguration struct {
 
 	// The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation
 	SarNamespace string `json:"sarNamespace,omitempty"`
+
+	// Using an external auth provider, specify the name of the secret
+	// that stores the credentials, ie. provider type, client id, cookie & client secrets
+	CredentialsSecret string `json:"credentialsSecret,omitempty"`
+
+	// The name of the secret used to store the TLS certificate for secure HTTPS communication
+	CryptoCommsSecret string `json:"cryptoCommsSecret,omitempty"`
 }
 
 type DatabaseConfiguration struct {

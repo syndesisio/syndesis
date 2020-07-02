@@ -1,5 +1,5 @@
-apiVersion: apps.openshift.io/v1
-kind: DeploymentConfig
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   creationTimestamp: "2020-01-30T20:28:07Z"
   generation: 1
@@ -25,9 +25,10 @@ spec:
   replicas: 1
   revisionHistoryLimit: 10
   selector:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/component: syndesis-server
+    matchLabels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-server
   strategy:
     activeDeadlineSeconds: 21600
     recreateParams:
@@ -148,8 +149,6 @@ spec:
           name: syndesis-server-config
         name: config-volume
   test: false
-  triggers:
-  - type: ConfigChange
 status:
   availableReplicas: 1
   conditions:

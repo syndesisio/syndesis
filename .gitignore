@@ -103,3 +103,6 @@ install/operator/pkg/cmd/internal/install/install_defaults.go
 
 # operator binary
 tools/bin/commands/binaries/syndesis
+
+# tools config files
+tools/bin/commands/share/*

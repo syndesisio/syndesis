@@ -24,6 +24,7 @@ import (
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 
+	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	dynfake "k8s.io/client-go/dynamic/fake"
@@ -40,10 +41,6 @@ const (
 )
 
 func TestInstallOperator(t *testing.T) {
-	if testing.Short() {
-		t.Skip("skipping operator install tests in short mode")
-	}
-
 	ctx := context.TODO()
 	i := &Install{Options: &internal.Options{Namespace: ns, Context: ctx}, tag: tag, devSupport: false}
 
@@ -74,21 +71,11 @@ func TestInstallOperator(t *testing.T) {
 		}
 		t.Logf("\t%s\t after running the command, a role named [%s] was created", succeed, RoleName)
 
-		is := &v12.ImageStream{}
-		if err := cl.Get(ctx, client.ObjectKey{Name: RoleName, Namespace: ns}, is); err != nil {
-			t.Fatalf("\t%s\t after running the command, an imagestream named [%s] should be created, but got an error [%v]", failed, RoleName, err)
+		deployment := &appsv1.Deployment{}
+		if err := cl.Get(ctx, client.ObjectKey{Name: "syndesis-operator", Namespace: ns}, deployment); err != nil {
+			t.Fatalf("\t%s\t after running the command, a Deployment named [%s] should be created, but got an error [%v]", failed, "syndesis-operator", err)
 		}
-		t.Logf("\t%s\t after running the command, an imagestream named [%s] was created", succeed, RoleName)
+		t.Logf("\t%s\t after running the command, a Deployment named [%s] was created", succeed, "syndesis-operator")
 
-		if len(is.Spec.Tags) != 1 {
-			t.Fatalf("\t%s\t the imagestream should have only one tag, but got %d", failed, 1)
-		} else {
-			t.Logf("\t%s\t the imagestream has only one tag", succeed)
-
-			if is.Spec.Tags[0].Name != tag {
-				t.Fatalf("\t%s\t the imagestream tag should be named [%s], but got %s", failed, tag, is.Spec.Tags[0].Name)
-			}
-			t.Logf("\t%s\t the imagestream tag is named [%s]", succeed, tag)
-		}
 	}
 }

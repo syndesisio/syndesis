@@ -27,10 +27,10 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
 	"go.uber.org/zap"
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	cgofake "k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
@@ -155,14 +155,13 @@ func TestRunDatabaseUpgrade(t *testing.T) {
 			ReadyReplicas: 1,
 		},
 	})
-	clientTools := clienttools.ClientTools{}
+	clientTools := syntesting.FakeClientTools()
 	clientTools.SetRuntimeClient(cl)
-	clientTools.SetApiClient(cgofake.NewSimpleClientset())
 	u := databaseUpgrade{
 		step: step{
 			log:         zapr.NewLogger(zap.NewNop()),
 			context:     context.TODO(),
-			clientTools: &clientTools,
+			clientTools: clientTools,
 		},
 		syndesis: &v1beta1.Syndesis{
 			Spec: v1beta1.SyndesisSpec{

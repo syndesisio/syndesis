@@ -39,7 +39,14 @@ Syndesis:
             DisableSarCheck: false
     Components:
         Oauth:
+            #
+            # Oauth image tailored specifically to openshift's authentication provider
+            #
             Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0"
+            #
+            # Alternative image that requires an external auth provider, eg. github
+            #
+            NonEmbeddedImage: "quay.io/pusher/oauth2_proxy:latest"
             DisableSarCheck: false
         UI:
             Image: "docker.io/syndesis/syndesis-ui:latest"

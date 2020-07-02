@@ -24,6 +24,7 @@ import (
 	osappsv1 "github.com/openshift/api/apps/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
+	kappsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	discoveryfake "k8s.io/client-go/discovery/fake"
@@ -72,12 +73,12 @@ func fakeClient() client.Client {
 	scheme := scheme.Scheme
 	osappsv1.AddToScheme(scheme)
 
-	synDbDeployment := &osappsv1.DeploymentConfig{
+	synDbDeployment := &kappsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "syndesis-db",
 		},
-		Spec: osappsv1.DeploymentConfigSpec{
-			Template: &corev1.PodTemplateSpec{
+		Spec: kappsv1.DeploymentSpec{
+			Template: corev1.PodTemplateSpec{
 				Spec: corev1.PodSpec{
 					Containers: []corev1.Container{},
 				},

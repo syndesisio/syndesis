@@ -493,6 +493,15 @@ spec:
                     type: object
                   oauth:
                     properties:
+                      credentialsSecret:
+                        description: Using an external auth provider, specify the
+                          name of the secret that stores the credentials, ie. provider
+                          type, client id, cookie & client secrets
+                        type: string
+                      cryptoCommsSecret:
+                        description: The name of the secret used to store the TLS
+                          certificate for secure HTTPS communication
+                        type: string
                       disableSarCheck:
                         description: Enable or disable SAR checks all together
                         type: boolean

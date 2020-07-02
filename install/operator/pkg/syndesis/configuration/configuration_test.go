@@ -18,16 +18,17 @@ package configuration
 
 import (
 	"context"
+	"encoding/base64"
 	"os"
 	"reflect"
 	"testing"
 
-	"sigs.k8s.io/controller-runtime/pkg/client"
-
 	"github.com/stretchr/testify/assert"
-
+	"github.com/stretchr/testify/require"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func Test_GetAddons(t *testing.T) {
@@ -543,9 +544,8 @@ func Test_setBoolFromEnv(t *testing.T) {
 
 func TestConfig_SetRoute(t *testing.T) {
 	type args struct {
-		ctx      context.Context
-		client   client.Client
-		syndesis *v1beta1.Syndesis
+		ctx           context.Context
+		routeHostname string
 	}
 	tests := []struct {
 		name    string
@@ -555,14 +555,23 @@ func TestConfig_SetRoute(t *testing.T) {
 		want    string
 	}{
 		{
+			name: "ROUTE_HOSTNAME environment variable NOT set, config.RouteHostname should take the value as given",
+			args: args{
+				ctx:           context.TODO(),
+				routeHostname: "my_route_name",
+			},
+			env:     map[string]string{},
+			wantErr: false,
+			want:    "my_route_name",
+		},
+		{
 			name: "If ROUTE_HOSTNAME environment variable is set, config.RouteHostname should take that value",
 			args: args{
-				ctx:      context.TODO(),
-				client:   nil,
-				syndesis: nil,
+				ctx:           context.TODO(),
+				routeHostname: "my_route_name",
 			},
-			wantErr: false,
 			env:     map[string]string{"ROUTE_HOSTNAME": "some_value"},
+			wantErr: false,
 			want:    "some_value",
 		},
 	}
@@ -573,7 +582,7 @@ func TestConfig_SetRoute(t *testing.T) {
 			}
 
 			config := getConfigLiteral()
-			if err := config.SetRoute(tt.args.ctx, tt.args.client, tt.args.syndesis); (err != nil) != tt.wantErr {
+			if err := config.SetRoute(tt.args.ctx, tt.args.routeHostname); (err != nil) != tt.wantErr {
 				t.Errorf("SetRoute() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			assert.Equal(t, config.Syndesis.RouteHostname, tt.want)
@@ -614,4 +623,43 @@ func Test_setIntFromEnv(t *testing.T) {
 			}
 		})
 	}
+}
+
+func Test_secretToEnvVars(t *testing.T) {
+	secret := &corev1.Secret{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "my-secret",
+			Namespace: "default",
+		},
+		Data: map[string][]byte{
+			"KEY_1": []byte(base64.StdEncoding.EncodeToString([]byte("example1key1"))),
+			"KEY_2": []byte(base64.StdEncoding.EncodeToString([]byte("example1key2"))),
+			"KEY_3": []byte(base64.StdEncoding.EncodeToString([]byte("example1key3"))),
+		},
+	}
+
+	//
+	// Note indenting by 2 tabs or 4 spaces
+	//
+	data, err := SecretToEnvVars(secret.Name, secret.Data, 2)
+	require.NoError(t, err)
+
+	expected := "" +
+		"    - name: KEY_1\n" +
+		"      valueFrom:\n" +
+		"        secretKeyRef:\n" +
+		"          key: KEY_1\n" +
+		"          name: my-secret\n" +
+		"    - name: KEY_2\n" +
+		"      valueFrom:\n" +
+		"        secretKeyRef:\n" +
+		"          key: KEY_2\n" +
+		"          name: my-secret\n" +
+		"    - name: KEY_3\n" +
+		"      valueFrom:\n" +
+		"        secretKeyRef:\n" +
+		"          key: KEY_3\n" +
+		"          name: my-secret\n"
+
+	assert.Equal(t, expected, string(data))
 }

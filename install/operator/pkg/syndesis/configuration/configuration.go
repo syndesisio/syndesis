@@ -17,29 +17,33 @@
 package configuration
 
 import (
+	"bufio"
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"net/url"
 	"os"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/imdario/mergo"
+	errs "github.com/pkg/errors"
 
 	"k8s.io/apimachinery/pkg/types"
 
-	routev1 "github.com/openshift/api/route/v1"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	"k8s.io/apimachinery/pkg/util/yaml"
+	syaml "sigs.k8s.io/yaml"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
@@ -98,10 +102,14 @@ type AMQConfiguration struct {
 }
 
 type OauthConfiguration struct {
-	Image           string // Docker image for proxy
-	CookieSecret    string // Secret to use to encrypt oauth cookies
-	DisableSarCheck bool   // Enable or disable SAR checks all together
-	SarNamespace    string // The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation
+	Image                 string            // Docker image for proxy
+	NonEmbeddedImage      string            // Alternative image for non-embedded auth provider platform
+	CookieSecret          string            // Secret to use to encrypt oauth cookies
+	DisableSarCheck       bool              // Enable or disable SAR checks all together
+	SarNamespace          string            // The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation
+	CredentialsSecret     string            // The name of the secret used to store provider credentials
+	CredentialsSecretData map[string][]byte // The data of the credentials secret
+	CryptoCommsSecret     string            // The name of the secret used to provide the TLS certificate for secure communication
 }
 
 type UIConfiguration struct {
@@ -325,7 +333,6 @@ var postgresVersionRegex = regexp.MustCompile(`^.* (\d+\.\d+)(?:\.d+)? ?`)
 / Returns an array of the addons metadata
 */
 func GetAddonsInfo(configuration Config) []AddonInfo {
-
 	return []AddonInfo{
 		configuration.Syndesis.Addons.Jaeger,
 		configuration.Syndesis.Addons.Ops,
@@ -335,6 +342,116 @@ func GetAddonsInfo(configuration Config) []AddonInfo {
 		configuration.Syndesis.Addons.PublicAPI,
 		configuration.Syndesis.Addons.Todo,
 	}
+}
+
+//
+// Route resources set the RouteHostname if not defined by the CR
+// but ingresses will not so check the CR has provided one
+//
+func (config *Config) CheckRouteHostname() error {
+	if config.ApiServer.Routes {
+		return nil
+	}
+
+	if len(config.Syndesis.RouteHostname) == 0 {
+		return errors.New("The operator configuration requires a route hostname be defined.")
+	}
+
+	return nil
+}
+
+func findSecret(ctx context.Context, rtClient client.Client, secretName string, namespace string) (*corev1.Secret, error) {
+	if len(secretName) == 0 {
+		return nil, fmt.Errorf("The operator is expecting a name of a secret but none has not been specified.")
+	}
+
+	secret := &corev1.Secret{}
+	err := rtClient.Get(ctx, types.NamespacedName{Namespace: namespace, Name: secretName}, secret)
+	if err != nil {
+		if k8serrors.IsNotFound(err) {
+			return nil, fmt.Errorf("The authentication secret %s has not been installed", secretName)
+		} else {
+			return nil, err
+		}
+	}
+	return secret, nil
+}
+
+type ByName []corev1.EnvVar
+
+func (k ByName) Len() int           { return len(k) }
+func (k ByName) Swap(i, j int)      { k[i], k[j] = k[j], k[i] }
+func (k ByName) Less(i, j int) bool { return k[i].Name < k[j].Name }
+
+func SecretToEnvVars(secretName string, secretData map[string][]byte, indents int) (string, error) {
+	envVars := make([]corev1.EnvVar, 0)
+	for key, _ := range secretData {
+		envVar := corev1.EnvVar{
+			Name: key,
+			ValueFrom: &corev1.EnvVarSource{
+				SecretKeyRef: &corev1.SecretKeySelector{
+					LocalObjectReference: corev1.LocalObjectReference{
+						Name: secretName,
+					},
+					Key: key,
+				},
+			},
+		}
+
+		envVars = append(envVars, envVar)
+	}
+
+	// Sort the environment variables
+	sort.Sort(ByName(envVars))
+
+	// Marshal the slice to yaml
+	data, err := syaml.Marshal(envVars)
+	if err != nil {
+		return "", err
+	}
+
+	indent := ""
+	for i := 0; i < indents; i++ {
+		indent = indent + "  "
+	}
+
+	// Read the new yaml string & indent each line to required length
+	indentData := ""
+	scanner := bufio.NewScanner(strings.NewReader(string(data)))
+	for scanner.Scan() {
+		if len(indentData) == 0 {
+			indentData = fmt.Sprintf("%s%s\n", indent, scanner.Text())
+		} else {
+			indentData = fmt.Sprintf("%s%s%s\n", indentData, indent, scanner.Text())
+		}
+	}
+
+	return indentData, nil
+}
+
+//
+// If provider is embedded then the OAuth credentials set to the internal
+// authentication server so no provider is required. Therefore,
+// no provider, clientId or clientSecret is required.
+//
+func (config *Config) CheckOAuthCredentialSecret(ctx context.Context, rtClient client.Client, syndesis *v1beta1.Syndesis) error {
+	if config.ApiServer.EmbeddedProvider {
+		return nil
+	}
+
+	// Check credentials secret is present
+	if secret, err := findSecret(ctx, rtClient, config.Syndesis.Components.Oauth.CredentialsSecret, syndesis.Namespace); err != nil {
+		return errs.Wrap(err, "Failed to find the oauth credentials secret")
+	} else {
+		config.Syndesis.Components.Oauth.CredentialsSecretData = secret.Data
+	}
+
+	// Check crypto tls secret is present
+	if _, err := findSecret(ctx, rtClient, config.Syndesis.Components.Oauth.CryptoCommsSecret, syndesis.Namespace); err != nil {
+		return errs.Wrap(err, "Failed to find the oauth TLS secret")
+	}
+
+	return nil
 }
 
 /*
@@ -365,6 +482,10 @@ func GetProperties(ctx context.Context, file string, clientTools *clienttools.Cl
 		return nil, err
 	} else {
 		configuration.ApiServer = *ac
+	}
+
+	if err := configuration.loadFromFile(file); err != nil {
+		return nil, err
 	}
 
 	configuration.OpenShiftProject = syndesis.Namespace
@@ -421,18 +542,12 @@ func (config *Config) loadFromFile(file string) error {
 
 // Set Config.RouteHostname based on the Spec.Host property of the syndesis route
 // If an environment variable is set to overwrite the route, take that instead
-func (config *Config) SetRoute(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis) error {
+func (config *Config) SetRoute(ctx context.Context, specRouteHostname string) error {
 	if os.Getenv("ROUTE_HOSTNAME") == "" {
-		syndesisRoute := &routev1.Route{}
-
-		if err := client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis"}, syndesisRoute); err != nil {
-			if k8serrors.IsNotFound(err) {
-				return nil
-			}
-
+		config.Syndesis.RouteHostname = specRouteHostname
+		if err := config.CheckRouteHostname(); err != nil {
 			return err
 		}
-		config.Syndesis.RouteHostname = syndesisRoute.Spec.Host
 	} else {
 		config.Syndesis.RouteHostname = os.Getenv("ROUTE_HOSTNAME")
 	}

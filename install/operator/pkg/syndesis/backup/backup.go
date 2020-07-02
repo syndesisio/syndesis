@@ -312,7 +312,7 @@ func (b *Backup) backupResources() error {
 		{APIVersion: "template.openshift.io/v1", Kind: "Template"},
 		{APIVersion: "image.openshift.io/v1", Kind: "ImageStream"},
 		{APIVersion: "build.openshift.io/v1", Kind: "BuildConfig"},
-		{APIVersion: "apps.openshift.io/v1", Kind: "DeploymentConfig"},
+		{APIVersion: "apps/v1", Kind: "Deployment"},
 		{APIVersion: "route.openshift.io/v1", Kind: "Route"},
 	}
 
