@@ -54,9 +54,13 @@ get_release_version() {
     echo $release_version
 }
 
-release::run() {
+release::init() {
     source "$(basedir)/commands/util/maven_funcs"
     # source "$(basedir)/commands/util/operator_funcs"
+
+}
+
+release::run() {
 
     # Main application directory
     local topdir=$(appdir ".")

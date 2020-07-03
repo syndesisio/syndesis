@@ -19,6 +19,10 @@ system-test::usage() {
 EOT
 }
 
+system-test::init() {
+    source "$(basedir)/commands/util/maven_funcs"
+}
+
 system-test::run() {
     source "$(basedir)/commands/util/maven_funcs"
 

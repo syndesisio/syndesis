@@ -12,6 +12,10 @@ completion::usage() {
 EOT
 }
 
+completion::init() {
+    # Nothing to do but required
+}
+
 completion::run() {
     local last=${ARGS[${#ARGS[@]}-1]}
     if [ x$last == xcompletion ]; then
