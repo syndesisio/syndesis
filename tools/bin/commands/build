@@ -52,17 +52,6 @@ build::init() {
 
     # For operator building
     source "$(basedir)/commands/util/operator_funcs"
-
-    #
-    # Determine the platform we'll be connecting to
-    #
-    determine_platform
-    check_error "${IS_OPENSHIFT}"
-
-    #
-    # Configure client binary
-    #
-    setup_client_binary
 }
 
 build::run() {
@@ -141,23 +130,32 @@ maven_args() {
         profiles="image"
 
         local mode=""
-        if [ "${IS_OPENSHIFT}" == "YES" ]; then
-            #
-            # By default use fabric8's openshift mode to build
-            # which employs s2i.
-            #
-            mode="openshift"
 
-            if [ $(hasflag --docker) ]; then
+        if [ $(hasflag --docker) ]; then
+            #
+            # On the rare occasion we want to use docker for building
+            # with openshift then the mode needs to be changed back to
+            # kubernetes
+            #
+            mode="kubernetes"
+        else
+            #
+            # Try and determine the platform we'll be connecting to
+            #
+            determine_platform
+
+            if [ "${IS_OPENSHIFT}" == "YES" ]; then
                 #
-                # On the rare occasion we want to use docker for building
-                # with openshift then the mode needs to be changed back to
-                # kubernetes
+                # By default use fabric8's openshift mode to build
+                # which employs s2i.
+                #
+                mode="openshift"
+            else
+                #
+                # Either cannot detect a running cluster or not openshift
                 #
                 mode="kubernetes"
             fi
-        else
-            mode="kubernetes"
         fi
 
         #
@@ -247,18 +245,31 @@ do_operator() {
 
     if [ $(hasflag -i --image --docker) ]; then
         local BUILD_ARGS=" --image-name=${image} --image-tag=${tag}"
-        local image_build="s2i"
+        local image_build=""
 
-        if [[ ${IS_OPENSHIFT} != true || $(hasflag --docker) ]]; then
+        if [[ $(hasflag --docker) ]]; then
             image_build="docker"
+        else
             #
-            # If building to kubernetes we normally need a registry to push
-            # the images to (unless using the default of docker.io)
+            # Try and detect the type of platform if any
             #
-            if [ $(hasflag --registry) ]; then
-                local registry=$(readopt --registry)
-                BUILD_ARGS="${BUILD_ARGS} --registry ${registry}"
+            determine_platform
+
+            if [[ ${IS_OPENSHIFT} == "YES" ]]; then
+                image_build="s2i"
+            else
+                image_build="docker"
             fi
+        fi
+
+        #
+        # If building to kubernetes we might need a registry to push
+        # the images to (unless using the default of docker.io)
+        # Don't need it for s2i
+        #
+        if [ "$image_build" == "docker" ] && [ $(hasflag --registry) ]; then
+            local registry=$(readopt --registry)
+            BUILD_ARGS="${BUILD_ARGS} --registry ${registry}"
         fi
 
         ./build.sh ${args} --image-build="${image_build}" ${BUILD_ARGS}
@@ -269,6 +280,8 @@ do_operator() {
         echo "Built operator copied to ${OPERATOR_BINARY}."
         echo "Built ${PLATFORM_DETECT} binary copied to ${PLATFORM_DETECT_BINARY}."
         echo "=============================================================================="
+    else
+        check_error "ERROR: One of '-i / --image' and/or '--docker' should be specified"
     fi
 
     popd >/dev/null

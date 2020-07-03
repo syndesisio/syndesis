@@ -300,11 +300,11 @@ get_platform_detect_bin() {
     tar xf ${archive} >/dev/null
     rm ${archive}
 
-    if [ ! -f ./${bin_name} ]; then
-        check_error "ERROR: Failed to extract ${bin_name} to ${tmp_dir}/"
+    if [ ! -f ./${PLATFORM_DETECT} ]; then
+        check_error "ERROR: Failed to extract ${PLATFORM_DETECT} to ${tmp_dir}/"
     fi
 
-    mv ./${bin_name} ${PLATFORM_DETECT_BINARY}
+    mv ./${PLATFORM_DETECT} ${PLATFORM_DETECT_BINARY}
 
     popd >/dev/null
 
@@ -312,7 +312,7 @@ get_platform_detect_bin() {
     # Clean up temporary directories
     #
     [ -n "$tmp_dir" ] && [ -d "$tmp_dir" ] && rm -rf $tmp_dir
-    echo $detect_command
+    echo ${PLATFORM_DETECT_BINARY}
 }
 
 #
