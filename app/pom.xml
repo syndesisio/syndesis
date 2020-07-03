@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.basepom</groupId>
     <artifactId>basepom-oss</artifactId>
-    <version>32</version>
+    <version>30</version>
   </parent>
 
   <groupId>io.syndesis</groupId>
@@ -120,6 +120,8 @@
     <dep.pmd.version>6.23.0</dep.pmd.version>
     <dep.spotbugs.version>4.0.3</dep.spotbugs.version>
     <dep.plugin.spotbugs.version>4.0.0</dep.plugin.spotbugs.version>
+    <!-- TODO: revisit when we upgrade basepom version -->
+    <dep.plugin.git-commit-id.version>4.0.0</dep.plugin.git-commit-id.version>
 
     <!-- UI dependencies -->
     <iltorb-version>2.4.5</iltorb-version>
@@ -587,45 +589,6 @@
     </profile>
 
     <profile>
-      <id>m2e</id>
-      <activation>
-        <property>
-          <name>m2e.version</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <compilerArgs>
-                <arg>-XDcompilePolicy=simple</arg>
-                <arg>-Xlint:all</arg>
-                <arg>-Xlint:-deprecation</arg>
-                <arg>-Xlint:-processing</arg>
-                <arg>-Xlint:-serial</arg>
-                <arg>${javac.werror}</arg>
-                <arg>-implicit:none</arg>
-              </compilerArgs>
-              <annotationProcessorPaths>
-                <annotationProcessorPath>
-                  <groupId>org.immutables</groupId>
-                  <artifactId>value</artifactId>
-                  <version>${immutables.version}</version>
-                </annotationProcessorPath>
-                <annotationProcessorPath>
-                  <groupId>com.google.auto.value</groupId>
-                  <artifactId>auto-value</artifactId>
-                  <version>1.7.1</version>
-                </annotationProcessorPath>
-              </annotationProcessorPaths>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
       <id>non-m2e</id>
       <activation>
         <property>
@@ -637,18 +600,28 @@
           <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
+              <release>8</release>
               <compilerArgs>
                 <arg>-XDcompilePolicy=simple</arg>
-                <arg>-Xplugin:ErrorProne
-                  -XepDisableWarningsInGeneratedCode -XepExcludedPaths:.*/generated-sources/.*
-                  -Xep:ConstantField:WARN -Xep:FieldCanBeFinal:WARN
-                  -Xep:LambdaFunctionalInterface:WARN
-                  -Xep:MethodCanBeStatic:WARN
-                  -XepOpt:MethodCanBeStatic:FindingPerSite -Xep:PackageLocation:WARN
-                  -Xep:PrivateConstructorForUtilityClass:WARN -Xep:RemoveUnusedImports:WARN -Xep:SwitchDefault:WARN
-                  -Xep:TestExceptionChecker:WARN -Xep:ThrowsUncheckedException:WARN -Xep:TryFailRefactoring:WARN
-                  -Xep:UnnecessaryStaticImport:WARN -Xep:WildcardImport:WARN -Xep:MissingSummary:OFF
-                  ${errorprone.autofix.arg1} ${errorprone.autofix.arg2}</arg>
+                <arg>-Xplugin:ErrorProne -XepDisableWarningsInGeneratedCode
+		-XepExcludedPaths:.*/generated-sources/.*
+		-Xep:ConstantField:WARN
+		-Xep:FieldCanBeFinal:WARN
+		-Xep:LambdaFunctionalInterface:WARN
+		-Xep:MethodCanBeStatic:WARN
+		-XepOpt:MethodCanBeStatic:FindingPerSite
+		-Xep:PackageLocation:WARN
+		-Xep:PrivateConstructorForUtilityClass:WARN
+		-Xep:RemoveUnusedImports:WARN
+		-Xep:SwitchDefault:WARN
+		-Xep:TestExceptionChecker:WARN
+		-Xep:ThrowsUncheckedException:WARN
+		-Xep:TryFailRefactoring:WARN
+		-Xep:UnnecessaryStaticImport:WARN
+		-Xep:WildcardImport:WARN
+		-Xep:MissingSummary:OFF</arg>
+                <arg>${errorprone.autofix.arg1}</arg>
+                <arg>${errorprone.autofix.arg2}</arg>
                 <arg>-Xlint:all</arg>
                 <arg>-Xlint:-deprecation</arg>
                 <arg>-Xlint:-processing</arg>
@@ -1268,24 +1241,6 @@
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
         <inherited>false</inherited>
-      </plugin>
-
-      <plugin>
-        <groupId>pl.project13.maven</groupId>
-        <artifactId>git-commit-id-plugin</artifactId>
-        <executions>
-          <execution>
-            <?m2e ignore?>
-            <id>basepom.default</id>
-          </execution>
-        </executions>
-        <configuration>
-          <injectAllReactorProjects>true</injectAllReactorProjects>
-          <offline>true</offline>
-          <runOnlyOnce>true</runOnlyOnce>
-          <skipPoms>false</skipPoms>
-          <useNativeGit>true</useNativeGit>
-        </configuration>
       </plugin>
 
     </plugins>
@@ -1950,6 +1905,12 @@
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-soap</artifactId>
         <version>${project.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -2301,7 +2262,6 @@
         </exclusions>
       </dependency>
 
-<<<<<<< HEAD
       <dependency>
         <groupId>io.undertow</groupId>
         <artifactId>undertow-websockets-jsr</artifactId>
@@ -2309,8 +2269,6 @@
       </dependency>
 
       <!-- TODO: Maybe import BOM ? -->
-=======
->>>>>>> chore(build): java 11 support (for build)
       <dependency>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-core</artifactId>
