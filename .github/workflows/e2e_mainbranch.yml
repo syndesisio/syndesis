@@ -1,0 +1,24 @@
+name: Integration Tests
+
+# Trigger the workflow on push 
+# but only for the master branch
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Build Syndesis
+        run: tools/bin/syndesis build --backend --flash 
+      - name: Run integration tests
+        run: tools/bin/syndesis integration-test
+
