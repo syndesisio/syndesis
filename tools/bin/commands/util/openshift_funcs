@@ -46,14 +46,16 @@ login_oc_as_admin() {
 
     local admin_user=$(get_admin_user "${1:-}")
 
-    read -p -s "Please enter the password for the cluster-admin ${admin_user}?: " password
+    read -p "Please enter the password for the cluster-admin '${admin_user}' or just press 'Enter' for no password?: " password
     echo
-    if [ -z "$password" ]; then
-        check_error "Error: No password for ${admin_user} was entered. Aborting."
+
+    local options=" -u ${admin_user}"
+    if [ -n "${password}" ]; then
+        options="${options} -p ${password}"
     fi
 
     # Login in as admin
-    local result=$(oc login -u "$admin_user" -p "${password}" 2>&1)
+    local result=$(oc login ${options} 2>&1)
     check_error "$result"
 
     # Return the command to use to revert to the initial user

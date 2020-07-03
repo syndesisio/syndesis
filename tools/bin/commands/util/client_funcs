@@ -44,7 +44,7 @@ get_current_user() {
 get_admin_user() {
     local admin="${1:-}"
     local client_dir=$(create_client_cache)
-    local cache_file="${client_dir}/admin-${KUBE}--user"
+    local cache_file="${client_dir}/admin-${KUBE}-user"
 
     if [ -f "${cache_file}" ]; then
         local admin=$(head -n 1 "${cache_file}")
