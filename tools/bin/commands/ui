@@ -24,6 +24,10 @@ ui::usage() {
 EOT
 }
 
+ui::init() {
+  # nothing required but must be present
+}
+
 ui::run() {
   cd_to_ui_dir
   do_things
