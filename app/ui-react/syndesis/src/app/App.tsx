@@ -58,6 +58,11 @@ export const App: React.FunctionComponent<IAppBaseProps> = ({
     }
   };
 
+  React.useEffect(() => {
+    const spinner = document.getElementById('loading-page-spinner')!;
+    spinner.setAttribute('hidden', 'true');
+  }, []);
+
   return (
     <WithUser>
       {({ data }) => (
