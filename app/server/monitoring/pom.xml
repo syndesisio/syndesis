@@ -40,6 +40,11 @@
 
     <!-- ================================================================================ -->
     <dependency>
+      <groupId>io.syndesis.server</groupId>
+      <artifactId>server-openshift</artifactId>
+    </dependency>
+    
+    <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>openshift-client</artifactId>
     </dependency>
