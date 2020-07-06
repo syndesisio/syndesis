@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -159,6 +160,10 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 	}
 
 	resourcesThatShouldExist[syndesisRoute.Meta().GetUID()] = true
+
+	if err := config.SetConsoleLink(ctx, rtClient, syndesis, syndesisRoute.Host()); err != nil {
+			return err
+	}
 
 	// Render the remaining syndesis resources...
 	all, err = generator.RenderDir("./infrastructure/", config)
