@@ -73,7 +73,7 @@ is_minishift_available() {
     # Check for minishift
     set +e
 
-    if [ $(check_for_command "minishift") != "OK" ]; then
+    if [ "$(check_for_command "minishift")" != "OK" ]; then
         set -e
         echo "ERROR: 'minishift is not installed so cannot use for 'oc'"
         return

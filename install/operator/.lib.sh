@@ -167,6 +167,9 @@ RUN go test -test.short -mod=vendor ./cmd/... ./pkg/...
 RUN GOOS=linux   GOARCH=amd64 go build $OPTS -o /dist/linux-amd64/syndesis-operator    -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
 RUN GOOS=darwin  GOARCH=amd64 go build $OPTS -o /dist/darwin-amd64/syndesis-operator   -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
 RUN GOOS=windows GOARCH=amd64 go build $OPTS -o /dist/windows-amd64/syndesis-operator  -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
+RUN GOOS=linux   GOARCH=amd64 go build $OPTS -o /dist/linux-amd64/platform-detect      -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/detect
+RUN GOOS=darwin  GOARCH=amd64 go build $OPTS -o /dist/darwin-amd64/platform-detect     -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/detect
+RUN GOOS=windows GOARCH=amd64 go build $OPTS -o /dist/windows-amd64/platform-detect    -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/detect
 EODockerfile
 
         docker build -t "${BUILDER_IMAGE_NAME}" . -f "${BUILDER_IMAGE_NAME}.tmp"
@@ -176,12 +179,15 @@ EODockerfile
 
         for GOARCH in amd64 ; do
           for GOOS in linux darwin windows ; do
-            echo extracting executable to ./dist/${GOOS}-${GOARCH}/syndesis-operator
+            echo extracting operator executable to ./dist/${GOOS}-${GOARCH}/syndesis-operator
             mkdir -p ./dist/${GOOS}-${GOARCH}
             docker run "${BUILDER_IMAGE_NAME}" cat /dist/${GOOS}-${GOARCH}/syndesis-operator > ./dist/${GOOS}-${GOARCH}/syndesis-operator
+
+            echo extracting platform-detect executable to ./dist/${GOOS}-${GOARCH}/platform-detect
+            docker run "${BUILDER_IMAGE_NAME}" cat /dist/${GOOS}-${GOARCH}/platform-detect > ./dist/${GOOS}-${GOARCH}/platform-detect
           done
         done
-        chmod a+x ./dist/*/syndesis-operator
+        chmod a+x ./dist/*/*-*
         mkdir -p ./build/_output/bin
         cp ./dist/linux-amd64/syndesis-operator ./build/_output/bin/syndesis-operator
     ;;
