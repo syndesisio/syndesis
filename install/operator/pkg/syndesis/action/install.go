@@ -161,7 +161,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 
 	resourcesThatShouldExist[syndesisRoute.Meta().GetUID()] = true
 
-	if err := config.SetConsoleLink(ctx, rtClient, syndesis, syndesisRoute); err != nil {
+	if err := config.SetConsoleLink(ctx, rtClient, syndesis, syndesisRoute.Host()); err != nil {
 			return err
 	}
 
