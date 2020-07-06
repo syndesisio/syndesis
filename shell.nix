@@ -5,6 +5,7 @@ pkgs.mkShell {
   buildInputs = [
     pkgs.checkstyle
     pkgs.dive
+    pkgs.go
     pkgs.just
     pkgs.kube3d
     # pkgs.kubebox
@@ -13,9 +14,10 @@ pkgs.mkShell {
     pkgs.minikube
     pkgs.minishift
     pkgs.nodejs
-    pkgs.yarn
     pkgs.openshift
+    # pkgs.operator-sdk
     pkgs.skaffold
+    pkgs.yarn
   ];
   shellHook = ''
     export PATH="$PWD/node_modules/.bin/:$PATH"
