@@ -10,7 +10,7 @@ pkgs.mkShell {
     pkgs.kube3d
     # pkgs.kubebox
     pkgs.kubectl
-    # pkgs.kubespy
+    pkgs.kubespy
     pkgs.minikube
     pkgs.minishift
     pkgs.nodejs
