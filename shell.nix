@@ -15,7 +15,7 @@ pkgs.mkShell {
     pkgs.minishift
     pkgs.nodejs
     pkgs.openshift
-    # pkgs.operator-sdk
+    pkgs.operator-sdk
     pkgs.skaffold
     pkgs.yarn
   ];
