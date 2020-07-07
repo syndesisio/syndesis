@@ -255,8 +255,4 @@ public abstract class AbstractODataTest implements ODataConstants {
         }
     }
 
-    public AbstractODataTest() {
-        super();
-    }
-
 }

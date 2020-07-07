@@ -48,7 +48,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
 
     private final JsonDB jsondb;
 
-    public JsonDbDao(JsonDB jsondb) {
+    protected JsonDbDao(JsonDB jsondb) {
         this.jsondb = jsondb;
 
         reader = JsonUtils.copyObjectMapperConfiguration()

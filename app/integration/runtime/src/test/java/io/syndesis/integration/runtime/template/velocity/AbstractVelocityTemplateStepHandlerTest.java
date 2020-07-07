@@ -26,10 +26,6 @@ import org.junit.Test;
 public abstract class AbstractVelocityTemplateStepHandlerTest extends AbstractTemplateStepHandlerTest
     implements TemplateStepConstants{
 
-    public AbstractVelocityTemplateStepHandlerTest() {
-        super();
-    }
-
     @Override
     protected TemplateStepLanguage getLanguage() {
         return TemplateStepLanguage.VELOCITY;

@@ -30,7 +30,7 @@ public abstract class TargetWithDomain<T extends WithId<T>> implements WithId<T>
 
     private final Collection<T> domain;
 
-    public TargetWithDomain(T target, Collection<T> domain) {
+    protected TargetWithDomain(T target, Collection<T> domain) {
         this.target = target;
         this.domain = domain;
     }

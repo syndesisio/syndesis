@@ -83,7 +83,7 @@ abstract class Mixed {
 
     }
 
-    public Mixed(final Object... parts) {
+    protected Mixed(final Object... parts) {
         this.parts = Arrays.asList(parts);
     }
 

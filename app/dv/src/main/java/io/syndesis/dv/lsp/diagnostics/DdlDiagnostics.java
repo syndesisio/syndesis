@@ -45,7 +45,7 @@ public class DdlDiagnostics {
     /**
      * Clear diagnostics for a given document URI.
      *
-     * @param uri
+     * @param uri - uri of the document
      */
     public void clearDiagnostics(String uri) {
         synchronized(diagnosticsLock) {
@@ -56,7 +56,7 @@ public class DdlDiagnostics {
     /**
      * Generate and publish diagnostics for target document.
      *
-     * @param ddlDocument
+     * @param ddlDocument - document to diagnose
      */
     public boolean publishDiagnostics(TextDocumentItem ddlDocument) {
         doPublishDiagnostics(ddlDocument);
@@ -66,7 +66,7 @@ public class DdlDiagnostics {
     /**
      * Performs actual parsing and diagnostics for a given ddl string
      *
-     * @param documentText
+     * @param documentText - text to process
      * @return list of language server {@link Diagnostic}s
      */
     public static List<Diagnostic> doBasicDiagnostics(String documentText) {

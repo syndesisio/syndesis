@@ -30,8 +30,7 @@ public abstract class AbstractStatementObject {
     int firstTknIndex;
     int lastTknIndex;
 
-    public AbstractStatementObject(DdlTokenAnalyzer analyzer) {
-        super();
+    protected AbstractStatementObject(DdlTokenAnalyzer analyzer) {
         this.analyzer = analyzer;
     }
 

@@ -61,7 +61,7 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
     private final ProjectGeneratorConfiguration projectGeneratorConfiguration = new ProjectGeneratorConfiguration();
     private final MavenProperties mavenProperties = new MavenProperties();
 
-    public AbstractMavenProjectBuilder(String name, String syndesisVersion) {
+    protected AbstractMavenProjectBuilder(String name, String syndesisVersion) {
         this.name = name;
         this.syndesisVersion = syndesisVersion;
         withOutputDirectory(SyndesisTestEnvironment.getOutputDirectory());

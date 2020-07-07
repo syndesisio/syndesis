@@ -35,15 +35,15 @@ public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExte
     protected static final long DEFAULT_CONNECTION_TIMEOUT = 5000L;
     public static final String MAIL_PREFIX = "mail.";
 
-    public AbstractEMailVerifier(String defaultScheme) {
+    protected AbstractEMailVerifier(String defaultScheme) {
         super(defaultScheme);
     }
 
-    public AbstractEMailVerifier(String defaultScheme, CamelContext camelContext) {
+    protected AbstractEMailVerifier(String defaultScheme, CamelContext camelContext) {
         super(defaultScheme, camelContext);
     }
 
-    public AbstractEMailVerifier(String defaultScheme, CamelContext camelContext, Component component) {
+    protected AbstractEMailVerifier(String defaultScheme, CamelContext camelContext, Component component) {
         super(defaultScheme, camelContext, component);
     }
 

@@ -101,6 +101,7 @@ public abstract class BaseITCase {
         get("/api/v1/test-support/reset-db", Void.class, tokenRule.validToken(), HttpStatus.NO_CONTENT);
     }
 
+    @SuppressWarnings("EmptyCatch")
     protected void clearDB() {
         try {
             this.dataManager.clearCache();

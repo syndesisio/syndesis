@@ -255,7 +255,8 @@ public final class DdlCompletionItemLoader extends CompletionItemBuilder {
     /**
      * Clones a {@link CompletionItem} for the given label from the supplied items
      *
-     * @param targetLabel
+     * @param targetLabel  - label of the item to select
+     * @param items - list of items to search on
      * @return a completion item
      */
     private static CompletionItem cloneCompletionItem(List<CompletionItem> items, String targetLabel) {
