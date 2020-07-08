@@ -807,29 +807,37 @@ func getSyndesisEnvVarsFromOpenShiftNamespace(secret *corev1.Secret) (map[string
 }
 
 func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis, syndesisRouteHost string) error {
-	if syndesisRouteHost != "" {
-		consoleLinkName := consoleLinkName(syndesis)
-		consoleLink := &consolev1.ConsoleLink{}
-		err := client.Get(ctx, types.NamespacedName{Name: consoleLinkName}, consoleLink)
-		if err != nil {
-			log.Info(consoleLink.Name)
-			consoleLink = createNamespaceDashboardLink(consoleLinkName, syndesisRouteHost, syndesis)
-			if err := client.Create(ctx, consoleLink); err != nil {
-				log.Error(err, "error creating console link")
-				return err
-			}
-		} else if err == nil && consoleLink != nil {
-			if syndesis.DeletionTimestamp != nil {
-				if err := client.Delete(ctx, consoleLink); err != nil {
-					log.Error(err, "Error deleting console link.")
-				}
-			}
+	if syndesisRouteHost == "" {
+		return nil
+	}
 
-			if err := reconcileConsoleLink(ctx, syndesis, syndesisRouteHost, consoleLink, client); err != nil {
-				return err
+	if !config.ApiServer.ConsoleLink {
+		// Cluster does not support ConsoleLink API
+		return nil
+	}
+
+	consoleLinkName := consoleLinkName(syndesis)
+	consoleLink := &consolev1.ConsoleLink{}
+	err := client.Get(ctx, types.NamespacedName{Name: consoleLinkName}, consoleLink)
+	if err != nil {
+		log.Info(consoleLink.Name)
+		consoleLink = createNamespaceDashboardLink(consoleLinkName, syndesisRouteHost, syndesis)
+		if err := client.Create(ctx, consoleLink); err != nil {
+			log.Error(err, "error creating console link")
+			return err
+		}
+	} else if err == nil && consoleLink != nil {
+		if syndesis.DeletionTimestamp != nil {
+			if err := client.Delete(ctx, consoleLink); err != nil {
+				log.Error(err, "Error deleting console link.")
 			}
 		}
+
+		if err := reconcileConsoleLink(ctx, syndesis, syndesisRouteHost, consoleLink, client); err != nil {
+			return err
+		}
 	}
+
 	return nil
 }
 

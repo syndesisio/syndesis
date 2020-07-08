@@ -2,14 +2,15 @@ package syndesis
 
 import (
 	"context"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"reflect"
 	"time"
+
+	consolev1 "github.com/openshift/api/console/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
-	consolev1 "github.com/openshift/api/console/v1"
 	"sigs.k8s.io/controller-runtime/pkg/controller"
 	"sigs.k8s.io/controller-runtime/pkg/handler"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
@@ -19,6 +20,7 @@ import (
 
 	syndesisv1beta1 "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 )
 
@@ -35,10 +37,7 @@ func Add(mgr manager.Manager) error {
 	if err != nil {
 		return err
 	}
-	err = consolev1.Install(mgr.GetScheme())
-	if err != nil {
-		return err
-	}
+
 	return add(mgr, reconciler)
 }
 
@@ -50,7 +49,7 @@ func newReconciler(mgr manager.Manager) (*ReconcileSyndesis, error) {
 
 	return &ReconcileSyndesis{
 		clientTools: clientTools,
-		scheme:    mgr.GetScheme(),
+		scheme:      mgr.GetScheme(),
 	}, nil
 }
 
@@ -79,7 +78,7 @@ type ReconcileSyndesis struct {
 	// This client kit contains a split client, initialized using mgr.Client() above,
 	// that reads objects from the cache and writes to the apiserver
 	clientTools *clienttools.ClientTools
-	scheme    *runtime.Scheme
+	scheme      *runtime.Scheme
 }
 
 // Reconcile the state of the Syndesis infrastructure elements
@@ -161,6 +160,20 @@ func (r *ReconcileSyndesis) isLatestVersion(ctx context.Context, syndesis *synde
 }
 
 func (r *ReconcileSyndesis) removeConsoleLink(ctx context.Context, syndesis *syndesisv1beta1.Syndesis) (request reconcile.Result, err error) {
+	// Need to determine if platform is applicable first
+	ac, err := capabilities.ApiCapabilities(r.clientTools)
+	if err != nil {
+		return reconcile.Result{}, err
+	}
+
+	if !ac.ConsoleLink {
+		//
+		// Nothing to do.
+		// This cluster does not support the ConsoleLink API
+		//
+		return reconcile.Result{}, nil
+	}
+
 	consoleLinkName := syndesis.Name + "-" + syndesis.Namespace
 	consoleLink := &consolev1.ConsoleLink{}
 	client, _ := r.clientTools.RuntimeClient()
