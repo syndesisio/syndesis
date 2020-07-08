@@ -18,7 +18,8 @@ jobs:
         with:
           java-version: 11
       - name: Build Syndesis
-        run: tools/bin/syndesis build --backend --flash 
+        run: tools/bin/syndesis build --backend --dependencies --flash --clean
+      - name: Build Docker images
+        run: tools/bin/syndesis build -m s2i --image --flash --docker
       - name: Run integration tests
-        run: tools/bin/syndesis integration-test
-
+        run: tools/bin/syndesis integration-test --s2i --logging
