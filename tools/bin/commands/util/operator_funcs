@@ -84,6 +84,7 @@ download_operator_binary() {
             release_uri="https://api.github.com/repos/syndesisio/syndesis/releases/tags/${release_tag}"
             url=$(curl -s $release_uri \
                 | ${GREP} browser_download_url \
+                | ${GREP} ${OPERATOR} \
                 | ${GREP} ${pattern} \
                 | cut -d '"' -f 4)
         else
@@ -92,6 +93,7 @@ download_operator_binary() {
                 | ${GREP} "download/2" \
                 | ${GREP} browser_download_url \
                 | ${GREP} ${pattern} \
+                | ${GREP} ${OPERATOR} \
                 | cut -d '"' -f 4 \
                 | sort -nr \
                 | head -1)
