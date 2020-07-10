@@ -25,12 +25,15 @@ import (
 	"reflect"
 	"testing"
 
+	"k8s.io/apimachinery/pkg/version"
+
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	v1 "k8s.io/api/core/v1"
+	gofake "k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/rest"
 	restclient "k8s.io/client-go/rest"
-	"k8s.io/client-go/rest/fake"
+	restfake "k8s.io/client-go/rest/fake"
 	"k8s.io/kubectl/pkg/scheme"
 
 	"k8s.io/client-go/kubernetes"
@@ -38,7 +41,10 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	discoveryfake "k8s.io/client-go/discovery/fake"
 )
 
 func Test_loadFromFile(t *testing.T) {
@@ -88,6 +94,12 @@ func Test_setConfigFromEnv(t *testing.T) {
 				Productized: true,
 				ProductName: "something",
 				DevSupport:  true,
+				ApiServer: capabilities.ApiServerSpec{
+					Version:          "1.16",
+					Routes:           true,
+					ImageStreams:     true,
+					EmbeddedProvider: true,
+				},
 				Syndesis: SyndesisConfig{
 					RouteHostname: "route",
 					Addons: AddonsSpec{
@@ -128,6 +140,12 @@ func Test_setConfigFromEnv(t *testing.T) {
 				Productized: true,
 				ProductName: "something",
 				DevSupport:  true,
+				ApiServer: capabilities.ApiServerSpec{
+					Version:          "1.16",
+					Routes:           true,
+					ImageStreams:     true,
+					EmbeddedProvider: true,
+				},
 				Syndesis: SyndesisConfig{
 					RouteHostname: "route",
 					Addons: AddonsSpec{
@@ -620,10 +638,10 @@ func Test_postgreSQLVersionFromInitPod(t *testing.T) {
 	defer func() { os.Unsetenv("POD_NAME") }()
 
 	// this simply returns the same HTTP response for every request
-	fakeClient := &fake.RESTClient{
+	fakeClient := &restfake.RESTClient{
 		GroupVersion:         v1.SchemeGroupVersion,
 		NegotiatedSerializer: scheme.Codecs,
-		Client: fake.CreateHTTPClient(func(req *http.Request) (*http.Response, error) {
+		Client: restfake.CreateHTTPClient(func(req *http.Request) (*http.Response, error) {
 			expected := "http://localhost/apis/v1/namespaces/syndesis/pods/syndesis-operator-3-crpjp/log?container=postgres-version"
 			if req.URL.String() != expected {
 				t.Errorf("Expecting to fetch pod log via URL like `%s`, but it was `%s`", expected, req.URL.String())
@@ -656,5 +674,102 @@ func Test_postgreSQLVersionFromInitPod(t *testing.T) {
 
 	if version != 9.6 {
 		t.Errorf("Expecting that version would be 9.6, but it was %f", version)
+	}
+}
+
+func Test_ApiCapabilities(t *testing.T) {
+
+	res1 := metav1.APIResourceList{
+		GroupVersion: "image.openshift.io/v1",
+	}
+	res2 := metav1.APIResourceList{
+		GroupVersion: "route.openshift.io/v1",
+	}
+	res3 := metav1.APIResourceList{
+		GroupVersion: "oauth.openshift.io/v1",
+	}
+
+	res4 := metav1.APIResourceList{
+		GroupVersion: "something.openshift.io/v1",
+	}
+	res5 := metav1.APIResourceList{
+		GroupVersion: "not.anything.io/v1",
+	}
+	res6 := metav1.APIResourceList{
+		GroupVersion: "something.else.io/v1",
+	}
+
+	testCases := []struct {
+		name     string
+		resList  []*metav1.APIResourceList
+		expected capabilities.ApiServerSpec
+	}{
+		{
+			"Relevant APIs available for fully true api spec",
+			[]*metav1.APIResourceList{&res1, &res2, &res3},
+			capabilities.ApiServerSpec{
+				Version:          "1.16",
+				Routes:           true,
+				ImageStreams:     true,
+				EmbeddedProvider: true,
+			},
+		},
+		{
+			"No relevant resources so expect false",
+			[]*metav1.APIResourceList{&res4, &res5, &res6},
+			capabilities.ApiServerSpec{
+				Version:          "1.16",
+				Routes:           false,
+				ImageStreams:     false,
+				EmbeddedProvider: false,
+			},
+		},
+		{
+			"No resources so everything false",
+			[]*metav1.APIResourceList{},
+			capabilities.ApiServerSpec{
+				Version:          "1.16",
+				Routes:           false,
+				ImageStreams:     false,
+				EmbeddedProvider: false,
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			api := gofake.NewSimpleClientset()
+			fd := api.Discovery().(*discoveryfake.FakeDiscovery)
+			fd.Resources = tc.resList
+			fd.FakedServerVersion = &version.Info{
+				Major: "1",
+				Minor: "16",
+			}
+
+			apiSpec, err := capabilities.ApiCapabilities(api)
+			if err != nil {
+				t.Error(err)
+			}
+
+			if apiSpec == nil {
+				t.Error("Failed to return an api specification")
+			}
+
+			if apiSpec.Version != tc.expected.Version {
+				t.Error("Expected api specification version not expected")
+			}
+
+			if apiSpec.Routes != tc.expected.Routes {
+				t.Error("Expected api specification routes not expected")
+			}
+
+			if apiSpec.ImageStreams != tc.expected.ImageStreams {
+				t.Error("Expected api specification image streams not expected")
+			}
+
+			if apiSpec.EmbeddedProvider != tc.expected.EmbeddedProvider {
+				t.Error("Expected api specification embedded provider not returned")
+			}
+		})
 	}
 }
