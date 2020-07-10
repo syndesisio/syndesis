@@ -106,7 +106,7 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
       process.env.REACT_APP_RHMI_SERVER_URL ? process.env.REACT_APP_RHMI_SERVER_URL : getSolutionExplorerServer(),
       undefined,
       process.env.REACT_APP_RHMI_SERVER_URL ? 'localhost:3006' : undefined,
-      ['3scale', 'fuse-managed'],
+      ['fuse-managed'],
       !!process.env.REACT_APP_RHMI_SERVER_URL
     ).then(apps => {
       setHasAvailableApps(apps);
