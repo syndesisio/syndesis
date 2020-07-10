@@ -84,6 +84,9 @@ func printVersion() {
 	log.Info(fmt.Sprintf("Version of operator-sdk: %v", sdkVersion.Version))
 	log.Info(fmt.Sprintf("Syndesis Operator Version: %s", pkg.DefaultOperatorTag))
 	log.Info(fmt.Sprintf("Syndesis Operator Image: %s", pkg.DefaultOperatorImage))
+	if len(pkg.BuildDateTime) > 0 {
+		log.Info(fmt.Sprintf("Syndesis Build Time: %s", pkg.BuildDateTime))
+	}
 }
 
 func New(parent *internal.Options) *cobra.Command {

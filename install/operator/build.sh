@@ -39,8 +39,17 @@ ENDHELP
 	exit 0
 fi
 
+#
+# Timestamp for the building of the operator
+#
+BUILD_TIME=$(date +%Y-%m-%dT%H:%M:%S%z)
+
 if [ $OPERATOR_BUILD_MODE != "skip" ] ; then
-  build_operator $OPERATOR_BUILD_MODE "$SOURCE_GEN" -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=$OPERATOR_IMAGE_NAME -X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorTag=$OPERATOR_IMAGE_TAG" $GO_BUILD_OPTIONS
+	LD_FLAGS=$(echo "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=${OPERATOR_IMAGE_NAME}" \
+		"-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorTag=${OPERATOR_IMAGE_TAG}" \
+		"-X github.com/syndesisio/syndesis/install/operator/pkg.BuildDateTime=${BUILD_TIME}")
+	echo "LD_FLAGS: ${LD_FLAGS}"
+  build_operator $OPERATOR_BUILD_MODE "$SOURCE_GEN" -ldflags "${LD_FLAGS}" $GO_BUILD_OPTIONS
 fi
 
 if [ $IMAGE_BUILD_MODE != "skip" ] ; then

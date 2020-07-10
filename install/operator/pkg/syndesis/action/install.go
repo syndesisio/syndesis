@@ -49,6 +49,29 @@ func newInstallAction(mgr manager.Manager, clientTools *clienttools.ClientTools)
 	}
 }
 
+func (a *installAction) installResource(ctx context.Context, rtClient client.Client, syndesis *v1beta1.Syndesis, res unstructured.Unstructured) (*unstructured.Unstructured, error) {
+	operation.SetNamespaceAndOwnerReference(res, syndesis)
+	o, modificationType, err := util.CreateOrUpdate(ctx, rtClient, &res)
+	if err != nil {
+		if util.IsNoKindMatchError(err) {
+			gvk := res.GroupVersionKind()
+			if _, found := kindsReportedNotAvailable[gvk]; !found {
+				kindsReportedNotAvailable[gvk] = time.Now()
+				a.log.Info("optional custom resource definition is not installed.", "group", gvk.Group, "version", gvk.Version, "kind", gvk.Kind)
+			}
+		} else {
+			a.log.Info("failed to create or replace resource", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+			return nil, err
+		}
+	} else {
+		if modificationType != controllerutil.OperationResultNone {
+			a.log.Info("resource "+string(modificationType), "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+		}
+	}
+
+	return o, nil
+}
+
 func (a *installAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis,
 		v1beta1.SyndesisPhaseInstalling,
@@ -151,6 +174,23 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		all = append(all, dbResources...)
 	}
 
+	// Link the image secret to service accounts
+	if secret != nil {
+		err = linkImageSecretToServiceAccounts(ctx, rtClient, syndesis, secret)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Install the resources..
+	for _, res := range all {
+		o, err := a.installResource(ctx, rtClient, syndesis, res)
+		if err != nil {
+			return err // Fail-fast for core components
+		}
+		resourcesThatShouldExist[o.GetUID()] = true
+	}
+
 	addons := configuration.GetAddons(*config)
 	for _, addon := range addons {
 		if !addon.Enabled {
@@ -167,40 +207,22 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 
 		resources, err := generator.RenderDir(addonDir, config)
 		if err != nil {
-			return err
+			a.log.Info("Rendering of addon resources failed", "addon", addon.Name, "error message", err.Error())
+			continue
 		}
 
-		all = append(all, resources...)
-	}
-
-	// Link the image secret to service accounts
-	if secret != nil {
-		err = linkImageSecretToServiceAccounts(ctx, rtClient, syndesis, secret)
-		if err != nil {
-			return err
-		}
-	}
-
-	// Install the resources..
-	for _, res := range all {
-		operation.SetNamespaceAndOwnerReference(res, syndesis)
-		o, modificationType, err := util.CreateOrUpdate(ctx, rtClient, &res)
-		if err != nil {
-			if util.IsNoKindMatchError(err) {
-				gvk := res.GroupVersionKind()
-				if _, found := kindsReportedNotAvailable[gvk]; !found {
-					kindsReportedNotAvailable[gvk] = time.Now()
-					a.log.Info("optional custom resource definition is not installed.", "group", gvk.Group, "version", gvk.Version, "kind", gvk.Kind)
-				}
-			} else {
-				a.log.Info("failed to create or replace resource", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
-				return err
+		//
+		// Install the resources of this addon
+		// If there is an error do NOT fail-fast but
+		// try and continue to install the other addons
+		//
+		for _, res := range resources {
+			o, err := a.installResource(ctx, rtClient, syndesis, res)
+			if err != nil {
+				a.log.Info("Install of addon failed", "addon", addon.Name, "error message", err.Error())
+				break
 			}
-		} else {
 			resourcesThatShouldExist[o.GetUID()] = true
-			if modificationType != controllerutil.OperationResultNone {
-				a.log.Info("resource "+string(modificationType), "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
-			}
 		}
 	}
 
