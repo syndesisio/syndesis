@@ -53,14 +53,19 @@ func (c *cleanup) run() (err error) {
 }
 
 func (c *cleanup) deleteDeploymentConfigs() (err error) {
+	rtClient, err := c.clientTools.RuntimeClient()
+	if err != nil {
+		return err
+	}
+
 	for _, dcName := range []string{"syndesis-meta", "syndesis-server", "syndesis-ui", "syndesis-prometheus", "todo"} {
 		dc := &v12.DeploymentConfig{}
-		if err := c.client.Get(c.context, client.ObjectKey{Name: dcName, Namespace: c.namespace}, dc); err != nil {
+		if err := rtClient.Get(c.context, client.ObjectKey{Name: dcName, Namespace: c.namespace}, dc); err != nil {
 			if !k8serrors.IsNotFound(err) {
 				c.log.Info(err.Error())
 			}
 		} else {
-			if err := c.client.Delete(c.context, dc); err != nil {
+			if err := rtClient.Delete(c.context, dc); err != nil {
 				c.log.Info(err.Error())
 			} else {
 				c.log.Info("force deleted DeploymentConfig", "name", dcName)
@@ -72,14 +77,19 @@ func (c *cleanup) deleteDeploymentConfigs() (err error) {
 }
 
 func (c *cleanup) deleteBuildConfigs() (err error) {
+	rtClient, err := c.clientTools.RuntimeClient()
+	if err != nil {
+		return err
+	}
+
 	for _, bcName := range []string{"todo"} {
 		bc := &v1.BuildConfig{}
-		if err := c.client.Get(c.context, client.ObjectKey{Name: bcName, Namespace: c.namespace}, bc); err != nil {
+		if err := rtClient.Get(c.context, client.ObjectKey{Name: bcName, Namespace: c.namespace}, bc); err != nil {
 			if !k8serrors.IsNotFound(err) {
 				c.log.Info(err.Error())
 			}
 		} else {
-			if err := c.client.Delete(c.context, bc); err != nil {
+			if err := rtClient.Delete(c.context, bc); err != nil {
 				c.log.Info(err.Error())
 			} else {
 				c.log.Info("force deleted BuildConfig", "name", bcName)

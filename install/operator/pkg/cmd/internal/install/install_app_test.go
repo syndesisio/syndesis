@@ -46,7 +46,7 @@ func TestInstallAppNoCustomResource(t *testing.T) {
 
 	scheme := runtime.NewScheme()
 	dyncl := dynfake.NewSimpleDynamicClient(scheme)
-	i.DynamicClient = dyncl
+	i.ClientTools().SetDynamicClient(dyncl)
 
 	//
 	// Want to compare app resource being installed rather than actually installing
@@ -81,7 +81,7 @@ func TestInstallAppCustomResource(t *testing.T) {
 
 	scheme := runtime.NewScheme()
 	dyncl := dynfake.NewSimpleDynamicClient(scheme)
-	i.DynamicClient = dyncl
+	i.ClientTools().SetDynamicClient(dyncl)
 
 	//
 	// Want to compare app resource being installed rather than actually installing

@@ -38,6 +38,7 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
 )
 
 func Test_loadFromFile(t *testing.T) {
@@ -642,10 +643,13 @@ func Test_postgreSQLVersionFromInitPod(t *testing.T) {
 	restClient.Client = fakeClient.Client
 	client := kubernetes.New(restClient).CoreV1()
 
+	clientTools := syntesting.FakeClientTools()
+	clientTools.SetCoreV1Client(client)
+
 	syndesis := v1beta1.Syndesis{}
 	syndesis.SetNamespace("syndesis")
 
-	version, err := postgreSQLVersionFromInitPod(client, &syndesis)
+	version, err := postgreSQLVersionFromInitPod(clientTools, &syndesis)
 	if err != nil {
 		t.Error(err)
 	}

@@ -57,7 +57,7 @@ func (o *Install) installApplication() error {
 			return err
 		}
 
-		client, err := o.GetDynamicClient()
+		client, err := o.ClientTools().DynamicClient()
 		if err != nil {
 			return err
 		}

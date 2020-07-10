@@ -44,10 +44,9 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	"k8s.io/apimachinery/pkg/util/yaml"
-	corev1client "k8s.io/client-go/kubernetes/typed/core/v1"
-	"sigs.k8s.io/controller-runtime/pkg/client/config"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 )
 
@@ -289,17 +288,26 @@ func GetAddons(configuration Config) []AddonInstance {
  - For QE, some fields are loaded from environment variables
  - Users might define fields using the syndesis custom resource
 */
-func GetProperties(file string, ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis) (*Config, error) {
+func GetProperties(ctx context.Context, file string, clientTools *clienttools.ClientTools, syndesis *v1beta1.Syndesis) (*Config, error) {
 	configuration := &Config{}
 	if err := configuration.loadFromFile(file); err != nil {
 		return nil, err
 	}
 
+	var rtClient client.Client
+	var err error
+	if clientTools != nil {
+		rtClient, err = clientTools.RuntimeClient()
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	configuration.OpenShiftProject = syndesis.Namespace
 	configuration.Syndesis.Components.Oauth.SarNamespace = configuration.OpenShiftProject
 
-	if client != nil {
-		if err := configuration.setPasswordsFromSecret(ctx, client, syndesis); err != nil {
+	if rtClient != nil {
+		if err := configuration.setPasswordsFromSecret(ctx, rtClient, syndesis); err != nil {
 			return nil, err
 		}
 	}
@@ -313,8 +321,8 @@ func GetProperties(file string, ctx context.Context, client client.Client, synde
 		return nil, err
 	}
 
-	if client == nil || len(syndesis.Spec.Components.Database.ExternalDbURL) > 0 {
-		if err := configuration.externalDatabase(ctx, client, syndesis); err != nil {
+	if rtClient != nil && len(syndesis.Spec.Components.Database.ExternalDbURL) > 0 {
+		if err := configuration.externalDatabase(ctx, rtClient, syndesis); err != nil {
 			return nil, err
 		}
 
@@ -322,7 +330,7 @@ func GetProperties(file string, ctx context.Context, client client.Client, synde
 	}
 
 	databaseDeployment := &appsv1.DeploymentConfig{}
-	if err := client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, databaseDeployment); err == nil {
+	if err := rtClient.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, databaseDeployment); err == nil {
 		for _, c := range databaseDeployment.Spec.Template.Spec.Containers {
 			if c.Name == "postgresql" {
 				//
@@ -346,11 +354,7 @@ func GetProperties(file string, ctx context.Context, client client.Client, synde
 		return configuration, nil
 	}
 
-	goC, err := goClient()
-	if err != nil {
-		return nil, err
-	}
-	wantedPostgreSQLVersion, err := postgreSQLVersionFromInitPod(goC, syndesis)
+	wantedPostgreSQLVersion, err := postgreSQLVersionFromInitPod(clientTools, syndesis)
 	if err != nil {
 		log.Error(err, "Unable to determine next version of PostgreSQL from the operator init container")
 		return configuration, nil
@@ -362,23 +366,18 @@ func GetProperties(file string, ctx context.Context, client client.Client, synde
 	return configuration, nil
 }
 
-func goClient() (corev1client.CoreV1Interface, error) {
-	restConfig, err := config.GetConfig()
-	if err != nil {
-		return nil, err
+func postgreSQLVersionFromInitPod(clientTools *clienttools.ClientTools, syndesis *v1beta1.Syndesis) (float64, error) {
+	if clientTools == nil {
+		return 0, nil
 	}
 
-	client, err := corev1client.NewForConfig(restConfig)
+	coreClient, err := clientTools.CoreV1Client()
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 
-	return client, nil
-}
-
-func postgreSQLVersionFromInitPod(client corev1client.CoreV1Interface, syndesis *v1beta1.Syndesis) (float64, error) {
 	operatorPodName := os.Getenv("POD_NAME")
-	req := client.Pods(syndesis.Namespace).GetLogs(operatorPodName, &v1.PodLogOptions{
+	req := coreClient.Pods(syndesis.Namespace).GetLogs(operatorPodName, &v1.PodLogOptions{
 		Container: "postgres-version",
 	})
 
@@ -474,6 +473,10 @@ func getSyndesisConfigurationSecret(ctx context.Context, client client.Client, n
 }
 
 func (config *Config) setPasswordsFromSecret(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis) error {
+	if client == nil {
+		return nil
+	}
+
 	secret, err := getSyndesisConfigurationSecret(ctx, client, syndesis.Namespace)
 	if err != nil {
 		if k8serrors.IsNotFound(err) {

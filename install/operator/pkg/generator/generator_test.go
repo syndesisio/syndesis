@@ -12,7 +12,8 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"sigs.k8s.io/controller-runtime/pkg/client/fake"
+
+	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
 )
 
 func TestGenerator(t *testing.T) {
@@ -81,7 +82,8 @@ func TestGenerator(t *testing.T) {
 		},
 	}
 
-	configuration, err := configuration.GetProperties("../../build/conf/config.yaml", context.TODO(), fake.NewFakeClient(), syndesis)
+	clientTools := syntesting.FakeClientTools()
+	configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config.yaml", clientTools, syndesis)
 	require.NoError(t, err)
 
 	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure/", configuration)
@@ -127,7 +129,8 @@ func TestOpsAddon(t *testing.T) {
 	syndesis := &v1beta1.Syndesis{}
 	baseDir := "./addons/ops/"
 
-	conf, err := configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), nil, syndesis)
+	clientTools := syntesting.FakeClientTools()
+	conf, err := configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", clientTools, syndesis)
 	if err != nil {
 
 	}
@@ -138,7 +141,7 @@ func TestOpsAddon(t *testing.T) {
 	}
 
 	syndesis.Spec.Components.Database.ExternalDbURL = "1234"
-	conf, err = configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), nil, syndesis)
+	conf, err = configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", clientTools, syndesis)
 	if err != nil {
 
 	}
@@ -289,7 +292,8 @@ func assertPropStr(t *testing.T, resource map[string]interface{}, expected strin
 }
 
 func loadDBResource(t *testing.T, syndesis *v1beta1.Syndesis) []unstructured.Unstructured {
-	configuration, err := configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), fake.NewFakeClient(), syndesis)
+	clientTools := syntesting.FakeClientTools()
+	configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", clientTools, syndesis)
 	require.NoError(t, err)
 
 	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./database/", configuration)

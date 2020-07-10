@@ -90,7 +90,7 @@ func (o *Grant) grant() error {
 	}
 	resources = append(resources, pubRole...)
 
-	client, err := o.GetClient()
+	client, err := o.ClientTools().RuntimeClient()
 	for _, res := range resources {
 		res.SetNamespace(o.Namespace)
 

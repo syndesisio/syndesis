@@ -27,6 +27,7 @@ import (
 	v1 "github.com/openshift/api/route/v1"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
@@ -42,9 +43,9 @@ type installAction struct {
 	baseAction
 }
 
-func newInstallAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
+func newInstallAction(mgr manager.Manager, clientTools *clienttools.ClientTools) SyndesisOperatorAction {
 	return &installAction{
-		newBaseAction(mgr, api, "install"),
+		newBaseAction(mgr, clientTools, "install"),
 	}
 }
 
@@ -69,15 +70,17 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 
 	resourcesThatShouldExist := map[types.UID]bool{}
 
+	rtClient, _ := a.clientTools.RuntimeClient()
 	// Load configuration to to use as context for generate pkg
-	config, err := configuration.GetProperties(configuration.TemplateConfig, ctx, a.client, syndesis)
+	config, err := configuration.GetProperties(ctx, configuration.TemplateConfig, a.clientTools, syndesis)
 	if err != nil {
+		a.log.Error(err, "Error occurred while initialising configuration")
 		return err
 	}
 
 	// Check if an image secret exists, to be used to connect to registries that require authentication
 	secret := &corev1.Secret{}
-	err = a.client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: SyndesisPullSecret}, secret)
+	err = rtClient.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: SyndesisPullSecret}, secret)
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
 			secret = nil
@@ -90,13 +93,13 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		config.ImagePullSecrets = append(config.ImagePullSecrets, secret.Name)
 	}
 
-	serviceAccount, err := installServiceAccount(ctx, a.client, syndesis, secret)
+	serviceAccount, err := installServiceAccount(ctx, rtClient, syndesis, secret)
 	if err != nil {
 		return err
 	}
 	resourcesThatShouldExist[serviceAccount.GetUID()] = true
 
-	token, err := serviceaccount.GetServiceAccountToken(ctx, a.client, serviceAccount.Name, syndesis.Namespace)
+	token, err := serviceaccount.GetServiceAccountToken(ctx, rtClient, serviceAccount.Name, syndesis.Namespace)
 	if err != nil {
 		a.log.Info("Unable to get service account token", "error message", err.Error())
 		return nil
@@ -110,13 +113,13 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 	}
 
 	routes, _ := util.SeperateStructuredAndUnstructured(a.scheme, all)
-	syndesisRoute, err := installSyndesisRoute(ctx, a.client, syndesis, routes)
+	syndesisRoute, err := installSyndesisRoute(ctx, rtClient, syndesis, routes)
 	if err != nil {
 		a.log.Info("Unable to set route syndesis", "error message", err.Error())
 		return nil
 	}
 
-	if err := config.SetRoute(ctx, a.client, syndesis); err != nil {
+	if err := config.SetRoute(ctx, rtClient, syndesis); err != nil {
 		return err
 	}
 
@@ -172,7 +175,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 
 	// Link the image secret to service accounts
 	if secret != nil {
-		err = linkImageSecretToServiceAccounts(ctx, a.client, syndesis, secret)
+		err = linkImageSecretToServiceAccounts(ctx, rtClient, syndesis, secret)
 		if err != nil {
 			return err
 		}
@@ -181,7 +184,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 	// Install the resources..
 	for _, res := range all {
 		operation.SetNamespaceAndOwnerReference(res, syndesis)
-		o, modificationType, err := util.CreateOrUpdate(ctx, a.client, &res)
+		o, modificationType, err := util.CreateOrUpdate(ctx, rtClient, &res)
 		if err != nil {
 			if util.IsNoKindMatchError(err) {
 				gvk := res.GroupVersionKind()
@@ -210,7 +213,9 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		Namespace:     syndesis.Namespace,
 		LabelSelector: labelSelector,
 	}
-	err = ListAllTypesInChunks(ctx, a.api, a.client, options, func(list []unstructured.Unstructured) error {
+
+	api, _ := a.clientTools.ApiClient()
+	err = ListAllTypesInChunks(ctx, api, rtClient, options, func(list []unstructured.Unstructured) error {
 		for _, res := range list {
 			if resourcesThatShouldExist[res.GetUID()] {
 				continue
@@ -223,7 +228,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 			}
 
 			// Found a resource that should not exist!
-			err := a.client.Delete(ctx, &res)
+			err := rtClient.Delete(ctx, &res)
 			if err != nil {
 				if !k8serrors.IsNotFound(err) {
 					a.log.Error(err, "could not deleted", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
@@ -245,7 +250,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		target.Status.Phase = v1beta1.SyndesisPhaseStarting
 		target.Status.Reason = v1beta1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
-		_, _, err := util.CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
+		_, _, err := util.CreateOrUpdate(ctx, rtClient, target, "kind", "apiVersion")
 		if err != nil {
 			return err
 		}
@@ -260,7 +265,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		target.Status.Phase = v1beta1.SyndesisPhasePostUpgradeRunSucceed
 		target.Status.Reason = v1beta1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
-		_, _, err := util.CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
+		_, _, err := util.CreateOrUpdate(ctx, rtClient, target, "kind", "apiVersion")
 		if err != nil {
 			return err
 		}
@@ -494,9 +499,10 @@ func (a *installAction) removePostgresUpgradeTrigger(context context.Context, sy
 	pollTimeout := 600 * time.Second
 	pollInterval := 5 * time.Second
 
+	rtClient, _ := a.clientTools.RuntimeClient()
 	wait.Poll(pollInterval, pollTimeout, func() (done bool, err error) {
 		dc := &appsv1.DeploymentConfig{}
-		if err := a.client.Get(context, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, dc); err != nil {
+		if err := rtClient.Get(context, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, dc); err != nil {
 			a.log.Error(err, "getting `syndesis-db` DeploymentConfig in "+syndesis.Namespace)
 			return false, err
 		}
@@ -519,7 +525,7 @@ func (a *installAction) removePostgresUpgradeTrigger(context context.Context, sy
 					"op": "remove",
 					"path": "/spec/template/spec/containers/%d/env/%d"
 				}]`, containerIdx, envIdx)))
-				if err := a.client.Patch(context, dc, removeUpgradeEnvVar); err != nil {
+				if err := rtClient.Patch(context, dc, removeUpgradeEnvVar); err != nil {
 					a.log.Error(err, "patching `syndesis-db` DeploymentConfig to remove `POSTGRESQL_UPGRADE` environment variable")
 					return true, err
 				}
