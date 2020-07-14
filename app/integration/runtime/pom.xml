@@ -127,6 +127,10 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-support</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-core-languages</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>com.github.spotbugs</groupId>
@@ -183,6 +187,11 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-freemarker</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-ftp</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
