@@ -147,12 +147,7 @@ func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 		o.ejectedResources = []unstructured.Unstructured{}
 	}
 
-	apiClient, err := o.ClientTools().ApiClient()
-	if err != nil {
-		return err
-	}
-
-	apiSpec, err := capabilities.ApiCapabilities(apiClient)
+	apiSpec, err := capabilities.ApiCapabilities(o.ClientTools())
 	if err != nil {
 		return err
 	}

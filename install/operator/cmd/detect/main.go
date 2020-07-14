@@ -28,13 +28,7 @@ func main() {
 	errMsg := "Error: Detection of cluster failed. "
 
 	ct := &clienttools.ClientTools{}
-
-	api, err := ct.ApiClient()
-	if err != nil {
-		fmt.Println(errMsg, "Cannot initialise api client")
-	}
-
-	apiSpec, err := capabilities.ApiCapabilities(api)
+	apiSpec, err := capabilities.ApiCapabilities(ct)
 	if err != nil {
 		fmt.Println(errMsg, err)
 	} else {

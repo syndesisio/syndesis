@@ -44,7 +44,6 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	"k8s.io/apimachinery/pkg/util/yaml"
-	"k8s.io/client-go/kubernetes"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
@@ -204,16 +203,17 @@ type MavenConfiguration struct {
 // Addons
 type AddonsSpec struct {
 	Jaeger    JaegerConfiguration
-	Ops       AddonConfiguration
+	Ops       OpsConfiguration
 	Todo      TodoConfiguration
-	Knative   AddonConfiguration
+	Knative   KnativeConfiguration
 	DV        DvConfiguration
 	CamelK    CamelKConfiguration
 	PublicApi PublicApiConfiguration
 }
 
 type JaegerConfiguration struct {
-	Enabled       bool
+	Enabled       bool // Whether the addon is enabled
+	Olm           OlmSpec
 	ClientOnly    bool
 	OperatorOnly  bool
 	QueryUri      string
@@ -225,37 +225,103 @@ type JaegerConfiguration struct {
 	ImageOperator string
 }
 
+func (j JaegerConfiguration) Name() string {
+	return "jaeger"
+}
+func (j JaegerConfiguration) IsEnabled() bool {
+	return j.Enabled
+}
+func (j JaegerConfiguration) GetOlmSpec() *OlmSpec {
+	if j.ClientOnly {
+		//
+		// If client only then we really don't want to try and install
+		// an operator at all, inc. using the operatorhub. As we check
+		// for an olm object to determine if the operatorhub
+		// should be used, we return nil here to stop installation.
+		//
+		return nil
+	}
+
+	return &j.Olm
+}
+
+type OpsConfiguration struct {
+	AddonConfiguration
+}
+
+func (o OpsConfiguration) Name() string {
+	return "ops"
+}
+
 type TodoConfiguration struct {
-	Image   string // Docker image for todo sample app
-	Enabled bool
+	Image string // Docker image for todo sample app
+	AddonConfiguration
+}
+
+func (t TodoConfiguration) Name() string {
+	return "todo"
 }
 
 type DvConfiguration struct {
-	Image     string // Docker image for dv
-	Enabled   bool
+	Image string // Docker image for dv
+	AddonConfiguration
 	Resources Resources
 }
 
+func (dv DvConfiguration) Name() string {
+	return "dv"
+}
+
+type KnativeConfiguration struct {
+	AddonConfiguration
+}
+
+func (k KnativeConfiguration) Name() string {
+	return "knative"
+}
+
 type PublicApiConfiguration struct {
-	Enabled         bool
+	AddonConfiguration
 	RouteHostname   string
 	DisableSarCheck bool
 }
 
-type AddonConfiguration struct {
-	Enabled bool
+func (p PublicApiConfiguration) Name() string {
+	return "publicApi"
 }
 
 type CamelKConfiguration struct {
-	Image         string
-	Enabled       bool
+	Image string
+	AddonConfiguration
 	CamelVersion  string
 	CamelKRuntime string
 }
 
-type AddonInstance struct {
-	Name    string
-	Enabled bool
+func (c CamelKConfiguration) Name() string {
+	return "camelk"
+}
+
+type AddonConfiguration struct {
+	Enabled bool    // Whether the addon is enabled
+	Olm     OlmSpec // The specification for the Operator-Lifecyle-Manager
+}
+
+type OlmSpec struct {
+	Package string // The name of the package if available in the operator-lifecycle-manager
+	Channel string // The preferred channel from which to take the operator
+}
+
+func (ac AddonConfiguration) IsEnabled() bool {
+	return ac.Enabled
+}
+func (ac AddonConfiguration) GetOlmSpec() *OlmSpec {
+	return &ac.Olm
+}
+
+type AddonInfo interface {
+	Name() string
+	IsEnabled() bool
+	GetOlmSpec() *OlmSpec
 }
 
 const (
@@ -267,18 +333,18 @@ const (
 var postgresVersionRegex = regexp.MustCompile(`^.* (\d+\.\d+)(?:\.d+)? ?`)
 
 /*
-/ Returns an array of the addons names and if configuration has been defined
-/ whether they've been enabled in that configuration instance
+/ Returns an array of the addons metadata
 */
-func GetAddons(configuration Config) []AddonInstance {
-	return []AddonInstance{
-		{"jaeger", configuration.Syndesis.Addons.Jaeger.Enabled},
-		{"ops", configuration.Syndesis.Addons.Ops.Enabled},
-		{"dv", configuration.Syndesis.Addons.DV.Enabled},
-		{"camelk", configuration.Syndesis.Addons.CamelK.Enabled},
-		{"knative", configuration.Syndesis.Addons.Knative.Enabled},
-		{"publicApi", configuration.Syndesis.Addons.PublicApi.Enabled},
-		{"todo", configuration.Syndesis.Addons.Todo.Enabled},
+func GetAddonsInfo(configuration Config) []AddonInfo {
+
+	return []AddonInfo{
+		configuration.Syndesis.Addons.Jaeger,
+		configuration.Syndesis.Addons.Ops,
+		configuration.Syndesis.Addons.DV,
+		configuration.Syndesis.Addons.CamelK,
+		configuration.Syndesis.Addons.Knative,
+		configuration.Syndesis.Addons.PublicApi,
+		configuration.Syndesis.Addons.Todo,
 	}
 }
 
@@ -297,22 +363,16 @@ func GetProperties(ctx context.Context, file string, clientTools *clienttools.Cl
 		return nil, err
 	}
 
-	var apiClient kubernetes.Interface
 	var rtClient client.Client
 	var err error
 	if clientTools != nil {
-		apiClient, err = clientTools.ApiClient()
-		if err != nil {
-			return nil, err
-		}
-
 		rtClient, err = clientTools.RuntimeClient()
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	if ac, err := capabilities.ApiCapabilities(apiClient); err != nil {
+	if ac, err := capabilities.ApiCapabilities(clientTools); err != nil {
 		return nil, err
 	} else {
 		configuration.ApiServer = *ac

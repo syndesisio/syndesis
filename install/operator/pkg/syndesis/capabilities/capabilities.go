@@ -18,9 +18,10 @@ package capabilities
 
 import (
 	"errors"
+	"fmt"
 
 	errs "github.com/pkg/errors"
-	"k8s.io/client-go/kubernetes"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 )
 
 type ApiServerSpec struct {
@@ -28,12 +29,41 @@ type ApiServerSpec struct {
 	ImageStreams     bool   // Set to true if the API Server supports imagestreams
 	Routes           bool   // Set to true if the API Server supports routes
 	EmbeddedProvider bool   // Set to true if the API Server support an embedded authenticaion provider, eg. openshift
+	OlmSupport       bool   // Set to true if the API Server supports an Operation-Lifecyle-Manager
+}
+
+type RequiredApiSpec struct {
+	routes                    string
+	imagestreams              string
+	oauthclientauthorizations string
+	catalogsources            string
+}
+
+var RequiredApi = RequiredApiSpec{
+	routes:                    "routes.route.openshift.io/v1",
+	imagestreams:              "imagestreams.image.openshift.io/v1",
+	oauthclientauthorizations: "oauthclientauthorizations.oauth.openshift.io/v1",
+	catalogsources:            "catalogsources.operators.coreos.com/v1alpha1",
+}
+
+func contains(a []string, x string) bool {
+	for _, n := range a {
+		if x == n {
+			return true
+		}
+	}
+	return false
 }
 
 /*
- * For testing if the giving platform is Openshift
+ * For testing the given platform's capabilities
  */
-func ApiCapabilities(apiClient kubernetes.Interface) (*ApiServerSpec, error) {
+func ApiCapabilities(clientTools *clienttools.ClientTools) (*ApiServerSpec, error) {
+	apiClient, err := clientTools.ApiClient()
+	if err != nil {
+		return nil, errs.Wrap(err, "Failed to initialise api client so cannot determine api capabilities")
+	}
+
 	if apiClient == nil {
 		return nil, errors.New("No api client. Cannot determine api capabilities")
 	}
@@ -47,24 +77,23 @@ func ApiCapabilities(apiClient kubernetes.Interface) (*ApiServerSpec, error) {
 
 	apiSpec.Version = info.Major + "." + info.Minor
 
-	apis, err := apiClient.Discovery().ServerGroups()
+	_, apiResourceLists, err := apiClient.Discovery().ServerGroupsAndResources()
 	if err != nil {
 		return nil, err
 	}
 
-	for _, api := range apis.Groups {
-		//
-		// By definition an API Server supporting Openshift APIs
-		// is more than likely going to be Openshift or closely
-		// compatible.
-		if api.Name == "route.openshift.io" {
-			apiSpec.Routes = true
-		} else if api.Name == "image.openshift.io" {
-			apiSpec.ImageStreams = true
-		} else if api.Name == "oauth.openshift.io" {
-			apiSpec.EmbeddedProvider = true
+	resIndex := []string{}
+
+	for _, apiResList := range apiResourceLists {
+		for _, apiResource := range apiResList.APIResources {
+			resIndex = append(resIndex, fmt.Sprintf("%s.%s", apiResource.Name, apiResList.GroupVersion))
 		}
 	}
+
+	apiSpec.Routes = contains(resIndex, RequiredApi.routes)
+	apiSpec.ImageStreams = contains(resIndex, RequiredApi.imagestreams)
+	apiSpec.EmbeddedProvider = contains(resIndex, RequiredApi.oauthclientauthorizations)
+	apiSpec.OlmSupport = contains(resIndex, RequiredApi.catalogsources)
 
 	return &apiSpec, nil
 }

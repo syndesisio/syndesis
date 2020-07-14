@@ -12,6 +12,12 @@ func (o *Install) installOperatorResources() error {
 		return err
 	}
 
+	olmRes, err := o.render("./install/olm_cluster_role.yml.tmpl")
+	if err != nil {
+		return err
+	}
+	resources = append(resources, olmRes...)
+
 	operator, err := o.render("./install/operator.yml.tmpl")
 	if err != nil {
 		return err

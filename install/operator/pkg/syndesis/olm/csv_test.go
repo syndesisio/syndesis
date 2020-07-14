@@ -118,3 +118,19 @@ func Test_csv_loadRoleFromTemplate(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, r)
 }
+
+func Test_csv_loadClusterRoleFromTemplate(t *testing.T) {
+	clientTools := syntesting.FakeClientTools()
+	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &v1beta1.Syndesis{})
+	assert.NoError(t, err)
+
+	//
+	// Mock olm support
+	//
+	conf.ApiServer.OlmSupport = true
+
+	c := &csv{config: conf, operator: ""}
+	r, err := c.loadClusterRoleFromTemplate()
+	assert.NoError(t, err)
+	assert.NotNil(t, r)
+}

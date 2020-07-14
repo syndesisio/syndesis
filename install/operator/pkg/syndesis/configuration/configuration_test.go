@@ -25,12 +25,9 @@ import (
 	"reflect"
 	"testing"
 
-	"k8s.io/apimachinery/pkg/version"
-
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	v1 "k8s.io/api/core/v1"
-	gofake "k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/rest"
 	restclient "k8s.io/client-go/rest"
 	restfake "k8s.io/client-go/rest/fake"
@@ -43,9 +40,43 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	discoveryfake "k8s.io/client-go/discovery/fake"
 )
+
+func Test_GetAddons(t *testing.T) {
+	config := getConfigLiteral()
+	addons := GetAddonsInfo(*config)
+
+	assert.True(t, len(addons) > 0)
+
+	for _, addon := range addons {
+		switch addon.Name() {
+		case "jaeger":
+			assert.Equal(t, config.Syndesis.Addons.Jaeger.Name(), addon.Name())
+			assert.Equal(t, config.Syndesis.Addons.Jaeger.Enabled, addon.IsEnabled())
+			assert.Equal(t, config.Syndesis.Addons.Jaeger.Olm, *addon.GetOlmSpec())
+		case "ops":
+			assert.Equal(t, config.Syndesis.Addons.Ops.Name(), addon.Name())
+			assert.Equal(t, config.Syndesis.Addons.Ops.Enabled, addon.IsEnabled())
+		case "dv":
+			assert.Equal(t, config.Syndesis.Addons.DV.Name(), addon.Name())
+			assert.Equal(t, config.Syndesis.Addons.DV.Enabled, addon.IsEnabled())
+		case "camelk":
+			assert.Equal(t, config.Syndesis.Addons.CamelK.Name(), addon.Name())
+			assert.Equal(t, config.Syndesis.Addons.CamelK.Enabled, addon.IsEnabled())
+		case "knative":
+			assert.Equal(t, config.Syndesis.Addons.Knative.Name(), addon.Name())
+			assert.Equal(t, config.Syndesis.Addons.Knative.Enabled, addon.IsEnabled())
+		case "todo":
+			assert.Equal(t, config.Syndesis.Addons.Todo.Name(), addon.Name())
+			assert.Equal(t, config.Syndesis.Addons.Todo.Enabled, addon.IsEnabled())
+		case "publicApi":
+			assert.Equal(t, config.Syndesis.Addons.PublicApi.Name(), addon.Name())
+			assert.Equal(t, config.Syndesis.Addons.PublicApi.Enabled, addon.IsEnabled())
+		default:
+			t.Errorf("addon name %s not recognised", addon.Name())
+		}
+	}
+}
 
 func Test_loadFromFile(t *testing.T) {
 	type args struct {
@@ -104,8 +135,8 @@ func Test_setConfigFromEnv(t *testing.T) {
 					RouteHostname: "route",
 					Addons: AddonsSpec{
 						DV: DvConfiguration{
-							Enabled: true,
-							Image:   "DV_IMAGE",
+							AddonConfiguration: AddonConfiguration{Enabled: true},
+							Image:              "DV_IMAGE",
 						},
 						CamelK: CamelKConfiguration{Image: "CAMELK_IMAGE"},
 						Todo:   TodoConfiguration{Image: "TODO_IMAGE"},
@@ -150,8 +181,8 @@ func Test_setConfigFromEnv(t *testing.T) {
 					RouteHostname: "route",
 					Addons: AddonsSpec{
 						DV: DvConfiguration{
-							Enabled: true,
-							Image:   "docker.io/teiid/syndesis-dv:latest",
+							AddonConfiguration: AddonConfiguration{Enabled: true},
+							Image:              "docker.io/teiid/syndesis-dv:latest",
 						},
 					},
 					Components: ComponentsSpec{
@@ -260,33 +291,41 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 				Syndesis: SyndesisConfig{
 					Addons: AddonsSpec{
 						Jaeger: JaegerConfiguration{
-							Enabled:       true,
+							Enabled: true,
+							Olm: OlmSpec{
+								Package: "jaeger",
+								Channel: "stable",
+							},
 							SamplerType:   "const",
 							SamplerParam:  "0",
 							ImageAgent:    "jaegertracing/jaeger-agent:1.13",
 							ImageAllInOne: "jaegertracing/all-in-one:1.13",
 							ImageOperator: "jaegertracing/jaeger-operator:1.13",
 						},
-						Ops: AddonConfiguration{Enabled: false},
-						Todo: TodoConfiguration{
-							Enabled: true,
-							Image:   "docker.io/centos/php-71-centos7",
+						Ops: OpsConfiguration{
+							AddonConfiguration: AddonConfiguration{Enabled: false},
 						},
-						Knative: AddonConfiguration{Enabled: false},
+						Todo: TodoConfiguration{
+							AddonConfiguration: AddonConfiguration{Enabled: true},
+							Image:              "docker.io/centos/php-71-centos7",
+						},
+						Knative: KnativeConfiguration{
+							AddonConfiguration: AddonConfiguration{Enabled: false},
+						},
 						DV: DvConfiguration{
-							Enabled:   true,
-							Resources: Resources{Memory: "1024Mi"},
-							Image:     "docker.io/teiid/syndesis-dv:latest",
+							AddonConfiguration: AddonConfiguration{Enabled: true},
+							Resources:          Resources{Memory: "1024Mi"},
+							Image:              "docker.io/teiid/syndesis-dv:latest",
 						},
 						CamelK: CamelKConfiguration{
-							Enabled:       true,
-							Image:         "fabric8/s2i-java:3.0-java8",
-							CamelVersion:  "2.23.2.fuse-760024",
-							CamelKRuntime: "0.3.4.fuse-740008",
+							AddonConfiguration: AddonConfiguration{Enabled: true},
+							Image:              "fabric8/s2i-java:3.0-java8",
+							CamelVersion:       "2.23.2.fuse-760024",
+							CamelKRuntime:      "0.3.4.fuse-740008",
 						},
 						PublicApi: PublicApiConfiguration{
-							Enabled:       true,
-							RouteHostname: "mypublichost.com",
+							AddonConfiguration: AddonConfiguration{Enabled: true},
+							RouteHostname:      "mypublichost.com",
 						},
 					},
 				},
@@ -409,32 +448,41 @@ func getConfigLiteral() *Config {
 			SHA:           false,
 			Addons: AddonsSpec{
 				Jaeger: JaegerConfiguration{
-					Enabled:       false,
+					Enabled: false,
+					Olm: OlmSpec{
+						Package: "jaeger",
+						Channel: "stable",
+					},
 					SamplerType:   "const",
 					SamplerParam:  "0",
 					ImageAgent:    "jaegertracing/jaeger-agent:1.13",
 					ImageAllInOne: "jaegertracing/all-in-one:1.13",
 					ImageOperator: "jaegertracing/jaeger-operator:1.13",
 				},
-				Ops: AddonConfiguration{Enabled: false},
+				Ops: OpsConfiguration{
+					AddonConfiguration: AddonConfiguration{Enabled: false},
+				},
 				Todo: TodoConfiguration{
-					Enabled: false,
-					Image:   "docker.io/centos/php-71-centos7",
+					AddonConfiguration: AddonConfiguration{Enabled: false},
+					Image:              "docker.io/centos/php-71-centos7",
+				},
+				Knative: KnativeConfiguration{
+					AddonConfiguration: AddonConfiguration{Enabled: false},
 				},
 				DV: DvConfiguration{
-					Enabled:   false,
-					Image:     "docker.io/teiid/syndesis-dv:latest",
-					Resources: Resources{Memory: "1024Mi"},
+					AddonConfiguration: AddonConfiguration{Enabled: false},
+					Image:              "docker.io/teiid/syndesis-dv:latest",
+					Resources:          Resources{Memory: "1024Mi"},
 				},
 				CamelK: CamelKConfiguration{
-					Enabled:       false,
-					CamelVersion:  "2.23.2.fuse-760024",
-					CamelKRuntime: "0.3.4.fuse-740008",
-					Image:         "fabric8/s2i-java:3.0-java8",
+					AddonConfiguration: AddonConfiguration{Enabled: false},
+					CamelVersion:       "2.23.2.fuse-760024",
+					CamelKRuntime:      "0.3.4.fuse-740008",
+					Image:              "fabric8/s2i-java:3.0-java8",
 				},
 				PublicApi: PublicApiConfiguration{
-					Enabled:       true,
-					RouteHostname: "mypublichost.com",
+					AddonConfiguration: AddonConfiguration{Enabled: true},
+					RouteHostname:      "mypublichost.com",
 				},
 			},
 			Components: ComponentsSpec{
@@ -674,102 +722,5 @@ func Test_postgreSQLVersionFromInitPod(t *testing.T) {
 
 	if version != 9.6 {
 		t.Errorf("Expecting that version would be 9.6, but it was %f", version)
-	}
-}
-
-func Test_ApiCapabilities(t *testing.T) {
-
-	res1 := metav1.APIResourceList{
-		GroupVersion: "image.openshift.io/v1",
-	}
-	res2 := metav1.APIResourceList{
-		GroupVersion: "route.openshift.io/v1",
-	}
-	res3 := metav1.APIResourceList{
-		GroupVersion: "oauth.openshift.io/v1",
-	}
-
-	res4 := metav1.APIResourceList{
-		GroupVersion: "something.openshift.io/v1",
-	}
-	res5 := metav1.APIResourceList{
-		GroupVersion: "not.anything.io/v1",
-	}
-	res6 := metav1.APIResourceList{
-		GroupVersion: "something.else.io/v1",
-	}
-
-	testCases := []struct {
-		name     string
-		resList  []*metav1.APIResourceList
-		expected capabilities.ApiServerSpec
-	}{
-		{
-			"Relevant APIs available for fully true api spec",
-			[]*metav1.APIResourceList{&res1, &res2, &res3},
-			capabilities.ApiServerSpec{
-				Version:          "1.16",
-				Routes:           true,
-				ImageStreams:     true,
-				EmbeddedProvider: true,
-			},
-		},
-		{
-			"No relevant resources so expect false",
-			[]*metav1.APIResourceList{&res4, &res5, &res6},
-			capabilities.ApiServerSpec{
-				Version:          "1.16",
-				Routes:           false,
-				ImageStreams:     false,
-				EmbeddedProvider: false,
-			},
-		},
-		{
-			"No resources so everything false",
-			[]*metav1.APIResourceList{},
-			capabilities.ApiServerSpec{
-				Version:          "1.16",
-				Routes:           false,
-				ImageStreams:     false,
-				EmbeddedProvider: false,
-			},
-		},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			api := gofake.NewSimpleClientset()
-			fd := api.Discovery().(*discoveryfake.FakeDiscovery)
-			fd.Resources = tc.resList
-			fd.FakedServerVersion = &version.Info{
-				Major: "1",
-				Minor: "16",
-			}
-
-			apiSpec, err := capabilities.ApiCapabilities(api)
-			if err != nil {
-				t.Error(err)
-			}
-
-			if apiSpec == nil {
-				t.Error("Failed to return an api specification")
-			}
-
-			if apiSpec.Version != tc.expected.Version {
-				t.Error("Expected api specification version not expected")
-			}
-
-			if apiSpec.Routes != tc.expected.Routes {
-				t.Error("Expected api specification routes not expected")
-			}
-
-			if apiSpec.ImageStreams != tc.expected.ImageStreams {
-				t.Error("Expected api specification image streams not expected")
-			}
-
-			if apiSpec.EmbeddedProvider != tc.expected.EmbeddedProvider {
-				t.Error("Expected api specification embedded provider not returned")
-			}
-		})
 	}
 }

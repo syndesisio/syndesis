@@ -21,12 +21,14 @@ import (
 	"fmt"
 	"testing"
 
-	"k8s.io/client-go/kubernetes/scheme"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
+	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
+	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
 	v1 "k8s.io/api/rbac/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
 const (
@@ -36,14 +38,36 @@ const (
 	failed  = "\u2717"
 )
 
+func TestRender(t *testing.T) {
+	ctx := context.TODO()
+	g := &Grant{
+		Options: &internal.Options{Namespace: ns, Context: ctx},
+		Role:    "MyRole",
+		User:    "MyUser",
+	}
+
+	resources, err := generator.Render("./install/grant", g)
+	require.NoError(t, err)
+	assert.NotEqual(t, 0, len(resources), "Failed to render")
+}
+
 // test grant without --cluster options
 func TestGrant(t *testing.T) {
 	ctx := context.TODO()
-	g := &Grant{Role: RoleName, User: user, Options: &internal.Options{Namespace: ns, Context: ctx}}
+	g := &Grant{
+		Role: RoleName,
+		User: user,
+		Options: &internal.Options{
+			Namespace: ns,
+			Context:   ctx,
+		},
+	}
 
-	// Create a fake client to mock API calls and pass it to the cmd
-	cl := fake.NewFakeClientWithScheme(scheme.Scheme)
-	g.ClientTools().SetRuntimeClient(cl)
+	g.SetClientTools(syntesting.FakeClientTools()) // fake client tools to mock api and runtime clients
+	cl, err := g.ClientTools().RuntimeClient()
+	if err != nil {
+		t.Fatalf("\t%s\t got an error when configuring client: [%v]", failed, err)
+	}
 
 	t.Logf("\tTest: When running `operator grant --user user`, it should create the role %s and bind it to the user %s", RoleName, user)
 	if err := g.grant(); err != nil {

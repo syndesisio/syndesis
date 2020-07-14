@@ -58,6 +58,8 @@ github.com/aws/aws-sdk-go/service/sts
 github.com/aws/aws-sdk-go/service/sts/stsiface
 # github.com/beorn7/perks v1.0.1
 github.com/beorn7/perks/quantile
+# github.com/blang/semver v3.5.1+incompatible
+github.com/blang/semver
 # github.com/cenkalti/backoff v2.2.1+incompatible
 github.com/cenkalti/backoff
 # github.com/cespare/xxhash/v2 v2.1.1
@@ -221,8 +223,21 @@ github.com/openshift/api/image/dockerpre012
 github.com/openshift/api/image/v1
 github.com/openshift/api/oauth/v1
 github.com/openshift/api/pkg/serialization
+github.com/openshift/api/project/v1
 github.com/openshift/api/route/v1
 github.com/openshift/api/template/v1
+# github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200321030439-57b580e57e88
+## explicit
+github.com/operator-framework/operator-lifecycle-manager/pkg/api/apis/operators
+github.com/operator-framework/operator-lifecycle-manager/pkg/api/apis/operators/v1
+github.com/operator-framework/operator-lifecycle-manager/pkg/api/apis/operators/v1alpha1
+github.com/operator-framework/operator-lifecycle-manager/pkg/lib/version
+github.com/operator-framework/operator-lifecycle-manager/pkg/package-server/apis/operators
+github.com/operator-framework/operator-lifecycle-manager/pkg/package-server/apis/operators/v1
+# github.com/operator-framework/operator-marketplace v0.0.0-20200424213926-c53c1e365d90
+## explicit
+github.com/operator-framework/operator-marketplace/pkg/apis/operators/shared
+github.com/operator-framework/operator-marketplace/pkg/apis/operators/v1
 # github.com/operator-framework/operator-sdk v0.17.0
 ## explicit
 github.com/operator-framework/operator-sdk/pkg/k8sutil

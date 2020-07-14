@@ -8,6 +8,9 @@ Syndesis:
     Addons:
         Jaeger:
             Enabled: false
+            Olm:
+                Package: "jaeger"
+                Channel: "stable"
             SamplerType: "const"
             SamplerParam: "0"
             ImageAgent: "jaegertracing/jaeger-agent:1.13"
