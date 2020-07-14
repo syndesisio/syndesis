@@ -23,39 +23,33 @@ import org.apache.camel.Body;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.impl.JndiRegistry;
+import org.apache.camel.spi.Registry;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 public class ComponentProxyComponentTest extends CamelTestSupport {
 
-    // ***************************
-    // Set up camel context
-    // ***************************
-
-    @Override
-    protected JndiRegistry createRegistry() throws Exception {
+    private void injectBeanToRegistry() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("beanName", "my-bean");
 
         ComponentProxyComponent component = new ComponentProxyComponent("my-bean-proxy", "bean");
         component.setOptions(properties);
 
-        JndiRegistry registry = super.createRegistry();
+        Registry registry = super.context.getRegistry();
         registry.bind("my-bean", new MyBean());
         registry.bind(component.getComponentId() + "-component", component);
-
-        return registry;
     }
 
     @Override
     protected RoutesBuilder createRouteBuilder() throws Exception {
+        this.injectBeanToRegistry();
         return new RouteBuilder() {
             @Override
             public void configure() {
                 from("direct:start")
-                    .to("my-bean-proxy")
+                    .to("my-bean-proxy:my-bean")
                     .to("mock:result");
             }
         };
