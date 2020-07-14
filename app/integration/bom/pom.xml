@@ -31,7 +31,6 @@
     <camel.version>3.3.0</camel.version>
     <atlasmap.version>2.0.5</atlasmap.version>
     <jackson.databind.version>2.10.0.pr1</jackson.databind.version>
-    <mongodb.version>3.11.2</mongodb.version>
   </properties>
 
   <!-- Metadata need to publish to central -->
@@ -83,12 +82,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <!-- Overriden Spring boot BOM dependecies -->
-      <dependency>
-        <groupId>org.mongodb</groupId>
-        <artifactId>mongo-java-driver</artifactId>
-        <version>${mongodb.version}</version>
-      </dependency>
       <!--
           NOTE: the final BOM will be an extension of the FIS BOM.
 
