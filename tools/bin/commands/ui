@@ -26,6 +26,7 @@ EOT
 
 ui::init() {
   # nothing required but must be present
+  echo
 }
 
 ui::run() {
