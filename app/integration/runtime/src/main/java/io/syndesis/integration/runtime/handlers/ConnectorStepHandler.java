@@ -144,13 +144,24 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         context.addComponent(component.getComponentId(), component);
 
         final ProcessorDefinition<?> definition;
+        // Camel 3.2 makes mandatory to include a contextPath
+        // Syndesis Component Proxy will take care to change that value with the real component context path needed
+        String uri = formatUriWithPlaceholderContextPath(componentId);
         if (route == null) {
-            definition = builder.from(componentId);
+            definition = builder.from(uri);
         } else {
-            definition = route.to(componentId);
+            definition = route.to(uri);
         }
 
         return Optional.ofNullable(definition);
+    }
+
+    private static String formatUriWithPlaceholderContextPath(String aliasScheme) {
+        if (aliasScheme.indexOf(':') < 0) {
+            return String.format("%s:%s", aliasScheme, "SyndesisContextPathPlaceholder");
+        } else {
+            return aliasScheme;
+        }
     }
 
     // *************************
