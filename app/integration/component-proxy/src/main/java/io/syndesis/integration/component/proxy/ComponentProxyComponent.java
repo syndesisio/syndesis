@@ -140,7 +140,7 @@ public class ComponentProxyComponent extends DefaultComponent {
         doAddOptions(options, parameters);
 
         // create the uri of the base component, DO NOT log the computed delegate
-        final Map<String, String> endpointOptions = buildEndpointOptions(remaining, options);
+        final Map<String, String> endpointOptions = buildEndpointOptions(depuratePlaceholderContextPath(remaining), options);
         final String endpointScheme = componentSchemeAlias.orElse(componentScheme);
         ComponentDefinition definition = getDefinition();
         final Endpoint delegate = createDelegateEndpoint(definition, endpointScheme, endpointOptions);
@@ -169,8 +169,20 @@ public class ComponentProxyComponent extends DefaultComponent {
         return answer;
     }
 
+    private static String depuratePlaceholderContextPath(String remaining) {
+        // Camel 3.2 makes mandatory to include a contextPath
+        // if the placeholder is still present, then we must remove it and its value
+        // will be replaced by the real context path provided by the option parameters
+        if ("SyndesisContextPathPlaceholder".equals(remaining)) {
+            LOGGER.warn("Skipping default context path variable");
+            return null;
+        } else {
+            return remaining;
+        }
+    }
+
     @Override
-    protected void doStart() throws Exception {
+    protected void doInit() throws Exception {
         this.remainingOptions.clear();
         this.remainingOptions.putAll(this.configuredOptions);
 
@@ -411,7 +423,7 @@ public class ComponentProxyComponent extends DefaultComponent {
             try {
                 extra = catalog.endpointProperties(targetUri);
             } catch (URISyntaxException e) {
-                throw new IllegalStateException("Unable to parse endpoint properties from : `" + targetUri+ "`", e);
+                throw new IllegalStateException("Unable to parse endpoint properties from : `" + targetUri + "`", e);
             }
             if (extra != null && !extra.isEmpty()) {
                 extra.forEach((key, value) -> doAddOption(endpointOptions, key, value));
@@ -451,7 +463,7 @@ public class ComponentProxyComponent extends DefaultComponent {
     public Collection<Class<? extends ComponentExtension>> getSupportedExtensions() {
         Set<Class<? extends ComponentExtension>> extensions = new HashSet<>();
         extensions.addAll(super.getSupportedExtensions());
-        extensions.addAll(getCamelContext().getComponent(componentScheme, true, false).getSupportedExtensions())   ;
+        extensions.addAll(getCamelContext().getComponent(componentScheme, true, false).getSupportedExtensions());
 
         return extensions;
     }
