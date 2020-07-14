@@ -269,6 +269,7 @@
             <configuration>
               <skip>false</skip>
               <includes>META-INF/syndesis/**/*.json</includes>
+              <excludeArtifactIds>camel-allcomponents</excludeArtifactIds>
               <outputDirectory>${project.build.directory}/classes</outputDirectory>
             </configuration>
           </execution>

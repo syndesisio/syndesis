@@ -111,7 +111,7 @@
 
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-base</artifactId>
+      <artifactId>camel-core-languages</artifactId>
     </dependency>
 
     <dependency>

@@ -152,7 +152,7 @@ public class ComponentProxyWithCustomComponentTest {
                 @Override
                 public void configure() throws Exception {
                     from("direct:start")
-                        .to("my-sql-proxy")
+                        .to("my-sql-proxy:select%20from%20dual")
                         .to("mock:result");
                 }
             });
