@@ -272,7 +272,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
             final Flow flow = integration.getFlows().get(0);
             final Flow flowWithScheduler = flow.builder()
                 .scheduler(new Scheduler.Builder()
-                    .expression("60s")
+                    .expression("60000")
                     .build())
             .build();
 
