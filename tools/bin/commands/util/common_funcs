@@ -412,10 +412,12 @@ gnugrep() {
 
     if $(isMacOs); then
 
-      if $(check_for_command "ggrep") -ne "OK" ]; then
-        check_error "ERROR: Please install ggrep on OSX usimg 'brew install grep'"
-      else
+      ggrepCheck=$(check_for_command "ggrep")
+
+      if [[ "$ggrepCheck" == "OK" ]]; then
         GREP=$(which ggrep)
+      else
+        check_error "ERROR: Please install ggrep on OSX using 'brew install grep'"
       fi
 
     else
