@@ -429,7 +429,7 @@ func GetProperties(ctx context.Context, file string, clientTools *clienttools.Cl
 		return configuration, nil
 	}
 
-	wantedPostgreSQLVersion, err := postgreSQLVersionFromInitPod(clientTools, syndesis)
+	wantedPostgreSQLVersion, err := postgreSQLVersionFromInitPod(ctx, clientTools, syndesis)
 	if err != nil {
 		log.Error(err, "Unable to determine next version of PostgreSQL from the operator init container")
 		return configuration, nil
@@ -441,7 +441,7 @@ func GetProperties(ctx context.Context, file string, clientTools *clienttools.Cl
 	return configuration, nil
 }
 
-func postgreSQLVersionFromInitPod(clientTools *clienttools.ClientTools, syndesis *v1beta1.Syndesis) (float64, error) {
+func postgreSQLVersionFromInitPod(ctx context.Context, clientTools *clienttools.ClientTools, syndesis *v1beta1.Syndesis) (float64, error) {
 	if clientTools == nil {
 		return 0, nil
 	}
@@ -456,7 +456,7 @@ func postgreSQLVersionFromInitPod(clientTools *clienttools.ClientTools, syndesis
 		Container: "postgres-version",
 	})
 
-	stream, err := req.Stream()
+	stream, err := req.Stream(ctx)
 	if err != nil {
 		return 0, err
 	}

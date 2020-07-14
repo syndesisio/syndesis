@@ -67,7 +67,7 @@ func WaitForDeploymentReady(ctx context.Context, client dynamic.Interface, names
 func WaitForResourceCondition(ctx context.Context, client dynamic.Interface, gvr schema.GroupVersionResource, namespace string, name string, timeout time.Duration, condition func(resource *unstructured.Unstructured) (bool, error)) (bool, error) {
 	options := metav1.ListOptions{FieldSelector: "metadata.name=" + name}
 	r := client.Resource(gvr).Namespace(namespace)
-	watcher, err := r.Watch(options)
+	watcher, err := r.Watch(ctx, options)
 	if err != nil {
 		return false, err
 	}
@@ -107,8 +107,8 @@ func WaitForResourceCondition(ctx context.Context, client dynamic.Interface, gvr
 	}
 }
 
-func GetPodWithLabelSelector(api kubernetes.Interface, namespace string, LabelSelector string) (*v1.Pod, error) {
-	podList, err := api.CoreV1().Pods(namespace).List(metav1.ListOptions{
+func GetPodWithLabelSelector(ctx context.Context, api kubernetes.Interface, namespace string, LabelSelector string) (*v1.Pod, error) {
+	podList, err := api.CoreV1().Pods(namespace).List(ctx, metav1.ListOptions{
 		LabelSelector: LabelSelector,
 	})
 	if err != nil {

@@ -19,8 +19,8 @@ package clienttools
 import (
 	osappsv1 "github.com/openshift/api/apps/v1"
 	projectv1 "github.com/openshift/api/project/v1"
-	olmopv1 "github.com/operator-framework/operator-lifecycle-manager/pkg/api/apis/operators/v1"
-	olmopv1alpha1 "github.com/operator-framework/operator-lifecycle-manager/pkg/api/apis/operators/v1alpha1"
+	olmapiv1 "github.com/operator-framework/api/pkg/operators/v1"
+	olmapiv1alpha1 "github.com/operator-framework/api/pkg/operators/v1alpha1"
 	olmpkgsvr "github.com/operator-framework/operator-lifecycle-manager/pkg/package-server/apis/operators/v1"
 	opmktv1 "github.com/operator-framework/operator-marketplace/pkg/apis/operators/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -68,8 +68,8 @@ func (ck *ClientTools) RuntimeClient() (c client.Client, err error) {
 		// whereas operator-marketplace has SchemeBuilder as public.
 		//
 		opmktv1.SchemeBuilder.AddToScheme(s)
-		olmopv1alpha1.SchemeBuilder.AddToScheme(s)
-		olmopv1.SchemeBuilder.AddToScheme(s)
+		olmapiv1alpha1.SchemeBuilder.AddToScheme(s)
+		olmapiv1.SchemeBuilder.AddToScheme(s)
 		olmpkgsvr.SchemeBuilder.AddToScheme(s)
 		projectv1.AddToScheme(s)
 
