@@ -139,7 +139,6 @@
     <testcontainers.version>1.12.5</testcontainers.version>
     <citrus.version>3.0.0-M1</citrus.version>
     <mockito.version>3.3.3</mockito.version>
-    <mongodb.version>3.11.2</mongodb.version>
 
     <greenmail.version>1.5.11</greenmail.version>
 
