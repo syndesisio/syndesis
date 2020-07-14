@@ -54,7 +54,7 @@ public class TemplateStepLanguage {
     public static final TemplateStepLanguage FREEMARKER = new TemplateStepLanguage(
                "FREEMARKER",
                "org.apache.camel:camel-freemarker",
-               "CamelFreeMarkerTemplate",
+               "CamelFreemarkerTemplate",
                new FreeMarkerTemplatePreProcessor());
 
     private final String name;
