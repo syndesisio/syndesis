@@ -2299,6 +2299,10 @@
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-core</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-allcomponents</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
 
