@@ -25,6 +25,7 @@ import org.eclipse.lsp4j.InsertTextFormat;
 import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
+import io.syndesis.dv.lsp.completion.providers.items.DdlCompletionItemLoader;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.Context;
 import io.syndesis.dv.lsp.parser.statement.TokenContext;
 
@@ -49,10 +50,18 @@ public class TableBodyCompletionProvider extends CompletionItemBuilder {
                 String details = "OPTIONS properties are comma separated key-value pairs in the form: OPTION(...  KEY 'some value')";
                 items.add(generateCompletionItem("OPTIONS", null, details, "OPTIONS()"));
             } else {
-                // 1) COLUMN DEFINITION snippet
-                items.add(getColumnCompletionItem(0));
-                // 2) PRIMARY KEY snippet
-                items.add(getPrimaryKeyCompletionItem(0));
+                items.add(getColumnCompletionItem(1));
+                items.add(getPrimaryKeyCompletionItem(2));
+                items.add(getForeignKeyCompletionItem(3));
+                // Add FOREIGN and PRIMARY
+                CompletionItem item = getItemLoader().getItem(DdlCompletionItemLoader.ItemType.TABLE_ELEMENT,"FOREIGN");
+                if( item != null ) {
+                    items.add(item);
+                }
+                item = getItemLoader().getItem(DdlCompletionItemLoader.ItemType.TABLE_ELEMENT,"PRIMARY");
+                if( item != null ) {
+                    items.add(item);
+                }
             }
         }
 
@@ -82,6 +91,19 @@ public class TableBodyCompletionProvider extends CompletionItemBuilder {
         ci.setData(data);
         ci.setPreselect(true);
         ci.setSortText("1120");
+        return ci;
+    }
+
+    public CompletionItem getForeignKeyCompletionItem(int data) {
+        CompletionItem ci = new CompletionItem();
+        ci.setLabel("FOREIGN KEY (c1, ...) tblRef (c1, ...)");
+        ci.setInsertText("FOREIGN KEY (${1:column}) ${2:tblRef} (${3:column})") ;
+        ci.setKind(CompletionItemKind.Snippet);
+        ci.setInsertTextFormat(InsertTextFormat.Snippet);
+        ci.setDocumentation(CompletionItemBuilder.beautifyDocument(ci.getInsertText()));
+        ci.setData(data);
+        ci.setPreselect(true);
+        ci.setSortText("1130");
         return ci;
     }
 

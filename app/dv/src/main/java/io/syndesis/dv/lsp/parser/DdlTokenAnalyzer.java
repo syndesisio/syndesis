@@ -29,6 +29,7 @@ import org.teiid.query.parser.Token;
 
 import io.syndesis.dv.lsp.Messages;
 import io.syndesis.dv.lsp.completion.DdlCompletionConstants;
+import io.syndesis.dv.lsp.parser.statement.TokenIndex;
 
 @SuppressWarnings("PMD.GodClass")
 public class DdlTokenAnalyzer {
@@ -36,6 +37,7 @@ public class DdlTokenAnalyzer {
     private final String statement;
     private final List<Token> tokens;
     private final DdlAnalyzerConstants.StatementType statementType;
+    private final TokenIndex globalTknIndex;
 
     private final DdlTokenParserReport report;
 
@@ -43,8 +45,12 @@ public class DdlTokenAnalyzer {
         super();
         this.statement = statement;
         tokens = init(statement);
+        // Create a token index tracker
+        // intent is to provide a common/global index
+        // for nested objects to share
         this.statementType = getStatementType();
         this.report = new DdlTokenParserReport();
+        this.globalTknIndex = new TokenIndex(tokens.size());
     }
 
     public String getStatement() {
@@ -333,6 +339,21 @@ public class DdlTokenAnalyzer {
         }
     }
 
+    public DdlAnalyzerException addWarning(
+            Token startToken,
+            Token endToken,
+            String errorMessage) {
+        Position startPosition = new Position(startToken.beginLine, startToken.beginColumn);
+        Position endPosition = new Position(endToken.endLine, endToken.endColumn+1);
+        DdlAnalyzerException exception =
+                new DdlAnalyzerException(
+                        DiagnosticSeverity.Warning,
+                        errorMessage,
+                        new Range(startPosition, endPosition)); //$NON-NLS-1$);
+        this.addException(exception);
+        return exception;
+    }
+
     public DdlAnalyzerException addException(
             Token startToken,
             Token endToken,
@@ -394,6 +415,10 @@ public class DdlTokenAnalyzer {
             index++;
         }
         return -1;
+    }
+
+    public TokenIndex getGlobalTokenIndex() {
+        return globalTknIndex;
     }
 
     public String positionToString(Position position) {

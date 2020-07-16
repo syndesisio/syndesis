@@ -66,4 +66,22 @@ public class DdlTokenParserReport {
 
         System.out.println("\n#########################################\n");
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(300).append("####### DDL DIAGNOSTICS REPORT ##########\n");
+        if( !this.exceptions.isEmpty() ) {
+            for(DdlAnalyzerException ex: this.exceptions ) {
+                sb.append("\t" + ex.getMessage() + "\n")
+                .append(ex.getDiagnostic().getRange());
+            }
+
+        } else {
+            sb.append("\t No parsing problems detected") ;
+        }
+
+        sb.append("\n#########################################\n");
+
+        return sb.toString();
+    }
 }

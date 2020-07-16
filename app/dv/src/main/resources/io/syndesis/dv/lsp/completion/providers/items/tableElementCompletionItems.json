@@ -101,6 +101,34 @@
             "commitCharacters": ""
         },
         {
+            "label": "FOREIGN",
+            "kind": "FIELD",
+            "detail": "",
+            "documentation": "",
+            "deprecated": "false",
+            "preselect": "false",
+            "sortText": "false",
+            "insertText": "FOREIGN",
+            "insertTextFormat": "",
+            "textEdit": "",
+            "additionalTextEdits": "",
+            "commitCharacters": ""
+        },
+        {
+            "label": "FOREIGN KEY",
+            "kind": "FIELD",
+            "detail": "",
+            "documentation": "",
+            "deprecated": "false",
+            "preselect": "false",
+            "sortText": "false",
+            "insertText": "FOREIGN KEY",
+            "insertTextFormat": "",
+            "textEdit": "",
+            "additionalTextEdits": "",
+            "commitCharacters": ""
+        },
+        {
             "label": "KEY",
             "kind": "FIELD",
             "detail": "",

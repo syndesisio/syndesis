@@ -39,9 +39,11 @@ public class QueryExpressionItemProvider extends CompletionItemBuilder {
         switch (tokenContext.getContext()) {
             case FUNCTION:
             case SELECT_COLUMN:
-            case TABLE_ALIAS:
             case SELECT_CLAUSE:
                 items.addAll(getSelectClauseItems(tokenContext));
+                break;
+            case TABLE_ALIAS:
+                items.addAll(getTableAliasItems(tokenContext));
                 break;
             case TABLE_SYMBOL:
             case TABLE_SYMBOL_ID:
@@ -92,6 +94,12 @@ public class QueryExpressionItemProvider extends CompletionItemBuilder {
         return items;
     }
 
+    private List<CompletionItem> getTableAliasItems(TokenContext tokenContext) {
+        List<CompletionItem> items = new ArrayList<CompletionItem>();
+        items.addAll(metadataItemProvider.getCompletionItems(tokenContext));
+        return items;
+    }
+
     @SuppressWarnings("PMD.CyclomaticComplexity") // TODO refactor
     private List<CompletionItem> getFromClauseItems(TokenContext tokenContext) {
         List<CompletionItem> items = metadataItemProvider.getCompletionItems(tokenContext);
@@ -116,6 +124,8 @@ public class QueryExpressionItemProvider extends CompletionItemBuilder {
             fromItem.setSortText("900");
             items.add(fromItem);
         } break;
+        case WITH_CLAUSE:
+        case WITH_LIST_ELEMENT:
         case FROM_CLAUSE_AS:
         case FROM_CLAUSE:
         case COLUMN_NAME:

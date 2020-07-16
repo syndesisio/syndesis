@@ -137,4 +137,20 @@ public class OptionsClause extends AbstractStatementObject {
     protected TokenContext getTokenContext(Position position) {
         return null;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(255);
+
+        if( !getOptionsTokens().isEmpty()) {
+            sb.append(" (");
+            // looking for comma separated token pairs
+            for( Token tkn: getOptionsTokens()) {
+                sb.append(tkn);
+            }
+            sb.append(')');
+        }
+
+        return sb.toString();
+    }
 }

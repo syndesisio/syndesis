@@ -17,8 +17,9 @@ package io.syndesis.dv.lsp.parser.statement;
 
 import java.util.List;
 
+import io.syndesis.dv.lsp.Messages;
+import io.syndesis.dv.lsp.codeactions.QuickFixFactory;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
-import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 import org.eclipse.lsp4j.Position;
@@ -30,10 +31,15 @@ public class QueryExpression extends AbstractStatementObject {
     FromClause fromClause;
     WhereClause whereClause;
     CreateViewStatement createViewStatement;
+    boolean isWithQuery;
 
     public QueryExpression(DdlTokenAnalyzer analyzer, CreateViewStatement createViewStatement) {
         super(analyzer);
         this.createViewStatement = createViewStatement;
+    }
+
+    public QueryExpression(DdlTokenAnalyzer analyzer) {
+        super(analyzer);
     }
 
     @Override
@@ -47,26 +53,45 @@ public class QueryExpression extends AbstractStatementObject {
             lastToken = tokens.get(tokens.size() - 2);
             setLastTknIndex(tokens.size() - 2);
         }
-        Token firstToken = findTokenByKind(SQLParserConstants.AS);
+        // Assume the current token is AS
 
-        if (firstToken == null) {
-            this.analyzer
-                    .addException(new DdlAnalyzerException("There is no 'AS' to project to your query expression"));
-            return;
+        Token firstToken = getCurrentToken();
+        if (this.createViewStatement.getWithClause() == null
+            && (firstToken == null || !isTokenOfKind(currentIndex(), SQLParserConstants.AS))) {
+                this.analyzer.addException(
+                        getCurrentToken(),
+                        getCurrentToken(),
+                        Messages.getString(Messages.Error.QUERY_EXPRESSION_MISSING_AS))
+                        .setErrorCode(
+                        QuickFixFactory.DiagnosticErrorId.QUERY_EXPRESSION_MISSING_AS.getErrorCode());
+                return;
         }
 
         setFirstTknIndex(getTokenIndex(firstToken));
         setLastTknIndex(getTokenIndex(lastToken));
 
-        // Process table body (i.e. columns definition)
+        // Process query expression clauses
         selectClause = new SelectClause(analyzer, this);
         selectClause.parseAndValidate();
+        if( selectClause.getLastTknIndex() == 0 ) {
+            selectClause = null;
+        }
 
-        fromClause = new FromClause(analyzer);
+        fromClause = new FromClause(analyzer, this);
         fromClause.parseAndValidate();
+        if( fromClause.getLastTknIndex() == 0 ) {
+            fromClause = null;
+        }
 
         whereClause = new WhereClause(analyzer, this);
         whereClause.parseAndValidate();
+        if( whereClause.getLastTknIndex() == 0 ) {
+            whereClause = null;
+        }
+
+        if( !isLastIndex()) {
+            setLastTknIndex(getLastTknIndex());
+        }
     }
 
     @Override
@@ -119,4 +144,14 @@ public class QueryExpression extends AbstractStatementObject {
         return createViewStatement;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(75);
+
+        append(selectClause, sb);
+        append(fromClause, sb);
+        append(whereClause, sb);
+
+        return sb.toString();
+    }
 }

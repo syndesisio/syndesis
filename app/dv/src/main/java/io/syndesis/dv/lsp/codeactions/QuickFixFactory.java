@@ -52,6 +52,19 @@ public final class QuickFixFactory {
         COLUMN_NAME_NON_RESERVED_WORD(Messages.Error.COLUMN_NAME_NON_RESERVED_WORD.name()),
         VIEW_NAME_NON_RESERVED_WORD(Messages.Error.VIEW_NAME_NON_RESERVED_WORD.name()),
         UNEXPECTED_COMMA(Messages.Error.UNEXPECTED_COMMA.name()),
+        PROJECTED_SYMBOLS_VIEW_COLUMNS_MISMATCH(Messages.Error.PROJECTED_SYMBOLS_VIEW_COLUMNS_MISMATCH.name()),
+        INCOMPLETE_SCHEMA_REF(Messages.Error.INCOMPLETE_SCHEMA_REF.name()),
+        MISSING_COMMA_SEPARATOR(Messages.Error.MISSING_COMMA_SEPARATOR.name()),
+        INVALID_COLUMN_MISSING_COMMA(Messages.Error.INVALID_COLUMN_MISSING_COMMA.name()),
+        INVALID_TOKEN(Messages.Error.INVALID_TOKEN.name()),
+        INCOMPLETE_FOREIGN_KEY(Messages.Error.INCOMPLETE_FOREIGN_KEY.name()),
+        MISSING_FROM_KEYWORD(Messages.Error.MISSING_FROM_KEYWORD.name()),
+        INVALID_TABLE_NAME(Messages.Error.INVALID_TABLE_NAME.name()),
+        INVALID_TOKEN_EXPECTING_XXX_(Messages.Error.INVALID_TOKEN_EXPECTING_XXX_.name()),
+        NO_WITH_LIST_ELEMENTS(Messages.Error.NO_WITH_LIST_ELEMENTS.name()),
+        INCOMPLETE_WITH_LIST_ELEMENT(Messages.Error.INCOMPLETE_WITH_LIST_ELEMENT.name()),
+        QUERY_EXPRESSION_MISSING_AS(Messages.Error.QUERY_EXPRESSION_MISSING_AS.name()),
+        INCOMPLETE_SELECT_EXPRESSION(Messages.Error.INCOMPLETE_SELECT_EXPRESSION.name()),
         UNKNOWN_ID("UNKNOWN");
 
         private final String errorCode;
@@ -83,11 +96,11 @@ public final class QuickFixFactory {
         for(DdlAnalyzerException exception: currentExceptions) {
             // get enum error code (if exists)
             Diagnostic diagnostic = exception.getDiagnostic();
-            String errorCode = diagnostic.getCode();
+            Either<String, Number> errorCode = diagnostic.getCode();
             Range range = diagnostic.getRange();
             LOGGER.debug("  diagnostic error CODE = " + errorCode);
             if( errorCode != null && range.equals(params.getRange())) {
-                switch(getIdFromCode(errorCode)) {
+                switch(getIdFromCode(errorCode.getLeft())) {
                 case VIEW_NAME_RESERVED_WORD:
                 case COLUMN_NAME_RESERVED_WORD: {
                     WrapInDoubleQuotesFix quickFix = new WrapInDoubleQuotesFix();

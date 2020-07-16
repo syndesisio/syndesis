@@ -425,16 +425,18 @@ public class MetadataItemProvider extends CompletionItemBuilder {
         FromClause fromClause = statement.getQueryExpression().getFromClause();
 
         boolean result = false;
-        for (TableSymbol tableSymbol : fromClause.getTableSymbols()) {
-            if (item.getSchemaName() != null && tableSymbol.getSchemaName() != null) {
-                result = tableSymbol.getSchemaName().equalsIgnoreCase(item.getSchemaName())
-                        && tableSymbol.getTableName().equalsIgnoreCase(item.getTableName());
-            } else if (tableSymbol.getTableName() != null) {
-                result = tableSymbol.getTableName().equalsIgnoreCase(item.getTableName());
-            }
+        if( fromClause != null ) {
+            for (TableSymbol tableSymbol : fromClause.getTableSymbols()) {
+                if (item.getSchemaName() != null && tableSymbol.getSchemaName() != null) {
+                    result = tableSymbol.getSchemaName().equalsIgnoreCase(item.getSchemaName())
+                            && tableSymbol.getTableName().equalsIgnoreCase(item.getTableName());
+                } else if (tableSymbol.getTableName() != null) {
+                    result = tableSymbol.getTableName().equalsIgnoreCase(item.getTableName());
+                }
 
-            if (result) {
-                break;
+                if (result) {
+                    break;
+                }
             }
         }
         return result;

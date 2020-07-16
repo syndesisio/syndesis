@@ -59,7 +59,10 @@ public class DdlAnalyzerException extends Exception {
     }
 
     public String getErrorCode() {
-        return this.diagnostic.getCode();
+        if( this.diagnostic.getCode() != null ) {
+            return this.diagnostic.getCode().getLeft();
+        }
+        return null;
     }
 
     public String getTargetedString() {

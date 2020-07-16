@@ -22,16 +22,19 @@ import org.teiid.query.parser.Token;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.syndesis.dv.lsp.Messages;
+import io.syndesis.dv.lsp.codeactions.QuickFixFactory;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
-import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 public class FromClause extends AbstractStatementObject {
     private final List<TableSymbol> tableSymbols;
+    private final QueryExpression queryExpression;
 
-    public FromClause(DdlTokenAnalyzer analyzer) {
+    public FromClause(DdlTokenAnalyzer analyzer, QueryExpression queryExpression) {
         super(analyzer);
         this.tableSymbols = new ArrayList<TableSymbol>();
+        this.queryExpression = queryExpression;
     }
 
     public TableSymbol[] getTableSymbols() {
@@ -42,9 +45,30 @@ public class FromClause extends AbstractStatementObject {
         this.tableSymbols.add(tableSymbol);
     }
 
+    public QueryExpression getQueryExpression() {
+        return this.queryExpression;
+    }
+
     @Override
     protected void parseAndValidate() {
-        processFromTokens();
+        if (hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.FROM)) {
+            incrementIndex();
+            setFirstTknIndex(currentIndex());
+            setLastTknIndex(currentIndex());
+        } else {
+            this.analyzer.addWarning(
+                    getCurrentToken(),
+                    getCurrentToken(),
+                    Messages.getString(Messages.Error.MISSING_FROM_KEYWORD))
+                    .setErrorCode(
+                    QuickFixFactory.DiagnosticErrorId.MISSING_FROM_KEYWORD.getErrorCode());
+
+            return;
+        }
+
+        // Parse TableSymbols
+        // EXAMPLE: FROM Table1 AS t1, Table2 WHERE
+        parseTableSymbols();
     }
 
     @Override
@@ -62,6 +86,9 @@ public class FromClause extends AbstractStatementObject {
                             nextTkn.kind == SQLParserConstants.WHERE &&
                             this.analyzer.getTokenAt(position) != null) {
                         return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.WHERE_CLAUSE, this);
+                    } else {
+                        // basically end of statement and outside the from clause... return NULL for query expression
+                        return null;
                     }
                 }
             } else {
@@ -77,45 +104,6 @@ public class FromClause extends AbstractStatementObject {
         return null;
     }
 
-    private void processFromTokens() {
-        // Look for and FROM and WHERE tokens
-        Token fromToken = findTokenByKind(SQLParserConstants.FROM);
-        if (fromToken != null) {
-            setFirstTknIndex(getTokenIndex(fromToken));
-        } else {
-            this.analyzer.addException(new DdlAnalyzerException(
-                    "Parsing Exception:  there is no 'FROM' keyword in your query expression"));
-            return;
-        }
-
-        // We have the FROM
-        // Look for OPTIONAL >> WHERE
-
-        Token whereToken = findTokenByKind(SQLParserConstants.WHERE);
-        if (whereToken != null) {
-            setLastTknIndex(getTokenIndex(whereToken) - 1);
-        } else {
-            Token orderToken = findTokenByKind(SQLParserConstants.ORDER);
-            Token byToken = findTokenByKind(SQLParserConstants.BY);
-            if( orderToken != null && byToken != null &&
-                (getTokenIndex(byToken) == (getTokenIndex(orderToken)+1)) ) {
-                setLastTknIndex(getTokenIndex(byToken) -1);
-            } else {
-                List<Token> tokens = getTokens();
-                if (tokens.get(tokens.size() - 1).kind == SQLParserConstants.SEMICOLON) {
-                    setLastTknIndex(tokens.size() - 2);
-                } else {
-                    setLastTknIndex(tokens.size() - 1);
-                }
-            }
-        }
-
-        // Parse TableSymbols
-        // EXAMPLE: FROM Table1 AS t1, Table2 WHERE
-        parseTableSymbols();
-
-    }
-
     /**
      * Parse TableSymbols ||||||||||||||||| EXAMPLE: FROM Table1 AS t1, Table2 WHERE
      */
@@ -127,16 +115,37 @@ public class FromClause extends AbstractStatementObject {
 
             tableSymbol.parseAndValidate();
 
-            if( tableSymbol.nextTokenIsInvalid() ) {
+            if (tableSymbol.nextTokenIsInvalid()) {
                 isDone = true;
-            } else if (tableSymbol.getLastTknIndex() > 0) {
-                if (tableSymbol.getLastTknIndex() == getLastTknIndex()) {
+            }  else {
+                if (tableSymbol.getLastTknIndex() > 0) {
+                    this.addTableSymbol(tableSymbol);
+                    isDone = tableSymbol.isLastTableSymbol();
+                } else {
                     isDone = true;
                 }
-
-                this.addTableSymbol(tableSymbol);
+                if (isDone && queryExpression instanceof WithQueryExpression &&
+                        isNextTokenOfKind(currentIndex(), SQLParserConstants.RPAREN)) {
+                    incrementIndex();
+                }
             }
         }
+        if( !tableSymbols.isEmpty() ) {
+            setLastTknIndex(tableSymbols.get(tableSymbols.size()-1).getLastTknIndex());
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder().append(" FROM ");
+
+        if( !tableSymbols.isEmpty()) {
+            for( TableSymbol symbol: tableSymbols) {
+                sb.append("").append(symbol);
+            }
+        }
+
+        return sb.toString();
     }
 
 }

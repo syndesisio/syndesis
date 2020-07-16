@@ -153,6 +153,8 @@ public class TableElementCompletionProvider extends CompletionItemBuilder {
                 } else if (item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.OPTIONS))
                         && element.getOptionClause() == null) {
                     remainingItems.add(item);
+                } else if (item.getLabel().equalsIgnoreCase(getLabel(SQLParserConstants.FOREIGN))) {
+                    remainingItems.add(item);
                 }
             }
         }

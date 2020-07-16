@@ -39,12 +39,14 @@ import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
  *    - where a function can be a complex function
  *    - EXAMPLE: concat(name1, concat(' ', name2)) AS foobar
  */
+@SuppressWarnings({"PMD.GodClass"})
 public class SelectColumn extends AbstractStatementObject {
     private Token nameToken;
     private Token aliasNameToken; // OPTIONAL
     private Token literalValueToken; // OPTIONAL
 
     private final SelectClause selectClause;
+    private boolean incomplete;
 
     public SelectColumn(DdlTokenAnalyzer analyzer, SelectClause selectClause) {
         super(analyzer);
@@ -52,102 +54,111 @@ public class SelectColumn extends AbstractStatementObject {
     }
 
     @Override
-    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"}) // TODO refactor
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity", "PMD.ExcessiveMethodLength"}) // TODO refactor
     protected void parseAndValidate() {
-        // Find starting index
-        int selectClauselastIndex = selectClause.getLastTknIndex();
+        boolean requiresAlias = false;
 
-        int startIndex = selectClause.getFirstTknIndex() + 1;
-        if (selectClause.isAll() || selectClause.isDistinct()) {
-            startIndex++;
+        // LOOKING FOR : column1 AS c1
+        if( hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.STRINGVAL, SQLParserConstants.UNSIGNEDINTEGER)) {
+            incrementIndex();
+            this.literalValueToken = getCurrentToken();
+            setFirstTknIndex(currentIndex());
+            setLastTknIndex(currentIndex());
+        } else if ( hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.ID)) {
+            incrementIndex();
+            this.nameToken = getCurrentToken();
+            setFirstTknIndex(currentIndex());
+            setLastTknIndex(currentIndex());
         }
 
-        // check for previous table elements and reset the startIndex
-        int nSelectColumns = selectClause.getSelectColumns().length;
-        if (nSelectColumns > 0) {
-            startIndex = selectClause.getSelectColumns()[nSelectColumns - 1].getLastTknIndex() + 1;
+         // CHECK IF unfinished aliased ID (i.e. t2. , as opposed to t2.xyz)
+        if ( hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.PERIOD)) {
+            incrementIndex();
+            setLastTknIndex(currentIndex());
+            DdlAnalyzerException exception = this.analyzer.addException(
+                    this.nameToken,
+                    this.nameToken,
+                    Messages.getString(Messages.Error.INCOMPLETE_SCHEMA_REF, this.nameToken.image));
+            exception.setErrorCode(
+                    QuickFixFactory.DiagnosticErrorId.INCOMPLETE_SCHEMA_REF.getErrorCode());
+        } else if(hasNextIndex() && isNextTokenOfKind(currentIndex(),
+                SQLParserConstants.SLASH,
+                SQLParserConstants.PLUS,
+                SQLParserConstants.MINUS,
+                SQLParserConstants.STAR
+                )) {
+            incrementIndex(2);
+            // Now check for next token
+            requiresAlias = true;
         }
-
-        int currentTknIndex = startIndex;
-        boolean columnEnded = startIndex > selectClauselastIndex;
-
-        while (!columnEnded) {
-            // LOOKING FOR : Table1 AS t1
-            Token tkn = this.getTokens().get(currentTknIndex);
-            if (currentTknIndex > selectClauselastIndex) {
-                columnEnded = true;
-                setLastTknIndex(selectClauselastIndex - 1);
-            } else {
-                if (tkn.kind == SQLParserConstants.STRINGVAL || tkn.kind == SQLParserConstants.UNSIGNEDINTEGER) {
-                    this.literalValueToken = tkn;
-                    if (getFirstTknIndex() == 0) {
-                        setFirstTknIndex(getTokenIndex(tkn));
-                    }
-                    currentTknIndex++;
-                } else if (tkn.kind == SQLParserConstants.ID) {
-                    this.nameToken = tkn;
-                    if (getFirstTknIndex() == 0) {
-                        setFirstTknIndex(getTokenIndex(tkn));
-                    }
-                    currentTknIndex++;
-                    // CHECK IF unfinished aliased ID (i.e. t2. , as opposed to t2.xyz)
-                    if (currentTknIndex <= selectClauselastIndex) {
-                        Token extraTkn = this.getTokens().get(currentTknIndex);
-                        if (extraTkn.kind == SQLParserConstants.PERIOD) {
-                            setLastTknIndex(getTokenIndex(extraTkn));
-                            currentTknIndex++;
-                        }
-                    }
-                }
-                // Check for alias (AS) token
-                if (currentTknIndex < selectClauselastIndex) {
-                    tkn = this.getTokens().get(currentTknIndex);
-                    if (tkn.kind == SQLParserConstants.AS) {
-                        currentTknIndex++;
-                        tkn = this.getTokens().get(currentTknIndex);
-                        if (getTokenIndex(tkn) <= selectClauselastIndex) {
-                            Token columnNameToken = getNameToken();
-                            this.nameToken = columnNameToken;
-                            this.aliasNameToken = tkn;
-                        }
-                        if (currentTknIndex < selectClauselastIndex) {
-                            currentTknIndex++;
-                            tkn = this.getTokens().get(currentTknIndex);
-                            if (tkn.kind == SQLParserConstants.COMMA) {
-                                // Since there is a comma, another TableSymbol is expected
-                                setLastTknIndex(getTokenIndex(tkn));
-                                columnEnded = true;
-                            } else {
-                                setLastTknIndex(currentTknIndex - 1);
-                                columnEnded = true;
-                            }
-                        } else {
-                            setLastTknIndex(getTokenIndex(tkn));
-                            columnEnded = true;
-                        }
-                    } else if (tkn.kind == SQLParserConstants.COMMA) {
-                        // Since there is a comma, another TableSymbol is expected
-                        setLastTknIndex(getTokenIndex(tkn));
-                        columnEnded = true;
-                    }
-                } else if (tkn.kind == SQLParserConstants.COMMA) {
-                    // looks like there's an extra comma which should be ignored
-                    columnEnded = true;
-                    setFirstTknIndex(0);
-                    setLastTknIndex(0);
-                    DdlAnalyzerException exception = this.analyzer.addException(
-                            tkn,
-                            tkn,
-                            Messages.getString(Messages.Error.UNEXPECTED_COMMA));
-                    exception.setErrorCode(
-                            QuickFixFactory.DiagnosticErrorId.UNEXPECTED_COMMA.getErrorCode());
+        // Check for alias (AS) token
+        if (hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.AS)) {
+            incrementIndex();
+            if (hasNextIndex()) {
+                incrementIndex();
+                // get the alias name and save the actual name to definition token
+                if( isTokenOfKind(currentIndex(), SQLParserConstants.ID, SQLParserConstants.STRINGVAL)) {
+                    Token aliasNameTkn = getCurrentToken();
+                    this.nameToken = getNameToken();
+                    this.aliasNameToken = aliasNameTkn;
+                    setLastTknIndex(currentIndex());
                 } else {
-                    setLastTknIndex(getTokenIndex(tkn));
-                    columnEnded = true;
+                    Token tmpTkn = getCurrentToken();
+                    this.analyzer.addException(tmpTkn, tmpTkn, "Missing or invalid alias for column name [" + tmpTkn.image + "]");
+                            setLastTknIndex(currentIndex());
+                    }
                 }
+
+                if (hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.COMMA, SQLParserConstants.SEMICOLON)) {
+                    incrementIndex();
+                }
+                setLastTknIndex(currentIndex());
+            } else {
+                // If alias is required, then add exception that AS was expected
+                if( requiresAlias ) {
+                    Token tmpTkn = getCurrentToken();
+                    this.analyzer.addException(getFirstToken(), tmpTkn, "Alias required for column expression");
+                }
+                if (hasNextIndex() && isNextTokenOfKind(currentIndex(),
+                        SQLParserConstants.COMMA,
+                        SQLParserConstants.SEMICOLON)) {
+                    incrementIndex();
+                    setLastTknIndex(currentIndex());
+                } else {
+                    // Have not found valid next/expected token
+                    // if != FROM or != COMMA or != ID/STRINGVAL/UNSIGNEDINTEGER
+                    if (hasNextIndex() && !isNextTokenOfKind(currentIndex(),
+                            SQLParserConstants.FROM,
+                            SQLParserConstants.ID,
+                            SQLParserConstants.STRINGVAL,
+                            SQLParserConstants.UNSIGNEDINTEGER,
+                            SQLParserConstants.RPAREN)) {
+                            Token nextTkn = getToken(nextIndex());
+                            this.analyzer.addException(
+                                    nextTkn,
+                                    nextTkn,
+                                    Messages.getString(Messages.Error.INVALID_TOKEN, nextTkn.image))
+                            .setErrorCode(QuickFixFactory.DiagnosticErrorId.INVALID_TOKEN.getErrorCode());
+                            incrementIndex();
+                            if (this.nameToken != null && hasNextIndex() && !isNextTokenOfKind(currentIndex(),
+                                    SQLParserConstants.FROM)) {
+                                this.analyzer.addException(
+                                        this.nameToken,
+                                        this.nameToken,
+                                        Messages.getString(Messages.Error.INVALID_COLUMN_MISSING_COMMA, this.nameToken.image))
+                                .setErrorCode(QuickFixFactory.DiagnosticErrorId.INVALID_COLUMN_MISSING_COMMA.getErrorCode());
+                            }
+                    } else if (hasNextIndex() && !isNextTokenOfKind(currentIndex(),
+                            SQLParserConstants.FROM, SQLParserConstants.RPAREN)) {
+                        this.analyzer.addException(
+                                this.nameToken,
+                                this.nameToken,
+                                Messages.getString(Messages.Error.INVALID_COLUMN_MISSING_COMMA, this.nameToken.image))
+                        .setErrorCode(QuickFixFactory.DiagnosticErrorId.INVALID_COLUMN_MISSING_COMMA.getErrorCode());
+                    }
+                }
+
             }
-            currentTknIndex++;
-        }
     }
 
     @Override
@@ -222,4 +233,21 @@ public class SelectColumn extends AbstractStatementObject {
         return selectClause;
     }
 
+    public boolean isIncomplete() {
+        return incomplete;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(75);
+
+        for (int i=getFirstTknIndex(); i<getLastTknIndex()+1; i++) {
+            append(getToken(i), sb);
+            if (i < getLastTknIndex()-1) {
+                sb.append(' ');
+            }
+        }
+
+        return sb.toString();
+    }
 }

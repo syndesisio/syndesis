@@ -36,4 +36,19 @@ public class TableOptionsClause extends OptionsClause {
         }
         return null;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(); //.append("TABLE OPTIONS:");
+
+        if( !getOptionsTokens().isEmpty()) {
+            // looking for comma separated token pairs
+            for( Token tkn: getOptionsTokens()) {
+                sb.append(tkn);
+            }
+            sb.append("");
+        }
+
+        return sb.toString();
+    }
 }

@@ -23,8 +23,11 @@ import org.eclipse.lsp4j.Position;
 import org.teiid.language.SQLConstants;
 import org.teiid.query.parser.Token;
 
+import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
+import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
+@SuppressWarnings({"PMD.GodClass"})
 public abstract class AbstractStatementObject {
     DdlTokenAnalyzer analyzer;
     int firstTknIndex;
@@ -52,6 +55,30 @@ public abstract class AbstractStatementObject {
             if (tkn.kind == kind) {
                 return tkn;
             }
+        }
+
+        return null;
+    }
+
+    protected Token findTokenByKind(int kind, int startIndex) {
+        int index = 0;
+        for (Token tkn : getTokens()) {
+            if( index >= startIndex && tkn.kind == kind) {
+                return tkn;
+            }
+            index++;
+        }
+
+        return null;
+    }
+
+    protected Token findTokenByKind(int kind, int startIndex, int endIndex) {
+        int index = 0;
+        for (Token tkn : getTokens()) {
+            if( index >= startIndex && index <= endIndex && tkn.kind == kind) {
+                return tkn;
+            }
+            index++;
         }
 
         return null;
@@ -112,6 +139,20 @@ public abstract class AbstractStatementObject {
         return false;
     }
 
+    public Token getToken(int index) {
+        if( index < getTokens().size()) {
+            return getTokens().get(index);
+        }
+        return null;
+    }
+
+    public Token getCurrentToken() {
+        if( currentIndex() < getTokens().size()) {
+            return getTokens().get(currentIndex());
+        }
+        return null;
+    }
+
     public int getTokenIndex(Token token) {
         if (token == null) {
             return 0;
@@ -150,12 +191,39 @@ public abstract class AbstractStatementObject {
     protected Token getLastToken() {
         return this.analyzer.getToken(getLastTknIndex());
     }
+
     protected boolean hasAnotherToken(List<Token> tkns, int currentIndex) {
-        return currentIndex + 2 < tkns.size();
+        return (currentIndex + 2) < tkns.size();
+    }
+
+    protected boolean hasAnotherToken(int currentIndex) {
+        return (currentIndex + 1) < getTokens().size();
     }
 
     protected boolean isNextTokenOfKind(List<Token> tkns, int currentIndex, int kind) {
         return hasAnotherToken(tkns, currentIndex) && tkns.get(currentIndex + 1).kind == kind;
+    }
+
+    protected boolean isNextTokenOfKind(int currentIndex, int ...kind) {
+        if( hasAnotherToken(currentIndex) ) {
+            int tknKind = getToken(currentIndex + 1).kind;
+            for (int i:kind) {
+                if(tknKind == i) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected boolean isTokenOfKind(int currentIndex, int ...kind) {
+        int tknKind = getToken(currentIndex).kind;
+        for (int i:kind) {
+            if(tknKind == i) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<Token> getBracketedTokens(List<Token> tkns, int startTokenId, int bracketStartKind,
@@ -199,6 +267,67 @@ public abstract class AbstractStatementObject {
         return SQLConstants.getNonReservedWords().contains(tkn.image.toUpperCase(Locale.US));
     }
 
+    public boolean containsException(String exceptionMessage) {
+        for(DdlAnalyzerException ex: this.analyzer.getExceptions()) {
+            if( exceptionMessage.equals(ex.getMessage())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private TokenIndex getGlobalTokenIndex() {
+        return this.analyzer.getGlobalTokenIndex();
+    }
+
+    public int currentIndex() {
+        return getGlobalTokenIndex().current();
+    }
+
+    public void incrementIndex() {
+        getGlobalTokenIndex().increment();
+    }
+
+    public void incrementIndex(int delta) {
+        getGlobalTokenIndex().increment(delta);
+    }
+
+    public void decrementIndex() {
+        getGlobalTokenIndex().decrement();
+    }
+
+    public void decrementIndex(int delta) {
+        if( getGlobalTokenIndex().current() <= delta) {
+            getGlobalTokenIndex().decrement(delta);
+        } else {
+            getGlobalTokenIndex().set(0);
+        }
+    }
+
+    public int nextIndex() {
+        return getGlobalTokenIndex().current() + 1;
+    }
+
+    public boolean hasNextIndex() {
+        return getGlobalTokenIndex().hasNext();
+    }
+
+    public int previousIndex() {
+        return getGlobalTokenIndex().current() - 1;
+    }
+
+    public boolean isLastIndex() {
+        return getGlobalTokenIndex().isLast();
+    }
+
+    public void setIndex(int newCurrentIndex) {
+        getGlobalTokenIndex().set(newCurrentIndex);
+    }
+
+    public static String getLabel(int keywordId, boolean upperCase) {
+        return DdlAnalyzerConstants.getLabel(keywordId, upperCase);
+    }
+
     @SuppressWarnings("PMD.SystemPrintln")
     protected void printTokens(Token[] tkns, String headerMessage) {
         System.out.println(headerMessage);
@@ -207,5 +336,45 @@ public abstract class AbstractStatementObject {
                     + "\n\t   >> begins at ( " + token.beginLine + ", " + token.beginColumn + " )"
                     + "\n\t   >> ends   at ( " + token.endLine + ", " + token.endColumn + " )");
         }
+    }
+
+    public static void append(Token token, StringBuilder target) {
+        if (token == null) {
+            return;
+        }
+
+        target.append(' ').append(token.image);
+    }
+
+    public static void append(Object obj, StringBuilder target) {
+        if (obj == null) {
+            return;
+        }
+
+        target.append(' ').append(obj.toString());
+    }
+
+    public static void append(final Iterable<Token> tokens, final StringBuilder target) {
+        if (tokens == null) {
+            return;
+        }
+
+        for (Token token : tokens) {
+            append(token, target);
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(200);
+
+        for (int i=getFirstTknIndex(); i<getLastTknIndex()+1; i++) {
+            append(getToken(i), sb);
+            if (i < getLastTknIndex()-1) {
+                sb.append(' ');
+            }
+        }
+
+        return sb.toString();
     }
 }

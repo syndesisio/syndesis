@@ -58,7 +58,7 @@ public class TableBody extends AbstractStatementObject {
 
     @Override
     protected void parseAndValidate() {
-        List<Token> tableBodyTokens = getBracketedTokens(getTokens(), 3, SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
+        List<Token> tableBodyTokens = getBracketedTokens(getTokens(), currentIndex(), SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
 
         setFirstTknIndex(getTokenIndex(tableBodyTokens.get(0)));
         setLastTknIndex(getTokenIndex(tableBodyTokens.get(tableBodyTokens.size() - 1)));
@@ -74,14 +74,21 @@ public class TableBody extends AbstractStatementObject {
             parseTableElements();
         }
 
+        setIndex(getLastTknIndex());
+
         // Parse Table Options
 
         // Create index for Token after table body () but it may be NULL
-        int iTkn = 3 + tableBodyTokens.size();
         // check if index == MAX INDEX
-        if( iTkn > getTokens().size()-1) { return; }
+        if( isLastIndex()) { return; }
 
-        Token nextTkn = getTokens().get(iTkn);
+        incrementIndex();
+
+        if( isLastIndex() && isTokenOfKind(currentIndex(), SQLParserConstants.SEMICOLON)) {
+            return;
+        }
+
+        Token nextTkn = getTokens().get(currentIndex());
 
         if (nextTkn.kind == SQLParserConstants.OPTIONS) {
             List<Token> optionsTkns = new ArrayList<Token>();
@@ -89,10 +96,10 @@ public class TableBody extends AbstractStatementObject {
 
             // Check for parens in case of string(), decimal() types.. etc
             Token lastTkn = nextTkn;
-            if (isNextTokenOfKind(getTokens(), iTkn, SQLParserConstants.LPAREN)) {
-                List<Token> bracketedTkns = getBracketedTokens(getTokens(), iTkn + 1, SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
+            if (isNextTokenOfKind(getTokens(), currentIndex(), SQLParserConstants.LPAREN)) {
+                List<Token> bracketedTkns = getBracketedTokens(getTokens(), currentIndex() + 1, SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
                 for (Token optionsTkn : bracketedTkns) {
-                    iTkn++;
+                    incrementIndex();
                     optionsTkns.add(optionsTkn);
                     lastTkn = optionsTkn;
                 }
@@ -104,6 +111,8 @@ public class TableBody extends AbstractStatementObject {
                 setOptions(options);
                 options.setFirstTknIndex(getTokenIndex(nextTkn));
                 options.setLastTknIndex(getTokenIndex(lastTkn));
+
+                incrementIndex();
             }
 
         }
@@ -125,6 +134,13 @@ public class TableBody extends AbstractStatementObject {
                 this.addTableElement(tableElement);
                 if (tableElement.isPKElement() || tableElement.isPrimaryKey()) {
                     setHasPrimaryKey(true);
+                }
+
+                // Check if an element is incomplete
+                // Example is ( .... FOREIGN KEY (c1) REFERENCES (c1, c2), c3 c4)
+                // Seems better to bail on any more table elements
+                if( !isDone) {
+                    isDone = tableElement.isIncompleteElement();
                 }
             }
         }
@@ -187,6 +203,30 @@ public class TableBody extends AbstractStatementObject {
 
     public CreateViewStatement getCreateViewStatement() {
         return createViewStatement;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(); //.append("TABLE BODY:\n");
+
+        if( !elements.isEmpty()) {
+            sb.append('(');
+            int count = 0;
+            for( TableElement element: elements) {
+                sb.append("").append(element);
+                count++;
+                if( count < elements.size()) {
+                    sb.append(", ");
+                }
+            }
+            sb.append(" )");
+        }
+
+        if( options != null ) {
+            sb.append(' ').append(options);
+        }
+
+        return sb.toString();
     }
 
 }
