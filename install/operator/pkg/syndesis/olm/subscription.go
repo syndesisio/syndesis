@@ -261,6 +261,7 @@ func waitForSubscription(ctx context.Context, rtClient client.Client, sub *olmap
 		// Fetch latest information for subscription
 		//
 		if err := rtClient.Get(ctx, client.ObjectKey{Namespace: sub.Namespace, Name: sub.Name}, sub); err != nil {
+			sublog.Info("Error occurred fetching latest subscription", err)
 			return false, err
 		}
 
@@ -274,7 +275,7 @@ func waitForSubscription(ctx context.Context, rtClient client.Client, sub *olmap
 		iPlanRef := sub.Status.InstallPlanRef
 		installPlan := &olmapiv1alpha1.InstallPlan{}
 		if err := rtClient.Get(ctx, client.ObjectKey{Namespace: iPlanRef.Namespace, Name: iPlanRef.Name}, installPlan); err != nil {
-			return false, err
+			return false, fmt.Errorf("Subscription %s does not have a valid install plan reference: %w", sub.Name, err)
 		}
 
 		if installPlan.Status.Phase == olmapiv1alpha1.InstallPlanPhaseRequiresApproval {
@@ -293,6 +294,7 @@ func waitForSubscription(ctx context.Context, rtClient client.Client, sub *olmap
 		//
 		// Install plan is still to complete so wait
 		//
+		sublog.Info("Waiting on install of subscription", "Name", sub.Name, "Status", installPlan.Status.Phase)
 		return false, nil
 	})
 

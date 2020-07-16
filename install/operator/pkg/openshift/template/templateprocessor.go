@@ -1,6 +1,7 @@
 package template
 
 import (
+	"context"
 	"errors"
 
 	v1template "github.com/openshift/api/template/v1"
@@ -62,13 +63,14 @@ func (p *TemplateProcessor) Process(sourceTemplate *v1template.Template, paramet
 	}
 
 	log.V(4).Info("Template with parameters", "template", resource)
+	ctx := context.TODO()
 
 	result := p.restClient.
 		Post().
 		Namespace(p.namespace).
 		Body(resource).
 		Resource("processedtemplates").
-		Do()
+		Do(ctx)
 
 	if result.Error() != nil {
 		return nil, result.Error()

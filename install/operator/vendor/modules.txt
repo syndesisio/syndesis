@@ -236,7 +236,7 @@ github.com/operator-framework/api/pkg/lib/version
 github.com/operator-framework/api/pkg/operators
 github.com/operator-framework/api/pkg/operators/v1
 github.com/operator-framework/api/pkg/operators/v1alpha1
-# github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200508205316-9ffa1fdb8dcf
+# github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200521062108-408ca95d458f
 ## explicit
 github.com/operator-framework/operator-lifecycle-manager/pkg/package-server/apis/operators
 github.com/operator-framework/operator-lifecycle-manager/pkg/package-server/apis/operators/v1

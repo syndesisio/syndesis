@@ -832,8 +832,8 @@ github.com/operator-framework/api v0.3.0/go.mod h1:tOJUgbX7u1fBEEjt2cz3QjXzydBPJ
 github.com/operator-framework/api v0.3.4/go.mod h1:TmRmw+8XOUaDPq6SP9gA8cIexNf/Pq8LMFY7YaKQFTs=
 github.com/operator-framework/api v0.3.5 h1:eUFzNOACJLsufdLiwRvj7/7O1yDgsu/6d1xM4idgE3I=
 github.com/operator-framework/api v0.3.5/go.mod h1:TmRmw+8XOUaDPq6SP9gA8cIexNf/Pq8LMFY7YaKQFTs=
-github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200508205316-9ffa1fdb8dcf h1:/SJ8ExD2d0ueLIfn/ElacQExMGqUOHdPBYDXT5woi9g=
-github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200508205316-9ffa1fdb8dcf/go.mod h1:yr0MslZO4o8cedPPf2GR9jbUevv9GWvhD88zLxrbEi8=
+github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200521062108-408ca95d458f h1:4Hvyy1FME94rXFS7fHVoF2JHdzbLfsiN126JsaBbCzY=
+github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200521062108-408ca95d458f/go.mod h1:yr0MslZO4o8cedPPf2GR9jbUevv9GWvhD88zLxrbEi8=
 github.com/operator-framework/operator-marketplace v0.0.0-20200515051804-e0148822df25 h1:pCcHpwNM5WxI4Wcp3g/L2eL1uWGmz6QvRpETZ5mhXF8=
 github.com/operator-framework/operator-marketplace v0.0.0-20200515051804-e0148822df25/go.mod h1:msZSL8pXwzQjB+hU+awVrZQw94IwJi3sNZVD3NoESIs=
 github.com/operator-framework/operator-registry v1.5.3/go.mod h1:agrQlkWOo1q8U1SAaLSS2WQ+Z9vswNT2M2HFib9iuLY=

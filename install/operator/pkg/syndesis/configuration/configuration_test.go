@@ -715,7 +715,7 @@ func Test_postgreSQLVersionFromInitPod(t *testing.T) {
 	syndesis := v1beta1.Syndesis{}
 	syndesis.SetNamespace("syndesis")
 
-	version, err := postgreSQLVersionFromInitPod(clientTools, &syndesis)
+	version, err := postgreSQLVersionFromInitPod(context.TODO(), clientTools, &syndesis)
 	if err != nil {
 		t.Error(err)
 	}
