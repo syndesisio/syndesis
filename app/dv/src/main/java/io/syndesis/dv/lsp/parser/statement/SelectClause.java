@@ -19,13 +19,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.syndesis.dv.lsp.Messages;
+import io.syndesis.dv.lsp.codeactions.QuickFixFactory;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
+import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 import org.eclipse.lsp4j.Position;
 import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
+@SuppressWarnings({"PMD.GodClass"})
 public class SelectClause extends AbstractStatementObject {
     private final List<SelectColumn> selectColumns;
     private boolean isAll;
@@ -54,9 +57,10 @@ public class SelectClause extends AbstractStatementObject {
     @Override
     protected void parseAndValidate() {
         // Look for SELECT and FROM tokens
-        Token selectToken = findTokenByKind(SQLParserConstants.SELECT);
-        if (selectToken != null) {
-            setFirstTknIndex(getTokenIndex(selectToken));
+        if( hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.SELECT)) {
+            incrementIndex();
+            setFirstTknIndex(currentIndex());
+            setLastTknIndex(currentIndex());
         } else {
             Token firstQETkn = queryExpression.getFirstToken();
             this.analyzer.addException(
@@ -66,38 +70,41 @@ public class SelectClause extends AbstractStatementObject {
         }
 
         // We have the SELECT
-        // Look for FROM
-
-        Token fromToken = findTokenByKind(SQLParserConstants.FROM);
-        if (fromToken != null) {
-            setLastTknIndex(getTokenIndex(fromToken) - 1);
-        } else {
-            // Assume that the SELECT ends at either the last token before the semicolon
-            // or the last token if semi-colon isn't there
-            List<Token> tokens = getTokens();
-            if (tokens.get(tokens.size() - 1).kind == SQLParserConstants.SEMICOLON) {
-                setLastTknIndex(tokens.size() - 2);
-            }
-        }
 
         // Parse SelectColumn's
         processSelectTokens();
 
         // Check number of select columns versus number of table elements in table body
-        int nViewColumns = getQueryExpression().getCreateViewStatement().getTableBody().getTableElements().length;
+        if( getQueryExpression() instanceof WithQueryExpression ) {
+            return;
+        }
+
+        if( getQueryExpression().getCreateViewStatement().getTableBody().getLastTknIndex() == 0 ) {
+            return;
+        }
+
+        int nViewColumns = 0;
+        for( TableElement element: getQueryExpression().getCreateViewStatement().getTableBody().getTableElements()) {
+            if( !element.isConstraint()) {
+                nViewColumns++;
+            }
+        }
+
         int nSelectColumns = getSelectColumns().length;
-        if( !isStar && nViewColumns != nSelectColumns ) {
+        if( allColumnsComplete() && !isStar && nViewColumns != nSelectColumns ) {
             Token firstToken = this.getFirstToken();
             Token lastToken = this.getLastToken();
             if( getSelectColumns().length > 0 ) {
                 firstToken = getSelectColumns()[0].getFirstToken();
                 lastToken = getSelectColumns()[getSelectColumns().length-1].getLastToken();
             }
-            this.analyzer.addException(
+            DdlAnalyzerException exception = this.analyzer.addException(
                     firstToken,
                     lastToken,
                     Messages.getString(Messages.Error.PROJECTED_SYMBOLS_VIEW_COLUMNS_MISMATCH,
                     nSelectColumns, nViewColumns));
+            exception.setErrorCode(
+                            QuickFixFactory.DiagnosticErrorId.PROJECTED_SYMBOLS_VIEW_COLUMNS_MISMATCH.getErrorCode());
         }
     }
 
@@ -105,33 +112,34 @@ public class SelectClause extends AbstractStatementObject {
      // SELECT ( ALL | DISTINCT )? ( <star> | ( <select sublist> ( <comma> <select sublist> )* ) )
     private void processSelectTokens() {
         // first token after SELECT
-        int currentIndex = getFirstTknIndex() + 1;
-        Token currentToken = getAnalyzer().getToken(currentIndex);
-        if (currentToken.kind == SQLParserConstants.ALL) {
-            isAll = true;
-        } else if (currentToken.kind == SQLParserConstants.DISTINCT) {
-            isDistinct = true;
+        if (hasNextIndex()) {
+            if (isNextTokenOfKind(currentIndex(), SQLParserConstants.ALL)) {
+                isAll = true;
+                incrementIndex();
+            } else if (isNextTokenOfKind(currentIndex(), SQLParserConstants.DISTINCT)) {
+                isDistinct = true;
+                incrementIndex();
+            }
         }
 
         // Look for ALL or DISTINCT and *
         // Parse SelectColumn's
-        parseSelectColumns(currentIndex);
+        // currentIndex should be the first column name/ID
+        // incrementIndex();
+        parseSelectColumns();
     }
 
-    private void parseSelectColumns(int startingIndex) {
+    private void parseSelectColumns() {
         boolean isDone = false;
-        Token currentToken = getAnalyzer().getToken(startingIndex);
 
-        // if next token is * , then there will be no defined columns
-        if (currentToken.kind == SQLParserConstants.STAR) {
+        if (hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.STAR)) {
             this.isStar = true;
             isDone = true;
+            incrementIndex();
         }
 
-        int nextFirstIndex = startingIndex;
-
         while (!isDone) {
-            if (functionIsNext(nextFirstIndex)) {
+            if (functionIsNext(currentIndex())) {
                 // Peek at next Token and see if it's Function or a
                 SelectFunction selectFunction = new SelectFunction(super.analyzer, this);
 
@@ -143,31 +151,56 @@ public class SelectClause extends AbstractStatementObject {
                     }
 
                     this.addSelectColumn(selectFunction);
+                    setLastTknIndex(selectFunction.getLastTknIndex());
+                    if (hasNextIndex() ) {
+                        isDone = isNextTokenOfKind(currentIndex(), SQLParserConstants.FROM);
+                    }
+                } else {
+                    isDone = true;
                 }
             } else {
                 // Peek at next Token and see if it's Function or a
                 SelectColumn selectColumn = new SelectColumn(super.analyzer, this);
 
                 selectColumn.parseAndValidate();
-
                 if (selectColumn.getLastTknIndex() > 0) {
-                    if (selectColumn.getLastTknIndex() == getLastTknIndex()) {
+                    this.addSelectColumn(selectColumn);
+                    setLastTknIndex(selectColumn.getLastTknIndex());
+                    if (hasNextIndex() ) {
+                        isDone = isTokenOfKind(currentIndex(), SQLParserConstants.FROM, SQLParserConstants.RPAREN);
+                    } else {
                         isDone = true;
                     }
-
-                    this.addSelectColumn(selectColumn);
                 } else {
                     isDone = true;
+                }
+            }
+
+            if( isDone && !this.selectColumns.isEmpty() ) {
+                // Check if last select column ends with COMMA token
+                Token selectColumnEndTkn =
+                        this.analyzer.getToken(this.selectColumns.get(this.selectColumns.size()-1).getLastTknIndex());
+                if( selectColumnEndTkn.kind == SQLParserConstants.COMMA) {
+                    this.analyzer.addException(
+                            selectColumnEndTkn,
+                            selectColumnEndTkn,
+                            Messages.getString(Messages.Error.UNEXPECTED_COMMA))
+                            .setErrorCode(
+                            QuickFixFactory.DiagnosticErrorId.UNEXPECTED_COMMA.getErrorCode());
                 }
             }
         }
     }
 
     public boolean functionIsNext(int startIndex) {
-        Token idToken = getAnalyzer().getToken(startIndex);
-        Token parenToken = getAnalyzer().getToken(startIndex + 1);
-        return parenToken != null && parenToken.kind == SQLParserConstants.LPAREN
-            && FunctionHelper.getInstance().isFunctionName(idToken.image);
+        if( hasAnotherToken(currentIndex()) && hasAnotherToken(currentIndex()+1) )  {
+            Token idToken = getAnalyzer().getToken(startIndex+1);
+            Token parenToken = getAnalyzer().getToken(startIndex + 2);
+            return parenToken != null && parenToken.kind == SQLParserConstants.LPAREN
+                && FunctionHelper.getInstance().isFunctionName(idToken.image);
+        }
+
+        return false;
     }
 
     @Override
@@ -197,5 +230,29 @@ public class SelectClause extends AbstractStatementObject {
 
     public boolean isStar() {
         return isStar;
+    }
+
+    private boolean allColumnsComplete() {
+        for( SelectColumn col: getSelectColumns()) {
+            if( col.isIncomplete() ) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(256).append(" SELECT ");
+
+        if( !selectColumns.isEmpty()) {
+            for( SelectColumn column: selectColumns) {
+                sb.append("").append(column);
+            }
+        } else if( isStar ) {
+            sb.append("* ");
+        }
+
+        return sb.toString();
     }
 }

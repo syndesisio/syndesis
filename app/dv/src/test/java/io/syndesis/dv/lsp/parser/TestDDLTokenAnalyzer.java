@@ -97,4 +97,18 @@ public class TestDDLTokenAnalyzer {
         assertEquals(31, analyzer.getTokens().size());
     }
 
+    @Test
+    public void testViewWithForeignKey() {
+        String stmt = "CREATE VIEW foo (c1, c2, FOREIGN KEY (c1, c2) REFERENCES otherTable(a1, a2)) AS SELECT c1, c2 FROM bar;";
+
+        DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
+
+        assertEquals(StatementType.CREATE_VIEW_TYPE, analyzer.getStatementType());
+        assertEquals(31, analyzer.getTokens().size());
+        assertEquals("FOREIGN", analyzer.getToken(8).image);
+        assertEquals("a2", analyzer.getToken(20).image);
+        assertEquals(")", analyzer.getToken(21).image);
+        assertEquals(")", analyzer.getToken(22).image);
+    }
+
 }

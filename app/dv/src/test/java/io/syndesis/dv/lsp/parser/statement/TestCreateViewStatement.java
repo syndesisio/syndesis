@@ -15,65 +15,65 @@
  */
 package io.syndesis.dv.lsp.parser.statement;
 
-import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.StatementType;
-import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
+import io.syndesis.dv.lsp.Messages;
+//import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants.StatementType;
+//import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
+//import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 import org.junit.Test;
-import org.teiid.query.parser.Token;
+//import org.teiid.query.parser.Token;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("nls")
-public class TestCreateViewStatement {
-    public void printTokens(Token[] tkns, String headerMessage) {
-        System.out.println(headerMessage);
-        for (Token token : tkns) {
-            System.out.println(
-                    " tkn ==>   " + token.image + "\t @ ( " + token.beginLine + ", " + token.beginColumn + ")");
-        }
+public class TestCreateViewStatement extends TestStatementUtils {
+
+    @Test
+    public void testSimpleStatement() {
+                 //   0      1    2   3 4 5 6  7      8  9    10      11
+        String ddl = "CREATE VIEW xyz ( a ) AS SELECT c1 FROM winelist;";
+        CreateViewStatement cvs = parseAndBasicAssertStatement(ddl, 12);
+        printBeforeAndAfter(cvs, "testFromAndWhereClauses");
+        assertEquals(0, cvs.getExceptions().size());
     }
-
-    public CreateViewStatement createStatatement(String stmt) {
-        DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
-
-        return new CreateViewStatement(analyzer);
-    }
-
+    
     @Test
     public void testCreateViewStatement() {
 
-        String stmt =
+        String ddl =
                 // 01234567890123456789012345678901234567890123456789
+               //0      1    2        3
                 "CREATE VIEW wineList (\n" +
                 // 01234567890123456789012345678901234567890123456789
-                        "e1 integer primary key OPTIONS (UPDATEABLE 'false', FOO 'BAR'),\n" +
+                      // 4  5       6       7   8       9 10          11    12 13  14   15
+                        "e1 integer primary key OPTIONS ( UPDATEABLE 'false',  FOO 'BAR')  ,\n" +
                         // 01234567890123456789012345678901234567890123456789
+                      // 17 18      19    20       21    22
                         "e6 varchar index default 'hello',\n" +
                         // 01234567890123456789012345678901234567890123456789
-                        "e7 decimal(10,2) NOT NULL unique)\n" +
+                      // 23 24     25 26 27 28 29 30  31   32    33 
+                        "e7 decimal(  10 ,  2  )  NOT NULL unique)\n" +
                         // 01234567890123456789012345678901234567890123456789
-                        "OPTIONS (CARDINALITY 12, UPDATABLE 'true', FOO 'BAR', ANNOTATION 'Test Table')\n" +
+                      // 34      35 36          37 38 39        40   41  42  43   44 45          46         47
+                        "OPTIONS (  CARDINALITY 12 ,  UPDATABLE 'true',  FOO 'BAR',  ANNOTATION 'Test Table')\n" +
                         // 01234567890123456789012345678901234567890123456789
-                        "AS SELECT * FROM winelist WHERE e1 > '10';";
+                      // 48 49     50 51   52       53    54 55 56 57
+                        "AS SELECT *  FROM winelist WHERE e1 > '10';";
 
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(58, cvs.analyzer.getTokens().size());
-
+        CreateViewStatement cvs = parseAndBasicAssertStatement(ddl, 58);
+        printBeforeAndAfter(cvs, "testCreateViewStatement");
         assertEquals("wineList", cvs.getViewName());
-
         assertTrue(cvs.getExceptions().isEmpty());
-
         TableBody tb = cvs.getTableBody();
         assertEquals(3, tb.getTableElements().length);
+        assertEquals(0, cvs.getExceptions().size()); 
 
     }
 
     @Test
     public void testMissingViewName() {
-        String stmt =
+        String ddl =
                 // 01234567890123456789012345678901234567890123456789
                 "CREATE VIEW (\n" +
                 // 01234567890123456789012345678901234567890123456789
@@ -83,282 +83,28 @@ public class TestCreateViewStatement {
                         // 01234567890123456789012345678901234567890123456789
                         "AS SELECT * FROM winelist WHERE e1 > '10'";
 
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(23, cvs.analyzer.getTokens().size());
-
+        CreateViewStatement cvs = parseAndBasicAssertStatement(ddl, 23);
+        printBeforeAndAfter(cvs, "testMissingViewName");
         assertEquals(2, cvs.getExceptions().size());
+        assertException(cvs, Messages.getString(Messages.Error.MISSING_VIEW_NAME));
+        assertException(cvs, Messages.getString(Messages.Error.INCOMPLETE_CREATE_VIEW_STATEMENT));
     }
-
+    
+    @Test
+    public void testFromAndWhereClauses() {
+                 //   0      1    2   3 4 5 6  7      8  9    10      11 12     13    14 15 16 17
+        String ddl = "CREATE VIEW xyz ( a ) AS SELECT c1 FROM winelist,  stores WHERE e1 >  10 ;";
+        CreateViewStatement cvs = parseAndBasicAssertStatement(ddl, 18);
+        printBeforeAndAfter(cvs, "testFromAndWhereClauses");
+        assertEquals(0, cvs.getExceptions().size());
+    }
+    
     @Test
     public void testNoTableBody() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW (\n" +
-                // 01234567890123456789012345678901234567890123456789
-                        ")\nAS SELECT * FROM winelist WHERE e1 > '10'";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(13, cvs.analyzer.getTokens().size());
-
-        assertEquals(2, cvs.getExceptions().size());
-    }
-
-    @Test
-    public void testSelectStar() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW abcd ( id ) AS SELECT * FROM fooBar";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(11, cvs.analyzer.getTokens().size());
-        assertEquals(true, cvs.getQueryExpression().getSelectClause().isStar());
-
+                 //   0      1    2    3  4      5       6 7          8 9           10 11 12 13   14   15    16
+        String ddl = "CREATE VIEW test AS SELECT orderkey, orderstatus, totlalprice /  2  AS half from orders;";
+        CreateViewStatement cvs = parseAndBasicAssertStatement(ddl, 17);
+        printBeforeAndAfter(cvs, "testNoTableBody");
         assertEquals(0, cvs.getExceptions().size());
-    }
-
-    @Test
-    public void testSelectWithAll() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW abcd ( id ) AS SELECT ALL * FROM fooBar";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(12, cvs.analyzer.getTokens().size());
-        assertEquals(true, cvs.getQueryExpression().getSelectClause().isAll());
-
-        assertEquals(0, cvs.getExceptions().size());
-    }
-
-    @Test
-    public void testSelectWithDistinct() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW abcd ( id ) AS SELECT DISTINCT * FROM fooBar";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(12, cvs.analyzer.getTokens().size());
-        assertEquals(true, cvs.getQueryExpression().getSelectClause().isDistinct());
-
-        assertEquals(0, cvs.getExceptions().size());
-    }
-
-    @Test
-    public void testSelectIntegerConstant() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW abcd ( id ) AS SELECT 1 FROM fooBar";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(11, cvs.analyzer.getTokens().size());
-        assertEquals(1, cvs.getQueryExpression().getSelectClause().getSelectColumns().length);
-        assertEquals("1",
-                cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getLiteralValueToken().image);
-
-        assertEquals(0, cvs.getExceptions().size());
-    }
-
-    @Test
-    public void testSelectStringConstant() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW abcd ( id ) AS SELECT 'xxx' FROM fooBar";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(11, cvs.analyzer.getTokens().size());
-        assertEquals(1, cvs.getQueryExpression().getSelectClause().getSelectColumns().length);
-        assertEquals("'xxx'",
-                cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getLiteralValueToken().image);
-
-        assertEquals(0, cvs.getExceptions().size());
-    }
-
-    @Test
-    public void testSelectConstantsAndColumn() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW abcd ( id ) AS SELECT 'xxx', 1, foo FROM fooBar";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(15, cvs.analyzer.getTokens().size());
-        assertEquals(3, cvs.getQueryExpression().getSelectClause().getSelectColumns().length);
-        assertEquals("'xxx'",
-                cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getLiteralValueToken().image);
-        assertEquals("1",
-                cvs.getQueryExpression().getSelectClause().getSelectColumns()[1].getLiteralValueToken().image);
-        assertEquals("foo", cvs.getQueryExpression().getSelectClause().getSelectColumns()[2].getNameToken().image);
-        assertEquals(1, cvs.getExceptions().size()); // # View and SELECT columns do not match
-    }
-
-    @Test
-    public void testSelectColumn() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW abcd ( id ) AS SELECT bar FROM foo";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(11, cvs.analyzer.getTokens().size());
-        assertEquals(1, cvs.getQueryExpression().getSelectClause().getSelectColumns().length);
-        assertEquals("bar", cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getNameToken().image);
-        assertEquals("bar", cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getColumnName());
-        assertEquals(null, cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getTableName());
-
-        assertEquals(0, cvs.getExceptions().size());
-    }
-
-    @Test
-    public void testSelectTableAndColumn() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW abcd ( id ) AS SELECT foo.bar FROM foo";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(11, cvs.analyzer.getTokens().size());
-        assertEquals(1, cvs.getQueryExpression().getSelectClause().getSelectColumns().length);
-        assertEquals("foo.bar", cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getNameToken().image);
-        assertEquals("bar", cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getColumnName());
-        assertEquals("foo", cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getTableName());
-
-        assertEquals(0, cvs.getExceptions().size());
-    }
-
-    @Test
-    public void testSelectAliasedColumn() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW abcd ( id ) AS SELECT foo as c1 FROM bar";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(13, cvs.analyzer.getTokens().size());
-        assertEquals(1, cvs.getQueryExpression().getSelectClause().getSelectColumns().length);
-        assertEquals("foo", cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getNameToken().image);
-        assertEquals("c1", cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getAliasNameToken().image);
-
-        assertEquals(0, cvs.getExceptions().size());
-    }
-
-    @Test
-    public void testSelectFunctionColumn() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW abcd ( id ) AS SELECT concat(firstName, lastName) as c1 FROM names";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(18, cvs.analyzer.getTokens().size());
-        assertEquals(1, cvs.getQueryExpression().getSelectClause().getSelectColumns().length);
-        assertEquals(null, cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getNameToken());
-        assertEquals("concat", ((SelectFunction) cvs.getQueryExpression().getSelectClause().getSelectColumns()[0])
-                .getFunctionNameToken().image);
-        assertEquals(2, ((SelectFunction) cvs.getQueryExpression().getSelectClause().getSelectColumns()[0])
-                .getParameters().size());
-        assertEquals("c1", cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getAliasNameToken().image);
-
-        assertEquals(0, cvs.getExceptions().size());
-    }
-
-    @Test
-    public void testSelectTwoAliasedColumn() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW abcd ( id ) AS SELECT columnA as c1, columnB as c2 FROM bar";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(17, cvs.analyzer.getTokens().size());
-        assertEquals(2, cvs.getQueryExpression().getSelectClause().getSelectColumns().length);
-        assertEquals("columnA", cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getNameToken().image);
-        assertEquals("c1", cvs.getQueryExpression().getSelectClause().getSelectColumns()[0].getAliasNameToken().image);
-        assertEquals("columnB", cvs.getQueryExpression().getSelectClause().getSelectColumns()[1].getNameToken().image);
-        assertEquals("c2", cvs.getQueryExpression().getSelectClause().getSelectColumns()[1].getAliasNameToken().image);
-        assertEquals(1, cvs.getExceptions().size()); // # View and SELECT columns do not match
-    }
-    
-    @Test
-    public void testReservedViewName() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW view ( id ) AS SELECT id FROM bar;";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(12, cvs.analyzer.getTokens().size());
-        assertEquals(1, cvs.getExceptions().size());
-    }
-    
-    @Test
-    public void testReservedViewNameQuoted() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW \"view\" ( id ) AS SELECT id FROM bar;";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(12, cvs.analyzer.getTokens().size());
-        assertEquals(0, cvs.getExceptions().size());
-    }
-
-    @Test
-    public void testValidNumProjectedSymbols() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW foo (c1, c2, c3 ) AS SELECT c1, c2, c3 FROM bar;";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(20, cvs.analyzer.getTokens().size());
-        assertEquals(0, cvs.getExceptions().size());
-    }
-    
-    @Test
-    public void testInvalidNumProjectedSymbols() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW foo (c1, c2 ) AS SELECT c1, FROM bar;";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(15, cvs.analyzer.getTokens().size());
-        assertEquals(2, cvs.getExceptions().size());
-    }
-    
-    @Test
-    public void testExtraTableElementColumn() {
-        String stmt =
-                // 01234567890123456789012345678901234567890123456789
-                "CREATE VIEW foo (c1, c2, ) AS SELECT c1, c2 FROM bar;";
-
-        CreateViewStatement cvs = createStatatement(stmt);
-
-        assertEquals(StatementType.CREATE_VIEW_TYPE, cvs.analyzer.getStatementType());
-        assertEquals(17, cvs.analyzer.getTokens().size());
-        assertEquals(1, cvs.getExceptions().size());
     }
 }

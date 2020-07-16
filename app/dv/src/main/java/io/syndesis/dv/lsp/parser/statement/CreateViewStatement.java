@@ -29,18 +29,17 @@ import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
+@SuppressWarnings({"PMD.GodClass"})
 public class CreateViewStatement extends AbstractStatementObject {
 
     private Token viewNameToken;
     private TableBody tableBody;
+    private WithClause withClause;
     private QueryExpression queryExpression;
     private final int numTokens;
 
     public CreateViewStatement(DdlTokenAnalyzer analyzer) {
         super(analyzer);
-
-        tableBody = new TableBody(analyzer, this);
-        queryExpression = new QueryExpression(analyzer, this);
         this.numTokens = this.analyzer.getTokens().size();
 
         parseAndValidate();
@@ -66,6 +65,10 @@ public class CreateViewStatement extends AbstractStatementObject {
         this.tableBody = tableBody;
     }
 
+    public WithClause getWithClause() {
+        return withClause;
+    }
+
     public QueryExpression getQueryExpression() {
         return queryExpression;
     }
@@ -74,7 +77,7 @@ public class CreateViewStatement extends AbstractStatementObject {
         this.queryExpression = queryExpression;
     }
 
-    @SuppressWarnings({"PMD.NPathComplexity", "PMD.ExcessiveMethodLength"}) // TODO refactor
+//    @SuppressWarnings({"PMD.NPathComplexity", "PMD.ExcessiveMethodLength"}) // TODO refactor
     @Override
     protected final void parseAndValidate() {
 
@@ -95,6 +98,8 @@ public class CreateViewStatement extends AbstractStatementObject {
             this.analyzer.getReport().setBracesMatch(false);
         }
 
+        tableBody = new TableBody(analyzer, this);
+
         // Check Table Body
         // If token[4] == '(' then search for
         if( numTokens < 4 ) {
@@ -109,10 +114,27 @@ public class CreateViewStatement extends AbstractStatementObject {
         if( numTokens > 3) {
             if( getTokenValue(3).equals("(") && this.analyzer.getReport().doParensMatch() ) {
                 parseTableBody();
-                queryExpression.parseAndValidate();
+                if( !isLastIndex()) {
+                    withClause = new WithClause(analyzer);
+                    withClause.parseAndValidate();
+                    if( withClause.getLastTknIndex() == 0 ) {
+                        withClause = null;
+                    }
+                    if( !isLastIndex()) {
+                        queryExpression = new QueryExpression(analyzer, this);
+                        queryExpression.parseAndValidate();
+                    }
+                }
             } else {
                 // Table Body is NOT required so check for token[3] == AS
                 if( getToken(3).kind == SQLParserConstants.AS) {
+                    incrementIndex();
+                    withClause = new WithClause(analyzer);
+                    withClause.parseAndValidate();
+                    if( withClause.getLastTknIndex() == 0 ) {
+                        withClause = null;
+                    }
+                    queryExpression = new QueryExpression(analyzer, this);
                     queryExpression.parseAndValidate();
                 } else {
                     Token firstToken = getToken(3);
@@ -202,7 +224,7 @@ public class CreateViewStatement extends AbstractStatementObject {
                         this.viewNameToken,
                         Messages.getString(Messages.Error.VIEW_NAME_RESERVED_WORD, viewNameToken.image));
                 exception.setErrorCode(
-                		QuickFixFactory.DiagnosticErrorId.VIEW_NAME_RESERVED_WORD.getErrorCode());
+                        QuickFixFactory.DiagnosticErrorId.VIEW_NAME_RESERVED_WORD.getErrorCode());
                 exception.setTargetedString(this.viewNameToken.image);
             } else if( isNonReservedKeywordToken(viewNameToken) ) {
                 DdlAnalyzerException exception = this.analyzer.addException(
@@ -220,11 +242,13 @@ public class CreateViewStatement extends AbstractStatementObject {
             }
         }
 
+        incrementIndex(2);
         return true;
     }
 
     private void parseTableBody() {
-        tableBody.setFirstTknIndex(4);
+        incrementIndex();
+//        tableBody.setFirstTknIndex(4);
         // Now parse each table element
         // Break up table body into TableElements based on finding a "comma"
         tableBody.parseAndValidate();
@@ -242,10 +266,6 @@ public class CreateViewStatement extends AbstractStatementObject {
 
     private String getTokenValue(int tokenIndex) {
         return getToken(tokenIndex).image;
-    }
-
-    private Token getToken(int tokenIndex) {
-        return analyzer.getToken(tokenIndex);
     }
 
     public List<DdlAnalyzerException> getExceptions() {
@@ -266,11 +286,28 @@ public class CreateViewStatement extends AbstractStatementObject {
                              tableBody.getOptions().getLastTknIndex()+1, position) ) {
             // TABLE OPTIONS
             return tableBody.getOptions().getTokenContext(position);
-        } else if( isBetween(queryExpression.getFirstTknIndex(),
-                             queryExpression.getLastTknIndex(), position) ) {
-            return queryExpression.getTokenContext(position);
+        } else if( withClause != null && isBetween(withClause.getFirstTknIndex(),
+                withClause.getLastTknIndex(), position) ) {
+            return withClause.getTokenContext(position);
+        } else if( queryExpression != null && isBetween(queryExpression.getFirstTknIndex(),
+                queryExpression.getLastTknIndex(), position) ) {
+        return queryExpression.getTokenContext(position);
         }
 
         return new TokenContext(position, null, DdlAnalyzerConstants.Context.NONE_FOUND, this);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(75);
+
+        sb.append("CREATE VIEW");
+        append(viewNameToken, sb);
+        append(tableBody, sb);
+        append("AS", sb);
+        append(withClause, sb);
+        append(queryExpression, sb);
+
+        return sb.toString();
     }
 }

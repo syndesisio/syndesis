@@ -43,6 +43,16 @@ public final class DdlCompletionItemLoader extends CompletionItemBuilder {
     private static final String TABLE_ELEMENT_JSON_FILE = "./tableElementCompletionItems.json";
     private static final String TABLE_ELEMENT_OPTIONS_JSON_FILE = "./tableElementOptionsCompletionItems.json";
     private static final String TABLE_BODY_OPTIONS_JSON_FILE = "./tableBodyOptionsCompletionItems.json";
+    public enum ItemType {
+        FUNCTIONS,
+        DATATYPES,
+        TABLE_ELEMENT,
+        SEARCHABLE_VALUES,
+        TABLE_ELEMENT_OPTIONS,
+        CREATE_STATEMENT_TEMPLATES,
+        QUERY_EXPRESSION,
+        QUERY_EXPRESSION_KEYWORDS
+    }
 
     private List<CompletionItem> functionItems;
     private List<CompletionItem> datatypeItems;
@@ -289,6 +299,50 @@ public final class DdlCompletionItemLoader extends CompletionItemBuilder {
             queryExpressionItems.addAll(getQueryExpressionKeywordItems());
         }
         return queryExpressionItems;
+    }
+
+    public CompletionItem getItem(ItemType itemType, String itemLabel) {
+        CompletionItem item = null;
+
+        switch(itemType) {
+        case FUNCTIONS:
+            item = getItem(getFunctionCompletionItems(), itemLabel);
+            break;
+        case DATATYPES:
+            item = getItem(getDatatypesCompletionItems(), itemLabel);
+            break;
+        case QUERY_EXPRESSION:
+            item = getItem(getQueryExpressionItems(), itemLabel);
+            break;
+        case QUERY_EXPRESSION_KEYWORDS:
+            item = getItem(getQueryExpressionKeywordItems(), itemLabel);
+            break;
+        case CREATE_STATEMENT_TEMPLATES:
+            item = getItem(getCreateStatementTemplateCompletionItems(), itemLabel);
+            break;
+        case SEARCHABLE_VALUES:
+            item = getItem(getSearchableValuesCompletionItems(), itemLabel);
+            break;
+        case TABLE_ELEMENT_OPTIONS:
+            item = getItem(getTableElementOptionsCompletionItems(), itemLabel);
+            break;
+        case TABLE_ELEMENT:
+            item = getItem(getTableElementCompletionItems(), itemLabel);
+            break;
+        default:
+            break;
+        }
+
+        return item;
+    }
+
+    public CompletionItem getItem(List<CompletionItem> items, String itemLabel) {
+        for(CompletionItem item: items) {
+            if( item.getLabel().equals(itemLabel)) {
+                return item;
+            }
+        }
+        return null;
     }
 
     public CompletionItem getCreateViewCompletionItem(int data, String sortValue) {

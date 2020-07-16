@@ -15,8 +15,6 @@
  */
 package io.syndesis.dv.lsp.parser.statement;
 
-import java.util.List;
-
 import org.eclipse.lsp4j.Position;
 import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
@@ -38,17 +36,30 @@ public class WhereClause extends AbstractStatementObject {
 
     @Override
     protected void parseAndValidate() {
-        Token whereToken = findTokenByKind(SQLParserConstants.WHERE);
-        if (whereToken != null) {
-            setFirstTknIndex(getTokenIndex(whereToken));
+        if( hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.WHERE) ) {
+            incrementIndex();
+            setFirstTknIndex(currentIndex());
             setLastTknIndex(getTokenIndex(getTokens().get(getTokens().size() - 1)));
-        } else {
-            List<Token> tokens = getTokens();
-            if (tokens.get(tokens.size() - 1).kind == SQLParserConstants.SEMICOLON) {
-                setLastTknIndex(tokens.size() - 2);
-            } else {
-                setLastTknIndex(tokens.size() - 1);
-            }
+
+//            if (whereToken != null) {
+//                setLastTknIndex(getTokenIndex(whereToken) - 1);
+//            } else {
+//                Token orderToken = findTokenByKind(SQLParserConstants.ORDER);
+//                Token byToken = findTokenByKind(SQLParserConstants.BY);
+//                if( orderToken != null && byToken != null &&
+//                    (getTokenIndex(byToken) == (getTokenIndex(orderToken)+1)) ) {
+//                    setLastTknIndex(getTokenIndex(byToken) -1);
+//                }
+//                else {
+//                    List<Token> tokens = getTokens();
+//                    if (tokens.get(tokens.size() - 1).kind == SQLParserConstants.SEMICOLON) {
+//                        setLastTknIndex(tokens.size() - 2);
+//                    }
+//                }
+//            }
+        } else if( queryExpression instanceof WithQueryExpression ) {
+            setLastTknIndex(0);
+            setLastTknIndex(0);
         }
     }
 
@@ -67,13 +78,27 @@ public class WhereClause extends AbstractStatementObject {
                     }
                 }
             }
+
             if (this.analyzer.isPositionInToken(position, tkn)) {
                 return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.WHERE_CLAUSE, this);
             } else {
                 return new TokenContext(position, tkn, DdlAnalyzerConstants.Context.QUERY_EXPRESSION, this);
             }
-
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(75);
+
+        for (int i=getFirstTknIndex(); i<getLastTknIndex()+1; i++) {
+            append(getToken(i), sb);
+            if (i < getLastTknIndex()-1) {
+                sb.append(' ');
+            }
+        }
+
+        return sb.toString();
     }
 }

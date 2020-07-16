@@ -26,7 +26,7 @@ import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 @SuppressWarnings("nls")
 public class TestTokenContext {
 
-	public CreateViewStatement createStatement;
+    public CreateViewStatement createStatement;
 
     public void setCreateStatement(String stmt) {
         DdlTokenAnalyzer analyzer = new DdlTokenAnalyzer(stmt);
@@ -128,19 +128,20 @@ public class TestTokenContext {
     public void testContextForTableAliasDot_2() {
         String stmt =
         // CHARACTER--------->
-//                 10        20        30        40        50        60        70        80        90        100       110       120       130
+          //                 10        20        30        40        50        60        70        80        90        100       110       120       130
                 // 0123456789 123456789 123456789 123456789 123456789 123456789 123456789
-                // 123456789 123456789 123456789 123456789 123456789 123456789 123456789
-                "CREATE VIEW winelist (priceInCents, id, productcode) AS\n" + "  SELECT\n"
-                        + "    t1.price * 100 as priceInCents, id, productcode, t2. \n" + "  FROM\n"
-                        + "    PostgresDB.winelist AS t1, PostgresDB.contact as t2 WHERE id > 70 ORDER BY t1.id";
+                  "CREATE VIEW winelist (priceInDollars, id) AS\n" 
+                + "  SELECT\n"
+                + "    t1.price AS priceInDollars, t1.id, t2. \n"
+                + "  FROM\n"
+                + "    PostgresDB.winelist AS t1, PostgresDB.contact as t2";
 
         setCreateStatement(stmt);
 
-        TokenContext tokenContext = getTokenContext(new Position(2, 55));
+        TokenContext tokenContext = getTokenContext(new Position(2, 41));
         assertEquals(DdlAnalyzerConstants.Context.SELECT_COLUMN, tokenContext.getContext());
 
-        tokenContext = getTokenContext(new Position(2, 56));
+        tokenContext = getTokenContext(new Position(2, 42));
         assertEquals(DdlAnalyzerConstants.Context.TABLE_ALIAS, tokenContext.getContext());
 
     }
@@ -161,12 +162,14 @@ public class TestTokenContext {
     public void testContextForWhereAliasDot() {
         String stmt =
                 // CHARACTER--------->
-                // 10 20 30 40 50 60 70 80 90 100 110 120 130
-                // 0123456789 123456789 123456789 123456789 123456789 123456789 123456789
+                //           10        20        30        40        50        60        70
+                // 0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
                 // 123456789 123456789 123456789 123456789 123456789 123456789 123456789
-                "CREATE VIEW winelist (priceInCents, id, productcode) AS\n" + "  SELECT\n"
-                        + "    t1.price * 100 as priceInCents, id, productcode, t2.first_name\n" + "  FROM\n"
-                        + "    PostgresDB.winelist AS t1, PostgresDB.contact as t2 WHERE t1. > 70 ORDER BY t1.id";
+                  "CREATE VIEW winelist (priceInCents, id, productcode) AS\n"
+                + "  SELECT\n"
+                + "    t1.price as priceInCents, id, productcode, t2.first_name\n"
+                + "  FROM\n"
+                + "    PostgresDB.winelist AS t1, PostgresDB.contact as t2 WHERE t1. > 70 ORDER BY t1.id";
 
         setCreateStatement(stmt);
 
@@ -194,59 +197,12 @@ public class TestTokenContext {
         String stmt =
 
                 "CREATE VIEW winelist AS SELECT * FROM PostgresDB.winelist as t1, PostgresDB.contact as t1 ";
-        // 10 20 30 40 50 60 70 80
-        // 0123456789 123456789 123456789 123456789 123456789 123456789 123456789
-        // 123456789 123456789 123456789
+              //            10        20        30        40        50        60        70        80
+              // 0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789
         setCreateStatement(stmt);
 
         TokenContext tokenContext = getTokenContext(new Position(0, 89));
-        assertEquals(DdlAnalyzerConstants.Context.QUERY_EXPRESSION, tokenContext.getContext());
+        assertEquals(DdlAnalyzerConstants.Context.WHERE_CLAUSE_START, tokenContext.getContext());
     }
-
-    /*
-    @Test
-    public void testContextsInFromClause() {
-
-        String DDL_1 = "CREATE VIEW contact ( id ) AS SELECT t1.id FROM MyDB.id ";
-        String DDL_2 = "CREATE VIEW contact ( id ) AS SELECT t1.id FROM MyDB.id, ";
-        String DDL_3 = "CREATE VIEW contact ( id ) AS SELECT t1.id FROM MyDB.id AS ";
-        String DDL_4 = "CREATE VIEW contact ( id ) AS SELECT t1.id FROM MyDB.id AS t1 ";
-        String DDL_5 = "CREATE VIEW contact ( id ) AS SELECT t1.id FROM MyDB.id AS t1, ";
-        String DDL_6 = "CREATE VIEW contact ( id ) AS SELECT t1.id FROM MyDB.id AS t1 WHERE ";
-        String DDL_7 = "CREATE VIEW contact ( id ) AS SELECT t1.id FROM MyDB.id AS t1 WHERE t1.id";
-        String DDL_8 = "CREATE VIEW someView AS SELECT * FROM schemaA.table_1 AS t1, schemaB.table_2 as t2 WHERE t1. ";
-        			 // 0123456789 123456789 123456789 123456789 123456789 123456789 123456789
-        // 123456789 123456789 123456789
-        // 10 20 30 40 50 60 70 80 90
-
-        testAndPrintContexts(DDL_1, 1);
-        testAndPrintContexts(DDL_2, 51);
-        testAndPrintContexts(DDL_3, 51);
-        testAndPrintContexts(DDL_4, 51);
-        testAndPrintContexts(DDL_5, 51);
-        testAndPrintContexts(DDL_6, 51);
-        testAndPrintContexts(DDL_7, 51);
-        testAndPrintContexts(DDL_8, 68);
-    }
-
-    public void testAndPrintContexts(String stmt, int start) {
-        setCreateStatement(stmt);
-        int end = stmt.length();
-        System.out.println("\nSTATEMENT: " + stmt);
-        for (int i = start; i < end; i++) {
-            Position pos = new Position(0, i);
-            Token token = createStatement.getAnalyzer().getTokenAt(pos);
-            String tokenStr = "[null]";
-            if (token != null) {
-                tokenStr = token.image;
-            }
-            char character = stmt.charAt(i);
-            TokenContext tokenContext = getTokenContext(pos);
-            System.out.println(posToString(pos) + "\t char: [ " + character + " ]  Token = " + tokenStr + " Context = "
-                    + tokenContext.contextToString());
-        }
-        System.out.println("-------------------------------------------------------------------------");
-    }
-    */
 
 }

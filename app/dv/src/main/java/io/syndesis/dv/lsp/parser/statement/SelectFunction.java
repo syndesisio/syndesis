@@ -24,6 +24,8 @@ import org.eclipse.lsp4j.Range;
 import org.teiid.query.parser.SQLParserConstants;
 import org.teiid.query.parser.Token;
 
+import io.syndesis.dv.lsp.Messages;
+import io.syndesis.dv.lsp.codeactions.QuickFixFactory;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
 import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
@@ -49,133 +51,96 @@ public class SelectFunction extends SelectColumn {
     @Override
     @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"}) // TODO refactor
     protected void parseAndValidate() {
-        // Find starting index
-        int selectClauselastIndex = getSelectClause().getLastTknIndex();
 
-        int startIndex = getSelectClause().getFirstTknIndex() + 1;
-        if (getSelectClause().isAll() || getSelectClause().isDistinct()) {
-            startIndex++;
+        if ( hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.ID)) {
+            incrementIndex();
+            this.functionNameToken = getCurrentToken();
+            setFirstTknIndex(currentIndex());
+            setLastTknIndex(currentIndex());
         }
 
-        // check for previous table elements and reset the startIndex
-        int nSelectColumns = getSelectClause().getSelectColumns().length;
-        if (nSelectColumns > 0) {
-            startIndex = getSelectClause().getSelectColumns()[nSelectColumns - 1].getLastTknIndex() + 1;
-        }
+        if ( hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.LPAREN)) {
+            List<Token> functionParameterTkns = getBracketedTokens(getTokens(), currentIndex()+1,
+                    SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
+            int nTkns = functionParameterTkns.size();
+            // now count the parameters
+            for (Token paramTkn : functionParameterTkns) {
+                if (paramTkn.kind == SQLParserConstants.ID) {
+                    if (FunctionHelper.getInstance().isFunctionName(paramTkn.image)) {
+                        Position startPosition = new Position(paramTkn.beginLine, paramTkn.beginColumn);
+                        Position endPosition = new Position(paramTkn.endLine, paramTkn.endColumn + 1);
+                        DdlAnalyzerException exception = new DdlAnalyzerException(
+                                DiagnosticSeverity.Warning, "NESTED Functions are not yet supported",
+                                    new Range(startPosition, endPosition));
 
-        int currentTknIndex = startIndex;
-        boolean columnEnded = startIndex > selectClauselastIndex;
-
-        while (!columnEnded) {
-            // LOOKING FOR : Table1 AS t1
-            Token tkn = this.getTokens().get(currentTknIndex);
-            if (currentTknIndex > selectClauselastIndex) {
-                columnEnded = true;
-                setLastTknIndex(selectClauselastIndex - 1);
-            } else {
-                if (tkn.kind == SQLParserConstants.ID) {
-                    this.functionNameToken = tkn;
-                    if (getFirstTknIndex() == 0) {
-                        setFirstTknIndex(getTokenIndex(tkn));
-                    }
-                    currentTknIndex++;
-                }
-                // Check for alias (AS) token
-                if (currentTknIndex < selectClauselastIndex) {
-                    tkn = this.getTokens().get(currentTknIndex);
-                    if (tkn.kind == SQLParserConstants.LPAREN) {
-//                      int nParamTkns = handleFunctionParameters(tkn, currentTknIndex, selectClauselastIndex);
-                        // Parse until we find a RPAREN or we hit the selectClauselastIndex
-                        List<Token> functionParameterTkns = getBracketedTokens(getTokens(), currentTknIndex,
-                                SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
-                        // 1) check last index so it isn't past the SELECT clause
-                        int nTkns = functionParameterTkns.size();
-                        if (getTokenIndex(functionParameterTkns.get(nTkns - 1)) < selectClauselastIndex) {
-                            // now count the parameters
-                            for (Token paramTkn : functionParameterTkns) {
-                                if (paramTkn.kind == SQLParserConstants.ID) {
-                                    if (FunctionHelper.getInstance().isFunctionName(paramTkn.image)) {
-                                        Position startPosition = new Position(paramTkn.beginLine, paramTkn.beginColumn);
-                                        Position endPosition = new Position(paramTkn.endLine, paramTkn.endColumn + 1);
-                                        DdlAnalyzerException exception = new DdlAnalyzerException(
-                                                DiagnosticSeverity.Warning, "NESTED Functions are not yet supported",
-                                                new Range(startPosition, endPosition));
-
-                                        this.analyzer.addException(exception);
-                                    } else {
-                                        this.parameters.add(paramTkn.image);
-                                    }
-                                } else if (paramTkn.kind == SQLParserConstants.UNSIGNEDINTEGER) {
-                                    this.parameters.add(paramTkn.image);
-                                }
-                            }
-                        }
-                        currentTknIndex = currentTknIndex + nTkns; // nParamTkns; // RPARENS token
-                        tkn = this.getTokens().get(currentTknIndex);
-                    }
-                    if (tkn.kind == SQLParserConstants.AS) {
-                        currentTknIndex++;
-                        tkn = this.getTokens().get(currentTknIndex);
-                        if (getTokenIndex(tkn) <= selectClauselastIndex) {
-                            setAliasNameToken(tkn);
-                        }
-                        if (currentTknIndex < selectClauselastIndex) {
-                            currentTknIndex++;
-                            tkn = this.getTokens().get(currentTknIndex);
-                            if (tkn.kind == SQLParserConstants.COMMA) {
-                                // Since there is a comma, another TableSymbol is expected
-                                setLastTknIndex(getTokenIndex(tkn));
-                                columnEnded = true;
-                            } else {
-                                setLastTknIndex(currentTknIndex - 1);
-                                columnEnded = true;
-                            }
+                            this.analyzer.addException(exception);
                         } else {
-                            setLastTknIndex(getTokenIndex(tkn));
-                            columnEnded = true;
+                            this.parameters.add(paramTkn.image);
                         }
-                    } else if (tkn.kind == SQLParserConstants.COMMA) {
-                        // Since there is a comma, another TableSymbol is expected
-                        setLastTknIndex(getTokenIndex(tkn));
-                        columnEnded = true;
+                    } else if (paramTkn.kind == SQLParserConstants.UNSIGNEDINTEGER) {
+                        this.parameters.add(paramTkn.image);
                     }
-                } else {
-                    setLastTknIndex(getTokenIndex(tkn));
-                    columnEnded = true;
                 }
+            setIndex(currentIndex() + nTkns);
+            if (hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.AS)) {
+                incrementIndex();
+                if (hasNextIndex()) {
+                    incrementIndex();
+                    // get the alias name and save the actual name to definition token
+                    if( isTokenOfKind(currentIndex(), SQLParserConstants.ID)) {
+                        Token aliasNameTkn = getCurrentToken();
+                        setAliasNameToken(aliasNameTkn);
+                        setLastTknIndex(currentIndex());
+                    } else {
+                        Token tmpTkn = getCurrentToken();
+                        this.analyzer.addException(tmpTkn, tmpTkn, "Missing or invalid alias for column name [" + tmpTkn.image + "]");
+                                setLastTknIndex(currentIndex());
+                    }
+                }
+
+                if (hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.COMMA, SQLParserConstants.SEMICOLON)) {
+                    incrementIndex();
+                }
+                setLastTknIndex(currentIndex());
+            } else if (hasNextIndex() && isNextTokenOfKind(currentIndex(),
+                        SQLParserConstants.COMMA,
+                        SQLParserConstants.SEMICOLON)) {
+                incrementIndex();
+                setLastTknIndex(currentIndex());
             }
-            currentTknIndex++;
+            // Have not found valid next/expected token?
+            // if != FROM or != COMMA or != ID/STRINGVAL/UNSIGNEDINTEGER
+            if (hasNextIndex() && !isNextTokenOfKind(currentIndex(),
+                    SQLParserConstants.FROM,
+                    SQLParserConstants.ID,
+                    SQLParserConstants.STRINGVAL,
+                    SQLParserConstants.UNSIGNEDINTEGER)) {
+                    Token nextTkn = getToken(nextIndex());
+                    this.analyzer.addException(
+                            nextTkn,
+                            nextTkn,
+                            Messages.getString(Messages.Error.INVALID_TOKEN, nextTkn.image))
+                                .setErrorCode(QuickFixFactory.DiagnosticErrorId.INVALID_TOKEN.getErrorCode());
+                    incrementIndex();
+                    if (hasNextIndex() && !isNextTokenOfKind(currentIndex(),
+                            SQLParserConstants.FROM)) {
+                        this.analyzer.addException(
+                                this.functionNameToken,
+                                this.functionNameToken,
+                                Messages.getString(Messages.Error.INVALID_COLUMN_MISSING_COMMA, this.functionNameToken.image))
+                                    .setErrorCode(QuickFixFactory.DiagnosticErrorId.INVALID_COLUMN_MISSING_COMMA.getErrorCode());
+                    }
+            } else if (hasNextIndex() &&
+                    (getCurrentToken().kind != SQLParserConstants.COMMA && !isNextTokenOfKind(currentIndex(),
+                    SQLParserConstants.FROM))) {
+                this.analyzer.addException(
+                        this.functionNameToken,
+                        this.functionNameToken,
+                        Messages.getString(Messages.Error.INVALID_COLUMN_MISSING_COMMA, this.functionNameToken.image))
+                            .setErrorCode(QuickFixFactory.DiagnosticErrorId.INVALID_COLUMN_MISSING_COMMA.getErrorCode());
+            }
         }
     }
-
-//    private int handleFunctionParameters(Token inToken, int currentTknIndex, int selectClauselastIndex) {
-//        // Parse until we find a RPAREN or we hit the selectClauselastIndex
-//        List<Token> functionParameterTkns = getBracketedTokens(getTokens(), currentTknIndex,
-//                SQLParserConstants.LPAREN, SQLParserConstants.RPAREN);
-//        // 1) check last index so it isn't past the SELECT clause
-//        int nTkns = functionParameterTkns.size();
-//        if (getTokenIndex(functionParameterTkns.get(nTkns - 1)) < selectClauselastIndex) {
-//            // now count the parameters
-//            for (Token paramTkn : functionParameterTkns) {
-//                if (paramTkn.kind == SQLParserConstants.ID) {
-//                    if (FunctionHelper.getInstance().isFunctionName(paramTkn.image)) {
-//                        Position startPosition = new Position(paramTkn.beginLine, paramTkn.beginColumn);
-//                        Position endPosition = new Position(paramTkn.endLine, paramTkn.endColumn + 1);
-//                        DdlAnalyzerException exception = new DdlAnalyzerException(
-//                                DiagnosticSeverity.Warning, "NESTED Functions are not yet supported",
-//                                new Range(startPosition, endPosition));
-//
-//                        this.analyzer.addException(exception);
-//                    } else {
-//                        this.parameters.add(paramTkn.image);
-//                    }
-//                } else if (paramTkn.kind == SQLParserConstants.UNSIGNEDINTEGER) {
-//                    this.parameters.add(paramTkn.image);
-//                }
-//            }
-//        }
-//        return nTkns;
-//    }
 
     @Override
     protected TokenContext getTokenContext(Position position) {

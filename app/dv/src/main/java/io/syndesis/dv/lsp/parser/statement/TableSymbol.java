@@ -58,78 +58,67 @@ public class TableSymbol extends AbstractStatementObject {
 
     @Override
     protected void parseAndValidate() {
-        int fromClauselastIndex = fromClause.getLastTknIndex();
+        if( isLastIndex()) { return; }
 
-        int startIndex = fromClause.getFirstTknIndex() + 1;
-        // check for previous table elements and reset the startIndex
-        int nTableSymbols = fromClause.getTableSymbols().length;
-        if (nTableSymbols > 0) {
-            startIndex = fromClause.getTableSymbols()[nTableSymbols - 1].getLastTknIndex() + 1;
-        }
+        incrementIndex(); // Should be at an ID or STRINGVAL
 
-        int currentTknIndex = startIndex;
-        boolean symbolEnded = startIndex > fromClauselastIndex;
+        if( isTokenOfKind(currentIndex(), SQLParserConstants.ID, SQLParserConstants.STRINGVAL)) {
+            // Get name token and set first index
+            Token tkn = getCurrentToken();
+            setNameToken(tkn);
+            setFirstTknIndex(currentIndex());
+            setLastTknIndex(currentIndex());
 
-        while (!symbolEnded) {
-            // LOOKING FOR : Table1 AS t1
-            Token tkn = this.getTokens().get(currentTknIndex);
-            if (currentTknIndex > fromClauselastIndex) {
-                symbolEnded = true;
-                setLastTknIndex(fromClauselastIndex - 1);
-            } else {
-                if (tkn.kind == SQLParserConstants.ID || tkn.kind == SQLParserConstants.STRINGVAL) {
-                    setNameToken(tkn);
-                    if (getFirstTknIndex() == 0) {
-                        setFirstTknIndex(getTokenIndex(tkn));
-                    }
-                    currentTknIndex++;
-                }
-                // Check for alias (AS) token
-                if (currentTknIndex <= fromClauselastIndex) {
-                    tkn = this.getTokens().get(currentTknIndex);
-                    if (tkn.kind == SQLParserConstants.AS) {
-                        currentTknIndex++;
-                        if (currentTknIndex <= fromClauselastIndex) {
-                            tkn = this.getTokens().get(currentTknIndex);
-                            if (getTokenIndex(tkn) <= fromClauselastIndex) {
-                                Token nameToken = getNameToken();
-                                setNameToken(tkn);
-                                setDefinitionToken(nameToken);
-                            }
-                        }
-                        if (currentTknIndex < fromClauselastIndex) {
-                            currentTknIndex++;
-                            tkn = this.getTokens().get(currentTknIndex);
-                            if (tkn.kind == SQLParserConstants.COMMA) {
-                                // Since there is a comma, another TableSymbol is expected
-                                setLastTknIndex(getTokenIndex(tkn));
-                                symbolEnded = true;
-                            } else {
-                                setLastTknIndex(currentTknIndex - 1);
-                                symbolEnded = true;
-                            }
-                        } else {
-                            setLastTknIndex(getTokenIndex(tkn));
-                            symbolEnded = true;
-                        }
-                    } else if (tkn.kind == SQLParserConstants.COMMA) {
-                        // Since there is a comma, another TableSymbol is expected
-                        setLastTknIndex(getTokenIndex(tkn));
-                        symbolEnded = true;
+            // Check for alias (AS) token
+            if (hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.AS)) {
+                incrementIndex();
+                if (hasNextIndex()) {
+                    incrementIndex();
+                    // get the alias name and save the actual name to definition token
+                    if( isTokenOfKind(currentIndex(), SQLParserConstants.ID, SQLParserConstants.STRINGVAL)) {
+                        Token aliasNameTkn = getCurrentToken();
+                        Token nameToken = getNameToken();
+                        setNameToken(aliasNameTkn);
+                        setDefinitionToken(nameToken);
+                        setLastTknIndex(currentIndex());
                     } else {
-                        setLastTknIndex(currentTknIndex-1);
-                        symbolEnded = true;
-                        this.analyzer.addException(tkn, tkn, "Invalid token: [" + tkn.image + "]");
-                        setNextTokenIsInvalid(true);
+                        Token tmpTkn = getCurrentToken();
+                        this.analyzer.addException(tmpTkn, tmpTkn, "Missing or invalid alias table name [" + tmpTkn.image + "]");
+                        setLastTknIndex(currentIndex());
                     }
-                } else {
-                    setLastTknIndex(getTokenIndex(tkn));
-                    symbolEnded = true;
                 }
             }
 
-            currentTknIndex++;
+            if (hasNextIndex() && isNextTokenOfKind(currentIndex(), SQLParserConstants.COMMA, SQLParserConstants.SEMICOLON)) {
+                incrementIndex();
+                setLastTknIndex(currentIndex());
+            }
+        } else {
+            Token tkn = getCurrentToken();
+            this.analyzer.addException(tkn, tkn, "Invalid token: [" + tkn.image + "]");
+            setNextTokenIsInvalid(true);
+            decrementIndex();
         }
+    }
+
+    public boolean isLastTableSymbol() {
+        // Check the following:
+        // 1) Is the last token the LAST TOKEN == YES
+        // 2) else If this table symbol ends with COMMA token == YES
+        // 3) If next token is a WHERE or SEMICOLON clause == YES
+
+        if( fromClause.getQueryExpression().isWithQuery ) {
+            return isLastIndex() ||
+                    isNextTokenOfKind(getLastTknIndex(),
+                            SQLParserConstants.SEMICOLON,
+                            SQLParserConstants.WHERE,
+                            SQLParserConstants.RPAREN);
+        }
+
+        return isLastIndex() ||
+                isNextTokenOfKind(getLastTknIndex(),
+                        SQLParserConstants.SEMICOLON,
+                        SQLParserConstants.WHERE);
     }
 
     @Override
@@ -229,15 +218,14 @@ public class TableSymbol extends AbstractStatementObject {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(75).append("TableSymbol:   ");
-        if (isAliased()) {
-            sb.append(this.definitionToken.image).append(" AS ").append(getNameToken().image);
-        } else {
-            sb.append(getNameToken().image);
-        }
+        StringBuilder sb = new StringBuilder(75);
 
-        sb.append("\n\tschemaName = ").append(getSchemaName()).append("\n\ttableName = ")
-        .append(getTableName()).append("\n\talias = ").append(getAlias());
+        for (int i=getFirstTknIndex(); i<getLastTknIndex()+1; i++) {
+            append(getToken(i), sb);
+            if (i < getLastTknIndex()-1) {
+                sb.append(' ');
+            }
+        }
 
         return sb.toString();
     }

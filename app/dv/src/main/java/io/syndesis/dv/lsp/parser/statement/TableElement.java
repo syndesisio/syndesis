@@ -37,11 +37,23 @@ public class TableElement extends AbstractStatementObject {
     private Token autoIncrementToken;
     private Token uniqueToken;
     private Token indexToken;
-    private List<Token> pkTokens;
     private List<Token> defaultTokens;
     private TableElementOptionsClause optionsClause;
     private int datatypeKind;
-    private boolean isPKElement;
+    private boolean incompleteElement;
+    /*
+     * PRIMARY KEY keywords added to an existing column definition
+     */
+    private List<Token> pkTokens;
+    /*
+     * Separate PRIMARY KEY table element definition which can specify multiple columns references
+     */
+    private PrimaryKeyInfo pkInfo;
+    /*
+     * FORIEIGN KEY table element definition which can specify multiple columns references
+     * to an dependent table name & column references
+     */
+    private ForeignKeyInfo fkInfo;
     private boolean isPrimaryKey;
 
     private TableBody tableBody;
@@ -90,8 +102,13 @@ public class TableElement extends AbstractStatementObject {
                     } else if (tkn.kind == SQLParserConstants.PRIMARY) {
                         // LOOKING FOR "PRIMARY KEY (ID)" tokens
                         setFirstTknIndex(getTokenIndex(tkn));
-                        currentTknIndex = parsePrimaryKeyTokens(currentTknIndex, tkn);
-                        setPKElement(true);
+                        parsePrimaryKeyTokens(tkn);
+                        currentTknIndex = getLastTknIndex();
+                    } else if (tkn.kind == SQLParserConstants.FOREIGN) {
+                        // foreign key (col2) references vw_t2 (col2)
+                        setFirstTknIndex(getTokenIndex(tkn));
+                        parseForeignKeyTokens(tkn);
+                        currentTknIndex = getLastTknIndex();
                     } else if( isReservedKeywordToken(tkn)) {
                         DdlAnalyzerException exception = this.analyzer.addException(
                             tkn, tkn,
@@ -264,109 +281,20 @@ public class TableElement extends AbstractStatementObject {
         }
     }
 
-    @SuppressWarnings("PMD.CyclomaticComplexity") // TODO refactor
-    private int parsePrimaryKeyTokens(int startIndex, Token primaryToken) {
-        int currentIndex = startIndex;
-        // LOOKING FOR "PRIMARY KEY (ID)" tokens
-
-        List<Token> tmpTkns = new ArrayList<Token>();
-        tmpTkns.add(primaryToken);
-        Token previousToken = primaryToken;
-        Token thisToken = primaryToken;
-
-        // Check for NULL and look for KEY token
-        if (hasAnotherToken(getTokens(), currentIndex)) {
-            currentIndex++;
-            thisToken = getTokens().get(currentIndex);
-            if (thisToken.kind == SQLParserConstants.KEY) {
-                previousToken = thisToken;
-                tmpTkns.add(thisToken);
-                // Check for NULL and look for ( token
-                if (hasAnotherToken(getTokens(), currentIndex)) {
-                    currentIndex++;
-                    thisToken = getTokens().get(currentIndex);
-                    if (thisToken.kind == SQLParserConstants.LPAREN) {
-                        previousToken = thisToken;
-                        tmpTkns.add(thisToken);
-                        // Check for NULL and look for ID token
-                        if (hasAnotherToken(getTokens(), currentIndex)) {
-                            currentIndex++;
-                            thisToken = getTokens().get(currentIndex);
-                            if (thisToken.kind == SQLParserConstants.ID) {
-                                previousToken = thisToken;
-                                tmpTkns.add(thisToken);
-                                // Check for NULL and look for ) token
-                                if (hasAnotherToken(getTokens(), currentIndex)) {
-                                    currentIndex++;
-                                    thisToken = getTokens().get(currentIndex);
-                                    if (thisToken.kind == SQLParserConstants.RPAREN) {
-                                        tmpTkns.add(thisToken);
-                                        if (hasAnotherToken(getTokens(), currentIndex)) {
-                                            thisToken = getTokens().get(currentIndex + 1);
-                                            if (thisToken.kind != SQLParserConstants.RPAREN && thisToken.kind != SQLParserConstants.COMMA) {
-                                                logPrimaryKeyException(thisToken, thisToken);
-                                            }
-                                        }
-                                    } else {
-                                        logPrimaryKeyException(previousToken, thisToken);
-                                    }
-                                } else {
-                                    logIncompletePrimaryKeyException(previousToken, previousToken);
-                                }
-                            } else {
-                                if (thisToken.kind == SQLParserConstants.RPAREN || thisToken.kind == SQLParserConstants.COMMA) {
-                                    logIncompletePrimaryKeyException(previousToken, previousToken);
-                                } else {
-                                    logPrimaryKeyException(previousToken, thisToken);
-                                }
-                            }
-                        } else {
-                            logIncompletePrimaryKeyException(previousToken, previousToken);
-                        }
-                    } else {
-                        if (thisToken.kind == SQLParserConstants.RPAREN || thisToken.kind == SQLParserConstants.COMMA) {
-                            logIncompletePrimaryKeyException(previousToken, previousToken);
-                        } else {
-                            logPrimaryKeyException(previousToken, thisToken);
-                        }
-                    }
-                } else {
-                    logIncompletePrimaryKeyException(previousToken, previousToken);
-                }
-            } else {
-                if (thisToken.kind == SQLParserConstants.RPAREN || thisToken.kind == SQLParserConstants.COMMA) {
-                    logIncompletePrimaryKeyException(previousToken, previousToken);
-                } else {
-                    logPrimaryKeyException(previousToken, thisToken);
-                }
-            }
-        } else {
-            logIncompletePrimaryKeyException(previousToken, previousToken);
-        }
-
-        if (!tmpTkns.isEmpty()) {
-            if (!tableBody.hasPrimaryKey()) {
-                setPrimaryKeyTokens(tmpTkns);
-            } else {
-                // error on all tokens since PK has already been defined
-                Token startToken = tmpTkns.get(0);
-                Token endToken = tmpTkns.get(tmpTkns.size() - 1);
-                this.analyzer.addException(startToken, endToken, "Invalid token in PRIMARY KEY element:  '"
-                        + startToken.image + "' at: " + positionToString(getBeginPosition(startToken)));
-            }
-        }
-
-        return currentIndex;
+    private void parsePrimaryKeyTokens(Token primaryToken) {
+        this.pkInfo = new PrimaryKeyInfo(analyzer, primaryToken);
+        pkInfo.parseAndValidate();
+        setLastTknIndex(pkInfo.getLastTknIndex());
     }
 
-    private void logPrimaryKeyException(Token startToken, Token endToken) {
-        this.analyzer.addException(startToken, endToken, "Invalid token in PRIMARY KEY element:  '" + startToken.image
-                + "' at: " + positionToString(getBeginPosition(startToken)));
-    }
-
-    private void logIncompletePrimaryKeyException(Token startToken, Token endToken) {
-        this.analyzer.addException(startToken, endToken,
-                "PRIMARY KEY element definition is incomplete\n\n expecting >>  PRIMARY KEY (columnName)");
+    private void parseForeignKeyTokens(Token foreignToken) {
+        this.fkInfo = new ForeignKeyInfo(analyzer, foreignToken, this.tableBody);
+        fkInfo.parseAndValidate();
+        setLastTknIndex(fkInfo.getLastTknIndex());
+        if( containsException(Messages.getString(Messages.Error.INCOMPLETE_FOREIGN_KEY)) ||
+            containsException(Messages.getString(Messages.Error.MISSING_FK_TABLE_REF))) {
+            incompleteElement = true;
+        }
     }
 
     private void logAlreadySetPropertyException(Token startToken, Token endToken, String property) {
@@ -454,8 +382,16 @@ public class TableElement extends AbstractStatementObject {
         this.indexToken = indexToken;
     }
 
+    public boolean isConstraint() {
+        return isFKElement() || isPKElement();
+    }
+
     public static boolean isDatatype(Token token) {
         return DdlAnalyzerConstants.DATATYPES.contains(token.kind);
+    }
+
+    public boolean isIncompleteElement() {
+        return this.incompleteElement;
     }
 
     @Override
@@ -488,11 +424,7 @@ public class TableElement extends AbstractStatementObject {
     }
 
     public boolean isPKElement() {
-        return isPKElement;
-    }
-
-    public void setPKElement(boolean isPKElement) {
-        this.isPKElement = isPKElement;
+        return this.pkInfo != null;
     }
 
     public boolean isPrimaryKey() {
@@ -503,50 +435,32 @@ public class TableElement extends AbstractStatementObject {
         this.isPrimaryKey = isPrimaryKey;
     }
 
-    private String getFullTokenString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("RAW TOKENS: ");
-        for (int i = getFirstTknIndex(); i < getLastTknIndex() + 1; i++) {
-            sb.append(' ').append(getTokens().get(i));
-        }
-        return sb.toString();
+    public boolean isFKElement() {
+        return this.fkInfo != null;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(75)
-            .append("TableElement:   ").append(getNameToken());
+        StringBuilder sb = new StringBuilder(75);
 
-        append(datatypeTokens, sb);
-        append(notNullTokens, sb);
-        append(autoIncrementToken, sb);
-        append(indexToken, sb);
-        append(defaultTokens, sb);
-        append(uniqueToken, sb);
-        append(pkTokens, sb);
-        if (optionsClause != null) {
-            append(optionsClause.getOptionsTokens(), sb);
+        if( fkInfo != null ) {
+            append(fkInfo, sb);
+        } else if( pkInfo != null ) {
+            append(pkInfo, sb);
+        } else {
+            append(getNameToken(), sb);
+            append(datatypeTokens, sb);
+            append(notNullTokens, sb);
+            append(autoIncrementToken, sb);
+            append(indexToken, sb);
+            append(defaultTokens, sb);
+            append(uniqueToken, sb);
+            append(pkTokens, sb);
+            if (optionsClause != null) {
+                append(optionsClause.getOptionsTokens(), sb);
+            }
         }
-        sb.append('\n').append(getFullTokenString());
 
         return sb.toString();
-    }
-
-    private static void append(Token token, StringBuilder target) {
-        if (token == null) {
-            return;
-        }
-
-        target.append(' ').append(token.image);
-    }
-
-    private static void append(final Iterable<Token> tokens, final StringBuilder target) {
-        if (tokens == null) {
-            return;
-        }
-
-        for (Token token : tokens) {
-            append(token, target);
-        }
     }
 }

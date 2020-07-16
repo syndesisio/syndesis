@@ -104,6 +104,8 @@ public class DdlCompletionProvider extends CompletionItemBuilder {
                     }
                         break;
                     // Context is the Table body surrounded by (....) and before OPTIONS() or AS
+                    case WITH_CLAUSE:
+                    case WITH_LIST_ELEMENT:
                     case QUERY_EXPRESSION:
                     case SELECT_CLAUSE:
                     case SELECT_COLUMN:
