@@ -21,6 +21,7 @@ build::usage() {
 -i  --image                    Build Docker via s2i images (openshift only), too (for those modules creating images)
     --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub (assumed if not using openshift)
     --operator-tag             The tag to use for the operator image
+    --operator-image           The image name of the operator (normally, syndesis/syndesis-operator but sometimes need to drop the 'syndesis' prefix)
     --registry                 Registry to push the built images (used in conjunction with --docker)
 -p  --project <project>        Specifies the project / namespace to create images
 -g  --goals <g1>,<g2>, ..      Use custom Maven goals to execute for the build. Default goal is `install`
@@ -93,8 +94,9 @@ build::run() {
 
     # Build operator if requested
     if $(should_build "operator" "$modules") && [ "$canbuildop" = "OK" ]; then
-        local tag=$(readopt --operator-tag)
-        do_operator $top_dir "$tag"
+        local optag=$(readopt --operator-tag)
+        local opimage=$(readopt --operator-image)
+        do_operator $top_dir "${optag}" "${opimage}"
     fi
 
     # Build image for upgrade pod if requested
@@ -228,8 +230,8 @@ maven_args() {
 
 do_operator() {
     local top_dir=$1
-    local tag=${2:-latest}
-    local image="syndesis/syndesis-operator" # No reason to expose image name to customisation
+    local tag=${2:-}
+    local image=${3:-}
 
     echo "=============================================================================="
     echo "Building syndesis-operator"
@@ -244,7 +246,15 @@ do_operator() {
     fi
 
     if [ $(hasflag -i --image --docker) ]; then
-        local BUILD_ARGS=" --image-name=${image} --image-tag=${tag}"
+        local BUILD_ARGS=""
+        if [ -n "${image}" ]; then
+          BUILD_ARGS="${BUILD_ARGS} --image-name=${image}"
+        fi
+
+        if [ -n "${tag}" ]; then
+          BUILD_ARGS="${BUILD_ARGS} --image-tag=${tag}"
+        fi
+
         local image_build=""
 
         if [[ $(hasflag --docker) ]]; then
