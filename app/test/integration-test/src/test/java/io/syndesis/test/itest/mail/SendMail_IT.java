@@ -117,7 +117,7 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
 
         runner.then(http().client(webHookClient)
                 .receive()
-                .response(HttpStatus.NO_CONTENT));
+                .response(HttpStatus.OK));
 
         verifyRecordsInDb(runner, 1, "New hire for ${first_name} from ${company}");
     }
