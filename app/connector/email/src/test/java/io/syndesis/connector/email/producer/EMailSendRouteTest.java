@@ -137,6 +137,7 @@ public class EMailSendRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(directStep, mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
@@ -144,8 +145,6 @@ public class EMailSendRouteTest extends AbstractEmailServerTest implements Route
 
         DirectEndpoint directEndpoint = context.getEndpoint("direct://start", DirectEndpoint.class);
         ProducerTemplate template = context.createProducerTemplate();
-
-        context.start();
 
         EMailMessageModel msgModel = new EMailMessageModel();
         msgModel.setSubject("Test Email 1");
@@ -193,6 +192,7 @@ public class EMailSendRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(directStep, mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
@@ -200,8 +200,6 @@ public class EMailSendRouteTest extends AbstractEmailServerTest implements Route
 
         DirectEndpoint directEndpoint = context.getEndpoint("direct://start", DirectEndpoint.class);
         ProducerTemplate template = context.createProducerTemplate();
-
-        context.start();
 
         EMailMessageModel msgModel = new EMailMessageModel();
         msgModel.setSubject("Test Email 1");
@@ -250,6 +248,7 @@ public class EMailSendRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(directStep, mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
@@ -257,8 +256,6 @@ public class EMailSendRouteTest extends AbstractEmailServerTest implements Route
 
         DirectEndpoint directEndpoint = context.getEndpoint("direct://start", DirectEndpoint.class);
         ProducerTemplate template = context.createProducerTemplate();
-
-        context.start();
 
         //
         // Sending through injected data model as if consumed from another connection
@@ -312,6 +309,7 @@ public class EMailSendRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(directStep, mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
@@ -319,8 +317,6 @@ public class EMailSendRouteTest extends AbstractEmailServerTest implements Route
 
         DirectEndpoint directEndpoint = context.getEndpoint("direct://start", DirectEndpoint.class);
         ProducerTemplate template = context.createProducerTemplate();
-
-        context.start();
 
         //
         // Sending through injected data model as if consumed from another connection
@@ -363,6 +359,7 @@ public class EMailSendRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(directStep, mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
@@ -370,8 +367,6 @@ public class EMailSendRouteTest extends AbstractEmailServerTest implements Route
 
         DirectEndpoint directEndpoint = context.getEndpoint("direct://start", DirectEndpoint.class);
         ProducerTemplate template = context.createProducerTemplate();
-
-        context.start();
 
         EMailMessageModel msgModel = new EMailMessageModel();
         msgModel.setSubject("Test Email 1");

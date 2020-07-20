@@ -113,12 +113,11 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setMinimumExpectedMessageCount(server.getEmailCount());
-
-        context.start();
 
         RouteUtils.assertSatisfied(result);
 
@@ -144,6 +143,7 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
@@ -154,7 +154,6 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
         result.setAssertPeriod(2000L);
         result.setMinimumExpectedMessageCount(0);
 
-        context.start();
         result.assertIsSatisfied();
     }
 
@@ -176,6 +175,7 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
@@ -183,7 +183,6 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
         result.setAssertPeriod(2000L);
         result.setMinimumExpectedMessageCount(server.getEmailCountInFolder(TEST_ADDRESS, TEST_PASSWORD, TEST_FOLDER));
 
-        context.start();
         result.assertIsSatisfied();
 
         List<EMailMessageModel> emails = server.getEmailsInFolder(TEST_ADDRESS, TEST_PASSWORD, TEST_FOLDER);
@@ -207,12 +206,11 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setMinimumExpectedMessageCount(server.getEmailCount());
-
-        context.start();
 
         RouteUtils.assertSatisfied(result);
 
@@ -239,12 +237,11 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setMinimumExpectedMessageCount(server.getEmailCount());
-
-        context.start();
 
         RouteUtils.assertSatisfied(result);
 
@@ -271,12 +268,11 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setMinimumExpectedMessageCount(server.getEmailCount());
-
-        context.start();
 
         RouteUtils.assertSatisfied(result);
 
@@ -312,13 +308,12 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setResultWaitTime(10000L);
         result.setExpectedMessageCount(unseenCount);
-
-        context.start();
 
         RouteUtils.assertSatisfied(result);
 
@@ -346,12 +341,11 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setExpectedMessageCount(filteredTotal);
-
-        context.start();
 
         RouteUtils.assertSatisfied(result);
 
@@ -380,12 +374,11 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setMinimumExpectedMessageCount(server.getEmailCount());
-
-        context.start();
 
         RouteUtils.assertSatisfied(result);
 
@@ -439,13 +432,12 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
         Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
         RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.start();
         context.addRoutes(routes);
 
         MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setMinimumExpectedMessageCount(server.getEmailCount());
-
-        context.start();
-
+        
         RouteUtils.assertSatisfied(result);
 
         EMailMessageModel model = RouteUtils.extractModelFromExchgMsg(result, 0);
