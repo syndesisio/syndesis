@@ -158,6 +158,7 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
 
     private static String formatUriWithPlaceholderContextPath(String aliasScheme) {
         if (aliasScheme.indexOf(':') < 0) {
+            LOGGER.warn("Appending a context path placeholder to original scheme {}. Required since Camel 3.2.", aliasScheme);
             return String.format("%s:%s", aliasScheme, "SyndesisContextPathPlaceholder");
         } else {
             return aliasScheme;
