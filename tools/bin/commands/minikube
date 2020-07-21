@@ -319,7 +319,7 @@ minikube::run() {
     elif [[ $(hasflag volumes) ]]; then
         volumes
     elif [[ $(hasflag registry) ]]; then
-        start_registry
+        registry
     else
         minikube::usage
     fi
