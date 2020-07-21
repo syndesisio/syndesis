@@ -1,4 +1,11 @@
 #
+# If there is olm support then there is no need
+# for the cluster role as OperatorHub takes care
+# of installing the operator
+#
+{{- if not .ApiServer.OlmSupport }}
+
+#
 # The jaeger cluster role that all users
 # wanting to use jaeger should be members of
 #
@@ -131,3 +138,5 @@
   - kind: User
     name: {{ .User }}
     namespace: {{ .Namespace }}
+
+{{end}}

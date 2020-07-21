@@ -113,13 +113,22 @@ build_operator()
         echo building executable
         go test -test.short -mod=vendor ./cmd/... ./pkg/...
 
+        if [ -z "${GOOSLIST}" ]; then
+            GOOSLIST="linux darwin windows"
+        fi
+
         for GOARCH in amd64 ; do
-          for GOOS in linux darwin windows ; do
+          for GOOS in ${GOOSLIST} ; do
             export GOARCH GOOS
             echo building ./dist/${GOOS}-${GOARCH}/syndesis-operator executable
             go build  "$@" -o ./dist/${GOOS}-${GOARCH}/syndesis-operator \
                 -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor \
                 ./cmd/manager
+
+            echo building ./dist/${GOOS}-${GOARCH}/platform-detect executable
+            go build -o ./dist/${GOOS}-${GOARCH}/platform-detect \
+                -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor \
+                ./cmd/detect
           done
         done
         mkdir -p ./build/_output/bin
@@ -221,6 +230,11 @@ build_image()
         echo $arch
         trap "rm $arch" EXIT
         tar --exclude-from=.dockerignore -cvf $arch build
+        if [ ! -d build ]; then
+            echo "No build directory. Something failed with building image"
+            exit 1
+        fi
+
         cd build
         tar uvf $arch Dockerfile
         oc start-build --from-archive=$arch ${S2I_STREAM_NAME}

@@ -27,7 +27,9 @@ import (
 	v1 "github.com/openshift/api/route/v1"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/olm"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
@@ -42,10 +44,33 @@ type installAction struct {
 	baseAction
 }
 
-func newInstallAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
+func newInstallAction(mgr manager.Manager, clientTools *clienttools.ClientTools) SyndesisOperatorAction {
 	return &installAction{
-		newBaseAction(mgr, api, "install"),
+		newBaseAction(mgr, clientTools, "install"),
 	}
+}
+
+func (a *installAction) installResource(ctx context.Context, rtClient client.Client, syndesis *v1beta1.Syndesis, res unstructured.Unstructured) (*unstructured.Unstructured, error) {
+	operation.SetNamespaceAndOwnerReference(res, syndesis)
+	o, modificationType, err := util.CreateOrUpdate(ctx, rtClient, &res)
+	if err != nil {
+		if util.IsNoKindMatchError(err) {
+			gvk := res.GroupVersionKind()
+			if _, found := kindsReportedNotAvailable[gvk]; !found {
+				kindsReportedNotAvailable[gvk] = time.Now()
+				a.log.Info("optional custom resource definition is not installed.", "group", gvk.Group, "version", gvk.Version, "kind", gvk.Kind)
+			}
+		} else {
+			a.log.Info("failed to create or replace resource", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+			return nil, err
+		}
+	} else {
+		if modificationType != controllerutil.OperationResultNone {
+			a.log.Info("resource "+string(modificationType), "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+		}
+	}
+
+	return o, nil
 }
 
 func (a *installAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
@@ -69,15 +94,17 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 
 	resourcesThatShouldExist := map[types.UID]bool{}
 
+	rtClient, _ := a.clientTools.RuntimeClient()
 	// Load configuration to to use as context for generate pkg
-	config, err := configuration.GetProperties(configuration.TemplateConfig, ctx, a.client, syndesis)
+	config, err := configuration.GetProperties(ctx, configuration.TemplateConfig, a.clientTools, syndesis)
 	if err != nil {
+		a.log.Error(err, "Error occurred while initialising configuration")
 		return err
 	}
 
 	// Check if an image secret exists, to be used to connect to registries that require authentication
 	secret := &corev1.Secret{}
-	err = a.client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: SyndesisPullSecret}, secret)
+	err = rtClient.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: SyndesisPullSecret}, secret)
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
 			secret = nil
@@ -90,13 +117,13 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		config.ImagePullSecrets = append(config.ImagePullSecrets, secret.Name)
 	}
 
-	serviceAccount, err := installServiceAccount(ctx, a.client, syndesis, secret)
+	serviceAccount, err := installServiceAccount(ctx, rtClient, syndesis, secret)
 	if err != nil {
 		return err
 	}
 	resourcesThatShouldExist[serviceAccount.GetUID()] = true
 
-	token, err := serviceaccount.GetServiceAccountToken(ctx, a.client, serviceAccount.Name, syndesis.Namespace)
+	token, err := serviceaccount.GetServiceAccountToken(ctx, rtClient, serviceAccount.Name, syndesis.Namespace)
 	if err != nil {
 		a.log.Info("Unable to get service account token", "error message", err.Error())
 		return nil
@@ -110,13 +137,13 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 	}
 
 	routes, _ := util.SeperateStructuredAndUnstructured(a.scheme, all)
-	syndesisRoute, err := installSyndesisRoute(ctx, a.client, syndesis, routes)
+	syndesisRoute, err := installSyndesisRoute(ctx, rtClient, syndesis, routes)
 	if err != nil {
 		a.log.Info("Unable to set route syndesis", "error message", err.Error())
 		return nil
 	}
 
-	if err := config.SetRoute(ctx, a.client, syndesis); err != nil {
+	if err := config.SetRoute(ctx, rtClient, syndesis); err != nil {
 		return err
 	}
 
@@ -148,31 +175,9 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		all = append(all, dbResources...)
 	}
 
-	addons := configuration.GetAddons(*config)
-	for _, addon := range addons {
-		if !addon.Enabled {
-			continue
-		}
-
-		addonDir := "./addons/" + addon.Name + "/"
-		f, err := generator.GetAssetsFS().Open(addonDir)
-		if err != nil {
-			a.log.Info("unsupported addon configured", "addon", addon.Name, "error", err)
-			continue
-		}
-		f.Close()
-
-		resources, err := generator.RenderDir(addonDir, config)
-		if err != nil {
-			return err
-		}
-
-		all = append(all, resources...)
-	}
-
 	// Link the image secret to service accounts
 	if secret != nil {
-		err = linkImageSecretToServiceAccounts(ctx, a.client, syndesis, secret)
+		err = linkImageSecretToServiceAccounts(ctx, rtClient, syndesis, secret)
 		if err != nil {
 			return err
 		}
@@ -180,24 +185,62 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 
 	// Install the resources..
 	for _, res := range all {
-		operation.SetNamespaceAndOwnerReference(res, syndesis)
-		o, modificationType, err := util.CreateOrUpdate(ctx, a.client, &res)
+		o, err := a.installResource(ctx, rtClient, syndesis, res)
 		if err != nil {
-			if util.IsNoKindMatchError(err) {
-				gvk := res.GroupVersionKind()
-				if _, found := kindsReportedNotAvailable[gvk]; !found {
-					kindsReportedNotAvailable[gvk] = time.Now()
-					a.log.Info("optional custom resource definition is not installed.", "group", gvk.Group, "version", gvk.Version, "kind", gvk.Kind)
-				}
-			} else {
-				a.log.Info("failed to create or replace resource", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
-				return err
+			return err // Fail-fast for core components
+		}
+		resourcesThatShouldExist[o.GetUID()] = true
+	}
+
+	addonsInfo := configuration.GetAddonsInfo(*config)
+	for _, addonInfo := range addonsInfo {
+		if !addonInfo.IsEnabled() {
+			continue
+		}
+
+		a.log.Info("Installing addon", "Name", addonInfo.Name())
+
+		if config.ApiServer.OlmSupport && addonInfo.GetOlmSpec() != nil {
+			//
+			// Using the operator hub is not mutally exclusive to loading the addon
+			// resources. Each addon should be tailored with conditionals to be
+			// compatible with using the operator hub or not, ie. operator installation
+			// should be delegated to the OLM & only if that's not possible should it
+			// be installed from syndesis' own resources.
+			//
+			err := olm.SubscribeOperator(ctx, a.clientTools, config, addonInfo.GetOlmSpec())
+			if err != nil {
+				a.log.Error(err, "A subscription to an OLM operator failed", "Addon Name", addonInfo.Name(), "Package", addonInfo.GetOlmSpec().Package)
+				continue
 			}
-		} else {
+		}
+
+		addonDir := "./addons/" + addonInfo.Name() + "/"
+		f, err := generator.GetAssetsFS().Open(addonDir)
+		if err != nil {
+			a.log.Info("unsupported addon configured", "addon", addonInfo.Name(), "error", err)
+			continue
+		}
+		f.Close()
+
+		resources, err := generator.RenderDir(addonDir, config)
+		if err != nil {
+			a.log.Info("Rendering of addon resources failed", "addon", addonInfo.Name(), "error message", err.Error())
+			continue
+		}
+
+		//
+		// Install the resources of this addon
+		// If there is an error do NOT fail-fast but
+		// try and continue to install the other addons
+		//
+		for _, res := range resources {
+			o, err := a.installResource(ctx, rtClient, syndesis, res)
+			if err != nil {
+				a.log.Info("Install of addon failed", "addon", addonInfo.Name(), "error message", err.Error())
+				break
+			}
 			resourcesThatShouldExist[o.GetUID()] = true
-			if modificationType != controllerutil.OperationResultNone {
-				a.log.Info("resource "+string(modificationType), "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
-			}
 		}
 	}
 
@@ -210,7 +253,9 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		Namespace:     syndesis.Namespace,
 		LabelSelector: labelSelector,
 	}
-	err = ListAllTypesInChunks(ctx, a.api, a.client, options, func(list []unstructured.Unstructured) error {
+
+	api, _ := a.clientTools.ApiClient()
+	err = ListAllTypesInChunks(ctx, api, rtClient, options, func(list []unstructured.Unstructured) error {
 		for _, res := range list {
 			if resourcesThatShouldExist[res.GetUID()] {
 				continue
@@ -223,7 +268,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 			}
 
 			// Found a resource that should not exist!
-			err := a.client.Delete(ctx, &res)
+			err := rtClient.Delete(ctx, &res)
 			if err != nil {
 				if !k8serrors.IsNotFound(err) {
 					a.log.Error(err, "could not deleted", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
@@ -245,7 +290,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		target.Status.Phase = v1beta1.SyndesisPhaseStarting
 		target.Status.Reason = v1beta1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
-		_, _, err := util.CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
+		_, _, err := util.CreateOrUpdate(ctx, rtClient, target, "kind", "apiVersion")
 		if err != nil {
 			return err
 		}
@@ -260,7 +305,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		target.Status.Phase = v1beta1.SyndesisPhasePostUpgradeRunSucceed
 		target.Status.Reason = v1beta1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
-		_, _, err := util.CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
+		_, _, err := util.CreateOrUpdate(ctx, rtClient, target, "kind", "apiVersion")
 		if err != nil {
 			return err
 		}
@@ -494,9 +539,10 @@ func (a *installAction) removePostgresUpgradeTrigger(context context.Context, sy
 	pollTimeout := 600 * time.Second
 	pollInterval := 5 * time.Second
 
+	rtClient, _ := a.clientTools.RuntimeClient()
 	wait.Poll(pollInterval, pollTimeout, func() (done bool, err error) {
 		dc := &appsv1.DeploymentConfig{}
-		if err := a.client.Get(context, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, dc); err != nil {
+		if err := rtClient.Get(context, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, dc); err != nil {
 			a.log.Error(err, "getting `syndesis-db` DeploymentConfig in "+syndesis.Namespace)
 			return false, err
 		}
@@ -519,7 +565,7 @@ func (a *installAction) removePostgresUpgradeTrigger(context context.Context, sy
 					"op": "remove",
 					"path": "/spec/template/spec/containers/%d/env/%d"
 				}]`, containerIdx, envIdx)))
-				if err := a.client.Patch(context, dc, removeUpgradeEnvVar); err != nil {
+				if err := rtClient.Patch(context, dc, removeUpgradeEnvVar); err != nil {
 					a.log.Error(err, "patching `syndesis-db` DeploymentConfig to remove `POSTGRESQL_UPGRADE` environment variable")
 					return true, err
 				}

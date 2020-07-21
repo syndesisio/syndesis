@@ -67,7 +67,8 @@ func TestUninstall(t *testing.T) {
 		client.InNamespace(ns),
 	}
 	cl.List(ctx, &sl, listOpts...)
-	u.Client = &cl
+	u.ClientTools().SetRuntimeClient(cl)
+
 	{
 		t.Logf("\tTest: When running `operator uninstall`, it should remove the exiting syndesis CRs")
 		if l := len(sl.Items); l != 1 {

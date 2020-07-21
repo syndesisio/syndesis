@@ -45,14 +45,14 @@ type S3 struct {
 }
 
 func (s *S3) Enabled() (result bool) {
-	api, err := s.apiClient()
+	api, err := s.Backup.clientTools.ApiClient()
 	if err != nil {
 		return false
 	}
 
 	_, err = api.CoreV1().
 		Secrets(s.syndesis.Namespace).
-		Get(secret, metav1.GetOptions{
+		Get(s.context, secret, metav1.GetOptions{
 			TypeMeta: metav1.TypeMeta{},
 		})
 
@@ -88,14 +88,14 @@ func (s *S3) credentials(unset bool) (err error) {
 		os.Unsetenv("AWS_SECRET_ACCESS_KEY")
 	}
 
-	api, err := s.apiClient()
+	api, err := s.Backup.clientTools.ApiClient()
 	if err != nil {
 		return
 	}
 
 	secret, err := api.CoreV1().
 		Secrets(s.syndesis.Namespace).
-		Get(secret, metav1.GetOptions{
+		Get(s.context, secret, metav1.GetOptions{
 			TypeMeta: metav1.TypeMeta{},
 		})
 	if err != nil {

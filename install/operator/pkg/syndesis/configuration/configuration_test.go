@@ -30,7 +30,7 @@ import (
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/rest"
 	restclient "k8s.io/client-go/rest"
-	"k8s.io/client-go/rest/fake"
+	restfake "k8s.io/client-go/rest/fake"
 	"k8s.io/kubectl/pkg/scheme"
 
 	"k8s.io/client-go/kubernetes"
@@ -38,7 +38,45 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
+	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
 )
+
+func Test_GetAddons(t *testing.T) {
+	config := getConfigLiteral()
+	addons := GetAddonsInfo(*config)
+
+	assert.True(t, len(addons) > 0)
+
+	for _, addon := range addons {
+		switch addon.Name() {
+		case "jaeger":
+			assert.Equal(t, config.Syndesis.Addons.Jaeger.Name(), addon.Name())
+			assert.Equal(t, config.Syndesis.Addons.Jaeger.Enabled, addon.IsEnabled())
+			assert.Equal(t, config.Syndesis.Addons.Jaeger.Olm, *addon.GetOlmSpec())
+		case "ops":
+			assert.Equal(t, config.Syndesis.Addons.Ops.Name(), addon.Name())
+			assert.Equal(t, config.Syndesis.Addons.Ops.Enabled, addon.IsEnabled())
+		case "dv":
+			assert.Equal(t, config.Syndesis.Addons.DV.Name(), addon.Name())
+			assert.Equal(t, config.Syndesis.Addons.DV.Enabled, addon.IsEnabled())
+		case "camelk":
+			assert.Equal(t, config.Syndesis.Addons.CamelK.Name(), addon.Name())
+			assert.Equal(t, config.Syndesis.Addons.CamelK.Enabled, addon.IsEnabled())
+		case "knative":
+			assert.Equal(t, config.Syndesis.Addons.Knative.Name(), addon.Name())
+			assert.Equal(t, config.Syndesis.Addons.Knative.Enabled, addon.IsEnabled())
+		case "todo":
+			assert.Equal(t, config.Syndesis.Addons.Todo.Name(), addon.Name())
+			assert.Equal(t, config.Syndesis.Addons.Todo.Enabled, addon.IsEnabled())
+		case "publicApi":
+			assert.Equal(t, config.Syndesis.Addons.PublicApi.Name(), addon.Name())
+			assert.Equal(t, config.Syndesis.Addons.PublicApi.Enabled, addon.IsEnabled())
+		default:
+			t.Errorf("addon name %s not recognised", addon.Name())
+		}
+	}
+}
 
 func Test_loadFromFile(t *testing.T) {
 	type args struct {
@@ -87,12 +125,18 @@ func Test_setConfigFromEnv(t *testing.T) {
 				Productized: true,
 				ProductName: "something",
 				DevSupport:  true,
+				ApiServer: capabilities.ApiServerSpec{
+					Version:          "1.16",
+					Routes:           true,
+					ImageStreams:     true,
+					EmbeddedProvider: true,
+				},
 				Syndesis: SyndesisConfig{
 					RouteHostname: "route",
 					Addons: AddonsSpec{
 						DV: DvConfiguration{
-							Enabled: true,
-							Image:   "DV_IMAGE",
+							AddonConfiguration: AddonConfiguration{Enabled: true},
+							Image:              "DV_IMAGE",
 						},
 						CamelK: CamelKConfiguration{Image: "CAMELK_IMAGE"},
 						Todo:   TodoConfiguration{Image: "TODO_IMAGE"},
@@ -127,12 +171,18 @@ func Test_setConfigFromEnv(t *testing.T) {
 				Productized: true,
 				ProductName: "something",
 				DevSupport:  true,
+				ApiServer: capabilities.ApiServerSpec{
+					Version:          "1.16",
+					Routes:           true,
+					ImageStreams:     true,
+					EmbeddedProvider: true,
+				},
 				Syndesis: SyndesisConfig{
 					RouteHostname: "route",
 					Addons: AddonsSpec{
 						DV: DvConfiguration{
-							Enabled: true,
-							Image:   "docker.io/teiid/syndesis-dv:latest",
+							AddonConfiguration: AddonConfiguration{Enabled: true},
+							Image:              "docker.io/teiid/syndesis-dv:latest",
 						},
 					},
 					Components: ComponentsSpec{
@@ -241,33 +291,41 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 				Syndesis: SyndesisConfig{
 					Addons: AddonsSpec{
 						Jaeger: JaegerConfiguration{
-							Enabled:       true,
+							Enabled: true,
+							Olm: OlmSpec{
+								Package: "jaeger",
+								Channel: "stable",
+							},
 							SamplerType:   "const",
 							SamplerParam:  "0",
 							ImageAgent:    "jaegertracing/jaeger-agent:1.13",
 							ImageAllInOne: "jaegertracing/all-in-one:1.13",
 							ImageOperator: "jaegertracing/jaeger-operator:1.13",
 						},
-						Ops: AddonConfiguration{Enabled: false},
-						Todo: TodoConfiguration{
-							Enabled: true,
-							Image:   "docker.io/centos/php-71-centos7",
+						Ops: OpsConfiguration{
+							AddonConfiguration: AddonConfiguration{Enabled: false},
 						},
-						Knative: AddonConfiguration{Enabled: false},
+						Todo: TodoConfiguration{
+							AddonConfiguration: AddonConfiguration{Enabled: true},
+							Image:              "docker.io/centos/php-71-centos7",
+						},
+						Knative: KnativeConfiguration{
+							AddonConfiguration: AddonConfiguration{Enabled: false},
+						},
 						DV: DvConfiguration{
-							Enabled:   true,
-							Resources: Resources{Memory: "1024Mi"},
-							Image:     "docker.io/teiid/syndesis-dv:latest",
+							AddonConfiguration: AddonConfiguration{Enabled: true},
+							Resources:          Resources{Memory: "1024Mi"},
+							Image:              "docker.io/teiid/syndesis-dv:latest",
 						},
 						CamelK: CamelKConfiguration{
-							Enabled:       true,
-							Image:         "fabric8/s2i-java:3.0-java8",
-							CamelVersion:  "2.23.2.fuse-760024",
-							CamelKRuntime: "0.3.4.fuse-740008",
+							AddonConfiguration: AddonConfiguration{Enabled: true},
+							Image:              "fabric8/s2i-java:3.0-java8",
+							CamelVersion:       "2.23.2.fuse-760024",
+							CamelKRuntime:      "0.3.4.fuse-740008",
 						},
 						PublicApi: PublicApiConfiguration{
-							Enabled:       true,
-							RouteHostname: "mypublichost.com",
+							AddonConfiguration: AddonConfiguration{Enabled: true},
+							RouteHostname:      "mypublichost.com",
 						},
 					},
 				},
@@ -390,32 +448,41 @@ func getConfigLiteral() *Config {
 			SHA:           false,
 			Addons: AddonsSpec{
 				Jaeger: JaegerConfiguration{
-					Enabled:       false,
+					Enabled: false,
+					Olm: OlmSpec{
+						Package: "jaeger",
+						Channel: "stable",
+					},
 					SamplerType:   "const",
 					SamplerParam:  "0",
 					ImageAgent:    "jaegertracing/jaeger-agent:1.13",
 					ImageAllInOne: "jaegertracing/all-in-one:1.13",
 					ImageOperator: "jaegertracing/jaeger-operator:1.13",
 				},
-				Ops: AddonConfiguration{Enabled: false},
+				Ops: OpsConfiguration{
+					AddonConfiguration: AddonConfiguration{Enabled: false},
+				},
 				Todo: TodoConfiguration{
-					Enabled: false,
-					Image:   "docker.io/centos/php-71-centos7",
+					AddonConfiguration: AddonConfiguration{Enabled: false},
+					Image:              "docker.io/centos/php-71-centos7",
+				},
+				Knative: KnativeConfiguration{
+					AddonConfiguration: AddonConfiguration{Enabled: false},
 				},
 				DV: DvConfiguration{
-					Enabled:   false,
-					Image:     "docker.io/teiid/syndesis-dv:latest",
-					Resources: Resources{Memory: "1024Mi"},
+					AddonConfiguration: AddonConfiguration{Enabled: false},
+					Image:              "docker.io/teiid/syndesis-dv:latest",
+					Resources:          Resources{Memory: "1024Mi"},
 				},
 				CamelK: CamelKConfiguration{
-					Enabled:       false,
-					CamelVersion:  "2.23.2.fuse-760024",
-					CamelKRuntime: "0.3.4.fuse-740008",
-					Image:         "fabric8/s2i-java:3.0-java8",
+					AddonConfiguration: AddonConfiguration{Enabled: false},
+					CamelVersion:       "2.23.2.fuse-760024",
+					CamelKRuntime:      "0.3.4.fuse-740008",
+					Image:              "fabric8/s2i-java:3.0-java8",
 				},
 				PublicApi: PublicApiConfiguration{
-					Enabled:       true,
-					RouteHostname: "mypublichost.com",
+					AddonConfiguration: AddonConfiguration{Enabled: true},
+					RouteHostname:      "mypublichost.com",
 				},
 			},
 			Components: ComponentsSpec{
@@ -619,10 +686,10 @@ func Test_postgreSQLVersionFromInitPod(t *testing.T) {
 	defer func() { os.Unsetenv("POD_NAME") }()
 
 	// this simply returns the same HTTP response for every request
-	fakeClient := &fake.RESTClient{
+	fakeClient := &restfake.RESTClient{
 		GroupVersion:         v1.SchemeGroupVersion,
 		NegotiatedSerializer: scheme.Codecs,
-		Client: fake.CreateHTTPClient(func(req *http.Request) (*http.Response, error) {
+		Client: restfake.CreateHTTPClient(func(req *http.Request) (*http.Response, error) {
 			expected := "http://localhost/apis/v1/namespaces/syndesis/pods/syndesis-operator-3-crpjp/log?container=postgres-version"
 			if req.URL.String() != expected {
 				t.Errorf("Expecting to fetch pod log via URL like `%s`, but it was `%s`", expected, req.URL.String())
@@ -642,10 +709,13 @@ func Test_postgreSQLVersionFromInitPod(t *testing.T) {
 	restClient.Client = fakeClient.Client
 	client := kubernetes.New(restClient).CoreV1()
 
+	clientTools := syntesting.FakeClientTools()
+	clientTools.SetCoreV1Client(client)
+
 	syndesis := v1beta1.Syndesis{}
 	syndesis.SetNamespace("syndesis")
 
-	version, err := postgreSQLVersionFromInitPod(client, &syndesis)
+	version, err := postgreSQLVersionFromInitPod(context.TODO(), clientTools, &syndesis)
 	if err != nil {
 		t.Error(err)
 	}

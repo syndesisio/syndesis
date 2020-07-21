@@ -54,7 +54,7 @@ type syndesisApi struct {
 }
 
 // Build and return an SyndesisApiMigrator interface
-func ApiMigrator(c client.Client, ctx context.Context, n string) (r SyndesisApiMigrator, err error) {
+func ApiMigrator(ctx context.Context, c client.Client, n string) (r SyndesisApiMigrator, err error) {
 	// Fetch all existing apis in an unstructured list. It is necessary to use an unstructured list
 	// because different apis might have a different structure
 	list := &unstructured.UnstructuredList{

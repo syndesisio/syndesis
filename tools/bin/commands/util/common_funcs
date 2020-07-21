@@ -68,18 +68,30 @@ readopt() {
     done
 }
 
+contains_error() {
+  local msg="${1:-}"
+
+  #
+  # Uppercase the msg to determine if it contains ERROR
+  #
+  if awk 'BEGIN {exit !index(toupper(ARGV[2]), toupper(ARGV[1]))}' "ERROR" "$1"; then
+      echo "YES"
+  else
+      echo "NO"
+  fi
+}
 
 check_error() {
     local msg="$*"
-    if [ "${msg//ERROR/}" != "${msg}" ]; then
-        if [ -n "${ERROR_FILE:-}" ] && [ -f "$ERROR_FILE" ] && ! grep "$msg" $ERROR_FILE ; then
+    if [ "$(contains_error "$msg")" == "YES" ]; then
+        if [ -n "${ERROR_FILE:-}" ] && [ -f "$ERROR_FILE" ] && ! grep "$msg" $ERROR_FILE; then
             local tmp=$(mktemp /tmp/error-XXXX)
-            echo ${msg} >> $tmp
+            echo ${msg} >>$tmp
             if [ $(wc -c <$ERROR_FILE) -ne 0 ]; then
-              echo >> $tmp
-              echo "===============================================================" >> $tmp
-              echo >> $tmp
-              cat $ERROR_FILE >> $tmp
+                echo >>$tmp
+                echo "===============================================================" >>$tmp
+                echo >>$tmp
+                cat $ERROR_FILE >>$tmp
             fi
             mv $tmp $ERROR_FILE
         fi
@@ -90,7 +102,8 @@ check_error() {
 print_error() {
     local exit_code=$?
     local error_file="${1:-}"
-    if [ -f $error_file ] && grep -q "ERROR" $error_file; then
+
+    if [ -f $error_file ] && [ "$(contains_error "$(cat $error_file)")" == "YES" ]; then
         cat $error_file
     elif [ $exit_code -ne 0 ]; then
         echo "ERROR: Last command exited with $exit_code"
@@ -232,7 +245,7 @@ ggrep_is_available_on_osx() {
         return
     fi
     set -e
-    
+
     echo "OK"
 }
 

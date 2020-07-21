@@ -53,12 +53,12 @@ func NewRestore(parent *internal.Options) *cobra.Command {
 }
 
 func (o *Restore) Run() error {
-	syndesis, cl, err := o.prepare()
+	syndesis, err := o.prepare()
 	if err != nil {
 		return err
 	}
 
-	b, err := backup.NewBackup(o.Context, cl, syndesis, o.backupDir)
+	b, err := backup.NewBackup(o.Context, o.ClientTools(), syndesis, o.backupDir)
 	if err != nil {
 		return err
 	}

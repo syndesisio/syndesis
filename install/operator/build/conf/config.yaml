@@ -11,6 +11,9 @@ Syndesis:
             Enabled: false
             SamplerType: "const"
             SamplerParam: "0"
+            Olm:
+                Package: "jaeger-product"
+                Channel: "stable"
             ImageAgent: "jaegertracing/jaeger-agent:1.13"
             ImageAllInOne: "jaegertracing/all-in-one:1.13"
             ImageOperator: "jaegertracing/jaeger-operator:1.13"

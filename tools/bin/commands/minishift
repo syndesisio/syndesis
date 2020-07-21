@@ -4,6 +4,7 @@ DEFAULT_OPENSHIFT_VERSION="v3.11.0"
 DEFAULT_CPUS="2"
 DEFAULT_DISK_SIZE="20GB"
 DEFAULT_RAM="4912"
+ADMIN_USER="system:admin"
 
 minishift::description() {
     echo "Initialize and manage a Minishift developer environment"
@@ -141,7 +142,7 @@ minishift::run() {
             check_error "$result"
         fi
 
-        if [[ "system:admin" != "$user" ]]; then
+        if [[ "$ADMIN_USER" != "$user" ]]; then
             echo "Grant user $user permissions"
             local result=$($OPERATOR_BINARY grant --user $user)
             check_error "$result"
@@ -153,6 +154,9 @@ minishift::run() {
           result=$(install_camel_k_crds "$(readopt --camel-k)")
           check_error "$result"
         fi
+
+        # Revert back to the original user whose been granted install rights
+        $revert_login
 
         # Deploy operator
         echo "Deploying Syndesis operator"
@@ -176,7 +180,6 @@ minishift::run() {
         # Relogin with original user
         echo "Switching to project \"$project\""
         oc project $project >/dev/null 2>&1
-        $revert_login
 
         local app_options=$(readopt --app-options)
         if [ $(hasflag --operator-only) ]; then
@@ -219,7 +222,7 @@ login_as_admin() {
     local project=$(oc project -q)
 
     # Login in as admin
-    oc login -u system:admin >/dev/null 2>&1
+    oc login -u "$ADMIN_USER" >/dev/null 2>&1
 
     # Return the command to use to revert to the initial user
     if [ -n "${token}" ]; then

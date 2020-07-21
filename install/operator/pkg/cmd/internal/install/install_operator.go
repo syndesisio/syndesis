@@ -1,8 +1,9 @@
 package install
 
 import (
-	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"time"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 )
 
 func (o *Install) installOperatorResources() error {
@@ -10,6 +11,12 @@ func (o *Install) installOperatorResources() error {
 	if err != nil {
 		return err
 	}
+
+	olmRes, err := o.render("./install/olm_cluster_role.yml.tmpl")
+	if err != nil {
+		return err
+	}
+	resources = append(resources, olmRes...)
 
 	operator, err := o.render("./install/operator.yml.tmpl")
 	if err != nil {
@@ -28,7 +35,7 @@ func (o *Install) installOperatorResources() error {
 			return err
 		}
 
-		client, err := o.NewDynamicClient()
+		client, err := o.ClientTools().DynamicClient()
 		if err != nil {
 			return err
 		}

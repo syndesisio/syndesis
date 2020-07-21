@@ -20,6 +20,7 @@ build::usage() {
 -f  --flash                    Skip checks and tests execution (fastest mode)
 -i  --image                    Build Docker via s2i images, too (for those modules creating images)
     --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
+    --operator-tag             The tag to use for the operator image
 -p  --project <project>        Specifies the project / namespace to create images
 -g  --goals <g1>,<g2>, ..      Use custom Maven goals to execute for the build. Default goal is `install`
 -s  --settings <path>          Path to Maven settings.xml
@@ -89,7 +90,8 @@ build::run() {
 
     # Build operator if requested
     if $(should_build "operator" "$modules") && [ "$canbuildop" = "OK" ]; then
-        do_operator $top_dir
+        local tag=$(readopt --operator-tag)
+        do_operator $top_dir "$tag"
     fi
 
     # Build image for upgrade pod if requested
@@ -183,7 +185,7 @@ maven_args() {
 do_operator() {
     local top_dir=$1
     local tag=${2:-latest}
-    local OPERATOR_IMAGE="syndesis/syndesis-operator"
+    local image="syndesis/syndesis-operator" # No reason to expose image name to customisation
 
     echo "=============================================================================="
     echo "Building syndesis-operator"
@@ -198,9 +200,9 @@ do_operator() {
     fi
 
     if [ $(hasflag -i --image --docker) ]; then
-        ./build.sh $args --image-build=docker --image-name="${OPERATOR_IMAGE}" --image-tag="$tag"
+        ./build.sh $args --image-build=docker --image-name="${image}" --image-tag="$tag"
     else
-        ./build.sh $args --image-build=s2i
+        ./build.sh $args --image-build=s2i --image-name="${image}" --image-tag="$tag"
     fi
     popd >/dev/null
 }
