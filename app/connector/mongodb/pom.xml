@@ -48,28 +48,41 @@
         <artifactId>de.flapdoodle.embed.process</artifactId>
         <version>2.1.2</version>
       </dependency>
+      <!-- We need to force these managed dependencies -->
+      <dependency>
+       <groupId>org.mongodb</groupId>
+       <artifactId>mongodb-driver-core</artifactId>
+       <version>4.0.1</version>
+     </dependency>
+      <dependency>
+        <groupId>org.mongodb</groupId>
+        <artifactId>mongodb-driver-sync</artifactId>
+        <version>4.0.1</version>
+      </dependency>
+     <dependency>
+       <groupId>org.mongodb</groupId>
+       <artifactId>bson</artifactId>
+       <version>4.0.1</version>
+     </dependency>
     </dependencies>
   </dependencyManagement>
 
   <dependencies>
     <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-mongodb</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.mongodb</groupId>
       <artifactId>mongodb-driver-core</artifactId>
-      <version>4.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.mongodb</groupId>
       <artifactId>mongodb-driver-sync</artifactId>
-      <version>4.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.mongodb</groupId>
       <artifactId>bson</artifactId>
-      <version>4.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-mongodb</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
