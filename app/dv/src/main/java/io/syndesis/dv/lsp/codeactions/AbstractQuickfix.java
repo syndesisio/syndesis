@@ -28,8 +28,8 @@ public abstract class AbstractQuickfix {
      * returns a replacement string value for the targeted error string
      * the default behavior is to return the current value
      * implementations must override this behavior to change the value
-     * @param currentValue
-     * @return
+     * @param currentValue replacement value
+     * @return the current value
      */
     protected String getReplacementValue(String currentValue) {
         return currentValue;
@@ -38,9 +38,9 @@ public abstract class AbstractQuickfix {
     /**
      * returns a {@link CodeAction} for the provided parameters and information
      * available from the {@link DdlAnalyzerException}
-     * @param params
-     * @param exception
-     * @return
+     * @param params code action parameters object
+     * @param exception reference exception for the quick fix
+     * @return list of {@link CodeAction}s
      */
     abstract List<CodeAction> createCodeActions(
             CodeActionParams params,
