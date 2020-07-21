@@ -174,7 +174,7 @@ public class ComponentProxyComponent extends DefaultComponent {
         // if the placeholder is still present, then we must remove it and its value
         // will be replaced by the real context path provided by the option parameters
         if ("SyndesisContextPathPlaceholder".equals(remaining)) {
-            LOGGER.warn("Depurate default context path variable {}", remaining);
+            LOGGER.info("Depurate default context path variable {}", remaining);
             return null;
         } else {
             return remaining;
