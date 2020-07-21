@@ -16,7 +16,7 @@
 package io.syndesis.common.model.integration.step.template;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -233,9 +233,7 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
     public Map<String, Object> getUriParams() {
         // Since Camel 3.3 we must declare explicitly the usage of templates
         // that are stored in headers
-        Map<String, Object> defaultMap = new HashMap<>();
-        defaultMap.put("allowTemplateFromHeader","true");
-        return defaultMap;
+        return Collections.singletonMap("allowTemplateFromHeader","true");
     }
 
     @Override
