@@ -83,6 +83,27 @@ public class DefaultMetadataInstanceTest {
 
         //redo with the same name
         metadataInstance.getVdb("myservice").validate("create view v (col, col1) as select col from tbl");
+
+        //validate with
+        report = metadataInstance.getVdb("myservice").validate("CREATE VIEW contact (\n" +
+                "  first_name, last_name, company, lead_source, create_date\n" +
+                ") AS WITH \n" +
+                "    t1 AS (SELECT * FROM tbl)\n" +
+                "  SELECT \n" +
+                "    *\n" +
+                "  FROM \n" +
+                "    t1");
+        assertNull(report.getMetadataException());
+        assertFalse(report.getReport().getItems().isEmpty());
+
+        report = metadataInstance.getVdb("myservice").validate("CREATE VIEW contact AS WITH \n" +
+                "    t1 AS (SELECT * FROM tbl)\n" +
+                "  SELECT \n" +
+                "    *\n" +
+                "  FROM \n" +
+                "    t1");
+        assertNull(report.getMetadataException());
+        assertTrue(report.getReport().getItems().isEmpty());
     }
 
     @Test

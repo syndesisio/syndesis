@@ -73,6 +73,8 @@ import org.teiid.query.metadata.CompositeMetadataStore;
 import org.teiid.query.metadata.MetadataValidator;
 import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.metadata.SystemMetadata;
+import org.teiid.query.metadata.TempMetadataAdapter;
+import org.teiid.query.metadata.TempMetadataStore;
 import org.teiid.query.metadata.TransformationMetadata;
 import org.teiid.query.parser.QueryParser;
 import org.teiid.query.validator.ValidatorReport;
@@ -522,7 +524,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
 
             //create an metadata facade so we can find stuff that was parsed
             CompositeMetadataStore compositeMetadataStore = new CompositeMetadataStore(mf.asMetadataStore());
-            BasicQueryMetadataWrapper wrapper = new BasicQueryMetadataWrapper(qmi) {
+            BasicQueryMetadataWrapper wrapper = new TempMetadataAdapter(qmi, new TempMetadataStore()) {
                 @Override
                 public Object getGroupID(String groupName) throws TeiidComponentException, QueryMetadataException {
                     try {
