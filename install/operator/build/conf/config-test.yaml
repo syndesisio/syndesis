@@ -31,7 +31,7 @@ Syndesis:
         CamelK:
             Enabled: false
             Image: "fabric8/s2i-java:3.0-java8"
-            CamelVersion: "3.1.0"
+            CamelVersion: "3.3.0"
             CamelKRuntime: "1.1.0"
         PublicApi:
             Enabled: true
