@@ -296,7 +296,7 @@
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <forkedProcessTimeoutInSeconds>180</forkedProcessTimeoutInSeconds>
+          <forkedProcessTimeoutInSeconds>240</forkedProcessTimeoutInSeconds>
         </configuration>
       </plugin>
       <!-- CXF has a couple of duplicate resources across both it's own and wss4j dependencies -->
