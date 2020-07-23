@@ -85,7 +85,7 @@ sync_lib() {
         parent_dir=$(echo $clean_lib | rev | cut -d'/' -f 2- | rev)
 
         ${KUBE} exec $operator_pod -- mkdir -p $OPERATOR_MAVEN_REPOSITORY/$parent_dir
-        // TODO - command not valid under kube
+        # TODO - command not valid under kube
         oc rsync ~/.m2/repository/$clean_lib $operator_pod:$OPERATOR_MAVEN_REPOSITORY/$parent_dir
     done
 }
