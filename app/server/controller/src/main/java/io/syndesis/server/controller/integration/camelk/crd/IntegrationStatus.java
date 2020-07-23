@@ -49,6 +49,10 @@ public interface IntegrationStatus extends Serializable {
     String getRuntimeVersion();
     @Nullable
     String getVersion();
+    @Nullable
+    String getImage();
+    @Nullable
+    Integer getReplicas();
 
     class Builder extends ImmutableIntegrationStatus.Builder {
         // make ImmutableIntegrationStatus.Builder which is package private
