@@ -25,25 +25,52 @@
 apiVersion: camel.apache.org/v1
 kind: CamelCatalog
 metadata:
-  name: camel-catalog-1.1.0-main
+  name: camel-catalog-1.3.0-main
   labels:
     app: camel-k
     camel.apache.org/catalog.version: 3.3.0
     camel.apache.org/catalog.loader.version: 3.3.0
-    camel.apache.org/runtime.version: 1.1.0
+    camel.apache.org/runtime.version: 1.3.0
     camel.apache.org/runtime.provider: main
 spec:
   runtime:
-    version: 1.1.0
+    version: 1.3.0
     provider: main
     applicationClass: org.apache.camel.k.main.Application
     metadata:
-      camel.version: 3.0.1
-      quarkus.version: 1.2.0.Final
-      camel-quarkus.version: 1.0.0-M3
+      camel.version: 3.3.0
+      quarkus.version: 1.5.0.Final
+      camel-quarkus.version: 1.0.0-CR2
     dependencies:
     - groupId: org.apache.camel.k
       artifactId: camel-k-runtime-main
+    capabilities:
+      cron:
+        dependencies:
+        - groupId: org.apache.camel.k
+          artifactId: camel-k-runtime-cron
+      health:
+        dependencies:
+        - groupId: org.apache.camel.k
+          artifactId: camel-k-runtime-health
+      platform-http:
+        dependencies:
+        - groupId: org.apache.camel.k
+          artifactId: camel-k-runtime-http
+      rest:
+        dependencies:
+        - groupId: org.apache.camel
+          artifactId: camel-rest
+        - groupId: org.apache.camel.k
+          artifactId: camel-k-runtime-http
+      circuit-breaker:
+        dependencies:
+        - groupId: org.apache.camel
+          artifactId: camel-microprofile-fault-tolerance
+      tracing:
+        dependencies:
+        - groupId: org.apache.camel.k
+          artifactId: camel-k-runtime-tracing
   artifacts:
     camel-zipfile:
       groupId: org.apache.camel
@@ -293,7 +320,7 @@ spec:
       artifactId: camel-platform-http
       schemes:
       - id: platform-http
-        http: false
+        http: true
         passive: false
       javaTypes:
       - org.apache.camel.component.platform.http.PlatformHttpComponent
@@ -3084,18 +3111,15 @@ spec:
     camel-k-loader-java:
       groupId: org.apache.camel.k
       artifactId: camel-k-loader-java
-    camel-k-loader-knative:
-      groupId: org.apache.camel.k
-      artifactId: camel-k-loader-knative
     camel-k-runtime-main:
       groupId: org.apache.camel.k
       artifactId: camel-k-runtime-main
     camel-k-runtime-health:
       groupId: org.apache.camel.k
       artifactId: camel-k-runtime-health
-    camel-k-runtime-servlet:
+    camel-k-runtime-http:
       groupId: org.apache.camel.k
-      artifactId: camel-k-runtime-servlet
+      artifactId: camel-k-runtime-http
     camel-k-runtime-webhook:
       groupId: org.apache.camel.k
       artifactId: camel-k-runtime-webhook
@@ -3108,8 +3132,6 @@ spec:
       dependencies:
       - groupId: org.apache.camel.k
         artifactId: camel-k-loader-yaml
-      - groupId: org.apache.camel.k
-        artifactId: camel-k-loader-knative
       - groupId: org.apache.camel.k
         artifactId: camel-knative-api
       - groupId: org.apache.camel.k
@@ -3126,6 +3148,8 @@ spec:
       dependencies:
       - groupId: org.apache.camel.k
         artifactId: camel-knative-api
+      - groupId: org.apache.camel.k
+        artifactId: camel-knative
       - groupId: org.apache.camel.k
         artifactId: camel-knative-http
   loaders:
@@ -3159,10 +3183,4 @@ spec:
       artifactId: camel-k-loader-java
       languages:
       - java
-    knative-source:
-      groupId: org.apache.camel.k
-      artifactId: camel-k-loader-knative
-      dependencies:
-      - groupId: org.apache.camel.k
-        artifactId: camel-k-runtime-knative
 {{- end}}
