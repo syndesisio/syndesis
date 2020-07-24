@@ -85,11 +85,10 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
   };
 
   /**
-   * Checks if the filename is .wsdl (SOAP)
-   * and sets the connector template ID.
+   * Formats file extension
    * @param fileName
    */
-  const checkDocStyle = (fileName: string) => {
+  const formatFileName = (fileName: string) => {
     return fileName
       .split('.')
       .pop()!
@@ -103,9 +102,9 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
    */
   const onAddUrlSpecification = (e: React.FormEvent<HTMLInputElement>) => {
     const newUrl = e.currentTarget.value;
-    const fileExt = checkDocStyle(newUrl);
+    const fileExt = formatFileName(newUrl);
 
-    if (fileExt === 'wsdl' || fileExt.includes('?WSDL')) {
+    if (fileExt === 'wsdl' || fileExt.includes('?wsdl')) {
       setConnectorTemplateId('soap-connector-template');
     }
 
@@ -128,9 +127,9 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
    * Callback for when one or more file uploads have been accepted.
    */
   const onUploadAccepted = (files: File[]): void => {
-    const fileExt = checkDocStyle(files[0].name);
+    const fileExt = formatFileName(files[0].name);
 
-    if (fileExt === 'wsdl' || fileExt.includes('?WSDL')) {
+    if (fileExt === 'wsdl' || fileExt.includes('?wsdl')) {
       setConnectorTemplateId('soap-connector-template');
     }
     const reader = new FileReader();
@@ -175,7 +174,7 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
       return !isValidUrl(url);
     }
     return false;
-  }
+  };
 
   return (
     <Stack
