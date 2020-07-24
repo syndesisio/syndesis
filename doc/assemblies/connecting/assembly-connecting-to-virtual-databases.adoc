@@ -39,9 +39,7 @@ After you create a virtual database in {prodname}, you can use {prodname} tools 
 * The data virtualization UI was enabled during installation. 
 
 ifeval::["{location}" == "downstream"]
-For {prodname} on OCP installations, see 
-link:{LinkFuseOnlineOCPInstallationGuide}#enabling-data-virtualization_install[Enabling data virtualization in {prodname} on OCP] 
-in the {NameOfFuseOnlineOCPInstallationGuide}. 
+For {prodname} on OCP installations, see the link:{LinkFuseOnlineOnOCP}#descriptions-of-custom-resource-attributes-that-configure-fuse-online_install[Descriptions of custom resource attributes that configure {prodname}] section in _{NameOfFuseOnlineOnOCPGuide}_.
 endif::[]
 
 include::../../modules/connecting/proc-vdbs-creating.adoc[leveloffset=+1]
