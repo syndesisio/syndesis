@@ -32,7 +32,7 @@ spec:
               syndesis-db has disappeared from Prometheus target discovery.
             sop_url: https://github.com/syndesisio/syndesis/blob/master/doc/managing_environments/topics/alerting_sop.adoc#fuseonlinepostgresexporterdown
           expr: >
-            absent(up{job="syndesis-db"}) == 1
+            absent(up{job=\"syndesis-db\"} == 1)
           for: 5m
           labels:
             severity: critical
