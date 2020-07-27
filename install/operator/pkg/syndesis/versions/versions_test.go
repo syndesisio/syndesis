@@ -282,9 +282,11 @@ func Test_syndesisAPI_v1alpha1ToV1beta1(t *testing.T) {
 								IntegrationLimit:              il,
 								IntegrationStateCheckInterval: ici,
 								ManagementURLFor3scale:        "ManagementURLFor3scale",
-								MavenRepositories: map[string]string{
-									"repo1": "repo1url",
-									"repo2": "repo2url",
+								Maven: v1beta1.MavenConfiguration{
+									Repositories: map[string]string{
+										"repo1": "repo1url",
+										"repo2": "repo2url",
+									},
 								},
 							},
 							Resources: v1beta1.Resources{Memory: "500m"},

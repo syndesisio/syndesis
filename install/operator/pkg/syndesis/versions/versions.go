@@ -199,9 +199,9 @@ func (api syndesisAPI) v1alpha1ToV1beta1() error {
 
 		// Migrate maven repositories
 		if len(api.v1alpha1.Spec.MavenRepositories) != 0 {
-			api.v1beta1.Spec.Components.Server.Features.MavenRepositories = map[string]string{}
+			api.v1beta1.Spec.Components.Server.Features.Maven.Repositories = map[string]string{}
 			for k, v := range api.v1alpha1.Spec.MavenRepositories {
-				api.v1beta1.Spec.Components.Server.Features.MavenRepositories[k] = v
+				api.v1beta1.Spec.Components.Server.Features.Maven.Repositories[k] = v
 			}
 		}
 

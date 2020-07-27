@@ -591,11 +591,22 @@ spec:
                           managementUrlFor3scale:
                             description: 3scale management URL
                             type: string
-                          mavenRepositories:
-                            additionalProperties:
-                              type: string
-                            description: Set repositories for maven
+                          maven:
+                            description: Maven settings
+                            properties:
+                              append:
+                                description: Should we append new repositories
+                                type: boolean
+                              repositories:
+                                additionalProperties:
+                                  type: string
+                                description: Set repositories for maven
+                                type: object
+                            required:
+                            - append
                             type: object
+                        required:
+                        - maven
                         type: object
                       resources:
                         properties:
