@@ -113,13 +113,22 @@
             value: "syndesis-operator"
           - name: DEV_SUPPORT
             value: "{{.DevSupport}}"
+          volumeMounts:
+          - name: syndesis-operator-data
+            mountPath: /data
         initContainers:
         - command:
           - bash
           - -c
-          - postgres -V
+          - "postgres -V > /data/postgresql.txt"
           image: '{{.DatabaseImage}}'
           name: postgres-version
+          volumeMounts:
+          - name: syndesis-operator-data
+            mountPath: /data
+        volumes:
+        - name: syndesis-operator-data
+          emptyDir: {}
     triggers:
     - imageChangeParams:
         automatic: true

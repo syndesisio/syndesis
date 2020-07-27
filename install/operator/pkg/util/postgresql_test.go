@@ -95,7 +95,11 @@ func Test_PostgreSQLVersionAt(t *testing.T) {
 		if err != nil {
 			t.Error(err)
 		}
-		version, err := PostgreSQLVersionAt("syndesis", "password", "syndesis", "localhost", port.Int())
+
+		url := fmt.Sprintf("postgresql://localhost:%s", port)
+
+		version, err := PostgreSQLVersionAt("syndesis", "password", "syndesis", url)
+
 		if err != nil {
 			t.Fatalf("an error '%s' was not expected when fetching version from the database", err)
 		}
