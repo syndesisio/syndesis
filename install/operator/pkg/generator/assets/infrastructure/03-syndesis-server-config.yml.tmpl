@@ -91,6 +91,11 @@
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
+{{- if .Syndesis.Components.Server.Features.AdditionalMavenArguments}}
+        additionalMavenArguments: "--strict-checksums {{ .Syndesis.Components.Server.Features.AdditionalMavenArguments }}"
+{{- else}}
+        additionalMavenArguments: "--strict-checksums"
+{{- end}}        
         integrationLivenessProbeInitialDelaySeconds: 120
       dao:
         kind: jsondb
