@@ -1755,7 +1755,7 @@
               },
               "configuredProperties": {
                 "contextPath": "test-webhook",
-                "errorResponseCodes": "{}",
+                "errorResponseCodes": "{\"SERVER_ERROR\":\"500\"}",
                 "httpResponseCode": "200",
                 "returnBody": "true"
               },
