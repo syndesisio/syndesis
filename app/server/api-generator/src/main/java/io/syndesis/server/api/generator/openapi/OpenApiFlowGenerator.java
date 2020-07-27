@@ -278,7 +278,7 @@ public abstract class OpenApiFlowGenerator<T extends OasDocument, O extends OasO
             .connection(connection)
             .stepKind(StepKind.endpoint)
             .putConfiguredProperty(HTTP_RESPONSE_CODE_PROPERTY, getResponseCode(operation))
-            .putConfiguredProperty(ERROR_RESPONSE_BODY, "false")
+            .putConfiguredProperty(ERROR_RESPONSE_BODY, "true")
             .putConfiguredProperty(ERROR_RESPONSE_CODES_PROPERTY, "{}")
             .putMetadata("configured", "true")
             .build();
