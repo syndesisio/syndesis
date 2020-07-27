@@ -504,6 +504,7 @@ func getConfigLiteral() *Config {
 						DeployIntegrations:            true,
 						TestSupport:                   false,
 						OpenShiftMaster:               "https://localhost:8443",
+						AdditionalMavenArguments:      "-Daaaaa=bbbbb",
 						Maven: MavenConfiguration{
 							Append: false,
 							Repositories: map[string]string{
