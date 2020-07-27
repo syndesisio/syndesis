@@ -81,6 +81,7 @@ Syndesis:
                 TestSupport: false
                 OpenShiftMaster: "https://localhost:8443"
                 ManagementUrlFor3scale: ""
+                AdditionalMavenArguments: "-Daaaaa=bbbbb"
                 MavenRepositories:
                     central: "https://repo.maven.apache.org/maven2/"
                     repo-02-redhat-ga: "https://maven.repository.redhat.com/ga/"

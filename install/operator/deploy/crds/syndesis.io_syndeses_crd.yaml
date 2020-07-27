@@ -545,6 +545,9 @@ spec:
                               type: string
                             description: Set repositories for maven
                             type: object
+                          additionalMavenArguments:
+                            description: Additional maven options to be used in integration builds
+                            type: string
                         type: object
                       resources:
                         properties:

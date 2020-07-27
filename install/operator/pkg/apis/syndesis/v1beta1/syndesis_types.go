@@ -189,6 +189,9 @@ type ServerFeatures struct {
 
 	// 3scale management URL
 	ManagementURLFor3scale string `json:"managementUrlFor3scale,omitempty"`
+
+	// additional maven options to be used in integration builds
+	AdditionalMavenArguments string `json:"additionalMavenArguments,omitempty"`
 }
 
 type AddonsSpec struct {
