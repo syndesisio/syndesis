@@ -190,6 +190,7 @@ type ServerFeatures struct {
 	TestSupport                   bool               // Enables test-support endpoint on backend API
 	OpenShiftMaster               string             // Public OpenShift master address
 	ManagementUrlFor3scale        string             // 3scale management URL
+	AdditionalMavenArguments      string             // User can set extra maven options
 	Maven                         MavenConfiguration // Maven settings
 }
 
