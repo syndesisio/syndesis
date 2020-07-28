@@ -84,6 +84,10 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
     return regexp.test(toCheck);
   };
 
+  const isWsdlFile = (fileExt: string): boolean => {
+    return fileExt === 'wsdl' || fileExt.includes('?wsdl');
+  };
+
   /**
    * Formats file extension
    * @param fileName
@@ -104,7 +108,7 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
     const newUrl = e.currentTarget.value;
     const fileExt = formatFileName(newUrl);
 
-    if (fileExt === 'wsdl' || fileExt.includes('?wsdl')) {
+    if (isWsdlFile(fileExt)) {
       setConnectorTemplateId('soap-connector-template');
     }
 
@@ -129,7 +133,7 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
   const onUploadAccepted = (files: File[]): void => {
     const fileExt = formatFileName(files[0].name);
 
-    if (fileExt === 'wsdl' || fileExt.includes('?wsdl')) {
+    if (isWsdlFile(fileExt)) {
       setConnectorTemplateId('soap-connector-template');
     }
     const reader = new FileReader();
