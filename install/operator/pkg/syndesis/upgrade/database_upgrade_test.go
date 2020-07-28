@@ -31,7 +31,10 @@ import (
 	"go.uber.org/zap"
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	runtime "k8s.io/apimachinery/pkg/runtime"
+	cgofake "k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/kubernetes/scheme"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
@@ -138,6 +141,27 @@ func TestShouldRunOnlyWhenTargetVersionIsNewerThanCurrent(t *testing.T) {
 	}
 }
 
+//
+// Provides a wrapper client that overrides the Create function, allowing
+// objects that have been requested to be created to be manipulated by the
+// test before they are actually created in the fake client.
+//
+type EvtFakeRuntimeClient struct {
+	client.Client
+}
+
+func (evt EvtFakeRuntimeClient) Create(ctx context.Context, runtimeObj runtime.Object, opts ...client.CreateOption) error {
+	if dep, ok := runtimeObj.(*appsv1.Deployment); ok {
+		//
+		// Fake the creation of a replica on the create db-upgrade deployment
+		//
+		dep.Status.Replicas = 1
+		dep.Status.ReadyReplicas = 1
+	}
+
+	return evt.Client.Create(ctx, runtimeObj)
+}
+
 func TestRunDatabaseUpgrade(t *testing.T) {
 	configuration.TemplateConfig = "../../../build/conf/config-test.yaml"
 
@@ -155,8 +179,14 @@ func TestRunDatabaseUpgrade(t *testing.T) {
 			ReadyReplicas: 1,
 		},
 	})
+
+	evtClient := EvtFakeRuntimeClient{cl}
+
 	clientTools := syntesting.FakeClientTools()
-	clientTools.SetRuntimeClient(cl)
+	clientTools.SetRuntimeClient(evtClient)
+	apiClient := cgofake.NewSimpleClientset()
+	clientTools.SetApiClient(apiClient)
+
 	u := databaseUpgrade{
 		step: step{
 			log:         zapr.NewLogger(zap.NewNop()),
