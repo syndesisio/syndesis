@@ -100,33 +100,6 @@ spec:
                     type: object
                   imagePrefix:
                     type: string
-                  komodo:
-                    properties:
-                      imagePrefix:
-                        type: string
-                      registry:
-                        type: string
-                      resources:
-                        properties:
-                          limits:
-                            additionalProperties:
-                              type: string
-                            description: 'Limits describes the maximum amount of compute
-                              resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                            type: object
-                          requests:
-                            additionalProperties:
-                              type: string
-                            description: 'Requests describes the minimum amount of
-                              compute resources required. If Requests is omitted for
-                              a container, it defaults to Limits if that is explicitly
-                              specified, otherwise to an implementation-defined value.
-                              More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                            type: object
-                        type: object
-                      tag:
-                        type: string
-                    type: object
                   meta:
                     properties:
                       imagePrefix:
@@ -351,16 +324,6 @@ spec:
                     properties:
                       enabled:
                         type: boolean
-                    type: object
-                  dv:
-                    properties:
-                      enabled:
-                        type: boolean
-                      resources:
-                        properties:
-                          memory:
-                            type: string
-                        type: object
                     type: object
                   jaeger:
                     properties:

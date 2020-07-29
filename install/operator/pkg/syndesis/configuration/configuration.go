@@ -206,7 +206,6 @@ type AddonsSpec struct {
 	Ops       OpsConfiguration
 	Todo      TodoConfiguration
 	Knative   KnativeConfiguration
-	DV        DvConfiguration
 	CamelK    CamelKConfiguration
 	PublicApi PublicApiConfiguration
 }
@@ -260,16 +259,6 @@ type TodoConfiguration struct {
 
 func (t TodoConfiguration) Name() string {
 	return "todo"
-}
-
-type DvConfiguration struct {
-	Image string // Docker image for dv
-	AddonConfiguration
-	Resources Resources
-}
-
-func (dv DvConfiguration) Name() string {
-	return "dv"
 }
 
 type KnativeConfiguration struct {
@@ -340,7 +329,6 @@ func GetAddonsInfo(configuration Config) []AddonInfo {
 	return []AddonInfo{
 		configuration.Syndesis.Addons.Jaeger,
 		configuration.Syndesis.Addons.Ops,
-		configuration.Syndesis.Addons.DV,
 		configuration.Syndesis.Addons.CamelK,
 		configuration.Syndesis.Addons.Knative,
 		configuration.Syndesis.Addons.PublicApi,
@@ -601,7 +589,6 @@ func (config *Config) setConfigFromEnv() error {
 	imgEnv := Config{
 		Syndesis: SyndesisConfig{
 			Addons: AddonsSpec{
-				DV:     DvConfiguration{Image: os.Getenv("RELATED_IMAGE_DV")},
 				CamelK: CamelKConfiguration{Image: os.Getenv("RELATED_IMAGE_CAMELK")},
 				Todo:   TodoConfiguration{Image: os.Getenv("RELATED_IMAGE_TODO")},
 			},

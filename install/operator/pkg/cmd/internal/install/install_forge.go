@@ -90,8 +90,6 @@ const (
 	EnvMaxIntegrationsPerUser        SyndesisEnvVar = "MAX_INTEGRATIONS_PER_USER"
 	EnvIntegrationStateCheckInterval SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
 	EnvSarNamespace                  SyndesisEnvVar = "SAR_PROJECT"
-	EnvKomodoMemoryLimit             SyndesisEnvVar = "KOMODO_MEMORY_LIMIT"
-	EnvDatavirtEnabled               SyndesisEnvVar = "DATAVIRT_ENABLED"
 
 	EnvUpgradeVolumeCapacity  SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
 	EnvManagementUrlFor3scale SyndesisEnvVar = "OPENSHIFT_MANAGEMENT_URL_FOR3SCALE"
@@ -107,7 +105,6 @@ const (
 	EnvPrometheusImage     SyndesisEnvVar = "FUSE_PROMETHEUS_IMAGE"
 	EnvFuseDBImage         SyndesisEnvVar = "FUSE_DB_IMAGE"
 	EnvFuseDBExporterImage SyndesisEnvVar = "FUSE_DB_EXPORTER_IMAGE"
-	EnvFuseDVImage         SyndesisEnvVar = "FUSE_DV_IMAGE"
 )
 
 //
@@ -143,8 +140,6 @@ var allTemplateParams = map[SyndesisEnvVar]ConfigSpec{
 	EnvMaxIntegrationsPerUser:        {Value: "1", Required: true, Description: "Maximum number of integrations single user can create"},
 	EnvIntegrationStateCheckInterval: {Value: "60", Required: true, Description: "Interval for checking the state of the integrations"},
 	EnvSarNamespace:                  {Required: true, Description: "The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation"},
-	EnvKomodoMemoryLimit:             {Value: "1024Mi", Required: true, Description: "Maximum amount of memory the data virtualization service might use"},
-	EnvDatavirtEnabled:               {Value: "0", Required: true, Description: "Set to 0 to disable data virtualization, set to 1 to enable data virtualization"},
 	EnvControllersIntegrationEnabled: {Value: "true", Description: "Should deployment of integrations be enabled?"},
 	EnvManagementUrlFor3scale:        {Value: "", Description: "Url to 3scale for exposing services"},
 
@@ -156,7 +151,6 @@ var allTemplateParams = map[SyndesisEnvVar]ConfigSpec{
 	EnvPrometheusImage:     {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Prometheus image and tag"},
 	EnvFuseDBImage:         {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Database image and tag"},
 	EnvFuseDBExporterImage: {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Database Exporter image and tag"},
-	EnvFuseDVImage:         {Value: EMPTY_FIELD, Required: true, Description: "The Fuse DV image and tag"},
 }
 
 func (cs ConfigSpec) From() string {
@@ -200,7 +194,6 @@ func (o *Install) installForge() error {
 	components.Prometheus.Image = retargetImage(EnvPrometheusImage, &components.Prometheus.Image)
 	components.Database.Image = retargetImage(EnvFuseDBImage, &components.Database.Image)
 	components.Database.Exporter.Image = retargetImage(EnvFuseDBExporterImage, &components.Database.Exporter.Image)
-	synConf.Addons.DV.Image = retargetImage(EnvFuseDVImage, &synConf.Addons.DV.Image)
 
 	// Fix Secrets
 	components.Database.User = convertToParam(string(EnvPostgresqlUser))
@@ -274,8 +267,6 @@ func (o *Install) installForge() error {
 				configuration.Syndesis.Addons.Jaeger.Enabled = true
 			case "ops":
 				configuration.Syndesis.Addons.Ops.Enabled = true
-			case "dv":
-				configuration.Syndesis.Addons.DV.Enabled = true
 			case "camelk":
 				configuration.Syndesis.Addons.CamelK.Enabled = true
 			case "knative":
@@ -386,15 +377,6 @@ func fixHardcodedExceptions(key string, value interface{}) interface{} {
 
 	if value == "syndesis-s2i:latest" {
 		return convertToParam(string(EnvFuseS2iImage))
-	}
-
-	return value
-}
-
-func fixDataVirt(value interface{}) interface{} {
-	if dvMap, ok := value.(map[string]interface{}); ok {
-		dvMap["enabled"] = convertToParam(string(EnvDatavirtEnabled))
-		return dvMap
 	}
 
 	return value
@@ -521,15 +503,6 @@ func processMap(content map[string]interface{}) error {
 	}
 
 	for key, value := range content {
-		//
-		// Really hacky but little choice
-		// Datavirt has its own little map that contains
-		// enabled key on its own
-		//
-		if key == "datavirt" {
-			fixDataVirt(value)
-			continue
-		}
 
 		status, value := analyzeType(value)
 		if status > 0 {

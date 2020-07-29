@@ -196,7 +196,6 @@ type AddonsSpec struct {
 	Ops       AddonSpec              `json:"ops,omitempty"`
 	Todo      AddonSpec              `json:"todo,omitempty"`
 	Knative   AddonSpec              `json:"knative,omitempty"`
-	DV        DvConfiguration        `json:"dv,omitempty"`
 	CamelK    AddonSpec              `json:"camelk,omitempty"`
 	PublicApi PublicApiConfiguration `json:"publicApi,omitempty"`
 }
@@ -216,11 +215,6 @@ type JaegerConfiguration struct {
 
 type AddonSpec struct {
 	Enabled bool `json:"enabled,omitempty"`
-}
-
-type DvConfiguration struct {
-	Enabled   bool      `json:"enabled,omitempty"`
-	Resources Resources `json:"resources,omitempty"`
 }
 
 type PublicApiConfiguration struct {
