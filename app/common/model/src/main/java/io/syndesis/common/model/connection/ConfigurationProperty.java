@@ -18,14 +18,11 @@ package io.syndesis.common.model.connection;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.Ordered;
 import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.connection.WithDynamicProperties.ActionPropertySuggestion;
-
 import org.immutables.value.Value;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConfigurationProperty.Builder.class)
@@ -118,6 +115,62 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
     Boolean getMultiple();
 
     String getExtendedProperties();
+
+   Optional<ConfigurationProperty.ArrayDefinition> getArrayDefinition();
+
+   Optional<ConfigurationProperty.ArrayDefinitionOptions> getArrayDefinitionOptions();
+
+    @Value.Immutable
+    @JsonDeserialize(builder = ConfigurationProperty.ArrayDefinition.Builder.class)
+    interface ArrayDefinition {
+
+        final class Builder extends ImmutableArrayDefinition.Builder {
+            public static ConfigurationProperty.ArrayDefinition of(final ArrayDefinitionElement key,
+                                                                   final ArrayDefinitionElement value) {
+                return new ConfigurationProperty.ArrayDefinition.Builder()
+                           .key(key).value(value).build();
+            }
+        }
+
+        ArrayDefinitionElement key();
+
+        ArrayDefinitionElement value();
+    }
+
+    @Value.Immutable
+    @JsonDeserialize(builder = ConfigurationProperty.ArrayDefinitionElement.Builder.class)
+    interface ArrayDefinitionElement {
+
+        final class Builder extends ImmutableArrayDefinitionElement.Builder {
+            public static ConfigurationProperty.ArrayDefinitionElement of(final String displayName,
+                                                                   final String type) {
+                return new ConfigurationProperty.ArrayDefinitionElement.Builder()
+                           .displayName(displayName).type(type).build();
+            }
+        }
+
+        String displayName();
+
+        String type();
+    }
+
+    @Value.Immutable
+    @JsonDeserialize(builder = ConfigurationProperty.ArrayDefinitionOptions.Builder.class)
+    interface ArrayDefinitionOptions {
+
+        final class Builder extends ImmutableArrayDefinitionOptions.Builder {
+            public static ConfigurationProperty.ArrayDefinitionOptions of(
+                        final String i18nAddElementText,
+                        final Integer minElements) {
+                return new ConfigurationProperty.ArrayDefinitionOptions.Builder()
+                           .i18nAddElementText(i18nAddElementText).minElements(minElements).build();
+            }
+        }
+
+        String i18nAddElementText();
+
+        Integer minElements();
+    }
 
     default boolean raw() {
         final Boolean value = getRaw();
