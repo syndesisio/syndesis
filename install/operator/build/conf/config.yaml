@@ -64,7 +64,7 @@ Syndesis:
             Name: "syndesis"
             User: "syndesis"
             URL: "postgresql://syndesis-db:5432/syndesis?sslmode=disable"
-            Image: "centos/postgresql-96-centos7"
+            Image: "centos/postgresql-10-centos7"
             Exporter:
                 Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"
             Resources:

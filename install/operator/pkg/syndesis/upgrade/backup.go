@@ -33,7 +33,7 @@ type backup struct {
 
 func newBackup(base step, s *v1beta1.Syndesis) (*backup, error) {
 
-	bkp, err := sbackup.NewBackup(base.context, nil, s,
+	bkp, err := sbackup.NewBackup(base.context, base.clientTools, s,
 		strings.Join([]string{"/tmp/", strconv.FormatInt(time.Now().Unix(), 10)}, ""))
 	if err != nil {
 		return nil, err

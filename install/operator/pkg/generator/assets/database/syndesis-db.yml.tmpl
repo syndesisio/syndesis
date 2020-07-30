@@ -232,10 +232,6 @@
             value: {{.Syndesis.Components.Database.Name}}
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
             value: {{.Syndesis.Components.Database.SampledbPassword}}
-{{- if .DatabaseNeedsUpgrade}}
-          - name: POSTGRESQL_UPGRADE
-            value: copy
-{{- end}}
           image: '{{ .Syndesis.Components.Database.Image }}'
           imagePullPolicy: IfNotPresent
           lifecycle:
