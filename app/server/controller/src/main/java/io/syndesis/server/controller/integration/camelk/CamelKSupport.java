@@ -84,8 +84,8 @@ public final class CamelKSupport {
 
     public static final String CAMEL_K_INTEGRATION_CRD_NAME = "integrations.camel.apache.org";
     public static final String CAMEL_K_INTEGRATION_CRD_GROUP = "camel.apache.org";
-    public static final String CAMEL_K_INTEGRATION_CRD_APIVERSION = "camel.apache.org/v1alpha1";
-    public static final String CAMEL_K_INTEGRATION_CRD_VERSION = "v1alpha1";
+    public static final String CAMEL_K_INTEGRATION_CRD_APIVERSION = "camel.apache.org/v1";
+    public static final String CAMEL_K_INTEGRATION_CRD_VERSION = "v1";
 
     public static final CustomResourceDefinition CAMEL_K_INTEGRATION_CRD = new CustomResourceDefinitionBuilder()
             .withApiVersion(CAMEL_K_INTEGRATION_CRD_APIVERSION)
