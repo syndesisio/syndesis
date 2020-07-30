@@ -245,54 +245,51 @@ do_operator() {
         args="$args --source-gen ${source_gen}"
     fi
 
-    if [ $(hasflag -i --image --docker) ]; then
-        local BUILD_ARGS=""
-        if [ -n "${image}" ]; then
-          BUILD_ARGS="${BUILD_ARGS} --image-name=${image}"
-        fi
-
-        if [ -n "${tag}" ]; then
-          BUILD_ARGS="${BUILD_ARGS} --image-tag=${tag}"
-        fi
-
-        local image_build=""
-
-        if [[ $(hasflag --docker) ]]; then
-            image_build="docker"
-        else
-            #
-            # Try and detect the type of platform if any
-            #
-            determine_platform
-
-            if [[ ${IS_OPENSHIFT} == "YES" ]]; then
-                image_build="s2i"
-            else
-                image_build="docker"
-            fi
-        fi
-
-        #
-        # If building to kubernetes we might need a registry to push
-        # the images to (unless using the default of docker.io)
-        # Don't need it for s2i
-        #
-        if [ "$image_build" == "docker" ] && [ $(hasflag --registry) ]; then
-            local registry=$(readopt --registry)
-            BUILD_ARGS="${BUILD_ARGS} --registry ${registry}"
-        fi
-
-        ./build.sh ${args} --image-build="${image_build}" ${BUILD_ARGS}
-
-        check_error $(install_built_operator "${top_dir}/install/operator")
-
-        echo "=============================================================================="
-        echo "Built operator copied to ${OPERATOR_BINARY}."
-        echo "Built ${PLATFORM_DETECT} binary copied to ${PLATFORM_DETECT_BINARY}."
-        echo "=============================================================================="
-    else
-        check_error "ERROR: One of '-i / --image' and/or '--docker' should be specified"
+    if [ -n "${image}" ]; then
+        args="${args} --image-name=${image}"
     fi
+
+    if [ -n "${tag}" ]; then
+        args="${args} --image-tag=${tag}"
+    fi
+
+    local image_build=""
+    if [[ $(hasflag -i --image --docker) ]]; then
+        image_build="docker"
+    else
+        #
+        # Try and detect the type of platform if any
+        #
+        determine_platform
+
+        if [[ ${IS_OPENSHIFT} == "YES" ]]; then
+            image_build="s2i"
+        else
+            image_build="docker"
+        fi
+    fi
+
+    echo "Building mode determined to be ${image_build}"
+    args="--image-build=${image_build} ${args}"
+
+    #
+    # If building to kubernetes we might need a registry to push
+    # the images to (unless using the default of docker.io)
+    # Don't need it for s2i
+    #
+    if [ "${image_build}" == "docker" ] && [ $(hasflag --registry) ]; then
+        local registry=$(readopt --registry)
+        args="${args} --registry ${registry}"
+    fi
+
+    ./build.sh ${args}
+
+    check_error $(install_built_operator "${top_dir}/install/operator")
+
+    echo "=============================================================================="
+    echo "Built operator copied to ${OPERATOR_BINARY}."
+    echo "Built ${PLATFORM_DETECT} binary copied to ${PLATFORM_DETECT_BINARY}."
+    echo "=============================================================================="
 
     popd >/dev/null
 }
