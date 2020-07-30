@@ -19,7 +19,6 @@ import i18n from './i18n';
 import { ApiClientConnectorsModule } from './modules/apiClientConnectors';
 import { ConnectionsModule } from './modules/connections';
 import { DashboardModule } from './modules/dashboard';
-import { DataModule } from './modules/data';
 import { ExtensionsModule } from './modules/extensions';
 import { IntegrationsModule } from './modules/integrations';
 import routes from './modules/routes';
@@ -109,11 +108,6 @@ ReactDOM.render(
                                         ],
                                         label: 'Customizations',
                                       } as IAppRouteWithChildrens,
-                                      {
-                                        component: DataModule,
-                                        label: 'Data',
-                                        to: routes.data.root,
-                                      } as IAppRoute,
                                       {
                                         component: SettingsModule,
                                         label: 'Settings',

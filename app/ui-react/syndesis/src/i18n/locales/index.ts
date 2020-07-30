@@ -10,9 +10,6 @@ import connectionsRu from '../../modules/connections/locales/connections-transla
 import dashboardEn from '../../modules/dashboard/locales/dashboard-translations.en.json';
 import dashboardIt from '../../modules/dashboard/locales/dashboard-translations.it.json';
 import dashboardRu from '../../modules/dashboard/locales/dashboard-translations.ru.json';
-import dataEn from '../../modules/data/locales/data-translations.en.json';
-import dataIt from '../../modules/data/locales/data-translations.it.json';
-import dataRu from '../../modules/data/locales/data-translations.ru.json';
 import extensionsEn from '../../modules/extensions/locales/extensions-translations.en.json';
 import extensionsIt from '../../modules/extensions/locales/extensions-translations.it.json';
 import extensionsRu from '../../modules/extensions/locales/extensions-translations.ru.json';
@@ -55,11 +52,6 @@ ru.ru.modules.extensions = extensionsRu;
 en.en.modules.dashboard = dashboardEn;
 it.it.modules.dashboard = dashboardIt;
 ru.ru.modules.dashboard = dashboardRu;
-
-// data
-en.en.modules.data = dataEn;
-it.it.modules.data = dataIt;
-ru.ru.modules.data = dataRu;
 
 // integrations
 en.en.modules.integrations = integrationsEn;
