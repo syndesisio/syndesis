@@ -1,7 +1,7 @@
 #
 # From `kamel install -o yaml`
 #
-- apiVersion: apiextensions.k8s.io/v1
+- apiVersion: apiextensions.k8s.io/v1beta1
   kind: CustomResourceDefinition
   metadata:
     labels:
@@ -25,7 +25,14 @@
     subresources:
       status: {}
     version: v1
-- apiVersion: apiextensions.k8s.io/v1
+    versions:
+      - name: v1
+        served: true
+        storage: true
+      - name: v1alpha1
+        served: true
+        storage: false
+- apiVersion: apiextensions.k8s.io/v1beta1
   kind: CustomResourceDefinition
   metadata:
     labels:
@@ -57,7 +64,14 @@
     subresources:
       status: {}
     version: v1
-- apiVersion: apiextensions.k8s.io/v1
+    versions:
+      - name: v1
+        served: true
+        storage: true
+      - name: v1alpha1
+        served: true
+        storage: false
+- apiVersion: apiextensions.k8s.io/v1beta1
   kind: CustomResourceDefinition
   metadata:
     labels:
@@ -66,13 +80,17 @@
   spec:
     additionalPrinterColumns:
       - JSONPath: .status.phase
-        description: The Integration phase
+        description: The integration phase
         name: Phase
         type: string
       - JSONPath: .status.kit
-        description: The IntegrationKit to use
+        description: The integration kit
         name: Kit
         type: string
+      - JSONPath: .status.replicas
+        description: The number of pods
+        name: Replicas
+        type: integer
     group: camel.apache.org
     names:
       kind: Integration
@@ -83,9 +101,19 @@
       singular: integration
     scope: Namespaced
     subresources:
+      scale:
+        specReplicasPath: .spec.replicas
+        statusReplicasPath: .status.replicas
       status: {}
     version: v1
-- apiVersion: apiextensions.k8s.io/v1
+    versions:
+      - name: v1
+        served: true
+        storage: true
+      - name: v1alpha1
+        served: true
+        storage: false
+- apiVersion: apiextensions.k8s.io/v1beta1
   kind: CustomResourceDefinition
   metadata:
     labels:
@@ -93,9 +121,13 @@
     name: camelcatalogs.camel.apache.org
   spec:
     additionalPrinterColumns:
-      - JSONPath: .spec.version
-        description: The Catalog version
-        name: Version
+      - JSONPath: .spec.runtime.version
+        description: The Camel K Runtime version
+        name: Runtime Version
+        type: string
+      - JSONPath: .spec.runtime.provider
+        description: The Camel K Runtime provider
+        name: Runtime Provider
         type: string
     group: camel.apache.org
     names:
@@ -109,7 +141,14 @@
     subresources:
       status: {}
     version: v1
-- apiVersion: apiextensions.k8s.io/v1
+    versions:
+      - name: v1
+        served: true
+        storage: true
+      - name: v1alpha1
+        served: true
+        storage: false
+- apiVersion: apiextensions.k8s.io/v1beta1
   kind: CustomResourceDefinition
   metadata:
     labels:
@@ -121,9 +160,13 @@
         description: The build phase
         name: Phase
         type: string
+      - JSONPath: .metadata.creationTimestamp
+        description: The time at which the build was created
+        name: Age
+        type: date
       - JSONPath: .status.startedAt
         description: The time at which the build was last (re-)started
-        name: Age
+        name: Started
         type: date
       - JSONPath: .status.duration
         description: The build last execution duration
@@ -143,3 +186,10 @@
     subresources:
       status: {}
     version: v1
+    versions:
+      - name: v1
+        served: true
+        storage: true
+      - name: v1alpha1
+        served: true
+        storage: false
