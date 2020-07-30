@@ -49,7 +49,7 @@ require (
 	github.com/operator-framework/operator-marketplace v0.0.0-20200515051804-e0148822df25
 	github.com/operator-framework/operator-sdk v0.0.0-20200428193249-b34ae44ff198 // Not a release but a bump commit aligning with client-go 0.18.2
 	github.com/spf13/afero v1.2.2
-	go.uber.org/zap v1.14.1
+	go.uber.org/zap v1.15.0
 	sigs.k8s.io/controller-runtime v0.6.0
 )
 
