@@ -36,17 +36,19 @@ require (
 	k8s.io/code-generator v0.18.2
 	k8s.io/gengo v0.0.0-20200114144118-36b2048a9120
 	k8s.io/kube-openapi v0.0.0-20200121204235-bf4fb3bd569c
-	k8s.io/kubectl v0.18.2
 	sigs.k8s.io/yaml v1.2.0
 )
 
 require (
 	github.com/coreos/prometheus-operator v0.39.0 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
+	github.com/go-logr/zapr v0.1.1
 	github.com/operator-framework/api v0.3.5
 	github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200521062108-408ca95d458f // Tag 0.15.1
 	github.com/operator-framework/operator-marketplace v0.0.0-20200515051804-e0148822df25
 	github.com/operator-framework/operator-sdk v0.0.0-20200428193249-b34ae44ff198 // Not a release but a bump commit aligning with client-go 0.18.2
+	github.com/spf13/afero v1.2.2
+	go.uber.org/zap v1.14.1
 	sigs.k8s.io/controller-runtime v0.6.0
 )
 

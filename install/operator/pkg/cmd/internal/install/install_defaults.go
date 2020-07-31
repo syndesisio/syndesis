@@ -1,3 +1,3 @@
 package install
 
-const defaultDatabaseImage = "centos/postgresql-96-centos7"
+const defaultDatabaseImage = "centos/postgresql-10-centos7"
