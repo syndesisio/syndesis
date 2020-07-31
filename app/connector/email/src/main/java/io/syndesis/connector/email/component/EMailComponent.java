@@ -160,6 +160,13 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
         return (t, u) -> fn.get();
     }
 
+    @Override
+    protected void enrichOptions(Map<String, Object> options) {
+        // Since Camel 3.2 we will need to include context path
+        // that will be recovered dynamically during initialization
+        options.putAll(this.bundleOptions());
+    }
+
     private Map<String, Object> bundleOptions() {
         Map<String, Object> options = new HashMap<>();
         options.compute(PROTOCOL, value(this::getProtocol));
@@ -223,6 +230,10 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
 
         // Decode mime headers like the subject from Quoted-Printable encoding to normal text
         configuration.setMimeDecodeHeaders(true);
+
+        // As we are using virtual scheme, we must tell configuration to ignore it
+        // setting it to true would change the configuration protocol back to the virtual scheme
+        configuration.setIgnoreUriScheme(true);
 
         MailComponent component = new MailComponent(getCamelContext());
         component.setConfiguration(configuration);

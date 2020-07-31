@@ -73,7 +73,7 @@ public class ComponentProxyWithCustomEndpointTest {
                 @Override
                 public void configure() throws Exception {
                     from("direct:start")
-                        .to("my-ftp-proxy")
+                        .to("my-ftp-proxy:localhost")
                         .to("mock:result");
                 }
             });

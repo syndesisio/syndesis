@@ -8,6 +8,7 @@ integration-test::usage() {
     cat - <<EOT
 -t  --test <test_name>          The test to run
 -c  --clean                     Run clean builds (mvn clean)
+    --runtime <name>            Integration runtime to use (spring-boot or camel-k)
     --release <version>         Syndesis version to use
     --image <tag>               Syndesis S2i image tag to use
     --logging                   Container logging enabled
@@ -43,6 +44,11 @@ maven_args() {
     local release_version="$(readopt --release)"
     if [ -n "${release_version}" ]; then
         args="$args -Dsyndesis.version=${release_version}"
+    fi
+
+    local integration_runtime="$(readopt --runtime)"
+    if [ -n "${integration_runtime}" ]; then
+        args="$args -Dsyndesis.integration.runtime=${integration_runtime}"
     fi
 
     local image_tag="$(readopt --image)"

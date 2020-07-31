@@ -11,9 +11,9 @@ data:
             <activeByDefault>true</activeByDefault>
           </activation>
 
-      {{- if .Syndesis.Components.Server.Features.MavenRepositories}}
+      {{- if .Syndesis.Components.Server.Features.Maven.Repositories}}
           <repositories>
-            {{- range $id, $url := .Syndesis.Components.Server.Features.MavenRepositories}}
+            {{- range $id, $url := .Syndesis.Components.Server.Features.Maven.Repositories}}
               <repository>
                 <id>{{ $id }}</id>
                 <url>{{ $url }}</url>
@@ -28,7 +28,7 @@ data:
             {{- end }}
           </repositories>
           <pluginRepositories>
-            {{- range $id, $url := .Syndesis.Components.Server.Features.MavenRepositories}}
+            {{- range $id, $url := .Syndesis.Components.Server.Features.Maven.Repositories}}
               <pluginRepository>
                 <id>{{ $id }}</id>
                 <url>{{ $url }}</url>

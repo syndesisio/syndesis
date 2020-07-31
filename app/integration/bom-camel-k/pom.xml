@@ -27,9 +27,9 @@
   <packaging>pom</packaging>
 
   <properties>
-    <camel.version>3.1.0</camel.version>
+    <camel.version>3.3.0</camel.version>
     <atlasmap.version>2.0.4</atlasmap.version>
-    <jackson.version>2.10.2</jackson.version>
+    <jackson.version>2.11.1</jackson.version>
     <validation-api.version>2.0.2</validation-api.version>
   </properties>
 

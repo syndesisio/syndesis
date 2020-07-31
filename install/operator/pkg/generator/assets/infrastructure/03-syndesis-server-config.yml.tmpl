@@ -72,10 +72,10 @@
       {{- end}}
         service.name: syndesis-server
 {{- end}}
-{{- if .Syndesis.Components.Server.Features.MavenRepositories}}
+{{- if .Syndesis.Components.Server.Features.Maven.Repositories}}
       maven:
         repositories:
-    {{- range $id, $url := .Syndesis.Components.Server.Features.MavenRepositories}}
+    {{- range $id, $url := .Syndesis.Components.Server.Features.Maven.Repositories}}
           {{ $id }}: {{ $url }}
     {{- end }}
 {{- end}}
@@ -91,6 +91,11 @@
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
+{{- if .Syndesis.Components.Server.Features.AdditionalMavenArguments}}
+        additionalMavenArguments: "--strict-checksums {{ .Syndesis.Components.Server.Features.AdditionalMavenArguments }}"
+{{- else}}
+        additionalMavenArguments: "--strict-checksums"
+{{- end}}        
         integrationLivenessProbeInitialDelaySeconds: 120
       dao:
         kind: jsondb

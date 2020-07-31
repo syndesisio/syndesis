@@ -59,7 +59,7 @@ public class IntegrationRouteLoader implements SourceLoader {
     }
 
     @Override
-    public void load(Runtime runtime, Source source) throws Exception {
+    public Result load(Runtime runtime, Source source) throws Exception {
         if (activityTracker == null) {
             LOGGER.info("Loading ActivityTracker from Camel RuntimeRegistry.");
             activityTracker = runtime.getRegistry().lookupByNameAndType("activityTracker", ActivityTracker.class);
@@ -95,5 +95,6 @@ public class IntegrationRouteLoader implements SourceLoader {
         );
 
         runtime.addRoutes(routeBuilder);
+        return Result.on(routeBuilder);
     }
 }

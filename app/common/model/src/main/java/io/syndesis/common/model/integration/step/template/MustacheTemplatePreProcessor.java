@@ -15,6 +15,7 @@
  */
 package io.syndesis.common.model.integration.step.template;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -167,9 +168,9 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
          * Need to specify the start and end delimiters since we have
          * modified the template symbols.
          */
-        Map<String, Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>(super.getUriParams());
         params.put("startDelimiter", MUSTACHE_OPEN_DELIMITER);
         params.put("endDelimiter", MUSTACHE_CLOSE_DELIMITER);
-        return params;
+        return Collections.unmodifiableMap(params);
     }
 }

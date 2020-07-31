@@ -139,7 +139,7 @@ public class ConnectorStepHandlerTest {
                     );
                 }
                 if (endpoint instanceof ComponentProxyEndpoint) {
-                    assertThat(endpoint.getEndpointUri()).isEqualTo(
+                    assertThat(endpoint.getEndpointUri()).startsWith(
                         "twitter-timeline-0-0"
                     );
                 }

@@ -231,7 +231,9 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
 
     @Override
     public Map<String, Object> getUriParams() {
-        return Collections.emptyMap();
+        // Since Camel 3.3 we must declare explicitly the usage of templates
+        // that are stored in headers
+        return Collections.singletonMap("allowTemplateFromHeader","true");
     }
 
     @Override

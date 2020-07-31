@@ -3,11 +3,6 @@
 # Minimal version for GO
 GO_MIN_VERSION=1.12
 
-# Version of the platform detect binary
-PLATFORM_DETECT="platform-detect"
-PLATFORM_DETECT_BINARY=$HOME/.syndesis/bin/${PLATFORM_DETECT}
-PLATFORM_DETECT_VERSION="0.1.0"
-
 # Var to hold result of detecting platform is openshift
 IS_OPENSHIFT=""
 
@@ -195,6 +190,14 @@ syndesis_config_dir() {
     echo $dir
 }
 
+# bin directory for binaries
+create_bin_dir() {
+  local bin_dir="$(syndesis_config_dir)/bin"
+  mkdir -p "${bin_dir}"
+
+  echo "${bin_dir}"
+}
+
 # Share directory for caching useful files
 create_share_dir() {
   local share_dir="$(syndesis_config_dir)/share"
@@ -248,19 +251,16 @@ has_changes() {
     fi
 }
 
+# The platform-detect constants
+PLATFORM_DETECT="platform-detect"
+PLATFORM_DETECT_BINARY=$(create_bin_dir)/${PLATFORM_DETECT}
+
 #
 # Download `platform-detect` binary
 #
 get_platform_detect_bin() {
-    local version=${1:-"${PLATFORM_DETECT_VERSION}"}
-    local binary="${PLATFORM_DETECT}"
-
-    check_error $(check_for_command "mktemp")
-    check_error $(check_for_command "mkdir")
     check_error $(check_for_command "curl")
     check_error $(check_for_command "tar")
-    check_error $(check_for_command "rm")
-    check_error $(check_for_command "mv")
 
     #
     # If its already downloaded, skip download
@@ -270,48 +270,64 @@ get_platform_detect_bin() {
         return
     fi
 
+    # Make sure the binary path exists
+    local path=$(dirname ${PLATFORM_DETECT_BINARY})
+    if [[ ! -d ${path} ]]; then
+        mkdir -p ${path}
+    fi
+
     #
     # Check for proper operating system
     #
-    local os="linux"
+    local pattern="linux-amd64"
     if $(isMacOs); then
-        os="mac"
+        pattern="darwin-amd64"
     elif $(isWindows); then
-        os="windows"
+        pattern="windows-amd64"
     fi
 
     #
-    # Download from site
+    # Construct the url to get the binary from. Same release tag as operator
     #
-    local config_dir=$(syndesis_config_dir)
-    [ -d ${config_dir}/bin ] || mkdir -p ${config_dir}/bin
-
-    local base_url="https://github.com/syndesisio/syndesis/releases/download/$version"
-    local download_url="${base_url}/${PLATFORM_DETECT}-$version-$os-amd64.tar.gz"
-    local archive=$(mktemp ${config_dir}/${PLATFORM_DETECT}-${version}.tar-XXXX)
-    curl -sL --fail -o ${archive} ${download_url} 2>/dev/null || { check_error "ERROR: Could not download ${PLATFORM_DETECT} from ${download_url}"; }
-
-    #
-    # Extract binary and move to correct name
-    #
-    local tmp_dir=$(mktemp -d ${config_dir}/platform-detect-${version}-XXXX)
-    pushd ${tmp_dir} >/dev/null
-
-    tar xf ${archive} >/dev/null
-    rm ${archive}
-
-    if [ ! -f ./${PLATFORM_DETECT} ]; then
-        check_error "ERROR: Failed to extract ${PLATFORM_DETECT} to ${tmp_dir}/"
+    release_tag="$(readopt --tag)"
+    url=""
+    if [[ -n "$release_tag" ]]; then
+        release_uri="https://api.github.com/repos/syndesisio/syndesis/releases/tags/${release_tag}"
+        url=$(curl -s $release_uri \
+            | ${GREP} browser_download_url \
+            | ${GREP} ${pattern} \
+            | ${GREP} ${PLATFORM_DETECT} \
+            | cut -d '"' -f 4)
+    else
+        # retrieve the last 40 releases and get the latest 2.0 release
+        url=$(curl -s "https://api.github.com/repos/syndesisio/syndesis/releases?per_page=40" \
+            | ${GREP} "download/2" \
+            | ${GREP} browser_download_url \
+            | ${GREP} ${pattern} \
+            | ${GREP} ${PLATFORM_DETECT} \
+            | cut -d '"' -f 4 \
+            | sort -nr \
+            | head -1)
+        release_tag=$(echo $url| awk -F '/' '{print $8}')
     fi
 
-    mv ./${PLATFORM_DETECT} ${PLATFORM_DETECT_BINARY}
+    if [ -z "$url" ]; then
+        echo "ERROR: the ${PLATFORM_DETECT} download URL could not be constructed"
+        return
+    fi
 
-    popd >/dev/null
+    if $(curl -sL ${url} | tar xz -C $(dirname ${PLATFORM_DETECT_BINARY})); then
+        if [ ! -f ${PLATFORM_DETECT_BINARY} ]; then
+            echo "ERROR: Failed to download ${PLATFORM_DETECT} from ${url}"
+            return
+        fi
 
-    #
-    # Clean up temporary directories
-    #
-    [ -n "$tmp_dir" ] && [ -d "$tmp_dir" ] && rm -rf $tmp_dir
+        chmod +x ${PLATFORM_DETECT_BINARY}
+    else
+        echo "ERROR: Unable to download platform-detect from ${url}"
+        return
+    fi
+
     echo ${PLATFORM_DETECT_BINARY}
 }
 
@@ -330,7 +346,7 @@ determine_platform() {
         return
     fi
 
-    local result=$($detect)
+    local result=$("${detect}")
     if [ "$(contains_error "${result}")" == "YES" ]; then
         IS_OPENSHIFT="${result}"
     else
@@ -396,10 +412,12 @@ gnugrep() {
 
     if $(isMacOs); then
 
-      if $(check_for_command "ggrep") -ne "OK" ]; then
-        check_error "ERROR: Please install ggrep on OSX usimg 'brew install grep'"
-      else
+      ggrepCheck=$(check_for_command "ggrep")
+
+      if [[ "$ggrepCheck" == "OK" ]]; then
         GREP=$(which ggrep)
+      else
+        check_error "ERROR: Please install ggrep on OSX using 'brew install grep'"
       fi
 
     else

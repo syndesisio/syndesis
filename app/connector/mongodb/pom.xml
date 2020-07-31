@@ -48,11 +48,22 @@
         <artifactId>de.flapdoodle.embed.process</artifactId>
         <version>2.1.2</version>
       </dependency>
+      <!-- We need to force these managed dependencies -->
+      <dependency>
+       <groupId>org.mongodb</groupId>
+       <artifactId>mongodb-driver-core</artifactId>
+       <version>4.0.1</version>
+     </dependency>
       <dependency>
         <groupId>org.mongodb</groupId>
-        <artifactId>mongo-java-driver</artifactId>
-        <version>${mongodb.version}</version>
+        <artifactId>mongodb-driver-sync</artifactId>
+        <version>4.0.1</version>
       </dependency>
+     <dependency>
+       <groupId>org.mongodb</groupId>
+       <artifactId>bson</artifactId>
+       <version>4.0.1</version>
+     </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -60,6 +71,18 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-mongodb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>mongodb-driver-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>mongodb-driver-sync</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.mongodb</groupId>
+      <artifactId>bson</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
@@ -97,10 +120,6 @@
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.mongodb</groupId>
-      <artifactId>mongo-java-driver</artifactId>
     </dependency>
     <dependency>
       <groupId>com.github.spotbugs</groupId>

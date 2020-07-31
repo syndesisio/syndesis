@@ -239,14 +239,26 @@ create_kube_user() {
             check_error "ERROR: A Certificate Authority key is required to create a new user."
         fi
 
+        set +e
         # Create a key for the user
-        openssl genrsa -out "${key}" 2048
+        local ssl_status
+        ssl_status="$(openssl genrsa -out ${key} 2048 2>&1)"
+        if [ $? -ne 0 ]; then
+          check_error "ERROR: SSL key generation failed: ${ssl_status}"
+        fi
 
         # Create a certificate signing request for the user
-        openssl req -new -key "${key}" -out "${csr}" -subj "/CN=${kuser}/O=syndesis"
+        ssl_status="$(openssl req -new -key ${key} -out ${csr} -subj /CN=${kuser}/O=syndesis 2>&1)"
+        if [ $? -ne 0 ]; then
+          check_error "ERROR: SSL csr generation failed: ${ssl_status}"
+        fi
 
         # Create the certificate by signing it with the certificate authority
-        openssl x509 -req -in "${csr}" -CA "${cacert}" -CAkey "${cakey}" -CAcreateserial -out "${cert}" -days 375
+        ssl_status="$(openssl x509 -req -in ${csr} -CA ${cacert} -CAkey ${cakey} -CAcreateserial -out ${cert} -days 375 2>&1)"
+        if [ $? -ne 0 ]; then
+          check_error "ERROR: SSL certificate signing failed: ${ssl_status}"
+        fi
+        set -e
 
         # Set the credentials
         ${KUBECTL} config set-credentials "${kuser}" --client-certificate="${cert}"  --client-key="${key}" --embed-certs=true

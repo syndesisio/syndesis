@@ -250,7 +250,7 @@ public static SyndesisIntegrationRuntimeContainer integrationContainer = new Syn
                         .descriptor(new ConnectorDescriptor.Builder()
                             .connectorId("timer")
                             .componentScheme("timer")
-                            .putConfiguredProperty("timer-name", "syndesis-timer")
+                            .putConfiguredProperty("timerName", "syndesis-timer")
                             .build())
                         .build())
                     .build(),

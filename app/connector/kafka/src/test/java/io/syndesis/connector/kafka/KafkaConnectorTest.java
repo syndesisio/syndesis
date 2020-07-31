@@ -105,6 +105,6 @@ public class KafkaConnectorTest extends ConnectorTestSupport {
         Optional<Endpoint> endpoint = context.getEndpoints().stream().filter(e -> e instanceof KafkaEndpoint).findFirst();
 
         Assertions.assertThat(endpoint.isPresent()).isTrue();
-        Assertions.assertThat(endpoint.get().getEndpointUri()).isEqualTo("kafka://ciao?brokers=domain%3A1234");
+        Assertions.assertThat(endpoint.get().getEndpointUri()).isEqualTo("kafka://ciao?brokers=domain:1234");
     }
 }

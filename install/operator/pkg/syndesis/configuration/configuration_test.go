@@ -309,8 +309,8 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 						CamelK: CamelKConfiguration{
 							AddonConfiguration: AddonConfiguration{Enabled: true},
 							Image:              "fabric8/s2i-java:3.0-java8",
-							CamelVersion:       "3.1.0",
-							CamelKRuntime:      "1.1.0",
+							CamelVersion:       "3.3.0",
+							CamelKRuntime:      "1.3.0",
 						},
 						PublicAPI: PublicAPIConfiguration{
 							AddonConfiguration: AddonConfiguration{Enabled: true},
@@ -336,6 +336,39 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 			}
 		})
 	}
+}
+
+func Test_MavenSettings(t *testing.T) {
+	c := getConfigLiteral()
+	s := &v1beta1.Syndesis{
+		Spec: v1beta1.SyndesisSpec{
+			Components: v1beta1.ComponentsSpec{
+				Server: v1beta1.ServerConfiguration{
+					Features: v1beta1.ServerFeatures{
+						Maven: v1beta1.MavenConfiguration{
+							Append: false,
+							Repositories: map[string]string{
+								"rep1": "http://rep1",
+								"rep2": "http://rep2",
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	c.setSyndesisFromCustomResource(s)
+	assert.Equal(t, c.Syndesis.Components.Server.Features.Maven.Repositories, s.Spec.Components.Server.Features.Maven.Repositories)
+
+	s.Spec.Components.Server.Features.Maven.Append = true
+	c.Syndesis.Components.Server.Features.Maven.Repositories = map[string]string{"rep0": "http://rep0"}
+	c.setSyndesisFromCustomResource(s)
+	assert.Equal(t, c.Syndesis.Components.Server.Features.Maven.Repositories, map[string]string{
+		"rep0": "http://rep0",
+		"rep1": "http://rep1",
+		"rep2": "http://rep2",
+	})
 }
 
 func Test_generatePasswords(t *testing.T) {
@@ -432,8 +465,8 @@ func getConfigLiteral() *Config {
 				},
 				CamelK: CamelKConfiguration{
 					AddonConfiguration: AddonConfiguration{Enabled: false},
-					CamelVersion:       "3.1.0",
-					CamelKRuntime:      "1.1.0",
+					CamelVersion:       "3.3.0",
+					CamelKRuntime:      "1.3.0",
 					Image:              "fabric8/s2i-java:3.0-java8",
 				},
 				PublicAPI: PublicAPIConfiguration{
@@ -460,10 +493,14 @@ func getConfigLiteral() *Config {
 						DeployIntegrations:            true,
 						TestSupport:                   false,
 						OpenShiftMaster:               "https://localhost:8443",
-						MavenRepositories: map[string]string{
-							"central":           "https://repo.maven.apache.org/maven2/",
-							"repo-02-redhat-ga": "https://maven.repository.redhat.com/ga/",
-							"repo-03-jboss-ea":  "https://repository.jboss.org/nexus/content/groups/ea/",
+						AdditionalMavenArguments:      "-Daaaaa=bbbbb",
+						Maven: MavenConfiguration{
+							Append: false,
+							Repositories: map[string]string{
+								"central":           "https://repo.maven.apache.org/maven2/",
+								"repo-02-redhat-ga": "https://maven.repository.redhat.com/ga/",
+								"repo-03-jboss-ea":  "https://repository.jboss.org/nexus/content/groups/ea/",
+							},
 						},
 					},
 				},

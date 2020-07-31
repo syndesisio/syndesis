@@ -191,13 +191,21 @@ type VolumeOnlyResources struct {
 }
 
 type ServerFeatures struct {
-	IntegrationLimit              int               // Maximum number of integrations single user can create
-	IntegrationStateCheckInterval int               // Interval for checking the state of the integrations
-	DeployIntegrations            bool              // Whether we deploy integrations
-	TestSupport                   bool              // Enables test-support endpoint on backend API
-	OpenShiftMaster               string            // Public OpenShift master address
-	ManagementURLFor3scale        string            // 3scale management URL
-	MavenRepositories             map[string]string // Set repositories for maven
+	IntegrationLimit              int                // Maximum number of integrations single user can create
+	IntegrationStateCheckInterval int                // Interval for checking the state of the integrations
+	DeployIntegrations            bool               // Whether we deploy integrations
+	TestSupport                   bool               // Enables test-support endpoint on backend API
+	OpenShiftMaster               string             // Public OpenShift master address
+	ManagementURLFor3scale        string             // 3scale management URL
+	AdditionalMavenArguments      string             // User can set extra maven options
+	Maven                         MavenConfiguration // Maven settings
+}
+
+type MavenConfiguration struct {
+	// Should we append new repositories
+	Append bool
+	// Set repositories for maven
+	Repositories map[string]string `json:"repositories,omitempty"`
 }
 
 // Addons
@@ -402,6 +410,7 @@ func SecretToEnvVars(secretName string, secretData map[string][]byte, indents in
 		}
 
 		envVars = append(envVars, envVar)
+
 	}
 
 	// Sort the environment variables
@@ -717,6 +726,12 @@ func (config *Config) setSyndesisFromCustomResource(syndesis *v1beta1.Syndesis) 
 	if err := mergo.Merge(&config.Syndesis, c, mergo.WithOverride); err != nil {
 		return err
 	}
+
+	// If specified, we overwrite the maven repositories with cr repositories
+	if len(syndesis.Spec.Components.Server.Features.Maven.Repositories) > 0 && !syndesis.Spec.Components.Server.Features.Maven.Append {
+		config.Syndesis.Components.Server.Features.Maven.Repositories = syndesis.Spec.Components.Server.Features.Maven.Repositories
+	}
+
 	return nil
 }
 
@@ -807,29 +822,37 @@ func getSyndesisEnvVarsFromOpenShiftNamespace(secret *corev1.Secret) (map[string
 }
 
 func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis, syndesisRouteHost string) error {
-	if syndesisRouteHost != "" {
-		consoleLinkName := consoleLinkName(syndesis)
-		consoleLink := &consolev1.ConsoleLink{}
-		err := client.Get(ctx, types.NamespacedName{Name: consoleLinkName}, consoleLink)
-		if err != nil {
-			log.Info(consoleLink.Name)
-			consoleLink = createNamespaceDashboardLink(consoleLinkName, syndesisRouteHost, syndesis)
-			if err := client.Create(ctx, consoleLink); err != nil {
-				log.Error(err, "error creating console link")
-				return err
-			}
-		} else if err == nil && consoleLink != nil {
-			if syndesis.DeletionTimestamp != nil {
-				if err := client.Delete(ctx, consoleLink); err != nil {
-					log.Error(err, "Error deleting console link.")
-				}
-			}
+	if syndesisRouteHost == "" {
+		return nil
+	}
 
-			if err := reconcileConsoleLink(ctx, syndesis, syndesisRouteHost, consoleLink, client); err != nil {
-				return err
+	if !config.ApiServer.ConsoleLink {
+		// Cluster does not support ConsoleLink API
+		return nil
+	}
+
+	consoleLinkName := consoleLinkName(syndesis)
+	consoleLink := &consolev1.ConsoleLink{}
+	err := client.Get(ctx, types.NamespacedName{Name: consoleLinkName}, consoleLink)
+	if err != nil {
+		log.Info(consoleLink.Name)
+		consoleLink = createNamespaceDashboardLink(consoleLinkName, syndesisRouteHost, syndesis)
+		if err := client.Create(ctx, consoleLink); err != nil {
+			log.Error(err, "error creating console link")
+			return err
+		}
+	} else if err == nil && consoleLink != nil {
+		if syndesis.DeletionTimestamp != nil {
+			if err := client.Delete(ctx, consoleLink); err != nil {
+				log.Error(err, "Error deleting console link.")
 			}
 		}
+
+		if err := reconcileConsoleLink(ctx, syndesis, syndesisRouteHost, consoleLink, client); err != nil {
+			return err
+		}
 	}
+
 	return nil
 }
 

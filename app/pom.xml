@@ -58,7 +58,7 @@
 
     <hibernate.validator.version>6.1.2.Final</hibernate.validator.version>
 
-    <jackson.version>2.11.0</jackson.version>
+    <jackson.version>2.11.1</jackson.version>
     <json-patch.version>1.9</json-patch.version>
     <kubernetes.client.version>4.9.0</kubernetes.client.version>
 
@@ -79,7 +79,7 @@
     <arquillian.cube.version>1.18.2</arquillian.cube.version>
 
     <maven.version>3.6.3</maven.version>
-    <maven.resolver.version>1.4.1</maven.resolver.version>
+    <maven.resolver.version>1.4.2</maven.resolver.version>
     <maven.shared.version>3.1.0</maven.shared.version>
 
     <errorprone.version>2.4.0</errorprone.version>
@@ -93,8 +93,8 @@
     <opentracing.spring.web.starter.version>3.0.0</opentracing.spring.web.starter.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>3.1.0</camel.version>
-    <camel-k-runtime.version>1.1.0</camel-k-runtime.version>
+    <camel.version>3.3.0</camel.version>
+    <camel-k-runtime.version>1.3.0</camel-k-runtime.version>
 
     <undertow.version>2.0.30.Final</undertow.version>
 
@@ -139,7 +139,6 @@
     <testcontainers.version>1.12.5</testcontainers.version>
     <citrus.version>3.0.0-M1</citrus.version>
     <mockito.version>3.3.3</mockito.version>
-    <mongodb.version>3.11.2</mongodb.version>
 
     <greenmail.version>1.5.11</greenmail.version>
 
@@ -2310,6 +2309,10 @@
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-core</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-allcomponents</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
 
@@ -2895,7 +2898,7 @@
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
-        <version>3.9</version>
+        <version>3.11</version>
       </dependency>
 
       <dependency>
@@ -3321,6 +3324,10 @@
         <artifactId>citrus-core</artifactId>
         <version>${citrus.version}</version>
         <exclusions>
+          <exclusion>
+            <groupId>com.consol.citrus</groupId>
+            <artifactId>citrus-validation-xml</artifactId>
+          </exclusion>
           <exclusion>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>

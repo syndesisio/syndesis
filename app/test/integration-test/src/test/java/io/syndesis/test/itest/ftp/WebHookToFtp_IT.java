@@ -111,7 +111,7 @@ public class WebHookToFtp_IT extends FtpTestSupport {
 
         runner.then(http().client(webHookClient)
                 .receive()
-                .response(HttpStatus.NO_CONTENT));
+                .response(HttpStatus.OK));
 
         runner.run(new VerifyFtpUploadTestAction());
     }

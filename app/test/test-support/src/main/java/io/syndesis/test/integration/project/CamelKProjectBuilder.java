@@ -19,7 +19,6 @@ package io.syndesis.test.integration.project;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -184,7 +183,7 @@ public class CamelKProjectBuilder extends AbstractMavenProjectBuilder<CamelKProj
         if (ObjectHelper.isEmpty(propertiesBuilder.toString()) && projectPath != null) {
             // auto add integration custom resource configuration to application properties
             Files.write(projectPath.resolve("src").resolve("main").resolve("resources").resolve("application.properties"),
-                    propertiesBuilder.toString().getBytes(Charset.forName("utf-8")), StandardOpenOption.APPEND);
+                    propertiesBuilder.toString().getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
         }
 
         return ProjectGeneratorHelper.generate(
@@ -205,7 +204,7 @@ public class CamelKProjectBuilder extends AbstractMavenProjectBuilder<CamelKProj
                     sourceData.getContent() != null &&
                     projectPath != null) {
                 Files.write(projectPath.resolve("src").resolve("main").resolve("resources").resolve(sourceData.getName() + "." + sourceSpec.getLanguage()),
-                        sourceData.getContent().getBytes(Charset.forName("utf-8")), StandardOpenOption.CREATE);
+                        sourceData.getContent().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
             }
         }
     }
@@ -217,7 +216,7 @@ public class CamelKProjectBuilder extends AbstractMavenProjectBuilder<CamelKProj
                     resourceData.getContent() != null &&
                     projectPath != null) {
                 Files.write(projectPath.resolve("src").resolve("main").resolve("resources").resolve(resourceData.getName()),
-                        resourceData.getContent().getBytes(Charset.forName("utf-8")), StandardOpenOption.CREATE);
+                        resourceData.getContent().getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE);
             }
         }
     }

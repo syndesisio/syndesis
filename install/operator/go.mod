@@ -16,7 +16,7 @@ require (
 	github.com/go-logr/logr v0.1.0
 	github.com/go-openapi/spec v0.19.8
 	github.com/imdario/mergo v0.3.9
-	github.com/lib/pq v1.4.0
+	github.com/lib/pq v1.8.0
 	github.com/openshift/api v3.9.1-0.20190927182313-d4a64ec2cbd8+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0
@@ -40,8 +40,9 @@ require (
 )
 
 require (
+	github.com/RHsyseng/operator-utils v0.0.0-20200709142328-d5a5812a443f
 	github.com/coreos/prometheus-operator v0.39.0 // indirect
-	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
+	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32
 	github.com/go-logr/zapr v0.1.1
 	github.com/operator-framework/api v0.3.5
 	github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200508205316-9ffa1fdb8dcf // Tag v0.15.0

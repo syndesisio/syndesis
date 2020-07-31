@@ -712,7 +712,7 @@
     <dependency>
     <groupId>org.glassfish.tyrus</groupId>
       <artifactId>tyrus-container-grizzly-server</artifactId>
-      <version>1.15</version>
+      <version>1.17</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>

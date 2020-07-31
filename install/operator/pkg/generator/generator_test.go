@@ -47,10 +47,13 @@ func TestGenerator(t *testing.T) {
 				Server: v1beta1.ServerConfiguration{
 					Resources: v1beta1.Resources{Memory: "800Mi"},
 					Features: v1beta1.ServerFeatures{
-						MavenRepositories: map[string]string{
-							"central":           "https://repo.maven.apache.org/maven2/",
-							"repo-02-redhat-ga": "https://maven.repository.redhat.com/ga/",
-							"repo-03-jboss-ea":  "https://repository.jboss.org/nexus/content/groups/ea/",
+						Maven: v1beta1.MavenConfiguration{
+							Append: false,
+							Repositories: map[string]string{
+								"central":           "https://repo.maven.apache.org/maven2/",
+								"repo-02-redhat-ga": "https://maven.repository.redhat.com/ga/",
+								"repo-03-jboss-ea":  "https://repository.jboss.org/nexus/content/groups/ea/",
+							},
 						},
 					},
 				},
