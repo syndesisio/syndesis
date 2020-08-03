@@ -189,14 +189,13 @@ type ServerFeatures struct {
 
 	// 3scale management URL
 	ManagementURLFor3scale string `json:"managementUrlFor3scale,omitempty"`
-
-	// additional maven options to be used in integration builds
-	AdditionalMavenArguments string `json:"additionalMavenArguments,omitempty"`
 }
 
 type MavenConfiguration struct {
 	// Should we append new repositories
 	Append bool `json:"append"`
+	// additional maven options to be used in integration builds
+	AdditionalArguments string `json:"additionalArguments,omitempty"`
 	// Set repositories for maven
 	Repositories map[string]string `json:"repositories,omitempty"`
 }
