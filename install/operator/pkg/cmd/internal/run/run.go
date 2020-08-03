@@ -143,7 +143,6 @@ func (o *options) run() error {
 	util.KnownDockerImages[config.Syndesis.Components.Database.Exporter.Image] = true
 	util.KnownDockerImages[config.Syndesis.Components.Prometheus.Image] = true
 	util.KnownDockerImages[config.Syndesis.Components.Upgrade.Image] = true
-	util.KnownDockerImages[config.Syndesis.Addons.DV.Image] = true
 
 	ctx := o.Context
 

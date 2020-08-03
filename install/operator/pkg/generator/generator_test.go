@@ -27,10 +27,6 @@ func TestGenerator(t *testing.T) {
 				},
 				Ops:  v1beta1.AddonSpec{Enabled: true},
 				Todo: v1beta1.AddonSpec{Enabled: true},
-				DV: v1beta1.DvConfiguration{
-					Enabled:   false,
-					Resources: v1beta1.Resources{Memory: "1024Mi"},
-				},
 				CamelK: v1beta1.AddonSpec{
 					Enabled: true,
 				},
@@ -110,18 +106,12 @@ func TestGenerator(t *testing.T) {
 	}
 	assert.True(t, checks >= 6)
 
-	for _, addon := range []string{"todo", "camelk", "jaeger", "dv", "ops", "publicApi"} {
+	for _, addon := range []string{"todo", "camelk", "jaeger", "ops", "publicApi"} {
 		resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./addons/"+addon+"/", configuration)
 		require.NoError(t, err)
 		assert.True(t, len(resources) > 0)
 	}
 
-	resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./addons/dv/", configuration)
-	checks = 0
-	for _, resource := range resources {
-		checks += checkSynAddonDv(t, resource, syndesis)
-	}
-	assert.True(t, checks >= 1)
 }
 
 // Run test related with Ops addon
@@ -214,34 +204,6 @@ func checkSynGlobalConfig(t *testing.T, resource unstructured.Unstructured, synd
 func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta1.Syndesis) int {
 	if resource.GetName() != "syndesis-ui-config" {
 		return 0
-	}
-
-	config, exists, _ := unstructured.NestedString(resource.UnstructuredContent(), "data", "config.json")
-	if exists {
-		var expected string
-		if syndesis.Spec.Addons.DV.Enabled {
-			expected = "1"
-		} else {
-			expected = "0"
-		}
-		assert.True(t, strings.Contains(config, "\"enabled\": "+expected))
-	}
-
-	return 1
-}
-
-func checkSynAddonDv(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta1.Syndesis) int {
-	if resource.GetName() != "syndesis-dv" {
-		return 0
-	}
-
-	container := sliceProperty(resource, "spec", "template", "spec", "containers")
-	if container != nil {
-		limits, lexists, _ := unstructured.NestedFieldNoCopy(container, "resources", "limits")
-		assert.True(t, lexists)
-		limitMap, ok := limits.(map[string]interface{})
-		assert.True(t, ok)
-		assert.Equal(t, syndesis.Spec.Addons.DV.Resources.Memory, limitMap["memory"])
 	}
 
 	return 1
