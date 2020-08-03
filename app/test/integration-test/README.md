@@ -10,14 +10,16 @@ the database.
 * [Setup and preparations](#setup-and-preparations)
 * [Test environment](#test-environment)
 * [Running tests](#running-tests)
-    * [Use latest snapshot versions](#use-latest-snapshot-versions)
-    * [Use release versions](#use-release-versions)
+* [Select the integration runtime](#select-the-integration-runtime)
+    * [Spring Boot Runtime](#spring-boot-runtime)
+    * [Camel K Runtime](#camel-k-runtime)
 * [Syndesis integration runtime container](#syndesis-integration-runtime-container)
   * [From integration export](#from-integration-export)
   * [From integration model](#from-integration-model)
   * [From integration fat jar](#from-integration-fat-jar)
   * [From integration project](#from-integration-project)
   * [From integration json](#from-integration-json)
+* [Use Syndesis release versions](#use-syndesis-release-versions)
 * [Syndesis db container](#syndesis-db-container)
 * [Syndesis server container](#syndesis-server-container)
 * [Infrastructure containers](#infrastructure-containers)
@@ -83,36 +85,45 @@ The following system properties (or environment variables) are known to the proj
 
 ## Running tests
 
-You can run the tests from your favorite Java IDE (e.g. Eclipse, IntelliJ) as normal JUnit test. Also you can run all available tests with
-Maven build tool:
+Test sources are located in `/app/test/integration-test`. As the tests are nothing but normal JUnit tests you can run
+those from your favorite Java IDE (e.g. Eclipse, IntelliJ) or via mMaven build.
+
+The easiest way to get the tests executed is to use the Syndesis build tool:
 
 ```bash
-mvn verify
+tools/bin/syndesis integration-test
 ```
 
 This will execute all available integration tests. You can also run single tests or test methods. Just give the test class name and/or test method name as
 an argument.
 
 ```bash
-mvn verify -Dit.test=MyTestClassName
+tools/bin/syndesis integration-test -t MyTestClassName
 ```
 
 ```bash
-mvn verify -Dit.test=MyTestClassName#mytestMethodName
+tools/bin/syndesis integration-test -t MyTestClassName#mytestMethodName
 ```
 
-Please, notice that the integration test may have been disabled by default through the setting of the variable `skip.integration.tests` to `true`. If that is the case, ensure to override the value to `false` instead:
-
-```bash
-mvn verify ... -Dskip.integration.tests=false
-```
-
-## Use latest snapshot versions
-
-If you do not specify anything different the integration tests will use the latest Syndesis version available. This can be the Syndesis Docker images tagged with `latest` or
+By default the integration tests will use the latest Syndesis version available. This can be the Syndesis Docker images tagged with `latest` or
 a local build of Syndesis using the very latest code base on your local host.
 
-In case you want to use the very latest code base on your local host you need to clone and build the Syndesis project first on your machine.
+## Select the integration runtime
+
+Syndesis integrations support different runtimes. You can use the same integration tests to run on each supported runtime. At the moment Syndesis supports
+the runtimes:
+
+* Spring Boot (default)
+* Camel K
+
+### Spring Boot runtime
+
+By default Syndesis integration tests will run with Spring Boot runtime using the Docker image `syndesis:syndesis-s2i` as integration runtime.
+When the S2i image is not present yet on your local machine the Docker image gets pulled automatically before the tests run.
+
+In case you want to use the very latest code base on your local host you need to build the S2i Docker image by yourself.
+
+Clone and build the Syndesis project first on your machine:
 
 ```bash
 git clone https://github.com/syndesisio/syndesis.git
@@ -125,7 +136,7 @@ cd syndesis
 tools/bin/syndesis build -f
 ```
 
-Now you can build the Docker images locally:
+Now you can build the Docker Syndesis S2i Docker image locally:
 
 ```bash
 tools/bin/syndesis build -m s2i -i -f --docker
@@ -143,31 +154,40 @@ syndesis/syndesis-s2i   1.6.7               e556ebf9d6b9
 
 You can now run the integration tests and they will use that local Syndesis version.
 
-## Use release versions
+### Camel K runtime
 
-By default the integration tests run with the latest Syndesis SNAPSHOT version. This usually is the latest SNAPSHOT version built on your local host. In case you do not have
-the latest SNAPSHOT version built on your machine you may want to explicitly specify a release version of Syndesis. The tests will then run with that particular version of Syndesis as
-a system under test.
+Syndesis integrations can also be run on top of Camel K instead of using Spring Boot as a runtime. We need to build a special
+S2i image for Syndesis with all Camel K related bits baked into it for that to happen. This is because the integration tests
+use pure Docker infrastructure on top of Testcontainers. There is no Camel K operator involved so we need to apply some things that
+are usually done by that very same operator.
 
-All required artifacts and Docker images are loaded form Maven central and Dockerhub so you might bring some time for that pull to finish. But once you have the versions loaded subsequent
-build just use the already downloaded artifacts.
-
-You can specify the Syndesis version as system property:
+Assuming that you have already cloned and built the Syndesis project as well as the traditional `syndesis:syndesis-s2i` image
+(also see previous chapter) on your local machine you can use the following command to create the special Camel K enabled S2i image.
 
 ```bash
-mvn clean verify -Dsyndesis.version=1.6.7
+tools/bin/syndesis build -m test/s2i-camelk -i -f --docker
 ```
 
-The comand above runs the tests with the Syndesis release version `1.6.7`.
+After that you should see a new Docker image `syndesis/syndesis-s2i-camelk:latest`
 
-Here is a list of available releases: [https://github.com/syndesisio/syndesis/releases](https://github.com/syndesisio/syndesis/releases)
+```bash
+docker images
 
-Syndesis also provides a daily release build that can be used for continuous integration.
+REPOSITORY              TAG                 IMAGE ID
+syndesis/syndesis-s2i-camelk   latest              e27b19a7717d
+syndesis/syndesis-s2i-camelk   1.6.7               e556ebf9d6b9
+```
+
+You can now run the integration tests and choose the camel-k runtime.
+
+```bash
+tools/bin/syndesis integration-test --runtime camel-k
+```
 
 ## Syndesis integration runtime container
 
 Syndesis executes integrations with a special runtime container. The container is usually provided with a generated integration project holding all sources required to run the
-integration (such as integration.json, pom.xml, atlas-mappings, application.properties, secrets and so on). The integration runtime container usually builds from the `syndesis/syndesis-s2i:latest`
+integration (such as integration.json, pom.xml, atlas-mappings, application.properties, secrets and so on). The integration runtime container usually builds from the Syndesis S2i
 Docker image that brings all required Syndesis artifacts and required 3rd party libs.
 
 The integration tests provide a Testcontainer that represents the integration runtime container. You can add the integration runtime container to your tests in following ways.
@@ -327,6 +347,27 @@ This close to production S2i mechanism is enabled with the system property **syn
 By default this mechanis is disabled in order to gain some more speed in test execution. When the S2i mode is disabled the integration runtime container will
 directly execute the project with `mvn spring-boot:run`. Still the integration is run inside using the `syndesis/syndesis-s2i:latest` base image but the assemble step
 is skipped and we do not execute the fat jar with `java -jar`. Instead a the Spring Boot maven plugin is used.
+
+## Use Syndesis release versions
+
+By default the integration tests run with the latest Syndesis SNAPSHOT version. This usually is the latest SNAPSHOT version built on your local host. In case you do not have
+the latest SNAPSHOT version built on your machine you may want to explicitly specify a release version of Syndesis. The tests will then run with that particular version of Syndesis as
+a system under test.
+
+All required artifacts and Docker images are loaded form Maven central and Dockerhub so you might bring some time for that pull to finish. But once you have the versions loaded subsequent
+build just use the already downloaded artifacts.
+
+You can specify the Syndesis version as system property:
+
+```bash
+syndesis integration-test --release 1.6.7
+```
+
+The comand above runs the tests with the Syndesis release version `1.6.7`.
+
+Here is a list of available releases: [https://github.com/syndesisio/syndesis/releases](https://github.com/syndesisio/syndesis/releases)
+
+Syndesis also provides a daily release build that can be used for continuous integration.
 
 ## Syndesis db container
 
