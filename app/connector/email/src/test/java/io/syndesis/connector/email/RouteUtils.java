@@ -15,9 +15,6 @@
  */
 package io.syndesis.connector.email;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,8 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import org.apache.camel.CamelContext;
-import org.apache.camel.component.mock.MockEndpoint;
+
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -43,6 +39,12 @@ import io.syndesis.connector.email.model.EMailMessageModel;
 import io.syndesis.connector.email.server.EMailTestServer;
 import io.syndesis.connector.support.util.PropertyBuilder;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import org.apache.camel.CamelContext;
+import org.apache.camel.component.mock.MockEndpoint;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public final class RouteUtils {
 
@@ -129,7 +131,7 @@ public final class RouteUtils {
             .name("EMail")
             .componentScheme(componentScheme)
             .description("Communicate with an EMail service")
-            .addDependency(Dependency.maven("org.apache.camel:camel-mail:latest"));
+            .addDependency(Dependency.maven("org.apache.camel:camel-mail"));
 
         if (configurePropBuilder != null) {
             builder.configuredProperties(configurePropBuilder.build());

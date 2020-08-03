@@ -64,7 +64,7 @@ public class SpringBootProjectBuilderTest {
                                     .descriptor(new ConnectorDescriptor.Builder()
                                             .build())
                                     .build())
-                                    .addDependency(Dependency.maven("org.apache.camel:camel-test:latest"))
+                                    .addDependency(Dependency.maven("org.apache.camel:camel-test"))
                             .connection(new Connection.Builder()
                                     .name("test-connection")
                                     .connector(new Connector.Builder()

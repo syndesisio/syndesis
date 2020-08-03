@@ -21,10 +21,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -52,6 +48,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.PropertyResolver;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractODataTest implements ODataConstants {
 
@@ -143,7 +143,7 @@ public abstract class AbstractODataTest implements ODataConstants {
             .name("OData")
             .componentScheme("olingo4")
             .description("Communicate with an OData service")
-            .addDependency(Dependency.maven("org.apache.camel:camel-olingo4:latest"));
+            .addDependency(Dependency.maven("org.apache.camel:camel-olingo4"));
 
         if (configurePropBuilder != null) {
             builder.configuredProperties(configurePropBuilder.build());
