@@ -468,9 +468,9 @@ func getConfigLiteral() *Config {
 						DeployIntegrations:            true,
 						TestSupport:                   false,
 						OpenShiftMaster:               "https://localhost:8443",
-						AdditionalMavenArguments:      "-Daaaaa=bbbbb",
 						Maven: MavenConfiguration{
-							Append: false,
+							Append:              false,
+							AdditionalArguments: "-Daaaaa=bbbbb",
 							Repositories: map[string]string{
 								"central":           "https://repo.maven.apache.org/maven2/",
 								"repo-02-redhat-ga": "https://maven.repository.redhat.com/ga/",
