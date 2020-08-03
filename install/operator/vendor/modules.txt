@@ -127,6 +127,7 @@ github.com/evanphx/json-patch
 # github.com/go-logr/logr v0.1.0
 github.com/go-logr/logr
 # github.com/go-logr/zapr v0.1.1
+## explicit
 github.com/go-logr/zapr
 # github.com/go-openapi/jsonpointer v0.19.3
 github.com/go-openapi/jsonpointer
@@ -265,6 +266,10 @@ github.com/shurcooL/httpfs/vfsutil
 github.com/shurcooL/vfsgen
 # github.com/sirupsen/logrus v1.5.0
 github.com/sirupsen/logrus
+# github.com/spf13/afero v1.2.2
+## explicit
+github.com/spf13/afero
+github.com/spf13/afero/mem
 # github.com/spf13/cast v1.3.1
 github.com/spf13/cast
 # github.com/spf13/cobra v1.0.0
@@ -282,6 +287,7 @@ go.uber.org/atomic
 # go.uber.org/multierr v1.5.0
 go.uber.org/multierr
 # go.uber.org/zap v1.14.1
+## explicit
 go.uber.org/zap
 go.uber.org/zap/buffer
 go.uber.org/zap/internal/bufferpool
@@ -392,7 +398,7 @@ gopkg.in/inf.v0
 # gopkg.in/yaml.v2 v2.2.8
 gopkg.in/yaml.v2
 # k8s.io/api v0.18.2
-k8s.io/api/admission/v1
+## explicit
 k8s.io/api/admission/v1beta1
 k8s.io/api/admissionregistration/v1
 k8s.io/api/admissionregistration/v1beta1
@@ -419,7 +425,6 @@ k8s.io/api/discovery/v1beta1
 k8s.io/api/events/v1beta1
 k8s.io/api/extensions/v1beta1
 k8s.io/api/flowcontrol/v1alpha1
-k8s.io/api/imagepolicy/v1alpha1
 k8s.io/api/networking/v1
 k8s.io/api/networking/v1beta1
 k8s.io/api/node/v1alpha1
@@ -584,7 +589,6 @@ k8s.io/client-go/pkg/version
 k8s.io/client-go/plugin/pkg/client/auth/exec
 k8s.io/client-go/plugin/pkg/client/auth/gcp
 k8s.io/client-go/rest
-k8s.io/client-go/rest/fake
 k8s.io/client-go/rest/watch
 k8s.io/client-go/restmapper
 k8s.io/client-go/testing
@@ -656,8 +660,6 @@ k8s.io/kube-openapi/pkg/util/sets
 # k8s.io/kube-state-metrics v1.7.2
 k8s.io/kube-state-metrics/pkg/metric
 k8s.io/kube-state-metrics/pkg/metrics_store
-# k8s.io/kubectl v0.18.2
-k8s.io/kubectl/pkg/scheme
 # k8s.io/utils v0.0.0-20200324210504-a9aa75ae1b89
 k8s.io/utils/buffer
 k8s.io/utils/integer
