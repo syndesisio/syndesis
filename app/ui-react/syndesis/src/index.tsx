@@ -1,8 +1,6 @@
 import {
   ApiContext,
-  MonacoContext,
   ServerEventsContext,
-  WithMonacoEditorHelper,
   WithServerEvents,
 } from '@syndesis/api';
 // Don't move this line, otherwise we anger the pf4
@@ -19,7 +17,6 @@ import i18n from './i18n';
 import { ApiClientConnectorsModule } from './modules/apiClientConnectors';
 import { ConnectionsModule } from './modules/connections';
 import { DashboardModule } from './modules/dashboard';
-import { DataModule } from './modules/data';
 import { ExtensionsModule } from './modules/extensions';
 import { IntegrationsModule } from './modules/integrations';
 import routes from './modules/routes';
@@ -58,23 +55,15 @@ ReactDOM.render(
               <ApiContext.Provider
                 value={{
                   apiUri: `${config!.apiBase}${config!.apiEndpoint}`,
-                  dvApiUri: `${config!.apiBase}${config!.datavirt.dvUrl}`,
                   headers: { 'SYNDESIS-XSRF-TOKEN': 'awesome' },
                 }}
               >
                 <ApiContext.Consumer>
-                  {({ apiUri, dvApiUri, headers }) => (
+                  {({ apiUri, headers }) => (
                     <>
                       <WithServerEvents apiUri={apiUri} headers={headers}>
                         {functions => (
                           <ServerEventsContext.Provider value={functions}>
-                            <WithMonacoEditorHelper
-                              dvApiUri={dvApiUri}
-                            >
-                              {helper => (
-                                <MonacoContext.Provider
-                                  value={helper}
-                                >
                                   <App
                                     config={config!}
                                     routes={[
@@ -110,11 +99,6 @@ ReactDOM.render(
                                         label: 'Customizations',
                                       } as IAppRouteWithChildrens,
                                       {
-                                        component: DataModule,
-                                        label: 'Data',
-                                        to: routes.data.root,
-                                      } as IAppRoute,
-                                      {
                                         component: SettingsModule,
                                         label: 'Settings',
                                         to: routes.settings.root,
@@ -126,9 +110,6 @@ ReactDOM.render(
                                       } as IAppRoute,
                                     ]}
                                   />
-                                </MonacoContext.Provider>
-                              )}
-                            </WithMonacoEditorHelper>
                           </ServerEventsContext.Provider>
                         )}
                       </WithServerEvents>
