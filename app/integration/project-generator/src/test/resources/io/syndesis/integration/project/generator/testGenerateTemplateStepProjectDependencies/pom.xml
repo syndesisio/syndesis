@@ -21,6 +21,8 @@
     -->
     <java.version>1.8</java.version>
 
+    <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+
     <spring-boot.version>@spring-boot.version@</spring-boot.version>
     <camel.version>@camel.version@</camel.version>
     <syndesis.version>@syndesis.version@</syndesis.version>
@@ -140,6 +142,15 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven-compiler-plugin.version}</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
