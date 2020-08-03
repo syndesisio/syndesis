@@ -1,0 +1,4 @@
+/.history/
+.DS_Store
+project/target
+src/main/docker/project/.m2

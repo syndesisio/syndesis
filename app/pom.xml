@@ -43,6 +43,7 @@
 
     <!-- Image names -->
     <image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
+    <image.s2i.camelk>syndesis/syndesis-s2i-camelk:%l</image.s2i.camelk>
     <image.server>syndesis/syndesis-server:%l</image.server>
     <image.meta>syndesis/syndesis-meta:%l</image.meta>
     <image.ui>syndesis/syndesis-ui:%l</image.ui>

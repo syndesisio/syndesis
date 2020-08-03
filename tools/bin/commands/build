@@ -11,6 +11,7 @@ build::usage() {
     --app-images               Build only application modules with Docker images (ui-react, server, meta, s2i)
                                and create images
     --infra-images             Build only infrastructure modules with Docker images (operator, upgrade) and create images
+    --test-images              Build only test modules with Docker images (s2i-camelk) and create images
 -m  --module <m1>,<m2>, ..     Build modules
                                Modules: ui-react, server, connector, s2i, meta, integration, extension, common, operator, upgrade
                                Submodules: defined with [groupId]:artifactId (e.g. :connector-sql)
@@ -126,7 +127,7 @@ maven_args() {
         args="$args --batch-mode"
     fi
 
-    if [ $(hasflag --image -i --all-images --app-images --infra-images --docker --registry) ]; then
+    if [ $(hasflag --image -i --all-images --app-images --infra-images --test-images --docker --registry) ]; then
         #Build images
 
         # Default profile for image building
@@ -327,8 +328,9 @@ do_upgrade_pod() {
 ALL_MODULES="common extension integration connector meta server s2i ui-react test operator upgrade dv"
 MAVEN_MODULES="common extension integration connector meta server s2i ui-react test dv"
 APP_IMAGES="ui-react server meta s2i dv"
+TEST_IMAGES="test/s2i-camelk"
 INFRA_IMAGES="operator upgrade"
-ALL_IMAGES="$APP_IMAGES $INFRA_IMAGES"
+ALL_IMAGES="$APP_IMAGES $INFRA_IMAGES $TEST_IMAGES"
 MODULES=(
   "upgrade:server common extension integration connector"
   "operator"
@@ -354,6 +356,7 @@ MODULE_PATHS=(
   "meta:app/meta/"
   "server:app/server/"
   "s2i:app/s2i/"
+  "s2i-camelk:app/test/s2i-camelk/"
   "dv:app/dv/"
 )
 
@@ -374,6 +377,10 @@ extract_modules() {
 
     if [ "$(hasflag --infra-images)" ]; then
         modules="$modules $INFRA_IMAGES"
+    fi
+
+    if [ "$(hasflag --test-images)" ]; then
+        modules="$modules $TEST_IMAGES"
     fi
 
     local arg_modules=$(readopt --module -m);
