@@ -57,15 +57,26 @@ public class ExposureCustomizerTest {
             entry("port", Integer.toString(OpenShiftService.INTEGRATION_SERVICE_PORT))
         );
 
+        assertThat(i.getSpec().getConfiguration()).hasSize(4);
         assertThat(i.getSpec().getConfiguration())
             .filteredOn("type", "property")
             .anyMatch(
-            c -> Objects.equals(c.getValue(), "customizer.servlet.enabled=true")
+                c -> Objects.equals(c.getValue(), "customizer.health.enabled=true")
         );
         assertThat(i.getSpec().getConfiguration())
             .filteredOn("type", "property")
             .anyMatch(
-                c -> Objects.equals(c.getValue(), "customizer.servlet.bindPort=" +OpenShiftService.INTEGRATION_SERVICE_PORT)
+                c -> Objects.equals(c.getValue(), "customizer.health.path=/actuator/health")
+        );
+        assertThat(i.getSpec().getConfiguration())
+            .filteredOn("type", "property")
+            .anyMatch(
+                c -> Objects.equals(c.getValue(), "customizer.platform-http.enabled=true")
+        );
+        assertThat(i.getSpec().getConfiguration())
+            .filteredOn("type", "property")
+            .anyMatch(
+                c -> Objects.equals(c.getValue(), "customizer.platform-http.bind-port=" +OpenShiftService.INTEGRATION_SERVICE_PORT)
             );
     }
 

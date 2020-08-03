@@ -22,11 +22,11 @@ import java.util.Optional;
 public class Project {
 
     final Path projectPath;
-    final Optional<Path> fatJarPath;
+    final Path fatJarPath;
 
     public static class Builder {
         Path projectPath;
-        Optional<Path> fatJarPath = Optional.empty();
+        Path fatJarPath;
 
         public Builder projectPath(Path projectPath){
             this.projectPath = projectPath;
@@ -34,7 +34,7 @@ public class Project {
         }
 
         public Builder fatJarPath(Path fatJarPath){
-            this.fatJarPath = Optional.ofNullable(fatJarPath);
+            this.fatJarPath = fatJarPath;
             return this;
         }
 
@@ -53,11 +53,11 @@ public class Project {
     }
 
     public Optional<Path> getFatJarPath() {
-        return fatJarPath;
+        return Optional.ofNullable(fatJarPath);
     }
 
     public boolean isProjectDir(){
-        return !fatJarPath.isPresent();
+        return fatJarPath == null;
     }
 
 }

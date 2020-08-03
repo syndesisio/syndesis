@@ -55,13 +55,25 @@ public class ExposureCustomizer implements CamelKIntegrationCustomizer {
             spec.addConfiguration(
                 new ConfigurationSpec.Builder()
                     .type(PROPERTY)
-                    .value("customizer.servlet.enabled=true")
+                    .value("customizer.health.enabled=true")
                     .build()
             );
             spec.addConfiguration(
                 new ConfigurationSpec.Builder()
                     .type(PROPERTY)
-                    .value("customizer.servlet.bindPort=" +OpenShiftService.INTEGRATION_SERVICE_PORT)
+                    .value("customizer.health.path=/actuator/health")
+                    .build()
+            );
+            spec.addConfiguration(
+                new ConfigurationSpec.Builder()
+                    .type(PROPERTY)
+                    .value("customizer.platform-http.enabled=true")
+                    .build()
+            );
+            spec.addConfiguration(
+                new ConfigurationSpec.Builder()
+                    .type(PROPERTY)
+                    .value("customizer.platform-http.bind-port=" + OpenShiftService.INTEGRATION_SERVICE_PORT)
                     .build()
             );
 
