@@ -13,6 +13,19 @@ source "$(pwd)/../../tools/bin/commands/util/openshift_funcs"
 source "$(pwd)/../../tools/bin/commands/util/kube_funcs"
 source "./.lib.sh"
 
+#
+# Ensure any errors from check_error are printed to the terminal
+# Uses same trap as syndesis command
+#
+#
+ERROR_FILE="$(mktemp /tmp/syndesis-build-output.XXXXXX)"
+add_to_trap "print_error ${ERROR_FILE}"
+#
+# This should be the only trap
+# Other instances should use add_to_trap
+#
+trap "process_trap" EXIT
+
 DOCKER_REGISTRY="$(readopt 		 --registry           '')"
 OPERATOR_IMAGE_NAME="$(readopt --image-name         docker.io/syndesis/syndesis-operator)"
 OPERATOR_IMAGE_TAG="$(readopt  --image-tag          latest)"

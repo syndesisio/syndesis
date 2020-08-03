@@ -229,6 +229,14 @@ build_image()
             check_error "$hasoc"
         fi
 
+        #
+        # Check that oc is logged in and communicating with a cluster
+        #
+        set +e
+        version="$(oc version 2>&1)"
+        set -e
+        check_error "${version}"
+
         echo ======================================================
         echo Building image with S2I
         echo ======================================================
@@ -239,6 +247,8 @@ build_image()
         # Otherwise remove the build-config to repoint to the new image:tag.
         #
         local bcOutName="$(oc get bc "${S2I_STREAM_NAME}" -o=jsonpath='{.spec.output.to.name}' 2>&1)"
+        check_error "${bcOutName}"
+
         local imgTag="${OPERATOR_IMAGE_NAME}:${OPERATOR_IMAGE_TAG}"
         # Remove any registry prefix from OPERATOR_IMAGE_NAME
         imgTag="${imgTag##*/}"

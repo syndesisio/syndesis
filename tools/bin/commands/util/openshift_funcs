@@ -16,14 +16,15 @@ check_oc_version() {
     # Extracts any version number of the format dd.dd.dd, eg. 3.10.0 or 4.1.0
     #
 
-    local test=$(${OC} version | ${GREP} -Eiv 'ubernetes|erver' | ${GREP} -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\?')
+    local version=$(${OC} version 2>&1)
+    local test=$(echo "${version}" | ${GREP} -Eiv 'ubernetes|erver' | ${GREP} -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\?')
     if [ -z "${test}" ]; then
-        test=$(${OC} version | ${GREP} 'lient' | ${GREP} -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\?')
+        test=$(echo "${version}" | ${GREP} 'lient' | ${GREP} -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\?')
     fi
 
     if [ -z "$test" ]; then
-      echo "ERROR: 'Version of oc could not be found'"
-      return
+        echo "ERROR: 'Version of oc could not be found'"
+        return
     fi
 
     echo $(compare_version $test $minimum)
@@ -210,13 +211,10 @@ setup_minishift_oc() {
 #
 is_oc_available() {
 
-    # Check path first if it already exists
-    set +e
-    which ${OC} &>/dev/null
-    if [ $? -eq 0 ]; then
-      set -e
-      echo $(check_oc_version)
-      return
+    local result=$(check_for_command ${OC})
+    if [ "$(contains_error "${result}")" != "YES" ]; then
+        echo $(check_oc_version)
+        return
     fi
 
     #
@@ -228,6 +226,7 @@ is_oc_available() {
     # shell and so the changes to the PATH variable will not be propogated
     # to the parent shell.
     #
+    set +e
     hasminishift=$(is_minishift_available)
     if [ "$hasminishift" == "OK" ]; then
       set -e
