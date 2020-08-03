@@ -32,7 +32,7 @@ ReactDOM.render(
           <WithLoader
             loading={loading}
             error={error}
-            loaderChildren={<span />}
+            loaderChildren={<span/>}
             errorChildren={
               <Translation ns={['shared']}>
                 {t => (
@@ -64,52 +64,52 @@ ReactDOM.render(
                       <WithServerEvents apiUri={apiUri} headers={headers}>
                         {functions => (
                           <ServerEventsContext.Provider value={functions}>
-                                  <App
-                                    config={config!}
-                                    routes={[
-                                      {
-                                        component: DashboardModule,
-                                        exact: true,
-                                        label: 'Home',
-                                        to: routes.dashboard.root,
-                                      } as IAppRoute,
-                                      {
-                                        component: IntegrationsModule,
-                                        label: 'Integrations',
-                                        to: routes.integrations.list,
-                                      } as IAppRoute,
-                                      {
-                                        component: ConnectionsModule,
-                                        label: 'Connections',
-                                        to: routes.connections.connections,
-                                      } as IAppRoute,
-                                      {
-                                        childrens: [
-                                          {
-                                            component: ApiClientConnectorsModule,
-                                            label: 'API Client Connectors',
-                                            to: routes.apiClientConnectors.list,
-                                          } as IAppRoute,
-                                          {
-                                            component: ExtensionsModule,
-                                            label: 'Extensions',
-                                            to: routes.extensions.list,
-                                          } as IAppRoute,
-                                        ],
-                                        label: 'Customizations',
-                                      } as IAppRouteWithChildrens,
-                                      {
-                                        component: SettingsModule,
-                                        label: 'Settings',
-                                        to: routes.settings.root,
-                                      } as IAppRoute,
-                                      {
-                                        component: SupportModule,
-                                        label: 'Support',
-                                        to: routes.support.root,
-                                      } as IAppRoute,
-                                    ]}
-                                  />
+                            <App
+                              config={config!}
+                              routes={[
+                                {
+                                  component: DashboardModule,
+                                  exact: true,
+                                  label: 'Home',
+                                  to: routes.dashboard.root,
+                                } as IAppRoute,
+                                {
+                                  component: IntegrationsModule,
+                                  label: 'Integrations',
+                                  to: routes.integrations.list,
+                                } as IAppRoute,
+                                {
+                                  component: ConnectionsModule,
+                                  label: 'Connections',
+                                  to: routes.connections.connections,
+                                } as IAppRoute,
+                                {
+                                  childrens: [
+                                    {
+                                      component: ApiClientConnectorsModule,
+                                      label: 'API Client Connectors',
+                                      to: routes.apiClientConnectors.list,
+                                    } as IAppRoute,
+                                    {
+                                      component: ExtensionsModule,
+                                      label: 'Extensions',
+                                      to: routes.extensions.list,
+                                    } as IAppRoute,
+                                  ],
+                                  label: 'Customizations',
+                                } as IAppRouteWithChildrens,
+                                {
+                                  component: SettingsModule,
+                                  label: 'Settings',
+                                  to: routes.settings.root,
+                                } as IAppRoute,
+                                {
+                                  component: SupportModule,
+                                  label: 'Support',
+                                  to: routes.support.root,
+                                } as IAppRoute,
+                              ]}
+                            />
                           </ServerEventsContext.Provider>
                         )}
                       </WithServerEvents>

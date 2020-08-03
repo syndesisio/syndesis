@@ -42,7 +42,6 @@
   "features": {
     "extensions": true,
     "integrations": true,
-    "connections": true,
-    "data": true
+    "connections": true
   }
 }
