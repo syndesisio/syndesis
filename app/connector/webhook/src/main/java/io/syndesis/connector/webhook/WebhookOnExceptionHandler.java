@@ -42,6 +42,7 @@ public class WebhookOnExceptionHandler implements Processor, Properties {
     @Override
     public void process(Exchange exchange) {
         Exception cause = exchange.getProperty(Exchange.EXCEPTION_CAUGHT, Exception.class);
+        LOGGER.debug("Webhook exception handler processing exception on exchange", cause);
         ErrorStatusInfo statusInfo =
                 ErrorMapper.mapError(cause, errorResponseCodeMappings, httpResponseStatus);
         exchange.getMessage().removeHeaders("*");
@@ -51,7 +52,7 @@ public class WebhookOnExceptionHandler implements Processor, Properties {
         } else {
             exchange.getMessage().setBody("");
         }
-        LOGGER.info("Error response: " + statusInfo.getMessage());
+        LOGGER.info(String.format("Error response: %s - %s", statusInfo.getError(), statusInfo.getMessage()));
     }
 
     @Override
