@@ -343,19 +343,20 @@ build_image()
         # Otherwise remove the build-config to repoint to the new image:tag.
         #
         local bcOutName="$(oc get bc "${S2I_STREAM_NAME}" -o=jsonpath='{.spec.output.to.name}' 2>&1)"
-        check_error "${bcOutName}"
+        if [ "$(contains_error "${bcOutName}")" != "YES" ]; then
 
-        local imgTag="${OPERATOR_IMAGE_NAME}:${OPERATOR_IMAGE_TAG}"
-        # Remove any registry prefix from OPERATOR_IMAGE_NAME
-        imgTag="${imgTag##*/}"
+            local imgTag="${OPERATOR_IMAGE_NAME}:${OPERATOR_IMAGE_TAG}"
+            # Remove any registry prefix from OPERATOR_IMAGE_NAME
+            imgTag="${imgTag##*/}"
 
-        if [ "${bcOutName}" != "${imgTag}" ]; then
-            echo "Removing old BuildConfig ${S2I_STREAM_NAME} due to different image:tag"
-            #
-            # build config exists but not generated the same image & tag as is requested
-            # so remove it to allow a new bc to be generated.
-            #
-            oc delete bc "${S2I_STREAM_NAME}" >/dev/null 2>&1
+            if [ "${bcOutName}" != "${imgTag}" ]; then
+                echo "Removing old BuildConfig ${S2I_STREAM_NAME} due to different image:tag"
+                #
+                # build config exists but not generated the same image & tag as is requested
+                # so remove it to allow a new bc to be generated.
+                #
+                oc delete bc "${S2I_STREAM_NAME}" >/dev/null 2>&1
+            fi
         fi
 
         if [ -z "$(oc get bc -o name | grep ${S2I_STREAM_NAME})" ]; then

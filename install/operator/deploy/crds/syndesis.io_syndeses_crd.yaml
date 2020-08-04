@@ -531,32 +531,33 @@ spec:
                             description: Whether we deploy integrations
                             type: boolean
                           integrationLimit:
-                              description: Maximum number of integrations single user
-                                  can create
-                              type: integer
+                            description: Maximum number of integrations single user
+                              can create
+                            type: integer
                           integrationStateCheckInterval:
-                              description: Interval for checking the state of the integrations
-                              type: integer
+                            description: Interval for checking the state of the integrations
+                            type: integer
                           managementUrlFor3scale:
-                              description: 3scale management URL
-                              type: string
-                          maven:
-                              description: Maven settings
-                              properties:
-                                  append:
-                                      description: Should we append new repositories
-                                      type: boolean
-                                  repositories:
-                                      additionalProperties:
-                                          type: string
-                                      description: Set repositories for maven
-                                      type: object
-                              required:
-                              - append
-                              type: object
-                          additionalMavenArguments:
-                            description: Additional maven options to be used in integration builds
+                            description: 3scale management URL
                             type: string
+                          maven:
+                            description: Maven settings
+                            properties:
+                              additionalArguments:
+                                description: additional maven options to be used in
+                                  integration builds
+                                type: string
+                              append:
+                                description: Should we append new repositories
+                                type: boolean
+                              repositories:
+                                additionalProperties:
+                                  type: string
+                                description: Set repositories for maven
+                                type: object
+                            required:
+                            - append
+                            type: object
                         required:
                         - maven
                         type: object
