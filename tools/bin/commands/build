@@ -110,7 +110,7 @@ maven_args() {
     local args="--no-transfer-progress"
 
     if [ $(hasflag --flash -f) ]; then
-        args="$args -Pflash"
+        args="$args -Pflash -Dassembly.skip=true"
     fi
 
     if [ $(hasflag --skip-tests) ]; then

@@ -38,6 +38,8 @@
     <!-- should archives of S2I and UI modules be deployed to a Maven repository -->
     <deploy.archives>false</deploy.archives>
 
+    <assembly.skip>false</assembly.skip>
+
     <!-- Atlasmap version -->
     <atlasmap.version>2.0.5</atlasmap.version>
 
@@ -354,7 +356,7 @@
       </modules>
     </profile>
 
-    <!-- Like 'no-checks' but even more aggresive (like even no tests)  -->
+    <!-- Like 'no-checks' but even more aggressive (like even no tests)  -->
     <profile>
       <id>flash</id>
       <activation>
@@ -1187,6 +1189,7 @@
             </goals>
             <inherited>false</inherited>
             <configuration>
+              <skipAssembly>${assembly.skip}</skipAssembly>
               <descriptors>
                 <descriptor>tools.xml</descriptor>
               </descriptors>
