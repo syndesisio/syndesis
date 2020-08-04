@@ -574,10 +574,6 @@ spec:
                     properties:
                       features:
                         properties:
-                          additionalMavenArguments:
-                            description: additional maven options to be used in integration
-                              builds
-                            type: string
                           deployIntegrations:
                             description: Whether we deploy integrations
                             type: boolean
@@ -594,6 +590,10 @@ spec:
                           maven:
                             description: Maven settings
                             properties:
+                              additionalArguments:
+                                description: additional maven options to be used in
+                                  integration builds
+                                type: string
                               append:
                                 description: Should we append new repositories
                                 type: boolean
