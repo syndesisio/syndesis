@@ -18,11 +18,12 @@ build::usage() {
     --skip-tests               Skip unit, integration and system test execution
     --skip-checks              Disable all checks
 -f  --flash                    Skip checks and tests execution (fastest mode)
--i  --image                    Build Docker via s2i images (openshift only), too (for those modules creating images)
-    --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub (assumed if not using openshift)
+-i  --image                    Build container via s2i images (openshift only), too (for those modules creating images)
+    --docker                   Create images using docker. Used by CI for pushing to registry (assumed if not using openshift)
+    --podman                   Create operator image using podman. (not yet available for other images)
     --operator-tag             The tag to use for the operator image
     --operator-image           The image name of the operator (normally, syndesis/syndesis-operator but sometimes need to drop the 'syndesis' prefix)
-    --registry                 Registry to push the built images (used in conjunction with --docker)
+    --registry                 Registry to push the built images (used in conjunction with --docker / --podman)
 -p  --project <project>        Specifies the project / namespace to create images
 -g  --goals <g1>,<g2>, ..      Use custom Maven goals to execute for the build. Default goal is `install`
 -s  --settings <path>          Path to Maven settings.xml
@@ -169,7 +170,6 @@ maven_args() {
           local registry=$(readopt --registry)
           profiles="${profiles},image-push"
           regarg="-Ddocker.push.registry=${registry}"
-          #args="$args -Dimage.push=true -Ddocker.push.registry=${registry}"
         fi
 
         args="${args} -P ${profiles} -Dfabric8.mode=${mode} ${regarg}"
@@ -245,54 +245,57 @@ do_operator() {
         args="$args --source-gen ${source_gen}"
     fi
 
-    if [ $(hasflag -i --image --docker) ]; then
-        local BUILD_ARGS=""
-        if [ -n "${image}" ]; then
-          BUILD_ARGS="${BUILD_ARGS} --image-name=${image}"
-        fi
-
-        if [ -n "${tag}" ]; then
-          BUILD_ARGS="${BUILD_ARGS} --image-tag=${tag}"
-        fi
-
-        local image_build=""
-
-        if [[ $(hasflag --docker) ]]; then
-            image_build="docker"
-        else
-            #
-            # Try and detect the type of platform if any
-            #
-            determine_platform
-
-            if [[ ${IS_OPENSHIFT} == "YES" ]]; then
-                image_build="s2i"
-            else
-                image_build="docker"
-            fi
-        fi
-
-        #
-        # If building to kubernetes we might need a registry to push
-        # the images to (unless using the default of docker.io)
-        # Don't need it for s2i
-        #
-        if [ "$image_build" == "docker" ] && [ $(hasflag --registry) ]; then
-            local registry=$(readopt --registry)
-            BUILD_ARGS="${BUILD_ARGS} --registry ${registry}"
-        fi
-
-        ./build.sh ${args} --image-build="${image_build}" ${BUILD_ARGS}
-
-        check_error $(install_built_operator "${top_dir}/install/operator")
-
-        echo "=============================================================================="
-        echo "Built operator copied to ${OPERATOR_BINARY}."
-        echo "Built ${PLATFORM_DETECT} binary copied to ${PLATFORM_DETECT_BINARY}."
-        echo "=============================================================================="
-    else
-        check_error "ERROR: One of '-i / --image' and/or '--docker' should be specified"
+    if [ -n "${image}" ]; then
+        args="${args} --image-name=${image}"
     fi
+
+    if [ -n "${tag}" ]; then
+        args="${args} --image-tag=${tag}"
+    fi
+
+    local image_build=""
+    if [[ $(hasflag --podman) ]]; then
+        image_build="podman"
+    elif [[ $(hasflag -i --image --docker) ]]; then
+        image_build="docker"
+    else
+        #
+        # Try and detect the type of platform if any
+        #
+        determine_platform
+
+        if [[ ${IS_OPENSHIFT} == "YES" ]]; then
+            image_build="s2i"
+        else
+            image_build="docker"
+        fi
+    fi
+
+    echo "Building mode determined to be ${image_build}"
+    args="--image-build=${image_build} ${args}"
+
+    #
+    # If building to kubernetes we might need a registry to push
+    # the images to (unless using the default of docker.io)
+    # Don't need it for s2i
+    #
+    if [ $(hasflag --registry) ]; then
+        if [ "${image_build}" == "s2i" ]; then
+            echo "WARNING: The --registry flag is not applicable for s2i (openshift source-2-image) builds"
+        else
+            local registry=$(readopt --registry)
+            args="${args} --registry ${registry}"
+        fi
+    fi
+
+    ./build.sh ${args}
+
+    check_error $(install_built_operator "${top_dir}/install/operator")
+
+    echo "=============================================================================="
+    echo "Built operator copied to ${OPERATOR_BINARY}."
+    echo "Built ${PLATFORM_DETECT} binary copied to ${PLATFORM_DETECT_BINARY}."
+    echo "=============================================================================="
 
     popd >/dev/null
 }

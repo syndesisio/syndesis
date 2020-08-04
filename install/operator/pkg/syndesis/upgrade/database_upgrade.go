@@ -109,7 +109,7 @@ func (u *databaseUpgrade) run() (err error) {
 
 	// wait for the `syndesis-db-upgrade` to scale up
 	// this marks the end of the upgrade
-	if err := u.awaitScale(upgradeDeploymentName, newDeploymentTracker()); err != nil {
+	if err := u.awaitScale(upgradeDeploymentName, newDbUpgradeDeploymentTracker()); err != nil {
 		return err
 	}
 
@@ -311,22 +311,26 @@ type scaleTracker interface {
 	hasScaled() bool
 }
 
-type deploymentTracker struct {
+type dbUpgradeDeploymentTracker struct {
 	deployment appsv1.Deployment
 }
 
-func newDeploymentTracker() scaleTracker {
-	return &deploymentTracker{
+func newDbUpgradeDeploymentTracker() scaleTracker {
+	return &dbUpgradeDeploymentTracker{
 		deployment: appsv1.Deployment{},
 	}
 }
 
-func (d *deploymentTracker) obj() runtime.Object {
+func (d *dbUpgradeDeploymentTracker) obj() runtime.Object {
 	return &d.deployment
 }
 
-func (d *deploymentTracker) hasScaled() bool {
-	return d.deployment.Status.Replicas == d.deployment.Status.ReadyReplicas
+func (d *dbUpgradeDeploymentTracker) hasScaled() bool {
+	//
+	// Wait for scaling up of the db upgrade container
+	// Waits for the ReadyReplicas to equal the required Replicas
+	//
+	return *d.deployment.Spec.Replicas == d.deployment.Status.ReadyReplicas
 }
 
 type deploymentConfigTracker struct {
