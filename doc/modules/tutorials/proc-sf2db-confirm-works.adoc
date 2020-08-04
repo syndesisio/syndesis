@@ -27,7 +27,7 @@ in the fields that you mapped: *Company*, *Email*, *FirstName*,
 *LastName*, *LeadSource*, *Status*, *Phone*, and *Rating*.
 . In a new browser window, insert `*todo-*` in front of the URL
 for your {prodname} environment. For example:
-`\https://todo-app-proj761432.6a63.fuse-ignite.openshiftapps.com/`.
+`\http://todo-app-proj761432.6a63.fuse-ignite.openshiftapps.com/`.
 +
 Your {prodname} environment provides the To Do app, which has a
 REST API for accessing a database that contains tasks. In the AMQ to REST
