@@ -57,7 +57,7 @@ public class ExposureCustomizerTest {
             entry("port", Integer.toString(OpenShiftService.INTEGRATION_SERVICE_PORT))
         );
 
-        assertThat(i.getSpec().getConfiguration()).hasSize(4);
+        assertThat(i.getSpec().getConfiguration()).hasSize(7);
         assertThat(i.getSpec().getConfiguration())
             .filteredOn("type", "property")
             .anyMatch(
