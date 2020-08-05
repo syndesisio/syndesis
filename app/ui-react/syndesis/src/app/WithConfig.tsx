@@ -14,10 +14,6 @@ export interface IConfigFile {
     baseJSONInspectionServiceUrl: string;
     disableMappingPreviewMode: boolean;
   };
-  datavirt: {
-    dvUrl: string;
-    enabled: number;
-  };
   features: StringMap<any>,
   branding: {
     logoWhiteBg: string;
