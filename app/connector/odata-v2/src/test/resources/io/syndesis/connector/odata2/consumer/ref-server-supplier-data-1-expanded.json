@@ -1,0 +1,76 @@
+{
+  "Products": {
+    "entries": [
+      {
+        "Description": "Low fat milk",
+        "Price": 3.5,
+        "Rating": 3,
+        "DiscontinuedDate": null,
+        "ID": 1,
+        "ReleaseDate": 812505600000,
+        "Name": "Milk"
+      },
+      {
+        "Description": "Americana Variety - Mix of 6 flavors",
+        "Price": 20.9,
+        "Rating": 3,
+        "DiscontinuedDate": null,
+        "ID": 2,
+        "ReleaseDate": 970358400000,
+        "Name": "Vint soda"
+      },
+      {
+        "Description": "The Original Key Lime Cola",
+        "Price": 19.9,
+        "Rating": 3,
+        "DiscontinuedDate": 1159660800000,
+        "ID": 3,
+        "ReleaseDate": 1128124800000,
+        "Name": "Havina Cola"
+      },
+      {
+        "Description": "Mango flavor, 8.3 Ounce Cans (Pack of 24)",
+        "Price": 22.99,
+        "Rating": 3,
+        "DiscontinuedDate": null,
+        "ID": 4,
+        "ReleaseDate": 1041724800000,
+        "Name": "Fruit Punch"
+      },
+      {
+        "Description": "16-Ounce Plastic Bottles (Pack of 12)",
+        "Price": 22.8,
+        "Rating": 3,
+        "DiscontinuedDate": null,
+        "ID": 5,
+        "ReleaseDate": 1154649600000,
+        "Name": "Cranberry Juice"
+      },
+      {
+        "Description": "36 Ounce Cans (Pack of 3)",
+        "Price": 18.8,
+        "Rating": 3,
+        "DiscontinuedDate": null,
+        "ID": 6,
+        "ReleaseDate": 1162684800000,
+        "Name": "Pink Lemonade"
+      }
+    ],
+    "feedMetadata": {
+      "inlineCount": null,
+      "nextLink": null,
+      "deltaLink": null
+    },
+    "deletedEntries": null
+  },
+  "Address": {
+    "State": "WA",
+    "ZipCode": "98074",
+    "Street": "NE 228th",
+    "Country": "USA",
+    "City": "Sammamish"
+  },
+  "Concurrency": 0,
+  "ID": 0,
+  "Name": "Exotic Liquids"
+}

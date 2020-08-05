@@ -15,28 +15,14 @@
  */
 package io.syndesis.connector.odata;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Properties;
-import org.apache.camel.CamelContext;
-import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.component.properties.DefaultPropertiesParser;
-import org.apache.camel.component.properties.PropertiesComponent;
-import org.apache.camel.component.properties.PropertiesParser;
-import org.apache.camel.spring.SpringCamelContext;
-import org.junit.BeforeClass;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.PropertyResolver;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -51,6 +37,23 @@ import io.syndesis.connector.odata.server.ODataTestServer;
 import io.syndesis.connector.odata.server.ODataTestServer.Options;
 import io.syndesis.connector.support.util.PropertyBuilder;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import org.apache.camel.CamelContext;
+import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.component.properties.DefaultPropertiesParser;
+import org.apache.camel.component.properties.PropertiesComponent;
+import org.apache.camel.component.properties.PropertiesParser;
+import org.apache.camel.spring.SpringCamelContext;
+import org.junit.BeforeClass;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.PropertyResolver;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractODataTest implements ODataConstants {
 
@@ -126,7 +129,7 @@ public abstract class AbstractODataTest implements ODataConstants {
      * @throws IOException
      */
     public static String streamToString(InputStream inStream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
         StringBuilder builder = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {

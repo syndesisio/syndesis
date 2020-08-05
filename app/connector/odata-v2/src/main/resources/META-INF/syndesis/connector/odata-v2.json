@@ -1,0 +1,415 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Read a resource from the server",
+      "descriptor": {
+        "configuredProperties": {
+          "methodName": "read",
+          "connectorDirection": "from"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.odata2.customizer.ODataReadFromCustomizer"
+        ],
+        "connectorFactory": "io.syndesis.connector.odata2.component.ODataComponentFactory",
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Enhance the service url with a resource path and query",
+            "name": "Resource Path and Query Options",
+            "properties": {
+              "backoffIdleThreshold": {
+                "defaultValue": 1,
+                "deprecated": false,
+                "displayName": "Backoff Idle Threshold",
+                "group": "scheduler",
+                "javaType": "int",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "If no results are returned after (Backoff Threshold) times then polling will become idle for (Backoff Threshold * Backoff Multiplier) seconds",
+                "optionalPrefix": "consumer.",
+                "order": "8",
+                "required": false,
+                "secret": false,
+                "type": "integer"
+              },
+              "backoffMultiplier": {
+                "defaultValue": 1,
+                "deprecated": false,
+                "displayName": "Backoff Multiplier",
+                "group": "scheduler",
+                "javaType": "int",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "If no results are returned after (Backoff Threshold) times then polling will become idle for (Backoff Threshold * Backoff Multiplier) seconds",
+                "optionalPrefix": "consumer.",
+                "order": "9",
+                "required": false,
+                "secret": false,
+                "type": "integer"
+              },
+              "delay": {
+                "defaultValue": 30000,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "scheduler",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).",
+                "optionalPrefix": "consumer.",
+                "order": "7",
+                "required": false,
+                "secret": false,
+                "type": "duration"
+              },
+              "filterAlreadySeen": {
+                "defaultValue": "true",
+                "deprecated": false,
+                "displayName": "Filter Old Results",
+                "group": "common",
+                "javaType": "java.lang.Boolean",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "While continuing to monitor the OData service, filter out those results already communicated.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              },
+              "initialDelay": {
+                "defaultValue": 1000,
+                "deprecated": false,
+                "displayName": "Interval before polling starts",
+                "group": "consumer",
+                "javaType": "java.lang.Integer",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Wait amount of time before starting to poll",
+                "optionalPrefix": "consumer.",
+                "order": "6",
+                "required": false,
+                "secret": false,
+                "type": "duration"
+              },
+              "keyPredicate": {
+                "deprecated": false,
+                "displayName": "Entity Key Predicate",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "Parameter to refine the collection to a single entity, eg. People(<i><b>UserName='Bob'</i></b>) or Categories(<i><b>1</b></i>). Note: the property must be a key.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "queryParams": {
+                "deprecated": false,
+                "displayName": "Query Options",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "Enter the full query to be applied to the collection in OData query syntax.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "resourcePath": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be queried, eg. an <i><b>EntitySetName</b></i> or <i><b>EntityFunctionImportCall</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "splitResult": {
+                "defaultValue": true,
+                "deprecated": false,
+                "displayName": "Split Results",
+                "group": "consumer",
+                "javaType": "java.lang.Boolean",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "When enabled the result set is split into multiple results where each result represents a single OData entity.",
+                "order": "5",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:odata-v2-read-connector-from",
+      "name": "Read",
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Read a resource from the server",
+      "descriptor": {
+        "configuredProperties": {
+          "methodName": "read",
+          "connectorDirection": "to"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.odata2.customizer.ODataReadToCustomizer"
+        ],
+        "connectorFactory": "io.syndesis.connector.odata2.component.ODataComponentFactory",
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-instance"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Provide the resource information from which to probe the service",
+            "name": "Resource Path",
+            "properties": {
+              "resourcePath": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be queried, eg. an <i><b>EntitySetName</b></i> or <i><b>EntityFunctionImportCall</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:odata-v2-read-connector-to",
+      "name": "Read",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Delete an entity from a server resource",
+      "descriptor": {
+        "configuredProperties": {
+          "methodName": "delete"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.odata2.customizer.ODataDeleteCustomizer"
+        ],
+        "connectorFactory": "io.syndesis.connector.odata2.component.ODataComponentFactory",
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-instance"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Provide the resource information from which to remove data",
+            "name": "Resource Path",
+            "properties": {
+              "resourcePath": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be modified, eg. an <i><b>EntitySetName</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:odata-v2-delete-connector",
+      "name": "Delete",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Create an entity on a server resource",
+      "descriptor": {
+        "configuredProperties": {
+          "methodName": "create"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.odata2.customizer.ODataCreateCustomizer"
+        ],
+        "connectorFactory": "io.syndesis.connector.odata2.component.ODataComponentFactory",
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Provide the resource on which to create data",
+            "name": "Resource Path",
+            "properties": {
+              "resourcePath": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be modified, eg. an <i><b>EntitySetName</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:odata-v2-create-connector",
+      "name": "Create",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Update an entity on a server resource",
+      "descriptor": {
+        "configuredProperties": {
+          "methodName": "merge"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.odata2.customizer.ODataUpdateCustomizer"
+        ],
+        "connectorFactory": "io.syndesis.connector.odata2.component.ODataComponentFactory",
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Provide the resource on which to update the data",
+            "name": "Resource Path",
+            "properties": {
+              "resourcePath": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be modified, eg. an <i><b>EntitySetName</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:odata-v2-merge-connector",
+      "name": "Update",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    }
+  ],
+  "componentScheme": "olingo2",
+  "configuredProperties": {},
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Communicate with an OData Version 2.0 service.",
+  "icon": "assets:odata.svg",
+  "id": "odata-v2",
+  "name": "OData V2",
+  "properties": {
+    "basicPassword": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Password",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "common,security",
+      "labelHint": "Specify a password for basic authentication of the odata service url, if required.",
+      "order": "3",
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "basicUserName": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "User Name",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "common,security",
+      "labelHint": "Specify a user name for basic authentication of the odata service url, if required.",
+      "order": "2",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "serverCertificate": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "If the https/SSL server is internal and possesses a self-signed certificate then enable SSL by adding the certificate here.",
+      "displayName": "Server Certificate",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "common,security",
+      "order": "5",
+      "required": false,
+      "secret": false,
+      "type": "textarea"
+    },
+    "serviceUri": {
+      "deprecated": false,
+      "displayName": "Service Root URL",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The service root URL of your OData server",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}

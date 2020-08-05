@@ -349,10 +349,10 @@
       "type": "MAVEN"
     }
   ],
-  "description": "Communicate with an OData service.",
+  "description": "Communicate with an OData Version 4.0 service.",
   "icon": "assets:odata.svg",
   "id": "odata",
-  "name": "OData",
+  "name": "OData V4",
   "properties": {
     "basicPassword": {
       "componentProperty": true,
