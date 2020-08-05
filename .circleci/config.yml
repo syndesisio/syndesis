@@ -786,6 +786,12 @@ workflows:
           requires:
             - connector-support
       - connector:
+          name: connector-odata-v2
+          module: odata-v2
+          <<: *ignore_cherry_pick_branches
+          requires:
+            - connector-support
+      - connector:
           name: connector-knative
           module: knative
           <<: *ignore_cherry_pick_branches
@@ -848,6 +854,7 @@ workflows:
             - connector-concur
             - connector-kudu
             - connector-odata
+            - connector-odata-v2
             - connector-knative
             - connector-flow
             - connector-mongodb

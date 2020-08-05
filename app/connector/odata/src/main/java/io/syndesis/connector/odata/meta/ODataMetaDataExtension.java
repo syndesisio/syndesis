@@ -113,9 +113,8 @@ public class ODataMetaDataExtension extends AbstractMetaDataExtension implements
     }
 
     private static void extractEdmNames(ODataMetadata odataMetadata, Edm edm) {
-        Set<EdmNamed> namedList = new HashSet<>();
         EdmEntityContainer container = edm.getEntityContainer();
-        namedList.addAll(container.getEntitySets());
+        Set<EdmNamed> namedList = new HashSet<>(container.getEntitySets());
 
 //
 // TODO
@@ -142,7 +141,7 @@ public class ODataMetaDataExtension extends AbstractMetaDataExtension implements
         ODataRetrieveResponse<Edm> response = request.execute();
 
         if (response.getStatusCode() != 200) {
-            throw new IllegalStateException("Metatdata response failure. Return code: " + response.getStatusCode());
+            throw new IllegalStateException("Metadata response failure. Return code: " + response.getStatusCode());
         }
 
         return response.getBody();
