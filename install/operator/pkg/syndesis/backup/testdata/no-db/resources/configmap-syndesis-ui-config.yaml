@@ -14,10 +14,6 @@ data:
         "baseJSONInspectionServiceUrl": "https://syndesis-syndesis.apps-crc.testing/api/v1/atlas/json/",
         "disableMappingPreviewMode": false
       },
-      "datavirt": {
-        "dvUrl": "/dv/v1/",
-        "enabled": 0
-      },
       "features" : {
         "logging": false
       },

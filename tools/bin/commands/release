@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Java Maven modules which create Docker images
-JAVA_IMAGE_MODULES="server meta s2i dv"
+JAVA_IMAGE_MODULES="server meta s2i"
 
 # UI Maven modules wich create Docker images
 UI_IMAGE_MODULES="ui-react"
@@ -248,7 +248,7 @@ update_image_versions() {
     local version="$2"
 
     echo "==== Updating image versions to $version"
-    for image in syndesis-dv syndesis-ui syndesis-s2i syndesis-upgrade syndesis-meta syndesis-server; do
+    for image in syndesis-ui syndesis-s2i syndesis-upgrade syndesis-meta syndesis-server; do
         sed -E "s|($image):latest|\1:$version|" -i $topdir/install/operator/build/conf/config.yaml
     done
 }

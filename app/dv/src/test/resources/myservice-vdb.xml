@@ -1,5 +1,0 @@
-<vdb name="myservice" version="1">
-    <model visible="true" name="accounts">
-        <source name="accounts-xyz" translator-name="postgresql" connection-jndi-name="java:/accountsDS"/>
-    </model>    
-</vdb>

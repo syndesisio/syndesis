@@ -324,9 +324,9 @@ do_upgrade_pod() {
 }
 
 # All modules, in the right build order
-ALL_MODULES="common extension integration connector meta server s2i ui-react test operator upgrade dv"
-MAVEN_MODULES="common extension integration connector meta server s2i ui-react test dv"
-APP_IMAGES="ui-react server meta s2i dv"
+ALL_MODULES="common extension integration connector meta server s2i ui-react test operator upgrade"
+MAVEN_MODULES="common extension integration connector meta server s2i ui-react test"
+APP_IMAGES="ui-react server meta s2i"
 INFRA_IMAGES="operator upgrade"
 ALL_IMAGES="$APP_IMAGES $INFRA_IMAGES"
 MODULES=(
@@ -341,7 +341,6 @@ MODULES=(
   "server:common extension integration connector"
   "s2i:common extension integration connector server"
   "test:common extension integration connector server s2i"
-  "dv"
 )
 MODULE_PATHS=(
   "upgrade:tools/upgrade/"
@@ -354,18 +353,17 @@ MODULE_PATHS=(
   "meta:app/meta/"
   "server:app/server/"
   "s2i:app/s2i/"
-  "dv:app/dv/"
 )
 
 extract_modules() {
     local modules=""
 
     if [ "$(hasflag --backend -b)" ]; then
-        modules="$modules common extension integration connector server meta dv"
+        modules="$modules common extension integration connector server meta"
     fi
 
     if [ "$(hasflag --all-images)" ]; then
-        modules="$modules ui-react server meta s2i operator dv"
+        modules="$modules ui-react server meta s2i operator"
     fi
 
     if [ "$(hasflag --app-images)" ]; then
