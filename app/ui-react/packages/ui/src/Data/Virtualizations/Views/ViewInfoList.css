@@ -1,8 +1,0 @@
-.view-info-list {
-    max-height: 40em;
-    overflow-y: auto;
-}
-
-.view-info-list__connection-status {
-    margin-right: 7px;
-}

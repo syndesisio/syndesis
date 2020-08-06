@@ -46,9 +46,6 @@ func Test_GetAddons(t *testing.T) {
 		case "ops":
 			assert.Equal(t, config.Syndesis.Addons.Ops.Name(), addon.Name())
 			assert.Equal(t, config.Syndesis.Addons.Ops.Enabled, addon.IsEnabled())
-		case "dv":
-			assert.Equal(t, config.Syndesis.Addons.DV.Name(), addon.Name())
-			assert.Equal(t, config.Syndesis.Addons.DV.Enabled, addon.IsEnabled())
 		case "camelk":
 			assert.Equal(t, config.Syndesis.Addons.CamelK.Name(), addon.Name())
 			assert.Equal(t, config.Syndesis.Addons.CamelK.Enabled, addon.IsEnabled())
@@ -123,10 +120,6 @@ func Test_setConfigFromEnv(t *testing.T) {
 				Syndesis: SyndesisConfig{
 					RouteHostname: "route",
 					Addons: AddonsSpec{
-						DV: DvConfiguration{
-							AddonConfiguration: AddonConfiguration{Enabled: true},
-							Image:              "DV_IMAGE",
-						},
 						CamelK: CamelKConfiguration{Image: "CAMELK_IMAGE"},
 						Todo:   TodoConfiguration{Image: "TODO_IMAGE"},
 					},
@@ -169,10 +162,6 @@ func Test_setConfigFromEnv(t *testing.T) {
 				Syndesis: SyndesisConfig{
 					RouteHostname: "route",
 					Addons: AddonsSpec{
-						DV: DvConfiguration{
-							AddonConfiguration: AddonConfiguration{Enabled: true},
-							Image:              "docker.io/teiid/syndesis-dv:latest",
-						},
 					},
 					Components: ComponentsSpec{
 						Oauth:      OauthConfiguration{Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0"},
@@ -196,7 +185,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 			env: map[string]string{
 				"RELATED_PSQL": "PSQL_IMAGE", "RELATED_IMAGE_S2I": "S2I_IMAGE", "RELATED_IMAGE_OPERATOR": "OPERATOR_IMAGE",
 				"RELATED_IMAGE_UI": "UI_IMAGE", "RELATED_IMAGE_SERVER": "SERVER_IMAGE", "RELATED_IMAGE_META": "META_IMAGE",
-				"RELATED_IMAGE_DV": "DV_IMAGE", "RELATED_IMAGE_OAUTH": "OAUTH_IMAGE", "RELATED_IMAGE_PROMETHEUS": "PROMETHEUS_IMAGE",
+                "RELATED_IMAGE_OAUTH": "OAUTH_IMAGE", "RELATED_IMAGE_PROMETHEUS": "PROMETHEUS_IMAGE",
 				"RELATED_IMAGE_UPGRADE": "UPGRADE_IMAGE", "DATABASE_NAMESPACE": "DATABASE_NAMESPACE", "RELATED_IMAGE_DATABASE": "DATABASE_IMAGE",
 				"RELATED_IMAGE_PSQL_EXPORTER": "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT": "true", "TEST_SUPPORT": "false",
 				"INTEGRATION_LIMIT": "30", "DEPLOY_INTEGRATIONS": "true", "RELATED_IMAGE_CAMELK": "CAMELK_IMAGE",
@@ -265,9 +254,6 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 							ImageOperator: "jaegertracing/jaeger-operator:1.13",
 						},
 						Todo: v1beta1.AddonSpec{Enabled: true},
-						DV: v1beta1.DvConfiguration{
-							Enabled: true,
-						},
 						CamelK: v1beta1.AddonSpec{Enabled: true},
 						PublicAPI: v1beta1.PublicAPIConfiguration{
 							Enabled:       true,
@@ -300,11 +286,6 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 						},
 						Knative: KnativeConfiguration{
 							AddonConfiguration: AddonConfiguration{Enabled: false},
-						},
-						DV: DvConfiguration{
-							AddonConfiguration: AddonConfiguration{Enabled: true},
-							Resources:          Resources{Memory: "1024Mi"},
-							Image:              "docker.io/teiid/syndesis-dv:latest",
 						},
 						CamelK: CamelKConfiguration{
 							AddonConfiguration: AddonConfiguration{Enabled: true},
@@ -457,11 +438,6 @@ func getConfigLiteral() *Config {
 				},
 				Knative: KnativeConfiguration{
 					AddonConfiguration: AddonConfiguration{Enabled: false},
-				},
-				DV: DvConfiguration{
-					AddonConfiguration: AddonConfiguration{Enabled: false},
-					Image:              "docker.io/teiid/syndesis-dv:latest",
-					Resources:          Resources{Memory: "1024Mi"},
 				},
 				CamelK: CamelKConfiguration{
 					AddonConfiguration: AddonConfiguration{Enabled: false},

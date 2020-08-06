@@ -1,8 +1,6 @@
 import {
   ApiContext,
-  MonacoContext,
   ServerEventsContext,
-  WithMonacoEditorHelper,
   WithServerEvents,
 } from '@syndesis/api';
 // Don't move this line, otherwise we anger the pf4
@@ -19,7 +17,6 @@ import i18n from './i18n';
 import { ApiClientConnectorsModule } from './modules/apiClientConnectors';
 import { ConnectionsModule } from './modules/connections';
 import { DashboardModule } from './modules/dashboard';
-import { DataModule } from './modules/data';
 import { ExtensionsModule } from './modules/extensions';
 import { IntegrationsModule } from './modules/integrations';
 import routes from './modules/routes';
@@ -58,77 +55,61 @@ ReactDOM.render(
               <ApiContext.Provider
                 value={{
                   apiUri: `${config!.apiBase}${config!.apiEndpoint}`,
-                  dvApiUri: `${config!.apiBase}${config!.datavirt.dvUrl}`,
                   headers: { 'SYNDESIS-XSRF-TOKEN': 'awesome' },
                 }}
               >
                 <ApiContext.Consumer>
-                  {({ apiUri, dvApiUri, headers }) => (
+                  {({ apiUri, headers }) => (
                     <>
                       <WithServerEvents apiUri={apiUri} headers={headers}>
                         {functions => (
                           <ServerEventsContext.Provider value={functions}>
-                            <WithMonacoEditorHelper
-                              dvApiUri={dvApiUri}
-                            >
-                              {helper => (
-                                <MonacoContext.Provider
-                                  value={helper}
-                                >
-                                  <App
-                                    config={config!}
-                                    routes={[
-                                      {
-                                        component: DashboardModule,
-                                        exact: true,
-                                        label: 'Home',
-                                        to: routes.dashboard.root,
-                                      } as IAppRoute,
-                                      {
-                                        component: IntegrationsModule,
-                                        label: 'Integrations',
-                                        to: routes.integrations.list,
-                                      } as IAppRoute,
-                                      {
-                                        component: ConnectionsModule,
-                                        label: 'Connections',
-                                        to: routes.connections.connections,
-                                      } as IAppRoute,
-                                      {
-                                        childrens: [
-                                          {
-                                            component: ApiClientConnectorsModule,
-                                            label: 'API Client Connectors',
-                                            to: routes.apiClientConnectors.list,
-                                          } as IAppRoute,
-                                          {
-                                            component: ExtensionsModule,
-                                            label: 'Extensions',
-                                            to: routes.extensions.list,
-                                          } as IAppRoute,
-                                        ],
-                                        label: 'Customizations',
-                                      } as IAppRouteWithChildrens,
-                                      {
-                                        component: DataModule,
-                                        label: 'Data',
-                                        to: routes.data.root,
-                                      } as IAppRoute,
-                                      {
-                                        component: SettingsModule,
-                                        label: 'Settings',
-                                        to: routes.settings.root,
-                                      } as IAppRoute,
-                                      {
-                                        component: SupportModule,
-                                        label: 'Support',
-                                        to: routes.support.root,
-                                      } as IAppRoute,
-                                    ]}
-                                  />
-                                </MonacoContext.Provider>
-                              )}
-                            </WithMonacoEditorHelper>
+                            <App
+                              config={config!}
+                              routes={[
+                                {
+                                  component: DashboardModule,
+                                  exact: true,
+                                  label: 'Home',
+                                  to: routes.dashboard.root,
+                                } as IAppRoute,
+                                {
+                                  component: IntegrationsModule,
+                                  label: 'Integrations',
+                                  to: routes.integrations.list,
+                                } as IAppRoute,
+                                {
+                                  component: ConnectionsModule,
+                                  label: 'Connections',
+                                  to: routes.connections.connections,
+                                } as IAppRoute,
+                                {
+                                  childrens: [
+                                    {
+                                      component: ApiClientConnectorsModule,
+                                      label: 'API Client Connectors',
+                                      to: routes.apiClientConnectors.list,
+                                    } as IAppRoute,
+                                    {
+                                      component: ExtensionsModule,
+                                      label: 'Extensions',
+                                      to: routes.extensions.list,
+                                    } as IAppRoute,
+                                  ],
+                                  label: 'Customizations',
+                                } as IAppRouteWithChildrens,
+                                {
+                                  component: SettingsModule,
+                                  label: 'Settings',
+                                  to: routes.settings.root,
+                                } as IAppRoute,
+                                {
+                                  component: SupportModule,
+                                  label: 'Support',
+                                  to: routes.support.root,
+                                } as IAppRoute,
+                              ]}
+                            />
                           </ServerEventsContext.Provider>
                         )}
                       </WithServerEvents>
