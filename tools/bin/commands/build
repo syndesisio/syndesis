@@ -22,9 +22,9 @@ build::usage() {
 -i  --image                    Build container via s2i images (openshift only), too (for those modules creating images)
     --docker                   Create images using docker. Used by CI for pushing to registry (assumed if not using openshift)
     --podman                   Create operator image using podman. (not yet available for other images)
-    --operator-tag             The tag to use for the operator image
-    --operator-image           The image name of the operator (normally, syndesis/syndesis-operator but sometimes need to drop the 'syndesis' prefix)
     --registry                 Registry to push the built images (used in conjunction with --docker / --podman)
+    --image-namespace          The namespace where the images of the images in the registry (syndesis by default)
+    --image-tag                The tag to use for the built images (latest by default)
 -p  --project <project>        Specifies the project / namespace to create images
 -g  --goals <g1>,<g2>, ..      Use custom Maven goals to execute for the build. Default goal is `install`
 -s  --settings <path>          Path to Maven settings.xml
@@ -96,9 +96,7 @@ build::run() {
 
     # Build operator if requested
     if $(should_build "operator" "$modules") && [ "$canbuildop" = "OK" ]; then
-        local optag=$(readopt --operator-tag)
-        local opimage=$(readopt --operator-image)
-        do_operator $top_dir "${optag}" "${opimage}"
+        do_operator $top_dir
     fi
 
     # Build image for upgrade pod if requested
@@ -169,12 +167,22 @@ maven_args() {
         local regarg=""
         if [ "${mode}" == "kubernetes" ] && [ $(hasflag --registry) ]; then
           local registry=$(readopt --registry)
+          local nm=$(readopt --image-namespace)
+
+          # Profile to switch on pushing to registry
           profiles="${profiles},image-push"
           regarg="-Ddocker.push.registry=${registry}"
+          if [ -n "${nm}" ]; then
+              regarg="${regarg} -Dimage.namespace=${nm}"
+          fi
         fi
 
         args="${args} -P ${profiles} -Dfabric8.mode=${mode} ${regarg}"
 
+        local tag=$(readopt --image-tag)
+        if [ -n "${tag}" ]; then
+            args="${args} -Dimage.tag=${tag} "
+        fi
     fi
 
     if [ $(hasflag --camel-snapshot) ]; then
@@ -230,9 +238,7 @@ maven_args() {
 }
 
 do_operator() {
-    local top_dir=$1
-    local tag=${2:-}
-    local image=${3:-}
+    local top_dir="${1}"
 
     echo "=============================================================================="
     echo "Building syndesis-operator"
@@ -246,10 +252,12 @@ do_operator() {
         args="$args --source-gen ${source_gen}"
     fi
 
-    if [ -n "${image}" ]; then
-        args="${args} --image-name=${image}"
+    local image_namespace=$(readopt --image-namespace)
+    if [ -n "${image_namespace}" ]; then
+        args="${args} --image-namespace=${image_namespace}"
     fi
 
+    local tag=$(readopt --image-tag)
     if [ -n "${tag}" ]; then
         args="${args} --image-tag=${tag}"
     fi

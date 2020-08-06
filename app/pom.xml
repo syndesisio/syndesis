@@ -43,13 +43,17 @@
     <!-- Atlasmap version -->
     <atlasmap.version>2.1.0-M.1</atlasmap.version>
 
+    <!-- Image namespace - can be overridden on cli -->
+    <image.namespace>syndesis</image.namespace>
+    <!-- Image tag - can be overridden on cli -->
+    <image.tag>%l</image.tag>
     <!-- Image names -->
-    <image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
-    <image.s2i.camelk>syndesis/syndesis-s2i-camelk:%l</image.s2i.camelk>
-    <image.server>syndesis/syndesis-server:%l</image.server>
-    <image.meta>syndesis/syndesis-meta:%l</image.meta>
-    <image.ui>syndesis/syndesis-ui:%l</image.ui>
-    <image.dv>syndesis/syndesis-dv:%l</image.dv>
+    <image.s2i>${image.namespace}/syndesis-s2i:${image.tag}</image.s2i>
+    <image.s2i.camelk>${image.namespace}/syndesis-s2i-camelk:${image.tag}</image.s2i.camelk>
+    <image.server>${image.namespace}/syndesis-server:${image.tag}</image.server>
+    <image.meta>${image.namespace}/syndesis-meta:${image.tag}</image.meta>
+    <image.ui>${image.namespace}/syndesis-ui:${image.tag}</image.ui>
+    <image.dv>${image.namespace}/syndesis-dv:${image.tag}</image.dv>
 
     <fabric8.maven.plugin.version>4.2.0</fabric8.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
@@ -203,7 +207,7 @@
       </build>
     </profile>
 
-    <!-- Profile for pushing a compiled image to a regsitry defined by the system property docker.push.registry -->
+    <!-- Profile for pushing a compiled image to a registry defined by the system property docker.push.registry -->
     <profile>
       <id>image-push</id>
       <activation>

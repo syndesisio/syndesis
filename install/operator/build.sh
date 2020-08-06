@@ -26,9 +26,11 @@ add_to_trap "print_error ${ERROR_FILE}"
 #
 trap "process_trap" EXIT
 
-CONTAINER_REGISTRY="$(readopt  --registry           '')"
-OPERATOR_IMAGE_NAME="$(readopt --image-name         docker.io/syndesis/syndesis-operator)"
-OPERATOR_IMAGE_TAG="$(readopt  --image-tag          latest)"
+IMAGE_NAME="syndesis-operator"
+
+CONTAINER_REGISTRY="$(readopt  --registry           docker.io)"
+IMAGE_NAMESPACE="$(readopt     --image-namespace    syndesis)"
+IMAGE_TAG="$(readopt           --image-tag          latest)"
 S2I_STREAM_NAME="$(readopt     --s2i-stream-name    syndesis-operator)"
 OPERATOR_BUILD_MODE="$(readopt --operator-build     auto)"
 IMAGE_BUILD_MODE="$(readopt    --image-build        auto)"
@@ -47,7 +49,7 @@ where options are:
   --operator-build <auto|docker|podman|go|skip>  how to build the operator executable (default: auto)
   --image-build <auto|docker|podman|s2i|skip>    how to build the image (default: auto)
   --registry <registry host[:port]>       custom container registry to locate the image
-  --image-name <name>                     container image name (default: syndesis/syndesis-operator)
+  --image-namespace <namespace>           container namespace of the image (default: syndesis)
   --image-tag  <tag>                      container image tag (default: latest)
   --s2i-stream-name <name>                s2i image stream name (default: syndesis-operator)
   --go-options <name>                     additional build options to pass to the go build
@@ -66,20 +68,16 @@ BUILD_TIME=$(date +%Y-%m-%dT%H:%M:%S%z)
 # the image coordinate in the operator resource can be rendered
 # pointing to the registry
 #
-FULL_OPERATOR_IMAGE_NAME=$OPERATOR_IMAGE_NAME
-if [ -n "$CONTAINER_REGISTRY" ]; then
-	OPERATOR_IMAGE_NAME=${OPERATOR_IMAGE_NAME##*/} # Drop prefix as not necessarily applicable to registry
-	FULL_OPERATOR_IMAGE_NAME="${CONTAINER_REGISTRY}/${OPERATOR_IMAGE_NAME}"
-fi
+FULL_OPERATOR_IMAGE_NAME="${CONTAINER_REGISTRY}/${IMAGE_NAMESPACE}/${IMAGE_NAME}"
 
 if [ $OPERATOR_BUILD_MODE != "skip" ] ; then
 	LD_FLAGS=$(echo "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=${FULL_OPERATOR_IMAGE_NAME}" \
-		"-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorTag=${OPERATOR_IMAGE_TAG}" \
+		"-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorTag=${IMAGE_TAG}" \
 		"-X github.com/syndesisio/syndesis/install/operator/pkg.BuildDateTime=${BUILD_TIME}")
 	echo "LD_FLAGS: ${LD_FLAGS}"
   build_operator $OPERATOR_BUILD_MODE "$SOURCE_GEN" "$GO_PROXY_URL" -ldflags "${LD_FLAGS}" $GO_BUILD_OPTIONS
 fi
 
 if [ $IMAGE_BUILD_MODE != "skip" ] ; then
-  build_image $IMAGE_BUILD_MODE $OPERATOR_IMAGE_NAME $OPERATOR_IMAGE_TAG $S2I_STREAM_NAME $CONTAINER_REGISTRY
+  build_image $IMAGE_BUILD_MODE $CONTAINER_REGISTRY $IMAGE_NAMESPACE $IMAGE_NAME $IMAGE_TAG $S2I_STREAM_NAME
 fi
