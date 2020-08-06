@@ -525,71 +525,6 @@ jobs:
           destination: /images/syndesis-upgrade.tar.gz
       - <<: *quay_transfer
 
-  # Integration test
-  integration-test:
-    environment:
-      <<: *common_env
-    machine:
-      image: ubuntu-1604:201903-01
-    steps:
-      - checkout
-      - <<: *attach_m2_workspace
-      - run:
-          name: Run integration tests
-          command: |
-            mkdir -p ~/integrations/
-            mkdir -p ~/junit/
-            mkdir -p ~/logs/
-            ./tools/bin/syndesis integration-test --output /home/circleci/integrations --default-timeout 180 | tee ~/logs/test_log.txt
-            cp ./app/test/integration-test/target/integration-runtime.log ~/logs/
-      - run:
-          name: Collect test results
-          when: always
-          command: |
-            find . -type f -regextype posix-extended -regex ".*target/.*TESTS?-.*xml" | xargs -i cp --backup --suffix=.xml {} ~/junit
-      - store_test_results:
-          path: ~/junit
-      - store_artifacts:
-          path: ~/logs
-      - store_artifacts:
-          path: ~/integrations
-
-  system-test:
-    <<: *job_defaults
-    environment:
-      <<: *common_env
-    steps:
-      - checkout
-      - run:
-          name: Prep for Maven cache load
-          command: |
-            cat $(find app -name pom.xml ! -path */src/* | sort) > all-poms
-      - restore_cache:
-          key: syndesis-mvn-tests-{{ checksum "all-poms" }}
-      - run:
-          name: Run System Tests
-          command: |
-            if [ -n "${OPENSHIFT_TOKEN}" ]; then
-              # Install 'oc' and login
-              curl -fsSL https://github.com/openshift/origin/releases/download/v3.6.0/openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz | tar xz -C /usr/bin --strip-components 1
-              oc login --server "${OPENSHIFT_SERVER}" --token "${OPENSHIFT_TOKEN}"
-              test_id="${CIRCLE_JOB}-${CIRCLE_BUILD_NUM}"
-
-              # Install missing libs for UI tests
-              apt-get update
-              apt-get install libxss1
-
-              ./tools/bin/syndesis system-test --batch-mode --server "${OPENSHIFT_SERVER}" --token "${OPENSHIFT_TOKEN}" --test-id "$test_id" --project ${OPENSHIFT_PROJECT} | tee test_log.txt | grep -v " Download"
-              # Always cleanup
-              ./tools/bin/syndesis system-test --release-project --test-id "$test_id"
-            fi
-      - store_artifacts:
-          path: test_log.txt
-      - save_cache:
-          key: syndesis-mvn-tests-{{ checksum "all-poms" }}
-          paths:
-            - ~/.m2
-
   license-check:
     <<: *job_defaults
     environment:
@@ -616,10 +551,6 @@ workflows:
   version: 2
   syndesis:
     jobs:
-      - system-test:
-          filters:
-            branches:
-              only: system-test
       - license-check:
           <<: *ignore_cherry_pick_branches
       - ui-doc:
@@ -941,34 +872,3 @@ workflows:
               only: master
           requires:
             - server
-  nightly:
-    triggers:
-      - schedule:
-          cron: "0 0 * * 1-5"
-          filters:
-            branches:
-              only:
-                - master
-    jobs:
-      - common
-      - extension:
-          requires:
-            - common
-      - integration:
-          requires:
-            - extension
-      - connectors:
-          requires:
-            - integration
-      - meta:
-          requires:
-            - connectors
-      - server:
-          requires:
-            - connectors
-      - s2i:
-          requires:
-            - server
-      - integration-test:
-          requires:
-            - s2i
