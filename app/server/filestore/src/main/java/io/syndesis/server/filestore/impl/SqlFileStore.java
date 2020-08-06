@@ -273,7 +273,11 @@ public class SqlFileStore {
      * Postgres does not allow to read from the large object after the connection has been closed.
      */
     private InputStream doReadPostgres(String path) {
-        try (Handle h = dbi.open()) {
+        Handle h = dbi.open();
+        // WARNING: we must not use try-with-resource, as the Handle object will be closed
+        // by the caller via HandleCloserInputStream.close() method. It's the way this has been designed so,
+        // if you use try-with-resources you'll get a SQLConnection exception at runtime.
+        try {
             h.getConnection().setAutoCommit(false);
 
             List<Map<String, Object>> res = h.select("SELECT data FROM filestore WHERE path=?", path);
@@ -287,10 +291,15 @@ public class SqlFileStore {
                 LargeObjectManager lobj = getPostgresConnection(h.getConnection()).getLargeObjectAPI();
                 LargeObject obj = lobj.open(oid.get(), LargeObjectManager.READ);
                 return new HandleCloserInputStream(h, obj.getInputStream());
+            } else {
+                h.close();
+                return null;
             }
 
-            return null;
         } catch (SQLException e) {
+            if (!h.isClosed()) {
+                h.close();
+            }
             throw DaoException.launderThrowable(e);
         }
     }
