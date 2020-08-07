@@ -91,6 +91,13 @@
       <artifactId>resteasy-jackson2-provider</artifactId>
     </dependency>
 
+    <!-- required by resteasy-jackson2-provider -->
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-core</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>com.google.errorprone</groupId>
       <artifactId>error_prone_annotations</artifactId>

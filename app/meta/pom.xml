@@ -917,6 +917,18 @@
         </executions>
       </plugin>
 
+      <!-- Resteasy dependency has a duplication in org.jboss.resteasy:resteasy-client:4.5.6.Final and org.jboss.resteasy:resteasy-client-api:4.5.6.Final -->
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <ignoredResourcePatterns>
+            <ignoredResourcePattern>org/jboss/resteasy/client/jaxrs/i18n/Messages.i18n_en.properties</ignoredResourcePattern>
+            <ignoredResourcePattern>org/jboss/resteasy/client/jaxrs/i18n/Messages.i18n_xx.properties</ignoredResourcePattern>
+          </ignoredResourcePatterns>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 
