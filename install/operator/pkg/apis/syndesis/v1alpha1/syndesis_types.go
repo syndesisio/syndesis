@@ -84,7 +84,6 @@ type ComponentsSpec struct {
 	PostgresExporter PostgresExporterConfiguration `json:"psql,omitempty"`
 	Prometheus       PrometheusConfiguration       `json:"prometheus,omitempty"`
 	Grafana          GrafanaConfiguration          `json:"grafana,omitempty"`
-	Komodo           KomodoConfiguration           `json:"komodo,omitempty"`
 	Upgrade          UpgradeConfiguration          `json:"upgrade,omitempty"`
 }
 
@@ -97,13 +96,6 @@ type PostgresExporterConfiguration struct {
 	Tag         string `json:"tag,omitempty"`
 	Registry    string `json:"registry,omitempty"`
 	ImagePrefix string `json:"imagePrefix,omitempty"`
-}
-
-type KomodoConfiguration struct {
-	Registry    string    `json:"registry,omitempty"`
-	ImagePrefix string    `json:"imagePrefix,omitempty"`
-	Resources   Resources `json:"resources,omitempty"`
-	Tag         string    `json:"tag,omitempty"`
 }
 
 type S2IConfiguration struct {

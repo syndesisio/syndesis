@@ -45,8 +45,6 @@ spec:
 {{- if .RelatedImages }}
           - name: OPERATOR_NAME
             value: "syndesis-operator"
-          - name: RELATED_IMAGE_DV
-            value: '{{.DvImage}}'
           - name: RELATED_IMAGE_CAMELK
             value: '{{.CamelKImage}}'
           - name: RELATED_IMAGE_TODO

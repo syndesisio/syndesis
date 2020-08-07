@@ -471,38 +471,6 @@ jobs:
           paths:
             - ~/.m2
 
-  # dv
-  dv:
-    <<: *job_defaults
-    environment:
-      DOCKER_IMAGES: syndesis-dv
-      <<: *common_env
-    steps:
-      - setup_remote_docker
-      - checkout
-      - restore_cache:
-          key: syndesis-mvn-dv-{{ checksum "app/dv/pom.xml" }}
-      - <<: *attach_m2_workspace
-      - run:
-          name: Build DV
-          command: |
-            ./tools/bin/syndesis build --batch-mode --module dv --docker | tee build_log.txt
-      - <<: *save_junit
-      - store_test_results:
-          path: /workspace/junit
-      - store_artifacts:
-          path: build_log.txt
-      - <<: *push_images
-      - store_artifacts:
-          path: syndesis-dv.tar.gz
-          destination: /images/syndesis-dv.tar.gz
-      - <<: *quay_transfer
-      - <<: *persist_m2_workspace
-      - save_cache:
-          key: syndesis-mvn-dv-{{ checksum "app/dv/pom.xml" }}
-          paths:
-            - ~/.m2
-
   operator:
     working_directory: /home/circleci/project
     docker:
@@ -894,10 +862,6 @@ workflows:
             - integration
             - connector-catalog
             - common
-      - dv:
-          <<: *ignore_cherry_pick_branches
-          requires:
-            - server
       - s2i:
           <<: *ignore_cherry_pick_branches
           requires:

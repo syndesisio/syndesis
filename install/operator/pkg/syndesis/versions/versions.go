@@ -190,8 +190,6 @@ func (api syndesisAPI) v1alpha1ToV1beta1() error {
 				api.v1beta1.Spec.Addons.Todo.Enabled = addon["enabled"] == "true"
 			case "camelk":
 				api.v1beta1.Spec.Addons.CamelK.Enabled = addon["enabled"] == "true"
-			case "komodo":
-				api.v1beta1.Spec.Addons.DV.Enabled = addon["enabled"] == "true"
 			case "jaeger":
 				api.v1beta1.Spec.Addons.Jaeger.Enabled = addon["enabled"] == "true"
 			}
@@ -268,13 +266,6 @@ func (api syndesisAPI) v1alpha1ToV1beta1() error {
 		if api.v1alpha1.Spec.Components.Grafana.Resources.Limits != nil {
 			if m, ok := api.v1alpha1.Spec.Components.Grafana.Resources.Limits[v1.ResourceMemory]; ok {
 				api.v1beta1.Spec.Components.Grafana.Resources.Memory = m.String()
-			}
-		}
-
-		// Komodo
-		if api.v1alpha1.Spec.Components.Komodo.Resources.Limits != nil {
-			if m, ok := api.v1alpha1.Spec.Components.Komodo.Resources.Limits[v1.ResourceMemory]; ok {
-				api.v1beta1.Spec.Addons.DV.Resources.Memory = m.String()
 			}
 		}
 
