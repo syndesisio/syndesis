@@ -53,7 +53,8 @@
               "kind": "ENDPOINT",
               "entrypoint": "direct:extension"
             },
-            "actionType": "step"
+            "actionType": "step",
+            "tags":["expose"]
           },
           "extension": {
             "extensionId": "my-extension-1",
@@ -87,7 +88,8 @@
               "kind": "BEAN",
               "entrypoint": "com.example.MyExtension::action"
             },
-            "actionType": "step"
+            "actionType": "step",
+            "tags":["expose"]
           },
           "extension": {
             "extensionId": "my-extension-2",

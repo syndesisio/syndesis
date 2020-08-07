@@ -21,8 +21,6 @@ import java.nio.file.Paths;
 import java.util.EnumSet;
 import java.util.Objects;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.integration.Integration;
@@ -33,6 +31,7 @@ import io.syndesis.server.controller.integration.camelk.TestResourceManager;
 import io.syndesis.server.openshift.Exposure;
 import org.junit.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class OpenApiCustomizerTest {
@@ -68,15 +67,7 @@ public class OpenApiCustomizerTest {
             EnumSet.of(Exposure.SERVICE)
         );
 
-        assertThat(i.getSpec().getConfiguration()).hasSize(2);
-        assertThat(i.getSpec().getConfiguration()).anyMatch(
-            c -> Objects.equals("customizer.servletregistration.enabled=true", c.getValue())
-                    && Objects.equals("property", c.getType())
-        );
-        assertThat(i.getSpec().getConfiguration()).anyMatch(
-            c -> Objects.equals("customizer.servletregistration.path=/*", c.getValue())
-                && Objects.equals("property", c.getType())
-        );
+        assertThat(i.getSpec().getConfiguration()).hasSize(0);
         assertThat(i.getSpec().getSources()).anyMatch(
             s -> Objects.equals("openapi-routes", s.getDataSpec().getName()) && Objects.equals("xml", s.getLanguage())
                 && !s.getDataSpec().getCompression().booleanValue()

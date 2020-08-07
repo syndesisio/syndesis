@@ -15,6 +15,10 @@
  */
 package io.syndesis.server.controller.integration.camelk.customizer;
 
+import java.io.InputStream;
+import java.util.EnumSet;
+import java.util.Objects;
+
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
@@ -27,10 +31,6 @@ import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.controller.integration.camelk.TestResourceManager;
 import io.syndesis.server.openshift.Exposure;
 import org.junit.Test;
-
-import java.io.InputStream;
-import java.util.EnumSet;
-import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -47,7 +47,7 @@ public class WebhookCustomizerTest {
             webhookIncomingAction = connector.getActions(ConnectorAction.class).stream()
                 .filter(a -> a.getId().get().equals("io.syndesis:webhook-incoming"))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException());
+                .orElseThrow(IllegalArgumentException::new);
         }
 
         webhookIncomingAction = webhookIncomingAction.builder().descriptor(new ConnectorDescriptor.Builder().connectorId("webhook").build()).build();
@@ -77,13 +77,9 @@ public class WebhookCustomizerTest {
             EnumSet.of(Exposure.SERVICE)
         );
 
-        assertThat(i.getSpec().getConfiguration()).hasSize(2);
+        assertThat(i.getSpec().getConfiguration()).hasSize(1);
         assertThat(i.getSpec().getConfiguration()).anyMatch(
-            c -> Objects.equals("customizer.servletregistration.enabled=true", c.getValue())
-                    && Objects.equals("property", c.getType())
-        );
-        assertThat(i.getSpec().getConfiguration()).anyMatch(
-            c -> Objects.equals("customizer.servletregistration.path=/webhook/*", c.getValue())
+            c -> Objects.equals("customizer.platform-http.path=/webhook/", c.getValue())
                 && Objects.equals("property", c.getType())
         );
     }

@@ -76,8 +76,8 @@ public class ConnectorStepHandlerTest {
                 .secret(true)
                 .build())
         .componentScheme("twitter")
-        .addDependency(Dependency.maven("io.syndesis:integration-component-proxy:latest"))
-        .addDependency(Dependency.maven("org.apache.camel:camel-twitter:latest"))
+        .addDependency(Dependency.maven("io.syndesis:integration-component-proxy"))
+        .addDependency(Dependency.maven("org.apache.camel:camel-twitter"))
         .addAction(TWITTER_MENTION_ACTION)
         .build();
 

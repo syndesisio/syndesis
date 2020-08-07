@@ -35,7 +35,7 @@
     <skip.integration.tests>true</skip.integration.tests>
 
     <syndesis.integration.runtime>spring-boot</syndesis.integration.runtime>
-    <syndesis.camel.k.customizers>health,logging,syndesis</syndesis.camel.k.customizers>
+    <syndesis.camel.k.customizers>metadata,logging,syndesis</syndesis.camel.k.customizers>
     <syndesis.logging.enabled>true</syndesis.logging.enabled>
     <syndesis.server.port>8080</syndesis.server.port>
     <syndesis.management.port>8081</syndesis.management.port>

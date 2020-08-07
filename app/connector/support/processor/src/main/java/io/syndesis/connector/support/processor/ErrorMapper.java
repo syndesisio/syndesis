@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import io.syndesis.common.util.json.JsonUtils;
@@ -72,7 +73,8 @@ public final class ErrorMapper {
         }
         Integer responseCode = httpResponseCodeMappings.get(sce.getCategory()) != null ?
                 httpResponseCodeMappings.get(sce.getCategory()): defaultResponseCode;
-        return new ErrorStatusInfo(responseCode, sce.getCategory(), sce.getMessage(), deriveErrorName(sce));
+        return new ErrorStatusInfo(responseCode, sce.getCategory(),
+            Optional.ofNullable(sce.getMessage()).orElse("no message"), deriveErrorName(sce));
     }
 
     private static String deriveErrorName(final Throwable t) {

@@ -26,6 +26,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -57,7 +58,6 @@ import io.syndesis.server.openshift.ExposureHelper;
 import io.syndesis.server.openshift.OpenShiftConfigurationProperties;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.integration.source.IntegrationSource;
-import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,9 +95,10 @@ public class CamelKProjectBuilder extends AbstractMavenProjectBuilder<CamelKProj
     }
 
     @Override
-    protected void customizePomFile(IntegrationSource source, Path pomFile) throws IOException {
-        Files.write(pomFile, generatePom(source, pomFile));
-        super.customizePomFile(source, pomFile);
+    protected void customizePomFile(IntegrationSource source, Path projectDir) throws IOException {
+        Path pomFile = projectDir.resolve("pom.xml");
+        Files.write(pomFile, generatePom(source, projectDir));
+        super.customizePomFile(source, projectDir);
     }
 
     @Override
@@ -115,6 +116,17 @@ public class CamelKProjectBuilder extends AbstractMavenProjectBuilder<CamelKProj
         }
 
         return super.customizePomLine(line);
+    }
+
+    @Override
+    protected Properties customizeApplicationProperties(Integration integration, Properties applicationProperties) {
+        applicationProperties.put("camel.main.autoConfigurationFailFast", "false");
+
+        for (String customizer : SyndesisTestEnvironment.getCamelkCustomizers()) {
+            applicationProperties.put(String.format("customizer.%s.enabled", customizer), "true");
+        }
+
+        return applicationProperties;
     }
 
     private String getCamelVersion() {
@@ -137,7 +149,7 @@ public class CamelKProjectBuilder extends AbstractMavenProjectBuilder<CamelKProj
         }
     }
 
-    private byte[] generatePom(final IntegrationSource source, Path pomFile) throws IOException {
+    private byte[] generatePom(final IntegrationSource source, Path projectDir) throws IOException {
         final Integration integration = source.get();
         final Set<MavenGav> dependencies = new StaticIntegrationResourceManager(source)
                 .collectDependencies(integration).stream()
@@ -167,24 +179,19 @@ public class CamelKProjectBuilder extends AbstractMavenProjectBuilder<CamelKProj
 
         addDependencies(integrationCR, dependencies);
 
-        Path projectPath = pomFile.getParent();
-        extractResources(integrationCR, projectPath);
-        extractSources(integrationCR, projectPath);
+        extractResources(integrationCR, projectDir);
+        extractSources(integrationCR, projectDir);
 
-        StringBuilder propertiesBuilder = new StringBuilder(25);
+        StringBuilder integrationCRProperties = new StringBuilder(35);
+        integrationCRProperties.append("#Camel-K integration properties").append(System.lineSeparator());
         integrationCR.getSpec().getConfiguration().stream().filter(configurationSpec -> "property".equals(configurationSpec.getType())).forEach(configurationSpec -> {
-            propertiesBuilder.append(configurationSpec.getValue()).append(System.lineSeparator());
+            integrationCRProperties.append(configurationSpec.getValue()).append(System.lineSeparator());
         });
 
-        for (String customizer : SyndesisTestEnvironment.getCamelkCustomizers()) {
-            propertiesBuilder.append("customizer.").append(customizer).append(".enabled=true").append(System.lineSeparator());
-        }
+        // auto add integration custom resource configuration to application properties
+        Files.write(projectDir.resolve("src").resolve("main").resolve("resources").resolve("application.properties"),
+            integrationCRProperties.toString().getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
 
-        if (ObjectHelper.isEmpty(propertiesBuilder.toString()) && projectPath != null) {
-            // auto add integration custom resource configuration to application properties
-            Files.write(projectPath.resolve("src").resolve("main").resolve("resources").resolve("application.properties"),
-                    propertiesBuilder.toString().getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
-        }
 
         return ProjectGeneratorHelper.generate(
                 new PomContext(
@@ -221,7 +228,7 @@ public class CamelKProjectBuilder extends AbstractMavenProjectBuilder<CamelKProj
         }
     }
 
-    private void addDependencies(io.syndesis.server.controller.integration.camelk.crd.Integration integrationCR, Set<MavenGav> dependencies) {
+    private static void addDependencies(io.syndesis.server.controller.integration.camelk.crd.Integration integrationCR, Set<MavenGav> dependencies) {
         for (String dependency : integrationCR.getSpec().getDependencies()) {
             if (dependency.contains("/")) {
                 String version = null;
@@ -251,10 +258,6 @@ public class CamelKProjectBuilder extends AbstractMavenProjectBuilder<CamelKProj
                                 gav.getArtifactId().equals(p.getArtifactId()))) {
                     dependencies.add(gav);
                 }
-            }
-
-            if (dependencies.stream().anyMatch(p -> p.getArtifactId().equals("camel-k-runtime-servlet"))) {
-                dependencies.add(new MavenGav("org.apache.camel", "camel-servlet", versionService.getCamelVersion()));
             }
         }
     }

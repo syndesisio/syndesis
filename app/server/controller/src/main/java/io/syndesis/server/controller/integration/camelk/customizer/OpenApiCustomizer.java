@@ -31,7 +31,6 @@ import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.integration.camelk.CamelKPublishHandler;
 import io.syndesis.server.controller.integration.camelk.CamelKSupport;
-import io.syndesis.server.controller.integration.camelk.crd.ConfigurationSpec;
 import io.syndesis.server.controller.integration.camelk.crd.DataSpec;
 import io.syndesis.server.controller.integration.camelk.crd.Integration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationSpec;
@@ -90,18 +89,6 @@ public class OpenApiCustomizer implements CamelKIntegrationCustomizer {
             spec.addResources(generateOpenAPIResource(res.get()));
             spec.addSources(generateOpenAPIRestDSL(res.get()));
             spec.addSources(generateOpenAPIRestEndpoint());
-            spec.addConfiguration(
-                new ConfigurationSpec.Builder()
-                    .type("property")
-                    .value("customizer.servletregistration.enabled=true")
-                    .build()
-            );
-            spec.addConfiguration(
-                new ConfigurationSpec.Builder()
-                    .type("property")
-                    .value("customizer.servletregistration.path=/*")
-                    .build()
-            );
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

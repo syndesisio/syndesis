@@ -21,7 +21,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,6 +33,7 @@ import java.util.Properties;
 
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.MavenProperties;
 import io.syndesis.integration.api.IntegrationResourceManager;
@@ -97,27 +98,29 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
                 }
             }
 
-            customizePomFile(source, projectDir.resolve("pom.xml"));
-            customizeIntegrationFile(source, projectDir.resolve("src").resolve("main").resolve("resources").resolve("syndesis").resolve("integration").resolve("integration.json"));
-
             // auto add secrets and other integration test settings to application properties
             Files.write(projectDir.resolve("src").resolve("main").resolve("resources").resolve("application.properties"),
-                    getApplicationProperties(source).getBytes(Charset.forName("utf-8")), StandardOpenOption.APPEND);
+                getApplicationProperties(source).getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+
+            customizePomFile(source, projectDir);
+            customizeIntegrationFile(source, projectDir.resolve("src").resolve("main").resolve("resources").resolve("syndesis").resolve("integration").resolve("integration.json"));
+
             return new Project.Builder().projectPath(projectDir).build();
         } catch (IOException e) {
             throw new IllegalStateException("Failed to create integration project", e);
         }
     }
 
-    protected void customizePomFile(IntegrationSource source, Path pomFile) throws IOException {
+    protected void customizePomFile(IntegrationSource source, Path projectDir) throws IOException {
+        Path pomFile = projectDir.resolve("pom.xml");
         // overwrite the syndesis version in generated pom.xml as project export may use another version as required in test.
         if (Files.exists(pomFile)) {
-            List<String> pomLines = Files.readAllLines(pomFile, Charset.forName("utf-8"));
+            List<String> pomLines = Files.readAllLines(pomFile, StandardCharsets.UTF_8);
             StringBuilder newPom = new StringBuilder();
             for (String line : pomLines) {
                 newPom.append(customizePomLine(line)).append(System.lineSeparator());
             }
-            Files.write(pomFile, newPom.toString().getBytes(Charset.forName("utf-8")));
+            Files.write(pomFile, newPom.toString().getBytes(StandardCharsets.UTF_8));
         }
     }
 
@@ -138,7 +141,8 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
 
     private String getApplicationProperties(IntegrationSource source) throws IOException {
         ProjectGenerator projectGenerator = new ProjectGenerator(projectGeneratorConfiguration, new StaticIntegrationResourceManager(source), mavenProperties);
-        Properties applicationProperties = customizeApplicationProperties(projectGenerator.generateApplicationProperties(source.get()));
+        Integration integration = source.get();
+        Properties applicationProperties = customizeApplicationProperties(integration, projectGenerator.generateApplicationProperties(integration));
 
         StringWriter writer = new StringWriter();
         applicationProperties.store(writer, "Auto added integration test properties");
@@ -146,7 +150,7 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
         return writer.toString();
     }
 
-    protected Properties customizeApplicationProperties(Properties applicationProperties) {
+    protected Properties customizeApplicationProperties(Integration integration, Properties applicationProperties) {
         applicationProperties.put("management.server.port", String.valueOf(SyndesisTestEnvironment.getManagementPort()));
         return applicationProperties;
     }

@@ -30,17 +30,20 @@ import org.testcontainers.containers.wait.strategy.WaitStrategy;
 public class IntegrationRuntime {
     public static final IntegrationRuntime SPRING_BOOT = new IntegrationRuntime("spring-boot",
             "spring-boot:run",
+        "syndesis/syndesis-s2i",
             Wait.forLogMessage(".*Started Application.*\\s", 1),
             SpringBootProjectBuilder::new);
 
 
     public static final IntegrationRuntime CAMEL_K = new IntegrationRuntime("camel-k",
             "process-resources exec:java",
+        "syndesis/syndesis-s2i-camelk",
             Wait.forLogMessage(".*Apache Camel .* started.*\\s", 1),
             CamelKProjectBuilder::new);
 
     private final String id;
     private final String command;
+    private final String baseImage;
     private final WaitStrategy readinessProbe;
     private final ProjectBuilderSupplier projectBuilderSupplier;
 
@@ -48,15 +51,21 @@ public class IntegrationRuntime {
         ProjectBuilder get(String name, String syndesisVersion);
     }
 
-    private IntegrationRuntime(String id, String command, WaitStrategy readinessProbe, ProjectBuilderSupplier projectBuilderSupplier) {
+    private IntegrationRuntime(String id, String command, String baseImage,
+                               WaitStrategy readinessProbe, ProjectBuilderSupplier projectBuilderSupplier) {
         this.id = id;
         this.command = command;
+        this.baseImage = baseImage;
         this.readinessProbe = readinessProbe;
         this.projectBuilderSupplier = projectBuilderSupplier;
     }
 
     public String getCommand() {
         return command;
+    }
+
+    public String getBaseImage() {
+        return baseImage;
     }
 
     public String getId() {

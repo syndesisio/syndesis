@@ -86,6 +86,7 @@
   </dependencyManagement>
 
   <modules>
+    <module>s2i-camelk</module>
     <module>test-support</module>
     <module>integration-test</module>
     <module>system-test</module>

@@ -76,7 +76,7 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
     protected SyndesisIntegrationRuntimeContainer(String imageTag, String integrationName, Path projectDir,
                                                 Map<String, String> envProperties, String runCommand, boolean deleteOnExit) {
         super(new SyndesisDockerfileBuilder(integrationName, deleteOnExit)
-                .from("syndesis/syndesis-s2i", imageTag)
+                .from(SyndesisTestEnvironment.getIntegrationRuntime().getBaseImage(), imageTag)
                 .projectSource("projectDir")
                 .projectDestination(SyndesisTestEnvironment.getProjectMountPath())
                 .projectPath(projectDir.toAbsolutePath())
@@ -95,7 +95,7 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
     protected SyndesisIntegrationRuntimeContainer(String imageTag, String integrationName, Path projectDir, File projectJar,
                                                 Map<String, String> envProperties, String runCommand, boolean deleteOnExit) {
         super(new SyndesisDockerfileBuilder(integrationName, deleteOnExit)
-                .from("syndesis/syndesis-s2i", imageTag)
+                .from(SyndesisTestEnvironment.getIntegrationRuntime().getBaseImage(), imageTag)
                 .projectSource("integration-runtime.jar")
                 .projectDestination("/deployments/integration-runtime.jar")
                 .projectPath(projectDir.toAbsolutePath())

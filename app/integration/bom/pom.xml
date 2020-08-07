@@ -373,6 +373,7 @@
         <plugin>
           <groupId>com.mycila</groupId>
           <artifactId>license-maven-plugin</artifactId>
+          <version>3.0</version>
           <inherited>true</inherited>
           <configuration>
             <header>license/syndesis-license.txt</header>
