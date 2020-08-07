@@ -145,7 +145,7 @@
 
     <greenmail.version>1.5.11</greenmail.version>
 
-    <spring-security.version>5.3.3.RELEASE</spring-security.version>
+    <spring-security.version>5.3.4.RELEASE</spring-security.version>
     <resteasy.version>4.4.2.Final</resteasy.version>
     <resteasy-spring-boot-starter.version>4.4.0.Final</resteasy-spring-boot-starter.version>
 
