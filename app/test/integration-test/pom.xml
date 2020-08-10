@@ -310,6 +310,8 @@
             <ignore>com/consol/citrus/schema/citrus-config-${citrus.version}.xsd</ignore>
             <ignore>com/consol/citrus/schema/citrus-testcase.xsd</ignore>
             <ignore>com/consol/citrus/schema/citrus-testcase-${citrus.version}.xsd</ignore>
+            <ignore>org/jboss/resteasy/client/jaxrs/i18n/Messages.i18n_en.properties</ignore>
+            <ignore>org/jboss/resteasy/client/jaxrs/i18n/Messages.i18n_xx.properties</ignore>
           </ignoredResourcePatterns>
         </configuration>
       </plugin>
