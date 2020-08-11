@@ -30,7 +30,7 @@ public class IllegalArgumentExceptionMapper extends BaseExceptionMapper<IllegalA
 
     @Override
     protected String developerMessage(IllegalArgumentException exception) {
-        return "Illegal Argument on Call " + exception.getMessage();
+        return "Illegal Argument on Call: " + exception.getMessage();
     }
 
 }
