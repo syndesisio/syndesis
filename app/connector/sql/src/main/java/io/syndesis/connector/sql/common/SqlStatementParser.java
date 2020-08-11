@@ -261,6 +261,7 @@ public class SqlStatementParser {
 
     List<SqlParam> findInputParams(List<String> values) {
         List<SqlParam> params = new ArrayList<>();
+        String inTable=null;
         int i=0;
         for (String word: sqlArray) {
             if (word.startsWith(":#")) {
@@ -272,13 +273,21 @@ public class SqlStatementParser {
                 if ("BETWEEN".equalsIgnoreCase(column)) {
                     column = sqlArray.get(i-2);
                 }
+                if ("IN".equalsIgnoreCase(column)) {
+                    column = sqlArray.get(i-2);
+                    inTable = column;
+                }
                 if ("AND".equalsIgnoreCase(column)) {
                     column = sqlArray.get(i-4);
                 }
-                if (column.startsWith(":#") || "VALUES".equalsIgnoreCase(column) || values.contains(column)) {
-                    param.setColumnPos(values.indexOf(word));
+                if (inTable != null && column.startsWith(":#")) {
+                    param.setColumn(inTable);
                 } else {
-                    param.setColumn(column.toUpperCase(Locale.US));
+                    if (column.startsWith(":#") || "VALUES".equalsIgnoreCase(column) || values.contains(column)) {
+                        param.setColumnPos(values.indexOf(word));
+                    } else {
+                        param.setColumn(column.toUpperCase(Locale.US));
+                    }
                 }
                 params.add(param);
             }
