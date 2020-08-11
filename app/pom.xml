@@ -158,7 +158,7 @@
     <teiid.version>14.0.0</teiid.version>
     <teiid.springboot.version>1.5.0</teiid.springboot.version>
     <aws-java-sdk-core.version>1.11.415</aws-java-sdk-core.version>
-    <version.javax.activation>1.2.1</version.javax.activation>
+    <version.javax.activation>1.2.2</version.javax.activation>
 
     <javac.werror>-Werror</javac.werror>
     <apache.http.version>4.5.10</apache.http.version>
