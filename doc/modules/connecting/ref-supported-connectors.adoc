@@ -134,11 +134,6 @@ contain data that you specify.
 |link:{LinkSyndesisIntegrationGuide}#triggering-integrations-with-http-requests_ug[Webhook]
 |Trigger execution of simple integrations with HTTP `GET` or `POST` requests.
 
-|link:{LinkSyndesisIntegrationGuide}#connecting-to-virtual-databases[Virtual databases]
-|Create a virtual database that integrates data from multiple
-data sources that you choose. After you deploy the resulting virtual database service,
-you can connect to as if it were a single physical database.
-
 |===
 
 If {prodname} does not provide a connector that you need, an
