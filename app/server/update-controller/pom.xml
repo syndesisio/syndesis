@@ -102,6 +102,7 @@
       <!-- We need the net.jcip.annotations.GuardedBy for Infinispan (at compile time only) -->
       <groupId>net.jcip</groupId>
       <artifactId>jcip-annotations</artifactId>
+      <version>1.0</version>
       <scope>provided</scope>
     </dependency>
 

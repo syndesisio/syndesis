@@ -59,7 +59,7 @@ public class VerifierExceptionMapper implements ExceptionMapper<Throwable> {
     public Response toResponse(final Throwable exception) {
         // the proxy @Context would provide would not let us access the wrapped
         // request
-        final HttpServletRequest request = ResteasyProviderFactory.getContextData(HttpServletRequest.class);
+        final HttpServletRequest request = ResteasyProviderFactory.getInstance().getContextData(HttpServletRequest.class);
 
         LOG.error("Exception while handling request: {} {}", request.getMethod(), request.getRequestURI(), exception);
         if (LOG.isDebugEnabled()) {

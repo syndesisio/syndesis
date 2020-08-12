@@ -79,7 +79,7 @@ final class CapturingCodec extends ObjectCodec {
 
     @Override
     @SuppressWarnings("TypeParameterUnusedInFormals")
-    public <T> T readValue(final JsonParser p, final TypeReference<?> valueTypeRef) throws IOException {
+    public <T> T readValue(final JsonParser p, final TypeReference<T> valueTypeRef) throws IOException {
         final T ret = delegate.readValue(p, valueTypeRef);
         captured = ret;
 
@@ -103,8 +103,8 @@ final class CapturingCodec extends ObjectCodec {
     }
 
     @Override
-    public <T> Iterator<T> readValues(final JsonParser p, final TypeReference<?> valueTypeRef) throws IOException {
-        final Iterator<T> ret = delegate.readValue(p, valueTypeRef);
+    public <T> Iterator<T> readValues(final JsonParser p, final TypeReference<T> valueTypeRef) throws IOException {
+        final Iterator<T> ret = delegate.readValues(p, valueTypeRef);
         captured = ret;
 
         return ret;
