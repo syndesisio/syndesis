@@ -1,3 +1,3 @@
 package install
 
-const defaultDatabaseImage = "centos/postgresql-96-centos7"
+const defaultDatabaseImage = "registry.redhat.io/rhscl/postgresql-96-rhel7:latest"
