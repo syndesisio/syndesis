@@ -15,21 +15,19 @@
  */
 package io.syndesis.server.verifier;
 
-import java.util.List;
-import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import org.jboss.resteasy.client.jaxrs.internal.LocalResteasyProviderFactory;
 import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -67,12 +65,10 @@ public class ExternalVerifierService implements Verifier {
 
             resteasyJacksonProvider.setMapper(mapper);
 
-            final ResteasyProviderFactory providerFactory = new ResteasyProviderFactory();
+            final ResteasyProviderFactory providerFactory = ResteasyProviderFactory.getInstance();
             providerFactory.register(resteasyJacksonProvider);
 
-            final Configuration configuration = new LocalResteasyProviderFactory(providerFactory);
-
-            this.client = ClientBuilder.newClient(configuration);
+            this.client = ClientBuilder.newClient(providerFactory);
         }
 
     }

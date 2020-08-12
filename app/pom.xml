@@ -58,7 +58,7 @@
 
     <hibernate.validator.version>6.0.16.Final</hibernate.validator.version>
 
-    <jackson.version>2.9.9</jackson.version>
+    <jackson.version>2.11.1</jackson.version>
     <json-patch.version>1.9</json-patch.version>
     <kubernetes.client.version>4.6.1</kubernetes.client.version>
 
@@ -1758,6 +1758,10 @@
         <version>${resteasy.version}</version>
         <exclusions>
           <exclusion>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+          </exclusion>
+          <exclusion>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
           </exclusion>
@@ -1769,21 +1773,13 @@
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>
           </exclusion>
-        </exclusions>
-      </dependency>
-
-      <dependency>
-        <groupId>org.jboss.resteasy</groupId>
-        <artifactId>resteasy-jaxrs</artifactId>
-        <version>${resteasy.version}</version>
-        <exclusions>
           <exclusion>
-            <groupId>org.jboss.spec.javax.xml.bind</groupId>
-            <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
           </exclusion>
           <exclusion>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
+            <groupId>org.jboss.spec.javax.annotation</groupId>
+            <artifactId>jboss-annotations-api_1.3_spec</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -1805,6 +1801,18 @@
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.annotation</groupId>
+            <artifactId>jboss-annotations-api_1.3_spec</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.xml.bind</groupId>
+            <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
 
@@ -1816,6 +1824,62 @@
           <exclusion>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-core-spi</artifactId>
+        <version>${resteasy.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.xml.bind</groupId>
+            <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.annotation</groupId>
+            <artifactId>jboss-annotations-api_1.3_spec</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-client</artifactId>
+        <version>${resteasy.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.xml.bind</groupId>
+            <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.annotation</groupId>
+            <artifactId>jboss-annotations-api_1.3_spec</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-jackson2-provider</artifactId>
+        <version>${resteasy.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.xml.bind</groupId>
+            <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
