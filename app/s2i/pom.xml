@@ -471,6 +471,9 @@
           <name>::image</name>
         </property>
       </activation>
+      <properties>
+        <fabric8.generator.name>${image.s2i}</fabric8.generator.name>
+      </properties>
       <build>
         <plugins>
 
@@ -511,7 +514,7 @@
 
     </profile>
 
-    <!-- Profile for pushing a compiled image to a regsitry defined by the system property docker.push.registry -->
+    <!-- Profile for pushing a compiled image to a registry defined by the system property docker.push.registry -->
     <profile>
       <id>image-push</id>
       <activation>
@@ -519,6 +522,9 @@
           <name>::image.push</name>
         </property>
       </activation>
+      <properties>
+        <fabric8.generator.name>${image.s2i}</fabric8.generator.name>
+      </properties>
       <build>
         <plugins>
           <plugin>
@@ -527,10 +533,26 @@
             <executions>
               <execution>
                 <id>push</id>
+                <phase>install</phase>
                 <goals>
                   <goal>push</goal>
                 </goals>
-                <phase>install</phase>
+                <configuration>
+                  <images>
+                    <image>
+                      <name>${image.s2i}</name>
+                      <build>
+                        <!--
+                          Doesn't actually build here but must be present, otherwise
+                          push starts to do a default java-exec type build. So this is
+                          a copy of the build image plugin above
+                        -->
+                        <dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
+                        <contextDir>${image.build.directory}</contextDir>
+                      </build>
+                    </image>
+                  </images>
+                </configuration>
               </execution>
             </executions>
           </plugin>

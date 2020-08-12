@@ -983,7 +983,7 @@
       </build>
     </profile>
 
-    <!-- Profile for pushing a compiled image to a regsitry defined by the system property docker.push.registry -->
+    <!-- Profile for pushing a compiled image to a registry defined by the system property docker.push.registry -->
     <profile>
       <id>image-push</id>
       <activation>
