@@ -54,15 +54,12 @@
     name: syndesis-operator
   spec:
     tags:
-    {{if .DevSupport}}
-    - name: "latest"
-      from:
-        name: {{.Image}}:latest
-        kind: ImageStreamTag
-    {{else}}
     - name: "{{.Tag}}"
       from:
         name: {{.Image}}:{{.Tag}}
+    {{if .DevSupport}}
+        kind: ImageStreamTag
+    {{else}}
         kind: DockerImage
       importPolicy:
         scheduled: true
