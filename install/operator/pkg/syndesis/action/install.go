@@ -195,12 +195,10 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 			continue
 		}
 
-		a.log.Info("Installing addon", "Name", addonInfo.Name())
-
 		if config.ApiServer.OlmSupport && addonInfo.GetOlmSpec() != nil && addonInfo.GetOlmSpec().Package != "" {
 			a.log.Info("Subscribing to OLM operator:", "Package", addonInfo.GetOlmSpec().Package, "Channel", addonInfo.GetOlmSpec().Channel)
 			//
-			// Using the operator hub is not mutally exclusive to loading the addon
+			// Using the operator hub is not mutually exclusive to loading the addon
 			// resources. Each addon should be tailored with conditionals to be
 			// compatible with using the operator hub or not, ie. operator installation
 			// should be delegated to the OLM & only if that's not possible should it
@@ -524,4 +522,3 @@ func linkSecret(sa *corev1.ServiceAccount, secret string) bool {
 
 	return false
 }
-
