@@ -5,7 +5,6 @@ import (
 	"errors"
 	"time"
 
-
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -162,7 +161,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 	resourcesThatShouldExist[syndesisRoute.Meta().GetUID()] = true
 
 	if err := config.SetConsoleLink(ctx, rtClient, syndesis, syndesisRoute.Host()); err != nil {
-			return err
+		return err
 	}
 
 	// Render the remaining syndesis resources...
@@ -214,12 +213,10 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 			continue
 		}
 
-		a.log.Info("Installing addon", "Name", addonInfo.Name())
-
 		if config.ApiServer.OlmSupport && addonInfo.GetOlmSpec() != nil && addonInfo.GetOlmSpec().Package != "" {
 			a.log.Info("Subscribing to OLM operator:", "Package", addonInfo.GetOlmSpec().Package, "Channel", addonInfo.GetOlmSpec().Channel)
 			//
-			// Using the operator hub is not mutally exclusive to loading the addon
+			// Using the operator hub is not mutually exclusive to loading the addon
 			// resources. Each addon should be tailored with conditionals to be
 			// compatible with using the operator hub or not, ie. operator installation
 			// should be delegated to the OLM & only if that's not possible should it
