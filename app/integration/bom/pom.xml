@@ -326,6 +326,11 @@
       </dependency>
       <dependency>
         <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-odata-v2</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-box</artifactId>
         <version>${project.version}</version>
       </dependency>

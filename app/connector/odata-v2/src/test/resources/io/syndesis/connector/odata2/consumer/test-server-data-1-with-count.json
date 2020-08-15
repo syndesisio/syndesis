@@ -1,0 +1,12 @@
+{
+  "Id": "1",
+  "Name": "Star Powered Racing",
+  "Address": {
+    "City": "Stuttgart",
+    "Country": "Germany",
+    "Street": "Star Street 137",
+    "ZipCode": "70173"
+  },
+  "Founded": -489027600000,
+  "ResultCount": 2
+}

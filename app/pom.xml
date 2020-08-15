@@ -1439,6 +1439,18 @@
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>*</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>javax.activation</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
 
@@ -1886,6 +1898,12 @@
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-odata</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-odata-v2</artifactId>
         <version>${project.version}</version>
       </dependency>
 

@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,8 +61,6 @@ public abstract class AbstractODataTest implements ODataConstants {
     protected static final int MOCK_TIMEOUT_MILLISECONDS = 60000;
 
     protected static final String OLINGO4_READ_FROM_ENDPOINT = "olingo4-olingo4-0-0://read";
-
-    protected static final String OLINGO4_READ_TO_ENDPOINT = "olingo4-olingo4-0-1://read";
 
     @Autowired
     protected ApplicationContext applicationContext;
@@ -125,7 +124,7 @@ public abstract class AbstractODataTest implements ODataConstants {
      * @return a string representation of the content of the given stream
      */
     public static String streamToString(InputStream inStream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
         StringBuilder builder = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {

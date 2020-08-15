@@ -425,6 +425,22 @@
       </dependency>
       <dependency>
         <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-odata-v2</artifactId>
+        <version>${project.version}</version>
+        <scope>runtime</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-email</artifactId>
         <version>${project.version}</version>
         <scope>runtime</scope>
@@ -814,6 +830,12 @@
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-odata</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-odata-v2</artifactId>
       <scope>runtime</scope>
     </dependency>
 
