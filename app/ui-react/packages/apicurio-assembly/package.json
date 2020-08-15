@@ -94,7 +94,7 @@
     "@angular-devkit/build-ng-packagr": "0.13.4",
     "@angular/cli": "7.3.3",
     "@angular/compiler-cli": "7.2.6",
-    "@angular/language-service": "7.2.6",
+    "@angular/language-service": "10.0.9",
     "@types/node": "8.10.40",
     "@types/marked": "0.7.2",
     "cp-cli": "2.0.0",
