@@ -216,6 +216,19 @@ public class SqlParserTest {
     }
 
     @Test
+    public void parseSelectWithIn() throws SQLException {
+        final SqlStatementParser parser = new SqlStatementParser(db.connection,
+                "SELECT * FROM NAME0 WHERE LASTNAME IN (:#name, :#othername)");
+        final SqlStatementMetaData info = parser.parse();
+        Assert.assertEquals("NAME0", info.getTableNames().get(0));
+        Assert.assertEquals(2, info.getInParams().size());
+        Assert.assertEquals("name", info.getInParams().get(0).getName());
+        Assert.assertEquals("LASTNAME", info.getInParams().get(0).getColumn());
+        Assert.assertEquals("othername", info.getInParams().get(1).getName());
+        Assert.assertEquals("LASTNAME", info.getInParams().get(1).getColumn());
+    }
+
+    @Test
     public void parseSelectWithJoin() throws SQLException {
         final SqlStatementParser parser = new SqlStatementParser(db.connection,
             "SELECT FIRSTNAME, NAME0.LASTNAME, ADDRESS FROM NAME0, ADDRESS0 WHERE NAME0.LASTNAME=ADDRESS0.LASTNAME AND FIRSTNAME LIKE :#first");
