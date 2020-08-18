@@ -354,3 +354,36 @@
     kind: Role
     name: syndesis-viewer
     apiGroup: rbac.authorization.k8s.io
+
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: Role
+  metadata:
+    name: syndesis-server
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-server
+  rules:
+  - apiGroups:
+    - syndesis.io
+    resources:
+    - "*"
+    verbs: [ get, list, watch ]
+
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: syndesis-server
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-server
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-server
+  roleRef:
+    kind: Role
+    name: syndesis-server
+    apiGroup: rbac.authorization.k8s.io

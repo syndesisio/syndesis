@@ -29,9 +29,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import io.fabric8.kubernetes.api.model.Affinity;
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.ContainerPort;
@@ -43,7 +41,10 @@ import io.fabric8.kubernetes.api.model.PodTemplateSpec;
 import io.fabric8.kubernetes.api.model.ProbeBuilder;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.Secret;
+import io.fabric8.kubernetes.api.model.Toleration;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionBuilder;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionStatusBuilder;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
@@ -62,6 +63,13 @@ import io.fabric8.openshift.api.model.UserBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.server.openshift.crd.IntegrationScheduling;
+import io.syndesis.server.openshift.crd.Syndesis;
+import io.syndesis.server.openshift.crd.SyndesisResourceDoneable;
+import io.syndesis.server.openshift.crd.SyndesisResourceList;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention", "PMD.GodClass"})
 public class OpenShiftServiceImpl implements OpenShiftService {
@@ -72,6 +80,26 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     // Labels used for generated objects
     private static final Map<String, String> INTEGRATION_DEFAULT_LABELS = defaultLabels();
+
+    public static final CustomResourceDefinition SYNDESIS_CRD = new CustomResourceDefinitionBuilder()
+        .withApiVersion("apiextensions.k8s.io/v1beta1")
+        .withKind("CustomResourceDefinition")
+        .withNewMetadata()
+            .withName("syndesises.syndesis.io")
+        .endMetadata()
+        .withNewSpec()
+            .withGroup("syndesis.io")
+            .withScope("Namespaced")
+            .withVersion("v1beta1")
+            .withNewNames()
+                .withKind("Syndesis")
+                .withListKind("SyndesisList")
+                .withPlural("syndesises")
+                .withSingular("syndesis")
+            .endNames()
+        .endSpec()
+        .withStatus(new CustomResourceDefinitionStatusBuilder().build())
+        .build();
 
     private final NamespacedOpenShiftClient openShiftClient;
     private final OpenShiftConfigurationProperties config;
@@ -237,7 +265,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return openShiftClient.imageStreams().withName(name).delete();
     }
 
-    @SuppressWarnings("PMD.ExcessiveMethodLength")
+    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.NPathComplexity"})
     protected void ensureDeploymentConfig(String name, DeploymentData deploymentData) {
         // check if deployment config exists
         final DoneableDeploymentConfig deploymentConfig;
@@ -245,6 +273,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         String jaegerCollectorUri = System.getenv("JAEGER_ENDPOINT");
         if (jaegerCollectorUri == null) {
             jaegerCollectorUri = "http://syndesis-jaeger-collector:14268/api/traces";
+        }
+        IntegrationScheduling integrationScheduling = loadIntegrationScheduling();
+        Affinity affinity = null;
+        List<Toleration> tolerations = null;
+        if (integrationScheduling != null) {
+            affinity = integrationScheduling.getAffinity();
+            tolerations = integrationScheduling.getTolerations();
         }
         if (oldConfig != null) {
             // make sure replicas is set to at least 1 or restore the previous replica count if present
@@ -310,6 +345,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                                 .addToAnnotations("prometheus.io/port", "9779")
                             .endMetadata()
                             .editSpec()
+                                .withAffinity(affinity)
+                                .withTolerations(tolerations)
                                 .editFirstContainer()
                                     .withImage(deploymentData.getImage())
                                     .withImagePullPolicy("Always")
@@ -382,6 +419,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                                 .addToAnnotations("prometheus.io/port", "9779")
                             .endMetadata()
                             .withNewSpec()
+                                .withAffinity(affinity)
+                                .withTolerations(tolerations)
                                 .addNewContainer()
                                     .withImage(deploymentData.getImage())
                                     .withImagePullPolicy("Always")
@@ -632,6 +671,23 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             Thread.sleep(config.getPollingInterval());
         }
         throw SyndesisServerException.launderThrowable(new TimeoutException("Timed out waiting for build completion."));
+    }
+
+    private IntegrationScheduling loadIntegrationScheduling() {
+        IntegrationScheduling integrationScheduling = null;
+        try {
+            SyndesisResourceList syndesisList = openShiftClient.customResources(SYNDESIS_CRD, Syndesis.class, SyndesisResourceList.class, SyndesisResourceDoneable.class)
+                .inNamespace(openShiftClient.getNamespace()).list();
+            boolean syndesisCRExists = syndesisList != null && syndesisList.getItems() != null && syndesisList.getItems().size() > 0;
+            if (syndesisCRExists) {
+                integrationScheduling = syndesisList.getItems().get(0).getSpec().getIntegrationScheduling();
+            } else {
+                LOGGER.error("There is no syndesis custom resource, it is required to load the affinity/toleration fields of syndesis CR. Search with the below CRD. You can try using \"oc get syndesis\". {}", SYNDESIS_CRD);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error loading syndesis CR.", e);
+        }
+        return integrationScheduling;
     }
 
     /**
