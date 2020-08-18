@@ -272,12 +272,12 @@ wait_for_deployments() {
 
 get_replicas() {
     local dc=${1}
-    local hasDc=$(${KUBE} get deployment -o name | ${GREP} $dc)
+    local hasDc=$(${KUBE} get deployment,dc -o name | ${GREP} $dc)
     if [ -z "$hasDc" ]; then
         echo "0"
         return
     fi
-    ${KUBE} get deployment $dc -o jsonpath="{.status.availableReplicas}"
+    ${KUBE} get "$hasDc" -o jsonpath="{.status.availableReplicas}"
 }
 
 pod() {

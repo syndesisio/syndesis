@@ -175,12 +175,24 @@ func schema_pkg_apis_syndesis_v1beta1_SyndesisSpec(ref common.ReferenceCallback)
 							Format:      "",
 						},
 					},
+					"infraScheduling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Configuration of Affinity and Toleration for infrastructure component pods",
+							Ref:         ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1.SchedulingSpec"),
+						},
+					},
+					"integrationScheduling": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Configuration of Affinity and Toleration for integrations pods",
+							Ref:         ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1.SchedulingSpec"),
+						},
+					},
 				},
 				Required: []string{"forceMigration"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1.AddonsSpec", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1.BackupConfig", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1.ComponentsSpec"},
+			"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1.AddonsSpec", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1.BackupConfig", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1.ComponentsSpec", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1.SchedulingSpec"},
 	}
 }
 
