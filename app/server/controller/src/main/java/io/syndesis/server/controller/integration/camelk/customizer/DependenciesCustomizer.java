@@ -59,7 +59,8 @@ public class DependenciesCustomizer implements CamelKIntegrationCustomizer {
 
         if (exposure.contains(Exposure.SERVICE)) {
             spec.addDependencies("mvn:org.apache.camel/camel-base64");
-            spec.addDependencies("mvn:org.apache.camel.k/camel-k-runtime-servlet");
+            spec.addDependencies("mvn:org.apache.camel/camel-servlet");
+            spec.addDependencies("mvn:org.apache.camel.k/camel-k-runtime-http");
         }
 
         Set<MavenGav> filteredDependencies = getDependencies(deployment.getSpec()).stream()

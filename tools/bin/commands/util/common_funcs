@@ -362,6 +362,24 @@ determine_platform() {
     fi
 }
 
+podman_is_available() {
+    set +e
+
+    if [ $(check_for_command "podman") != "OK" ]; then
+        set -e
+        echo "ERROR: 'podman' command not installed"
+        return
+    fi
+
+    if podman info >/dev/null 2>&1; then
+        echo "OK"
+    else
+        echo "ERROR: the 'podman' command is not connected to a server"
+    fi
+
+    set -e
+}
+
 docker_is_available() {
     set +e
 

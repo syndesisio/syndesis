@@ -140,14 +140,6 @@
           "baseJSONInspectionServiceUrl": "https://{{.Syndesis.RouteHostname}}/api/v1/atlas/json/",
           "disableMappingPreviewMode": false
         },
-        "datavirt": {
-          "dvUrl": "/dv/v1/",
-{{- if .Syndesis.Addons.DV.Enabled }}
-          "enabled": 1
-        {{- else }}
-          "enabled": 0
-        {{- end }}
-        },
         "features" : {
 {{- if .Syndesis.Addons.CamelK.Enabled}}
           "extensions": false,

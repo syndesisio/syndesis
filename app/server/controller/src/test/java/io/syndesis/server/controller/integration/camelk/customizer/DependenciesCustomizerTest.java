@@ -84,7 +84,9 @@ public class DependenciesCustomizerTest {
 
         assertThat(i.getSpec().getDependencies()).anyMatch(s -> s.startsWith("bom:io.syndesis.integration/integration-bom-camel-k/pom/"));
         assertThat(i.getSpec().getDependencies()).anyMatch(s -> s.startsWith("mvn:io.syndesis.integration/integration-runtime-camelk"));
-        assertThat(i.getSpec().getDependencies()).anyMatch(s -> s.startsWith("mvn:org.apache.camel.k/camel-k-runtime-servlet"));
+        assertThat(i.getSpec().getDependencies()).anyMatch(s -> s.startsWith("mvn:org.apache.camel/camel-base64"));
+        assertThat(i.getSpec().getDependencies()).anyMatch(s -> s.startsWith("mvn:org.apache.camel/camel-servlet"));
+        assertThat(i.getSpec().getDependencies()).anyMatch(s -> s.startsWith("mvn:org.apache.camel.k/camel-k-runtime-http"));
         assertThat(i.getSpec().getDependencies()).anyMatch(s -> s.startsWith("mvn:io.syndesis.connector/syndesis-connector-api-provider"));
     }
 }

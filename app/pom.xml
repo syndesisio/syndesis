@@ -38,21 +38,28 @@
     <!-- should archives of S2I and UI modules be deployed to a Maven repository -->
     <deploy.archives>false</deploy.archives>
 
-    <!-- Atlasmap version -->
-    <atlasmap.version>2.0.5</atlasmap.version>
+    <assembly.skip>false</assembly.skip>
 
+    <!-- Atlasmap version -->
+    <atlasmap.version>2.1.0-M.1</atlasmap.version>
+
+    <!-- Image namespace - can be overridden on cli -->
+    <image.namespace>syndesis</image.namespace>
+    <!-- Image tag - can be overridden on cli -->
+    <image.tag>%l</image.tag>
     <!-- Image names -->
-    <image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
-    <image.server>syndesis/syndesis-server:%l</image.server>
-    <image.meta>syndesis/syndesis-meta:%l</image.meta>
-    <image.ui>syndesis/syndesis-ui:%l</image.ui>
-    <image.dv>syndesis/syndesis-dv:%l</image.dv>
+    <image.s2i>${image.namespace}/syndesis-s2i:${image.tag}</image.s2i>
+    <image.s2i.camelk>${image.namespace}/syndesis-s2i-camelk:${image.tag}</image.s2i.camelk>
+    <image.server>${image.namespace}/syndesis-server:${image.tag}</image.server>
+    <image.meta>${image.namespace}/syndesis-meta:${image.tag}</image.meta>
+    <image.ui>${image.namespace}/syndesis-ui:${image.tag}</image.ui>
+    <image.dv>${image.namespace}/syndesis-dv:${image.tag}</image.dv>
 
     <fabric8.maven.plugin.version>4.2.0</fabric8.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
     <dep.plugin.deploy.version>2.8.2</dep.plugin.deploy.version>
     <clean-maven-plugin-version>2.4.1</clean-maven-plugin-version>
-    <frontend-maven-plugin-version>1.9.1</frontend-maven-plugin-version>
+    <frontend-maven-plugin-version>1.10.0</frontend-maven-plugin-version>
     <node.version>v10.15.1</node.version>
     <yarn.version>v1.22.0</yarn.version>
 
@@ -99,7 +106,7 @@
     <undertow.version>2.0.30.Final</undertow.version>
 
     <!-- CXF version, to be kept in sync with the one referenced by camel version above -->
-    <cxf.version>3.3.6</cxf.version>
+    <cxf.version>3.3.7</cxf.version>
     <wss4j.version>2.2.2</wss4j.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
@@ -128,7 +135,7 @@
     <node-sass-version>4.12.0</node-sass-version>
 
     <!-- Common dependencies -->
-    <assertj-core.version>3.15.0</assertj-core.version>
+    <assertj-core.version>3.16.1</assertj-core.version>
 
     <jakarta-mail.version>1.6.5</jakarta-mail.version>
     <json-schema-core.version>1.2.8</json-schema-core.version>
@@ -136,15 +143,15 @@
     <junit.version>4.13</junit.version>
     <junit5.version>5.6.2</junit5.version>
     <powermock.version>2.0.7</powermock.version>
-    <testcontainers.version>1.12.5</testcontainers.version>
+    <testcontainers.version>1.14.3</testcontainers.version>
     <citrus.version>3.0.0-M1</citrus.version>
     <mockito.version>3.3.3</mockito.version>
 
     <greenmail.version>1.5.11</greenmail.version>
 
-    <spring-security.version>5.3.3.RELEASE</spring-security.version>
-    <resteasy.version>4.4.2.Final</resteasy.version>
-    <resteasy-spring-boot-starter.version>4.4.0.Final</resteasy-spring-boot-starter.version>
+    <spring-security.version>5.3.4.RELEASE</spring-security.version>
+    <resteasy.version>4.5.6.Final</resteasy.version>
+    <resteasy-spring-boot-starter.version>4.6.1.Final</resteasy-spring-boot-starter.version>
 
     <immutables.version>2.8.8</immutables.version>
 
@@ -170,7 +177,6 @@
     <module>s2i</module>
     <module>meta</module>
     <module>ui-react</module>
-    <module>dv</module>
   </modules>
 
   <profiles>
@@ -201,7 +207,7 @@
       </build>
     </profile>
 
-    <!-- Profile for pushing a compiled image to a regsitry defined by the system property docker.push.registry -->
+    <!-- Profile for pushing a compiled image to a registry defined by the system property docker.push.registry -->
     <profile>
       <id>image-push</id>
       <activation>
@@ -354,7 +360,7 @@
       </modules>
     </profile>
 
-    <!-- Like 'no-checks' but even more aggresive (like even no tests)  -->
+    <!-- Like 'no-checks' but even more aggressive (like even no tests)  -->
     <profile>
       <id>flash</id>
       <activation>
@@ -1187,6 +1193,7 @@
             </goals>
             <inherited>false</inherited>
             <configuration>
+              <skipAssembly>${assembly.skip}</skipAssembly>
               <descriptors>
                 <descriptor>tools.xml</descriptor>
               </descriptors>
@@ -1431,6 +1438,18 @@
           <exclusion>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>*</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>javax.activation</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -1879,6 +1898,12 @@
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-odata</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-odata-v2</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -2499,7 +2524,7 @@
       <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-starter-security</artifactId>
-        <version>2.2.2.RELEASE</version>
+        <version>2.2.4.RELEASE</version>
         <exclusions>
           <exclusion>
             <groupId>javax.xml.bind</groupId>
@@ -3219,7 +3244,7 @@
       <dependency>
         <groupId>com.github.tomakehurst</groupId>
         <artifactId>wiremock-standalone</artifactId>
-        <version>2.25.1</version>
+        <version>2.27.1</version>
         <scope>test</scope>
       </dependency>
 

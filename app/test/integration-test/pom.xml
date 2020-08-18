@@ -35,7 +35,7 @@
     <skip.integration.tests>true</skip.integration.tests>
 
     <syndesis.integration.runtime>spring-boot</syndesis.integration.runtime>
-    <syndesis.camel.k.customizers>health,logging,syndesis</syndesis.camel.k.customizers>
+    <syndesis.camel.k.customizers>metadata,logging,syndesis</syndesis.camel.k.customizers>
     <syndesis.logging.enabled>true</syndesis.logging.enabled>
     <syndesis.server.port>8080</syndesis.server.port>
     <syndesis.management.port>8081</syndesis.management.port>
@@ -293,6 +293,8 @@
             <ignore>com/consol/citrus/schema/citrus-config-${citrus.version}.xsd</ignore>
             <ignore>com/consol/citrus/schema/citrus-testcase.xsd</ignore>
             <ignore>com/consol/citrus/schema/citrus-testcase-${citrus.version}.xsd</ignore>
+            <ignore>org/jboss/resteasy/client/jaxrs/i18n/Messages.i18n_en.properties</ignore>
+            <ignore>org/jboss/resteasy/client/jaxrs/i18n/Messages.i18n_xx.properties</ignore>
           </ignoredResourcePatterns>
         </configuration>
       </plugin>

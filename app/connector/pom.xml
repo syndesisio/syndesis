@@ -73,6 +73,7 @@
     <module>concur</module>
     <module>kudu</module>
     <module>odata</module>
+    <module>odata-v2</module>
     <module>knative</module>
     <module>flow</module>
     <module>mongodb</module>

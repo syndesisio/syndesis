@@ -156,7 +156,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
                 break;
             case OBJECT:
                 ObjectSchema objectSchema = factory.objectSchema();
-                Set<PropertyMetadata> childProperties = propertyMetadata.getChilldProperties();
+                Set<PropertyMetadata> childProperties = propertyMetadata.getChildProperties();
                 if (childProperties != null) {
                     for (PropertyMetadata childProperty : childProperties) {
                         schemaFor(childProperty, objectSchema);

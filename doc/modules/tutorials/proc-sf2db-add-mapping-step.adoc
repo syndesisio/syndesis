@@ -19,19 +19,15 @@ appear, the *Sources* panel on the left displays the Salesforce fields
 and the *Target* panel on the right displays the database fields.
 
 . Map the Salesforce `Company` field to the
-database `company` field:
-.. On the left, in the *Sources* panel, click *Company*.
-.. On the right, in the *Target* panel, click *company*.
-The data mapper displays a line
-from the source field to the target field.
+database `company` field. On the left, in the *Sources* panel, click *Company* and drag it to the *Target* panel onto *company*.
++
+The data mapper displays a line from the source field to the target field.
 . Map the *Sources* (Salesforce) `Email` field to the *Target* (database)
 `email` field.
 . Map two Salesforce fields (`FirstName` and `LastName`) to the database
 `first_and_last_name` field:
-.. In the *Target* panel, click *first_and_last_name*.
-.. In the *Sources* panel, click *FirstName*.
-.. In the *Sources* panel, hover over *LastName* and 
-press *CTRL-Mouse1* (*CMD-Mouse1* on MacOS).
+.. In the *Target* panel, click *first_and_last_name* and then click the *Create New Mapping* icon.
+.. In the *Mapping Details* panel, in the *Sources* field, select */FirstName* and then select */LastName*.
 +
 When you are done you should see a line from each of the source fields to
 the target field. 

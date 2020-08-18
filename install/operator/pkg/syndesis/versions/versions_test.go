@@ -35,34 +35,34 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
-func Test_syndesisAPI_unstructuredToV1Alpha1(t *testing.T) {
-
-	type args struct {
-		obj unstructured.Unstructured
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantS   *v1alpha1.Syndesis
-		wantErr bool
-	}{
-		{"It should marshal unstructured from v1alpha1 to v1alpha1", args{getRuntimeObjectAsUnstructured(&v1alpha1.Syndesis{})}, &v1alpha1.Syndesis{}, false},
-		{"It should not marshal unstructured from v1beta1 to v1alpha1", args{getRuntimeObjectAsUnstructured(&v1beta1.Syndesis{})}, nil, true},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			api := syndesisAPI{}
-			gotS, err := api.unstructuredToV1Alpha1(tt.args.obj)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("unstructuredToV1Alpha1() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(gotS, tt.wantS) {
-				t.Errorf("unstructuredToV1Alpha1() gotS = %v, want %v", gotS, tt.wantS)
-			}
-		})
-	}
-}
+// func Test_syndesisAPI_unstructuredToV1Alpha1(t *testing.T) {
+//
+// 	type args struct {
+// 		obj unstructured.Unstructured
+// 	}
+// 	tests := []struct {
+// 		name    string
+// 		args    args
+// 		wantS   *v1alpha1.Syndesis
+// 		wantErr bool
+// 	}{
+// 		{"It should marshal unstructured from v1alpha1 to v1alpha1", args{getRuntimeObjectAsUnstructured(&v1alpha1.Syndesis{})}, &v1alpha1.Syndesis{}, false},
+// 		{"It should not marshal unstructured from v1beta1 to v1alpha1", args{getRuntimeObjectAsUnstructured(&v1beta1.Syndesis{})}, nil, true},
+// 	}
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			api := syndesisAPI{}
+// 			gotS, err := api.unstructuredToV1Alpha1(tt.args.obj)
+// 			if (err != nil) != tt.wantErr {
+// 				t.Errorf("unstructuredToV1Alpha1() error = %v, wantErr %v", err, tt.wantErr)
+// 				return
+// 			}
+// 			if !reflect.DeepEqual(gotS, tt.wantS) {
+// 				t.Errorf("unstructuredToV1Alpha1() gotS = %v, want %v", gotS, tt.wantS)
+// 			}
+// 		})
+// 	}
+// }
 
 func Test_syndesisAPI_unstructuredToV1Beta1(t *testing.T) {
 	type args struct {
@@ -170,7 +170,6 @@ func Test_syndesisAPI_v1alpha1ToV1beta1(t *testing.T) {
 							"ops":    map[string]string{"enabled": "true"},
 							"todo":   map[string]string{"enabled": "true"},
 							"camelk": map[string]string{"enabled": "false"},
-							"komodo": map[string]string{"enabled": "true"},
 							"jaeger": map[string]string{"enabled": "false"},
 						},
 						Integration: v1alpha1.IntegrationSpec{
@@ -241,15 +240,6 @@ func Test_syndesisAPI_v1alpha1ToV1beta1(t *testing.T) {
 									},
 								},
 							},
-							Komodo: v1alpha1.KomodoConfiguration{
-								Resources: v1alpha1.Resources{
-									ResourceRequirements: v1.ResourceRequirements{
-										Limits: v1.ResourceList{
-											v1.ResourceMemory: resource.MustParse("500m"),
-										},
-									},
-								},
-							},
 							Oauth: v1alpha1.OauthConfiguration{
 								DisableSarCheck: &dsc,
 							},
@@ -272,7 +262,6 @@ func Test_syndesisAPI_v1alpha1ToV1beta1(t *testing.T) {
 						Jaeger: v1beta1.JaegerConfiguration{Enabled: false},
 						Ops:    v1beta1.AddonSpec{Enabled: true},
 						Todo:   v1beta1.AddonSpec{Enabled: true},
-						DV:     v1beta1.DvConfiguration{Enabled: true, Resources: v1beta1.Resources{Memory: "500m"}},
 						CamelK: v1beta1.AddonSpec{Enabled: false},
 					},
 					Components: v1beta1.ComponentsSpec{

@@ -91,8 +91,8 @@
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
-{{- if .Syndesis.Components.Server.Features.AdditionalMavenArguments}}
-        additionalMavenArguments: "--strict-checksums {{ .Syndesis.Components.Server.Features.AdditionalMavenArguments }}"
+{{- if .Syndesis.Components.Server.Features.Maven.AdditionalArguments}}
+        additionalMavenArguments: "--strict-checksums {{ .Syndesis.Components.Server.Features.Maven.AdditionalArguments }}"
 {{- else}}
         additionalMavenArguments: "--strict-checksums"
 {{- end}}        

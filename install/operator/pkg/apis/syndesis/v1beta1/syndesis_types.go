@@ -189,14 +189,13 @@ type ServerFeatures struct {
 
 	// 3scale management URL
 	ManagementURLFor3scale string `json:"managementUrlFor3scale,omitempty"`
-
-	// additional maven options to be used in integration builds
-	AdditionalMavenArguments string `json:"additionalMavenArguments,omitempty"`
 }
 
 type MavenConfiguration struct {
 	// Should we append new repositories
 	Append bool `json:"append"`
+	// additional maven options to be used in integration builds
+	AdditionalArguments string `json:"additionalArguments,omitempty"`
 	// Set repositories for maven
 	Repositories map[string]string `json:"repositories,omitempty"`
 }
@@ -206,7 +205,6 @@ type AddonsSpec struct {
 	Ops       AddonSpec              `json:"ops,omitempty"`
 	Todo      AddonSpec              `json:"todo,omitempty"`
 	Knative   AddonSpec              `json:"knative,omitempty"`
-	DV        DvConfiguration        `json:"dv,omitempty"`
 	CamelK    AddonSpec              `json:"camelk,omitempty"`
 	PublicAPI PublicAPIConfiguration `json:"publicApi,omitempty"`
 }
@@ -226,11 +224,6 @@ type JaegerConfiguration struct {
 
 type AddonSpec struct {
 	Enabled bool `json:"enabled,omitempty"`
-}
-
-type DvConfiguration struct {
-	Enabled   bool      `json:"enabled,omitempty"`
-	Resources Resources `json:"resources,omitempty"`
 }
 
 type PublicAPIConfiguration struct {

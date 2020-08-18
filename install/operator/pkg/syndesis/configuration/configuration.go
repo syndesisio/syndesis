@@ -197,15 +197,13 @@ type ServerFeatures struct {
 	TestSupport                   bool               // Enables test-support endpoint on backend API
 	OpenShiftMaster               string             // Public OpenShift master address
 	ManagementURLFor3scale        string             // 3scale management URL
-	AdditionalMavenArguments      string             // User can set extra maven options
 	Maven                         MavenConfiguration // Maven settings
 }
 
 type MavenConfiguration struct {
-	// Should we append new repositories
-	Append bool
-	// Set repositories for maven
-	Repositories map[string]string `json:"repositories,omitempty"`
+	Append              bool              // Should we append new repositories
+	AdditionalArguments string            // User can set extra maven options
+	Repositories        map[string]string // Set repositories for maven
 }
 
 // Addons
@@ -214,7 +212,6 @@ type AddonsSpec struct {
 	Ops       OpsConfiguration
 	Todo      TodoConfiguration
 	Knative   KnativeConfiguration
-	DV        DvConfiguration
 	CamelK    CamelKConfiguration
 	PublicAPI PublicAPIConfiguration
 }
@@ -268,16 +265,6 @@ type TodoConfiguration struct {
 
 func (t TodoConfiguration) Name() string {
 	return "todo"
-}
-
-type DvConfiguration struct {
-	Image string // Docker image for dv
-	AddonConfiguration
-	Resources Resources
-}
-
-func (dv DvConfiguration) Name() string {
-	return "dv"
 }
 
 type KnativeConfiguration struct {
@@ -347,7 +334,6 @@ func GetAddonsInfo(configuration Config) []AddonInfo {
 	return []AddonInfo{
 		configuration.Syndesis.Addons.Jaeger,
 		configuration.Syndesis.Addons.Ops,
-		configuration.Syndesis.Addons.DV,
 		configuration.Syndesis.Addons.CamelK,
 		configuration.Syndesis.Addons.Knative,
 		configuration.Syndesis.Addons.PublicAPI,
@@ -648,7 +634,6 @@ func (config *Config) setConfigFromEnv() error {
 	imgEnv := Config{
 		Syndesis: SyndesisConfig{
 			Addons: AddonsSpec{
-				DV:     DvConfiguration{Image: os.Getenv("RELATED_IMAGE_DV")},
 				CamelK: CamelKConfiguration{Image: os.Getenv("RELATED_IMAGE_CAMELK")},
 				Todo:   TodoConfiguration{Image: os.Getenv("RELATED_IMAGE_TODO")},
 			},

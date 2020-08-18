@@ -425,6 +425,22 @@
       </dependency>
       <dependency>
         <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-odata-v2</artifactId>
+        <version>${project.version}</version>
+        <scope>runtime</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-email</artifactId>
         <version>${project.version}</version>
         <scope>runtime</scope>
@@ -819,6 +835,12 @@
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-odata-v2</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-flow</artifactId>
       <scope>runtime</scope>
     </dependency>
@@ -917,6 +939,18 @@
         </executions>
       </plugin>
 
+      <!-- Resteasy dependency has a duplication in org.jboss.resteasy:resteasy-client:4.5.6.Final and org.jboss.resteasy:resteasy-client-api:4.5.6.Final -->
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <ignoredResourcePatterns>
+            <ignoredResourcePattern>org/jboss/resteasy/client/jaxrs/i18n/Messages.i18n_en.properties</ignoredResourcePattern>
+            <ignoredResourcePattern>org/jboss/resteasy/client/jaxrs/i18n/Messages.i18n_xx.properties</ignoredResourcePattern>
+          </ignoredResourcePatterns>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 
@@ -953,7 +987,7 @@
       </build>
     </profile>
 
-    <!-- Profile for pushing a compiled image to a regsitry defined by the system property docker.push.registry -->
+    <!-- Profile for pushing a compiled image to a registry defined by the system property docker.push.registry -->
     <profile>
       <id>image-push</id>
       <activation>

@@ -17,7 +17,7 @@
 package io.syndesis.test;
 
 import java.time.Duration;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,7 +46,7 @@ public final class SyndesisTestEnvironment {
     private static final String SYNDESIS_INTEGRATION_RUNTIME = SYNDESIS_PREFIX + "integration.runtime";
     private static final String SYNDESIS_INTEGRATION_RUNTIME_ENV = SYNDESIS_ENV_PREFIX + "INTEGRATION_RUNTIME";
 
-    private static final String SYNDESIS_CAMEL_K_CUSTOMIZERS_DEFAULT = "health,logging,syndesis";
+    private static final String SYNDESIS_CAMEL_K_CUSTOMIZERS_DEFAULT = "metadata,logging,syndesis";
     private static final String SYNDESIS_CAMEL_K_CUSTOMIZERS = SYNDESIS_PREFIX + "camel.k.customizers";
     private static final String SYNDESIS_CAMEL_K_CUSTOMIZERS_ENV = SYNDESIS_ENV_PREFIX + "CAMEL_K_CUSTOMIZERS";
 
@@ -175,11 +175,11 @@ public final class SyndesisTestEnvironment {
                 System.getenv(SYNDESIS_INTEGRATION_RUNTIME_ENV) : SYNDESIS_INTEGRATION_RUNTIME_DEFAULT));
     }
 
-    public static List<String> getCamelkCustomizers() {
+    public static Set<String> getCamelkCustomizers() {
         return Stream.of(System.getProperty(SYNDESIS_CAMEL_K_CUSTOMIZERS, System.getenv(SYNDESIS_CAMEL_K_CUSTOMIZERS_ENV) != null ?
                 System.getenv(SYNDESIS_CAMEL_K_CUSTOMIZERS_ENV) : SYNDESIS_CAMEL_K_CUSTOMIZERS_DEFAULT)
                 .split(",", -1))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
     public static String getProjectMountPath() {

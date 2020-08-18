@@ -74,7 +74,9 @@ public final class CamelKSupport {
                 "Waiting For Platform",
                 "Building Context",
                 "Resolving Context",
-                "Deploying");
+                "Deploying",
+                "Initialization",
+                "Building Kit");
     public static final ImmutableSet<String> CAMEL_K_FAILED_STATES = ImmutableSet.of(
                 "Error",
                 "Building Failure Recovery");

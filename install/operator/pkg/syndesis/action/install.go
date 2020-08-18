@@ -216,7 +216,8 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 
 		a.log.Info("Installing addon", "Name", addonInfo.Name())
 
-		if config.ApiServer.OlmSupport && addonInfo.GetOlmSpec() != nil {
+		if config.ApiServer.OlmSupport && addonInfo.GetOlmSpec() != nil && addonInfo.GetOlmSpec().Package != "" {
+			a.log.Info("Subscribing to OLM operator:", "Package", addonInfo.GetOlmSpec().Package, "Channel", addonInfo.GetOlmSpec().Channel)
 			//
 			// Using the operator hub is not mutally exclusive to loading the addon
 			// resources. Each addon should be tailored with conditionals to be

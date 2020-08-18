@@ -19,11 +19,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.common.model.Dependency;
@@ -53,6 +50,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.PropertyResolver;
 
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public abstract class AbstractODataTest implements ODataConstants {
 
     protected final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -60,8 +61,6 @@ public abstract class AbstractODataTest implements ODataConstants {
     protected static final int MOCK_TIMEOUT_MILLISECONDS = 60000;
 
     protected static final String OLINGO4_READ_FROM_ENDPOINT = "olingo4-olingo4-0-0://read";
-
-    protected static final String OLINGO4_READ_TO_ENDPOINT = "olingo4-olingo4-0-1://read";
 
     @Autowired
     protected ApplicationContext applicationContext;
@@ -125,7 +124,7 @@ public abstract class AbstractODataTest implements ODataConstants {
      * @return a string representation of the content of the given stream
      */
     public static String streamToString(InputStream inStream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
         StringBuilder builder = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
@@ -143,7 +142,7 @@ public abstract class AbstractODataTest implements ODataConstants {
             .name("OData")
             .componentScheme("olingo4")
             .description("Communicate with an OData service")
-            .addDependency(Dependency.maven("org.apache.camel:camel-olingo4:latest"));
+            .addDependency(Dependency.maven("org.apache.camel:camel-olingo4"));
 
         if (configurePropBuilder != null) {
             builder.configuredProperties(configurePropBuilder.build());

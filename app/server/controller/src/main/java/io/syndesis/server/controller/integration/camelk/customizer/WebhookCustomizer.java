@@ -15,6 +15,8 @@
  */
 package io.syndesis.server.controller.integration.camelk.customizer;
 
+import java.util.EnumSet;
+
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.server.controller.integration.camelk.CamelKSupport;
 import io.syndesis.server.controller.integration.camelk.crd.ConfigurationSpec;
@@ -22,8 +24,6 @@ import io.syndesis.server.controller.integration.camelk.crd.Integration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationSpec;
 import io.syndesis.server.openshift.Exposure;
 import org.springframework.stereotype.Component;
-
-import java.util.EnumSet;
 
 /**
  * Configure OpenApi
@@ -46,13 +46,7 @@ public class WebhookCustomizer implements CamelKIntegrationCustomizer {
             spec.addConfiguration(
                 new ConfigurationSpec.Builder()
                     .type("property")
-                    .value("customizer.servletregistration.enabled=true")
-                    .build()
-            );
-            spec.addConfiguration(
-                new ConfigurationSpec.Builder()
-                    .type("property")
-                    .value("customizer.servletregistration.path=/webhook/*")
+                    .value("customizer.platform-http.path=/webhook/")
                     .build()
             );
         } catch (Exception e) {

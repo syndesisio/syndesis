@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (C) 2016 Red Hat, Inc.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.syndesis.test</groupId>
+    <artifactId>test-parent</artifactId>
+    <version>2.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <groupId>io.syndesis.s2i</groupId>
+  <artifactId>s2i-camelk</artifactId>
+  <version>2.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>S2I CamelK</name>
+
+  <properties>
+    <image.build.directory>${project.basedir}/target/image</image.build.directory>
+  </properties>
+
+  <build>
+    <plugins>
+
+      <!-- START: disable plugins this build doesn't use -->
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+          <execution>
+            <id>basepom.default-it</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+          <execution>
+            <id>attach-javadocs</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-source-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.ning.maven.plugins</groupId>
+        <artifactId>maven-dependency-versions-check-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.hubspot.maven.plugins</groupId>
+        <artifactId>dependency-management-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.hubspot.maven.plugins</groupId>
+        <artifactId>dependency-scope-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+          <execution>
+            <id>spotbugs</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+      <!-- END: all of the above plugins are not needed and disabled -->
+
+      <plugin>
+        <artifactId>maven-invoker-plugin</artifactId>
+        <executions>
+          <execution>
+            <!--
+              Runs the Maven build on the generated project to
+              gather all the dependencies we wish to bake into
+              the S2I image. This is the first run and it takes
+              into account settings this Maven invocation uses
+              and the settings.xml from src/main/resources that
+              contains additional (Red Hat) repositories.
+            -->
+            <id>cache-artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <goals>
+                <goal>--batch-mode -T3.0C de.qaware.maven:go-offline-maven-plugin:1.2.3:resolve-dependencies</goal>
+              </goals>
+              <mergeUserSettings>true</mergeUserSettings>
+              <projectsDirectory>${project.build.directory}</projectsDirectory>
+              <localRepositoryPath>${settings.localRepository}</localRepositoryPath>
+              <settingsFile>${project.build.directory}/settings.xml</settingsFile>
+              <skipInvocation>false</skipInvocation>
+            </configuration>
+          </execution>
+          <execution>
+            <!--
+              Runs the Maven build on the generated project to
+              gather all the dependencies we wish to bake into
+              the S2I image. This is the second run to gather
+              the dependencies and it uses settings pointing to
+              the local Maven repository that was pre-cached
+              in the first run.
+            -->
+            <id>create-repository</id>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <goals>
+                <goal>--batch-mode -T3.0C de.qaware.maven:go-offline-maven-plugin:1.2.3:resolve-dependencies</goal>
+              </goals>
+              <mergeUserSettings>true</mergeUserSettings>
+              <projectsDirectory>${project.build.directory}</projectsDirectory>
+              <localRepositoryPath>${image.build.directory}/repository</localRepositoryPath>
+              <settingsFile>${project.build.directory}/settings_local.xml</settingsFile>
+              <skipInvocation>false</skipInvocation>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <!--
+              We need to remove some of the tracking files Maven puts
+              in the repository we created above. Otherwise Maven
+              will try to resolve using the repositories we used to
+              download these (namely the local repository used above
+              in the `settings_local.xml`), that will not resolve
+              to anything meaningful when we do the integration POD
+              S2I build.
+            -->
+            <id>remove-repository-tracking-files</id>
+            <phase>package</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <configuration>
+              <excludeDefaultDirectories>true</excludeDefaultDirectories>
+              <filesets>
+                <fileset>
+                  <directory>${image.build.directory}/repository</directory>
+                  <followSymlinks>false</followSymlinks>
+                  <includes>
+                    <include>**/_remote.repositories</include>
+                    <include>**/resolver-status.properties</include>
+                    <include>**/*.lastUpdated</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+          <execution>
+            <id>default-deploy</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/src/main/resources</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <delimiters>
+            <delimiter>@</delimiter>
+          </delimiters>
+          <escapeString>\</escapeString>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>image</id>
+      <activation>
+        <property>
+          <name>::image</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>fabric8-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <!--
+                  Builds the S2I image.
+                -->
+                <id>create-s2i-image</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+                <configuration>
+                  <!-- Important here, otherwise fmp silently ignores the build config -->
+                  <skipBuildPom>false</skipBuildPom>
+                  <!-- Create a plain Docker image -->
+                  <buildStrategy>docker</buildStrategy>
+                  <images>
+                    <image>
+                      <name>${image.s2i.camelk}</name>
+                      <build>
+                        <dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
+                        <contextDir>${image.build.directory}</contextDir>
+                      </build>
+                    </image>
+                  </images>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Profile for pushing a compiled image to a registry defined by the system property docker.push.registry -->
+    <profile>
+      <id>image-push</id>
+      <activation>
+        <property>
+          <name>::image.push</name>
+        </property>
+      </activation>
+      <properties>
+        <fabric8.generator.name>${image.s2i.camelk}</fabric8.generator.name>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>fabric8-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>push</id>
+                <phase>install</phase>
+                <goals>
+                  <goal>push</goal>
+                </goals>
+                <configuration>
+                  <images>
+                    <image>
+                      <name>${image.s2i.camelk}</name>
+                      <build>
+                        <!--
+                          Doesn't actually build here but must be present, otherwise
+                          push starts to do a default java-exec type build. So this is
+                          a copy of the build image plugin above
+                        -->
+                        <dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
+                        <contextDir>${image.build.directory}</contextDir>
+                      </build>
+                    </image>
+                  </images>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

@@ -87,8 +87,6 @@ These are the fields available. Only fields of type string or bool can be edited
 |Spec.Addons.camelk.enabled|string|Whether the addons is enabled or disabled|
 |Spec.Addons.jaeger|hash[string,string]|Jaeger|
 |Spec.Addons.jaeger.enabled|string|Whether the addons is enabled or disabled|
-|Spec.Addons.dv|hash[string,string]|Dv|
-|Spec.Addons.dv.enabled|string|Whether the addons is enabled or disabled|
 |Spec.Addons.legacyui|hash[string,string]|Legacy UI|
 |Spec.Addons.legacyui.enabled|string|Whether the addons is enabled or disabled|
 |Spec.Addons.ops|hash[string,string]|Monitoring resources|
@@ -133,10 +131,6 @@ These are the fields available. Only fields of type string or bool can be edited
 |Spec.Components.Grafana|GrafanaConfiguration|syndesis grafana configurations|
 |Spec.Components.Grafana.Resources|Resources|Contains resource limits for the pod|
 |Spec.Components.Grafana.Resources.Limits.Memory|string|Memory limits|
-|Spec.Components.Dv|DvConfiguration|syndesis dv configurations|
-|Spec.Components.Dv.Tag|string|tag used for the syndesis-dv `ImageStream`|
-|Spec.Components.Dv.Resources|Resources|Contains resource limits for the pod|
-|Spec.Components.Dv.Resources.Limits.Memory|string|Memory limits|
 |Spec.Components.Upgrade|UpgradeConfiguration|syndesis upgrade configurations|
 |Spec.Components.Upgrade.Resources|Resources|Contains resource limits for the pod|
 |Spec.Components.Upgrade.Resources.Limits.Memory|string|Memory limits|

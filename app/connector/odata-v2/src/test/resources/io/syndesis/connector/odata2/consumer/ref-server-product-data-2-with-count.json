@@ -1,0 +1,10 @@
+{
+  "ID": 1,
+  "Name": "Milk",
+  "Description": "Low fat milk",
+  "Price": 3.5,
+  "Rating": 3,
+  "DiscontinuedDate": null,
+  "ReleaseDate": 812505600000,
+  "ResultCount": 9
+}

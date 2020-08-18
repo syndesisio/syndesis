@@ -28,7 +28,7 @@
 
   <properties>
     <camel.version>3.3.0</camel.version>
-    <atlasmap.version>2.0.4</atlasmap.version>
+    <atlasmap.version>2.0.5</atlasmap.version>
     <jackson.version>2.11.1</jackson.version>
     <validation-api.version>2.0.2</validation-api.version>
   </properties>
@@ -61,7 +61,6 @@
     <developerConnection>scm:git:ssh://git@github.com:syndesisio/syndesis.git</developerConnection>
     <url>http://github.com/syndesisio/syndesis</url>
   </scm>
-
 
   <distributionManagement>
     <snapshotRepository>
@@ -341,6 +340,16 @@
       </dependency>
       <dependency>
         <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-odata-v2</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-box</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-flow</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -378,6 +387,7 @@
         <plugin>
           <groupId>com.mycila</groupId>
           <artifactId>license-maven-plugin</artifactId>
+          <version>3.0</version>
           <inherited>true</inherited>
           <configuration>
             <header>license/syndesis-license.txt</header>

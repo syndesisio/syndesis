@@ -100,12 +100,18 @@ download_operator_binary() {
             release_tag=$(echo $url| awk -F '/' '{print $8}')
         fi
 
-        if [ -z "$url" ]
-        then
-          echo "ERROR - the operator download URL could not be constructed"
-          exit 1
+        #
+        # Check curl returns a valid url
+        #
+        if [ -z "${url}" ]; then
+            if [[ -n "$release_tag" ]]; then
+                echo "unable to find a valid release url for release tag ${release_tag}"
+            else
+                echo "unable to find any valid release urls"
+            fi
+            return 1
         else
-          echo "Downloading from $url ..."
+            echo "Downloading from $url ..."
         fi
 
         if $(curl -sL ${url} | tar xz -C $(dirname ${OPERATOR_BINARY})); then

@@ -34,7 +34,7 @@ maven_args() {
         args="$args clean"
     fi
 
-    args="$args verify"
+    args="$args install"
 
     local tests="$(readopt --test -t)"
     if [ -n "${tests}" ]; then
