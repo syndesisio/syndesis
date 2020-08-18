@@ -13,6 +13,7 @@ pkgs.mkShell {
   buildInputs = [
     pkgs.checkstyle
     pkgs.dive
+    pkgs.docker
     pkgs.go
     pkgs.just
     pkgs.kube3d
@@ -23,6 +24,7 @@ pkgs.mkShell {
     pkgs.nodejs
     pkgs.openshift
     pkgs.operator-sdk
+    pkgs.podman
     pkgs.skaffold
     pkgs.yarn
   ];
