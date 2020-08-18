@@ -15,6 +15,9 @@
  */
 package io.syndesis.connector.odata;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.security.GeneralSecurityException;
@@ -24,9 +27,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
+
+import io.syndesis.connector.support.util.ConnectorOptions;
+import io.syndesis.connector.support.util.KeyStoreHelper;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.auth.AuthScope;
@@ -41,8 +44,6 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.olingo.client.api.http.HttpClientFactory;
 import org.apache.olingo.commons.api.http.HttpMethod;
-import io.syndesis.connector.support.util.ConnectorOptions;
-import io.syndesis.connector.support.util.KeyStoreHelper;
 
 public class ODataUtil implements ODataConstants {
 
@@ -285,7 +286,6 @@ public class ODataUtil implements ODataConstants {
             } else {
                 buf.append(QUOTE_MARK).append(keyValue).append(QUOTE_MARK);
             }
-
         } else {
             buf.append(QUOTE_MARK).append(keyPredicateToUse).append(QUOTE_MARK);
         }
