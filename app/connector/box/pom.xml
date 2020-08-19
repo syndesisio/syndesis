@@ -28,7 +28,8 @@
     <name>Connector :: Box</name>
 
     <properties>
-        <box-java-sdk-version>2.50.0</box-java-sdk-version>
+        <!-- Keep aligned with version coming from Camel -->
+        <box-java-sdk-version>2.47.0</box-java-sdk-version>
     </properties>
 
     <dependencies>
