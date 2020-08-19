@@ -85,14 +85,32 @@ export const ReviewPage: React.FunctionComponent = () => {
           { name, description }: ISaveForm,
           actions: any
         ) => {
+          const newObj = {};
+
+          Object.keys(state.configuredProperties!).map(key => {
+            const value = state.configuredProperties![key];
+            /**
+             * Syndesis's API doesn't handle arrays well,
+             * so we'll be sending it as a JSON encoded array
+             * instead.
+             */
+            if (Array.isArray(value)) {
+              newObj[key] = JSON.stringify(value);
+            } else {
+              newObj[key] = value;
+            }
+            return newObj;
+          });
+
           try {
             const connection = createConnection(
               connector,
               name,
               description || '',
-              state.configuredProperties
+              newObj
             );
             await saveConnection(connection);
+
             pushNotification(
               t('connections:connectionCreatedSuccess', { name }),
               'success'

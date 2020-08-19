@@ -23,6 +23,7 @@ import { WithConnectorForm } from '../../components';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
 import { useOAuthFlow } from '../../useOAuthFlow';
+// tslint:disable:no-console
 
 export interface IConfigurationPageRouteParams {
   connectorId: string;
@@ -117,12 +118,16 @@ export const ConfigurationPage: React.FunctionComponent = () => {
    * @param configuredProperties
    */
   const onSave = (configuredProperties: { [key: string]: string }) => {
-    history.push(
+    console.log('hello from onSave');
+    // tslint:disable-next-line:no-console
+    console.table(configuredProperties);
+
+    /*history.push(
       resolvers.create.review({
         configuredProperties,
         connector,
       })
-    );
+    );*/
   };
 
   /**
@@ -181,121 +186,139 @@ export const ConfigurationPage: React.FunctionComponent = () => {
               isValid,
               isValidating,
               validateForm,
-            }) => (
-              <ConnectionCreatorLayout
-                toggle={
-                  <ConnectionCreatorToggleList
-                    step={2}
-                    i18nSelectConnector={t(
-                      'connections:create:connector:title'
-                    )}
-                    i18nConfigureConnection={t(
-                      'connections:create:configure:title'
-                    )}
-                    i18nNameConnection={t('connections:create:review:title')}
-                  />
-                }
-                navigation={
-                  <ConnectionCreatorBreadSteps
-                    step={2}
-                    i18nSelectConnector={t(
-                      'connections:create:connector:title'
-                    )}
-                    i18nConfigureConnection={t(
-                      'connections:create:configure:title'
-                    )}
-                    i18nNameConnection={t('connections:create:review:title')}
-                  />
-                }
-                footer={
-                  <ConnectionCreatorFooter
-                    cancelHref={resolvers.connections()}
-                    backHref={resolvers.create.selectConnector()}
-                    onNext={submitForm}
-                    isNextDisabled={isSubmitting || !isValid}
-                    isNextLoading={isSubmitting}
-                    isLastStep={false}
-                    i18nBack={t('shared:Back')}
-                    i18nCancel={t('shared:Cancel')}
-                    i18nSave={t('shared:Save')}
-                    i18nNext={t('shared:Next')}
-                  />
-                }
-                content={
-                  <WithLoader
-                    error={(errorConnector || errorCredentials) !== false}
-                    loading={!hasData || loadingCredentials}
-                    loaderChildren={<PageLoader />}
-                    errorChildren={
-                      <ApiError
-                        error={(errorConnector || errorCredentials) as Error}
-                      />
-                    }
-                  >
-                    {() => {
-                      if (configuredForOAuth) {
-                        return (
-                          <OAuthFlow
-                            connectorId={connector.id!}
-                            connectorName={connector.name}
-                            onSuccess={onOAuthSuccess}
-                          />
-                        );
-                      }
+            }) => {
+              // tslint:disable:no-console
 
-                      if (supportsOAuth) {
-                        return (
-                          <ConnectionSetupOAuthCard
-                            i18nTitle={t(
-                              'connections:create:configure:configurationTitle',
-                              {
-                                name: connector.name,
-                              }
-                            )}
-                            i18nDescription={t(
-                              'connections:oauth:settingsMissing'
-                            )}
-                            i18nOAuthSettingsButton={t('shared:Settings')}
-                            backHref={resolvers.create.selectConnector()}
-                            oauthSettingsHref={
-                              globalRoutes.settings.oauthApps.root
-                            }
-                          />
-                        );
+              const tempHandle = (data?: any, something?: any) => {
+                console.log('temp handle');
+                // console.log('data: ' + data);
+                console.table(data);
+                console.log('something: ' + something);
+                submitForm();
+              };
+              return (
+                <ConnectionCreatorLayout
+                  toggle={
+                    <ConnectionCreatorToggleList
+                      step={2}
+                      i18nSelectConnector={t(
+                        'connections:create:connector:title'
+                      )}
+                      i18nConfigureConnection={t(
+                        'connections:create:configure:title'
+                      )}
+                      i18nNameConnection={t('connections:create:review:title')}
+                    />
+                  }
+                  navigation={
+                    <ConnectionCreatorBreadSteps
+                      step={2}
+                      i18nSelectConnector={t(
+                        'connections:create:connector:title'
+                      )}
+                      i18nConfigureConnection={t(
+                        'connections:create:configure:title'
+                      )}
+                      i18nNameConnection={t('connections:create:review:title')}
+                    />
+                  }
+                  footer={
+                    <ConnectionCreatorFooter
+                      cancelHref={resolvers.connections()}
+                      backHref={resolvers.create.selectConnector()}
+                      // onNext={submitForm}
+                      onNext={tempHandle}
+                      isNextDisabled={isSubmitting || !isValid}
+                      isNextLoading={isSubmitting}
+                      isLastStep={false}
+                      i18nBack={t('shared:Back')}
+                      i18nCancel={t('shared:Cancel')}
+                      i18nSave={t('shared:Save')}
+                      i18nNext={t('shared:Next')}
+                    />
+                  }
+                  content={
+                    <WithLoader
+                      error={(errorConnector || errorCredentials) !== false}
+                      loading={!hasData || loadingCredentials}
+                      loaderChildren={<PageLoader />}
+                      errorChildren={
+                        <ApiError
+                          error={(errorConnector || errorCredentials) as Error}
+                        />
                       }
+                    >
+                      {() => {
+                        if (configuredForOAuth) {
+                          return (
+                            <OAuthFlow
+                              connectorId={connector.id!}
+                              connectorName={connector.name}
+                              onSuccess={onOAuthSuccess}
+                            />
+                          );
+                        }
 
-                      return (
-                        <ConnectorConfigurationForm
-                          i18nFormTitle={connector.name}
-                          i18nValidate={t('shared:Validate')}
-                          isNextDisabled={isSubmitting || !isValid}
-                          isNextLoading={isSubmitting}
-                          isValidating={isValidating}
-                          onValidate={(ev: React.FormEvent) => {
-                            ev.preventDefault();
-                            validateForm();
-                          }}
-                          handleSubmit={handleSubmit}
-                          validationResults={validationResults}
-                        >
-                          <>
-                            {hasProperties ? (
-                              fields
-                            ) : (
-                              <ConnectorNothingToConfigureAlert
-                                i18nAlert={
-                                  'There are no properties to configure'
+                        if (supportsOAuth) {
+                          return (
+                            <ConnectionSetupOAuthCard
+                              i18nTitle={t(
+                                'connections:create:configure:configurationTitle',
+                                {
+                                  name: connector.name,
                                 }
-                              />
-                            )}
-                          </>
-                        </ConnectorConfigurationForm>
-                      );
-                    }}
-                  </WithLoader>
-                }
-              />
-            )}
+                              )}
+                              i18nDescription={t(
+                                'connections:oauth:settingsMissing'
+                              )}
+                              i18nOAuthSettingsButton={t('shared:Settings')}
+                              backHref={resolvers.create.selectConnector()}
+                              oauthSettingsHref={
+                                globalRoutes.settings.oauthApps.root
+                              }
+                            />
+                          );
+                        }
+
+                        const handleSubmitTemp = (data?: any) => {
+                          // tslint:disable-next-line:no-console
+                          console.log('data: ' + JSON.stringify(data));
+                          // handleSubmit();
+                        };
+
+                        return (
+                          <ConnectorConfigurationForm
+                            i18nFormTitle={connector.name}
+                            i18nValidate={t('shared:Validate')}
+                            isNextDisabled={isSubmitting || !isValid}
+                            isNextLoading={isSubmitting}
+                            isValidating={isValidating}
+                            onValidate={(ev: React.FormEvent) => {
+                              ev.preventDefault();
+                              validateForm();
+                            }}
+                            handleSubmit={handleSubmitTemp}
+                            validationResults={validationResults}
+                          >
+                            <>
+                              {hasProperties ? (
+                                fields
+                              ) : (
+                                <ConnectorNothingToConfigureAlert
+                                  i18nAlert={
+                                    'There are no properties to configure'
+                                  }
+                                />
+                              )}
+                            </>
+                          </ConnectorConfigurationForm>
+                        );
+                      }}
+                    </WithLoader>
+                  }
+                />
+              );
+            }}
           </WithConnectorForm>
         </>
       )}
