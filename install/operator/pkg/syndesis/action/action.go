@@ -50,6 +50,7 @@ func NewOperatorActions(mgr manager.Manager, clientTools *clienttools.ClientTool
 		newInstallAction(mgr, clientTools),
 		newBackupAction(mgr, clientTools),
 		newStartupAction(mgr, clientTools),
+		newPodSchedulingAction(mgr, clientTools),
 	}
 }
 
