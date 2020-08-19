@@ -165,7 +165,7 @@
     <version.javax.activation>1.2.1</version.javax.activation>
 
     <javac.werror>-Werror</javac.werror>
-    <apache.http.version>4.5.10</apache.http.version>
+    <apache.http.version>4.5.12</apache.http.version>
   </properties>
 
   <modules>
