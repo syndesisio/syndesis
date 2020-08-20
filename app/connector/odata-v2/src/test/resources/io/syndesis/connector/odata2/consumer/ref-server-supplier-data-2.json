@@ -1,0 +1,12 @@
+{
+  "Address": {
+    "State": "WA",
+    "ZipCode": "98052",
+    "Street": "NE 40th",
+    "Country": "USA",
+    "City": "Redmond"
+  },
+  "Concurrency": 0,
+  "ID": 1,
+  "Name": "Tokyo Traders"
+}

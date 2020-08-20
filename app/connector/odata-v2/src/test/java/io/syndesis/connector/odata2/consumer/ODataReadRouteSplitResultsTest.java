@@ -586,7 +586,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
 
-        int expectedMsgCount = 1;
+        int expectedMsgCount = 2;
         MockEndpoint result = initMockEndpoint();
         result.setExpectedMessageCount(expectedMsgCount);
 
@@ -597,6 +597,11 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         String json = extractJsonFromExchgMsg(result, 0, String.class);
         assertNotNull(json);
         String expected = testData(REF_SERVER_SUPPLIER_DATA_1);
+        assertThatJson(json).isEqualTo(expected);
+
+        json = extractJsonFromExchgMsg(result, 1, String.class);
+        assertNotNull(json);
+        expected = testData(REF_SERVER_SUPPLIER_DATA_2);
         assertThatJson(json).isEqualTo(expected);
 
         //
