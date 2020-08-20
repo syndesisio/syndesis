@@ -49,6 +49,7 @@ public abstract class AbstractODataRouteTest extends AbstractODataTest {
     protected static final String REF_SERVER_PRODUCT_DATA_2 = "ref-server-product-data-2.json";
     protected static final String REF_SERVER_PRODUCT_DATA_2_WITH_COUNT = "ref-server-product-data-2-with-count.json";
     protected static final String REF_SERVER_SUPPLIER_DATA_1 = "ref-server-supplier-data-1.json";
+    protected static final String REF_SERVER_SUPPLIER_DATA_2 = "ref-server-supplier-data-2.json";
     protected static final String REF_SERVER_SUPPLIER_DATA_1_EXPANDED = "ref-server-supplier-data-1-expanded.json";
     protected static final String REF_SERVER_SUPPLIER_DATA_1_ADDRESS = "ref-server-supplier-data-1-address.json";
     protected static final String REF_SERVER_SUPPLIER_DATA_1_ADDRESS_STREET = "ref-server-supplier-data-1-address-street.json";
