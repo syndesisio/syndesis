@@ -9,7 +9,6 @@ import (
 	oappsv1 "github.com/openshift/api/apps/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
-	v1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -59,11 +58,11 @@ func (a *podSchedulingAction) Execute(ctx context.Context, syndesis *v1beta1.Syn
 }
 
 func (a *podSchedulingAction) executeInfraScheduling(ctx context.Context, syndesis *v1beta1.Syndesis) {
-	list := v1.DeploymentList{
+	list := oappsv1.DeploymentConfigList{
 		TypeMeta: metav1.TypeMeta{
-			Kind:       "Deployment",
-			APIVersion: "apps/v1",
-		}}
+			Kind: "DeploymentConfig",
+		},
+	}
 	selector, _ := labels.Parse("syndesis.io/app=syndesis,syndesis.io/type=infrastructure")
 	options := client.ListOptions{
 		Namespace:     syndesis.Namespace,
@@ -72,7 +71,10 @@ func (a *podSchedulingAction) executeInfraScheduling(ctx context.Context, syndes
 
 	rtClient, _ := a.clientTools.RuntimeClient()
 	if err := rtClient.List(ctx, &list, &options); err != nil {
-		a.log.Error(err, "Error listing deployments to apply infra scheduling", "selector", selector)
+		a.log.Error(err, "Error listing DeploymentConfig to apply infra scheduling", "selector", selector)
+	}
+	if len(list.Items) == 0 {
+		a.log.Error(nil, "There are no DeploymentConfig infra component to apply the infraScheduling", "label selector", selector)
 	}
 
 	ops := make([]patchOp, 0)
@@ -119,15 +121,16 @@ func (a *podSchedulingAction) executeInfraScheduling(ctx context.Context, syndes
 
 	payload, _ := json.Marshal(ops)
 	for _, depl := range list.Items {
-		a.log.Info("Patching deploy/" + depl.GetName() + " with new affinity/toleration values, this action will restart the pod.")
-		deploy := &v1.Deployment{
+		a.log.Info("Patching dc/" + depl.GetName() + " with new affinity/toleration values, this action will restart the pod.")
+
+		dc := &oappsv1.DeploymentConfig{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      depl.Name,
 				Namespace: syndesis.Namespace,
 			}}
-		err := rtClient.Patch(ctx, deploy, client.RawPatch(types.JSONPatchType, payload))
+		err := rtClient.Patch(ctx, dc, client.RawPatch(types.JSONPatchType, payload))
 		if err != nil {
-			a.log.Error(err, "Error patching deploy/"+depl.GetName(), "ReasonForError", errors.ReasonForError(err))
+			a.log.Error(err, "Error patching dc/"+depl.GetName(), "ReasonForError", errors.ReasonForError(err))
 		}
 	}
 	a.currentInfraScheduling = syndesis.Spec.InfraScheduling

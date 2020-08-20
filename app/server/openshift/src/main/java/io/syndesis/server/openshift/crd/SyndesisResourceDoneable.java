@@ -25,9 +25,4 @@ public class SyndesisResourceDoneable extends CustomResourceDoneable<Syndesis> {
     public SyndesisResourceDoneable(Syndesis resource, Function<Syndesis, Syndesis> function) {
         super(resource, function);
     }
-
-    @Override
-    public Syndesis done() {
-        return super.done();
-    }
 }
