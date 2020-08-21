@@ -1,16 +1,13 @@
 {
-  nixpkgs ? builtins.fetchGit {
-    url = https://github.com/nixos/nixpkgs-channels;
-    ref = "nixpkgs-unstable";
-    rev = "16fc531784ac226fb268cc59ad573d2746c109c1";
-  }
+  pkgs ? import ./nix/nixpkgs.nix
 }:
 
 let
-  pkgs = import nixpkgs {config = {}; overlays = [];};
+  syndesis-operator = pkgs.callPackage ./nix/syndesis-operator.nix { inherit (pkgs.stdenv) mkDerivation; };
 in
 pkgs.mkShell {
   buildInputs = [
+    syndesis-operator
     pkgs.checkstyle
     pkgs.dive
     pkgs.docker
@@ -30,6 +27,7 @@ pkgs.mkShell {
   ];
   shellHook = ''
     export PATH="$PWD/node_modules/.bin/:$PATH"
+    export OPERATOR_BINARY=${syndesis-operator}/bin/syndesis-operator
     yarn install
   '';
 }

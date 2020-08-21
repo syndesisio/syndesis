@@ -2,7 +2,7 @@
 
 OPERATOR_GO_PACKAGE="github.com/syndesisio/syndesis/install/operator"
 OPERATOR="syndesis-operator"
-OPERATOR_BINARY=$HOME/.syndesis/bin/${OPERATOR}
+[ -z $OPERATOR_BINARY ] && OPERATOR_BINARY=$HOME/.syndesis/bin/${OPERATOR}
 
 operatorsdk_is_available() {
     set +e

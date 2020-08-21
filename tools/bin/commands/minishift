@@ -188,6 +188,7 @@ minishift::run() {
           check_error "$result"
         fi
 
+        export KUBE=kubectl
         wait_for_deployments 1 syndesis-operator
 
         # Relogin with original user
