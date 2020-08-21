@@ -17,6 +17,7 @@
 package v1beta1
 
 import (
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -44,6 +45,12 @@ type SyndesisSpec struct {
 
 	// Something
 	ForceMigration bool `json:"forceMigration"`
+
+	// Configuration of Affinity and Toleration for infrastructure component pods
+	InfraScheduling SchedulingSpec `json:"infraScheduling,omitempty"`
+
+	// Configuration of Affinity and Toleration for integrations pods
+	IntegrationScheduling SchedulingSpec `json:"integrationScheduling,omitempty"`
 
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
@@ -191,6 +198,11 @@ type MavenConfiguration struct {
 	AdditionalArguments string `json:"additionalArguments,omitempty"`
 	// Set repositories for maven
 	Repositories map[string]string `json:"repositories,omitempty"`
+}
+
+type SchedulingSpec struct {
+	Affinity    *v1.Affinity    `json:"affinity,omitempty"`
+	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
 }
 
 type AddonsSpec struct {
