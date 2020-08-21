@@ -13,7 +13,7 @@ require (
 	github.com/docker/go-connections v0.4.0
 	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
-	github.com/go-logr/logr v0.1.0
+	github.com/go-logr/logr v0.2.0
 	github.com/go-openapi/spec v0.19.9
 	github.com/imdario/mergo v0.3.10
 	github.com/lib/pq v1.8.0
@@ -43,7 +43,7 @@ require (
 	github.com/RHsyseng/operator-utils v0.0.0-20200709142328-d5a5812a443f
 	github.com/coreos/prometheus-operator v0.39.0 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32
-	github.com/go-logr/zapr v0.1.1
+	github.com/go-logr/zapr v0.2.0
 	github.com/operator-framework/api v0.3.5
 	github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200508205316-9ffa1fdb8dcf // Tag v0.15.0
 	github.com/operator-framework/operator-marketplace v0.0.0-20200515051804-e0148822df25
