@@ -47,6 +47,21 @@
     <syndesis.image.tag>${syndesis.version}</syndesis.image.tag>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.sun.mail</groupId>
+        <artifactId>jakarta.mail</artifactId>
+        <exclusions>
+          <exclusion>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <!-- === Internal dependencies (don't touch without discussion) ========================== -->
     <dependency>
@@ -233,18 +248,6 @@
       <groupId>javax.jms</groupId>
       <artifactId>javax.jms-api</artifactId>
       <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.sun.mail</groupId>
-      <artifactId>jakarta.mail</artifactId>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>com.sun.activation</groupId>
-          <artifactId>jakarta.activation</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <!-- Logging -->
