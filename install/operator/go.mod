@@ -30,8 +30,8 @@ require (
 	github.com/stretchr/testify v1.5.1
 	github.com/testcontainers/testcontainers-go v0.5.1
 	gopkg.in/yaml.v2 v2.3.0
-	k8s.io/api v0.18.6
-	k8s.io/apimachinery v0.18.6
+	k8s.io/api v0.18.8
+	k8s.io/apimachinery v0.18.8
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/code-generator v0.18.8
 	k8s.io/gengo v0.0.0-20200114144118-36b2048a9120
