@@ -1,5 +1,5 @@
-Version: "7.7.0"
-SupportedOpenShiftVersions: "v4.5,v4.6"
+Version: "7.7"
+SupportedOpenShiftVersions: "v4.6"
 ProductName: syndesis
 AllowLocalHost: false
 Productized: false

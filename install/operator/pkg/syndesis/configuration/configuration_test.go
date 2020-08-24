@@ -405,9 +405,9 @@ func Test_generatePasswords(t *testing.T) {
 // but without using the loadFromFile function
 func getConfigLiteral() *Config {
 	return &Config{
-		Version:                    "7.7.0",
+		Version:                    "7.7",
 		ProductName:                "syndesis",
-		SupportedOpenShiftVersions: "v4.5,v4.6",
+		SupportedOpenShiftVersions: "v4.6",
 		AllowLocalHost:             false,
 		Productized:                false,
 		DevSupport:                 false,

@@ -42,8 +42,14 @@ func TestManifest_Generate(t *testing.T) {
 	if err != nil {
 		t.FailNow()
 	}
-	defer os.RemoveAll(dir)
-	os.Chmod(dir, 0755)
+
+	defer func() {
+		err = os.RemoveAll(dir)
+		assert.NoError(t, err)
+	}()
+
+	err = os.Chmod(dir, 0755)
+	assert.NoError(t, err)
 
 	m := manifest{
 		config:     conf,
@@ -56,14 +62,16 @@ func TestManifest_Generate(t *testing.T) {
 		container:  &container{},
 	}
 	err = m.Generate()
-	assert.DirExists(t, filepath.Join(dir, m.config.Version, "manifests"))
-	assert.FileExists(t, filepath.Join(dir, m.config.Version, "manifests", "syndesis.crd.yaml"))
-	assert.FileExists(t, filepath.Join(dir, m.config.Version, "manifests", "syndesis.clusterserviceversion.yaml"))
-	assert.FileExists(t, filepath.Join(dir, m.config.Version, "manifests", "syndesis.clusterroles.yaml"))
-	assert.DirExists(t, filepath.Join(dir, m.config.Version, "metadata"))
-	assert.FileExists(t, filepath.Join(dir, m.config.Version, "metadata", "annotations.yaml"))
-
 	assert.NoError(t, err)
+
+	assert.FileExists(t, filepath.Join(dir, "Dockerfile"))
+	assert.FileExists(t, filepath.Join(dir, "container.yaml"))
+	assert.DirExists(t, filepath.Join(dir, "manifests"))
+	assert.FileExists(t, filepath.Join(dir, "manifests", "syndesis.crd.yaml"))
+	assert.FileExists(t, filepath.Join(dir, "manifests", "syndesis.clusterserviceversion.yaml"))
+	assert.FileExists(t, filepath.Join(dir, "manifests", "syndesis.clusterroles.yaml"))
+	assert.DirExists(t, filepath.Join(dir, "metadata"))
+	assert.FileExists(t, filepath.Join(dir, "metadata", "annotations.yaml"))
 }
 
 func TestManifest_ensureDir(t *testing.T) {
@@ -79,8 +87,12 @@ func TestManifest_ensureDir(t *testing.T) {
 	if err != nil {
 		t.FailNow()
 	}
-	defer os.RemoveAll(dir)
-	os.Chmod(dir, 0755)
+	defer func() {
+		err = os.RemoveAll(dir)
+		assert.NoError(t, err)
+	}()
+	err = os.Chmod(dir, 0755)
+	assert.NoError(t, err)
 
 	m := manifest{config: conf, path: dir}
 	err = m.ensureDir()

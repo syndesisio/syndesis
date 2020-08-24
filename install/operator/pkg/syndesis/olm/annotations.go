@@ -30,12 +30,12 @@ type annotation struct {
 }
 
 func (c *annotation) build() (err error) {
-	name := "fuse-online-operator"
+	name := "fuse-online"
 	if !c.config.Productized {
 		name = "syndesis-operator"
 	}
 
-	channel := fmt.Sprintf("fuse-online-%s", semver.MajorMinor("v"+c.config.Version))
+	channel := fmt.Sprintf("fuse-online-%s.x", semver.MajorMinor("v"+c.config.Version))
 
 	m := map[string]map[string]string{
 		"annotations": {

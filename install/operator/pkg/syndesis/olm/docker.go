@@ -30,7 +30,7 @@ type docker struct {
 }
 
 func (c *docker) build() (err error) {
-	channel := fmt.Sprintf("fuse-online-%s", semver.MajorMinor("v"+c.config.Version))
+	channel := fmt.Sprintf("fuse-online-%s.x", semver.MajorMinor("v"+c.config.Version))
 
 	m := `FROM scratch
 
