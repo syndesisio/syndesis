@@ -44,7 +44,7 @@ module.exports = function(app) {
       }
     });
 
-    ['/api/v1', '/dv/v1'].forEach(url => {
+    ['/api/v1'].forEach(url => {
       app.use(url, chaos, apiProxy);
     });
 
