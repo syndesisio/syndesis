@@ -109,19 +109,6 @@
         </exclusions>
       </dependency>
 
-      <dependency>
-        <groupId>org.apache.cxf</groupId>
-        <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-        <!-- TODO: add this dependency to master pom and see which dependency bring this -->
-        <version>3.2.7.fuse-sb2-760016</version>
-        <exclusions>
-          <exclusion>
-            <groupId>jakarta.ws.rs</groupId>
-            <artifactId>jakarta.ws.rs-api</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-
       <!-- Apache Olingo Annotation Processor Extension dependencies -->
       <dependency>
         <artifactId>olingo-odata2-api-annotation</artifactId>
@@ -407,11 +394,11 @@
       <artifactId>olingo-odata2-annotation-processor-core</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
+<!--    <dependency>
       <groupId>javax.ws.rs</groupId>
       <artifactId>javax.ws.rs-api</artifactId>
       <scope>test</scope>
-    </dependency>
+    </dependency>-->
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-frontend-jaxrs</artifactId>
