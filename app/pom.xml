@@ -91,7 +91,7 @@
     <opentracing.spring.web.starter.version>3.0.0</opentracing.spring.web.starter.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.23.2.fuse-760024</camel.version>
+    <camel.version>2.23.2.fuse-780018</camel.version>
     <camel-k-runtime.version>0.3.4.fuse-740009-redhat-00002</camel-k-runtime.version>
 
     <undertow.version>2.0.30.Final</undertow.version>
@@ -2578,6 +2578,14 @@
         <groupId>javax.inject</groupId>
         <artifactId>javax.inject</artifactId>
         <version>1</version>
+        <scope>test</scope>
+      </dependency>
+
+
+      <dependency>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility</artifactId>
+        <version>3.1.6</version>
         <scope>test</scope>
       </dependency>
 
