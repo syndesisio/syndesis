@@ -394,11 +394,6 @@
       <artifactId>olingo-odata2-annotation-processor-core</artifactId>
       <scope>test</scope>
     </dependency>
-<!--    <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-      <scope>test</scope>
-    </dependency>-->
     <dependency>
       <groupId>org.apache.cxf</groupId>
       <artifactId>cxf-rt-frontend-jaxrs</artifactId>
