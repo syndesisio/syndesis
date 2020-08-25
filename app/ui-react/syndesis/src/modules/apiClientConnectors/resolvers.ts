@@ -40,11 +40,10 @@ export default {
       IReviewActionsRouteState
     >(
       routes.create.review,
-      ({ specification, connectorTemplateId, serviceName, portName }) => ({
+      ({ specification, connectorTemplateId, configured }) => ({
         state: {
+          configured,
           connectorTemplateId,
-          portName,
-          serviceName,
           specification,
         },
       })
@@ -70,23 +69,11 @@ export default {
     })),
     save: makeResolver<IDetailsPageRouteState, null, IDetailsPageRouteState>(
       routes.create.save,
-      ({
-        authenticationType,
-        authorizationEndpoint,
-        connectorTemplateId,
-        portName,
-        serviceName,
-        specification,
-        tokenEndpoint,
-      }) => ({
+      ({ configured, connectorTemplateId, specification }) => ({
         state: {
-          authenticationType,
-          authorizationEndpoint,
+          configured,
           connectorTemplateId,
-          portName,
-          serviceName,
           specification,
-          tokenEndpoint,
         },
       })
     ),

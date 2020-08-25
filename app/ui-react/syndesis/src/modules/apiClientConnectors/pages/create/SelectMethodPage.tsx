@@ -23,9 +23,11 @@ export const SelectMethodPage: React.FunctionComponent = () => {
   const onServiceConfigured = (service: string, port: string) => {
     history.push(
       resolvers.create.review({
+        configured: {
+          portName: port,
+          serviceName: service,
+        },
         connectorTemplateId,
-        portName: port,
-        serviceName: service,
         specification: spec,
       })
     );
