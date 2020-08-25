@@ -180,11 +180,12 @@ export function massageValue(
       // select controls in syndesis need to default
       // to the first available value if no value
       // is set
-      return value ||
-        defaultValue ||
-        (property.enum && property.enum.length > 0)
-        ? property.enum![0].value
-        : '';
+      if (typeof value === 'undefined' && typeof defaultValue === 'undefined') {
+        return property.enum && property.enum.length > 0
+          ? property.enum![0].value
+          : '';
+      }
+      return value || defaultValue;
     }
     default: {
       return value || defaultValue || '';
