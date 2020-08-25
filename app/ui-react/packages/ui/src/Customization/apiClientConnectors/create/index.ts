@@ -1,5 +1,6 @@
 export * from './ApiConnectorCreatorBreadcrumb';
 export * from './ApiConnectorCreatorBreadSteps';
+export * from './ApiConnectorCreatorDetails';
 export * from './ApiConnectorCreatorFooter';
 export * from './ApiConnectorCreatorSelectMethod';
 export * from './ApiConnectorCreatorSecurity';

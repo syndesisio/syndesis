@@ -2,21 +2,27 @@ import { action } from '@storybook/addon-actions';
 import { boolean } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { ApiConnectorCreatorLayout } from '../../../src/Customization/apiClientConnectors';
+import {
+  ApiConnectorCreatorLayout,
+  ICreateConnectorPropsUi,
+} from '../../../src/Customization/apiClientConnectors';
 import {
   ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorFooter,
   ApiConnectorCreatorSecurity,
   ApiConnectorCreatorToggleList,
 } from '../../../src/Customization/apiClientConnectors/create';
-import soapSpec from './soap';
+import validateSecurity, {
+  IErrorValidation,
+} from '../../../src/Customization/apiClientConnectors/create/securityValidation';
+import soapSpec from '../soap-connector';
 
 const stories = storiesOf(
   'Customization/ApiClientConnector/CreateApiConnector/3 - Select Security',
   module
 );
 
-const preConfiguredValues = {
+const preConfiguredValues: ICreateConnectorPropsUi = {
   authenticationType: soapSpec.properties!.authenticationType.defaultValue,
   authorizationEndpoint: soapSpec.properties!.authorizationEndpoint
     .defaultValue,
@@ -36,25 +42,39 @@ const dropdownOptions = {
 const component = (authenticationType: string) => {
   preConfiguredValues.authenticationType = authenticationType;
 
+  const [errors, setErrors] = React.useState<IErrorValidation>({
+    password: undefined,
+    username: undefined,
+  });
   const [values, setValues] = React.useState(preConfiguredValues);
 
   const handleChange = (param: any, event: any) => {
     const { checked, name, type } = event.target;
-
-    // Checkboxes require special treatment
     const isCheckbox = type === 'checkbox';
     const value = isCheckbox ? checked : event.target.value;
-
-    // If this is a change in the authentication type,
-    // clear any previous values.
     const isAuthType = name === 'authenticationType';
 
+    let localValues: ICreateConnectorPropsUi;
+
     if (isAuthType) {
-      setValues({ ...preConfiguredValues, [name]: value });
+      localValues = { ...preConfiguredValues, [name]: value };
     } else {
-      setValues({ ...values, [name]: value });
+      localValues = { ...values, [name]: value };
+
+      if (name === 'passwordType') {
+        localValues.addTimestamp = undefined;
+        localValues.addUsernameTokenCreated = undefined;
+        localValues.addUsernameTokenNonce = undefined;
+        localValues.username = undefined;
+        localValues.password = undefined;
+      }
     }
+
+    setValues(() => localValues);
+    setErrors(() => validateSecurity(localValues));
   };
+
+  const isValid = !errors.username && !errors.password;
 
   return (
     <ApiConnectorCreatorLayout
@@ -86,7 +106,7 @@ const component = (authenticationType: string) => {
           i18nBack={'Back'}
           i18nNext={'Next'}
           isNextLoading={boolean('isNextLoading', false)}
-          isNextDisabled={boolean('isNextDisabled', false)}
+          isNextDisabled={!isValid}
         />
       }
       navigation={
