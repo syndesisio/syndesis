@@ -27,7 +27,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <camel.version>2.23.2.fuse-760024</camel.version>
+    <camel.version>2.23.2.fuse-780021</camel.version>
     <atlasmap.version>1.42.10</atlasmap.version>
     <jackson.version>2.9.9</jackson.version>
     <jackson.databind.version>2.9.9</jackson.databind.version>

@@ -234,7 +234,7 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
 
     @Override
     public Map<String, Object> getUriParams() {
-        return Collections.emptyMap();
+        return Collections.singletonMap("allowTemplateFromHeader","true");
     }
 
     @Override
