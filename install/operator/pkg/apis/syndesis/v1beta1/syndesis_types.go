@@ -130,7 +130,6 @@ type DatabaseConfiguration struct {
 }
 
 type PrometheusConfiguration struct {
-	Rules     string              `json:"rules,omitempty"`
 	Resources ResourcesWithVolume `json:"resources,omitempty"`
 }
 
