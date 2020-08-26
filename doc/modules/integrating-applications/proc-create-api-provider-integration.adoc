@@ -20,7 +20,7 @@ link:{syndesis-quickstart-url}/api-provider/task-api.json[download the raw versi
 which is an OpenAPI document for an API provider quickstart. You can
 upload this file when {prodname} prompts you to provide an OpenAPI
 document. Alternatively, you can specify the URL for the raw `task-api.json` file,
-which is https://raw.githubusercontent.com/syndesisio/syndesis-quickstarts/1.9/api-provider/task-api.json[].
+which is https://raw.githubusercontent.com/syndesisio/syndesis-quickstarts/{syndesis-version}/api-provider/task-api.json[].
 * You have a plan for the flow for each OpenAPI operation.
 * You created a connection for each application or service that you want
 to add to an operation's flow.
