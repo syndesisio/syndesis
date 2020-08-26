@@ -46,6 +46,7 @@ import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SERVI
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SERVICE_NAME_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SOAP_VERSION_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SPECIFICATION_PROPERTY;
+import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.WSDL_URL_PROPERTY;
 
 /**
  * Generates SOAP API Connector.
@@ -213,6 +214,10 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
 
         // set configured properties
         final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
+        final String wsdlURL = modelInfo.getWsdlURL().orElse(configuredProperties.get(WSDL_URL_PROPERTY));
+        if (wsdlURL != null) {
+            builder.putConfiguredProperty(WSDL_URL_PROPERTY, wsdlURL);
+        }
         builder.putConfiguredProperty(SPECIFICATION_PROPERTY,
                 modelInfo.getResolvedSpecification().orElse(configuredProperties.get(SPECIFICATION_PROPERTY)));
         getService(modelInfo, configuredProperties)
@@ -246,8 +251,12 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
     private static SoapApiModelInfo getModelInfo(ConnectorSettings connectorSettings) {
         // check TLS first
         if (LOCAL_MODEL_INFO.get() == null) {
-            final String specification = getSpecification(connectorSettings);
-            LOCAL_MODEL_INFO.set(SoapApiModelParser.parseSoapAPI(specification));
+            final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
+            final String specification = configuredProperties.get(SPECIFICATION_PROPERTY);
+            if (specification == null) {
+                throw new IllegalArgumentException("Missing configured property 'specification'");
+            }
+            LOCAL_MODEL_INFO.set(SoapApiModelParser.parseSoapAPI(specification, configuredProperties.get(WSDL_URL_PROPERTY)));
         }
         return LOCAL_MODEL_INFO.get();
     }
@@ -255,14 +264,6 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
     // release cached TLS model info
     private static void releaseModelInfo() {
         LOCAL_MODEL_INFO.set(null);
-    }
-
-    private static String getSpecification(ConnectorSettings connectorSettings) {
-        final String specification = connectorSettings.getConfiguredProperties().get(SPECIFICATION_PROPERTY);
-        if (specification == null) {
-            throw new IllegalArgumentException("Missing configured property 'specification'");
-        }
-        return specification;
     }
 
     // return a json representation of map of ports

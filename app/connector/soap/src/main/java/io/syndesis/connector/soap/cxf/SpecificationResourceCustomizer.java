@@ -31,23 +31,35 @@ public final class SpecificationResourceCustomizer implements ComponentProxyCust
 
     @Override
     public void customize(final ComponentProxyComponent component, final Map<String, Object> options) {
-        consumeOption(options, ComponentProperties.SPECIFICATION, specificationObject -> {
-            final String specification = (String) specificationObject;
 
-            try {
-                final File tempSpecification = File.createTempFile("soap", ".wsdl");
-                tempSpecification.deleteOnExit();
-                final String wsdlURL = tempSpecification.getAbsolutePath();
+        if (options.containsKey(ComponentProperties.WSDL_URL)) {
 
-                try (OutputStream out = new FileOutputStream(wsdlURL)) {
-                    IOUtils.write(specification, out, StandardCharsets.UTF_8);
+            // remove specification, since CXF will load it from wsdlURL
+            options.remove(ComponentProperties.SPECIFICATION);
+
+        } else if (options.containsKey(ComponentProperties.SPECIFICATION)) {
+
+            consumeOption(options, ComponentProperties.SPECIFICATION, specificationObject -> {
+                final String specification = (String) specificationObject;
+
+                try {
+                    final File tempSpecification = File.createTempFile("soap", ".wsdl");
+                    tempSpecification.deleteOnExit();
+                    final String wsdlURL = tempSpecification.getAbsolutePath();
+
+                    try (OutputStream out = new FileOutputStream(wsdlURL)) {
+                        IOUtils.write(specification, out, StandardCharsets.UTF_8);
+                    }
+
+                    options.put(ComponentProperties.WSDL_URL, wsdlURL);
+                } catch (final IOException e) {
+                    throw new IllegalStateException("Unable to persist the WSDL specification to filesystem", e);
                 }
+            });
 
-                options.put(ComponentProperties.WSDL_URL, wsdlURL);
-            } catch (final IOException e) {
-                throw new IllegalStateException("Unable to persist the WSDL specification to filesystem", e);
-            }
-        });
+        } else {
+            throw new IllegalStateException("Missing property, either 'wsdlURL' or 'specification' MUST be provided");
+        }
     }
 
 }
