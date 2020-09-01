@@ -33,10 +33,14 @@ export const SecurityPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, ISecurityPageRouteState>();
   const { connectorTemplateId, specification } = state;
   const { properties } = specification;
-  const { portName, serviceName } = specification.configuredProperties!;
+  const {
+    portName,
+    serviceName,
+    wsdlUrl,
+  } = specification.configuredProperties!;
 
   const backHref = resolvers.create.review({
-    configured: { portName, serviceName },
+    configured: { portName, serviceName, wsdlUrl },
     connectorTemplateId,
     specification: specification.configuredProperties!.specification,
   });
