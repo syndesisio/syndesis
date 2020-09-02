@@ -522,8 +522,6 @@ spec:
                           volumeCapacity:
                             type: string
                         type: object
-                      rules:
-                        type: string
                     type: object
                   server:
                     properties:

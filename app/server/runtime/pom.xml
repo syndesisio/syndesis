@@ -31,7 +31,6 @@
 
   <properties>
     <basepom.test.timeout>300</basepom.test.timeout>
-    <basepom.test.timeout>150</basepom.test.timeout>
     <basepom.failsafe.timeout>0</basepom.failsafe.timeout>
     <failOnMissingWebXml>false</failOnMissingWebXml>
 
@@ -218,6 +217,13 @@
           <prettyPrint>true</prettyPrint>
           <outputFormat>JSONANDYAML</outputFormat>
         </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
             <id>internal-openapi</id>

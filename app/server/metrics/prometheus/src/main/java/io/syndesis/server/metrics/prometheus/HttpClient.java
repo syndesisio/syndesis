@@ -20,7 +20,9 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
@@ -52,7 +54,10 @@ public class HttpClient {
     // ************
 
     private static Client createClient() {
-        final ObjectMapper mapper = new ObjectMapper().registerModules(new Jdk8Module());
+        final ObjectMapper mapper = JsonMapper.builder()
+            .enable(MapperFeature.BLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES)
+            .build()
+            .registerModules(new Jdk8Module());
         final ResteasyJackson2Provider resteasyJacksonProvider = new ResteasyJackson2Provider();
 
         resteasyJacksonProvider.setMapper(mapper);

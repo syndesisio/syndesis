@@ -28,6 +28,10 @@
   <artifactId>test-support</artifactId>
   <name>Test :: Support</name>
 
+  <properties>
+    <basepom.test.timeout>300</basepom.test.timeout>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>

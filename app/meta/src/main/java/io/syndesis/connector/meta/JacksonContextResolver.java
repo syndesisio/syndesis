@@ -15,15 +15,17 @@
  */
 package io.syndesis.connector.meta;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import org.springframework.stereotype.Component;
-
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import org.springframework.stereotype.Component;
 
 @Provider
 @Component
@@ -31,7 +33,9 @@ public class JacksonContextResolver implements ContextResolver<ObjectMapper> {
     private final ObjectMapper objectMapper;
 
     public JacksonContextResolver() {
-        this.objectMapper = new ObjectMapper()
+        this.objectMapper = JsonMapper.builder()
+            .enable(MapperFeature.BLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES)
+            .build()
             .registerModule(new Jdk8Module())
             .setSerializationInclusion(JsonInclude.Include.NON_ABSENT)
             .configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true)
