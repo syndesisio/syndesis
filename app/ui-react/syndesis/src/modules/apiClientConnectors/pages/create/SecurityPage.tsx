@@ -31,16 +31,12 @@ export interface ISecurityPageRouteState {
 
 export const SecurityPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, ISecurityPageRouteState>();
-  const { connectorTemplateId, specification } = state;
+  const { configured, connectorTemplateId, specification } = state;
   const { properties } = specification;
-  const {
-    portName,
-    serviceName,
-    wsdlUrl,
-  } = specification.configuredProperties!;
+  const { portName, serviceName } = specification.configuredProperties!;
 
   const backHref = resolvers.create.review({
-    configured: { portName, serviceName, wsdlUrl },
+    configured,
     connectorTemplateId,
     specification: specification.configuredProperties!.specification,
   });
@@ -68,7 +64,12 @@ export const SecurityPage: React.FunctionComponent = () => {
 
     history.push(
       resolvers.create.save({
-        configured: { ...values, portName, serviceName },
+        configured: {
+          ...values,
+          portName,
+          serviceName,
+          wsdlUrl: configured?.wsdlUrl,
+        },
         connectorTemplateId,
         specification,
       })

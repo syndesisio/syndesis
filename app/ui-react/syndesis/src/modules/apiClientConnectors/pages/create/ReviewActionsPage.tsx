@@ -136,6 +136,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         isNextLoading={false}
                         isNextDisabled={!!apiSummary!.errors}
                         nextHref={resolvers.create.security({
+                          configured: state.configured,
                           connectorTemplateId: state.connectorTemplateId,
                           specification: apiSummary!,
                         })}

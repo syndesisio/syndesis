@@ -61,12 +61,16 @@ export default {
       ISecurityPageRouteState,
       null,
       ISecurityPageRouteState
-    >(routes.create.security, ({ connectorTemplateId, specification }) => ({
-      state: {
-        connectorTemplateId,
-        specification,
-      },
-    })),
+    >(
+      routes.create.security,
+      ({ configured, connectorTemplateId, specification }) => ({
+        state: {
+          configured,
+          connectorTemplateId,
+          specification,
+        },
+      })
+    ),
     save: makeResolver<IDetailsPageRouteState, null, IDetailsPageRouteState>(
       routes.create.save,
       ({ configured, connectorTemplateId, specification }) => ({

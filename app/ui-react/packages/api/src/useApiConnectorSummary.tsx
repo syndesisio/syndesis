@@ -6,6 +6,7 @@ import { callFetch } from './callFetch';
 interface IApiConnectorSummaryOptions {
   portName?: string;
   serviceName?: string;
+  wsdlUrl?: string;
 }
 
 export function useApiConnectorSummary(
