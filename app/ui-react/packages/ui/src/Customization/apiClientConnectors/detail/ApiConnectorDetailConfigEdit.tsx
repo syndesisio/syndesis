@@ -75,10 +75,13 @@ export const ApiConnectorDetailConfigEdit: React.FunctionComponent<IApiConnector
           validated={isValid}
         />
       </FormGroup>
-      <FormGroup label={i18nLabelDescription} fieldId="connector-description">
+      <FormGroup 
+        label={i18nLabelDescription} 
+        fieldId="connector-description">
         <TextArea
           value={properties.description}
           onChange={onChange}
+          data-testid={'api-connector-description-field'}
           name="description"
           id="connector-description"
         />
@@ -93,6 +96,7 @@ export const ApiConnectorDetailConfigEdit: React.FunctionComponent<IApiConnector
           isRequired={false}
           type="text"
           id="connector-host"
+          data-testid={'api-connector-host-field'}
           aria-describedby="horizontal-form-host-helper"
           name="host"
           onChange={onChange}
@@ -108,6 +112,7 @@ export const ApiConnectorDetailConfigEdit: React.FunctionComponent<IApiConnector
           isRequired={false}
           type="text"
           id="connector-baseurl"
+          data-testid={'api-connector-baseurl-field'}
           aria-describedby="horizontal-form-baseurl-helper"
           name="basePath"
           onChange={onChange}
