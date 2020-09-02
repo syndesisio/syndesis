@@ -30,6 +30,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -58,7 +59,8 @@ public final class JsonUtils {
                 .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                 .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
                 .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
-                .disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);
+                .disable(JsonParser.Feature.AUTO_CLOSE_SOURCE)
+                .enable(MapperFeature.BLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES);
         OBJECT_READER = OBJECT_MAPPER.reader();
         OBJECT_WRITER = OBJECT_MAPPER.writer();
     }
