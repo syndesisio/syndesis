@@ -21,6 +21,7 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -53,10 +54,12 @@ import org.apache.cxf.BusFactory;
 import org.apache.cxf.binding.soap.model.SoapBodyInfo;
 import org.apache.cxf.binding.soap.model.SoapHeaderInfo;
 import org.apache.cxf.service.model.AbstractPropertiesHolder;
+import org.apache.cxf.service.model.BindingFaultInfo;
 import org.apache.cxf.service.model.BindingInfo;
 import org.apache.cxf.service.model.BindingMessageInfo;
 import org.apache.cxf.service.model.BindingOperationInfo;
 import org.apache.cxf.service.model.EndpointInfo;
+import org.apache.cxf.service.model.MessageInfo;
 import org.apache.cxf.service.model.OperationInfo;
 import org.apache.cxf.service.model.ServiceInfo;
 import org.apache.cxf.wsdl.WSDLManager;
@@ -252,9 +255,8 @@ public final class SoapApiModelParser {
                     .putConfiguredProperty(DEFAULT_OPERATION_NAME_PROPERTY, name.getLocalPart())
                     .putConfiguredProperty(DEFAULT_OPERATION_NAMESPACE_PROPERTY, name.getNamespaceURI())
                     .putConfiguredProperty(DATA_FORMAT_PROPERTY, PAYLOAD_FORMAT)
-                    .inputDataShape(getDataShape(bindingOperationInfo.getInput()))
-                    .outputDataShape(getDataShape(bindingOperationInfo.getOutput()))
-                    // TODO handle SOAP faults
+                    .inputDataShape(getDataShape(bindingOperationInfo, bindingOperationInfo.getInput(), Collections.emptyList(), MessageInfo.Type.INPUT))
+                    .outputDataShape(getDataShape(bindingOperationInfo, bindingOperationInfo.getOutput(), bindingOperationInfo.getFaults(), MessageInfo.Type.OUTPUT))
                     .build())
                 .pattern(Action.Pattern.To);
         return builder.build();
@@ -264,27 +266,28 @@ public final class SoapApiModelParser {
         return described.getDocumentation() != null ? described.getDocumentation() : defaultDescription.apply(described);
     }
 
-    private static DataShape getDataShape(BindingMessageInfo messageInfo) throws ParserException {
+    private static DataShape getDataShape(BindingOperationInfo bindingOperationInfo, BindingMessageInfo messageInfo,
+                                          Collection<BindingFaultInfo> faults, MessageInfo.Type type) throws ParserException {
 
-        // message is missing or doesn't have any headers and body parts,
-        // probably only faults for output messages
-        // TODO handle operation faults instead of letting CXF throw them as Exceptions
-        if (messageInfo == null ||
-            (messageInfo.getExtensor(SoapBodyInfo.class) == null && messageInfo.getExtensor(SoapHeaderInfo.class) == null)) {
+        // message is missing or doesn't have any headers, body parts, and faults
+        if (faults.isEmpty() && (messageInfo == null ||
+            (messageInfo.getExtensor(SoapBodyInfo.class) == null && messageInfo.getExtensor(SoapHeaderInfo.class) == null))) {
             return new DataShape.Builder().kind(DataShapeKinds.NONE).build();
         }
 
         final BindingHelper bindingHelper;
         try {
-            bindingHelper = new BindingHelper(messageInfo);
+            bindingHelper = new BindingHelper(bindingOperationInfo, messageInfo, faults, type);
         } catch (ParserConfigurationException e) {
             throw new ParserException("Error creating XML Document parser: " + e.getMessage(), e);
         }
 
         return new DataShape.Builder()
                 .kind(DataShapeKinds.XML_SCHEMA)
-                .name(messageInfo.getMessageInfo().getName().getLocalPart())
-                .description(getMessageDescription(messageInfo))
+                .name(messageInfo != null ? messageInfo.getMessageInfo().getName().getLocalPart() :
+                    getOperationName(bindingOperationInfo) + "Response")
+                .description(messageInfo != null ?
+                    getMessageDescription(messageInfo) : String.format("Data output for operation %s", getOperationName(bindingOperationInfo)))
                 .specification(bindingHelper.getSpecification())
                 .build();
     }

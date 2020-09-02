@@ -16,11 +16,16 @@
 
 package io.syndesis.test.itest.apiconnector;
 
-import java.util.Arrays;
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.sql.DataSource;
-
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
+import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
+import com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor;
+import com.consol.citrus.ws.server.WebServiceServer;
+import io.syndesis.test.SyndesisTestEnvironment;
+import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
+import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
 import org.apache.wss4j.common.WSS4JConstants;
 import org.apache.wss4j.common.ext.WSPasswordCallback;
 import org.junit.ClassRule;
@@ -34,16 +39,10 @@ import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor;
 import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.GenericContainer;
 
-import io.syndesis.test.SyndesisTestEnvironment;
-import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
-import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
-import com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor;
-import com.consol.citrus.ws.server.WebServiceServer;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.sql.DataSource;
+import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
 
@@ -111,7 +110,7 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
             .until(is(6))
             .actions(runner.query(builder -> builder.dataSource(sampleDb)
                 .statement("select count(*) as found_records from contact")
-                .validate("found_records", String.valueOf(1))));
+                .validateScript("assert rows.get(0).get(\"found_records\") > 0", "groovy")));
 
         runner.query(builder -> builder.dataSource(sampleDb)
             .statement("select * from contact")
