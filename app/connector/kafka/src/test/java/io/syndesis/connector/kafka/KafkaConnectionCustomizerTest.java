@@ -41,4 +41,35 @@ public class KafkaConnectionCustomizerTest {
         assertThat(kafkaConfiguration.getSslEndpointAlgorithm()).isEqualTo("");
     }
 
+    @Test
+    public void testExtraOptions() {
+        KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer();
+        Map<String, Object> options = new HashMap<>();
+        options.put("brokers", "test:9092");
+        options.put("extraOptions", "[{\"key\":\"AAA\",\"value\":\"BBB\"}," +
+                                        " {\"key\":\"autoOffsetReset\"," +
+                                        "\"value\":\"earliest\"}," +
+                                        "{\"key\":\"checkCrcs\",\"value\":\"false\"},  " +
+                                        "{\"key\":\"auto.commit.interval.ms\",\"value\":\"5\"}]");
+        kafkaConnectionCustomizer.customize(null, options);
+        assertThat(options).containsKey("configuration");
+        KafkaConfiguration kafkaConfiguration = (KafkaConfiguration) options.get("configuration");
+        assertThat(kafkaConfiguration.getAdditionalProperties()).containsEntry("additionalProperties.AAA", "BBB");
+        assertThat(kafkaConfiguration.getAutoOffsetReset()).isEqualTo("earliest");
+        assertThat(kafkaConfiguration.getCheckCrcs()).isEqualTo(false);
+        assertThat(kafkaConfiguration.getAutoCommitIntervalMs()).isEqualTo(5);
+    }
+
+    @Test
+    public void testExtraOptionsEmpty() {
+        KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer();
+        Map<String, Object> options = new HashMap<>();
+        options.put("brokers", "test:9092");
+        options.put("extraOptions", "[]");
+        kafkaConnectionCustomizer.customize(null, options);
+        assertThat(options).containsKey("configuration");
+        KafkaConfiguration kafkaConfiguration = (KafkaConfiguration) options.get("configuration");
+        assertThat(kafkaConfiguration.getAdditionalProperties()).isEmpty();
+    }
+
 }
