@@ -2,7 +2,7 @@
   "connections": {
     ":5": {
       "configuredProperties": {
-        "password": "»ENC:87a6397edfdbad960cb6db1015eae5a3d6afa5c201d1b8fe2247c67b4b5cc348939d3632ba6ac5eee960aead34693471",
+        "password": "»ENC:9b603e63dd0f2c412cfac733a1390869a78c77ac5859132876f853105437490813f365a008131407d6854e0d94dd519b",
         "schema": "sampledb",
         "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
         "user": "sampledb"
@@ -29,7 +29,7 @@
                   "name": "SQL statement",
                   "properties": {
                     "batch": {
-                      "defaultValue": "false",
+                      "defaultValue": false,
                       "deprecated": false,
                       "displayName": "Batch update",
                       "group": "common",
@@ -55,7 +55,7 @@
                       "type": "dataList"
                     },
                     "raiseErrorOnNotFound": {
-                      "defaultValue": "false",
+                      "defaultValue": false,
                       "deprecated": false,
                       "displayName": "Raise error when record not found",
                       "group": "common",
@@ -72,16 +72,20 @@
               ],
               "standardizedErrors": [
                 {
-                  "displayName": "SqlDataAccessError",
-                  "name": "SQL_DATA_ACCESS_ERROR"
+                  "displayName": "DataAccessError",
+                  "name": "DATA_ACCESS_ERROR"
                 },
                 {
-                  "displayName": "SqlEntityNotFoundError",
-                  "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                  "displayName": "EntityNotFoundError",
+                  "name": "ENTITY_NOT_FOUND_ERROR"
                 },
                 {
-                  "displayName": "SqlConnectorError",
-                  "name": "SQL_CONNECTOR_ERROR"
+                  "displayName": "DuplicateKeyError",
+                  "name": "DUPLICATE_KEY_ERROR"
+                },
+                {
+                  "displayName": "ConnectorError",
+                  "name": "CONNECTOR_ERROR"
                 }
               ]
             },
@@ -136,7 +140,7 @@
                       "type": "dataList"
                     },
                     "schedulerExpression": {
-                      "defaultValue": "60000",
+                      "defaultValue": 60000,
                       "deprecated": false,
                       "displayName": "Period",
                       "group": "consumer",
@@ -245,7 +249,7 @@
                       "type": "select"
                     },
                     "schedulerExpression": {
-                      "defaultValue": "60000",
+                      "defaultValue": 60000,
                       "deprecated": false,
                       "displayName": "Period",
                       "group": "consumer",
@@ -285,7 +289,7 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-sql:${project.version}",
             "type": "MAVEN"
           },
           {
@@ -356,7 +360,7 @@
         "tags": [
           "verifier"
         ],
-        "version": 11
+        "version": 1
       },
       "connectorId": "sql",
       "description": "Connection to SampleDB",
@@ -369,14 +373,14 @@
       ],
       "uses": 0
     },
-    ":i-M6XYBPr3ZihQPwe5Nyqz": {
+    ":i-MHE_9MMC46E8BnVcU_sz": {
       "configuredProperties": {
         "addTimestamp": "true",
         "addUsernameTokenCreated": "true",
         "addUsernameTokenNonce": "true",
         "address": "http://localhost:9191/HelloWorld",
         "authenticationType": "ws-security-ut",
-        "password": "»ENC:7d39f5eef58ef8897738a982cc05a2e978217d9993fed7c62d2022ff2792bc94",
+        "password": "»ENC:5ad3d40f611c4dc56f05c08b047161e2b3d56706b47d9cef4619aabb1cb007d4",
         "passwordType": "PasswordText",
         "username": "admin"
       },
@@ -391,7 +395,7 @@
                 "defaultOperationName": "sayHi",
                 "defaultOperationNamespace": "http://camel.apache.org/cxf/wsrm"
               },
-              "connectorId": "i-M6XXkXI3ZihQPwe5Nypz",
+              "connectorId": "i-MHEZrsYC46E8BnVcU_rz",
               "inputDataShape": {
                 "description": "Data input for operation sayHi",
                 "kind": "xml-schema",
@@ -402,10 +406,10 @@
                 "description": "Data output for operation sayHi",
                 "kind": "xml-schema",
                 "name": "sayHiResponse",
-                "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><import namespace=\"http://camel.apache.org/cxf/wsrm\"/><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><sequence><element ref=\"ns0:sayHiResponse\"/></sequence></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHiResponse\" nillable=\"true\" type=\"tns:sayHiResponse\"/><complexType name=\"sayHiResponse\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"return\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
+                "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><choice><sequence><element ref=\"ns0:sayHiResponse\"/></sequence><element name=\"Fault\"><complexType><sequence><element form=\"unqualified\" name=\"faultcode\" type=\"QName\"/><element form=\"unqualified\" name=\"faultstring\" type=\"string\"/><element form=\"unqualified\" minOccurs=\"0\" name=\"faultactor\" type=\"anyURI\"/><element form=\"unqualified\" minOccurs=\"0\" name=\"detail\"><complexType><choice/></complexType></element></sequence></complexType></element></choice></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHiResponse\" nillable=\"true\" type=\"tns:sayHiResponse\"/><complexType name=\"sayHiResponse\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"return\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
               }
             },
-            "id": "i-M6XXkXI3ZihQPwe5Nypz:sayHi",
+            "id": "i-MHEZrsYC46E8BnVcU_rz:sayHi",
             "name": "sayHi",
             "pattern": "To"
           }
@@ -418,12 +422,19 @@
         },
         "componentScheme": "cxf",
         "configuredProperties": {
+          "addTimestamp": "true",
+          "addUsernameTokenCreated": "true",
+          "addUsernameTokenNonce": "true",
           "address": "http://localhost:9191/HelloWorld",
+          "authenticationType": "ws-security-ut",
           "componentName": "connector-soap",
+          "password": "secret",
+          "passwordType": "PasswordText",
           "portName": "HelloWorldPort",
           "serviceName": "{http://camel.apache.org/cxf/wsrm}HelloWorldService",
           "soapVersion": "1.1",
-          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><wsdl:definitions xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\" xmlns:ns1=\"http://schemas.xmlsoap.org/soap/http\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" name=\"HelloWorldImplService\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><wsdl:types><xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><xs:complexType name=\"sayHi\"><xs:sequence><xs:element minOccurs=\"0\" name=\"arg0\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:complexType name=\"sayHiResponse\"><xs:sequence><xs:element minOccurs=\"0\" name=\"return\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:element name=\"sayHi\" nillable=\"true\" type=\"sayHi\"/><xs:element name=\"sayHiResponse\" nillable=\"true\" type=\"sayHiResponse\"/></xs:schema></wsdl:types><wsdl:message name=\"sayHi\"><wsdl:part element=\"tns:sayHi\" name=\"parameters\"/></wsdl:message><wsdl:message name=\"sayHiResponse\"><wsdl:part element=\"tns:sayHiResponse\" name=\"parameters\"/></wsdl:message><wsdl:portType name=\"HelloWorld\"><wsdl:operation name=\"sayHi\"><wsdl:input message=\"tns:sayHi\" name=\"sayHi\"/><wsdl:output message=\"tns:sayHiResponse\" name=\"sayHiResponse\"/></wsdl:operation></wsdl:portType><wsdl:binding name=\"HelloWorldServiceSoapBinding\" type=\"tns:HelloWorld\"><soap:binding style=\"document\" transport=\"http://schemas.xmlsoap.org/soap/http\"/><wsdl:operation name=\"sayHi\"><soap:operation soapAction=\"\" style=\"document\"/><wsdl:input name=\"sayHi\"><soap:body use=\"literal\"/></wsdl:input><wsdl:output name=\"sayHiResponse\"><soap:body use=\"literal\"/></wsdl:output></wsdl:operation></wsdl:binding><wsdl:service name=\"HelloWorldService\"><wsdl:port binding=\"tns:HelloWorldServiceSoapBinding\" name=\"HelloWorldPort\"><soap:address location=\"http://localhost:9191/HelloWorld\"/><wswa:UsingAddressing xmlns:wswa=\"http://www.w3.org/2005/02/addressing/wsdl\"/></wsdl:port></wsdl:service></wsdl:definitions>"
+          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><wsdl:definitions xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\" xmlns:ns1=\"http://schemas.xmlsoap.org/soap/http\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" name=\"HelloWorldImplService\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><wsdl:types><xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><xs:complexType name=\"sayHi\"><xs:sequence><xs:element minOccurs=\"0\" name=\"arg0\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:complexType name=\"sayHiResponse\"><xs:sequence><xs:element minOccurs=\"0\" name=\"return\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:element name=\"sayHi\" nillable=\"true\" type=\"sayHi\"/><xs:element name=\"sayHiResponse\" nillable=\"true\" type=\"sayHiResponse\"/></xs:schema></wsdl:types><wsdl:message name=\"sayHi\"><wsdl:part element=\"tns:sayHi\" name=\"parameters\"/></wsdl:message><wsdl:message name=\"sayHiResponse\"><wsdl:part element=\"tns:sayHiResponse\" name=\"parameters\"/></wsdl:message><wsdl:portType name=\"HelloWorld\"><wsdl:operation name=\"sayHi\"><wsdl:input message=\"tns:sayHi\" name=\"sayHi\"/><wsdl:output message=\"tns:sayHiResponse\" name=\"sayHiResponse\"/></wsdl:operation></wsdl:portType><wsdl:binding name=\"HelloWorldServiceSoapBinding\" type=\"tns:HelloWorld\"><soap:binding style=\"document\" transport=\"http://schemas.xmlsoap.org/soap/http\"/><wsdl:operation name=\"sayHi\"><soap:operation soapAction=\"\" style=\"document\"/><wsdl:input name=\"sayHi\"><soap:body use=\"literal\"/></wsdl:input><wsdl:output name=\"sayHiResponse\"><soap:body use=\"literal\"/></wsdl:output></wsdl:operation></wsdl:binding><wsdl:service name=\"HelloWorldService\"><wsdl:port binding=\"tns:HelloWorldServiceSoapBinding\" name=\"HelloWorldPort\"><soap:address location=\"http://localhost:9191/HelloWorld\"/><wswa:UsingAddressing xmlns:wswa=\"http://www.w3.org/2005/02/addressing/wsdl\"/></wsdl:port></wsdl:service></wsdl:definitions>",
+          "username": "admin"
         },
         "connectorCustomizers": [
           "io.syndesis.connector.soap.cxf.SpecificationResourceCustomizer",
@@ -439,21 +450,22 @@
         "connectorGroupId": "soap-connector-template",
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-soap:1.10-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-soap:${project.version}",
             "type": "MAVEN"
           },
           {
-            "id": "org.apache.camel:camel-cxf:2.23.2.fuse-760024",
+            "id": "org.apache.camel:camel-cxf:${camel.version}",
             "type": "MAVEN"
           }
         ],
         "description": "Web Services Connector for service {http://camel.apache.org/cxf/wsrm}HelloWorldImplService",
         "icon": "data:image/svg+xml,%3Csvg%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22200%22%20r%3D%22200%22%20style%3D%22fill%3A%23fff%22%2F%3E%3Cpath%20d%3D%22m%20258%2E608%2C280%20%2D11%2E536%2C0%200%2C%2D80%2E528%20%2D95%2E648%2C0%200%2C80%2E528%20%2D11%2E424%2C0%200%2C%2D163%2E744%2011%2E424%2C0%200%2C72%2E688%2095%2E648%2C0%200%2C%2D72%2E688%2011%2E536%2C0%200%2C163%2E744%20z%22%20style%3D%22fill%3A%23fff%22%2F%3E%3C%2Fsvg%3E",
-        "id": "i-M6XXkXI3ZihQPwe5Nypz",
+        "id": "i-MHEZrsYC46E8BnVcU_rz",
         "name": "HelloWorldImplService",
         "properties": {
           "addTimestamp": {
             "componentProperty": true,
+            "defaultValue": false,
             "description": "Add a Timestamp to WS-Security header.",
             "displayName": "Timestamp",
             "group": "security",
@@ -478,6 +490,7 @@
           },
           "addUsernameTokenCreated": {
             "componentProperty": true,
+            "defaultValue": false,
             "description": "Add Created timestamp element to WS-Security Username Token header.",
             "displayName": "Username Token Created",
             "group": "security",
@@ -490,8 +503,8 @@
                 "action": "ENABLE",
                 "when": [
                   {
-                    "id": "passwordType",
-                    "value": "PasswordText"
+                    "id": "authenticationType",
+                    "value": "ws-security-ut"
                   }
                 ]
               }
@@ -502,6 +515,7 @@
           },
           "addUsernameTokenNonce": {
             "componentProperty": true,
+            "defaultValue": false,
             "description": "Add Nonce element to WS-Security Username Token header.",
             "displayName": "Username Token Nonce",
             "group": "security",
@@ -514,8 +528,8 @@
                 "action": "ENABLE",
                 "when": [
                   {
-                    "id": "passwordType",
-                    "value": "PasswordText"
+                    "id": "authenticationType",
+                    "value": "ws-security-ut"
                   }
                 ]
               }
@@ -536,6 +550,7 @@
           },
           "authenticationType": {
             "componentProperty": true,
+            "defaultValue": "none",
             "description": "Authentication Type to use to invoke WSDL endpoint, one of [None|Basic|WS-Security Username Token].",
             "displayName": "Authentication Type",
             "enum": [
@@ -585,6 +600,7 @@
           },
           "passwordType": {
             "componentProperty": true,
+            "defaultValue": "PasswordText",
             "description": "WS-Security Password Type.",
             "displayName": "Password Type",
             "enum": [
@@ -679,15 +695,15 @@
             "type": "string"
           }
         },
-        "version": 2
+        "version": 1
       },
-      "connectorId": "i-M6XXkXI3ZihQPwe5Nypz",
-      "createdDate": 1588643808867,
+      "connectorId": "i-MHEZrsYC46E8BnVcU_rz",
+      "createdDate": 1600136717761,
       "description": "Web Services Connector for service {http://camel.apache.org/cxf/wsrm}HelloWorldImplService",
       "icon": "data:image/svg+xml,%3Csvg%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22200%22%20r%3D%22200%22%20style%3D%22fill%3A%23fff%22%2F%3E%3Cpath%20d%3D%22m%20258%2E608%2C280%20%2D11%2E536%2C0%200%2C%2D80%2E528%20%2D95%2E648%2C0%200%2C80%2E528%20%2D11%2E424%2C0%200%2C%2D163%2E744%2011%2E424%2C0%200%2C72%2E688%2095%2E648%2C0%200%2C%2D72%2E688%2011%2E536%2C0%200%2C163%2E744%20z%22%20style%3D%22fill%3A%23fff%22%2F%3E%3C%2Fsvg%3E",
-      "id": "i-M6XYBPr3ZihQPwe5Nyqz",
+      "id": "i-MHE_9MMC46E8BnVcU_sz",
       "isDerived": false,
-      "lastUpdated": 1588789151543,
+      "lastUpdated": 1600136717761,
       "name": "HelloWorldImplService",
       "userId": "developer",
       "uses": 0
@@ -716,7 +732,7 @@
                   "properties": {
                     "period": {
                       "componentProperty": false,
-                      "defaultValue": "60000",
+                      "defaultValue": 60000,
                       "deprecated": false,
                       "description": "Period",
                       "displayName": "Period",
@@ -739,7 +755,7 @@
             "actionType": "connector",
             "description": "Specify a cron utility expression for a more complex integration execution schedule.",
             "descriptor": {
-              "componentScheme": "quartz2",
+              "componentScheme": "quartz",
               "configuredProperties": {
                 "triggerName": "syndesis-quartz"
               },
@@ -778,11 +794,11 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-timer:1.10-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-timer:${project.version}",
             "type": "MAVEN"
           },
           {
-            "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-760024",
+            "id": "org.apache.camel:camel-quartz:${camel.version}",
             "type": "MAVEN"
           }
         ],
@@ -793,7 +809,7 @@
           "hide-from-connection-pages": "true"
         },
         "name": "Timer",
-        "version": 11
+        "version": 1
       },
       "connectorId": "timer",
       "description": "Trigger integration execution based on an interval or a cron expression",
@@ -808,7 +824,7 @@
     }
   },
   "connectors": {
-    ":i-M6XXkXI3ZihQPwe5Nypz": {
+    ":i-MHEZrsYC46E8BnVcU_rz": {
       "actions": [
         {
           "actionType": "connector",
@@ -819,7 +835,7 @@
               "defaultOperationName": "sayHi",
               "defaultOperationNamespace": "http://camel.apache.org/cxf/wsrm"
             },
-            "connectorId": "i-M6XXkXI3ZihQPwe5Nypz",
+            "connectorId": "i-MHEZrsYC46E8BnVcU_rz",
             "inputDataShape": {
               "description": "Data input for operation sayHi",
               "kind": "xml-schema",
@@ -830,10 +846,10 @@
               "description": "Data output for operation sayHi",
               "kind": "xml-schema",
               "name": "sayHiResponse",
-              "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><import namespace=\"http://camel.apache.org/cxf/wsrm\"/><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><sequence><element ref=\"ns0:sayHiResponse\"/></sequence></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHiResponse\" nillable=\"true\" type=\"tns:sayHiResponse\"/><complexType name=\"sayHiResponse\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"return\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
+              "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><choice><sequence><element ref=\"ns0:sayHiResponse\"/></sequence><element name=\"Fault\"><complexType><sequence><element form=\"unqualified\" name=\"faultcode\" type=\"QName\"/><element form=\"unqualified\" name=\"faultstring\" type=\"string\"/><element form=\"unqualified\" minOccurs=\"0\" name=\"faultactor\" type=\"anyURI\"/><element form=\"unqualified\" minOccurs=\"0\" name=\"detail\"><complexType><choice/></complexType></element></sequence></complexType></element></choice></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHiResponse\" nillable=\"true\" type=\"tns:sayHiResponse\"/><complexType name=\"sayHiResponse\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"return\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
             }
           },
-          "id": "i-M6XXkXI3ZihQPwe5Nypz:sayHi",
+          "id": "i-MHEZrsYC46E8BnVcU_rz:sayHi",
           "name": "sayHi",
           "pattern": "To"
         }
@@ -846,12 +862,19 @@
       },
       "componentScheme": "cxf",
       "configuredProperties": {
+        "addTimestamp": "true",
+        "addUsernameTokenCreated": "true",
+        "addUsernameTokenNonce": "true",
         "address": "http://localhost:9191/HelloWorld",
+        "authenticationType": "ws-security-ut",
         "componentName": "connector-soap",
+        "password": "secret",
+        "passwordType": "PasswordText",
         "portName": "HelloWorldPort",
         "serviceName": "{http://camel.apache.org/cxf/wsrm}HelloWorldService",
         "soapVersion": "1.1",
-        "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><wsdl:definitions xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\" xmlns:ns1=\"http://schemas.xmlsoap.org/soap/http\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" name=\"HelloWorldImplService\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><wsdl:types><xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><xs:complexType name=\"sayHi\"><xs:sequence><xs:element minOccurs=\"0\" name=\"arg0\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:complexType name=\"sayHiResponse\"><xs:sequence><xs:element minOccurs=\"0\" name=\"return\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:element name=\"sayHi\" nillable=\"true\" type=\"sayHi\"/><xs:element name=\"sayHiResponse\" nillable=\"true\" type=\"sayHiResponse\"/></xs:schema></wsdl:types><wsdl:message name=\"sayHi\"><wsdl:part element=\"tns:sayHi\" name=\"parameters\"/></wsdl:message><wsdl:message name=\"sayHiResponse\"><wsdl:part element=\"tns:sayHiResponse\" name=\"parameters\"/></wsdl:message><wsdl:portType name=\"HelloWorld\"><wsdl:operation name=\"sayHi\"><wsdl:input message=\"tns:sayHi\" name=\"sayHi\"/><wsdl:output message=\"tns:sayHiResponse\" name=\"sayHiResponse\"/></wsdl:operation></wsdl:portType><wsdl:binding name=\"HelloWorldServiceSoapBinding\" type=\"tns:HelloWorld\"><soap:binding style=\"document\" transport=\"http://schemas.xmlsoap.org/soap/http\"/><wsdl:operation name=\"sayHi\"><soap:operation soapAction=\"\" style=\"document\"/><wsdl:input name=\"sayHi\"><soap:body use=\"literal\"/></wsdl:input><wsdl:output name=\"sayHiResponse\"><soap:body use=\"literal\"/></wsdl:output></wsdl:operation></wsdl:binding><wsdl:service name=\"HelloWorldService\"><wsdl:port binding=\"tns:HelloWorldServiceSoapBinding\" name=\"HelloWorldPort\"><soap:address location=\"http://localhost:9191/HelloWorld\"/><wswa:UsingAddressing xmlns:wswa=\"http://www.w3.org/2005/02/addressing/wsdl\"/></wsdl:port></wsdl:service></wsdl:definitions>"
+        "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><wsdl:definitions xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\" xmlns:ns1=\"http://schemas.xmlsoap.org/soap/http\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" name=\"HelloWorldImplService\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><wsdl:types><xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><xs:complexType name=\"sayHi\"><xs:sequence><xs:element minOccurs=\"0\" name=\"arg0\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:complexType name=\"sayHiResponse\"><xs:sequence><xs:element minOccurs=\"0\" name=\"return\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:element name=\"sayHi\" nillable=\"true\" type=\"sayHi\"/><xs:element name=\"sayHiResponse\" nillable=\"true\" type=\"sayHiResponse\"/></xs:schema></wsdl:types><wsdl:message name=\"sayHi\"><wsdl:part element=\"tns:sayHi\" name=\"parameters\"/></wsdl:message><wsdl:message name=\"sayHiResponse\"><wsdl:part element=\"tns:sayHiResponse\" name=\"parameters\"/></wsdl:message><wsdl:portType name=\"HelloWorld\"><wsdl:operation name=\"sayHi\"><wsdl:input message=\"tns:sayHi\" name=\"sayHi\"/><wsdl:output message=\"tns:sayHiResponse\" name=\"sayHiResponse\"/></wsdl:operation></wsdl:portType><wsdl:binding name=\"HelloWorldServiceSoapBinding\" type=\"tns:HelloWorld\"><soap:binding style=\"document\" transport=\"http://schemas.xmlsoap.org/soap/http\"/><wsdl:operation name=\"sayHi\"><soap:operation soapAction=\"\" style=\"document\"/><wsdl:input name=\"sayHi\"><soap:body use=\"literal\"/></wsdl:input><wsdl:output name=\"sayHiResponse\"><soap:body use=\"literal\"/></wsdl:output></wsdl:operation></wsdl:binding><wsdl:service name=\"HelloWorldService\"><wsdl:port binding=\"tns:HelloWorldServiceSoapBinding\" name=\"HelloWorldPort\"><soap:address location=\"http://localhost:9191/HelloWorld\"/><wswa:UsingAddressing xmlns:wswa=\"http://www.w3.org/2005/02/addressing/wsdl\"/></wsdl:port></wsdl:service></wsdl:definitions>",
+        "username": "admin"
       },
       "connectorCustomizers": [
         "io.syndesis.connector.soap.cxf.SpecificationResourceCustomizer",
@@ -867,21 +890,22 @@
       "connectorGroupId": "soap-connector-template",
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-soap:1.10-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-soap:${project.version}",
           "type": "MAVEN"
         },
         {
-          "id": "org.apache.camel:camel-cxf:2.23.2.fuse-760024",
+          "id": "org.apache.camel:camel-cxf:${camel.version}",
           "type": "MAVEN"
         }
       ],
       "description": "Web Services Connector for service {http://camel.apache.org/cxf/wsrm}HelloWorldImplService",
       "icon": "data:image/svg+xml,%3Csvg%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22200%22%20r%3D%22200%22%20style%3D%22fill%3A%23fff%22%2F%3E%3Cpath%20d%3D%22m%20258%2E608%2C280%20%2D11%2E536%2C0%200%2C%2D80%2E528%20%2D95%2E648%2C0%200%2C80%2E528%20%2D11%2E424%2C0%200%2C%2D163%2E744%2011%2E424%2C0%200%2C72%2E688%2095%2E648%2C0%200%2C%2D72%2E688%2011%2E536%2C0%200%2C163%2E744%20z%22%20style%3D%22fill%3A%23fff%22%2F%3E%3C%2Fsvg%3E",
-      "id": "i-M6XXkXI3ZihQPwe5Nypz",
+      "id": "i-MHEZrsYC46E8BnVcU_rz",
       "name": "HelloWorldImplService",
       "properties": {
         "addTimestamp": {
           "componentProperty": true,
+          "defaultValue": false,
           "description": "Add a Timestamp to WS-Security header.",
           "displayName": "Timestamp",
           "group": "security",
@@ -906,6 +930,7 @@
         },
         "addUsernameTokenCreated": {
           "componentProperty": true,
+          "defaultValue": false,
           "description": "Add Created timestamp element to WS-Security Username Token header.",
           "displayName": "Username Token Created",
           "group": "security",
@@ -918,8 +943,8 @@
               "action": "ENABLE",
               "when": [
                 {
-                  "id": "passwordType",
-                  "value": "PasswordText"
+                  "id": "authenticationType",
+                  "value": "ws-security-ut"
                 }
               ]
             }
@@ -930,6 +955,7 @@
         },
         "addUsernameTokenNonce": {
           "componentProperty": true,
+          "defaultValue": false,
           "description": "Add Nonce element to WS-Security Username Token header.",
           "displayName": "Username Token Nonce",
           "group": "security",
@@ -942,8 +968,8 @@
               "action": "ENABLE",
               "when": [
                 {
-                  "id": "passwordType",
-                  "value": "PasswordText"
+                  "id": "authenticationType",
+                  "value": "ws-security-ut"
                 }
               ]
             }
@@ -964,6 +990,7 @@
         },
         "authenticationType": {
           "componentProperty": true,
+          "defaultValue": "none",
           "description": "Authentication Type to use to invoke WSDL endpoint, one of [None|Basic|WS-Security Username Token].",
           "displayName": "Authentication Type",
           "enum": [
@@ -1013,6 +1040,7 @@
         },
         "passwordType": {
           "componentProperty": true,
+          "defaultValue": "PasswordText",
           "description": "WS-Security Password Type.",
           "displayName": "Password Type",
           "enum": [
@@ -1107,7 +1135,7 @@
           "type": "string"
         }
       },
-      "version": 2
+      "version": 1
     },
     ":sql": {
       "actions": [
@@ -1131,7 +1159,7 @@
                 "name": "SQL statement",
                 "properties": {
                   "batch": {
-                    "defaultValue": "false",
+                    "defaultValue": false,
                     "deprecated": false,
                     "displayName": "Batch update",
                     "group": "common",
@@ -1157,7 +1185,7 @@
                     "type": "dataList"
                   },
                   "raiseErrorOnNotFound": {
-                    "defaultValue": "false",
+                    "defaultValue": false,
                     "deprecated": false,
                     "displayName": "Raise error when record not found",
                     "group": "common",
@@ -1174,16 +1202,20 @@
             ],
             "standardizedErrors": [
               {
-                "displayName": "SqlDataAccessError",
-                "name": "SQL_DATA_ACCESS_ERROR"
+                "displayName": "DataAccessError",
+                "name": "DATA_ACCESS_ERROR"
               },
               {
-                "displayName": "SqlEntityNotFoundError",
-                "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                "displayName": "EntityNotFoundError",
+                "name": "ENTITY_NOT_FOUND_ERROR"
               },
               {
-                "displayName": "SqlConnectorError",
-                "name": "SQL_CONNECTOR_ERROR"
+                "displayName": "DuplicateKeyError",
+                "name": "DUPLICATE_KEY_ERROR"
+              },
+              {
+                "displayName": "ConnectorError",
+                "name": "CONNECTOR_ERROR"
               }
             ]
           },
@@ -1238,7 +1270,7 @@
                     "type": "dataList"
                   },
                   "schedulerExpression": {
-                    "defaultValue": "60000",
+                    "defaultValue": 60000,
                     "deprecated": false,
                     "displayName": "Period",
                     "group": "consumer",
@@ -1347,7 +1379,7 @@
                     "type": "select"
                   },
                   "schedulerExpression": {
-                    "defaultValue": "60000",
+                    "defaultValue": 60000,
                     "deprecated": false,
                     "displayName": "Period",
                     "group": "consumer",
@@ -1387,7 +1419,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-sql:${project.version}",
           "type": "MAVEN"
         },
         {
@@ -1458,7 +1490,7 @@
       "tags": [
         "verifier"
       ],
-      "version": 11
+      "version": 1
     },
     ":timer": {
       "actions": [
@@ -1483,7 +1515,7 @@
                 "properties": {
                   "period": {
                     "componentProperty": false,
-                    "defaultValue": "60000",
+                    "defaultValue": 60000,
                     "deprecated": false,
                     "description": "Period",
                     "displayName": "Period",
@@ -1506,7 +1538,7 @@
           "actionType": "connector",
           "description": "Specify a cron utility expression for a more complex integration execution schedule.",
           "descriptor": {
-            "componentScheme": "quartz2",
+            "componentScheme": "quartz",
             "configuredProperties": {
               "triggerName": "syndesis-quartz"
             },
@@ -1545,11 +1577,11 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-timer:1.10-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-timer:${project.version}",
           "type": "MAVEN"
         },
         {
-          "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-760024",
+          "id": "org.apache.camel:camel-quartz:${camel.version}",
           "type": "MAVEN"
         }
       ],
@@ -1560,15 +1592,15 @@
         "hide-from-connection-pages": "true"
       },
       "name": "Timer",
-      "version": 11
+      "version": 1
     }
   },
   "integrations": {
-    ":i-M6fCR2N2lJ-afJy1HTRz": {
-      "createdAt": 1588789100758,
+    ":i-MHEaCq2C46E8BnVcU_uz": {
+      "createdAt": 1600136994179,
       "flows": [
         {
-          "id": "-M6fAckO24U_u37weNry",
+          "id": "-MHE_AU7VqGHnw1Lv2m4",
           "steps": [
             {
               "action": {
@@ -1587,11 +1619,12 @@
                   },
                   "propertyDefinitionSteps": [
                     {
+                      "description": "Period",
                       "name": "Period",
                       "properties": {
                         "period": {
                           "componentProperty": false,
-                          "defaultValue": "60000",
+                          "defaultValue": 60000,
                           "deprecated": false,
                           "description": "Period",
                           "displayName": "Period",
@@ -1637,7 +1670,7 @@
                             "properties": {
                               "period": {
                                 "componentProperty": false,
-                                "defaultValue": "60000",
+                                "defaultValue": 60000,
                                 "deprecated": false,
                                 "description": "Period",
                                 "displayName": "Period",
@@ -1660,7 +1693,7 @@
                       "actionType": "connector",
                       "description": "Specify a cron utility expression for a more complex integration execution schedule.",
                       "descriptor": {
-                        "componentScheme": "quartz2",
+                        "componentScheme": "quartz",
                         "configuredProperties": {
                           "triggerName": "syndesis-quartz"
                         },
@@ -1699,11 +1732,11 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-timer:1.10-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-timer:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-760024",
+                      "id": "org.apache.camel:camel-quartz:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -1714,7 +1747,7 @@
                     "hide-from-connection-pages": "true"
                   },
                   "name": "Timer",
-                  "version": 11
+                  "version": 1
                 },
                 "connectorId": "timer",
                 "description": "Trigger integration execution based on an interval or a cron expression",
@@ -1727,7 +1760,7 @@
                 "name": "Timer",
                 "uses": 0
               },
-              "id": "-M6fAhb224U_u37weNry",
+              "id": "-MHE_EANVqGHnw1Lv2m4",
               "metadata": {
                 "configured": "true"
               },
@@ -1750,9 +1783,9 @@
                 }
               },
               "configuredProperties": {
-                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlDataSource\",\"id\":\"-M6fBbgz24U_u37weNry\",\"uri\":\"atlas:xml:-M6fBbgz24U_u37weNry\",\"dataSourceType\":\"TARGET\",\"template\":null,\"xmlNamespaces\":{\"xmlNamespace\":[{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"},{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"}]}}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.467305\",\"inputField\":[{\"jsonType\":\"io.atlasmap.v2.ConstantField\",\"path\":\"/Hello\",\"fieldType\":\"STRING\",\"docId\":\"DOC.Constants.561679\",\"value\":\"Hello\"}],\"outputField\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlField\",\"name\":\"arg0\",\"path\":\"/tns:Envelope/tns:Body/ns1:sayHi/ns1:arg0\",\"fieldType\":\"STRING\",\"docId\":\"-M6fBbgz24U_u37weNry\",\"userCreated\":false}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[{\"name\":\"Hello\",\"value\":\"Hello\",\"fieldType\":\"STRING\"}]},\"properties\":{\"property\":[]}}}"
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlDataSource\",\"id\":\"-MHE_QkAVqGHnw1Lv2m4\",\"name\":\"2 - sayHi\",\"description\":\"Data input for operation sayHi\",\"uri\":\"atlas:xml:-MHE_QkAVqGHnw1Lv2m4\",\"dataSourceType\":\"TARGET\",\"template\":null,\"xmlNamespaces\":{\"xmlNamespace\":[{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"}]}}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.774549\",\"inputField\":[{\"jsonType\":\"io.atlasmap.v2.ConstantField\",\"path\":\"/Hello\",\"fieldType\":\"STRING\",\"docId\":\"DOC.Constants.565600\",\"value\":\"Hello\"}],\"outputField\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlField\",\"name\":\"arg0\",\"path\":\"/tns:Envelope/tns:Body/ns1:sayHi/ns1:arg0\",\"fieldType\":\"STRING\",\"docId\":\"-MHE_QkAVqGHnw1Lv2m4\",\"userCreated\":false}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[{\"name\":\"Hello\",\"value\":\"Hello\",\"fieldType\":\"STRING\"}]},\"properties\":{\"property\":[]}}}"
               },
-              "id": "-M6fBmOG24U_u37weNry",
+              "id": "-MHE_j-9VqGHnw1Lv2m4",
               "metadata": {
                 "configured": "true"
               },
@@ -1769,7 +1802,7 @@
                     "defaultOperationName": "sayHi",
                     "defaultOperationNamespace": "http://camel.apache.org/cxf/wsrm"
                   },
-                  "connectorId": "i-M6XXkXI3ZihQPwe5Nypz",
+                  "connectorId": "i-MHEZrsYC46E8BnVcU_rz",
                   "inputDataShape": {
                     "description": "Data input for operation sayHi",
                     "kind": "xml-schema",
@@ -1780,10 +1813,10 @@
                     "description": "Data output for operation sayHi",
                     "kind": "xml-schema",
                     "name": "sayHiResponse",
-                    "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><import namespace=\"http://camel.apache.org/cxf/wsrm\"/><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><sequence><element ref=\"ns0:sayHiResponse\"/></sequence></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHiResponse\" nillable=\"true\" type=\"tns:sayHiResponse\"/><complexType name=\"sayHiResponse\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"return\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
+                    "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><choice><sequence><element ref=\"ns0:sayHiResponse\"/></sequence><element name=\"Fault\"><complexType><sequence><element form=\"unqualified\" name=\"faultcode\" type=\"QName\"/><element form=\"unqualified\" name=\"faultstring\" type=\"string\"/><element form=\"unqualified\" minOccurs=\"0\" name=\"faultactor\" type=\"anyURI\"/><element form=\"unqualified\" minOccurs=\"0\" name=\"detail\"><complexType><choice/></complexType></element></sequence></complexType></element></choice></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHiResponse\" nillable=\"true\" type=\"tns:sayHiResponse\"/><complexType name=\"sayHiResponse\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"return\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
                   }
                 },
-                "id": "i-M6XXkXI3ZihQPwe5Nypz:sayHi",
+                "id": "i-MHEZrsYC46E8BnVcU_rz:sayHi",
                 "name": "sayHi",
                 "pattern": "To"
               },
@@ -1794,7 +1827,7 @@
                   "addUsernameTokenNonce": "true",
                   "address": "http://localhost:9191/HelloWorld",
                   "authenticationType": "ws-security-ut",
-                  "password": "»ENC:7d39f5eef58ef8897738a982cc05a2e978217d9993fed7c62d2022ff2792bc94",
+                  "password": "»ENC:5ad3d40f611c4dc56f05c08b047161e2b3d56706b47d9cef4619aabb1cb007d4",
                   "passwordType": "PasswordText",
                   "username": "admin"
                 },
@@ -1809,7 +1842,7 @@
                           "defaultOperationName": "sayHi",
                           "defaultOperationNamespace": "http://camel.apache.org/cxf/wsrm"
                         },
-                        "connectorId": "i-M6XXkXI3ZihQPwe5Nypz",
+                        "connectorId": "i-MHEZrsYC46E8BnVcU_rz",
                         "inputDataShape": {
                           "description": "Data input for operation sayHi",
                           "kind": "xml-schema",
@@ -1820,10 +1853,10 @@
                           "description": "Data output for operation sayHi",
                           "kind": "xml-schema",
                           "name": "sayHiResponse",
-                          "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><import namespace=\"http://camel.apache.org/cxf/wsrm\"/><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><sequence><element ref=\"ns0:sayHiResponse\"/></sequence></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHiResponse\" nillable=\"true\" type=\"tns:sayHiResponse\"/><complexType name=\"sayHiResponse\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"return\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
+                          "specification": "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\"><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:ns0=\"http://camel.apache.org/cxf/wsrm\" xmlns:tns=\"http://schemas.xmlsoap.org/soap/envelope/\" attributeFormDefault=\"qualified\" elementFormDefault=\"qualified\" targetNamespace=\"http://schemas.xmlsoap.org/soap/envelope/\"><element name=\"Envelope\"><complexType><sequence><element name=\"Body\"><complexType><choice><sequence><element ref=\"ns0:sayHiResponse\"/></sequence><element name=\"Fault\"><complexType><sequence><element form=\"unqualified\" name=\"faultcode\" type=\"QName\"/><element form=\"unqualified\" name=\"faultstring\" type=\"string\"/><element form=\"unqualified\" minOccurs=\"0\" name=\"faultactor\" type=\"anyURI\"/><element form=\"unqualified\" minOccurs=\"0\" name=\"detail\"><complexType><choice/></complexType></element></sequence></complexType></element></choice></complexType></element></sequence></complexType></element></schema><d:AdditionalSchemas><schema xmlns=\"http://www.w3.org/2001/XMLSchema\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><element name=\"sayHiResponse\" nillable=\"true\" type=\"tns:sayHiResponse\"/><complexType name=\"sayHiResponse\"><sequence><element form=\"unqualified\" minOccurs=\"0\" name=\"return\" type=\"string\"/></sequence></complexType></schema></d:AdditionalSchemas></d:SchemaSet>"
                         }
                       },
-                      "id": "i-M6XXkXI3ZihQPwe5Nypz:sayHi",
+                      "id": "i-MHEZrsYC46E8BnVcU_rz:sayHi",
                       "name": "sayHi",
                       "pattern": "To"
                     }
@@ -1836,12 +1869,19 @@
                   },
                   "componentScheme": "cxf",
                   "configuredProperties": {
+                    "addTimestamp": "true",
+                    "addUsernameTokenCreated": "true",
+                    "addUsernameTokenNonce": "true",
                     "address": "http://localhost:9191/HelloWorld",
+                    "authenticationType": "ws-security-ut",
                     "componentName": "connector-soap",
+                    "password": "secret",
+                    "passwordType": "PasswordText",
                     "portName": "HelloWorldPort",
                     "serviceName": "{http://camel.apache.org/cxf/wsrm}HelloWorldService",
                     "soapVersion": "1.1",
-                    "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><wsdl:definitions xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\" xmlns:ns1=\"http://schemas.xmlsoap.org/soap/http\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" name=\"HelloWorldImplService\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><wsdl:types><xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><xs:complexType name=\"sayHi\"><xs:sequence><xs:element minOccurs=\"0\" name=\"arg0\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:complexType name=\"sayHiResponse\"><xs:sequence><xs:element minOccurs=\"0\" name=\"return\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:element name=\"sayHi\" nillable=\"true\" type=\"sayHi\"/><xs:element name=\"sayHiResponse\" nillable=\"true\" type=\"sayHiResponse\"/></xs:schema></wsdl:types><wsdl:message name=\"sayHi\"><wsdl:part element=\"tns:sayHi\" name=\"parameters\"/></wsdl:message><wsdl:message name=\"sayHiResponse\"><wsdl:part element=\"tns:sayHiResponse\" name=\"parameters\"/></wsdl:message><wsdl:portType name=\"HelloWorld\"><wsdl:operation name=\"sayHi\"><wsdl:input message=\"tns:sayHi\" name=\"sayHi\"/><wsdl:output message=\"tns:sayHiResponse\" name=\"sayHiResponse\"/></wsdl:operation></wsdl:portType><wsdl:binding name=\"HelloWorldServiceSoapBinding\" type=\"tns:HelloWorld\"><soap:binding style=\"document\" transport=\"http://schemas.xmlsoap.org/soap/http\"/><wsdl:operation name=\"sayHi\"><soap:operation soapAction=\"\" style=\"document\"/><wsdl:input name=\"sayHi\"><soap:body use=\"literal\"/></wsdl:input><wsdl:output name=\"sayHiResponse\"><soap:body use=\"literal\"/></wsdl:output></wsdl:operation></wsdl:binding><wsdl:service name=\"HelloWorldService\"><wsdl:port binding=\"tns:HelloWorldServiceSoapBinding\" name=\"HelloWorldPort\"><soap:address location=\"http://localhost:9191/HelloWorld\"/><wswa:UsingAddressing xmlns:wswa=\"http://www.w3.org/2005/02/addressing/wsdl\"/></wsdl:port></wsdl:service></wsdl:definitions>"
+                    "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?><wsdl:definitions xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\" xmlns:ns1=\"http://schemas.xmlsoap.org/soap/http\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:tns=\"http://camel.apache.org/cxf/wsrm\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" name=\"HelloWorldImplService\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><wsdl:types><xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" xmlns=\"http://camel.apache.org/cxf/wsrm\" attributeFormDefault=\"unqualified\" elementFormDefault=\"unqualified\" targetNamespace=\"http://camel.apache.org/cxf/wsrm\"><xs:complexType name=\"sayHi\"><xs:sequence><xs:element minOccurs=\"0\" name=\"arg0\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:complexType name=\"sayHiResponse\"><xs:sequence><xs:element minOccurs=\"0\" name=\"return\" type=\"xs:string\"/></xs:sequence></xs:complexType><xs:element name=\"sayHi\" nillable=\"true\" type=\"sayHi\"/><xs:element name=\"sayHiResponse\" nillable=\"true\" type=\"sayHiResponse\"/></xs:schema></wsdl:types><wsdl:message name=\"sayHi\"><wsdl:part element=\"tns:sayHi\" name=\"parameters\"/></wsdl:message><wsdl:message name=\"sayHiResponse\"><wsdl:part element=\"tns:sayHiResponse\" name=\"parameters\"/></wsdl:message><wsdl:portType name=\"HelloWorld\"><wsdl:operation name=\"sayHi\"><wsdl:input message=\"tns:sayHi\" name=\"sayHi\"/><wsdl:output message=\"tns:sayHiResponse\" name=\"sayHiResponse\"/></wsdl:operation></wsdl:portType><wsdl:binding name=\"HelloWorldServiceSoapBinding\" type=\"tns:HelloWorld\"><soap:binding style=\"document\" transport=\"http://schemas.xmlsoap.org/soap/http\"/><wsdl:operation name=\"sayHi\"><soap:operation soapAction=\"\" style=\"document\"/><wsdl:input name=\"sayHi\"><soap:body use=\"literal\"/></wsdl:input><wsdl:output name=\"sayHiResponse\"><soap:body use=\"literal\"/></wsdl:output></wsdl:operation></wsdl:binding><wsdl:service name=\"HelloWorldService\"><wsdl:port binding=\"tns:HelloWorldServiceSoapBinding\" name=\"HelloWorldPort\"><soap:address location=\"http://localhost:9191/HelloWorld\"/><wswa:UsingAddressing xmlns:wswa=\"http://www.w3.org/2005/02/addressing/wsdl\"/></wsdl:port></wsdl:service></wsdl:definitions>",
+                    "username": "admin"
                   },
                   "connectorCustomizers": [
                     "io.syndesis.connector.soap.cxf.SpecificationResourceCustomizer",
@@ -1857,21 +1897,22 @@
                   "connectorGroupId": "soap-connector-template",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-soap:1.10-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-soap:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-cxf:2.23.2.fuse-760024",
+                      "id": "org.apache.camel:camel-cxf:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
                   "description": "Web Services Connector for service {http://camel.apache.org/cxf/wsrm}HelloWorldImplService",
                   "icon": "data:image/svg+xml,%3Csvg%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22200%22%20r%3D%22200%22%20style%3D%22fill%3A%23fff%22%2F%3E%3Cpath%20d%3D%22m%20258%2E608%2C280%20%2D11%2E536%2C0%200%2C%2D80%2E528%20%2D95%2E648%2C0%200%2C80%2E528%20%2D11%2E424%2C0%200%2C%2D163%2E744%2011%2E424%2C0%200%2C72%2E688%2095%2E648%2C0%200%2C%2D72%2E688%2011%2E536%2C0%200%2C163%2E744%20z%22%20style%3D%22fill%3A%23fff%22%2F%3E%3C%2Fsvg%3E",
-                  "id": "i-M6XXkXI3ZihQPwe5Nypz",
+                  "id": "i-MHEZrsYC46E8BnVcU_rz",
                   "name": "HelloWorldImplService",
                   "properties": {
                     "addTimestamp": {
                       "componentProperty": true,
+                      "defaultValue": false,
                       "description": "Add a Timestamp to WS-Security header.",
                       "displayName": "Timestamp",
                       "group": "security",
@@ -1896,6 +1937,7 @@
                     },
                     "addUsernameTokenCreated": {
                       "componentProperty": true,
+                      "defaultValue": false,
                       "description": "Add Created timestamp element to WS-Security Username Token header.",
                       "displayName": "Username Token Created",
                       "group": "security",
@@ -1908,8 +1950,8 @@
                           "action": "ENABLE",
                           "when": [
                             {
-                              "id": "passwordType",
-                              "value": "PasswordText"
+                              "id": "authenticationType",
+                              "value": "ws-security-ut"
                             }
                           ]
                         }
@@ -1920,6 +1962,7 @@
                     },
                     "addUsernameTokenNonce": {
                       "componentProperty": true,
+                      "defaultValue": false,
                       "description": "Add Nonce element to WS-Security Username Token header.",
                       "displayName": "Username Token Nonce",
                       "group": "security",
@@ -1932,8 +1975,8 @@
                           "action": "ENABLE",
                           "when": [
                             {
-                              "id": "passwordType",
-                              "value": "PasswordText"
+                              "id": "authenticationType",
+                              "value": "ws-security-ut"
                             }
                           ]
                         }
@@ -1954,6 +1997,7 @@
                     },
                     "authenticationType": {
                       "componentProperty": true,
+                      "defaultValue": "none",
                       "description": "Authentication Type to use to invoke WSDL endpoint, one of [None|Basic|WS-Security Username Token].",
                       "displayName": "Authentication Type",
                       "enum": [
@@ -2003,6 +2047,7 @@
                     },
                     "passwordType": {
                       "componentProperty": true,
+                      "defaultValue": "PasswordText",
                       "description": "WS-Security Password Type.",
                       "displayName": "Password Type",
                       "enum": [
@@ -2097,20 +2142,20 @@
                       "type": "string"
                     }
                   },
-                  "version": 2
+                  "version": 1
                 },
-                "connectorId": "i-M6XXkXI3ZihQPwe5Nypz",
-                "createdDate": 1588643808867,
+                "connectorId": "i-MHEZrsYC46E8BnVcU_rz",
+                "createdDate": 1600136717761,
                 "description": "Web Services Connector for service {http://camel.apache.org/cxf/wsrm}HelloWorldImplService",
                 "icon": "data:image/svg+xml,%3Csvg%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22200%22%20r%3D%22200%22%20style%3D%22fill%3A%23fff%22%2F%3E%3Cpath%20d%3D%22m%20258%2E608%2C280%20%2D11%2E536%2C0%200%2C%2D80%2E528%20%2D95%2E648%2C0%200%2C80%2E528%20%2D11%2E424%2C0%200%2C%2D163%2E744%2011%2E424%2C0%200%2C72%2E688%2095%2E648%2C0%200%2C%2D72%2E688%2011%2E536%2C0%200%2C163%2E744%20z%22%20style%3D%22fill%3A%23fff%22%2F%3E%3C%2Fsvg%3E",
-                "id": "i-M6XYBPr3ZihQPwe5Nyqz",
+                "id": "i-MHE_9MMC46E8BnVcU_sz",
                 "isDerived": false,
-                "lastUpdated": 1588789151543,
+                "lastUpdated": 1600136717761,
                 "name": "HelloWorldImplService",
                 "userId": "developer",
                 "uses": 0
               },
-              "id": "-M6fBbgz24U_u37weNry",
+              "id": "-MHE_QkAVqGHnw1Lv2m4",
               "metadata": {
                 "configured": "true"
               },
@@ -2137,9 +2182,9 @@
                 }
               },
               "configuredProperties": {
-                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlDataSource\",\"id\":\"-M6fBmOG24U_u37weNry\",\"uri\":\"atlas:xml:-M6fBmOG24U_u37weNry\",\"dataSourceType\":\"SOURCE\",\"xmlNamespaces\":{\"xmlNamespace\":[{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"},{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"}]}},{\"jsonType\":\"io.atlasmap.xml.v2.XmlDataSource\",\"id\":\"-M6fBbgz24U_u37weNry\",\"uri\":\"atlas:xml:-M6fBbgz24U_u37weNry\",\"dataSourceType\":\"SOURCE\",\"xmlNamespaces\":{\"xmlNamespace\":[{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"},{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"}]}},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-M6fAm9T24U_u37weNry\",\"uri\":\"atlas:json:-M6fAm9T24U_u37weNry\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.433584\",\"inputField\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlField\",\"name\":\"return\",\"path\":\"/tns:Envelope/tns:Body/ns1:sayHiResponse/ns1:return\",\"fieldType\":\"STRING\",\"docId\":\"-M6fBbgz24U_u37weNry\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-M6fAm9T24U_u37weNry\",\"userCreated\":false}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlDataSource\",\"id\":\"-MHE_QkAVqGHnw1Lv2m4\",\"name\":\"2 - sayHiResponse\",\"description\":\"Data output for operation sayHi\",\"uri\":\"atlas:xml:-MHE_QkAVqGHnw1Lv2m4\",\"dataSourceType\":\"SOURCE\",\"xmlNamespaces\":{\"xmlNamespace\":[{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"}]}},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-MHE_OQUVqGHnw1Lv2m4\",\"name\":\"3 - SQL Parameter\",\"description\":\"Parameters of SQL [INSERT INTO CONTACT ( first_name ) VALUES ( :#first_name )]\",\"uri\":\"atlas:json:-MHE_OQUVqGHnw1Lv2m4\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.374478\",\"inputField\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlField\",\"name\":\"return\",\"path\":\"/tns:Envelope/tns:Body/ns1:sayHiResponse/ns1:return\",\"fieldType\":\"STRING\",\"docId\":\"-MHE_QkAVqGHnw1Lv2m4\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-MHE_OQUVqGHnw1Lv2m4\",\"userCreated\":false}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
               },
-              "id": "-M6fBwwA24U_u37weNry",
+              "id": "-MHE_QkaVqGHnw1Lv2m4",
               "metadata": {
                 "configured": "true"
               },
@@ -2175,7 +2220,7 @@
                       "name": "SQL statement",
                       "properties": {
                         "batch": {
-                          "defaultValue": "false",
+                          "defaultValue": false,
                           "deprecated": false,
                           "displayName": "Batch update",
                           "group": "common",
@@ -2205,7 +2250,7 @@
                           "type": "dataList"
                         },
                         "raiseErrorOnNotFound": {
-                          "defaultValue": "false",
+                          "defaultValue": false,
                           "deprecated": false,
                           "displayName": "Raise error when record not found",
                           "group": "common",
@@ -2222,16 +2267,20 @@
                   ],
                   "standardizedErrors": [
                     {
-                      "displayName": "SqlDataAccessError",
-                      "name": "SQL_DATA_ACCESS_ERROR"
+                      "displayName": "DataAccessError",
+                      "name": "DATA_ACCESS_ERROR"
                     },
                     {
-                      "displayName": "SqlEntityNotFoundError",
-                      "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                      "displayName": "EntityNotFoundError",
+                      "name": "ENTITY_NOT_FOUND_ERROR"
                     },
                     {
-                      "displayName": "SqlConnectorError",
-                      "name": "SQL_CONNECTOR_ERROR"
+                      "displayName": "DuplicateKeyError",
+                      "name": "DUPLICATE_KEY_ERROR"
+                    },
+                    {
+                      "displayName": "ConnectorError",
+                      "name": "CONNECTOR_ERROR"
                     }
                   ]
                 },
@@ -2249,7 +2298,7 @@
               },
               "connection": {
                 "configuredProperties": {
-                  "password": "»ENC:87a6397edfdbad960cb6db1015eae5a3d6afa5c201d1b8fe2247c67b4b5cc348939d3632ba6ac5eee960aead34693471",
+                  "password": "»ENC:9b603e63dd0f2c412cfac733a1390869a78c77ac5859132876f853105437490813f365a008131407d6854e0d94dd519b",
                   "schema": "sampledb",
                   "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
                   "user": "sampledb"
@@ -2276,7 +2325,7 @@
                             "name": "SQL statement",
                             "properties": {
                               "batch": {
-                                "defaultValue": "false",
+                                "defaultValue": false,
                                 "deprecated": false,
                                 "displayName": "Batch update",
                                 "group": "common",
@@ -2302,7 +2351,7 @@
                                 "type": "dataList"
                               },
                               "raiseErrorOnNotFound": {
-                                "defaultValue": "false",
+                                "defaultValue": false,
                                 "deprecated": false,
                                 "displayName": "Raise error when record not found",
                                 "group": "common",
@@ -2319,16 +2368,20 @@
                         ],
                         "standardizedErrors": [
                           {
-                            "displayName": "SqlDataAccessError",
-                            "name": "SQL_DATA_ACCESS_ERROR"
+                            "displayName": "DataAccessError",
+                            "name": "DATA_ACCESS_ERROR"
                           },
                           {
-                            "displayName": "SqlEntityNotFoundError",
-                            "name": "SQL_ENTITY_NOT_FOUND_ERROR"
+                            "displayName": "EntityNotFoundError",
+                            "name": "ENTITY_NOT_FOUND_ERROR"
                           },
                           {
-                            "displayName": "SqlConnectorError",
-                            "name": "SQL_CONNECTOR_ERROR"
+                            "displayName": "DuplicateKeyError",
+                            "name": "DUPLICATE_KEY_ERROR"
+                          },
+                          {
+                            "displayName": "ConnectorError",
+                            "name": "CONNECTOR_ERROR"
                           }
                         ]
                       },
@@ -2383,7 +2436,7 @@
                                 "type": "dataList"
                               },
                               "schedulerExpression": {
-                                "defaultValue": "60000",
+                                "defaultValue": 60000,
                                 "deprecated": false,
                                 "displayName": "Period",
                                 "group": "consumer",
@@ -2492,7 +2545,7 @@
                                 "type": "select"
                               },
                               "schedulerExpression": {
-                                "defaultValue": "60000",
+                                "defaultValue": 60000,
                                 "deprecated": false,
                                 "displayName": "Period",
                                 "group": "consumer",
@@ -2532,7 +2585,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:${project.version}",
                       "type": "MAVEN"
                     },
                     {
@@ -2603,7 +2656,7 @@
                   "tags": [
                     "verifier"
                   ],
-                  "version": 11
+                  "version": 1
                 },
                 "connectorId": "sql",
                 "description": "Connection to SampleDB",
@@ -2616,7 +2669,7 @@
                 ],
                 "uses": 0
               },
-              "id": "-M6fAm9T24U_u37weNry",
+              "id": "-MHE_OQUVqGHnw1Lv2m4",
               "metadata": {
                 "configured": "true"
               },
@@ -2625,21 +2678,21 @@
           ],
           "tags": [
             "5",
-            "i-M6XYBPr3ZihQPwe5Nyqz",
+            "i-MHE_9MMC46E8BnVcU_sz",
             "timer"
           ],
           "type": "PRIMARY"
         }
       ],
-      "id": "i-M6fCR2N2lJ-afJy1HTRz",
+      "id": "i-MHEaCq2C46E8BnVcU_uz",
       "name": "HelloWorldSoapClient",
       "tags": [
-        "i-M6XXkXI3ZihQPwe5Nypz",
+        "i-MHEZrsYC46E8BnVcU_rz",
         "sql",
         "timer"
       ],
-      "updatedAt": 1588962700977,
-      "version": 4
+      "updatedAt": 0,
+      "version": 1
     }
   }
 }

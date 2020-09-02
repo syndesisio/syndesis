@@ -18,6 +18,8 @@ package io.syndesis.server.api.generator.soap.parser;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -36,21 +38,29 @@ import org.apache.cxf.binding.soap.model.SoapBodyInfo;
 import org.apache.cxf.binding.soap.model.SoapHeaderInfo;
 import org.apache.cxf.binding.soap.model.SoapOperationInfo;
 import org.apache.cxf.common.xmlschema.SchemaCollection;
+import org.apache.cxf.service.model.BindingFaultInfo;
 import org.apache.cxf.service.model.BindingMessageInfo;
 import org.apache.cxf.service.model.BindingOperationInfo;
+import org.apache.cxf.service.model.FaultInfo;
 import org.apache.cxf.service.model.MessageInfo;
 import org.apache.cxf.service.model.MessagePartInfo;
 import org.apache.cxf.service.model.OperationInfo;
 import org.apache.cxf.staxutils.StaxUtils;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaAnnotated;
+import org.apache.ws.commons.schema.XmlSchemaChoice;
+import org.apache.ws.commons.schema.XmlSchemaChoiceMember;
+import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaComplexType;
 import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaForm;
+import org.apache.ws.commons.schema.XmlSchemaParticle;
 import org.apache.ws.commons.schema.XmlSchemaSequence;
 import org.apache.ws.commons.schema.XmlSchemaSequenceMember;
 import org.apache.ws.commons.schema.XmlSchemaSerializer;
 import org.apache.ws.commons.schema.XmlSchemaType;
+import org.apache.ws.commons.schema.utils.XmlSchemaNamed;
+import org.apache.ws.commons.schema.utils.XmlSchemaObjectBase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -68,23 +78,57 @@ public class BindingHelper {
             "<d:AdditionalSchemas/>" +
         "</d:SchemaSet>";
 
-    private final BindingMessageInfo bindingMessageInfo;
-    private final SchemaCollection schemaCollection;
+    private static final SchemaCollection SOAP_SCHEMAS;
+    private static final XmlSchema SOAP_SCHEMA_1_1;
+    private static final XmlSchema SOAP_SCHEMA_1_2;
+    private static final XmlSchemaComplexType FAULT_1_1;
+    private static final XmlSchemaComplexType FAULT_1_2;
+
+    private static final String SOAP1_1_DETAIL = "detail";
+    private static final String SOAP1_2_DETAIL = "Detail";
+
+    static {
+        // load SOAP 1.1 and SOAP 1.2 Fault types
+        SOAP_SCHEMAS = new SchemaCollection();
+        final XmlSchemaCollection schemaCollection = SOAP_SCHEMAS.getXmlSchemaCollection();
+        // read xml-ns.xsd to avoid opening an http connection
+        schemaCollection.read(new InputSource(BindingHelper.class.getResourceAsStream("/schema/xml-ns.xsd")));
+
+        SOAP_SCHEMA_1_1 = schemaCollection.read(new InputSource(BindingHelper.class.getResourceAsStream("/schema/soap1_1.xsd")));
+        FAULT_1_1 = (XmlSchemaComplexType) SOAP_SCHEMA_1_1.getTypeByName("Fault");
+        // remove detail element
+        XmlSchemaSequence faultSequence = (XmlSchemaSequence) FAULT_1_1.getParticle();
+        faultSequence.getItems().removeIf(i -> SOAP1_1_DETAIL.equals(((XmlSchemaElement)i).getName()));
+
+        SOAP_SCHEMA_1_2 = schemaCollection.read(new InputSource(BindingHelper.class.getResourceAsStream("/schema/soap1_2.xsd")));
+        FAULT_1_2 = (XmlSchemaComplexType) SOAP_SCHEMA_1_2.getTypeByName("Fault");
+        faultSequence = (XmlSchemaSequence) FAULT_1_2.getParticle();
+        faultSequence.getItems().removeIf(i -> SOAP1_2_DETAIL.equals(((XmlSchemaElement)i).getName()));
+    }
+
+    // operation
     private final BindingOperationInfo bindingOperation;
+
+    private final SchemaCollection schemaCollection;
     private final Style style;
 
     private final List<MessagePartInfo> bodyParts;
 
     private final boolean hasHeaders;
     private final List<MessagePartInfo> headerParts;
+
+    private final List<MessagePartInfo> faultParts;
+
     private final SoapVersion soapVersion;
     private final DocumentBuilder documentBuilder;
+    private final MessageInfo.Type type;
 
-    BindingHelper(BindingMessageInfo bindingMessageInfo) throws ParserException, ParserConfigurationException {
+    BindingHelper(BindingOperationInfo bindingOperationInfo, BindingMessageInfo bindingMessageInfo, Collection<BindingFaultInfo> faults, MessageInfo.Type type) throws ParserException, ParserConfigurationException {
 
-        this.bindingMessageInfo = bindingMessageInfo;
-        this.bindingOperation = bindingMessageInfo.getBindingOperation();
-        this.schemaCollection = bindingMessageInfo.getBindingOperation().getBinding().getService().getXmlSchemaCollection();
+        this.bindingOperation = bindingOperationInfo;
+        this.type = type;
+
+        this.schemaCollection = bindingOperation.getBinding().getService().getXmlSchemaCollection();
 
         SoapOperationInfo soapOperationInfo = bindingOperation.getExtensor(SoapOperationInfo.class);
         SoapBindingInfo soapBindingInfo = (SoapBindingInfo) bindingOperation.getBinding();
@@ -101,44 +145,55 @@ public class BindingHelper {
         }
 
         // get body binding
-        SoapBodyInfo soapBodyInfo = bindingMessageInfo.getExtensor(SoapBodyInfo.class);
-        List<SoapHeaderInfo> soapHeaders = bindingMessageInfo.getExtensors(SoapHeaderInfo.class);
-        bodyParts = soapBodyInfo.getParts();
+        if (bindingMessageInfo != null) {
+            SoapBodyInfo soapBodyInfo = bindingMessageInfo.getExtensor(SoapBodyInfo.class);
+            List<SoapHeaderInfo> soapHeaders = bindingMessageInfo.getExtensors(SoapHeaderInfo.class);
+            // TODO handle headerfaults
+            //List<SoapHeaderFault> soapHeaderFaults = bindingMessageInfo.getExtensors(SoapHeaderFault.class);
+            bodyParts = soapBodyInfo.getParts();
 
-        // get any headers as MessagePartInfos
-        hasHeaders = soapHeaders != null && !soapHeaders.isEmpty();
-        headerParts = hasHeaders ?
-            soapHeaders.stream().map(SoapHeaderInfo::getPart).collect(Collectors.toList()) : null;
+            // get any headers as MessagePartInfos
+            hasHeaders = soapHeaders != null && !soapHeaders.isEmpty();
+            headerParts = hasHeaders ?
+                soapHeaders.stream().map(SoapHeaderInfo::getPart).collect(Collectors.toList()) : null;
 
-        // get required body use
-        Use use = Use.valueOf(soapBodyInfo.getUse().toUpperCase(Locale.US));
-        if (ENCODED.equals(use)) {
-            // TODO could we add support for RPC/encoded messages by setting schema type to any??
-            throw new ParserException("Messages with use='encoded' are not supported");
+            // get required body use
+            Use use = Use.valueOf(soapBodyInfo.getUse().toUpperCase(Locale.US));
+            if (ENCODED.equals(use)) {
+                throw new ParserException("Messages with use='encoded' are not supported");
+            }
+
+        } else {
+            bodyParts = Collections.emptyList();
+            hasHeaders = false;
+            headerParts = null;
+        }
+
+        // get fault parts
+        faultParts = new ArrayList<>();
+        for (BindingFaultInfo fault : faults) {
+            final FaultInfo faultInfo = fault.getFaultInfo();
+            faultParts.addAll(faultInfo.getMessageParts());
         }
 
         // Document builder for create schemaset
         this.documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
     }
 
-    // get specification from BindingMessageInfo
+    // get specification from BindingMessageInfo and or faults
     public String getSpecification() throws ParserException {
 
         // add a SOAP schema to hold wrapper elements, to be removed by soap connector
         final SchemaCollection targetSchemas = new SchemaCollection();
-        final XmlSchema soapSchema = targetSchemas.newXmlSchemaInCollection(soapVersion.getEnvelope().getNamespaceURI());
-        soapSchema.setElementFormDefault(XmlSchemaForm.QUALIFIED);
-        soapSchema.setAttributeFormDefault(XmlSchemaForm.QUALIFIED);
+        final XmlSchema soapSchema = createSoapSchema(targetSchemas);
 
         // extract elements/types from source schema using an XmlSchemaExtractor
         final XmlSchemaExtractor schemaExtractor = new XmlSchemaExtractor(targetSchemas, schemaCollection);
 
-        // TODO also handle faults for output message, which requires an enhancement in Syndesis
-
         if (style == Style.RPC) {
             final OperationInfo operationInfo = bindingOperation.getOperationInfo();
             final QName operationName = operationInfo.getName();
-            final QName wrapperElement = bindingMessageInfo.getMessageInfo().getType() == MessageInfo.Type.INPUT ?
+            final QName wrapperElement = type == MessageInfo.Type.INPUT ?
                 operationName : new QName(operationName.getNamespaceURI(), operationName.getLocalPart() + "Response");
 
             createRpcEnvelope(schemaExtractor, wrapperElement);
@@ -158,44 +213,127 @@ public class BindingHelper {
 
         // create soap envelope
         final XmlSchema soapSchema = schemaExtractor.getTargetSchemas().getSchemaByTargetNamespace(soapVersion.getNamespace());
-        final List<XmlSchemaSequenceMember> soapEnvelope = getSoapEnvelope(soapSchema);
+        final List<? extends XmlSchemaObjectBase> envelope = createSoapEnvelope(soapSchema);
 
         if (headerParts != null) {
             // soap header
-            final List<XmlSchemaSequenceMember> soapHeader = getXmlSchemaElement(soapSchema, soapEnvelope,
-                soapVersion.getHeader());
+            final List<XmlSchemaSequenceMember> soapHeader = createXmlSchemaSequenceElement(soapSchema, envelope, soapVersion.getHeader());
             // add header elements
             soapHeader.addAll(getPartElements(schemaExtractor, soapSchema, headerParts));
         }
 
-        // soap body
-        final List<XmlSchemaSequenceMember> soapBody = getXmlSchemaElement(soapSchema, soapEnvelope, soapVersion.getBody());
-
-        // top-level operation wrapper element
+        // create operation schema
         final String namespaceURI = operationWrapper.getNamespaceURI();
         final XmlSchema operationSchema = schemaExtractor.getOrCreateTargetSchema(namespaceURI);
-        final List<XmlSchemaSequenceMember> bodySequence = getXmlSchemaElement(operationSchema, soapSchema,
-            soapBody, operationWrapper.getLocalPart(), true);
+
+        // soap body
+        final List<? extends XmlSchemaObjectBase> soapBody;
+        if (type == MessageInfo.Type.INPUT) {
+            soapBody = createXmlSchemaSequenceElement(soapSchema, envelope, soapVersion.getBody());
+        } else {
+            soapBody = createXmlSchemaChoiceElement(soapSchema, envelope, soapVersion.getBody());
+        }
+
+        // top-level operation wrapper element
+        final XmlSchemaSequence bodySequence = new XmlSchemaSequence();
+        createXmlSchemaElement(operationSchema, soapSchema, soapBody,
+            operationWrapper.getLocalPart(), bodySequence, true);
 
         // add bodyParts to wrapper element
-        bodySequence.addAll(getPartElements(schemaExtractor, operationSchema, bodyParts));
+        bodySequence.getItems().addAll(getPartElements(schemaExtractor, operationSchema, bodyParts));
+
+        if (type == MessageInfo.Type.OUTPUT) {
+            // add faults to soapBody
+            @SuppressWarnings("unchecked")
+            final List<XmlSchemaChoiceMember> choiceSoapBody = (List<XmlSchemaChoiceMember>) soapBody;
+            addFaultsToSoapBody(schemaExtractor, soapSchema, choiceSoapBody);
+        }
     }
 
     private void createDocumentEnvelope(XmlSchemaExtractor schemaExtractor, List<XmlSchemaElement> headerElements,
-                                        List<XmlSchemaElement> bodyElements) {
+                                        List<XmlSchemaElement> bodyElements) throws ParserException {
         // envelope element
         final XmlSchema soapSchema = schemaExtractor.getTargetSchemas().getSchemaByTargetNamespace(soapVersion.getNamespace());
-        final List<XmlSchemaSequenceMember> envelope = getSoapEnvelope(soapSchema);
+        final List<XmlSchemaSequenceMember> envelope = createSoapEnvelope(soapSchema);
 
         // check if there is a header included
         if (headerElements != null) {
-            final List<XmlSchemaSequenceMember> headers = getXmlSchemaElement(soapSchema, envelope, soapVersion.getHeader());
+            final List<XmlSchemaSequenceMember> headers = createXmlSchemaSequenceElement(soapSchema, envelope, soapVersion.getHeader());
             headers.addAll(headerElements);
         }
 
         // add body wrapper
-        final List<XmlSchemaSequenceMember> bodySequence = getXmlSchemaElement(soapSchema, envelope, soapVersion.getBody());
-        bodySequence.addAll(bodyElements);
+        if (type == MessageInfo.Type.INPUT) {
+
+            final List<XmlSchemaSequenceMember> sequenceBody = createXmlSchemaSequenceElement(soapSchema,
+                envelope, soapVersion.getBody());
+            sequenceBody.addAll(bodyElements);
+
+        } else {
+
+            final List<XmlSchemaChoiceMember> choiceBody = createXmlSchemaChoiceElement(soapSchema,
+                envelope, soapVersion.getBody());
+            final XmlSchemaSequence bodyPartsSequence = new XmlSchemaSequence();
+            bodyPartsSequence.getItems().addAll(bodyElements);
+            choiceBody.add(bodyPartsSequence);
+
+            // add faults to soapBody
+            addFaultsToSoapBody(schemaExtractor, soapSchema, choiceBody);
+        }
+    }
+
+    private void addFaultsToSoapBody(XmlSchemaExtractor schemaExtractor, XmlSchema soapSchema,
+                                     List<XmlSchemaChoiceMember> soapBody) throws ParserException {
+
+        QName fault = soapVersion.getFault();
+        XmlSchemaExtractor faultExtractor = new XmlSchemaExtractor(schemaExtractor.getTargetSchemas(), SOAP_SCHEMAS);
+        final XmlSchemaComplexType faultSource;
+        final String detailName;
+        if (fault.equals(FAULT_1_1.getQName())) {
+            faultSource = FAULT_1_1;
+            detailName = SOAP1_1_DETAIL;
+        } else {
+            faultSource = FAULT_1_2;
+            detailName = SOAP1_2_DETAIL;
+        }
+
+        // temporarily copy Fault element and type from original SOAP schema
+        final XmlSchemaElement tempFault = faultExtractor.extract(fault, faultSource);
+        faultExtractor.copyObjects();
+
+        // get Fault type sequence
+        final XmlSchemaComplexType tempFaultType = (XmlSchemaComplexType) soapSchema.getTypeByName("Fault");
+        final XmlSchemaSequence faultSequence = (XmlSchemaSequence) tempFaultType.getParticle();
+
+        // create new Fault element under Body choice
+        XmlSchemaElement faultElement = new XmlSchemaElement(soapSchema, false);
+        faultElement.setName(tempFault.getName());
+        final XmlSchemaComplexType faultType = new XmlSchemaComplexType(soapSchema, false);
+        faultType.setParticle(faultSequence);
+        faultElement.setType(faultType);
+        soapBody.add(faultElement);
+
+        // remove temp root Fault element and type
+        soapSchema.getItems().removeIf(i -> i instanceof XmlSchemaNamed && "Fault".equals(((XmlSchemaNamed)i).getName()));
+
+        final List<XmlSchemaSequenceMember> faultSequenceItems = faultSequence.getItems();
+
+        final List<XmlSchemaChoiceMember> faultChoiceElements = createXmlSchemaChoiceElement(soapSchema,
+            faultSequenceItems, new QName(soapSchema.getTargetNamespace(), detailName));
+        // set detail minOccurs to 0 and form to SOAP default
+        faultSequenceItems.forEach(i -> {
+            if (i instanceof XmlSchemaElement) {
+                XmlSchemaElement element1 = (XmlSchemaElement) i;
+                if (element1.getName().equals(detailName)) {
+                    element1.setMinOccurs(0);
+                    final XmlSchema realSoapSchema =
+                        SOAP_SCHEMAS.getSchemaByTargetNamespace(soapSchema.getTargetNamespace());
+                    element1.setForm(realSoapSchema.getElementFormDefault());
+                }
+            }
+        });
+
+        faultChoiceElements.addAll(getPartElements(schemaExtractor, soapSchema, faultParts));
     }
 
     private String getSpecificationString(XmlSchemaExtractor schemaExtractor) throws ParserException {
@@ -243,12 +381,18 @@ public class BindingHelper {
             return StaxUtils.toString(schemaSet);
 
         } catch (XmlSchemaSerializer.XmlSchemaSerializerException | ParserException | SAXException | IOException e) {
-            throw new ParserException(String.format("Error parsing %s for operation %s: %s",
-                bindingMessageInfo.getMessageInfo().getType(),
-                bindingMessageInfo.getBindingOperation().getOperationInfo().getName(),
-                e.getMessage())
-                , e);
+            throw new ParserException(String.format("Error parsing %s for operation %s: %s", type,
+                bindingOperation.getName(), e.getMessage()) , e);
         }
+    }
+
+    protected XmlSchema createSoapSchema(SchemaCollection targetSchemas) {
+
+        final XmlSchema soapSchema = targetSchemas.newXmlSchemaInCollection(soapVersion.getEnvelope().getNamespaceURI());
+        soapSchema.setElementFormDefault(XmlSchemaForm.QUALIFIED);
+        soapSchema.setAttributeFormDefault(XmlSchemaForm.QUALIFIED);
+
+        return soapSchema;
     }
 
     private List<XmlSchemaElement> getPartElements(XmlSchemaExtractor schemaExtractor, XmlSchema parentSchema,
@@ -295,33 +439,46 @@ public class BindingHelper {
     }
 
     // create top-level Envelope element in SOAP schema
-    private List<XmlSchemaSequenceMember> getSoapEnvelope(XmlSchema soapSchema) {
-        return getXmlSchemaElement(soapSchema, null, null,
-            soapVersion.getEnvelope().getLocalPart(), true);
+    private List<XmlSchemaSequenceMember> createSoapEnvelope(XmlSchema soapSchema) {
+        XmlSchemaSequence particle = new XmlSchemaSequence();
+        createXmlSchemaElement(soapSchema, null, null,
+            soapVersion.getEnvelope().getLocalPart(), particle, true);
+        return particle.getItems();
     }
 
-    // create local element in schema under parent sequence
-    private static List<XmlSchemaSequenceMember> getXmlSchemaElement(XmlSchema schema,
-                                                              List<XmlSchemaSequenceMember> parentSequence,
-                                                              QName name) {
-        return getXmlSchemaElement(schema, schema, parentSequence, name.getLocalPart(), false);
+    // create local element in schema under parent items
+    private static <T> List<XmlSchemaSequenceMember> createXmlSchemaSequenceElement(XmlSchema schema,
+                                                                                    List<T> parentItems,
+                                                                                    QName name) {
+        final XmlSchemaSequence particle = new XmlSchemaSequence();
+        createXmlSchemaElement(schema, schema, parentItems, name.getLocalPart(), particle, false);
+        return particle.getItems();
     }
 
-    // create element in schema (local or topLevel), add element/ref under parent sequence in parentSchema
-    private static List<XmlSchemaSequenceMember> getXmlSchemaElement(XmlSchema schema, XmlSchema parentSchema,
-                                                              List<XmlSchemaSequenceMember> parentSequence,
-                                                              String name, boolean topLevel) {
+    // create local element in schema under parent items
+    private static <T> List<XmlSchemaChoiceMember> createXmlSchemaChoiceElement(XmlSchema schema,
+                                                                                List<T> parentItems,
+                                                                                QName name) {
+        final XmlSchemaChoice particle = new XmlSchemaChoice();
+        createXmlSchemaElement(schema, schema, parentItems, name.getLocalPart(), particle, false);
+        return particle.getItems();
+    }
+
+    // create element in schema (local or topLevel) with provided particle,
+    // add element/ref under parent items in parentSchema
+    @SuppressWarnings("unchecked")
+    private static <T> void createXmlSchemaElement(XmlSchema schema, XmlSchema parentSchema,
+                                               List<T> parentSequence, String name,
+                                               XmlSchemaParticle particle, boolean topLevel) {
+
         // element
         final XmlSchemaElement element = new XmlSchemaElement(schema, topLevel);
         element.setName(name);
 
         // complex type
         final XmlSchemaComplexType complexType = new XmlSchemaComplexType(schema, false);
+        complexType.setParticle(particle);
         element.setType(complexType);
-
-        // sequence
-        final XmlSchemaSequence sequence = new XmlSchemaSequence();
-        complexType.setParticle(sequence);
 
         // need to add new element to a parent sequence?
         if(parentSequence != null) {
@@ -337,10 +494,8 @@ public class BindingHelper {
             }
 
             // add element or ref to parent sequence
-            parentSequence.add(child);
+            parentSequence.add((T) child);
         }
-
-        return sequence.getItems();
     }
 
 }
