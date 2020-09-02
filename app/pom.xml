@@ -162,7 +162,7 @@
     <teiid.version>14.0.0</teiid.version>
     <teiid.springboot.version>1.5.0</teiid.springboot.version>
     <aws-java-sdk-core.version>1.11.415</aws-java-sdk-core.version>
-    <version.javax.activation>1.2.1</version.javax.activation>
+    <version.javax.activation>1.2.2</version.javax.activation>
 
     <javac.werror>-Werror</javac.werror>
     <apache.http.version>4.5.12</apache.http.version>
@@ -724,6 +724,9 @@
               <exclude>connector/fhir/**/META-INF/syndesis/schemas/**</exclude>              <!-- HL7 license -->
               <exclude>meta/**/run-env.sh</exclude>
               <exclude>server/syndesis-builder-image-generator/image/**</exclude>              <!-- auto generated without headers -->
+              <exclude>server/api-generator/src/main/resources/schema/soap1_1.xsd</exclude>    <!-- standard SOAP 1.1 schema -->
+              <exclude>server/api-generator/src/main/resources/schema/soap1_2.xsd</exclude>    <!-- standard SOAP 1.2 schema -->
+              <exclude>server/api-generator/src/main/resources/schema/xml-ns.xsd</exclude>     <!-- standard XML namespace schema -->
               <exclude>**/src/main/resources/banner.txt</exclude>
               <exclude>extension/**/src/it/**/verify.groovy</exclude>
               <!-- excludes as it is copied from upstream camel component and nneds to be moved back to caml -->
@@ -1382,6 +1385,10 @@
           <exclusion>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -2126,6 +2133,10 @@
             <groupId>org.jboss.spec.javax.xml.bind</groupId>
             <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>jakarta.activation</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
 
@@ -2205,6 +2216,10 @@
           <exclusion>
             <groupId>javax.el</groupId>
             <artifactId>javax.el-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>jakarta.activation</groupId>
+            <artifactId>jakarta.activation-api</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -3413,7 +3428,17 @@
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-endpoint-catalog</artifactId>
+        <version>${citrus.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-junit</artifactId>
+        <version>${citrus.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-java-dsl</artifactId>
         <version>${citrus.version}</version>
       </dependency>
       <dependency>
@@ -3439,6 +3464,17 @@
         <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-base</artifactId>
         <version>${citrus.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-validation-hamcrest</artifactId>
+        <version>${citrus.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
@@ -3563,6 +3599,21 @@
           <exclusion>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-impl</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-ws</artifactId>
+        <version>${citrus.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
           </exclusion>
         </exclusions>
       </dependency>

@@ -208,7 +208,7 @@ class XmlSchemaExtractor {
         final XmlSchemaElement result;
         final XmlSchemaElement existing = targetSchema.getElementByName(element.getQName());
         if (existing == null) {
-            // create new top-level element in target schema
+            // create new topLevel element in target schema
             result = new XmlSchemaElement(targetSchema, true);
             result.setName(element.getName());
 
@@ -371,6 +371,7 @@ class XmlSchemaExtractor {
 
     private void handleSimpleTypeRestriction(XmlSchemaSimpleTypeRestriction target,
                                              XmlSchemaSimpleTypeRestriction source) throws ParserException {
+        target.getFacets().addAll(source.getFacets());
         handleTypeNameAndType(source.getBaseTypeName(), source.getBaseType(),
                 target::setBaseTypeName, target::setBaseType);
     }

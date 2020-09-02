@@ -89,6 +89,8 @@ public abstract class AbstractSoapExampleTest {
         return Arrays.asList(
             "/soap/HelloWorld.wsdl",
             "/soap/StockQuote.wsdl",
+            "/soap/SoapFault11.wsdl",
+            "/soap/SoapFault12.wsdl",
             // ALL WorkDay WSDLs
             "https://community.workday.com/sites/default/files/file-hosting/productionapi/Absence_Management/v33.1/Absence_Management.wsdl",
             "https://community.workday.com/sites/default/files/file-hosting/productionapi/Academic_Foundation/v33.1/Academic_Foundation.wsdl",
