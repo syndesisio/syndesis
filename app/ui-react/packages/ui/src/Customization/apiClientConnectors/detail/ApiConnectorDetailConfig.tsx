@@ -36,7 +36,7 @@ export const ApiConnectorDetailConfig: React.FunctionComponent<IApiConnectorDeta
             <TextListItem component={TextListItemVariants.dt}>
               {i18nLabelName}
             </TextListItem>
-            <TextListItem component={TextListItemVariants.dd}>
+            <TextListItem component={TextListItemVariants.dd} data-testid={'api-connector-detail-config-name'}>
               {properties.name}
             </TextListItem>
           </>
@@ -46,7 +46,7 @@ export const ApiConnectorDetailConfig: React.FunctionComponent<IApiConnectorDeta
             <TextListItem component={TextListItemVariants.dt}>
               {i18nLabelDescription}
             </TextListItem>
-            <TextListItem component={TextListItemVariants.dd}>
+            <TextListItem component={TextListItemVariants.dd} data-testid={'api-connector-detail-config-description'}>
               {properties.description}
             </TextListItem>
           </>
@@ -56,7 +56,7 @@ export const ApiConnectorDetailConfig: React.FunctionComponent<IApiConnectorDeta
             <TextListItem component={TextListItemVariants.dt}>
               {i18nLabelHost}
             </TextListItem>
-            <TextListItem component={TextListItemVariants.dd}>
+            <TextListItem component={TextListItemVariants.dd} data-testid={'api-connector-detail-config-host'}>
               {properties.host}
             </TextListItem>
           </>
@@ -66,7 +66,7 @@ export const ApiConnectorDetailConfig: React.FunctionComponent<IApiConnectorDeta
             <TextListItem component={TextListItemVariants.dt}>
               {i18nLabelBaseUrl}
             </TextListItem>
-            <TextListItem component={TextListItemVariants.dd}>
+            <TextListItem component={TextListItemVariants.dd} data-testid={'api-connector-detail-config-path'}>
               {properties.basePath}
             </TextListItem>
           </>
