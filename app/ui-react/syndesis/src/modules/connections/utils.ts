@@ -16,7 +16,7 @@ export function parseValidationResult(results: Result[], name: string) {
     );
   const goodValidationResults = [
     {
-      message: `${connectorName} has been successfully validated`,
+      message: `${name} has been successfully validated`,
       type: 'success',
     } as IConnectorConfigurationFormValidationResult,
   ];
