@@ -128,7 +128,7 @@
     <dep.spotbugs.version>4.0.3</dep.spotbugs.version>
     <dep.plugin.spotbugs.version>4.0.0</dep.plugin.spotbugs.version>
     <!-- TODO: revisit when we upgrade basepom version -->
-    <dep.plugin.git-commit-id.version>4.0.0</dep.plugin.git-commit-id.version>
+    <dep.plugin.git-commit-id.version>4.0.2</dep.plugin.git-commit-id.version>
 
     <!-- UI dependencies -->
     <iltorb-version>2.4.5</iltorb-version>
