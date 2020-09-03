@@ -292,9 +292,8 @@
               <sourceDirectory>${project.basedir}/src/docs/asciidoc</sourceDirectory>
               <sourceDocumentName>index.adoc</sourceDocumentName>
               <outputDirectory>${apidocs.output.dir}/internal</outputDirectory>
-              <backend>html5</backend>
-              <sourceHighlighter>coderay</sourceHighlighter>
               <attributes>
+                <source-highlighter>coderay</source-highlighter> 
                 <generated>${apidocs.dir}/asciidoc/internal</generated>
                 <toc>left</toc>
                 <sectnums>true</sectnums>
@@ -314,9 +313,8 @@
               <sourceDirectory>${project.basedir}/src/docs/asciidoc</sourceDirectory>
               <sourceDocumentName>index.adoc</sourceDocumentName>
               <outputDirectory>${apidocs.output.dir}</outputDirectory>
-              <backend>html5</backend>
-              <sourceHighlighter>coderay</sourceHighlighter>
               <attributes>
+                <source-highlighter>coderay</source-highlighter> 
                 <generated>${apidocs.dir}/asciidoc</generated>
                 <toc>left</toc>
                 <sectnums>true</sectnums>
