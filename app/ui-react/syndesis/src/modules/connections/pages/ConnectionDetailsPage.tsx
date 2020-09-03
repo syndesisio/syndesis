@@ -23,7 +23,7 @@ import { ApiError, EntityIcon, PageTitle } from '../../../shared';
 import resolvers from '../../resolvers';
 import { WithConnectorForm } from '../components';
 import { useOAuthFlow } from '../useOAuthFlow';
-import { parseValidationResult } from '../utils';
+import { parseJsonArray, parseValidationResult } from '../utils';
 
 export interface IConnectionDetailsOauthProps {
   connectorId: string;
@@ -170,7 +170,9 @@ export const ConnectionDetailsPage: React.FunctionComponent<IConnectionDetailsPa
     actions: any
   ): Promise<void> => {
     setIsWorking(true);
-    await save({ configuredProperties });
+    // tslint:disable:no-console
+    console.table(configuredProperties);
+    // await save({ configuredProperties });
     actions.setSubmitting(false);
     setIsWorking(false);
   };
@@ -256,7 +258,7 @@ export const ConnectionDetailsPage: React.FunctionComponent<IConnectionDetailsPa
         {() => (
           <WithConnectorForm
             connector={connection.connector!}
-            initialValue={connection.configuredProperties}
+            initialValue={parseJsonArray(connection.configuredProperties)}
             disabled={!edit}
             onSave={saveConnector}
             key={`${location.key} - ${connection.lastUpdated}`}
