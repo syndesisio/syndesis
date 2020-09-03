@@ -15,9 +15,6 @@
  */
 package io.syndesis.connector.kafka;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -35,6 +32,7 @@ import org.apache.camel.util.jsse.KeyStoreParameters;
 import org.apache.camel.util.jsse.SSLContextParameters;
 import org.apache.camel.util.jsse.TrustManagersParameters;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,24 +62,24 @@ public class KafkaConnectionCustomizer implements ComponentProxyCustomizer {
             List<Map<String, String>> attributes = MAPPER.readValue(extraOptions, List.class);
             for (Map<String, String> attribute : attributes) {
                 final String key = attribute.get("key").trim();
-                if(!key.isEmpty()) {
+                if (!key.isEmpty()) {
                     final String value = attribute.get("value");
-                    //make sure we don't have a specific option for this
-                    Method method = findSetter(key);
-                    if (method != null) {
-                        try {
-                            if(method.getParameterTypes()[0] == Integer.class) {
-                                method.invoke(configuration, Integer.valueOf(value));
-                            } else if(method.getParameterTypes()[0] == Boolean.class) {
-                                method.invoke(configuration, Boolean.valueOf(value));
+                    final String property = getCanonicalPropertyName(key);
+                    try {
+                        //make sure we don't have a specific attribute for this
+                        if (PropertyUtils.isWriteable(configuration, property)) {
+                            Class<?> c = PropertyUtils.getPropertyType(configuration, property);
+                            if(c == Integer.class) {
+                                PropertyUtils.setSimpleProperty(configuration, property, Integer.valueOf(value));
+                            } else if(c == Boolean.class) {
+                                PropertyUtils.setSimpleProperty(configuration, property, Boolean.valueOf(value));
                             } else {
-                                method.invoke(configuration, value);
+                                PropertyUtils.setSimpleProperty(configuration, property, value);
                             }
-                        } catch (IllegalAccessException e) {
-                            LOG.error("This should never happen, we already checked it is a public method.", e);
-                        } catch (InvocationTargetException e) {
-                            LOG.error("Couldn't assign Additional Property " + key, e);
+                            PropertyUtils.setSimpleProperty(configuration, property, c.cast(value));
                         }
+                    } catch (Exception e) {
+                        LOG.error("Couldn't assign Additional Property " + key, e);
                     }
                 }
             }
@@ -91,27 +89,16 @@ public class KafkaConnectionCustomizer implements ComponentProxyCustomizer {
         options.put("configuration", configuration);
     }
 
-    private static Method findSetter(final String name) {
+    private static String getCanonicalPropertyName(final String name) {
         //If there are "." it means we have to convert to "Camel-alike" properties
         String property = name;
-        while(property.contains(".")) {
+        while (property.contains(".")) {
             int i = property.indexOf('.');
             property = property.substring(0, i)
-                           + property.substring(i +1 , i + 2).toUpperCase(Locale.ENGLISH)
+                           + property.substring(i + 1, i + 2).toUpperCase(Locale.ENGLISH)
                            + property.substring(i + 2);
         }
-
-        //We are looking for a setter for this property
-        property = "set" + property.substring(0, 1).toUpperCase(Locale.ENGLISH) + property.substring(1);
-        for (Method method : KafkaConfiguration.class.getDeclaredMethods()) {
-            if (Modifier.isPublic(method.getModifiers()) &&
-                    method.getReturnType().equals(void.class) &&
-                    method.getParameterTypes().length == 1 &&
-                    method.getName().equals(property)) {
-                return method;
-            }
-        }
-        return null;
+        return property;
     }
 
 
