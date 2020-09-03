@@ -70,6 +70,19 @@ func (a *installAction) installResource(ctx context.Context, rtClient client.Cli
 	return o, nil
 }
 
+//
+// Log the possible combination of values chosen for the db persistent volume claim
+//
+func (a *installAction) logResourcePersistentVolume(syndesis *v1beta1.Syndesis, componentName string, resourceVolume configuration.ResourcesWithPersistentVolume) {
+	if syndesisPhaseIs(syndesis, v1beta1.SyndesisPhaseInstalling) {
+		a.log.Info("Binding to persistent volume with criteria ",
+			"component", componentName,
+			"volume-access-mode", resourceVolume.VolumeAccessMode,
+			"volume-name", resourceVolume.VolumeName,
+			"storage-class", resourceVolume.VolumeStorageClass)
+	}
+}
+
 func (a *installAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis,
 		v1beta1.SyndesisPhaseInstalling,
@@ -170,6 +183,8 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		return err
 	}
 
+	a.logResourcePersistentVolume(syndesis, "syndesis-meta", config.Syndesis.Components.Meta.Resources)
+
 	// Render the database resource if needed...
 	if syndesis.Spec.Components.Database.ExternalDbURL == "" {
 		dbResources, err := generator.RenderDir("./database/", config)
@@ -177,15 +192,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 			return err
 		}
 
-		//
-		// Log the possible combination of values chosen for the db persistent volume claim
-		//
-		if syndesisPhaseIs(syndesis, v1beta1.SyndesisPhaseInstalling) {
-			a.log.Info("Will bind sydnesis-db to persistent volume with criteria ",
-				"volume-access-mode", config.Syndesis.Components.Database.Resources.VolumeAccessMode,
-				"volume-name", config.Syndesis.Components.Database.Resources.VolumeName,
-				"storage-class", config.Syndesis.Components.Database.Resources.VolumeStorageClass)
-		}
+		a.logResourcePersistentVolume(syndesis, "syndesis-db", config.Syndesis.Components.Database.Resources)
 
 		all = append(all, dbResources...)
 	}

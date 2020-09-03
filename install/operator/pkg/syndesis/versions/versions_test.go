@@ -281,7 +281,7 @@ func Test_syndesisAPI_v1alpha1ToV1beta1(t *testing.T) {
 							Resources: v1beta1.Resources{Memory: "500m"},
 						},
 						Database:   v1beta1.DatabaseConfiguration{User: "user", Name: "database", Resources: v1beta1.ResourcesWithPersistentVolume{VolumeCapacity: "1Gi"}},
-						Meta:       v1beta1.MetaConfiguration{Resources: v1beta1.ResourcesWithVolume{Memory: "300m", VolumeCapacity: "5Gi"}},
+						Meta:       v1beta1.MetaConfiguration{Resources: v1beta1.ResourcesWithPersistentVolume{Memory: "300m", VolumeCapacity: "5Gi"}},
 						Prometheus: v1beta1.PrometheusConfiguration{Resources: v1beta1.ResourcesWithVolume{Memory: "700m", VolumeCapacity: "2Gi"}},
 						Grafana:    v1beta1.GrafanaConfiguration{Resources: v1beta1.Resources{Memory: "500m"}},
 					},

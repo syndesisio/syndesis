@@ -28,10 +28,23 @@
       syndesis.io/component: syndesis-meta
   spec:
     accessModes:
-    - ReadWriteOnce
+    - {{.Syndesis.Components.Meta.Resources.VolumeAccessMode}}
     resources:
       requests:
         storage: {{.Syndesis.Components.Meta.Resources.VolumeCapacity}}
+{{- if .Syndesis.Components.Meta.Resources.VolumeStorageClass}}
+    storageClassName: {{.Syndesis.Components.Meta.Resources.VolumeStorageClass}}
+{{- end}}
+{{- if .Syndesis.Components.Meta.Resources.VolumeName}}
+    volumeName: {{.Syndesis.Components.Meta.Resources.VolumeName}}
+{{end}}
+{{- if .Syndesis.Components.Meta.Resources.VolumeLabels}}
+    selector:
+      matchLabels:
+      {{- range $key, $value := .Syndesis.Components.Meta.Resources.VolumeLabels}}
+        {{ $key }}: {{ $value }}
+      {{- end }}
+{{- end}}
 - apiVersion: apps/v1
   kind: Deployment
   metadata:
