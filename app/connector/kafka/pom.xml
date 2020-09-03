@@ -110,6 +110,11 @@
       <classifier>annotations</classifier>
     </dependency>
 
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+    </dependency>
+
     <!-- Testing -->
     <dependency>
       <groupId>org.apache.camel</groupId>
