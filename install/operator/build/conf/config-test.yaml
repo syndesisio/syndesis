@@ -49,6 +49,7 @@ Syndesis:
             Resources:
                 Memory: "512Mi"
                 VolumeCapacity: "1Gi"
+                VolumeAccessMode: "ReadWriteOnce"
         Upgrade:
             Image: "docker.io/syndesis/syndesis-upgrade:latest"
             Resources:

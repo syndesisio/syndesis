@@ -519,9 +519,10 @@ func getConfigLiteral() *Config {
 				},
 				Prometheus: PrometheusConfiguration{
 					Image: "docker.io/prom/prometheus:v2.1.0",
-					Resources: ResourcesWithVolume{
-						Memory:         "512Mi",
-						VolumeCapacity: "1Gi",
+					Resources: ResourcesWithPersistentVolume{
+						Memory:           "512Mi",
+						VolumeCapacity:   "1Gi",
+						VolumeAccessMode: string(v1beta1.ReadWriteOnce),
 					},
 				},
 				Upgrade: UpgradeConfiguration{

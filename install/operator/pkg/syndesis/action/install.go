@@ -184,6 +184,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 	}
 
 	a.logResourcePersistentVolume(syndesis, "syndesis-meta", config.Syndesis.Components.Meta.Resources)
+	a.logResourcePersistentVolume(syndesis, "syndesis-prometheus", config.Syndesis.Components.Prometheus.Resources)
 
 	// Render the database resource if needed...
 	if syndesis.Spec.Components.Database.ExternalDbURL == "" {

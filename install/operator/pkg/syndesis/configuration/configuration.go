@@ -140,9 +140,9 @@ type ExporterConfiguration struct {
 }
 
 type PrometheusConfiguration struct {
-	Image     string              // Docker image for prometheus
-	Rules     string              // Monitoring rules for prometheus
-	Resources ResourcesWithVolume // Set volume size for prometheus pod, where metrics are stored
+	Image     string                        // Docker image for prometheus
+	Rules     string                        // Monitoring rules for prometheus
+	Resources ResourcesWithPersistentVolume // Set volume size for prometheus pod, where metrics are stored
 }
 
 type GrafanaConfiguration struct {
@@ -638,11 +638,18 @@ func (config *Config) setConfigFromEnv() error {
 				Todo:   TodoConfiguration{Image: os.Getenv("RELATED_IMAGE_TODO")},
 			},
 			Components: ComponentsSpec{
-				Oauth:      OauthConfiguration{Image: os.Getenv("RELATED_IMAGE_OAUTH")},
-				UI:         UIConfiguration{Image: os.Getenv("RELATED_IMAGE_UI")},
-				S2I:        S2IConfiguration{Image: os.Getenv("RELATED_IMAGE_S2I")},
-				Prometheus: PrometheusConfiguration{Image: os.Getenv("RELATED_IMAGE_PROMETHEUS")},
-				Upgrade:    UpgradeConfiguration{Image: os.Getenv("RELATED_IMAGE_UPGRADE")},
+				Oauth: OauthConfiguration{Image: os.Getenv("RELATED_IMAGE_OAUTH")},
+				UI:    UIConfiguration{Image: os.Getenv("RELATED_IMAGE_UI")},
+				S2I:   S2IConfiguration{Image: os.Getenv("RELATED_IMAGE_S2I")},
+				Prometheus: PrometheusConfiguration{
+					Image: os.Getenv("RELATED_IMAGE_PROMETHEUS"),
+					Resources: ResourcesWithPersistentVolume{
+						VolumeAccessMode:   os.Getenv("PROMETHEUS_VOLUME_ACCESS_MODE"),
+						VolumeStorageClass: os.Getenv("PROMETHEUS_STORAGE_CLASS"),
+						VolumeName:         os.Getenv("PROMETHEUS_VOLUME_NAME"),
+					},
+				},
+				Upgrade: UpgradeConfiguration{Image: os.Getenv("RELATED_IMAGE_UPGRADE")},
 				Meta: MetaConfiguration{
 					Image: os.Getenv("RELATED_IMAGE_META"),
 					Resources: ResourcesWithPersistentVolume{
