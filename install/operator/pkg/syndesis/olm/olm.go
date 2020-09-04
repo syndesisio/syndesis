@@ -40,6 +40,8 @@ func Build(config *configuration.Config, path string, operator string) (m Bundle
 		csv:        &csv{config: config, operator: operator},
 		crd:        &crd{},
 		annotation: &annotation{config: config},
+		docker:     &docker{config: config},
+		container:  &container{},
 	}
 
 	return
@@ -53,6 +55,8 @@ type manifest struct {
 	csv        *csv
 	crd        *crd
 	annotation *annotation
+	docker     *docker
+	container  *container
 }
 
 // Generate Cluster Service Version, CRD and Annotations
@@ -72,6 +76,14 @@ func (m manifest) Generate() (err error) {
 		return err
 	}
 
+	if err = m.docker.build(); err != nil {
+		return err
+	}
+
+	if err = m.container.build(); err != nil {
+		return err
+	}
+
 	if err = m.ensureDir(); err != nil {
 		return err
 	}
@@ -85,6 +97,14 @@ func (m manifest) Generate() (err error) {
 	}
 
 	if err = ioutil.WriteFile(filepath.Join(m.path, "metadata", "annotations.yaml"), m.annotation.body, 0644); err != nil {
+		return err
+	}
+
+	if err = ioutil.WriteFile(filepath.Join(m.path, "Dockerfile"), m.docker.body, 0644); err != nil {
+		return err
+	}
+
+	if err = ioutil.WriteFile(filepath.Join(m.path, "container.yaml"), m.container.body, 0644); err != nil {
 		return err
 	}
 
