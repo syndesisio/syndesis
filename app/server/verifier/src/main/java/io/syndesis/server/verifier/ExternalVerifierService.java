@@ -15,6 +15,8 @@
  */
 package io.syndesis.server.verifier;
 
+import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ws.rs.client.Client;
@@ -23,9 +25,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
-import java.util.Map;
 
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
@@ -60,7 +61,9 @@ public class ExternalVerifierService implements Verifier {
     @PostConstruct
     public void init() {
         if (this.client == null) {
-            final ObjectMapper mapper = new ObjectMapper().registerModules(new Jdk8Module());
+            final ObjectMapper mapper = new ObjectMapper()
+                .enable(MapperFeature.BLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES)
+                .registerModules(new Jdk8Module());
             final ResteasyJackson2Provider resteasyJacksonProvider = new ResteasyJackson2Provider();
 
             resteasyJacksonProvider.setMapper(mapper);
