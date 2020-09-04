@@ -25,11 +25,12 @@ import io.syndesis.connector.support.util.KeyStoreHelper;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.component.kafka.KafkaConfiguration;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.support.PropertyBindingSupport;
 import org.apache.camel.support.jsse.KeyManagersParameters;
 import org.apache.camel.support.jsse.KeyStoreParameters;
 import org.apache.camel.support.jsse.SSLContextParameters;
 import org.apache.camel.support.jsse.TrustManagersParameters;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,29 +63,18 @@ public class KafkaConnectionCustomizer implements ComponentProxyCustomizer {
                 if (!key.isEmpty()) {
                     final String value = attribute.get("value");
                     final String property = getCanonicalPropertyName(key);
-                    try {
-                        //make sure we don't have a specific attribute for this
-                        if (PropertyUtils.isWriteable(configuration, property)) {
-                            Class<?> c = PropertyUtils.getPropertyType(configuration, property);
-                            if(c == Integer.class) {
-                                PropertyUtils.setSimpleProperty(configuration, property, Integer.valueOf(value));
-                            } else if(c == Boolean.class) {
-                                PropertyUtils.setSimpleProperty(configuration, property, Boolean.valueOf(value));
-                            } else {
-                                PropertyUtils.setSimpleProperty(configuration, property, value);
-                            }
-                            PropertyUtils.setSimpleProperty(configuration, property, c.cast(value));
-                        } else {
-                            configuration.getAdditionalProperties().put("additionalProperties." + key,
-                                value);
-                        }
-                    } catch (Exception e) {
-                        LOG.error("Couldn't assign Additional Property " + key, e);
-                        configuration.getAdditionalProperties().put("additionalProperties." + key,
-                            value);
-                    }
+
+                    //In case this is an attribute on KafkaConfiguration that can be set
+                    //So the PropertyBindingSupport does its work below
+                    options.put(property, value);
+
+                    //In case this is an unknown attribute on KafkaConfiguration
+                    configuration.getAdditionalProperties().put("additionalProperties." + property,
+                        value);
                 }
             }
+
+            PropertyBindingSupport.bindProperties(new DefaultCamelContext(), configuration, options);
         } catch (JsonProcessingException e) {
             LOG.error(e.getMessage(), e);
         }
