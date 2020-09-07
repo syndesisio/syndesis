@@ -11,7 +11,7 @@ import {
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../../i18n';
-import { parseValidationResult } from '../utils';
+import { parseValidationResult, stringifyJsonArray } from '../utils';
 
 export interface IWithConnectorFormChildrenProps {
   /**
@@ -137,8 +137,12 @@ export const WithConnectorForm: React.FunctionComponent<IWithConnectorFormProps>
         const validateFormAgainstBackend = async (values: {
           [key: string]: string;
         }) => {
+          const formattedValues = stringifyJsonArray(values);
           setIsValidatingAgainstBackend(true);
-          const status = await validateConfiguration(connector.id!, values);
+          const status = await validateConfiguration(
+            connector.id!,
+            formattedValues
+          );
           setIsValidatingAgainstBackend(false);
           setValidationResults(parseValidationResult(status, connector.name));
         };

@@ -23,6 +23,7 @@ import { ApiError, PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
+import { stringifyJsonArray } from '../../utils';
 
 export interface ISaveForm {
   name: string;
@@ -85,22 +86,7 @@ export const ReviewPage: React.FunctionComponent = () => {
           { name, description }: ISaveForm,
           actions: any
         ) => {
-          const newObj = {};
-
-          Object.keys(state.configuredProperties!).map(key => {
-            const value = state.configuredProperties![key];
-            /**
-             * Syndesis's API doesn't handle arrays well,
-             * so we'll be sending it as a JSON encoded array
-             * instead.
-             */
-            if (Array.isArray(value)) {
-              newObj[key] = JSON.stringify(value);
-            } else {
-              newObj[key] = value;
-            }
-            return newObj;
-          });
+          const newObj = stringifyJsonArray(state.configuredProperties!);
 
           try {
             const connection = createConnection(
