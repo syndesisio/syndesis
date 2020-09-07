@@ -19,6 +19,8 @@ package olm
 import (
 	"fmt"
 
+	"github.com/rogpeppe/go-internal/semver"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 )
 
@@ -28,14 +30,16 @@ type docker struct {
 }
 
 func (c *docker) build() (err error) {
+	channel := fmt.Sprintf("fuse-online-%s", semver.MajorMinor("v"+c.config.Version))
+
 	m := `FROM scratch
 
 LABEL operators.operatorframework.io.bundle.mediatype.v1=registry+v1
 LABEL operators.operatorframework.io.bundle.manifests.v1=manifests/
 LABEL operators.operatorframework.io.bundle.metadata.v1=metadata/
 LABEL operators.operatorframework.io.bundle.package.v1=fuse-online
-LABEL operators.operatorframework.io.bundle.channels.v1=alpha
-LABEL operators.operatorframework.io.bundle.channel.default.v1=alpha
+LABEL operators.operatorframework.io.bundle.channels.v1=%s
+LABEL operators.operatorframework.io.bundle.channel.default.v1=%s
 LABEL com.redhat.delivery.operator.bundle=true
 LABEL com.redhat.openshift.versions="%s"
 
@@ -52,7 +56,7 @@ LABEL name="fuse7/fuse-online-operator-metadata" \
       io.k8s.display-name="Red Hat Fuse Online Operator" \
       io.openshift.tags="fuse"
 `
-	m = fmt.Sprintf(m, c.config.SupportedOpenShiftVersions, c.config.Version)
+	m = fmt.Sprintf(m, channel, channel, c.config.SupportedOpenShiftVersions, c.config.Version)
 	c.body = []byte(m)
 	return
 }

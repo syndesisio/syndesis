@@ -18,7 +18,6 @@ package olm
 
 import (
 	"context"
-	"fmt"
 	"testing"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
@@ -39,5 +38,5 @@ func Test_docker_build(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotNil(t, d.body)
 
-	fmt.Print(string(d.body))
+	// fmt.Print(string(d.body))
 }
