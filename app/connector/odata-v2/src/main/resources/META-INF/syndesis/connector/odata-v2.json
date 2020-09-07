@@ -270,7 +270,7 @@
         "propertyDefinitionSteps": [
           {
             "description": "Provide the resource on which to create data",
-            "name": "Resource Path",
+            "name": "Resource",
             "properties": {
               "resourcePath": {
                 "deprecated": false,
@@ -283,6 +283,45 @@
                 "required": true,
                 "secret": false,
                 "type": "string"
+              },
+              "contentOnly": {
+                "deprecated": false,
+                "defaultValue": false,
+                "displayName": "Content only",
+                "group": "common",
+                "javaType": "java.lang.Boolean",
+                "kind": "parameter",
+                "labelHint": "Send content only in resource request. Excludes content metadata and etag from request.",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "boolean"
+              },
+              "omitEtag": {
+                "deprecated": false,
+                "defaultValue": false,
+                "displayName": "Omit ETag",
+                "group": "common",
+                "javaType": "java.lang.Boolean",
+                "kind": "parameter",
+                "labelHint": "Omit ETag.",
+                "order": "3",
+                "required": true,
+                "secret": false,
+                "type": "boolean"
+              },
+              "omitJsonWrapper": {
+                "deprecated": false,
+                "defaultValue": false,
+                "displayName": "Omit Json wrapper",
+                "group": "common",
+                "javaType": "java.lang.Boolean",
+                "kind": "parameter",
+                "labelHint": "Omit Json wrapper that is added to the request data as surrounding Json object.",
+                "order": "4",
+                "required": true,
+                "secret": false,
+                "type": "boolean"
               }
             }
           }
@@ -315,7 +354,7 @@
         "propertyDefinitionSteps": [
           {
             "description": "Provide the resource on which to update the data",
-            "name": "Resource Path",
+            "name": "Resource",
             "properties": {
               "resourcePath": {
                 "deprecated": false,
@@ -328,6 +367,45 @@
                 "required": true,
                 "secret": false,
                 "type": "string"
+              },
+              "contentOnly": {
+                "deprecated": false,
+                "defaultValue": false,
+                "displayName": "Content only",
+                "group": "common",
+                "javaType": "java.lang.Boolean",
+                "kind": "parameter",
+                "labelHint": "Send content only in resource request. Excludes content metadata and etag from request.",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "boolean"
+              },
+              "omitEtag": {
+                "deprecated": false,
+                "defaultValue": false,
+                "displayName": "Omit ETag",
+                "group": "common",
+                "javaType": "java.lang.Boolean",
+                "kind": "parameter",
+                "labelHint": "Omit ETag.",
+                "order": "3",
+                "required": true,
+                "secret": false,
+                "type": "boolean"
+              },
+              "omitJsonWrapper": {
+                "deprecated": false,
+                "defaultValue": false,
+                "displayName": "Omit Json wrapper",
+                "group": "common",
+                "javaType": "java.lang.Boolean",
+                "kind": "parameter",
+                "labelHint": "Omit Json wrapper that is added to the request data as surrounding Json object.",
+                "order": "4",
+                "required": true,
+                "secret": false,
+                "type": "boolean"
               }
             }
           }

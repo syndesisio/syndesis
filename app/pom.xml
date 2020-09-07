@@ -100,7 +100,7 @@
     <opentracing.spring.web.starter.version>3.0.0</opentracing.spring.web.starter.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>3.3.0</camel.version>
+    <camel.version>3.5.0</camel.version>
     <camel-k-runtime.version>1.3.0</camel-k-runtime.version>
 
     <undertow.version>2.0.30.Final</undertow.version>
