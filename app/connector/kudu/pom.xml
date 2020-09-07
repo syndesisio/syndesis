@@ -124,13 +124,6 @@
             <artifactId>jackson-module-jsonSchema</artifactId>
         </dependency>
 
-        <!-- Camel annotations in provided scope to avoid compile errors in IDEs -->
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>spi-annotations</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.immutables</groupId>
             <artifactId>value</artifactId>

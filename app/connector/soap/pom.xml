@@ -142,6 +142,7 @@
     <dependency>
       <groupId>jakarta.xml.soap</groupId>
       <artifactId>jakarta.xml.soap-api</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>

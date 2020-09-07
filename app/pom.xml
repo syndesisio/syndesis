@@ -893,10 +893,6 @@
                     <groupId>org.apache.camel</groupId>
                     <artifactId>camel-api</artifactId>
                   </dependency>
-                  <dependency>
-                    <groupId>org.apache.camel</groupId>
-                    <artifactId>spi-annotations</artifactId>
-                  </dependency>
                 </conflictingDependencies>
                 <packages>
                   <package>org.apache.camel.spi</package>
@@ -1352,8 +1348,16 @@
             <artifactId>javax.xml.soap-api</artifactId>
           </exclusion>
           <exclusion>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+          </exclusion>
+          <exclusion>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.activation</groupId>
+            <artifactId>javax.activation</artifactId>
           </exclusion>
           <exclusion>
             <groupId>org.apache.geronimo.specs</groupId>
@@ -1408,6 +1412,10 @@
         <version>${cxf.version}</version>
         <exclusions>
           <exclusion>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+          </exclusion>
+          <exclusion>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>woodstox-core-asl</artifactId>
           </exclusion>
@@ -1460,6 +1468,14 @@
         <version>${cxf.version}</version>
         <exclusions>
           <exclusion>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+          </exclusion>
+          <exclusion>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>*</artifactId>
           </exclusion>
@@ -1471,6 +1487,14 @@
         <artifactId>cxf-rt-rs-client</artifactId>
         <version>${cxf.version}</version>
         <exclusions>
+          <exclusion>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+          </exclusion>
           <exclusion>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>*</artifactId>
@@ -1484,6 +1508,14 @@
         <version>${cxf.version}</version>
         <exclusions>
           <exclusion>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+          </exclusion>
+          <exclusion>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>*</artifactId>
           </exclusion>
@@ -1495,6 +1527,10 @@
         <artifactId>cxf-rt-rs-extension-providers</artifactId>
         <version>${cxf.version}</version>
         <exclusions>
+          <exclusion>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+          </exclusion>
           <exclusion>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>*</artifactId>

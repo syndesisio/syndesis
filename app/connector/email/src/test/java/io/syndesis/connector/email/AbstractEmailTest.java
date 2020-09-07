@@ -24,13 +24,16 @@ import org.apache.camel.component.properties.PropertiesParser;
 import org.apache.camel.spring.SpringCamelContext;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.PropertyResolver;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-public class AbstractEmailTest implements EMailConstants {
+@RunWith(SpringJUnit4ClassRunner.class)
+public abstract class AbstractEmailTest implements EMailConstants {
 
     protected static final String NO_HOST = "not.a.running.host";
     protected static final String TEST_USER_NAME = "bob";
@@ -59,10 +62,6 @@ public class AbstractEmailTest implements EMailConstants {
     @Autowired
     private ApplicationContext applicationContext;
     protected CamelContext context;
-
-    public AbstractEmailTest() {
-        super();
-    }
 
     /**
      * Creates a camel context complete with a properties component that handles
