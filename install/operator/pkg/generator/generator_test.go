@@ -54,7 +54,7 @@ func TestGenerator(t *testing.T) {
 					},
 				},
 				Meta: v1beta1.MetaConfiguration{
-					Resources: v1beta1.ResourcesWithVolume{
+					Resources: v1beta1.ResourcesWithPersistentVolume{
 						Memory:         "512Mi",
 						VolumeCapacity: "1Gi",
 					},
@@ -69,7 +69,7 @@ func TestGenerator(t *testing.T) {
 					},
 				},
 				Prometheus: v1beta1.PrometheusConfiguration{
-					Resources: v1beta1.ResourcesWithVolume{
+					Resources: v1beta1.ResourcesWithPersistentVolume{
 						Memory:         "512Mi",
 						VolumeCapacity: "1Gi",
 					},
@@ -256,19 +256,19 @@ func assertPropStr(t *testing.T, resource map[string]interface{}, expected strin
 	}
 }
 
-func loadDBResource(t *testing.T, syndesis *v1beta1.Syndesis) []unstructured.Unstructured {
+func renderResource(t *testing.T, syndesis *v1beta1.Syndesis, resourcePath string) []unstructured.Unstructured {
 	clientTools := syntesting.FakeClientTools()
 	configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", clientTools, syndesis)
 	require.NoError(t, err)
 
-	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./database/", configuration)
+	resources, err := generator.Render(resourcePath, configuration)
 	require.NoError(t, err)
 	assert.True(t, len(resources) > 0)
 	return resources
 }
 
-func checkPesistentVolumeProps(t *testing.T, syndesis *v1beta1.Syndesis, pvTest func(t *testing.T, resource unstructured.Unstructured)) {
-	resources := loadDBResource(t, syndesis)
+func checkPesistentVolumeProps(t *testing.T, syndesis *v1beta1.Syndesis, infResource string, pvTest func(t *testing.T, resource unstructured.Unstructured)) {
+	resources := renderResource(t, syndesis, infResource)
 
 	for _, resource := range resources {
 		if resource.GetKind() != "PersistentVolumeClaim" {
@@ -279,144 +279,74 @@ func checkPesistentVolumeProps(t *testing.T, syndesis *v1beta1.Syndesis, pvTest 
 	}
 }
 
-func TestGeneratorDBDefaultAccessMode(t *testing.T) {
-	syndesis := &v1beta1.Syndesis{
-		Spec: v1beta1.SyndesisSpec{
-			Components: v1beta1.ComponentsSpec{
-				Database: v1beta1.DatabaseConfiguration{
-					Resources: v1beta1.ResourcesWithPersistentVolume{
-						Memory:         "255Mi",
-						VolumeCapacity: "1Gi",
+func TestGeneratorComponentPVAccessMode(t *testing.T) {
+
+	resources := v1beta1.ResourcesWithPersistentVolume{
+		Memory:           "255Mi",
+		VolumeCapacity:   "1Gi",
+		VolumeAccessMode: v1beta1.ReadOnlyMany,
+	}
+
+	testData := []struct {
+		name               string
+		path               string
+		expectedAccessMode string
+		syndesis           *v1beta1.Syndesis
+	}{
+		{
+			name:               "syndesis-db-default",
+			path:               "./database/",
+			expectedAccessMode: string(v1beta1.ReadWriteOnce),
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Database: v1beta1.DatabaseConfiguration{
+							Resources: v1beta1.ResourcesWithPersistentVolume{
+								Memory:         "255Mi",
+								VolumeCapacity: "1Gi",
+							},
+						},
 					},
 				},
 			},
 		},
-	}
-
-	checkPesistentVolumeProps(t, syndesis, func(t *testing.T, resource unstructured.Unstructured) {
-		//
-		// Test that default accessModes is applied
-		//
-		aModes, exists, _ := unstructured.NestedStringSlice(resource.UnstructuredContent(), "spec", "accessModes")
-		assert.True(t, exists)
-		assert.True(t, len(aModes) == 1)
-		assert.Equal(t, aModes[0], string(v1beta1.ReadWriteOnce))
-	})
-}
-
-func TestGeneratorDBAccessMode(t *testing.T) {
-	syndesis := &v1beta1.Syndesis{
-		Spec: v1beta1.SyndesisSpec{
-			Components: v1beta1.ComponentsSpec{
-				Database: v1beta1.DatabaseConfiguration{
-					Resources: v1beta1.ResourcesWithPersistentVolume{
-						Memory:           "255Mi",
-						VolumeCapacity:   "1Gi",
-						VolumeAccessMode: v1beta1.ReadOnlyMany,
+		{
+			name:               "syndesis-db",
+			path:               "./database/",
+			expectedAccessMode: string(v1beta1.ReadOnlyMany),
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Database: v1beta1.DatabaseConfiguration{
+							Resources: resources,
+						},
 					},
 				},
 			},
 		},
-	}
-	checkPesistentVolumeProps(t, syndesis, func(t *testing.T, resource unstructured.Unstructured) {
-		aModes, exists, _ := unstructured.NestedStringSlice(resource.UnstructuredContent(), "spec", "accessModes")
-		assert.True(t, exists)
-		assert.True(t, len(aModes) == 1)
-		assert.Equal(t, aModes[0], string(v1beta1.ReadOnlyMany))
-	})
-}
-
-func TestGeneratorDBVolumeName(t *testing.T) {
-	syndesis := &v1beta1.Syndesis{
-		Spec: v1beta1.SyndesisSpec{
-			Components: v1beta1.ComponentsSpec{
-				Database: v1beta1.DatabaseConfiguration{
-					Resources: v1beta1.ResourcesWithPersistentVolume{
-						Memory:         "255Mi",
-						VolumeCapacity: "1Gi",
-						VolumeName:     "pv0001",
+		{
+			name:               "syndesis-meta",
+			path:               "./infrastructure/04-syndesis-meta.yml.tmpl",
+			expectedAccessMode: string(v1beta1.ReadOnlyMany),
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Meta: v1beta1.MetaConfiguration{
+							Resources: resources,
+						},
 					},
 				},
 			},
 		},
-	}
-
-	checkPesistentVolumeProps(t, syndesis, func(t *testing.T, resource unstructured.Unstructured) {
-		assertResourcePropertyStr(t, resource, syndesis.Spec.Components.Database.Resources.VolumeName, "spec", "volumeName")
-	})
-}
-
-func TestGeneratorDBNoVolumeName(t *testing.T) {
-	syndesis := &v1beta1.Syndesis{
-		Spec: v1beta1.SyndesisSpec{
-			Components: v1beta1.ComponentsSpec{
-				Database: v1beta1.DatabaseConfiguration{
-					Resources: v1beta1.ResourcesWithPersistentVolume{
-						Memory:         "255Mi",
-						VolumeCapacity: "1Gi",
-					},
-				},
-			},
-		},
-	}
-
-	checkPesistentVolumeProps(t, syndesis, func(t *testing.T, resource unstructured.Unstructured) {
-		_, exists, _ := unstructured.NestedString(resource.UnstructuredContent(), "spec", "volumeName")
-		assert.False(t, exists)
-	})
-}
-
-func TestGeneratorDBVolumeStorageClass(t *testing.T) {
-	syndesis := &v1beta1.Syndesis{
-		Spec: v1beta1.SyndesisSpec{
-			Components: v1beta1.ComponentsSpec{
-				Database: v1beta1.DatabaseConfiguration{
-					Resources: v1beta1.ResourcesWithPersistentVolume{
-						Memory:             "255Mi",
-						VolumeCapacity:     "1Gi",
-						VolumeStorageClass: "gluster-fs",
-					},
-				},
-			},
-		},
-	}
-
-	checkPesistentVolumeProps(t, syndesis, func(t *testing.T, resource unstructured.Unstructured) {
-		assertResourcePropertyStr(t, resource, syndesis.Spec.Components.Database.Resources.VolumeStorageClass, "spec", "storageClassName")
-	})
-}
-
-func TestGeneratorDBNoVolumeStorageClass(t *testing.T) {
-	syndesis := &v1beta1.Syndesis{
-		Spec: v1beta1.SyndesisSpec{
-			Components: v1beta1.ComponentsSpec{
-				Database: v1beta1.DatabaseConfiguration{
-					Resources: v1beta1.ResourcesWithPersistentVolume{
-						Memory:         "255Mi",
-						VolumeCapacity: "1Gi",
-					},
-				},
-			},
-		},
-	}
-
-	checkPesistentVolumeProps(t, syndesis, func(t *testing.T, resource unstructured.Unstructured) {
-		_, exists, _ := unstructured.NestedString(resource.UnstructuredContent(), "spec", "storageClassName")
-		assert.False(t, exists)
-	})
-}
-
-func TestGeneratorDBVolumeLabels(t *testing.T) {
-	syndesis := &v1beta1.Syndesis{
-		Spec: v1beta1.SyndesisSpec{
-			Components: v1beta1.ComponentsSpec{
-				Database: v1beta1.DatabaseConfiguration{
-					Resources: v1beta1.ResourcesWithPersistentVolume{
-						Memory:         "255Mi",
-						VolumeCapacity: "1Gi",
-						VolumeLabels: map[string]string{
-							"storage-tier":          "gold",
-							"aws-availability-zone": "us-east-1",
+		{
+			name:               "syndesis-prometheus",
+			path:               "./infrastructure/06-syndesis-prometheus.yml.tmpl",
+			expectedAccessMode: string(v1beta1.ReadOnlyMany),
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Prometheus: v1beta1.PrometheusConfiguration{
+							Resources: resources,
 						},
 					},
 				},
@@ -424,35 +354,285 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 		},
 	}
 
-	checkPesistentVolumeProps(t, syndesis, func(t *testing.T, resource unstructured.Unstructured) {
-		labelsMap, exists, _ := unstructured.NestedMap(resource.UnstructuredContent(), "spec", "selector", "matchLabels")
-		assert.True(t, exists)
-		assert.Equal(t, len(labelsMap), 2)
-
-		for key, val := range labelsMap {
-			assert.Equal(t, val, syndesis.Spec.Components.Database.Resources.VolumeLabels[key])
-		}
-	})
+	for _, tt := range testData {
+		t.Run(tt.name, func(t *testing.T) {
+			checkPesistentVolumeProps(t, tt.syndesis, tt.path, func(t *testing.T, resource unstructured.Unstructured) {
+				aModes, exists, _ := unstructured.NestedStringSlice(resource.UnstructuredContent(), "spec", "accessModes")
+				assert.True(t, exists)
+				assert.True(t, len(aModes) == 1)
+				assert.Equal(t, aModes[0], tt.expectedAccessMode)
+			})
+		})
+	}
 }
 
-func TestGeneratorDBNoVolumeLabels(t *testing.T) {
-	syndesis := &v1beta1.Syndesis{
-		Spec: v1beta1.SyndesisSpec{
-			Components: v1beta1.ComponentsSpec{
-				Database: v1beta1.DatabaseConfiguration{
-					Resources: v1beta1.ResourcesWithPersistentVolume{
-						Memory:         "255Mi",
-						VolumeCapacity: "1Gi",
+func TestGeneratorComponentPVNoExtraProps(t *testing.T) {
+	resources := v1beta1.ResourcesWithPersistentVolume{
+		Memory:         "255Mi",
+		VolumeCapacity: "1Gi",
+	}
+
+	testData := []struct {
+		name     string
+		path     string
+		syndesis *v1beta1.Syndesis
+	}{
+		{
+			name: "syndesis-db",
+			path: "./database/",
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Database: v1beta1.DatabaseConfiguration{
+							Resources: resources,
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "syndesis-meta",
+			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Meta: v1beta1.MetaConfiguration{
+							Resources: resources,
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "syndesis-prometheus",
+			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Prometheus: v1beta1.PrometheusConfiguration{
+							Resources: resources,
+						},
 					},
 				},
 			},
 		},
 	}
 
-	checkPesistentVolumeProps(t, syndesis, func(t *testing.T, resource unstructured.Unstructured) {
-		_, exists, _ := unstructured.NestedMap(resource.UnstructuredContent(), "spec", "matchLabels")
-		assert.False(t, exists)
-	})
+	for _, tt := range testData {
+		t.Run(tt.name, func(t *testing.T) {
+			checkPesistentVolumeProps(t, tt.syndesis, tt.path, func(t *testing.T, resource unstructured.Unstructured) {
+				_, exists, _ := unstructured.NestedString(resource.UnstructuredContent(), "spec", "volumeName")
+				assert.False(t, exists)
+
+				_, exists, _ = unstructured.NestedString(resource.UnstructuredContent(), "spec", "storageClassName")
+				assert.False(t, exists)
+
+				_, exists, _ = unstructured.NestedMap(resource.UnstructuredContent(), "spec", "matchLabels")
+				assert.False(t, exists)
+			})
+		})
+	}
+}
+
+func TestGeneratorComponentPVVolumeName(t *testing.T) {
+	volumeName := "pv0001"
+
+	resources := v1beta1.ResourcesWithPersistentVolume{
+		Memory:         "255Mi",
+		VolumeCapacity: "1Gi",
+		VolumeName:     volumeName,
+	}
+
+	testData := []struct {
+		name     string
+		path     string
+		syndesis *v1beta1.Syndesis
+	}{
+		{
+			name: "syndesis-db",
+			path: "./database/",
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Database: v1beta1.DatabaseConfiguration{
+							Resources: resources,
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "syndesis-meta",
+			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Meta: v1beta1.MetaConfiguration{
+							Resources: resources,
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "syndesis-prometheus",
+			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Prometheus: v1beta1.PrometheusConfiguration{
+							Resources: resources,
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for _, tt := range testData {
+		t.Run(tt.name, func(t *testing.T) {
+			checkPesistentVolumeProps(t, tt.syndesis, tt.path, func(t *testing.T, resource unstructured.Unstructured) {
+				assertResourcePropertyStr(t, resource, volumeName, "spec", "volumeName")
+			})
+		})
+	}
+}
+
+func TestGeneratorDBVolumeStorageClass(t *testing.T) {
+	volumeStorageClass := "gluster-fs"
+
+	resources := v1beta1.ResourcesWithPersistentVolume{
+		Memory:             "255Mi",
+		VolumeCapacity:     "1Gi",
+		VolumeStorageClass: volumeStorageClass,
+	}
+
+	testData := []struct {
+		name     string
+		path     string
+		syndesis *v1beta1.Syndesis
+	}{
+		{
+			name: "syndesis-db",
+			path: "./database/",
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Database: v1beta1.DatabaseConfiguration{
+							Resources: resources,
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "syndesis-meta",
+			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Meta: v1beta1.MetaConfiguration{
+							Resources: resources,
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "syndesis-prometheus",
+			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Prometheus: v1beta1.PrometheusConfiguration{
+							Resources: resources,
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for _, tt := range testData {
+		t.Run(tt.name, func(t *testing.T) {
+			checkPesistentVolumeProps(t, tt.syndesis, tt.path, func(t *testing.T, resource unstructured.Unstructured) {
+				assertResourcePropertyStr(t, resource, volumeStorageClass, "spec", "storageClassName")
+			})
+		})
+	}
+}
+
+func TestGeneratorDBVolumeLabels(t *testing.T) {
+	volumeLabels := map[string]string{
+		"storage-tier":          "gold",
+		"aws-availability-zone": "us-east-1",
+	}
+
+	resources := v1beta1.ResourcesWithPersistentVolume{
+		Memory:         "255Mi",
+		VolumeCapacity: "1Gi",
+		VolumeLabels:   volumeLabels,
+	}
+
+	testData := []struct {
+		name     string
+		path     string
+		syndesis *v1beta1.Syndesis
+	}{
+		{
+			name: "syndesis-db",
+			path: "./database/",
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Database: v1beta1.DatabaseConfiguration{
+							Resources: resources,
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "syndesis-meta",
+			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Meta: v1beta1.MetaConfiguration{
+							Resources: resources,
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "syndesis-prometheus",
+			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
+			syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
+					Components: v1beta1.ComponentsSpec{
+						Prometheus: v1beta1.PrometheusConfiguration{
+							Resources: resources,
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for _, tt := range testData {
+		t.Run(tt.name, func(t *testing.T) {
+			checkPesistentVolumeProps(t, tt.syndesis, tt.path, func(t *testing.T, resource unstructured.Unstructured) {
+				labelsMap, exists, _ := unstructured.NestedMap(resource.UnstructuredContent(), "spec", "selector", "matchLabels")
+				assert.True(t, exists)
+				assert.Equal(t, len(labelsMap), 2)
+
+				for key, val := range labelsMap {
+					assert.Equal(t, val, volumeLabels[key])
+				}
+			})
+		})
+	}
 }
 
 func TestGeneratorNonEmbeddedOAuthSecretConversion(t *testing.T) {
