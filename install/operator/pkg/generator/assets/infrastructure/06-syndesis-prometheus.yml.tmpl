@@ -120,10 +120,23 @@
       syndesis.io/component: syndesis-prometheus
   spec:
     accessModes:
-    - ReadWriteOnce
+    - {{.Syndesis.Components.Prometheus.Resources.VolumeAccessMode}}
     resources:
       requests:
         storage: {{.Syndesis.Components.Prometheus.Resources.VolumeCapacity}}
+{{- if .Syndesis.Components.Prometheus.Resources.VolumeStorageClass}}
+    storageClassName: {{.Syndesis.Components.Prometheus.Resources.VolumeStorageClass}}
+{{- end}}
+{{- if .Syndesis.Components.Prometheus.Resources.VolumeName}}
+    volumeName: {{.Syndesis.Components.Prometheus.Resources.VolumeName}}
+{{end}}
+{{- if .Syndesis.Components.Prometheus.Resources.VolumeLabels}}
+    selector:
+      matchLabels:
+      {{- range $key, $value := .Syndesis.Components.Prometheus.Resources.VolumeLabels}}
+        {{ $key }}: {{ $value }}
+      {{- end }}
+{{- end}}
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
