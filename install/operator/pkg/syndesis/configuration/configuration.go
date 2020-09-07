@@ -148,8 +148,8 @@ type ServerConfiguration struct {
 }
 
 type MetaConfiguration struct {
-	Image     string              // Docker image for syndesis meta
-	Resources ResourcesWithVolume // Resources for meta pod, memory
+	Image     string                        // Docker image for syndesis meta
+	Resources ResourcesWithPersistentVolume // Resources for meta pod, memory
 }
 
 type UpgradeConfiguration struct {
@@ -521,7 +521,14 @@ func (config *Config) setConfigFromEnv() error {
 				S2I:        S2IConfiguration{Image: os.Getenv("RELATED_IMAGE_S2I")},
 				Prometheus: PrometheusConfiguration{Image: os.Getenv("RELATED_IMAGE_PROMETHEUS")},
 				Upgrade:    UpgradeConfiguration{Image: os.Getenv("RELATED_IMAGE_UPGRADE")},
-				Meta:       MetaConfiguration{Image: os.Getenv("RELATED_IMAGE_META")},
+				Meta: MetaConfiguration{
+					Image: os.Getenv("RELATED_IMAGE_META"),
+					Resources: ResourcesWithPersistentVolume{
+						VolumeAccessMode:   os.Getenv("META_VOLUME_ACCESS_MODE"),
+						VolumeStorageClass: os.Getenv("META_STORAGE_CLASS"),
+						VolumeName:         os.Getenv("META_VOLUME_NAME"),
+					},
+				},
 				Database: DatabaseConfiguration{
 					Image:    os.Getenv("RELATED_IMAGE_DATABASE"),
 					Exporter: ExporterConfiguration{Image: os.Getenv("RELATED_IMAGE_PSQL_EXPORTER")},
