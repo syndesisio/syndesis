@@ -67,7 +67,6 @@ public class KafkaConnectionCustomizerTest {
         options.put("extraOptions", "[]");
         kafkaConnectionCustomizer.customize(null, options);
         assertThat(options).containsKey("configuration");
-        KafkaConfiguration kafkaConfiguration = (KafkaConfiguration) options.get("configuration");
     }
 
 }
