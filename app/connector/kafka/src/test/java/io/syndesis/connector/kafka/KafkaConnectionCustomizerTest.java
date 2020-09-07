@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.camel.component.kafka.KafkaConfiguration;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,7 +30,7 @@ public class KafkaConnectionCustomizerTest {
 
     @Test
     public void shouldAssertIfSelfSignedCertificate() {
-        KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer();
+        KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer(new DefaultCamelContext());
         Map<String, Object> options = new HashMap<>();
         options.put("brokers", "test:9092");
         options.put("brokerCertificate", TEST_CERT);
@@ -39,6 +40,37 @@ public class KafkaConnectionCustomizerTest {
         assertThat(kafkaConfiguration.getSslContextParameters()).isNotNull();
         assertThat(kafkaConfiguration.getSecurityProtocol()).isEqualTo("SSL");
         assertThat(kafkaConfiguration.getSslEndpointAlgorithm()).isEqualTo("");
+    }
+
+    @Test
+    public void testExtraOptions() {
+        KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer(new DefaultCamelContext());
+        Map<String, Object> options = new HashMap<>();
+        options.put("brokers", "test:9092");
+        options.put("extraOptions", "[{\"key\":\"AAA\",\"value\":\"BBB\"}," +
+                                        " {\"key\":\"autoOffsetReset\"," +
+                                        "\"value\":\"earliest\"}," +
+                                        "{\"key\":\"checkCrcs\",\"value\":\"false\"},  " +
+                                        "{\"key\":\"auto.commit.interval.ms\",\"value\":\"5\"}]");
+        kafkaConnectionCustomizer.customize(null, options);
+        assertThat(options).containsKey("configuration");
+        KafkaConfiguration kafkaConfiguration = (KafkaConfiguration) options.get("configuration");
+        assertThat(kafkaConfiguration.getAdditionalProperties()).containsEntry("additionalProperties.AAA", "BBB");
+        assertThat(kafkaConfiguration.getAutoOffsetReset()).isEqualTo("earliest");
+        assertThat(kafkaConfiguration.getCheckCrcs()).isEqualTo(false);
+        assertThat(kafkaConfiguration.getAutoCommitIntervalMs()).isEqualTo(5);
+    }
+
+    @Test
+    public void testExtraOptionsEmpty() {
+        KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer(new DefaultCamelContext());
+        Map<String, Object> options = new HashMap<>();
+        options.put("brokers", "test:9092");
+        options.put("extraOptions", "[]");
+        kafkaConnectionCustomizer.customize(null, options);
+        assertThat(options).containsKey("configuration");
+        KafkaConfiguration kafkaConfiguration = (KafkaConfiguration) options.get("configuration");
+        assertThat(kafkaConfiguration.getAdditionalProperties()).isEmpty();
     }
 
 }

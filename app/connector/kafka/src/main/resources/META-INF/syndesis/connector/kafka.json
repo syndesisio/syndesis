@@ -99,6 +99,33 @@
   "id": "kafka",
   "name": "Kafka Message Broker",
   "properties": {
+    "extraOptions": {
+      "componentProperty": true,
+      "deprecated": false,
+      "group": "common",
+      "kind": "property",
+      "label": "common",
+      "labelHint": "Extra Options for the Kafka connection.",
+      "order": "4",
+      "javaType": "java.util.List",
+      "arrayDefinition": {
+        "key": {
+          "displayName": "Key",
+          "type": "text"
+        },
+        "value": {
+          "displayName": "Value",
+          "type": "text"
+        }
+      },
+      "arrayDefinitionOptions": {
+        "i18nAddElementText": "Add",
+        "minElements": 0
+      },
+      "defaultValue": [],
+      "displayName": "Extra Options",
+      "type": "array"
+    },
     "brokers": {
       "componentProperty": true,
       "deprecated": false,
