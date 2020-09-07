@@ -404,7 +404,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         result.assertIsSatisfied();
         String json = extractJsonFromExchgMsg(result, 0, String.class);
         assertNotNull(json);
-        String expected = testData(TEST_SERVER_DATA_1);
+        String expected = testData(TEST_SERVER_DATA_1_WITH_COUNT);
         JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
     }
 
