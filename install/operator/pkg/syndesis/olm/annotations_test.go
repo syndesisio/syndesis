@@ -36,6 +36,4 @@ func Test_annotation_build(t *testing.T) {
 	err = a.build()
 	assert.NoError(t, err)
 	assert.NotNil(t, a.body)
-
-	// fmt.Print(string(a.body))
 }

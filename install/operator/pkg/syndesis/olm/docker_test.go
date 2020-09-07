@@ -37,6 +37,4 @@ func Test_docker_build(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.NotNil(t, d.body)
-
-	// fmt.Print(string(d.body))
 }
