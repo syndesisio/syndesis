@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.camel.component.kafka.KafkaConfiguration;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,7 +30,7 @@ public class KafkaConnectionCustomizerTest {
 
     @Test
     public void shouldAssertIfSelfSignedCertificate() {
-        KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer();
+        KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer(new DefaultCamelContext());
         Map<String, Object> options = new HashMap<>();
         options.put("brokers", "test:9092");
         options.put("brokerCertificate", TEST_CERT);
@@ -43,7 +44,7 @@ public class KafkaConnectionCustomizerTest {
 
     @Test
     public void testExtraOptions() {
-        KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer();
+        KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer(new DefaultCamelContext());
         Map<String, Object> options = new HashMap<>();
         options.put("brokers", "test:9092");
         options.put("extraOptions", "[{\"key\":\"AAA\",\"value\":\"BBB\"}," +
@@ -62,7 +63,7 @@ public class KafkaConnectionCustomizerTest {
 
     @Test
     public void testExtraOptionsEmpty() {
-        KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer();
+        KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer(new DefaultCamelContext());
         Map<String, Object> options = new HashMap<>();
         options.put("brokers", "test:9092");
         options.put("extraOptions", "[]");

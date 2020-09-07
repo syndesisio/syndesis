@@ -22,6 +22,8 @@ import io.syndesis.connector.kafka.KafkaConnectionCustomizer;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.CamelContextAware;
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,14 +31,33 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class DebeziumConsumerCustomizer implements ComponentProxyCustomizer {
+public class DebeziumConsumerCustomizer implements ComponentProxyCustomizer, CamelContextAware {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DebeziumConsumerCustomizer.class);
     private static final ObjectMapper MAPPER = new ObjectMapper();
     public static final String DEBEZIUM_OPERATION = "debezium.OPERATION";
 
     // Debezium is based on Kafka connector
-    private final KafkaConnectionCustomizer kafkaConnectionCustomizer = new KafkaConnectionCustomizer();
+    private final  KafkaConnectionCustomizer kafkaConnectionCustomizer;
+
+
+    private CamelContext camelContext;
+
+    @Override
+    public CamelContext getCamelContext() {
+        return this.camelContext;
+    }
+
+    @Override
+    public final void setCamelContext(CamelContext camelContext) {
+        this.camelContext = camelContext;
+    }
+
+    public DebeziumConsumerCustomizer(CamelContext context) {
+        super();
+        setCamelContext(context);
+        kafkaConnectionCustomizer = new KafkaConnectionCustomizer(context);
+    }
 
     @Override
     public void customize(final ComponentProxyComponent component, final Map<String, Object> options) {

@@ -24,8 +24,9 @@ import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.util.KeyStoreHelper;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+import org.apache.camel.CamelContext;
+import org.apache.camel.CamelContextAware;
 import org.apache.camel.component.kafka.KafkaConfiguration;
-import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.support.PropertyBindingSupport;
 import org.apache.camel.support.jsse.KeyManagersParameters;
 import org.apache.camel.support.jsse.KeyStoreParameters;
@@ -34,11 +35,27 @@ import org.apache.camel.support.jsse.TrustManagersParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class KafkaConnectionCustomizer implements ComponentProxyCustomizer {
+public class KafkaConnectionCustomizer implements ComponentProxyCustomizer, CamelContextAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(KafkaConnectionCustomizer.class);
     private static final String CERTIFICATE_OPTION = "brokerCertificate";
     public static final ObjectMapper MAPPER = new ObjectMapper();
+    private CamelContext camelContext;
+
+    @Override
+    public CamelContext getCamelContext() {
+        return this.camelContext;
+    }
+
+    @Override
+    public final void setCamelContext(CamelContext camelContext) {
+        this.camelContext = camelContext;
+    }
+
+    public KafkaConnectionCustomizer(CamelContext context) {
+        super();
+        setCamelContext(context);
+    }
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
@@ -74,7 +91,7 @@ public class KafkaConnectionCustomizer implements ComponentProxyCustomizer {
                 }
             }
 
-            PropertyBindingSupport.bindProperties(new DefaultCamelContext(), configuration, options);
+            PropertyBindingSupport.bindProperties(this.getCamelContext(), configuration, options);
         } catch (JsonProcessingException e) {
             LOG.error(e.getMessage(), e);
         }
