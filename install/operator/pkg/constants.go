@@ -9,5 +9,8 @@ var DefaultOperatorTag = "latest"
 // The Date & Time of the build if specified, not a constant
 var BuildDateTime = ""
 
+// The level prescribed as the debugging level of the logger
+var DEBUG_LOGGING_LVL = 1
+
 // ControllerUIDLabel label to be added to Jobs, for tracking, an actual constant
 const ControllerUIDLabel = "controller-uid"

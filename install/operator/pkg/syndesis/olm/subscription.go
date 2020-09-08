@@ -23,6 +23,7 @@ import (
 	"time"
 
 	olmapiv1alpha1 "github.com/operator-framework/api/pkg/operators/v1alpha1"
+	synpkg "github.com/syndesisio/syndesis/install/operator/pkg"
 	"k8s.io/apimachinery/pkg/util/wait"
 
 	olmapiv1 "github.com/operator-framework/api/pkg/operators/v1"
@@ -65,7 +66,7 @@ func SubscribeOperator(ctx context.Context, clientTools *clienttools.ClientTools
 		return errors.New("Cluster does not support operation-lifecycle-manager")
 	}
 
-	sublog.Info("Subscribing to operator", "Package", olmSpec.Package)
+	sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Subscribing to operator", "Package", olmSpec.Package)
 
 	//
 	// 1. Look for the packageName in the packageManifest
@@ -115,7 +116,7 @@ func SubscribeOperator(ctx context.Context, clientTools *clienttools.ClientTools
 }
 
 func findPackageManifest(ctx context.Context, rtClient client.Client, olmSpec *conf.OlmSpec) (*olmpkgsvr.PackageManifest, error) {
-	sublog.Info("Finding package manifest for package", "Package", olmSpec.Package)
+	sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Finding package manifest for package", "Package", olmSpec.Package)
 
 	//
 	// Find the list of package manifests
@@ -134,7 +135,7 @@ func findPackageManifest(ctx context.Context, rtClient client.Client, olmSpec *c
 	//
 	for _, pkg := range pkgs.Items {
 		if pkg.Name == olmSpec.Package {
-			sublog.Info("Identified package manifest for package", "Package", olmSpec.Package)
+			sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Identified package manifest for package", "Package", olmSpec.Package)
 			return &pkg, nil
 		}
 	}
@@ -153,7 +154,7 @@ func findChannel(ctx context.Context, pkgManifest *olmpkgsvr.PackageManifest, ch
 }
 
 func findPackageCSV(ctx context.Context, rtClient client.Client, channel *olmpkgsvr.PackageChannel, namespace string) (*olmapiv1alpha1.ClusterServiceVersion, error) {
-	sublog.Info("Finding csv for package in namespace", "Channel", channel.Name, "Namespace", namespace)
+	sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Finding csv for package in namespace", "Channel", channel.Name, "Namespace", namespace)
 
 	csv := olmapiv1alpha1.ClusterServiceVersion{}
 	if err := rtClient.Get(ctx, client.ObjectKey{Namespace: namespace, Name: channel.CurrentCSV}, &csv); err != nil {
@@ -165,12 +166,12 @@ func findPackageCSV(ctx context.Context, rtClient client.Client, channel *olmpkg
 		return nil, err
 	}
 
-	sublog.Info("Identified csv for package in namespace", "Channel", channel.Name, "Namespace", namespace)
+	sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Identified csv for package in namespace", "Channel", channel.Name, "Namespace", namespace)
 	return &csv, nil
 }
 
 func createSubscription(ctx context.Context, rtClient client.Client, configuration *conf.Config, pkgManifest *olmpkgsvr.PackageManifest, channel *olmpkgsvr.PackageChannel) (*olmapiv1alpha1.Subscription, error) {
-	sublog.Info("Creating subsription for package in namespace", "Channel", channel.Name, "Namespace", configuration.OpenShiftProject)
+	sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Creating subsription for package in namespace", "Channel", channel.Name, "Namespace", configuration.OpenShiftProject)
 
 	ogName := fmt.Sprintf("%s-%s-og", configuration.OpenShiftProject, pkgManifest.Status.PackageName)
 
@@ -232,7 +233,7 @@ func createSubscription(ctx context.Context, rtClient client.Client, configurati
 		return nil, err
 	}
 
-	sublog.Info("Created subscription for package in namespace", "Name", sub.Name, "Namespace", sub.Namespace)
+	sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Created subscription for package in namespace", "Name", sub.Name, "Namespace", sub.Namespace)
 	return sub, nil
 }
 
@@ -251,7 +252,7 @@ func hasInstallMode(installModes []olmapiv1alpha1.InstallMode, tgtModeType olmap
 }
 
 func waitForSubscription(ctx context.Context, rtClient client.Client, sub *olmapiv1alpha1.Subscription) error {
-	sublog.Info("Waiting on subscription install plan to complete for package in namespace", "Name", sub.Name, "Namespace", sub.Namespace)
+	sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Waiting on subscription install plan to complete for package in namespace", "Name", sub.Name, "Namespace", sub.Namespace)
 	//
 	// Wait for the subscription to install the operator
 	//
@@ -286,7 +287,7 @@ func waitForSubscription(ctx context.Context, rtClient client.Client, sub *olmap
 		}
 
 		if installPlan.Status.Phase == olmapiv1alpha1.InstallPlanPhaseComplete {
-			sublog.Info("Install plan for subscription complete", "Subscription Name", sub.Name, "Subscription Namespace", sub.Namespace)
+			sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Install plan for subscription complete", "Subscription Name", sub.Name, "Subscription Namespace", sub.Namespace)
 			return true, nil
 		}
 
