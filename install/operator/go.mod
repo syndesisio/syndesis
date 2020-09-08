@@ -47,6 +47,7 @@ require (
 	github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200521062108-408ca95d458f // Tag 0.15.1
 	github.com/operator-framework/operator-marketplace v0.0.0-20200515051804-e0148822df25
 	github.com/operator-framework/operator-sdk v0.0.0-20200428193249-b34ae44ff198 // Not a release but a bump commit aligning with client-go 0.18.2
+	github.com/rogpeppe/go-internal v1.5.0
 	github.com/spf13/afero v1.2.2
 	go.uber.org/zap v1.14.1
 	sigs.k8s.io/controller-runtime v0.6.0

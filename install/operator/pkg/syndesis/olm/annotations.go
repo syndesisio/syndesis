@@ -17,6 +17,9 @@
 package olm
 
 import (
+	"fmt"
+
+	"github.com/rogpeppe/go-internal/semver"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"gopkg.in/yaml.v2"
 )
@@ -32,14 +35,16 @@ func (c *annotation) build() (err error) {
 		name = "syndesis-operator"
 	}
 
+	channel := fmt.Sprintf("fuse-online-%s", semver.MajorMinor("v"+c.config.Version))
+
 	m := map[string]map[string]string{
 		"annotations": {
 			"operators.operatorframework.io.bundle.mediatype.v1":       "registry+v1",
 			"operators.operatorframework.io.bundle.manifests.v1":       "manifests/",
 			"operators.operatorframework.io.bundle.metadata.v1":        "metadata/",
 			"operators.operatorframework.io.bundle.package.v1":         name,
-			"operators.operatorframework.io.bundle.channels.v1":        "alpha",
-			"operators.operatorframework.io.bundle.channel.default.v1": "alpha",
+			"operators.operatorframework.io.bundle.channels.v1":        channel,
+			"operators.operatorframework.io.bundle.channel.default.v1": channel,
 		},
 	}
 	c.body, err = yaml.Marshal(m)

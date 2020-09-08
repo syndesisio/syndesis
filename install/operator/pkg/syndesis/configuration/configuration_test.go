@@ -160,8 +160,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 				},
 				Syndesis: SyndesisConfig{
 					RouteHostname: "route",
-                    Addons: AddonsSpec{
-                    },
+					Addons:        AddonsSpec{},
 					Components: ComponentsSpec{
 						Oauth:      OauthConfiguration{Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0"},
 						UI:         UIConfiguration{Image: "docker.io/syndesis/syndesis-ui:latest"},
@@ -184,7 +183,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 			env: map[string]string{
 				"RELATED_PSQL": "PSQL_IMAGE", "RELATED_IMAGE_S2I": "S2I_IMAGE", "RELATED_IMAGE_OPERATOR": "OPERATOR_IMAGE",
 				"RELATED_IMAGE_UI": "UI_IMAGE", "RELATED_IMAGE_SERVER": "SERVER_IMAGE", "RELATED_IMAGE_META": "META_IMAGE",
-                "RELATED_IMAGE_OAUTH": "OAUTH_IMAGE", "RELATED_IMAGE_PROMETHEUS": "PROMETHEUS_IMAGE",
+				"RELATED_IMAGE_OAUTH": "OAUTH_IMAGE", "RELATED_IMAGE_PROMETHEUS": "PROMETHEUS_IMAGE",
 				"RELATED_IMAGE_UPGRADE": "UPGRADE_IMAGE", "DATABASE_NAMESPACE": "DATABASE_NAMESPACE", "RELATED_IMAGE_DATABASE": "DATABASE_IMAGE",
 				"RELATED_IMAGE_PSQL_EXPORTER": "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT": "true", "TEST_SUPPORT": "false",
 				"INTEGRATION_LIMIT": "30", "DEPLOY_INTEGRATIONS": "true", "RELATED_IMAGE_CAMELK": "CAMELK_IMAGE",
@@ -252,7 +251,7 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 							ImageAllInOne: "jaegertracing/all-in-one:1.13",
 							ImageOperator: "jaegertracing/jaeger-operator:1.13",
 						},
-						Todo: v1beta1.AddonSpec{Enabled: true},
+						Todo:   v1beta1.AddonSpec{Enabled: true},
 						CamelK: v1beta1.AddonSpec{Enabled: true},
 						PublicApi: v1beta1.PublicApiConfiguration{
 							Enabled:       true,
@@ -404,6 +403,7 @@ func getConfigLiteral() *Config {
 	return &Config{
 		Version:                    "7.7.0",
 		ProductName:                "syndesis",
+		SupportedOpenShiftVersions: "v4.5,v4.6",
 		AllowLocalHost:             false,
 		Productized:                false,
 		DevSupport:                 false,
