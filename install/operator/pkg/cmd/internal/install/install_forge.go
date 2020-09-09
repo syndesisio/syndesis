@@ -26,7 +26,7 @@ import (
 	"unicode"
 
 	"github.com/spf13/cast"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	conf "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -166,7 +166,7 @@ func (o *Install) installForge() error {
 	// Create an empty syndesis CR which will
 	// be filled with parameters placeholder values
 	//
-	syndesis, _ := v1beta1.NewSyndesis(convertToParam(string(EnvOpenShiftProject)))
+	syndesis, _ := v1beta2.NewSyndesis(convertToParam(string(EnvOpenShiftProject)))
 	configuration, err := conf.GetProperties(o.Context, conf.TemplateConfig, o.ClientTools(), syndesis)
 	if err != nil {
 		return err

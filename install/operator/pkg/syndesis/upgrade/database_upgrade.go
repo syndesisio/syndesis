@@ -26,7 +26,7 @@ import (
 
 	oappsv1 "github.com/openshift/api/apps/v1"
 	"github.com/spf13/afero"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	appsv1 "k8s.io/api/apps/v1"
@@ -61,13 +61,13 @@ var postgresVersionRegex = regexp.MustCompile(`^.* (\d+\.\d+)(?:\.d+)? ?`)
 // variable
 type databaseUpgrade struct {
 	step
-	syndesis *v1beta1.Syndesis
+	syndesis *v1beta2.Syndesis
 	target   func() (float64, error) // target version of PostgreSQL as detected at runtime from the file left by the init container
 	current  func() (float64, error) // current version of PostgreSQL as detected at runtime by querying the running database
 	cleanup  func() error            // how to perform cleanup, that is what to do in case of rollback or when we're done with the upgrade
 }
 
-func newDatabaseUpgrade(base step, s *v1beta1.Syndesis) stepRunner {
+func newDatabaseUpgrade(base step, s *v1beta2.Syndesis) stepRunner {
 	sharedFile := &sharedFileTarget{
 		fs: afero.NewOsFs(),
 	}
@@ -201,7 +201,12 @@ func (u *databaseUpgrade) deployUpgrade() error {
 	}
 
 	one := int32(1)
-	memory, err := resource.ParseQuantity(config.Syndesis.Components.Database.Resources.Memory)
+	limitMemory, err := resource.ParseQuantity(config.Syndesis.Components.Database.Resources.Limit.Memory)
+	if err != nil {
+		return err
+	}
+
+	requestMemory, err := resource.ParseQuantity(config.Syndesis.Components.Database.Resources.Request.Memory)
 	if err != nil {
 		return err
 	}
@@ -261,10 +266,10 @@ func (u *databaseUpgrade) deployUpgrade() error {
 							Image:           config.Syndesis.Components.Database.Image,
 							Resources: corev1.ResourceRequirements{
 								Limits: corev1.ResourceList{
-									corev1.ResourceMemory: memory,
+									corev1.ResourceMemory: limitMemory,
 								},
 								Requests: corev1.ResourceList{
-									corev1.ResourceMemory: memory,
+									corev1.ResourceMemory: requestMemory,
 								},
 							},
 							VolumeMounts: []corev1.VolumeMount{

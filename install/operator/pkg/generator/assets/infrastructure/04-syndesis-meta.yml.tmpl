@@ -156,9 +156,9 @@
             protocol: TCP
           resources:
             limits:
-              memory: {{.Syndesis.Components.Meta.Resources.Memory}}
+              memory: {{.Syndesis.Components.Meta.Resources.Limit.Memory}}
             requests:
-              memory: 280Mi
+              memory: {{.Syndesis.Components.Meta.Resources.Request.Memory}}
           # spring-boot automatically picks up application.yml from ./config
           workingDir: /deployments
           volumeMounts:

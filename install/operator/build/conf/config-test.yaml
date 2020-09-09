@@ -47,7 +47,10 @@ Syndesis:
             Rules: ""
             Image: "docker.io/prom/prometheus:v2.1.0"
             Resources:
-                Memory: "512Mi"
+                Limit:
+                    Memory: "512Mi"
+                Request:
+                    Memory: "512Mi"
                 VolumeCapacity: "1Gi"
                 VolumeAccessMode: "ReadWriteOnce"
         Upgrade:
@@ -57,7 +60,10 @@ Syndesis:
         Meta:
             Image: "docker.io/syndesis/syndesis-meta:latest"
             Resources:
-                Memory: "512Mi"
+                Limit:
+                    Memory: "512Mi"
+                Request:
+                    Memory: "280Mi"
                 VolumeCapacity: "1Gi"
                 VolumeAccessMode: "ReadWriteOnce"
         Database:
@@ -68,13 +74,21 @@ Syndesis:
             Exporter:
                 Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"
             Resources:
-                Memory: "255Mi"
+                Limit:
+                    Memory: "255Mi"
+                Request:
+                    Memory: "255Mi"
                 VolumeCapacity: "1Gi"
                 VolumeAccessMode: "ReadWriteOnce"
         Server:
             Image: "docker.io/syndesis/syndesis-server:latest"
             Resources:
-                Memory: "800Mi"
+                Limit:
+                    Memory: "800Mi"
+                    CPU: "750m"
+                Request:
+                    Memory: "256Mi"
+                    CPU: "450m"
             Features:
                 IntegrationLimit: 0
                 IntegrationStateCheckInterval: 60

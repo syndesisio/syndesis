@@ -48,7 +48,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/yaml"
 	syaml "sigs.k8s.io/yaml"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -168,17 +168,25 @@ type UpgradeConfiguration struct {
 	Resources VolumeOnlyResources // Resources for upgrade pod, memory and volume size where database dump is saved
 }
 
-type Resources struct {
+type ResourceParams struct {
 	Memory string
+	CPU    string
+}
+
+type Resources struct {
+	Limit   ResourceParams
+	Request ResourceParams
 }
 
 type ResourcesWithVolume struct {
-	Memory         string
+	Limit          ResourceParams
+	Request        ResourceParams
 	VolumeCapacity string
 }
 
 type ResourcesWithPersistentVolume struct {
-	Memory             string
+	Limit              ResourceParams
+	Request            ResourceParams
 	VolumeCapacity     string
 	VolumeName         string
 	VolumeAccessMode   string
@@ -432,7 +440,7 @@ func SecretToEnvVars(secretName string, secretData map[string][]byte, indents in
 // authentication server so no provider is required. Therefore,
 // no provider, clientId or clientSecret is required.
 //
-func (config *Config) CheckOAuthCredentialSecret(ctx context.Context, rtClient client.Client, syndesis *v1beta1.Syndesis) error {
+func (config *Config) CheckOAuthCredentialSecret(ctx context.Context, rtClient client.Client, syndesis *v1beta2.Syndesis) error {
 	if config.ApiServer.EmbeddedProvider {
 		return nil
 	}
@@ -461,7 +469,7 @@ func (config *Config) CheckOAuthCredentialSecret(ctx context.Context, rtClient c
  - For QE, some fields are loaded from environment variables
  - Users might define fields using the syndesis custom resource
 */
-func GetProperties(ctx context.Context, file string, clientTools *clienttools.ClientTools, syndesis *v1beta1.Syndesis) (*Config, error) {
+func GetProperties(ctx context.Context, file string, clientTools *clienttools.ClientTools, syndesis *v1beta2.Syndesis) (*Config, error) {
 	configuration := &Config{}
 	if err := configuration.loadFromFile(file); err != nil {
 		return nil, err
@@ -553,7 +561,7 @@ func (config *Config) SetRoute(ctx context.Context, specRouteHostname string) er
 }
 
 // When an external database is defined, reset connection parameters
-func (config *Config) externalDatabase(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis) error {
+func (config *Config) externalDatabase(ctx context.Context, client client.Client, syndesis *v1beta2.Syndesis) error {
 	// Handle an external database being defined
 	if syndesis.Spec.Components.Database.ExternalDbURL != "" {
 
@@ -580,7 +588,7 @@ func getSyndesisConfigurationSecret(ctx context.Context, client client.Client, n
 	return &secret, nil
 }
 
-func (config *Config) setPasswordsFromSecret(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis) error {
+func (config *Config) setPasswordsFromSecret(ctx context.Context, client client.Client, syndesis *v1beta2.Syndesis) error {
 	if client == nil {
 		return nil
 	}
@@ -711,7 +719,7 @@ func setIntFromEnv(env string, current int) int {
 }
 
 // Replace default values with those from custom resource
-func (config *Config) setSyndesisFromCustomResource(syndesis *v1beta1.Syndesis) error {
+func (config *Config) setSyndesisFromCustomResource(syndesis *v1beta2.Syndesis) error {
 	c := SyndesisConfig{}
 	jsonProperties, err := json.Marshal(syndesis.Spec)
 	if err != nil {
@@ -820,7 +828,7 @@ func getSyndesisEnvVarsFromOpenShiftNamespace(secret *corev1.Secret) (map[string
 	return nil, errors.New("no configuration found")
 }
 
-func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis, syndesisRouteHost string) error {
+func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, syndesis *v1beta2.Syndesis, syndesisRouteHost string) error {
 	if syndesisRouteHost == "" {
 		return nil
 	}
@@ -855,7 +863,7 @@ func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, 
 	return nil
 }
 
-func reconcileConsoleLink(ctx context.Context, syndesis *v1beta1.Syndesis, routeHost string, link *consolev1.ConsoleLink, client client.Client) error {
+func reconcileConsoleLink(ctx context.Context, syndesis *v1beta2.Syndesis, routeHost string, link *consolev1.ConsoleLink, client client.Client) error {
 	updateConsoleLink := false
 	url := "https://" + routeHost
 	if link.Spec.Href != url {
@@ -878,11 +886,11 @@ func reconcileConsoleLink(ctx context.Context, syndesis *v1beta1.Syndesis, route
 	return nil
 }
 
-func consoleLinkName(syndesis *v1beta1.Syndesis) string {
+func consoleLinkName(syndesis *v1beta2.Syndesis) string {
 	return syndesis.Name + "-" + syndesis.Namespace
 }
 
-func createNamespaceDashboardLink(name string, routeHost string, syndesis *v1beta1.Syndesis) *consolev1.ConsoleLink {
+func createNamespaceDashboardLink(name string, routeHost string, syndesis *v1beta2.Syndesis) *consolev1.ConsoleLink {
 	return &consolev1.ConsoleLink{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:   name,

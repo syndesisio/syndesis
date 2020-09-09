@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -32,7 +32,7 @@ func (o *Install) installApplication() error {
 		//
 		// check the customResource can parse to syndesis type
 		//
-		syndesis := &v1beta1.Syndesis{}
+		syndesis := &v1beta2.Syndesis{}
 		err = json.Unmarshal(customResData, syndesis)
 		if err != nil {
 			return err
@@ -84,7 +84,7 @@ func (o *Install) installApplication() error {
 func WaitForSyndesisReady(ctx context.Context, client dynamic.Interface, namespace string, name string, timeout time.Duration) (bool, error) {
 	gvr := schema.GroupVersionResource{
 		Group:    "syndesis.io",
-		Version:  "v1beta1",
+		Version:  "v1beta2",
 		Resource: "syndesises",
 	}
 	return util.WaitForResourceCondition(ctx, client, gvr, namespace, name, timeout, func(resource *unstructured.Unstructured) (bool, error) {
