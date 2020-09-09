@@ -128,7 +128,14 @@ func Test_setConfigFromEnv(t *testing.T) {
 						S2I:        S2IConfiguration{Image: "S2I_IMAGE"},
 						Prometheus: PrometheusConfiguration{Image: "PROMETHEUS_IMAGE"},
 						Upgrade:    UpgradeConfiguration{Image: "UPGRADE_IMAGE"},
-						Meta:       MetaConfiguration{Image: "META_IMAGE"},
+						Meta: MetaConfiguration{
+							Image: "META_IMAGE",
+							Resources: ResourcesWithPersistentVolume{
+								VolumeAccessMode:   "ReadWriteOnce",
+								VolumeStorageClass: "nfs-storage-class10",
+								VolumeName:         "nfs0020",
+							},
+						},
 						Database: DatabaseConfiguration{
 							Image:    "DATABASE_IMAGE",
 							Exporter: ExporterConfiguration{Image: "PSQL_EXPORTER_IMAGE"},
@@ -167,7 +174,14 @@ func Test_setConfigFromEnv(t *testing.T) {
 						S2I:        S2IConfiguration{Image: "docker.io/syndesis/syndesis-s2i:latest"},
 						Prometheus: PrometheusConfiguration{Image: "docker.io/prom/prometheus:v2.1.0"},
 						Upgrade:    UpgradeConfiguration{Image: "docker.io/syndesis/syndesis-upgrade:latest"},
-						Meta:       MetaConfiguration{Image: "docker.io/syndesis/syndesis-meta:latest"},
+						Meta: MetaConfiguration{
+							Image: "docker.io/syndesis/syndesis-meta:latest",
+							Resources: ResourcesWithPersistentVolume{
+								VolumeAccessMode:   "ReadWriteMany",
+								VolumeStorageClass: "nfs-storage-class",
+								VolumeName:         "nfs0011",
+							},
+						},
 						Database: DatabaseConfiguration{
 							Exporter: ExporterConfiguration{Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"},
 							Resources: ResourcesWithPersistentVolume{
@@ -187,7 +201,9 @@ func Test_setConfigFromEnv(t *testing.T) {
 				"RELATED_IMAGE_UPGRADE": "UPGRADE_IMAGE", "DATABASE_NAMESPACE": "DATABASE_NAMESPACE", "RELATED_IMAGE_DATABASE": "DATABASE_IMAGE",
 				"RELATED_IMAGE_PSQL_EXPORTER": "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT": "true", "TEST_SUPPORT": "false",
 				"INTEGRATION_LIMIT": "30", "DEPLOY_INTEGRATIONS": "true", "RELATED_IMAGE_CAMELK": "CAMELK_IMAGE",
-				"DATABASE_VOLUME_NAME": "nfs0002", "DATABASE_STORAGE_CLASS": "nfs-storage-class1",
+				"META_VOLUME_NAME": "nfs0020", "META_STORAGE_CLASS": "nfs-storage-class10",
+				"META_VOLUME_ACCESS_MODE": "ReadWriteOnce",
+				"DATABASE_VOLUME_NAME":    "nfs0002", "DATABASE_STORAGE_CLASS": "nfs-storage-class1",
 				"DATABASE_VOLUME_ACCESS_MODE": "ReadWriteOnce", "RELATED_IMAGE_TODO": "TODO_IMAGE", "RELATED_IMAGE_AMQ": "AMQ_IMAGE",
 			},
 			wantErr: false,
@@ -481,9 +497,10 @@ func getConfigLiteral() *Config {
 				},
 				Meta: MetaConfiguration{
 					Image: "docker.io/syndesis/syndesis-meta:latest",
-					Resources: ResourcesWithVolume{
-						Memory:         "512Mi",
-						VolumeCapacity: "1Gi",
+					Resources: ResourcesWithPersistentVolume{
+						Memory:           "512Mi",
+						VolumeCapacity:   "1Gi",
+						VolumeAccessMode: string(v1beta1.ReadWriteOnce),
 					},
 				},
 				Database: DatabaseConfiguration{
@@ -502,9 +519,10 @@ func getConfigLiteral() *Config {
 				},
 				Prometheus: PrometheusConfiguration{
 					Image: "docker.io/prom/prometheus:v2.1.0",
-					Resources: ResourcesWithVolume{
-						Memory:         "512Mi",
-						VolumeCapacity: "1Gi",
+					Resources: ResourcesWithPersistentVolume{
+						Memory:           "512Mi",
+						VolumeCapacity:   "1Gi",
+						VolumeAccessMode: string(v1beta1.ReadWriteOnce),
 					},
 				},
 				Upgrade: UpgradeConfiguration{

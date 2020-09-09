@@ -130,7 +130,7 @@ type DatabaseConfiguration struct {
 }
 
 type PrometheusConfiguration struct {
-	Resources ResourcesWithVolume `json:"resources,omitempty"`
+	Resources ResourcesWithPersistentVolume `json:"resources,omitempty"`
 }
 
 type GrafanaConfiguration struct {
@@ -143,7 +143,7 @@ type ServerConfiguration struct {
 }
 
 type MetaConfiguration struct {
-	Resources ResourcesWithVolume `json:"resources,omitempty"`
+	Resources ResourcesWithPersistentVolume `json:"resources,omitempty"`
 }
 
 type UpgradeConfiguration struct {
