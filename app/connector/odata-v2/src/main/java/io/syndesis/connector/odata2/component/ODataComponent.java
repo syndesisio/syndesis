@@ -18,6 +18,13 @@ package io.syndesis.connector.odata2.component;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import io.syndesis.connector.odata2.ODataConstants;
+import io.syndesis.connector.odata2.ODataUtil;
+import io.syndesis.connector.support.util.ConnectorOptions;
+import io.syndesis.connector.support.util.PropertyBuilder;
+import io.syndesis.integration.component.proxy.ComponentDefinition;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
 import org.apache.camel.component.olingo2.Olingo2AppEndpointConfiguration;
@@ -25,14 +32,9 @@ import org.apache.camel.component.olingo2.Olingo2Component;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
-import io.syndesis.connector.odata2.ODataConstants;
-import io.syndesis.connector.odata2.ODataUtil;
-import io.syndesis.connector.support.util.ConnectorOptions;
-import io.syndesis.connector.support.util.PropertyBuilder;
-import io.syndesis.integration.component.proxy.ComponentDefinition;
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import org.apache.olingo.odata2.api.ep.EntityProviderWriteProperties;
 
-@SuppressWarnings("PMD.GodClass") // TODO refactor
+@SuppressWarnings({"PMD.GodClass", "PMD.TooManyFields"}) // TODO refactor
 public final class ODataComponent extends ComponentProxyComponent implements ODataConstants {
 
     /**
@@ -64,6 +66,11 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
     private int backoffIdleThreshold = -1;
     private int backoffMultiplier = -1;
     private boolean splitResult;
+
+    // Producer properties
+    private boolean contentOnly;
+    private boolean omitJsonWrapper;
+    private boolean omitEtag;
 
     ODataComponent(String componentId, String componentScheme) {
         super(componentId, componentScheme);
@@ -165,6 +172,30 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
         this.splitResult = splitResult;
     }
 
+    public boolean isContentOnly() {
+        return contentOnly;
+    }
+
+    public void setContentOnly(boolean contentOnly) {
+        this.contentOnly = contentOnly;
+    }
+
+    public boolean isOmitJsonWrapper() {
+        return omitJsonWrapper;
+    }
+
+    public void setOmitJsonWrapper(boolean omitJsonWrapper) {
+        this.omitJsonWrapper = omitJsonWrapper;
+    }
+
+    public boolean isOmitEtag() {
+        return omitEtag;
+    }
+
+    public void setOmitEtag(boolean omitEtag) {
+        this.omitEtag = omitEtag;
+    }
+
     public String getConnectorDirection() {
         return connectorDirection;
     }
@@ -174,7 +205,7 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
     }
 
     private Map<String, Object> bundleOptions(Map<String, Object> options) {
-        PropertyBuilder<Object> builder = new PropertyBuilder<Object>();
+        PropertyBuilder<Object> builder = new PropertyBuilder<>();
 
         for (Map.Entry<String, Object> option : options.entrySet()) {
             builder.propertyIfNotNull(option.getKey(), option.getValue());
@@ -249,9 +280,28 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
             configuration.setSplitResult(isSplitResult());
         }
 
+        if (shouldSetEntityProviderWriteProperties(method)) {
+            EntityProviderWriteProperties entityProviderWriteProperties = EntityProviderWriteProperties.serviceRoot(null)
+                .contentOnly(contentOnly)
+                .omitETag(omitEtag)
+                .omitJsonWrapper(omitJsonWrapper).build();
+            configuration.setEntityProviderWriteProperties(entityProviderWriteProperties);
+        }
+
         Olingo2Component component = new Olingo2Component(getCamelContext());
         component.setConfiguration(configuration);
         return Optional.of(component);
+    }
+
+    /**
+     * Set custom entity provider write properties for create/merge operation
+     * and when values differing from defaults.
+     * @param method current connector action method.
+     * @return true if entity provider write properties should be set for given method.
+     */
+    private boolean shouldSetEntityProviderWriteProperties(Methods method) {
+        return (Methods.CREATE.equals(method) || Methods.MERGE.equals(method))
+            && (contentOnly || omitJsonWrapper || omitEtag);
     }
 
     private void configureResourcePath(Olingo2AppEndpointConfiguration configuration, Map<String, Object> options) {
