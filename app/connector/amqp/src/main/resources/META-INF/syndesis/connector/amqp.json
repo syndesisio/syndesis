@@ -4,7 +4,9 @@
       "actionType": "connector",
       "description": "Send data to the destination you specify.",
       "descriptor": {
-        "configuredProperties": {},
+        "configuredProperties": {
+          "disableReplyTo":"true"
+        },
         "inputDataShape": {
           "kind": "any"
         },
