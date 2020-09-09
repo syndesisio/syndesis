@@ -4,3 +4,7 @@
   font-size: 0.75em;
   margin-left: 8px;
 }
+
+.pf-c-button.pf-m-control::after {
+  border: 0;
+}
