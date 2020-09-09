@@ -8,11 +8,8 @@ import {
   TextArea,
   TextInput,
 } from '@patternfly/react-core';
-import { OkIcon, PencilAltIcon, TimesIcon } from '@patternfly/react-icons';
-import {
-  global_danger_color_100,
-  global_success_color_100,
-} from '@patternfly/react-tokens';
+import { CheckIcon, PencilAltIcon, TimesIcon } from '@patternfly/react-icons';
+import { global_palette_black_600 } from '@patternfly/react-tokens';
 import classnames from 'classnames';
 import * as React from 'react';
 import { Omit } from 'react-router';
@@ -92,7 +89,7 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
                   <Loader inline={true} size={'sm'} />
                 </span>
               ) : (
-                <OkIcon size={'sm'} color={global_success_color_100.value} />
+                <CheckIcon size={'sm'} color={global_palette_black_600.value} />
               )}
             </Button>
             <Button
@@ -100,7 +97,7 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
               isDisabled={saving}
               onClick={onCancel}
             >
-              <TimesIcon size={'sm'} color={global_danger_color_100.value} />
+              <TimesIcon size={'sm'} color={global_palette_black_600.value} />
             </Button>
           </InputGroup>
         </FormGroup>
@@ -130,7 +127,7 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
                   <Loader inline={true} size={'sm'} />
                 </span>
               ) : (
-                <OkIcon size={'sm'} color={global_success_color_100.value} />
+                <CheckIcon size={'sm'} color={global_palette_black_600.value} />
               )}
             </Button>
             <Button
@@ -138,7 +135,7 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
               isDisabled={saving}
               onClick={onCancel}
             >
-              <TimesIcon size={'sm'} color={global_danger_color_100.value} />
+              <TimesIcon size={'sm'} color={global_palette_black_600.value} />
             </Button>
           </InputGroup>
         </FormGroup>
