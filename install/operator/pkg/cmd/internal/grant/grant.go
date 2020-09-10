@@ -87,6 +87,13 @@ func (o *Grant) grant() error {
 	}
 	resources = append(resources, gr...)
 
+	// Allow syndesis-server user to lookup kafka customresources at cluster level
+	kafka, err := generator.Render("./install/grant/grant_kafka_role.yml.tmpl", o)
+	if err != nil {
+		return err
+	}
+	resources = append(resources, kafka...)
+
 	//
 	// Create & bind the cluster role for reading
 	// operation-lifecycle-manager artifacts if they are available
@@ -119,7 +126,7 @@ func (o *Grant) grant() error {
 	}
 	resources = append(resources, pubRole...)
 
-	client, err := o.ClientTools().RuntimeClient()
+	client, _ := o.ClientTools().RuntimeClient()
 	for _, res := range resources {
 		res.SetNamespace(o.Namespace)
 
