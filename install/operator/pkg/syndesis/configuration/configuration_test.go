@@ -45,9 +45,6 @@ func Test_GetAddons(t *testing.T) {
 		case "ops":
 			assert.Equal(t, config.Syndesis.Addons.Ops.Name(), addon.Name())
 			assert.Equal(t, config.Syndesis.Addons.Ops.Enabled, addon.IsEnabled())
-		case "camelk":
-			assert.Equal(t, config.Syndesis.Addons.CamelK.Name(), addon.Name())
-			assert.Equal(t, config.Syndesis.Addons.CamelK.Enabled, addon.IsEnabled())
 		case "knative":
 			assert.Equal(t, config.Syndesis.Addons.Knative.Name(), addon.Name())
 			assert.Equal(t, config.Syndesis.Addons.Knative.Enabled, addon.IsEnabled())
@@ -119,7 +116,6 @@ func Test_setConfigFromEnv(t *testing.T) {
 				Syndesis: SyndesisConfig{
 					RouteHostname: "route",
 					Addons: AddonsSpec{
-						CamelK: CamelKConfiguration{Image: "CAMELK_IMAGE"},
 						Todo:   TodoConfiguration{Image: "TODO_IMAGE"},
 					},
 					Components: ComponentsSpec{
@@ -200,7 +196,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 				"RELATED_IMAGE_OAUTH": "OAUTH_IMAGE", "RELATED_IMAGE_PROMETHEUS": "PROMETHEUS_IMAGE",
 				"RELATED_IMAGE_UPGRADE": "UPGRADE_IMAGE", "DATABASE_NAMESPACE": "DATABASE_NAMESPACE", "RELATED_IMAGE_DATABASE": "DATABASE_IMAGE",
 				"RELATED_IMAGE_PSQL_EXPORTER": "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT": "true", "TEST_SUPPORT": "false",
-				"INTEGRATION_LIMIT": "30", "DEPLOY_INTEGRATIONS": "true", "RELATED_IMAGE_CAMELK": "CAMELK_IMAGE",
+				"INTEGRATION_LIMIT": "30", "DEPLOY_INTEGRATIONS": "true",
 				"META_VOLUME_NAME": "nfs0020", "META_STORAGE_CLASS": "nfs-storage-class10",
 				"META_VOLUME_ACCESS_MODE": "ReadWriteOnce",
 				"DATABASE_VOLUME_NAME":    "nfs0002", "DATABASE_STORAGE_CLASS": "nfs-storage-class1",
@@ -268,7 +264,6 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 							ImageOperator: "jaegertracing/jaeger-operator:1.13",
 						},
 						Todo:   v1beta1.AddonSpec{Enabled: true},
-						CamelK: v1beta1.AddonSpec{Enabled: true},
 						PublicApi: v1beta1.PublicApiConfiguration{
 							Enabled:       true,
 							RouteHostname: "mypublichost.com",
@@ -300,12 +295,6 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 						},
 						Knative: KnativeConfiguration{
 							AddonConfiguration: AddonConfiguration{Enabled: false},
-						},
-						CamelK: CamelKConfiguration{
-							AddonConfiguration: AddonConfiguration{Enabled: true},
-							Image:              "fabric8/s2i-java:3.0-java8",
-							CamelVersion:       "2.23.2.fuse-760024",
-							CamelKRuntime:      "0.3.4.fuse-740008",
 						},
 						PublicApi: PublicApiConfiguration{
 							AddonConfiguration: AddonConfiguration{Enabled: true},
@@ -453,12 +442,6 @@ func getConfigLiteral() *Config {
 				},
 				Knative: KnativeConfiguration{
 					AddonConfiguration: AddonConfiguration{Enabled: false},
-				},
-				CamelK: CamelKConfiguration{
-					AddonConfiguration: AddonConfiguration{Enabled: false},
-					CamelVersion:       "2.23.2.fuse-760024",
-					CamelKRuntime:      "0.3.4.fuse-740008",
-					Image:              "fabric8/s2i-java:3.0-java8",
 				},
 				PublicApi: PublicApiConfiguration{
 					AddonConfiguration: AddonConfiguration{Enabled: true},

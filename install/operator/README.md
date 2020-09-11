@@ -83,8 +83,6 @@ These are the fields available. Only fields of type string or bool can be edited
 |Property path|Type|Description|
 |------------ |----|-----------|
 |Spec.Addons|AddonsSpec|Addons is the place for all addons, for example `todo`. Each addon can have a different set of properties. Enabling addons might require 3rd party CRDs to be installed|
-|Spec.Addons.camelk|hash[string,string]|Camel K|
-|Spec.Addons.camelk.enabled|string|Whether the addons is enabled or disabled|
 |Spec.Addons.jaeger|hash[string,string]|Jaeger|
 |Spec.Addons.jaeger.enabled|string|Whether the addons is enabled or disabled|
 |Spec.Addons.legacyui|hash[string,string]|Legacy UI|

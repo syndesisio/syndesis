@@ -36,10 +36,6 @@ crc::usage() {
     --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
     --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
     --test-support            Allow test support endpoint for syndesis-server
-    --camel-k <version>       Install the Camel-K operator with version <version>
-                              (version is optional)
-    --camel-k-options "opts"  Options used when installing the camel-k operator.
-                              Use quotes and start with a space before appending the options.
     --datavirt                Install Data Virtualizations.
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
     --nodev                   Do not set the devSupport flag in CR (deploys all images)
@@ -49,7 +45,6 @@ EOT
 
 crc::run() {
     source "$(basedir)/commands/util/openshift_funcs"
-    source "$(basedir)/commands/util/camel_k_funcs"
     source "$(basedir)/commands/util/operator_funcs"
 
     release_tag="$(readopt --tag)"
@@ -128,13 +123,6 @@ crc::run() {
         local result=$($OPERATOR_BINARY grant --user $user)
         check_error "$result"
 
-        # Install Camel-K CRD
-        if [ $(hasflag --camel-k) ]; then
-          echo "Installing Camel-K CRDs"
-          result=$(install_camel_k_crds "$(readopt --camel-k)")
-          check_error "$result"
-        fi
-
         # Revert back to the original user whose been granted install rights
         $revert_login
 
@@ -147,13 +135,6 @@ crc::run() {
             echo "To complete the installation please go ahead and run local dev builds for syndesis-server syndesis-ui syndesis-meta syndesis-s2i."
         fi
         check_error "$result"
-
-        # Deploy Camel-K operator if requested
-        if [ $(hasflag --camel-k) ]; then
-          echo "Deploying Camel-K operator"
-          result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(oc project -q)" "$(readopt --camel-k-options)")
-          check_error "$result"
-        fi
 
         wait_for_deployments 1 syndesis-operator
 

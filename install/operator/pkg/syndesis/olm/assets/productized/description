@@ -44,7 +44,6 @@ oc secrets link syndesis-operator syndesis-pull-secret --for=pull
 The CR definition is pretty simple and an empy CR will trigger a base installation.
 
 Within the addons section, users are able to enable specific addons. The available addons at the moment are:
-- camelk: enables kamelk
 - jaeger: enable jaeger
 - ops: enables monitoring, requires extra CRDs
 - todo: a simple todo application

@@ -17,7 +17,6 @@ export class WithApiVersion extends React.Component<IWithApiVersionProps> {
         }}
         defaultValue={{
           'build-id': '',
-          camelkruntimeversion: '',
           camelversion: '',
           'commit-id': '',
           version: '',

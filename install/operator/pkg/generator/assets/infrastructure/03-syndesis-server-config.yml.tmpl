@@ -91,23 +91,11 @@
         additionalMavenArguments: "--strict-checksums {{ .Syndesis.Components.Server.Features.Maven.AdditionalArguments }}"
 {{- else}}
         additionalMavenArguments: "--strict-checksums"
-{{- end}}        
+{{- end}}
         integrationLivenessProbeInitialDelaySeconds: 120
       dao:
         kind: jsondb
       controllers:
-{{- if .Syndesis.Addons.CamelK.Enabled}}
-        integration: camel-k
-        camelk:
-          customizers:
-          - metadata
-          {{- if .Syndesis.Addons.Jaeger.Enabled}}
-          - tracing
-          {{- else}}
-          - logging
-          {{- end}}
-          - syndesis
-{{- end}}
         maxIntegrationsPerUser: '{{.Syndesis.Components.Server.Features.IntegrationLimit}}'
         maxDeploymentsPerUser: '{{.Syndesis.Components.Server.Features.IntegrationLimit}}'
         integrationStateCheckInterval: '{{.Syndesis.Components.Server.Features.IntegrationStateCheckInterval}}'

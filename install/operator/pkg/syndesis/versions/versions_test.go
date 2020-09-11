@@ -170,7 +170,6 @@ func Test_syndesisApi_v1alpha1ToV1beta1(t *testing.T) {
 						Addons: v1alpha1.AddonsSpec{
 							"ops":    map[string]string{"enabled": "true"},
 							"todo":   map[string]string{"enabled": "true"},
-							"camelk": map[string]string{"enabled": "false"},
 							"jaeger": map[string]string{"enabled": "false"},
 						},
 						Integration: v1alpha1.IntegrationSpec{
@@ -263,7 +262,6 @@ func Test_syndesisApi_v1alpha1ToV1beta1(t *testing.T) {
 						Jaeger: v1beta1.JaegerConfiguration{Enabled: false},
 						Ops:    v1beta1.AddonSpec{Enabled: true},
 						Todo:   v1beta1.AddonSpec{Enabled: true},
-						CamelK: v1beta1.AddonSpec{Enabled: false},
 					},
 					Components: v1beta1.ComponentsSpec{
 						Oauth: v1beta1.OauthConfiguration{SarNamespace: "sar namespace", DisableSarCheck: dsc},

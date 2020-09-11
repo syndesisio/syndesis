@@ -18,7 +18,6 @@ package io.syndesis.test.model;
 
 import java.util.stream.Stream;
 
-import io.syndesis.test.integration.project.CamelKProjectBuilder;
 import io.syndesis.test.integration.project.ProjectBuilder;
 import io.syndesis.test.integration.project.SpringBootProjectBuilder;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -32,12 +31,6 @@ public class IntegrationRuntime {
             "spring-boot:run",
             Wait.forLogMessage(".*Started Application.*\\s", 1),
             SpringBootProjectBuilder::new);
-
-
-    public static final IntegrationRuntime CAMEL_K = new IntegrationRuntime("camel-k",
-            "process-resources exec:java",
-            Wait.forLogMessage(".*Apache Camel .* started.*\\s", 1),
-            CamelKProjectBuilder::new);
 
     private final String id;
     private final String command;
@@ -72,7 +65,7 @@ public class IntegrationRuntime {
     }
 
     public static IntegrationRuntime fromId(String id) {
-        return Stream.of(CAMEL_K, SPRING_BOOT)
+        return Stream.of(SPRING_BOOT)
                 .filter(runtime -> runtime.id.equals(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException(String.format("Unsupported integration runtime '%s'", id)));

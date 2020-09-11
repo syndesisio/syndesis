@@ -202,7 +202,6 @@ type AddonsSpec struct {
 	Ops       OpsConfiguration
 	Todo      TodoConfiguration
 	Knative   KnativeConfiguration
-	CamelK    CamelKConfiguration
 	PublicApi PublicApiConfiguration
 }
 
@@ -275,17 +274,6 @@ func (p PublicApiConfiguration) Name() string {
 	return "publicApi"
 }
 
-type CamelKConfiguration struct {
-	Image string
-	AddonConfiguration
-	CamelVersion  string
-	CamelKRuntime string
-}
-
-func (c CamelKConfiguration) Name() string {
-	return "camelk"
-}
-
 type AddonConfiguration struct {
 	Enabled bool    // Whether the addon is enabled
 	Olm     OlmSpec // The specification for the Operator-Lifecyle-Manager
@@ -325,7 +313,6 @@ func GetAddonsInfo(configuration Config) []AddonInfo {
 	return []AddonInfo{
 		configuration.Syndesis.Addons.Jaeger,
 		configuration.Syndesis.Addons.Ops,
-		configuration.Syndesis.Addons.CamelK,
 		configuration.Syndesis.Addons.Knative,
 		configuration.Syndesis.Addons.PublicApi,
 		configuration.Syndesis.Addons.Todo,
@@ -513,7 +500,6 @@ func (config *Config) setConfigFromEnv() error {
 	imgEnv := Config{
 		Syndesis: SyndesisConfig{
 			Addons: AddonsSpec{
-				CamelK: CamelKConfiguration{Image: os.Getenv("RELATED_IMAGE_CAMELK")},
 				Todo:   TodoConfiguration{Image: os.Getenv("RELATED_IMAGE_TODO")},
 			},
 			Components: ComponentsSpec{

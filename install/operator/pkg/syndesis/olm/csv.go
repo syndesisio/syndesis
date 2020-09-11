@@ -389,7 +389,6 @@ func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 		DatabaseImage   string
 		OperatorImage   string
 		AmqImage        string
-		CamelKImage     string
 		TodoImage       string
 		OauthImage      string
 		UiImage         string
@@ -403,7 +402,6 @@ func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 		RelatedImages:   true,
 		OperatorImage:   "",
 		DatabaseImage:   c.config.Syndesis.Components.Database.Image,
-		CamelKImage:     c.config.Syndesis.Addons.CamelK.Image,
 		TodoImage:       c.config.Syndesis.Addons.Todo.Image,
 		AmqImage:        c.config.Syndesis.Components.AMQ.Image,
 		OauthImage:      c.config.Syndesis.Components.Oauth.Image,

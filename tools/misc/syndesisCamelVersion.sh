@@ -27,19 +27,13 @@ fi
 # get the current camel version
 current_camel=$(grep '<camel.version>' app/pom.xml  | head -1 | cut -d '>' -f 2|cut -d '<' -f 1)
 echo "Changing camel version from \"$current_camel\" to \"$new_camel\""
-current_camel_catalog=$(ls install/operator/pkg/generator/assets/addons/camelk/camel-catalog-*.tmpl)
-new_camel_catalog=$(echo $current_camel_catalog | sed "s/${current_camel}/${new_camel}/g")
 
 sed -i "s/$current_camel/$new_camel/g" \
     app/pom.xml \
     app/extension/bom/pom.xml \
-    app/integration/bom-camel-k/pom.xml \
     app/integration/bom/pom.xml \
     install/operator/build/conf/config.yaml \
-    install/operator/pkg/generator/assets_vfsdata.go \
-    ${current_camel_catalog}
-
-git mv ${current_camel_catalog} ${new_camel_catalog}
+    install/operator/pkg/generator/assets_vfsdata.go
 
 cd install/operator
 go generate ./pkg/...

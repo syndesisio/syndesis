@@ -1,5 +1,4 @@
 Manifest-Version: 1.0
 Implementation-Title: Server :: Controller
 Implementation-Version: @project.version@
-camelkruntimeversion: dummy
 camelversion: dummy
