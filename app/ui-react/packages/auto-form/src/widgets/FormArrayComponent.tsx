@@ -7,9 +7,7 @@ import { toValidHtmlId } from './helpers';
 
 import './FormArrayComponent.css';
 
-export const FormArrayComponent: React.FunctionComponent<
-  IFormArrayControlProps
-> = props => {
+export const FormArrayComponent: React.FunctionComponent<IFormArrayControlProps> = props => {
   if (typeof props.property.arrayDefinition === 'undefined') {
     return (
       <div className="alert alert-warning">
@@ -55,7 +53,10 @@ export const FormArrayComponent: React.FunctionComponent<
                 </h5>
               </div>
             )}
-            <div className="form-array-section__fields form-array-layout" {...formGroupAttributes}>
+            <div
+              className="form-array-section__fields form-array-layout"
+              {...formGroupAttributes}
+            >
               {propertiesArray.map(property => {
                 const propertyFieldName = `${fieldName}.${property.name}`;
 
@@ -66,6 +67,8 @@ export const FormArrayComponent: React.FunctionComponent<
                     fieldAttributes,
                     formGroupAttributes,
                     ...property,
+                    disabled:
+                      props.form.isSubmitting || props.property.disabled,
                     key: propertyFieldName,
                     name: propertyFieldName,
                   },
@@ -102,31 +105,36 @@ export const FormArrayComponent: React.FunctionComponent<
                     </Button>
                   </>
                 )}
-                <Button
-                  data-testid={'condition-delete'}
-                  variant={'link'}
-                  onClick={() => props.remove(index)}
-                  isDisabled={!(values.length > minElements)}
-                >
-                  <i className="fa fa-trash" />
-                </Button>
+                {!props.form.isSubmitting && !props.property.disabled && (
+                  <Button
+                    data-testid={'condition-delete'}
+                    variant={'link'}
+                    onClick={() => props.remove(index)}
+                    isDisabled={!(values.length > minElements)}
+                  >
+                    <i className="fa fa-trash" />
+                  </Button>
+                )}
               </div>
             </div>
           </section>
         );
       })}
-      <div className={'form-array-control__array-add'}>
-        <Button
-          variant={'link'}
-          data-testid="form-array-control-add-another-item-button"
-          onClick={() => props.push(getNewArrayRow(definition))}>
-          <>
-            <i className="fa fa-plus-circle" />
-            &nbsp;
-            {options.i18nAddElementText || 'Add Another'}
-          </>
-        </Button>
-      </div>
+      {!props.form.isSubmitting && !props.property.disabled && (
+        <div className={'form-array-control__array-add'}>
+          <Button
+            variant={'link'}
+            data-testid="form-array-control-add-another-item-button"
+            onClick={() => props.push(getNewArrayRow(definition))}
+          >
+            <>
+              <i className="fa fa-plus-circle" />
+              &nbsp;
+              {options.i18nAddElementText || 'Add Another'}
+            </>
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
