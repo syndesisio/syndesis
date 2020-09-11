@@ -103,7 +103,7 @@
     <camel.version>3.5.0</camel.version>
     <camel-k-runtime.version>1.3.0</camel-k-runtime.version>
 
-    <undertow.version>2.0.30.Final</undertow.version>
+    <undertow.version>2.1.4.Final</undertow.version>
 
     <!-- CXF version, to be kept in sync with the one referenced by camel version above -->
     <cxf.version>3.3.7</cxf.version>
