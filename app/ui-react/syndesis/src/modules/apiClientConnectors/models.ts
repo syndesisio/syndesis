@@ -24,5 +24,5 @@ export interface ICreateConnectorProps {
   specification?: string;
   tokenEndpoint?: string;
   username?: string;
-  wsdlUrl?: string;
+  wsdlURL?: string;
 }

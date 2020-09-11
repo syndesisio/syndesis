@@ -26,7 +26,7 @@ export const SelectMethodPage: React.FunctionComponent = () => {
         configured: {
           portName: port,
           serviceName: service,
-          wsdlUrl: apiSummary!.configuredProperties!.wsdlUrl,
+          wsdlURL: apiSummary!.configuredProperties!.wsdlURL,
         },
         connectorTemplateId,
         specification: spec,

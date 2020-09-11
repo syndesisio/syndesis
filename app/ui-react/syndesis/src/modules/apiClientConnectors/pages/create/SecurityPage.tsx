@@ -33,7 +33,11 @@ export const SecurityPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, ISecurityPageRouteState>();
   const { configured, connectorTemplateId, specification } = state;
   const { properties } = specification;
-  const { portName, serviceName } = specification.configuredProperties!;
+  const {
+    portName,
+    serviceName,
+    wsdlURL,
+  } = specification.configuredProperties!;
 
   const backHref = resolvers.create.review({
     configured,
@@ -68,7 +72,7 @@ export const SecurityPage: React.FunctionComponent = () => {
           ...values,
           portName,
           serviceName,
-          wsdlUrl: configured?.wsdlUrl,
+          wsdlURL,
         },
         connectorTemplateId,
         specification,
