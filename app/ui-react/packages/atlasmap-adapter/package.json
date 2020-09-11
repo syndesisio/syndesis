@@ -40,7 +40,7 @@
     "jest-cli": "^25.1.0",
     "jest-fetch-mock": "^3.0.3",
     "ky": "^0.17.0",
-    "microbundle": "^0.11.0",
+    "microbundle": "^0.12.3",
     "react": "^16.6.0",
     "react-docgen-typescript-loader": "^3.1.0",
     "react-dom": "^16.6.0",
