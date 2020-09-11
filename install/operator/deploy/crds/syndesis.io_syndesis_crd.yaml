@@ -489,7 +489,21 @@ spec:
                         properties:
                           memory:
                             type: string
+                          volumeAccessMode:
+                            enum:
+                            - ReadWriteOnce
+                            - ReadOnlyMany
+                            - ReadWriteMany
+                            type: string
                           volumeCapacity:
+                            type: string
+                          volumeLabels:
+                            additionalProperties:
+                              type: string
+                            type: object
+                          volumeName:
+                            type: string
+                          volumeStorageClass:
                             type: string
                         type: object
                     type: object
@@ -519,7 +533,21 @@ spec:
                         properties:
                           memory:
                             type: string
+                          volumeAccessMode:
+                            enum:
+                            - ReadWriteOnce
+                            - ReadOnlyMany
+                            - ReadWriteMany
+                            type: string
                           volumeCapacity:
+                            type: string
+                          volumeLabels:
+                            additionalProperties:
+                              type: string
+                            type: object
+                          volumeName:
+                            type: string
+                          volumeStorageClass:
                             type: string
                         type: object
                     type: object

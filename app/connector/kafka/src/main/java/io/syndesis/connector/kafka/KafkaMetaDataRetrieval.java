@@ -21,17 +21,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionNames;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionSpec;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionBuilder;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionStatusBuilder;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
-import io.syndesis.connector.kafka.model.crd.Listener;
 import io.syndesis.connector.kafka.model.crd.Address;
 import io.syndesis.connector.kafka.model.crd.Kafka;
 import io.syndesis.connector.kafka.model.crd.KafkaResourceDoneable;
 import io.syndesis.connector.kafka.model.crd.KafkaResourceList;
+import io.syndesis.connector.kafka.model.crd.Listener;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
@@ -42,9 +43,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
+
     private static final Logger LOG = LoggerFactory.getLogger(KafkaMetaDataRetrieval.class);
-    public static final String GROUP = "kafka.strimzi.io";
-    public static final String PLURAL = "kafkas";
+
+    static final CustomResourceDefinition KAFKA_CRD = new CustomResourceDefinitionBuilder()
+        .withApiVersion("apiextensions.k8s.io/v1beta1")
+        .withKind("CustomResourceDefinition")
+        .withNewMetadata()
+            .withName("kafkas.kafka.strimzi.io")
+        .endMetadata()
+        .withNewSpec()
+            .withGroup("kafka.strimzi.io")
+            .withScope("Namespaced")
+            .withVersion("v1beta1")
+            .withNewNames()
+                .withKind("Kafka")
+                .withListKind("KafkaList")
+                .withPlural("kafkas")
+                .withSingular("kafka")
+            .endNames()
+        .endSpec()
+        .withStatus(new CustomResourceDefinitionStatusBuilder().build())
+        .build();
 
     /**
      * TODO: use local extension, remove when switching to camel 2.22.x
@@ -81,14 +101,12 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
                                                       Map<String, Object> properties) {
         List<PropertyPair> brokers = new ArrayList<>();
         try (KubernetesClient client = createKubernetesClient()) {
-            client.customResourceDefinitions().list().getItems()
-                .stream().filter(KafkaMetaDataRetrieval::isKafkaCustomResourceDefinition)
-                .forEach(kafka -> processKafkaCustomResourceDefinition(brokers, client, kafka));
+            KafkaResourceList kafkaList = client.customResources(KAFKA_CRD, Kafka.class, KafkaResourceList.class,
+                KafkaResourceDoneable.class).inAnyNamespace().list();
+            kafkaList.getItems().forEach(kafka -> processKafkaResource(brokers, kafka));
         } catch (Exception t) {
-            LOG.warn("Couldn't auto discover any broker.");
-            LOG.debug("Couldn't auto discover any broker.", t);
+            LOG.warn("Couldn't auto discover any kafka broker.", t);
         }
-
         Map<String, List<PropertyPair>> dynamicProperties = new HashMap<>();
         dynamicProperties.put("brokers", brokers);
         return new SyndesisMetadataProperties(dynamicProperties);
@@ -96,20 +114,6 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
 
     KubernetesClient createKubernetesClient() {
         return new DefaultKubernetesClient();
-    }
-
-    /**
-     * For each Kafka container definition found, process it.
-     */
-    private static void processKafkaCustomResourceDefinition(List<PropertyPair> brokers, KubernetesClient client, CustomResourceDefinition crd) {
-        KafkaResourceList list = client.customResources(crd,
-            Kafka.class,
-            KafkaResourceList.class,
-            KafkaResourceDoneable.class).inAnyNamespace().list();
-
-        for (Kafka item : list.getItems()) {
-            processKafkaResource(brokers, item);
-        }
     }
 
     /**
@@ -159,20 +163,5 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
     private static boolean typesAllowed(final Listener listener) {
         return "plain".equalsIgnoreCase(listener.getType()) ||
             "tls".equalsIgnoreCase(listener.getType());
-    }
-
-    /**
-     * Used to filter brokers. Right now, based on GROUP and PLURAL.
-     */
-    static boolean isKafkaCustomResourceDefinition(final CustomResourceDefinition crd) {
-        final CustomResourceDefinitionSpec spec = crd.getSpec();
-
-        final String group = spec.getGroup();
-
-        final CustomResourceDefinitionNames names = spec.getNames();
-        final String plural = names.getPlural();
-
-        return GROUP.equalsIgnoreCase(group)
-            && PLURAL.equalsIgnoreCase(plural);
     }
 }

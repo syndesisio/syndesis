@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Test;
 import static org.mockito.Mockito.mock;
 
@@ -53,7 +54,7 @@ public class DebeziumConsumerCustomizerTest {
     @Test
     public void shouldIncludeKafkaCustomizerOptions() {
         ComponentProxyComponent mockComponent = mock(ComponentProxyComponent.class);
-        DebeziumConsumerCustomizer debeziumCustomizer = new DebeziumConsumerCustomizer();
+        DebeziumConsumerCustomizer debeziumCustomizer = new DebeziumConsumerCustomizer(new DefaultCamelContext());
         Map<String, Object> userOptions = new HashMap<>();
         userOptions.put("brokers","1.2.3.4:9093");
         userOptions.put("transportProtocol","TSL");

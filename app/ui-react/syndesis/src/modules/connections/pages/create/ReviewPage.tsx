@@ -23,6 +23,7 @@ import { ApiError, PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
+import { stringifyJsonArray } from '../../utils';
 
 export interface ISaveForm {
   name: string;
@@ -85,14 +86,17 @@ export const ReviewPage: React.FunctionComponent = () => {
           { name, description }: ISaveForm,
           actions: any
         ) => {
+          const newObj = stringifyJsonArray(state.configuredProperties!);
+
           try {
             const connection = createConnection(
               connector,
               name,
               description || '',
-              state.configuredProperties
+              newObj
             );
             await saveConnection(connection);
+
             pushNotification(
               t('connections:connectionCreatedSuccess', { name }),
               'success'
