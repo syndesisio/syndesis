@@ -106,7 +106,7 @@
     <undertow.version>2.0.30.Final</undertow.version>
 
     <!-- CXF version, to be kept in sync with the one referenced by camel version above -->
-    <cxf.version>3.3.7</cxf.version>
+    <cxf.version>3.4.0</cxf.version>
     <wss4j.version>2.2.2</wss4j.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
