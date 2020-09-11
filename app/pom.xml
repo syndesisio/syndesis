@@ -60,7 +60,7 @@
 
     <jackson.version>2.11.2</jackson.version>
     <json-patch.version>1.9</json-patch.version>
-    <kubernetes.client.version>4.6.1</kubernetes.client.version>
+    <kubernetes.client.version>4.9.0</kubernetes.client.version>
 
     <spring.version>5.1.8.RELEASE</spring.version>
     <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
