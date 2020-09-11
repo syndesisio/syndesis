@@ -2,6 +2,13 @@
   white-space: nowrap ;
 }
 
+/** Prevents the last group of array
+ ** fields from being shorter than the rest
+ */
+.form-array-container.form-array-layout > :last-child {
+  justify-self: inherit;
+}
+
 .form-array-section__title {
   white-space: nowrap;
 }
