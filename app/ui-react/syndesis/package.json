@@ -101,7 +101,7 @@
     "@types/react": "^16.4.14",
     "@types/react-content-loader": "*",
     "@types/react-dom": "^16.0.8",
-    "@types/react-helmet": "^5.0.8",
+    "@types/react-helmet": "^6.1.0",
     "@types/react-loadable": "*",
     "@types/react-router-dom": "^5.1.3",
     "babel-loader": "^8.0.4",
