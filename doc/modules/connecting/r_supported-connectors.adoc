@@ -13,13 +13,13 @@
 |Description
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-amazon-dynamodb_connectors[Amazon DynamoDB]
-|Obtain, add, update, or delete data in an Amazon DynamoDB table. 
+|Obtain, add, update, or delete data in an Amazon DynamoDB table.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-amazon-sns_connectors[Amazon Simple Notification Service (SNS)]
 |Send messages to an Amazon SNS topic.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-amazon-sqs_connectors[Amazon Simple Queue Service (SQS)]
-|Retrieve messages from or send messages to an Amazon SQS queue. 
+|Retrieve messages from or send messages to an Amazon SQS queue.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-s3_connectors[Amazon Simple Storage Service (S3)]
 |Retrieve data from an Amazon S3 bucket or copy data into a bucket.
@@ -40,10 +40,10 @@ publish messages to an AMQP broker.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-email-servers_connectors[Email Servers]
 |Retrieve email from an IMAP or POP3 email server or connect to an SMTP
-email server to send email. 
+email server to send email.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-fhir_connectors[FHIR]
-|Obtain resources from a FHIR server or update resources on a FHIR server. 
+|Obtain resources from a FHIR server or update resources on a FHIR server.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-ftp_connectors[FTP/SFTP]
 |Download files from an FTP or SFTP server or upload files to an
@@ -58,7 +58,7 @@ from a particular Gmail account.
 events in a Google Calendar that you specify.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-google-sheets_google[Google Sheets]
-|Obtain data from a Google Sheets spreadsheet that you specify, add/update spreadsheet 
+|Obtain data from a Google Sheets spreadsheet that you specify, add/update spreadsheet
 data, create charts, or create pivot tables in a spreadsheet that you specify.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-http_connectors[HTTP/HTTPS]
@@ -66,23 +66,18 @@ data, create charts, or create pivot tables in a spreadsheet that you specify.
 `GET`, `PUT`, `POST`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE`, OR `PATCH` method.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-irc_connectors[IRC]
-|Receive messages that are sent to an IRC nickname or channel, or 
+|Receive messages that are sent to an IRC nickname or channel, or
 send messages to an IRC nickname on a particular channel.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-jira_connectors[Jira]
-|Obtain, create, or update issues on a Jira server. 
-
-
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-knative-resources_connectors[Knative resources]
-|Obtain messages from a Knative channel, send messages to a Knative channel,
-expose a simple integration as a Knative service, or call a Knative service. 
+|Obtain, create, or update issues on a Jira server.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-kudu_connectors[Kudu]
 |Obtain records from a table in an Apache Kudu data store
 or add records to a table in a Kudu data store.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-mongodb_connectors[MongoDB]
-|Obtain data from a MongoDB database or update data in a MongoDB database. 
+|Obtain data from a MongoDB database or update data in a MongoDB database.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-mqtt_connectors[MQTT]
 |Obtain messages from an MQ Telemetry Transport broker or publish messages
@@ -90,7 +85,7 @@ to an MQTT broker.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-odata_connectors[OData]
 |Obtain entities from an OData service or update, create, or delete entities
-that are managed by an OData service. 
+that are managed by an OData service.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis_connectors[REST APIs]
 |Create a custom REST API client connector by uploading an OpenAPI
