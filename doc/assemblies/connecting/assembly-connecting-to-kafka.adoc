@@ -10,16 +10,12 @@ Apache Kafka is a distributed streaming platform that you can use to
 obtain and publish data. 
 In an integration, you can subscribe for data from a Kafka topic 
 that you specify or publish data to a Kafka topic that you specify.  
-To do this, enable {prodname} to discover the Kafka brokers in the cluster. 
-Then create a connection to Kafka and add that connection to an 
+To do this, create a connection to Kafka and add that connection to an 
 integration flow. Details are in the following topics:
 
-* xref:enabling-auto-discovery-of-kafka-brokers_{context}[]
 * xref:creating-kafka-connections_{context}[]
 * xref:adding-kafka-connection-start_{context}[]
 * xref:adding-kafka-connection-finish-middle_{context}[]
-
-include::../../modules/connecting/proc-enabling-auto-discovery-of-kafka-brokers.adoc[leveloffset=+1]
 
 include::../../modules/connecting/proc-creating-kafka-connections.adoc[leveloffset=+1]
 
