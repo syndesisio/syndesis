@@ -24,8 +24,6 @@ features:
     enabled: true
   public-api:
     enabled: true
-  knative:
-    enabled: false
 
 server:
   compression:

@@ -395,18 +395,6 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-knative</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <!-- Needed for Knative metadata retrieval -->
-      <groupId>io.fabric8</groupId>
-      <artifactId>openshift-client</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
       <!-- Needed by Guava at compile time -->
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>

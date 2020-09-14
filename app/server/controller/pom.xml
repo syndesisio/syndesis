@@ -163,12 +163,6 @@
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-knative</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-webhook</artifactId>
       <scope>test</scope>
     </dependency>
