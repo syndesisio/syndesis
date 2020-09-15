@@ -28,10 +28,6 @@ install::usage() {
 -o  --open                    Open Syndesis in browser when installation is ready (implies --watch)
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
-    --camel-k <version>       Install camel-k operator version <version>
-                              (version is optional)
-    --camel-k-options "opts"  Options used when installing the camel-k operator.
-                              Use quotes and start with a space before appending the options.
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
     --custom-resource         Provide a custom resource to be installed by the operator
     --app-options             Operator parameters when installing the app.
@@ -42,7 +38,6 @@ EOT
 
 install::run() {
     source "$(basedir)/commands/util/openshift_funcs"
-    source "$(basedir)/commands/util/camel_k_funcs"
     source "$(basedir)/commands/util/operator_funcs"
 
     release_tag="$(readopt --tag)"
@@ -58,11 +53,6 @@ install::run() {
         echo "Installing Syndesis CRD"
         result=$($OPERATOR_BINARY install cluster)
         check_error "$result"
-        if [ $(hasflag --camel-k) ]; then
-          echo "Installing Camel-K CRDs"
-          result=$(install_camel_k_crds "$(readopt --camel-k)")
-          check_error "$result"
-        fi
         prep_only="true"
     fi
 
@@ -107,12 +97,6 @@ install::run() {
         check_error "ERROR: No CRD Syndesis installed or not enough permissions to read them. Please run --setup and/or --grant as cluster-admin. See 'syndesis install --help' for more information."
     fi
 
-    if [ $(hasflag --camel-k) ]; then
-        oc get integration >/dev/null 2>&1
-        if [ $? -ne 0 ]; then
-            check_error "ERROR: Camel-K installation requested but no Camel-K CRDs accessible. Please run --setup --camel-k to register the proper CRDs."
-        fi
-    fi
     set -e
 
     if [ $(hasflag --maven-mirror) ]; then
@@ -123,12 +107,6 @@ install::run() {
     echo "Deploying Syndesis operator"
     result=$($OPERATOR_BINARY install operator)
     check_error "$result"
-
-    if [ $(hasflag --camel-k) ]; then
-        echo "Deploying Camel-K operator"
-        result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(oc project -q)" "$(readopt --camel-k-options)")
-        check_error "$result"
-    fi
 
     wait_for_deployments 1 syndesis-operator
 

@@ -27,9 +27,6 @@ func TestGenerator(t *testing.T) {
 				},
 				Ops:  v1beta1.AddonSpec{Enabled: true},
 				Todo: v1beta1.AddonSpec{Enabled: true},
-				CamelK: v1beta1.AddonSpec{
-					Enabled: true,
-				},
 				PublicApi: v1beta1.PublicApiConfiguration{
 					Enabled:       true,
 					RouteHostname: "mypublichost.com",
@@ -106,7 +103,7 @@ func TestGenerator(t *testing.T) {
 	}
 	assert.True(t, checks >= 6)
 
-	for _, addon := range []string{"todo", "camelk", "jaeger", "ops", "publicApi"} {
+	for _, addon := range []string{"todo", "jaeger", "ops", "publicApi"} {
 		resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./addons/"+addon+"/", configuration)
 		require.NoError(t, err)
 		assert.True(t, len(resources) > 0)

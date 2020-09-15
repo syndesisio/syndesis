@@ -50,38 +50,14 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis.server</groupId>
-      <artifactId>server-endpoint</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
       <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-openapi-rest-dsl-generator</artifactId>
-      <version>${camel.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.apicurio</groupId>
-      <artifactId>apicurio-data-models</artifactId>
     </dependency>
 
     <!-- ====================================================================== -->
@@ -138,36 +114,6 @@
     </dependency>
 
     <dependency>
-      <groupId>io.fabric8</groupId>
-      <artifactId>kubernetes-client</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.errorprone</groupId>
-      <artifactId>error_prone_annotations</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-annotations</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.integration</groupId>
-      <artifactId>integration-project-generator</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
       <scope>runtime</scope>
@@ -217,12 +163,6 @@
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-knative</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-webhook</artifactId>
       <scope>test</scope>
     </dependency>
@@ -238,7 +178,6 @@
           <archive>
             <manifestEntries>
               <camelversion>${camel.version}</camelversion>
-              <camelkruntimeversion>${camel-k-runtime.version}</camelkruntimeversion>
             </manifestEntries>
           </archive>
         </configuration>

@@ -16,10 +16,6 @@
 
 package io.syndesis.test;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import io.syndesis.test.model.IntegrationRuntime;
 
 /**
@@ -34,9 +30,6 @@ public final class SyndesisTestEnvironment {
     private static final String CAMEL_VERSION = "camel.version";
     private static final String CAMEL_VERSION_ENV = "CAMEL_VERSION";
 
-    private static final String CAMELK_RUNTIME_VERSION = "camelk.runtime.version";
-    private static final String CAMELK_RUNTIME_VERSION_ENV = "CAMELK_RUNTIME_VERSION";
-
     private static final String SYNDESIS_VERSION_DEFAULT = "1.10-SNAPSHOT";
     private static final String SYNDESIS_VERSION = SYNDESIS_PREFIX + "version";
     private static final String SYNDESIS_VERSION_ENV = SYNDESIS_ENV_PREFIX + "VERSION";
@@ -44,10 +37,6 @@ public final class SyndesisTestEnvironment {
     private static final String SYNDESIS_INTEGRATION_RUNTIME_DEFAULT = IntegrationRuntime.SPRING_BOOT.getId();
     private static final String SYNDESIS_INTEGRATION_RUNTIME = SYNDESIS_PREFIX + "integration.runtime";
     private static final String SYNDESIS_INTEGRATION_RUNTIME_ENV = SYNDESIS_ENV_PREFIX + "INTEGRATION_RUNTIME";
-
-    private static final String SYNDESIS_CAMEL_K_CUSTOMIZERS_DEFAULT = "health,logging,syndesis";
-    private static final String SYNDESIS_CAMEL_K_CUSTOMIZERS = SYNDESIS_PREFIX + "camel.k.customizers";
-    private static final String SYNDESIS_CAMEL_K_CUSTOMIZERS_ENV = SYNDESIS_ENV_PREFIX + "CAMEL_K_CUSTOMIZERS";
 
     private static final String SYNDESIS_SERVER_PORT_DEFAULT = "8080";
     private static final String SYNDESIS_SERVER_PORT = SYNDESIS_PREFIX + "server.port";
@@ -98,11 +87,6 @@ public final class SyndesisTestEnvironment {
                 System.getenv(CAMEL_VERSION_ENV) : "");
     }
 
-    public static String getCamelkRuntimeVersion() {
-        return System.getProperty(CAMELK_RUNTIME_VERSION, System.getenv(CAMELK_RUNTIME_VERSION_ENV) != null ?
-                System.getenv(CAMELK_RUNTIME_VERSION_ENV) : "");
-    }
-
     public static String getSyndesisVersion() {
         return System.getProperty(SYNDESIS_VERSION, System.getenv(SYNDESIS_VERSION_ENV) != null ?
                 System.getenv(SYNDESIS_VERSION_ENV) : SYNDESIS_VERSION_DEFAULT);
@@ -125,12 +109,8 @@ public final class SyndesisTestEnvironment {
     }
 
     public static int getManagementPort() {
-        if (getIntegrationRuntime() == IntegrationRuntime.CAMEL_K) {
-            return getServerPort();
-        } else {
-            return Integer.parseInt(System.getProperty(SYNDESIS_MANAGEMENT_PORT, System.getenv(SYNDESIS_MANAGEMENT_PORT_ENV) != null ?
-                    System.getenv(SYNDESIS_MANAGEMENT_PORT_ENV) : SYNDESIS_MANAGEMENT_PORT_DEFAULT));
-        }
+        return Integer.parseInt(System.getProperty(SYNDESIS_MANAGEMENT_PORT, System.getenv(SYNDESIS_MANAGEMENT_PORT_ENV) != null ?
+                System.getenv(SYNDESIS_MANAGEMENT_PORT_ENV) : SYNDESIS_MANAGEMENT_PORT_DEFAULT));
     }
 
     public static int getDebugPort() {
@@ -166,13 +146,6 @@ public final class SyndesisTestEnvironment {
     public static IntegrationRuntime getIntegrationRuntime() {
         return IntegrationRuntime.fromId(System.getProperty(SYNDESIS_INTEGRATION_RUNTIME, System.getenv(SYNDESIS_INTEGRATION_RUNTIME_ENV) != null ?
                 System.getenv(SYNDESIS_INTEGRATION_RUNTIME_ENV) : SYNDESIS_INTEGRATION_RUNTIME_DEFAULT));
-    }
-
-    public static List<String> getCamelkCustomizers() {
-        return Stream.of(System.getProperty(SYNDESIS_CAMEL_K_CUSTOMIZERS, System.getenv(SYNDESIS_CAMEL_K_CUSTOMIZERS_ENV) != null ?
-                System.getenv(SYNDESIS_CAMEL_K_CUSTOMIZERS_ENV) : SYNDESIS_CAMEL_K_CUSTOMIZERS_DEFAULT)
-                .split(",", -1))
-                .collect(Collectors.toList());
     }
 
     public static String getProjectMountPath() {

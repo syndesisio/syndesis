@@ -15,12 +15,12 @@ Usage: syndesis build [... options ...]
 
 Options for build:
     -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta, dv)
-        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade, camel-k, dv
-        --app-images               Build only application modules with Docker images (ui, server, meta, s2i, dv)
+        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade
+        --app-images               Build only application modules with Docker images (ui, server, meta, s2i)
                                    and create images
-        --infra-images             Build only infrastructure modules with Docker images (operator, camel-k, upgrade) and create images
+        --infra-images             Build only infrastructure modules with Docker images (operator, upgrade) and create images
     -m  --module <m1>,<m2>, ..     Build modules
-                                   Top level modules: ui, server, connector, s2i, meta, integration, extension, common, operator, camel-k, upgrade, dv
+                                   Top level modules: ui, server, connector, s2i, meta, integration, extension, common, operator, upgrade
                                    Submodules: defined with [groupId]:artifactId (e.g. :connector-sql)
     -d  --dependencies             Build also all project the specified module depends on
         --skip-tests               Skip unit and system test execution

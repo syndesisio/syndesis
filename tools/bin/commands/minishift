@@ -38,10 +38,6 @@ minishift::usage() {
 -o  --open                    Open Syndesis in the browser
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
-    --camel-k <version>       Install the Camel-K operator with version <version>
-                              (version is optional)
-    --camel-k-options "opts"  Options used when installing the camel-k operator.
-                              Use quotes and start with a space before appending the options.
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
     --deploy-latest           Deploy latest tags from dockerhub.
     --nodev                   Do not set the devSupport flag in CR (deploys all images)
@@ -52,7 +48,6 @@ EOT
 
 minishift::run() {
     source "$(basedir)/commands/util/openshift_funcs"
-    source "$(basedir)/commands/util/camel_k_funcs"
     source "$(basedir)/commands/util/operator_funcs"
 
     release_tag="$(readopt --tag)"
@@ -148,13 +143,6 @@ minishift::run() {
             check_error "$result"
         fi
 
-        # Install Camel-K CRD
-        if [ $(hasflag --camel-k) ]; then
-          echo "Installing Camel-K CRDs"
-          result=$(install_camel_k_crds "$(readopt --camel-k)")
-          check_error "$result"
-        fi
-
         # Revert back to the original user whose been granted install rights
         $revert_login
 
@@ -167,13 +155,6 @@ minishift::run() {
             echo "To complete the installation please go ahead and run local dev builds for syndesis-server syndesis-ui syndesis-meta syndesis-s2i."
         fi
         check_error "$result"
-
-        # Deploy Camel-K operator if requested
-        if [ $(hasflag --camel-k) ]; then
-          echo "Deploying Camel-K operator"
-          result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(oc project -q)" "$(readopt --camel-k-options)")
-          check_error "$result"
-        fi
 
         wait_for_deployments 1 syndesis-operator
 

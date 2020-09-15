@@ -37,7 +37,6 @@ public final class VersionService {
         putManifestValueTo(detail, "build-time", "Build-Time");
         putManifestValueTo(detail, "build-id", "X-BasePOM-Build-Id");
         putManifestValueTo(detail, "camelversion", "camelversion") ;
-        putManifestValueTo(detail, "camelkruntimeversion", "camelkruntimeversion");
 
         this.detail = Collections.unmodifiableMap(detail);
     }
@@ -52,10 +51,6 @@ public final class VersionService {
 
     public String getCamelVersion() {
         return Optional.ofNullable(detail.get("camelversion")).orElseThrow(() -> new IllegalStateException("camelversion must be found in a MANIFEST.MF!"));
-    }
-
-    public String getCamelkRuntimeVersion() {
-        return Optional.ofNullable(detail.get("camelkruntimeversion")).orElseThrow(() -> new IllegalStateException("camelkruntimeversion must be found in a MANIFEST.MF!"));
     }
 
     static void putManifestValueTo(final Map<String, String> detail, final String key, final String... attributes) {

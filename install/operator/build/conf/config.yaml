@@ -25,11 +25,6 @@ Syndesis:
             Image: "docker.io/centos/php-71-centos7"
         Knative:
             Enabled: false
-        CamelK:
-            Enabled: false
-            Image: "fabric8/s2i-java:3.0-java8"
-            CamelVersion: "2.23.2.fuse-780022"
-            CamelKRuntime: "0.3.4.fuse-740008"
         PublicApi:
             Enabled: false
             DisableSarCheck: false

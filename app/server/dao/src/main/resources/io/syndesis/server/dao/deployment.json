@@ -87,21 +87,6 @@
     "kind": "connection"
   },
   {
-    "condition": "#{getProperty('features.knative.enabled') == 'true'}",
-    "data": {
-      "configuredProperties": {},
-      "connectorId": "knative",
-      "description": "Send and receive cloud events using Knative resources",
-      "icon": "assets:knative.svg",
-      "id": "knative",
-      "metadata": {
-        "hide-from-connection-pages": true
-      },
-      "name": "Knative"
-    },
-    "kind": "connection"
-  },
-  {
     "data": {
       "componentScheme": "rest-openapi",
       "connectorGroup": {

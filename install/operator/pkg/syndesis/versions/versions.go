@@ -188,8 +188,6 @@ func (api syndesisApi) v1alpha1ToV1beta1() error {
 				api.v1beta1.Spec.Addons.Ops.Enabled = addon["enabled"] == "true"
 			case "todo":
 				api.v1beta1.Spec.Addons.Todo.Enabled = addon["enabled"] == "true"
-			case "camelk":
-				api.v1beta1.Spec.Addons.CamelK.Enabled = addon["enabled"] == "true"
 			case "jaeger":
 				api.v1beta1.Spec.Addons.Jaeger.Enabled = addon["enabled"] == "true"
 			}

@@ -19,7 +19,6 @@
     <log4j2.version>2.11.2</log4j2.version>
     <validation-api.version>2.0.1.Final</validation-api.version>
     <camel.version>@camel.version@</camel.version>
-    <camel-k-runtime.version>@camel-k-runtime.version@</camel-k-runtime.version>
     <syndesis.version>@syndesis.version@</syndesis.version>
   </properties>
   {{^mavenRepositories.empty}}
@@ -54,29 +53,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      <dependency>
-        <groupId>io.syndesis.integration</groupId>
-        <artifactId>integration-bom-camel-k</artifactId>
-        <version>${syndesis.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.camel.k</groupId>
-        <artifactId>camel-k-runtime-jvm</artifactId>
-        <version>${camel-k-runtime.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.camel.k</groupId>
-        <artifactId>camel-k-runtime-servlet</artifactId>
-        <version>${camel-k-runtime.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.camel.k</groupId>
-        <artifactId>camel-k-runtime-health</artifactId>
-        <version>${camel-k-runtime.version}</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -99,16 +75,6 @@
     <dependency>
       <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-runtime</artifactId>
-    </dependency>
-
-    <!-- camel-k as runtime -->
-    <dependency>
-      <groupId>org.apache.camel.k</groupId>
-      <artifactId>camel-k-runtime-jvm</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel.k</groupId>
-      <artifactId>camel-k-runtime-health</artifactId>
     </dependency>
 
     <dependency>

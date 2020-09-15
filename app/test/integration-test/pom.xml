@@ -285,7 +285,6 @@
           <skipITs>${skip.integration.tests}</skipITs>
           <systemProperties>
             <camel.version>${camel.version}</camel.version>
-            <camelk.runtime.version>${camel-k-runtime.version}</camelk.runtime.version>
             <syndesis.version>${syndesis.version}</syndesis.version>
             <syndesis.integration.runtime>${syndesis.integration.runtime}</syndesis.integration.runtime>
             <syndesis.camel.k.customizers>${syndesis.camel.k.customizers}</syndesis.camel.k.customizers>

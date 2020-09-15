@@ -267,8 +267,6 @@ func (o *Install) installForge() error {
 				configuration.Syndesis.Addons.Jaeger.Enabled = true
 			case "ops":
 				configuration.Syndesis.Addons.Ops.Enabled = true
-			case "camelk":
-				configuration.Syndesis.Addons.CamelK.Enabled = true
 			case "knative":
 				configuration.Syndesis.Addons.Knative.Enabled = true
 			case "publicApi":

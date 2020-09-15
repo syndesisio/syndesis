@@ -86,7 +86,6 @@ export interface IApiVersion {
   'commit-id': string;
   'build-id': string;
   camelversion: string;
-  camelkruntimeversion: string;
 }
 
 export interface IConfigurationProperties {

@@ -212,11 +212,6 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>connector-knative</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>connector-jira</artifactId>
       <scope>provided</scope>
     </dependency>

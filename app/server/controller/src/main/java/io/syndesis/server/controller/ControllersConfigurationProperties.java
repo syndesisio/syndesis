@@ -16,12 +16,6 @@
 package io.syndesis.server.controller;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @ConfigurationProperties("controllers")
 public class ControllersConfigurationProperties {
@@ -33,9 +27,6 @@ public class ControllersConfigurationProperties {
     private int maxIntegrationsPerUser = 1;
     private int maxDeploymentsPerUser = 1;
     private int integrationStateCheckInterval = 60;
-
-    @NestedConfigurationProperty
-    private final CamelK camelk = new CamelK();
 
     public int getMaxIntegrationsPerUser() {
         return maxIntegrationsPerUser;
@@ -59,40 +50,5 @@ public class ControllersConfigurationProperties {
 
     public int getIntegrationStateCheckInterval() {
         return integrationStateCheckInterval;
-    }
-
-    public CamelK getCamelk() {
-        return camelk;
-    }
-
-    public static class CamelK {
-        private boolean compression;
-        private boolean prettyPrint;
-        private final Map<String, String> environment = new HashMap<>();
-        private final List<String> customizers = new ArrayList<>();
-
-        public Map<String, String> getEnvironment() {
-            return environment;
-        }
-
-        public boolean isCompression() {
-            return compression;
-        }
-
-        public void setCompression(boolean compression) {
-            this.compression = compression;
-        }
-
-        public boolean isPrettyPrint() {
-            return prettyPrint;
-        }
-
-        public void setPrettyPrint(boolean prettyPrint) {
-            this.prettyPrint = prettyPrint;
-        }
-
-        public List<String> getCustomizers() {
-            return customizers;
-        }
     }
 }

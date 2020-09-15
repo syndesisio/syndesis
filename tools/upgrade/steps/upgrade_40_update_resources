@@ -123,7 +123,7 @@ link_pull_secret() {
     # Add pull secrets to every service account specific to syndesis
     for sa in $(oc get sa -o jsonpath='{.items[*].metadata.name}'); do
       # For all sa's which start with "syndesis-" + the camel k operator
-      if [ ${sa/#syndesis-/} != $sa ] || [ $sa == "camel-k-operator" ]; then
+      if [ ${sa/#syndesis-/} != $sa ]; then
         echo "       ### Linking syndesis-pull-secret --> SA $sa (pull)"
         oc secrets link $sa syndesis-pull-secret --for=pull
       fi
