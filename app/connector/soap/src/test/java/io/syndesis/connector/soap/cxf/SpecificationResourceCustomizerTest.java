@@ -25,7 +25,7 @@ import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class SpecificationResourceCustomizerTest {
 
@@ -71,6 +71,6 @@ public class SpecificationResourceCustomizerTest {
 
         final Map<String, Object> options = new HashMap<>();
 
-        assertThrows(IllegalStateException.class, () -> customizer.customize(NOT_USED, options));
+        assertThatThrownBy(() -> customizer.customize(NOT_USED, options)).isInstanceOf(IllegalStateException.class);
     }
 }
