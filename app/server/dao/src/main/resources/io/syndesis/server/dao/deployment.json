@@ -524,7 +524,7 @@
           "javaType": "java.lang.Boolean",
           "kind": "property",
           "label": "common,security",
-          "order": 6,
+          "order": 7,
           "relation": [
             {
               "action": "ENABLE",
@@ -549,7 +549,7 @@
           "javaType": "java.lang.Boolean",
           "kind": "property",
           "label": "common,security",
-          "order": 8,
+          "order": 9,
           "relation": [
             {
               "action": "ENABLE",
@@ -574,7 +574,7 @@
           "javaType": "java.lang.Boolean",
           "kind": "property",
           "label": "common,security",
-          "order": 7,
+          "order": 8,
           "relation": [
             {
               "action": "ENABLE",
@@ -622,7 +622,7 @@
           "javaType": "java.lang.String",
           "kind": "property",
           "label": "common,security",
-          "order": 2,
+          "order": 3,
           "required": true
         },
         "password": {
@@ -633,7 +633,7 @@
           "javaType": "java.lang.String",
           "kind": "property",
           "label": "common,security",
-          "order": 5,
+          "order": 6,
           "relation": [
             {
               "action": "DISABLE",
@@ -672,7 +672,7 @@
           "javaType": "java.lang.String",
           "kind": "property",
           "label": "common,security",
-          "order": 3,
+          "order": 4,
           "relation": [
             {
               "action": "ENABLE",
@@ -740,9 +740,18 @@
           "javaType": "java.lang.String",
           "kind": "property",
           "label": "common,security",
-          "order": 4,
+          "order": 5,
           "required": false,
           "secret": false,
+          "type": "string"
+        },
+        "wsdlURL": {
+          "componentProperty": true,
+          "description": "Optional address for remotely hosted WSDL.",
+          "displayName": "WSDL URL",
+          "javaType": "java.lang.String",
+          "order": 2,
+          "required": false,
           "type": "string"
         }
       },
@@ -759,7 +768,7 @@
           "javaType": "java.lang.Boolean",
           "kind": "property",
           "label": "common,security",
-          "order": 6,
+          "order": 7,
           "relation": [
             {
               "action": "ENABLE",
@@ -783,7 +792,7 @@
           "javaType": "java.lang.Boolean",
           "kind": "property",
           "label": "common,security",
-          "order": 8,
+          "order": 9,
           "relation": [
             {
               "action": "ENABLE",
@@ -807,7 +816,7 @@
           "javaType": "java.lang.Boolean",
           "kind": "property",
           "label": "common,security",
-          "order": 7,
+          "order": 8,
           "relation": [
             {
               "action": "ENABLE",
@@ -853,7 +862,7 @@
           "javaType": "java.lang.String",
           "kind": "property",
           "label": "common,security",
-          "order": 2,
+          "order": 3,
           "required": true
         },
         "password": {
@@ -863,7 +872,7 @@
           "javaType": "java.lang.String",
           "kind": "property",
           "label": "common,security",
-          "order": 5,
+          "order": 6,
           "relation": [
             {
               "action": "DISABLE",
@@ -901,7 +910,7 @@
           "javaType": "java.lang.String",
           "kind": "property",
           "label": "common,security",
-          "order": 3,
+          "order": 4,
           "relation": [
             {
               "action": "ENABLE",
@@ -984,9 +993,18 @@
           "javaType": "java.lang.String",
           "kind": "property",
           "label": "common,security",
-          "order": 4,
+          "order": 5,
           "required": false,
           "secret": false,
+          "type": "string"
+        },
+        "wsdlURL": {
+          "componentProperty": true,
+          "description": "Optional address for remotely hosted WSDL.",
+          "displayName": "WSDL URL",
+          "javaType": "java.lang.String",
+          "order": 2,
+          "required": false,
           "type": "string"
         }
       }

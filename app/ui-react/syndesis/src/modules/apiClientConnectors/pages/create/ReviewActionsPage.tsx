@@ -108,7 +108,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         )}
                         warningMessages={
                           apiSummary!.warnings
-                            ? apiSummary!.warnings.map(
+                            ? apiSummary!.warnings!.map(
                                 warning => (warning as any).message
                               )
                             : undefined
@@ -118,7 +118,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         )}
                         errorMessages={
                           apiSummary!.errors
-                            ? apiSummary!.errors.map(
+                            ? apiSummary!.errors!.map(
                                 (e: any) => `${e.property}: ${e.message}`
                               )
                             : undefined
@@ -136,6 +136,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         isNextLoading={false}
                         isNextDisabled={!!apiSummary!.errors}
                         nextHref={resolvers.create.security({
+                          configured: state.configured,
                           connectorTemplateId: state.connectorTemplateId,
                           specification: apiSummary!,
                         })}

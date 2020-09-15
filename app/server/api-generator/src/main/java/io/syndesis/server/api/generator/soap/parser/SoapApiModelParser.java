@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
@@ -94,15 +95,19 @@ public final class SoapApiModelParser {
         // utility
     }
 
-    public static SoapApiModelInfo parseSoapAPI(final String specification) {
+    public static SoapApiModelInfo parseSoapAPI(final String specification, final String wsdlURL) {
         SoapApiModelInfo.Builder builder = new SoapApiModelInfo.Builder();
 
         try {
             // check if WSDL specification is a URL
             final String resolvedSpecification;
+            final Optional<String> resolvedWsdlURL;
             final boolean isHttpUrl = specification.toLowerCase(Locale.US).startsWith("http");
             if (isHttpUrl) {
-                final HttpURLConnection connection = (HttpURLConnection) new URL(specification).openConnection();
+
+                final URL httpURL = new URL(specification);
+                resolvedWsdlURL = Optional.of(httpURL.toString());
+                final HttpURLConnection connection = (HttpURLConnection) httpURL.openConnection();
                 connection.setRequestMethod("GET");
 
                 if (connection.getResponseCode() > 299) {
@@ -113,7 +118,11 @@ public final class SoapApiModelParser {
 
             } else {
                 resolvedSpecification = specification;
+                resolvedWsdlURL = Optional.ofNullable(wsdlURL);
             }
+
+            // set WSDL URL, either resolved from specification or provided by caller
+            builder.wsdlURL(resolvedWsdlURL);
 
             // get concise WSDL representation without extra spaces
             final String condensedSpecification = condenseWSDL(resolvedSpecification);
@@ -121,7 +130,7 @@ public final class SoapApiModelParser {
 
             // parse WSDL to get model Definition
             final InputSource inputSource = new InputSource(new StringReader(condensedSpecification));
-            final Definition definition = getWsdlReader().readWSDL(isHttpUrl ? specification : null, inputSource);
+            final Definition definition = getWsdlReader().readWSDL(resolvedWsdlURL.orElse(null), inputSource);
 
             builder.model(definition);
             validateModel(definition, builder);
@@ -150,14 +159,12 @@ public final class SoapApiModelParser {
                 }
             }
 
-        } catch (WSDLException e) {
-            addError(builder, "Error parsing WSDL: " + e.getMessage(), e);
         } catch (IOException e) {
             addError(builder, "Error reading WSDL: " + e.getMessage(), e);
+        } catch (WSDLException | BusException e) {
+            addError(builder, "Error parsing WSDL: " + e.getMessage(), e);
         } catch (TransformerException e) {
             addError(builder, "Error condensing WSDL: " + e.getMessage(), e);
-        } catch (BusException e) {
-            addError(builder, "Error parsing WSDL: " + e.getMessage(), e);
         }
 
         return builder.build();
