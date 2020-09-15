@@ -38,7 +38,7 @@ public class SoapApiModelParserTest extends AbstractSoapExampleTest {
 
     @Test
     public void parseSoapAPI() {
-        final SoapApiModelInfo soapApiModelInfo = SoapApiModelParser.parseSoapAPI(this.specification);
+        final SoapApiModelInfo soapApiModelInfo = SoapApiModelParser.parseSoapAPI(this.specification, this.specification);
 
         assertThat(soapApiModelInfo).isNotNull();
 

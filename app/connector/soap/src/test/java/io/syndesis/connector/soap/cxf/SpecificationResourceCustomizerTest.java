@@ -25,22 +25,52 @@ import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class SpecificationResourceCustomizerTest {
 
     private static final ComponentProxyComponent NOT_USED = null;
+
+    private static final String WSDL_URL = "wsdlURL";
+    private static final String SPECIFICATION = "specification";
+    private static final String CONTENTS = "the specification is here";
+    private static final String HTTP_DUMMY_URL = "http://dummy.url";
 
     @Test
     public void shouldStoreSpecificationInTemporaryDirectory() {
         final SpecificationResourceCustomizer customizer = new SpecificationResourceCustomizer();
 
         final Map<String, Object> options = new HashMap<>();
-        options.put("specification", "the specification is here");
+        options.put(SPECIFICATION, CONTENTS);
 
         customizer.customize(NOT_USED, options);
 
-        assertThat(options).containsKey("wsdlURL");
-        assertThat(options).doesNotContainKey("specification");
-        assertThat(new File(ConnectorOptions.extractOption(options, "wsdlURL"))).hasContent("the specification is here");
+        assertThat(options).containsKey(WSDL_URL);
+        assertThat(options).doesNotContainKey(SPECIFICATION);
+        assertThat(new File(ConnectorOptions.extractOption(options, WSDL_URL))).hasContent(CONTENTS);
+    }
+
+    @Test
+    public void shouldIgnoreSpecificationWhenWsdlUrlIsPresent() {
+        final SpecificationResourceCustomizer customizer = new SpecificationResourceCustomizer();
+
+        final Map<String, Object> options = new HashMap<>();
+        options.put(SPECIFICATION, CONTENTS);
+        options.put(WSDL_URL, HTTP_DUMMY_URL);
+
+        customizer.customize(NOT_USED, options);
+
+        assertThat(options).containsKey(WSDL_URL);
+        assertThat(options.get(WSDL_URL)).isEqualTo(HTTP_DUMMY_URL);
+        assertThat(options).doesNotContainKey(SPECIFICATION);
+    }
+
+    @Test
+    public void shouldThrowExceptionOnMissingProperties() {
+        final SpecificationResourceCustomizer customizer = new SpecificationResourceCustomizer();
+
+        final Map<String, Object> options = new HashMap<>();
+
+        assertThatThrownBy(() -> customizer.customize(NOT_USED, options)).isInstanceOf(IllegalStateException.class);
     }
 }

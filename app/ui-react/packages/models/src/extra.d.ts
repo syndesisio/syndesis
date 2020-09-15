@@ -79,6 +79,7 @@ export interface ICreateConnectorProps {
   specification?: string;
   tokenEndpoint?: string;
   username?: string;
+  wsdlURL?: string;
 }
 
 export interface IApiVersion {
