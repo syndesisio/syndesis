@@ -28,6 +28,7 @@ interface ICreateApiConnectorProps {
   specification?: string;
   tokenEndpoint?: string;
   username?: string;
+  wsdlURL?: string;
 }
 
 export function useApiConnectorCreator() {
@@ -56,6 +57,7 @@ export function useApiConnectorCreator() {
               specification: connector.specification,
               tokenEndpoint: connector.tokenEndpoint,
               username: connector.username,
+              wsdlURL: connector.wsdlURL,
             },
             connectorTemplateId: connector.connectorTemplateId
               ? connector.connectorTemplateId

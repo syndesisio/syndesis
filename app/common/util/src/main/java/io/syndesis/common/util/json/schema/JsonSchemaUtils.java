@@ -19,17 +19,19 @@ package io.syndesis.common.util.json.schema;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.syndesis.common.util.json.JsonUtils;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import io.syndesis.common.util.json.JsonUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
@@ -58,9 +60,9 @@ public final class JsonSchemaUtils {
         return JsonUtils.copyObjectMapperConfiguration()
                 .addHandler(new DeserializationProblemHandler() {
                     @Override
-                    public Object handleUnexpectedToken(DeserializationContext ctxt, Class<?> targetType, JsonToken t,
+                    public Object handleUnexpectedToken(DeserializationContext ctxt, JavaType targetType, JsonToken t,
                                                         JsonParser p, String failureMsg) throws IOException {
-                        if (t == JsonToken.START_ARRAY && targetType.equals(Boolean.class)) {
+                        if (t == JsonToken.START_ARRAY && targetType.getRawClass().equals(Boolean.class)) {
                             // handle Json schema draft-04 array type for required field and resolve to default value (required=true).
                             String[] requiredProps = new StringArrayDeserializer().deserialize(p, ctxt);
                             LOG.warn("Auto convert Json schema draft-04 \"required\" array value '{}' to default \"required=false\" value for draft-03 parser compatibility reasons", Arrays.toString(requiredProps));

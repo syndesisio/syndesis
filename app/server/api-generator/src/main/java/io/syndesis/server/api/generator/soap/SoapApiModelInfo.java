@@ -38,6 +38,9 @@ public interface SoapApiModelInfo {
         // make ImmutableSoapApiModelInfo.Builder accessible
     }
 
+    // URL for remotely hosted WSDLs that might use imported schemas
+    Optional<String> getWsdlURL();
+
     // resolved and condensed WSDL
     Optional<String> getResolvedSpecification();
 

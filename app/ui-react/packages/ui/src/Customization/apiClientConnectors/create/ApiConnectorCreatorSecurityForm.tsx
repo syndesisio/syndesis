@@ -21,6 +21,7 @@ export interface ICreateConnectorPropsUi {
   serviceName?: string;
   tokenEndpoint?: string;
   username?: string;
+  wsdlURL?: string;
 }
 
 export interface IApiConnectorCreatorSecurityFormChildrenProps {
