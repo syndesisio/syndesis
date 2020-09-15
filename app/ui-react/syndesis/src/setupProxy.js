@@ -49,7 +49,7 @@ module.exports = function(app) {
     });
 
     app.use('/logout', (req, res) => {
-      res.clearCookie('_oauth_proxy', {
+      res.clearCookie('oauth_proxy', {
         domain: req.headers.referrer,
         path: '/',
       });
