@@ -1,34 +1,32 @@
 {{- if .ApiServer.ConsoleLink }}
 
 - apiVersion: rbac.authorization.k8s.io/v1
-  kind: ClusterRoleBinding
+  kind: {{ .Kind }}Binding
   metadata:
     name: {{ .Role }}-{{ .User }}-consolelink
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
-    name: {{ .Role }}-consolelink
+    name: syndesis-operator-consolelink
   subjects:
   - apiGroup: rbac.authorization.k8s.io
     kind: User
     name: {{ .User }}
-    namespace: {{ .Namespace }}
 
 {{- end }}
 {{- if .ApiServer.OlmSupport }}
 
 - apiVersion: rbac.authorization.k8s.io/v1
-  kind: ClusterRoleBinding
+  kind: {{ .Kind }}Binding
   metadata:
     name: {{ .Role }}-{{ .User }}-olm
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
-    name: {{ .Role }}-olm
+    name: syndesis-operator-olm
   subjects:
   - apiGroup: rbac.authorization.k8s.io
     kind: User
     name: {{ .User }}
-    namespace: {{ .Namespace }}
 
 {{- end }}

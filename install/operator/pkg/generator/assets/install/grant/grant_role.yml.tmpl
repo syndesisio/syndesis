@@ -1,11 +1,13 @@
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: {{ .Kind }}Binding
 metadata:
   name: {{ .Role }}-{{ .User }}
+{{- if (eq .Kind "Role") }}
   namespace: {{ .Namespace }}
+{{- end}}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
+  kind: {{ .Kind }}
   name: {{ .Role }}
 subjects:
 - apiGroup: rbac.authorization.k8s.io
