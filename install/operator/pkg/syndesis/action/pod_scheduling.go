@@ -7,7 +7,7 @@ import (
 	"reflect"
 
 	oappsv1 "github.com/openshift/api/apps/v1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -25,20 +25,20 @@ type patchOp struct {
 
 type podSchedulingAction struct {
 	baseAction
-	currentInfraScheduling       v1beta1.SchedulingSpec
-	currentIntegrationScheduling v1beta1.SchedulingSpec
+	currentInfraScheduling       v1beta2.SchedulingSpec
+	currentIntegrationScheduling v1beta2.SchedulingSpec
 	updateInfraScheduling        bool
 	updateIntegrationScheduling  bool
 }
 
 func newPodSchedulingAction(mgr manager.Manager, clientTools *clienttools.ClientTools) SyndesisOperatorAction {
 	return &podSchedulingAction{
-		newBaseAction(mgr, clientTools, "pod_scheduling"), v1beta1.SchedulingSpec{}, v1beta1.SchedulingSpec{}, false, false,
+		newBaseAction(mgr, clientTools, "pod_scheduling"), v1beta2.SchedulingSpec{}, v1beta2.SchedulingSpec{}, false, false,
 	}
 }
 
-func (a *podSchedulingAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
-	canExecute := syndesisPhaseIs(syndesis, v1beta1.SyndesisPhaseInstalled)
+func (a *podSchedulingAction) CanExecute(syndesis *v1beta2.Syndesis) bool {
+	canExecute := syndesisPhaseIs(syndesis, v1beta2.SyndesisPhaseInstalled)
 	if canExecute {
 		a.updateInfraScheduling = !reflect.DeepEqual(a.currentInfraScheduling, syndesis.Spec.InfraScheduling)
 		a.updateIntegrationScheduling = !reflect.DeepEqual(a.currentIntegrationScheduling, syndesis.Spec.IntegrationScheduling)
@@ -47,7 +47,7 @@ func (a *podSchedulingAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
 	return canExecute
 }
 
-func (a *podSchedulingAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis) error {
+func (a *podSchedulingAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis) error {
 	if a.updateInfraScheduling {
 		a.executeInfraScheduling(ctx, syndesis)
 	}
@@ -57,7 +57,7 @@ func (a *podSchedulingAction) Execute(ctx context.Context, syndesis *v1beta1.Syn
 	return nil
 }
 
-func (a *podSchedulingAction) executeInfraScheduling(ctx context.Context, syndesis *v1beta1.Syndesis) {
+func (a *podSchedulingAction) executeInfraScheduling(ctx context.Context, syndesis *v1beta2.Syndesis) {
 	list := oappsv1.DeploymentConfigList{
 		TypeMeta: metav1.TypeMeta{
 			Kind: "DeploymentConfig",
@@ -136,7 +136,7 @@ func (a *podSchedulingAction) executeInfraScheduling(ctx context.Context, syndes
 	a.currentInfraScheduling = syndesis.Spec.InfraScheduling
 }
 
-func (a *podSchedulingAction) executeIntegrationScheduling(ctx context.Context, syndesis *v1beta1.Syndesis) {
+func (a *podSchedulingAction) executeIntegrationScheduling(ctx context.Context, syndesis *v1beta2.Syndesis) {
 	list := oappsv1.DeploymentConfigList{
 		TypeMeta: metav1.TypeMeta{
 			Kind: "DeploymentConfig",

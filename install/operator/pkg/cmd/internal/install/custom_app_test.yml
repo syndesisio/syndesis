@@ -1,4 +1,4 @@
-apiVersion: syndesis.io/v1beta1
+apiVersion: syndesis.io/v1beta2
 kind: Syndesis
 metadata:
   name: app
@@ -6,6 +6,10 @@ spec:
   components:
     database:
       resources:
+        limit:
+          memory: "255Mi"
+        request:
+          memory: "255Mi"
         volumeCapacity: 5Gi
     server:
       features:

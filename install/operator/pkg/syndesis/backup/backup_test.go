@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/syndesisio/syndesis/install/operator/pkg"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -21,7 +21,7 @@ func TestBackupInit(t *testing.T) {
 	objs := []runtime.Object{}
 	cl := fake.NewFakeClient(objs...)
 	ns := "syndesis"
-	s, _ := v1beta1.NewSyndesis(ns)
+	s, _ := v1beta2.NewSyndesis(ns)
 
 	ct := &clienttools.ClientTools{}
 	ct.SetRuntimeClient(cl)
@@ -50,7 +50,7 @@ func TestValidate(t *testing.T) {
 	objs := []runtime.Object{}
 	cl := fake.NewFakeClient(objs...)
 	ns := "syndesis"
-	s, _ := v1beta1.NewSyndesis(ns)
+	s, _ := v1beta2.NewSyndesis(ns)
 
 	ct := &clienttools.ClientTools{}
 	ct.SetRuntimeClient(cl)
@@ -85,7 +85,7 @@ func TestBackupBuildDir(t *testing.T) {
 	objs := []runtime.Object{}
 	cl := fake.NewFakeClient(objs...)
 	ns := "syndesis"
-	s, _ := v1beta1.NewSyndesis(ns)
+	s, _ := v1beta2.NewSyndesis(ns)
 
 	ct := &clienttools.ClientTools{}
 	ct.SetRuntimeClient(cl)
@@ -102,7 +102,7 @@ func TestBackupBuildDir(t *testing.T) {
 }
 
 func TestBackupPodFromJob(t *testing.T) {
-	ns := v1beta1.DefaultNamespace
+	ns := v1beta2.DefaultNamespace
 	jobName := "myJob"
 	controllerUid := "Job666"
 	labels := map[string]string{
@@ -132,7 +132,7 @@ func TestBackupPodFromJob(t *testing.T) {
 	ctx := context.TODO()
 	objs := []runtime.Object{job, jobPod}
 	cl := fake.NewFakeClient(objs...)
-	s, _ := v1beta1.NewSyndesis(ns)
+	s, _ := v1beta2.NewSyndesis(ns)
 
 	ct := &clienttools.ClientTools{}
 	ct.SetRuntimeClient(cl)

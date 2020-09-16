@@ -1,0 +1,34 @@
+apiVersion: syndesis.io/v1beta2
+kind: Syndesis
+metadata:
+    name: "syndesis-beta"
+spec:
+    components:
+        server:
+            resources:
+                limit:
+                    memory: "800Mi"
+                    cpu: "750m"
+                request:
+                    memory: "256Mi"
+                    cpu: "450m"
+        meta:
+            resources:
+                limit:
+                    memory: "512Mi"
+                request:
+                    memory: "280Mi"
+        database:
+            resources:
+                limit:
+                    memory: "255Mi"
+                request:
+                    memory: "255Mi"
+        prometheus:
+            resources:
+                limit:
+                    memory: "512Mi"
+                request:
+                    memory: "512Mi"
+status:
+    apiVersion: v1beta2

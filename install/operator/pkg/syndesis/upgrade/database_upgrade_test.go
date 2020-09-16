@@ -24,7 +24,7 @@ import (
 	"github.com/go-logr/zapr"
 	oappsv1 "github.com/openshift/api/apps/v1"
 	"github.com/spf13/afero"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"go.uber.org/zap"
@@ -44,10 +44,10 @@ func TestShouldCreateNewInstance(t *testing.T) {
 }
 
 func TestShouldNotRunForExternalDatabases(t *testing.T) {
-	u := newDatabaseUpgrade(step{}, &v1beta1.Syndesis{
-		Spec: v1beta1.SyndesisSpec{
-			Components: v1beta1.ComponentsSpec{
-				Database: v1beta1.DatabaseConfiguration{
+	u := newDatabaseUpgrade(step{}, &v1beta2.Syndesis{
+		Spec: v1beta2.SyndesisSpec{
+			Components: v1beta2.ComponentsSpec{
+				Database: v1beta2.DatabaseConfiguration{
 					ExternalDbURL: "some url",
 				},
 			},
@@ -123,10 +123,10 @@ func TestShouldRunOnlyWhenTargetVersionIsNewerThanCurrent(t *testing.T) {
 			step: step{
 				log: zapr.NewLogger(zap.NewNop()),
 			},
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Database: v1beta1.DatabaseConfiguration{},
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Database: v1beta2.DatabaseConfiguration{},
 					},
 				},
 			},
@@ -192,10 +192,10 @@ func TestRunDatabaseUpgrade(t *testing.T) {
 			context:     context.TODO(),
 			clientTools: &clientTools,
 		},
-		syndesis: &v1beta1.Syndesis{
-			Spec: v1beta1.SyndesisSpec{
-				Components: v1beta1.ComponentsSpec{
-					Database: v1beta1.DatabaseConfiguration{},
+		syndesis: &v1beta2.Syndesis{
+			Spec: v1beta2.SyndesisSpec{
+				Components: v1beta2.ComponentsSpec{
+					Database: v1beta2.DatabaseConfiguration{},
 				},
 			},
 		},

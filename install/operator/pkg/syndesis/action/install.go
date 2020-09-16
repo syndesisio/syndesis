@@ -24,7 +24,7 @@ import (
 
 	v1 "github.com/openshift/api/route/v1"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/olm"
@@ -48,7 +48,7 @@ func newInstallAction(mgr manager.Manager, clientTools *clienttools.ClientTools)
 	}
 }
 
-func (a *installAction) installResource(ctx context.Context, rtClient client.Client, syndesis *v1beta1.Syndesis, res unstructured.Unstructured) (*unstructured.Unstructured, error) {
+func (a *installAction) installResource(ctx context.Context, rtClient client.Client, syndesis *v1beta2.Syndesis, res unstructured.Unstructured) (*unstructured.Unstructured, error) {
 	operation.SetNamespaceAndOwnerReference(res, syndesis)
 	o, modificationType, err := util.CreateOrUpdate(ctx, rtClient, &res)
 	if err != nil {
@@ -84,22 +84,22 @@ func (a *installAction) logResourcePersistentVolume(syndesis *v1beta2.Syndesis, 
 	}
 }
 
-func (a *installAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
+func (a *installAction) CanExecute(syndesis *v1beta2.Syndesis) bool {
 	return syndesisPhaseIs(syndesis,
-		v1beta1.SyndesisPhaseInstalling,
-		v1beta1.SyndesisPhaseInstalled,
-		v1beta1.SyndesisPhasePostUpgradeRun,
-		v1beta1.SyndesisPhaseStarting,
-		v1beta1.SyndesisPhaseStartupFailed,
+		v1beta2.SyndesisPhaseInstalling,
+		v1beta2.SyndesisPhaseInstalled,
+		v1beta2.SyndesisPhasePostUpgradeRun,
+		v1beta2.SyndesisPhaseStarting,
+		v1beta2.SyndesisPhaseStartupFailed,
 	)
 }
 
 var kindsReportedNotAvailable = map[schema.GroupVersionKind]time.Time{}
 
-func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis) error {
-	if syndesisPhaseIs(syndesis, v1beta1.SyndesisPhaseInstalling) {
+func (a *installAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis) error {
+	if syndesisPhaseIs(syndesis, v1beta2.SyndesisPhaseInstalling) {
 		a.log.Info("installing Syndesis resource", "name", syndesis.Name)
-	} else if syndesisPhaseIs(syndesis, v1beta1.SyndesisPhasePostUpgradeRun) {
+	} else if syndesisPhaseIs(syndesis, v1beta2.SyndesisPhasePostUpgradeRun) {
 		a.log.Info("installing Syndesis resource for the first time after upgrading", "name", syndesis.Name)
 	}
 
@@ -292,10 +292,10 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 
 	addRouteAnnotation(syndesis, syndesisRoute)
 	target := syndesis.DeepCopy()
-	if syndesis.Status.Phase == v1beta1.SyndesisPhaseInstalling {
+	if syndesis.Status.Phase == v1beta2.SyndesisPhaseInstalling {
 		// Installation completed, set the next state
-		target.Status.Phase = v1beta1.SyndesisPhaseStarting
-		target.Status.Reason = v1beta1.SyndesisStatusReasonMissing
+		target.Status.Phase = v1beta2.SyndesisPhaseStarting
+		target.Status.Reason = v1beta2.SyndesisStatusReasonMissing
 		target.Status.Description = ""
 		_, _, err := util.CreateOrUpdate(ctx, rtClient, target, "kind", "apiVersion")
 		if err != nil {
@@ -303,10 +303,10 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		}
 
 		a.log.Info("Syndesis resource installed", "name", target.Name)
-	} else if syndesis.Status.Phase == v1beta1.SyndesisPhasePostUpgradeRun {
+	} else if syndesis.Status.Phase == v1beta2.SyndesisPhasePostUpgradeRun {
 		// Installation completed, set the next state
-		target.Status.Phase = v1beta1.SyndesisPhasePostUpgradeRunSucceed
-		target.Status.Reason = v1beta1.SyndesisStatusReasonMissing
+		target.Status.Phase = v1beta2.SyndesisPhasePostUpgradeRunSucceed
+		target.Status.Reason = v1beta2.SyndesisStatusReasonMissing
 		target.Status.Description = ""
 		_, _, err := util.CreateOrUpdate(ctx, rtClient, target, "kind", "apiVersion")
 		if err != nil {
@@ -372,7 +372,7 @@ func getTypes(api kubernetes.Interface) ([]metav1.TypeMeta, error) {
 	return types, nil
 }
 
-func installServiceAccount(ctx context.Context, cl client.Client, syndesis *v1beta1.Syndesis, secret *corev1.Secret) (*corev1.ServiceAccount, error) {
+func installServiceAccount(ctx context.Context, cl client.Client, syndesis *v1beta2.Syndesis, secret *corev1.Secret) (*corev1.ServiceAccount, error) {
 	sa := newSyndesisServiceAccount()
 	if secret != nil {
 		linkImagePullSecret(sa, secret)
@@ -410,7 +410,7 @@ func newSyndesisServiceAccount() *corev1.ServiceAccount {
 	return &sa
 }
 
-func addRouteAnnotation(syndesis *v1beta1.Syndesis, route *v1.Route) {
+func addRouteAnnotation(syndesis *v1beta2.Syndesis, route *v1.Route) {
 	annotations := syndesis.ObjectMeta.Annotations
 	if annotations == nil {
 		annotations = make(map[string]string)
@@ -427,7 +427,7 @@ func extractApplicationUrl(route *v1.Route) string {
 	return scheme + "://" + route.Spec.Host
 }
 
-func installSyndesisRoute(ctx context.Context, cl client.Client, syndesis *v1beta1.Syndesis, objects []runtime.Object) (*v1.Route, error) {
+func installSyndesisRoute(ctx context.Context, cl client.Client, syndesis *v1beta2.Syndesis, objects []runtime.Object) (*v1.Route, error) {
 	route, err := findSyndesisRoute(objects)
 	if err != nil {
 		return nil, err
@@ -480,7 +480,7 @@ func isSyndesisRoute(resource runtime.Object) (*v1.Route, bool) {
 	return nil, false
 }
 
-func linkImageSecretToServiceAccounts(ctx context.Context, cl client.Client, syndesis *v1beta1.Syndesis, secret *corev1.Secret) error {
+func linkImageSecretToServiceAccounts(ctx context.Context, cl client.Client, syndesis *v1beta2.Syndesis, secret *corev1.Secret) error {
 	// Link the builder service account to the image pull/push secret if it exists
 	builder := &corev1.ServiceAccount{}
 	err := cl.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "builder"}, builder)

@@ -35,6 +35,7 @@ import (
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -51,6 +52,7 @@ type syndesisApi struct {
 	unstructuredApis *unstructured.UnstructuredList
 	v1alpha1         *v1alpha1.Syndesis
 	v1beta1          *v1beta1.Syndesis
+	v1beta2          *v1beta2.Syndesis
 }
 
 // Build and return an SyndesisApiMigrator interface
@@ -82,6 +84,9 @@ func ApiMigrator(ctx context.Context, c client.Client, n string) (r SyndesisApiM
 		context:          ctx,
 		log:              logf.Log.WithName("versions").WithValues("version from", "v1alpha1", "version to", "v1beta1"),
 		unstructuredApis: list,
+		v1beta2: &v1beta2.Syndesis{
+			TypeMeta: metav1.TypeMeta{Kind: "Syndesis", APIVersion: "syndesis.io/v1beta2"},
+		},
 		v1beta1: &v1beta1.Syndesis{
 			TypeMeta: metav1.TypeMeta{Kind: "Syndesis", APIVersion: "syndesis.io/v1beta1"},
 		},
@@ -92,27 +97,35 @@ func ApiMigrator(ctx context.Context, c client.Client, n string) (r SyndesisApiM
 
 	v1alpha1s := []*v1alpha1.Syndesis{}
 	v1beta1s := []*v1beta1.Syndesis{}
+	v1beta2s := []*v1beta2.Syndesis{}
 	for _, a := range api.unstructuredApis.Items {
-		sb, err := api.unstructuredToV1Beta1(a)
-		if err != nil {
-			sa, err := api.unstructuredToV1Alpha1(a)
-			if err == nil {
-				v1alpha1s = append(v1alpha1s, sa)
-			}
+		sb2, err := api.unstructuredToV1Beta2(a)
+		if err == nil {
+			v1beta2s = append(v1beta2s, sb2)
 		} else {
-			v1beta1s = append(v1beta1s, sb)
+			sb1, err := api.unstructuredToV1Beta1(a)
+			if err == nil {
+				v1beta1s = append(v1beta1s, sb1)
+			} else {
+				sa, err := api.unstructuredToV1Alpha1(a)
+				if err == nil {
+					v1alpha1s = append(v1alpha1s, sa)
+				}
+			}
 		}
 	}
 
 	/*
 	 * We support at most, one instance of each api. We can have:
-	 * - 1x v1alpha1 0x v1beta1. It can be an upgrade where the administrator installing the operator didn't create
-	 * a v1beta1. In this case, we will create an empty v1beta1 and migrate from v1alpha1
+	 * - 1x v1alpha1 0x v1beta1 0x v1beta2.
+	 * - 0x v1alpha1 1x v1beta1 0x v1beta2.
+	 * It can be an upgrade where the administrator installing the operator didn't create
+	 * a v1beta2. In this case, we will create an empty v1beta2 and migrate
 	 *
-	 * - 0x v1alpha1 1x v1beta1. This is the desired state and we do nothing
+	 * - 0x v1alpha1 0x v1beta1 1x v1beta2. This is the desired state and we do nothing
 	 */
-	if len(v1alpha1s)+len(v1beta1s) > 1 {
-		return nil, fmt.Errorf("unsupported ammount of apis v1alpha: %d, v1beta1: %d", len(v1alpha1s), len(v1beta1s))
+	if len(v1alpha1s)+len(v1beta1s)+len(v1beta2s) > 1 {
+		return nil, fmt.Errorf("unsupported number of apis v1alpha: %d, v1beta1: %d, v1beta2: %d", len(v1alpha1s), len(v1beta1s), len(v1beta2s))
 	}
 
 	// Fetch v1alpha1 from kubernetes if it exists
@@ -126,12 +139,12 @@ func ApiMigrator(ctx context.Context, c client.Client, n string) (r SyndesisApiM
 			api.v1alpha1); err != nil {
 			return nil, err
 		}
-		api.v1alpha1.TypeMeta = metav1.TypeMeta{Kind: "Syndesis", APIVersion: "syndesis.io/v1beta1"}
+		api.v1alpha1.TypeMeta = metav1.TypeMeta{Kind: "Syndesis", APIVersion: "syndesis.io/v1alpha1"}
 	} else {
 		api.v1alpha1 = nil
 	}
 
-	// Fetch v1beta1 from kubernetes if it exists, otherwise create a new one
+	// Fetch v1beta1 from kubernetes if it exists
 	if len(v1beta1s) == 1 {
 		if err = api.client.Get(
 			api.context,
@@ -144,15 +157,36 @@ func ApiMigrator(ctx context.Context, c client.Client, n string) (r SyndesisApiM
 		}
 		api.v1beta1.TypeMeta = metav1.TypeMeta{Kind: "Syndesis", APIVersion: "syndesis.io/v1beta1"}
 	} else {
-		// When creating a new v1beta1 api, try to use v1alpha1 name for it
+		api.v1beta1 = nil
+	}
+
+	// Fetch v1beta2 from kubernetes if it exists, otherwise create a new one
+	if len(v1beta2s) == 1 {
+		if err = api.client.Get(
+			api.context,
+			types.NamespacedName{
+				Namespace: v1beta2s[0].Namespace,
+				Name:      v1beta2s[0].Name,
+			},
+			api.v1beta2); err != nil {
+			return nil, err
+		}
+		api.v1beta2.TypeMeta = metav1.TypeMeta{Kind: "Syndesis", APIVersion: "syndesis.io/v1beta2"}
+	} else {
+		// When creating a new v1beta2 api, try to use existing name for it
 		name := "app"
 		if len(v1alpha1s) == 1 {
 			name = v1alpha1s[0].Name
+		} else if len(v1beta1s) == 1 {
+			name = v1beta1s[0].Name
 		}
 
-		api.v1beta1 = &v1beta1.Syndesis{
-			Spec:     v1beta1.SyndesisSpec{ForceMigration: true},
-			TypeMeta: metav1.TypeMeta{Kind: "Syndesis", APIVersion: "syndesis.io/v1beta1"},
+		//
+		// Not fetched from cluster so create a new one and turn on ForceMigration
+		//
+		api.v1beta2 = &v1beta2.Syndesis{
+			Spec:     v1beta2.SyndesisSpec{ForceMigration: true},
+			TypeMeta: metav1.TypeMeta{Kind: "Syndesis", APIVersion: "syndesis.io/v1beta2"},
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      name,
 				Namespace: n,
@@ -165,13 +199,135 @@ func ApiMigrator(ctx context.Context, c client.Client, n string) (r SyndesisApiM
 
 func (api syndesisApi) Migrate() (err error) {
 	if api.v1alpha1 != nil {
-		if err = api.v1alpha1ToV1beta1(); err != nil {
+		if err = api.v1alpha1ToV1beta2(); err != nil {
+			return err
+		}
+	} else if api.v1beta1 != nil {
+		if err = api.v1beta1ToV1beta2(); err != nil {
+			return err
+		}
+	}
+
+	if err = api.updateApis(); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Migrates from old v1alpha1 api to v1beta2. This overwrite v1alpha1
+func (api syndesisApi) v1alpha1ToV1beta2() error {
+	// We migrate only if v1alpha1 wasn't migrated before and v1beta2 explicitly indicates to be migrated
+	if api.v1alpha1 != nil && api.v1alpha1.Status.Phase == v1alpha1.SyndesisPhaseInstalled && api.v1beta2.Spec.ForceMigration {
+
+		//
+		// Upgrade to v1beta1 first
+		//
+
+		//
+		// If there is no v1beta1 defined then create one and migrate the v1alpha1 to it
+		//
+		if api.v1beta1 == nil {
+			api.v1beta1 = &v1beta1.Syndesis{
+				Spec:     v1beta1.SyndesisSpec{ForceMigration: true},
+				TypeMeta: metav1.TypeMeta{Kind: "Syndesis", APIVersion: "syndesis.io/v1beta1"},
+				ObjectMeta: metav1.ObjectMeta{
+					Name:      api.v1alpha1.Name,
+					Namespace: api.v1alpha1.Namespace,
+				},
+			}
+		}
+
+		if err := api.v1alpha1ToV1beta1(); err != nil {
 			return err
 		}
 
-		if err = api.updateApis(); err != nil {
+		//
+		// Now upgrade to v1beta2
+		//
+
+		// Ensure that beta1 is in upgrade mode
+		api.v1beta1.Spec.ForceMigration = true
+
+		if err := api.v1beta1ToV1beta2(); err != nil {
 			return err
 		}
+	}
+
+	return nil
+}
+
+// Migrates from old v1beta1 api to v1beta2. This overwrite v1beta1
+func (api syndesisApi) v1beta1ToV1beta2() error {
+	// We migrate only if v1beta1 wasn't migrated before and v1beta2 explicitly indicates to be migrated
+	if api.v1beta1 != nil && api.v1beta1.Status.Phase == v1beta1.SyndesisPhaseInstalled && api.v1beta2.Spec.ForceMigration {
+
+		//
+		// Copy any common fields by marhsalling to json
+		// then unmarshalling into the new struct
+		//
+		beta1Json, err := json.Marshal(api.v1beta1)
+		if err != nil {
+			return err
+		}
+
+		//
+		// Not interested in marshalling errors as only copying common fields
+		// The rest will be explicitly copied in the remaining code
+		//
+		_ = json.Unmarshal(beta1Json, &api.v1beta2)
+
+		//
+		// This will have been overwritten so correct it
+		//
+		api.v1beta2.TypeMeta.APIVersion = "syndesis.io/v1beta2"
+
+		// Server
+		if api.v1beta1.Spec.Components.Server.Resources.Memory != "" {
+			api.v1beta2.Spec.Components.Server.Resources.Limit = v1beta2.ResourceParams{Memory: api.v1beta1.Spec.Components.Server.Resources.Memory}
+			api.v1beta2.Spec.Components.Server.Resources.Request = v1beta2.ResourceParams{Memory: api.v1beta1.Spec.Components.Server.Resources.Memory}
+		}
+
+		// Database
+		if api.v1beta1.Spec.Components.Database.Resources.Memory != "" {
+			api.v1beta2.Spec.Components.Database.Resources.Limit = v1beta2.ResourceParams{Memory: api.v1beta1.Spec.Components.Database.Resources.Memory}
+			api.v1beta2.Spec.Components.Database.Resources.Request = v1beta2.ResourceParams{Memory: api.v1beta1.Spec.Components.Database.Resources.Memory}
+		}
+
+		// Meta
+		if api.v1beta1.Spec.Components.Meta.Resources.Memory != "" {
+			api.v1beta2.Spec.Components.Meta.Resources.Limit = v1beta2.ResourceParams{Memory: api.v1beta1.Spec.Components.Meta.Resources.Memory}
+			api.v1beta2.Spec.Components.Meta.Resources.Request = v1beta2.ResourceParams{Memory: api.v1beta1.Spec.Components.Meta.Resources.Memory}
+		}
+
+		// Prometheus
+		if api.v1beta1.Spec.Components.Prometheus.Resources.Memory != "" {
+			api.v1beta2.Spec.Components.Prometheus.Resources.Limit = v1beta2.ResourceParams{Memory: api.v1beta1.Spec.Components.Prometheus.Resources.Memory}
+			api.v1beta2.Spec.Components.Prometheus.Resources.Request = v1beta2.ResourceParams{Memory: api.v1beta1.Spec.Components.Prometheus.Resources.Memory}
+		}
+
+		// Grafana
+		if api.v1beta1.Spec.Components.Grafana.Resources.Memory != "" {
+			api.v1beta2.Spec.Components.Grafana.Resources.Limit = v1beta2.ResourceParams{Memory: api.v1beta1.Spec.Components.Grafana.Resources.Memory}
+			api.v1beta2.Spec.Components.Grafana.Resources.Request = v1beta2.ResourceParams{Memory: api.v1beta1.Spec.Components.Grafana.Resources.Memory}
+		}
+
+		// We dont want to migrate again more than once
+		api.v1beta2.Spec.ForceMigration = false
+
+		// We need the same status and version in the target as in the origin
+		api.v1beta2.Status.Version = api.v1beta1.Status.Version
+		api.v1beta2.Status.Phase = v1beta2.SyndesisPhaseInstalled
+		api.v1beta2.Status.Reason = v1beta2.SyndesisStatusReasonMigrated
+
+		srcVersion := ""
+		if api.v1alpha1 != nil {
+			srcVersion = v1alpha1.SchemeGroupVersion.String()
+		} else {
+			srcVersion = v1beta1.SchemeGroupVersion.String()
+		}
+
+		api.v1beta2.Status.Description = fmt.Sprintf("App migrated from %s to %s", srcVersion, v1beta2.SchemeGroupVersion.String())
 	}
 
 	return nil
@@ -181,6 +337,27 @@ func (api syndesisApi) Migrate() (err error) {
 func (api syndesisApi) v1alpha1ToV1beta1() error {
 	// We migrate only if v1alpha1 wasn't migrated before and v1beta1 explicitly indicates to be migrated
 	if api.v1alpha1 != nil && api.v1alpha1.Status.Phase == v1alpha1.SyndesisPhaseInstalled && api.v1beta1.Spec.ForceMigration {
+
+		//
+		// Copy any common fields by marhsalling to json
+		// then unmarshalling into the new struct
+		//
+		alphaJson, err := json.Marshal(api.v1alpha1)
+		if err != nil {
+			return err
+		}
+
+		//
+		// Not interested in marshalling errors as only copying common fields
+		// The rest will be explicitly copied in the remaining code
+		//
+		_ = json.Unmarshal(alphaJson, &api.v1beta1)
+
+		//
+		// This will have been overwritten so correct it
+		//
+		api.v1beta1.TypeMeta.APIVersion = "syndesis.io/v1beta1"
+
 		// Migrate addons
 		for k, addon := range api.v1alpha1.Spec.Addons {
 			switch k {
@@ -291,14 +468,40 @@ func (api syndesisApi) v1alpha1ToV1beta1() error {
 
 // Write back apis
 func (api syndesisApi) updateApis() error {
+	fromName := ""
+	fromVersion := ""
+	if api.v1alpha1 != nil {
+		fromName = api.v1alpha1.Name
+		fromVersion = api.v1alpha1.Status.Version
+	} else if api.v1beta1 != nil {
+		fromName = api.v1beta1.Name
+		fromVersion = api.v1beta1.Status.Version
+	}
+
 	api.log.Info("updating syndesis api",
-		"from name", api.v1alpha1.Name, "from version", api.v1alpha1.Status.Version,
-		"to name", api.v1beta1.Name, "to version", api.v1beta1.Status.Version)
-	if _, _, err := util.CreateOrUpdate(api.context, api.client, api.v1beta1); err != nil {
+		"from name", fromName, "from version", fromVersion,
+		"to name", api.v1beta2.Name, "to version", api.v1beta2.Status.Version)
+	if _, _, err := util.CreateOrUpdate(api.context, api.client, api.v1beta2); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+// Attempt to convert from unstructured to v1beta2.Syndesis
+func (api syndesisApi) unstructuredToV1Beta2(obj unstructured.Unstructured) (s *v1beta2.Syndesis, err error) {
+	s = &v1beta2.Syndesis{}
+
+	objM, err := json.Marshal(obj.Object)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := json.Unmarshal(objM, s); err != nil {
+		return nil, err
+	}
+
+	return
 }
 
 // Attempt to convert from unstructured to v1beta1.Syndesis

@@ -16,7 +16,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
-	syndesisv1beta1 "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	syndesisv1beta2 "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 )
@@ -45,7 +45,7 @@ func newReconciler(mgr manager.Manager) (*ReconcileSyndesis, error) {
 
 	return &ReconcileSyndesis{
 		clientTools: clientTools,
-		scheme:    mgr.GetScheme(),
+		scheme:      mgr.GetScheme(),
 	}, nil
 }
 
@@ -58,7 +58,7 @@ func add(mgr manager.Manager, r *ReconcileSyndesis) error {
 	}
 
 	// Watch for changes to primary resource Syndesis
-	err = c.Watch(&source.Kind{Type: &syndesisv1beta1.Syndesis{}}, &handler.EnqueueRequestForObject{})
+	err = c.Watch(&source.Kind{Type: &syndesisv1beta2.Syndesis{}}, &handler.EnqueueRequestForObject{})
 	if err != nil {
 		return err
 	}
@@ -74,7 +74,7 @@ type ReconcileSyndesis struct {
 	// This client kit contains a split client, initialized using mgr.Client() above,
 	// that reads objects from the cache and writes to the apiserver
 	clientTools *clienttools.ClientTools
-	scheme    *runtime.Scheme
+	scheme      *runtime.Scheme
 }
 
 // Reconcile the state of the Syndesis infrastructure elements
@@ -86,7 +86,7 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 	reqLogger.V(2).Info("Reconciling Syndesis")
 
 	// Fetch the Syndesis syndesis
-	syndesis := &syndesisv1beta1.Syndesis{}
+	syndesis := &syndesisv1beta2.Syndesis{}
 
 	ctx := context.TODO()
 
@@ -137,7 +137,7 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 	}, nil
 }
 
-func (r *ReconcileSyndesis) isLatestVersion(ctx context.Context, syndesis *syndesisv1beta1.Syndesis) (bool, error) {
+func (r *ReconcileSyndesis) isLatestVersion(ctx context.Context, syndesis *syndesisv1beta2.Syndesis) (bool, error) {
 	refreshed := syndesis.DeepCopy()
 	client, _ := r.clientTools.RuntimeClient()
 	if err := client.Get(ctx, types.NamespacedName{Name: refreshed.Name, Namespace: refreshed.Namespace}, refreshed); err != nil {

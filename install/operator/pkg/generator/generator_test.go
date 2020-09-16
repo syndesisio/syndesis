@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -17,27 +17,36 @@ import (
 )
 
 func TestGenerator(t *testing.T) {
-	syndesis := &v1beta1.Syndesis{
-		Spec: v1beta1.SyndesisSpec{
-			Addons: v1beta1.AddonsSpec{
-				Jaeger: v1beta1.JaegerConfiguration{
+	syndesis := &v1beta2.Syndesis{
+		Spec: v1beta2.SyndesisSpec{
+			Addons: v1beta2.AddonsSpec{
+				Jaeger: v1beta2.JaegerConfiguration{
 					Enabled:      true,
 					SamplerType:  "const",
 					SamplerParam: "0",
 				},
-				Ops:  v1beta1.AddonSpec{Enabled: true},
-				Todo: v1beta1.AddonSpec{Enabled: true},
-				PublicApi: v1beta1.PublicApiConfiguration{
+				Ops:  v1beta2.AddonSpec{Enabled: true},
+				Todo: v1beta2.AddonSpec{Enabled: true},
+				PublicApi: v1beta2.PublicApiConfiguration{
 					Enabled:       true,
 					RouteHostname: "mypublichost.com",
 				},
 			},
-			Components: v1beta1.ComponentsSpec{
-				Oauth: v1beta1.OauthConfiguration{},
-				Server: v1beta1.ServerConfiguration{
-					Resources: v1beta1.Resources{Memory: "800Mi"},
-					Features: v1beta1.ServerFeatures{
-						Maven: v1beta1.MavenConfiguration{
+			Components: v1beta2.ComponentsSpec{
+				Oauth: v1beta2.OauthConfiguration{},
+				Server: v1beta2.ServerConfiguration{
+					Resources: v1beta2.Resources{
+						Limit: v1beta2.ResourceParams{
+							Memory: "800Mi",
+							CPU:    "750m",
+						},
+						Request: v1beta2.ResourceParams{
+							Memory: "256Mi",
+							CPU:    "450m",
+						},
+					},
+					Features: v1beta2.ServerFeatures{
+						Maven: v1beta2.MavenConfiguration{
 							Append: false,
 							Repositories: map[string]string{
 								"central":           "https://repo.maven.apache.org/maven2/",
@@ -47,29 +56,44 @@ func TestGenerator(t *testing.T) {
 						},
 					},
 				},
-				Meta: v1beta1.MetaConfiguration{
-					Resources: v1beta1.ResourcesWithPersistentVolume{
-						Memory:         "512Mi",
+				Meta: v1beta2.MetaConfiguration{
+					Resources: v1beta2.ResourcesWithPersistentVolume{
+						Limit: v1beta2.ResourceParams{
+							Memory: "512Mi",
+						},
+						Request: v1beta2.ResourceParams{
+							Memory: "280Mi",
+						},
 						VolumeCapacity: "1Gi",
 					},
 				},
-				Database: v1beta1.DatabaseConfiguration{
+				Database: v1beta2.DatabaseConfiguration{
 					User: "syndesis",
 					Name: "syndesis",
 					URL:  "postgresql://syndesis-db:5432/syndesis?sslmode=disable",
-					Resources: v1beta1.ResourcesWithPersistentVolume{
-						Memory:         "255Mi",
+					Resources: v1beta2.ResourcesWithPersistentVolume{
+						Limit: v1beta2.ResourceParams{
+							Memory: "255Mi",
+						},
+						Request: v1beta2.ResourceParams{
+							Memory: "255Mi",
+						},
 						VolumeCapacity: "1Gi",
 					},
 				},
-				Prometheus: v1beta1.PrometheusConfiguration{
-					Resources: v1beta1.ResourcesWithPersistentVolume{
-						Memory:         "512Mi",
+				Prometheus: v1beta2.PrometheusConfiguration{
+					Resources: v1beta2.ResourcesWithPersistentVolume{
+						Limit: v1beta2.ResourceParams{
+							Memory: "512Mi",
+						},
+						Request: v1beta2.ResourceParams{
+							Memory: "512Mi",
+						},
 						VolumeCapacity: "1Gi",
 					},
 				},
-				Upgrade: v1beta1.UpgradeConfiguration{
-					Resources: v1beta1.VolumeOnlyResources{VolumeCapacity: "1Gi"},
+				Upgrade: v1beta2.UpgradeConfiguration{
+					Resources: v1beta2.VolumeOnlyResources{VolumeCapacity: "1Gi"},
 				},
 			},
 		},
@@ -113,14 +137,13 @@ func TestGenerator(t *testing.T) {
 
 // Run test related with Ops addon
 func TestOpsAddon(t *testing.T) {
-	syndesis := &v1beta1.Syndesis{}
+	syndesis := &v1beta2.Syndesis{}
 	baseDir := "./addons/ops/"
 
 	clientTools := syntesting.FakeClientTools()
 	conf, err := configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", clientTools, syndesis)
-	if err != nil {
+	require.NoError(t, err)
 
-	}
 	for _, file := range []string{"addon-ops-db-alerting-rules.yml", "addon-ops-db-dashboard.yml"} {
 		resources, err := generator.Render(filepath.Join(baseDir, file), conf)
 		require.NoError(t, err)
@@ -143,7 +166,7 @@ func TestOpsAddon(t *testing.T) {
 // Checks syndesis-meta resources have had syndesis
 // object values correctly applied
 //
-func checkSynMeta(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta1.Syndesis) int {
+func checkSynMeta(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta2.Syndesis) int {
 	if resource.GetName() != "syndesis-meta" {
 		return 0
 	}
@@ -157,7 +180,7 @@ func checkSynMeta(t *testing.T, resource unstructured.Unstructured, syndesis *v1
 // Checks syndesis-server resources have had syndesis
 // object values correctly applied
 //
-func checkSynServer(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta1.Syndesis) int {
+func checkSynServer(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta2.Syndesis) int {
 	if resource.GetName() != "syndesis-server" {
 		return 0
 	}
@@ -165,20 +188,21 @@ func checkSynServer(t *testing.T, resource unstructured.Unstructured, syndesis *
 	container := sliceProperty(resource, "spec", "template", "spec", "containers")
 	if container != nil {
 		//
-		// Compare the server memory limit which is set via the template function 'memoryLimit'
+		// Compare the server memory and cpu values
 		//
 		limits, lexists, _ := unstructured.NestedFieldNoCopy(container, "resources", "limits")
 		if lexists {
 			limitMap, ok := limits.(map[string]interface{})
 			assert.True(t, ok)
-			assert.Equal(t, syndesis.Spec.Components.Server.Resources.Memory, limitMap["memory"])
+			assert.Equal(t, syndesis.Spec.Components.Server.Resources.Limit.Memory, limitMap["memory"])
+			assert.Equal(t, syndesis.Spec.Components.Server.Resources.Limit.CPU, limitMap["cpu"])
 		}
 	}
 
 	return 1
 }
 
-func checkSynGlobalConfig(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta1.Syndesis) int {
+func checkSynGlobalConfig(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta2.Syndesis) int {
 	if resource.GetName() != "syndesis-global-config" {
 		return 0
 	}
@@ -198,7 +222,7 @@ func checkSynGlobalConfig(t *testing.T, resource unstructured.Unstructured, synd
 	return 1
 }
 
-func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta1.Syndesis) int {
+func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta2.Syndesis) int {
 	if resource.GetName() != "syndesis-ui-config" {
 		return 0
 	}
@@ -206,7 +230,7 @@ func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis
 	return 1
 }
 
-func checkSynOAuthProxy(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta1.Syndesis) int {
+func checkSynOAuthProxy(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta2.Syndesis) int {
 	if resource.GetName() != "oauth-proxy" {
 		return 0
 	}
@@ -250,7 +274,7 @@ func assertPropStr(t *testing.T, resource map[string]interface{}, expected strin
 	}
 }
 
-func renderResource(t *testing.T, syndesis *v1beta1.Syndesis, resourcePath string) []unstructured.Unstructured {
+func renderResource(t *testing.T, syndesis *v1beta2.Syndesis, resourcePath string) []unstructured.Unstructured {
 	clientTools := syntesting.FakeClientTools()
 	configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", clientTools, syndesis)
 	require.NoError(t, err)
@@ -261,7 +285,7 @@ func renderResource(t *testing.T, syndesis *v1beta1.Syndesis, resourcePath strin
 	return resources
 }
 
-func checkPesistentVolumeProps(t *testing.T, syndesis *v1beta1.Syndesis, infResource string, pvTest func(t *testing.T, resource unstructured.Unstructured)) {
+func checkPesistentVolumeProps(t *testing.T, syndesis *v1beta2.Syndesis, infResource string, pvTest func(t *testing.T, resource unstructured.Unstructured)) {
 	resources := renderResource(t, syndesis, infResource)
 
 	for _, resource := range resources {
@@ -275,28 +299,30 @@ func checkPesistentVolumeProps(t *testing.T, syndesis *v1beta1.Syndesis, infReso
 
 func TestGeneratorComponentPVAccessMode(t *testing.T) {
 
-	resources := v1beta1.ResourcesWithPersistentVolume{
-		Memory:           "255Mi",
+	resources := v1beta2.ResourcesWithPersistentVolume{
+		Limit:            v1beta2.ResourceParams{Memory: "255Mi"},
 		VolumeCapacity:   "1Gi",
-		VolumeAccessMode: v1beta1.ReadOnlyMany,
+		VolumeAccessMode: v1beta2.ReadOnlyMany,
 	}
 
 	testData := []struct {
 		name               string
 		path               string
 		expectedAccessMode string
-		syndesis           *v1beta1.Syndesis
+		syndesis           *v1beta2.Syndesis
 	}{
 		{
 			name:               "syndesis-db-default",
 			path:               "./database/",
-			expectedAccessMode: string(v1beta1.ReadWriteOnce),
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Database: v1beta1.DatabaseConfiguration{
-							Resources: v1beta1.ResourcesWithPersistentVolume{
-								Memory:         "255Mi",
+			expectedAccessMode: string(v1beta2.ReadWriteOnce),
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Database: v1beta2.DatabaseConfiguration{
+							Resources: v1beta2.ResourcesWithPersistentVolume{
+								Limit: v1beta2.ResourceParams{
+									Memory: "255Mi",
+								},
 								VolumeCapacity: "1Gi",
 							},
 						},
@@ -307,11 +333,11 @@ func TestGeneratorComponentPVAccessMode(t *testing.T) {
 		{
 			name:               "syndesis-db",
 			path:               "./database/",
-			expectedAccessMode: string(v1beta1.ReadOnlyMany),
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Database: v1beta1.DatabaseConfiguration{
+			expectedAccessMode: string(v1beta2.ReadOnlyMany),
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Database: v1beta2.DatabaseConfiguration{
 							Resources: resources,
 						},
 					},
@@ -321,11 +347,11 @@ func TestGeneratorComponentPVAccessMode(t *testing.T) {
 		{
 			name:               "syndesis-meta",
 			path:               "./infrastructure/04-syndesis-meta.yml.tmpl",
-			expectedAccessMode: string(v1beta1.ReadOnlyMany),
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Meta: v1beta1.MetaConfiguration{
+			expectedAccessMode: string(v1beta2.ReadOnlyMany),
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Meta: v1beta2.MetaConfiguration{
 							Resources: resources,
 						},
 					},
@@ -335,11 +361,11 @@ func TestGeneratorComponentPVAccessMode(t *testing.T) {
 		{
 			name:               "syndesis-prometheus",
 			path:               "./infrastructure/06-syndesis-prometheus.yml.tmpl",
-			expectedAccessMode: string(v1beta1.ReadOnlyMany),
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Prometheus: v1beta1.PrometheusConfiguration{
+			expectedAccessMode: string(v1beta2.ReadOnlyMany),
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Prometheus: v1beta2.PrometheusConfiguration{
 							Resources: resources,
 						},
 					},
@@ -361,23 +387,25 @@ func TestGeneratorComponentPVAccessMode(t *testing.T) {
 }
 
 func TestGeneratorComponentPVNoExtraProps(t *testing.T) {
-	resources := v1beta1.ResourcesWithPersistentVolume{
-		Memory:         "255Mi",
+	resources := v1beta2.ResourcesWithPersistentVolume{
+		Limit: v1beta2.ResourceParams{
+			Memory: "255Mi",
+		},
 		VolumeCapacity: "1Gi",
 	}
 
 	testData := []struct {
 		name     string
 		path     string
-		syndesis *v1beta1.Syndesis
+		syndesis *v1beta2.Syndesis
 	}{
 		{
 			name: "syndesis-db",
 			path: "./database/",
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Database: v1beta1.DatabaseConfiguration{
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Database: v1beta2.DatabaseConfiguration{
 							Resources: resources,
 						},
 					},
@@ -387,10 +415,10 @@ func TestGeneratorComponentPVNoExtraProps(t *testing.T) {
 		{
 			name: "syndesis-meta",
 			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Meta: v1beta1.MetaConfiguration{
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Meta: v1beta2.MetaConfiguration{
 							Resources: resources,
 						},
 					},
@@ -400,10 +428,10 @@ func TestGeneratorComponentPVNoExtraProps(t *testing.T) {
 		{
 			name: "syndesis-prometheus",
 			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Prometheus: v1beta1.PrometheusConfiguration{
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Prometheus: v1beta2.PrometheusConfiguration{
 							Resources: resources,
 						},
 					},
@@ -431,8 +459,10 @@ func TestGeneratorComponentPVNoExtraProps(t *testing.T) {
 func TestGeneratorComponentPVVolumeName(t *testing.T) {
 	volumeName := "pv0001"
 
-	resources := v1beta1.ResourcesWithPersistentVolume{
-		Memory:         "255Mi",
+	resources := v1beta2.ResourcesWithPersistentVolume{
+		Limit: v1beta2.ResourceParams{
+			Memory: "255Mi",
+		},
 		VolumeCapacity: "1Gi",
 		VolumeName:     volumeName,
 	}
@@ -440,15 +470,15 @@ func TestGeneratorComponentPVVolumeName(t *testing.T) {
 	testData := []struct {
 		name     string
 		path     string
-		syndesis *v1beta1.Syndesis
+		syndesis *v1beta2.Syndesis
 	}{
 		{
 			name: "syndesis-db",
 			path: "./database/",
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Database: v1beta1.DatabaseConfiguration{
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Database: v1beta2.DatabaseConfiguration{
 							Resources: resources,
 						},
 					},
@@ -458,10 +488,10 @@ func TestGeneratorComponentPVVolumeName(t *testing.T) {
 		{
 			name: "syndesis-meta",
 			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Meta: v1beta1.MetaConfiguration{
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Meta: v1beta2.MetaConfiguration{
 							Resources: resources,
 						},
 					},
@@ -471,10 +501,10 @@ func TestGeneratorComponentPVVolumeName(t *testing.T) {
 		{
 			name: "syndesis-prometheus",
 			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Prometheus: v1beta1.PrometheusConfiguration{
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Prometheus: v1beta2.PrometheusConfiguration{
 							Resources: resources,
 						},
 					},
@@ -495,8 +525,10 @@ func TestGeneratorComponentPVVolumeName(t *testing.T) {
 func TestGeneratorDBVolumeStorageClass(t *testing.T) {
 	volumeStorageClass := "gluster-fs"
 
-	resources := v1beta1.ResourcesWithPersistentVolume{
-		Memory:             "255Mi",
+	resources := v1beta2.ResourcesWithPersistentVolume{
+		Limit: v1beta2.ResourceParams{
+			Memory: "255Mi",
+		},
 		VolumeCapacity:     "1Gi",
 		VolumeStorageClass: volumeStorageClass,
 	}
@@ -504,15 +536,15 @@ func TestGeneratorDBVolumeStorageClass(t *testing.T) {
 	testData := []struct {
 		name     string
 		path     string
-		syndesis *v1beta1.Syndesis
+		syndesis *v1beta2.Syndesis
 	}{
 		{
 			name: "syndesis-db",
 			path: "./database/",
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Database: v1beta1.DatabaseConfiguration{
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Database: v1beta2.DatabaseConfiguration{
 							Resources: resources,
 						},
 					},
@@ -522,10 +554,10 @@ func TestGeneratorDBVolumeStorageClass(t *testing.T) {
 		{
 			name: "syndesis-meta",
 			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Meta: v1beta1.MetaConfiguration{
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Meta: v1beta2.MetaConfiguration{
 							Resources: resources,
 						},
 					},
@@ -535,10 +567,10 @@ func TestGeneratorDBVolumeStorageClass(t *testing.T) {
 		{
 			name: "syndesis-prometheus",
 			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Prometheus: v1beta1.PrometheusConfiguration{
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Prometheus: v1beta2.PrometheusConfiguration{
 							Resources: resources,
 						},
 					},
@@ -562,8 +594,10 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 		"aws-availability-zone": "us-east-1",
 	}
 
-	resources := v1beta1.ResourcesWithPersistentVolume{
-		Memory:         "255Mi",
+	resources := v1beta2.ResourcesWithPersistentVolume{
+		Limit: v1beta2.ResourceParams{
+			Memory: "255Mi",
+		},
 		VolumeCapacity: "1Gi",
 		VolumeLabels:   volumeLabels,
 	}
@@ -571,15 +605,15 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 	testData := []struct {
 		name     string
 		path     string
-		syndesis *v1beta1.Syndesis
+		syndesis *v1beta2.Syndesis
 	}{
 		{
 			name: "syndesis-db",
 			path: "./database/",
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Database: v1beta1.DatabaseConfiguration{
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Database: v1beta2.DatabaseConfiguration{
 							Resources: resources,
 						},
 					},
@@ -589,10 +623,10 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 		{
 			name: "syndesis-meta",
 			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Meta: v1beta1.MetaConfiguration{
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Meta: v1beta2.MetaConfiguration{
 							Resources: resources,
 						},
 					},
@@ -602,10 +636,10 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 		{
 			name: "syndesis-prometheus",
 			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
-			syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Components: v1beta1.ComponentsSpec{
-						Prometheus: v1beta1.PrometheusConfiguration{
+			syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Components: v1beta2.ComponentsSpec{
+						Prometheus: v1beta2.PrometheusConfiguration{
 							Resources: resources,
 						},
 					},
