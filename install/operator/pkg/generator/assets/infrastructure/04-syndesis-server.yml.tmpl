@@ -145,11 +145,11 @@
           # from limit to resource (80% currently). 'requests' is ignored there
           resources:
             limits:
-              memory: '{{ .Syndesis.Components.Server.Resources.Memory }}'
-              cpu: 750m
+              memory: '{{ .Syndesis.Components.Server.Resources.Limit.Memory }}'
+              cpu: '{{ .Syndesis.Components.Server.Resources.Limit.CPU }}'
             requests:
-              memory: 256Mi
-              cpu: 450m
+              memory: '{{ .Syndesis.Components.Server.Resources.Request.Memory }}'
+              cpu: '{{ .Syndesis.Components.Server.Resources.Request.CPU }}'
         volumes:
         - name: config-volume
           configMap:

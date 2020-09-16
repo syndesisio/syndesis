@@ -43,6 +43,7 @@ require (
 	github.com/coreos/prometheus-operator v0.39.0 // indirect
 	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
 	github.com/go-logr/zapr v0.1.1
+	github.com/go-openapi/swag v0.19.7 // indirect
 	github.com/operator-framework/api v0.3.5
 	github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200521062108-408ca95d458f // Tag 0.15.1
 	github.com/operator-framework/operator-marketplace v0.0.0-20200515051804-e0148822df25
@@ -50,6 +51,8 @@ require (
 	github.com/rogpeppe/go-internal v1.5.0
 	github.com/spf13/afero v1.2.2
 	go.uber.org/zap v1.14.1
+	golang.org/x/lint v0.0.0-20200130185559-910be7a94367 // indirect
+	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d // indirect
 	sigs.k8s.io/controller-runtime v0.6.0
 )
 

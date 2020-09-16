@@ -189,9 +189,9 @@
           # Note: On OSO there is no Guaranteed class, its always burstable
           resources:
             limits:
-              memory: {{ .Syndesis.Components.Prometheus.Resources.Memory}}
+              memory: {{ .Syndesis.Components.Prometheus.Resources.Limit.Memory}}
             requests:
-              memory: {{ .Syndesis.Components.Prometheus.Resources.Memory}}
+              memory: {{ .Syndesis.Components.Prometheus.Resources.Request.Memory}}
           volumeMounts:
           - name: syndesis-prometheus-data
             mountPath: /prometheus

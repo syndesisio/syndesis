@@ -22,7 +22,7 @@ import (
 	"github.com/operator-framework/operator-sdk/pkg/log/zap"
 	"github.com/spf13/cobra"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/backup"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
@@ -51,7 +51,7 @@ func NewBackup(parent *internal.Options) *cobra.Command {
 	return &cmd
 }
 
-func (o *Backup) prepare() (*v1beta1.Syndesis, error) {
+func (o *Backup) prepare() (*v1beta2.Syndesis, error) {
 	mgr, err := manager.New(o.ClientTools().RestConfig(), manager.Options{
 		Namespace: o.Namespace,
 	})
@@ -68,7 +68,7 @@ func (o *Backup) prepare() (*v1beta1.Syndesis, error) {
 		return nil, err
 	}
 
-	syndesis, err := v1beta1.InstalledSyndesis(o.Context, cl, o.Namespace)
+	syndesis, err := v1beta2.InstalledSyndesis(o.Context, cl, o.Namespace)
 	if err != nil {
 		return nil, err
 	}

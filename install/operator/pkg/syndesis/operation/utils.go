@@ -2,20 +2,20 @@ package operation
 
 import (
 	"github.com/syndesisio/syndesis/install/operator/pkg"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-func SetNamespaceAndOwnerReference(resource interface{}, syndesis *v1beta1.Syndesis) {
+func SetNamespaceAndOwnerReference(resource interface{}, syndesis *v1beta2.Syndesis) {
 	object := util.ToMetaObject(resource)
 	object.SetNamespace(syndesis.Namespace)
 	object.SetOwnerReferences([]metav1.OwnerReference{
 		*metav1.NewControllerRef(syndesis, schema.GroupVersionKind{
-			Group:   v1beta1.SchemeGroupVersion.Group,
-			Version: v1beta1.SchemeGroupVersion.Version,
+			Group:   v1beta2.SchemeGroupVersion.Group,
+			Version: v1beta2.SchemeGroupVersion.Version,
 			Kind:    syndesis.Kind,
 		}),
 	})

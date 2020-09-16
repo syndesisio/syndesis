@@ -20,7 +20,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -43,12 +43,12 @@ func TestUninstall(t *testing.T) {
 	}
 
 	ctx := context.TODO()
-	s := v1beta1.Syndesis{ObjectMeta: v1.ObjectMeta{Name: s, Namespace: ns}}
-	sl := v1beta1.SyndesisList{}
+	s := v1beta2.Syndesis{ObjectMeta: v1.ObjectMeta{Name: s, Namespace: ns}}
+	sl := v1beta2.SyndesisList{}
 
 	sch := scheme.Scheme
-	sch.AddKnownTypes(v1beta1.SchemeGroupVersion, &s)
-	sch.AddKnownTypes(v1beta1.SchemeGroupVersion, &sl)
+	sch.AddKnownTypes(v1beta2.SchemeGroupVersion, &s)
+	sch.AddKnownTypes(v1beta2.SchemeGroupVersion, &sl)
 
 	u := &Uninstall{Options: &internal.Options{Namespace: ns, Context: ctx}}
 	{

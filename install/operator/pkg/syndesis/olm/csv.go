@@ -302,7 +302,7 @@ func (c *csv) build() (err error) {
 			Customresourcedefinitions: CustomResourceDefinitions{
 				Owned: []CustomResourceDefinition{{
 					Name:        "syndesises.syndesis.io",
-					Version:     "v1beta1",
+					Version:     "v1beta2",
 					Kind:        "Syndesis",
 					DisplayName: "Syndesis CRD",
 					Description: "Syndesis CRD",

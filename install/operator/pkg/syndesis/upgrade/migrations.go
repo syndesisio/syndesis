@@ -31,7 +31,7 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -43,13 +43,13 @@ import (
 type migration struct {
 	step
 	jobName  string
-	syndesis *v1beta1.Syndesis
+	syndesis *v1beta2.Syndesis
 	backup   sbackup.Runner
 	timeout  time.Duration
 	interval time.Duration
 }
 
-func newMigration(base step, s *v1beta1.Syndesis, b sbackup.Runner) (m *migration) {
+func newMigration(base step, s *v1beta2.Syndesis, b sbackup.Runner) (m *migration) {
 	m = &migration{
 		jobName:  "upgrade-db-migration",
 		step:     base,

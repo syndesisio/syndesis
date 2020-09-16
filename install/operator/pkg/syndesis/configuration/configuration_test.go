@@ -25,8 +25,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/stretchr/testify/assert"
-
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 )
 
@@ -116,7 +115,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 				Syndesis: SyndesisConfig{
 					RouteHostname: "route",
 					Addons: AddonsSpec{
-						Todo:   TodoConfiguration{Image: "TODO_IMAGE"},
+						Todo: TodoConfiguration{Image: "TODO_IMAGE"},
 					},
 					Components: ComponentsSpec{
 						Oauth:      OauthConfiguration{Image: "OAUTH_IMAGE"},
@@ -236,7 +235,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 
 func Test_setSyndesisFromCustomResource(t *testing.T) {
 	type args struct {
-		syndesis *v1beta1.Syndesis
+		syndesis *v1beta2.Syndesis
 	}
 	tests := []struct {
 		name       string
@@ -246,16 +245,16 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 	}{
 		{
 			name:       "When using an empty syndesis custom resource, the config values from template should remain",
-			args:       args{syndesis: &v1beta1.Syndesis{}},
+			args:       args{syndesis: &v1beta2.Syndesis{}},
 			wantConfig: getConfigLiteral(),
 			wantErr:    false,
 		},
 		{
 			name: "When using a syndesis custom resource with values, those values should replace the template values",
-			args: args{syndesis: &v1beta1.Syndesis{
-				Spec: v1beta1.SyndesisSpec{
-					Addons: v1beta1.AddonsSpec{
-						Jaeger: v1beta1.JaegerConfiguration{
+			args: args{syndesis: &v1beta2.Syndesis{
+				Spec: v1beta2.SyndesisSpec{
+					Addons: v1beta2.AddonsSpec{
+						Jaeger: v1beta2.JaegerConfiguration{
 							Enabled:       true,
 							SamplerType:   "const",
 							SamplerParam:  "0",
@@ -263,8 +262,8 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 							ImageAllInOne: "jaegertracing/all-in-one:1.13",
 							ImageOperator: "jaegertracing/jaeger-operator:1.13",
 						},
-						Todo:   v1beta1.AddonSpec{Enabled: true},
-						PublicApi: v1beta1.PublicApiConfiguration{
+						Todo: v1beta2.AddonSpec{Enabled: true},
+						PublicApi: v1beta2.PublicApiConfiguration{
 							Enabled:       true,
 							RouteHostname: "mypublichost.com",
 						},
@@ -324,12 +323,12 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 
 func Test_MavenSettings(t *testing.T) {
 	c := getConfigLiteral()
-	s := &v1beta1.Syndesis{
-		Spec: v1beta1.SyndesisSpec{
-			Components: v1beta1.ComponentsSpec{
-				Server: v1beta1.ServerConfiguration{
-					Features: v1beta1.ServerFeatures{
-						Maven: v1beta1.MavenConfiguration{
+	s := &v1beta2.Syndesis{
+		Spec: v1beta2.SyndesisSpec{
+			Components: v1beta2.ComponentsSpec{
+				Server: v1beta2.ServerConfiguration{
+					Features: v1beta2.ServerFeatures{
+						Maven: v1beta2.MavenConfiguration{
 							Append: false,
 							Repositories: map[string]string{
 								"rep1": "http://rep1",
@@ -459,8 +458,17 @@ func getConfigLiteral() *Config {
 					Image: "docker.io/syndesis/syndesis-s2i:latest",
 				},
 				Server: ServerConfiguration{
-					Image:     "docker.io/syndesis/syndesis-server:latest",
-					Resources: Resources{Memory: "800Mi"},
+					Image: "docker.io/syndesis/syndesis-server:latest",
+					Resources: Resources{
+						Limit: ResourceParams{
+							Memory: "800Mi",
+							CPU:    "750m",
+						},
+						Request: ResourceParams{
+							Memory: "256Mi",
+							CPU:    "450m",
+						},
+					},
 					Features: ServerFeatures{
 						IntegrationLimit:              0,
 						IntegrationStateCheckInterval: 60,
@@ -481,9 +489,14 @@ func getConfigLiteral() *Config {
 				Meta: MetaConfiguration{
 					Image: "docker.io/syndesis/syndesis-meta:latest",
 					Resources: ResourcesWithPersistentVolume{
-						Memory:           "512Mi",
+						Limit: ResourceParams{
+							Memory: "512Mi",
+						},
+						Request: ResourceParams{
+							Memory: "280Mi",
+						},
 						VolumeCapacity:   "1Gi",
-						VolumeAccessMode: string(v1beta1.ReadWriteOnce),
+						VolumeAccessMode: string(v1beta2.ReadWriteOnce),
 					},
 				},
 				Database: DatabaseConfiguration{
@@ -495,17 +508,27 @@ func getConfigLiteral() *Config {
 						Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7",
 					},
 					Resources: ResourcesWithPersistentVolume{
-						Memory:           "255Mi",
+						Limit: ResourceParams{
+							Memory: "255Mi",
+						},
+						Request: ResourceParams{
+							Memory: "255Mi",
+						},
 						VolumeCapacity:   "1Gi",
-						VolumeAccessMode: string(v1beta1.ReadWriteOnce),
+						VolumeAccessMode: string(v1beta2.ReadWriteOnce),
 					},
 				},
 				Prometheus: PrometheusConfiguration{
 					Image: "docker.io/prom/prometheus:v2.1.0",
 					Resources: ResourcesWithPersistentVolume{
-						Memory:           "512Mi",
+						Limit: ResourceParams{
+							Memory: "512Mi",
+						},
+						Request: ResourceParams{
+							Memory: "512Mi",
+						},
 						VolumeCapacity:   "1Gi",
-						VolumeAccessMode: string(v1beta1.ReadWriteOnce),
+						VolumeAccessMode: string(v1beta2.ReadWriteOnce),
 					},
 				},
 				Upgrade: UpgradeConfiguration{
@@ -559,7 +582,7 @@ func TestConfig_SetRoute(t *testing.T) {
 	type args struct {
 		ctx      context.Context
 		client   client.Client
-		syndesis *v1beta1.Syndesis
+		syndesis *v1beta2.Syndesis
 	}
 	tests := []struct {
 		name    string
