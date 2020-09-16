@@ -5,6 +5,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/syndesisio/syndesis/install/operator/pkg"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -73,9 +74,9 @@ func (a *installAction) installResource(ctx context.Context, rtClient client.Cli
 //
 // Log the possible combination of values chosen for the db persistent volume claim
 //
-func (a *installAction) logResourcePersistentVolume(syndesis *v1beta1.Syndesis, componentName string, resourceVolume configuration.ResourcesWithPersistentVolume) {
-	if syndesisPhaseIs(syndesis, v1beta1.SyndesisPhaseInstalling) {
-		a.log.V(1).Info("Binding to persistent volume with criteria ",
+func (a *installAction) logResourcePersistentVolume(syndesis *v1beta2.Syndesis, componentName string, resourceVolume configuration.ResourcesWithPersistentVolume) {
+	if syndesisPhaseIs(syndesis, v1beta2.SyndesisPhaseInstalling) {
+		a.log.V(pkg.DEBUG_LOGGING_LVL).Info("Binding to persistent volume with criteria ",
 			"component", componentName,
 			"volume-access-mode", resourceVolume.VolumeAccessMode,
 			"volume-name", resourceVolume.VolumeName,
@@ -203,8 +204,10 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 			continue
 		}
 
+		a.log.V(pkg.DEBUG_LOGGING_LVL).Info("Installing addon", "Name", addonInfo.Name())
+
 		if config.ApiServer.OlmSupport && addonInfo.GetOlmSpec() != nil && addonInfo.GetOlmSpec().Package != "" {
-			a.log.Info("Subscribing to OLM operator:", "Package", addonInfo.GetOlmSpec().Package, "Channel", addonInfo.GetOlmSpec().Channel)
+			a.log.V(pkg.DEBUG_LOGGING_LVL).Info("Subscribing to OLM operator:", "Package", addonInfo.GetOlmSpec().Package, "Channel", addonInfo.GetOlmSpec().Channel)
 			//
 			// Using the operator hub is not mutually exclusive to loading the addon
 			// resources. Each addon should be tailored with conditionals to be
@@ -222,14 +225,14 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		addonDir := "./addons/" + addonInfo.Name() + "/"
 		f, err := generator.GetAssetsFS().Open(addonDir)
 		if err != nil {
-			a.log.Info("unsupported addon configured", "addon", addonInfo.Name(), "error", err)
+			a.log.Error(err, "Unsupported addon configured", "addon", addonInfo.Name())
 			continue
 		}
 		f.Close()
 
 		resources, err := generator.RenderDir(addonDir, config)
 		if err != nil {
-			a.log.Info("Rendering of addon resources failed", "addon", addonInfo.Name(), "error message", err.Error())
+			a.log.Error(err, "Rendering of addon resources failed", "addon", addonInfo.Name())
 			continue
 		}
 
@@ -241,7 +244,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		for _, res := range resources {
 			o, err := a.installResource(ctx, rtClient, syndesis, res)
 			if err != nil {
-				a.log.Info("Install of addon failed", "addon", addonInfo.Name(), "error message", err.Error())
+				a.log.Error(err, "Install of addon failed", "addon", addonInfo.Name())
 				break
 			}
 			resourcesThatShouldExist[o.GetUID()] = true
