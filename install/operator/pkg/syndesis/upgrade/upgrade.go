@@ -32,7 +32,7 @@ import (
 
 	"github.com/go-logr/logr"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 )
 
 // Upgrader the interface to be used top perform upgrades
@@ -88,7 +88,7 @@ type upgrade struct {
 	backup      sbackup.Runner
 	attempts    []result
 	ctx         context.Context
-	syndesis    *v1beta1.Syndesis
+	syndesis    *v1beta2.Syndesis
 	clientTools *clienttools.ClientTools
 }
 
@@ -145,7 +145,7 @@ func (u *upgrade) InstallFailed() (count int) {
 }
 
 // build the upgrade struct
-func Build(ctx context.Context, log logr.Logger, syndesis *v1beta1.Syndesis, clientTools *clienttools.ClientTools) (Upgrader, error) {
+func Build(ctx context.Context, log logr.Logger, syndesis *v1beta2.Syndesis, clientTools *clienttools.ClientTools) (Upgrader, error) {
 	base := step{
 		log:         log,
 		executed:    false,

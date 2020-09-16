@@ -20,7 +20,7 @@ import (
 	"context"
 
 	"github.com/spf13/cobra"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/olm"
@@ -50,7 +50,7 @@ func New(parent *internal.Options) *cobra.Command {
 }
 
 func (o *Olm) generate() (err error) {
-	conf, err := configuration.GetProperties(context.TODO(), configuration.TemplateConfig, nil, &v1beta1.Syndesis{})
+	conf, err := configuration.GetProperties(context.TODO(), configuration.TemplateConfig, nil, &v1beta2.Syndesis{})
 	if err != nil {
 		return err
 	}

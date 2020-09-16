@@ -273,9 +273,11 @@
           # Note: On OSO there is no Guaranteed class, its always burstable
           resources:
             limits:
-              memory: {{.Syndesis.Components.Database.Resources.Memory}}
+              memory: {{.Syndesis.Components.Database.Resources.Limit.Memory}}
+              cpu: {{.Syndesis.Components.Database.Resources.Limit.CPU}}
             requests:
-              memory: {{.Syndesis.Components.Database.Resources.Memory}}
+              memory: {{.Syndesis.Components.Database.Resources.Request.Memory}}
+              cpu: {{.Syndesis.Components.Database.Resources.Request.CPU}}
           volumeMounts:
           - mountPath: /var/lib/pgsql/data
             name: syndesis-db-data
