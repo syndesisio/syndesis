@@ -46,7 +46,6 @@
     <image.server>syndesis/syndesis-server:%l</image.server>
     <image.meta>syndesis/syndesis-meta:%l</image.meta>
     <image.ui>syndesis/syndesis-ui:%l</image.ui>
-    <image.dv>syndesis/syndesis-dv:%l</image.dv>
 
     <fabric8.maven.plugin.version>4.2.0</fabric8.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
@@ -701,8 +700,6 @@
               <exclude>extension/**/src/it/**/verify.groovy</exclude>
               <!-- excludes as it is copied from upstream camel component and nneds to be moved back to caml -->
               <exclude>connector/servicenow/src/main/java/io/syndesis/connector/servicenow/ServiceNowMetaDataExtension.java</exclude>
-              <exclude>dv/src/main/resources/static/**</exclude>
-              <exclude>dv/src/main/resources/db/migration/**</exclude>
             </excludes>
           </configuration>
           <dependencies>

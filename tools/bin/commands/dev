@@ -201,12 +201,12 @@ dev::run() {
         set -e
 
         if [ $(hasflag --nuke) ]; then
-            # truncate jsondb and data_virtualization tables
-            oc exec -c postgresql $(oc get pod -l 'syndesis.io/component=syndesis-db' --no-headers=true -o=custom-columns=x:.metadata.name) -- bash -c "echo 'TRUNCATE jsondb; TRUNCATE config; TRUNCATE filestore; TRUNCATE data_virtualization CASCADE; VACUUM FULL ANALYSE;' |psql -U syndesis"
+            # truncate jsondb tables
+            oc exec -c postgresql $(oc get pod -l 'syndesis.io/component=syndesis-db' --no-headers=true -o=custom-columns=x:.metadata.name) -- bash -c "echo 'TRUNCATE jsondb; TRUNCATE config; TRUNCATE filestore; VACUUM FULL ANALYSE;' |psql -U syndesis"
             # restart syndesis-server pod
             oc delete $(oc get pod -l 'syndesis.io/component=syndesis-server' -o name)
-            # delete all syndesis and datavirt deployed objects
-            oc delete $(oc get all -o name |grep -E '^[^/]+/(i-|dv-)')
+            # delete all syndesis deployed objects
+            oc delete $(oc get all -o name |grep -E '^[^/]+/(i-)')
         fi
 
         echo done

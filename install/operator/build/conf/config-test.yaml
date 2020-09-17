@@ -24,11 +24,6 @@ Syndesis:
             Image: "docker.io/centos/php-71-centos7"
         Knative:
             Enabled: false
-        DV:
-            Enabled: false
-            Image: "docker.io/teiid/syndesis-dv:latest"
-            Resources:
-                Memory: "1024Mi"
         PublicApi:
             Enabled: true
             RouteHostname: "mypublichost.com"
