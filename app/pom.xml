@@ -53,7 +53,6 @@
     <image.server>${image.namespace}/syndesis-server:${image.tag}</image.server>
     <image.meta>${image.namespace}/syndesis-meta:${image.tag}</image.meta>
     <image.ui>${image.namespace}/syndesis-ui:${image.tag}</image.ui>
-    <image.dv>${image.namespace}/syndesis-dv:${image.tag}</image.dv>
 
     <fabric8.maven.plugin.version>4.2.0</fabric8.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
@@ -732,8 +731,6 @@
               <!-- excludes as it is copied from upstream camel component and nneds to be moved back to caml -->
               <exclude>connector/servicenow/src/main/java/io/syndesis/connector/servicenow/ServiceNowMetaDataExtension.java</exclude>
               <exclude>integration/runtime-camelk/src/main/resources/META-INF/catalog/**</exclude>
-              <exclude>dv/src/main/resources/static/**</exclude>
-              <exclude>dv/src/main/resources/db/migration/**</exclude>
             </excludes>
           </configuration>
           <dependencies>
