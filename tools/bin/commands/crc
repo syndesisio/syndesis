@@ -41,7 +41,6 @@ crc::usage() {
                               (version is optional)
     --camel-k-options "opts"  Options used when installing the camel-k operator.
                               Use quotes and start with a space before appending the options.
-    --datavirt                Install Data Virtualizations.
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
     --nodev                   Do not set the devSupport flag in CR (deploys all images)
 EOT

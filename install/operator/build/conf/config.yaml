@@ -24,11 +24,6 @@ Syndesis:
             Image: "docker.io/centos/php-71-centos7"
         Knative:
             Enabled: false
-        DV:
-            Enabled: false
-            Image: "docker.io/syndesis/syndesis-dv:latest"
-            Resources:
-                Memory: "1024Mi"
         CamelK:
             Enabled: false
             Image: "fabric8/s2i-java:3.0-java8"
