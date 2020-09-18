@@ -1,0 +1,21 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: syndesis-auth-delegator
+  app: syndesis
+  syndesis.io/app: syndesis
+  syndesis.io/type: infrastructure
+  syndesis.io/component: syndesis-public-oauthproxy
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create

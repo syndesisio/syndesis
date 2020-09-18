@@ -38,7 +38,7 @@ func TestInstallResourcesRender(t *testing.T) {
 
 	for _, f := range files {
 
-		if strings.HasPrefix(f.Name(), "grant") {
+		if strings.HasPrefix(f.Name(), "grant") || strings.HasPrefix(f.Name(), "cluster") {
 			continue // skip these.. Not testing the grant resource rendering..
 		}
 

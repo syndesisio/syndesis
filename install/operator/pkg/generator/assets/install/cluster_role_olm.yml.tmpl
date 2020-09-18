@@ -2,7 +2,7 @@
 - kind: ClusterRole
   apiVersion: rbac.authorization.k8s.io/v1
   metadata:
-    name: {{.Role}}-consolelink
+    name: syndesis-operator-consolelink
     labels:
       app: syndesis
       syndesis.io/app: syndesis
@@ -19,7 +19,7 @@
 - kind: ClusterRole
   apiVersion: rbac.authorization.k8s.io/v1
   metadata:
-    name: {{.Role}}-olm
+    name: syndesis-operator-olm
     labels:
       app: syndesis
       syndesis.io/app: syndesis
