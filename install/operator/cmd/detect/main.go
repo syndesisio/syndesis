@@ -36,5 +36,6 @@ func main() {
 		fmt.Println("Imagestreams:", apiSpec.ImageStreams)
 		fmt.Println("Routes:", apiSpec.Routes)
 		fmt.Println("AuthProvider:", apiSpec.EmbeddedProvider)
+		fmt.Println("ConsoleLink:", apiSpec.ConsoleLink)
 	}
 }
