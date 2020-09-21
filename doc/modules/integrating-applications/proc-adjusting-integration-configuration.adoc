@@ -1,0 +1,72 @@
+// This module is included in these assemblies:
+// as_managing-integrations.adoc
+
+[id='adjusting-integration-configuration_{context}']
+= Adjusting the memory and CPU configuration attributes for an integration
+
+You can specify custom values for a specific integration's CPU and memory by editing the integration's deployment configuration object. You might want to adjust the memory and CPU configuration attributes for an integration, for example, if the integration requires more memory than its default allocation.
+
+.Prerequisite
+
+* The Red Hat OpenShift `oc` client tool is installed and it is
+connected to the OCP cluster in which {prodname} is installed.
+
+* A user with cluster administration permissions gave you `admin` permission
+for the project that contains the integration that you want to configure.
+
+.Procedure
+
+. Log in to OpenShift with an account that has `admin` permission for the OpenShift project that contains the {prodname} integration. For example:
++
+`*oc login -u admin -p admin*`
+
+. Switch to the project that contains the {prodname} integration. For example: 
++
+`*oc project my-fuse-online-project*`
+
+. Edit the integration's deployment configuration object:
+
+.. Enter the following command, which typically opens the resource in an editor:
++
+`*oc edit deploymentconfig <i-integration-name>*`
++
+For example, if the integration's name is `my-integration`, type this command:
++
+`*oc edit deploymentconfig i-my-integration*`
+
+.. Edit the configuration by setting `spec.containers.resources` to specify values for CPU and memory as shown in the following example: 
++
+[listing,options="nowrap"]
+----
+spec:
+  containers:
+    resources:
+      limits:
+        cpu: 350m
+    requests:
+        memory: 350Mi
+---- 
+
+.. Save the configuration.
+
+.Results
+
+After you save your changes, the integration's pod restarts and the new pod runs with the new values. For example:
+
+[listing,options="nowrap"]
+----
+    resources:
+      limits:
+        cpu: 350m
+      requests:
+        cpu: 350m
+        memory: 350Mi
+----
+
+These values persist even after you publish a new version of the integration.
+
+ifeval::["{location}"=="downstream"]
+.Additional resources
+
+To set the default value for all integration's CPU and memory attributes, an OpenShift cluster administrator can update the {prodname} custom resource as described in link:{LinkFuseOnlineOnOCP}##descriptions-of-custom-resource-attributes-that-configure-fuse-online_install[Descriptions of custom resource attributes that configure Fuse Online] in _{NameOfFuseOnlineOnOCP}_.
+endif::[]

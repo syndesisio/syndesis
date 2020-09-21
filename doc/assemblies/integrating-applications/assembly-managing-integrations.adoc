@@ -26,6 +26,7 @@ integrations:
 * xref:testing-integrations_{context}[]
 * xref:troubleshooting-integration-execution_{context}[]
 * xref:updating-integrations_{context}[]
+* xref:adjusting-integration-configuration_{context}[]
 * xref:deleting-integrations_{context}[]
 * xref:copying-integrations-to-other-environments_{context}[]
 
@@ -42,6 +43,8 @@ include::../../modules/integrating-applications/proc-testing-integrations.adoc[l
 include::../../modules/integrating-applications/ref-troubleshooting-integration-execution.adoc[leveloffset=+1]
 
 include::../../modules/integrating-applications/proc-updating-integrations.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/proc-adjusting-integration-configuration.adoc[leveloffset=+1]
 
 include::../../modules/integrating-applications/proc-deleting-integrations.adoc[leveloffset=+1]
 
