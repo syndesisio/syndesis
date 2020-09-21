@@ -24,9 +24,28 @@
     name: {{ .Role }}
     apiGroup: rbac.authorization.k8s.io
 
+{{- if .ApiServer.ConsoleLink }}
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-operator
+      syndesis.io/type: operator
+    name: syndesis-operator:install-consolelink
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-operator
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: syndesis-operator-consolelink
+{{- end }}
+
 {{- if .ApiServer.OlmSupport }}
 - apiVersion: rbac.authorization.k8s.io/v1
-  kind: ClusterRoleBinding
+  kind: RoleBinding
   metadata:
     labels:
       app: syndesis
@@ -37,11 +56,10 @@
   subjects:
   - kind: ServiceAccount
     name: syndesis-operator
-    namespace: {{ .Namespace }}
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
-    name: {{ .Role }}-olm
+    name: syndesis-operator-olm
 {{- end }}
 - apiVersion: image.openshift.io/v1
   kind: ImageStream

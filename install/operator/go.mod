@@ -60,7 +60,7 @@ replace k8s.io/client-go => k8s.io/client-go v0.18.2 // Required by prometheus-o
 
 replace (
 	github.com/docker/docker => github.com/moby/moby v0.7.3-0.20190826074503-38ab9da00309 // Required by Helm
-	github.com/openshift/api => github.com/openshift/api v0.0.0-20190924102528-32369d4db2ad // Required until https://github.com/operator-framework/operator-lifecycle-manager/pull/1241 is resolved
+	github.com/openshift/api => github.com/openshift/api v0.0.0-20200205145930-e9d93e317dd1
 )
 
 go 1.14

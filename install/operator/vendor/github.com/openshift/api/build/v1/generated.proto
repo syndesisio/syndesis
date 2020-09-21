@@ -14,7 +14,6 @@ option go_package = "v1";
 
 // BinaryBuildRequestOptions are the options required to fully speficy a binary build request
 message BinaryBuildRequestOptions {
-  // metadata for BinaryBuildRequestOptions.
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
   // asFile determines if the binary should be created as a file within the source rather than extracted as an archive
@@ -60,13 +59,13 @@ message BitbucketWebHookCause {
 // Build encapsulates the inputs needed to produce a new deployable image, as well as
 // the status of the execution and a reference to the Pod which executed the build.
 message Build {
-  // Standard object's metadata.
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
   // spec is all the inputs used to execute the build.
   optional BuildSpec spec = 2;
 
   // status is the current status of the build.
+  // +optional
   optional BuildStatus status = 3;
 }
 
@@ -74,7 +73,6 @@ message Build {
 //
 // Each build created by a build configuration is numbered and refers back to its parent configuration. Multiple builds can be triggered at once. Builds that do not have "output" set can be used to test code or run a verification build.
 message BuildConfig {
-  // metadata for BuildConfig.
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
   // spec holds all the input necessary to produce a new build, and the conditions when
@@ -82,12 +80,12 @@ message BuildConfig {
   optional BuildConfigSpec spec = 2;
 
   // status holds any relevant information about a build config
+  // +optional
   optional BuildConfigStatus status = 3;
 }
 
 // BuildConfigList is a collection of BuildConfigs.
 message BuildConfigList {
-  // metadata for BuildConfigList.
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
 
   // items is a list of build configs
@@ -128,7 +126,6 @@ message BuildConfigStatus {
 
 // BuildList is a collection of Builds.
 message BuildList {
-  // metadata for BuildList.
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 1;
 
   // items is a list of builds
@@ -297,7 +294,6 @@ message BuildPostCommitSpec {
 
 // BuildRequest is the resource used to pass parameters to build generator
 message BuildRequest {
-  // metadata for BuildRequest.
   optional k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
 
   // revision is the information from the source for a specific repo snapshot.
@@ -476,6 +472,7 @@ message BuildStrategy {
   optional CustomBuildStrategy customStrategy = 4;
 
   // JenkinsPipelineStrategy holds the parameters to the Jenkins Pipeline build strategy.
+  // Deprecated: use OpenShift Pipelines
   optional JenkinsPipelineBuildStrategy jenkinsPipelineStrategy = 5;
 }
 
@@ -567,6 +564,7 @@ message CommonSpec {
   // If nil, it can be overridden by default build nodeselector values for the cluster.
   // If set to an empty map or a map with any values, default build nodeselector values
   // are ignored.
+  // +optional
   optional OptionalNodeSelector nodeSelector = 9;
 }
 
@@ -852,6 +850,7 @@ message ImageSourcePath {
 }
 
 // JenkinsPipelineBuildStrategy holds parameters specific to a Jenkins Pipeline build.
+// Deprecated: use OpenShift Pipelines
 message JenkinsPipelineBuildStrategy {
   // JenkinsfilePath is the optional path of the Jenkinsfile that will be used to configure the pipeline
   // relative to the root of the context (contextDir). If both JenkinsfilePath & Jenkinsfile are

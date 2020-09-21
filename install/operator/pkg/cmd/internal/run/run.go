@@ -45,6 +45,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 
+	consolev1 "github.com/openshift/api/console/v1"
 	sdkVersion "github.com/operator-framework/operator-sdk/version"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis"
 	"github.com/syndesisio/syndesis/install/operator/pkg/controller"
@@ -168,6 +169,10 @@ func (o *options) run() error {
 	}
 
 	openshift.AddToScheme(mgr.GetScheme())
+
+	if err := consolev1.Install(mgr.GetScheme()); err != nil {
+		return err
+	}
 
 	cli, err := o.ClientTools().RuntimeClient()
 	if err != nil {

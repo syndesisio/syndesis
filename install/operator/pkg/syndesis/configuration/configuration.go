@@ -29,6 +29,9 @@ import (
 	"strings"
 	"time"
 
+	consolev1 "github.com/openshift/api/console/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
 	"github.com/imdario/mergo"
 
 	"k8s.io/apimachinery/pkg/types"
@@ -41,6 +44,7 @@ import (
 
 	"k8s.io/apimachinery/pkg/util/yaml"
 
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
@@ -508,7 +512,7 @@ func (config *Config) setConfigFromEnv() error {
 	imgEnv := Config{
 		Syndesis: SyndesisConfig{
 			Addons: AddonsSpec{
-				Todo:   TodoConfiguration{Image: os.Getenv("RELATED_IMAGE_TODO")},
+				Todo: TodoConfiguration{Image: os.Getenv("RELATED_IMAGE_TODO")},
 			},
 			Components: ComponentsSpec{
 				Oauth: OauthConfiguration{Image: os.Getenv("RELATED_IMAGE_OAUTH")},
@@ -688,7 +692,88 @@ func parseConfigurationBlob(blob []byte) map[string]string {
 func getSyndesisEnvVarsFromOpenShiftNamespace(secret *corev1.Secret) (map[string]string, error) {
 	if envBlob, present := secret.Data["params"]; present {
 		return parseConfigurationBlob(envBlob), nil
-	} else {
-		return nil, errors.New("no configuration found")
+	}
+
+	return nil, errors.New("no configuration found")
+}
+
+func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis, syndesisRouteHost string) error {
+	if syndesisRouteHost == "" {
+		return nil
+	}
+
+	if !config.ApiServer.ConsoleLink {
+		// Cluster does not support ConsoleLink API
+		return nil
+	}
+
+	consoleLinkName := consoleLinkName(syndesis)
+	consoleLink := &consolev1.ConsoleLink{}
+	err := client.Get(ctx, types.NamespacedName{Name: consoleLinkName}, consoleLink)
+	if err != nil {
+		log.Info(consoleLink.Name)
+		consoleLink = createNamespaceDashboardLink(consoleLinkName, syndesisRouteHost, syndesis)
+		if err := client.Create(ctx, consoleLink); err != nil {
+			log.Error(err, "error creating console link")
+			return err
+		}
+	} else if err == nil && consoleLink != nil {
+		if syndesis.DeletionTimestamp != nil {
+			if err := client.Delete(ctx, consoleLink); err != nil {
+				log.Error(err, "Error deleting console link.")
+			}
+		}
+
+		if err := reconcileConsoleLink(ctx, syndesis, syndesisRouteHost, consoleLink, client); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func reconcileConsoleLink(ctx context.Context, syndesis *v1beta1.Syndesis, routeHost string, link *consolev1.ConsoleLink, client client.Client) error {
+	updateConsoleLink := false
+	url := "https://" + routeHost
+	if link.Spec.Href != url {
+		link.Spec.Href = url
+		updateConsoleLink = true
+	}
+
+	linkText := syndesis.Name
+	if link.Spec.Text != linkText {
+		link.Spec.Text = linkText
+		updateConsoleLink = true
+	}
+
+	if updateConsoleLink {
+		if err := client.Update(ctx, link); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func consoleLinkName(syndesis *v1beta1.Syndesis) string {
+	return syndesis.Name + "-" + syndesis.Namespace
+}
+
+func createNamespaceDashboardLink(name string, routeHost string, syndesis *v1beta1.Syndesis) *consolev1.ConsoleLink {
+	return &consolev1.ConsoleLink{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:   name,
+			Labels: syndesis.Labels,
+		},
+		Spec: consolev1.ConsoleLinkSpec{
+			Link: consolev1.Link{
+				Text: name,
+				Href: "https://" + routeHost,
+			},
+			Location: consolev1.NamespaceDashboard,
+			NamespaceDashboard: &consolev1.NamespaceDashboardSpec{
+				Namespaces: []string{syndesis.Namespace},
+			},
+		},
 	}
 }

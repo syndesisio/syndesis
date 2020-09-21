@@ -30,6 +30,7 @@ type ApiServerSpec struct {
 	Routes           bool   // Set to true if the API Server supports routes
 	EmbeddedProvider bool   // Set to true if the API Server support an embedded authenticaion provider, eg. openshift
 	OlmSupport       bool   // Set to true if the API Server supports an Operation-Lifecyle-Manager
+	ConsoleLink      bool   // Set to true if the API Server support the openshift console link API
 }
 
 type RequiredApiSpec struct {
@@ -37,6 +38,7 @@ type RequiredApiSpec struct {
 	imagestreams              string
 	oauthclientauthorizations string
 	catalogsources            string
+	consolelinks              string
 }
 
 var RequiredApi = RequiredApiSpec{
@@ -44,6 +46,7 @@ var RequiredApi = RequiredApiSpec{
 	imagestreams:              "imagestreams.image.openshift.io/v1",
 	oauthclientauthorizations: "oauthclientauthorizations.oauth.openshift.io/v1",
 	catalogsources:            "catalogsources.operators.coreos.com/v1alpha1",
+	consolelinks:              "consolelinks.console.openshift.io/v1",
 }
 
 func contains(a []string, x string) bool {
@@ -94,6 +97,7 @@ func ApiCapabilities(clientTools *clienttools.ClientTools) (*ApiServerSpec, erro
 	apiSpec.ImageStreams = contains(resIndex, RequiredApi.imagestreams)
 	apiSpec.EmbeddedProvider = contains(resIndex, RequiredApi.oauthclientauthorizations)
 	apiSpec.OlmSupport = contains(resIndex, RequiredApi.catalogsources)
+	apiSpec.ConsoleLink = contains(resIndex, RequiredApi.consolelinks)
 
 	return &apiSpec, nil
 }

@@ -219,11 +219,12 @@ github.com/opencontainers/image-spec/specs-go/v1
 # github.com/opencontainers/runc v1.0.0-rc9
 github.com/opencontainers/runc/libcontainer/system
 github.com/opencontainers/runc/libcontainer/user
-# github.com/openshift/api v3.9.1-0.20190927182313-d4a64ec2cbd8+incompatible => github.com/openshift/api v0.0.0-20190924102528-32369d4db2ad
+# github.com/openshift/api v3.9.1-0.20190927182313-d4a64ec2cbd8+incompatible => github.com/openshift/api v0.0.0-20200205145930-e9d93e317dd1
 ## explicit
 github.com/openshift/api/apps/v1
 github.com/openshift/api/authorization/v1
 github.com/openshift/api/build/v1
+github.com/openshift/api/console/v1
 github.com/openshift/api/image/docker10
 github.com/openshift/api/image/dockerpre012
 github.com/openshift/api/image/v1
@@ -754,4 +755,4 @@ sigs.k8s.io/structured-merge-diff/v3/value
 sigs.k8s.io/yaml
 # k8s.io/client-go => k8s.io/client-go v0.18.2
 # github.com/docker/docker => github.com/moby/moby v0.7.3-0.20190826074503-38ab9da00309
-# github.com/openshift/api => github.com/openshift/api v0.0.0-20190924102528-32369d4db2ad
+# github.com/openshift/api => github.com/openshift/api v0.0.0-20200205145930-e9d93e317dd1
