@@ -28,7 +28,6 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-irc_{context}>>
 * <<connecting-to-jira_{context}>>
 * <<connecting-to-kafka_{context}>>
-* <<connecting-to-knative-resources_{context}>>
 * <<connecting-to-kudu_{context}>>
 * <<connecting-to-mongodb_{context}>>
 * <<connecting-to-mqtt_{context}>>
@@ -70,8 +69,6 @@ include::assemblies/connecting/assembly-connecting-to-irc.adoc[leveloffset=+1]
 include::assemblies/connecting/assembly-connecting-to-jira.adoc[leveloffset=+1]
 
 include::assemblies/connecting/assembly-connecting-to-kafka.adoc[leveloffset=+1]
-
-include::assemblies/connecting/assembly-connecting-to-knative-resources.adoc[leveloffset=+1]
 
 include::assemblies/connecting/assembly-connecting-to-kudu.adoc[leveloffset=+1]
 

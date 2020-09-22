@@ -72,11 +72,6 @@ send messages to an IRC nickname on a particular channel.
 |link:{LinkSyndesisConnectorGuide}#connecting-to-jira_connectors[Jira]
 |Obtain, create, or update issues on a Jira server. 
 
-
-|link:{LinkSyndesisConnectorGuide}#connecting-to-knative-resources_connectors[Knative resources]
-|Obtain messages from a Knative channel, send messages to a Knative channel,
-expose a simple integration as a Knative service, or call a Knative service. 
-
 |link:{LinkSyndesisConnectorGuide}#connecting-to-kudu_connectors[Kudu]
 |Obtain records from a table in an Apache Kudu data store
 or add records to a table in a Kudu data store.
