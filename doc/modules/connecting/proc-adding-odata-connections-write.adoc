@@ -32,11 +32,9 @@ When the OData connection creates an entity, the connection returns the new enti
 +
 For OData Version 2 connections only, when you create or update an entity there are three options that you can set. These three options specify the way that data is serialized in the request:
 
-** *Content Only* - By default, OData Version 2 adds metadata as part of a request. To disable this default behavior, select the *Content Only* option.
-
-** *Omit ETag* - By default, OData Version 2 requires that, when you send an update to a request, you must specify all mandatory property values in the update request. To disable this default behavior so that you can specify only the property values that you want to change, select the *Omit ETag* option.
-
-** *Omit Json wrapper* - By default, OData Version 2 wraps a request in JSON format. To disable this default behavior, select the *Omit Json wrapper* option.
+** *Content Only* - By default, OData version 2 adds metadata as part of a request. To disable this default behavior, select the *Content Only* option.
+** *Omit ETag* - By default, OData version 2 requires that, when you send an update to a request, you must specify all mandatory property values in the update request. To disable this default behavior so that you can specify only the property values that you want to change, select the *Omit ETag* option.
+** *Omit Json wrapper* - By default, OData version 2 wraps a request in JSON format. To disable this default behavior, select the *Omit Json wrapper* option.
 
 . Configure the action by selecting the OData resource that
 you want to update. 
