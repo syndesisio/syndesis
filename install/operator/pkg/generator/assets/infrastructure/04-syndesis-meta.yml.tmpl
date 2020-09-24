@@ -157,8 +157,10 @@
           resources:
             limits:
               memory: {{.Syndesis.Components.Meta.Resources.Limit.Memory}}
+              cpu: {{.Syndesis.Components.Meta.Resources.Limit.CPU}}
             requests:
               memory: {{.Syndesis.Components.Meta.Resources.Request.Memory}}
+              cpu: {{.Syndesis.Components.Meta.Resources.Request.CPU}}
           # spring-boot automatically picks up application.yml from ./config
           workingDir: /deployments
           volumeMounts:
