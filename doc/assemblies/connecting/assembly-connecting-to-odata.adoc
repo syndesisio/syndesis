@@ -14,8 +14,8 @@ entities from an OData service, and can update, create, or
 delete entities managed by an OData service. To do this, create an 
 OData connection, and add it to an integration. 
 
-It is assumed that you are familiar with the 
-link:http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html[OData specification].
+It is assumed that you are familiar with the OData specification 
+link:http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html[Version 4] or http://www.odata.org/documentation/odata-version-2-0[Version 2].
  
 Details for connecting to an OData service are in the following topics:
 

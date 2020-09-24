@@ -6,7 +6,7 @@
 
 In an integration, to obtain, update, create, or delete
 entities that are managed by an OData service, you must first create a connection to 
-that OData service.
+that OData service. You can create a connection for version 2 or a version 4 OData.
 
 .Prerequisites
 
@@ -23,7 +23,7 @@ authentication.
 display any available connections.
 . Click *Create Connection* to display
 connectors.  
-. Click the *OData* connector.
+. Click the *OData v2* or the *OData v4* connector.
 . To configure the connection:
 .. In the *Service Root URL* field, enter the base URL for the 
 OData service that you want to access. 
