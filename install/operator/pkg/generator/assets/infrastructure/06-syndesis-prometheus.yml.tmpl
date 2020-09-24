@@ -190,8 +190,10 @@
           resources:
             limits:
               memory: {{ .Syndesis.Components.Prometheus.Resources.Limit.Memory}}
+              cpu: {{ .Syndesis.Components.Prometheus.Resources.Limit.CPU}}
             requests:
               memory: {{ .Syndesis.Components.Prometheus.Resources.Request.Memory}}
+              cpu: {{ .Syndesis.Components.Prometheus.Resources.Request.CPU}}
           volumeMounts:
           - name: syndesis-prometheus-data
             mountPath: /prometheus
