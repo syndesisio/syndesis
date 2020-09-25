@@ -5,30 +5,22 @@
 = Creating an AMQ connection
 
 The AMQ to REST API sample integration starts by connecting to an
-AMQ broker (Red Hat AMQ) that is provided in your OpenShift Online  
+AMQ broker (Red Hat AMQ) that is provided in your OpenShift  
 project. Before you
 start to create the integration itself, you must start the broker
 and create a connection to that broker. 
 
 .Procedure
 
-. Start the broker:
+. Verify that the broker has started:
 
-.. In a browser, go to the 
-https://console.fuse-ignite.openshift.com/console/[OpenShift Online Web Console]. 
-Your {prodname} environment runs on OpenShift Online.
+.. In a browser, go to your OpenShift web console.
 
-.. In the console, on the right, under *My Projects*, click *Fuse Online* to
-display the project's overview. 
-+
-Your project's name is something like `proj123456`.
+.. In the console, click *Project*.
 
-.. In the overview, click the *>* to the left of the first entry, 
-*broker-amq, #1*, to expand the entry for the
-provided Red Hat AMQ broker.
+.. On the *Overview* page, in the *Inventory* section, click *Services*.
 
-.. On the right, click the up caret to scale up to running 1 pod. This starts
-the AMQ broker.
+.. Click *broker-amq-tcp* and then click *Pods*. The status of the pod should be `Running`.
 
 . Create the AMQ connection:
 

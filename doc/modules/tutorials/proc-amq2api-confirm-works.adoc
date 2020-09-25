@@ -17,7 +17,7 @@ integration that you created and deployed.
 . In a new browser window, go to the To Do app display by
 inserting `*todo-*` in front of the URL
 for your {prodname} environment. For example: 
-`\https://todo-app-proj761432.6a63.fuse-ignite.openshiftapps.com/`.
+`\http://todo-app-proj761432.6a63.fuse-ignite.openshiftapps.com/`.
 . In the To Do app display, click *Show JMS Form* to display an
 input box that contains an XML message.
 . Click *Send JMS Message* to send that message

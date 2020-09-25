@@ -25,23 +25,17 @@ and the *Target* panel on the right displays the Salesforce fields.
 .. In the *Sources* panel, click the magnifying
 glass image:images/tutorials/magnifying-glass.png[title="Magnifying Glass"]
 to display the search field and enter `*name*`.
-.. Under the `user` folder, click the `name` field.
-.. In the *Target* panel, scroll down and click *FirstName*. The
-data mapper displays a line from the source *name* field to the
-target *FirstName* field. 
-.. In the *Target* panel, scroll down, hover over *LastName*, press 
-*CTRL-Mouse1* (*CMD-Mouse1* on MacOS) and select *LastName*. 
+.. Under the `user` folder, click the `name` field and then click the *Create New Mapping* icon.
+.. In the *Mapping Details* panel, in the *Targets* field, type *FirstName* to filter the list of target fields and then select */FirstName*. The data mapper displays a line from the source *name* field to the target *FirstName* field.    
+.. In the *Mapping Details* panel, in the *Targets* field, type *LastName* to filter the list of target fields and then select */LastName*.
++                 
 The data mapper displays another line from the Twitter
 *name* field, but this time it goes to the Salesforce *LastName* field.
 The blue lines indicate the current focus.
-
 +
 [NOTE]
 ====
-If you accidentally map the wrong fields then delete the incorrect mapping by 
-selecting one of its fields to make it the current
-mapping. Then click the trash can icon in the top right of the data mapper's 
-*Mapping Details* panel. 
+If you accidentally map the wrong fields then delete the incorrect mapping by clicking the trash can icon in the data mapper’s *Mapping Details* panel.     
 ====
 
 . Map the Twitter `screenName` field to the Salesforce

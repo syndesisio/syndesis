@@ -21,8 +21,10 @@ the *Source* panel on the left displays the fields in the
 output from the damage reporter step. The
 *Target* panel on the right displays the fields in the database that
 the API accesses.
-. In the *Source* panel, click the `task` field.
-. In the *Target* panel, expand the `body` field and click `task`.
+. In the *Source* panel, click the `task` field and then click the *Create New Mapping* icon.
++
+The *Mapping Details* panel opens.                    
+. In the *Mapping Details* target panel, under *Targets*, select */body/task*.
 . In the upper right, click *Done*.
 
 .Result
