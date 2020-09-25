@@ -1,0 +1,43 @@
+// This module is included in the following assemblies:
+// as_connecting-to-rest-apis.adoc
+
+[id='create-soap-api-connection_{context}']
+= Creating a SOAP API client connection
+
+In an integration, to connect to a SOAP API, create a connection to that SOAP API, which you can then add to any number of integrations. 
+
+IMPORTANT: The SOAP API client connection is a Technology Preview feature only. Technology Preview features are not supported with Red Hat production service level agreements (SLAs) and might not be functionally complete. Red Hat does not recommend using them in production.These features provide early access to upcoming product features, enabling customers to test functionality and provide feedback during the development process.For more information about the support scope of Red Hat Technology Preview features, see https://access.redhat.com/support/offerings/techpreview/
+
+.Prerequisite
+* You created a connector for the SOAP API that you want to connect to. 
+
+.Procedure
+
+. In {prodname}, in the left panel, click *Connections* to display any available connections.
+. Click *Create Connection* to display available connectors.
+. Click the connector for the API that you want to create a connection for.
+. On the configuration page, provide the requested information. The
+definition of the API determines what {prodname} prompts for.
+. On the connection configuration page:
+.. Accept or edit the SOAP Endpoint address.
+.. Select an Authentication type (None, Basic, or WS-Security Username Token) to use when invoking the WSDL endpoint. Typically, an API service has security requirements and {prodname} prompts for security input according to the particular security type that the WSDL file defines.
+document describes how to use the UsernameToken with the Web Services Security (WSS) specification. 
+
+.. Select a WS-Security Password Type (`None`, `Text`, or `Digest`).
+.. Specify *username* and *password*.
+.. Select *Timestamp* if you want Fuse Online to add a timestamp to the WS-Security header.
+.. Select *Username Token Nonce* if you want  {prodname} to add a Nonce element to the WS-Security Username Token header.
++ 
+For more information about how to use the UsernameToken with the Web Services Security (WSS) specification, see https://www.oasis-open.org/committees/download.php/13392/wss-v1.1-spec-pr-UsernameTokenProfile-01.htm[this OASIS document].
+.. Select *Username Token Created* if you want {prodname} to add a timestamp element to the WS-Security Username Token header.
++
+*Note:* Due to a lack of an OASIS/W3C standard for verifying connections to SOAP endpoints, SOAP connectors do not support validation.
+
+. Click *Next*.
+. On the *Name connection* page:
+.. In the *Name* field, enter your choice of a name that
+helps you distinguish this connection from any other connections.
+.. In the *Description* field, optionally enter any information that
+is helpful to know about this connection.
+.. Click *Save*. You can now choose the connection that you
+created and add it to an integration.

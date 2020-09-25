@@ -1,7 +1,7 @@
 // This module is used in the following assemblies:
 // as_adding-api-connectors.adoc
 
-[id='creating-api-connectors_{context}']
+[id='creating-rest-api-connectors_{context}']
 = Creating REST API client connectors
 
 Upload an OpenAPI document to enable {prodname} to create a REST API
@@ -17,10 +17,10 @@ You have an OpenAPI document for the connector that you want
 *API Client Connectors*. Any API client connectors that are
 already available are listed here.
 . Click *Create API Connector*.
-. On the *Create API Client Connector* page, do one of the following:
+. On the *Create API Connector* page, do one of the following:
 +
 * Click in the dotted-line box and select the OpenAPI file that you want to upload.
-* Select *Use a URL* and paste the URL for your OpenAPI document
+* Select *Use a URL* and paste the URL for the OpenAPI document
 in the input field. 
 
 . Click *Next*. If there is invalid or missing content, {prodname}
@@ -29,26 +29,23 @@ OpenAPI file to upload or click *Cancel*,
 revise the OpenAPI file, and upload the updated file.
 +
 If the schema is valid, {prodname} displays a summary of
-the actions that the connector provides. This might include errors and
-warnings about the action definitions.
+the operations that the connector provides. This might include errors and
+warnings about the operation definitions.
 
-. If you are satisfied with the action summary, click *Next*.
+. If you are satisfied with the summary, click *Next*.
 +
-Or, to revise the OpenAPI document, in the lower right, click *Review/Edit* 
-to open the API Designer editor. Update the schema as needed. 
-In the upper right, click *Save* to incorporate your updates into the 
+Or, to revise the OpenAPI document, click *Review/Edit* 
+to open the API Designer editor. Update the schema as needed. For details about using the API editor, see 
+link:{LinkDesigningAPIs}#create-api-definition[Design and develop an API definition with API Designer]. When you are done, *Save* your changes to incorporate your updates into the 
 new API client connector. Then click *Next* to continue creating the 
 API client connector. 
-+
-For details about using the API editor, see 
-link:{LinkDesigningAPIs}#create-api-definition[Design and develop an API definition with API Designer].
 +
 Sometimes, if you provide a URL for the OpenAPI document, {prodname} 
 can upload it but  cannot open it for editing. Typically, this is caused by 
 settings on the file’s host. To open the schema for editing, 
 {prodname} requires that the file host has:
 
-* An `https` URL. An `http` URL does not work. 
+* An `https` URL. (An `http` URL does not work.)
 * Enabled CORS. 
 
 . Indicate the API's security requirements. {prodname} reads the 
@@ -111,9 +108,9 @@ OpenAPI document so that {prodname} can create a new connector
 or you can upload the same schema and then edit it in the API editor. 
 You then continue the process for creating a new API client connector. 
 
-. When you are satisfied with the connector details, click *Create API Connector*.
-{prodname} displays the new connector with the other connectors. 
+. When you are satisfied with the connector details, click *Save*.
+{prodname} displays the new connector in the list of API Client Connectors. 
 
 .Next step
 For details about using your new API connector, see
-link:{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis_connectors[{NameOfFuseOnlineConnectorGuide}, Connecting to REST APIs]. 
+link:{LinkFuseOnlineConnectorGuide}#connecting-to-api-clients_connectors[{NameOfSyndesisConnectorGuide}, Connecting to API clients]. 

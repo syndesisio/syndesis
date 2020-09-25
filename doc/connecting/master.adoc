@@ -17,6 +17,7 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-aws_{context}>>
 * <<connecting-to-amq_{context}>>
 * <<connecting-to-amqp_{context}>>
+* <<connecting-to-api-clients_{context}>>
 * <<connecting-to-box_{context}>>
 * <<connecting-to-dropbox_{context}>>
 * <<connecting-to-email-servers_{context}>>
@@ -31,7 +32,6 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-mongodb_{context}>>
 * <<connecting-to-mqtt_{context}>>
 * <<connecting-to-odata_{context}>>
-* <<connecting-to-rest-apis_{context}>>
 * <<connecting-to-sf_{context}>>
 * <<connecting-to-concur_{context}>>
 * <<connecting-to-servicenow_{context}>>
@@ -48,6 +48,8 @@ include::assemblies/connecting/assembly-connecting-to-aws.adoc[leveloffset=+1]
 include::assemblies/connecting/assembly-connecting-to-amq.adoc[leveloffset=+1]
 
 include::assemblies/connecting/assembly-connecting-to-amqp.adoc[leveloffset=+1]
+
+include::assemblies/connecting/assembly-connecting-to-api-clients.adoc[leveloffset=+1]
 
 include::assemblies/connecting/assembly-connecting-to-box.adoc[leveloffset=+1]
 
@@ -76,8 +78,6 @@ include::assemblies/connecting/assembly-connecting-to-mongodb.adoc[leveloffset=+
 include::assemblies/connecting/assembly-connecting-to-mqtt.adoc[leveloffset=+1]
 
 include::assemblies/connecting/assembly-connecting-to-odata.adoc[leveloffset=+1]
-
-include::assemblies/connecting/assembly-connecting-to-rest-apis.adoc[leveloffset=+1]
 
 include::assemblies/connecting/assembly-connecting-to-sf.adoc[leveloffset=+1]
 

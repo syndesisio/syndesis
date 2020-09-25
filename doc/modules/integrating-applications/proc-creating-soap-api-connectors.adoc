@@ -1,0 +1,75 @@
+// This module is used in the following assemblies:
+// as_adding-api-connectors.adoc
+
+[id='creating-soap-api-connectors_{context}']
+= Creating SOAP API client connectors
+
+Upload a WSDL file to enable {prodname} to create a SOAP API client connector.  
+
+IMPORTANT: The SOAP API client connector is a Technology Preview feature only. Technology Preview features are not supported with Red Hat production service level agreements (SLAs) and might not be functionally complete. Red Hat does not recommend using them in production.These features provide early access to upcoming product features, enabling customers to test functionality and provide feedback during the development process.For more information about the support scope of Red Hat Technology Preview features, see https://access.redhat.com/support/offerings/techpreview/
+
+.Prerequisite
+You have a WSDL file for the SOAP client connector that you want
+{prodname} to create.
+
+*Note:* For this release, the WSDL file’s extension (`.wsdl`) must be lowercase. If the file extension is uppercase (`.WSDL`) you must rename the file to have a lowercase extension before you import it into {prodname}.
+
+.Procedure
+
+. In the {prodname} navigation panel, click *Customizations* > 
+*API Client Connectors*. Any API client connectors that are
+already available are listed here.
+. Click *Create API Connector*.
+. On the *Create API Connector* page, do one of the following:
++
+* Click in the dotted-line box and select the WSDL (`.wsdl`) file that you want to upload.
+* Select *Use a URL* and paste the URL for the WSDL (`.wsdl`) file
+in the input field. 
+
+. Click *Next*. 
+. On the *Specify service and port* page, verify the service and port.
+. Click *Next*. If there is invalid or missing content, {prodname} displays information about what needs to be corrected. Select a different WSDL file to upload or click *Cancel*, revise the WSDL file, and then upload the updated file. If the schema is valid, {prodname} displays a summary of the API definition (name and description) and a list of imported elements, such as the number of operations.
+. Click *Next*. 
++
+*Note:* For this release, the security requirements on this page are inactive. Instead, you can define the security options when you create a connection from the connector, as described in link:{LinkFuseOnlineConnectorGuide}#create-soap-api-connection_add-client-connector[{NameOfSyndesisConnectorGuide}, Creating a SOAP API client connection]. 
+
+//. Indicate the security requirements to use when invoking the WSDL endpoint. {prodname} reads the API definition to determine the information needed to configure the connector to meet the API’s security requirements. {prodname} can display any of the following: 
+//+
+//* *None* (no security)
+//* *HTTP Basic Authorization* — If the API service uses HTTP basic authorization, select this checkbox. Later, when you use this connector to create a connection, {prodname} prompts you to enter a user name and password. 
+//* *WS-Security Username Token* — {prodname} prompts you for the following information: 
+//.. *Timestamp* - Select this option if you want {prodname} to add a timestamp to the WS-Security header.
+//.. *Password Type* - Select `Digest`, `Text`, or `None`.
+//+
+//If you select `Text` or `Digest`:
+//* Specify your *username* and *password*. 
+//* Select *Username Token Nonce* if you want {prodname} to add a Nonce element to the WS-Security Username Token header.
+//* Select *Username Token Created* if you want {prodname} to add a "Created" timestamp element to the WS-Security Username Token header.
+
+. Click *Next*. {prodname} displays the connector’s name, description, and WSDL endpoint address.
++
+* Optionally, upload an icon for the connector. You can also upload an icon at a later time.
+//If you do not upload an icon, {prodname} generates one. 
++
+*Note:* For this release, If you do not upload an icon, {prodname} does _not_ generate one for you.
++
+When {prodname} displays the flow of an integration, it displays a connector’s icon to represent connections that are created from that connector. 
+* For *Name*, enter your choice of a name that helps you distinguish this connection from any other connections. 
+* Optionally, for *Description*,  enter information that is helpful to know about this connection. 
+
+. Review the connector details and to override a value obtained from the WSDL file, edit the field value that you want to change. 
++
+[IMPORTANT]
+After {prodname} creates a connector,
+*you cannot change it*. To effect a change, you need to upload an updated
+OpenAPI document so that {prodname} can create a new connector
+or you can upload the same schema and then edit it in the API editor. 
+You then continue the process for creating a new API client connector. 
+
+. When you are satisfied with the connector details, click *Save*.
+{prodname} displays the new connector in the list of API Client Connectors. 
+
+.Next step
+
+For details about using your new API connector, see
+link:{LinkFuseOnlineConnectorGuide}#connecting-to-api-clients_connectors[{NameOfSyndesisConnectorGuide}, Connecting to API clients]. 

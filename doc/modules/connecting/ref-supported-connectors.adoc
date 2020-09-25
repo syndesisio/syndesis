@@ -87,7 +87,7 @@ to an MQTT broker.
 |Obtain entities from an OData service or update, create, or delete entities
 that are managed by an OData service.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis_connectors[REST APIs]
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-api-clients_connectors[REST APIs]
 |Create a custom REST API client connector by uploading an OpenAPI
 document. You can then create a connection to that REST API.
 
