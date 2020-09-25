@@ -9,11 +9,8 @@ or publish data to a Kafka topic,
 create a connection to Kafka and then add that connection to an 
 integration.
 
-.Prerequisites
+.Prerequisite
 
-* You enabled auto-discovery of Kafka brokers in the cluster as described in 
-link:{LinkFuseOnlineConnectorGuide}#enabling-auto-discovery-of-kafka-brokers_kafka[Enabling auto-discovery of Kafka brokers/AMQ Streams]. 
-Or, you know the URI for the Kafka broker that you want to connect to. 
 * If you want to use Transport Layer Security (TLS) to encrypt your data, you have the Kafka broker’s PEM certificate text. Typically, you obtain the broker certificate text from your Kafka server administrator.
 
 .Procedure
