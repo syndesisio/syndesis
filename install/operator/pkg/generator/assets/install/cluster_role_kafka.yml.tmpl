@@ -1,0 +1,17 @@
+# Allow syndesis-server user to lookup kafka customresources at cluster level
+# The lookup code is in KafkaMetaDataRetrieval.java
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: syndesis-server-kafka
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: infrastructure
+    syndesis.io/component: syndesis-server
+rules:
+- apiGroups:
+  - "kafka.strimzi.io"
+  resources:
+  - "kafkas"
+  verbs: [ get, list, watch ]

@@ -26,7 +26,7 @@
 
 {{- if .ApiServer.ConsoleLink }}
 - apiVersion: rbac.authorization.k8s.io/v1
-  kind: ClusterRoleBinding
+  kind: RoleBinding
   metadata:
     labels:
       app: syndesis
@@ -37,16 +37,15 @@
   subjects:
   - kind: ServiceAccount
     name: syndesis-operator
-    namespace: {{ .Namespace }}
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
-    name: {{ .Role }}-consolelink
+    name: syndesis-operator-consolelink
 {{- end }}
 
 {{- if .ApiServer.OlmSupport }}
 - apiVersion: rbac.authorization.k8s.io/v1
-  kind: ClusterRoleBinding
+  kind: RoleBinding
   metadata:
     labels:
       app: syndesis
@@ -57,11 +56,10 @@
   subjects:
   - kind: ServiceAccount
     name: syndesis-operator
-    namespace: {{ .Namespace }}
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
-    name: {{ .Role }}-olm
+    name: syndesis-operator-olm
 {{- end }}
 
 {{- if .ApiServer.ImageStreams}}

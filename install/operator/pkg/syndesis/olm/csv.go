@@ -25,6 +25,7 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
 	"gopkg.in/yaml.v2"
 )
@@ -359,26 +360,48 @@ func (c *csv) loadClusterRoleFromTemplate() (r interface{}, err error) {
 		ApiServer: c.config.ApiServer,
 	}
 
-	g, err := generator.Render("./install/olm_cluster_role.yml.tmpl", context)
+	resources, err := generator.Render("./install/cluster_role_kafka.yml.tmpl", context)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(g) == 0 {
+	olm, err := generator.Render("./install/cluster_role_olm.yml.tmpl", context)
+	if err != nil {
+		return nil, err
+	}
+	resources = append(resources, olm...)
+
+	pubapi, err := generator.Render("./install/cluster_role_public_api.yml.tmpl", context)
+	if err != nil {
+		return nil, err
+	}
+	resources = append(resources, pubapi...)
+
+	if len(resources) == 0 {
 		return r, nil
 	}
 
-	mjson, err := g[0].MarshalJSON()
-	if err != nil {
-		return nil, err
+	m := make([]map[string]interface{}, 0, 0)
+	for _, resource := range resources {
+		rules, exists, _ := unstructured.NestedFieldNoCopy(resource.UnstructuredContent(), "rules")
+		if !exists {
+			continue
+		}
+
+		ruleMaps, ok := rules.([]interface{})
+		if !ok || len(ruleMaps) == 0 {
+			continue
+		}
+
+		ruleMap, ok := ruleMaps[0].(map[string]interface{})
+		if !ok {
+			continue
+		}
+
+		m = append(m, ruleMap)
 	}
 
-	m := make(map[string]interface{})
-	if err := yaml.Unmarshal(mjson, &m); err != nil {
-		return nil, err
-	}
-
-	r = m["rules"]
+	r = m
 	return
 }
 

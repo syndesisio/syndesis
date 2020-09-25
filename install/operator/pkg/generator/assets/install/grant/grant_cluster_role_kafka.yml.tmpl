@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: {{ .Kind }}Binding
+metadata:
+  name: syndesis-server-{{ .Namespace }}-kafka
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: infrastructure
+    syndesis.io/component: syndesis-server
+subjects:
+- kind: ServiceAccount
+  name: syndesis-server
+  namespace: {{ .Namespace }}
+roleRef:
+  kind: ClusterRole
+  name: syndesis-server-kafka
+  apiGroup: rbac.authorization.k8s.io

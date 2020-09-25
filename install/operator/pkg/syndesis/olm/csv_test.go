@@ -117,6 +117,16 @@ func Test_csv_loadRoleFromTemplate(t *testing.T) {
 	r, err := c.loadRoleFromTemplate()
 	assert.NoError(t, err)
 	assert.NotNil(t, r)
+
+	// Doesn't want to assert with map as well so split and check the first element
+	s, ok := r.([]interface{})
+	assert.True(t, ok)
+	assert.True(t, len(s) > 0)
+
+	_, ok = s[0].(map[interface{}]interface{})
+	assert.True(t, ok)
+
+	assert.True(t, ok, "Expected return value should be a map[interface{}interface{}")
 }
 
 func Test_csv_loadClusterRoleFromTemplate(t *testing.T) {
@@ -133,4 +143,7 @@ func Test_csv_loadClusterRoleFromTemplate(t *testing.T) {
 	r, err := c.loadClusterRoleFromTemplate()
 	assert.NoError(t, err)
 	assert.NotNil(t, r)
+
+	_, ok := r.([]map[string]interface{})
+	assert.True(t, ok, "Expected return value should be a map[string]interface{}")
 }
