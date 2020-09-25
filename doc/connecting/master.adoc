@@ -39,7 +39,6 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-databases_{context}>>
 * <<connecting-to-telegram_{context}>>
 * <<connecting-to-twitter_{context}>>
-* <<connecting-to-virtual-databases_{context}>>
 
 include::modules/connecting/ref-supported-connectors.adoc[leveloffset=+1]
 
@@ -92,5 +91,3 @@ include::assemblies/connecting/assembly-connecting-to-databases.adoc[leveloffset
 include::assemblies/connecting/assembly-connecting-to-telegram.adoc[leveloffset=+1]
 
 include::assemblies/connecting/assembly-connecting-to-twitter.adoc[leveloffset=+1]
-
-include::assemblies/connecting/assembly-connecting-to-virtual-databases.adoc[leveloffset=+1]

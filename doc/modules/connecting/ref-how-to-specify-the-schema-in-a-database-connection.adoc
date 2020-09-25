@@ -77,29 +77,6 @@ then the connection searches public resources for the specified table.
 For more details, see 
 link:https://www.postgresql.org/docs/9.1/ddl-schemas.html[PostgreSQL schema documentation].
 
-|Teiid
-|*Connection URL* (JDBC URL): `jdbc:teiid:<vdb-name>@mm://localhost:31000` +
-*Username*: any value +
-*Password*: any value +
-*Schema*:
-|The virtual database must have already been created, for example by using 
-the link:{LinkFuseOnlineConnectorGuide}#connecting-to-virtual-databases_vdbs[Data Virtualization] feature. In the connection URL, replace `<vdb-name>` 
-with the name of the virtual database. No security has been implemented yet 
-for connections to Teiid. 
-Specify any value in the *Username* and *Password* fields. Leave the *Schema* field blank. 
-The driver is already available in {prodname}. 
-
 |===
 
-ifeval::["{location}" == "downstream"]
-[IMPORTANT]
-====
-Data virtualization is a Technology Preview feature only. Technology Preview features are 
-not supported with Red Hat production service level agreements (SLAs) and might not be 
-functionally complete. Red Hat does not recommend using them in production. 
-These features provide early access to upcoming product features, enabling 
-customers to test functionality and provide feedback during the development process. 
-For more information about the support scope of Red Hat Technology Preview features, 
-see link:https://access.redhat.com/support/offerings/techpreview/[]. 
-====
-endif::[]
+
