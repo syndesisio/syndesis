@@ -1,5 +1,13 @@
+#
+# Must be a ClusterRoleBinding as the user
+# wants to list kafaks across namespaces
+#
+# Note.
+# A RoleBinding binding to a ClusterRole will only
+# allow the permissions at the namespace-scope level
+#
 apiVersion: rbac.authorization.k8s.io/v1
-kind: {{ .Kind }}Binding
+kind: ClusterRoleBinding
 metadata:
   name: syndesis-server-{{ .Namespace }}-kafka
   labels:
