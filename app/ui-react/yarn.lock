@@ -23343,10 +23343,10 @@ vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=
 
-velocityjs@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/velocityjs/-/velocityjs-2.0.0.tgz#3bc4dcb69545d2181aa7b4059e04412778b495b6"
-  integrity sha512-ykI/zV9K51pcxOvD8Nd3jzVtRHcgG9w/a/BxsHh4sDwV0ZJAjWJk7Wa2TM5c9MWtCMn+FgqePkQFajwAvcNx7w==
+velocityjs@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/velocityjs/-/velocityjs-2.0.1.tgz#078c73d22a53f085cf3a52a56a8271c820ac23dd"
+  integrity sha512-KXVGRAOPCm8DhMdrhHqXyELIZNs3CTe2Vz1Kg09zzSycEmE9VzjiSnG50n3rs3FuiL9ek7c36sYJg+R+8EO2Zg==
 
 vendors@^1.0.0:
   version "1.0.4"
