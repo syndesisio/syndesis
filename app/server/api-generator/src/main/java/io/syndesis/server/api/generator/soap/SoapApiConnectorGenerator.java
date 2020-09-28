@@ -134,12 +134,13 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
                                                    ConnectorSettings connectorSettings) {
 
         final String defaultDescription = "Web Services Connector";
-        final Optional<Definition> definition = getModelInfo(connectorSettings).getModel();
+        final SoapApiModelInfo modelInfo = getModelInfo(connectorSettings);
+        final Optional<Definition> definition = modelInfo.getModel();
 
         return definition.map(d -> {
             final Element docElement = d.getDocumentationElement();
-            final QName qName = d.getQName();
-            return docElement != null ? docElement.getTextContent() :
+            final QName qName = d.getQName() != null ? d.getQName() : modelInfo.getDefaultService().orElse(null);
+            return docElement != null ? docElement.getTextContent().trim() :
                 (qName != null ? defaultDescription + " for service " + qName : null);
         }).orElse(defaultDescription);
     }
@@ -147,10 +148,11 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
     @Override
     protected String determineConnectorName(ConnectorTemplate connectorTemplate,
                                                    ConnectorSettings connectorSettings) {
-        final String defaultName = super.determineConnectorName(connectorTemplate, connectorSettings);
-        return getModelInfo(connectorSettings).getModel()
-                .map(d -> d.getQName() != null ? d.getQName().getLocalPart() : null)
-                .orElse(defaultName);
+        final SoapApiModelInfo modelInfo = getModelInfo(connectorSettings);
+        return modelInfo.getModel()
+            .map(d -> d.getQName() != null ? d.getQName().getLocalPart() :
+                modelInfo.getDefaultService().map(QName::getLocalPart).orElse(null))
+            .orElse(super.determineConnectorName(connectorTemplate, connectorSettings));
     }
 
     private APISummary getApiSummary(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings,
@@ -220,10 +222,22 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
         }
         builder.putConfiguredProperty(SPECIFICATION_PROPERTY,
                 modelInfo.getResolvedSpecification().orElse(configuredProperties.get(SPECIFICATION_PROPERTY)));
-        getService(modelInfo, configuredProperties)
-                .ifPresent(s -> builder.putConfiguredProperty(SERVICE_NAME_PROPERTY, s.toString()));
-        getPortName(modelInfo, configuredProperties)
-                .ifPresent(p -> builder.putConfiguredProperty(PORT_NAME_PROPERTY, p));
+        getService(modelInfo, configuredProperties).ifPresent(s -> {
+            builder.putConfiguredProperty(SERVICE_NAME_PROPERTY, s.toString());
+
+            getPortName(modelInfo, configuredProperties).ifPresent(p -> {
+                builder.putConfiguredProperty(PORT_NAME_PROPERTY, p);
+
+                // set address from selected port
+                final String address = SoapApiModelParser.getAddress(modelInfo.getModel().get(), s, p);
+                builder.putConfiguredProperty(ADDRESS_PROPERTY,
+                    address);
+                builder.putProperty(ADDRESS_PROPERTY,
+                    new ConfigurationProperty.Builder().createFrom(connectorProperties.get(ADDRESS_PROPERTY))
+                        .defaultValue(address)
+                        .build());
+            });
+        });
 
         // if present, set default address from WSDL
         modelInfo.getDefaultAddress().ifPresent(a -> {
