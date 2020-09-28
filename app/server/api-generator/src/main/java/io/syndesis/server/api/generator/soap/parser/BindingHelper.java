@@ -122,11 +122,13 @@ public class BindingHelper {
     private final SoapVersion soapVersion;
     private final DocumentBuilder documentBuilder;
     private final MessageInfo.Type type;
+    private final boolean useXmlSchemaChoice;
 
-    BindingHelper(BindingOperationInfo bindingOperationInfo, BindingMessageInfo bindingMessageInfo, Collection<BindingFaultInfo> faults, MessageInfo.Type type) throws ParserException, ParserConfigurationException {
+    BindingHelper(BindingOperationInfo bindingOperationInfo, BindingMessageInfo bindingMessageInfo, Collection<BindingFaultInfo> faults, MessageInfo.Type type, boolean useXmlSchemaChoice) throws ParserException, ParserConfigurationException {
 
         this.bindingOperation = bindingOperationInfo;
         this.type = type;
+        this.useXmlSchemaChoice = useXmlSchemaChoice;
 
         this.schemaCollection = bindingOperation.getBinding().getService().getXmlSchemaCollection();
 
@@ -228,7 +230,8 @@ public class BindingHelper {
 
         // soap body
         final List<? extends XmlSchemaObjectBase> soapBody;
-        if (type == MessageInfo.Type.INPUT) {
+        final boolean useAlternativeToChoice = (type == MessageInfo.Type.OUTPUT && !this.useXmlSchemaChoice);
+        if (type == MessageInfo.Type.INPUT || useAlternativeToChoice) {
             soapBody = createXmlSchemaSequenceElement(soapSchema, envelope, soapVersion.getBody());
         } else {
             soapBody = createXmlSchemaChoiceElement(soapSchema, envelope, soapVersion.getBody());
@@ -237,7 +240,7 @@ public class BindingHelper {
         // top-level operation wrapper element
         final XmlSchemaSequence bodySequence = new XmlSchemaSequence();
         createXmlSchemaElement(operationSchema, soapSchema, soapBody,
-            operationWrapper.getLocalPart(), bodySequence, true);
+            operationWrapper.getLocalPart(), bodySequence, true, useAlternativeToChoice ? 0 : 1);
 
         // add bodyParts to wrapper element
         bodySequence.getItems().addAll(getPartElements(schemaExtractor, operationSchema, bodyParts));
@@ -245,8 +248,8 @@ public class BindingHelper {
         if (type == MessageInfo.Type.OUTPUT) {
             // add faults to soapBody
             @SuppressWarnings("unchecked")
-            final List<XmlSchemaChoiceMember> choiceSoapBody = (List<XmlSchemaChoiceMember>) soapBody;
-            addFaultsToSoapBody(schemaExtractor, soapSchema, choiceSoapBody);
+            List<? super XmlSchemaObjectBase> soapConsumerBody = (List<? super XmlSchemaObjectBase>) soapBody;
+            addFaultsToSoapBody(schemaExtractor, soapSchema, soapConsumerBody);
         }
     }
 
@@ -271,19 +274,29 @@ public class BindingHelper {
 
         } else {
 
-            final List<XmlSchemaChoiceMember> choiceBody = createXmlSchemaChoiceElement(soapSchema,
-                envelope, soapVersion.getBody());
+            final List<? extends XmlSchemaObjectBase> soapBody;
+            if (this.useXmlSchemaChoice) {
+                soapBody = createXmlSchemaChoiceElement(soapSchema, envelope, soapVersion.getBody());
+            } else {
+                soapBody = createXmlSchemaSequenceElement(soapSchema, envelope, soapVersion.getBody());
+            }
+
+            // add bodyElements under a sequence
             final XmlSchemaSequence bodyPartsSequence = new XmlSchemaSequence();
+            bodyPartsSequence.setMinOccurs(useXmlSchemaChoice ? 1 : 0);
             bodyPartsSequence.getItems().addAll(bodyElements);
-            choiceBody.add(bodyPartsSequence);
+
+            @SuppressWarnings("unchecked")
+            final List<? super XmlSchemaObjectBase> consumerSoapBody = (List<? super XmlSchemaObjectBase>) soapBody;
+            consumerSoapBody.add(bodyPartsSequence);
 
             // add faults to soapBody
-            addFaultsToSoapBody(schemaExtractor, soapSchema, choiceBody);
+            addFaultsToSoapBody(schemaExtractor, soapSchema, consumerSoapBody);
         }
     }
 
     private void addFaultsToSoapBody(XmlSchemaExtractor schemaExtractor, XmlSchema soapSchema,
-                                     List<XmlSchemaChoiceMember> soapBody) throws ParserException {
+                                     List<? super XmlSchemaObjectBase> soapBody) throws ParserException {
 
         QName fault = soapVersion.getFault();
         XmlSchemaExtractor faultExtractor = new XmlSchemaExtractor(schemaExtractor.getTargetSchemas(), SOAP_SCHEMAS);
@@ -308,6 +321,7 @@ public class BindingHelper {
         // create new Fault element under Body choice
         XmlSchemaElement faultElement = new XmlSchemaElement(soapSchema, false);
         faultElement.setName(tempFault.getName());
+        faultElement.setMinOccurs(useXmlSchemaChoice ? 1 : 0);
         final XmlSchemaComplexType faultType = new XmlSchemaComplexType(soapSchema, false);
         faultType.setParticle(faultSequence);
         faultElement.setType(faultType);
@@ -318,8 +332,14 @@ public class BindingHelper {
 
         final List<XmlSchemaSequenceMember> faultSequenceItems = faultSequence.getItems();
 
-        final List<XmlSchemaChoiceMember> faultChoiceElements = createXmlSchemaChoiceElement(soapSchema,
-            faultSequenceItems, new QName(soapSchema.getTargetNamespace(), detailName));
+        final List<? extends XmlSchemaObjectBase> faultChoiceElements;
+        if (useXmlSchemaChoice) {
+            faultChoiceElements = createXmlSchemaChoiceElement(soapSchema,
+                faultSequenceItems, new QName(soapSchema.getTargetNamespace(), detailName));
+        } else {
+            faultChoiceElements = createXmlSchemaSequenceElement(soapSchema,
+                faultSequenceItems, new QName(soapSchema.getTargetNamespace(), detailName));
+        }
         // set detail minOccurs to 0 and form to SOAP default
         faultSequenceItems.forEach(i -> {
             if (i instanceof XmlSchemaElement) {
@@ -333,7 +353,9 @@ public class BindingHelper {
             }
         });
 
-        faultChoiceElements.addAll(getPartElements(schemaExtractor, soapSchema, faultParts));
+        @SuppressWarnings("unchecked")
+        final List<? super XmlSchemaElement> elementList = ((List<? super XmlSchemaElement>) faultChoiceElements);
+        elementList.addAll(getPartElements(schemaExtractor, soapSchema, faultParts));
     }
 
     private String getSpecificationString(XmlSchemaExtractor schemaExtractor) throws ParserException {
@@ -468,8 +490,8 @@ public class BindingHelper {
     // add element/ref under parent items in parentSchema
     @SuppressWarnings("unchecked")
     private static <T> void createXmlSchemaElement(XmlSchema schema, XmlSchema parentSchema,
-                                               List<T> parentSequence, String name,
-                                               XmlSchemaParticle particle, boolean topLevel) {
+                                                   List<T> parentSequence, String name,
+                                                   XmlSchemaParticle particle, boolean topLevel, long refMinOccurs) {
 
         // element
         final XmlSchemaElement element = new XmlSchemaElement(schema, topLevel);
@@ -490,6 +512,7 @@ public class BindingHelper {
                 // add as ref in parent schema
                 XmlSchemaElement refElement = new XmlSchemaElement(parentSchema, false);
                 refElement.getRef().setTargetQName(element.getQName());
+                refElement.setMinOccurs(refMinOccurs);
                 child = refElement;
             }
 
@@ -498,4 +521,10 @@ public class BindingHelper {
         }
     }
 
+    // create element with default refMinOccurs set to 1
+    private static <T> void createXmlSchemaElement(XmlSchema schema, XmlSchema parentSchema,
+                                                   List<T> parentSequence, String name,
+                                                   XmlSchemaParticle particle, boolean topLevel) {
+        createXmlSchemaElement(schema, parentSchema, parentSequence, name, particle, topLevel, 1);
+    }
 }
