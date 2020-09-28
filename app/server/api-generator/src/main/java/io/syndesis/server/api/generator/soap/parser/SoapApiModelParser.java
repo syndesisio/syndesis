@@ -89,6 +89,7 @@ import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.PAYLO
 /**
  * Parses SOAP WSDL specification.
  */
+@SuppressWarnings("PMD.GodClass")
 public final class SoapApiModelParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(SoapApiModelParser.class);
@@ -146,18 +147,14 @@ public final class SoapApiModelParser {
 
                 final List<String> ports = localBuild.getPorts().get(defaultService);
                 if (ports.size() == 1) {
-                    builder.defaultPort(ports.get(0));
+                    final String defaultPort = ports.get(0);
+                    builder.defaultPort(defaultPort);
 
                     // set default address
-                    @SuppressWarnings("unchecked")
-                    final List<ExtensibilityElement> extensibilityElements = definition.getService(defaultService)
-                            .getPort(ports.get(0)).getExtensibilityElements();
-                    extensibilityElements.forEach(a -> {
-                        final SOAPAddress soapAddress = SOAPBindingUtil.getSoapAddress(a);
-                        if (soapAddress != null) {
-                            builder.defaultAddress(soapAddress.getLocationURI());
-                        }
-                    });
+                    String locationURI = getAddress(definition, defaultService, defaultPort);
+                    if (locationURI != null) {
+                        builder.defaultAddress(locationURI);
+                    }
                 }
             }
 
@@ -170,6 +167,21 @@ public final class SoapApiModelParser {
         }
 
         return builder.build();
+    }
+
+    public static String getAddress(Definition definition, QName service, String port) {
+        String locationURI = null;
+        @SuppressWarnings("unchecked")
+        final List<ExtensibilityElement> extensibilityElements = definition.getService(service)
+                .getPort(port).getExtensibilityElements();
+        for (ExtensibilityElement a : extensibilityElements) {
+            final SOAPAddress soapAddress = SOAPBindingUtil.getSoapAddress(a);
+            if (soapAddress != null) {
+                locationURI = soapAddress.getLocationURI();
+                break;
+            }
+        }
+        return locationURI;
     }
 
     public static ActionsSummary parseActionsSummary(Definition definition, QName serviceName, String portName) throws ParserException {
@@ -277,7 +289,7 @@ public final class SoapApiModelParser {
 
         final BindingHelper bindingHelper;
         try {
-            bindingHelper = new BindingHelper(bindingOperationInfo, messageInfo, faults, type);
+            bindingHelper = new BindingHelper(bindingOperationInfo, messageInfo, faults, type, false);
         } catch (ParserConfigurationException e) {
             throw new ParserException("Error creating XML Document parser: " + e.getMessage(), e);
         }
