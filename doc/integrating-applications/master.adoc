@@ -1,12 +1,5 @@
-:experimental:
 include::attributes.adoc[]
 
-:prodname: Syndesis
-:prodversion: 7.5
-:prodnameinurl: fuse-ignite
-:productpkg: red_hat_fuse
-:version: 7.5
-:location: upstream
 :parent-context: ug
 :context: ug
 
@@ -32,20 +25,20 @@ The content in this guide is organized as follows:
 To learn how to use {prodname} by creating sample integrations, see:
 link:{LinkFuseOnlineTutorials}[{NameOfFuseOnlineTutorials}].
 
-include::assemblies/integrating-applications/as_high-level-overview.adoc[leveloffset=+1]
+include::assemblies/integrating-applications/assembly-high-level-overview.adoc[leveloffset=+1]
 
-include::assemblies/integrating-applications/as_how-to-get-ready.adoc[leveloffset=+1]
+include::assemblies/integrating-applications/assembly-how-to-get-ready.adoc[leveloffset=+1]
 
-include::assemblies/integrating-applications/as_connecting-to-applications.adoc[leveloffset=+1]
+include::assemblies/integrating-applications/assembly-connecting-to-applications.adoc[leveloffset=+1]
 
-include::assemblies/integrating-applications/as_creating-integrations.adoc[leveloffset=+1]
+include::assemblies/integrating-applications/assembly-creating-integrations.adoc[leveloffset=+1]
 
-include::assemblies/integrating-applications/as_trigger-integrations-with-api-calls.adoc[leveloffset=+1]
+include::assemblies/integrating-applications/assembly-trigger-integrations-with-api-calls.adoc[leveloffset=+1]
 
-include::assemblies/integrating-applications/as_triggering-integrations-with-http-requests.adoc[leveloffset=+1]
+include::assemblies/integrating-applications/assembly-triggering-integrations-with-http-requests.adoc[leveloffset=+1]
 
-include::assemblies/integrating-applications/as_mapping-data.adoc[leveloffset=+1]
+include::assemblies/integrating-applications/assembly-mapping-data.adoc[leveloffset=+1]
 
-include::assemblies/integrating-applications/as_managing-integrations.adoc[leveloffset=+1]
+include::assemblies/integrating-applications/assembly-managing-integrations.adoc[leveloffset=+1]
 
-include::assemblies/customizing/as_customizing.adoc[leveloffset=+1]
+include::assemblies/customizing/assembly-customizing.adoc[leveloffset=+1]

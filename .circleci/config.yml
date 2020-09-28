@@ -606,21 +606,6 @@ jobs:
           paths:
             - ~/.m2
 
-  doc:
-    docker:
-      - image: syndesis/builder-doc
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints:
-            - "d8:49:be:71:ed:d9:d3:dc:7a:dd:35:ac:81:30:c5:d8"
-      - run:
-          name: Generate docs
-          command: |
-            git config --global user.email "circleci@syndesis.io"
-            git config --global user.name "CircleCI"
-            ./tools/bin/syndesis doc --local --html --pdf --gh-pages
-
 workflows:
   version: 2
   syndesis:
@@ -629,10 +614,6 @@ workflows:
           filters:
             branches:
               only: system-test
-      - doc:
-          filters:
-            branches:
-              only: master
       - license-check:
           <<: *ignore_cherry_pick_branches
       - ui-doc:

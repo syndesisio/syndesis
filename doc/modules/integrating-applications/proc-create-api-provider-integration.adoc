@@ -1,0 +1,73 @@
+// Module included in the following assemblies:
+// as_trigger-integrations-with-api-calls.adoc
+
+[id='create-api-provider-integration_{context}']
+= Creating an API provider integration
+
+To create an API provider integration, provide
+an OpenAPI document (`.json`, `.yaml`, or `.yml` file) that defines the operations that the integration
+can perform. {prodname} creates an execution flow for each operation.
+Edit the flow for each operation to
+add connections and steps that
+process integration data according to the requirements for that operation.
+
+.Prerequisites
+* You are able to provide or define an OpenAPI document for the REST API
+operations that you want the integration to perform.
++
+To experiment,
+link:{syndesis-quickstart-url}/api-provider/task-api.json[download the raw version of the `task-api.json` file],
+which is an OpenAPI document for an API provider quickstart. You can
+upload this file when {prodname} prompts you to provide an OpenAPI
+document. Alternatively, you can specify the URL for the raw `task-api.json` file,
+which is https://raw.githubusercontent.com/syndesisio/syndesis-quickstarts/{syndesis-version}/api-provider/task-api.json[].
+* You have a plan for the flow for each OpenAPI operation.
+* You created a connection for each application or service that you want
+to add to an operation's flow.
+
+.Procedure
+
+. In {prodname}, in the left navigation panel, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a connection* page, click *API Provider*.
+. On the *Start integration with an API call* page:
++
+* If you have an OpenAPI document that defines the REST API
+operations, upload the OpenAPI document.
+* If you need to define the OpenAPI document, select *Create a new OpenAPI 3.x document* or *Create a new OpenAPI 2.x document*.
+
+. Click *Next*.
++
+* If you uploaded a document, review or edit it:
++
+.. Click *Review/Edit* to open the API Designer editor.
+.. Review and edit as needed.
++
+Optionally, if your document uses the OpenAPI 2 specification, you can click *Convert to OpenAPI 3* if you want the API Designer to convert your document to conform with the OpenAPI 3 specification.
+
+.. In the upper right, click *Save* or *Cancel* to close the editor.
+.. Click *Next*.
+
+* If you are creating a document, then in the API Designer editor
+that {prodname} opens:
++
+ifndef::developing-and-deploying-api-provider-integrations[]
+.. Define the OpenAPI document as described in
+link:{LinkDesigningAPIs}#create-api-definition[Design and develop an API definition with API Designer].
+endif::[]
+ifdef::developing-and-deploying-api-provider-integrations[]
+.. Define the OpenAPI document as described in
+link:{LinkIntegrationDevDeploy}#p_creating_api_create-api-definition[Creating a REST API definition in API Designer].
+endif::[]
+
+.. In the upper right, click *Save*, which closes the editor.
+.. Click *Next*.
+
+
+.Result
+{prodname} displays a list of the operations that the OpenAPI
+document defines.
+
+.Next step
+For each operation,
+link:{LinkFuseOnlineIntegrationGuide}#define-integration-operation-flows_api-provider[define a flow that executes that operation].

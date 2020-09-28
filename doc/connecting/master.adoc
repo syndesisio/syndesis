@@ -1,13 +1,5 @@
-:experimental:
 include::attributes.adoc[]
-include::attributes-links.adoc[]
 
-:prodname: Syndesis
-:prodversion: 7.5
-:prodnameinurl: fuse-ignite
-:productpkg: red_hat_fuse
-:version: 7.5
-:location: upstream
 :context: connectors
 
 [id='connecting-to-applications-and-services']
@@ -25,6 +17,7 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-aws_{context}>>
 * <<connecting-to-amq_{context}>>
 * <<connecting-to-amqp_{context}>>
+* <<connecting-to-api-clients_{context}>>
 * <<connecting-to-box_{context}>>
 * <<connecting-to-dropbox_{context}>>
 * <<connecting-to-email-servers_{context}>>
@@ -39,7 +32,6 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-mongodb_{context}>>
 * <<connecting-to-mqtt_{context}>>
 * <<connecting-to-odata_{context}>>
-* <<connecting-to-rest-apis_{context}>>
 * <<connecting-to-sf_{context}>>
 * <<connecting-to-concur_{context}>>
 * <<connecting-to-servicenow_{context}>>
@@ -48,54 +40,54 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-telegram_{context}>>
 * <<connecting-to-twitter_{context}>>
 
-include::modules/connecting/r_supported-connectors.adoc[leveloffset=+1]
+include::modules/connecting/ref-supported-connectors.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-aws.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-aws.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-amq.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-amq.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-amqp.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-amqp.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-box.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-api-clients.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-dropbox.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-box.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-email-servers.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-dropbox.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-fhir.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-email-servers.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-ftp.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-fhir.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-google.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-ftp.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-http.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-google.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-irc.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-http.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-jira.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-irc.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-kafka.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-jira.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-kudu.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-kafka.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-mongodb.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-kudu.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-mqtt.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-mongodb.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-odata.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-mqtt.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-rest-apis.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-odata.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-sf.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-sf.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-concur.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-concur.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-servicenow.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-servicenow.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-slack.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-slack.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-databases.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-databases.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-telegram.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-telegram.adoc[leveloffset=+1]
 
-include::assemblies/connecting/as_connecting-to-twitter.adoc[leveloffset=+1]
+include::assemblies/connecting/assembly-connecting-to-twitter.adoc[leveloffset=+1]

@@ -1,0 +1,47 @@
+// This module is included in the following assembly:
+// as_developing-extensions.adoc
+
+[id='develop-library-extensions_{context}']
+= How to develop library extensions
+
+A library extension provides a resource that an 
+integration requires at runtime. A library extension does not contribute steps or 
+connectors to {prodname}. 
+
+When you save an integration, you can optionally select one or more imported library extensions that you want to include with the integration.    
+
+A library extension does not define any actions. 
+Here is a sample definition for a library extension:
+
+[source,json]
+----
+{
+  "schemaVersion" : "v1",
+  "name" : "Example Library Extension",
+  "description" : "Syndesis Extension for adding a runtime library",
+  "extensionId" : "io.syndesis.extensions:syndesis-library",
+  "version" : "1.0.0",
+  "tags" : [ "my-libraries-extension" ],
+  "extensionType" : "Libraries"
+}
+----
+
+See also the sample library extension here:  https://github.com/syndesisio/syndesis-extensions
+
+Other than the lack of actions, the structure of a library extension 
+is the same as the structure of a step or connector extension. 
+
+In a Maven project that creates a library extension, to add dependencies 
+that are not available from a Maven repository, 
+specify a `system` dependency, for example: 
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.company</groupId>
+    <artifactId>my-library-extension</artifactId>
+    <version>1.0</version>
+    <scope>system</scope>
+    <systemPath>${project.basedir}/lib/my-library-extension.jar</systemPath>
+</dependency>
+----

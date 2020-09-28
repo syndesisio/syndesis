@@ -1,0 +1,69 @@
+// This module is included in the following assemblies:
+// as_connecting-to-email-servers.adoc
+
+[id='obtaining-email-to-trigger-integration-execution_{context}']
+= Obtaining email to trigger integration execution
+
+To trigger execution of an integration upon receiving email,
+add an IMAP or POP3 email server connection 
+as a simple integration's start connection.
+
+.Prerequisites
+* You created an IMAP or POP3 email server connection that is configured to access 
+the account that you want to obtain email from. 
+* You know the name of the folder to retrieve messages from. 
+
+.Procedure
+
+. In the {prodname} panel on the left, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a connection* page, click the email server connection that
+you want to use to start the integration.
+. On the *Choose an action* page, select *Receive Email* 
+to periodically retrieve messages from the email account 
+that the connection is authorized to access. 
+. Configure the action:
+.. Leave the *Folder* field blank to obtain email from the inbox. Or, 
+to obtain messages from a particular folder, enter the name of that folder.
++
+If this connection accesses a POP3 email server, only standard folders,  
+such as *Inbox* or *Sent* are supported. 
+.. Select the *Unseen Only* checkbox to obtain 
+only messages that are marked as unread on the email server. 
+.. In the *Delay* field, accept the default of 5 seconds as the time
+that elapses between polls for messages. Or, to specify a different polling interval,
+enter a number and select its time unit. 
+.. In the *Maximum Emails* field, enter the largest number 
+of messages that one poll operation can return. The default is 5.
+If the inbox or folder contains more than the maximum number of messages 
+that can be returned, the connection returns the oldest 
+messages up to the number set for *Maximum Emails*.
++
+Set *Maximum Emails* to *`-1`* if you want each poll to obtain: 
++
+** All new messages in the specified folder when *Unseen Only* is selected. 
+** All messages in the specified folder when *Unseen Only* is NOT selected. 
+
+. Click *Next*. 
+
+.Result
+
+The connection appears at the beginning of the integration flow. 
+During execution, if a poll returns email, the connection passes 
+the messages to the next step in the integration. If a poll does not
+return any email, the integration continues to run but {prodname} 
+does not trigger the rest of the integration steps.
+
+.Example
+Consider a *Receive Email* action that is configured as follows:
+
+* The *Folder* field is blank so the connection polls the inbox. 
+* *Unseen Only* is selected.
+* The defaults for *Delay* (5 seconds) and *Maximum Emails* (5) are accepted. 
+
+Suppose that 10 messages arrive in the inbox during the delay before the 
+next poll. The connection returns the 5 oldest messages. At the next 
+poll, 5 seconds later, the connection returns the other 5 messages. 
+Even if new messages arrived, this is the case because the connection returns 
+the oldest messages if there are more messages than the number set for 
+*Maximum Emails*. 

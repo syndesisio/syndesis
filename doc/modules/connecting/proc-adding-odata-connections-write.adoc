@@ -1,0 +1,65 @@
+// This module is included in the following assemblies:
+// as_connecting-to-odata.adoc
+
+[id='adding-odata-connections-write_{context}']
+= Updating, creating, and deleting data that is managed by an OData service 
+
+In an integration, you can update a resource that is managed by an OData service in the middle 
+of a flow or to finish
+a simple integration. To do this, add an OData connection to the middle of 
+a flow or as a simple integration's 
+finish connection. 
+
+.Prerequisites
+* You created an OData connection.
+* You are creating or editing an integration and {prodname} is
+prompting you to add to the integration. Or, {prodname} is 
+prompting you to choose a finish connection.  
+
+.Procedure
+
+. On the *Add to Integration* page, click the plus sign where you 
+want to add an OData connection. Skip this step if you are adding 
+a simple integration's finish connection. 
+. Click the OData connection that you want to use. Note that when an OData 
+connection updates or deletes an entity, the connection does not return anything. 
+When the OData connection creates an entity, the connection returns the new entity. 
+. On the *Choose an action* page, select the action that you want the connection to perform:  
++
+* *Create* adds an entity to an OData resource. 
+* *Delete* removes an entity from an OData resource. 
+* *Update* changes an entity that is in an OData resource. 
++
+For OData Version 2 connections only, when you create or update an entity there are three options that you can set. These three options specify the way that data is serialized in the request:
+
+** *Content Only* - By default, OData Version 2 adds metadata as part of a request. To disable this default behavior, select the *Content Only* option.
+
+** *Omit ETag* - By default, OData Version 2 requires that, when you send an update to a request, you must specify all mandatory property values in the update request. To disable this default behavior so that you can specify only the property values that you want to change, select the *Omit ETag* option.
+
+** *Omit Json wrapper* - By default, OData Version 2 wraps a request in JSON format. To disable this default behavior, select the *Omit Json wrapper* option.
+
+. Configure the action by selecting the OData resource that
+you want to update. 
++
+It is important for you to have an understanding of how the OData 
+resource that you are updating is set up. The backing data source for 
+an OData service determines the rules for updates and resolving conflicts. 
+For example, suppose an OData connection tries to create a new entity but 
+an entity with that predicate key already exists. The OData service might 
+overwrite the existing entity, or it might update some fields in the 
+existing entity, or it might ignore the operation. It is up to you to 
+know how the OData service behaves in this situation.
+
+. Click *Next*. 
+
+.Result
+The connection appears in the integration visualization where
+you added it. 
+
+.Next steps
+Add a data mapper step before the OData connection. You must map 
+source fields that provide the data that is required to create a new entity, 
+to update an entity, or to delete an entity. See 
+link:{LinkFuseOnlineIntegrationGuide}#mapping-data_ug[Mapping integration data to fields for the next connection].
+ 
+ 

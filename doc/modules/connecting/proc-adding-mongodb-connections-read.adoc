@@ -1,0 +1,124 @@
+// This module is included in the following assemblies:
+// as_connecting-to-odata.adoc
+
+[id='adding-mongodb-connections-read_{context}']
+= Triggering an integration when a MongoDB collection is updated
+
+To trigger execution of an integration when a document is added to a 
+MongoDB collection, add a MongoDB connection to a simple integration as its start 
+connection. When the integration is running, the MongoDB connection
+monitors the database collection that you specified when you created the 
+integration. Insertion of a new document
+into the collection that the connection is configured to monitor 
+triggers execution of the integration. The MongoDB connection 
+returns the new document to the integration and this data is available
+to the next step in the integration. 
+
+.Prerequisites
+* You created a MongoDB connection. 
+* You know the name of the MongoDB collection
+that you want the connection to read.
+* If the collection that you want the connection to monitor is a capped
+collection, then you must also know: 
+** The name of the MongoDB collection field that tracks incoming documents. 
+** Whether persistent tracking is enabled for the database that
+contains the collection.
+** How to specify tail tracking information related to the data 
+that you want the connection to read. MongoDB connections can use tail
+tracking information to resume an action after an unexpected connection 
+termination. Tail tracking ensures that when the connection resumes its
+activity, it does not return duplicate data to the integration nor does it
+drop any data that needs to be returned to the integration. 
+
+.Procedure
+
+. In the {prodname} panel on the left, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a connection* page, click the MongoDB connection that
+is configured to access the database that you want the integration 
+to obtain updates from. 
+. On the *Choose an action* page, select one of these actions:
++ 
+* *Retrieve documents (stream)* is typically the action that you want 
+to select. It retrieves data from non-capped collections. 
+* *Retrieve documents (tail)* is the action for retrieving data from 
+capped collections. 
+
+. Configure the action: 
+.. In the *Collection name* field, enter the name of the MongoDB 
+collection that you want the connection to read. 
++
+If you are configuring the *Retrieve documents (stream)* action, 
+this is the only required parameter. Go to step 6. If you are
+configuring the *Retrieve documents (tail)* action, follow the 
+remaining substeps.
+.. In the *Collection field used to track incoming documents* field, 
+enter the name of the relevant MongoDB collection field.
+This field contains data that can be sorted, such as a date or an ID. 
+.. Select the *Persistent tracking enabled* checkbox if persistent 
+tracking is enabled for the database that you want the connection 
+to read. 
+.. Optional. In the *Unique id to identify this tracking process* field, 
+specify a unique ID if there are multiple consumers that monitor the same 
+collection. For more information, see the Camel documentation for 
+link:https://camel.apache.org/components/latest/mongodb-component.html#_tailable_cursor_consumer[Tailable Cursor Consumer].
+.. Optional. In the *DB used to store tail tracking* field, enter 
+the name of the MongoDB database that contains tail tracking information. 
+.. Optional. In the *Collection used to store tail tracking* field, enter
+the name of the collection that contains tail tracking information. 
+.. Optional. In the *Field used to store tail tracking* field, enter the name of 
+the field that stores tail tracking information for the collection that this
+connection is reading.  
+
++
+To identify the tail tracking field, you can specify the tail tracking database
+or tail tracking collection. With one of these pieces of information, the connection can
+find the tail tracking field. 
+
+. Click *Next* to specify the action's output type. 
+
+. In the *Select Type* field, if the data type does not need to be known, 
+accept *Type specification not required* 
+and click *Next*. You do not need to follow the rest of these
+instructions. 
++
+However, a structured data type is recommended. For example, if you want 
+to map the connection output in a data mapper step then you must specify 
+the data type. The data mapper cannot display fields for unstructured data.
++
+To specify the data type, click in the *Select Type* field and select one of the following as the schema type:
++
+* *JSON schema* is a document that describes the structure of JSON data.
+The document's media type is `application/schema+json`. 
+* *JSON instance* is a document that contains JSON data. The document's 
+media type is `application/json`. 
+* *XML schema* is a document that describes the structure of XML data.
+The document's file extension is `.xsd`.
+* *XML instance* is a document that contains XML data. The
+document's file extension is `.xml`. 
+
+. In the *Definition* input box, paste a definition that conforms to the
+schema type you selected. 
+For example, if you select *JSON schema* then you would paste the content of
+a JSON schema file, which has a media type of `application/schema+json`.
+
+. In the *Data Type Name* field, enter a name that you choose for the
+data type. For example, if you are specifying a JSON schema for
+vendors then you might specify `*Vendor*` as the data type name. 
++
+You will see this data type name when you are creating 
+or editing an integration that uses the connection
+for which you are specifying this type. {prodname} displays the type name
+in the integration visualization and in the data mapper. 
+
+. In the *Data Type Description* field, provide information that helps you
+distinguish this type. This description appears in the data mapper when 
+you hover over the step that processes this type. 
+. Click *Next*. 
+
+.Result
+The integration now has a start connection and {prodname} is prompting
+you to choose the finish connection. 
+
+During execution, the connection returns the inserted document in 
+JSON format. 

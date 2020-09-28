@@ -1,12 +1,5 @@
-:experimental:
 include::attributes.adoc[]
 
-:prodname: Syndesis
-:prodversion: 7.5
-:prodnameinurl: fuse-ignite
-:productpkg: red_hat_fuse
-:version: 7.5
-:location: upstream
 :parent-context: custom
 :context: custom
 
@@ -63,14 +56,14 @@ See the following topics for details:
 * xref:adding-extensions_{context}[]
 * xref:rebranding-the-user-interface_{context}[]
 
-include::assemblies/customizing/as_developing-rest-api-client-connectors.adoc[leveloffset=+1]
+include::assemblies/customizing/assembly-developing-rest-api-client-connectors.adoc[leveloffset=+1]
 
-include::assemblies/integrating-applications/as_adding-api-connectors.adoc[leveloffset=+1]
+include::assemblies/integrating-applications/assembly-adding-api-connectors.adoc[leveloffset=+1]
 
-include::assemblies/customizing/as_developing-extensions.adoc[leveloffset=+1]
+include::assemblies/customizing/assembly-developing-extensions.adoc[leveloffset=+1]
 
-include::assemblies/integrating-applications/as_adding-extensions.adoc[leveloffset=+1]
+include::assemblies/integrating-applications/assembly-adding-extensions.adoc[leveloffset=+1]
 
-include::modules/customizing/p_rebranding-the-user-interface.adoc[leveloffset=+1]
+include::modules/customizing/proc-rebranding-the-user-interface.adoc[leveloffset=+1]
 
 :context: custom

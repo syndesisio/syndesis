@@ -1,0 +1,133 @@
+// This module is included in the following assemblies:
+// as_connecting-to-odata.adoc
+
+[id='adding-mongodb-connections-write_{context}']
+= Operating on documents in a MongoDB collection
+
+In an integration, you can search for, update, delete, count, or 
+add a document to a MongoDB collection. To do this, add a 
+MongoDB connection to the middle of a flow or as a simple 
+integration’s finish connection.
+ 
+.Prerequisites
+* You created a MongoDB connection. 
+* You know the name of the MongoDB collection
+that you want the connection to operate on.
+* You are creating or editing an integration and {prodname} is
+prompting you to add to the integration. Or, {prodname} is 
+prompting you to choose a finish connection.  
+
+.Procedure
+
+. On the *Add to Integration* page, click the plus sign where you 
+want to add a MongoDB connection. Skip this step if you are adding 
+a simple integration's finish connection. 
+. Click the MongoDB connection that you want to use.  
+. On the *Choose an action* page, select the action that you want the
+connection to perform.
+. To configure the action, in the *Collection name* field, enter 
+the name of the collection that you want the connection to 
+operate on. 
++
+If you selected the *Insert* action:
++
+* You are done configuring the connection.
+* Ensure that the data that the integration passes to this 
+MongoDB connection contains JSON notation that specifies the
+document to add to the collection.
+* Click *Next* to add this connection to the integration. 
+
+. For all other actions, the following table provides information 
+about what to specify in the second field for configuring the action. 
++
+The second field is a JSON notation expression that identifies 
+the document(s) to operate on and possibly, details for the 
+operation. If you plan to map an incoming source field to an 
+identifier in the expression, specify `:#_variable-name_` in 
+the expression. 
++
+For completeness, the *Insert* action is described in this 
+table as well.  
++
+[options="header"]
+[cols="1,1,2,2"]
+|===
+|Action
+|What it does
+|Parameter field
+|Returns
+
+|*Count*
+|Counts the number of documents that satisfy the count expression that you specify.
+|In the *Count expression* field, specify a JSON filter expression in the form of `{"test":"unit"}`. 
+The action counts the number of documents that have a `test` attribute value of `unit`.
+|An instance of `java.lang.Long` that specifies the number of documents that were found.
+
+|*Delete*
+|Removes one or more documents from the collection. 
+|In the *Delete expression* field, specify a JSON expression in the form of `{"test":"unit"}`. 
+The operation removes each document whose `test` attribute has a value of `unit`.
+|An instance of `java.lang.Long` that specifies the number of documents that were deleted.
+
+|*Find*
+|Looks for all documents that match the filter expression that you specify.
+|In the *Filter expression* field, specify a JSON notation string that identifies one or more documents. 
+|JSON notation that specifies a list (an array). Each list element identifies a document that matches the 
+filter expression and provides the document content. If no documents are found, the action returns an empty list. +
+ +
+You must be familiar with the data model of the collection. If the collection adheres to a JSON schema, 
+you must be familiar with this schema because the returned list elements adhere to this schema. For additional information, see 
+link:https://docs.mongodb.com/manual/data-modeling/[MongoDB Data Models]. +
+ +
+To use output data from the *Find* action in a subsequent data mapper step, 
+the collection must adhere to a JSON schema. This enables the data mapper to 
+display data fields. For more information, see 
+link:https://docs.mongodb.com/manual/core/schema-validation/#json-schema[MongoDB documentation for JSON schema validation].
+
+|*Insert*
+|Adds one or more documents to the collection. 
+|There is no action configuration parameter for inserting a document. The data coming in 
+to the MongoDB connection must contain JSON notation that specifies one ore more documents to add to the collection.
+|JSON notation that specifies a list (an array). Each list element is a document that this action inserted. 
+
+|*Update*
+|Updates one or more documents in the collection. 
+|In the *Filter criteria* field, specify an array of 2 arguments. 
+The first argument is a filter expression that identifies the documents to update. 
+The second argument is a MongoDB update statement that specifies how to update the documents. Update statement 
+format is described in link:https://docs.mongodb.com/manual/reference/method/db.collection.update/[]. For example: 
+`[{"_id":11},{$set: {"test":"updated!"}}]`.
+|An instance of `java.lang.Long` that specifies the number of documents that were updated.
+
+|*Upsert*
+|Updates one or more documents in the collection or creates a document if no documents match the *Upsert expression*. 
+|In the *Upsert expression* field, specify JSON notation that identifies one or more documents. The action uses this expression 
+to detect any matching documents. If the action finds a matching document(s) in the collection, it updates it. If the action does 
+not find a matching document, the action creates a new document. 
+The data coming into the MongoDB connection must contain JSON notation that specifies:
+
+* An `_id` field to identify whether it is an insert or an update operation.
+
+* The content to add or update.
+
+|An instance of `com.mongodb.client.result.UpdateResult` that specifies either the number of updated documents or the ID of the new, inserted document.
+|===
++
+Each action returns a response. If this is a finish connection, then 
+the response is lost, but you can add a *Log* step to capture the response. 
+
+. Click *Next*. 
+
+. Optional. If this is a finish connection, add a *Log* step to finish the 
+integration instead. Configure the *Log* step to capture the response.
+
+.Result
+The connection appears in the integration visualization where
+you added it. 
+
+.Next steps
+Add any other needed connections to the flow. Add any other steps that 
+process data. Complete the integration by adding any needed data mapping steps. 
+When you configured the MongoDB connection action, if you specified any 
+`:#_variable-name_` identifiers in an action expression, be sure to map a 
+source field to the MongoDB connection variable field. 

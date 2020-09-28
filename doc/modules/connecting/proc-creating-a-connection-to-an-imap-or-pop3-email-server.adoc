@@ -1,0 +1,71 @@
+// This module is included in the following assemblies:
+// as_connecting-to-email-servers.adoc
+
+[id='creating-a-connection-to-an-imap-or-pop3-email-server_{context}']
+= Creating a connection to an IMAP or POP3 email server
+
+You must create a connection to an IMAP or POP3 email server 
+before you can create a simple integration whose execution is
+triggered by received email. 
+
+.Prerequisites
+
+You must be familiar with the email server that this 
+connection accesses. Specifically, you must know:
+
+* Whether the email server uses the IMAP or POP3 protocol. 
+* Whether authentication credentials are required. If they are,
+you must have a user name and password.
+* Whether a security method is implemented. If one is, you must know 
+which method.
+* Whether a server certificate is required. If it is, 
+you must be able to specify it. 
+
+.Procedure
+
+. In {prodname}, in the left panel, click *Connections* to
+display any available connections.
+. Click *Create Connection* to display
+{prodname} connectors.
+. Click the *Receive Email* connector.
+. Configure the connection:
+.. In the *Protocol* field, accept *imap* or select *pop3*.
+.. In the *Email Host Name* field, enter the email server 
+host name, virtual host name, or IP address.
+.. In the *Email Server Port Number* field, enter the port number
+that the email server listens on.
+.. In the *User Name* field, specify the user name for the email 
+account that this connection is authorized to access. During
+execution of an integration, this connection polls this email
+account for messages. 
++
+Rarely, an email server does not authenticate access. In that case,
+specification of user name and password is not required. 
+.. In the *Password* field, specify the password for the email 
+account that this connection is authorized to access.
+.. Optional. In the *Security Method* field, if the
+email server implements a security method, select *StartTLS* or 
+*SSL/TLS*.
+.. Optional. In the *Server Certificate* field, if the email server
+is not public, that is, it is on an internal network, and if you 
+selected *StartTLS* or *SSL/TLS* as the security method, 
+paste the self-signed email server certificate 
+in this field. {prodname} cannot verify this connection if a 
+server certificate is required and you do not specify it. 
+
+. Click *Validate*. {prodname} immediately tries to validate the
+connection and displays a message that indicates whether or not
+validation is successful. If validation fails, revise the configuration
+details as needed and try again.
+. When validation is successful, click *Next*.
+. In the *Name* field, enter your choice of a name that
+helps you distinguish this connection from any other connections.
+For example, enter `*Obtain Info Emails*`.
+. In the *Description* field, optionally enter any information that
+is helpful to know about this connection. For example,
+enter `*Connect to our company email server to obtain messages
+sent to \info@ourcompany.com.*`
+. Click *Save* to see that the connection you
+created is now available. If you entered the example name, you would
+see that *Obtain Info Emails* appears as a connection that you can 
+choose to add to an integration.

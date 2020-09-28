@@ -1,12 +1,5 @@
-:experimental:
 include::attributes.adoc[]
 
-:prodname: Syndesis
-:prodversion: 7.5
-:prodnameinurl: fuse-ignite
-:productpkg: red_hat_fuse
-:version: 7.5
-:location: upstream
 :parent-context: extensions
 :context: extensions
 
@@ -57,26 +50,26 @@ developing extensions in an IDE that you choose.
 * xref:develop-library-extensions_{context}[]
 * xref:creating-jdbc-driver-library-extensions_{context}[]
 
-include::modules/customizing/p_developing-extensions.adoc[leveloffset=+1]
+include::modules/customizing/proc-developing-extensions.adoc[leveloffset=+1]
 
-include::modules/customizing/c_description-kinds-extensions.adoc[leveloffset=+1]
+include::modules/customizing/con-description-kinds-extensions.adoc[leveloffset=+1]
 
-include::modules/customizing/c_overview-extension-content-structure.adoc[leveloffset=+1]
+include::modules/customizing/con-overview-extension-content-structure.adoc[leveloffset=+1]
 
-include::modules/customizing/c_about-extension-definitions.adoc[leveloffset=+1]
+include::modules/customizing/con-about-extension-definitions.adoc[leveloffset=+1]
 
-include::modules/customizing/r_descriptions-of-user-interface-properties-in-extension-definitions.adoc[leveloffset=+1]
+include::modules/customizing/ref-descriptions-of-user-interface-properties-in-extension-definitions.adoc[leveloffset=+1]
 
-include::modules/customizing/p_using-maven-to-generate-extension-definitions.adoc[leveloffset=+1]
+include::modules/customizing/proc-using-maven-to-generate-extension-definitions.adoc[leveloffset=+1]
 
-include::modules/customizing/r_how-to-specify-data-shapes.adoc[leveloffset=+1]
+include::modules/customizing/ref-how-to-specify-data-shapes.adoc[leveloffset=+1]
 
-include::assemblies/customizing/as_develop-step-extensions.adoc[leveloffset=+1]
+include::assemblies/customizing/assembly-develop-step-extensions.adoc[leveloffset=+1]
 
-include::modules/customizing/r_develop-connector-extensions.adoc[leveloffset=+1]
+include::modules/customizing/ref-develop-connector-extensions.adoc[leveloffset=+1]
 
-include::modules/customizing/r_develop-library-extensions.adoc[leveloffset=+1]
+include::modules/customizing/ref-develop-library-extensions.adoc[leveloffset=+1]
 
-include::modules/customizing/p_creating-jdbc-driver-library-extensions.adoc[leveloffset=+1]
+include::modules/customizing/proc-creating-jdbc-driver-library-extensions.adoc[leveloffset=+1]
 
 :context: extensions

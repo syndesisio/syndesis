@@ -1,0 +1,32 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='triggering-integrations-with-http-requests_{context}']
+= Creating an integration that is triggered by an HTTP request (Webhook)
+:context: webhook
+
+You can trigger execution of a simple integration by sending an HTTP `GET` or `POST`
+request to an HTTP endpoint that {prodname} exposes. The following topics
+provide details: 
+
+* xref:how-to-use-webhook_{context}[]
+* xref:start-with-webhook-connection_{context}[]
+* xref:how-requests-are-handled_{context}[]
+* xref:guidelines-for-service-sending-requests_{context}[]
+* xref:about-json-schema-for-http-requests_{context}[]
+* xref:how-to-specify-request_{context}[]
+
+include::../../modules/integrating-applications/proc-how-to-use-webhook.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/proc-start-with-webhook-connection.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/ref-how-requests-are-handled.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/ref-guidelines-for-service-sending-requests.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/ref-about-json-schema-for-http-requests.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/ref-how-to-specify-request.adoc[leveloffset=+1]
+
+:context: ug

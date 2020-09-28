@@ -1,0 +1,80 @@
+// This module is included in the following assemblies:
+// as_evaluating-integration-data-to-determine-execution-flow.adoc
+
+[id='using-basic-expression-builder_{context}']
+= Using the basic expression builder to specify conditions
+
+In a flow, add a *Conditional Flows* step when you want to evaluate
+incoming data to determine the integration's execution path. The procedure
+described here shows how to use the basic expression builder to 
+specify conditions. 
+
+.Prerequisites
+
+* You are creating or editing a primary flow. If this is a simple integration, 
+the start and finish connections have been added.  
+* Input to a *Conditional Flows* step
+must be an individual message. In the integration visualization, 
+if the previous step's *Data Type* shows *(Collection)*, add a *Split* step
+after the previous step and before this *Conditional Flows* step.  
+* You are familiar with the fields that will be in the messages that the 
+integration passes to the *Conditional Flows* step you are about to add.  
+
+.Procedure
+
+. In the integration visualization, where you want to add a *Conditional Flows* step,
+click image:images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
+. Click *Conditional Flows*.
+. Click *Select* in the *Basic expression builder* entry.
+. In the *Configure Conditional Flows* page, define one or more conditions: 
+.. Click in the initial *When* field.
+.. In the list of properties, click the property that contains the 
+content that you want the *Conditional Flows* step to evaluate. 
+.. In the next field, accept *Contains* as the condition for which 
+the step evaluates the data or select another condition. 
+The condition that you select in this field must evaluate to 
+true for the value that you enter in the next field.
+.. In the third field, specify the value that the condition tests for. 
+.. Optional. Click *Add another condition* to specify another condition. 
+.. Repeat this set of steps for each additional condition that you want to define.
+.. Optional. Change the order in which the integration evaluates
+the defined conditions by clicking the up or down arrow to the right of a 
+condition. 
+ 
+.. Optional. Click *Execute default flow* if you want there to be a 
+default conditional flow. 
++
+If you select *Execute default flow*, during execution, 
+if none of the conditions that you specified evaluates
+to true, the integration executes the default conditional flow. If you do
+not select *Execute default flow*, during execution, if none of the 
+conditions that you specified evaluates to true, the integration continues 
+execution with the step that follows this *Conditional Flows* step. 
+
+. Click *Next*. 
+. Optional. Specify the output data type if {prodname} prompts for it.
+All conditional flows that are part of this *Conditional Flows* step
+must have the same output type. 
+
+. Click *Next*.
++
+{prodname} displays the flow visualization. Below the *Conditional Flows* step
+that you are adding, there is an entry for each condition that you specified, 
+as well as an entry for an *Otherwise* default flow if you indicated that the 
+*Conditional Flows* step has a default flow. 
+
+.Next step
+
+For each condition, add steps to its associated flow. If there is a default flow, 
+add steps to the default flow. 
+
+.Additional resources
+
+* For details about the conditions that you can select in the middle field
+for each condition, see 
+link:https://camel.apache.org/manual/latest/simple-language.html#_operator_support[Camel Simple Language operators]. 
+Note that the *matches* condition corresponds to the Simple Language
+*regex* operator. 
+
+* If you cannot define the conditions that you need by using the basic expression builder,
+see link:{LinkFuseOnlineIntegrationGuide}#using-advanced-expression-builder_condition[Using the advanced expression builder to specify conditions].

@@ -1,0 +1,75 @@
+// This module is included in the following assemblies:
+// as_evaluating-integration-data-to-determine-execution-flow.adoc
+
+[id='adding-steps-to-conditional-flows_{context}']
+= Adding steps to conditional flows
+
+In a *Conditional Flows* step, after you define conditions, for 
+each condition, add steps to the flow that is associated with that 
+condition. During execution, when the *Conditional Flows* step 
+evaluates a condition as true, it executes the flow that is associated 
+with that condition.  
+
+.Prerequisites
+
+* You defined the conditions for this *Conditional Flows* step. 
+* You are familiar with the fields that will be in the messages that the 
+integration passes to this *Conditional Flows* step.
+* You created each connection that you want to add to a conditional flow. 
+
+.Procedure
+
+. In the integration visualization, for the condition whose flow
+you want to add to, click *Open Flow*.
++
+{prodname} displays that condition near the top of the page.
+The conditional flow visualization shows the *Flow Start* and 
+*Flow End* steps that all conditional flows have. 
+
+. In the flow visualization, click 
+image:images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign']
+where you want to add a step to this conditional flow. 
+
+. Click the step that you want to add. You can add any connection or 
+step that you can add to a primary flow.  
++
+The output from the *Flow Start* step is always the same as the 
+output from the primary flow step that is before this *Conditional Flows* step. 
+For example, if you add a filter step or a data mapper step to this 
+conditional flow, the available fields are the same fields 
+that would be available in the primary flow. 
+
+. Configure the step as needed. 
+
+. Repeat the previous three instructions for each step that you 
+want to add to this conditional flow. 
+
+. At the top of the page, in the *Flow* field, 
+click the down carat and click *Back to primary flow*, which saves 
+this conditional flow and displays the primary flow. 
+
+. For each conditional flow that you want to add to, 
+repeat this procedure.  
+
+.Results
+The primary flow has a conditional flow for each condition that you 
+defined in the *Conditional Flows* step. If you selected the 
+*Execute default flow* option, the primary flow also has a default 
+conditional flow. 
+
+During execution, the *Conditional Flows* step executes the conditional 
+flow that is associated with the first condition that evaluates to true.
+The integration then executes the step that follows the *Conditional Flows*
+step. 
+
+If no condition evaluates to true then the *Conditional Flows* step 
+executes the default conditional flow. The integration then executes the 
+step that follows the *Conditional Flows* step. 
+
+If both of the following are true: 
+
+* No condition evaluates to true.
+* There is no default conditional flow. 
+
+Then the integration executes the step that follows 
+the *Conditional Flows* step. 

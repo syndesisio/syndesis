@@ -1,0 +1,185 @@
+// Module included in the following assemblies:
+// as_trigger-integrations-with-api-calls.adoc
+
+[id='define-integration-operation-flows_{context}']
+= Defining the operation flows for an API provider integration
+
+The OpenAPI document that defines your REST API service defines
+the operations that the service can perform. After you create an API
+provider integration, you can edit the flow for each operation.
+
+Each operation has exactly one flow.
+In an operation flow, you can add connections
+to other applications and services, as well as steps that operate on data
+between connections.
+
+As you add to operation flows, you might find that you need to update
+the OpenAPI document that the API provider integration is based on. To do this,
+click *View/Edit API Definition* in the upper right of a page in which
+you are editing your API provider integration. This displays your document
+in the API Designer editor. In your OpenAPI
+definition, as long as each operation has a unique `operationId` property,
+you can save your updates in API Designer and {prodname} can synchronize the
+API provider integration's flow definitions to have your updates.
+
+.Prerequisites
+
+* You created an API provider integration, gave it a name, and saved it.
+* You created a connection to each application or service that you want
+an operation flow to connect to. For details, see the
+link:{LinkFuseOnlineIntegrationGuide}#about-creating-connections_connections[information about creating connections].
+* {prodname} is displaying the list of operations that the API defines.
+
+.Procedure
+
+. In the *Operations* list page, for the operation
+whose flow you want to define, click *Create flow*.
+
+. For each connection that you want to add to this flow:
+.. In the flow visualization, click the plus sign to add a connection
+at that location.
+.. Click the connection that you want to add.
+.. Select the action that you want this connection to perform.
+.. Configure the action by entering data in the labeled fields.
+.. Click *Next*.
+
++
+Add all desired connections to the flow
+before you continue.
+
+. In this operation flow, to process data between connections:
+.. In the flow visualization, click the
+plus sign where you want to add a step.
+.. Click the step that you want to add.
+.. Configure the step by entering data in the labeled fields.
+.. Click *Next*.
+
++
+For help, see
+link:{LinkFuseOnlineIntegrationGuide}#about-adding-steps_create[Adding steps between connections].
+
++
+If you want to add another step that processes
+data between connections, repeat this subset of instructions.
+
+. Map data to fields in the next connection:
+.. In the flow visualization, check for data type mismatch
+image:images/integrating-applications/DataTypeMismatchWarning.png[data mismatch] icons, which
+indicate that the connection cannot process the incoming data. You need
+to add a data mapper step here.
+.. For each data mismatch icon in the flow visualization:
+... Click the plus sign that is just before that step.
+... Click *Data Mapper*.
+... Define the needed mappings. For help, see
+link:{LinkFuseOnlineIntegrationGuide}#mapping-data_ug[Mapping integration data to fields in the next connection].
+... Click *Done* to add the data mapper step to the flow.
+
+. In the flow visualization, on the
+*Provided API Return Path* step, click *Configure*.
++
+Every API provider integration finishes each operation flow by
+sending a response to the REST API caller that triggered execution of
+the operation flow. The response contains one of the return codes
+that you configure for the *Provided API Return Path* step that
+finishes the operation’s flow. Configure the return path step as follows:
+
+.. Under *Default Response*, in the *Return Code* field, accept
+the default response that {prodname} displays, or click the down
+caret and scroll to select the default response that you want.
+The flow sends this response when execution of the operation
+flow does not return any of the configured error responses.
+Typically, the default response return code indicates a successful operation.
+
+
+.. Under *Error Handling*, indicate whether you want to include
+the error message in the body of the returned message.
++
+During development, you typically want to return the error message.
+In production, however, you might want to hide the error message if
+it contains sensitive or proprietary information. The error message
+is a JSON formatted string that contains `responseCode`, `category`, `message`, and `error` elements, for example:
++
+[source,json]
+----
+   {
+      responseCode: 404,
+      category:  "ENTITY_NOT_FOUND_ERROR",
+      message: "SQL SELECT did not SELECT any records"
+      error: SYNDESIS_CONNECTION_ERROR
+    }
+----
++
+Note that during development, the most reliable way to know that an error happened is to check the `HTTP_RESPONSE STATUS` header in the response to the caller. You can also check the integration pod’s log for `INFO` messages. The integration’s *Activity* log shows a successful exchange and errors are not always visible in the *Activity* log.
+
+.. Under *Error Response Codes*, {prodname} displays an entry for
+each error that a connection in the flow might return. For each
+error, accept the *200 All is good* default return code or click to
+select another HTTP status return code.
++
+The return codes that you
+can select from, are the return codes that the OpenAPI document
+defines for the operation that this flow executes.
+If {prodname} does not display a return code that you need, you can
+edit the OpenAPI document to add it.
++
+To do this, in the upper right,
+click *View/Edit API Definition*. Edit the OpenAPI document as needed.
+When you are done, save the OpenAPI document. {prodname} returns to
+editing the *Provided API Return Path* and reflects any changes that you saved.
+
+.. Click Next to complete configuration of the return path.
+
+
+. When this flow has all needed
+connections and steps and there are no data mismatch icons, or when
+you no longer want to edit the flow for now, do one of the following:
+* *Publish* -- To start running the integration, in the upper right, click *Publish*.
+This builds the integration, deploys the REST API service to
+OpenShift, and makes the integration available to be executed.
+You can publish the integration each time that you
+complete the creation of an operation's flow or each
+time that you edit an operation's flow.
+* *Save* -- To display the list of operations, in the upper right,
+click *Save*.
+
+Repeat this procedure to edit another operation's flow.
+
+.Testing API provider integrations
+
+ifndef::rhmi[]
+
+* Testing API provider integrations running on one of these platforms:
+** OpenShift Online
+** OpenShift Dedicated
+** OpenShift Container Platform when *API discovery is disabled*
+
++
+You can use the `curl` utility to confirm that the integration is working as
+expected. In the `curl` command, specify the external URL that {prodname} displays
+after it publishes the API provider integration.
+For examples of doing this, see
+link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration].
+
+* Testing API provider integrations running on OpenShift Container Platform
+when *API discovery is enabled*
++
+Red Hat 3scale publishes your API provider integration. To test the integration, open the 3scale dashboard to obtain the integration’s URL.
++
+You can disable discovery for an API provider integration if, for example, you do not want Red Hat 3scale to control access to the integration’s API or you want to test the API provider integration in {prodname}. If you disable discovery, {prodname} republishes the integration and provides an external URL for invoking and testing integration execution. To do this, in {prodname} go to the integration’s summary page. On this page, click *Disable discovery*. {prodname} republishes the integration and provides the integration’s URL. For examples of how to test an integration, see
+link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration]. After testing, you can re-enable discovery for the API provider integration so that 3scale publishes it.
++
+You can enable or disable discovery for each API provider integration.
+endif::rhmi[]
+
+ifdef::rhmi[]
+
+For Red Hat Managed Integration, API discovery is enabled by default and Red Hat 3scale publishes your API provider integration. To test the integration, open the 3scale dashboard to obtain the integration’s URL.
+
+You can disable discovery for an API provider integration if, for example, you do not want Red Hat 3scale to control access to the integration’s API or you want to test the API provider integration in Fuse Online. If you disable discovery, Fuse Online republishes the integration and provides an external URL for invoking and testing integration execution.
+
+To disable discovery for an API provider integration, in Fuse Online go to the integration’s summary page. On this page, click *Disable discovery*. Fuse Online republishes the integration and provides the integration’s URL.
+
+You can use the `curl` utility to confirm that the integration is working as expected. In the `curl` command, specify the external URL that Fuse Online displays after it publishes the API provider integration.  For examples of how to test an integration, see link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration].
+
+After testing, you can re-enable discovery for the API provider integration so that 3scale publishes it.
+endif::rhmi[]

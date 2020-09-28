@@ -1,145 +1,22 @@
-// Standard document attributes to be used in the documentation
+//  attributes for use in the documentation
 //
-// The following are shared by all documents
-:toc:
-:toclevels: 4
-:numbered:
+:prodname: Syndesis
 
-// Attributes for Fuse on OpenShift
-:cdk-version: 3.9
-:maven-version: 3.6.x
-:archetype-version: 2.2.0.fuse-740017-redhat-00003
-:archetype-catalog: https://maven.repository.redhat.com/ga/io/fabric8/archetypes/archetypes-catalog/{archetype-version}/archetypes-catalog-{archetype-version}-archetype-catalog.xml
+:syndesis-version: 1.10
 
-// RCM: version.application-templates
-:templates-base-url: https://raw.githubusercontent.com/jboss-fuse/application-templates/application-templates-2.1.fuse-740025-redhat-00003
+:location: upstream
 
-
-// Attributes converted from DocBook
-:amq: Apache ActiveMQ
-
-// New-style BOM version 
-// RCM: version.redhat-fuse
-:fuseversion: 7.4.0.fuse-740036-redhat-00002
-
-//RCM: version.redhat-fuse (spring boot 2 BOM)
-:fuseBOMversion-sb: 7.4.0.fuse-sb2-740019-redhat-00005
-
-:broker: Red Hat AMQ
-
-:camel: Apache Camel
-
-// RCM: version.camel
-:camelFullVersion: 2.21.0.fuse-740039-redhat-00001
-
-:copy: ©
-
-:cxf: Apache CXF
-
-// RCM: version.cxf
-:cxfFullVersion: 3.2.7.fuse-740026-redhat-00001
-
-:eapfull: Red Hat JBoss Enterprise Application Platform
-
-:eapname: JBoss EAP
-
-:eapversion: 7.2.1
-
-
-// RCM: version.fabric8
-:fabric8Version: 3.0.11.fuse-740029-redhat-00002
-
-// RCM: version.fabric8-maven-plugin
-:fabric8MavenPluginVersion: 3.5.33.fuse-740029-redhat-00001
-
-// No RCM version
-:fabric8CamelMavenPluginVersion: 2.3.90
-
-:felix: Apache Felix
-
-:fmc: Fuse Console
-
-:framework: Apache CXF
-
-// RCM: version.fuse-karaf
-:fullversion: 7.4.0.fuse-740028-redhat-00001
-
-// RCM: version.fuse-eap
-:fuseeapversion: 7.4.0.fuse-740017-redhat-00003
-
-:hq: JBoss Operations Network
-
-:ide: Fuse Tooling
-
-:ideTools: Fuse Tooling
-
-:infin: ∞
-
-:karaf: Apache Karaf
-
-// RCM: version.karaf
-:karafMavenPluginVersion: 4.2.0.fuse-740027-redhat-00001
-
-:mdash: —
-
-:nbsp:  
-
-:ndash: –
-
-// Build version of Apache Karaf
-:prodbuildversion: 740028
-
-:prodname: Fuse
-
-:prodnamefull: Red Hat Fuse
+:prodnameinurl: fuse-ignite
 
 :productpkg: red_hat_fuse
 
-:productdocsemail: fuse-docs-support@redhat.com
+:version: 7.7
 
-// Toggle downstream content "on"
-// The 'red-hat-fuse' attribute is used to conditionalize content from the Wildfly Camel upstream project.
-// * Downstream-only content is introduced by ifdef::red-hat-fuse[]
-// * Upstream-only content is introduced by ifndef::red-hat-fuse[]
-:red-hat-fuse:
+:cdk-version: 3.11
 
-:reg: ®
-
-:reldate: August 2019
-
-:router: Apache Camel
-
-:servicemix: Apache ServiceMix
-
-:springBootFullVersion: 1.5.19.RELEASE
-
-// :springBootPreviousVersion: 1.5.17.RELEASE
-
-:syndesis-version: 1.8
+:3scaleVersion: 2.9
 
 :syndesis-quickstart-url: https://github.com/syndesisio/syndesis-quickstarts/tree/{syndesis-version}
 
-:trade: ™
-
-:previousVersion: 7.3
-
-:version: 7.5
-
-// RCM: version.wildfly-camel
-:wildflyCamelVersion: 5.3.0.fuse-740022-redhat-00002
-
 // Include attributes for deep linking
 include::attributes-links.adoc[]
-
-// Download URLs
-:download-url-devstudio: https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=70511&product=developerstudio
-:download-url-jboss-eap: https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=64301&product=appplatform
-:download-url-fuse-on-eap: https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=71551&product=jboss.fuse
-:download-url-fuse-on-karaf: https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=71541&product=jboss.fuse
-:download-url-maven: http://maven.apache.org/download.cgi
-
-// Package names
-:package-name-devstudio: codereadystudio-12.12.0.GA-installer-standalone.jar
-:package-name-jboss-eap: jboss-eap-7.2.0-installer.jar
-:package-name-fuse-on-eap: fuse-eap-installer-7.4.0.jar
-:package-name-fuse-on-karaf: fuse-karaf-7.4.0.zip
