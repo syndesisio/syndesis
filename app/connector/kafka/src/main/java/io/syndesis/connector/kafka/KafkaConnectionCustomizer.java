@@ -70,16 +70,15 @@ public class KafkaConnectionCustomizer implements ComponentProxyCustomizer {
                         if (PropertyUtils.isWriteable(configuration, property)) {
                             Class<?> c = PropertyUtils.getPropertyType(configuration, property);
                             if(c == Integer.class) {
-                                PropertyUtils.setSimpleProperty(configuration, property, Integer.valueOf(value));
+                                PropertyUtils.setSimpleProperty(configuration, property, Integer.valueOf(value.trim()));
                             } else if(c == Boolean.class) {
-                                PropertyUtils.setSimpleProperty(configuration, property, Boolean.valueOf(value));
+                                PropertyUtils.setSimpleProperty(configuration, property, Boolean.valueOf(value.trim()));
                             } else {
-                                PropertyUtils.setSimpleProperty(configuration, property, value);
+                                PropertyUtils.setSimpleProperty(configuration, property, c.cast(value));
                             }
-                            PropertyUtils.setSimpleProperty(configuration, property, c.cast(value));
                         }
                     } catch (Exception e) {
-                        LOG.error("Couldn't assign Additional Property " + key, e);
+                        LOG.error("Couldn't assign Additional Property " + key + " with value '" + value + "'", e);
                     }
                 }
             }
