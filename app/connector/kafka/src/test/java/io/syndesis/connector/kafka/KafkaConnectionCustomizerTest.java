@@ -49,8 +49,10 @@ public class KafkaConnectionCustomizerTest {
         options.put("extraOptions", "[{\"key\":\"AAA\",\"value\":\"BBB\"}," +
                                         " {\"key\":\"autoOffsetReset\"," +
                                         "\"value\":\"earliest\"}," +
+                                        " {\"key\":\"sessionTimeoutMs\"," +
+                                        "\"value\":\"60001\"}," +
                                         "{\"key\":\"checkCrcs\",\"value\":\"false\"},  " +
-                                        "{\"key\":\"auto.commit.interval.ms\",\"value\":\"5\"}]");
+                                        "{\"key\":\"auto.commit.interval.ms\",\"value\":\"5 \"}]");
         kafkaConnectionCustomizer.customize(null, options);
         assertThat(options).containsKey("configuration");
         KafkaConfiguration kafkaConfiguration = (KafkaConfiguration) options.get("configuration");

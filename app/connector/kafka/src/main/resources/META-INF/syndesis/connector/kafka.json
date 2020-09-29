@@ -119,7 +119,7 @@
         }
       },
       "arrayDefinitionOptions": {
-        "i18nAddElementText": "Add",
+        "i18nAddElementText": "Add a custom property",
         "minElements": 0
       },
       "defaultValue": [],

@@ -402,7 +402,7 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                             dataManager.update(dbConnection);
                         }
 
-                        if (connection.getId().isPresent()) {
+                        if (connection.getId().isPresent() && (!connection.getConnector().isPresent() || !connection.getConnector().get().getTags().contains("dynamic"))) {
                             //
                             // Compare the connection in the draft integration's
                             // step

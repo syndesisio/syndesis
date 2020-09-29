@@ -71,6 +71,10 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
     final Validator validator = mock(Validator.class);
 
     private static Connector newSqlConnector() {
+        return newSqlConnector(false);
+    }
+
+    private static Connector newSqlConnector(boolean dynamic) {
         ConnectorAction action1 = new ConnectorAction.Builder()
             .id(SQL_CONNECTOR_ACTION_ID)
             .actionType("connector")
@@ -80,11 +84,16 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
             .pattern(Pattern.To)
             .build();
 
-        return new Connector.Builder()
-           .id(CONNECTOR_ID)
-           .name(SQL_CONNECTOR_NAME)
-           .addAction(action1)
-           .build();
+        Connector.Builder connectorBuilder = new Connector.Builder()
+            .id(CONNECTOR_ID)
+            .name(SQL_CONNECTOR_NAME)
+            .addAction(action1);
+
+        if (dynamic){
+            connectorBuilder.addTag("dynamic");
+        }
+
+        return connectorBuilder.build();
     }
 
     private static Connection newSqlConnection(Connector connector) {
@@ -222,58 +231,7 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
     public void shouldComputeStaleIntegrationAndDeployment() {
         final IntegrationUpdateHandler updateHandler = new IntegrationUpdateHandler(dataManager, null, validator);
 
-        // integration
-        String id = "MyTestIntegration-x123456";
-        Connector sqlConnector = newSqlConnector();
-        Connection sqlConnection = newSqlConnection(sqlConnector);
-        Integration sqlIntegration = newSqlIntegration(id, sqlConnection);
-        IntegrationDeployment integrationDeployment = newIntegrationDeployment(id, 1, sqlIntegration, true);
-
-        String connectorNewName = SQL_CONNECTOR_NAME + "_new";
-
-        Map<String, String> properties = new HashMap<>();
-        properties.put("blah", "blah");
-
-        Connector modSqlConnector = new Connector.Builder()
-            .createFrom(sqlConnector)
-            .configuredProperties(properties)
-            .name(connectorNewName)
-            .build();
-
-        Equivalencer equiv = new Equivalencer();
-        assertFalse(equiv.equivalent(sqlConnector, modSqlConnector));
-
-        Connection modSqlConnection = new Connection.Builder()
-            .createFrom(sqlConnection)
-            .connector(modSqlConnector)
-            .build();
-
-        assertNotEquals(sqlConnection, modSqlConnection);
-
-        // Returns the changed sql connection
-        when(dataManager.fetchAll(Connection.class)).thenReturn(
-                                                                           new ListResult.Builder<Connection>()
-                                                                           .addItem(modSqlConnection).build());
-        when(dataManager.fetch(Connection.class, CONNECTION_ID)).thenReturn(modSqlConnection);
-        when(dataManager.fetch(Connector.class, CONNECTOR_ID)).thenReturn(modSqlConnector);
-
-        // Returns the integration deployment
-        when(dataManager.fetchAll(IntegrationDeployment.class)).thenReturn(
-                                                                           new ListResult.Builder<IntegrationDeployment>()
-                                                                           .addItem(integrationDeployment).build());
-        when(dataManager.fetch(IntegrationDeployment.class, id)).thenReturn(integrationDeployment);
-
-        Set<String> ids = Collections.singleton(id);
-        when(dataManager.fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", id)).thenReturn(ids);
-
-        // Returns the ORIGINAL integration
-        when(dataManager.fetchAll(Integration.class)).thenReturn(new ListResult.Builder<Integration>().addItem(sqlIntegration).build());
-
-        ChangeEvent event = new ChangeEvent.Builder()
-            .action("updated")
-            .id(CONNECTION_ID)
-            .kind("connection")
-            .build();
+        ChangeEvent event = getEventFromChangedIntegration(false);
 
         List<IntegrationBulletinBoard> boards = updateHandler.compute(event);
         assertFalse(boards.isEmpty());
@@ -303,6 +261,76 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
                     fail("Expecting syndesis codes 11 & 12 only");
             }
         });
+    }
+
+    @Test
+    public void shouldNotWarnOnDynamicStaleIntegrationAndDeployment() {
+        final IntegrationUpdateHandler updateHandler = new IntegrationUpdateHandler(dataManager, null, validator);
+
+        ChangeEvent event = getEventFromChangedIntegration(true);
+
+        List<IntegrationBulletinBoard> boards = updateHandler.compute(event);
+        assertFalse(boards.isEmpty());
+        assertEquals(1, boards.size());
+
+        IntegrationBulletinBoard board = boards.get(0);
+        List<LeveledMessage> messages = board.getMessages();
+        assertTrue(messages.isEmpty());
+    }
+
+    private ChangeEvent getEventFromChangedIntegration(boolean isDynamic) {
+        // integration
+        String id = "MyTestIntegration-x123456";
+        Connector sqlConnector = newSqlConnector(isDynamic);
+        Connection sqlConnection = newSqlConnection(sqlConnector);
+        Integration sqlIntegration = newSqlIntegration(id, sqlConnection);
+        IntegrationDeployment integrationDeployment = newIntegrationDeployment(id, 1, sqlIntegration, true);
+
+        String connectorNewName = SQL_CONNECTOR_NAME + "_new";
+
+        Map<String, String> properties = new HashMap<>();
+        properties.put("blah", "blah");
+
+        Connector modSqlConnector = new Connector.Builder()
+            .createFrom(sqlConnector)
+            .configuredProperties(properties)
+            .name(connectorNewName)
+            .build();
+
+        Equivalencer equiv = new Equivalencer();
+        assertFalse(equiv.equivalent(sqlConnector, modSqlConnector));
+
+        Connection modSqlConnection = new Connection.Builder()
+            .createFrom(sqlConnection)
+            .connector(modSqlConnector)
+            .build();
+
+        assertNotEquals(sqlConnection, modSqlConnection);
+
+        // Returns the changed sql connection
+        when(dataManager.fetchAll(Connection.class)).thenReturn(
+            new ListResult.Builder<Connection>()
+                .addItem(modSqlConnection).build());
+        when(dataManager.fetch(Connection.class, CONNECTION_ID)).thenReturn(modSqlConnection);
+        when(dataManager.fetch(Connector.class, CONNECTOR_ID)).thenReturn(modSqlConnector);
+
+        // Returns the integration deployment
+        when(dataManager.fetchAll(IntegrationDeployment.class)).thenReturn(
+            new ListResult.Builder<IntegrationDeployment>()
+                .addItem(integrationDeployment).build());
+        when(dataManager.fetch(IntegrationDeployment.class, id)).thenReturn(integrationDeployment);
+
+        Set<String> ids = Collections.singleton(id);
+        when(dataManager.fetchIdsByPropertyValue(IntegrationDeployment.class, "integrationId", id)).thenReturn(ids);
+
+        // Returns the ORIGINAL integration
+        when(dataManager.fetchAll(Integration.class)).thenReturn(new ListResult.Builder<Integration>().addItem(sqlIntegration).build());
+
+        return new ChangeEvent.Builder()
+            .action("updated")
+            .id(CONNECTION_ID)
+            .kind("connection")
+            .build();
     }
 
     /**
