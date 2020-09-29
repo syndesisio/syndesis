@@ -2199,6 +2199,36 @@ spec:
                     type: object
                   server:
                     properties:
+                      connectionPool:
+                        description: Connection Pool parameters used in syndesis-server
+                          to manage the connections to the database time values are
+                          in milliseconds
+                        properties:
+                          connectionTimeout:
+                            description: maximum number of milliseconds that syndesis-server
+                              will wait for a connection from the pool
+                            type: integer
+                          idleTimeout:
+                            description: maximum amount of time that a connection
+                              is allowed to sit idle in the pool
+                            type: integer
+                          leakDetectionThreshold:
+                            description: amount of time that a connection can be out
+                              of the pool before a message is logged indicating a
+                              possible connection leak
+                            type: integer
+                          maxLifetime:
+                            description: maximum lifetime of a connection in the pool
+                            type: integer
+                          maximumPoolSize:
+                            description: maximum size that the pool is allowed to
+                              reach, including both idle and in-use connections
+                            type: integer
+                          minimumIdle:
+                            description: minimum number of idle connections maintained
+                              in the pool
+                            type: integer
+                        type: object
                       features:
                         properties:
                           deployIntegrations:
