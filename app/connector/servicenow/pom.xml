@@ -55,6 +55,10 @@
             <groupId>javax.xml.soap</groupId>
             <artifactId>javax.xml.soap-api</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
     </dependencies>
