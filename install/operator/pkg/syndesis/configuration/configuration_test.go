@@ -305,7 +305,7 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 						CamelK: CamelKConfiguration{
 							AddonConfiguration: AddonConfiguration{Enabled: true},
 							Image:              "fabric8/s2i-java:3.0-java8",
-							CamelVersion:       "3.3.0",
+							CamelVersion:       "3.4.4",
 							CamelKRuntime:      "1.3.0",
 						},
 						PublicAPI: PublicAPIConfiguration{
@@ -456,7 +456,7 @@ func getConfigLiteral() *Config {
 				},
 				CamelK: CamelKConfiguration{
 					AddonConfiguration: AddonConfiguration{Enabled: false},
-					CamelVersion:       "3.3.0",
+					CamelVersion:       "3.4.4",
 					CamelKRuntime:      "1.3.0",
 					Image:              "fabric8/s2i-java:3.0-java8",
 				},
