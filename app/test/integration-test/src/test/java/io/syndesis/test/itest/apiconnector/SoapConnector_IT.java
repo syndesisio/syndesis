@@ -110,6 +110,7 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
             .send()
             .payload(RESPONSE_PAYLOAD));
 
+        runner.run(echo("SayHi waiting for result..."));
         runner.then(repeatOnError()
             .index("retries")
             .autoSleep(1000L)
@@ -118,8 +119,9 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
                 .statement("select count(*) as found_records from contact")
                 .validateScript("assert rows.get(0).get(\"found_records\") > 0", "groovy")));
 
+        runner.run(echo("SayHi checking result..."));
         runner.then(query(sampleDb)
-            .statement("select * from contact")
+            .statement("select * from contact limit 1")
             .validate("first_name", "Hello Hello!"));
     }
 
