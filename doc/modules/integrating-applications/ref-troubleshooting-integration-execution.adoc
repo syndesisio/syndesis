@@ -10,7 +10,7 @@ and link:{LinkSyndesisIntegrationGuide}#viewing-integration-history_monitor[View
 
 .Insufficient memory for integrations
 
-If the Syndesis Operator logs shows that an integration's status is `not ready` or if an integration's pod events report insufficient memory, you might need to edit the integration's deployment configuration as described in link:{LinkSyndesisIntegrationGuide}#adjusting-integration-configuration_monitor[Adjusting the memory and CPU configuration attributes for an integration].
+If the {prodname} Operator logs shows that an integration's status is `not ready` or if an integration's pod events report insufficient memory, you might need to edit the integration's deployment configuration as described in link:{LinkSyndesisIntegrationGuide}#adjusting-integration-configuration_monitor[Adjusting the memory and CPU configuration attributes for an integration].
 
 .Connection to an application that uses OAuth 
 

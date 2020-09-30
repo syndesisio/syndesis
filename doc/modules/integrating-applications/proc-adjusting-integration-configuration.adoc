@@ -51,7 +51,7 @@ spec:
 
 .Results
 
-After you save your changes, the integration's pod restarts and the new pod runs with the new values. For example:
+After you save your changes, the integration's pod restarts and the new pod runs with the new values. For example, if you run the `oc describe <intergration-pod-name>` command (where you replace <intergration-pod-name> with the name of the integration pod, for example `i-my-integration`), the command returns the new values, such as:
 
 [listing,options="nowrap"]
 ----
