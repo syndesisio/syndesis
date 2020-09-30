@@ -1,5 +1,14 @@
+#
+# Must be a ClusterRoleBinding as the oauthproxy
+# has to review tokens of the user and this has to
+# occur at the cluster-scope level.
+#
+# Note.
+# A RoleBinding binding to a ClusterRole will only
+# allow the permissions at the namespace-scope level
+#
 apiVersion: rbac.authorization.k8s.io/v1
-kind: {{ .Kind }}Binding
+kind: ClusterRoleBinding
 metadata:
   name: syndesis-{{.Namespace}}-auth-delegator
   labels:
