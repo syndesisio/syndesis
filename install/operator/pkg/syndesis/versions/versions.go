@@ -82,7 +82,7 @@ func APIMigrator(ctx context.Context, c client.Client, n string) (r SyndesisAPIM
 	api := syndesisAPI{
 		client:           c,
 		context:          ctx,
-		log:              logf.Log.WithName("versions").WithValues("version from", "v1alpha1", "version to", "v1beta1"),
+		log:              logf.Log.WithName("versions").WithValues("version to", "v1beta2"),
 		unstructuredApis: list,
 		v1beta2: &v1beta2.Syndesis{
 			TypeMeta: metav1.TypeMeta{Kind: "Syndesis", APIVersion: "syndesis.io/v1beta2"},
@@ -478,6 +478,8 @@ func (api syndesisAPI) updateApis() error {
 	} else if api.v1beta1 != nil {
 		fromName = api.v1beta1.Name
 		fromVersion = api.v1beta1.Status.Version
+	} else {
+		return nil // nothing to do
 	}
 
 	api.log.Info("updating syndesis api",
