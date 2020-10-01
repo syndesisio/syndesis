@@ -123,8 +123,7 @@ export const FormArrayComponent: React.FunctionComponent<IFormArrayControlProps>
       {!props.form.isSubmitting && !props.property.disabled && (
         <div className={'form-array-control__array-add'}>
           <Button
-            variant={'link'}
-            className={'pf-m-secondary'}
+            variant={'secondary'}
             data-testid="form-array-control-add-another-item-button"
             onClick={() => props.push(getNewArrayRow(definition))}
           >
