@@ -5,8 +5,14 @@
 = Tips for troubleshooting integration execution
 
 If an integration stops working, check its activity and history details.
-See link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-activity-information_monitor[Viewing integration activity information]
-and link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-history_monitor[Viewing integration history]. 
+See link:{LinkSyndesisIntegrationGuide}#viewing-integration-activity-information_monitor[Viewing integration activity information]
+and link:{LinkSyndesisIntegrationGuide}#viewing-integration-history_monitor[Viewing integration history]. 
+
+.Insufficient memory for integrations
+
+If the {prodname} Operator logs shows that an integration's status is `not ready` or if an integration's pod events report insufficient memory, you might need to edit the integration's deployment configuration as described in link:{LinkSyndesisIntegrationGuide}#adjusting-integration-configuration_monitor[Adjusting the memory and CPU configuration attributes for an integration].
+
+.Connection to an application that uses OAuth 
 
 For a connection to an application that uses OAuth, 
 you might see an error message that indicates
@@ -41,7 +47,7 @@ for other applications.
 If reconnection is not successful, try this:
 
 . Re-register {prodname} as a client of the application. See 
-link:{LinkFuseOnlineIntegrationGuide}#general-procedure-for-obtaining-authorization_connections[General procedure for obtaining authorization]. 
+link:{LinkSyndesisIntegrationGuide}#general-procedure-for-obtaining-authorization_connections[General procedure for obtaining authorization]. 
 . Create a new connection. 
 . Edit each integration that was using the old connection:
 .. Remove the old connection. 
