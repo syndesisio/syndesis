@@ -28,7 +28,7 @@
                 "required": true,
                 "secret": false,
                 "tags": [],
-                "type": "string"
+                "type": "dataList"
               }
             }
           }
@@ -69,7 +69,7 @@
                 "required": true,
                 "secret": false,
                 "tags": [],
-                "type": "string"
+                "type": "dataList"
               }
             }
           }
