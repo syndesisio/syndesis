@@ -34,6 +34,25 @@
           username: '{{.Syndesis.Components.Database.User}}'
           password: '{{.Syndesis.Components.Database.Password}}'
           driver-class-name: org.postgresql.Driver
+          hikari:
+            {{- if .Syndesis.Components.Server.ConnectionPool.ConnectionTimeout }}
+            connection-timeout: '{{.Syndesis.Components.Server.ConnectionPool.ConnectionTimeout}}'
+            {{- end}}
+            {{- if .Syndesis.Components.Server.ConnectionPool.IdleTimeout }}
+            idle-timeout: '{{.Syndesis.Components.Server.ConnectionPool.IdleTimeout}}'
+            {{- end}}
+            {{- if .Syndesis.Components.Server.ConnectionPool.LeakDetectionThreshold }}
+            leak-detection-threshold: '{{.Syndesis.Components.Server.ConnectionPool.LeakDetectionThreshold}}'
+            {{- end}}
+            {{- if .Syndesis.Components.Server.ConnectionPool.MaximumPoolSize }}
+            maximum-pool-size: '{{.Syndesis.Components.Server.ConnectionPool.MaximumPoolSize}}'
+            {{- end}}
+            {{- if .Syndesis.Components.Server.ConnectionPool.MaxLifetime }}
+            max-lifetime: '{{.Syndesis.Components.Server.ConnectionPool.MaxLifetime}}'
+            {{- end}}
+            {{- if .Syndesis.Components.Server.ConnectionPool.MinimumIdle }}
+            minimum-idle: '{{.Syndesis.Components.Server.ConnectionPool.MinimumIdle}}'
+            {{- end}}
       security:
         basic:
           enabled: false

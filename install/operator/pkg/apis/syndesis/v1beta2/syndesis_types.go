@@ -145,8 +145,9 @@ type GrafanaConfiguration struct {
 }
 
 type ServerConfiguration struct {
-	Resources Resources      `json:"resources,omitempty"`
-	Features  ServerFeatures `json:"features,omitempty"`
+	Resources      Resources      `json:"resources,omitempty"`
+	Features       ServerFeatures `json:"features,omitempty"`
+	ConnectionPool ConnectionPool `json:"connectionPool,omitempty"`
 }
 
 type MetaConfiguration struct {
@@ -202,6 +203,23 @@ type ServerFeatures struct {
 
 	// 3scale management URL
 	ManagementURLFor3scale string `json:"managementUrlFor3scale,omitempty"`
+}
+
+// Connection Pool parameters used in syndesis-server to manage the connections to the database
+// time values are in milliseconds
+type ConnectionPool struct {
+	// maximum number of milliseconds that syndesis-server will wait for a connection from the pool
+	ConnectionTimeout int `json:"connectionTimeout,omitempty"`
+	// maximum amount of time that a connection is allowed to sit idle in the pool
+	IdleTimeout int `json:"idleTimeout,omitempty"`
+	// amount of time that a connection can be out of the pool before a message is logged indicating a possible connection leak
+	LeakDetectionThreshold int `json:"leakDetectionThreshold,omitempty"`
+	// maximum size that the pool is allowed to reach, including both idle and in-use connections
+	MaximumPoolSize int `json:"maximumPoolSize,omitempty"`
+	// maximum lifetime of a connection in the pool
+	MaxLifetime int `json:"maxLifetime,omitempty"`
+	// minimum number of idle connections maintained in the pool
+	MinimumIdle int `json:"minimumIdle,omitempty"`
 }
 
 type MavenConfiguration struct {
