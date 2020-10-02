@@ -150,6 +150,7 @@ type ServerConfiguration struct {
 	SyndesisEncryptKey           string         // The encryption key used to encrypt/decrypt stored secrets
 	ClientStateAuthenticationKey string         // Key used to perform authentication of client side stored state
 	ClientStateEncryptionKey     string         // Key used to perform encryption of client side stored state
+	ConnectionPool               ConnectionPool // Database connection pool parameters
 }
 
 type MetaConfiguration struct {
@@ -200,6 +201,24 @@ type ServerFeatures struct {
 	OpenShiftMaster               string             // Public OpenShift master address
 	ManagementUrlFor3scale        string             // 3scale management URL
 	Maven                         MavenConfiguration // Maven settings
+}
+
+// Connectin Pool parameters used in syndesis-server to manage the connections to the database
+// time values are in milliseconds
+// https://github.com/brettwooldridge/HikariCP
+type ConnectionPool struct {
+	// maximum number of milliseconds that syndesis-server will wait for a connection from the pool
+	ConnectionTimeout int
+	// maximum amount of time that a connection is allowed to sit idle in the pool
+	IdleTimeout int
+	// amount of time that a connection can be out of the pool before a message is logged indicating a possible connection leak
+	LeakDetectionThreshold int
+	// maximum size that the pool is allowed to reach, including both idle and in-use connections
+	MaximumPoolSize int
+	// maximum lifetime of a connection in the pool
+	MaxLifetime int
+	// minimum number of idle connections that HikariCP tries to maintain in the pool
+	MinimumIdle int
 }
 
 type MavenConfiguration struct {
@@ -384,6 +403,14 @@ func GetProperties(ctx context.Context, file string, clientTools *clienttools.Cl
 			return nil, err
 		}
 	}
+
+	// configure connection pool
+	configuration.Syndesis.Components.Server.ConnectionPool.ConnectionTimeout = syndesis.Spec.Components.Server.ConnectionPool.ConnectionTimeout
+	configuration.Syndesis.Components.Server.ConnectionPool.IdleTimeout = syndesis.Spec.Components.Server.ConnectionPool.IdleTimeout
+	configuration.Syndesis.Components.Server.ConnectionPool.LeakDetectionThreshold = syndesis.Spec.Components.Server.ConnectionPool.LeakDetectionThreshold
+	configuration.Syndesis.Components.Server.ConnectionPool.MaximumPoolSize = syndesis.Spec.Components.Server.ConnectionPool.MaximumPoolSize
+	configuration.Syndesis.Components.Server.ConnectionPool.MaxLifetime = syndesis.Spec.Components.Server.ConnectionPool.MaxLifetime
+	configuration.Syndesis.Components.Server.ConnectionPool.MinimumIdle = syndesis.Spec.Components.Server.ConnectionPool.MinimumIdle
 
 	return configuration, nil
 }
