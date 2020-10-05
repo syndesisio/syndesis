@@ -148,10 +148,14 @@ type ServerConfiguration struct {
 	Resources      Resources      `json:"resources,omitempty"`
 	Features       ServerFeatures `json:"features,omitempty"`
 	ConnectionPool ConnectionPool `json:"connectionPool,omitempty"`
+	// JAVA_OPTIONS environment variable
+	JavaOptions string `json:"javaOptions,omitempty"`
 }
 
 type MetaConfiguration struct {
 	Resources ResourcesWithPersistentVolume `json:"resources,omitempty"`
+	// JAVA_OPTIONS environment variable
+	JavaOptions string `json:"javaOptions,omitempty"`
 }
 
 type UpgradeConfiguration struct {

@@ -151,11 +151,13 @@ type ServerConfiguration struct {
 	ClientStateAuthenticationKey string         // Key used to perform authentication of client side stored state
 	ClientStateEncryptionKey     string         // Key used to perform encryption of client side stored state
 	ConnectionPool               ConnectionPool // Database connection pool parameters
+	JavaOptions                  string
 }
 
 type MetaConfiguration struct {
-	Image     string                        // Docker image for syndesis meta
-	Resources ResourcesWithPersistentVolume // Resources for meta pod, memory
+	Image       string                        // Docker image for syndesis meta
+	Resources   ResourcesWithPersistentVolume // Resources for meta pod, memory
+	JavaOptions string
 }
 
 type UpgradeConfiguration struct {
@@ -403,14 +405,6 @@ func GetProperties(ctx context.Context, file string, clientTools *clienttools.Cl
 			return nil, err
 		}
 	}
-
-	// configure connection pool
-	configuration.Syndesis.Components.Server.ConnectionPool.ConnectionTimeout = syndesis.Spec.Components.Server.ConnectionPool.ConnectionTimeout
-	configuration.Syndesis.Components.Server.ConnectionPool.IdleTimeout = syndesis.Spec.Components.Server.ConnectionPool.IdleTimeout
-	configuration.Syndesis.Components.Server.ConnectionPool.LeakDetectionThreshold = syndesis.Spec.Components.Server.ConnectionPool.LeakDetectionThreshold
-	configuration.Syndesis.Components.Server.ConnectionPool.MaximumPoolSize = syndesis.Spec.Components.Server.ConnectionPool.MaximumPoolSize
-	configuration.Syndesis.Components.Server.ConnectionPool.MaxLifetime = syndesis.Spec.Components.Server.ConnectionPool.MaxLifetime
-	configuration.Syndesis.Components.Server.ConnectionPool.MinimumIdle = syndesis.Spec.Components.Server.ConnectionPool.MinimumIdle
 
 	return configuration, nil
 }
