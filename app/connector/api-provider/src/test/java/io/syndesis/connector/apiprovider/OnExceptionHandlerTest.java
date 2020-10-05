@@ -50,7 +50,7 @@ public class OnExceptionHandlerTest {
 
         CamelContext context = new DefaultCamelContext();
         Exchange exchange = new ExchangeBuilder(context).build();
-        exchange.setProperty(Exchange.EXCEPTION_CAUGHT, e);
+        exchange.setException(e);
 
         ApiProviderOnExceptionHandler handler = new ApiProviderOnExceptionHandler();
         handler.setProperties(configuredProperties);
@@ -75,7 +75,7 @@ public class OnExceptionHandlerTest {
                 "ENTITY_NOT_FOUND_ERROR", "entity not found");
 
         Exchange exchange = new ExchangeBuilder(new DefaultCamelContext()).build();
-        exchange.setProperty(Exchange.EXCEPTION_CAUGHT, e);
+        exchange.setException(e);
 
         ApiProviderOnExceptionHandler handler = new ApiProviderOnExceptionHandler();
         handler.setProperties(configuredProperties);
