@@ -16,6 +16,11 @@
 
 package io.syndesis.test.itest.apiconnector;
 
+import java.util.Arrays;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.sql.DataSource;
+
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
@@ -31,6 +36,7 @@ import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
 import org.apache.wss4j.common.WSS4JConstants;
 import org.apache.wss4j.common.ext.WSPasswordCallback;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -40,11 +46,6 @@ import org.springframework.util.SocketUtils;
 import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor;
 import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.GenericContainer;
-
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.sql.DataSource;
-import java.util.Arrays;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
 import static com.consol.citrus.actions.ExecuteSQLQueryAction.Builder.query;
@@ -99,6 +100,7 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
 
     @Test
     @CitrusTest
+    @Ignore
     public void testSayHi(@CitrusResource TestCaseRunner runner) {
         runner.run(echo("SayHi operation"));
 

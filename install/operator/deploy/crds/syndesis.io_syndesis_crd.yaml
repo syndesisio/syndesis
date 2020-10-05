@@ -2148,6 +2148,9 @@ spec:
                     type: object
                   meta:
                     properties:
+                      javaOptions:
+                        description: JAVA_OPTIONS environment variable
+                        type: string
                       resources:
                         properties:
                           limit:
@@ -2306,6 +2309,9 @@ spec:
                         required:
                         - maven
                         type: object
+                      javaOptions:
+                        description: JAVA_OPTIONS environment variable
+                        type: string
                       resources:
                         properties:
                           limit:
