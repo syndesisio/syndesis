@@ -17,6 +17,7 @@ it('Renders the component, its properties, and data-testids', () => {
   const { queryByTestId } = render(
     <ApiConnectorDetailConfigEdit
       handleOnChange={handleOnChange}
+      i18nLabelAddress={'Address'}
       i18nLabelBaseUrl={'Base URL'}
       i18nLabelDescription={'Description'}
       i18nLabelHost={'Host'}

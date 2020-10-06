@@ -1,6 +1,9 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
-import { ApiConnectorDetailConfig } from '../../src/Customization/apiClientConnectors';
+import {
+  ApiConnectorDetailBody,
+  ApiConnectorDetailConfig,
+} from '../../src/Customization/apiClientConnectors';
 
 it('Renders the component, its properties, and data-testids', () => {
   const expectedBaseUrl = '/';
@@ -19,6 +22,7 @@ it('Renders the component, its properties, and data-testids', () => {
 
   const { getByText, queryByTestId } = render(
     <ApiConnectorDetailConfig
+      i18nLabelAddress={'Address'}
       i18nLabelBaseUrl={'Base URL'}
       i18nLabelDescription={'Description'}
       i18nLabelHost={'Host'}
