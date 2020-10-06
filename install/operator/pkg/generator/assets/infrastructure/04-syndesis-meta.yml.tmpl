@@ -94,7 +94,7 @@
           - name: LOADER_HOME
             value: /deployments/ext
           - name: JAVA_OPTIONS
-            value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
+            value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp {{.Syndesis.Components.Meta.JavaOptions}}"
           - name: NAMESPACE
             valueFrom:
               fieldRef:
