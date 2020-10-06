@@ -12,6 +12,7 @@
     },
     "shared": {
       "Actions": "Actions",
+      "Address": "Address",
       "Back": "Back",
       "BaseUrl": "Base URL",
       "Cancel": "Cancel",
