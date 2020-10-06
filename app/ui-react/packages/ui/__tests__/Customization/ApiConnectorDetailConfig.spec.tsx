@@ -19,6 +19,7 @@ it('Renders the component, its properties, and data-testids', () => {
 
   const { getByText, queryByTestId } = render(
     <ApiConnectorDetailConfig
+      i18nLabelAddress={'Address'}
       i18nLabelBaseUrl={'Base URL'}
       i18nLabelDescription={'Description'}
       i18nLabelHost={'Host'}

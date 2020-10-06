@@ -14,6 +14,7 @@ it('Renders the expected connector name and description', () => {
       handleSubmit={onSubmit}
       i18nCancelLabel={'Cancel'}
       i18nEditLabel={'Edit'}
+      i18nLabelAddress={'Address'}
       i18nLabelBaseUrl={'Base URL'}
       i18nLabelDescription={'Description'}
       i18nLabelHost={'Host'}
