@@ -46,31 +46,32 @@ public class KafkaMetaDataExtension extends AbstractMetaDataExtension {
         final String transportProtocol = ConnectorOptions.extractOption(parameters, "transportProtocol");
         LOG.debug("Getting metadata from Kafka connection to {} with protocol {}", brokers, transportProtocol);
 
-        if( topic == null ) {
+        Set<String> topicsNames = new HashSet<>();
+        if (topic != null) {
+            // Adding topic to appear at the top
+            topicsNames.add(topic);
+        }
+        try {
             if (ObjectHelper.isNotEmpty(brokers)) {
-                KafkaBrokerService kafkaBrokerService = new KafkaBrokerServiceImpl(brokers, transportProtocol, certificate);
-                return Optional.of(
-                    MetaDataBuilder.on(getCamelContext())
-                        .withAttribute(MetaData.CONTENT_TYPE, "text/plain")
-                        .withAttribute(MetaData.JAVA_TYPE, String.class)
-                        .withPayload(kafkaBrokerService.listTopics())
-                        .build()
-                );
+                LOG.trace("Calling the brokerService to collect topics");
+                KafkaBrokerService kafkaBrokerService =
+                    new KafkaBrokerServiceImpl(brokers, transportProtocol, certificate);
+                topicsNames.addAll(kafkaBrokerService.listTopics());
+                topicsNames = Collections.unmodifiableSet(topicsNames);
             } else {
                 throw new IllegalStateException("brokers property must have a value.");
             }
-        } else {
-            LOG.debug("Topic property already set nothing to do, just return what we got in topic property: [{}].", topic);
-            Set<String> topicsNames = new HashSet<>();
-            topicsNames.add(topic);
-            topicsNames = Collections.unmodifiableSet(topicsNames);
-            return Optional.of(
-                MetaDataBuilder.on(getCamelContext())
-                    .withAttribute(MetaData.CONTENT_TYPE, "text/plain")
-                    .withAttribute(MetaData.JAVA_TYPE, String.class)
-                    .withPayload(topicsNames)
-                    .build()
-                );
+        } catch (Exception e) {
+            LOG.error("Couldn't fill the topics from the broker");
         }
+
+        return Optional.of(
+            MetaDataBuilder.on(getCamelContext())
+                .withAttribute(MetaData.CONTENT_TYPE, "text/plain")
+                .withAttribute(MetaData.JAVA_TYPE, String.class)
+                .withPayload(topicsNames)
+                .build()
+        );
+
     }
 }
