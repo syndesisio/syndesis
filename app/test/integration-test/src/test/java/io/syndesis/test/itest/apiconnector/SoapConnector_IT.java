@@ -109,12 +109,8 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
             .autoSleep(1000L)
             .until(is(6))
             .actions(runner.query(builder -> builder.dataSource(sampleDb)
-                .statement("select count(*) as found_records from contact")
+                .statement("select count(*) as found_records from contact where first_name like 'Hello Hello!'")
                 .validateScript("assert rows.get(0).get(\"found_records\") > 0", "groovy")));
-
-        runner.query(builder -> builder.dataSource(sampleDb)
-            .statement("select * from contact")
-            .validate("first_name", "Hello Hello!"));
     }
 
     @Configuration
