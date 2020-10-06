@@ -36,7 +36,6 @@ import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
 import org.apache.wss4j.common.WSS4JConstants;
 import org.apache.wss4j.common.ext.WSPasswordCallback;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -100,7 +99,6 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
 
     @Test
     @CitrusTest
-    @Ignore
     public void testSayHi(@CitrusResource TestCaseRunner runner) {
         runner.run(echo("SayHi operation"));
 
@@ -118,13 +116,8 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
             .autoSleep(1000L)
             .until(HamcrestConditionExpression.assertThat(is(6)))
             .actions(query(sampleDb)
-                .statement("select count(*) as found_records from contact")
+                .statement("select count(*) as found_records from contact where first_name like 'Hello Hello!'")
                 .validateScript("assert rows.get(0).get(\"found_records\") > 0", "groovy")));
-
-        runner.run(echo("SayHi checking result..."));
-        runner.then(query(sampleDb)
-            .statement("select * from contact limit 1")
-            .validate("first_name", "Hello Hello!"));
     }
 
     @Configuration
