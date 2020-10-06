@@ -34,6 +34,7 @@ export interface IApiConnectorDetailBodyProps {
   /**
    * Property Labels
    */
+  i18nLabelAddress: string;
   i18nLabelBaseUrl: string;
   i18nLabelDescription: string;
   i18nLabelHost: string;
@@ -63,6 +64,7 @@ export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetail
   description,
   handleSubmit,
   host,
+  i18nLabelAddress,
   i18nLabelBaseUrl,
   i18nLabelDescription,
   i18nLabelHost,
@@ -109,6 +111,7 @@ export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetail
           {isEditing ? (
             <ApiConnectorDetailConfigEdit
               handleOnChange={onHandleChange}
+              i18nLabelAddress={i18nLabelAddress}
               i18nLabelBaseUrl={i18nLabelBaseUrl}
               i18nLabelDescription={i18nLabelDescription}
               i18nLabelHost={i18nLabelHost}
@@ -119,6 +122,7 @@ export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetail
             />
           ) : (
             <ApiConnectorDetailConfig
+              i18nLabelAddress={i18nLabelAddress}
               i18nLabelBaseUrl={i18nLabelBaseUrl}
               i18nLabelDescription={i18nLabelDescription}
               i18nLabelHost={i18nLabelHost}
