@@ -423,7 +423,7 @@ func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 		ExporterImage   string
 	}{
 		RelatedImages:   true,
-		OperatorImage:   "",
+		OperatorImage:   c.operator,
 		DatabaseImage:   c.config.Syndesis.Components.Database.Image,
 		TodoImage:       c.config.Syndesis.Addons.Todo.Image,
 		AmqImage:        c.config.Syndesis.Components.AMQ.Image,
