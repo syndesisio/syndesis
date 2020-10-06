@@ -27,8 +27,6 @@ import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeAware;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.connector.support.processor.ErrorMapper;
-import io.syndesis.connector.support.processor.ErrorStatusInfo;
 import io.syndesis.connector.support.processor.HttpRequestUnwrapperProcessor;
 import io.syndesis.connector.support.processor.util.SimpleJsonSchemaInspector;
 import io.syndesis.connector.support.util.ConnectorOptions;
@@ -45,13 +43,9 @@ public class ApiProviderReturnPathCustomizer implements ComponentProxyCustomizer
     private static final ObjectReader READER = JsonUtils.reader().forType(JsonNode.class);
 
     private static final String HTTP_RESPONSE_CODE_PROPERTY        = "httpResponseCode";
-    private static final String HTTP_ERROR_RESPONSE_CODES_PROPERTY = "errorResponseCodes";
-    private static final String ERROR_RESPONSE_BODY                = "returnBody";
 
     private CamelContext context;
-
     private DataShape inputDataShape;
-
     private DataShape outputDataShape;
 
     @Override
@@ -71,32 +65,18 @@ public class ApiProviderReturnPathCustomizer implements ComponentProxyCustomizer
             }
         }
 
-        Map<String, Integer> errorResponseCodeMappings = ErrorMapper.jsonToMap(
-                ConnectorOptions.extractOptionAndMap(options, HTTP_ERROR_RESPONSE_CODES_PROPERTY, String::valueOf, ""));
-        Boolean isReturnBody =
-                ConnectorOptions.extractOptionAndMap(options, ERROR_RESPONSE_BODY, Boolean::valueOf, false);
         Integer httpResponseStatus =
                 ConnectorOptions.extractOptionAndMap(options, HTTP_RESPONSE_CODE_PROPERTY, Integer::valueOf, 200);
 
-        component.setAfterProducer(statusCodeUpdater(httpResponseStatus, errorResponseCodeMappings, isReturnBody));
+        component.setAfterProducer(statusCodeUpdater(httpResponseStatus));
     }
 
-    private static Processor statusCodeUpdater(Integer responseCode, Map<String, Integer> errorResponseCodeMappings,
-            Boolean isReturnBody) {
+    private static Processor statusCodeUpdater(Integer httpResponseCode) {
         return exchange -> {
-            if (exchange.getException() != null) {
-                ErrorStatusInfo statusInfo =
-                        ErrorMapper.mapError(exchange.getException(), errorResponseCodeMappings, responseCode);
-                exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, statusInfo.getHttpResponseCode());
-                if (isReturnBody) {
-                    exchange.getIn().setBody(statusInfo.toJson());
-                } else {
-                    //making sure we don't return anything
-                    exchange.getIn().setBody("");
-                }
-            } else if (responseCode != null) {
-                // Let's not override the return code in case of exceptions in the route execution
-                exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, responseCode);
+            //making sure we don't return anything
+            exchange.getIn().setBody("");
+            if (httpResponseCode != null) {
+                exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, httpResponseCode);
             }
         };
     }

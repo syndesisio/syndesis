@@ -111,13 +111,13 @@ public class WebhookConnectorCustomizerTest {
 
         final Exchange exchange = mock(Exchange.class);
         final Message message = mock(Message.class);
-        when(exchange.getOut()).thenReturn(message);
+        when(exchange.getMessage()).thenReturn(message);
 
         afterConsumer.process(exchange);
 
         verify(message).setBody("");
         verify(message).removeHeaders("*");
-        verify(message).setHeader(Exchange.HTTP_RESPONSE_CODE, 204);
+        verify(message).setHeader(Exchange.HTTP_RESPONSE_CODE, 200);
         verify(message).setHeader(Exchange.HTTP_RESPONSE_TEXT, "No Content");
     }
 

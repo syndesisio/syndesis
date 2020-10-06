@@ -42,7 +42,7 @@ public class ApiProviderOnExceptionHandler implements Processor, Properties {
     @Override
     public void process(Exchange exchange) {
         ErrorStatusInfo statusInfo =
-                ErrorMapper.mapError(exchange.getException(), errorResponseCodeMappings, httpResponseStatus);
+             ErrorMapper.mapError(exchange.getException(), errorResponseCodeMappings, httpResponseStatus);
         exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, statusInfo.getHttpResponseCode());
         if (isReturnBody) {
             exchange.getIn().setBody(statusInfo.toJson());
