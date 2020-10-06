@@ -20,12 +20,22 @@ export const SelectMethodPage: React.FunctionComponent = () => {
   const [showSoapConfig, setShowSoapConfig] = React.useState(false);
   const { apiSummary } = useApiConnectorSummary(spec, connectorTemplateId);
 
+  /**
+   * Called on 'Next' from the SOAP service & port selection form
+   */
   const onServiceConfigured = (service: string, port: string) => {
+    const availablePorts = JSON.parse(apiSummary!.configuredProperties!.ports);
+    const availableServices = JSON.parse(
+      apiSummary!.configuredProperties!.services
+    );
+    const firstSvc = port || availableServices[0];
+    const firstPort = port || availablePorts[firstSvc][0];
+
     history.push(
       resolvers.create.review({
         configured: {
-          portName: port,
-          serviceName: service,
+          portName: port || firstPort,
+          serviceName: service || firstSvc,
           wsdlURL: apiSummary!.configuredProperties!.wsdlURL,
         },
         connectorTemplateId,
