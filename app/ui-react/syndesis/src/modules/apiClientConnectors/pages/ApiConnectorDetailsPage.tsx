@@ -169,6 +169,12 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                           />
                                           <>
                                             <ApiConnectorDetailBody
+                                              address={
+                                                (
+                                                  data.configuredProperties ||
+                                                  {}
+                                                ).address
+                                              }
                                               basePath={
                                                 (
                                                   data.configuredProperties ||
@@ -187,6 +193,9 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                                 'shared:Cancel'
                                               )}
                                               i18nEditLabel={t('shared:Edit')}
+                                              i18nLabelAddress={t(
+                                                'shared:Address'
+                                              )}
                                               i18nLabelBaseUrl={t(
                                                 'shared:BaseUrl'
                                               )}
