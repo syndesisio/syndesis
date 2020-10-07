@@ -49,6 +49,7 @@ type Install struct {
 	addons         string
 	customResource string
 	devSupport     bool
+	logLevel       int
 	apiServer      capabilities.ApiServerSpec
 	databaseImage  string
 	templateName   string
@@ -124,6 +125,7 @@ func New(parent *internal.Options) *cobra.Command {
 	cmd.PersistentFlags().StringVarP(&o.tag, "tag", "", pkg.DefaultOperatorTag, "sets operator tag that gets installed")
 	cmd.PersistentFlags().BoolVarP(&o.wait, "wait", "w", false, "waits for the application to be running")
 	cmd.PersistentFlags().BoolVarP(&o.devSupport, "dev", "", false, "enable development mode by loading images from image stream tags.")
+	cmd.PersistentFlags().IntVarP(&o.logLevel, "log-level", "", 0, "specify the level of logging to display, ie. 1 (default) = info, 1 = debug ...")
 	cmd.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
 	cmd.PersistentFlags().AddFlagSet(util.FlagSet)
 	return &cmd
@@ -204,6 +206,7 @@ type RenderScope struct {
 	Namespace     string
 	ApiServer     capabilities.ApiServerSpec
 	DevSupport    bool
+	LogLevel      int
 	Role          string
 	Kind          string
 	EnabledAddons []string
@@ -261,6 +264,7 @@ func (o *Install) render(fromFile string) ([]unstructured.Unstructured, error) {
 		Image:         o.image,
 		Tag:           o.tag,
 		DevSupport:    o.devSupport,
+		LogLevel:      o.logLevel,
 		ApiServer:     o.apiServer,
 		Role:          RoleName,
 		Kind:          "Role",
