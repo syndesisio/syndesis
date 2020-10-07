@@ -17,9 +17,11 @@
 package testing
 
 import (
+	"context"
 	"fmt"
 	"reflect"
 	"strings"
+	"time"
 
 	osappsv1 "github.com/openshift/api/apps/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
@@ -27,10 +29,13 @@ import (
 	kappsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	discoveryfake "k8s.io/client-go/discovery/fake"
 	clientset "k8s.io/client-go/kubernetes"
+	corefake "k8s.io/client-go/kubernetes/fake"
 	gofake "k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/kubernetes/scheme"
+	corev1client "k8s.io/client-go/kubernetes/typed/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	rtfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
@@ -38,7 +43,7 @@ import (
 //
 // A fake API client that supports all required api
 //
-func allApiClient() clientset.Interface {
+func AllApiClient() clientset.Interface {
 	api := gofake.NewSimpleClientset()
 	fd := api.Discovery().(*discoveryfake.FakeDiscovery)
 
@@ -89,9 +94,29 @@ func fakeClient() client.Client {
 	return rtfake.NewFakeClientWithScheme(scheme, synDbDeployment)
 }
 
+func CoreV1Client(initObjs ...runtime.Object) corev1client.CoreV1Interface {
+	clientset := corefake.NewSimpleClientset(initObjs...)
+
+	coreV1Client := clientset.CoreV1()
+
+	//
+	// Create a syndesis namespace
+	//
+	nsi := coreV1Client.Namespaces()
+	nsi.Create(context.TODO(), &corev1.Namespace{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:              "syndesis",
+			CreationTimestamp: metav1.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC),
+		},
+	}, metav1.CreateOptions{})
+
+	return coreV1Client
+}
+
 func FakeClientTools() *clienttools.ClientTools {
 	clientTools := &clienttools.ClientTools{}
 	clientTools.SetRuntimeClient(fakeClient())
-	clientTools.SetApiClient(allApiClient())
+	clientTools.SetApiClient(AllApiClient())
+	clientTools.SetCoreV1Client(CoreV1Client())
 	return clientTools
 }
