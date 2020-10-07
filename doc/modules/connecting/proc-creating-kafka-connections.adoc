@@ -27,6 +27,15 @@ of Kafka broker URIs. Each URI should be in the form _host:port_.
 * If you want to encrypt your data to protect it in transit, select *TLS* (Transport Layer Security).
 * If you do not want to encrypt your data, select *Plain* and then skip to Step 7.
 . If you selected *TLS* in Step 5, then in the *Broker certificate* field, paste the Kafka broker’s PEM certificate text.
+. Optional. Click *Add* to specify `key:value` pairs to configure Kafka producer and consumer options.
++
+For example, if you want a new integration to be able to consume old messages from a topic, change the `auto.offset.reset` value from the default (`latest`) to `earliest` by typing  *auto.offset.reset* for the *Key* field and *earliest* for the *Value* field.
++
+For details about Kafka producer configuration options, go to https://kafka.apache.org/documentation/#producerconfigs
++
+For details about Kafka consumer configuration options, go to https://kafka.apache.org/documentation/#consumerconfigs
++
+*Note:* If you add configuration attributes, {prodname} does not include them as part of its validation process in the next step.
 . Click *Validate*. {prodname} immediately tries to validate the 
 connection and displays a message that indicates whether 
 validation is successful. If validation fails, revise the input 
@@ -34,7 +43,7 @@ parameter and try again.
 . If validation is successful, click *Next*.
 . In the *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
-For example, you might enter `Kafka West`.
+For example, you might type `Kafka West`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. 
 . Click *Save* to see that the connection you 
