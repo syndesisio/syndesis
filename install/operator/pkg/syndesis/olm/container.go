@@ -16,21 +16,28 @@
 
 package olm
 
-import "gopkg.in/yaml.v2"
-
 type container struct {
 	body []byte
 }
 
 func (d *container) build() (err error) {
-	m := map[string]map[string]string{
-		"operator_manifests": {
-			"manifests_dir":                "manifests",
-			"enable_digest_pinning":        "false",
-			"enable_repo_replacements":     "false",
-			"enable_registry_replacements": "false",
-		},
-	}
-	d.body, err = yaml.Marshal(m)
+	c := `operator_manifests:
+  manifests_dir: manifests
+  enable_digest_pinning: true
+  enable_repo_replacements: true
+  enable_registry_replacements: true
+  repo_replacements:
+    - registry: registry.redhat.io
+      package_mappings:
+        fuse-online-operator-container: fuse7
+        fuse-ignite-s2i-container: fuse7
+        fuse-ignite-server-container: fuse7
+        fuse-ignite-meta-container: fuse7
+        fuse-ignite-upgrade-container: fuse7
+        fuse-ignite-ui-container: fuse7
+        fuse-postgres-exporter-container: fuse7
+`
+
+	d.body = []byte(c)
 	return
 }
