@@ -17,18 +17,18 @@ package io.syndesis.server.jsondb.impl;
 
 import javax.sql.DataSource;
 
+import io.syndesis.common.util.EventBus;
+import io.syndesis.common.util.SyndesisServerException;
+import org.h2.jdbcx.JdbcConnectionPool;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.skife.jdbi.v2.DBI;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
-
-import io.syndesis.common.util.EventBus;
-import io.syndesis.common.util.SyndesisServerException;
-import org.h2.jdbcx.JdbcConnectionPool;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.skife.jdbi.v2.DBI;
 
 public class SqlJsonDBIntegrationTest {
 
@@ -38,7 +38,7 @@ public class SqlJsonDBIntegrationTest {
 
     private SqlJsonDB jsonDB;
 
-    @BeforeAll
+    @BeforeEach
     public void prepare() {
         bus = mock(EventBus.class);
 

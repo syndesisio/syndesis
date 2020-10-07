@@ -19,10 +19,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithUsage;
@@ -35,6 +31,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 public class JsonDbDaoTest<T extends WithId<T> & WithUsage> {
 
     private static final byte[] JSON_BYTES = "{\"uses\":14}".getBytes(StandardCharsets.UTF_8);
@@ -43,13 +43,13 @@ public class JsonDbDaoTest<T extends WithId<T> & WithUsage> {
 
     final private JsonDB jsondb = mock(JsonDB.class);
 
-    public Class<? extends WithUsage>[] getClasses() {
+    public static Class<? extends WithUsage>[] getClasses() {
         final Reflections reflections =
             new Reflections(new ConfigurationBuilder()
                                 .forPackages("io.syndesis")
                                 .filterInputsBy(r -> !r.contains("Immutable")));
 
-        Set<Class<? extends WithUsage>> withUsageSubtypes = new HashSet<Class<? extends WithUsage>>();
+        Set<Class<? extends WithUsage>> withUsageSubtypes = new HashSet<>();
         withUsageSubtypes.addAll(reflections.getSubTypesOf(WithUsage.class));
         final Set<Class<?>> immutables =
             reflections.getTypesAnnotatedWith(Value.Immutable.class);
@@ -63,7 +63,7 @@ public class JsonDbDaoTest<T extends WithId<T> & WithUsage> {
 
         @SuppressWarnings("unchecked")
         final Class<? extends WithUsage>[] classes =
-            (Class<? extends WithUsage>[]) withUsageSubtypes.toArray();
+            (Class<? extends WithUsage>[]) withUsageSubtypes.toArray(new Class<?>[withUsageSubtypes.size()]);
 
         return classes;
     }

@@ -41,7 +41,7 @@ abstract class SupportMojo extends RepackageMojo {
     @Parameter(defaultValue = "${project.build.directory}", required = true)
     protected File outputDirectory;
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
-    protected MavenProject project;
+    protected MavenProject mvnProject;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -57,7 +57,7 @@ abstract class SupportMojo extends RepackageMojo {
     private void writePrivateFields() throws MojoFailureException {
         try {
 
-            writeFieldViaReflection("project", project);
+            writeFieldViaReflection("project", mvnProject);
             writeFieldViaReflection("outputDirectory", outputDirectory);
             writeFieldViaReflection("finalName", finalName);
 
