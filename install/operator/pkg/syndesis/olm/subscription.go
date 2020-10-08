@@ -30,6 +30,7 @@ import (
 	conf "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	k8serr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/wait"
@@ -39,11 +40,8 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
-const (
-	pollTimeout  = 180 * time.Second
-	pollInterval = 5 * time.Second
-)
-
+var pollTimeout = 180 * time.Second
+var pollInterval = 15 * time.Second
 var sublog = logf.Log.WithName("subscription")
 
 //
@@ -128,7 +126,7 @@ func SubscribeOperator(ctx context.Context, clientTools *clienttools.ClientTools
 		return err
 	}
 
-	err = waitForSubscription(ctx, rtClient, sub)
+	err = waitForSubscription(ctx, dynClient, sub)
 	if err != nil {
 		return err
 	}
@@ -421,7 +419,18 @@ func hasInstallMode(installModes []olmapiv1alpha1.InstallMode, tgtModeTypes ...o
 	return false
 }
 
-func waitForSubscription(ctx context.Context, rtClient client.Client, sub *olmapiv1alpha1.Subscription) error {
+func waitForSubscription(ctx context.Context, dynClient dynamic.Interface, sub *olmapiv1alpha1.Subscription) error {
+	subGvr := schema.GroupVersionResource{
+		Group:    "operators.coreos.com",
+		Version:  "v1alpha1",
+		Resource: "subscriptions",
+	}
+	insGvr := schema.GroupVersionResource{
+		Group:    "operators.coreos.com",
+		Version:  "v1alpha1",
+		Resource: "installplans",
+	}
+
 	sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Waiting on subscription install plan to complete for package in namespace", "Name", sub.Name, "Namespace", sub.Namespace)
 	//
 	// Wait for the subscription to install the operator
@@ -429,35 +438,61 @@ func waitForSubscription(ctx context.Context, rtClient client.Client, sub *olmap
 	err := wait.Poll(pollInterval, pollTimeout, func() (done bool, err error) {
 
 		//
-		// Fetch latest information for subscription
+		// Fetch latest information for subscription using dynamic client
+		// (the runtime client seems incapable of finding resources in other namespaces)
 		//
-		if err := rtClient.Get(ctx, client.ObjectKey{Namespace: sub.Namespace, Name: sub.Name}, sub); err != nil {
-			sublog.Info("Error occurred fetching latest subscription", err)
+		unsSub, err := dynClient.Resource(subGvr).Namespace(sub.Namespace).Get(ctx, sub.Name, metav1.GetOptions{})
+		if err != nil {
+			sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Error: Cannot locate subscription", "Subscription", sub.Name, "Namespace", sub.Namespace, "Error", err)
+			if k8serr.IsNotFound(err) {
+				// Might not have been created yet so need to wait longer
+				return false, nil
+			}
 			return false, err
 		}
 
-		if sub.Status.InstallPlanRef == nil {
+		iPlanRefUns, exists, err := unstructured.NestedFieldNoCopy(unsSub.UnstructuredContent(), "status", "installPlanRef")
+		if !exists {
 			//
 			// No install plan reference so something has gone wrong
 			//
-			return false, fmt.Errorf("Subscription %s does not have an install plan", sub.Name)
+			return false, fmt.Errorf("Subscription %s in namespace %s does not have an install plan", sub.Name, sub.Namespace)
+		} else if err != nil {
+			//
+			// Another error occurred so return to that effect
+			//
+			return false, err
 		}
 
-		iPlanRef := sub.Status.InstallPlanRef
-		installPlan := &olmapiv1alpha1.InstallPlan{}
-		if err := rtClient.Get(ctx, client.ObjectKey{Namespace: iPlanRef.Namespace, Name: iPlanRef.Name}, installPlan); err != nil {
-			return false, fmt.Errorf("Subscription %s does not have a valid install plan reference: %w", sub.Name, err)
+		//
+		// Convert the successful reference
+		//
+		iPlanRef, ok := iPlanRefUns.(map[string]interface{})
+		if !ok {
+			return false, fmt.Errorf("Failed to convert install plan reference")
 		}
 
-		if installPlan.Status.Phase == olmapiv1alpha1.InstallPlanPhaseRequiresApproval {
-			return false, fmt.Errorf("Subscription %s requires install approval to complete installation", sub.Name)
+		installPlanUns, err := dynClient.Resource(insGvr).Namespace(sub.Namespace).Get(ctx, iPlanRef["name"].(string), metav1.GetOptions{})
+		if err != nil {
+			sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Error: Cannot find install plan", "InstallPlan", iPlanRef["name"].(string), "Namespace", sub.Namespace)
+			return false, err
 		}
 
-		if installPlan.Status.Phase == olmapiv1alpha1.InstallPlanPhaseFailed {
-			return false, fmt.Errorf("Subscription %s failed to install the operator", sub.Name)
+		phase, exists, err := unstructured.NestedString(installPlanUns.UnstructuredContent(), "status", "phase")
+		if !exists {
+			//
+			// No install plan phase. Should not happen.
+			//
+			return false, fmt.Errorf("Subscription %s in namespace %s contains an invalid install plan phase", sub.Name, sub.Namespace)
+		} else if err != nil {
+			return false, err
 		}
 
-		if installPlan.Status.Phase == olmapiv1alpha1.InstallPlanPhaseComplete {
+		if phase == string(olmapiv1alpha1.InstallPlanPhaseRequiresApproval) {
+			return false, fmt.Errorf("Subscription %s in %s requires install approval to complete installation", sub.Name, sub.Namespace)
+		} else if phase == string(olmapiv1alpha1.InstallPlanPhaseFailed) {
+			return false, fmt.Errorf("Subscription %s in %s failed to install the operator", sub.Name, sub.Namespace)
+		} else if phase == string(olmapiv1alpha1.InstallPlanPhaseComplete) {
 			sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Install plan for subscription complete", "Subscription Name", sub.Name, "Subscription Namespace", sub.Namespace)
 			return true, nil
 		}
@@ -465,7 +500,6 @@ func waitForSubscription(ctx context.Context, rtClient client.Client, sub *olmap
 		//
 		// Install plan is still to complete so wait
 		//
-		sublog.Info("Waiting on install of subscription", "Name", sub.Name, "Status", installPlan.Status.Phase)
 		return false, nil
 	})
 

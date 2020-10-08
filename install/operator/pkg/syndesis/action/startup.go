@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	v1 "github.com/openshift/api/apps/v1"
+	synpkg "github.com/syndesisio/syndesis/install/operator/pkg"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	corev1 "k8s.io/api/core/v1"
@@ -61,7 +62,7 @@ func (a *startupAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis)
 	var failedDeployment *string
 	for _, depl := range list.Items {
 		if depl.Spec.Replicas != depl.Status.ReadyReplicas {
-			a.log.V(2).Info("Not ready", "desired", depl.Spec.Replicas, "actual", depl.Status.ReadyReplicas, "deployment", depl.Name)
+			a.log.V(synpkg.DEBUG_LOGGING_LVL).Info("Not ready", "desired", depl.Spec.Replicas, "actual", depl.Status.ReadyReplicas, "deployment", depl.Name)
 			ready = false
 		}
 		if depl.Spec.Replicas != depl.Status.Replicas && depl.Status.Replicas == 0 && !isProcessing(&depl) {
@@ -81,14 +82,14 @@ func (a *startupAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis)
 		target.Status.Phase = v1beta2.SyndesisPhaseStartupFailed
 		target.Status.Reason = v1beta2.SyndesisStatusReasonDeploymentNotReady
 		target.Status.Description = "Some Syndesis deployments failed to startup within the allowed time frame"
-		a.log.V(2).Info("Startup failed for Syndesis resource. Deployment not ready", "name", syndesis.Name, "deployment", *failedDeployment)
+		a.log.V(synpkg.DEBUG_LOGGING_LVL).Info("Startup failed for Syndesis resource. Deployment not ready", "name", syndesis.Name, "deployment", *failedDeployment)
 		return rtClient.Update(ctx, target)
 	} else {
 		target := syndesis.DeepCopy()
 		target.Status.Phase = v1beta2.SyndesisPhaseStarting
 		target.Status.Reason = v1beta2.SyndesisStatusReasonMissing
 		target.Status.Description = ""
-		a.log.V(2).Info("Waiting for Syndesis resource to startup", "name", syndesis.Name)
+		a.log.V(synpkg.DEBUG_LOGGING_LVL).Info("Waiting for Syndesis resource to startup", "name", syndesis.Name)
 		return rtClient.Update(ctx, target)
 	}
 }
