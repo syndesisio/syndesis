@@ -18,7 +18,9 @@ package olm
 
 import (
 	"context"
+	"fmt"
 	"testing"
+	"time"
 
 	"github.com/blang/semver"
 	osappsv1 "github.com/openshift/api/apps/v1"
@@ -31,15 +33,24 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	dynfake "k8s.io/client-go/dynamic/fake"
 	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	rtfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
+
+func createScheme() *runtime.Scheme {
+	scheme := scheme.Scheme
+	osappsv1.AddToScheme(scheme)
+	olmapiv1.AddToScheme(scheme)
+	return scheme
+}
 
 func packageManifest(installModes []olmapiv1alpha1.InstallMode) (*olmpkgsvr.PackageManifest, *olmpkgsvr.PackageChannel) {
 	channel := olmpkgsvr.PackageChannel{
@@ -250,9 +261,7 @@ func Test_FindOperatorGroups(t *testing.T) {
 		},
 	}
 
-	scheme := scheme.Scheme
-	osappsv1.AddToScheme(scheme)
-	olmapiv1.AddToScheme(scheme)
+	scheme := createScheme()
 
 	ogGvr := schema.GroupVersionResource{
 		Group:    "operators.coreos.com",
@@ -308,4 +317,82 @@ func Test_FindOperatorGroups(t *testing.T) {
 			assert.Equal(t, tc.expect.Namespace, ns)
 		})
 	}
+}
+
+func Test_WaitForSubscription(t *testing.T) {
+	oons := "openshift-operators"
+	testPkg := "jaeger-product"
+	testPkgVersion := "v1.17.6"
+
+	installPlan := &olmapiv1alpha1.InstallPlan{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "InstallPlan",
+			APIVersion: "operators.coreos.com/v1alpha1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace:       oons,
+			Name:            "install-w6kdm",
+			ResourceVersion: "1",
+			Labels:          map[string]string{"namespace": oons},
+		},
+		Spec: olmapiv1alpha1.InstallPlanSpec{
+			Approval:                   olmapiv1alpha1.ApprovalAutomatic,
+			Approved:                   true,
+			ClusterServiceVersionNames: []string{fmt.Sprintf("%s.%s", testPkg, testPkgVersion)},
+			Generation:                 1,
+		},
+		Status: olmapiv1alpha1.InstallPlanStatus{
+			Phase: olmapiv1alpha1.InstallPlanPhaseComplete,
+		},
+	}
+
+	subscription := &olmapiv1alpha1.Subscription{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "Subscription",
+			APIVersion: "operators.coreos.com/v1alpha1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace:       oons,
+			Name:            testPkg,
+			ResourceVersion: "1",
+			Labels:          map[string]string{"namespace": oons},
+		},
+		Spec: &olmapiv1alpha1.SubscriptionSpec{
+			Channel:                "stable",
+			InstallPlanApproval:    olmapiv1alpha1.ApprovalAutomatic,
+			Package:                testPkg,
+			CatalogSource:          "test-operators",
+			CatalogSourceNamespace: "test-marketplace",
+			StartingCSV:            fmt.Sprintf("%s.%s", testPkg, testPkgVersion),
+		},
+		Status: olmapiv1alpha1.SubscriptionStatus{
+			CurrentCSV:   fmt.Sprintf("%s.%s", testPkg, testPkgVersion),
+			InstalledCSV: fmt.Sprintf("%s.%s", testPkg, testPkgVersion),
+			InstallPlanRef: &corev1.ObjectReference{
+				APIVersion: "operators.coreos.com/v1alpha1",
+				Kind:       "InstallPlan",
+				Name:       installPlan.Name,
+				Namespace:  oons,
+			},
+		},
+	}
+
+	//
+	// Quicken up for test
+	//
+	pollTimeout = 10 * time.Second
+	pollInterval = 1 * time.Second
+
+	scheme := createScheme()
+	ip, err := util.ToUnstructured(installPlan)
+	assert.NoError(t, err)
+	s, err := util.ToUnstructured(subscription)
+	assert.NoError(t, err)
+
+	dynClient := dynfake.NewSimpleDynamicClient(scheme, ip, s)
+
+	assert.NoError(t, err)
+
+	err = waitForSubscription(context.TODO(), dynClient, subscription)
+	assert.NoError(t, err)
 }
