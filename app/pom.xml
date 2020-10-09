@@ -80,6 +80,7 @@
     <swagger-maven-plugin.version>3.1.8</swagger-maven-plugin.version>
 
     <activemq.version>5.15.9</activemq.version>
+    <mongodb-driver.version>4.0.4</mongodb-driver.version>
 
     <arquillian.version>1.6.0.Final</arquillian.version>
     <arquillian.cube.version>1.18.2</arquillian.cube.version>
@@ -3726,6 +3727,23 @@
             <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <!-- Spring boot BOM is managing older mongodb driver versions, so we need to override -->
+      <dependency>
+        <groupId>org.mongodb</groupId>
+        <artifactId>mongodb-driver-core</artifactId>
+        <version>${mongodb-driver.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mongodb</groupId>
+        <artifactId>mongodb-driver-sync</artifactId>
+        <version>${mongodb-driver.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mongodb</groupId>
+        <artifactId>bson</artifactId>
+        <version>${mongodb-driver.version}</version>
       </dependency>
 
     </dependencies>
