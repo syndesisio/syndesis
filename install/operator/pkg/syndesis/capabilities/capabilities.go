@@ -62,6 +62,10 @@ func contains(a []string, x string) bool {
  * For testing the given platform's capabilities
  */
 func ApiCapabilities(clientTools *clienttools.ClientTools) (*ApiServerSpec, error) {
+	if clientTools == nil {
+		return &ApiServerSpec{}, nil
+	}
+
 	apiClient, err := clientTools.ApiClient()
 	if err != nil {
 		return nil, errs.Wrap(err, "Failed to initialise api client so cannot determine api capabilities")
