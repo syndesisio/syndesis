@@ -6,11 +6,12 @@ import {
   ApiConnectorCreatorSelectMethod,
   ApiConnectorCreatorService,
   ApiConnectorCreatorToggleList,
+  PageLoader,
 } from '@syndesis/ui';
-import { useRouteData } from '@syndesis/utils';
+import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { PageTitle } from '../../../../shared';
+import { ApiError, PageTitle } from '../../../../shared';
 import resolvers from '../../resolvers';
 
 export const SelectMethodPage: React.FunctionComponent = () => {
@@ -18,7 +19,22 @@ export const SelectMethodPage: React.FunctionComponent = () => {
   const [connectorTemplateId, setConnectorTemplateId] = React.useState('');
   const [spec, setSpec] = React.useState('');
   const [showSoapConfig, setShowSoapConfig] = React.useState(false);
-  const { apiSummary } = useApiConnectorSummary(spec, connectorTemplateId);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const { apiSummary, error, loading } = useApiConnectorSummary(
+    spec,
+    connectorTemplateId
+  );
+
+  /**
+   * Only use the loader state from useApiConnectorSummary
+   * for the SOAP connector configuration, and not on
+   * initial page load.
+   */
+  React.useEffect(() => {
+    if (showSoapConfig) {
+      setIsLoading(loading);
+    }
+  }, [loading, showSoapConfig]);
 
   /**
    * Called on 'Next' from the SOAP service & port selection form
@@ -45,7 +61,10 @@ export const SelectMethodPage: React.FunctionComponent = () => {
   };
 
   const onNext = (specification: string, connectorTemplate?: string) => {
+    setIsLoading(loading);
+
     if (!connectorTemplate) {
+      setIsLoading(false);
       history.push(resolvers.create.review({ specification }));
     } else {
       setSpec(specification);
@@ -68,91 +87,108 @@ export const SelectMethodPage: React.FunctionComponent = () => {
             cancelHref={resolvers.list()}
             connectorsHref={resolvers.list()}
           />
-          <ApiConnectorCreatorLayout
-            content={
-              <>
-                {!showSoapConfig && (
-                  <ApiConnectorCreatorSelectMethod
-                    disableDropzone={false}
-                    fileExtensions={t(
-                      'apiClientConnectors:create:selectMethod:dndFileExtensions'
+          <WithLoader
+            loading={isLoading}
+            loaderChildren={<PageLoader />}
+            error={error !== false}
+            errorChildren={<ApiError error={error as Error} />}
+          >
+            {() => (
+              <ApiConnectorCreatorLayout
+                content={
+                  <>
+                    {!showSoapConfig && (
+                      <ApiConnectorCreatorSelectMethod
+                        disableDropzone={false}
+                        fileExtensions={t(
+                          'apiClientConnectors:create:selectMethod:dndFileExtensions'
+                        )}
+                        i18nBtnNext={t('shared:Next')}
+                        i18nHelpMessage={t(
+                          'apiClientConnectors:create:selectMethod:dndHelpMessage'
+                        )}
+                        i18nInstructions={t(
+                          'apiClientConnectors:create:selectMethod:dndInstructions'
+                        )}
+                        i18nNoFileSelectedMessage={t(
+                          'apiClientConnectors:create:selectMethod:dndNoFileSelectedLabel'
+                        )}
+                        i18nSelectedFileLabel={t(
+                          'apiClientConnectors:create:selectMethod:dndSelectedFileLabel'
+                        )}
+                        i18nUploadFailedMessage={t(
+                          'apiClientConnectors:create:selectMethod:dndUploadFailedMessage'
+                        )}
+                        i18nUploadSuccessMessage={t(
+                          'apiClientConnectors:create:selectMethod:dndUploadSuccessMessage'
+                        )}
+                        i18nMethodFromFile={t(
+                          'apiClientConnectors:create:selectMethod:methodFromFile'
+                        )}
+                        i18nMethodFromUrl={t(
+                          'apiClientConnectors:create:selectMethod:methodFromUrl'
+                        )}
+                        i18nUrlNote={t(
+                          'apiClientConnectors:create:selectMethod:urlNote'
+                        )}
+                        onNext={onNext}
+                      />
                     )}
-                    i18nBtnNext={t('shared:Next')}
-                    i18nHelpMessage={t(
-                      'apiClientConnectors:create:selectMethod:dndHelpMessage'
+                    {/* Where users can specify a SOAP service and port if connector is WSDL file */}
+                    {showSoapConfig && apiSummary && (
+                      <ApiConnectorCreatorService
+                        handleNext={onServiceConfigured}
+                        i18nBtnNext={t('shared:Next')}
+                        i18nPort={t('apiClientConnectors:create:soap:port')}
+                        i18nService={t(
+                          'apiClientConnectors:create:soap:service'
+                        )}
+                        i18nServicePortTitle={t(
+                          'apiClientConnectors:create:soap:servicePortTitle'
+                        )}
+                        portName={apiSummary!.configuredProperties!.portName}
+                        portsAvailable={JSON.parse(
+                          apiSummary!.configuredProperties!.ports
+                        )}
+                        serviceName={
+                          apiSummary!.configuredProperties!.serviceName
+                        }
+                        servicesAvailable={JSON.parse(
+                          apiSummary!.configuredProperties!.services
+                        )}
+                      />
                     )}
-                    i18nInstructions={t(
-                      'apiClientConnectors:create:selectMethod:dndInstructions'
+                  </>
+                }
+                navigation={
+                  <ApiConnectorCreatorBreadSteps
+                    step={1}
+                    i18nDetails={t('apiClientConnectors:create:details:title')}
+                    i18nReview={t('apiClientConnectors:create:review:title')}
+                    i18nSecurity={t(
+                      'apiClientConnectors:create:security:title'
                     )}
-                    i18nNoFileSelectedMessage={t(
-                      'apiClientConnectors:create:selectMethod:dndNoFileSelectedLabel'
+                    i18nSelectMethod={t(
+                      'apiClientConnectors:create:selectMethod:title'
                     )}
-                    i18nSelectedFileLabel={t(
-                      'apiClientConnectors:create:selectMethod:dndSelectedFileLabel'
-                    )}
-                    i18nUploadFailedMessage={t(
-                      'apiClientConnectors:create:selectMethod:dndUploadFailedMessage'
-                    )}
-                    i18nUploadSuccessMessage={t(
-                      'apiClientConnectors:create:selectMethod:dndUploadSuccessMessage'
-                    )}
-                    i18nMethodFromFile={t(
-                      'apiClientConnectors:create:selectMethod:methodFromFile'
-                    )}
-                    i18nMethodFromUrl={t(
-                      'apiClientConnectors:create:selectMethod:methodFromUrl'
-                    )}
-                    i18nUrlNote={t(
-                      'apiClientConnectors:create:selectMethod:urlNote'
-                    )}
-                    onNext={onNext}
                   />
-                )}
-                {/* Where users can specify a SOAP service and port if connector is WSDL file */}
-                {showSoapConfig && apiSummary && (
-                  <ApiConnectorCreatorService
-                    handleNext={onServiceConfigured}
-                    i18nBtnNext={t('shared:Next')}
-                    i18nPort={t('apiClientConnectors:create:soap:port')}
-                    i18nService={t('apiClientConnectors:create:soap:service')}
-                    i18nServicePortTitle={t(
-                      'apiClientConnectors:create:soap:servicePortTitle'
+                }
+                toggle={
+                  <ApiConnectorCreatorToggleList
+                    step={1}
+                    i18nDetails={t('apiClientConnectors:create:details:title')}
+                    i18nReview={t('apiClientConnectors:create:review:title')}
+                    i18nSecurity={t(
+                      'apiClientConnectors:create:security:title'
                     )}
-                    portName={apiSummary!.configuredProperties!.portName}
-                    portsAvailable={JSON.parse(
-                      apiSummary!.configuredProperties!.ports
-                    )}
-                    serviceName={apiSummary!.configuredProperties!.serviceName}
-                    servicesAvailable={JSON.parse(
-                      apiSummary!.configuredProperties!.services
+                    i18nSelectMethod={t(
+                      'apiClientConnectors:create:selectMethod:title'
                     )}
                   />
-                )}
-              </>
-            }
-            navigation={
-              <ApiConnectorCreatorBreadSteps
-                step={1}
-                i18nDetails={t('apiClientConnectors:create:details:title')}
-                i18nReview={t('apiClientConnectors:create:review:title')}
-                i18nSecurity={t('apiClientConnectors:create:security:title')}
-                i18nSelectMethod={t(
-                  'apiClientConnectors:create:selectMethod:title'
-                )}
+                }
               />
-            }
-            toggle={
-              <ApiConnectorCreatorToggleList
-                step={1}
-                i18nDetails={t('apiClientConnectors:create:details:title')}
-                i18nReview={t('apiClientConnectors:create:review:title')}
-                i18nSecurity={t('apiClientConnectors:create:security:title')}
-                i18nSelectMethod={t(
-                  'apiClientConnectors:create:selectMethod:title'
-                )}
-              />
-            }
-          />
+            )}
+          </WithLoader>
         </>
       )}
     </Translation>
