@@ -6,7 +6,7 @@ import (
 	"time"
 
 	consolev1 "github.com/openshift/api/console/v1"
-
+	synpkg "github.com/syndesisio/syndesis/install/operator/pkg"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
@@ -121,7 +121,7 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 		}
 
 		if a.CanExecute(syndesis) {
-			log.V(2).Info("Running action", "action", reflect.TypeOf(a))
+			log.V(synpkg.DEBUG_LOGGING_LVL).Info("Running action", "action", reflect.TypeOf(a))
 			if err := a.Execute(ctx, syndesis); err != nil {
 				log.Error(err, "Error reconciling", "action", reflect.TypeOf(a), "phase", syndesis.Status.Phase)
 				return reconcile.Result{

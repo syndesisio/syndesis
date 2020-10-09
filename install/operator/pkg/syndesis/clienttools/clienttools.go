@@ -27,7 +27,7 @@ import (
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
-	corev1client "k8s.io/client-go/kubernetes/typed/core/v1"
+	corev1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
@@ -38,7 +38,7 @@ type ClientTools struct {
 	runtimeClient *client.Client
 	dynamicClient dynamic.Interface
 	apiClient     kubernetes.Interface
-	coreV1Client  corev1client.CoreV1Interface
+	coreV1Client  corev1.CoreV1Interface
 }
 
 func (ck *ClientTools) RestConfig() (c *rest.Config) {
@@ -122,17 +122,18 @@ func (ck *ClientTools) SetApiClient(a kubernetes.Interface) {
 	ck.apiClient = a
 }
 
-func (ck *ClientTools) CoreV1Client() (corev1client.CoreV1Interface, error) {
+func (ck *ClientTools) CoreV1Client() (corev1.CoreV1Interface, error) {
 	if ck.coreV1Client == nil {
-		client, err := corev1client.NewForConfig(ck.RestConfig())
+		client, err := corev1.NewForConfig(ck.RestConfig())
 		if err != nil {
 			return nil, err
 		}
 		ck.coreV1Client = client
 	}
+
 	return ck.coreV1Client, nil
 }
 
-func (ck *ClientTools) SetCoreV1Client(c corev1client.CoreV1Interface) {
+func (ck *ClientTools) SetCoreV1Client(c corev1.CoreV1Interface) {
 	ck.coreV1Client = c
 }
