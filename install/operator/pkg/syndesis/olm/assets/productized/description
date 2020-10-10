@@ -49,10 +49,4 @@ Within the addons section, users are able to enable specific addons. The availab
 - ops: enables monitoring, requires extra CRDs
 - todo: a simple todo application
 
-- When you enable Jaeger addon, you should link the previously created `syndesis-pull-secret` secret to jaeger service accounts.
-```
-oc secrets link jaeger-operator syndesis-pull-secret --for=pull
-oc secrets link syndesis-jaeger-ui-proxy syndesis-pull-secret --for=pull
-```
-
 To enable addons, set "addon_name": {"enabled": true} in the CR.
