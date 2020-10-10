@@ -138,12 +138,14 @@ func Test_csv_loadClusterRoleFromTemplate(t *testing.T) {
 	// Mock olm support
 	//
 	conf.ApiServer.OlmSupport = true
+	conf.ApiServer.ConsoleLink = true
 
 	c := &csv{config: conf, operator: ""}
 	r, err := c.loadClusterRoleFromTemplate()
 	assert.NoError(t, err)
 	assert.NotNil(t, r)
 
-	_, ok := r.([]map[string]interface{})
+	roles, ok := r.([]map[string]interface{})
 	assert.True(t, ok, "Expected return value should be a map[string]interface{}")
+	assert.Equal(t, 8, len(roles)) // set of all the rule maps
 }

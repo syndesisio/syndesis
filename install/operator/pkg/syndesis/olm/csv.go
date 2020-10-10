@@ -17,6 +17,7 @@
 package olm
 
 import (
+	"fmt"
 	"io/ioutil"
 	"path/filepath"
 	"time"
@@ -50,14 +51,14 @@ type csv struct {
 }
 
 type CSVOut struct {
-	ApiVersion string
+	ApiVersion string `yaml:"apiVersion"`
 	Kind       string
 	Metadata   Metadata
 	Spec       Spec
 }
 
 type Spec struct {
-	DisplayName               string
+	DisplayName               string `yaml:"displayName"`
 	Description               string
 	Keywords                  []string
 	Version                   string
@@ -68,10 +69,10 @@ type Spec struct {
 	Selector                  Selector
 	Icon                      []Icon
 	Links                     []Link
-	RelatedImages             []Image
-	InstallModes              []InstallMode
+	InstallModes              []InstallMode `yaml:"installModes"`
 	Install                   Install
 	Customresourcedefinitions CustomResourceDefinitions
+	RelatedImages             []Image `yaml:"relatedImages"`
 }
 
 type Metadata struct {
@@ -84,12 +85,12 @@ type MetadataAnnotations struct {
 	Capabilities   string
 	Categories     string
 	Certified      string
-	CreatedAt      string
-	ContainerImage string
+	CreatedAt      string `yaml:"createdAt"`
+	ContainerImage string `yaml:"containerImage"`
 	Support        string
 	Description    string
 	Repository     string
-	Alm            string
+	AlmExamples    string `yaml:"alm-examples"`
 }
 
 type Maintainer struct {
@@ -115,8 +116,8 @@ type Link struct {
 }
 
 type Image struct {
-	Name   string
-	Images string
+	Name  string
+	Image string
 }
 
 type InstallMode struct {
@@ -171,6 +172,13 @@ func (c *csv) setVariables() {
 	c.version = c.config.Version
 	c.maturity = "alpha"
 
+	// Both of these are required to ensure permissions are correctly added to manifest
+	c.config.ApiServer.ImageStreams = true
+	c.config.ApiServer.Routes = true
+	c.config.ApiServer.EmbeddedProvider = true
+	c.config.ApiServer.OlmSupport = true
+	c.config.ApiServer.ConsoleLink = true
+
 	// Dependant on whether it is community or productized
 	c.name = "fuse-online-operator"
 	c.displayName = "Red Hat Integration - Fuse Online"
@@ -217,6 +225,11 @@ func (c *csv) build() (err error) {
 		return err
 	}
 
+	relatedImages, err := c.assembleRelatedImages()
+	if err != nil {
+		return err
+	}
+
 	co := CSVOut{
 		ApiVersion: "operators.coreos.com/v1alpha1",
 		Kind:       "ClusterServiceVersion",
@@ -232,7 +245,7 @@ func (c *csv) build() (err error) {
 				Support:        c.support,
 				Description:    c.description,
 				Repository:     "https://github.com/syndesisio/syndesis/",
-				Alm:            string(alm),
+				AlmExamples:    string(alm),
 			},
 		},
 		Spec: Spec{
@@ -309,6 +322,7 @@ func (c *csv) build() (err error) {
 					Description: "Syndesis CRD",
 				}},
 			},
+			RelatedImages: relatedImages,
 		},
 	}
 
@@ -369,6 +383,7 @@ func (c *csv) loadClusterRoleFromTemplate() (r interface{}, err error) {
 	if err != nil {
 		return nil, err
 	}
+
 	resources = append(resources, olm...)
 
 	pubapi, err := generator.Render("./install/cluster_role_public_api.yml.tmpl", context)
@@ -385,20 +400,21 @@ func (c *csv) loadClusterRoleFromTemplate() (r interface{}, err error) {
 	for _, resource := range resources {
 		rules, exists, _ := unstructured.NestedFieldNoCopy(resource.UnstructuredContent(), "rules")
 		if !exists {
-			continue
+			return nil, fmt.Errorf("Cannot validate 'rules' in %s", resource.GetName())
 		}
 
 		ruleMaps, ok := rules.([]interface{})
 		if !ok || len(ruleMaps) == 0 {
-			continue
+			return nil, fmt.Errorf("Cannot validate rule maps in %s", resource.GetName())
 		}
 
-		ruleMap, ok := ruleMaps[0].(map[string]interface{})
-		if !ok {
-			continue
+		for _, ruleMap := range ruleMaps {
+			ruleMap, ok := ruleMap.(map[string]interface{})
+			if !ok {
+				return nil, fmt.Errorf("Cannot validate 'rule map' in %s", resource.GetName())
+			}
+			m = append(m, ruleMap)
 		}
-
-		m = append(m, ruleMap)
 	}
 
 	r = m
@@ -454,4 +470,23 @@ func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 
 	r = m["spec"]
 	return
+}
+
+func (c *csv) assembleRelatedImages() ([]Image, error) {
+	images := []Image{}
+
+	images = append(images, Image{Name: "syndesis-operator", Image: c.operator})
+	images = append(images, Image{Name: "postgres-version", Image: c.config.Syndesis.Components.Database.Image})
+	images = append(images, Image{Name: "todo", Image: c.config.Syndesis.Addons.Todo.Image})
+	images = append(images, Image{Name: "oauth", Image: c.config.Syndesis.Components.Oauth.Image})
+	images = append(images, Image{Name: "ui", Image: c.config.Syndesis.Components.UI.Image})
+	images = append(images, Image{Name: "s2i", Image: c.config.Syndesis.Components.S2I.Image})
+	images = append(images, Image{Name: "prometheus", Image: c.config.Syndesis.Components.Prometheus.Image})
+	images = append(images, Image{Name: "upgrade", Image: c.config.Syndesis.Components.Upgrade.Image})
+	images = append(images, Image{Name: "meta", Image: c.config.Syndesis.Components.Meta.Image})
+	images = append(images, Image{Name: "database", Image: c.config.Syndesis.Components.Database.Image})
+	images = append(images, Image{Name: "psql_exporter", Image: c.config.Syndesis.Components.Database.Exporter.Image})
+	images = append(images, Image{Name: "server", Image: c.config.Syndesis.Components.Server.Image})
+	images = append(images, Image{Name: "amq", Image: c.config.Syndesis.Components.AMQ.Image})
+	return images, nil
 }

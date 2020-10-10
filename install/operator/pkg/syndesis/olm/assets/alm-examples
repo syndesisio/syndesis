@@ -13,8 +13,7 @@
         "enabled": false
       },
       "jaeger": {
-        "enabled": false,
-        "clientOnly": true
+        "enabled": true
       }
     }
   }
