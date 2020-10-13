@@ -60,7 +60,7 @@ instructions.
 +
 However, a structured data type is recommended. For example, if you want 
 to map the connection input/output in a data mapper step then you must specify 
-the data type. The data mapper cannot dislay fields for unstructured data.
+the data type. The data mapper cannot display fields for unstructured data.
 +
 To specify the data type, click in the *Select Type* field and select one of the following as the schema type:
 +
