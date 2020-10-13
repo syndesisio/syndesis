@@ -22,10 +22,10 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
-	"time"
 
 	oappsv1 "github.com/openshift/api/apps/v1"
 	"github.com/spf13/afero"
+	synpkg "github.com/syndesisio/syndesis/install/operator/pkg"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -33,19 +33,10 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/apimachinery/pkg/util/wait"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
-
-const upgradeDeploymentName = "syndesis-db-upgrade"
-
-var upgradeLabels = map[string]string{
-	"syndesis.io/app":       "syndesis",
-	"syndesis.io/component": upgradeDeploymentName,
-}
 
 var upgradeMetadata = metav1.ObjectMeta{
 	Name:   upgradeDeploymentName,
@@ -79,7 +70,7 @@ func newDatabaseUpgrade(base step, s *v1beta2.Syndesis) stepRunner {
 	}
 
 	u.current = u.currentFromRunningDatabase
-	u.cleanup = u.deleteUpgrade
+	u.cleanup = u.deleteDbUpgrade
 
 	return &u
 }
@@ -87,7 +78,7 @@ func newDatabaseUpgrade(base step, s *v1beta2.Syndesis) stepRunner {
 func (u *databaseUpgrade) run() (err error) {
 	u.log.Info("Upgrading database")
 
-	// scales down the databasae (`syndesis-db`)
+	// scales down the database (`syndesis-db`)
 	if err := u.scaleDownDatabase(); err != nil {
 		return err
 	}
@@ -96,20 +87,14 @@ func (u *databaseUpgrade) run() (err error) {
 	// with the image of the new (target) version with
 	// the environment variable set to perform the
 	// upgrade by running pg_upgrade
+	u.log.V(synpkg.DEBUG_LOGGING_LVL).Info("Deploying the db upgrade")
 	if err := u.deployUpgrade(); err != nil {
 		return err
 	}
 
-	// make sure we delete the syndesis-db-upgrade Deployment
-	defer func() {
-		if err := u.cleanup(); err != nil {
-			u.log.Error(err, "Failed to cleanup database upgrade deployment")
-		}
-	}()
-
 	// wait for the `syndesis-db-upgrade` to scale up
 	// this marks the end of the upgrade
-	if err := u.awaitScale(upgradeDeploymentName, newDbUpgradeDeploymentTracker()); err != nil {
+	if err := u.awaitScale(upgradeDeploymentName, newDeploymentTracker()); err != nil {
 		return err
 	}
 
@@ -117,7 +102,7 @@ func (u *databaseUpgrade) run() (err error) {
 }
 
 func (u *databaseUpgrade) rollback() (err error) {
-	if err := u.deleteUpgrade(); err != nil {
+	if err := u.deleteDbUpgrade(); err != nil {
 		u.log.Error(err, "Unable to delete database upgrade Deployment during rollback")
 	}
 
@@ -309,85 +294,6 @@ func (u *databaseUpgrade) deployUpgrade() error {
 			},
 		},
 	})
-}
-
-type scaleTracker interface {
-	obj() runtime.Object
-	hasScaled() bool
-}
-
-type dbUpgradeDeploymentTracker struct {
-	deployment appsv1.Deployment
-}
-
-func newDbUpgradeDeploymentTracker() scaleTracker {
-	return &dbUpgradeDeploymentTracker{
-		deployment: appsv1.Deployment{},
-	}
-}
-
-func (d *dbUpgradeDeploymentTracker) obj() runtime.Object {
-	return &d.deployment
-}
-
-func (d *dbUpgradeDeploymentTracker) hasScaled() bool {
-	//
-	// Wait for scaling up of the db upgrade container
-	// Waits for the ReadyReplicas to equal the required Replicas
-	//
-	return *d.deployment.Spec.Replicas == d.deployment.Status.ReadyReplicas
-}
-
-type deploymentConfigTracker struct {
-	deployment oappsv1.DeploymentConfig
-}
-
-func newDeploymentConfigTracker() scaleTracker {
-	return &deploymentConfigTracker{
-		deployment: oappsv1.DeploymentConfig{},
-	}
-}
-
-func (d *deploymentConfigTracker) obj() runtime.Object {
-	return &d.deployment
-}
-
-func (d *deploymentConfigTracker) hasScaled() bool {
-	return d.deployment.Status.Replicas == d.deployment.Status.ReadyReplicas
-}
-
-// Waits at most 15min for the Deployment or DeploymentConfig to reach the desired scale
-func (u *databaseUpgrade) awaitScale(name string, tracker scaleTracker) error {
-	if err := wait.PollImmediate(time.Second*3, time.Minute*15, func() (done bool, err error) {
-		if err = u.client().Get(u.context, types.NamespacedName{Namespace: u.namespace, Name: name}, tracker.obj()); err != nil {
-			return false, err
-		}
-
-		if !tracker.hasScaled() {
-			u.log.Info("Waiting for the deployment to scale", "deployment", name)
-			return false, nil
-		}
-
-		return true, nil
-	}); err != nil {
-		u.log.Error(err, "Failed in waiting for the deployment to scale", "deployment", name)
-		return err
-	}
-
-	return nil
-}
-
-func (u *databaseUpgrade) deleteUpgrade() error {
-	return u.client().DeleteAllOf(u.context, &appsv1.Deployment{}, client.InNamespace(u.namespace), client.MatchingLabels(upgradeLabels))
-}
-
-func (u *databaseUpgrade) client() client.Client {
-	client, err := u.clientTools.RuntimeClient()
-	if err != nil {
-		panic(err)
-	}
-
-	return client
 }
 
 // simple strategy to load the version of the database left in /data/postgresql.txt by the init container

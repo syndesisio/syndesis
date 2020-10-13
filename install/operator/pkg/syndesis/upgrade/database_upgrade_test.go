@@ -250,7 +250,7 @@ func TestShouldDeleteUpgradeDeployment(t *testing.T) {
 		},
 	}
 
-	if err := u.deleteUpgrade(); err != nil {
+	if err := u.deleteDbUpgrade(); err != nil {
 		t.Fatal(err)
 	}
 
