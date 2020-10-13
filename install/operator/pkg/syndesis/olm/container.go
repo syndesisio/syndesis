@@ -36,6 +36,11 @@ func (d *container) build() (err error) {
         fuse-ignite-upgrade-container: fuse7
         fuse-ignite-ui-container: fuse7
         fuse-postgres-exporter-container: fuse7
+        jboss-amq-6-amq63-openshift-docker: jboss-amq-6
+        golang-github-prometheus-prometheus-container: openshift3
+        golang-github-openshift-oauth-proxy-container: openshift4
+        rh-php72-container: rhscl
+        rh-postgresql10-container: rhscl
 `
 
 	d.body = []byte(c)

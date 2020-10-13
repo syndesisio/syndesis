@@ -243,7 +243,6 @@ func Test_syndesisAPI_v1alpha1ToV1beta2(t *testing.T) {
 						Jaeger: v1beta2.JaegerConfiguration{Enabled: false},
 						Ops:    v1beta2.AddonSpec{Enabled: true},
 						Todo:   v1beta2.AddonSpec{Enabled: true},
-						CamelK: v1beta2.AddonSpec{Enabled: false},
 					},
 					Components: v1beta2.ComponentsSpec{
 						Oauth: v1beta2.OauthConfiguration{SarNamespace: "sar namespace", DisableSarCheck: dsc},
@@ -413,7 +412,6 @@ func Test_syndesisAPI_v1beta1ToV1beta2(t *testing.T) {
 						Jaeger: v1beta2.JaegerConfiguration{Enabled: false},
 						Ops:    v1beta2.AddonSpec{Enabled: true},
 						Todo:   v1beta2.AddonSpec{Enabled: true},
-						CamelK: v1beta2.AddonSpec{Enabled: false},
 					},
 					Components: v1beta2.ComponentsSpec{
 						Oauth: v1beta2.OauthConfiguration{SarNamespace: "sar namespace", DisableSarCheck: dsc},

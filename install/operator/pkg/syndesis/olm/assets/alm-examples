@@ -6,14 +6,20 @@
   },
   "spec" : {
     "addons": {
-      "todo": {
+      "jaeger": {
+        "enabled": true
+      },
+      "knative": {
         "enabled": false
       },
       "ops": {
         "enabled": false
       },
-      "jaeger": {
-        "enabled": true
+      "publicApi": {
+        "enabled": false
+      },
+      "todo": {
+        "enabled": false
       }
     }
   }
