@@ -1943,11 +1943,6 @@ spec:
               addons:
                 description: Optional add on features that can be enabled.
                 properties:
-                  camelk:
-                    properties:
-                      enabled:
-                        type: boolean
-                    type: object
                   jaeger:
                     properties:
                       clientOnly:

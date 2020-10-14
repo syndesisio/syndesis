@@ -32,7 +32,6 @@ func (in *AddonsSpec) DeepCopyInto(out *AddonsSpec) {
 	out.Ops = in.Ops
 	out.Todo = in.Todo
 	out.Knative = in.Knative
-	out.CamelK = in.CamelK
 	out.PublicApi = in.PublicApi
 	return
 }

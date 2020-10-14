@@ -245,7 +245,6 @@ type AddonsSpec struct {
 	Ops       AddonSpec              `json:"ops,omitempty"`
 	Todo      AddonSpec              `json:"todo,omitempty"`
 	Knative   AddonSpec              `json:"knative,omitempty"`
-	CamelK    AddonSpec              `json:"camelk,omitempty"`
 	PublicApi PublicApiConfiguration `json:"publicApi,omitempty"`
 }
 
