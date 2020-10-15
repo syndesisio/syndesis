@@ -17,7 +17,7 @@ spec:
         emptyDir: {}
       containers:
       - name: restore-db-compiler
-        image: "crunchydata/crunchy-pgrestore:centos7-9.6.16-4.2.1"
+        image: "crunchydata/crunchy-pgrestore:centos7-10.11-4.2.1"
         volumeMounts:
         - mountPath: /pgdata
           name: tmp-pgdata
