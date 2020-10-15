@@ -20,7 +20,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
 
@@ -29,7 +30,7 @@ import (
 
 func Test_container_build(t *testing.T) {
 	clientTools := syntesting.FakeClientTools()
-	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &v1beta1.Syndesis{})
+	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &v1beta2.Syndesis{})
 	assert.NoError(t, err)
 
 	c := &container{config: conf}
