@@ -18,7 +18,7 @@ spec:
         emptyDir: {}
       containers:
       - name: backup-db-compiler
-        image: "crunchydata/crunchy-pgdump:centos7-9.6.16-4.2.1"
+        image: "crunchydata/crunchy-pgdump:centos7-10.11-4.2.1"
         volumeMounts:
         - mountPath: /pgdata
           name: tmp-pgdata
