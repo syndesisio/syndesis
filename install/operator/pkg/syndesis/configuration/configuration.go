@@ -272,6 +272,11 @@ func (j JaegerConfiguration) GetOlmSpec() *OlmSpec {
 	return &j.Olm
 }
 
+// Is compatible with previous version of addon
+func (j JaegerConfiguration) IsVersionCompatible() bool {
+	return false
+}
+
 type OpsConfiguration struct {
 	AddonConfiguration
 }
@@ -324,10 +329,16 @@ func (ac AddonConfiguration) GetOlmSpec() *OlmSpec {
 	return &ac.Olm
 }
 
+// Is compatible with previous version of addon
+func (ac AddonConfiguration) IsVersionCompatible() bool {
+	return true
+}
+
 type AddonInfo interface {
 	Name() string
 	IsEnabled() bool
 	GetOlmSpec() *OlmSpec
+	IsVersionCompatible() bool
 }
 
 const (

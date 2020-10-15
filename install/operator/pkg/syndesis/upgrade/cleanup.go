@@ -41,32 +41,36 @@ func newCleanup(base step) (c *cleanup) {
  * since we are using docker images
  */
 func (c *cleanup) run() (err error) {
-	if err = c.deleteDeploymentConfigs(); err != nil {
-		return err
-	}
 
-	if err = c.deleteBuildConfigs(); err != nil {
-		return err
-	}
+	//
+	// want to try and cleanup all of these so
+	// so error returns. All errors should be
+	// reported to the log
+	//
+
+	c.deleteDeploymentConfigs()
+
+	c.deleteBuildConfigs()
+
+	// Delete database upgrade
+	c.deleteDbUpgrade()
+
+	// Delete migration job
+	c.deleteMigrationJob()
 
 	return nil
 }
 
 func (c *cleanup) deleteDeploymentConfigs() (err error) {
-	rtClient, err := c.clientTools.RuntimeClient()
-	if err != nil {
-		return err
-	}
-
 	for _, dcName := range []string{"syndesis-meta", "syndesis-server", "syndesis-ui", "syndesis-prometheus", "todo"} {
 		dc := &v12.DeploymentConfig{}
-		if err := rtClient.Get(c.context, client.ObjectKey{Name: dcName, Namespace: c.namespace}, dc); err != nil {
+		if err := c.client().Get(c.context, client.ObjectKey{Name: dcName, Namespace: c.namespace}, dc); err != nil {
 			if !k8serrors.IsNotFound(err) {
-				c.log.Info(err.Error())
+				c.log.Error(err, "Failed to delete DeploymentConfig", "name", dcName)
 			}
 		} else {
-			if err := rtClient.Delete(c.context, dc); err != nil {
-				c.log.Info(err.Error())
+			if err := c.client().Delete(c.context, dc); err != nil {
+				c.log.Error(err, "Failed to delete DeploymentConfig", "name", dcName)
 			} else {
 				c.log.Info("force deleted DeploymentConfig", "name", dcName)
 			}
@@ -77,20 +81,15 @@ func (c *cleanup) deleteDeploymentConfigs() (err error) {
 }
 
 func (c *cleanup) deleteBuildConfigs() (err error) {
-	rtClient, err := c.clientTools.RuntimeClient()
-	if err != nil {
-		return err
-	}
-
 	for _, bcName := range []string{"todo"} {
 		bc := &v1.BuildConfig{}
-		if err := rtClient.Get(c.context, client.ObjectKey{Name: bcName, Namespace: c.namespace}, bc); err != nil {
+		if err := c.client().Get(c.context, client.ObjectKey{Name: bcName, Namespace: c.namespace}, bc); err != nil {
 			if !k8serrors.IsNotFound(err) {
-				c.log.Info(err.Error())
+				c.log.Error(err, "Failed to delete BuildConfig", "name", bcName)
 			}
 		} else {
-			if err := rtClient.Delete(c.context, bc); err != nil {
-				c.log.Info(err.Error())
+			if err := c.client().Delete(c.context, bc); err != nil {
+				c.log.Error(err, "Failed to delete BuildConfig", "name", bcName)
 			} else {
 				c.log.Info("force deleted BuildConfig", "name", bcName)
 			}
