@@ -1,5 +1,6 @@
 import resolvePathname from 'resolve-pathname';
 import valueEqual from 'value-equal';
+import pako from 'pako';
 
 import { parsePath } from './PathUtils';
 
@@ -51,7 +52,10 @@ export function createLocation(path, state, key, currentLocation) {
     }
   }
 
-  location.state = location.state || JSON.parse(sessionStorage.getItem(key));
+  const sessionState = sessionStorage.getItem(key);
+  const decompressedState = sessionState ? JSON.parse(pako.inflate(sessionState, { to: "string" })) : null;
+  // console.log("get", key, sessionState, decompressedState);
+  location.state = location.state || decompressedState;
   return location;
 }
 
