@@ -118,7 +118,7 @@
     "tslint-config-prettier": "^1.16.0",
     "tslint-react": "^4.0.0",
     "webpack": "^4.41.5",
-    "typescript": "~3.8.3",
+    "typescript": "~3.9.7",
     "yargs": "^15.1.0"
   },
   "browserslist": [
