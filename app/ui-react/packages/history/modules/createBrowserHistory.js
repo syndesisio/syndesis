@@ -1,5 +1,6 @@
 import warning from 'tiny-warning';
 import invariant from 'tiny-invariant';
+import pako from 'pako';
 
 import { createLocation } from './LocationUtils';
 import {
@@ -175,15 +176,17 @@ function createBrowserHistory(props = {}) {
 
         const href = createHref(location);
         const { key, state } = location;
+        // console.log("set", key, state)
+        const compressedState = state ? pako.deflate(JSON.stringify(state), { to: "string" }) : null;
 
         if (canUseHistory) {
           globalHistory.pushState({ key }, null, href);
           try {
-            sessionStorage.setItem(key, JSON.stringify(state));
+            sessionStorage.setItem(key, compressedState);
           } catch (e) {
             // storage full, retry after a clean. Old history entries will be nuked, so if the user will go back pages will raise exceptions. Nothing we can do about that I guess?
             sessionStorage.clear();
-            sessionStorage.setItem(key, JSON.stringify(state));
+            sessionStorage.setItem(key, compressedState);
           }
 
           if (forceRefresh) {
