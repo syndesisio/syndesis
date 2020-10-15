@@ -152,7 +152,7 @@ public class RepackageExtensionMojo extends SupportMojo {
         final String[] parts = artifact.split(":", -1);
         final String groupId = parts.length > 0 ? parts[0] : "";
         final String artifactId = parts.length > 1 ? parts[1] : "";
-        for (final org.apache.maven.model.Dependency dep : project.getDependencyManagement().getDependencies()) {
+        for (final org.apache.maven.model.Dependency dep : mvnProject.getDependencyManagement().getDependencies()) {
             if (groupId.equals(dep.getGroupId()) && artifactId.equals(dep.getArtifactId())) {
                 return dep.getVersion();
             }
@@ -183,7 +183,7 @@ public class RepackageExtensionMojo extends SupportMojo {
 
         final Dependency dependency = new Dependency(artifact, JavaScopes.RUNTIME);
 
-        final List<RemoteRepository> remoteRepositories = project.getRepositories().stream()
+        final List<RemoteRepository> remoteRepositories = mvnProject.getRepositories().stream()
             .map(r -> new RemoteRepository.Builder(r.getId(), r.getLayout(), r.getUrl()).build())
             .collect(Collectors.toList());
 
@@ -215,7 +215,7 @@ public class RepackageExtensionMojo extends SupportMojo {
     }
 
     private String resolveBomVersion(final String bom, final String containedArtifact, final String property) {
-        String propertyVal = project.getProperties().getProperty(property);
+        String propertyVal = mvnProject.getProperties().getProperty(property);
         if (propertyVal == null) {
             propertyVal = getVersionFromDependencyManagement(containedArtifact);
         }

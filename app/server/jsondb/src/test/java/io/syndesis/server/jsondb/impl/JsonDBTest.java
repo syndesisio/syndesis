@@ -24,10 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.syndesis.common.util.Resources.getResourceAsText;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,9 +32,13 @@ import io.syndesis.server.jsondb.Filter.Op;
 import io.syndesis.server.jsondb.GetOptions;
 import io.syndesis.server.jsondb.JsonDBException;
 import org.h2.jdbcx.JdbcDataSource;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.skife.jdbi.v2.DBI;
+
+import static io.syndesis.common.util.Resources.getResourceAsText;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Unit Tests for the JsonDB implementation.
@@ -51,7 +51,7 @@ public class JsonDBTest {
 
     private final GetOptions prettyPrint = new GetOptions().prettyPrint(true);
 
-    @BeforeAll
+    @BeforeEach
     public void before() {
         JdbcDataSource ds = new JdbcDataSource();
         ds.setURL("jdbc:h2:mem:test1;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
