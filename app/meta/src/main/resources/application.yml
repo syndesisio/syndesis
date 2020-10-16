@@ -26,7 +26,9 @@ management:
   metrics:
     web:
       server:
-        auto-time-requests: false
+        request:
+          autotime:
+            enabled: false
   endpoints:
     web:
       base-path: /

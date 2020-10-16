@@ -231,7 +231,7 @@
     </dependency>
     <dependency>
       <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
+      <artifactId>jakarta.el</artifactId>
       <scope>test</scope>
     </dependency>
 
@@ -350,11 +350,6 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
       <scope>test</scope>
@@ -400,8 +395,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>javax.annotation</groupId>
-      <artifactId>javax.annotation-api</artifactId>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

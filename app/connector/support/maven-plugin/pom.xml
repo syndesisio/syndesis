@@ -106,7 +106,7 @@
 
     <dependency>
       <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
+      <artifactId>jakarta.el</artifactId>
       <scope>runtime</scope>
     </dependency>
 

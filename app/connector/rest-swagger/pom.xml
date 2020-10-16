@@ -30,6 +30,22 @@
   <name>Connector :: REST Swagger</name>
   <packaging>jar</packaging>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-http4</artifactId>
+        <version>${camel.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>io.syndesis.integration</groupId>
@@ -161,7 +177,7 @@
 
     <dependency>
       <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
+      <artifactId>jakarta.el</artifactId>
       <scope>test</scope>
     </dependency>
 

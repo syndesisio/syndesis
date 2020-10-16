@@ -29,10 +29,11 @@ server:
   compression:
     enabled: true
     mime-types: text/html,text/css,application/javascript,application/json
-  useForwardHeaders: true
+  forward-headers-strategy: native
   undertow:
-    ioThreads: 2
-    workerThreads: 10
+    threads:
+      io: 2
+      worker: 10
 
 management:
   server:
@@ -43,7 +44,9 @@ management:
   metrics:
     web:
       server:
-        auto-time-requests: false
+        request:
+          autotime:
+            enabled: false
   endpoints:
     web:
       base-path: /

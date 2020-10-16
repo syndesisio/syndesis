@@ -88,7 +88,7 @@
       <dependency>
         <groupId>org.jboss.shrinkwrap.resolver</groupId>
         <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-        <version>3.1.3</version>
+        <version>3.1.4</version>
         <exclusions>
           <exclusion>
             <groupId>javax.inject</groupId>
@@ -238,7 +238,7 @@
 
     <dependency>
       <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
+      <artifactId>jakarta.el</artifactId>
       <scope>runtime</scope>
     </dependency>
 

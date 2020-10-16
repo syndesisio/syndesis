@@ -20,10 +20,11 @@ import org.apache.camel.Handler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.syndesis.extension.api.SyndesisActionProperty;
-import io.syndesis.extension.api.SyndesisExtensionAction;
+import io.syndesis.extension.api.Step;
+import io.syndesis.extension.api.annotations.Action;
+import io.syndesis.extension.api.annotations.ConfigurationProperty;
 
-@SyndesisExtensionAction(
+@Action(
     id = "my-step",
     name = "My Logging Step",
     description = "A simple logging step"
@@ -31,7 +32,7 @@ import io.syndesis.extension.api.SyndesisExtensionAction;
 public class ${extension-name}Extension {
     private static final Logger LOGGER = LoggerFactory.getLogger(${extension-name}Extension.class);
 
-    @SyndesisActionProperty(
+    @ConfigurationProperty(
         name = "trace",
         displayName = "Trace",
         description = "Log the body as TRACE level, default INFO")

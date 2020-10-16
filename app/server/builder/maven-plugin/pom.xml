@@ -117,8 +117,8 @@
             <artifactId>spring-beans</artifactId>
           </exclusion>
           <exclusion>
-            <groupId>org.jboss.spec.javax.annotation</groupId>
-            <artifactId>jboss-annotations-api_1.2_spec</artifactId>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
           </exclusion>
           <exclusion>
             <groupId>org.springframework.boot</groupId>
@@ -249,8 +249,8 @@
         <version>${maven.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>javax.el</groupId>
-            <artifactId>javax.el-api</artifactId>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
           </exclusion>
           <exclusion>
             <groupId>javax.interceptor</groupId>
@@ -352,16 +352,9 @@
 
     <dependency>
       <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
+      <artifactId>jakarta.el</artifactId>
       <scope>runtime</scope>
     </dependency>
-
-    <dependency>
-      <groupId>xml-apis</groupId>
-      <artifactId>xml-apis</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
   </dependencies>
 
   <build>

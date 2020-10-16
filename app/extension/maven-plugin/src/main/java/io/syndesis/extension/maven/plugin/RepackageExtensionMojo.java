@@ -30,9 +30,10 @@ import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.extension.converter.ExtensionConverter;
-import io.syndesis.common.model.extension.Extension;
+import io.syndesis.extension.maven.plugin.layout.ModuleLayoutFactory;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
@@ -65,10 +66,6 @@ import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependencies;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependency;
 import org.jboss.shrinkwrap.resolver.impl.maven.MavenWorkingSessionContainer;
-import org.springframework.boot.maven.Exclude;
-import org.springframework.boot.maven.ExcludeFilter;
-
-import io.syndesis.extension.maven.plugin.layout.ModuleLayoutFactory;
 
 /**
  * Helper Maven plugin
@@ -166,10 +163,7 @@ public class RepackageExtensionMojo extends SupportMojo {
     }
 
     protected ExcludeFilter newExcludeFilter(MavenCoordinate dep) {
-        Exclude exclude = new Exclude();
-        exclude.setGroupId(dep.getGroupId());
-        exclude.setArtifactId(dep.getArtifactId());
-        return new ExcludeFilter(exclude);
+        return new ExcludeFilter(dep.getGroupId(), dep.getArtifactId());
     }
 
     protected void addCustomBoms(Collection<MavenDependency> dependencies) {
@@ -186,7 +180,7 @@ public class RepackageExtensionMojo extends SupportMojo {
     }
 
     private String resolveBomVersion(String bom, String containedArtifact, String property) {
-        String propertyVal = project.getProperties().getProperty(property);
+        String propertyVal = mvnProject.getProperties().getProperty(property);
         if (propertyVal == null) {
             propertyVal = getVersionFromDependencyManagement(containedArtifact);
         }
@@ -200,7 +194,7 @@ public class RepackageExtensionMojo extends SupportMojo {
         String[] parts = artifact.split(":", -1);
         String groupId = parts.length > 0 ? parts[0] : "";
         String artifactId = parts.length > 1 ? parts[1] : "";
-        for (Dependency dep : project.getDependencyManagement().getDependencies()) {
+        for (Dependency dep : mvnProject.getDependencyManagement().getDependencies()) {
             if (groupId.equals(dep.getGroupId()) && artifactId.equals(dep.getArtifactId())) {
                 return dep.getVersion();
             }
@@ -247,13 +241,13 @@ public class RepackageExtensionMojo extends SupportMojo {
             Model bomModel = new Model();
             bomModel.setDependencyManagement(new DependencyManagement());
             bomModel.getDependencyManagement().addDependency(bom);
-            bomModel.setRepositories(project.getRepositories());
+            bomModel.setRepositories(mvnProject.getRepositories());
             MavenProject bomProject = new MavenProject();
             bomProject.setModel(bomModel);
-            bomProject.setModelVersion(project.getModelVersion());
-            bomProject.setGroupId(project.getGroupId());
-            bomProject.setArtifactId(project.getArtifactId() + "-temp-bom");
-            bomProject.setVersion(project.getVersion());
+            bomProject.setModelVersion(mvnProject.getModelVersion());
+            bomProject.setGroupId(mvnProject.getGroupId());
+            bomProject.setArtifactId(mvnProject.getArtifactId() + "-temp-bom");
+            bomProject.setVersion(mvnProject.getVersion());
 
 
             ModelWriter modelWriter = new DefaultModelWriter();
