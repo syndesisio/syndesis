@@ -1,20 +1,4 @@
-{{- if and .Productized .ApiServer.ImageStreams}}
-- apiVersion: image.openshift.io/v1
-  kind: ImageStream
-  metadata:
-    name: jboss-amq-63
-    labels:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/component: amq
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: '{{ .Syndesis.Components.AMQ.Image }}'
-      importPolicy:
-        scheduled: true
-      name: "1.3"
+{{- if .Productized }}
 - apiVersion: v1
   kind: Service
   metadata:
@@ -66,7 +50,7 @@
             value: topSecret
           - name: AMQ_TRANSPORTS
             value: openwire,stomp
-          image: registry.access.redhat.com/jboss-amq-6/amq63-openshift@sha256:3981a66428347bd3874d1146390db35278ffab56d8eb736ceedf3971950d2631
+          image: '{{ .Syndesis.Components.AMQ.Image }}'
           imagePullPolicy: Always
           name: broker-amq
           ports:
