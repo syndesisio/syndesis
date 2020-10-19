@@ -21,6 +21,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
@@ -211,8 +212,12 @@ func (c *csv) build() (err error) {
 	//
 	// Ensure the following files can be located
 	//
-	if _, err := os.Stat("pkg"); os.IsNotExist(err) {
-		return fmt.Errorf("This needs to be executed from the syndesis/install/operator directory.")
+	if cwd, err := os.Getwd(); err != nil {
+		if strings.HasSuffix(cwd, "/install/operator") == false {
+			return fmt.Errorf("This needs to be executed from the syndesis/install/operator directory.")
+		}
+	} else {
+		return err
 	}
 
 	alm, err := ioutil.ReadFile(filepath.Join("pkg", "syndesis", "olm", "assets", "alm-examples"))
