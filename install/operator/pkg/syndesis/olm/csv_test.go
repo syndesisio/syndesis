@@ -155,7 +155,6 @@ func Test_csv_loadRolesFromTemplate(t *testing.T) {
 			assert.NoError(t, err)
 			assert.NotNil(t, r)
 
-			assert.True(t, len(r) > 0)
 			assert.Equal(t, tc.expect, len(r))
 
 			for _, rule := range r {
