@@ -18,10 +18,7 @@ package olm
 
 import (
 	"fmt"
-	"io/ioutil"
-	"os"
 	"path/filepath"
-	"strings"
 	"time"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
@@ -209,20 +206,18 @@ func (c *csv) build() (err error) {
 	}
 	c.setVariables()
 
-	//
-	// Ensure the following files can be located
-	//
-	if cwd, err := os.Getwd(); err != nil {
-		if strings.HasSuffix(cwd, "/install/operator") == false {
-			return fmt.Errorf("This needs to be executed from the syndesis/install/operator directory.")
-		}
-	} else {
+	alm, err := Read("/alm-examples")
+	if err != nil {
 		return err
 	}
-
-	alm, err := ioutil.ReadFile(filepath.Join("pkg", "syndesis", "olm", "assets", "alm-examples"))
-	descriptionLong, _ := ioutil.ReadFile(filepath.Join("pkg", "syndesis", "olm", "assets", target, "description"))
-	icon, _ := ioutil.ReadFile(filepath.Join("pkg", "syndesis", "olm", "assets", "icon"))
+	descriptionLong, err := Read(filepath.Join("/", target, "description"))
+	if err != nil {
+		return err
+	}
+	icon, err := Read("icon")
+	if err != nil {
+		return err
+	}
 
 	ruleSpecs := []InstallSpecPermission{}
 	clusterRuleSpecs := []InstallSpecPermission{}

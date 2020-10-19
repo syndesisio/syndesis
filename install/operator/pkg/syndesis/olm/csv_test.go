@@ -18,7 +18,6 @@ package olm
 
 import (
 	"context"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -33,11 +32,6 @@ func Test_csv_build(t *testing.T) {
 	assert.NoError(t, err)
 
 	c := &csv{config: conf, operator: "operator-image"}
-
-	pkgPath := "pkg"
-
-	_ = os.Mkdir(pkgPath, os.ModeDir)
-	defer os.Remove(pkgPath)
 
 	err = c.build()
 	assert.NoError(t, err)
