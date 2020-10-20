@@ -28,12 +28,11 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/shurcooL/httpfs/filter"
-	"github.com/syndesisio/syndesis/install/operator/pkg/build"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 )
 
 func GetAssetsFS() http.FileSystem {
-	assetsDir := filepath.Join(build.GO_MOD_DIRECTORY, "pkg", "syndesis", "olm", "assets")
+	assetsDir := filepath.Join("assets")
 	return util.NewFileInfoMappingFS(filter.Keep(http.Dir(assetsDir), func(path string, fi os.FileInfo) bool {
 		if fi.Name() == "assets_generate.go" {
 			return false
