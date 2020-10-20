@@ -41,7 +41,7 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>io.syndesis</groupId>
+        <groupId>io.syndesis.extension</groupId>
         <artifactId>extension-bom</artifactId>
         <version>${syndesis.version}</version>
         <type>pom</type>
@@ -54,14 +54,14 @@
   <dependencies>
     <!-- annotation processing -->
     <dependency>
-      <groupId>io.syndesis</groupId>
+      <groupId>io.syndesis.extension</groupId>
       <artifactId>extension-annotation-processor</artifactId>
       <optional>true</optional>
     </dependency>
 
     <!-- runtime -->
     <dependency>
-      <groupId>io.syndesis</groupId>
+      <groupId>io.syndesis.extension</groupId>
       <artifactId>extension-api</artifactId>
       <scope>provided</scope>
     </dependency>
@@ -109,7 +109,7 @@
       </plugin>
 
       <plugin>
-        <groupId>io.syndesis</groupId>
+        <groupId>io.syndesis.extension</groupId>
         <artifactId>extension-maven-plugin</artifactId>
         <version>${syndesis.version}</version>
         <executions>

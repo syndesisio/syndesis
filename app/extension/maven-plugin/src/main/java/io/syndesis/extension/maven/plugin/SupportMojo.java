@@ -38,7 +38,7 @@ import org.springframework.boot.maven.RepackageMojo;
 @SuppressWarnings({"PMD.EmptyMethodInAbstractClassShouldBeAbstract"})
 public abstract class SupportMojo extends RepackageMojo {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
-    protected MavenProject project;
+    protected MavenProject mvnProject;
     @Parameter(defaultValue = "${project.build.directory}", required = true)
     protected File outputDirectory;
     @Parameter(defaultValue = "${project.build.finalName}", required = true)
@@ -57,7 +57,7 @@ public abstract class SupportMojo extends RepackageMojo {
     protected final void writePrivateFields() throws MojoFailureException {
         try {
 
-            writeFieldViaReflection("project", project);
+            writeFieldViaReflection("project", mvnProject);
             writeFieldViaReflection("outputDirectory", outputDirectory);
             writeFieldViaReflection("finalName", finalName);
 
