@@ -51,6 +51,8 @@ func TestManifest_Generate(t *testing.T) {
 		crd:        &crd{},
 		annotation: &annotation{config: conf},
 		csv:        &csv{config: conf, operator: "operator"},
+		docker:     &docker{config: conf},
+		container:  &container{},
 	}
 	err = m.Generate()
 	assert.DirExists(t, filepath.Join(dir, m.config.Version, "manifests"))

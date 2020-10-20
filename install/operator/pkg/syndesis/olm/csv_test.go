@@ -32,9 +32,9 @@ func Test_csv_build(t *testing.T) {
 	assert.NoError(t, err)
 
 	c := &csv{config: conf, operator: "operator-image"}
+
 	err = c.build()
 	assert.NoError(t, err)
-	// fmt.Println(string(c.body))
 }
 
 func Test_csv_setCommunityVariables(t *testing.T) {
@@ -108,44 +108,59 @@ func Test_csv_loadDeploymentFromTemplate(t *testing.T) {
 	assert.NotNil(t, d)
 }
 
-func Test_csv_loadRoleFromTemplate(t *testing.T) {
+func Test_csv_loadRolesFromTemplate(t *testing.T) {
+
+	testCases := []struct {
+		name   string
+		path   string
+		expect int
+	}{
+		{
+			"operator-role",
+			"./install/role.yml.tmpl",
+			46,
+		},
+		{
+			"olm-roles",
+			"./install/cluster_role_olm.yml.tmpl",
+			5,
+		},
+		{
+			"kafka-roles",
+			"./install/cluster_role_kafka.yml.tmpl",
+			1,
+		},
+		{
+			"public-api-roles",
+			"./install/cluster_role_public_api.yml.tmpl",
+			2,
+		},
+	}
+
 	clientTools := syntesting.FakeClientTools()
 	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &v1beta2.Syndesis{})
 	assert.NoError(t, err)
-
 	c := &csv{config: conf, operator: ""}
-	r, err := c.loadRoleFromTemplate()
-	assert.NoError(t, err)
-	assert.NotNil(t, r)
 
-	// Doesn't want to assert with map as well so split and check the first element
-	s, ok := r.([]interface{})
-	assert.True(t, ok)
-	assert.True(t, len(s) > 0)
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
 
-	_, ok = s[0].(map[interface{}]interface{})
-	assert.True(t, ok)
+			r, err := c.loadRolesFromTemplate(tc.path)
+			assert.NoError(t, err)
+			assert.NotNil(t, r)
 
-	assert.True(t, ok, "Expected return value should be a map[interface{}interface{}")
-}
+			assert.Equal(t, tc.expect, len(r))
 
-func Test_csv_loadClusterRoleFromTemplate(t *testing.T) {
-	clientTools := syntesting.FakeClientTools()
-	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &v1beta2.Syndesis{})
-	assert.NoError(t, err)
+			for _, rule := range r {
+				_, ok := rule["apiGroups"]
+				assert.True(t, ok)
 
-	//
-	// Mock olm support
-	//
-	conf.ApiServer.OlmSupport = true
-	conf.ApiServer.ConsoleLink = true
+				_, ok = rule["resources"]
+				assert.True(t, ok)
 
-	c := &csv{config: conf, operator: ""}
-	r, err := c.loadClusterRoleFromTemplate()
-	assert.NoError(t, err)
-	assert.NotNil(t, r)
-
-	roles, ok := r.([]map[string]interface{})
-	assert.True(t, ok, "Expected return value should be a map[string]interface{}")
-	assert.Equal(t, 8, len(roles)) // set of all the rule maps
+				_, ok = rule["verbs"]
+				assert.True(t, ok)
+			}
+		})
+	}
 }

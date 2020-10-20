@@ -18,7 +18,6 @@ package olm
 
 import (
 	"fmt"
-	"io/ioutil"
 	"path/filepath"
 	"time"
 
@@ -207,16 +206,52 @@ func (c *csv) build() (err error) {
 	}
 	c.setVariables()
 
-	alm, err := ioutil.ReadFile(filepath.Join("pkg", "syndesis", "olm", "assets", "alm-examples"))
-	descriptionLong, _ := ioutil.ReadFile(filepath.Join("pkg", "syndesis", "olm", "assets", target, "description"))
-	icon, _ := ioutil.ReadFile(filepath.Join("pkg", "syndesis", "olm", "assets", "icon"))
-	rules, err := c.loadRoleFromTemplate()
+	alm, err := Read("/alm-examples")
+	if err != nil {
+		return err
+	}
+	descriptionLong, err := Read(filepath.Join("/", target, "description"))
+	if err != nil {
+		return err
+	}
+	icon, err := Read("icon")
 	if err != nil {
 		return err
 	}
 
-	clusterrules, err := c.loadClusterRoleFromTemplate()
-	if err != nil {
+	ruleSpecs := []InstallSpecPermission{}
+	clusterRuleSpecs := []InstallSpecPermission{}
+
+	//
+	// syndesis-operator service account
+	//
+	if synOpPerm, err := c.installPerm("syndesis-operator", "./install/role.yml.tmpl"); err == nil {
+		ruleSpecs = append(ruleSpecs, synOpPerm)
+	} else {
+		return err
+	}
+
+	if synOpPerm, err := c.installPerm("syndesis-operator", "./install/cluster_role_olm.yml.tmpl"); err == nil {
+		clusterRuleSpecs = append(clusterRuleSpecs, synOpPerm)
+	} else {
+		return err
+	}
+
+	//
+	// syndesis-server service account for kafka addon
+	//
+	if synSvrPerm, err := c.installPerm("syndesis-server", "./install/cluster_role_kafka.yml.tmpl"); err == nil {
+		clusterRuleSpecs = append(clusterRuleSpecs, synSvrPerm)
+	} else {
+		return err
+	}
+
+	//
+	// syndesis-public-oauthproxy service account for public-api addon
+	//
+	if synPubPerm, err := c.installPerm("syndesis-public-oauthproxy", "./install/cluster_role_public_api.yml.tmpl"); err == nil {
+		clusterRuleSpecs = append(clusterRuleSpecs, synPubPerm)
+	} else {
 		return err
 	}
 
@@ -299,14 +334,8 @@ func (c *csv) build() (err error) {
 			Install: Install{
 				Strategy: "deployment",
 				Spec: InstallSpec{
-					ClusterPermissions: []InstallSpecPermission{{
-						ServiceAccountName: "syndesis-operator",
-						Rules:              clusterrules,
-					}},
-					Permissions: []InstallSpecPermission{{
-						ServiceAccountName: "syndesis-operator",
-						Rules:              rules,
-					}},
+					ClusterPermissions: clusterRuleSpecs,
+					Permissions:        ruleSpecs,
 					Deployments: []InstallSpecDeployment{{
 						Name: c.name,
 						Spec: deployment,
@@ -330,40 +359,17 @@ func (c *csv) build() (err error) {
 	return
 }
 
-// Load role to apply to syndesis operator, from template file. This role
-// is later applied to the syndesis-operator service account, by OLM
-func (c *csv) loadRoleFromTemplate() (r interface{}, err error) {
-	context := struct {
-		Kind string
-		Role string
-	}{
-		Kind: "",
-		Role: "",
+func (c *csv) installPerm(sa string, templates ...string) (perm InstallSpecPermission, err error) {
+
+	perm = InstallSpecPermission{
+		ServiceAccountName: sa,
 	}
 
-	g, err := generator.Render("./install/role.yml.tmpl", context)
-	if err != nil {
-		return nil, err
-	}
-
-	mjson, err := g[0].MarshalJSON()
-	if err != nil {
-		return nil, err
-	}
-
-	m := make(map[string]interface{})
-	if err := yaml.Unmarshal(mjson, &m); err != nil {
-		return nil, err
-	}
-
-	r = m["rules"]
+	perm.Rules, err = c.loadRolesFromTemplate(templates...)
 	return
 }
 
-// Load cluster role to apply to syndesis operator, from template file. This role
-// is later applied to the syndesis-operator service account, by OLM and allows
-// the operator to query for OLM artifacts across namespaces, eg. subscriptions.
-func (c *csv) loadClusterRoleFromTemplate() (r interface{}, err error) {
+func (c *csv) loadRolesFromTemplate(templates ...string) (m []map[string]interface{}, err error) {
 	context := struct {
 		Kind      string
 		Role      string
@@ -374,50 +380,43 @@ func (c *csv) loadClusterRoleFromTemplate() (r interface{}, err error) {
 		ApiServer: c.config.ApiServer,
 	}
 
-	resources, err := generator.Render("./install/cluster_role_kafka.yml.tmpl", context)
-	if err != nil {
-		return nil, err
+	if len(templates) == 0 {
+		return m, nil
 	}
 
-	olm, err := generator.Render("./install/cluster_role_olm.yml.tmpl", context)
-	if err != nil {
-		return nil, err
-	}
+	m = make([]map[string]interface{}, 0, 0)
+	for _, template := range templates {
 
-	resources = append(resources, olm...)
-
-	pubapi, err := generator.Render("./install/cluster_role_public_api.yml.tmpl", context)
-	if err != nil {
-		return nil, err
-	}
-	resources = append(resources, pubapi...)
-
-	if len(resources) == 0 {
-		return r, nil
-	}
-
-	m := make([]map[string]interface{}, 0, 0)
-	for _, resource := range resources {
-		rules, exists, _ := unstructured.NestedFieldNoCopy(resource.UnstructuredContent(), "rules")
-		if !exists {
-			return nil, fmt.Errorf("Cannot validate 'rules' in %s", resource.GetName())
+		resources, err := generator.Render(template, context)
+		if err != nil {
+			return nil, err
 		}
 
-		ruleMaps, ok := rules.([]interface{})
-		if !ok || len(ruleMaps) == 0 {
-			return nil, fmt.Errorf("Cannot validate rule maps in %s", resource.GetName())
+		if len(resources) == 0 {
+			return nil, fmt.Errorf("Rendering of rule template %s is empty.", template)
 		}
 
-		for _, ruleMap := range ruleMaps {
-			ruleMap, ok := ruleMap.(map[string]interface{})
-			if !ok {
-				return nil, fmt.Errorf("Cannot validate 'rule map' in %s", resource.GetName())
+		for _, resource := range resources {
+			rules, exists, _ := unstructured.NestedFieldNoCopy(resource.UnstructuredContent(), "rules")
+			if !exists {
+				return nil, fmt.Errorf("Cannot validate 'rules' in %s", resource.GetName())
 			}
-			m = append(m, ruleMap)
+
+			ruleMaps, ok := rules.([]interface{})
+			if !ok || len(ruleMaps) == 0 {
+				return nil, fmt.Errorf("Cannot validate rule maps in %s", resource.GetName())
+			}
+
+			for _, ruleMap := range ruleMaps {
+				ruleMap, ok := ruleMap.(map[string]interface{})
+				if !ok {
+					return nil, fmt.Errorf("Cannot validate 'rule map' in %s", resource.GetName())
+				}
+				m = append(m, ruleMap)
+			}
 		}
 	}
 
-	r = m
 	return
 }
 
