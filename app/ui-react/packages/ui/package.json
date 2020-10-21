@@ -23,7 +23,7 @@
     "@rh-uxd/integration-core": "1.0.3",
     "@rh-uxd/integration-react": "1.0.3",
     "@storybook/addon-a11y": "^5.3.8",
-    "@storybook/addon-actions": "^5.3.8",
+    "@storybook/addon-actions": "^6.0.26",
     "@storybook/addon-info": "^5.3.8",
     "@storybook/addon-knobs": "^5.3.8",
     "@storybook/addon-links": "^6.0.7",
