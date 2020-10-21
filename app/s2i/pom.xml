@@ -203,6 +203,8 @@
             </goals>
             <phase>generate-resources</phase>
             <configuration>
+              <skipAggregateDownloadLicenses>false</skipAggregateDownloadLicenses>
+              <executeOnlyOnRootModule>false</executeOnlyOnRootModule>
               <licensesOutputDirectory>${image.build.directory}/licenses</licensesOutputDirectory>
               <licensesOutputFile>${image.build.directory}/licenses.xml</licensesOutputFile>
             </configuration>
