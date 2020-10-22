@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -100,10 +101,9 @@ public class Application implements ApplicationRunner {
         }
     }
 
-
-    private void generateIntegrationProject(File project) throws IOException {
+    private GatheredDependencies collectAllSteps() throws IOException {
         final ReadApiClientData reader = new ReadApiClientData();
-        final ArrayList<Step> steps = new ArrayList<>();
+        final GatheredDependencies deps = new GatheredDependencies();
 
         String deploymentText;
         try (InputStream is = resourceLoader.getResource("io/syndesis/server/dao/deployment.json").getInputStream()) {
@@ -116,7 +116,7 @@ public class Application implements ApplicationRunner {
             if (model.getKind() == Kind.Connector) {
                 final Connector connector = (Connector) model.getData();
                 for (final Action action : connector.getActions()) {
-                    steps.add(
+                    deps.steps.add(
                         new Step.Builder()
                             .stepKind(StepKind.endpoint)
                             .connection(new Connection.Builder()
@@ -132,7 +132,7 @@ public class Application implements ApplicationRunner {
             if (model.getKind() == Kind.ConnectorTemplate) {
                 final ConnectorTemplate template = (ConnectorTemplate) model.getData();
                 schemeIdMap.put(template.getComponentScheme(), template.getId().get());
-                steps.add(
+                deps.steps.add(
                     new Step.Builder()
                         .stepKind(StepKind.endpoint)
                         .connection(new Connection.Builder()
@@ -148,7 +148,6 @@ public class Application implements ApplicationRunner {
             }
         }
 
-        final Map<String, Connector> connectorMap = new HashMap<>();
         try {
             final ResourcePatternResolver resolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader);
             final Resource[] resources = resolver.getResources("classpath:/META-INF/syndesis/connector/*.json");
@@ -161,21 +160,18 @@ public class Application implements ApplicationRunner {
                         // template IDs are mapped to their actual connectors, to add dependencies
                         final String templateId = schemeIdMap.get(connector.getComponentScheme().orElse(null));
                         if (templateId != null) {
-                            connectorMap.put(templateId, connector);
+                            deps.connectorMap.put(templateId, connector);
                         }
 
-                        for (final Action action : connector.getActions()) {
-                            steps.add(
-                                new Step.Builder()
-                                    .stepKind(StepKind.endpoint)
-                                    .connection(new Connection.Builder()
-                                        .connector(connector)
-                                        .connectorId(connector.getId().get())
-                                        .build())
-                                    .action(action)
-                                    .build()
-                            );
-                        }
+                        deps.steps.add(
+                            new Step.Builder()
+                                .stepKind(StepKind.endpoint)
+                                .connection(new Connection.Builder()
+                                    .connector(connector)
+                                    .connectorId(connector.getId().get())
+                                    .build())
+                                .build()
+                        );
                     }
                 }
             }
@@ -183,23 +179,42 @@ public class Application implements ApplicationRunner {
             // ignore
         }
 
+        return deps;
+    }
 
-        Integration integration = new Integration.Builder()
-            .id("Integration")
-            .name("Integration")
-            .description("This integration is used to prime the .m2 repo")
-            .addFlow(new Flow.Builder().steps(steps).build())
-            .build();
+    private void generateIntegrationProject(File project) throws IOException {
+        final GatheredDependencies deps = collectAllSteps();
 
-        generate(integration, project, connectorMap);
+        StringBuilder parentPom = new StringBuilder(5000);
+        parentPom.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?><project xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://maven.apache.org/POM/4.0.0\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"><modelVersion>4.0.0</modelVersion> <groupId>io.syndesis.integrations</groupId><artifactId>project</artifactId><version>0.1-SNAPSHOT</version><packaging>pom</packaging><modules>\n");
+        int i = 0;
+        for (final Step step : deps.steps) {
+          final Integration integration = new Integration.Builder()
+              .id("Integration")
+              .name("Integration")
+              .description("This integration is used to prime the .m2 repo")
+              .addFlow(new Flow.Builder().addStep(step).build())
+              .build();
+
+          final String artifactId = "p" + i++;
+          final File module = new File(project, artifactId);
+
+          generate(integration, module, deps.connectorMap, artifactId);
+          parentPom.append("<module>").append(artifactId).append("</module>\n");
+        }
+
+        parentPom.append("</modules></project>");
+
+        Files.write(project.toPath().resolve("pom.xml"), parentPom.toString().getBytes(StandardCharsets.UTF_8));
     }
 
     @SuppressWarnings("PMD.UseProperClassLoader")
-    private void generate(Integration integration, File targetDir, Map<String, Connector> connectorMap) throws IOException {
+    private void generate(Integration integration, File targetDir, Map<String, Connector> connectorMap, String artifactId) throws IOException {
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
+        configuration.setArtifactId(artifactId);
         IntegrationProjectGenerator generator = new ProjectGenerator(configuration, new EmptyIntegrationResourceManager(connectorMap), mavenProperties);
 
-        Path dir =targetDir.toPath();
+        Path dir = targetDir.toPath();
         Files.createDirectories(dir);
         Files.write(dir.resolve("pom.xml"), generator.generatePom(integration));
 
@@ -249,6 +264,11 @@ public class Application implements ApplicationRunner {
         public String decrypt(String encrypted) {
             return encrypted;
         }
+    }
+
+    private static class GatheredDependencies {
+        List<Step> steps = new ArrayList<>();
+        Map<String, Connector> connectorMap = new HashMap<>();
     }
 
 }
