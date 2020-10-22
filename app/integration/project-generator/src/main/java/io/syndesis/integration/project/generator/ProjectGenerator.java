@@ -218,7 +218,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
         return ProjectGeneratorHelper.generate(
             new PomContext(
-                integration.getId().orElse(""),
+                Optional.ofNullable(configuration.getArtifactId()).orElse("project"),
                 integration.getName(),
                 integration.getDescription().orElse(null),
                 dependencies,

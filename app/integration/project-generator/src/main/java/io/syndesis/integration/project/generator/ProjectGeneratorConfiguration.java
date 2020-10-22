@@ -36,6 +36,16 @@ public class ProjectGeneratorConfiguration {
      */
     private final Templates templates = new Templates();
 
+    private String artifactId;
+
+    public void setArtifactId(String artifactId) {
+        this.artifactId = artifactId;
+    }
+
+    public String getArtifactId() {
+        return artifactId;
+    }
+
     public Boolean isSecretMaskingEnabled() {
         return secretMaskingEnabled;
     }
@@ -128,4 +138,5 @@ public class ProjectGeneratorConfiguration {
             }
         }
     }
+
 }
