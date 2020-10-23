@@ -19,7 +19,7 @@ field of interest by clicking the
 image:images/tutorials/magnifying-glass.png[Magnifying Glass] and then typing
 the name of the data field in the search field.
 
-..Click the data field that you want to map from and then click image:images/integrating-applications/create-mapping-icon.png[the Create New Mapping icon]. The *Mapping Details* panel opens. 
+.. Click the data field that you want to map from and then click image:images/integrating-applications/create-mapping-icon.png[the Create New Mapping icon]. The *Mapping Details* panel opens. 
 
 . In the *Target* panel, find the data field that you want to map to and then click image:images/integrating-applications/connect-mapping-icon.png[the Connect Mapping icon].
 +
