@@ -17,7 +17,6 @@
 package io.syndesis.test.itest.amq;
 
 import javax.jms.ConnectionFactory;
-import java.time.Duration;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
@@ -75,7 +74,7 @@ public class HttpToAMQ_IT extends SyndesisIntegrationTestSupport {
                         String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, TODO_SERVER_PORT))
             .build()
             .withNetwork(amqBrokerContainer.getNetwork())
-            .waitingFor(Wait.defaultWaitStrategy().withStartupTimeout(Duration.ofSeconds(SyndesisTestEnvironment.getContainerStartupTimeout())));
+            .waitingFor(Wait.defaultWaitStrategy().withStartupTimeout(SyndesisTestEnvironment.getContainerStartupTimeout()));
 
     @Test
     @CitrusTest

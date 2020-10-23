@@ -124,7 +124,7 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
         private boolean enableLogging = SyndesisTestEnvironment.isLoggingEnabled();
         private boolean enableDebug = SyndesisTestEnvironment.isDebugEnabled();
 
-        private Duration startupTimeout = Duration.ofSeconds(SyndesisTestEnvironment.getContainerStartupTimeout());
+        private Duration startupTimeout = SyndesisTestEnvironment.getContainerStartupTimeout();
 
         private ProjectBuilder projectBuilder;
         private IntegrationSource integrationSource;

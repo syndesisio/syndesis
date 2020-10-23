@@ -22,22 +22,22 @@ import java.util.Set;
 import io.syndesis.common.util.MavenProperties;
 
 public final class PomContext {
-    private final String id;
+    private final String artifactId;
     private final String name;
     private final String description;
     private final Collection<MavenGav> dependencies;
     private final MavenProperties mavenProperties;
 
-    public PomContext(String id, String name, String description, Collection<MavenGav> dependencies, MavenProperties mavenProperties) {
-        this.id = id;
+    public PomContext(String artifactId, String name, String description, Collection<MavenGav> dependencies, MavenProperties mavenProperties) {
+        this.artifactId = artifactId;
         this.name = name;
         this.description = description;
         this.dependencies = dependencies;
         this.mavenProperties = mavenProperties;
     }
 
-    public String getId() {
-        return id;
+    public String getArtifactId() {
+        return artifactId;
     }
 
     public String getName() {
