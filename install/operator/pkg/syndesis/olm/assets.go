@@ -22,26 +22,11 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"path/filepath"
 	"sort"
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/shurcooL/httpfs/filter"
-	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 )
-
-func GetAssetsFS() http.FileSystem {
-	assetsDir := filepath.Join("assets")
-	return util.NewFileInfoMappingFS(filter.Keep(http.Dir(assetsDir), func(path string, fi os.FileInfo) bool {
-		if fi.Name() == "assets_generate.go" {
-			return false
-		}
-		return true
-	}), func(fi os.FileInfo) (os.FileInfo, error) {
-		return &zeroTimeFileInfo{fi}, nil
-	})
-}
 
 func AssetAsBytes(path string) ([]byte, error) {
 	file, err := GetAssetsFS().Open(path)

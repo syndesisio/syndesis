@@ -12,7 +12,7 @@ import (
 )
 
 func GetAssetsFS() http.FileSystem {
-	assetsDir := filepath.Join(build.GoModDirectory, "pkg", "generator", "assets")
+	assetsDir := filepath.Join(build.GoModDirectory, "pkg", "syndesis", "olm", "assets")
 	return util.NewFileInfoMappingFS(filter.Keep(http.Dir(assetsDir), func(path string, fi os.FileInfo) bool {
 		if fi.Name() == ".DS_Store" {
 			return false
