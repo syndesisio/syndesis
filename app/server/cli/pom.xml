@@ -54,6 +54,12 @@
           </exclusion>
         </exclusions>
       </dependency>
+
+      <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jdbc</artifactId>
+        <version>9.0.21</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
