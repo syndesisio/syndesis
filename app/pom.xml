@@ -155,12 +155,14 @@
     <logback.version>1.2.3</logback.version>
     <micrometer.version>1.5.3</micrometer.version>
     <teiid.version>13.0.2</teiid.version>
-    <aws-java-sdk-core.version>1.11.415</aws-java-sdk-core.version>
+    <aws-java-sdk.version>1.11.438</aws-java-sdk.version>
     <version.javax.activation>1.2.1</version.javax.activation>
 
     <javac.werror>-Werror</javac.werror>
     <jetty.version>9.4.30.v20200611</jetty.version>
     <google-api-client-version>1.22.0</google-api-client-version>
+    <kafka-clients.version>2.5.0</kafka-clients.version>
+    <netty.version>4.1.48.Final</netty.version>
   </properties>
 
   <modules>
@@ -2762,6 +2764,12 @@
         <scope>test</scope>
       </dependency>
 
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka-clients</artifactId>
+        <version>${kafka-clients.version}</version>
+      </dependency>
+
       <!-- ========================================== -->
 
       <!-- === Atlasmap -->
@@ -3208,7 +3216,7 @@
       <dependency>
         <groupId>com.amazonaws</groupId>
         <artifactId>aws-java-sdk-core</artifactId>
-        <version>${aws-java-sdk-core.version}</version>
+        <version>${aws-java-sdk.version}</version>
         <exclusions>
           <exclusion>
             <groupId>commons-logging</groupId>
@@ -3216,13 +3224,6 @@
           </exclusion>
         </exclusions>
       </dependency>
-
-      <dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>DynamoDBLocal</artifactId>
-        <version>${aws-dynamodb-local.version}</version>
-      </dependency>
-
     </dependencies>
   </dependencyManagement>
 
