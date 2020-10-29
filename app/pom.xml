@@ -161,7 +161,7 @@
     <micrometer.version>1.5.5</micrometer.version>
     <teiid.version>14.0.0</teiid.version>
     <teiid.springboot.version>1.5.0</teiid.springboot.version>
-    <aws-java-sdk-core.version>1.11.415</aws-java-sdk-core.version>
+    <aws-java-sdk.version>1.11.714</aws-java-sdk.version>
     <version.javax.activation>1.2.2</version.javax.activation>
 
     <javac.werror>-Werror</javac.werror>
@@ -3688,19 +3688,13 @@
       <dependency>
         <groupId>com.amazonaws</groupId>
         <artifactId>aws-java-sdk-core</artifactId>
-        <version>${aws-java-sdk-core.version}</version>
+        <version>${aws-java-sdk.version}</version>
         <exclusions>
           <exclusion>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
-      </dependency>
-
-      <dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>DynamoDBLocal</artifactId>
-        <version>${aws-dynamodb-local.version}</version>
       </dependency>
 
       <!-- Telegram -->
