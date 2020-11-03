@@ -10,7 +10,7 @@
 # in the given namespace. Allows for multiple bindings
 # from different namespaces.
 #
-- kind: {{ .Kind }}Binding
+- kind: ClusterRoleBinding
   apiVersion: rbac.authorization.k8s.io/v1
   metadata:
     name: syndesis-{{ .Namespace }}-jaeger-operator
@@ -29,7 +29,7 @@
 # Grants the jaeger-operator ClusterRole to the user
 # to allow them to add their own jaeger CR
 #
-- kind: {{ .Kind }}Binding
+- kind: ClusterRoleBinding
   apiVersion: rbac.authorization.k8s.io/v1
   metadata:
     name: syndesis-{{ .Namespace }}-jaeger-{{ .User }}
