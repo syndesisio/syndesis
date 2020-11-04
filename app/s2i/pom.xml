@@ -33,6 +33,7 @@
 
   <properties>
     <image.build.directory>${project.basedir}/target/image</image.build.directory>
+    <license-plugin-offline>false</license-plugin-offline>
   </properties>
 
   <dependencies>
@@ -204,6 +205,7 @@
             </goals>
             <phase>generate-resources</phase>
             <configuration>
+              <offline>${license-plugin-offline}</offline>
               <skipAggregateDownloadLicenses>false</skipAggregateDownloadLicenses>
               <executeOnlyOnRootModule>false</executeOnlyOnRootModule>
               <licensesOutputDirectory>${image.build.directory}/licenses</licensesOutputDirectory>
@@ -419,7 +421,7 @@
           <execution>
             <!--
               We need to remove some of the tracking files Maven puts
-              in the repository we created above. Otherwise Maven 
+              in the repository we created above. Otherwise Maven
               will try to resolve using the repositories we used to
               download these (namely the local repository used above
               in the `settings_local.xml`), that will not resolve

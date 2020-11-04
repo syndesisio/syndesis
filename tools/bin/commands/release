@@ -34,6 +34,7 @@ release::usage() {
                               Works only when on a branch, not when checked out directly.
     --log <log-file>          Write full log to <log-file>, only print progress to screen
     --skip-tests              Do not run tests
+    --skip-download-licenses  Skip downloading licenses when not available locally
     --no-strict-checksums     Do not insist on strict checksum policy for downloaded Maven artifacts
 -q  --quiet                   Adds quiet option to Maven options - only show errors
 EOT
@@ -559,6 +560,10 @@ extract_maven_opts() {
 
     if [ ! $(hasflag --no-strict-checksums) ]; then
         maven_opts="$maven_opts -C"
+    fi
+
+    if [ $(hasflag --skip-download-licenses) ]; then
+        maven_opts="$maven_opts -Dlicense-plugin-offline=true"
     fi
 
     echo $maven_opts
