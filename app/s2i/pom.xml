@@ -204,6 +204,12 @@
             </goals>
             <phase>generate-resources</phase>
             <configuration>
+              <licenseUrlReplacements>
+                <licenseUrlReplacement>
+                  <regexp>http.*://www.apache.org/licenses/LICENSE-2.0.*</regexp>
+                  <replacement>file://${project.basedir}/src/main/license/apache_license_2.0.txt</replacement>
+                </licenseUrlReplacement>
+              </licenseUrlReplacements>
               <skipAggregateDownloadLicenses>false</skipAggregateDownloadLicenses>
               <executeOnlyOnRootModule>false</executeOnlyOnRootModule>
               <licensesOutputDirectory>${image.build.directory}/licenses</licensesOutputDirectory>

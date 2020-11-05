@@ -707,6 +707,7 @@
               <exclude>**/*.adoc</exclude>
               <exclude>**/archetypes/**/src/main/resources/archetype-resources/**</exclude>
               <exclude>**/s2i/src/main/docker/project/**</exclude>
+              <exclude>s2i/src/main/license/*.txt</exclude>
               <exclude>**/Dockerfile</exclude>
               <exclude>**/*.ts</exclude>
               <exclude>**/*.tsx</exclude>
