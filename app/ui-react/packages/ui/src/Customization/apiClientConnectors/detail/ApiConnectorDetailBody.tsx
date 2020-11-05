@@ -22,7 +22,7 @@ export interface IApiConnectorDetailValues {
 
 export interface IApiConnectorDetailBodyProps {
   /**
-   * Properties
+   * Configured Properties
    */
   address?: string;
   basePath?: string;
@@ -56,6 +56,11 @@ export interface IApiConnectorDetailBodyProps {
    * @param e
    */
   handleSubmit: (e: any) => void;
+
+  /**
+   * An array of strings with possible properties
+   */
+  propertyKeys: string[];
 }
 
 export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetailBodyProps> = ({
@@ -77,6 +82,7 @@ export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetail
   i18nTitle,
   icon,
   name,
+  propertyKeys,
 }) => {
   const [configured, setConfigured] = React.useState<IApiConnectorDetailValues>(
     { address, basePath, description, host, icon, name }
@@ -119,6 +125,7 @@ export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetail
               i18nNameHelper={i18nNameHelper}
               i18nRequiredText={i18nRequiredText}
               properties={configured}
+              propertyKeys={propertyKeys}
             />
           ) : (
             <ApiConnectorDetailConfig
@@ -128,6 +135,7 @@ export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetail
               i18nLabelHost={i18nLabelHost}
               i18nLabelName={i18nLabelName}
               properties={configured}
+              propertyKeys={propertyKeys}
             />
           )}
         </CardBody>

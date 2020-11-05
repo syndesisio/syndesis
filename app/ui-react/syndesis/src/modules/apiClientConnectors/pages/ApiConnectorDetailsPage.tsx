@@ -105,6 +105,7 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                     data,
                                     values.name,
                                     values.description,
+                                    values.address,
                                     values.host,
                                     values.basePath,
                                     values.icon
@@ -151,6 +152,10 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                     }
                                   >
                                     {() => {
+                                      const propertyKeys = Object.keys(
+                                        data.properties!
+                                      );
+
                                       return (
                                         <>
                                           <ApiConnectorDetailHeader
@@ -219,6 +224,7 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                               )}
                                               icon={data.icon}
                                               name={data.name}
+                                              propertyKeys={propertyKeys}
                                             />
                                             &nbsp;
                                             {data.actionsSummary ? (

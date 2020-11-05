@@ -11,6 +11,7 @@ export interface IWithApiConnectorHelpersChildrenProps {
     apiConnector: Connector,
     name?: string,
     description?: string,
+    address?: string,
     host?: string,
     basePath?: string,
     icon?: string
@@ -75,6 +76,7 @@ export class WithApiConnectorHelpersWrapped extends React.Component<
     apiConnector: Connector,
     newName: string,
     newDescription?: string,
+    newAddress?: string,
     newHost?: string,
     newBasePath?: string,
     newIcon?: string
@@ -95,13 +97,26 @@ export class WithApiConnectorHelpersWrapped extends React.Component<
           draft.configuredProperties = noHost;
         }
 
+        if (newAddress) {
+          draft.configuredProperties.address = newAddress;
+        } else if (draft.configuredProperties.address) {
+          const { address, ...noAddress } = draft.configuredProperties;
+          draft.configuredProperties = noAddress;
+        }
+
         if (newBasePath) {
           draft.configuredProperties.basePath = newBasePath;
         } else if (draft.configuredProperties.basePath) {
           const { basePath, ...noBasePath } = draft.configuredProperties;
           draft.configuredProperties = noBasePath;
         }
-      } else if (newHost || newBasePath) {
+      } else if (newAddress || newHost || newBasePath) {
+        if (newAddress) {
+          draft.configuredProperties = {
+            address: newAddress,
+          };
+        }
+
         if (newHost) {
           draft.configuredProperties = {
             host: newHost,
@@ -130,9 +145,7 @@ export class WithApiConnectorHelpersWrapped extends React.Component<
   }
 }
 
-export const WithApiConnectorHelpers: React.FunctionComponent<
-  IWithApiConnectorHelpersProps
-> = props => (
+export const WithApiConnectorHelpers: React.FunctionComponent<IWithApiConnectorHelpersProps> = props => (
   <ApiContext.Consumer>
     {apiContext => (
       <WithApiConnectorHelpersWrapped {...props} {...apiContext} />

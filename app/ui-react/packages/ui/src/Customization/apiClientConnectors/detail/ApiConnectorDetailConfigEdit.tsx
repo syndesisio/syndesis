@@ -22,6 +22,11 @@ export interface IApiConnectorDetailConfigEdit {
    * typically set when creating the connector
    */
   properties: IApiConnectorDetailValues;
+
+  /**
+   * An array of strings with possible properties
+   */
+  propertyKeys: string[];
 }
 
 export const ApiConnectorDetailConfigEdit: React.FunctionComponent<IApiConnectorDetailConfigEdit> = ({
@@ -34,6 +39,7 @@ export const ApiConnectorDetailConfigEdit: React.FunctionComponent<IApiConnector
   i18nNameHelper,
   i18nRequiredText,
   properties,
+  propertyKeys,
 }) => {
   type IValidation = 'default' | 'error' | 'success' | undefined;
   const [isValid, setIsValid] = React.useState<IValidation>('default');
@@ -58,39 +64,35 @@ export const ApiConnectorDetailConfigEdit: React.FunctionComponent<IApiConnector
   return (
     <Form isHorizontal={true} data-testid={'api-connector-details-form'}>
       {i18nRequiredText}
-      {properties.name && (
-        <FormGroup
-          label={i18nLabelName}
+      <FormGroup
+        label={i18nLabelName}
+        isRequired={true}
+        fieldId="connector-name"
+        helperTextInvalid={i18nNameHelper}
+        validated={isValid}
+      >
+        <TextInput
+          value={properties.name}
           isRequired={true}
-          fieldId="connector-name"
-          helperTextInvalid={i18nNameHelper}
+          type="text"
+          id="connector-name"
+          aria-describedby="horizontal-form-name-helper"
+          data-testid={'api-connector-name-field'}
+          name="name"
+          onChange={onChange}
           validated={isValid}
-        >
-          <TextInput
-            value={properties.name}
-            isRequired={true}
-            type="text"
-            id="connector-name"
-            aria-describedby="horizontal-form-name-helper"
-            data-testid={'api-connector-name-field'}
-            name="name"
-            onChange={onChange}
-            validated={isValid}
-          />
-        </FormGroup>
-      )}
-      {properties.description && (
-        <FormGroup label={i18nLabelDescription} fieldId="connector-description">
-          <TextArea
-            value={properties.description}
-            onChange={onChange}
-            data-testid={'api-connector-description-field'}
-            name="description"
-            id="connector-description"
-          />
-        </FormGroup>
-      )}
-      {properties.address && (
+        />
+      </FormGroup>
+      <FormGroup label={i18nLabelDescription} fieldId="connector-description">
+        <TextArea
+          value={properties.description}
+          onChange={onChange}
+          data-testid={'api-connector-description-field'}
+          name="description"
+          id="connector-description"
+        />
+      </FormGroup>
+      {propertyKeys.includes('address') && (
         <FormGroup
           label={i18nLabelAddress}
           isRequired={false}
@@ -108,7 +110,7 @@ export const ApiConnectorDetailConfigEdit: React.FunctionComponent<IApiConnector
           />
         </FormGroup>
       )}
-      {properties.host && (
+      {propertyKeys.includes('host') && (
         <FormGroup
           label={i18nLabelHost}
           isRequired={false}
@@ -126,7 +128,7 @@ export const ApiConnectorDetailConfigEdit: React.FunctionComponent<IApiConnector
           />
         </FormGroup>
       )}
-      {properties.basePath && (
+      {propertyKeys.includes('basePath') && (
         <FormGroup
           label={i18nLabelBaseUrl}
           isRequired={false}
