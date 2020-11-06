@@ -25,6 +25,7 @@ it('Renders the component, its properties, and data-testids', () => {
       i18nLabelHost={'Host'}
       i18nLabelName={'Name'}
       properties={properties}
+      propertyKeys={['description', 'basePath', 'host', 'name']}
     />
   );
 

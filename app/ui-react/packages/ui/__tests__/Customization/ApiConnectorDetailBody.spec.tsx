@@ -25,6 +25,7 @@ it('Renders the expected connector name and description', () => {
       i18nTitle={expectedName + ' Configuration'}
       icon={expectedIcon}
       name={expectedName}
+      propertyKeys={['description', 'name']}
     />
   );
 

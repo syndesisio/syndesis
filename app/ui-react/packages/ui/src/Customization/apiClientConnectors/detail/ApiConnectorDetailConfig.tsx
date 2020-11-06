@@ -20,6 +20,11 @@ export interface IApiConnectorDetailConfig {
    * typically set when creating the connector
    */
   properties: IApiConnectorDetailValues;
+
+  /**
+   * An array of strings with possible properties
+   */
+  propertyKeys: string[];
 }
 
 export const ApiConnectorDetailConfig: React.FunctionComponent<IApiConnectorDetailConfig> = ({
@@ -29,6 +34,7 @@ export const ApiConnectorDetailConfig: React.FunctionComponent<IApiConnectorDeta
   i18nLabelHost,
   i18nLabelName,
   properties,
+  propertyKeys,
 }) => {
   return (
     <TextContent data-testid={'api-connector-detail-config'}>
@@ -59,7 +65,7 @@ export const ApiConnectorDetailConfig: React.FunctionComponent<IApiConnectorDeta
             </TextListItem>
           </>
         )}
-        {properties.address && (
+        {propertyKeys.includes('address') && (
           <>
             <TextListItem component={TextListItemVariants.dt}>
               {i18nLabelAddress}
@@ -72,7 +78,7 @@ export const ApiConnectorDetailConfig: React.FunctionComponent<IApiConnectorDeta
             </TextListItem>
           </>
         )}
-        {properties.host && (
+        {propertyKeys.includes('host') && (
           <>
             <TextListItem component={TextListItemVariants.dt}>
               {i18nLabelHost}
@@ -85,7 +91,7 @@ export const ApiConnectorDetailConfig: React.FunctionComponent<IApiConnectorDeta
             </TextListItem>
           </>
         )}
-        {properties.basePath && (
+        {propertyKeys.includes('basePath') && (
           <>
             <TextListItem component={TextListItemVariants.dt}>
               {i18nLabelBaseUrl}
