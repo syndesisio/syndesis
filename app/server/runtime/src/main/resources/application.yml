@@ -62,6 +62,8 @@ management:
       enabled: false
     prometheus:
       enabled: true
+    restart:
+      enabled: true
 
 cors:
   allowedOrigins: "*"
