@@ -25,6 +25,7 @@ it('Renders the component, its properties, and data-testids', () => {
       i18nNameHelper={'Please provide a name for the API Connector'}
       i18nRequiredText={'The fields marked with * are required.'}
       properties={properties}
+      propertyKeys={['description', 'name']}
     />
   );
 
