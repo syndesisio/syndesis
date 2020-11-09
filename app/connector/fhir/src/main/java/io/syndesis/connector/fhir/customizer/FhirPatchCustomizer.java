@@ -63,35 +63,37 @@ public class FhirPatchCustomizer implements ComponentProxyCustomizer {
 
         in.setHeader("CamelFhir.preferReturn", null);
 
-        String body = in.getBody(String.class);
-        if (body != null) {
-            try {
-                Map<String, Object> map = MAPPER.readValue(body, JSON_PATCH_MAP);
-
-                List<Map<String, String>> list = new ArrayList<>();
-                for(Map.Entry<String, Object> entry: map.entrySet()) {
-                    if ("id".equals(entry.getKey()) && ObjectHelper.isNotEmpty(entry.getValue())) {
-                        in.setHeader("CamelFhir.stringId", resourceType + "/" + entry.getValue());
-                    } else if (entry.getValue() instanceof Map) {
-                        @SuppressWarnings("unchecked")
-                        Map<String, String> operation = (Map<String, String>) entry.getValue();
-                        if (ObjectHelper.isEmpty(ConnectorOptions.extractOption(operation, "op"))) {
-                            operation.put("op", "replace"); //'replace' by default
-                        }
-                        list.add(operation);
-                    }
-                }
-
+        if (StringUtils.isBlank(patch)) {
+            String body = in.getBody(String.class);
+            if (body != null) {
                 try {
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    MAPPER.writeValue(out, list);
-                    patch = out.toString("UTF-8");
+                    Map<String, Object> map = MAPPER.readValue(body, JSON_PATCH_MAP);
+
+                    List<Map<String, String>> list = new ArrayList<>();
+                    for (Map.Entry<String, Object> entry : map.entrySet()) {
+                        if ("id".equals(entry.getKey()) && ObjectHelper.isNotEmpty(entry.getValue())) {
+                            in.setHeader("CamelFhir.stringId", resourceType + "/" + entry.getValue());
+                        } else if (entry.getValue() instanceof Map) {
+                            @SuppressWarnings("unchecked")
+                            Map<String, String> operation = (Map<String, String>) entry.getValue();
+                            if (ObjectHelper.isEmpty(ConnectorOptions.extractOption(operation, "op"))) {
+                                operation.put("op", "replace"); //'replace' by default
+                            }
+                            list.add(operation);
+                        }
+                    }
+
+                    try {
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        MAPPER.writeValue(out, list);
+                        patch = out.toString("UTF-8");
+                    } catch (IOException e) {
+                        throw new CamelExecutionException("Cannot serialize body to json", exchange, e);
+                    }
                 } catch (IOException e) {
-                    throw new CamelExecutionException("Cannot serialize body to json", exchange, e);
+                    //Body might be in the correct format already, so use it as is
+                    patch = body;
                 }
-            } catch (IOException e) {
-                //Body might be in the correct format already, so use it as is
-                patch = body;
             }
         }
         in.setHeader("CamelFhir.patchBody", patch);

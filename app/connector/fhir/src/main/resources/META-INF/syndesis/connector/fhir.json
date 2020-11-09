@@ -505,7 +505,7 @@
       "type": "text"
     },
     "serverUrl": {
-      "defaultValue": "http://fhirtest.uhn.ca/baseDstu3",
+      "defaultValue": "http://hapi.fhir.org/baseDstu3",
       "deprecated": false,
       "displayName": "FHIR server URL",
       "group": "common",
