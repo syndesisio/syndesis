@@ -122,12 +122,6 @@ meta:
 generator:
   secretMaskingEnabled: true
 
-maven:
-  repositories:
-    01_maven_central: https://repo1.maven.org/maven2
-    # uncomment this to use a local nexus repo
-    #02_openshift-nexus: http://${NEXUS_SERVICE_HOST}:${NEXUS_SERVICE_PORT}/nexus/content/groups/public/
-
 logging:
   level:
     io.swagger.parser: WARN
