@@ -299,7 +299,7 @@
               <sourceDocumentName>index.adoc</sourceDocumentName>
               <outputDirectory>${apidocs.output.dir}/internal</outputDirectory>
               <attributes>
-                <source-highlighter>coderay</source-highlighter> 
+                <source-highlighter>coderay</source-highlighter>
                 <generated>${apidocs.dir}/asciidoc/internal</generated>
                 <toc>left</toc>
                 <sectnums>true</sectnums>
@@ -320,7 +320,7 @@
               <sourceDocumentName>index.adoc</sourceDocumentName>
               <outputDirectory>${apidocs.output.dir}</outputDirectory>
               <attributes>
-                <source-highlighter>coderay</source-highlighter> 
+                <source-highlighter>coderay</source-highlighter>
                 <generated>${apidocs.dir}/asciidoc</generated>
                 <toc>left</toc>
                 <sectnums>true</sectnums>
@@ -379,6 +379,15 @@
 
     </plugins>
   </build>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-kubernetes-dependencies</artifactId>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <!-- ===================================================================================== -->
@@ -638,6 +647,12 @@
 
     <dependency>
       <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-kubernetes-config</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-security</artifactId>
       <scope>runtime</scope>
     </dependency>
@@ -891,20 +906,6 @@
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
       <classifier>annotations</classifier>
-    </dependency>
-
-    <!--  ==== Test Scope === -->
-    <dependency>
-      <groupId>io.fabric8</groupId>
-      <artifactId>spring-cloud-kubernetes-core</artifactId>
-      <version>0.1.6</version>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <!-- === Micrometer ================================================================== -->
