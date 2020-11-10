@@ -76,9 +76,9 @@ public class ApiProviderReturnPathCustomizer implements ComponentProxyCustomizer
             if (exchange.getException() != null) {
                 //making sure we don't return anything
                 exchange.getIn().setBody("");
-                if (httpResponseCode != null) {
-                    exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, httpResponseCode);
-                }
+            }
+            if (httpResponseCode != null) {
+                exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, httpResponseCode);
             }
         };
     }
