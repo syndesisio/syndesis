@@ -73,12 +73,12 @@ public class ApiProviderReturnPathCustomizer implements ComponentProxyCustomizer
 
     private static Processor statusCodeUpdater(Integer httpResponseCode) {
         return exchange -> {
+            if (httpResponseCode != null) {
+                exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, httpResponseCode);
+            }
             if (exchange.getException() != null) {
                 //making sure we don't return anything
                 exchange.getIn().setBody("");
-                if (httpResponseCode != null) {
-                    exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, httpResponseCode);
-                }
             }
         };
     }
