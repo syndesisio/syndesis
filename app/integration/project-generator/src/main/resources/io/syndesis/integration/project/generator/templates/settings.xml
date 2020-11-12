@@ -23,6 +23,16 @@
       <id>additional-repositories</id>
       <repositories>
         <repository>
+          <id>_local</id>
+          <url>file:///tmp/artifacts/m2</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </repository>
+        <repository>
           <id>central</id>
           <name>Maven Central</name>
           <url>https://repo.maven.apache.org/maven2/</url>
@@ -60,6 +70,16 @@
         </repository>
       </repositories>
       <pluginRepositories>
+        <pluginRepository>
+          <id>_local</id>
+          <url>file:///tmp/artifacts/m2</url>
+          <releases>
+            <enabled>true</enabled>
+          </releases>
+          <snapshots>
+            <enabled>true</enabled>
+          </snapshots>
+        </pluginRepository>
         <pluginRepository>
           <id>central</id>
           <name>Maven Central</name>

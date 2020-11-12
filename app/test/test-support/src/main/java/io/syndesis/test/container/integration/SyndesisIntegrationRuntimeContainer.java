@@ -326,8 +326,7 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
                     .add(SyndesisTestEnvironment.getProjectMountPath() + "/configuration/settings.xml")
                     .add("-f")
                     .add(SyndesisTestEnvironment.getProjectMountPath())
-                    .add(SyndesisTestEnvironment.getIntegrationRuntime().getCommand())
-                    .add("-Dmaven.repo.local=/tmp/artifacts/m2");
+                    .add(SyndesisTestEnvironment.getIntegrationRuntime().getCommand());
 
             if (enableDebug) {
                 commandLine.add(getDebugJvmArguments());
