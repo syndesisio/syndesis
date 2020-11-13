@@ -16,6 +16,9 @@
 
 package io.syndesis.test.container.s2i;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
@@ -47,6 +50,20 @@ public class S2iProjectBuilder implements ProjectBuilder {
         SyndesisS2iAssemblyContainer syndesisS2iAssemblyContainer = new SyndesisS2iAssemblyContainer(integrationName, projectDir, imageTag);
         syndesisS2iAssemblyContainer.start();
 
-        return projectDir.resolve("target").resolve("project-0.1-SNAPSHOT.jar");
+        // The S2I assembly container result need to be copied to the local host
+        // to be used by S2I integration containers
+        Path target = projectDir.resolve("target");
+        Path fatJar = target.resolve("project-0.1-SNAPSHOT.jar");
+        try {
+            Files.createDirectories(target);
+            syndesisS2iAssemblyContainer.copyFileFromContainer(
+                "/tmp/src/target/project-0.1-SNAPSHOT.jar",
+                fatJar.toAbsolutePath().toString()
+            );
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+
+        return fatJar;
     }
 }
