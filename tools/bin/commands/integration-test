@@ -24,7 +24,7 @@ integration-test::run() {
 }
 
 maven_args() {
-    local args=""
+    local args=" --no-transfer-progress"
 
     if [ "$(hasflag --clean -c)" ]; then
         args="$args clean"
