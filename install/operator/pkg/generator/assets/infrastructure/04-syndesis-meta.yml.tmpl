@@ -108,7 +108,7 @@
 {{else}}
           image: '{{ .Syndesis.Components.Meta.Image }}'
 {{end}}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           readinessProbe:
             httpGet:
               path: /health
