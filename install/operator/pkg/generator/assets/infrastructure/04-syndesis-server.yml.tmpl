@@ -111,7 +111,7 @@
 {{else}}
           image: '{{ .Syndesis.Components.Server.Image }}'
 {{end}}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           livenessProbe:
             httpGet:
               port: 8080

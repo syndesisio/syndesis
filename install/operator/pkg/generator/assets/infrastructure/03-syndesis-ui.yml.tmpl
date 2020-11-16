@@ -65,7 +65,7 @@
 # Just changing the image name is not considered a config change.
           - name: DEV_SUPPORT
             value: '{{.DevSupport}}'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           livenessProbe:
             httpGet:
               path: "/"

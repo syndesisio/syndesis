@@ -233,7 +233,7 @@
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
             value: {{.Syndesis.Components.Database.SampledbPassword}}
           image: '{{ .Syndesis.Components.Database.Image }}'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           lifecycle:
             postStart:
               exec:
@@ -285,7 +285,7 @@
           - name: PG_EXPORTER_EXTEND_QUERY_PATH
             value: /etc/postgres/exporter/queries.yaml
           image: '{{ .Syndesis.Components.Database.Exporter.Image }}'
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: syndesis-db-metrics
           livenessProbe:
             failureThreshold: 5
