@@ -52,23 +52,18 @@ func (items OrderSchemaItems) Less(i, j int) (ret bool) {
 				}
 			}()
 			return reflect.ValueOf(ii).Int() < reflect.ValueOf(ij).Int()
-		} else {
-			return true
 		}
+		return true
 	} else if okj {
 		return false
-	} else {
-		return items[i].Name < items[j].Name
 	}
+	return items[i].Name < items[j].Name
 }
 
 type SchemaProperties map[string]Schema
 
-func (properties SchemaProperties) MarshalJSON() ([]byte, error) {
-	if properties == nil {
-		return []byte("null"), nil
-	}
-	var items OrderSchemaItems = make(OrderSchemaItems, 0, len(properties))
+func (properties SchemaProperties) ToOrderedSchemaItems() OrderSchemaItems {
+	items := make(OrderSchemaItems, 0, len(properties))
 	for k, v := range properties {
 		items = append(items, OrderSchemaItem{
 			Name:   k,
@@ -76,5 +71,12 @@ func (properties SchemaProperties) MarshalJSON() ([]byte, error) {
 		})
 	}
 	sort.Sort(items)
-	return json.Marshal(items)
+	return items
+}
+
+func (properties SchemaProperties) MarshalJSON() ([]byte, error) {
+	if properties == nil {
+		return []byte("null"), nil
+	}
+	return json.Marshal(properties.ToOrderedSchemaItems())
 }

@@ -39,8 +39,7 @@ func PathParam(name string) *Parameter {
 
 // BodyParam creates a body parameter
 func BodyParam(name string, schema *Schema) *Parameter {
-	return &Parameter{ParamProps: ParamProps{Name: name, In: "body", Schema: schema},
-		SimpleSchema: SimpleSchema{Type: "object"}}
+	return &Parameter{ParamProps: ParamProps{Name: name, In: "body", Schema: schema}}
 }
 
 // FormDataParam creates a body parameter
