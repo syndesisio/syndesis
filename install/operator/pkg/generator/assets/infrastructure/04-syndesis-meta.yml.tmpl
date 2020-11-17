@@ -123,11 +123,7 @@
           #  -- Developer provides a new image in the associated imagestream
           #
           image: '{{ .Syndesis.Components.Meta.Image }}'
-        {{if .DevSupport}}
           imagePullPolicy: Always
-        {{else}}
-          imagePullPolicy: IfNotPresent
-        {{end}}
           readinessProbe:
             httpGet:
               path: /health

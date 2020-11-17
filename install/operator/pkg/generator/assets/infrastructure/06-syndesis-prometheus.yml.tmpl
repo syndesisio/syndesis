@@ -172,11 +172,7 @@
         containers:
         - name: prometheus
           image: '{{ .Syndesis.Components.Prometheus.Image }}'
-        {{if .DevSupport}}
           imagePullPolicy: Always
-        {{else}}
-          imagePullPolicy: IfNotPresent
-        {{end}}
           args:
             - '--config.file=/etc/prometheus/prometheus.yml'
             - '--storage.tsdb.retention=30d'
