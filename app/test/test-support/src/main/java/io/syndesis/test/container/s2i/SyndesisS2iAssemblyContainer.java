@@ -38,7 +38,7 @@ import org.testcontainers.images.builder.dockerfile.statement.MultiArgsStatement
  */
 public class SyndesisS2iAssemblyContainer extends GenericContainer<SyndesisS2iAssemblyContainer> {
 
-    private static final String S2I_ASSEMBLE_SCRIPT = "/usr/local/s2i/assemble";
+    static final String S2I_ASSEMBLE_SCRIPT = "/usr/local/s2i/assemble";
     private static final String SRC_DIR = "/tmp/src";
 
     public SyndesisS2iAssemblyContainer(final String integrationName, final Path projectDir, final String imageTag) {

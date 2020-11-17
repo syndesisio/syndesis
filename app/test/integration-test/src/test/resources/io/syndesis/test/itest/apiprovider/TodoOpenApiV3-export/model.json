@@ -425,6 +425,7 @@
               "connectorCustomizers": [
                 "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
               ],
+              "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
               "inputDataShape": {
                 "kind": "any"
               },
@@ -600,6 +601,7 @@
             "connectorCustomizers": [
               "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
             ],
+            "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
             "inputDataShape": {
               "kind": "any"
             },
@@ -1179,6 +1181,7 @@
                         "connectorCustomizers": [
                           "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                         ],
+                        "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                         "inputDataShape": {
                           "kind": "any"
                         },
@@ -1834,6 +1837,7 @@
                   "connectorCustomizers": [
                     "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                   ],
+                  "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                   "inputDataShape": {
                     "description": "API response payload",
                     "kind": "json-schema",
@@ -1994,6 +1998,7 @@
                         "connectorCustomizers": [
                           "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                         ],
+                        "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                         "inputDataShape": {
                           "kind": "any"
                         },
@@ -2247,6 +2252,7 @@
                         "connectorCustomizers": [
                           "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                         ],
+                        "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                         "inputDataShape": {
                           "kind": "any"
                         },
@@ -2938,6 +2944,7 @@
                   "connectorCustomizers": [
                     "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                   ],
+                  "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                   "inputDataShape": {
                     "description": "API response payload",
                     "kind": "json-schema",
@@ -3098,6 +3105,7 @@
                         "connectorCustomizers": [
                           "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                         ],
+                        "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                         "inputDataShape": {
                           "kind": "any"
                         },
@@ -3351,6 +3359,7 @@
                         "connectorCustomizers": [
                           "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                         ],
+                        "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                         "inputDataShape": {
                           "kind": "any"
                         },
@@ -4042,6 +4051,7 @@
                   "connectorCustomizers": [
                     "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                   ],
+                  "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                   "inputDataShape": {
                     "description": "API response payload",
                     "kind": "json-schema",
@@ -4206,6 +4216,7 @@
                         "connectorCustomizers": [
                           "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                         ],
+                        "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                         "inputDataShape": {
                           "kind": "any"
                         },
@@ -4459,6 +4470,7 @@
                         "connectorCustomizers": [
                           "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                         ],
+                        "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                         "inputDataShape": {
                           "kind": "any"
                         },
@@ -5144,6 +5156,7 @@
                   "connectorCustomizers": [
                     "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                   ],
+                  "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                   "inputDataShape": {
                     "description": "API response payload",
                     "kind": "json-schema",
@@ -5304,6 +5317,7 @@
                         "connectorCustomizers": [
                           "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                         ],
+                        "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                         "inputDataShape": {
                           "kind": "any"
                         },
@@ -5557,6 +5571,7 @@
                         "connectorCustomizers": [
                           "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                         ],
+                        "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                         "inputDataShape": {
                           "kind": "any"
                         },
@@ -6213,6 +6228,7 @@
                   "connectorCustomizers": [
                     "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                   ],
+                  "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                   "inputDataShape": {
                     "kind": "none"
                   },
@@ -6367,6 +6383,7 @@
                         "connectorCustomizers": [
                           "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
                         ],
+                        "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
                         "inputDataShape": {
                           "kind": "any"
                         },
