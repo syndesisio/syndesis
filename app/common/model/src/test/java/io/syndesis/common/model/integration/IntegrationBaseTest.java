@@ -15,6 +15,8 @@
  */
 package io.syndesis.common.model.integration;
 
+import java.util.Collections;
+
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
@@ -67,5 +69,11 @@ public class IntegrationBaseTest {
     private static Step stepWithConnectorInAction(final String connectorId) {
         return new Step.Builder()
             .action(new ConnectorAction.Builder().descriptor(connectorDescriptor(connectorId)).build()).build();
+    }
+
+    @Test
+    public void shouldStoreCustomLabels() {
+        assertThat(
+            new Integration.Builder().labels(Collections.singletonMap("key","value")).build().getLabels()).containsEntry("key","value");
     }
 }
