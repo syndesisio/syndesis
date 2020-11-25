@@ -51,6 +51,7 @@
         containers:
         - name: oauthproxy
           image: '{{ .Syndesis.Components.Oauth.Image }}'
+          imagePullPolicy: Always
           args:
             - --provider=openshift
             - --client-id=system:serviceaccount:{{.OpenShiftProject}}:syndesis-oauth-client
