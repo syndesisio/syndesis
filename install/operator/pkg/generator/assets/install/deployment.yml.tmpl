@@ -25,6 +25,7 @@ spec:
         - -c
         - postgres -V
         image: '{{.DatabaseImage}}'
+        imagePullPolicy: Always
         name: postgres-version
       containers:
       - name: syndesis-operator

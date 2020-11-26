@@ -168,6 +168,7 @@
           - -c
           - "postgres -V > /data/postgresql.txt"
           image: '{{.DatabaseImage}}'
+          imagePullPolicy: Always
           name: postgres-version
           volumeMounts:
           - name: syndesis-operator-data

@@ -47,6 +47,7 @@
         containers:
         - name: oauthproxy
           image: '{{ .Syndesis.Components.Oauth.NonEmbeddedImage }}'
+          imagePullPolicy: Always
           args:
             - --cookie-name=oauth_proxy
             - --upstream=http://syndesis-server/api/
