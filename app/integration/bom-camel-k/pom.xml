@@ -29,7 +29,7 @@
   <properties>
     <camel.version>3.5.0</camel.version>
     <atlasmap.version>2.0.5</atlasmap.version>
-    <jackson.version>2.11.2</jackson.version>
+    <jackson.version>2.11.3</jackson.version>
     <validation-api.version>2.0.2</validation-api.version>
   </properties>
 
