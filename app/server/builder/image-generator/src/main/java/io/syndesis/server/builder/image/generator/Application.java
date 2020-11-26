@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternUtils;
 
+import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ModelData;
 import io.syndesis.common.model.action.Action;
@@ -56,6 +58,7 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.MavenProperties;
 import io.syndesis.common.util.SuppressFBWarnings;
@@ -178,6 +181,13 @@ public class Application implements ApplicationRunner {
         } catch (FileNotFoundException ignored) {
             // ignore
         }
+
+        // add non-connector steps
+        Stream.of(TemplateStepLanguage.FREEMARKER, TemplateStepLanguage.MUSTACHE, TemplateStepLanguage.VELOCITY)
+            .forEach(t -> deps.steps.add(new Step.Builder()
+                .stepKind(StepKind.template)
+                .addDependency(Dependency.maven(t.mavenDependency()))
+                .build()));
 
         return deps;
     }
