@@ -1,4 +1,5 @@
-import { Result } from '@syndesis/models';
+import { Result, StringMap } from '@syndesis/models';
+import { ConfigurationProperty } from '@syndesis/models/dist/models';
 import { IConnectorConfigurationFormValidationResult } from '@syndesis/ui';
 import i18n from '../../i18n';
 
@@ -94,4 +95,22 @@ export function stringifyJsonArray(
   });
 
   return newObj;
+}
+
+export function substituteDefaultWithConfiguredProperties(
+  key: string,
+  property: ConfigurationProperty,
+  configuredProperties?: StringMap<string>
+): ConfigurationProperty {
+  if (
+    !configuredProperties?.[key] ||
+    configuredProperties?.[key] === property.defaultValue
+  ) {
+    return property;
+  }
+
+  const substituted = { ...property };
+  substituted.defaultValue = configuredProperties[key];
+
+  return substituted;
 }
