@@ -11,7 +11,11 @@ import {
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../../i18n';
-import { parseValidationResult, stringifyJsonArray } from '../utils';
+import {
+  parseValidationResult,
+  stringifyJsonArray,
+  substituteDefaultWithConfiguredProperties,
+} from '../utils';
 
 export interface IWithConnectorFormChildrenProps {
   /**
@@ -123,7 +127,11 @@ export const WithConnectorForm: React.FunctionComponent<IWithConnectorFormProps>
   >([]);
   const properties = connector.properties || {};
   const definition = Object.keys(properties).reduce((def, key) => {
-    const d = properties[key];
+    const d = substituteDefaultWithConfiguredProperties(
+      key,
+      properties[key],
+      connector.configuredProperties
+    );
     def[key] = {
       ...d,
       disabled,
