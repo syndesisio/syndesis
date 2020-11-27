@@ -11,13 +11,14 @@ spec:
       labels:
         job-name: {{.Job}}
     spec:
+      serviceAccountName: syndesis-operator
       restartPolicy: Never
       volumes:
       - name: tmp-pgdata
         emptyDir: {}
       containers:
       - name: restore-db-compiler
-        image: "crunchydata/crunchy-pgrestore:centos7-10.11-4.2.1"
+        image: {{.Image}}
         volumeMounts:
         - mountPath: /pgdata
           name: tmp-pgdata

@@ -82,6 +82,8 @@ type Backup struct {
 
 type backupDesign struct {
 	Job           string // Name of the unique job
+	Image         string // Docker image to use for the operation
+	LoggerImage   string // Docker image to monitor and log the operation
 	Name          string // Name of the database
 	User          string // User used to access the database
 	Password      string // Password to access the database
@@ -524,14 +526,16 @@ func (b *Backup) backupDatabase() error {
 	suffix := strconv.FormatInt(time.Now().Unix(), 10)
 
 	b.backupDesign = backupDesign{
-		Job:      "db-backup-" + suffix,
-		Name:     sc.Syndesis.Components.Database.Name,
-		User:     sc.Syndesis.Components.Database.User,
-		Password: sc.Syndesis.Components.Database.Password,
-		Host:     dbURL.Hostname(),
-		Port:     dbURL.Port(),
-		FileDir:  "/pgdata/" + dbURL.Hostname() + "-backups/*",
-		FileName: dumpFilename,
+		Job:         "db-backup-" + suffix,
+		Image:       sc.Syndesis.Components.Database.BackupImage,
+		LoggerImage: sc.Syndesis.Components.Database.LoggerImage,
+		Name:        sc.Syndesis.Components.Database.Name,
+		User:        sc.Syndesis.Components.Database.User,
+		Password:    sc.Syndesis.Components.Database.Password,
+		Host:        dbURL.Hostname(),
+		Port:        dbURL.Port(),
+		FileDir:     "/pgdata/" + dbURL.Hostname() + "-backups/*",
+		FileName:    dumpFilename,
 	}
 
 	// Get migration resources, this should be the db migration job
@@ -610,6 +614,7 @@ func (b *Backup) RestoreDb() (err error) {
 
 	b.backupDesign = backupDesign{
 		Job:           "db-restore-" + suffix,
+		Image:         sc.Syndesis.Components.Database.RestoreImage,
 		Name:          sc.Syndesis.Components.Database.Name,
 		User:          sc.Syndesis.Components.Database.User,
 		Password:      sc.Syndesis.Components.Database.Password,
