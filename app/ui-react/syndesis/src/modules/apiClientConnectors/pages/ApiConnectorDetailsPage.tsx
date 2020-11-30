@@ -175,24 +175,24 @@ export const ApiConnectorDetailsPage: React.FunctionComponent<IApiConnectorDetai
                                           <>
                                             <ApiConnectorDetailBody
                                               address={
-                                                (
-                                                  data.configuredProperties ||
-                                                  {}
-                                                ).address
+                                                data.configuredProperties
+                                                  ?.address ||
+                                                data.properties?.address
+                                                  ?.defaultValue
                                               }
                                               basePath={
-                                                (
-                                                  data.configuredProperties ||
-                                                  {}
-                                                ).basePath
+                                                data.configuredProperties
+                                                  ?.basePath ||
+                                                data.properties?.basePath
+                                                  ?.defaultValue
                                               }
                                               description={data.description}
                                               handleSubmit={onSubmit}
                                               host={
-                                                (
-                                                  data.configuredProperties ||
-                                                  {}
-                                                ).host
+                                                data.configuredProperties
+                                                  ?.host ||
+                                                data.properties?.host
+                                                  ?.defaultValue
                                               }
                                               i18nCancelLabel={t(
                                                 'shared:Cancel'
