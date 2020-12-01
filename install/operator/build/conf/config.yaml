@@ -73,6 +73,9 @@ Syndesis:
                     Memory: "255Mi"
                 VolumeCapacity: "1Gi"
                 VolumeAccessMode: "ReadWriteOnce"
+            BackupImage: "crunchydata/crunchy-pgdump:centos7-10.11-4.2.1"
+            RestoreImage: "crunchydata/crunchy-pgrestore:centos7-10.11-4.2.1"
+            LoggerImage: "centos:7"
         Server:
             Image: "docker.io/syndesis/syndesis-server:latest"
             Resources:
