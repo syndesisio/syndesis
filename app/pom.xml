@@ -91,7 +91,7 @@
     <maven.shared.version>3.1.0</maven.shared.version>
 
     <errorprone.version>2.4.0</errorprone.version>
-    <commons.compress.version>1.18</commons.compress.version>
+    <commons.compress.version>1.20</commons.compress.version>
 
     <!-- opentracing dependencies -->
     <jaeger.core.version>1.0.0</jaeger.core.version>
