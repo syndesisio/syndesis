@@ -37,8 +37,8 @@
       done
       echo "***** deleting sampledb"  
       psql <<EOF
-        DROP DATABASE sampledb;
-        DROP USER sampledb;
+        DROP DATABASE IF EXISTS sampledb;
+        DROP USER IF EXISTS sampledb;
       EOF
     add-sample-db.sh: |
       #!/bin/bash
