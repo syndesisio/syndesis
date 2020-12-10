@@ -29,6 +29,17 @@
       syndesis.io/component: syndesis-db
     name: syndesis-sampledb-config
   data:
+    delete-sample-db.sh: |
+      #!/bin/bash
+      until bash -c "psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"; do
+        echo "Waiting for Postgres server..."
+        sleep 1
+      done
+      echo "***** deleting sampledb"  
+      psql <<EOF
+        DROP DATABASE IF EXISTS sampledb;
+        DROP USER IF EXISTS sampledb;
+      EOF
     add-sample-db.sh: |
       #!/bin/bash
       until bash -c "psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"; do
@@ -115,7 +126,11 @@
       echo "***** sampledb created"
     postStart.sh: |
       #!/bin/bash
+      {{- if .Syndesis.DemoData }}    
       /var/lib/pgsql/sampledb/add-sample-db.sh &>  /proc/1/fd/1
+      {{- else }}
+      /var/lib/pgsql/sampledb/delete-sample-db.sh &>  /proc/1/fd/1
+      {{- end }}
 
 - apiVersion: v1
   kind: ConfigMap
