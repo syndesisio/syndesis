@@ -56,5 +56,5 @@ spec:
         - "-c"
         - |
           (while true; do if [[ -f "/pgdata/pg-dump-complete" ]]; then sleep 5; break; fi; sleep 3; done)
-          cat {{- .FileDir}}/{{- .FileName}}
+          cat {{ .FileDir}}/{{- .FileName}}
           sleep 120
