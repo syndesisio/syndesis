@@ -31,7 +31,7 @@ func Test_csv_build(t *testing.T) {
 	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &v1beta2.Syndesis{})
 	assert.NoError(t, err)
 
-	c := &csv{config: conf, operator: "operator-image"}
+	c := &csv{config: conf, image: "operator-image", tag: "latest"}
 
 	err = c.build()
 	assert.NoError(t, err)
@@ -39,9 +39,10 @@ func Test_csv_build(t *testing.T) {
 
 func Test_csv_setCommunityVariables(t *testing.T) {
 	type fields struct {
-		config   *configuration.Config
-		operator string
-		want     *csv
+		config *configuration.Config
+		image  string
+		tag    string
+		want   *csv
 	}
 	tests := []struct {
 		name   string
@@ -50,8 +51,9 @@ func Test_csv_setCommunityVariables(t *testing.T) {
 		{
 			name: "For upstream",
 			fields: fields{
-				config:   &configuration.Config{Productized: false, Version: "7.7.0"},
-				operator: "",
+				config: &configuration.Config{Productized: false, Version: "7.7.0"},
+				image:  "",
+				tag:    "",
 				want: &csv{
 					version:        "7.7.0",
 					maturity:       "alpha",
@@ -68,8 +70,9 @@ func Test_csv_setCommunityVariables(t *testing.T) {
 		{
 			name: "For Downstream",
 			fields: fields{
-				config:   &configuration.Config{Productized: true, Version: "7.7.0"},
-				operator: "",
+				config: &configuration.Config{Productized: true, Version: "7.7.0"},
+				image:  "",
+				tag:    "",
 				want: &csv{
 					version:        "7.7.0",
 					maturity:       "alpha",
@@ -87,8 +90,9 @@ func Test_csv_setCommunityVariables(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := &csv{
-				config:   tt.fields.config,
-				operator: tt.fields.operator,
+				config: tt.fields.config,
+				image:  tt.fields.image,
+				tag:    tt.fields.tag,
 			}
 			c.setVariables()
 			c.config = nil
@@ -102,7 +106,7 @@ func Test_csv_loadDeploymentFromTemplate(t *testing.T) {
 	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &v1beta2.Syndesis{})
 	assert.NoError(t, err)
 
-	c := &csv{config: conf, operator: ""}
+	c := &csv{config: conf, image: "operator-image", tag: "latest"}
 	d, err := c.loadDeploymentFromTemplate()
 	assert.NoError(t, err)
 	assert.NotNil(t, d)
@@ -140,7 +144,7 @@ func Test_csv_loadRolesFromTemplate(t *testing.T) {
 	clientTools := syntesting.FakeClientTools()
 	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &v1beta2.Syndesis{})
 	assert.NoError(t, err)
-	c := &csv{config: conf, operator: ""}
+	c := &csv{config: conf, image: "", tag: ""}
 
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {

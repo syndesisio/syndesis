@@ -17,6 +17,7 @@
 package olm
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -32,12 +33,12 @@ type BundleGenerator interface {
 }
 
 // Build the bundle generator
-func Build(config *configuration.Config, path string, operator string) (m BundleGenerator) {
+func Build(config *configuration.Config, path string, image string, tag string) (m BundleGenerator) {
 	m = manifest{
 		config:     config,
 		path:       path,
-		operator:   operator,
-		csv:        &csv{config: config, operator: operator},
+		operator:   fmt.Sprintf("%s:%s", image, tag),
+		csv:        &csv{config: config, image: image, tag: tag},
 		crd:        &crd{},
 		annotation: &annotation{config: config},
 		docker:     &docker{config: config},

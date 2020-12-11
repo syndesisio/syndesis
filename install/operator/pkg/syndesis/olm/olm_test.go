@@ -50,7 +50,7 @@ func TestManifest_Generate(t *testing.T) {
 		path:       dir,
 		crd:        &crd{},
 		annotation: &annotation{config: conf},
-		csv:        &csv{config: conf, operator: "operator"},
+		csv:        &csv{config: conf, image: "operator", tag: "latest"},
 		docker:     &docker{config: conf},
 		container:  &container{},
 	}

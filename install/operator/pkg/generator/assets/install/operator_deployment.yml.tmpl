@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  {{- if .DevSupport }}
+  annotations:
+    #
+    # Sets a trigger on this deployment to overwrite
+    # the template.spec.image property and point to
+    # the syndesis-operator image stream.
+    #
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"syndesis-operator:{{.Tag}}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"syndesis-operator\")].image"}]'
+  {{end}}
+  name: syndesis-operator
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: operator
+    syndesis.io/component: syndesis-operator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: syndesis-operator
+      syndesis.io/app: syndesis
+      syndesis.io/type: operator
+      syndesis.io/component: syndesis-operator
+  template:
+    metadata:
+      labels:
+        name: syndesis-operator
+        syndesis.io/app: syndesis
+        syndesis.io/type: operator
+        syndesis.io/component: syndesis-operator
+    spec:
+      serviceAccountName: syndesis-operator
+      containers:
+      - name: syndesis-operator
+        #
+        # Image will always start out being set to the release .Image:.Tag pair
+        # In openshift this would be overwritten by the trigger annotation
+        #  -- Requires DevSupport = true
+        #  -- Requires imagePullPolicy = Always (otherwise annotation does nothing)
+        #  -- Developer provides a new image in the associated imagestream
+        #
+        image: {{.Image}}:{{.Tag}}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 60000
+          name: metrics
+        {{- if gt .LogLevel 0}}
+        args:
+          - '--zap-level={{.LogLevel}}'
+        {{- end}}
+        env:
+          - name: WATCH_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: OPERATOR_NAME
+            value: "syndesis-operator"
+        {{- if .DevSupport }}
+          - name: DEV_SUPPORT
+            value: "{{.DevSupport}}"
+        {{- end}}
+        volumeMounts:
+        - name: syndesis-operator-data
+          mountPath: /data
+      initContainers:
+      - command:
+        - bash
+        - -c
+        - "postgres -V > /data/postgresql.txt"
+        image: '{{.DatabaseImage}}'
+        imagePullPolicy: Always
+        name: postgres-version
+        volumeMounts:
+        - name: syndesis-operator-data
+          mountPath: /data
+      volumes:
+      - name: syndesis-operator-data
+        emptyDir: {}
