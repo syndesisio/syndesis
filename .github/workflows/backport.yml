@@ -11,6 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Backport pull request
     steps:
-    - uses: syndesisio/backport-action@v1
+    - uses: tibdex/backport@v1
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
