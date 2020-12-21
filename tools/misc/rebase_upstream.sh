@@ -1,9 +1,9 @@
 #!/bin/bash
-# Rebase from syndesisio/syndesis.git 1.11.x to jboss-fuse/syndesis 1.11.x
+# Rebase from syndesisio/syndesis.git 1.12.x to jboss-fuse/syndesis 1.12.x
 # if there is a conflict in assets_vfsdata.go use go to regenerate the file
 
 if [ -z ${1} ] ; then
-    echo "Error: A branch name parameter is required. Example: 1.11.x"
+    echo "Error: A branch name parameter is required. Example: 1.12.x"
     exit 1
 fi
 branch=${1}
