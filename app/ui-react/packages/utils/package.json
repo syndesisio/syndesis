@@ -23,7 +23,7 @@
     "@types/jest": "^24.0.11",
     "@types/mustache": "^4.0.1",
     "@types/patternfly-react": "*",
-    "@types/react": "^16.4.18",
+    "@types/react": "^17.0.0",
     "@types/react-dom": "^16.0.9",
     "expect": "^24.5.0",
     "jest": "^25.1.0",
