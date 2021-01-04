@@ -54,7 +54,7 @@
     <image.meta>${image.namespace}/syndesis-meta:${image.tag}</image.meta>
     <image.ui>${image.namespace}/syndesis-ui:${image.tag}</image.ui>
 
-    <fabric8.maven.plugin.version>4.2.0</fabric8.maven.plugin.version>
+    <fabric8.maven.plugin.version>4.4.1</fabric8.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
     <dep.plugin.deploy.version>2.8.2</dep.plugin.deploy.version>
     <clean-maven-plugin-version>2.4.1</clean-maven-plugin-version>
