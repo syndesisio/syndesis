@@ -40,33 +40,26 @@ You will need this URL later in this procedure.
 to display the *Consumer API Key* and *Consumer API Secret Key* fields.
 . In another browser tab, go to your
 https://developer.twitter.com/apps[Twitter developer account], sign in if you
-need to, and do the following: 
-
-.. In the upper right, next to the name of your developer project, click the 
-down caret and click *Apps*. 
-.. In the upper right, click *Create an app*. 
+need to, and then do the following: 
+.. Click *Projects & Apps*.
+.. On the *Overview* page, scroll down to click *Create an app*. 
 .. In the *App name* field, enter a name such as *My {prodname} Client*. 
 .. In the *Application description* field, enter a tip such as 
 *For leveraging tweets*. 
-.. In the *Website URL* field, paste the URL that you copied at the beginning
-of this procedure and remove `api/v1/credentials/callback` from the end
-of the URL.
-.. Select *Enable Sign in with Twitter*. 
-.. In the *Callback URLs* field, paste the URL again. It should be
-something like this: 
-`\https://app-proj912876.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
+.. Scroll down to *Set up Your App* and then click *App settings*.
+.. Next to *Authentication Settings*, click *Edit*.
+.. Switch on the *Enable 3-legged OAuth* option.
+.. In the *Callback URLs* field, paste the URL that you copied at the beginning
+of this procedure. It should be something like this: 
+`\https://app-proj912876.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`
+.. In the *Website URL* field, paste the URL again and remove `api/v1/credentials/callback` from the end of the URL.
 +
 You can skip the next few fields.
-.. *Tell us how this app will be used* requires a 100-character description. 
-For convenience, you can copy and paste: 
-`This is a demo application so that I can evaluate how to integrate Twitter 
-with my enterprise applications.`
-.. Click *Create*. 
-.. Click *Create* again to confirm that you reviewed the developer terms. 
-.. At the top of the page for the app you just created, click 
+.. Click *Save*.
+.. At the top of the page for the app that you just created, click 
 the *Keys and tokens* tab. 
-.. Copy the consumer API key. 
-
+.. Under *Consumer Keys*, click *View keys*.
+.. Copy the API key. 
 . Return to your {prodname} *Settings* page and paste the Twitter
 consumer API key into the {prodname} Twitter *Consumer API Key* field.
 . Return to the Twitter *Keys and tokens* tab and copy the consumer API secret key. 
