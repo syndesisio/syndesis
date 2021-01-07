@@ -94,7 +94,7 @@ build_operator()
 
             if [ "$source_gen" == "verify-none" ]; then
         	    echo "verifying no sources have been generated"
-        	    for file in pkg/apis/syndesis/v1beta1/zz_generated.deepcopy.go pkg/generator/assets_vfsdata.go; do
+        	    for file in pkg/apis/syndesis/v1beta2/zz_generated.deepcopy.go pkg/generator/assets_vfsdata.go; do
                     if [ "$(git diff $file)" != "" ] ; then
                         echo ===========================================
                         echo   Looks like some generated source code
@@ -266,6 +266,9 @@ openapi_gen() {
 
         openapi-gen --logtostderr=true -o "" \
             -i ./pkg/apis/syndesis/v1beta1 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta1
+
+        openapi-gen --logtostderr=true -o "" \
+            -i ./pkg/apis/syndesis/v1beta2 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta2
     else
         echo "skipping go openapi generation"
     fi
