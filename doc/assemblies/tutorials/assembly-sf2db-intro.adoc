@@ -38,7 +38,7 @@ link:{LinkFuseOnlineTutorials}#logging-in-and-out_tutorials[What to expect the f
 * You are working in a {prodname} evaluation environment that is running on OpenShift Dedicated or you are working in a {prodname} 
 environment that is running in an OpenShift Container Platform project in 
 which an administrator added the {prodname} sample data, which provides the 
-*PostgresDB* connection. 
+*PostgresDB* connection and the *To Do* app for confirming that the integration works as expected.
 endif::[]
 
 To implement, deploy, and test this sample integration, the main steps are:
