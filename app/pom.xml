@@ -81,7 +81,7 @@
     <swagger-maven-plugin.version>3.1.8</swagger-maven-plugin.version>
 
     <activemq.version>5.15.9</activemq.version>
-    <mongodb-driver.version>4.0.4</mongodb-driver.version>
+    <mongodb-driver.version>4.1.1</mongodb-driver.version>
 
     <arquillian.version>1.6.0.Final</arquillian.version>
     <arquillian.cube.version>1.18.2</arquillian.cube.version>
