@@ -15,6 +15,16 @@ an OpenAPI document for this API.
 
 .Procedure
 
+. Download the icon for the `todo app`:
+.. In the {prodname} navigation panel, click *Home*. 
+.. Copy the URL into a text editor. 
+.. At the beginning of the URL, insert `*todo-*`. 
+.. At the end of the URL, add `*/images/todo_icon.png*`. 
+.. Use the `http` scheme instead of `https`. 
++
+The result is something like this: http://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com/images/todo_icon.png
+.. Paste this URL into a new browser window and download the `todo_icon.png` file to a location on your file system. You will upload this icon in Step 11.
+
 . Identify the URL for your {prodname} environment's copy of the
 OpenAPI document:
 .. In the {prodname} navigation panel, click *Home*.
@@ -42,14 +52,16 @@ and always specify secure URLs (`https`) to obtain an OpenAPI document.
 click *Next*.
 . On the *Review Actions* page, click *Next*. If you see
 a warning, you can ignore it.
-. Click *Next* again to accept *HTTP Basic Authentication*.
-. On the *Review/Edit Connector Details* page:
-.. If you want to, you can
-change the values in the *Name* and *Description* fields.
-.. In the *Host* field, enter the name of the service host,
+. Click *Next*.
+. On the *Specify Security* page, accept *HTTP Basic Authentication* and specify a username and password, such as `admin` and `admin`. Note that, for this sample app, the username and password are not verified.      
+. Click *Next*.
+. On the *Todo App API* summary page: 
+.. For the *Connector Icon*, click *Choose File* and then navigate to the location of the `todo_icon.png` that you downloaded in Step 1. 
+.. If you want to, you can change the values in the *Name* and *Description* fields.
+.. In the *Host* field, accept the name of the service host,
 which is something like this:
 `\http://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com`.
-.. In the *Base URL* field, enter the part of the URL that follows the
+.. In the *Base URL* field, accept the part of the URL that follows the
 host name in service requests: `/api`.
 
 . Click *Save*.

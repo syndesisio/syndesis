@@ -2,7 +2,7 @@
 //
 :prodname: Syndesis
 
-:syndesis-version: 1.10
+:syndesis-version: 1.11
 
 :location: upstream
 
@@ -10,7 +10,7 @@
 
 :productpkg: red_hat_fuse
 
-:version: 7.7
+:version: 7.8
 
 :cdk-version: 3.11
 
