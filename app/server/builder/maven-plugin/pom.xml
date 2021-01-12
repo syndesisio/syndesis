@@ -355,6 +355,13 @@
       <artifactId>jakarta.el</artifactId>
       <scope>runtime</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
+      <classifier>annotations</classifier>
+    </dependency>
+
   </dependencies>
 
   <build>

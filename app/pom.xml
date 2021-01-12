@@ -611,6 +611,18 @@
                 <arg>${errorprone.autofix.arg1}</arg>
                 <arg>${errorprone.autofix.arg2}</arg>
               </compilerArgs>
+              <annotationProcessorPaths>
+                <annotationProcessorPath>
+                  <groupId>org.immutables</groupId>
+                  <artifactId>value</artifactId>
+                  <version>${immutables.version}</version>
+                </annotationProcessorPath>
+                <annotationProcessorPath>
+                  <groupId>com.google.auto.value</groupId>
+                  <artifactId>auto-value</artifactId>
+                  <version>1.7.1</version>
+                </annotationProcessorPath>
+              </annotationProcessorPaths>
             </configuration>
             <dependencies>
               <dependency>
@@ -946,18 +958,6 @@
                 <packages>
                     <package>io.swagger.v3.jaxrs2.integration</package>
                 </packages>
-              </exception>
-              <exception>
-                <conflictingDependencies>
-                  <dependency>
-                    <groupId>org.immutables</groupId>
-                    <artifactId>value-annotations</artifactId>
-                  </dependency>
-                  <dependency>
-                    <groupId>org.immutables</groupId>
-                    <artifactId>value</artifactId>
-                  </dependency>
-                </conflictingDependencies>
               </exception>
             </exceptions>
             <ignoredDependencies>
@@ -2674,6 +2674,14 @@
         <groupId>org.immutables</groupId>
         <artifactId>value</artifactId>
         <version>${immutables.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.immutables</groupId>
+        <artifactId>value</artifactId>
+        <version>${immutables.version}</version>
+        <classifier>annotations</classifier>
         <scope>provided</scope>
       </dependency>
 

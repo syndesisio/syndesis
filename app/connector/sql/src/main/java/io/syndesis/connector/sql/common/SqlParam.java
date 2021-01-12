@@ -24,26 +24,22 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import lombok.Data;
-
-@Data
+@SuppressWarnings("PMD.GodClass") // TODO refactor
 public class SqlParam {
 
-    private String name;
+    private final String name;
     private String column;
     private JDBCType jdbcType;
     private int columnPos;
     private TypeValue<?> typeValue;
-    private Boolean isConstant;
-    private String value;
-
-    public SqlParam() {
-        super();
-    }
 
     public SqlParam(String name) {
-        super();
+        this(name, null);
+    }
+
+    public SqlParam(String name, JDBCType type) {
         this.name = name;
+        this.jdbcType = type;
     }
 
     public void setJdbcType(JDBCType jdbcType) {
@@ -51,27 +47,56 @@ public class SqlParam {
         this.typeValue = javaType(jdbcType);
     }
 
+    public String getName() {
+        return name;
+    }
 
-    @Data
+    public String getColumn() {
+        return column;
+    }
+
+    public JDBCType getJdbcType() {
+        return jdbcType;
+    }
+
+    public int getColumnPos() {
+        return columnPos;
+    }
+
+    public TypeValue<?> getTypeValue() {
+        return typeValue;
+    }
+
     public static class TypeValue<T> {
 
-        private Class<T> clazz;
-        private T sampleValue;
+        private final Class<T> clazz;
+        private final T sampleValue;
 
         public TypeValue(Class<T> clazz, T sampleValue) {
-            super();
             this.clazz = clazz;
             this.sampleValue = sampleValue;
+        }
+
+        public Class<T> getClazz() {
+            return clazz;
+        }
+
+        public T getSampleValue() {
+            return sampleValue;
         }
     }
 
     public static final class SqlSampleValue {
         public static final List<String> ARRAY_VALUE = Collections.unmodifiableList(Arrays.asList("1","2","3"));
+        @SuppressWarnings("MutablePublicArray")
         public static final byte[] BINARY_VALUE = {1,2,3};
         public static final String STRING_VALUE = "abc";
         public static final Character CHAR_VALUE = 'a';
+        @SuppressWarnings("JdkObsolete")
         public static final Date DATE_VALUE = new Date(new java.util.Date().getTime());
+        @SuppressWarnings("JdkObsolete")
         public static final Time TIME_VALUE = new Time(new java.util.Date().getTime());
+        @SuppressWarnings("JdkObsolete")
         public static final Timestamp TIMESTAMP_VALUE = new Timestamp(new java.util.Date().getTime());
         public static final BigDecimal DECIMAL_VALUE = BigDecimal.ZERO;
         public static final Boolean BOOLEAN_VALUE = Boolean.TRUE;
@@ -144,6 +169,14 @@ public class SqlParam {
         default:
             return new TypeValue<>(String.class, SqlSampleValue.STRING_VALUE);
         }
+    }
+
+    public void setColumn(String column) {
+        this.column = column;
+    }
+
+    public void setColumnPos(int columnPos) {
+        this.columnPos = columnPos;
     }
 
 }

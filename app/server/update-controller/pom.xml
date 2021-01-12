@@ -106,6 +106,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
+      <classifier>annotations</classifier>
+    </dependency>
+
     <!-- === Test ============================================================================ -->
 
     <dependency>
