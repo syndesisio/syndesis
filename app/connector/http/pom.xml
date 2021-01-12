@@ -89,6 +89,11 @@
       <artifactId>commons-lang3</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
+      <classifier>annotations</classifier>
+    </dependency>
 
     <!-- test -->
     <dependency>

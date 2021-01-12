@@ -155,6 +155,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.immutables</groupId>
+      <artifactId>value</artifactId>
+      <classifier>annotations</classifier>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>compile</scope>

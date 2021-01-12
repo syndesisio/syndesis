@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -95,9 +96,10 @@ public final class DbMetaDataHelper {
         List<ColumnMetaData> cList = getColumnMetaData(catalog, schema, tableName, null, -1);
         for (ColumnMetaData columnMetaData : cList) {
             if (columnMetaData.isAutoIncrement()) {
-                SqlParam sqlParam = new SqlParam();
-                sqlParam.setName(columnMetaData.getName());
-                sqlParam.setJdbcType(columnMetaData.getType());
+                final String name = columnMetaData.getName();
+                final JDBCType type = columnMetaData.getType();
+                SqlParam sqlParam = new SqlParam(name, type);
+                sqlParam.setJdbcType(type);
                 outParams.add(sqlParam);
                 break; //SQL only allows one per table, so we're done.
             }
@@ -111,8 +113,13 @@ public final class DbMetaDataHelper {
         List<ColumnMetaData> cList = getColumnMetaData(catalog, schema, tableName, null, params.size());
         for (SqlParam param : params) {
             ColumnMetaData c = cList.get(param.getColumnPos());
-            param.setColumn(c.getName());
-            param.setJdbcType(c.getType());
+
+            final String name = c.getName();
+            param.setColumn(name);
+
+            final JDBCType type = c.getType();
+            param.setJdbcType(type);
+
             paramList.add(param);
         }
         return paramList;
@@ -173,9 +180,6 @@ public final class DbMetaDataHelper {
         List<ColumnMetaData> list = new ArrayList<>();
         Integer position = 0;
         while (resultSet.next()) {
-
-            ColumnMetaData columnMetaData = new ColumnMetaData();
-
             // the order in which the columns are read is significant for some databases
             // for certain combinations of Oracle Database / Oracle JDBC driver if we
             // try to fetch COLUMN_DEF column after IS_AUTOINCREMENT we get:
@@ -187,19 +191,41 @@ public final class DbMetaDataHelper {
             // end of the row data that bit of stream is closed automatically
             // this issue was reported in https://issues.jboss.org/browse/ENTESB-12159
             // against Oracle 12.1
-            columnMetaData.setName(resultSet.getString("COLUMN_NAME"));
-            columnMetaData.setType(JDBCType.valueOf(resultSet.getInt("DATA_TYPE")));
+            String name = resultSet.getString("COLUMN_NAME");
+            JDBCType type = determineJDBCType(resultSet);
             String columnDefString = resultSet.getString("COLUMN_DEF");
             String autoIncString = resultSet.getString("IS_AUTOINCREMENT");
 
+            boolean autoIncrement = false;
             if ("YES".equalsIgnoreCase(autoIncString) ||
                     (columnDefString != null && columnDefString.contains("nextval"))) {
-                columnMetaData.setAutoIncrement(true);
+                autoIncrement = true;
             }
-            columnMetaData.setPosition(position++);
+
+            ColumnMetaData columnMetaData = new ColumnMetaData(name, type, position++, autoIncrement);
             list.add(columnMetaData);
         }
         return list;
+    }
+
+    private static JDBCType determineJDBCType(final ResultSet resultSet) throws SQLException {
+        final int dataType = resultSet.getInt("DATA_TYPE");
+        if (dataType == Types.OTHER) {
+            return determineOtherJDBCType(resultSet);
+        }
+
+        return JDBCType.valueOf(dataType);
+    }
+
+    private static JDBCType determineOtherJDBCType(ResultSet resultSet) throws SQLException {
+        final String typeName = resultSet.getString("TYPE_NAME");
+
+        if ("uuid".equalsIgnoreCase(typeName)) {
+            // treat UUID column type as VARCHAR
+            return JDBCType.VARCHAR;
+        }
+
+        return JDBCType.OTHER;
     }
 
 }

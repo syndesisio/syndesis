@@ -94,6 +94,8 @@
     <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
+      <classifier>annotations</classifier>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
