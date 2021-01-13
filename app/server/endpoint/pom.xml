@@ -414,6 +414,22 @@
         <filtering>true</filtering>
       </testResource>
     </testResources>
+    <plugins>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+            <annotationProcessorPaths combine.children="append">
+                <annotationProcessorPath>
+                    <!--  io.syndesis.server.endpoint.v1.state.ClientSideStateTest requires immutables annotation processor -->
+                    <groupId>org.immutables</groupId>
+                    <artifactId>value</artifactId>
+                    <version>${immutables.version}</version>
+                </annotationProcessorPath>
+            </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 
 </project>
