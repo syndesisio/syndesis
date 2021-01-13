@@ -17,6 +17,6 @@
   "scripts": {
     "pre-commit:lint-staged": "lint-staged",
     "pre-commit:ui-react": "cd app/ui-react && yarn pre-commit",
-    "pre-push:ui-react": "./tools/bin/syndesis -m ui-react --incremental"
+    "pre-push:ui-react": "./tools/bin/syndesis -m ui-react --incremental --incremental-staged"
   }
 }
