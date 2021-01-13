@@ -1,0 +1,6 @@
+resources:
+- role.yml
+- cluster-role-jaeger.yml
+- cluster-role-kafka.yml
+- cluster-role-olm.yml
+- cluster-role-public-api.yml
