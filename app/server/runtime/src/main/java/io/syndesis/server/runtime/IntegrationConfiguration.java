@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.model.extension.Extension.Status;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.dao.file.FileDataManager;
@@ -62,7 +63,7 @@ public class IntegrationConfiguration {
                 return dataManager.fetchAll(Extension.class,
                     resultList -> new ListResult.Builder<Extension>()
                         .items(resultList.getItems().stream()
-                            .filter(extension -> extension.getTags().contains(tag))
+                            .filter(extension -> extension.getStatus().orElse(Status.Installed) != Status.Deleted && extension.getTags().contains(tag))
                             .collect(Collectors.toList()))
                         .totalCount(resultList.getTotalCount())
                         .build()

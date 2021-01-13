@@ -31,5 +31,6 @@ public class NoopVerifierExtensionUploader extends DefaultVerifierExtensionUploa
 
     @Override
     protected void redeployMeta() {
+        // nop
     }
 }
