@@ -15,26 +15,22 @@
  */
 package io.syndesis.server.endpoint.v1.handler.extension;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.syndesis.server.dao.file.FileDataManager;
+import io.syndesis.server.verifier.MetadataConfigurationProperties;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import io.syndesis.common.model.extension.Extension;
-
 @Component
-@ConditionalOnProperty(value = "openshift.enabled", havingValue = "false", matchIfMissing=false)
-public class NoopVerifierExtensionUploader implements VerifierExtensionUploader {
+@ConditionalOnProperty(value = "openshift.enabled", havingValue = "false", matchIfMissing = false)
+public class NoopVerifierExtensionUploader extends DefaultVerifierExtensionUploader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NoopVerifierExtensionUploader.class);
-
-    @Override
-    public void uploadToVerifier(Extension extension) {
-        LOGGER.info("Upload {} extension to verifier", ExtensionActivator.getConnectorIdForExtension(extension));
+    public NoopVerifierExtensionUploader(final MetadataConfigurationProperties verificationConfig, final FileDataManager fileDataManager) {
+        super(verificationConfig, fileDataManager, null);
     }
 
     @Override
-    public void deleteFromVerifier(Extension extension) {
-        LOGGER.info("Delete {} extension from verifier", ExtensionActivator.getConnectorIdForExtension(extension));
+    protected void redeployMeta() {
+        // nop
     }
 }

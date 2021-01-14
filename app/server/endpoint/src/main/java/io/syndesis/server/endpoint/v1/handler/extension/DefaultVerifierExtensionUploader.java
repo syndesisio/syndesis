@@ -84,7 +84,7 @@ public class DefaultVerifierExtensionUploader implements VerifierExtensionUpload
 
         Boolean isDeployed = target.request().post(entity, Boolean.class);
         if (isDeployed) {
-            openShiftClient.deploymentConfigs().withName("syndesis-meta").deployLatest();
+            redeployMeta();
         }
     }
 
@@ -96,7 +96,11 @@ public class DefaultVerifierExtensionUploader implements VerifierExtensionUpload
 
         Boolean isDeleted = target.request().delete(Boolean.class);
         if (isDeleted) {
-            openShiftClient.deploymentConfigs().withName("syndesis-meta").deployLatest();
+            redeployMeta();
         }
+    }
+
+    protected void redeployMeta() {
+        openShiftClient.deploymentConfigs().withName("syndesis-meta").deployLatest();
     }
 }
