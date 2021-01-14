@@ -240,7 +240,12 @@ has_changes() {
     local ref="${2:-master}"
     local hash="${CIRCLE_SHA1:-$(git rev-parse HEAD)}"
 
-    local changed_paths="$(git diff ..${ref} --name-only | tr '\n' ' ') $(git status --porcelain=v1 | cut -c 4- | tr '\n' ' ')"
+    local git_status_args=''
+    if [ $(hasflag --incremental-staged) ]; then
+      git_status_args='--untracked-files=no'
+    fi
+
+    local changed_paths="$(git diff ..${ref} --name-only | tr '\n' ' ') $(git status --porcelain=v1 ${git_status_args} | cut -c 4- | tr '\n' ' ')"
 
     # when on `master` on CircleCI, compute changed paths for the commit being built
     if [ "master" == "${CIRCLE_BRANCH:-}" ]; then
