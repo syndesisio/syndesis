@@ -72,6 +72,7 @@ import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.Names;
+import io.syndesis.common.util.SuppressFBWarnings;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
@@ -170,53 +171,57 @@ public class IntegrationSupportHandler {
     @GET
     @Path("/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public StreamingOutput export(@NotNull @QueryParam("id") @Parameter(required = true) List<String> requestedIds) throws IOException {
+    public StreamingOutput export(@NotNull @QueryParam("id") @Parameter(required = true) List<String> requestedIds) {
 
-        List<String> ids = requestedIds;
+        final List<String> ids = requestedIds;
         if ( ids ==null || ids.isEmpty() ) {
             throw new ClientErrorException("No 'integration' query parameter specified.", Response.Status.BAD_REQUEST);
         }
 
-        CloseableJsonDB memJsonDB = MemorySqlJsonDB.create(jsondb.getIndexes());
-        if( ids.contains("all") ) {
-            ids = new ArrayList<>();
-            for (Integration integration : dataManager.fetchAll(Integration.class)) {
-                ids.add(integration.getId().get());
-            }
-        }
-        LinkedHashSet<String> extensions = new LinkedHashSet<>();
-        LinkedHashSet<String> icons = new LinkedHashSet<>();
-        for (String id : ids) {
-            Integration integration = integrationHandler.getIntegration(id);
-            addToExport(memJsonDB, integration);
-            Collection<Dependency> dependencies = resourceManager.collectDependencies(integration.getFlows().stream()
-                    .flatMap(flow -> flow.getSteps().stream())
-                    .collect(Collectors.toList()), true);
-            dependencies.stream()
-                .filter(d -> d.isExtension() || d.isIcon() )
-                .map(Dependency::getId)
-                .forEach(extensions::add);
-        }
-        LOG.debug("Extensions: {}", extensions);
-        LOG.debug("Icons: {}", icons);
-
         return out -> {
-            try (ZipOutputStream tos = new ZipOutputStream(out) ) {
+            try (ZipOutputStream tos = new ZipOutputStream(out);
+                CloseableJsonDB memJsonDB = MemorySqlJsonDB.create(jsondb.getIndexes())) {
+
+                if( ids.contains("all") ) {
+                    ids.clear();
+                    for (Integration integration : dataManager.fetchAll(Integration.class)) {
+                        ids.add(integration.getId().get());
+                    }
+                }
+                LinkedHashSet<String> extensions = new LinkedHashSet<>();
+                LinkedHashSet<String> icons = new LinkedHashSet<>();
+                for (String id : ids) {
+                    Integration integration = integrationHandler.getIntegration(id);
+                    addToExport(memJsonDB, integration);
+                    Collection<Dependency> dependencies = resourceManager.collectDependencies(integration.getFlows().stream()
+                            .flatMap(flow -> flow.getSteps().stream())
+                            .collect(Collectors.toList()), true);
+                    dependencies.stream()
+                        .filter(d -> d.isExtension() || d.isIcon() )
+                        .map(Dependency::getId)
+                        .forEach(extensions::add);
+                }
+                LOG.debug("Extensions: {}", extensions);
+                LOG.debug("Icons: {}", icons);
+
                 ModelExport exportObject = ModelExport.of(Schema.VERSION);
                 addEntry(tos, EXPORT_MODEL_INFO_FILE_NAME, JsonUtils.writer().writeValueAsBytes(exportObject));
                 addEntry(tos, EXPORT_MODEL_FILE_NAME, memJsonDB.getAsByteArray("/"));
-                memJsonDB.close();
                 for (String extensionId : extensions) {
-                    addEntry(tos, "extensions/" + Names.sanitize(extensionId) + ".jar", IOUtils.toByteArray(
-                        extensionDataManager.getExtensionBinaryFile(extensionId)
-                    ));
+                    try (InputStream extensionStream = extensionDataManager.getExtensionBinaryFile(extensionId)) {
+                        final byte[] extensionBytes = IOUtils.toByteArray(extensionStream);
+                        addEntry(tos, "extensions/" + Names.sanitize(extensionId) + ".jar", extensionBytes);
+                    }
                 }
                 for (String iconId : icons) {
                     Icon icon = getDataManager().fetch(Icon.class, iconId);
                     String ext = MediaType.valueOf(icon.getMediaType()).getSubtype();
                     String name = iconId.substring(3);
-                    byte[] bytes = IOUtils.toByteArray(iconDao.read(name));
-                    addEntry(tos, "icons/" + name + "." + ext, bytes);
+
+                    try (InputStream iconStream = iconDao.read(name)) {
+                        byte[] bytes = IOUtils.toByteArray(iconStream);
+                        addEntry(tos, "icons/" + name + "." + ext, bytes);
+                    }
                 }
             }
         };
@@ -292,10 +297,10 @@ public class IntegrationSupportHandler {
                 }
 
                 if (EXPORT_MODEL_FILE_NAME.equals(entry.getName())) {
-                    CloseableJsonDB memJsonDB = MemorySqlJsonDB.create(jsondb.getIndexes());
-                    memJsonDB.set("/", nonClosing(zis));
-                    imported.putAll(importModels(sec, modelExport, memJsonDB));
-                    memJsonDB.close();
+                    try (CloseableJsonDB memJsonDB = MemorySqlJsonDB.create(jsondb.getIndexes())) {
+                        memJsonDB.set("/", nonClosing(zis));
+                        imported.putAll(importModels(sec, modelExport, memJsonDB));
+                    }
                 }
 
                 // import missing extensions that were in the model.
@@ -318,42 +323,49 @@ public class IntegrationSupportHandler {
         }
     }
 
+    @SuppressFBWarnings({"RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE", "NP_LOAD_OF_KNOWN_NULL_VALUE", "NP_LOAD_OF_KNOWN_NULL_VALUE"})
     private void importMissingExtensions(ZipInputStream zis, ZipEntry entry,
             Map<String, List<WithResourceId>> imported) throws IOException {
 
-        if( entry.getName().startsWith("extensions/") ) {
-            for (WithResourceId extension : imported.getOrDefault("extensions", Collections.emptyList())) {
-                // use extension's correlation Id with extension ZipEntry
-                final String extensionId = ((Extension)extension).getExtensionId();
-                if( entry.getName().equals("extensions/" + Names.sanitize(extensionId) + ".jar") ) {
-                    // path in filestore uses id instead of extensionId
-                    String path = "/extensions/" + extension.getId().get();
-                    InputStream existing = extensionDataManager.getExtensionDataAccess().read(path);
-                    if( existing == null ) {
-                        // write blob in jsondb
-                        extensionDataManager.getExtensionDataAccess().write(path, zis);
+        if (!entry.getName().startsWith("extensions/")) {
+            return;
+        }
 
-                        // also activate the imported extension
-                        extensionActivator.activateExtension((Extension) extension);
-                    } else {
-                        existing.close();
-                    }
+        for (WithResourceId extension : imported.getOrDefault("extensions", Collections.emptyList())) {
+            // use extension's correlation Id with extension ZipEntry
+            final String extensionId = ((Extension) extension).getExtensionId();
+            final String extensionFileName = "extensions/" + Names.sanitize(extensionId) + ".jar";
+            if (!entry.getName().equals(extensionFileName)) {
+                continue;
+            }
+
+            // path in filestore uses id instead of extensionId
+            String path = "/extensions/" + extension.getId().get();
+            try (InputStream existing = extensionDataManager.getExtensionDataAccess().read(path)) {
+                if (existing != null) {
+                    continue;
                 }
+
+                // write blob in jsondb
+                extensionDataManager.getExtensionDataAccess().write(path, zis);
+
+                // also activate the imported extension
+                extensionActivator.activateExtension((Extension) extension);
             }
         }
     }
 
+    @SuppressFBWarnings({"RCN_REDUNDANT_NULLCHECK_OF_NULL_VALUE", "NP_LOAD_OF_KNOWN_NULL_VALUE", "NP_LOAD_OF_KNOWN_NULL_VALUE"})
     private void importMissingCustomIcons(ZipInputStream zis, ZipEntry entry) throws IOException {
 
         if( entry.getName().startsWith("icons/") ) {
             String fileName = entry.getName().substring(6);
             String id = fileName.substring(0, fileName.indexOf('.'));
-            InputStream existing = iconDao.read(id);
-            if( existing == null) {
-                // write the icon to the (Sql)FileStore
-                iconDao.write(id, zis);
-            } else {
-                existing.close();
+            try (InputStream existing = iconDao.read(id)) {
+                if (existing == null) {
+                    // write the icon to the (Sql)FileStore
+                    iconDao.write(id, zis);
+                }
             }
         }
     }

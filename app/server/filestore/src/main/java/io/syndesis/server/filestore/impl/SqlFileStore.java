@@ -15,7 +15,7 @@
  */
 package io.syndesis.server.filestore.impl;
 
-import java.io.FilterInputStream;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -345,7 +345,7 @@ public class SqlFileStore {
     /**
      * Allows closing a handle after the given {@link InputStream} has been fully read and closed.
      */
-    static class HandleCloserInputStream extends FilterInputStream {
+    static class HandleCloserInputStream extends BufferedInputStream {
 
         private final Handle handle;
 
@@ -359,9 +359,12 @@ public class SqlFileStore {
             try {
                 super.close();
             } finally {
-                handle.commit();
-
-                handle.close();
+                try {
+                    // Handle::commit() returns the same instance, this way we make sure it's closed
+                    handle.commit();
+                } finally {
+                    handle.close();
+                }
             }
         }
     }
