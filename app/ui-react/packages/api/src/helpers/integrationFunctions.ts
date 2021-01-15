@@ -17,7 +17,8 @@ import { key as generateKey } from '@syndesis/utils';
 import produce from 'immer';
 import {
   AGGREGATE,
-  API_PROVIDER, API_PROVIDER_END_ACTION_ID,
+  API_PROVIDER,
+  API_PROVIDER_END_ACTION_ID,
   CHOICE,
   DataShapeKinds,
   DataShapeKindType,
@@ -274,11 +275,18 @@ export function hasDataShape(step: Step, isInput = false) {
   const dataShape = isInput
     ? descriptor.inputDataShape
     : descriptor.outputDataShape;
-  return (
-    dataShape &&
-    dataShape.kind &&
-    toDataShapeKinds(dataShape.kind) !== DataShapeKinds.NONE
-  );
+
+  if (!(dataShape && dataShape.kind)) {
+    return false;
+  }
+
+  const kind = toDataShapeKinds(dataShape.kind);
+  if (kind === DataShapeKinds.NONE && !isInput) {
+    // input datashape of NONE is considered preset as mapper can insert constants, i.e. it can operatate without any input data
+    return false;
+  }
+
+  return true;
 }
 
 /**
@@ -294,7 +302,7 @@ export function isActionShapeless(descriptor: ActionDescriptor) {
   return (
     inputDataShape &&
     outputDataShape &&
-    (inputDataShape.kind && outputDataShape.kind) &&
+    inputDataShape.kind && outputDataShape.kind &&
     (toDataShapeKinds(inputDataShape.kind) === DataShapeKinds.ANY ||
       toDataShapeKinds(outputDataShape.kind) === DataShapeKinds.ANY)
   );
@@ -385,12 +393,12 @@ export function setIntegrationProperty(
   if (!propertyName) {
     return integration;
   }
-  const update = { 
-    [propertyName]: value 
+  const update = {
+    [propertyName]: value,
   };
-  return { 
-    ...integration, 
-    ...update
+  return {
+    ...integration,
+    ...update,
   };
 }
 
@@ -562,16 +570,16 @@ export function setDescriptorOnAction(
     isUserDefinedDataShape(oldInputDataShape) ||
     (descriptor.inputDataShape &&
       descriptor.inputDataShape.kind &&
-      (toDataShapeKinds(descriptor.inputDataShape.kind) !==
+      toDataShapeKinds(descriptor.inputDataShape.kind) !==
         DataShapeKinds.NONE &&
-        !descriptor.inputDataShape.specification));
+        !descriptor.inputDataShape.specification);
   const preserveOutput =
     isUserDefinedDataShape(oldOutputDataShape) ||
     (descriptor.outputDataShape &&
       descriptor.outputDataShape.kind &&
-      (toDataShapeKinds(descriptor.outputDataShape.kind) !==
+      toDataShapeKinds(descriptor.outputDataShape.kind) !==
         DataShapeKinds.NONE &&
-        !descriptor.outputDataShape.specification));
+        !descriptor.outputDataShape.specification);
   return {
     ...action,
     descriptor: {
