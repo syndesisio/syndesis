@@ -31,8 +31,6 @@ import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 public class SqlConnectorVerifierExtension extends DefaultComponentVerifierExtension {
     private static final Logger LOG = LoggerFactory.getLogger(SqlConnectorVerifierExtension.class);
 
@@ -116,7 +114,6 @@ public class SqlConnectorVerifierExtension extends DefaultComponentVerifierExten
             .build();
     }
 
-    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE") // https://github.com/spotbugs/spotbugs/issues/259
     private static void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
         try ( Connection connection = SqlSupport.createConnection(parameters)) {
             if (connection == null) {
