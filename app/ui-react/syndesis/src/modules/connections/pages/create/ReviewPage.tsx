@@ -194,7 +194,10 @@ export const ReviewPage: React.FunctionComponent = () => {
                       footer={
                         <ConnectionCreatorFooter
                           backHref={resolvers.create.configureConnector({
-                            connector,
+                            connector: {
+                              ...connector,
+                              configuredProperties: state.configuredProperties!,
+                            },
                           })}
                           cancelHref={resolvers.connections()}
                           onNext={submitForm}
