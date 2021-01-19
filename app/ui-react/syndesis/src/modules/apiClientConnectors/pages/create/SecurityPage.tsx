@@ -46,10 +46,16 @@ export const SecurityPage: React.FunctionComponent = () => {
   });
 
   const defaultValues: ICreateConnectorProps = {
-    authenticationType: properties!.authenticationType?.defaultValue,
-    authorizationEndpoint: properties!.authorizationEndpoint?.defaultValue,
-    passwordType: properties!.passwordType?.defaultValue,
-    tokenEndpoint: properties!.tokenEndpoint?.defaultValue,
+    authenticationType:
+      configured?.authenticationType ||
+      properties!.authenticationType?.defaultValue,
+    authorizationEndpoint:
+      configured?.authorizationEndpoint ||
+      properties!.authorizationEndpoint?.defaultValue,
+    passwordType:
+      configured?.passwordType || properties!.passwordType?.defaultValue,
+    tokenEndpoint:
+      configured?.tokenEndpoint || properties!.tokenEndpoint?.defaultValue,
   };
 
   const dropdowns = {
