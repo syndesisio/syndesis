@@ -1,0 +1,4 @@
+bases:
+- ../bases/crd
+- ../bases/role
+- ../bases/grant

@@ -1,0 +1,6 @@
+bases:
+- ../../bases/deployment
+patchesStrategicMerge:
+- ./annotation-patch.yml
+- ./env-var-patch.yml
+- ./image-stream-patch.yml # This is the generated version complete with Tag

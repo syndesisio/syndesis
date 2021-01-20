@@ -1,0 +1,4 @@
+bases:
+- ../operator
+resources:
+- ./syndesis-cr.yml

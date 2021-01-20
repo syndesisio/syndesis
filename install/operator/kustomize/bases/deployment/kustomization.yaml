@@ -1,0 +1,3 @@
+resources:
+- operator-install.yml
+- deployment.yml

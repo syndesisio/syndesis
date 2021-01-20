@@ -1,0 +1,6 @@
+resources:
+- grant.yml
+- grant-jaeger.yml
+- grant-kafka.yml
+- grant-olm.yml
+- grant-public-api.yml

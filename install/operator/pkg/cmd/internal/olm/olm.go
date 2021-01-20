@@ -29,8 +29,9 @@ import (
 
 type Olm struct {
 	*internal.Options
-	Path     string
-	Operator string
+	Path  string
+	Image string
+	Tag   string
 }
 
 func New(parent *internal.Options) *cobra.Command {
@@ -44,7 +45,8 @@ func New(parent *internal.Options) *cobra.Command {
 	}
 
 	cmd.PersistentFlags().StringVarP(&o.Path, "path", "p", ".", "Path where bundle files should be saved")
-	cmd.PersistentFlags().StringVarP(&o.Operator, "operator-image", "o", "syndesis/syndesis-operator:latest", "Syndesis operator docker image")
+	cmd.PersistentFlags().StringVarP(&o.Image, "operator-name", "o", "syndesis/syndesis-operator", "Syndesis operator docker image name")
+	cmd.PersistentFlags().StringVarP(&o.Tag, "operator-tag", "t", "latest", "Syndesis operator docker image tag")
 	cmd.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
 	return &cmd
 }
@@ -55,7 +57,7 @@ func (o *Olm) generate() (err error) {
 		return err
 	}
 
-	mg := olm.Build(conf, o.Path, o.Operator)
+	mg := olm.Build(conf, o.Path, o.Image, o.Tag)
 	err = mg.Generate()
 
 	return

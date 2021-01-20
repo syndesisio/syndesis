@@ -12,11 +12,17 @@ func (o *Install) installOperatorResources() error {
 		return err
 	}
 
-	operator, err := o.render("./install/operator.yml.tmpl")
+	oinstall, err := o.render("./install/operator_install.yml.tmpl")
 	if err != nil {
 		return err
 	}
-	resources = append(resources, operator...)
+	resources = append(resources, oinstall...)
+
+	deployment, err := o.render("./install/operator_deployment.yml.tmpl")
+	if err != nil {
+		return err
+	}
+	resources = append(resources, deployment...)
 
 	if o.ejectedResources != nil {
 		o.ejectedResources = append(o.ejectedResources, resources...)

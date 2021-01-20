@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    #
+    # Sets a trigger on this deployment to overwrite
+    # the template.spec.image property and point to
+    # the syndesis-operator image stream.
+    #
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"syndesis-operator:{{.Tag}}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"syndesis-operator\")].image"}]'
+  name: syndesis-operator

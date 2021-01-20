@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: syndesis-operator
+spec:
+  template:
+    spec:
+      containers:
+      - name: syndesis-operator
+        env:
+          - name: DEV_SUPPORT
+            value: "true"

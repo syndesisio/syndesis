@@ -22,6 +22,25 @@
           max-traces: 100000
       ingress:
         enabled: false
+{{- end}}
+
+#
+# This is required in both the hybrid and default cases:
+# 1) In the default case, the jaeger instance is initialised by the
+#    syndesis-enabled jaeger-operator and the query url expects to
+#    access the 'noauth-syndesis-jaeger-query' service;
+# 2) In the hybrid case, the user has requested syndesis enable the
+#    jaeger operator but not create a CR. However, the query url from
+#    the syndesis server still expects 'noauth-syndesis-jaeger-query'
+#    and the jaeger instance is still 'owned' by the syndesis-enabled
+#    operator so this service is still required.
+#
+# Only in the client-only use-case is this not necessary because the user
+# would be expected to override the queryUrl and collectorUrl seeing as
+# the jaeger-instance would be completely independent and have no relation
+# to the default service hostnames.
+#
+{{- if not .Syndesis.Addons.Jaeger.ClientOnly }}
 #
 # This is service is here as a hack to more easily access the query api from syndesis, bypassing
 # the oauth proxy..

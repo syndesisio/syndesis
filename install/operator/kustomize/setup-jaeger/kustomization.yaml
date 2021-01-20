@@ -1,0 +1,4 @@
+bases:
+-  ../setup
+resources:
+- jaeger-crd.yml

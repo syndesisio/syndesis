@@ -31,9 +31,10 @@ import (
 )
 
 type csv struct {
-	config   *configuration.Config
-	operator string
-	body     []byte
+	config *configuration.Config
+	image  string
+	tag    string
+	body   []byte
 
 	// Variable needed to build the CSV
 	version  string
@@ -260,11 +261,6 @@ func (c *csv) build() (err error) {
 		return err
 	}
 
-	relatedImages, err := c.assembleRelatedImages()
-	if err != nil {
-		return err
-	}
-
 	co := CSVOut{
 		ApiVersion: "operators.coreos.com/v1alpha1",
 		Kind:       "ClusterServiceVersion",
@@ -276,7 +272,7 @@ func (c *csv) build() (err error) {
 				Categories:     "Integration & Delivery",
 				Certified:      "false",
 				CreatedAt:      time.Now().String(),
-				ContainerImage: c.operator,
+				ContainerImage: fmt.Sprintf("%s:%s", c.image, c.tag),
 				Support:        c.support,
 				Description:    c.description,
 				Repository:     "https://github.com/syndesisio/syndesis/",
@@ -351,7 +347,7 @@ func (c *csv) build() (err error) {
 					Description: "Syndesis CRD",
 				}},
 			},
-			RelatedImages: relatedImages,
+			RelatedImages: []Image{}, // Has to be specified but populated downstream
 		},
 	}
 
@@ -423,9 +419,9 @@ func (c *csv) loadRolesFromTemplate(templates ...string) (m []map[string]interfa
 // Load syndesis-operator deployment from template file
 func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 	context := struct {
-		RelatedImages   bool
 		DatabaseImage   string
-		OperatorImage   string
+		Image           string
+		Tag             string
 		AmqImage        string
 		TodoImage       string
 		OauthImage      string
@@ -436,9 +432,11 @@ func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 		MetaImage       string
 		ServerImage     string
 		ExporterImage   string
+		DevSupport      bool
+		LogLevel        int
 	}{
-		RelatedImages:   true,
-		OperatorImage:   c.operator,
+		Image:           c.image,
+		Tag:             c.tag,
 		DatabaseImage:   c.config.Syndesis.Components.Database.Image,
 		TodoImage:       c.config.Syndesis.Addons.Todo.Image,
 		AmqImage:        c.config.Syndesis.Components.AMQ.Image,
@@ -450,9 +448,11 @@ func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 		PrometheusImage: c.config.Syndesis.Components.Prometheus.Image,
 		UpgradeImage:    c.config.Syndesis.Components.Upgrade.Image,
 		ExporterImage:   c.config.Syndesis.Components.Database.Exporter.Image,
+		DevSupport:      false, // Never be true in CSV generation - here for template compatibility
+		LogLevel:        0,     // Never to be more in CSV generation - here for template compatibility
 	}
 
-	g, err := generator.Render("./install/deployment.yml.tmpl", context)
+	g, err := generator.Render("./install/operator_deployment.yml.tmpl", context)
 	if err != nil {
 		return nil, err
 	}
@@ -469,23 +469,4 @@ func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 
 	r = m["spec"]
 	return
-}
-
-func (c *csv) assembleRelatedImages() ([]Image, error) {
-	images := []Image{}
-
-	images = append(images, Image{Name: "syndesis-operator", Image: c.operator})
-	images = append(images, Image{Name: "postgres-version", Image: c.config.Syndesis.Components.Database.Image})
-	images = append(images, Image{Name: "todo", Image: c.config.Syndesis.Addons.Todo.Image})
-	images = append(images, Image{Name: "oauth", Image: c.config.Syndesis.Components.Oauth.Image})
-	images = append(images, Image{Name: "ui", Image: c.config.Syndesis.Components.UI.Image})
-	images = append(images, Image{Name: "s2i", Image: c.config.Syndesis.Components.S2I.Image})
-	images = append(images, Image{Name: "prometheus", Image: c.config.Syndesis.Components.Prometheus.Image})
-	images = append(images, Image{Name: "upgrade", Image: c.config.Syndesis.Components.Upgrade.Image})
-	images = append(images, Image{Name: "meta", Image: c.config.Syndesis.Components.Meta.Image})
-	images = append(images, Image{Name: "database", Image: c.config.Syndesis.Components.Database.Image})
-	images = append(images, Image{Name: "psql_exporter", Image: c.config.Syndesis.Components.Database.Exporter.Image})
-	images = append(images, Image{Name: "server", Image: c.config.Syndesis.Components.Server.Image})
-	images = append(images, Image{Name: "amq", Image: c.config.Syndesis.Components.AMQ.Image})
-	return images, nil
 }
