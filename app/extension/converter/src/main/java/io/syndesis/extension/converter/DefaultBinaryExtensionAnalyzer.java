@@ -65,7 +65,19 @@ class DefaultBinaryExtensionAnalyzer implements BinaryExtensionAnalyzer {
             }
             throw new IllegalArgumentException("The specified path for the icon (" + path + ") is not allowed. Only " + allowedIconPaths.keySet() + " are allowed.");
         }
-        return readPath(binaryExtension, SYNDESIS_ROOT + path);
+
+        try {
+            final InputStream iconStream = readPath(binaryExtension, SYNDESIS_ROOT + path);
+            if (iconStream == null) {
+                return Optional.empty();
+            }
+
+            // iconStream is a stream to the entry bytes within compressed binaryExtension, closing it
+            // would close the binaryExtension stream, and that's up to the caller
+            return Optional.of(iconStream);
+        } catch (IOException e) {
+            throw SyndesisServerException.launderThrowable("Cannot read from binary extension file", e);
+        }
     }
 
     @Override
@@ -82,12 +94,14 @@ class DefaultBinaryExtensionAnalyzer implements BinaryExtensionAnalyzer {
     }
 
     private static Extension doGetExtension(InputStream binaryExtension) throws IOException {
-        Optional<InputStream> entry = readPath(binaryExtension, MANIFEST_LOCATION);
-        if (!entry.isPresent()) {
+        // manifestStream is a stream to the entry bytes within compressed binaryExtension, closing it
+        // would close the binaryExtension stream, and that's up to the caller
+        InputStream manifestStream = readPath(binaryExtension, MANIFEST_LOCATION);
+        if (manifestStream == null) {
             throw new IllegalArgumentException("Cannot find manifest file (" + MANIFEST_LOCATION + ") inside JAR");
         }
 
-        JsonNode tree = JsonUtils.reader().readTree(entry.get());
+        JsonNode tree = JsonUtils.reader().readTree(manifestStream);
         Extension extension = ExtensionConverter.getDefault().toInternalExtension(tree);
         if (extension == null) {
             throw new IllegalArgumentException("Cannot extract Extension from manifest file (" + MANIFEST_LOCATION + ") inside JAR");
@@ -95,33 +109,14 @@ class DefaultBinaryExtensionAnalyzer implements BinaryExtensionAnalyzer {
         return extension;
     }
 
-    private static Optional<InputStream> readPath(InputStream binaryExtension, String path) {
-        final JarInputStream jar;
-        try {
-            jar = new JarInputStream(binaryExtension);
-        } catch (IOException ioe) {
-            throw SyndesisServerException.launderThrowable(ioe);
-        }
-
-        try {
-            JarEntry entry;
-            do {
-                entry = jar.getNextJarEntry();
-                if (entry != null && path.equals(entry.getName())) {
-                    return Optional.of(jar);
-                }
-            } while (entry != null);
-
-            jar.close();
-            return Optional.empty();
-        } catch (IOException e) {
-            try {
-                jar.close();
-            } catch (Exception ignored) {
-                // ignore
+    private static InputStream readPath(InputStream binaryExtension, String path) throws IOException {
+        JarInputStream jar = new JarInputStream(binaryExtension);
+        for (JarEntry entry = jar.getNextJarEntry(); entry != null; entry = jar.getNextJarEntry()) {
+            if (path.equals(entry.getName())) {
+                return jar;
             }
-            throw SyndesisServerException.launderThrowable(e);
         }
+        return null;
     }
 
 }

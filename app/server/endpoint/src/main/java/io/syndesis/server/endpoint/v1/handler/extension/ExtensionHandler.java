@@ -82,6 +82,9 @@ import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.util.PredicateFilter;
 import okio.BufferedSink;
 import okio.Okio;
+import okio.Sink;
+import okio.Source;
+
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -268,21 +271,28 @@ public class ExtensionHandler extends BaseHandler implements Getter<Extension>, 
     @Path("/{id}/stepIcon")
     public Response getStepIcon(@NotNull @PathParam("id") final String id) {
         Extension extension = getDataManager().fetch(Extension.class, id);
-        String extensionIconVal = extension.getIcon();
-        if (extensionIconVal.startsWith("extension:")) {
-            String iconFile = extensionIconVal.substring(10);
-            Optional<InputStream> extensionIcon = extensionDataManager.getExtensionIcon(extension.getExtensionId(), iconFile);
 
-            if (extensionIcon.isPresent()) {
-                final StreamingOutput streamingOutput = (out) -> {
-                    try (BufferedSink sink = Okio.buffer(Okio.sink(out)); InputStream iconStream = extensionIcon.get()) {
-                        sink.writeAll(Okio.source(iconStream));
-                    }
-                };
-                return Response.ok(streamingOutput, extensionDataManager.getExtensionIconMediaType(iconFile)).build();
-            }
+        String extensionIconVal = extension.getIcon();
+        if (!extensionIconVal.startsWith("extension:")) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
-        return Response.status(Response.Status.NOT_FOUND).build();
+
+        String iconFile = extensionIconVal.substring(10);
+
+        Optional<InputStream> extensionIcon = extensionDataManager.getExtensionIcon(extension.getExtensionId(), iconFile);
+        if (!extensionIcon.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        final StreamingOutput streamingOutput = (out) -> {
+            try (Sink iosink = Okio.sink(out);
+                BufferedSink sink = Okio.buffer(iosink);
+                InputStream iconStream = extensionIcon.get();
+                Source source = Okio.source(iconStream)) {
+                sink.writeAll(source);
+            }
+        };
+        return Response.ok(streamingOutput, extensionDataManager.getExtensionIconMediaType(iconFile)).build();
     }
 
 
@@ -301,33 +311,28 @@ public class ExtensionHandler extends BaseHandler implements Getter<Extension>, 
     private void storeFile(String location, MultipartFormDataInput dataInput) {
         // Store the artifact into the filestore
         try (InputStream file = getBinaryArtifact(dataInput)) {
+            if (file == null) {
+                throw new IllegalArgumentException("Can't find a valid 'file' part in the multipart request");
+            }
+
             fileStore.write(location, file);
         } catch (IOException ex) {
             throw SyndesisServerException.launderThrowable("Unable to store the file into the filestore", ex);
         }
     }
 
-    @Nonnull
-    @SuppressWarnings("PMD.CyclomaticComplexity")
     private static InputStream getBinaryArtifact(MultipartFormDataInput input) {
         if (input == null || input.getParts() == null || input.getParts().isEmpty()) {
             throw new IllegalArgumentException("Multipart request is empty");
         }
 
         try {
-            InputStream result;
             if (input.getParts().size() == 1) {
                 InputPart filePart = input.getParts().iterator().next();
-                result = filePart.getBody(InputStream.class, null);
-            } else {
-                result = input.getFormDataPart("file", InputStream.class, null);
+                return filePart.getBody(InputStream.class, null);
             }
 
-            if (result == null) {
-                throw new IllegalArgumentException("Can't find a valid 'file' part in the multipart request");
-            }
-
-            return result;
+            return input.getFormDataPart("file", InputStream.class, null);
         } catch (IOException e) {
             throw new IllegalArgumentException("Error while reading multipart request", e);
         }

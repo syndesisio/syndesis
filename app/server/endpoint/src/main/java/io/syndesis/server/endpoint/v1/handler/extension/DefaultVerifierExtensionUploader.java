@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.endpoint.v1.handler.extension;
 
+import java.io.IOException;
 import java.io.InputStream;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -27,6 +28,7 @@ import javax.ws.rs.core.MediaType;
 
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
@@ -76,15 +78,18 @@ public class DefaultVerifierExtensionUploader implements VerifierExtensionUpload
         String fileName = ExtensionActivator.getConnectorIdForExtension(extension);
         multipart.addFormData("fileName", fileName, MediaType.TEXT_PLAIN_TYPE);
 
-        InputStream is = fileDataManager.getExtensionBinaryFile(extension.getExtensionId());
-        multipart.addFormData("file", is, MediaType.APPLICATION_OCTET_STREAM_TYPE);
+        try (InputStream is = fileDataManager.getExtensionBinaryFile(extension.getExtensionId())) {
+            multipart.addFormData("file", is, MediaType.APPLICATION_OCTET_STREAM_TYPE);
 
-        GenericEntity<MultipartFormDataOutput> genericEntity = new GenericEntity<MultipartFormDataOutput>(multipart) {};
-        Entity<?> entity = Entity.entity(genericEntity, MediaType.MULTIPART_FORM_DATA_TYPE);
+            GenericEntity<MultipartFormDataOutput> genericEntity = new GenericEntity<MultipartFormDataOutput>(multipart) {};
+            Entity<?> entity = Entity.entity(genericEntity, MediaType.MULTIPART_FORM_DATA_TYPE);
 
-        Boolean isDeployed = target.request().post(entity, Boolean.class);
-        if (isDeployed) {
-            openShiftClient.deploymentConfigs().withName("syndesis-meta").deployLatest();
+            Boolean isDeployed = target.request().post(entity, Boolean.class);
+            if (isDeployed) {
+                redeployMeta();
+            }
+        } catch (IOException e) {
+            throw SyndesisServerException.launderThrowable(e);
         }
     }
 
@@ -96,7 +101,11 @@ public class DefaultVerifierExtensionUploader implements VerifierExtensionUpload
 
         Boolean isDeleted = target.request().delete(Boolean.class);
         if (isDeleted) {
-            openShiftClient.deploymentConfigs().withName("syndesis-meta").deployLatest();
+            redeployMeta();
         }
+    }
+
+    protected void redeployMeta() {
+        openShiftClient.deploymentConfigs().withName("syndesis-meta").deployLatest();
     }
 }
