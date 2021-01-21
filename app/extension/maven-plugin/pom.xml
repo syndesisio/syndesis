@@ -312,6 +312,13 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-compress</artifactId>
+      <version>${commons.compress.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
