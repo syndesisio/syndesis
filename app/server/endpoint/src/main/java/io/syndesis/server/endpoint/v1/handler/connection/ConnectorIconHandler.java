@@ -44,8 +44,11 @@ import io.syndesis.common.model.icon.Icon;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import okio.BufferedSink;
+import okio.BufferedSource;
 import okio.Okio;
+import okio.Sink;
 import okio.Source;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
@@ -128,7 +131,6 @@ public final class ConnectorIconHandler extends BaseHandler {
     }
 
     @GET
-    @SuppressWarnings("PMD.CyclomaticComplexity")
     public Response get() {
         String connectorIcon = connector.getIcon();
         if (connectorIcon == null) {
@@ -137,36 +139,10 @@ public final class ConnectorIconHandler extends BaseHandler {
 
         if (connectorIcon.startsWith("db:")) {
             String connectorIconId = connectorIcon.substring(3);
-            Icon icon = getDataManager().fetch(Icon.class, connectorIconId);
-            if (icon == null) {
-                return Response.status(Response.Status.NOT_FOUND).build();
-            }
-            //grab icon file from the (Sql)FileStore
-            final StreamingOutput streamingOutput = (out) -> {
-                try (BufferedSink sink = Okio.buffer(Okio.sink(out));
-                    Source source = Okio.source(iconDao.read(connectorIconId))) {
-                    sink.writeAll(source);
-                }
-            };
-            return Response.ok(streamingOutput, icon.getMediaType()).build();
+            return fromDatabase(connectorIconId);
         } else if (connectorIcon.startsWith("extension:")) {
             String iconFile = connectorIcon.substring(10);
-            Optional<InputStream> extensionIcon = connector.getDependencies().stream()
-                .filter(Dependency::isExtension)
-                .map(Dependency::getId)
-                .findFirst()
-                .flatMap(extensionId -> extensionDataManager.getExtensionIcon(extensionId, iconFile));
-
-            if (extensionIcon.isPresent()) {
-                final StreamingOutput streamingOutput = (out) -> {
-                    try (BufferedSink sink = Okio.buffer(Okio.sink(out)); InputStream iconStream = extensionIcon.get()) {
-                        sink.writeAll(Okio.source(iconStream));
-                    }
-                };
-                return Response.ok(streamingOutput, extensionDataManager.getExtensionIconMediaType(iconFile)).build();
-            } else {
-                return Response.status(Response.Status.NOT_FOUND).build();
-            }
+            return fromExtension(iconFile);
         }
 
         // If the specified icon is a data URL, or a non-URL like value (e.g.
@@ -182,9 +158,12 @@ public final class ConnectorIconHandler extends BaseHandler {
             final String contentLength = externalResponse.header(CONTENT_LENGTH);
 
             final StreamingOutput streamingOutput = (out) -> {
-                final BufferedSink sink = Okio.buffer(Okio.sink(out));
-                sink.writeAll(externalResponse.body().source());
-                sink.close();
+                try (Sink iosink = Okio.sink(out);
+                    BufferedSink sink = Okio.buffer(iosink);
+                    ResponseBody body = externalResponse.body();
+                    BufferedSource source = body.source()) {
+                    sink.writeAll(source);
+                }
             };
 
             final Response.ResponseBuilder actualResponse = Response.ok(streamingOutput, contentType);
@@ -196,5 +175,44 @@ public final class ConnectorIconHandler extends BaseHandler {
         } catch (final IOException e) {
             throw new SyndesisServerException(e);
         }
+    }
+
+    private Response fromExtension(String iconFile) {
+        Optional<InputStream> extensionIcon = connector.getDependencies().stream()
+            .filter(Dependency::isExtension)
+            .map(Dependency::getId)
+            .findFirst()
+            .flatMap(extensionId -> extensionDataManager.getExtensionIcon(extensionId, iconFile));
+
+        if (!extensionIcon.isPresent()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        final StreamingOutput streamingOutput = (out) -> {
+            try (Sink iosink = Okio.sink(out);
+                BufferedSink sink = Okio.buffer(iosink);
+                InputStream iconStream = extensionIcon.get();
+                Source source = Okio.source(iconStream)) {
+                sink.writeAll(source);
+            }
+        };
+        return Response.ok(streamingOutput, extensionDataManager.getExtensionIconMediaType(iconFile)).build();
+    }
+
+    private Response fromDatabase(String connectorIconId) {
+        Icon icon = getDataManager().fetch(Icon.class, connectorIconId);
+        if (icon == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        //grab icon file from the (Sql)FileStore
+        final StreamingOutput streamingOutput = (out) -> {
+            try (Sink iosink = Okio.sink(out);
+                BufferedSink sink = Okio.buffer(iosink);
+                InputStream iconStream = iconDao.read(connectorIconId);
+                Source source = Okio.source(iconStream)) {
+                sink.writeAll(source);
+            }
+        };
+        return Response.ok(streamingOutput, icon.getMediaType()).build();
     }
 }
