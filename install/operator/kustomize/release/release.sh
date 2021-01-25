@@ -73,7 +73,7 @@ readopt() {
 
 # Getting base dir
 BASEDIR=$(basedir)
-RELEASE_GIT_ORG="phantomjinx"
+RELEASE_GIT_ORG="syndesisio"
 RELEASE_GIT_REPO="syndesis"
 TAR_NAME="syndesis-install-release"
 
