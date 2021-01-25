@@ -52,6 +52,9 @@ public final class ErrorCategory {
     //Mapping RuntimeExceptions to Categories
     private static Map<String,String> initExceptionCategoryMap() {
         Map<String,String> map = new HashMap<>();
+        //Camel
+        map.put("org.apache.camel.component.file.GenericFileOperationFailedException", DUPLICATE_KEY_ERROR);
+        //Spring
         //DataAccessExceptions
         map.put("org.springframework.dao.DataAccessException", DATA_ACCESS_ERROR);
         //  NonTransientDataAccessExceptions
