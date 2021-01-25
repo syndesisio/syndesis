@@ -163,6 +163,11 @@
     <google-api-client-version>1.22.0</google-api-client-version>
     <kafka-clients.version>2.5.0</kafka-clients.version>
     <netty.version>4.1.48.Final</netty.version>
+    
+    <!-- sonarcloud.io -->
+    <sonar.projectKey>syndesisio_syndesis</sonar.projectKey>
+    <sonar.organization>syndesisio</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
   </properties>
 
   <modules>
