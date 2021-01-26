@@ -1,6 +1,0 @@
-- op: replace
-  path: /spec/tags/0/from/name
-  value: registry.redhat.io/fuse7/fuse-online-operator:1.8
-- op: replace
-  path: /spec/tags/0/name
-  value: "1.8"

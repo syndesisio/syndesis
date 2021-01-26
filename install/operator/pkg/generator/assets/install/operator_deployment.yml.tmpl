@@ -43,7 +43,11 @@ spec:
         #  -- Developer provides a new image in the associated imagestream
         #
         image: {{.Image}}:{{.Tag}}
+      {{- if .DevSupport}}
         imagePullPolicy: Always
+      {{else}}
+        imagePullPolicy: IfNotPresent
+      {{end}}
         ports:
         - containerPort: 60000
           name: metrics

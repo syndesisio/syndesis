@@ -78,7 +78,7 @@ app: kubectl
 # - Patches the imagestream to use a locally built image
 #   rather than a downloaded docker image
 #
-operator-dev: kubectl
+dev-operator: kubectl
 	$(MAKE) $(MK_OPTIONS) -C bases/deployment
 	$(MAKE) $(MK_OPTIONS) -C dev/operator
 	#@ Used for development purposes only - allows for a locally compiled operator
@@ -89,28 +89,9 @@ operator-dev: kubectl
 # Installs the operator deployment in development mode
 # and in addition installs a default CR
 #
-app-dev: kubectl
+dev-app: kubectl
 	$(MAKE) $(MK_OPTIONS) -C bases/deployment
 	$(MAKE) $(MK_OPTIONS) -C dev/operator
 	$(MAKE) $(MK_OPTIONS) -C dev/app
 	#@ Must be invoked by a user previously granted permissions using `KUBE_USER=<user> make install-setup`
 	kubectl apply -k dev/app
-
-#
-# Installs the product operator using kustomize to override
-# the images in the deployment and imagestream.
-# First checks for a syndesis-pull-secret for accessing the
-# Red Hat registry. If not present then it request credentials
-# and creates accordingly.
-#
-product: kubectl
-	$(MAKE) $(MK_OPTIONS) -C bases/deployment
-	#@ Credentials required for accessing the redhat registry
-	kubectl get secret syndesis-pull-secret &> /dev/null || (\
-	 read -p "enter username for registry.redhat.io and press [ENTER]: " username; \
-	 read -p "enter password for registry.redhat.io and press [ENTER]: " password; \
-	 read -p "enter email address for registry.redhat.io and press [ENTER]: " email; \
-	 kubectl create secret docker-registry syndesis-pull-secret \
-	   --docker-server=registry.redhat.io \
-		 --docker-username=$$username --docker-password=$$password --docker-email=$$email)
-	kubectl apply -k product
