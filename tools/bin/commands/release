@@ -7,7 +7,7 @@ JAVA_IMAGE_MODULES="server meta s2i"
 UI_IMAGE_MODULES="ui-react"
 
 # All modules which create images
-ALL_IMAGE_MODULES="$JAVA_IMAGE_MODULES ui operator"
+ALL_IMAGE_MODULES="$JAVA_IMAGE_MODULES ui operator upgrade"
 
 release::description() {
     echo "Perform a release"
@@ -166,9 +166,6 @@ create_moving_tag_release() {
     local moving_tag=$3
 
     if [ ! $(hasflag --snapshot-release) ]; then
-        docker image tag "syndesis/syndesis-operator:$release_version" "syndesis/syndesis-operator:$moving_tag"
-        docker push "syndesis/syndesis-operator:$moving_tag"
-
         echo "==== Git tag $moving_tag"
         git tag -f $moving_tag
     fi
@@ -444,18 +441,9 @@ docker_push() {
         local image="syndesis/syndesis-$module"
         docker push "$image:$release_version"
 
-        # The operator image needs to be recreated for the moving tag.
-        # This is done in a later step.
-        if [ $module != "operator" ]; then
-            docker tag "$image:$release_version" "$image:$moving_tag"
-            docker push "$image:$moving_tag"
-        fi
+        docker tag "$image:$release_version" "$image:$moving_tag"
+        docker push "$image:$moving_tag"
     done
-
-    # Push out upgrade image
-    docker tag "syndesis/syndesis-upgrade:$release_version" "syndesis/syndesis-upgrade:$moving_tag"
-    docker push "syndesis/syndesis-upgrade:$release_version"
-    docker push "syndesis/syndesis-upgrade:$moving_tag"
 }
 
 release_staging_repo() {
