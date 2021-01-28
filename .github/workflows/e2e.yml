@@ -12,6 +12,12 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 8
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
       - name: Build Syndesis
         run: tools/bin/syndesis build --backend --dependencies --flash --clean
       - name: Build Docker images
