@@ -161,7 +161,7 @@
     <micrometer.version>1.6.1</micrometer.version>
     <teiid.version>14.0.0</teiid.version>
     <teiid.springboot.version>1.5.0</teiid.springboot.version>
-    <aws-java-sdk.version>1.11.714</aws-java-sdk.version>
+    <aws-java-sdk.version>1.11.946</aws-java-sdk.version>
     <version.javax.activation>1.2.2</version.javax.activation>
 
     <javac.werror>-Werror</javac.werror>
