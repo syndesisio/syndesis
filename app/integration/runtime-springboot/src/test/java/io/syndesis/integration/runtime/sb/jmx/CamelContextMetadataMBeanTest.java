@@ -30,7 +30,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import io.syndesis.integration.runtime.sb.IntegrationRuntimeAutoConfiguration;
-import io.syndesis.integration.runtime.sb.jmx.IntegrationMetadataAutoConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
