@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.processor.Pipeline;
+import org.apache.camel.processor.PollEnricher;
 
 public final class Processors {
 
@@ -96,4 +97,10 @@ public final class Processors {
         return replacement;
     }
 
+    public static Processor pollEnricher(final String endpointUri, ComponentProxyComponent proxyComponent) {
+        final PollEnricher pollEnricher = new PollEnricher(endpointUri, -1);
+        pollEnricher.setDefaultAggregationStrategy();
+
+        return Pipeline.newInstance(proxyComponent.getCamelContext(), proxyComponent.getBeforeConsumer(), pollEnricher, proxyComponent.getAfterConsumer());
+    }
 }

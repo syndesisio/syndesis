@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.syndesis.common.model.action.Action.Pattern;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -43,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import static io.syndesis.common.model.InputDataShapeAware.trySetInputDataShape;
 import static io.syndesis.common.model.OutputDataShapeAware.trySetOutputDataShape;
+import static io.syndesis.integration.component.proxy.Processors.pollEnricher;
 
 public class ConnectorStepHandler implements IntegrationStepHandler, IntegrationStepHandler.Consumer {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnectorStepHandler.class);
@@ -148,9 +150,23 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         // Syndesis Component Proxy will take care to change that value with the real component context path needed
         String uri = formatUriWithPlaceholderContextPath(componentId);
         if (route == null) {
+            // we're at step 0
             definition = builder.from(uri);
         } else {
-            definition = route.to(uri);
+            // route exists we passed step 0
+            final Pattern pattern = action.getPattern().orElse(Pattern.To);
+            switch (pattern) {
+            case To:
+            case Pipe:
+            case From: // sql-start connector uses From
+                definition = route.to(uri);
+                break;
+            case PollEnrich:
+                definition = route.process(pollEnricher(uri, component));
+                break;
+            default:
+                throw new UnsupportedOperationException("'" + pattern + "' pattern not supported");
+            }
         }
 
         return Optional.ofNullable(definition);

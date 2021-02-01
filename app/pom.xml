@@ -612,22 +612,22 @@
               <compilerArgs>
                 <arg>-XDcompilePolicy=simple</arg>
                 <arg>-Xplugin:ErrorProne -XepDisableWarningsInGeneratedCode
-		-XepExcludedPaths:.*/generated-sources/.*
-		-Xep:ConstantField:WARN
-		-Xep:FieldCanBeFinal:WARN
-		-Xep:LambdaFunctionalInterface:WARN
-		-Xep:MethodCanBeStatic:WARN
-		-XepOpt:MethodCanBeStatic:FindingPerSite
-		-Xep:PackageLocation:WARN
-		-Xep:PrivateConstructorForUtilityClass:WARN
-		-Xep:RemoveUnusedImports:WARN
-		-Xep:SwitchDefault:WARN
-		-Xep:TestExceptionChecker:WARN
-		-Xep:ThrowsUncheckedException:WARN
-		-Xep:TryFailRefactoring:WARN
-		-Xep:UnnecessaryStaticImport:WARN
-		-Xep:WildcardImport:WARN
-		-Xep:MissingSummary:OFF</arg>
+                  -XepExcludedPaths:.*/generated-sources/.*
+                  -Xep:ConstantField:WARN
+                  -Xep:FieldCanBeFinal:WARN
+                  -Xep:LambdaFunctionalInterface:WARN
+                  -Xep:MethodCanBeStatic:WARN
+                  -XepOpt:MethodCanBeStatic:FindingPerSite
+                  -Xep:PackageLocation:WARN
+                  -Xep:PrivateConstructorForUtilityClass:WARN
+                  -Xep:RemoveUnusedImports:WARN
+                  -Xep:SwitchDefault:WARN
+                  -Xep:TestExceptionChecker:WARN
+                  -Xep:ThrowsUncheckedException:WARN
+                  -Xep:TryFailRefactoring:WARN
+                  -Xep:UnnecessaryStaticImport:WARN
+                  -Xep:WildcardImport:WARN
+                  -Xep:MissingSummary:OFF</arg>
                 <arg>${errorprone.autofix.arg1}</arg>
                 <arg>${errorprone.autofix.arg2}</arg>
                 <arg>-Xlint:all</arg>
