@@ -413,7 +413,7 @@ image_registry_login() {
 
     if [ -n "$(readopt --quayio-user)" ] && [ -n "$(readopt --quayio-password)" ]; then
         echo "==== Login to Quay.io"
-        docker login -u "$(readopt --quay-user)" -p "$(readopt --quayio-password)" quay.io
+        docker login -u "$(readopt --quayio-user)" -p "$(readopt --quayio-password)" quay.io
         add_to_trap "docker logout quay.io"
     fi
 }
