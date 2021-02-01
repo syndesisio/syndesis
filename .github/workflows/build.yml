@@ -13,7 +13,7 @@ jobs:
         with:
           java-version: 11
       - name: Build Syndesis
-        run: tools/bin/syndesis build --clean
+        run: tools/bin/syndesis build --batch-mode --all-images
 #      - name: Build Docker images
 #        run: tools/bin/syndesis build -m s2i --image --flash --docker
 #      - name: Run integration tests
