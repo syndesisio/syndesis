@@ -1,9 +1,9 @@
-name: Integration Tests for PR
+name: Build for PR
 
 on: pull_request
 
 jobs:
-  integration-tests:
+  full build:
     runs-on: ubuntu-latest
 
     steps:
@@ -13,10 +13,10 @@ jobs:
         with:
           java-version: 11
       - name: Build Syndesis
-        run: tools/bin/syndesis build --backend --dependencies --flash --clean
-      - name: Build Docker images
-        run: tools/bin/syndesis build -m s2i --image --flash --docker
-      - name: Run integration tests
-        run: tools/bin/syndesis integration-test --s2i --logging
+        run: tools/bin/syndesis build --clean
+#      - name: Build Docker images
+#        run: tools/bin/syndesis build -m s2i --image --flash --docker
+#      - name: Run integration tests
+#        run: tools/bin/syndesis integration-test --s2i --logging
 
 
