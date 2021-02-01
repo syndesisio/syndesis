@@ -3,7 +3,7 @@ name: Build for PR
 on: pull_request
 
 jobs:
-  full build:
+  full-build:
     runs-on: ubuntu-latest
 
     steps:
