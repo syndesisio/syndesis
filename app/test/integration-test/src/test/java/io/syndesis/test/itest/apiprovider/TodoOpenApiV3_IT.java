@@ -96,8 +96,9 @@ public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().client(todoApiClient)
                 .receive()
                 .response(HttpStatus.OK)
+                .message()
                 .contentType(VND_OAI_OPENAPI_JSON)
-                .payload(new ClassPathResource("todo-openapi-v3.json", TodoOpenApiV3_IT.class)));
+                .body(new ClassPathResource("todo-openapi-v3.json", TodoOpenApiV3_IT.class)));
     }
 
     @Test
@@ -117,7 +118,8 @@ public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().client(todoApiClient)
                 .receive()
                 .response(HttpStatus.OK)
-                .payload("{\"id\":${id},\"task\":\"Walk the dog\",\"completed\":0}"));
+                .message()
+                .body("{\"id\":${id},\"task\":\"Walk the dog\",\"completed\":0}"));
     }
 
     @Test
@@ -149,12 +151,14 @@ public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().client(todoApiClient)
             .send()
             .put("/api/${id}")
-            .payload("{\"id\":${id},\"task\":\"WALK THE DOG\",\"completed\":1}"));
+            .message()
+            .body("{\"id\":${id},\"task\":\"WALK THE DOG\",\"completed\":1}"));
 
         runner.then(http().client(todoApiClient)
             .receive()
             .response(HttpStatus.OK)
-            .payload("{\"id\":${id},\"task\":\"WALK THE DOG\",\"completed\":1}"));
+            .message()
+            .body("{\"id\":${id},\"task\":\"WALK THE DOG\",\"completed\":1}"));
 
         runner.then(query(sampleDb)
             .statement("select task, completed from todo where id=${id}")
@@ -202,7 +206,8 @@ public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().client(todoApiClient)
                 .receive()
                 .response(HttpStatus.OK)
-                .payload("[" +
+                .message()
+                .body("[" +
                         "{\"id\":\"@ignore@\",\"task\":\"Wash the dog\",\"completed\":0}," +
                         "{\"id\":\"@ignore@\",\"task\":\"Feed the dog\",\"completed\":0}," +
                         "{\"id\":\"@ignore@\",\"task\":\"Play with the dog\",\"completed\":0}" +
@@ -221,7 +226,6 @@ public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
 
     private void cleanupDatabase(TestCaseRunner runner) {
         runner.given(sql(sampleDb)
-            .dataSource(sampleDb)
             .statement("delete from todo"));
     }
 }

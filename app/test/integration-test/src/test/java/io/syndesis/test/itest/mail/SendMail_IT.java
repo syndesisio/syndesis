@@ -100,7 +100,8 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
                 .send()
                 .post()
                 .fork(true)
-                .payload(getWebhookPayload()));
+                .message()
+                .body(getWebhookPayload()));
 
         String mailBody = FileUtils.readToString(new ClassPathResource("mail.txt", SendMail_IT.class));
         runner.when(receive().endpoint(mailServer)
@@ -135,9 +136,11 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
                 .send()
                 .post()
                 .fork(true)
-                .payload(getWebhookPayload()));
+                .message()
+                .body(getWebhookPayload()));
 
         runner.when(receive().endpoint(mailServer)
+                        .message()
                         .header(CitrusMailMessageHeaders.MAIL_FROM, "people-team@syndesis.org")
                         .header(CitrusMailMessageHeaders.MAIL_TO, "${email}")
                         .header(CitrusMailMessageHeaders.MAIL_SUBJECT, "Welcome!"));
@@ -184,7 +187,6 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
 
     private void cleanupDatabase(TestCaseRunner runner) {
         runner.given(sql(sampleDb)
-            .dataSource(sampleDb)
             .statement("delete from todo"));
     }
 }

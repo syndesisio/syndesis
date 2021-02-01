@@ -88,28 +88,32 @@ public class TodoOpenApiV3Connector_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().server(todoApiServer)
             .receive()
             .post("/api")
+            .message()
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            .payload("{\"task\":\"${task}\", \"completed\": 0}"));
+            .body("{\"task\":\"${task}\", \"completed\": 0}"));
 
         runner.then(http().server(todoApiServer)
             .send()
             .response(HttpStatus.CREATED)
+            .message()
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            .payload("{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}"));
+            .body("{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}"));
 
         runner.run(echo("Update task"));
 
         runner.when(http().server(todoApiServer)
             .receive()
             .put("/api/${id}")
+            .message()
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            .payload("{\"id\": ${id}, \"task\":\"citrus:upperCase(${task})\", \"completed\": 0}"));
+            .body("{\"id\": ${id}, \"task\":\"citrus:upperCase(${task})\", \"completed\": 0}"));
 
         runner.then(http().server(todoApiServer)
             .send()
             .response(HttpStatus.OK)
+            .message()
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            .payload("{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}"));
+            .body("{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}"));
 
         runner.run(echo("Fetch task by id"));
 
@@ -120,8 +124,9 @@ public class TodoOpenApiV3Connector_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().server(todoApiServer)
             .send()
             .response(HttpStatus.OK)
+            .message()
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            .payload("{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}"));
+            .body("{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}"));
 
         runner.run(echo("List all tasks"));
 
@@ -132,8 +137,9 @@ public class TodoOpenApiV3Connector_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().server(todoApiServer)
             .send()
             .response(HttpStatus.OK)
+            .message()
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            .payload("[{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}]"));
+            .body("[{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}]"));
 
         runner.run(echo("Delete task by id"));
 

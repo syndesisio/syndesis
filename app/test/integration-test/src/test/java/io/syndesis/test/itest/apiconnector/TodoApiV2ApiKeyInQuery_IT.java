@@ -89,8 +89,9 @@ public class TodoApiV2ApiKeyInQuery_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().server(todoApiServer)
             .send()
             .response(HttpStatus.OK)
+            .message()
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            .payload("[{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}]"));
+            .body("[{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}]"));
     }
 
     @Configuration

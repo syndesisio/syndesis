@@ -84,12 +84,14 @@ public class AMQToHttp_IT extends SyndesisIntegrationTestSupport {
     @CitrusTest
     public void testHttpToAMQ(@CitrusResource TestCaseRunner runner) {
         runner.given(send().endpoint(todoJms)
-                .payload("{\"id\": \"1\", \"name\":\"Learn some #golang\", \"done\": 1}"));
+                .message()
+                .body("{\"id\": \"1\", \"name\":\"Learn some #golang\", \"done\": 1}"));
 
         runner.when(http().server(todoApiServer)
                 .receive()
                 .post()
-                .payload("{\"id\": \"1\", \"task\":\"Learn some #golang\", \"completed\": 1}"));
+                .message()
+                .body("{\"id\": \"1\", \"task\":\"Learn some #golang\", \"completed\": 1}"));
 
         runner.then(http().server(todoApiServer)
                 .send()

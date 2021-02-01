@@ -87,8 +87,9 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().server(httpTestServer)
                 .receive()
                 .put()
+                .message()
                 .selector(Collections.singletonMap("jsonPath:$.contact", "@startsWith(Joanne)@"))
-                .payload("{\"contact\":\"Joanne Jackson Red Hat\"}"));
+                .body("{\"contact\":\"Joanne Jackson Red Hat\"}"));
 
         runner.then(http().server(httpTestServer)
                 .send()
@@ -97,8 +98,9 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().server(httpTestServer)
                 .receive()
                 .put()
+                .message()
                 .selector(Collections.singletonMap("jsonPath:$.contact", "@startsWith(Joe)@"))
-                .payload("{\"contact\":\"Joe Jackson Red Hat\"}"));
+                .body("{\"contact\":\"Joe Jackson Red Hat\"}"));
 
         runner.then(http().server(httpTestServer)
                 .send()
@@ -120,7 +122,6 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
 
     private void cleanupDatabase(TestCaseRunner runner) {
         runner.given(sql(sampleDb)
-            .dataSource(sampleDb)
             .statement("delete from contact"));
     }
 }

@@ -75,7 +75,8 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().client(webHookClient)
                 .send()
                 .post()
-                .payload(contact("John", "Red Hat")));
+                .message()
+                .body(contact("John", "Red Hat")));
 
         runner.then(http().client(webHookClient)
                 .receive()
@@ -92,7 +93,8 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().client(webHookClient)
                 .send()
                 .post()
-                .payload(contact("Bill", "Microsoft")));
+                .message()
+                .body(contact("Bill", "Microsoft")));
 
         runner.then(http().client(webHookClient)
                 .receive()
@@ -109,7 +111,8 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().client(webHookClient)
                 .send()
                 .post()
-                .payload(contact("Joanna", "Red Hat")));
+                .message()
+                .body(contact("Joanna", "Red Hat")));
 
         runner.then(http().client(webHookClient)
                 .receive()
@@ -140,7 +143,6 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
 
     private void cleanupDatabase(TestCaseRunner runner) {
         runner.given(sql(sampleDb)
-            .dataSource(sampleDb)
             .statement("delete from todo"));
     }
 }

@@ -93,14 +93,16 @@ public class HttpToHttp_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().server(todoApiServer)
                 .send()
                 .response(HttpStatus.OK)
-                .payload("[{\"id\": \"1\", \"task\":\"Learn to play drums\", \"completed\": 0}," +
+                .message()
+                .body("[{\"id\": \"1\", \"task\":\"Learn to play drums\", \"completed\": 0}," +
                           "{\"id\": \"2\", \"task\":\"Learn to play guitar\", \"completed\": 0}," +
                           "{\"id\": \"3\", \"task\":\"Important: Learn to play piano\", \"completed\": 0}]"));
 
         runner.then(http().server(todoApiServer)
                 .receive()
                 .put()
-                .payload("{\"id\": \"1\", \"task\":\"Important: Learn to play drums\", \"completed\": 0}"));
+                .message()
+                .body("{\"id\": \"1\", \"task\":\"Important: Learn to play drums\", \"completed\": 0}"));
 
         runner.when(http().server(todoApiServer)
                 .send()
@@ -109,7 +111,8 @@ public class HttpToHttp_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().server(todoApiServer)
                 .receive()
                 .put()
-                .payload("{\"id\": \"2\", \"task\":\"Important: Learn to play guitar\", \"completed\": 0}"));
+                .message()
+                .body("{\"id\": \"2\", \"task\":\"Important: Learn to play guitar\", \"completed\": 0}"));
 
         runner.when(http().server(todoApiServer)
                 .send()
@@ -129,7 +132,8 @@ public class HttpToHttp_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().server(todoApiServer)
                 .send()
                 .response(HttpStatus.OK)
-                .payload("[]"));
+                .message()
+                .body("[]"));
 
         runner.then(receiveTimeout(todoApiServer)
                 .timeout(1000L));
