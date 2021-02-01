@@ -3212,7 +3212,7 @@
           },
           "pattern": {
             "type": "string",
-            "enum": ["From", "Pipe", "To"]
+            "enum": ["From", "Pipe", "To", "PollEnrich"]
           },
           "metadata": {
             "type": "object",
@@ -3665,7 +3665,7 @@
           },
           "pattern": {
             "type": "string",
-            "enum": ["From", "Pipe", "To"]
+            "enum": ["From", "Pipe", "To", "PollEnrich"]
           },
           "metadata": {
             "type": "object",

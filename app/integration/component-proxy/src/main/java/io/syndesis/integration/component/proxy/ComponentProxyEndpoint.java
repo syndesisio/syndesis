@@ -18,6 +18,7 @@ package io.syndesis.integration.component.proxy;
 import org.apache.camel.Consumer;
 import org.apache.camel.DelegateEndpoint;
 import org.apache.camel.Endpoint;
+import org.apache.camel.PollingConsumer;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
 import org.apache.camel.api.management.ManagedAttribute;
@@ -64,6 +65,14 @@ public class ComponentProxyEndpoint extends DefaultEndpoint implements DelegateE
         // create consumer with the pipeline
         final Processor pipeline = Pipeline.newInstance(getCamelContext(), beforeConsumer, processor, afterConsumer);
         final Consumer consumer = endpoint.createConsumer(pipeline);
+        configureConsumer(consumer);
+
+        return consumer;
+    }
+
+    @Override
+    public PollingConsumer createPollingConsumer() throws Exception {
+        final PollingConsumer consumer = endpoint.createPollingConsumer();
         configureConsumer(consumer);
 
         return consumer;

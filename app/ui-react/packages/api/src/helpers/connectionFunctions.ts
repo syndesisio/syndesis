@@ -11,16 +11,8 @@ import {
 } from '@syndesis/models';
 import { getMetadataValue } from './integrationFunctions';
 
-export function getActionsWithFrom(actions: Action[] = []) {
-  return actions.filter(a => a.pattern === 'From');
-}
-
-export function getActionsWithTo(actions: Action[] = []) {
-  return actions.filter(a => a.pattern === 'To');
-}
-
-export function getActionsWithPipe(actions: Action[] = []) {
-  return actions.filter(a => a.pattern === 'Pipe');
+export function getActionsWithPattern(pattern: string, actions: Action[] = []) {
+  return actions.filter(a => a.pattern === pattern);
 }
 
 export function getConnectionMetadataValue(
