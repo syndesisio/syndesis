@@ -1,4 +1,4 @@
-name: Build for PR
+name: Builds for PR
 
 on: pull_request
 
@@ -19,4 +19,18 @@ jobs:
 #      - name: Run integration tests
 #        run: tools/bin/syndesis integration-test --s2i --logging
 
+  integration-build:
+    runs-on: ubuntu-latest
 
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build Syndesis
+        run: tools/bin/syndesis build --backend --dependencies --flash --clean
+      - name: Build Docker images
+        run: tools/bin/syndesis build -m s2i --image --flash --docker
+      - name: Run integration tests
+        run: tools/bin/syndesis integration-test --s2i --logging
