@@ -1,0 +1,68 @@
+name: On PR
+
+on: pull_request
+
+jobs:
+  full-pr-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: images
+        run: docker images
+#      - name: Build Syndesis
+#        run: tools/bin/syndesis build -d  --batch-mode --all-images --docker
+      - name: pull
+        run: |
+          echo ${{github.event.number}}
+          printenv
+          mkdir "images-pr"
+          docker pull hello-world
+          docker images
+          docker save hello-world -o images-pr/helloworld1.tar
+          docker save hello-world -o images-pr/helloworld2.tar
+          echo $GITHUB_RUN_ID > images-pr/runid.txt
+          echo "hi"
+      - name: Upload result for job hello-world
+        uses: actions/upload-artifact@v2
+        with:
+          name: helloworld_images
+          path: images-pr
+          retention-days: 1
+      - name: artifactid
+        run: |
+          printenv
+#      - uses: 8BitJonny/gh-get-current-pr@v1
+#          id: PR
+#          with:
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#          // Only return if PR is still open
+#          filterOutClosed: true
+#      - name: tag
+#        run: docker tag hello-world KurtStam/hello-world:{prNumber}
+#      - name: images
+#        run: docker images
+#      - name: Build Docker images
+#        run: tools/bin/syndesis build --all-images --flash --docker
+#      - name: Run integration tests
+#        run: tools/bin/syndesis integration-test --s2i --logging
+
+#  integration-build:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Set up JDK 11
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: 11
+#      - name: Build Syndesis
+#        run: tools/bin/syndesis build --backend --dependencies --flash --clean
+#      - name: Build Docker images
+#        run: tools/bin/syndesis build -m s2i --image --flash --docker
+#      - name: Run integration tests
+#        run: tools/bin/syndesis integration-test --s2i --logging

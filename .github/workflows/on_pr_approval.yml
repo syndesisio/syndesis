@@ -1,0 +1,27 @@
+name: On PR Approval
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  quay:
+    if: github.event.review.state == 'approved'
+    runs-on: ubuntu-latest
+    steps:
+      - name: ping
+        run: echo "HELLO"
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: images-pr
+      - name: runid
+        shell: bash
+        run: |
+          value=`cat images-pr/runid.txt`
+          echo "value=$value"
+#      - name: quay_transfer_webhook
+#        uses: distributhor/workflow-webhook
+#        with:
+#          url: "http://www.cnn.com/api/"
+#          json: '{ "repository": "${{github.event.repository.full_name}}", "number": "${{github.event.number}}", "created_at": "${{github.event.pull_request.created_at}}", "updated_at": "${{github.event.pull_request.updated_at}}" }'
