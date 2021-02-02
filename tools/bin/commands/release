@@ -7,7 +7,7 @@ JAVA_IMAGE_MODULES="server meta s2i"
 UI_IMAGE_MODULES="ui-react"
 
 # All modules which create images
-ALL_IMAGE_MODULES="$JAVA_IMAGE_MODULES ui operator"
+ALL_IMAGE_MODULES="$JAVA_IMAGE_MODULES ui operator upgrade"
 
 release::description() {
     echo "Perform a release"
@@ -28,6 +28,8 @@ release::usage() {
                               temporary directory will be used (and removed after the release)
     --docker-user <user>      Docker user for Docker Hub
     --docker-password <pwd>   Docker password for Docker Hub
+    --quayio-user <user>      User for Quay.io
+    --quayio-password <pwd>   Password for Quay.io
     --no-git-push             Don't push the release tag (and symbolic major.minor tag) at the end
     --git-remote              Name of the git remote to push to. If not given, its trying to be pushed
                               to the git remote to which the currently checked out branch is attached to.
@@ -101,11 +103,11 @@ release::run() {
     build_and_stage_artefacts "$topdir" "$maven_opts"
 
     # Build all Docker Images
-    docker_login
-    create_syndesis_docker_images "$topdir" "$maven_opts"
+    image_registry_login
+    create_syndesis_container_images "$topdir" "$maven_opts"
 
     # Create the image for the upgrade
-    create_upgrade_docker_image "$topdir" "$release_version"
+    create_upgrade_container_image "$topdir" "$release_version"
 
     # Create the operator image binaries
     update_image_versions "$topdir" "$release_version" "$moving_tag"
@@ -134,8 +136,8 @@ release::run() {
     # and commit to git
     create_moving_tag_release "$topdir" "$release_version" "$moving_tag"
 
-    # Pushing to Docker Hub
-    docker_push "$release_version" "$moving_tag"
+    # Pushing to image registry
+    push_container_images "$release_version" "$moving_tag"
 
     # Release staging repo
     release_staging_repo "$topdir" "$maven_opts"
@@ -166,9 +168,6 @@ create_moving_tag_release() {
     local moving_tag=$3
 
     if [ ! $(hasflag --snapshot-release) ]; then
-        docker image tag "syndesis/syndesis-operator:$release_version" "syndesis/syndesis-operator:$moving_tag"
-        docker push "syndesis/syndesis-operator:$moving_tag"
-
         echo "==== Git tag $moving_tag"
         git tag -f $moving_tag
     fi
@@ -397,15 +396,21 @@ build_and_stage_artefacts() {
     fi
 }
 
-docker_login() {
+image_registry_login() {
     if [ -n "$(readopt --docker-user)" ] && [ -n "$(readopt --docker-password)" ]; then
         echo "==== Login to Docker Hub"
-        docker login -u "$(readopt --docker-user)" -p "$(readopt --docker-password)"
-        trap "docker logout" "EXIT"
+        docker login -u "$(readopt --docker-user)" -p "$(readopt --docker-password)" docker.io
+        trap "docker logout docker.io" "EXIT"
+    fi
+
+    if [ -n "$(readopt --quayio-user)" ] && [ -n "$(readopt --quayio-password)" ]; then
+        echo "==== Login to Quay.io"
+        docker login -u "$(readopt --quayio-user)" -p "$(readopt --quayio-password)" quay.io
+        trap "docker logout quay.io" "EXIT"
     fi
 }
 
-create_syndesis_docker_images() {
+create_syndesis_container_images() {
     local topdir=$1
     local maven_opts="$2"
 
@@ -418,7 +423,7 @@ create_syndesis_docker_images() {
     ./mvnw ${maven_opts} -Prelease,image,flash -Dfabric8.mode=kubernetes -pl ${UI_IMAGE_MODULES// /,} fabric8:build
 }
 
-create_upgrade_docker_image() {
+create_upgrade_container_image() {
     local topdir=$1
     local release_version="$2"
 
@@ -435,27 +440,33 @@ create_upgrade_docker_image() {
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Commit, push, release actions
 
-docker_push() {
-    local release_version=$1
-    local moving_tag=$2
+push_container_images_to_registry() {
+    local registry=$1
+    local release_version=$2
+    local moving_tag=$3
 
     echo "==== Pushing to Docker Hub"
     for module in $ALL_IMAGE_MODULES; do
         local image="syndesis/syndesis-$module"
-        docker push "$image:$release_version"
+        docker tag "$image:$release_version" "$registry/$image:$release_version"
+        docker push "$registry/$image:$release_version"
 
-        # The operator image needs to be recreated for the moving tag.
-        # This is done in a later step.
-        if [ $module != "operator" ]; then
-            docker tag "$image:$release_version" "$image:$moving_tag"
-            docker push "$image:$moving_tag"
-        fi
+        docker tag "$image:$release_version" "$registry/$image:$moving_tag"
+        docker push "$registry/$image:$moving_tag"
     done
+}
 
-    # Push out upgrade image
-    docker tag "syndesis/syndesis-upgrade:$release_version" "syndesis/syndesis-upgrade:$moving_tag"
-    docker push "syndesis/syndesis-upgrade:$release_version"
-    docker push "syndesis/syndesis-upgrade:$moving_tag"
+push_container_images() {
+    local release_version=$1
+    local moving_tag=$2
+
+    if [ -n "$(readopt --docker-user)" ] && [ -n "$(readopt --docker-password)" ]; then
+      push_container_images_to_registry docker.io "$release_version" "$moving_tag"
+    fi
+
+    if [ -n "$(readopt --quayio-user)" ] && [ -n "$(readopt --quayio-password)" ]; then
+      push_container_images_to_registry quay.io "$release_version" "$moving_tag"
+    fi
 }
 
 release_staging_repo() {
