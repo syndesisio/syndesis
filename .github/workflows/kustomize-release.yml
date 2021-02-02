@@ -1,0 +1,52 @@
+# This is workflow for create a release of the kustomize install archive
+
+name: Create Kustomize Release
+
+# Controls when the action will run.
+on:
+  push:
+    tags:
+      - '*-installer-*'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get Release Version
+        run: |
+          TAG=${GITHUB_REF#refs/tags/} &&
+          echo "RELEASE_VERSION=${TAG##*-}" >> $GITHUB_ENV &&
+          echo "RELEASE_NAME=${TAG%%-*}" >> $GITHUB_ENV
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ env.RELEASE_NAME }}-installer-${{ env.RELEASE_VERSION }}
+          draft: false
+          prerelease: true
+
+      - name: Build Kustomize Release
+        run: |
+          cd install/operator/kustomize/release &&
+          RELEASE_VERSION=${{ env.RELEASE_VERSION }} RELEASE_NAME=${{ env.RELEASE_NAME }} make release
+
+      - name: Upload Kustomize Release
+        id: upload-kustomize-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: install/operator/kustomize/release/${{ env.RELEASE_NAME }}-installer-${{ env.RELEASE_VERSION }}.tar.gz
+          asset_name: ${{ env.RELEASE_NAME }}-installer-${{ env.RELEASE_VERSION }}.tar.gz
+          asset_content_type: application/tar+gzip
