@@ -41,7 +41,7 @@
     <assembly.skip>false</assembly.skip>
 
     <!-- Atlasmap version -->
-    <atlasmap.version>2.1.3</atlasmap.version>
+    <atlasmap.version>2.1.4</atlasmap.version>
 
     <!-- Image namespace - can be overridden on cli -->
     <image.namespace>syndesis</image.namespace>
