@@ -72,6 +72,7 @@ jobs:
 #        run: tools/bin/syndesis integration-test --s2i --logging
 
   quay:
+    needs: full-pr-build
     if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     steps:
