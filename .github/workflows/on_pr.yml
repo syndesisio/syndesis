@@ -1,6 +1,10 @@
 name: On PR
 
-on: pull_request
+on: 
+  pull_request
+  pull_request_review:
+    types: [submitted]
+  
 
 jobs:
   full-pr-build:
@@ -66,3 +70,19 @@ jobs:
 #        run: tools/bin/syndesis build -m s2i --image --flash --docker
 #      - name: Run integration tests
 #        run: tools/bin/syndesis integration-test --s2i --logging
+
+  quay:
+    if: github.event.review.state == 'approved'
+    runs-on: ubuntu-latest
+    steps:
+      - name: ping
+        run: echo "HELLO helloworld_images"
+      - name: download artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: helloworld_images
+      - name: runid
+        shell: bash
+        run: |
+          value=`cat images-pr/runid.txt`
+          echo "value=$value"
