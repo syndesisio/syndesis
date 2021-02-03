@@ -15,60 +15,69 @@
  */
 package io.syndesis.connector.slack;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.assertj.core.api.Condition;
-import org.junit.Ignore;
+import org.apache.camel.component.extension.MetaDataExtension.MetaData;
+import org.json.simple.JSONObject;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.iterable;
+import static org.mockito.Mockito.mock;
 
-@Ignore
 public class SlackMetaDataExtensionTest {
 
     @Test
-    public void retrieveChannelListTest() {
-        CamelContext context = new DefaultCamelContext();
-        SlackMetaDataExtension extension = new SlackMetaDataExtension(context);
+    public void shouldNotFetchChannelListWithoutToken() {
+        @SuppressWarnings("resource")
+        final CamelContext context = mock(CamelContext.class);
+        final SlackMetaDataExtension extension = new SlackMetaDataExtension(context);
 
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("token", "token");
-
-        Optional<MetaDataExtension.MetaData> meta = extension.meta(properties);
-
-        assertThat(meta).isPresent();
-        assertThat(meta.get().getPayload()).isInstanceOf(Set.class);
-        assertThat(meta.get().getAttributes()).hasEntrySatisfying(MetaDataExtension.MetaData.JAVA_TYPE, new Condition<Object>() {
-            @Override
-            public boolean matches(Object val) {
-                return Objects.equals(String.class, val);
-            }
-        });
-        assertThat(meta.get().getAttributes()).hasEntrySatisfying(MetaDataExtension.MetaData.CONTENT_TYPE, new Condition<Object>() {
-            @Override
-            public boolean matches(Object val) {
-                return Objects.equals("text/plain", val);
-            }
-        });
-    }
-
-    @Test
-    public void noChannelTest() {
-        CamelContext context = new DefaultCamelContext();
-        SlackMetaDataExtension extension = new SlackMetaDataExtension(context);
-
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("webhookurl", "token");
-
-        Optional<MetaDataExtension.MetaData> meta = extension.meta(properties);
+        final Optional<MetaDataExtension.MetaData> meta = extension.meta(Collections.emptyMap());
 
         assertThat(meta).isEmpty();
     }
+
+    @Test
+    public void shouldRetrieveChannelList() {
+        @SuppressWarnings("resource")
+        final CamelContext context = mock(CamelContext.class);
+        final SlackMetaDataExtension extension = new SlackMetaDataExtension(context) {
+            @SuppressWarnings("unchecked")
+            @Override
+            JSONObject conversationList(final String token) {
+                final JSONObject json = new JSONObject();
+                final List<JSONObject> channels = Arrays.asList(channelJson("channel1"), channelJson("channel2"));
+
+                json.put("channels", channels);
+
+                return json;
+            }
+        };
+
+        final Map<String, Object> properties = new HashMap<>();
+        properties.put("token", "token");
+
+        final Optional<MetaDataExtension.MetaData> maybeMeta = extension.meta(properties);
+
+        assertThat(maybeMeta).isPresent();
+        final MetaData metaData = maybeMeta.get();
+
+        assertThat(metaData.getPayload()).isInstanceOf(Set.class).asInstanceOf(iterable(String.class)).containsOnly("channel1", "channel2");
+        assertThat(metaData.getAttributes()).containsEntry(MetaDataExtension.MetaData.JAVA_TYPE, String.class);
+        assertThat(metaData.getAttributes()).containsEntry(MetaDataExtension.MetaData.CONTENT_TYPE, "text/plain");
+    }
+
+    JSONObject channelJson(final String name) {
+        return new JSONObject(Collections.singletonMap("name", name));
+    }
+
 }

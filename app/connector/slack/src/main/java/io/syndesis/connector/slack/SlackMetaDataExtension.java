@@ -15,79 +15,84 @@
  */
 package io.syndesis.connector.slack;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.MetaDataBuilder;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.syndesis.connector.support.util.ConnectorOptions;
-import static io.syndesis.connector.slack.utils.SlackUtils.readResponse;
 
-public class SlackMetaDataExtension extends AbstractMetaDataExtension {
+import static java.util.Collections.singletonList;
+
+public class SlackMetaDataExtension extends AbstractMetaDataExtension implements WithHttpClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(SlackMetaDataExtension.class);
 
-    SlackMetaDataExtension(CamelContext context) {
+    SlackMetaDataExtension(final CamelContext context) {
         super(context);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public Optional<MetaData> meta(Map<String, Object> parameters) {
+    public Optional<MetaData> meta(final Map<String, Object> parameters) {
         final String token = ConnectorOptions.extractOption(parameters, "token");
 
-        if (token != null) {
-            LOG.debug("Retrieving channels for connection to slack with token {}", token);
-            HttpClient client = HttpClientBuilder.create().useSystemProperties().build();
-            HttpPost httpPost = new HttpPost("https://slack.com/api/channels.list");
-
-            List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>();
-            params.add(new BasicNameValuePair("token", token));
-            try {
-                httpPost.setEntity(new UrlEncodedFormEntity(params));
-
-                HttpResponse response = client.execute(httpPost);
-
-                String jsonString = readResponse(response);
-                JSONParser parser = new JSONParser();
-
-                JSONObject c = (JSONObject) parser.parse(jsonString);
-                List<Object> list = (List<Object>) c.get("channels");
-                Set<String> setChannels = new HashSet<String>();
-                Iterator<Object> it = list.iterator();
-                while (it.hasNext()) {
-                    Object object = it.next();
-                    JSONObject singleChannel = (JSONObject) object;
-                    if (singleChannel.get("name") != null) {
-                        setChannels.add((String) singleChannel.get("name"));
-                    }
-                }
-
-            return Optional
-                        .of(MetaDataBuilder.on(getCamelContext()).withAttribute(MetaData.CONTENT_TYPE, "text/plain")
-                                .withAttribute(MetaData.JAVA_TYPE, String.class).withPayload(setChannels).build());
-            } catch (Exception e) {
-                throw new IllegalStateException(
-                    "Get information about channels failed with token has failed.", e);
-            }
-        } else {
+        if (token == null) {
+            LOG.warn("Unable to fetch list of channels, token not provided");
             return Optional.empty();
+        }
+
+        final JSONObject conversationList = conversationList(token);
+
+        @SuppressWarnings("unchecked")
+        final List<JSONObject> channels = (List<JSONObject>) conversationList.get("channels");
+
+        final Set<String> channelNames = channels.stream()
+            .map(c -> c.get("name"))
+            .filter(Objects::nonNull)
+            .map(String.class::cast)
+            .collect(Collectors.toSet());
+
+        @SuppressWarnings("resource")
+        final MetaData metaData = MetaDataBuilder.on(getCamelContext())
+            .withAttribute(MetaData.CONTENT_TYPE, "text/plain")
+            .withAttribute(MetaData.JAVA_TYPE, String.class)
+            .withPayload(channelNames)
+            .build();
+
+        return Optional.of(metaData);
+    }
+
+    JSONObject conversationList(final String token) {
+        LOG.debug("Retrieving channels for connection to slack with token {}", token);
+
+        try (CloseableHttpClient client = createHttpClient()) {
+            final HttpPost httpPost = new HttpPost("https://slack.com/api/conversations.list");
+            httpPost.addHeader("Content-Type", "application/x-www-form-urlencoded");
+            httpPost.addHeader("Accept", "application/json");
+
+            final BasicNameValuePair tokenParameter = new BasicNameValuePair("token", token);
+            final UrlEncodedFormEntity form = new UrlEncodedFormEntity(singletonList(tokenParameter));
+            httpPost.setEntity(form);
+
+            return client.execute(httpPost, SlackResponseHandler.INSTANCE);
+        } catch (final IOException e) {
+            LOG.error("Unable to list channels", e);
+            throw new IllegalStateException(
+                "Get information about channels failed with token has failed.", e);
         }
     }
 }
