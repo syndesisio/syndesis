@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ping
-        run: echo "HELLO"
+        run: echo "HELLO helloworld_images"
       - name: download artifacts
         uses: actions/download-artifact@v2
         with:
