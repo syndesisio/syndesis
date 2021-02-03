@@ -15,46 +15,47 @@
  */
 package io.syndesis.connector.slack;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.component.extension.MetaDataExtension;
+import java.util.stream.Collectors;
 
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.component.extension.MetaDataExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static java.util.Collections.singletonMap;
+
 public class SlackMetaDataRetrieval extends ComponentMetadataRetrieval {
 
-    /**
-     * TODO: use local extension, remove when switching to camel 2.22.x
-     */
-    @Override
-    protected MetaDataExtension resolveMetaDataExtension(CamelContext context, Class<? extends MetaDataExtension> metaDataExtensionClass, String componentId, String actionId) {
-        return new SlackMetaDataExtension(context);
-    }
+    private static final Logger LOG = LoggerFactory.getLogger(SlackMetaDataRetrieval.class);
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
+    protected SyndesisMetadata adapt(final CamelContext context, final String componentId, final String actionId, final Map<String, Object> properties,
+        final MetaDataExtension.MetaData metadata) {
         try {
-            Set<String> channels = (Set<String>) metadata.getPayload();
+            @SuppressWarnings("unchecked")
+            final Set<String> channelNames = (Set<String>) metadata.getPayload();
 
-            List<PropertyPair> channelsResult = new ArrayList<>();
-            channels.stream().forEach(
-                t -> channelsResult.add(new PropertyPair(t, t))
-            );
+            final List<PropertyPair> channels = channelNames.stream().map(c -> new PropertyPair(c, c)).collect(Collectors.toList());
 
-            return SyndesisMetadata.of(
-                Collections.singletonMap("channel", channelsResult)
-            );
-        } catch ( Exception e) {
+            return SyndesisMetadata.of(singletonMap("channel", channels));
+        } catch (final Exception e) {
+            LOG.error("Unable to fetch Slack metadata", e);
             return SyndesisMetadata.EMPTY;
         }
+    }
+
+    @Override
+    protected MetaDataExtension resolveMetaDataExtension(final CamelContext context, final Class<? extends MetaDataExtension> metaDataExtensionClass,
+        final String componentId,
+        final String actionId) {
+        return new SlackMetaDataExtension(context);
     }
 
 }
