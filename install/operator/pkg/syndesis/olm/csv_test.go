@@ -55,7 +55,7 @@ func Test_csv_setCommunityVariables(t *testing.T) {
 				image:  "",
 				tag:    "",
 				want: &csv{
-					version:        "7.7.0",
+					version:        "7.7.0.x",
 					maturity:       "alpha",
 					name:           "syndesis-operator",
 					displayName:    "Syndesis",
@@ -74,7 +74,7 @@ func Test_csv_setCommunityVariables(t *testing.T) {
 				image:  "",
 				tag:    "",
 				want: &csv{
-					version:        "7.7.0",
+					version:        "7.7.0.x",
 					maturity:       "alpha",
 					name:           "fuse-online-operator",
 					displayName:    "Red Hat Integration - Fuse Online",
