@@ -140,7 +140,8 @@
     <junit.version>4.12</junit.version>
     <junit5.version>5.5.2</junit5.version>
     <powermock.version>2.0.4</powermock.version>
-    <testcontainers.version>1.12.3</testcontainers.version>
+    <testcontainers.version>1.15.1</testcontainers.version>
+    <docker-java.version>3.2.7</docker-java.version>
     <citrus.version>2.8.0</citrus.version>
     <mockito.version>2.19.0</mockito.version>
     <mongodb.version>3.9.0</mongodb.version>
@@ -3054,6 +3055,12 @@
         <groupId>org.testcontainers</groupId>
         <artifactId>mariadb</artifactId>
         <version>${testcontainers.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.docker-java</groupId>
+        <artifactId>docker-java-api</artifactId>
+        <version>${docker-java.version}</version>
       </dependency>
 
       <!-- Citrus -->
