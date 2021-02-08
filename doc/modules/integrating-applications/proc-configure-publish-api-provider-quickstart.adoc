@@ -4,13 +4,12 @@
 [id='configure-publish-api-provider-quickstart_{context}']
 = Importing and publishing the example API provider quickstart integration
 
-ifndef::getting-started-with-apis-in-red-hat-integration[]
 {prodname} provides an API provider quickstart integration that you can
 import into your {prodname} environment. This quickstart includes
 an OpenAPI document for a task management API. After importing
 the quickstart integration, you can examine the flows and then publish
 the integration. After you complete the procedure described below,
-the *TaskAPI* integration is running and ready
+the *Task API* integration is running and ready
 to be executed.
 
 The API provider quickstart helps you quickly learn how to configure, publish, and
@@ -21,43 +20,29 @@ used {prodname} to publish several simple integrations. You could define an Open
 document for triggering execution of those integrations. To do this, you
 would edit the flow for each OpenAPI operation to be almost the
 same as the simple integrations that you already published.
-endif::getting-started-with-apis-in-red-hat-integration[]
-
-ifdef::getting-started-with-apis-in-red-hat-integration[]
-The `TaskAPI-export.zip` file contains the Task Management API Provider integration. It is based on the API definition in the `task-api.json` file.
-
-After importing the quickstart integration, you can examine the operation flows and then publish the integration.
-endif::getting-started-with-apis-in-red-hat-integration[]
 
 
 .Prerequisites
 
 * {prodname} is open in a browser.
 
+*  The Fuse Online environment must include the `Todo` sample app as described in https://access.redhat.com/documentation/en-us/red_hat_fuse/{fuse-version}/html-single/installing_and_operating_fuse_online_on_openshift_container_platform/index#adding-sample-data_config[Adding a sample app to a Fuse Online environment running on OCP].
+
 .Procedure
 
-. Import the *TaskAPI* quickstart integration:
-ifndef::getting-started-with-apis-in-red-hat-integration[]
+. Import the *Task API* quickstart integration:
 .. Go to
 link:{syndesis-quickstart-url}/api-provider[]
 and download `TaskAPI-export.zip`.
-endif::getting-started-with-apis-in-red-hat-integration[]
 .. In {prodname}, in the left navigation panel, click *Integrations*.
 .. In the upper right, click *Import*.
 .. Drag the `TaskAPI-export.zip` file that you downloaded to the *Import* page. {prodname} indicates
 that it has successfully imported the file.
 .. In the left navigation panel, click *Integrations* to see
-an entry for the *TaskAPI* integration that you just imported. Although the entry
+an entry for the *Task API* integration that you just imported. Although the entry
 indicates that configuration is required, this integration is ready to publish.
 
-. In the *TaskAPI* entry, click image:images/integrating-applications/ThreeVerticalDotsKebab.png[Three Vertical Dots] and
-then click *Edit* to display a list
-of the operations that this API provides.
-
-ifdef::getting-started-with-apis-in-red-hat-integration[]
-+
-Each operation has a flow defined for it. In {prodname}, a _flow_ defines the connections and other steps to execute for each REST operation in the integration. The imported quickstart provides pre-defined flows for each operation.
-endif::getting-started-with-apis-in-red-hat-integration[]
+. Click *Edit Integration* to view the list of the operations that this API provides.
 
 . To examine the flows for each operation:
 .. Click its *Edit flow* button to display the visualization for that flow.
@@ -76,23 +61,23 @@ operation's flow, click *Configure* to
 see the HTTP return codes that the operation might send to the caller.
 Click *Cancel* to return to the visualization.
 
-.. After examining one operation's flow, click the *Integrations*> *TaskAPI*> *Operation* drop down menu and then select another operation.
+.. After examining one operation's flow, click the *Integrations*> *Task API*> *Operation* drop down menu and then select another operation.
 
 .. Repeat this subset of steps to examine each flow.
 
-. After examining the flows, click *Publish*, edit the integration
-name if you want to, and then click *Save and publish*.
+. Click *Save* and edit the integration name if you want to.
+
+. Click *Save and Publish*.
 +
-{prodname} displays the summary page for this integration and shows
+The summary page for the integration shows
 publication progress as it assembles, builds, deploys, and
 starts the integration.
 
-ifndef::getting-started-with-apis-in-red-hat-integration[]
-. When the *TaskAPI* integration summary page displays *Running*,
+. When the *Task API* integration summary page displays *Running*,
 {prodname} displays the external URL for the Task API service.
 It looks something like this:
 +
-`\https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com/api/`
+`\https://i-task-api-fuseonline.apps.openshift.com/`
 +
 This is where {prodname} makes the Task API service available. REST
 API calls specify URLs that start with this base URL.
@@ -112,10 +97,3 @@ integration’s summary page. On this page, click *Disable discovery*.
 for invoking integration execution.
 +
 You can enable or disable discovery for each API provider integration.
-endif::getting-started-with-apis-in-red-hat-integration[]
-
-ifdef::getting-started-with-apis-in-red-hat-integration[]
-When 3scale service discovery is enabled, Red Hat 3scale publishes your API provider integration, which means that 3scale controls access to the integration’s API. Next, you use 3scale API management to discover the published API.
-
-NOTE: If you want Fuse Online to publish the API service and provide a URL (for example, to test the API before you discover it in 3scale), you can disable discovery for the API provider integration as described in  link:{LinkIntegrationDevDeploy}[{NameIntegrationDevDeploy}].
-endif::getting-started-with-apis-in-red-hat-integration[]
