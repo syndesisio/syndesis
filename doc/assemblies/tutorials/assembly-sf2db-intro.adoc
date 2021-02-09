@@ -34,7 +34,7 @@ Salesforce to database sample integration.
 ifeval::["{location}" == "downstream"]
 * You must be logged in to your {prodname} environment. 
 If you are not already logged in, see 
-link:{LinkFuseOnlineTutorials}#logging-in-and-out_tutorials[What to expect the first time that you use {prodname}.]
+link:{LinkSyndesisTutorials}#logging-in-and-out_tutorials[What to expect the first time that you use {prodname}.]
 * You are working in a {prodname} evaluation environment that is running on OpenShift Dedicated or you are working in a {prodname} 
 environment that is running in an OpenShift Container Platform project in 
 which an administrator added the {prodname} sample data, which provides the 

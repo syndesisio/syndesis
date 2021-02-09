@@ -16,7 +16,7 @@ broker of interest:
 * AMQ 6 broker
 
 To communicate with one of the following broker types, 
-link:{LinkFuseOnlineConnectorGuide}#connecting-to-amqp_amqp[use the AMQP connector] 
+link:{LinkSyndesisConnectorGuide}#connecting-to-amqp_amqp[use the AMQP connector] 
 to create a connection to the broker of interest:
 
 * Apache ActiveMQ broker that supports AMQP

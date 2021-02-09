@@ -60,19 +60,18 @@
 
 // Fuse Online titles
 
-:LinkFuseOnlineTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_online_sample_integration_tutorials/index
-:NameOfFuseOnlineTutorials: Fuse Online Sample Integration Tutorials
+:LinkSyndesisTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_online_sample_integration_tutorials/index
+:NameOfSyndesisTutorials: Fuse Online Sample Integration Tutorials
 
-:LinkFuseOnlineIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_fuse_online/index
-:NameOfFuseOnlineIntegrationGuide: Integrating Applications with Fuse Online
+:LinkSyndesisIntegrationGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/integrating_applications_with_fuse_online/index
+:NameOfSyndesisIntegrationGuide: Integrating Applications with Fuse Online
 
-:LinkFuseOnlineConnectorGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/connecting_fuse_online_to_applications_and_services/index
-:NameOfFuseOnlineConnectorGuide: Connecting Fuse Online to Applications and Services
+:LinkSyndesisConnectorGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/connecting_fuse_online_to_applications_and_services/index
+:NameOfSyndesisConnectorGuide: Connecting Fuse Online to Applications and Services
 
 :LinkFuseOnlineOnOCP: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/installing_and_operating_fuse_online_on_openshift_container_platform/index
 :NameOfFuseOnlineOnOCPGuide: Installing and Operating Fuse Online on OpenShift Container Platform
 
-//REVISIT Don't forget to add the guides from the tooling repo, FIS guide!
 
 // Developer Studio titles
 :DevStudioProdName: Red Hat CodeReady Studio

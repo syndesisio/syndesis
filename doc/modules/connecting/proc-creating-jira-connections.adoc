@@ -11,7 +11,7 @@ same connection to any number of integrations.
 If the Jira server that you want to connect to uses the OAuth protocol 
 for authenticating access, you must have registered your {prodname} 
 environment as a client of the Jira server that you want to connect to. See 
-link:{LinkFuseOnlineConnectorGuide}#registering-with-jira_jira[Registering {prodname} with a Jira server that uses OAuth]. 
+link:{LinkSyndesisConnectorGuide}#registering-with-jira_jira[Registering {prodname} with a Jira server that uses OAuth]. 
 
 .Prerequisites
 * For a Jira server that uses basic authentication, you have a Jira 

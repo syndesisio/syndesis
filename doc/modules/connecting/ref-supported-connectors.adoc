@@ -12,121 +12,121 @@
 |Name
 |Description
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-amazon-dynamodb_connectors[Amazon DynamoDB]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-amazon-dynamodb_connectors[Amazon DynamoDB]
 |Obtain, add, update, or delete data in an Amazon DynamoDB table.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-amazon-sns_connectors[Amazon Simple Notification Service (SNS)]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-amazon-sns_connectors[Amazon Simple Notification Service (SNS)]
 |Send messages to an Amazon SNS topic.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-amazon-sqs_connectors[Amazon Simple Queue Service (SQS)]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-amazon-sqs_connectors[Amazon Simple Queue Service (SQS)]
 |Retrieve messages from or send messages to an Amazon SQS queue.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-s3_connectors[Amazon Simple Storage Service (S3)]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-s3_connectors[Amazon Simple Storage Service (S3)]
 |Retrieve data from an Amazon S3 bucket or copy data into a bucket.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-amq_connectors[AMQ]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-amq_connectors[AMQ]
 |Obtain messages from a Red Hat AMQ (Apache ActiveMQ) broker or publish messages to
 a Red Hat AMQ (Apache ActiveMQ) broker.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-amqp_connectors[AMQP]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-amqp_connectors[AMQP]
 |Obtain messages from an Advanced Message Queue Protocol broker or
 publish messages to an AMQP broker.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-box_connectors[Box]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-box_connectors[Box]
 |Download files from Box or upload files to Box.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-dropbox_connectors[Dropbox]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-dropbox_connectors[Dropbox]
 |Download files from Dropbox or upload files to Dropbox.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-email-servers_connectors[Email Servers]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-email-servers_connectors[Email Servers]
 |Retrieve email from an IMAP or POP3 email server or connect to an SMTP
 email server to send email.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-fhir_connectors[FHIR]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-fhir_connectors[FHIR]
 |Obtain resources from a FHIR server or update resources on a FHIR server.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-ftp_connectors[FTP/SFTP]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-ftp_connectors[FTP/SFTP]
 |Download files from an FTP or SFTP server or upload files to an
 FTP or SFTP server.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-gmail_google[Gmail]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-gmail_google[Gmail]
 |Obtain messages sent to a particular Gmail account and send messages
 from a particular Gmail account.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-google-calendar_google[Google Calendar]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-google-calendar_google[Google Calendar]
 |Obtain events from a Google Calendar that you specify or add/update
 events in a Google Calendar that you specify.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-google-sheets_google[Google Sheets]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-google-sheets_google[Google Sheets]
 |Obtain data from a Google Sheets spreadsheet that you specify, add/update spreadsheet
 data, create charts, or create pivot tables in a spreadsheet that you specify.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-http_connectors[HTTP/HTTPS]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-http_connectors[HTTP/HTTPS]
 |Connect to an HTTP or HTTPS endpoint and execute the
 `GET`, `PUT`, `POST`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE`, OR `PATCH` method.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-irc_connectors[IRC]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-irc_connectors[IRC]
 |Receive messages that are sent to an IRC nickname or channel, or
 send messages to an IRC nickname on a particular channel.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-jira_connectors[Jira]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-jira_connectors[Jira]
 |Obtain, create, or update issues on a Jira server.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-kudu_connectors[Kudu]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-kudu_connectors[Kudu]
 |Obtain records from a table in an Apache Kudu data store
 or add records to a table in a Kudu data store.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-mongodb_connectors[MongoDB]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-mongodb_connectors[MongoDB]
 |Obtain data from a MongoDB database or update data in a MongoDB database.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-mqtt_connectors[MQTT]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-mqtt_connectors[MQTT]
 |Obtain messages from an MQ Telemetry Transport broker or publish messages
 to an MQTT broker.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-odata_connectors[OData]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-odata_connectors[OData]
 |Obtain entities from an OData service or update, create, or delete entities
 that are managed by an OData service.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-api-clients_connectors[REST APIs]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-api-clients_connectors[REST APIs]
 |Create a custom REST API client connector by uploading an OpenAPI
 document. You can then create a connection to that REST API.
 
 Create a REST API provider integration by uploading an OpenAPI document
 that defines operations that trigger integration execution. See
-link:{LinkFuseOnlineIntegrationGuide}#trigger-integrations-with-api-calls_ug[Creating an integration that is triggered by a REST API call]
-in {NameOfFuseOnlineIntegrationGuide}.
+link:{LinkSyndesisIntegrationGuide}#trigger-integrations-with-api-calls_ug[Creating an integration that is triggered by a REST API call]
+in {NameOfSyndesisIntegrationGuide}.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-sf_connectors[Salesforce]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-sf_connectors[Salesforce]
 |Create, update, fetch, or delete a Salesforce record.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-concur_connectors[SAP Concur]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-concur_connectors[SAP Concur]
 |Perform any one of a large variety of SAP Concur actions.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-servicenow_connectors[ServiceNow]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-servicenow_connectors[ServiceNow]
 |Obtain records from or copy records to your ServiceNow instance.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-slack_connectors[Slack]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-slack_connectors[Slack]
 |Obtain messages from a channel or send a message to a
 Slack channel or user.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-api-clients_connectors[SOAP API clients]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-api-clients_connectors[SOAP API clients]
 |Create a custom SOAP API client connector by uploading a WSDL file. You can then create a connection to that SOAP API client.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-databases_connectors[SQL databases]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-databases_connectors[SQL databases]
 |Invoke a SQL statement or a SQL stored procedure on an Apache Derby,
 MySQL, or PostgreSQL database. To connect to other types of SQL databases,
 you upload a {prodname} library extension that contains a
 JDBC driver for that database.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting_to_telegram_connectors[Telegram]
+|link:{LinkSyndesisConnectorGuide}#connecting_to_telegram_connectors[Telegram]
 |Obtain messages from a chat or send messages to a chat by using
 a Telegram chat bot.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-twitter_connectors[Twitter]
+|link:{LinkSyndesisConnectorGuide}#connecting-to-twitter_connectors[Twitter]
 |Trigger execution of a simple integration upon tweets that mention you or that
 contain data that you specify.
 
-|link:{LinkFuseOnlineIntegrationGuide}#triggering-integrations-with-http-requests_ug[Webhook]
+|link:{LinkSyndesisIntegrationGuide}#triggering-integrations-with-http-requests_ug[Webhook]
 |Trigger execution of simple integrations with HTTP `GET` or `POST` requests.
 
 |===
@@ -138,4 +138,4 @@ extension and creating its `.jar` file, which you upload to
 {prodname}, see:
 
 * link:{LinkToolingUserGuide}#FuseOnlineExtension[{NameOfToolingUserGuide}, how to use Fuse tooling to develop extensions]
-* link:{LinkFuseOnlineIntegrationGuide}#developing-extensions_custom[{NameOfFuseOnlineIntegrationGuide}, how to code extensions]
+* link:{LinkSyndesisIntegrationGuide}#developing-extensions_custom[{NameOfSyndesisIntegrationGuide}, how to code extensions]

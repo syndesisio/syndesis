@@ -10,7 +10,7 @@ Transforming a data field defines how you want to store the data.
 For example, you could specify the *Capitalize* transformation to ensure that the first
 letter of a data value is uppercase.
 
-*Note:* If you want to add a condition to a mapping, you need to place any transformations within the conditional expression as described in link:{LinkFuseOnlineIntegrationGuide}#applying-conditions-to-mappings_map[Applying conditions to mappings].
+*Note:* If you want to add a condition to a mapping, you need to place any transformations within the conditional expression as described in link:{LinkSyndesisIntegrationGuide}#applying-conditions-to-mappings_map[Applying conditions to mappings].
 
 .Procedure
 
@@ -25,5 +25,5 @@ in the appropriate input fields.
 
 .Additional resource
 
-* link:{LinkFuseOnlineIntegrationGuide}#available-transformations_map[Available transformations]
-* link:{LinkFuseOnlineIntegrationGuide}#about-transformations-on-multiple-source-values_map[About transformations on multiple source values before mapping to one target field]
+* link:{LinkSyndesisIntegrationGuide}#available-transformations_map[Available transformations]
+* link:{LinkSyndesisIntegrationGuide}#about-transformations-on-multiple-source-values_map[About transformations on multiple source values before mapping to one target field]

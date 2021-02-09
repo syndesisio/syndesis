@@ -76,7 +76,7 @@ any required configuration details.
 
 . Optionally, add one or more steps that operate on integration
 data between connections. See
-link:{LinkFuseOnlineIntegrationGuide}#about-adding-steps_create[About adding steps between connections].
+link:{LinkSyndesisIntegrationGuide}#about-adding-steps_create[About adding steps between connections].
 
 . In the integration visualization, look for any
 image:images/tutorials/WarningIcon.png[Warning] icons. These 
@@ -95,7 +95,7 @@ indicate what this integration does.
 
 .  Optionally, from the list of library extensions that you have imported, you can select one or more library extensions to associate with the integration. Note that you must have already imported a library `.jar` file as a {prodname} extension if you want it to appear in this list so that you can select it.
 + 
-For more information about library extensions, see link:{LinkFuseOnlineIntegrationGuide}#develop-library-extensions_extensions[How to develop library extensions].
+For more information about library extensions, see link:{LinkSyndesisIntegrationGuide}#develop-library-extensions_extensions[How to develop library extensions].
 
 . If you are ready to start running the integration, click *Save and publish*.
 +

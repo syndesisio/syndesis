@@ -12,7 +12,7 @@ target fields. For  example, map the `Name` field to the `FirstName` and
 For the source field, you must know what type of content is in each
 part of this compound field, the order and index of each part of the content, 
 and the separator between parts, such as a space or comma. See
-link:{LinkFuseOnlineIntegrationGuide}#example-missing-unwanted-data_map[Example of missing or unwanted data]. 
+link:{LinkSyndesisIntegrationGuide}#example-missing-unwanted-data_map[Example of missing or unwanted data]. 
 
 .Procedure
 
@@ -55,7 +55,7 @@ padding fields as needed to indicate unwanted data.
 +
 See the example at the end of this procedure. 
 .. Optionally, click image:images/integrating-applications/transformation-icon.png[the Transformation icon] to map the content into 
-the target field and then apply a transformation as described in link:{LinkFuseOnlineIntegrationGuide}#transform-target-data_map[Transforming source or target data]. 
+the target field and then apply a transformation as described in link:{LinkSyndesisIntegrationGuide}#transform-target-data_map[Transforming source or target data]. 
 
 . Optionally, preview the data mapping result: 
 .. Click image:images/integrating-applications/preview-mapping-icon.png[the Show/Hide Preview Mapping icon] to display a text input field on the source

@@ -10,7 +10,7 @@ add it to multiple integrations.
 
 .Prerequisites
 * You 
-link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[registered {prodname} as a Google client application] 
+link:{LinkSyndesisConnectorGuide}#register-with-google_google[registered {prodname} as a Google client application] 
 and enabled the Gmail API. 
 * The {prodname} *Settings* page entry for Gmail has values for the client ID and client secret, which
 you obtained by registering {prodname} as a Google client application. 
@@ -28,7 +28,7 @@ which takes you to a *Sign in with Gmail* page.
 +
 If *Connect Gmail* does not display, your {prodname} environment
 is not registered as a Google client application. See
-link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Registering {prodname} as a Google client application].
+link:{LinkSyndesisConnectorGuide}#register-with-google_google[Registering {prodname} as a Google client application].
 When you try to create a Gmail connection and your {prodname} environment 
 is not registered as a Google client application, then {prodname} displays
 multiple fields that prompt for authorization information. While you can
