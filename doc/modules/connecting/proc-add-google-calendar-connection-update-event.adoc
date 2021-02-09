@@ -14,7 +14,7 @@ or as a simple integration's finish connection.
 In this release, the *Update Event* action requires a value in each event 
 field. In most if not all cases, this means that you must add a Google 
 Calendar connection that 
-link:{LinkFuseOnlineConnectorGuide}#add-google-calendar-connection-to-get-one-event_calendar[obtains the event that you want to update], 
+link:{LinkSyndesisConnectorGuide}#add-google-calendar-connection-to-get-one-event_calendar[obtains the event that you want to update], 
 then add the Google Calendar connection that updates the event, and then 
 insert a data mapper step between the two Google Calendar connections. 
 ====

@@ -13,7 +13,7 @@ a simple integration's finish connection.
 
 * You created a Gmail connection. 
 * You are familiar with the
-link:{LinkFuseOnlineConnectorGuide}#alternative-for-populating-email-to-send_gmail[alternatives for populating an email to send]
+link:{LinkSyndesisConnectorGuide}#alternative-for-populating-email-to-send_gmail[alternatives for populating an email to send]
 and you have a plan for populating such emails. 
 * {prodname} is prompting you to add to the integration or to choose the finish 
 connection for a simple integration. 

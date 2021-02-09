@@ -13,7 +13,7 @@ authorize {prodname} to access the API.
 
 If the API you want to connect to does not use OAuth, skip this
 section and see 
-link:{LinkFuseOnlineConnectorGuide}#create-rest-api-connection_rest[Creating a REST API client connection].
+link:{LinkSyndesisConnectorGuide}#create-rest-api-connection_rest[Creating a REST API client connection].
 
 .Prerequisite
 You must know the URL for the OAuth custom application setting page for the

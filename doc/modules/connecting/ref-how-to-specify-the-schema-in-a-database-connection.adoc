@@ -32,7 +32,7 @@ a namespace. For example, you can reference the `mytable` table with `sample.myt
 *Password*: `mypw` +
 *Schema*: `sampledb`
 |Upload the driver by using the 
-link:{LinkFuseOnlineIntegrationGuide}#creating-jdbc-driver-library-extensions_extensions[extension mechanism].
+link:{LinkSyndesisIntegrationGuide}#creating-jdbc-driver-library-extensions_extensions[extension mechanism].
 Then create a connection. Connection verification fails if you have 
 not already uploaded the driver. You must specify the same schema at the end of 
 the connection URL and in the *Schema* field. 
@@ -52,7 +52,7 @@ configuration in the connection (JDBC) URL.
 *Password*: `mypw` +
 *Schema*: 
 |Use the {prodname} 
-link:{LinkFuseOnlineIntegrationGuide}#creating-jdbc-driver-library-extensions_extensions[extension mechanism].
+link:{LinkSyndesisIntegrationGuide}#creating-jdbc-driver-library-extensions_extensions[extension mechanism].
 to upload an Oracle database driver. 
 Then create the connection. Connection verification fails if the driver has 
 not been uploaded. +

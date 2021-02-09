@@ -8,7 +8,7 @@
 
 In an integration, to connect to a REST or a SOAP API, you must have created a
 connector for that API. See 
-link:{LinkFuseOnlineIntegrationGuide}#adding-api-connectors_custom[{NameOfSyndesisIntegrationGuide}, Adding and managing API client connectors].
+link:{LinkSyndesisIntegrationGuide}#adding-api-connectors_custom[{NameOfSyndesisIntegrationGuide}, Adding and managing API client connectors].
 
 When a connector for the API that you want to connect to
 is available in {prodname}, the steps for connecting to that API are:

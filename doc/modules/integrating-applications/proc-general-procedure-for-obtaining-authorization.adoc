@@ -54,14 +54,14 @@ client ID and client secret and save the settings.
 
 * Examples of registering applications that have entries in the *Settings* page:
 
-** link:{LinkFuseOnlineConnectorGuide}#register-with-salesforce_salesforce[Registering {prodname} as a Salesforce client]
-** link:{LinkFuseOnlineConnectorGuide}#register-with-twitter_twitter[Registering {prodname} as a Twitter client]
+** link:{LinkSyndesisConnectorGuide}#register-with-salesforce_salesforce[Registering {prodname} as a Salesforce client]
+** link:{LinkSyndesisConnectorGuide}#register-with-twitter_twitter[Registering {prodname} as a Twitter client]
 
 * Example of registering with an application that does not have 
 an entry in the {prodname} *Settings* page: 
-link:{LinkFuseOnlineConnectorGuide}#register-with-dropbox_dropbox[Registering {prodname} as a Dropbox client]
+link:{LinkSyndesisConnectorGuide}#register-with-dropbox_dropbox[Registering {prodname} as a Dropbox client]
 
 * Information about using custom connectors that let 
 you access applications that use the
 OAuth protocol: 
-link:{LinkFuseOnlineIntegrationGuide}#creating-connections-from-custom-connectors_connections[About creating a connection from a custom connector]. 
+link:{LinkSyndesisIntegrationGuide}#creating-connections-from-custom-connectors_connections[About creating a connection from a custom connector]. 

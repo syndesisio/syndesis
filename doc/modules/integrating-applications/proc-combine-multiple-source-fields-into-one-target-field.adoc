@@ -12,7 +12,7 @@ fields to the `CustomerName` field.
 For the target field, you must know what type of content is in each
 part of this compound field, the order and index of each part of the content, 
 and the separator between parts, such as a space or comma. See
-link:{LinkFuseOnlineIntegrationGuide}#example-missing-unwanted-data_map[Example of missing or unwanted data]. 
+link:{LinkSyndesisIntegrationGuide}#example-missing-unwanted-data_map[Example of missing or unwanted data]. 
 
 .Procedure
 
@@ -61,7 +61,7 @@ automatically adds padding fields as needed to indicate missing data.
 If you accidentally create too many padding fields, click image:images/integrating-applications/TrashIcon.png[the Trash icon] for each extra padding field to delete it.
 
 .. Optionally, under *Targets*, click image:images/integrating-applications/transformation-icon.png[the Transformation icon] to map 
-the content into the target field and then apply a transformation as described in link:{LinkFuseOnlineIntegrationGuide}#transform-target-data_map[Transforming source or target data]. 
+the content into the target field and then apply a transformation as described in link:{LinkSyndesisIntegrationGuide}#transform-target-data_map[Transforming source or target data]. 
 
 . Optionally, preview the data mapping result: 
 .. Click image:images/integrating-applications/preview-mapping-icon.png[the Show/Hide Preview Mapping icon] to display a text input field on each source
@@ -93,6 +93,6 @@ mapping in the table to view preview fields for it.
 
 .Additional resource
 Example of adding padding fields: 
-link:{LinkFuseOnlineIntegrationGuide}#separate-one-source-field-into-multiple-target-fields_map[Separating one source field into multiple target field]. 
+link:{LinkSyndesisIntegrationGuide}#separate-one-source-field-into-multiple-target-fields_map[Separating one source field into multiple target field]. 
 
 Although that example is for a one-to-many mapping, the principles are the same.

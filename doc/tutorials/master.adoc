@@ -19,7 +19,7 @@ can help you decide which of these integrations to create first:
 * <<salesforce-to-db_{context}>>
 * <<amq-to-rest-api_{context}>>
 
-See also: link:{LinkFuseOnlineIntegrationGuide}[{NameOfFuseOnlineIntegrationGuide}]
+See also: link:{LinkSyndesisIntegrationGuide}[{NameOfSyndesisIntegrationGuide}]
 
 include::modules/tutorials/ref-comparison-of-sample-integrations.adoc[leveloffset=+1]
 

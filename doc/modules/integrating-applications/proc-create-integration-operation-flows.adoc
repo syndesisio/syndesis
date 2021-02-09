@@ -27,7 +27,7 @@ API provider integration's flow definitions to have your updates.
 * You created an API provider integration, gave it a name, and saved it.
 * You created a connection to each application or service that you want
 an operation flow to connect to. For details, see the
-link:{LinkFuseOnlineIntegrationGuide}#about-creating-connections_connections[information about creating connections].
+link:{LinkSyndesisIntegrationGuide}#about-creating-connections_connections[information about creating connections].
 * {prodname} is displaying the list of operations that the API defines.
 
 .Procedure
@@ -56,7 +56,7 @@ plus sign where you want to add a step.
 
 +
 For help, see
-link:{LinkFuseOnlineIntegrationGuide}#about-adding-steps_create[Adding steps between connections].
+link:{LinkSyndesisIntegrationGuide}#about-adding-steps_create[Adding steps between connections].
 
 +
 If you want to add another step that processes
@@ -71,7 +71,7 @@ to add a data mapper step here.
 ... Click the plus sign that is just before that step.
 ... Click *Data Mapper*.
 ... Define the needed mappings. For help, see
-link:{LinkFuseOnlineIntegrationGuide}#mapping-data_ug[Mapping integration data to fields in the next connection].
+link:{LinkSyndesisIntegrationGuide}#mapping-data_ug[Mapping integration data to fields in the next connection].
 ... Click *Done* to add the data mapper step to the flow.
 
 . In the flow visualization, on the
@@ -158,7 +158,7 @@ You can use the `curl` utility to confirm that the integration is working as
 expected. In the `curl` command, specify the external URL that {prodname} displays
 after it publishes the API provider integration.
 For examples of doing this, see
-link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration].
+link:{LinkSyndesisIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration].
 
 * Testing API provider integrations running on OpenShift Container Platform
 when *API discovery is enabled*
@@ -166,7 +166,7 @@ when *API discovery is enabled*
 Red Hat 3scale publishes your API provider integration. To test the integration, open the 3scale dashboard to obtain the integration’s URL.
 +
 You can disable discovery for an API provider integration if, for example, you do not want Red Hat 3scale to control access to the integration’s API or you want to test the API provider integration in {prodname}. If you disable discovery, {prodname} republishes the integration and provides an external URL for invoking and testing integration execution. To do this, in {prodname} go to the integration’s summary page. On this page, click *Disable discovery*. {prodname} republishes the integration and provides the integration’s URL. For examples of how to test an integration, see
-link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration]. After testing, you can re-enable discovery for the API provider integration so that 3scale publishes it.
+link:{LinkSyndesisIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration]. After testing, you can re-enable discovery for the API provider integration so that 3scale publishes it.
 +
 You can enable or disable discovery for each API provider integration.
 endif::rhmi[]
@@ -179,7 +179,7 @@ You can disable discovery for an API provider integration if, for example, you d
 
 To disable discovery for an API provider integration, in Fuse Online go to the integration’s summary page. On this page, click *Disable discovery*. Fuse Online republishes the integration and provides the integration’s URL.
 
-You can use the `curl` utility to confirm that the integration is working as expected. In the `curl` command, specify the external URL that Fuse Online displays after it publishes the API provider integration.  For examples of how to test an integration, see link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration].
+You can use the `curl` utility to confirm that the integration is working as expected. In the `curl` command, specify the external URL that Fuse Online displays after it publishes the API provider integration.  For examples of how to test an integration, see link:{LinkSyndesisIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration].
 
 After testing, you can re-enable discovery for the API provider integration so that 3scale publishes it.
 endif::rhmi[]
