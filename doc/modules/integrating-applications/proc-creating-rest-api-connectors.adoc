@@ -62,7 +62,7 @@ enter a user name and password.
 .. *OAuth 2.0*  — {prodname} prompts you to enter:
 ... *Authorization URL* is the location for registering {prodname} as
 a client of the API. Registration authorizes {prodname} to access the API.
-See link:{LinkFuseOnlineConnectorGuide}#register-with-rest-api_rest[{NameOfFuseOnlineConnectorGuide}, Registering {prodname} as a REST API client]. 
+See link:{LinkSyndesisConnectorGuide}#register-with-rest-api_rest[{NameOfSyndesisConnectorGuide}, Registering {prodname} as a REST API client]. 
 The OpenAPI document or other
 documentation for the API should specify this URL. If it does not then
 you must contact the service provider to obtain this URL.
@@ -113,4 +113,4 @@ You then continue the process for creating a new API client connector.
 
 .Next step
 For details about using your new API connector, see
-link:{LinkFuseOnlineConnectorGuide}#connecting-to-api-clients_connectors[{NameOfSyndesisConnectorGuide}, Connecting to API clients]. 
+link:{LinkSyndesisConnectorGuide}#connecting-to-api-clients_connectors[{NameOfSyndesisConnectorGuide}, Connecting to API clients]. 

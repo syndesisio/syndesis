@@ -6,7 +6,7 @@
 
 Preparation for creating an integration starts with answers to the
 questions listed in 
-link:{LinkFuseOnlineIntegrationGuide}#plan_ready[Considerations for planning your integrations].
+link:{LinkSyndesisIntegrationGuide}#plan_ready[Considerations for planning your integrations].
 After you have a plan for the
 integration, you need to do the following before you can create the
 integration:
@@ -31,5 +31,5 @@ create the connection.
 . For each application that you want to integrate, create a connection.
 
 .Additional resources
-* link:{LinkFuseOnlineIntegrationGuide}#general-procedure-for-obtaining-authorization_connections[General procedure for obtaining authorization]
-* link:{LinkFuseOnlineIntegrationGuide}#about-creating-connections_connections[About creating connections]
+* link:{LinkSyndesisIntegrationGuide}#general-procedure-for-obtaining-authorization_connections[General procedure for obtaining authorization]
+* link:{LinkSyndesisIntegrationGuide}#about-creating-connections_connections[About creating connections]

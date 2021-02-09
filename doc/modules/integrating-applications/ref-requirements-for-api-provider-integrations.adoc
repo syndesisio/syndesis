@@ -16,7 +16,7 @@ Your OpenAPI document determines which HTTP verbs (such as
 `GET`, `POST`, `DELETE` and so on) you can specify
 in calls to your REST API service URLs. Examples of calls to
 API provider URLs are in the
-link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[instructions for trying out the API provider quickstart example].
+link:{LinkSyndesisIntegrationGuide}#try-api-provider-quickstart_api-provider[instructions for trying out the API provider quickstart example].
 
 Your OpenAPI document also determines the possible HTTP status codes
 that an operation can return. An operation’s return path can handle

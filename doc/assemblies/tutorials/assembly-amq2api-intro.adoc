@@ -29,7 +29,7 @@ ifeval::["{location}" == "downstream"]
 
 * You must be logged in to {prodname}.
 If you are not already logged in, see
-link:{LinkFuseOnlineTutorials}#logging-in-and-out_tutorials[What to expect the first time that you use {prodname}.]
+link:{LinkSyndesisTutorials}#logging-in-and-out_tutorials[What to expect the first time that you use {prodname}.]
 
 * You are working in a {prodname} evaluation environment that is running
 on OpenShift Dedicated or you are working in a {prodname}

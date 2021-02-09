@@ -96,7 +96,7 @@ exposes to the integrator who will be adding this step to an integration. In
 gets mapped to a message header that has the same name as the property. 
 In this example, the integrator will see one input field, with the
 *Log Prefix* display name. For more details, see 
-link:{LinkFuseOnlineIntegrationGuide}#descriptions-of-user-interface-properties-in-extension-definitions_extensions[Descriptions of user interface properties].
+link:{LinkSyndesisIntegrationGuide}#descriptions-of-user-interface-properties-in-extension-definitions_extensions[Descriptions of user interface properties].
 
 
 When you use beans, you might find it convenient to  

@@ -48,6 +48,6 @@ custom step(s) available and displays the extension's details page.
 
 .Additional resources
 
-* link:{LinkFuseOnlineIntegrationGuide}#creating-connections-from-custom-connectors_connections[Creating a connection from a custom connectors].
-* link:{LinkFuseOnlineIntegrationGuide}#add-custom-step_create[Adding a custom step]
-* link:{LinkFuseOnlineConnectorGuide}#connecting-to-proprietary-databases_db[Connecting to a proprietary database]
+* link:{LinkSyndesisIntegrationGuide}#creating-connections-from-custom-connectors_connections[Creating a connection from a custom connectors].
+* link:{LinkSyndesisIntegrationGuide}#add-custom-step_create[Adding a custom step]
+* link:{LinkSyndesisConnectorGuide}#connecting-to-proprietary-databases_db[Connecting to a proprietary database]

@@ -78,6 +78,6 @@ second element, the value of the *city* field is `Paris`.
 In the third element, the value of the *city* field is `Tokyo`. 
 
 .Additional resources
-* link:{LinkFuseOnlineIntegrationGuide}#about-transformations-on-multiple-source-values_map[About transformations on multiple source values before mapping to one target field]
-* link:{LinkFuseOnlineIntegrationGuide}#combine-multiple-source-fields-into-one-target-field_map[Combining multiple source fields into one target field]
-* link:{LinkFuseOnlineIntegrationGuide}#separate-one-source-field-into-multiple-target-fields_map[Separating one source field into multiple target fields]
+* link:{LinkSyndesisIntegrationGuide}#about-transformations-on-multiple-source-values_map[About transformations on multiple source values before mapping to one target field]
+* link:{LinkSyndesisIntegrationGuide}#combine-multiple-source-fields-into-one-target-field_map[Combining multiple source fields into one target field]
+* link:{LinkSyndesisIntegrationGuide}#separate-one-source-field-into-multiple-target-fields_map[Separating one source field into multiple target fields]
