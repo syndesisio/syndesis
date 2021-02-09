@@ -18,7 +18,7 @@ broker of interest:
 * EnMasse, which is an open source messaging platform
 
 To communicate with one of the following broker types, 
-link:{LinkFuseOnlineConnectorGuide}#connecting-to-amq_amq[use the Red Hat AMQ connector] 
+link:{LinkSyndesisConnectorGuide}#connecting-to-amq_amq[use the Red Hat AMQ connector] 
 to create a connection to the broker of interest:
 
 * Apache ActiveMQ broker that does not support AMQP

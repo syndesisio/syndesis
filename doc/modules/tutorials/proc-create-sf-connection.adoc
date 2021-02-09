@@ -31,11 +31,11 @@ after registration to the {prodname} *Settings* page.
 +
 ifeval::["{context}" == "t2sf"]
 If you did not already register {prodname}, see 
-link:{LinkFuseOnlineTutorials}#register-with-salesforce_t2sf[Registering {prodname} as a Salesforce client application].
+link:{LinkSyndesisTutorials}#register-with-salesforce_t2sf[Registering {prodname} as a Salesforce client application].
 endif::[]
 ifeval::["{context}" == "sf2db"]
 If you did not already register {prodname}, see 
-link:{LinkFuseOnlineTutorials}#register-with-salesforce_sf2db[Registering {prodname} as a Salesforce client application].
+link:{LinkSyndesisTutorials}#register-with-salesforce_sf2db[Registering {prodname} as a Salesforce client application].
 endif::[]
 
 +
@@ -55,7 +55,7 @@ You might need to log in to Salesforce before you see the authorization page.
 +
 If *Connect Salesforce* does not appear, then your {prodname} environment
 is not registered as a Salesforce client application. See
-link:{LinkFuseOnlineConnectorGuide}#register-with-sf_salesforce[Registering {prodname} as a Salesforce client application].
+link:{LinkSyndesisConnectorGuide}#register-with-sf_salesforce[Registering {prodname} as a Salesforce client application].
 When you try to create a Salesforce connection and your {prodname} environment 
 is not registered as a Salesforce client application, then {prodname} displays
 multiple fields that prompt for authorization information. While you can
@@ -71,7 +71,7 @@ correct {prodname} callback URL:
 
 If you get this error message, then in Salesforce, ensure that the {prodname}
 callback URL is specified according to the instructions in
-link:{LinkFuseOnlineConnectorGuide}#register-with-salesforce_salesforce[Registering {prodname} as a Salesforce client application].
+link:{LinkSyndesisConnectorGuide}#register-with-salesforce_salesforce[Registering {prodname} as a Salesforce client application].
 ====
 . Click *Allow* to return to {prodname}.
 . In the *Name* field, enter your choice of a name that

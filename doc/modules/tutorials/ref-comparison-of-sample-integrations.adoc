@@ -10,9 +10,9 @@ which one to try first, the following table compares them.
 [cols="4*"]
 |===
 |&nbsp;
-|link:{LinkFuseOnlineTutorials}#twitter-to-salesforce_tutorials[Twitter to Salesforce]
-|link:{LinkFuseOnlineTutorials}#salesforce-to-db_tutorials[Salesforce to Database]
-|link:{LinkFuseOnlineTutorials}#amq-to-rest-api_tutorials[AMQ to REST API]
+|link:{LinkSyndesisTutorials}#twitter-to-salesforce_tutorials[Twitter to Salesforce]
+|link:{LinkSyndesisTutorials}#salesforce-to-db_tutorials[Salesforce to Database]
+|link:{LinkSyndesisTutorials}#amq-to-rest-api_tutorials[AMQ to REST API]
 
 |What it does
 |Captures and filters tweets that mention

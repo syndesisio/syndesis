@@ -39,4 +39,4 @@ in this procedure. In the mapping step, map a string
 from a data mapping source to the Slack *message* field. This string 
 should contain the message that you want to send to the Slack
 user or channel. See
-link:{LinkFuseOnlineIntegrationGuide}#add-data-mapping-step_create[Adding a data mapper step].
+link:{LinkSyndesisIntegrationGuide}#add-data-mapping-step_create[Adding a data mapper step].

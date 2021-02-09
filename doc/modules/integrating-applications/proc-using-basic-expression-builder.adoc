@@ -77,4 +77,4 @@ Note that the *matches* condition corresponds to the Simple Language
 *regex* operator. 
 
 * If you cannot define the conditions that you need by using the basic expression builder,
-see link:{LinkFuseOnlineIntegrationGuide}#using-advanced-expression-builder_condition[Using the advanced expression builder to specify conditions].
+see link:{LinkSyndesisIntegrationGuide}#using-advanced-expression-builder_condition[Using the advanced expression builder to specify conditions].

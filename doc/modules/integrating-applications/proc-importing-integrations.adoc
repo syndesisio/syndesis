@@ -43,13 +43,13 @@ application that uses the OAuth protocol, register your {prodname}
 environment with the application. The steps vary for each application.
 See the appropriate topic:
 
-* link:{LinkFuseOnlineConnectorGuide}#register-with-dropbox_dropbox[Registering with Dropbox]
-* link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Registering with Google]
-* link:{LinkFuseOnlineConnectorGuide}#registering-with-jira_jira[Registering with Jira]
-* link:{LinkFuseOnlineConnectorGuide}#register-with-rest-api_rest[Registering with a REST API]
-* link:{LinkFuseOnlineConnectorGuide}#register-with-salesforce_salesforce[Registering with Salesforce]
-* link:{LinkFuseOnlineConnectorGuide}#connecting-to-concur_connectors[Connecting to SAP Concur]
-* link:{LinkFuseOnlineConnectorGuide}#register-with-twitter_twitter[Registering with Twitter]
+* link:{LinkSyndesisConnectorGuide}#register-with-dropbox_dropbox[Registering with Dropbox]
+* link:{LinkSyndesisConnectorGuide}#register-with-google_google[Registering with Google]
+* link:{LinkSyndesisConnectorGuide}#registering-with-jira_jira[Registering with Jira]
+* link:{LinkSyndesisConnectorGuide}#register-with-rest-api_rest[Registering with a REST API]
+* link:{LinkSyndesisConnectorGuide}#register-with-salesforce_salesforce[Registering with Salesforce]
+* link:{LinkSyndesisConnectorGuide}#connecting-to-concur_connectors[Connecting to SAP Concur]
+* link:{LinkSyndesisConnectorGuide}#register-with-twitter_twitter[Registering with Twitter]
 
 . In the left panel, click *Connections* and confirm that there are no
 longer any connections that require configuration.

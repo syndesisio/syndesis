@@ -36,7 +36,7 @@ OpenAPI document.
 +
 You upload this schema to Syndesis. Syndesis makes the
 API service available and provides the URL for API calls. This lets you 
-link:{LinkFuseOnlineIntegrationGuide}#trigger-integrations-with-api-calls_ug[trigger integration execution with an API call]. 
+link:{LinkSyndesisIntegrationGuide}#trigger-integrations-with-api-calls_ug[trigger integration execution with an API call]. 
 
 * A `JAR` file that implements a Syndesis extension. An extension
 can be any one of the following:  

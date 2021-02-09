@@ -60,6 +60,6 @@ you added it.
 Add a data mapper step before the OData connection. You must map 
 source fields that provide the data that is required to create a new entity, 
 to update an entity, or to delete an entity. See 
-link:{LinkFuseOnlineIntegrationGuide}#mapping-data_ug[Mapping integration data to fields for the next connection].
+link:{LinkSyndesisIntegrationGuide}#mapping-data_ug[Mapping integration data to fields for the next connection].
  
  
