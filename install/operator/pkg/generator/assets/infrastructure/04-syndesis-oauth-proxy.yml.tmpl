@@ -54,6 +54,7 @@
           imagePullPolicy: Always
           args:
             - --provider=openshift
+            - --cookie-name=oauth_proxy
             - --client-id=system:serviceaccount:{{.OpenShiftProject}}:syndesis-oauth-client
             - --upstream=http://syndesis-server/api/
             - --upstream=http://syndesis-server/mapper/
