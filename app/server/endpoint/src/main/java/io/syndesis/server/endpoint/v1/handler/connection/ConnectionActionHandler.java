@@ -136,9 +136,8 @@ public class ConnectionActionHandler {
             .forEach(step -> step.getProperties().forEach((k, v) -> parameters.putIfAbsent(k, null)));
 
         // add the pattern as a property
-        if (action.getPattern() != null) {
-            parameters.put(action.getPattern().getDeclaringClass().getSimpleName(), action.getPattern().name());
-        }
+        action.getPattern().ifPresent(pattern -> parameters.put("Pattern", pattern.name()));
+
         // lastly put all connection properties
         parameters.putAll(encryptionComponent.decrypt(connection.getConfiguredProperties()));
 

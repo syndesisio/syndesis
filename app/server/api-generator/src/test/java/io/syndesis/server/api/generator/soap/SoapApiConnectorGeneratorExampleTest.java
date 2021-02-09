@@ -138,7 +138,7 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
             assertThat(a.getActionType()).isEqualTo(ConnectorAction.TYPE_CONNECTOR);
             assertThat(a.getName()).isNotEmpty();
             assertThat(a.getDescription()).isNotEmpty();
-            assertThat(a.getPattern()).isEqualTo(Action.Pattern.To);
+            assertThat(a.getPattern()).contains(Action.Pattern.To);
 
             final ConnectorDescriptor descriptor = a.getDescriptor();
             assertThat(descriptor).isNotNull();

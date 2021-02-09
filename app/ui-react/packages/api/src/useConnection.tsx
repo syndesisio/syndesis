@@ -1,11 +1,5 @@
 import { IConnectionOverview } from '@syndesis/models';
-import {
-  getActionsWithFrom,
-  getActionsWithPipe,
-  getActionsWithTo,
-  isConfigRequired,
-  isDerived,
-} from './helpers';
+import { getActionsWithPattern, isConfigRequired, isDerived } from './helpers';
 import { useApiResource } from './useApiResource';
 import { transformConnectorResponse } from './useConnector';
 import { useServerEvents } from './useServerEvents';
@@ -19,9 +13,22 @@ export const transformConnectionResponse = (
     : undefined;
   return {
     ...connection,
-    actionsWithFrom: getActionsWithFrom(connector ? connector.actions : []),
-    actionsWithPipe: getActionsWithPipe(connector ? connector.actions : []),
-    actionsWithTo: getActionsWithTo(connector ? connector.actions : []),
+    actionsWithFrom: getActionsWithPattern(
+      'From',
+      connector ? connector.actions : []
+    ),
+    actionsWithPipe: getActionsWithPattern(
+      'Pipe',
+      connector ? connector.actions : []
+    ),
+    actionsWithPollEnrich: getActionsWithPattern(
+      'PollEnrich',
+      connector ? connector.actions : []
+    ),
+    actionsWithTo: getActionsWithPattern(
+      'To',
+      connector ? connector.actions : []
+    ),
     connector,
     derived: isDerived(connection),
     isConfigRequired: isConfigRequired(connection),

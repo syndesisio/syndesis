@@ -57,7 +57,7 @@ public interface Action extends WithResourceId, WithKind, WithName, WithTags, Wi
     String TYPE_CONNECTOR = "connector";
     String TYPE_STEP = "step";
 
-    enum Pattern { From, Pipe, To }
+    enum Pattern { From, Pipe, To, PollEnrich }
 
     @Override
     default Kind getKind() {
@@ -70,7 +70,7 @@ public interface Action extends WithResourceId, WithKind, WithName, WithTags, Wi
 
     ActionDescriptor getDescriptor();
 
-    Pattern getPattern();
+    Optional<Pattern> getPattern();
 
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
