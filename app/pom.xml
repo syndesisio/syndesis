@@ -164,6 +164,30 @@
     <google-api-client-version>1.22.0</google-api-client-version>
     <kafka-clients.version>2.5.0</kafka-clients.version>
     <netty.version>4.1.48.Final</netty.version>
+
+    <!-- general Sonar configuration -->
+    <sonar.projectKey>${project.artifactId}</sonar.projectKey>
+    <sonar.organization>syndesisio</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <sonar.projectName>${project.name}</sonar.projectName>
+    <sonar.sourceEncoding>${project.build.sourceEncoding}</sonar.sourceEncoding>
+    <sonar.language>java</sonar.language>
+
+    <!-- paths of reports -->
+    <sonar.junit.reportPaths>**/target/surefire-reports/*.xml</sonar.junit.reportPaths>
+    <sonar.java.pmd.reportPaths>**/target/pmd.xml</sonar.java.pmd.reportPaths>
+    <sonar.java.checkstyle.reportPaths>**/target/checkstyle-results.xml</sonar.java.checkstyle.reportPaths>
+    <sonar.coverage.jacoco.xmlReportPaths>**/target/**/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+
+    <!-- jacoco configuration -->
+    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+    <jacoco.version>${dep.plugin.jacoco.version}</jacoco.version>
+
+    <!-- extra configuration to make it work -->
+    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+    <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
+    <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
   </properties>
 
   <modules>
@@ -175,7 +199,6 @@
     <module>s2i</module>
     <module>meta</module>
     <module>ui-react</module>
-    <module>test</module>
   </modules>
 
   <profiles>
@@ -386,6 +409,20 @@
             <executions>
               <execution>
                 <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>basepom.default-it</id>
                 <phase />
               </execution>
             </executions>
@@ -644,10 +681,6 @@
     <!-- Sonar Cloud and Coverage -->
     <profile>
       <id>sonarcloud</id>
-      <properties>
-        <basepom.check.fail-coverage>false</basepom.check.fail-coverage>
-        <basepom.check.skip-coverage>false</basepom.check.skip-coverage>
-      </properties>
       <build>
         <plugins>
           <plugin>
@@ -656,7 +689,7 @@
             <configuration>
               <!-- Fix "There was a timeout or other error in the fork" errors -->
               <forkedProcessTimeoutInSeconds>120</forkedProcessTimeoutInSeconds>
-              <argLine>@{surefireArgLine}</argLine>
+              <argLine>@{surefireArgLine} -Xmx${basepom.test.memory} -Dfile.encoding=${project.build.sourceEncoding}</argLine>
             </configuration>
           </plugin>
           <plugin>
@@ -704,30 +737,6 @@
         <basepom.check.phase-dependency>none</basepom.check.phase-dependency>
         <basepom.check.phase-checkstyle>none</basepom.check.phase-checkstyle>
         <skipTests>true</skipTests>
-
-        <!-- general Sonar configuration -->
-        <sonar.projectKey>${project.artifactId}</sonar.projectKey>
-        <sonar.organization>syndesisio</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.projectName>${project.name}</sonar.projectName>
-        <sonar.sourceEncoding>${project.build.sourceEncoding}</sonar.sourceEncoding>
-        <sonar.language>java</sonar.language>
-
-        <!-- paths of reports -->
-        <sonar.junit.reportPaths>**/target/surefire-reports/*.xml</sonar.junit.reportPaths>
-        <sonar.java.pmd.reportPaths>**/target/pmd.xml</sonar.java.pmd.reportPaths>
-        <sonar.java.checkstyle.reportPaths>**/target/checkstyle-results.xml</sonar.java.checkstyle.reportPaths>
-        <sonar.coverage.jacoco.xmlReportPaths>**/target/**/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-
-        <!-- jacoco configuration -->
-        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-        <jacoco.version>0.8.5</jacoco.version>
-
-        <!-- extra configuration to make it work -->
-        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
-        <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
       </properties>
       <build>
         <plugins>
@@ -776,16 +785,6 @@
           </plugin>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-invoker-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>integration-tests</id>
-                <phase>none</phase>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-resources-plugin</artifactId>
             <executions>
               <execution>
@@ -802,12 +801,15 @@
                 <id>basepom.invoker-integration-testing.default</id>
                 <phase>none</phase>
               </execution>
+              <execution>
+                <id>integration-tests</id>
+                <phase>none</phase>
+              </execution>
             </executions>
           </plugin>
           <plugin>
             <groupId>org.sonarsource.scanner.maven</groupId>
             <artifactId>sonar-maven-plugin</artifactId>
-            <version>3.8.0.2131 </version>
             <executions>
               <execution>
                 <id>sonar-cloud</id>
@@ -3423,6 +3425,12 @@
             <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.sonarsource.scanner.maven</groupId>
+        <artifactId>sonar-maven-plugin</artifactId>
+        <version>3.8.0.2131</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
