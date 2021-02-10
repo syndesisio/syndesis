@@ -1,0 +1,52 @@
+name: On PR
+
+on: 
+  pull_request_target
+
+jobs:
+  full-pr-build:
+    runs-on: ubuntu-latest
+    env:
+      IMAGES_DIR: syndesis_images
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Build Syndesis
+        run: tools/bin/syndesis build -d  --batch-mode --all-images --docker
+      - name: images
+        run: docker images
+      - name: docker save
+        run: |
+          mkdir $IMAGES_DIR
+          IMAGES=`docker images --filter=reference='syndesis/syndesis-*' --format "{{.Repository}}"`
+          for image in $IMAGES
+          do
+            echo Saving $image ..
+            COMPONENT=$(echo $image | cut -d '/' -f 2)
+            echo $image -> $IMAGES_DIR/$COMPONENT.tar
+            docker save $image -o $IMAGES_DIR/$COMPONENT.tar
+          done
+          echo "{ \"run_id\": \"$GITHUB_RUN_ID\" }" > $IMAGES_DIR/github-metadata.json
+      - name: env
+        run: env
+      - name: Saving docker images
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.IMAGES_DIR }}
+          path: ${{ env.IMAGES_DIR }}
+          retention-days: 4
+      - name: notify quay
+        uses: satak/webrequest-action@master
+        with:
+          url: 'https://ci.fabric8.io/generic-webhook-trigger/invoke?token=syndesis-github-to-quay'
+          method: POST
+          payload: '{"run_id":"${{ github.run_id }}"}'
