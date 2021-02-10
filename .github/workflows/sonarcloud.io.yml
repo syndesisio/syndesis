@@ -38,13 +38,9 @@ jobs:
         uses: AdoptOpenJDK/install-jdk@v1
         with:
           version: '11'
-      - name: Remove Problematic BOM project
-        run: rm -r app/extension/bom
-      - name: Remove Problematic BOM project reference
-        run: sed -i "/bom/d" app/extension/pom.xml
       - name: Send analysis to SonarCloud
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: cd app; mvn verify -P\!non-staging -Dsonar.login=${{secrets.SONAR_TOKEN}} -Psonarcloud_send -pl \!ui-react
+        run: cd app; ./mvnw -N -Dsonar.login=${{secrets.SONAR_TOKEN}} sonar:sonar
         
