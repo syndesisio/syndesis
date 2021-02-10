@@ -30,7 +30,7 @@
 
     <properties>
         <!-- The 5.1.0 version uses an old guava 20 version incompatible with the default guava set on syndesis -->
-        <atlassian-jira-rest-java-client-version>5.1.6</atlassian-jira-rest-java-client-version>
+        <atlassian-jira-rest-java-client-version>5.2.2</atlassian-jira-rest-java-client-version>
         <atlassian-util-concurrent-version>4.0.1</atlassian-util-concurrent-version>
     </properties>
 
