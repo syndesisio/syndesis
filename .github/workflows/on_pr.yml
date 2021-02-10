@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       IMAGES_DIR: syndesis_images
+      COMMIT_ID: ${{ github.event.pull_request.head.sha }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -20,8 +22,8 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Build Syndesis
-        run: tools/bin/syndesis build -d  --batch-mode --all-images --docker
+#      - name: Build Syndesis
+#        run: tools/bin/syndesis build -d  --batch-mode --all-images --docker
       - name: images
         run: docker images
       - name: docker save
@@ -35,7 +37,7 @@ jobs:
             echo $image -> $IMAGES_DIR/$COMPONENT.tar
             docker save $image -o $IMAGES_DIR/$COMPONENT.tar
           done
-          echo "{ \"run_id\": \"$GITHUB_RUN_ID\" }" > $IMAGES_DIR/github-metadata.json
+          echo "{ \"run_id\": \"$GITHUB_RUN_ID\", \"github_pr_id\": \"$PR_NUMBER\", \"commit_id\": \"$COMMIT_ID\" }" > $IMAGES_DIR/github-metadata.json
       - name: env
         run: env
       - name: Saving docker images
@@ -49,4 +51,4 @@ jobs:
         with:
           url: 'https://ci.fabric8.io/generic-webhook-trigger/invoke?token=syndesis-github-to-quay'
           method: POST
-          payload: '{"run_id":"${{ github.run_id }}"}'
+          payload: '{"run_id":"${{ github.run_id }}", "github_pr_id": "${{ env.PR_NUMBER }}", "commit_id": "${{ env.COMMIT_ID }}" }'
