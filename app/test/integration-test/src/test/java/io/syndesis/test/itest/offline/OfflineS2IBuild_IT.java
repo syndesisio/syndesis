@@ -15,7 +15,6 @@
  */
 package io.syndesis.test.itest.offline;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 import io.syndesis.common.model.integration.Integration;
@@ -44,7 +43,7 @@ public class OfflineS2IBuild_IT {
         .build();
 
     @Test
-    public void s2iBuildShouldBeOffline() throws IOException {
+    public void s2iBuildShouldBeOffline() {
         final ProjectBuilder builder = new SpringBootProjectBuilder("offline-project", SyndesisTestEnvironment.getSyndesisVersion());
 
         final Path project = builder.build(() -> integration);
@@ -55,13 +54,14 @@ public class OfflineS2IBuild_IT {
 
             final String containerId = containerInfo.getId();
 
-            try (DockerClient docker = s2i.getDockerClient();
-                InspectContainerCmd inspectCmd = docker.inspectContainerCmd(containerId)) {
+            @SuppressWarnings("resource") // global docker client, we musn't close it
+            final DockerClient docker = s2i.getDockerClient(); 
+            try (InspectContainerCmd inspectCmd = docker.inspectContainerCmd(containerId)) {
 
                 // for some reason containerInfo.getState().getExitCode() always
                 // returns 0 so we run the `docker inspect` command instead
                 final ContainerState state = inspectCmd.exec().getState();
-                assertThat(state.getExitCode())
+                assertThat(state.getExitCodeLong())
                     .describedAs(new Description() {
                         @Override
                         public String value() {
