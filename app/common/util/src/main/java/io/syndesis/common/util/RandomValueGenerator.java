@@ -15,7 +15,7 @@
  */
 package io.syndesis.common.util;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 /**
  * Generates strings values according to a generator string.
@@ -28,7 +28,7 @@ public final class RandomValueGenerator {
     private static final String ALPHANUM_DOMAIN = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final String ALPHANUM_SCHEME = "alphanum";
 
-    private static final Random RANDOMIZER = new Random();
+    private static final SecureRandom RANDOMIZER = new SecureRandom();;
 
     private RandomValueGenerator() {
     }

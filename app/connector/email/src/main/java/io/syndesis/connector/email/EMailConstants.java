@@ -96,12 +96,12 @@ public interface EMailConstants extends StringConstants {
         }
 
         public static Protocol toSecureProtocol(String name) {
-            if (name == null) {
+            Protocol p = getValueOf(name);
+            if(p != null) {
+                return p.toSecureProtocol();
+            } else {
                 return null;
             }
-
-            Protocol p = getValueOf(name);
-            return p.toSecureProtocol();
         }
 
         public Protocol toSecureProtocol() {
