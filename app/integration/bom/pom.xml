@@ -29,7 +29,7 @@
   <properties>
     <spring-boot.version>2.3.4.RELEASE</spring-boot.version>
     <camel.version>3.4.4</camel.version>
-    <atlasmap.version>2.1.4</atlasmap.version>
+    <atlasmap.version>2.1.5</atlasmap.version>
     <jackson.version>2.11.3</jackson.version>
   </properties>
 
