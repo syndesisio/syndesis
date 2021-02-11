@@ -350,6 +350,11 @@ public class SqlFileStore {
 
         @Override
         public void close() throws IOException {
+            if (in == null) {
+                // we closed already;
+                return;
+            }
+
             try {
                 super.close();
             } finally {
