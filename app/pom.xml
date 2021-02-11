@@ -2380,6 +2380,12 @@
       </dependency>
 
       <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-compress</artifactId>
+        <version>${commons.compress.version}</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.jdbi</groupId>
         <artifactId>jdbi</artifactId>
         <version>${jdbi.version}</version>
