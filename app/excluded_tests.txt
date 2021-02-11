@@ -1,0 +1,4 @@
+**/ODataReadRouteSplitResultsTest
+**/AMQToHttp_IT
+**/HttpToAMQ_IT
+**/OfflineS2IBuild_IT
