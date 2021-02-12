@@ -1,7 +1,7 @@
 {
   "private": true,
   "devDependencies": {
-    "@commitlint/cli": "^8.3.3",
+    "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^8.3.3",
     "husky": "~3",
     "lint-staged": "~9",
