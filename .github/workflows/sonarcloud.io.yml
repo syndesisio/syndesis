@@ -1,6 +1,5 @@
 name: SonarCloud.io
 on:
-   - pull_request
    - push
   
 jobs:
