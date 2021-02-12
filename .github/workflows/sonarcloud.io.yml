@@ -1,7 +1,7 @@
 name: SonarCloud.io
 on:
    - push
-  
+
 jobs:
   build:
     name: SonarCloud.io
@@ -41,5 +41,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: cd app; ./mvnw -N -Dsonar.login=${{secrets.SONAR_TOKEN}} sonar:sonar
-        
+        run: cd app; ./mvnw -q -B -pl '!:extension-bom,!:integration-bom' jacoco:report && ./mvnw -B -N -Dsonar.login=${{secrets.SONAR_TOKEN}} sonar:sonar
+
