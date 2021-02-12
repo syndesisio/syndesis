@@ -57,7 +57,7 @@
     "@syndesis/utils": "*",
     "deepmerge": "^4.2.2",
     "file-saver": "^2.0.1",
-    "immer": "^6.0.3",
+    "immer": "^8.0.1",
     "monaco-editor-core": "^0.19.3",
     "monaco-languageclient": "^0.10.2",
     "react-monaco-editor": "^0.33.0",
