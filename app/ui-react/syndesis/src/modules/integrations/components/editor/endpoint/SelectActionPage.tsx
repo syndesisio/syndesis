@@ -66,13 +66,20 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                     );
                     // if we're looking at the 1st step, only show
                     // actions with 'From'.  If we're looking at the
-                    // last step, only show actions with 'To'.
-                    // Otherwise, show actions with 'To' and 'Pipe'.
+                    // last step, only show actions with 'To' or 'PollEnrich'.
+                    // Otherwise, show actions with 'To', 'Pipe' or 'PollEnrich'.
                     const actions =
                       positionAsNumber > 0
                         ? positionAsNumber === steps.length
-                          ? data.actionsWithTo
-                          : [...data.actionsWithTo, ...data.actionsWithPipe]
+                          ? [
+                              ...data.actionsWithTo,
+                              ...data.actionsWithPollEnrich,
+                            ]
+                          : [
+                              ...data.actionsWithTo,
+                              ...data.actionsWithPipe,
+                              ...data.actionsWithPollEnrich,
+                            ]
                         : data.actionsWithFrom;
                     return (
                       <>

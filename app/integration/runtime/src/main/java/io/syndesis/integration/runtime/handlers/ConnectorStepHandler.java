@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import io.syndesis.common.model.action.Action.Pattern;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -34,6 +35,7 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyFactory;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.spi.ClassResolver;
@@ -43,12 +45,13 @@ import org.slf4j.LoggerFactory;
 
 import static io.syndesis.common.model.InputDataShapeAware.trySetInputDataShape;
 import static io.syndesis.common.model.OutputDataShapeAware.trySetOutputDataShape;
+import static io.syndesis.integration.component.proxy.Processors.pollEnricher;
 
 public class ConnectorStepHandler implements IntegrationStepHandler, IntegrationStepHandler.Consumer {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnectorStepHandler.class);
 
     @Override
-    public boolean canHandle(Step step) {
+    public boolean canHandle(final Step step) {
         if (StepKind.endpoint != step.getStepKind() && StepKind.connector != step.getStepKind()) {
             return false;
         }
@@ -64,12 +67,12 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
 
         return Optionals.first(
             step.getActionAs(ConnectorAction.class).get().getDescriptor().getComponentScheme(),
-            step.getConnection().get().getConnector().get().getComponentScheme()
-        ).isPresent();
+            step.getConnection().get().getConnector().get().getComponentScheme()).isPresent();
     }
 
     @Override
-    public Optional<ProcessorDefinition<?>> handle(final Step step, final ProcessorDefinition<?> route, final IntegrationRouteBuilder builder, final String flowIndex, final String stepIndex) {
+    public Optional<ProcessorDefinition<?>> handle(final Step step, final ProcessorDefinition<?> route, final IntegrationRouteBuilder builder,
+        final String flowIndex, final String stepIndex) {
         // Model
         final Connection connection = step.getConnection().get();
         final Connector connector = connection.getConnector().get();
@@ -86,9 +89,10 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         final Map<String, String> properties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
         final Map<String, ConfigurationProperty> configurationProperties = CollectionsUtils.aggregate(connector.getProperties(), action.getProperties());
 
-        // Add ConfigurationProperty's default value to the available properties.
+        // Add ConfigurationProperty's default value to the available
+        // properties.
         // Workaround for https://github.com/syndesisio/syndesis/issues/1713
-        for (Map.Entry<String, ConfigurationProperty> entry: configurationProperties.entrySet()) {
+        for (final Map.Entry<String, ConfigurationProperty> entry : configurationProperties.entrySet()) {
             if (ObjectHelper.isNotEmpty(entry.getValue().getDefaultValue())) {
                 properties.putIfAbsent(entry.getKey(), Objects.toString(entry.getValue().getDefaultValue(), null));
             }
@@ -107,7 +111,7 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
             .filter(Predicates.or(connector::isRaw, action::isRaw))
             .forEach(e -> e.setValue(String.format("RAW(%s)", e.getValue())));
 
-        //Connector/Action properties have the precedence
+        // Connector/Action properties have the precedence
         connector.getConfiguredProperties().forEach(properties::put);
         descriptor.getConfiguredProperties().forEach(properties::put);
 
@@ -131,23 +135,37 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         context.removeComponent(component.getComponentId());
         try {
             context.removeService(component);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new IllegalStateException("Unable to remove component `" + component.getComponentId() + "` from Camel managed services", e);
         }
 
         // Register component
         try {
             context.addService(component, true, true);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new IllegalStateException("Unable to add component `" + component.getComponentId() + "` to Camel managed services", e);
         }
         context.addComponent(component.getComponentId(), component);
 
         final ProcessorDefinition<?> definition;
         if (route == null) {
+            // we're at step 0
             definition = builder.from(componentId);
         } else {
-            definition = route.to(componentId);
+            // route exists we passed step 0
+            final Pattern pattern = action.getPattern().orElse(Pattern.To);
+            switch (pattern) {
+            case To:
+            case Pipe:
+            case From: // sql-start connector uses From
+                definition = route.to(componentId);
+                break;
+            case PollEnrich:
+                definition = route.process(pollEnricher(componentId, component));
+                break;
+            default:
+                throw new UnsupportedOperationException("'" + pattern + "' pattern not supported");
+            }
         }
 
         return Optional.ofNullable(definition);
@@ -157,7 +175,8 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
     // Helpers
     // *************************
 
-    private static ComponentProxyComponent resolveComponent(String componentId, String componentScheme, CamelContext context, Connector connector, ConnectorDescriptor descriptor) {
+    private static ComponentProxyComponent resolveComponent(final String componentId, final String componentScheme, final CamelContext context,
+        final Connector connector, final ConnectorDescriptor descriptor) {
         ComponentProxyFactory factory = ComponentProxyComponent::new;
 
         if (descriptor.getConnectorFactory().isPresent()) {
@@ -169,14 +188,14 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         return factory.newInstance(componentId, componentScheme);
     }
 
-    private static Optional<ComponentProxyFactory> resolveComponentProxyFactory(CamelContext context, Optional<String> componentProxyFactory) {
+    private static Optional<ComponentProxyFactory> resolveComponentProxyFactory(final CamelContext context, final Optional<String> componentProxyFactory) {
         ComponentProxyFactory factory = null;
 
         if (componentProxyFactory.isPresent()) {
             final String factoryType = componentProxyFactory.get();
             final ClassResolver resolver = context.getClassResolver();
 
-            Class<? extends ComponentProxyFactory> type = resolver.resolveClass(factoryType, ComponentProxyFactory.class);
+            final Class<? extends ComponentProxyFactory> type = resolver.resolveClass(factoryType, ComponentProxyFactory.class);
             if (type == null) {
                 throw new IllegalArgumentException("Unable to resolve a ComponentProxyFactory of type: " + factoryType);
             }

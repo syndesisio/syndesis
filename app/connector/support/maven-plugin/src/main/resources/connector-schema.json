@@ -143,7 +143,8 @@
               "type": "string"
             },
             "pattern": {
-              "type": "string"
+              "type": "string",
+              "enum": ["From", "Pipe", "To", "PollEnrich"]
             },
             "tags": {
               "type": "array",

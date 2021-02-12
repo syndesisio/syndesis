@@ -1,19 +1,15 @@
 import { Action, ConnectionOverview } from '@syndesis/models';
 import * as React from 'react';
 import { IFetchState } from './Fetch';
-import {
-  getActionsWithFrom,
-  getActionsWithPipe,
-  getActionsWithTo,
-} from './helpers';
+import { getActionsWithPattern } from './helpers';
 import { SyndesisFetch } from './SyndesisFetch';
 
 export interface IConnectionOverviewExtended extends ConnectionOverview {
   readonly actionsWithFrom: Action[];
   readonly actionsWithPipe: Action[];
   readonly actionsWithTo: Action[];
+  readonly actionsWithPollEnrich: Action[];
 }
-
 
 export interface IWithConnectionProps {
   id: string;
@@ -36,13 +32,20 @@ export class WithConnection extends React.Component<IWithConnectionProps> {
             ...response,
             data: {
               ...response.data,
-              actionsWithFrom: getActionsWithFrom(
+              actionsWithFrom: getActionsWithPattern(
+                'From',
                 response.data.connector ? response.data.connector.actions : []
               ),
-              actionsWithPipe: getActionsWithPipe(
+              actionsWithPipe: getActionsWithPattern(
+                'Pipe',
                 response.data.connector ? response.data.connector.actions : []
               ),
-              actionsWithTo: getActionsWithTo(
+              actionsWithPollEnrich: getActionsWithPattern(
+                'PollEnrich',
+                response.data.connector ? response.data.connector.actions : []
+              ),
+              actionsWithTo: getActionsWithPattern(
+                'To',
                 response.data.connector ? response.data.connector.actions : []
               ),
             },

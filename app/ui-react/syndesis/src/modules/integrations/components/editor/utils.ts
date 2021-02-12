@@ -435,7 +435,11 @@ export function filterStepsByPosition(
     if ((step.connection || (step as Connection)).connector) {
       return (step.connection || (step as Connection)).connector!.actions.some(
         (action: ConnectorAction) => {
-          return action.pattern === 'To' || action.pattern === 'Pipe';
+          return (
+            action.pattern === 'To' ||
+            action.pattern === 'Pipe' ||
+            action.pattern === 'PollEnrich'
+          );
         }
       );
     }
