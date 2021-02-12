@@ -91,13 +91,6 @@ public final class ErrorCategory {
         map.put("org.springframework.jdbc.SQLWarningException", NON_TRANSIENT_DATA_ACCESS_ERROR);
         map.put("org.springframework.jdbc.UncategorizedSQLException", NON_TRANSIENT_DATA_ACCESS_ERROR);
         map.put("org.springframework.dao.InvalidDataAccessResourceUsageException", NON_TRANSIENT_DATA_ACCESS_ERROR);
-        map.put("org.springframework.jdbc.BadSqlGrammarException", NON_TRANSIENT_DATA_ACCESS_ERROR);
-        map.put("org.springframework.jca.cci.CciOperationNotSupportedException", NON_TRANSIENT_DATA_ACCESS_ERROR);
-        map.put("org.springframework.orm.hibernate5.HibernateQueryException", NON_TRANSIENT_DATA_ACCESS_ERROR);
-        map.put("org.springframework.dao.IncorrectUpdateSemanticsDataAccessException", NON_TRANSIENT_DATA_ACCESS_ERROR);
-        map.put("org.springframework.jdbc.InvalidResultSetAccessException", NON_TRANSIENT_DATA_ACCESS_ERROR);
-        map.put("org.springframework.jca.cci.RecordTypeNotSupportedException", NON_TRANSIENT_DATA_ACCESS_ERROR);
-        map.put("org.springframework.dao.TypeMismatchDataAccessException", NON_TRANSIENT_DATA_ACCESS_ERROR);
 
         // Recoverable Exception
         map.put("org.springframework.dao.RecoverableDataAccessException", DATA_ACCESS_ERROR);

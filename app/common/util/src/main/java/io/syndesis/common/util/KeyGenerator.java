@@ -19,8 +19,7 @@ import net.iharder.Base64;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
+import java.security.SecureRandom;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.LongSupplier;
 
@@ -46,7 +45,7 @@ public final class KeyGenerator {
     private static final AtomicLong RANDOMNESS_LONG;
 
     static {
-        final Random random = ThreadLocalRandom.current();
+        final SecureRandom random = new SecureRandom();
         randomnessByte = (byte) random.nextInt();
         RANDOMNESS_LONG = new AtomicLong(random.nextLong());
     }
