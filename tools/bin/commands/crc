@@ -19,7 +19,7 @@ crc::usage() {
                               'crc stop && rm -rf ~/.crc/* && crc start'
     --operator-only           Only install the operator but no custom resource
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
-                              version from master is installed
+                              version is installed
     --memory <mem>            How much memory to use when doing a reset. Default: $DEFAULT_RAM
     --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: $DEFAULT_CPUS
     --pull-secret-file <file> File holding the OCP4 pull secret
