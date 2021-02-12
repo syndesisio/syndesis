@@ -106,6 +106,8 @@
     <!-- takes a really long time -->
     <basepom.check.skip-dependency-versions-check>true</basepom.check.skip-dependency-versions-check>
     <basepom.it.memory>1024m</basepom.it.memory>
+    <!-- Fix "There was a timeout or other error in the fork" errors -->
+    <basepom.test.timeout>120</basepom.test.timeout>
 
     <!-- Plugin versions -->
     <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
@@ -164,6 +166,30 @@
     <google-api-client-version>1.22.0</google-api-client-version>
     <kafka-clients.version>2.5.0</kafka-clients.version>
     <netty.version>4.1.48.Final</netty.version>
+
+    <!-- Sonar configuration -->
+    <sonar.projectKey>${project.artifactId}</sonar.projectKey>
+    <sonar.organization>syndesisio</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <sonar.projectName>${project.name}</sonar.projectName>
+    <sonar.sourceEncoding>${project.build.sourceEncoding}</sonar.sourceEncoding>
+    <sonar.language>java</sonar.language>
+
+    <!-- paths of reports -->
+    <sonar.junit.reportPaths>**/target/surefire-reports/*.xml</sonar.junit.reportPaths>
+    <sonar.java.pmd.reportPaths>**/target/pmd.xml</sonar.java.pmd.reportPaths>
+    <sonar.java.checkstyle.reportPaths>**/target/checkstyle-results.xml</sonar.java.checkstyle.reportPaths>
+    <sonar.coverage.jacoco.xmlReportPaths>**/target/**/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+
+    <!-- jacoco configuration -->
+    <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+    <jacoco.version>${dep.plugin.jacoco.version}</jacoco.version>
+
+    <!-- extra configuration to make it work -->
+    <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+    <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
+    <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
   </properties>
 
   <modules>
@@ -998,15 +1024,6 @@
         </plugin>
 
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <configuration>
-            <!-- Fix "There was a timeout or other error in the fork" errors -->
-            <forkedProcessTimeoutInSeconds>120</forkedProcessTimeoutInSeconds>
-          </configuration>
-        </plugin>
-
-        <plugin>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-maven-plugin</artifactId>
           <version>${spring-boot.version}</version>
@@ -1094,6 +1111,12 @@
             <skipPoms>false</skipPoms>
             <useNativeGit>true</useNativeGit>
           </configuration>
+        </plugin>
+        
+        <plugin>
+          <groupId>org.sonarsource.scanner.maven</groupId>
+          <artifactId>sonar-maven-plugin</artifactId>
+          <version>3.8.0.2131</version>
         </plugin>
 
       </plugins>
