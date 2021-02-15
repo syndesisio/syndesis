@@ -299,7 +299,7 @@ create_or_delete_openshift_resource() {
             fi
         fi
     else
-        local url="https://raw.githubusercontent.com/syndesisio/syndesis/${tag:-master}/${resource}"
+        local url="https://raw.githubusercontent.com/syndesisio/syndesis/${tag:-$(curl -s https://api.github.com/repos/syndesisio/syndesis |jq -r .default_branch)}/${resource}"
 
         if [ -z "$parameters" ]; then
             result=$(oc $what -f $url >$ERROR_FILE 2>&1)

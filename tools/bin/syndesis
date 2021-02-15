@@ -45,7 +45,7 @@ EOT
 
 Global options:
 
--r  --rebase                  Fetch origin/master and try a rebase
+-r  --rebase                  Fetch default branch from origin and try a rebase
 -h  --help                    Display this help message
     --verbose                 Verbose script output (set -x)
 

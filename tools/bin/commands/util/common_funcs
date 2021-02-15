@@ -145,15 +145,17 @@ syndesis_config_dir() {
 # ======================================================
 # Git update functions
 git_rebase_upstream() {
-  echo "git fetch upstream master"
-  git fetch upstream master
-  echo -n "git rebase upstream/master"
-  if ! git rebase upstream/master; then
+  local default_branch
+  default_branch=$(curl -s https://api.github.com/repos/syndesisio/syndesis |jq -r .default_branch)
+  echo "git fetch upstream ${default_branch}"
+  git fetch upstream "${default_branch}"
+  echo -n "git rebase upstream/${default_branch}"
+  if ! git rebase "upstream/${default_branch}"; then
     echo " (failed)"
     echo "git stash"
     git stash
-    echo "git rebase upstream/master"
-    git rebase upstream/master
+    echo "git rebase upstream/${default_branch}"
+    git rebase "upstream/${default_branch}"
     echo "git stash pop"
     git stash pop
   else
@@ -164,15 +166,12 @@ git_rebase_upstream() {
 # returns `"true"` if subtree path has changes
 has_changes() {
   local subtree_path="${1:-}"
-  local ref="${2:-master}"
-  local hash="${CIRCLE_SHA1:-$(git rev-parse HEAD)}"
+  local ref="${2:-${GITHUB_BASE_REF:-$(curl -s https://api.github.com/repos/syndesisio/syndesis |jq -r .default_branch)}}"
+  local hash="${GITHUB_SHA:-$(git rev-parse HEAD)}"
 
-  local changed_paths="$(git diff ..${ref} --name-only | tr '\n' ' ') $(git status --porcelain=v1 | cut -c 4- | tr '\n' ' ')"
+  local changed_paths
+  changed_paths="$(git diff .."${ref}" --name-only | tr '\n' ' ') $(git status --porcelain=v1 | cut -c 4- | tr '\n' ' ')"
 
-  # when on `master` on CircleCI, compute changed paths for the commit being built
-  if [ "master" == "${CIRCLE_BRANCH:-}" ]; then
-    changed_paths="$changed_paths $(git log $hash^..$hash --name-only --pretty='format:' | tr '\n' ' ')"
-  fi
   if [[ " $changed_paths" == *" ${subtree_path}"* ]]; then
     echo "true"
   fi
