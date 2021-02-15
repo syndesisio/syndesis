@@ -33,7 +33,8 @@
     <packaging>pom</packaging>
 
     <properties>
-      <basepom.check.skip-all>true</basepom.check.skip-all>
+      <basepom.check.skip-all>true</basepom.check.skip-all>    
+      <sonar.skip>true</sonar.skip>
     </properties>
 
     <build>

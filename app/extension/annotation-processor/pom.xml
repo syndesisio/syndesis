@@ -67,6 +67,12 @@
       <artifactId>compile-testing</artifactId>
       <version>0.12</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.sun</groupId>
+          <artifactId>tools</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
