@@ -17,17 +17,21 @@
 package run
 
 import (
+	"context"
 	"fmt"
 	"runtime"
 
 	"github.com/prometheus/client_golang/prometheus"
 
+	oappsv1 "github.com/openshift/api/apps/v1"
 	kubemetrics "github.com/operator-framework/operator-sdk/pkg/kube-metrics"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	customMetrics "sigs.k8s.io/controller-runtime/pkg/metrics"
 
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/versions"
 	v1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/types"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 
@@ -41,6 +45,7 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	k8errors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
@@ -54,6 +59,8 @@ import (
 
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 )
+
+const OperatorName = "syndesis-operator"
 
 var (
 	metricsHost               = "0.0.0.0"
@@ -109,6 +116,33 @@ func New(parent *internal.Options) *cobra.Command {
 }
 
 //
+// Removes the legacy deployment config if it exists
+// The new operator installed by this
+//
+func removeLegacyOperatorDeployment(ctx context.Context, clientTools *clienttools.ClientTools, namespace string) error {
+	client, err := clientTools.RuntimeClient()
+	if err != nil {
+		return err
+	}
+
+	dc := &oappsv1.DeploymentConfig{}
+	if err := client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: OperatorName}, dc); err != nil {
+		if !k8errors.IsNotFound(err) {
+			return err // genuine problematic error
+		}
+	} else {
+		if err := client.Delete(ctx, dc); err != nil {
+			log.Error(err, "Failed to delete legacy operator DeploymentConfig")
+			return err
+		} else {
+			log.V(2).Info("Deleted legacy operator DeploymentConfig")
+		}
+	}
+
+	return nil
+}
+
+//
 type options struct {
 	*internal.Options
 }
@@ -146,6 +180,20 @@ func (o *options) run() error {
 	util.KnownDockerImages[config.Syndesis.Components.Upgrade.Image] = true
 
 	ctx := o.Context
+
+	//
+	// pre-requisite of running this operator version
+	// is to ensure it removes the legacy deployment
+	// config of previous operator versions
+	//
+	err = removeLegacyOperatorDeployment(ctx, o.ClientTools(), namespace)
+	if err != nil {
+		//
+		// Error occurred while trying to delete another operator
+		// This could impact operator installation so don't continue
+		//
+		return errors.Wrap(err, "Error occurred whilst attempting to clean up existing legacy operator")
+	}
 
 	// Become the leader before proceeding
 	err = leader.Become(ctx, "syndesis-operator-lock")

@@ -5,7 +5,6 @@ import (
 	"reflect"
 	"time"
 
-	consolev1 "github.com/openshift/api/console/v1"
 	synpkg "github.com/syndesisio/syndesis/install/operator/pkg"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -19,7 +18,6 @@ import (
 
 	syndesisv1beta2 "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 )
 
@@ -53,6 +51,7 @@ func newReconciler(mgr manager.Manager) (*ReconcileSyndesis, error) {
 
 // add adds a new Controller to mgr with r as the reconcile.Reconciler
 func add(mgr manager.Manager, r *ReconcileSyndesis) error {
+
 	// Create a new controller
 	c, err := controller.New("syndesis-controller", mgr, controller.Options{Reconciler: r})
 	if err != nil {
@@ -93,6 +92,7 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 	ctx := context.TODO()
 
 	client, _ := r.clientTools.RuntimeClient()
+
 	err := client.Get(ctx, request.NamespacedName, syndesis)
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -146,36 +146,4 @@ func (r *ReconcileSyndesis) isLatestVersion(ctx context.Context, syndesis *synde
 		return false, err
 	}
 	return refreshed.ResourceVersion == syndesis.ResourceVersion, nil
-}
-
-func (r *ReconcileSyndesis) removeConsoleLink(ctx context.Context, syndesis *syndesisv1beta2.Syndesis) (request reconcile.Result, err error) {
-	// Need to determine if platform is applicable first
-	ac, err := capabilities.ApiCapabilities(r.clientTools)
-	if err != nil {
-		return reconcile.Result{}, err
-	}
-
-	if !ac.ConsoleLink {
-		//
-		// Nothing to do.
-		// This cluster does not support the ConsoleLink API
-		//
-		return reconcile.Result{}, nil
-	}
-
-	consoleLinkName := syndesis.Name + "-" + syndesis.Namespace
-	consoleLink := &consolev1.ConsoleLink{}
-	client, _ := r.clientTools.RuntimeClient()
-	err = client.Get(context.TODO(), types.NamespacedName{Name: consoleLinkName}, consoleLink)
-	if err != nil {
-		if !errors.IsNotFound(err) {
-			return reconcile.Result{}, err
-		}
-	} else {
-		err = client.Delete(context.TODO(), consoleLink)
-		if err != nil {
-			return reconcile.Result{}, err
-		}
-	}
-	return reconcile.Result{}, err
 }
