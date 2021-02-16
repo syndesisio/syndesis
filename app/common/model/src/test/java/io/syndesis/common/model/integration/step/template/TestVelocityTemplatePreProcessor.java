@@ -18,18 +18,12 @@ package io.syndesis.common.model.integration.step.template;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import io.syndesis.common.util.StringConstants;
 
 public class TestVelocityTemplatePreProcessor implements StringConstants {
 
     private final VelocityTemplatePreProcessor processor = new VelocityTemplatePreProcessor();
-
-    @AfterEach
-    public void tearDown() {
-        processor.reset();
-    }
 
     @Test
     public void testBasicTemplate() throws Exception {

@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.SymbolSyntax;
 
-class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
+class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor<MustacheContext> {
 
     private static final String MUSTACHE_OPEN_DELIMITER = "[[";
 
@@ -46,8 +46,6 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
     private static final Pattern SYMBOL_CLOSE_SECTION_PATTERN = Pattern.compile(
       DOUBLE_OPEN_BRACE_PATTERN + "\\/");
 
-    private boolean inSectionSymbol;
-
     MustacheTemplatePreProcessor() {
         super(new SymbolSyntax("{{", "}}"));
     }
@@ -63,14 +61,14 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
     }
 
     @Override
-    protected boolean isText(String token) {
+    protected boolean isText(MustacheContext context, String token) {
         SymbolSyntax symbolSyntax = getSymbolSyntaxes().get(0);
         return !token.startsWith(symbolSyntax.open()) &&
                         !token.contains(symbolSyntax.close());
     }
 
     @Override
-    protected void parseSymbol(String literal) throws TemplateProcessingException {
+    protected void parseSymbol(MustacheContext context, String literal, StringBuilder buff) throws TemplateProcessingException {
         //
         // Scanner does not delineate between two symbols
         // with no whitespace between so match and loop
@@ -82,30 +80,30 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
             String symbol = m.group("symbol");
             String ctag = m.group("ctag");
 
-            append(leading);
+            buff.append(leading);
 
             checkValidTags(otag, symbol, ctag);
 
             if (isClosingSectionSymbol(otag)) { // check that the otag denotes a closing section
-                inSectionSymbol = false;
+                context.inSectionSymbol = false;
             }
 
-            if (inSectionSymbol) {
+            if (context.inSectionSymbol) {
                 //
                 // Any symbol within another symbol, eg. section symbol,
                 // should not have a prefix.
                 //
-                append(otag).append(symbol).append(ctag);
+                buff.append(otag).append(symbol).append(ctag);
             } else {
                 String replacement = otag + ensurePrefix(symbol) + ctag;
 
                 StringBuffer buf = new StringBuffer();
                 m.appendReplacement(buf, Matcher.quoteReplacement(replacement));
-                append(buf.toString());
+                buff.append(buf.toString());
             }
 
             if (isOpeningSectionSymbol(otag)) {
-                inSectionSymbol = true;
+                context.inSectionSymbol = true;
             }
         }
 
@@ -118,18 +116,20 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
         StringBuffer buf = new StringBuffer();
         m.appendTail(buf);
         if (! buf.toString().equals(literal)) {
-            append(buf.toString());
+            buff.append(buf.toString());
         }
     }
 
-    @SuppressWarnings("PMD.PrematureDeclaration")
+    @SuppressWarnings("PMD.PrematureDeclaration") // looks like a false positive
     @Override
     public String preProcess(String template) throws TemplateProcessingException {
-        String newTemplate = super.preProcess(template);
+        final MustacheContext context = createContext();
+        String newTemplate = preProcessWithContext(context, template);
+
         //
         // Invalid template is inSectionSymbol has not been terminated
         //
-        if (inSectionSymbol) {
+        if (context.inSectionSymbol) {
            throw new TemplateProcessingException("The template is invalid since a section has not been closed");
         }
 
@@ -157,12 +157,6 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
     }
 
     @Override
-    public void reset() {
-        super.reset();
-        inSectionSymbol = false;
-    }
-
-    @Override
     public Map<String, Object> getUriParams() {
         /*
          * Need to specify the start and end delimiters since we have
@@ -172,5 +166,10 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
         params.put("startDelimiter", MUSTACHE_OPEN_DELIMITER);
         params.put("endDelimiter", MUSTACHE_CLOSE_DELIMITER);
         return Collections.unmodifiableMap(params);
+    }
+
+    @Override
+    public MustacheContext createContext() {
+        return new MustacheContext();
     }
 }

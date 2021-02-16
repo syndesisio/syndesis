@@ -25,25 +25,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.SymbolSyntax;
 
-abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor {
+abstract class AbstractTemplatePreProcessor<C extends ProcessingContext> implements TemplateStepPreProcessor<C> {
 
     private final List<SymbolSyntax> symbolSyntax;
 
-    @SuppressWarnings("PMD.AvoidStringBufferField")
-    private StringBuilder sb = new StringBuilder();
-
-    private SymbolSyntax onlyPartial;
-
     protected AbstractTemplatePreProcessor(SymbolSyntax... symbolSyntax) {
-       this.symbolSyntax = Arrays.asList(symbolSyntax);
-    }
-
-    protected StringBuilder append(String token) {
-        if (token == null) {
-            return sb;
-        }
-
-        return sb.append(token);
+       this.symbolSyntax = Collections.unmodifiableList(Arrays.asList(symbolSyntax));
     }
 
     protected String ensurePrefix(String symbolName) {
@@ -94,11 +81,12 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
         return false;
     }
 
-    protected abstract boolean isText(String token);
+    protected abstract boolean isText(C context, String token);
 
-    protected abstract void parseSymbol(String symbol) throws TemplateProcessingException;
+    protected abstract void parseSymbol(C context, String symbol, StringBuilder buff) throws TemplateProcessingException;
 
-    private String checkPartial(String partial, String currentToken) {
+    @SuppressWarnings("PMD.PrematureDeclaration") // looks like a false positive
+    private String checkPartial(ProcessingContext context, String partial, String currentToken) {
         String token = "";
 
         for (SymbolSyntax sSyntax : getSymbolSyntaxes()) {
@@ -111,7 +99,7 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
                 // hence impossible for a partial to be valid.
                 //
                 token = partial;
-                this.onlyPartial = null;
+                context.onlyPartial = null;
                 break;
             }
 
@@ -120,7 +108,7 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
                 // partial is a complete symbol so assign as is
                 //
                 token = partial;
-                onlyPartial = null;
+                context.onlyPartial = null;
                 break;
             }
             else if (partial.startsWith(open) && ! partial.contains(close)) {
@@ -129,19 +117,19 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
                 // therefore store the partial token and grab another until complete
                 //
                 token = partial;
-                onlyPartial = sSyntax;
+                context.onlyPartial = sSyntax;
                 break;
             }
-            else if (partial.contains(close) && sSyntax.equals(onlyPartial)) {
+            else if (partial.contains(close) && sSyntax.equals(context.onlyPartial)) {
                 //
                 // Found a partial containing the close and onlyPartial flag matches
                 // this syntax so found the end of the token so token is complete
                 //
                 token = currentToken + " " + partial;
-                onlyPartial = null;
+                context.onlyPartial = null;
                 break;
             }
-            else if (sSyntax.equals(onlyPartial)) {
+            else if (sSyntax.equals(context.onlyPartial)) {
                 //
                 // partial contains neither open or close symbols so could be the
                 // middle of a symbol since onlyPartial flag is set thus append and
@@ -156,7 +144,7 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
         // partial checked against syntaxes available and doesn't conform
         // therefore should be text or unrecognised symbol so not a partial
         //
-        if (onlyPartial == null && currentToken == null) {
+        if (context.onlyPartial == null && currentToken == null) {
             token = partial;
         }
 
@@ -165,6 +153,22 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
 
     @Override
     public String preProcess(String template) throws TemplateProcessingException {
+        final C context = createContext();
+
+        return preProcessWithContext(context, template);
+    }
+
+    @Override
+    public C createContext() {
+        @SuppressWarnings("unchecked")
+        final C context = (C) new ProcessingContext();
+
+        return context;
+    }
+
+    protected String preProcessWithContext(C context, String template) throws TemplateProcessingException {
+        final StringBuilder ret = new StringBuilder();
+
         try (Scanner lineScanner = new Scanner(template)) {
             while(lineScanner.hasNextLine()) {
                 String line = lineScanner.nextLine();
@@ -181,9 +185,9 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
                         // therefore need to identifier 'partial' symbols
                         // and glue them back together before processing
                         //
-                        completeToken = checkPartial(token, completeToken);
+                        completeToken = checkPartial(context, token, completeToken);
 
-                        if (onlyPartial != null) {
+                        if (context.onlyPartial != null) {
                             //
                             // Only time that completeToken is not nullified
                             // since we have identified that token is a partial
@@ -191,26 +195,26 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
                             continue;
                         }
                         else if (isSymbol(completeToken)) {
-                            parseSymbol(completeToken);
+                            parseSymbol(context, completeToken, ret);
                         }
-                        else if (isText(completeToken)) {
-                            append(completeToken);
+                        else if (isText(context, completeToken)) {
+                            ret.append(completeToken);
                         } else {
                             throw new TemplateProcessingException("The template is invalid due to the string '" + completeToken + "'");
                         }
 
                         if (scanner.hasNext()) {
-                            append(" ");
+                            ret.append(' ');
                         }
 
                         completeToken = null;
                     }
 
                     if (lineScanner.hasNextLine()) {
-                        append("\n");
+                        ret.append('\n');
                     }
 
-                    if (onlyPartial != null) {
+                    if (context.onlyPartial != null) {
                         //
                         // We have a partial token left over so cannot be a valid template
                         //
@@ -223,13 +227,7 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
 
         }
 
-        return sb.toString();
-    }
-
-    @Override
-    public void reset() {
-        onlyPartial = null;
-        sb = new StringBuilder();
+        return ret.toString();
     }
 
     @Override

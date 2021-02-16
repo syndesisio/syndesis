@@ -158,8 +158,8 @@ public class TemplateStepHandler implements IntegrationStepHandler, StringConsta
             ArrayList<String> keys = new ArrayList<String>(map.keySet());
             keys.stream().forEach(key -> {
                 Object value = map.remove(key);
-                if (key.startsWith(BODY_PREFIX)) {
-                    key = key.substring(BODY_PREFIX.length());
+                if (key.startsWith("body.")) {
+                    key = key.substring(5);
                     LOGGER.debug("Refactored Key: {}", key);
                 }
 
