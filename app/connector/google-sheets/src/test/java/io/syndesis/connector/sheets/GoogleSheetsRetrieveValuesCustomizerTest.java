@@ -27,9 +27,9 @@ import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollecti
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
 import org.apache.camel.impl.DefaultExchange;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import com.google.api.services.sheets.v4.model.ValueRange;
@@ -40,7 +40,7 @@ public class GoogleSheetsRetrieveValuesCustomizerTest extends AbstractGoogleShee
 
     private GoogleSheetsRetrieveValuesCustomizer customizer;
 
-    @Before
+    @BeforeEach
     public void setupCustomizer() {
         customizer = new GoogleSheetsRetrieveValuesCustomizer();
     }
@@ -57,12 +57,12 @@ public class GoogleSheetsRetrieveValuesCustomizerTest extends AbstractGoogleShee
         Exchange inbound = new DefaultExchange(createCamelContext());
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
-        Assert.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
+        Assertions.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assertions.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
 
-        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "spreadsheetId"));
-        Assert.assertEquals("A1", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "range"));
-        Assert.assertEquals(RangeCoordinate.DIMENSION_ROWS, inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "majorDimension"));
+        Assertions.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "spreadsheetId"));
+        Assertions.assertEquals("A1", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "range"));
+        Assertions.assertEquals(RangeCoordinate.DIMENSION_ROWS, inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "majorDimension"));
     }
 
     @Test
@@ -101,12 +101,12 @@ public class GoogleSheetsRetrieveValuesCustomizerTest extends AbstractGoogleShee
         inbound.getIn().setBody(valueRange);
         getComponent().getAfterProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
-        Assert.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
+        Assertions.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assertions.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
 
         @SuppressWarnings("unchecked")
         List<String> model = inbound.getIn().getBody(List.class);
-        Assert.assertEquals(expectedValueModel.size(), model.size());
+        Assertions.assertEquals(expectedValueModel.size(), model.size());
         Iterator<String> modelIterator = model.iterator();
         for (String expected : expectedValueModel) {
             JSONAssert.assertEquals(String.format(expected, getSpreadsheetId()), modelIterator.next(), JSONCompareMode.STRICT);
@@ -139,12 +139,12 @@ public class GoogleSheetsRetrieveValuesCustomizerTest extends AbstractGoogleShee
         inbound.getIn().setBody(valueRange);
         getComponent().getAfterProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
-        Assert.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
+        Assertions.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assertions.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
 
         @SuppressWarnings("unchecked")
         List<String> model = inbound.getIn().getBody(List.class);
-        Assert.assertEquals(expectedValueModel.size(), model.size());
+        Assertions.assertEquals(expectedValueModel.size(), model.size());
         Iterator<String> modelIterator = model.iterator();
         for (String expected : expectedValueModel) {
             JSONAssert.assertEquals(String.format(expected, getSpreadsheetId()), modelIterator.next(), JSONCompareMode.STRICT);

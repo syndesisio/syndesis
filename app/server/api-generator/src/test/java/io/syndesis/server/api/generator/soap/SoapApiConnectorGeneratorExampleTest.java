@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -58,15 +59,12 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
 
     private static final Logger LOG = LoggerFactory.getLogger(SoapApiConnectorGeneratorExampleTest.class);
 
-    public SoapApiConnectorGeneratorExampleTest(final String resource) throws IOException {
-        super(resource);
-    }
-
-    @Test
-    public void shouldProvideInfo() throws IOException {
+    @ParameterizedTest(name = "{1}")
+    @MethodSource("parameters")
+    public void shouldProvideInfo(final String path, final String specification) throws IOException {
 
         final APISummary apiSummary = connectorGenerator.info(SoapConnectorTemplate.SOAP_TEMPLATE,
-            getConnectorSettings());
+            getConnectorSettings(specification));
 
         assertThat(apiSummary).isNotNull();
         assertThat(apiSummary.getWarnings()).isEmpty();
@@ -98,10 +96,11 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
         assertThat(actionsSummary.getActionCountByTags()).isNotEmpty();
     }
 
-    @Test
-    public void shouldGenerateConnector() throws IOException, SAXException {
+    @ParameterizedTest(name = "{1}")
+    @MethodSource("parameters")
+    public void shouldGenerateConnector(final String path, final String specification) throws IOException, SAXException {
 
-        final Connector connector = connectorGenerator.generate(SoapConnectorTemplate.SOAP_TEMPLATE, getConnectorSettings());
+        final Connector connector = connectorGenerator.generate(SoapConnectorTemplate.SOAP_TEMPLATE, getConnectorSettings(specification));
 
         assertThat(connector).isNotNull();
         assertThat(connector.getName()).isNotEmpty();

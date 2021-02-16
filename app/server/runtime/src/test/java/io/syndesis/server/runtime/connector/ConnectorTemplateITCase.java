@@ -17,8 +17,8 @@ package io.syndesis.server.runtime.connector;
 
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
@@ -97,7 +97,7 @@ public class ConnectorTemplateITCase extends BaseITCase {
         template = createConnectorTemplate();
     }
 
-    @Before
+    @BeforeEach
     public void createConnectorTemplates() {
         dataManager.create(template);
     }

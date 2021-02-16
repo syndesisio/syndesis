@@ -27,38 +27,24 @@ import org.apache.olingo.client.core.ODataClientFactory;
 import org.apache.olingo.commons.api.edm.Edm;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.core.uri.parser.Parser;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(Parameterized.class)
 public class ODataUtilTests extends AbstractODataTest {
-
-    @Parameter(0)
-    public Supplier<String> serviceUri;
-    @Parameter(1)
-    public Supplier<String> resource;
-    @Parameter(2)
-    public String data;
-    @Parameter(3)
-    public String expected;
 
     private static Edm testMetadata;
     private static Edm refMetadata;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() {
         testMetadata = requestEdm(defaultTestServer.servicePlainUri());
         refMetadata = requestEdm(REF_SERVICE_URI);
     }
 
-    @Parameters
     public static Iterable<Object[]> testData() {
         Supplier<String> testUriSupplier = () -> defaultTestServer.servicePlainUri();
         Supplier<String> testResPathSupplier = () -> defaultTestServer.resourcePath();
@@ -107,8 +93,9 @@ public class ODataUtilTests extends AbstractODataTest {
         return response.getBody();
     }
 
-    @Test
-    public void testFormattingKeyPredicate() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testFormattingKeyPredicate(final Supplier<String> serviceUri, final Supplier<String> resource, final String data, final String expected) {
         Parser testParser = new Parser(testMetadata, OData.newInstance());
         Parser refParser = new Parser(refMetadata, OData.newInstance());
 
@@ -117,11 +104,11 @@ public class ODataUtilTests extends AbstractODataTest {
 
         final Parser parser = serviceUri.get().equals(REF_SERVICE_URI) ? refParser : testParser;
         assertThatCode(() -> {
-            parser.parseUri(resourcePath(result), null, null, serviceUri.get());
+            parser.parseUri(resourcePath(resource, result), null, null, serviceUri.get());
         }).doesNotThrowAnyException();
     }
 
-    private String resourcePath(String keyPredicate) {
+    private static String resourcePath(final Supplier<String> resource, final String keyPredicate) {
         return resource.get() + keyPredicate;
     }
 }

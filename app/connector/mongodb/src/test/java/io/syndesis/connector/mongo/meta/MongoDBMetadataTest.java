@@ -32,7 +32,7 @@ import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
 
@@ -87,7 +87,7 @@ public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
         // Then
         MongoDBMetadataRetrieval metaBridge = new MongoDBMetadataRetrieval();
         SyndesisMetadata metadata = metaBridge.fetch(
-            context,
+            context(),
             SCHEME,
             CONNECTOR_ID,
             properties
@@ -120,7 +120,7 @@ public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
         // Then
         MongoDBMetadataRetrieval metaBridge = new MongoDBMetadataRetrieval();
         SyndesisMetadata metadata = metaBridge.fetch(
-            context,
+            context(),
             SCHEME,
             CONNECTOR_ID,
             properties

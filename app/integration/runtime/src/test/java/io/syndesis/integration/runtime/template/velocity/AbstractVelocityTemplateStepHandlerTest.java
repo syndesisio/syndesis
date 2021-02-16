@@ -16,7 +16,7 @@
 package io.syndesis.integration.runtime.template.velocity;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import io.syndesis.common.model.integration.step.template.TemplateStepConstants;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.SymbolSyntax;

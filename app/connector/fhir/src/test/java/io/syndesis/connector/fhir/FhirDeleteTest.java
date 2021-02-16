@@ -18,7 +18,7 @@ package io.syndesis.connector.fhir;
 import io.syndesis.common.model.integration.Step;
 import org.assertj.core.api.Assertions;
 import org.hl7.fhir.dstu3.model.OperationOutcome;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +44,7 @@ public class FhirDeleteTest extends FhirTestBase {
     public void deleteWithIdProvidedAsParameterTest() {
         stubFhirRequest(delete(urlEqualTo("/Patient/1234")).willReturn(okXml(toXml(new OperationOutcome().setId("1234")))));
 
-        OperationOutcome result = template.requestBody("direct:start", "", OperationOutcome.class);
+        OperationOutcome result = template().requestBody("direct:start", "", OperationOutcome.class);
         Assertions.assertThat(result.getId()).isEqualTo("OperationOutcome/1234");
     }
 
@@ -55,7 +55,7 @@ public class FhirDeleteTest extends FhirTestBase {
         FhirResourceId id = new FhirResourceId();
         id.setId("4321");
 
-        OperationOutcome result = template.requestBody("direct:start", id, OperationOutcome.class);
+        OperationOutcome result = template().requestBody("direct:start", id, OperationOutcome.class);
         Assertions.assertThat(result.getId()).isEqualTo("OperationOutcome/4321");
     }
 

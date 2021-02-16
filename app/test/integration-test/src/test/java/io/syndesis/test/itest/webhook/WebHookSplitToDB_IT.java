@@ -29,18 +29,20 @@ import com.consol.citrus.http.client.HttpClient;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * @author Christoph Deppisch
  */
 @ContextConfiguration(classes = WebHookSplitToDB_IT.EndpointConfig.class)
+@Testcontainers
 public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
 
     @Autowired
@@ -57,7 +59,7 @@ public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
      *  Basic filter applies to the company name property to be "Red Hat"
      *  Advanced filter applies to the first_name property to not be like "Unknown"
      */
-    @ClassRule
+    @Container
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("webhook-split-to-db")
                             .fromExport(WebHookSplitToDB_IT.class.getResource("WebhookSplitToDB-export"))

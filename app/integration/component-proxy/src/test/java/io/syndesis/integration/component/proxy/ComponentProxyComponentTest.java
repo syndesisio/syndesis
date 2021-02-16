@@ -16,40 +16,60 @@
 package io.syndesis.integration.component.proxy;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.camel.Body;
+import org.apache.camel.CamelContext;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.impl.JndiRegistry;
-import org.apache.camel.test.junit4.CamelTestSupport;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.SimpleRegistry;
+import org.apache.camel.spi.Registry;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ComponentProxyComponentTest extends CamelTestSupport {
+public class ComponentProxyComponentTest {
 
-    // ***************************
-    // Set up camel context
-    // ***************************
+    private final ProducerTemplate template;
 
-    @Override
-    protected JndiRegistry createRegistry() throws Exception {
+    private final CamelContext camel;
+
+    public ComponentProxyComponentTest() throws Exception {
+        camel = new DefaultCamelContext(createRegistry());
+        camel.addRoutes(createRouteBuilder());
+
+        template = camel.createProducerTemplate();
+    }
+
+    @BeforeEach
+    public void start() throws Exception {
+        camel.start();
+    }
+
+    @AfterEach
+    public void stop() throws Exception {
+        camel.stop();
+    }
+
+    protected Registry createRegistry() throws Exception {
         Map<String, Object> properties = new HashMap<>();
         properties.put("beanName", "my-bean");
 
         ComponentProxyComponent component = new ComponentProxyComponent("my-bean-proxy", "bean");
         component.setOptions(properties);
 
-        JndiRegistry registry = super.createRegistry();
-        registry.bind("my-bean", new MyBean());
-        registry.bind(component.getComponentId() + "-component", component);
+        SimpleRegistry registry = new SimpleRegistry();
+        registry.put("my-bean", new MyBean());
+        registry.put(component.getComponentId() + "-component", component);
 
         return registry;
     }
 
-    @Override
     protected RoutesBuilder createRouteBuilder() throws Exception {
         return new RouteBuilder() {
             @Override
@@ -68,20 +88,20 @@ public class ComponentProxyComponentTest extends CamelTestSupport {
     @Test
     public void testRequest() {
         final String body = "hello";
-        final String result = template().requestBody("direct:start", body, String.class);
+        final String result = template.requestBody("direct:start", body, String.class);
 
         Assertions.assertThat(result).isEqualTo(body.toUpperCase(Locale.US));
     }
 
     @Test
     public void testSend() throws Exception {
-        final MockEndpoint mock = getMockEndpoint("mock:result");
+        final MockEndpoint mock = camel.getEndpoint("mock:result", MockEndpoint.class);
         final String body = "hello";
 
         mock.expectedMessageCount(1);
         mock.expectedBodiesReceived(body.toUpperCase(Locale.US));
 
-        template().sendBody("direct:start", body);
+        template.sendBody("direct:start", body);
 
         mock.assertIsSatisfied();
     }

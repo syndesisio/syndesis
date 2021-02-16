@@ -31,7 +31,7 @@ import io.syndesis.server.credential.OAuth1CredentialFlowState;
 import io.syndesis.server.credential.OAuth1CredentialProvider;
 import io.syndesis.server.endpoint.v1.handler.setup.OAuthApp;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;

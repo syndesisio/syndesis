@@ -15,21 +15,16 @@
  */
 package io.syndesis.server.credential;
 
-import java.util.Arrays;
-
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.EventBus;
 import io.syndesis.server.credential.CredentialsIntegrationTest.TestConfiguration;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
@@ -39,27 +34,18 @@ import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(Parameterized.class)
 @ContextConfiguration(classes = {CredentialConfiguration.class, TestConfiguration.class})
 @SpringBootTest
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Configuration
+@ExtendWith(SpringExtension.class)
 public class CredentialsIntegrationTest {
-
-    public String provider;
-
-    @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
-
-    @Rule
-    public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
     @Autowired
     private CredentialProviderLocator credentialProviderLocator;
@@ -105,17 +91,9 @@ public class CredentialsIntegrationTest {
         }
     }
 
-    public CredentialsIntegrationTest(final String provider) {
-        this.provider = provider;
-    }
-
-    @Test
-    public void shouldSupportResourceProviders() {
+    @ParameterizedTest
+    @ValueSource(strings = {"salesforce", "twitter"})
+    public void shouldSupportResourceProviders(final String provider) {
         assertThat(credentialProviderLocator.providerWithId(provider)).isNotNull();
-    }
-
-    @Parameters(name = "provider={0}")
-    public static Iterable<String> resourceProviders() {
-        return Arrays.asList("salesforce", "twitter");
     }
 }

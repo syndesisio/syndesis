@@ -16,58 +16,49 @@
 
 package io.syndesis.integration.runtime.logging;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.stream.Stream;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.converter.stream.InputStreamCache;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * @author Christoph Deppisch
  */
-@RunWith(Parameterized.class)
 public class BodyLoggerTest {
 
-    private final Object body;
-    private final String logResult;
-
-    private static final Charset CHARSET_UTF8 = Charset.forName("UTF-8");
-
-    public BodyLoggerTest(Object body, String logResult) {
-        this.body = body;
-        this.logResult = logResult;
+    public static Stream<Arguments> data() {
+        return Stream.of(
+            Arguments.of(null, null),
+            Arguments.of("SimpleBody", "SimpleBody"),
+            Arguments.of(new String[] {"a", "b", "c"}, "[a, b, c]"),
+            Arguments.of(Arrays.asList("a", "b", "c"), "[a, b, c]"),
+            Arguments.of(
+                Arrays.asList(new InputStreamCache("Hello".getBytes(StandardCharsets.UTF_8)), new InputStreamCache("World".getBytes(StandardCharsets.UTF_8))),
+                "[Hello, World]"),
+            Arguments.of(new InputStreamCache[] {new InputStreamCache("Hello".getBytes(StandardCharsets.UTF_8)),
+                new InputStreamCache("World".getBytes(StandardCharsets.UTF_8))}, "[Hello, World]"),
+            Arguments.of(new InputStreamCache("Hello World".getBytes(StandardCharsets.UTF_8)), "Hello World"),
+            Arguments.of(new GroupedExchangeList("a", "b", "c"), "[a, b, c]"));
     }
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
-                { null, null },
-                { "SimpleBody", "SimpleBody" },
-                { new String[] {"a", "b", "c"}, "[a, b, c]" },
-                { Arrays.asList("a", "b", "c"), "[a, b, c]" },
-                { Arrays.asList(new InputStreamCache("Hello".getBytes(CHARSET_UTF8)), new InputStreamCache("World".getBytes(CHARSET_UTF8))), "[Hello, World]" },
-                { new InputStreamCache[] {new InputStreamCache("Hello".getBytes(CHARSET_UTF8)), new InputStreamCache("World".getBytes(CHARSET_UTF8))}, "[Hello, World]" },
-                { new InputStreamCache("Hello World".getBytes(CHARSET_UTF8)), "Hello World" },
-                { new GroupedExchangeList("a", "b", "c"), "[a, b, c]" }
-        });
-    }
-
-    @Test
-    public void testDefaultLogger() {
+    @ParameterizedTest(name = "{2}")
+    @MethodSource("data")
+    public void testDefaultLogger(Object body, String logResult) {
         CamelContext context = new DefaultCamelContext();
         Exchange exchange = new DefaultExchange(context);
         exchange.getIn().setBody(body);
 
-        Assert.assertEquals(logResult, new BodyLogger.Default().log(exchange));
+        Assertions.assertEquals(logResult, new BodyLogger.Default().log(exchange));
     }
 
     private static class GroupedExchangeList extends ArrayList<String> {

@@ -31,7 +31,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.SimpleRegistry;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
 

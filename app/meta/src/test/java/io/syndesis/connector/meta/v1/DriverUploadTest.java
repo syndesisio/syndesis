@@ -35,8 +35,8 @@ import javax.ws.rs.core.MediaType;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class DriverUploadTest {
 
@@ -72,7 +72,8 @@ public class DriverUploadTest {
         //assertThat(isEquals).isTrue();
     }
 
-    @Test @Ignore //Easy way to quickly upload an extension when running Application.main()
+    @Test
+    @Disabled //Easy way to quickly upload an extension when running Application.main()
     public void upload2Server() throws IOException {
 
         URL driverClasspath = DriverUploadTest.class.getClassLoader().getResource(FILE_CLASSPATH);

@@ -33,34 +33,15 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 
-@RunWith(Parameterized.class)
 public class GoogleSheetsMetadataAdapterTest {
 
-    private final String range;
-    private final String actionId;
-    private final String majorDimension;
-    private final String expectedJson;
-    private final boolean split;
-    private final String columnNames;
-
-    public GoogleSheetsMetadataAdapterTest(String range, String actionId, String majorDimension, String expectedJson, boolean split, String columnNames) {
-        this.range = range;
-        this.actionId = actionId;
-        this.majorDimension = majorDimension;
-        this.expectedJson = expectedJson;
-        this.split = split;
-        this.columnNames = columnNames;
-    }
-
-    @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
                 { "A1:D1", "io.syndesis:sheets-get-values-connector", "", "/meta/get_rows_metadata.json", false, "A,B,C,D" },
@@ -77,8 +58,9 @@ public class GoogleSheetsMetadataAdapterTest {
         });
     }
 
-    @Test
-    public void adaptForMetadataTest() throws IOException, JSONException {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void adaptForMetadataTest(final String range, final String actionId, final String majorDimension, final String expectedJson, final boolean split, final String columnNames) throws IOException, JSONException {
         CamelContext camelContext = new DefaultCamelContext();
         GoogleSheetsMetaDataExtension ext = new GoogleSheetsMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();

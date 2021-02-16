@@ -26,7 +26,7 @@ import io.syndesis.connector.sql.SqlSupport;
 import io.syndesis.connector.sql.common.stored.ColumnMode;
 import io.syndesis.connector.sql.common.stored.StoredProcedureColumn;
 import io.syndesis.connector.sql.common.stored.StoredProcedureMetadata;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

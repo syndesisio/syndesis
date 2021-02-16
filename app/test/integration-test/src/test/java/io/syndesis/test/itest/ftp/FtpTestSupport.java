@@ -32,7 +32,7 @@ import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.ftpserver.DataConnectionConfiguration;
 import org.apache.ftpserver.listener.ListenerFactory;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +110,7 @@ public abstract class FtpTestSupport extends SyndesisIntegrationTestSupport {
         }
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setupFtpUserHome() {
         try {
             Path publicUserDir = getFtpUserHome().resolve("public");

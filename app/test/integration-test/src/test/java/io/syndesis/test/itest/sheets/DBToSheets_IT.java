@@ -25,16 +25,18 @@ import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.http.server.HttpServer;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * @author Christoph Deppisch
  */
+@Testcontainers
 public class DBToSheets_IT extends GoogleSheetsTestSupport {
 
     @Autowired
@@ -47,7 +49,7 @@ public class DBToSheets_IT extends GoogleSheetsTestSupport {
      * Integration periodically retrieves all contacts from the database and maps the entries (first_name, last_name, company) to a spreadsheet on a Google Sheets account.
      * The integration uses collection to collection data mapping and passes all values in one single operation to Google Sheets.
      */
-    @ClassRule
+    @Container
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
             .name("db-to-sheets")
             .fromExport(DBToSheets_IT.class.getResource("DBToSheets-export"))

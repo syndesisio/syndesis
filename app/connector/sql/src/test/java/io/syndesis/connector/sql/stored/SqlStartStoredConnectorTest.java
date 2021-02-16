@@ -22,7 +22,7 @@ import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
 import io.syndesis.common.model.integration.Step;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.syndesis.connector.sql.stored.SqlStoredCommon.setupStoredProcedure;
 

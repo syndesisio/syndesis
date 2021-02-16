@@ -22,7 +22,7 @@ import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
 import io.syndesis.common.model.integration.Step;
 import org.apache.camel.ProducerTemplate;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SqlStoredConnectorTest extends SqlConnectorTestSupport {
 

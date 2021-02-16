@@ -25,8 +25,8 @@ import java.util.stream.Stream;
 import javax.validation.Validator;
 import javax.ws.rs.core.SecurityContext;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import io.syndesis.common.model.DataShape;
@@ -76,7 +76,7 @@ public class IntegrationHandlerTest {
         assertThat(options.getPaths()).hasSize(2).contains("paramA", "paramB");
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         dataManager = mock(DataManager.class);
         Validator validator = mock(Validator.class);

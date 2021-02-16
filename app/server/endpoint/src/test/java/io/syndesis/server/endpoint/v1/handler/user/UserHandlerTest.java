@@ -29,8 +29,8 @@ import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.server.openshift.OpenShiftServiceImpl;
 
 import org.assertj.core.api.Assertions;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
 
 public class UserHandlerTest {
 
-    @After
+    @AfterEach
     public void tearDown() {
         SecurityContextHolder.clearContext();
     }

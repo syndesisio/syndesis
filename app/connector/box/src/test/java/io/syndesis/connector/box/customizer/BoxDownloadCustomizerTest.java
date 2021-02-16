@@ -22,18 +22,22 @@ import java.util.Map;
 
 import io.syndesis.connector.box.BoxFile;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-import org.apache.camel.Exchange;
-import org.apache.camel.impl.DefaultExchange;
-import org.apache.camel.test.junit4.CamelTestSupport;
-import org.junit.Before;
-import org.junit.Test;
 
-public class BoxDownloadCustomizerTest extends CamelTestSupport {
+import org.apache.camel.Exchange;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.DefaultExchange;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+public class BoxDownloadCustomizerTest {
 
     private BoxDownloadCustomizer customizer;
     private ComponentProxyComponent component;
 
-    @Before
+    @BeforeEach
     public void setupCustomizer() {
         customizer = new BoxDownloadCustomizer();
         component = new ComponentProxyComponent("box-test", "box");
@@ -51,7 +55,7 @@ public class BoxDownloadCustomizerTest extends CamelTestSupport {
 
         customizer.customize(component, options);
 
-        Exchange inbound = new DefaultExchange(createCamelContext());
+        Exchange inbound = new DefaultExchange(new DefaultCamelContext());
         setBody(inbound, content, encoding);
         component.getAfterProducer().process(inbound);
 
@@ -67,4 +71,6 @@ public class BoxDownloadCustomizerTest extends CamelTestSupport {
         output.write(content.getBytes(encoding));
         inbound.getIn().setBody(output);
     }
+
+
 }

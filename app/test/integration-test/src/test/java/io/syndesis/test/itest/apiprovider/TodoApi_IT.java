@@ -28,8 +28,7 @@ import com.consol.citrus.http.client.HttpClient;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,11 +36,14 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * @author Christoph Deppisch
  */
 @ContextConfiguration(classes = TodoApi_IT.EndpointConfig.class)
+@Testcontainers
 public class TodoApi_IT extends SyndesisIntegrationTestSupport {
 
     private static final String VND_OAI_OPENAPI_JSON = "application/vnd.oai.openapi+json";
@@ -61,7 +63,7 @@ public class TodoApi_IT extends SyndesisIntegrationTestSupport {
      *  GET /todos/open provides all uncompleted tasks as Json array (using basic filter)
      *  GET /todos/done provides all completed tasks as Json array (using basic filter)
      */
-    @ClassRule
+    @Container
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("todo-api")
                             .fromExport(TodoApi_IT.class.getResource("TodoApi-export"))

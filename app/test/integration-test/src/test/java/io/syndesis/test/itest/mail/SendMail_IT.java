@@ -32,8 +32,7 @@ import com.consol.citrus.util.FileUtils;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,18 +40,20 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.SocketUtils;
-import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * @author Christoph Deppisch
  */
 @ContextConfiguration(classes = SendMail_IT.EndpointConfig.class)
+@Testcontainers
 public class SendMail_IT extends SyndesisIntegrationTestSupport {
 
     private static final int MAIL_SERVER_PORT = SocketUtils.findAvailableTcpPort();
     static {
-        Testcontainers.exposeHostPorts(MAIL_SERVER_PORT);
+        org.testcontainers.Testcontainers.exposeHostPorts(MAIL_SERVER_PORT);
     }
 
     @Autowired
@@ -70,7 +71,7 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
      *
      * After the mail is sent a new task entry for that contact is added to the sample database.
      */
-    @ClassRule
+    @Container
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("send-mail")
                             .fromExport(SendMail_IT.class.getResource("SendMail-export"))

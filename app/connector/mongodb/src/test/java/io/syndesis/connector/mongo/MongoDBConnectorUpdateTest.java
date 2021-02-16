@@ -18,70 +18,77 @@ package io.syndesis.connector.mongo;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mongodb.client.model.Filters;
 import io.syndesis.common.model.integration.Step;
+
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-public class MongoDBConnectorUpdateTest extends MongoDBConnectorProducerTestSupport {
+import com.mongodb.client.model.Filters;
 
-    private final static String COLLECTION = "updateCollection";
+public abstract class MongoDBConnectorUpdateTest extends MongoDBConnectorProducerTestSupport {
+
+    static class Multiple extends MongoDBConnectorUpdateTest {
+
+        @Test
+        public void mongoUpdateMultiTest() {
+            // When
+            final String json = String.format("{\"test\":\"unit\",\"batchNo\":%d}", 33);
+            final String json2 = String.format("{\"test\":\"unit2\",\"batchNo\":%d}", 33);
+            collection.insertOne(Document.parse(json));
+            collection.insertOne(Document.parse(json2));
+            // Given
+            // { $set: { <field1>: <value1>, ... } }
+            final String updateArguments = "{\"batchNo\":33, \"someText\":\"updated!\"}";
+            final Long result = template().requestBody("direct:start", updateArguments, Long.class);
+            // Then
+            final List<Document> docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<>());
+            Assertions.assertThat(docsFound).hasSize(2);
+            docsFound.forEach(document -> Assertions.assertThat(document.getString("test")).isEqualTo("updated!"));
+            Assertions.assertThat(result).isEqualTo(2L);
+        }
+
+        @Override
+        protected List<Step> createSteps() {
+            final String filter = "{\"batchNo\": :#batchNo}";
+            final String updateExpression = "{$set: {\"test\": \":#someText\"}}";
+
+            return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-update", DATABASE, COLLECTION, null,
+                filter, updateExpression);
+        }
+    }
+
+    static class Single extends MongoDBConnectorUpdateTest {
+
+        @Test
+        public void mongoUpdateSingleTest() {
+            // When
+            final String json = String.format("{\"test\":\"unit\",\"_id\":%s}", "11");
+            final String json2 = String.format("{\"test\":\"unit2\",\"_id\":%s}", "22");
+            collection.insertOne(Document.parse(json));
+            collection.insertOne(Document.parse(json2));
+            // Given
+            final String updateArguments = "{\"id\":11, \"someText\":\"updated!\"}";
+            final Long result = template().requestBody("direct:start", updateArguments, Long.class);
+            // Then
+            final List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<>());
+            Assertions.assertThat(docsFound).hasSize(1);
+            Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("updated!");
+            Assertions.assertThat(result).isEqualTo(1L);
+        }
+
+        @Override
+        protected List<Step> createSteps() {
+            final String filter = "{\"_id\": :#id}";
+            final String updateExpression = "{$set: {\"test\": \":#someText\"}}";
+
+            return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-update", DATABASE, COLLECTION, null,
+                filter, updateExpression);
+        }
+    }
 
     @Override
     public String getCollectionName() {
         return COLLECTION;
     }
-
-    @Override
-    protected List<Step> createSteps() {
-        String filter = null;
-        String updateExpression = "{$set: {\"test\": \":#someText\"}}";
-        switch (getTestMethodName()) {
-            case "mongoUpdateSingleTest":
-                filter = "{\"_id\": :#id}";
-                break;
-            case "mongoUpdateMultiTest":
-                filter = "{\"batchNo\": :#batchNo}";
-                break;
-        }
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-update", DATABASE, COLLECTION, null,
-            filter, updateExpression);
-    }
-
-    @Test
-    public void mongoUpdateSingleTest() {
-        // When
-        String json = String.format("{\"test\":\"unit\",\"_id\":%s}", "11");
-        String json2 = String.format("{\"test\":\"unit2\",\"_id\":%s}", "22");
-        collection.insertOne(Document.parse(json));
-        collection.insertOne(Document.parse(json2));
-        // Given
-        String updateArguments = "{\"id\":11, \"someText\":\"updated!\"}";
-        Long result = template.requestBody("direct:start", updateArguments, Long.class);
-        // Then
-        List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<>());
-        Assertions.assertThat(docsFound).hasSize(1);
-        Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("updated!");
-        Assertions.assertThat(result).isEqualTo(1L);
-    }
-
-    @Test
-    public void mongoUpdateMultiTest() {
-        // When
-        String json = String.format("{\"test\":\"unit\",\"batchNo\":%d}", 33);
-        String json2 = String.format("{\"test\":\"unit2\",\"batchNo\":%d}", 33);
-        collection.insertOne(Document.parse(json));
-        collection.insertOne(Document.parse(json2));
-        // Given
-        // { $set: { <field1>: <value1>, ... } }
-        String updateArguments = "{\"batchNo\":33, \"someText\":\"updated!\"}";
-        Long result = template.requestBody("direct:start", updateArguments, Long.class);
-        // Then
-        List<Document> docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<>());
-        Assertions.assertThat(docsFound).hasSize(2);
-        docsFound.forEach(document -> Assertions.assertThat(document.getString("test")).isEqualTo("updated!"));
-        Assertions.assertThat(result).isEqualTo(2L);
-    }
-
 }

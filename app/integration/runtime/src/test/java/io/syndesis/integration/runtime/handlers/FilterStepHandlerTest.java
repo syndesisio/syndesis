@@ -40,8 +40,8 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +69,7 @@ public class FilterStepHandlerTest {
 
     private final ActivityTracker activityTracker = Mockito.mock(ActivityTracker.class);
 
-    @Before
+    @BeforeEach
     public void setupMocks() {
         reset(activityTracker);
 

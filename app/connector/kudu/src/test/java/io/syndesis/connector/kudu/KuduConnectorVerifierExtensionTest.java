@@ -18,9 +18,9 @@ package io.syndesis.connector.kudu;
 
 import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.DefaultResultVerificationError;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.Map;
 public class KuduConnectorVerifierExtensionTest extends AbstractKuduCustomizerTestSupport {
     private KuduConnectorVerifierExtension verifier;
 
-    @Before
+    @BeforeEach
     public void setupVerifier() throws Exception {
         this.verifier = new KuduConnectorVerifierExtension(createCamelContext());
     }
@@ -42,7 +42,7 @@ public class KuduConnectorVerifierExtensionTest extends AbstractKuduCustomizerTe
         ComponentVerifierExtension.Result result = verifier.verifyParameters(options);
         List<ComponentVerifierExtension.VerificationError> errors = result.getErrors();
         DefaultResultVerificationError portError = (DefaultResultVerificationError) errors.get(0);
-        Assert.assertEquals("port should be set", portError.getDescription());
+        Assertions.assertEquals("port should be set", portError.getDescription());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class KuduConnectorVerifierExtensionTest extends AbstractKuduCustomizerTe
         ComponentVerifierExtension.Result result = verifier.verifyParameters(options);
         List<ComponentVerifierExtension.VerificationError> errors = result.getErrors();
         DefaultResultVerificationError hostError = (DefaultResultVerificationError) errors.get(0);
-        Assert.assertEquals("host should be set", hostError.getDescription());
+        Assertions.assertEquals("host should be set", hostError.getDescription());
     }
 
     @Test
@@ -64,6 +64,6 @@ public class KuduConnectorVerifierExtensionTest extends AbstractKuduCustomizerTe
 
         ComponentVerifierExtension.Result result = verifier.verifyConnectivity(options);
         List<ComponentVerifierExtension.VerificationError> errors = result.getErrors();
-        Assert.assertFalse(errors.isEmpty());
+        Assertions.assertFalse(errors.isEmpty());
     }
 }

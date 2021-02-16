@@ -36,9 +36,8 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +66,7 @@ public class SplitAggregateStepHandlerTest {
 
     private final ActivityTracker activityTracker = Mockito.mock(ActivityTracker.class);
 
-    @Before
+    @BeforeEach
     public void setupMocks() {
         reset(activityTracker);
 
@@ -138,7 +137,7 @@ public class SplitAggregateStepHandlerTest {
             List<?> response = template.requestBody("direct:expression", body, List.class);
 
             result.assertIsSatisfied();
-            Assert.assertEquals(body, response);
+            Assertions.assertThat(response).isEqualTo(body);
 
             verify(activityTracker).startTracking(any(Exchange.class));
             verifyActivityStepTracking(START_STEP, 1);
@@ -220,8 +219,8 @@ public class SplitAggregateStepHandlerTest {
 
             split.assertIsSatisfied();
             afterSplit.assertIsSatisfied();
-            Assert.assertEquals(body, afterSplit.getExchanges().get(0).getIn().getBody());
-            Assert.assertEquals(body, response);
+            Assertions.assertThat(afterSplit.getExchanges().get(0).getIn().getBody()).isEqualTo(body);
+            Assertions.assertThat(response).isEqualTo(body);
 
             verify(activityTracker).startTracking(any(Exchange.class));
             verifyActivityStepTracking(START_STEP, 1);
@@ -315,10 +314,9 @@ public class SplitAggregateStepHandlerTest {
 
             split.assertIsSatisfied();
             afterSplit.assertIsSatisfied();
-            Assert.assertEquals(Arrays.asList("A", "B", "C"), afterSplit.getExchanges().get(0).getIn().getBody());
+            Assertions.assertThat(afterSplit.getExchanges().get(0).getIn().getBody()).asList().containsOnly("A", "B", "C");
 
-            Assertions.assertThat(response.size()).isEqualTo(3);
-            Assert.assertEquals(3L, response.size());
+            Assertions.assertThat(response).hasSize(3);
 
             verify(activityTracker).startTracking(any(Exchange.class));
             verifyActivityStepTracking(START_STEP, 1);
@@ -391,8 +389,8 @@ public class SplitAggregateStepHandlerTest {
             List<?> response = template.requestBody("direct:expression", body, List.class);
 
             result.assertIsSatisfied();
-            Assert.assertEquals(5, response.size());
-            Assert.assertEquals(body, response.stream().map(Object::toString).collect(Collectors.joining()));
+            Assertions.assertThat(response).hasSize(5);
+            Assertions.assertThat(response.stream().map(Object::toString).collect(Collectors.joining())).isEqualTo(body);
 
             verify(activityTracker).startTracking(any(Exchange.class));
             verifyActivityStepTracking(START_STEP, 1);
@@ -464,7 +462,7 @@ public class SplitAggregateStepHandlerTest {
             String response = template.requestBody("direct:expression", body, String.class);
 
             result.assertIsSatisfied();
-            Assert.assertEquals(body, response);
+            Assertions.assertThat(body).isEqualTo(response);
 
             verify(activityTracker).startTracking(any(Exchange.class));
             verifyActivityStepTracking(START_STEP, 1);
@@ -535,7 +533,7 @@ public class SplitAggregateStepHandlerTest {
             String response = template.requestBody("direct:expression", body, String.class);
 
             result.assertIsSatisfied();
-            Assert.assertEquals("c", response);
+            Assertions.assertThat(response).isEqualTo("c");
 
             verify(activityTracker).startTracking(any(Exchange.class));
             verifyActivityStepTracking(START_STEP, 1);
@@ -610,7 +608,7 @@ public class SplitAggregateStepHandlerTest {
             String response = template.requestBody("direct:expression", body, String.class);
 
             result.assertIsSatisfied();
-            Assert.assertEquals("c|b|a", response);
+            Assertions.assertThat(response).isEqualTo("c|b|a");
 
             verify(activityTracker).startTracking(any(Exchange.class));
             verifyActivityStepTracking(START_STEP, 1);

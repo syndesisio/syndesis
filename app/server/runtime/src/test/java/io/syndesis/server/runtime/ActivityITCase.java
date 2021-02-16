@@ -20,8 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -31,14 +31,14 @@ import io.syndesis.server.endpoint.v1.handler.activity.Feature;
 public class ActivityITCase extends BaseITCase {
 
     @Override
-    @Before
+    @BeforeEach
     public void clearDB() {
         super.clearDB();
     }
 
 
     @Test
-    public void requestFeature() throws IOException {
+    public void requestFeature() {
         ResponseEntity<Feature> re = get("/api/v1/activity/feature", Feature.class);
         Feature response = re.getBody();
         assertThat(response.isEnabled()).isTrue();

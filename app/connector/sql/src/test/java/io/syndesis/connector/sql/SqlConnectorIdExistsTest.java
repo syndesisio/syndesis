@@ -29,7 +29,7 @@ import java.util.Map;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.springframework.dao.DuplicateKeyException;
@@ -49,7 +49,7 @@ public class SqlConnectorIdExistsTest extends SqlConnectorTestSupport {
         this.parameters = parameters;
     }
 
-    @BeforeClass
+    @BeforeEachClass
     public static void beforeClass() throws SQLException {
         try (Statement stmt = db.connection.createStatement()) {
             stmt.executeUpdate("CREATE TABLE ADDRESS ( id INTEGER NOT NULL," + 
@@ -58,7 +58,7 @@ public class SqlConnectorIdExistsTest extends SqlConnectorTestSupport {
         }
     }
 
-    @AfterClass
+    @AfterEachClass
     public static void afterClass() throws SQLException {
         try (Statement stmt = db.connection.createStatement()) {
                 stmt.executeUpdate("DROP TABLE ADDRESS");

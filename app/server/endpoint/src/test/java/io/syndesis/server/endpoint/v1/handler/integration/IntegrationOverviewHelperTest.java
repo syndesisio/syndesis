@@ -30,7 +30,7 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.ExposureHelper;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.common.collect.Sets;
 

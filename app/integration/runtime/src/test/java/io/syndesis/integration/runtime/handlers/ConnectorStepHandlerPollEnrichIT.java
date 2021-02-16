@@ -37,9 +37,9 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.mockftpserver.fake.FakeFtpServer;
 import org.mockftpserver.fake.UserAccount;
 import org.mockftpserver.fake.filesystem.DirectoryEntry;
@@ -291,7 +291,7 @@ public class ConnectorStepHandlerPollEnrichIT {
         }
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void startFtpServer() {
         server = new FakeFtpServer();
         server.setServerControlPort(0);
@@ -308,7 +308,7 @@ public class ConnectorStepHandlerPollEnrichIT {
         port = server.getServerControlPort();
     }
 
-    @AfterClass
+    @AfterAll
     public static void stopFtpServer() {
         server.stop();
     }

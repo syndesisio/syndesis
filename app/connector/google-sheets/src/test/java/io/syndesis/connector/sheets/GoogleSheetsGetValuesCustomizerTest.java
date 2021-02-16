@@ -27,37 +27,19 @@ import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
 import org.apache.camel.impl.DefaultExchange;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
 import io.syndesis.connector.support.util.ConnectorOptions;
 
-@RunWith(Parameterized.class)
 public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
 
-    private GoogleSheetsGetValuesCustomizer customizer;
+    private final GoogleSheetsGetValuesCustomizer customizer = new GoogleSheetsGetValuesCustomizer();
 
-    private final String range;
-    private final String sheetName;
-    private final String majorDimension;
-    private final List<List<Object>> values;
-    private final List<String> expectedValueModel;
-
-    public GoogleSheetsGetValuesCustomizerTest(String range, String sheetName, String majorDimension, List<List<Object>> values, List<String> expectedValueModel) {
-        this.range = range;
-        this.sheetName = sheetName;
-        this.majorDimension = majorDimension;
-        this.values = values;
-        this.expectedValueModel = expectedValueModel;
-    }
-
-    @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
                 { "A1:A5", "Sheet1", RangeCoordinate.DIMENSION_ROWS, Arrays.asList(Collections.singletonList("a1"),
@@ -81,13 +63,9 @@ public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCus
         });
     }
 
-    @Before
-    public void setupCustomizer() {
-        customizer = new GoogleSheetsGetValuesCustomizer();
-    }
-
-    @Test
-    public void testBeforeConsumer() throws Exception {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void testBeforeConsumer(final String range, final String sheetName, final String majorDimension, final List<List<Object>> values, final List<String> expectedValueModel) throws Exception {
         Map<String, Object> options = new HashMap<>();
         options.put("spreadsheetId", getSpreadsheetId());
         options.put("range", range);
@@ -105,12 +83,12 @@ public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCus
         inbound.getIn().setBody(valueRange);
         getComponent().getBeforeConsumer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
-        Assert.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
+        Assertions.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assertions.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
 
         @SuppressWarnings("unchecked")
         List<String> model = inbound.getIn().getBody(List.class);
-        Assert.assertEquals(expectedValueModel.size(), model.size());
+        Assertions.assertEquals(expectedValueModel.size(), model.size());
         Iterator<String> modelIterator = model.iterator();
         for (String expected : expectedValueModel) {
             JSONAssert.assertEquals(String.format(expected, getSpreadsheetId()), modelIterator.next(), JSONCompareMode.STRICT);

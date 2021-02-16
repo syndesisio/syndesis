@@ -27,18 +27,20 @@ import com.consol.citrus.http.client.HttpClient;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * @author Christoph Deppisch
  */
 @ContextConfiguration(classes = Webhook2DB_IT.EndpointConfig.class)
+@Testcontainers
 public class Webhook2DB_IT extends SyndesisIntegrationTestSupport {
 
     @Autowired
@@ -50,7 +52,7 @@ public class Webhook2DB_IT extends SyndesisIntegrationTestSupport {
     /**
      * Quickstart integration from https://github.com/syndesisio/syndesis-quickstarts/tree/master/webhook-2-db
      */
-    @ClassRule
+    @Container
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("webhook-to-db")
                             .fromExport(Webhook2DB_IT.class.getResource("Webhook2Db-export"))

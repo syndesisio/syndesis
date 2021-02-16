@@ -28,33 +28,32 @@ import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContaine
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
 import org.apache.wss4j.common.WSS4JConstants;
 import org.apache.wss4j.common.ext.WSPasswordCallback;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.SocketUtils;
 import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor;
-import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.sql.DataSource;
 import java.util.Arrays;
 
-import static org.hamcrest.CoreMatchers.is;
-
 /**
  * @author Dhiraj Bokde
  */
 @ContextConfiguration(classes = SoapConnector_IT.EndpointConfig.class)
+@Testcontainers
 public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
 
     private static final int SOAP_SERVER_PORT = SocketUtils.findAvailableTcpPort();
     static {
-        Testcontainers.exposeHostPorts(SOAP_SERVER_PORT);
+        org.testcontainers.Testcontainers.exposeHostPorts(SOAP_SERVER_PORT);
     }
 
     @Autowired
@@ -79,7 +78,7 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
      * The integration invokes following sequence of client requests on the test server
      *  Invoke operation sayHi.
      */
-    @ClassRule
+    @Container
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("soap-helloworld-client")
                             .fromExport(SoapConnector_IT.class.getResource("HelloWorldSoapConnector-export"))
@@ -107,7 +106,7 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
         runner.repeatOnError()
             .index("retries")
             .autoSleep(1000L)
-            .until(is(6))
+            .until((index, rules) -> index <= 6)
             .actions(runner.query(builder -> builder.dataSource(sampleDb)
                 .statement("select count(*) as found_records from contact where first_name like 'Hello Hello!'")
                 .validateScript("assert rows.get(0).get(\"found_records\") > 0", "groovy")));

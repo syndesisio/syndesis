@@ -110,6 +110,7 @@
     <basepom.test.timeout>120</basepom.test.timeout>
 
     <!-- Plugin versions -->
+    <dep.plugin.surefire.version>3.0.0-M5</dep.plugin.surefire.version>
     <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
     <!-- FIXME: update to 6.19 when released we're seeing:
       https://github.com/pmd/pmd/issues/1969
@@ -139,13 +140,12 @@
     <mailapi.version>1.6.4</mailapi.version>
     <json-schema-core.version>1.2.8</json-schema-core.version>
     <json-schema-validator.version>2.2.10</json-schema-validator.version>
-    <junit.version>4.12</junit.version>
-    <junit5.version>5.5.2</junit5.version>
+    <junit-jupiter.version>5.7.1</junit-jupiter.version>
     <powermock.version>2.0.4</powermock.version>
     <testcontainers.version>1.15.1</testcontainers.version>
     <docker-java.version>3.2.7</docker-java.version>
     <citrus.version>2.8.0</citrus.version>
-    <mockito.version>2.19.0</mockito.version>
+    <mockito.version>3.8.0</mockito.version>
     <mongodb.version>3.9.0</mongodb.version>
 
     <resteasy.version>4.5.6.Final</resteasy.version>
@@ -1112,13 +1112,12 @@
             <useNativeGit>true</useNativeGit>
           </configuration>
         </plugin>
-        
+
         <plugin>
           <groupId>org.sonarsource.scanner.maven</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
           <version>3.8.0.2131</version>
         </plugin>
-
       </plugins>
     </pluginManagement>
 
@@ -1161,6 +1160,20 @@
               <message>Prefer using AssertJ for assertions</message>
               <searchTransitive>false</searchTransitive>
             </bannedDependencies>
+            <bannedDependencies>
+              <excludes>
+                <exclude>junit:junit</exclude>
+              </excludes>
+              <message>Migrate to JUnit5 Jupiter</message>
+              <searchTransitive>true</searchTransitive>
+            </bannedDependencies>
+            <bannedDependencies>
+              <excludes>
+                 <exclude>org.apache.camel:camel-test</exclude>
+              </excludes>
+              <message>camel-test brings in junit:junit</message>
+              <searchTransitive>false</searchTransitive>
+            </bannedDependencies>
           </rules>
         </configuration>
       </plugin>
@@ -1196,6 +1209,14 @@
         <version>${jackson.version}</version>
         <scope>import</scope>
         <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${junit-jupiter.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
       <dependency>
@@ -1260,6 +1281,12 @@
       <dependency>
         <groupId>io.syndesis.common</groupId>
         <artifactId>common-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.test</groupId>
+        <artifactId>junit4-stub</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -2177,6 +2204,19 @@
       </dependency>
 
       <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-test</artifactId>
+        <version>${camel.version}</version>
+        <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-core</artifactId>
         <version>${spring.version}</version>
@@ -2236,6 +2276,19 @@
           <exclusion>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <version>${spring-boot.version}</version>
+        <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -2754,6 +2807,13 @@
       </dependency>
 
       <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-junit-jupiter</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
         <groupId>org.powermock</groupId>
         <artifactId>powermock-api-mockito2</artifactId>
         <version>${powermock.version}</version>
@@ -2771,13 +2831,6 @@
         <groupId>org.powermock</groupId>
         <artifactId>powermock-core</artifactId>
         <version>${powermock.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>pl.pragmatists</groupId>
-        <artifactId>JUnitParams</artifactId>
-        <version>1.1.1</version>
         <scope>test</scope>
       </dependency>
 
@@ -2965,19 +3018,6 @@
       </dependency>
 
       <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>${junit5.version}</version>
-      </dependency>
-
-      <dependency>
         <groupId>io.fabric8</groupId>
         <artifactId>mockwebserver</artifactId>
         <version>0.1.3</version>
@@ -2986,6 +3026,23 @@
           <exclusion>
             <groupId>io.sundr</groupId>
             <artifactId>builder-annotations</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>com.squareup.okhttp3</groupId>
+        <artifactId>mockwebserver</artifactId>
+        <version>${okhttp3.version}</version>
+        <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -2998,21 +3055,39 @@
       </dependency>
 
       <dependency>
-        <groupId>org.xmlunit</groupId>
-        <artifactId>xmlunit-core</artifactId>
-        <version>2.8.2</version>
+        <groupId>com.github.tomakehurst</groupId>
+        <artifactId>wiremock</artifactId>
+        <version>2.25.1</version>
         <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>de.mkammerer.wiremock-junit5</groupId>
+        <artifactId>wiremock-junit5</artifactId>
+        <version>1.1.0</version>
+        <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
         <groupId>org.xmlunit</groupId>
-        <artifactId>xmlunit-matchers</artifactId>
-        <version>2.6.3</version>
+        <artifactId>xmlunit-assertj</artifactId>
+        <version>2.8.2</version>
         <scope>test</scope>
       </dependency>
 
       <!-- Micrometer -->
-
       <dependency>
         <groupId>io.micrometer</groupId>
         <artifactId>micrometer-core</artifactId>
@@ -3064,6 +3139,10 @@
           <exclusion>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -3354,5 +3433,4 @@
       <url>https://maven.repository.redhat.com/ga/</url>
     </pluginRepository>
   </pluginRepositories>
-
 </project>

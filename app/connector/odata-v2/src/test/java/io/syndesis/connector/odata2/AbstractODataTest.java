@@ -43,7 +43,7 @@ import org.apache.camel.component.properties.DefaultPropertiesParser;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.component.properties.PropertiesParser;
 import org.apache.camel.spring.SpringCamelContext;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +52,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.PropertyResolver;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class AbstractODataTest implements ODataConstants {
 
@@ -105,7 +105,7 @@ public abstract class AbstractODataTest implements ODataConstants {
         }
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void startTestServer() throws Exception {
         if (odataTestServer == null) {
             odataTestServer = new ODataTestServer();

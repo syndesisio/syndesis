@@ -25,7 +25,7 @@ import io.syndesis.server.openshift.Exposure;
 
 import io.syndesis.server.openshift.ExposureHelper;
 import io.syndesis.server.openshift.OpenShiftConfigurationProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

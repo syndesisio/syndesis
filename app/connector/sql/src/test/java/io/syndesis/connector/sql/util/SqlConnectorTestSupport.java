@@ -30,8 +30,8 @@ import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.common.SqlConnectionRule;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
-import org.junit.After;
-import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.ClassRule;
 
 public abstract class SqlConnectorTestSupport extends ConnectorTestSupport {
@@ -59,7 +59,7 @@ public abstract class SqlConnectorTestSupport extends ConnectorTestSupport {
         }
     }
 
-    @After
+    @AfterEach
     public void after() throws SQLException {
         try (Statement stmt = db.connection.createStatement()) {
             for (String sql : cleanupStatements()) {
@@ -114,19 +114,19 @@ public abstract class SqlConnectorTestSupport extends ConnectorTestSupport {
     }
 
     protected void validateProperty(List<Properties> propertyList, String propertyName, String ... expectedValues) {
-        Assert.assertEquals(expectedValues.length, propertyList.size());
+        Assertions.assertEquals(expectedValues.length, propertyList.size());
 
         for (int i = 0; i < expectedValues.length; i++) {
-            Assert.assertEquals(expectedValues[i], propertyList.get(i).get(propertyName).toString());
+            Assertions.assertEquals(expectedValues[i], propertyList.get(i).get(propertyName).toString());
         }
     }
     
     protected void validateJson(List<String> jsonBeans, String propertyName, String ... expectedValues) {
-        Assert.assertEquals(expectedValues.length, jsonBeans.size());
+        Assertions.assertEquals(expectedValues.length, jsonBeans.size());
 
         for (int i = 0; i < expectedValues.length; i++) {
             Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(jsonBeans.get(i));
-            Assert.assertEquals(expectedValues[i], properties.get(propertyName).toString());
+            Assertions.assertEquals(expectedValues[i], properties.get(propertyName).toString());
         }
     }
 

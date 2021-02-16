@@ -16,42 +16,52 @@
 package io.syndesis.server.api.generator.openapi.v3;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.stream.Stream;
 
+import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.openapi.BaseOpenApiGeneratorExampleTest;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.util.OpenApiModelParser;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class OpenApiConnectorGeneratorExampleTest extends BaseOpenApiGeneratorExampleTest {
 
-    public OpenApiConnectorGeneratorExampleTest(final String name) throws IOException {
-        super("unified", name, "v3");
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("parameters")
+    public void shouldGenerateAsExpected(final String name, final String specification, final Connector connector) throws IOException {
+        shouldGenerateAsExpected(specification, connector);
     }
 
-    @Test
-    @Override
-    public void shouldGenerateAsExpected() throws IOException {
-        super.shouldGenerateAsExpected();
-    }
-
-    @Test
-    public void specificationsShouldNotContainErrors() {
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("parameters")
+    public void specificationsShouldNotContainErrors(final String name, final String specification) {
         final OpenApiModelInfo info = OpenApiModelParser.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).isEmpty();
     }
 
-    @Parameters(name = "{0}")
-    public static Iterable<String> parameters() {
-        return Arrays.asList("reverb", "petstore", "petstore_xml", "basic_auth", "apikey_auth", "todo", "complex_xml", "kie-server", "machine_history", "damage_service", "doubleclick_reporting");
+    public static Stream<Arguments> parameters() throws IOException {
+        return Stream.of(
+            argument("reverb"),
+            argument("petstore"),
+            argument("petstore_xml"),
+            argument("basic_auth"),
+            argument("apikey_auth"),
+            argument("todo"),
+            argument("complex_xml"),
+            argument("kie-server"),
+            argument("machine_history"),
+            argument("damage_service"),
+            argument("doubleclick_reporting"));
     }
 
+    static Arguments argument(String name) throws IOException {
+        return Arguments.of(name, loadSpecification("v3", name), loadConnector("v3", name, "unified"));
+    }
 }

@@ -27,8 +27,8 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.sql.common.DbEnum;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class SqlConnectorBatchUpdateTest extends SqlConnectorTestSupport {
 
@@ -41,7 +41,7 @@ public class SqlConnectorBatchUpdateTest extends SqlConnectorTestSupport {
             dbProductName = db.connection.getMetaData().getDatabaseProductName();
         } catch (SQLException e) {
             e.printStackTrace();
-            Assert.fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
         if (DbEnum.POSTGRESQL.equals(DbEnum.fromName(dbProductName))) {
             return Collections.singletonList("CREATE TABLE ADDRESS ("
@@ -112,7 +112,7 @@ public class SqlConnectorBatchUpdateTest extends SqlConnectorTestSupport {
         @SuppressWarnings("unchecked")
         List<String> jsonBeans = template.requestBody("direct:start", body, List.class);
 
-        Assert.assertFalse(jsonBeans.isEmpty());
+        Assertions.assertFalse(jsonBeans.isEmpty());
 
         validateJson(jsonBeans, "ID", "3");
     }

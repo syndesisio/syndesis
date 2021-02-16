@@ -37,7 +37,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.syndesis.connector.sql.common.DbEnum;
@@ -64,7 +64,7 @@ public class SqlMetadataAdapterTest {
     private static Connection conn;
     private static final Properties PROPS = new Properties();
 
-    @BeforeClass
+    @BeforeEachClass
     public static void setUpBeforeClass() throws IOException {
         try (InputStream is = SqlMetadataAdapterTest.class.getClassLoader().getResourceAsStream("test-options.properties")) {
             PROPS.load(is);
@@ -92,7 +92,7 @@ public class SqlMetadataAdapterTest {
         }
     }
 
-    @AfterClass
+    @AfterEachClass
     public static void afterClass() throws SQLException {
         if (conn!=null && !conn.isClosed()) {
             Statement stmt = conn.createStatement();

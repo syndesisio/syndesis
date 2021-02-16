@@ -26,8 +26,8 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
@@ -62,12 +62,12 @@ public abstract class AbstractODataRouteTest extends AbstractODataTest {
         this.connectorAction = createConnectorAction();
     }
 
-    @Before
+    @BeforeEach
     public void setup() throws Exception {
         context = createCamelContext();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (context != null) {
             context.stop();

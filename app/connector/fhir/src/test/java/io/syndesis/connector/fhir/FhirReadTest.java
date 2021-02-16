@@ -18,7 +18,7 @@ package io.syndesis.connector.fhir;
 import io.syndesis.common.model.integration.Step;
 import org.assertj.core.api.Assertions;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +44,7 @@ public class FhirReadTest extends FhirTestBase {
     public void readWithIdProvidedAsParameterTest() {
         stubFhirRequest(get(urlEqualTo("/Patient/1234")).willReturn(okXml(toXml(new Patient().setId("1234")))));
 
-        String patient = template.requestBody("direct:start", "", String.class);
+        String patient = template().requestBody("direct:start", "", String.class);
 
         Assertions.assertThat(patient).contains("<id value=\"1234\"/>");
     }
@@ -56,7 +56,7 @@ public class FhirReadTest extends FhirTestBase {
         FhirResourceId id = new FhirResourceId();
         id.setId("4321");
 
-        String patient = template.requestBody("direct:start", id, String.class);
+        String patient = template().requestBody("direct:start", id, String.class);
 
         Assertions.assertThat(patient).contains("<id value=\"4321\"/>");
     }

@@ -37,9 +37,9 @@ import io.syndesis.server.credential.Type;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import io.syndesis.server.runtime.BaseITCase;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -82,13 +82,13 @@ public class CredentialITCase extends BaseITCase {
             + "=\"\"; path=/; secure; HttpOnly; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:00 GMT");
     }
 
-    @After
+    @AfterEach
     public void cleanupDatabase() {
         dataManager.delete(Connector.class, "test-provider");
         dataManager.delete(Connection.class, "test-connection");
     }
 
-    @Before
+    @BeforeEach
     public void prepopulateDatabase() {
         final Connector provider = new Connector.Builder().id("test-provider")
             .putProperty("clientId", new ConfigurationProperty.Builder()

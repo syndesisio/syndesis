@@ -23,7 +23,7 @@ import io.syndesis.server.inspector.DataMapperBaseInspector.Context;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import com.fasterxml.jackson.databind.JsonNode;

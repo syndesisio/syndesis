@@ -22,7 +22,7 @@ import java.util.List;
 
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 

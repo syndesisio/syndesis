@@ -35,8 +35,8 @@ import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.runtime.BaseITCase;
 
 import org.json.JSONException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +64,7 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
     @Autowired
     protected IntegrationResourceManager resourceManager;
 
-    @Before
+    @BeforeEach
     public void generateApiIntegration() {
         final MultiValueMap<Object, Object> data = specification("/io/syndesis/server/runtime/test-swagger.json");
 

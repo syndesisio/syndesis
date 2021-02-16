@@ -15,63 +15,59 @@
  */
 package io.syndesis.server.api.generator.openapi.util;
 
-import java.util.Arrays;
+import java.util.stream.Stream;
 
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class OperationDescriptionGenerationTest {
 
-    private final OperationDescription expected;
-
-    private final Oas20Operation operation;
-
-    private final Oas20Document openApiDoc;
-
-    public OperationDescriptionGenerationTest(final String operationSummary, final String operationDescription,
-                                              final String expectedName, final String expectedDescription) {
-        operation = new Oas20Operation("get");
-        operation.description = operationDescription;
-        operation.summary = operationSummary;
-
-        openApiDoc = new Oas20Document();
-        Oas20PathItem pathItem = new Oas20PathItem("/test");
-        pathItem.get = operation;
-        openApiDoc.paths = openApiDoc.createPaths();
-        openApiDoc.paths.addPathItem("/test", pathItem);
-        expected = new OperationDescription(expectedName, expectedDescription);
-    }
-
-    @Test
-    public void shouldDetermineOperationDescriptions() {
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void shouldDetermineOperationDescriptions(final Oas20Document openApiDoc, final Oas20Operation operation, final OperationDescription expected) {
         assertThat(OasModelHelper.operationDescriptionOf(openApiDoc, operation, (m, p) -> "Send " + m + " request to " + p)).isEqualTo(expected);
     }
 
-    @Parameters
-    public static Iterable<Object[]> parameters() {
-        return Arrays.<Object[]>asList(//
-            new Object[] {null, null, "GET /test", "Send GET request to /test"}, //
-            new Object[] {"null", "null", "GET /test", "Send GET request to /test"}, //
-            new Object[] {null, "", "GET /test", "Send GET request to /test"}, //
-            new Object[] {"null", "", "GET /test", "Send GET request to /test"}, //
-            new Object[] {"", null, "GET /test", "Send GET request to /test"}, //
-            new Object[] {"", "null", "GET /test", "Send GET request to /test"}, //
-            new Object[] {"", "", "GET /test", "Send GET request to /test"}, //
-            new Object[] {"Test summary", "Test description", "Test summary", "Test description"}, //
-            new Object[] {"", "Test description", "GET /test", "Test description"}, //
-            new Object[] {null, "Test description", "GET /test", "Test description"}, //
-            new Object[] {"null", "Test description", "GET /test", "Test description"}, //
-            new Object[] {"Test summary", "", "Test summary", "Send GET request to /test"}, //
-            new Object[] {"Test summary", null, "Test summary", "Send GET request to /test"}, //
-            new Object[] {"Test summary", "null", "Test summary", "Send GET request to /test"});
+    public static Stream<Arguments> parameters() {
+        return Stream.of(
+            argument(null, null, "GET /test", "Send GET request to /test"),
+            argument("null", "null", "GET /test", "Send GET request to /test"),
+            argument(null, "", "GET /test", "Send GET request to /test"),
+            argument("null", "", "GET /test", "Send GET request to /test"),
+            argument("", null, "GET /test", "Send GET request to /test"),
+            argument("", "null", "GET /test", "Send GET request to /test"),
+            argument("", "", "GET /test", "Send GET request to /test"),
+            argument("Test summary", "Test description", "Test summary", "Test description"),
+            argument("", "Test description", "GET /test", "Test description"),
+            argument(null, "Test description", "GET /test", "Test description"),
+            argument("null", "Test description", "GET /test", "Test description"),
+            argument("Test summary", "", "Test summary", "Send GET request to /test"),
+            argument("Test summary", null, "Test summary", "Send GET request to /test"),
+            argument("Test summary", "null", "Test summary", "Send GET request to /test"));
+    }
+
+    static Arguments argument(final String summary, final String description, final String expectedName, final String expectedDescription) {
+        final Oas20Operation operation = new Oas20Operation("get");
+        operation.description = description;
+        operation.summary = summary;
+
+        final Oas20PathItem pathItem = new Oas20PathItem("/test");
+        pathItem.get = operation;
+
+        final Oas20Document openApiDoc = new Oas20Document();
+        openApiDoc.paths = openApiDoc.createPaths();
+        openApiDoc.paths.addPathItem("/test", pathItem);
+
+        final OperationDescription expected = new OperationDescription(expectedName, expectedDescription);
+
+        return Arguments.of(openApiDoc, operation, expected);
     }
 
 }

@@ -26,7 +26,7 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.syndesis.server.jsondb.impl.JsonRecordSupport;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.syndesis.server.api.generator.openapi.TestHelper.resource;
 import static org.assertj.core.api.Assertions.assertThat;

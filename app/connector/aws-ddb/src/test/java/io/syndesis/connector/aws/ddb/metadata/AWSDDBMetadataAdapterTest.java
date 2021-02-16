@@ -19,22 +19,25 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.connector.aws.ddb.AWSDDBConfiguration;
+import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
+
+import org.apache.camel.CamelContext;
+import org.apache.camel.component.extension.MetaDataExtension.MetaData;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.json.JSONException;
+import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+
 import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
 import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 import com.amazonaws.services.dynamodbv2.model.TableDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.connector.aws.ddb.AWSDDBConfiguration;
-import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
-import org.apache.camel.CamelContext;
-import org.apache.camel.component.extension.MetaDataExtension.MetaData;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.json.JSONException;
-import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 
 public class AWSDDBMetadataAdapterTest {
 

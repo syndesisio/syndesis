@@ -25,12 +25,12 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.assertj.core.api.Condition;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Ignore
+@Disabled("Requires access to AWS account")
 public class AWSSNSMetaDataExtensionTest {
 
     @Test
@@ -41,7 +41,7 @@ public class AWSSNSMetaDataExtensionTest {
         Map<String, Object> properties = new HashMap<>();
         properties.put("accessKey", "accessKey");
         properties.put("secretKey", "secretKey");
-        properties.put("region", "region");
+        properties.put("region", "eu-central-1");
 
         Optional<MetaDataExtension.MetaData> meta = extension.meta(properties);
 
@@ -60,7 +60,7 @@ public class AWSSNSMetaDataExtensionTest {
             }
         });
     }
-    
+
     @Test
     public void noChannelTest() {
         CamelContext context = new DefaultCamelContext();

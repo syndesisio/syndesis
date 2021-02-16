@@ -18,9 +18,8 @@ package io.syndesis.server.api.generator.openapi.v3;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.util.stream.Stream;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
@@ -28,27 +27,18 @@ import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
+
 import org.apache.commons.io.IOUtils;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class UnifiedXmlDataShapeGeneratorRequestShapeTest {
-
-    @Parameter(0)
-    public String operation;
-
-    @Parameter(1)
-    public String path;
-
-    @Parameter(2)
-    public String schemaset;
 
     private final UnifiedXmlDataShapeGenerator generator = new UnifiedXmlDataShapeGenerator();
 
@@ -66,8 +56,9 @@ public class UnifiedXmlDataShapeGeneratorRequestShapeTest {
         openApiDoc = (Oas30Document) Library.readDocumentFromJSONString(specification);
     }
 
-    @Test
-    public void shouldGenerateAtlasmapSchemaSetForUpdatePetRequest() throws IOException {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void shouldGenerateAtlasmapSchemaSetForUpdatePetRequest(final String operation, final String path, final String schemaset) throws IOException {
         final Oas30Operation openApiOperation = OasModelHelper.getOperationMap(openApiDoc.paths.getPathItem(path), Oas30Operation.class).get(operation);
 
         final DataShape shape = generator.createShapeFromRequest(json, openApiDoc, openApiOperation);
@@ -89,18 +80,9 @@ public class UnifiedXmlDataShapeGeneratorRequestShapeTest {
         assertThat(specification).isXmlEqualTo(expectedSpecification);
     }
 
-    @Parameters
-    public static Iterable<Object[]> data() {
-        return Arrays.<Object[]>asList(//
-            new Object[] {//
-                "put", //
-                "/pet", //
-                "petstore.update-pet.schemaset.xml"//
-            }, //
-            new Object[] {//
-                "post", //
-                "/pet/{petId}", //
-                "petstore.update-pet-with-form.schemaset.xml"//
-            });
+    public static Stream<Arguments> data() {
+        return Stream.of(
+            Arguments.of("put", "/pet", "petstore.update-pet.schemaset.xml"),
+            Arguments.of("post", "/pet/{petId}", "petstore.update-pet-with-form.schemaset.xml"));
     }
 }

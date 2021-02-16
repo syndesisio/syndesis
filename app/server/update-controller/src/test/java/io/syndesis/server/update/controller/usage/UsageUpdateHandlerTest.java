@@ -29,8 +29,8 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.server.dao.manager.DataManager;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Collections.emptyList;
 
@@ -155,7 +155,7 @@ public class UsageUpdateHandlerTest {
         verifyNoMoreInteractions(dataManager);
     }
 
-    @Before
+    @BeforeEach
     public void setupMocks() {
         when(dataManager.fetchAll(Connection.class)).thenReturn(ListResult.of(c1, c2, c3));
         when(dataManager.fetchAll(Extension.class)).thenReturn(ListResult.of(extension));

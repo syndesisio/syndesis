@@ -38,9 +38,8 @@ import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContaine
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.ftpserver.DataConnectionConfiguration;
 import org.apache.ftpserver.DataConnectionConfigurationFactory;
-import org.junit.Assert;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,12 +47,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * @author Christoph Deppisch
  */
 @ContextConfiguration(classes = WebHookToFtp_IT.EndpointConfig.class)
 @DirtiesContext
+@Testcontainers
 public class WebHookToFtp_IT extends FtpTestSupport {
 
     @Autowired
@@ -63,7 +65,7 @@ public class WebHookToFtp_IT extends FtpTestSupport {
      * Integration receives a WebHook trigger with contact information as Json object. The contact is transformed to a csv like
      * comma delimited String and pushed to Ftp server as new file.
      */
-    @ClassRule
+    @Container
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
             .name("webhook-to-ftp")
             .fromExport(WebHookToFtp_IT.class.getResource("WebhookToFtp-export"))
@@ -139,10 +141,10 @@ public class WebHookToFtp_IT extends FtpTestSupport {
         @Override
         public void doExecute(TestContext testContext) {
             Path publicUserDir = getFtpUserHome().resolve("public");
-            Assert.assertTrue( "Missing ftp user home directory", publicUserDir.toFile().exists());
+            Assertions.assertTrue(publicUserDir.toFile().exists(), "Missing ftp user home directory");
 
             File ftpUploadFile = publicUserDir.resolve(UPLOAD_FILENAME).toFile();
-            Assert.assertTrue(String.format("Missing ftp upload file '%s'", UPLOAD_FILENAME), ftpUploadFile.exists());
+            Assertions.assertTrue(ftpUploadFile.exists(), String.format("Missing ftp upload file '%s'", UPLOAD_FILENAME));
             try {
                 JsonTextMessageValidator validator = new JsonTextMessageValidator();
                 validator.validateMessage(new DefaultMessage(FileUtils.readToString(ftpUploadFile)),

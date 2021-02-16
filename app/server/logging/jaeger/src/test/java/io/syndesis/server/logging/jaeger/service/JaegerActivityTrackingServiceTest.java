@@ -25,7 +25,7 @@ import javax.ws.rs.WebApplicationException;
 
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.endpoint.v1.handler.activity.Activity;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import static java.util.Objects.requireNonNull;

@@ -24,7 +24,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.assertj.core.api.AbstractAssert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

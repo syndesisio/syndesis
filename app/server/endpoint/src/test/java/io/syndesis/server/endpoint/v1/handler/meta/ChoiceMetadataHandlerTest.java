@@ -25,8 +25,8 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Christoph Deppisch
@@ -75,15 +75,15 @@ public class ChoiceMetadataHandlerTest {
 
         DynamicActionMetadata metadata = metadataHandler.createMetadata(choiceStep, Collections.singletonList(previousStep), Collections.singletonList(subsequentStep));
 
-        Assert.assertNotNull(metadata.outputShape());
-        Assert.assertEquals(DataShapeKinds.ANY, metadata.outputShape().getKind());
+        Assertions.assertNotNull(metadata.outputShape());
+        Assertions.assertEquals(DataShapeKinds.ANY, metadata.outputShape().getKind());
 
-        Assert.assertNotNull(metadata.inputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_INSTANCE, metadata.inputShape().getKind());
-        Assert.assertEquals("previousOutput", metadata.inputShape().getDescription());
-        Assert.assertEquals(2, metadata.inputShape().getVariants().size());
-        Assert.assertEquals("variant1", metadata.inputShape().getVariants().get(0).getMetadata().get("name"));
-        Assert.assertEquals("variant2", metadata.inputShape().getVariants().get(1).getMetadata().get("name"));
+        Assertions.assertNotNull(metadata.inputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_INSTANCE, metadata.inputShape().getKind());
+        Assertions.assertEquals("previousOutput", metadata.inputShape().getDescription());
+        Assertions.assertEquals(2, metadata.inputShape().getVariants().size());
+        Assertions.assertEquals("variant1", metadata.inputShape().getVariants().get(0).getMetadata().get("name"));
+        Assertions.assertEquals("variant2", metadata.inputShape().getVariants().get(1).getMetadata().get("name"));
     }
 
     @Test
@@ -110,16 +110,16 @@ public class ChoiceMetadataHandlerTest {
 
         DynamicActionMetadata metadata = metadataHandler.createMetadata(choiceStep, Collections.singletonList(previousStep), Collections.singletonList(subsequentStep));
 
-        Assert.assertEquals(StepMetadataHelper.ANY_SHAPE, metadata.inputShape());
-        Assert.assertEquals(StepMetadataHelper.ANY_SHAPE, metadata.outputShape());
+        Assertions.assertEquals(StepMetadataHelper.ANY_SHAPE, metadata.inputShape());
+        Assertions.assertEquals(StepMetadataHelper.ANY_SHAPE, metadata.outputShape());
     }
 
     @Test
     public void shouldCreateMetaDataFromEmptySurroundingSteps() {
         DynamicActionMetadata metadata = metadataHandler.createMetadata(choiceStep, Collections.emptyList(), Collections.emptyList());
 
-        Assert.assertEquals(StepMetadataHelper.NO_SHAPE, metadata.inputShape());
-        Assert.assertEquals(StepMetadataHelper.ANY_SHAPE, metadata.outputShape());
+        Assertions.assertEquals(StepMetadataHelper.NO_SHAPE, metadata.inputShape());
+        Assertions.assertEquals(StepMetadataHelper.ANY_SHAPE, metadata.outputShape());
     }
 
     @Test
@@ -130,7 +130,7 @@ public class ChoiceMetadataHandlerTest {
                 .build();
 
         DynamicActionMetadata enrichedMetadata = metadataHandler.handle(metadata);
-        Assert.assertEquals(metadata, enrichedMetadata);
+        Assertions.assertEquals(metadata, enrichedMetadata);
     }
 
     private static DataShape testShape(String name) {

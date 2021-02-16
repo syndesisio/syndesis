@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
+
 import javax.sql.DataSource;
 
 import org.apache.camel.CamelContext;
@@ -32,15 +33,15 @@ import org.apache.camel.impl.SimpleRegistry;
 import org.apache.camel.spi.Registry;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.assertj.core.api.Condition;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ComponentProxyWithCustomComponentTest {
     private DataSource ds;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.ds = new BasicDataSource();
     }

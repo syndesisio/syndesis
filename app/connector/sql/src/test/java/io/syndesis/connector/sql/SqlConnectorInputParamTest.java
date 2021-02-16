@@ -29,7 +29,7 @@ import io.syndesis.connector.sql.common.SqlParam;
 import io.syndesis.connector.sql.common.SqlStatementParser;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SqlConnectorInputParamTest extends SqlConnectorTestSupport {
     private static final String STATEMENT = "INSERT INTO ALLTYPES " +

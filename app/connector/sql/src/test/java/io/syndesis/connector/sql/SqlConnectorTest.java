@@ -23,8 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -53,7 +53,7 @@ public class SqlConnectorTest extends SqlConnectorTestSupport {
             dbProductName = db.connection.getMetaData().getDatabaseProductName();
         } catch (SQLException e) {
             e.printStackTrace();
-            Assert.fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
         if (DbEnum.POSTGRESQL.equals(DbEnum.fromName(dbProductName))) {
             return Collections.singletonList("CREATE TABLE ADDRESS ("
@@ -130,7 +130,7 @@ public class SqlConnectorTest extends SqlConnectorTestSupport {
         @SuppressWarnings("unchecked")
         List<String> jsonBeans = template.requestBody("direct:start", body, List.class);
 
-        Assert.assertEquals(expectedResults.isEmpty(), jsonBeans.isEmpty());
+        Assertions.assertEquals(expectedResults.isEmpty(), jsonBeans.isEmpty());
 
         for (Map<String, String[]> result : expectedResults) {
             for (Map.Entry<String, String[]> resultEntry : result.entrySet()) {

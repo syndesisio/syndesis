@@ -91,8 +91,8 @@
       <artifactId>test-support</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest</artifactId>
+      <groupId>io.syndesis.test</groupId>
+      <artifactId>junit4-stub</artifactId>
     </dependency>
 
     <!-- Citrus -->
@@ -198,6 +198,11 @@
     </dependency>
 
     <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>junit-jupiter</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>com.github.docker-java</groupId>
       <artifactId>docker-java-api</artifactId>
     </dependency>
@@ -269,8 +274,8 @@
     </dependency>
 
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
       <scope>compile</scope>
     </dependency>
 
@@ -379,6 +384,7 @@
               com.sun.activation:jakarta.activation-api:1.2.1 within it
             -->
             <ignoredClassPattern>^javax\.activation\..*$</ignoredClassPattern>
+            <ignoredClassPattern>^META-INF\.versions\.9\.module-info$</ignoredClassPattern>
           </ignoredClassPatterns>
           <ignoredResourcePatterns>
             <ignoredResourcePattern>binding.xjb</ignoredResourcePattern>
@@ -390,6 +396,15 @@
             <ignore>org/jboss/resteasy/client/jaxrs/i18n/Messages.i18n_en.properties</ignore>
             <ignore>org/jboss/resteasy/client/jaxrs/i18n/Messages.i18n_xx.properties</ignore>
           </ignoredResourcePatterns>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <ignoredUnusedDeclaredDependencies>
+            <ignoredUnusedDeclaredDependency>io.syndesis.test:junit4-stub:jar</ignoredUnusedDeclaredDependency>
+          </ignoredUnusedDeclaredDependencies>
         </configuration>
       </plugin>
     </plugins>

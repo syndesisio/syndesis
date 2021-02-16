@@ -31,8 +31,8 @@ import io.syndesis.common.model.connection.ConnectorGroup;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.dao.init.ReadApiClientData;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,18 +52,18 @@ public class ReadApiClientDataTest {
         //serialize
         ConnectorGroup cg = new ConnectorGroup.Builder().id("label").name("label").build();
         ModelData<ConnectorGroup> mdIn = new ModelData<>(Kind.ConnectorGroup, cg);
-        Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdIn.getDataAsJson());
+        Assertions.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdIn.getDataAsJson());
 
         //deserialize
         String json = JsonUtils.writer().writeValueAsString(mdIn);
         ModelData<?> mdOut = JsonUtils.reader().forType(ModelData.class).readValue(json);
-        Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdOut.getDataAsJson());
+        Assertions.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdOut.getDataAsJson());
     }
 
     @Test
     public void loadApiClientDataTest() throws IOException {
         List<ModelData<?>> modelDataList = new ReadApiClientData().readDataFromFile("io/syndesis/server/dao/deployment.json");
-        Assert.assertTrue("We should find some ModelData", 0 < modelDataList.size());
+        Assertions.assertTrue(0 < modelDataList.size(), "We should find some ModelData");
 
         List<Object> items = new ArrayList<>();
         for (ModelData<?> md : modelDataList) {
@@ -72,7 +72,7 @@ public class ReadApiClientDataTest {
             }
         }
 
-        Assert.assertFalse("We should find some Connectors", items.isEmpty());
+        Assertions.assertFalse(items.isEmpty(), "We should find some Connectors");
     }
 
     @Test
@@ -84,17 +84,17 @@ public class ReadApiClientDataTest {
             ReadApiClientData readApiClientData =  new ReadApiClientData();
             String jsonText = readApiClientData.from(is);
             jsonText = readApiClientData.findAndReplaceTokens(jsonText, env);
-            Assert.assertTrue(jsonText.contains("@SECRET_NOT_IN_ENV@"));
-            Assert.assertFalse(jsonText.contains("@POSTGRESQL_SAMPLEDB_PASSWORD@"));
+            Assertions.assertTrue(jsonText.contains("@SECRET_NOT_IN_ENV@"));
+            Assertions.assertFalse(jsonText.contains("@POSTGRESQL_SAMPLEDB_PASSWORD@"));
 
             //passing in the updated String with replaced tokens
             List<ModelData<?>> modelDataList = readApiClientData.readDataFromString(jsonText);
-            Assert.assertTrue("We should find some ModelData", 0 < modelDataList.size());
+            Assertions.assertTrue(0 < modelDataList.size(), "We should find some ModelData");
 
             //the second item is the sampledb-connection
             Connection connection = (Connection) modelDataList.get(1).getData();
             String pw = connection.getConfiguredProperties().get("password");
-            Assert.assertEquals("password123", pw);
+            Assertions.assertEquals("password123", pw);
         }
     }
 }

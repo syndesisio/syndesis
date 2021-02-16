@@ -27,18 +27,20 @@ import com.consol.citrus.http.client.HttpClient;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * @author Christoph Deppisch
  */
 @ContextConfiguration(classes = ConditionalFlows_IT.EndpointConfig.class)
+@Testcontainers
 public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
 
     @Autowired
@@ -56,7 +58,7 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
      *  When body.company == 'Red Hat' save 'Meet {{first_name}} from Red Hat' as task to the DB
      *  Otherwise store 'Drink coffee with {{first_name}} from {{company}}' as task
      */
-    @ClassRule
+    @Container
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("conditional-flows")
                             .fromExport(ConditionalFlows_IT.class.getResource("ConditionalFlows-export"))

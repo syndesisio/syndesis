@@ -25,8 +25,8 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.server.endpoint.v1.handler.exception.RestError;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -40,7 +40,7 @@ public class IntegrationsITCase extends BaseITCase {
     private final static Class<List<Violation>> RESPONSE_TYPE = (Class) List.class;
 
     @Override
-    @Before
+    @BeforeEach
     public void clearDB() {
         super.clearDB();
     }

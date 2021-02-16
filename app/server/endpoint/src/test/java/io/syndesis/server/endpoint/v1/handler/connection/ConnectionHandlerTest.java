@@ -21,8 +21,8 @@ import static org.mockito.Mockito.when;
 import java.util.HashSet;
 import java.util.Set;
 import javax.validation.Validator;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import io.syndesis.common.model.bulletin.ConnectionBulletinBoard;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.server.credential.Credentials;
@@ -36,7 +36,7 @@ public class ConnectionHandlerTest {
     private ConnectionHandler handler;
     private DataManager dataManager;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         dataManager = mock(DataManager.class);
         Validator validator = mock(Validator.class);

@@ -29,8 +29,7 @@ import io.syndesis.test.container.amq.JBossAMQBrokerContainer;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,11 +39,13 @@ import org.springframework.util.SocketUtils;
 import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
 
 /**
  * @author Christoph Deppisch
  */
 @ContextConfiguration(classes = HttpToAMQ_IT.EndpointConfig.class)
+@org.testcontainers.junit.jupiter.Testcontainers
 public class HttpToAMQ_IT extends SyndesisIntegrationTestSupport {
 
     private static final int TODO_SERVER_PORT = SocketUtils.findAvailableTcpPort();
@@ -58,14 +59,14 @@ public class HttpToAMQ_IT extends SyndesisIntegrationTestSupport {
     @Autowired
     private JmsEndpoint todoJms;
 
-    @ClassRule
+    @Container
     public static JBossAMQBrokerContainer amqBrokerContainer = new JBossAMQBrokerContainer();
 
     /**
      * Integration periodically requests list of tasks (as Json array) from Http service and maps the results to AMQ queue.
      * AMQ queue is provided with all tasks (Json array) as message payload.
      */
-    @ClassRule
+    @Container
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
             .name("http-to-amq")
             .fromExport(HttpToAMQ_IT.class.getResource("HttpToAMQ-export"))

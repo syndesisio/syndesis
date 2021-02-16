@@ -20,9 +20,9 @@ import java.sql.Statement;
 import java.util.List;
 
 import org.junit.AfterClass;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class SqlMetaDataTest {
 
@@ -47,16 +47,16 @@ public class SqlMetaDataTest {
         final List<SqlParam> inputParams = new DbMetaDataHelper(db.connection).getJDBCInfoByColumnNames(null, db.schema,
             paramInfo.getTableNames().get(0), paramInfo.getInParams());
         // information for input
-        Assert.assertEquals(1, inputParams.size());
-        Assert.assertEquals(Character.class, inputParams.get(0).getTypeValue().getClazz());
+        Assertions.assertEquals(1, inputParams.size());
+        Assertions.assertEquals(Character.class, inputParams.get(0).getTypeValue().getClazz());
 
         // information for output of select statement
         for (final SqlParam sqlParam : inputParams) {
             select = select.replace(":#" + sqlParam.getName(), "'" + sqlParam.getTypeValue().getSampleValue().toString() + "'");
         }
         final List<SqlParam> outputParams = new DbMetaDataHelper(db.connection).getOutputColumnInfo(select);
-        Assert.assertEquals(7, outputParams.size());
-        Assert.assertEquals(Character.class, outputParams.get(0).getTypeValue().getClazz());
+        Assertions.assertEquals(7, outputParams.size());
+        Assertions.assertEquals(Character.class, outputParams.get(0).getTypeValue().getClazz());
     }
 
     @Test
@@ -74,9 +74,9 @@ public class SqlMetaDataTest {
 
         final List<SqlParam> paramList = new DbMetaDataHelper(db.connection).getJDBCInfoByColumnOrder(null, null, "NAME2",
             info.getInParams());
-        Assert.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
-        Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
-        Assert.assertEquals("VARCHAR", paramList.get(2).getJdbcType().getName());
+        Assertions.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
+        Assertions.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
+        Assertions.assertEquals("VARCHAR", paramList.get(2).getJdbcType().getName());
 
     }
 
@@ -95,9 +95,9 @@ public class SqlMetaDataTest {
 
         final List<SqlParam> paramList = new DbMetaDataHelper(db.connection).getJDBCInfoByColumnNames(null, null, "NAME3",
             info.getInParams());
-        Assert.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
-        Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
-        Assert.assertEquals("VARCHAR", paramList.get(2).getJdbcType().getName());
+        Assertions.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
+        Assertions.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
+        Assertions.assertEquals("VARCHAR", paramList.get(2).getJdbcType().getName());
 
     }
 
@@ -116,8 +116,8 @@ public class SqlMetaDataTest {
 
         final List<SqlParam> paramList = new DbMetaDataHelper(db.connection).getJDBCInfoByColumnNames(null, null, "NAME4",
             info.getInParams());
-        Assert.assertEquals("VARCHAR", paramList.get(0).getJdbcType().getName());
-        Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
+        Assertions.assertEquals("VARCHAR", paramList.get(0).getJdbcType().getName());
+        Assertions.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
 
     }
 
@@ -134,11 +134,11 @@ public class SqlMetaDataTest {
         final SqlStatementMetaData info = parser.parse();
 
         final List<SqlParam> paramList = new DbMetaDataHelper(db.connection).getOutputColumnInfo(info.getDefaultedSqlStatement());
-        Assert.assertEquals("VARCHAR", paramList.get(0).getJdbcType().getName());
-        Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
+        Assertions.assertEquals("VARCHAR", paramList.get(0).getJdbcType().getName());
+        Assertions.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
     }
 
-    @AfterClass
+    @AfterEachClass
     public static void afterClass() throws SQLException {
         try (final Statement stmt = db.connection.createStatement()) {
             stmt.execute("DROP table ALLTYPES");

@@ -27,26 +27,27 @@ import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
 import com.consol.citrus.http.server.HttpServer;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.SocketUtils;
-import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * @author Christoph Deppisch
  */
 @ContextConfiguration(classes = DBToHttp_IT.EndpointConfig.class)
+@Testcontainers
 public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
 
     private static final int HTTP_TEST_SERVER_PORT = SocketUtils.findAvailableTcpPort();
     static {
-        Testcontainers.exposeHostPorts(HTTP_TEST_SERVER_PORT);
+        org.testcontainers.Testcontainers.exposeHostPorts(HTTP_TEST_SERVER_PORT);
     }
 
     @Autowired
@@ -60,7 +61,7 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
      * entries (first_name, last_name, company) to a Http endpoint.
      * The integration uses a split step to pass entries one by one to the Http endpoint.
      */
-    @ClassRule
+    @Container
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
             .name("db-to-http")
             .fromExport(DBToHttp_IT.class.getResource("DBToHttp-export"))

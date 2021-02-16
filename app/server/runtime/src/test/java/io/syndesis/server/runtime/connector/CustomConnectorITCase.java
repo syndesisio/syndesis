@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -119,7 +119,7 @@ public class CustomConnectorITCase extends BaseITCase {
         }
     }
 
-    @Before
+    @BeforeEach
     public void createConnectorTemplates() {
         dataManager.create(template);
         final ConnectorTemplate secondTemplate = createConnectorTemplate(SECOND_TEMPLATE_ID, "connector template");

@@ -37,7 +37,7 @@ import io.syndesis.extension.converter.ExtensionConverter;
 import io.syndesis.server.endpoint.v1.handler.exception.RestError;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;

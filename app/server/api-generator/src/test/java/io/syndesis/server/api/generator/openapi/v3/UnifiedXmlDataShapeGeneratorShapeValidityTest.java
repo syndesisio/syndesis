@@ -15,36 +15,34 @@
  */
 package io.syndesis.server.api.generator.openapi.v3;
 
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+
 import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
+import io.apicurio.datamodels.openapi.v3.models.Oas30PathItem;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
 import io.syndesis.server.api.generator.openapi.LocalResolver;
+
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
@@ -54,9 +52,10 @@ import org.xmlunit.validation.ValidationProblem;
 import org.xmlunit.validation.ValidationResult;
 import org.xmlunit.validation.Validator;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
 
     private static final Source CACHED_SCHEMA = new Source() {
@@ -80,18 +79,6 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
         SCHEMA_FACTORY.setResourceResolver(new LocalResolver());
         VALIDATOR = createValidator();
     }
-
-    @Parameter(0)
-    public ObjectNode json;
-
-    @Parameter(2)
-    public Oas30Operation operation;
-
-    @Parameter(3)
-    public String specification;
-
-    @Parameter(1)
-    public Oas30Document openApiDoc;
 
     private static final UnifiedXmlDataShapeGenerator generator = new UnifiedXmlDataShapeGenerator();
 
@@ -138,8 +125,10 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
         }
     }
 
-    @Test
-    public void shouldGenerateValidInputSchemasets() {
+    @ParameterizedTest
+    @MethodSource("specifications")
+    public void shouldGenerateValidInputSchemasets(final ObjectNode json, final Oas30Document openApiDoc, final Oas30Operation operation,
+        final String specification) {
         final DataShape input = generator.createShapeFromRequest(json, openApiDoc, operation);
 
         if (input.getKind() != DataShapeKinds.XML_SCHEMA) {
@@ -156,8 +145,10 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
             .isTrue();
     }
 
-    @Test
-    public void shouldGenerateValidOutputSchemasets() throws IOException {
+    @ParameterizedTest
+    @MethodSource("specifications")
+    public void shouldGenerateValidOutputSchemasets(final ObjectNode json, final Oas30Document openApiDoc, final Oas30Operation operation,
+        final String specification) throws IOException {
         final DataShape output = generator.createShapeFromResponse(json, openApiDoc, operation);
 
         if (output.getKind() != DataShapeKinds.XML_SCHEMA) {
@@ -194,45 +185,35 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
         return validator;
     }
 
-    @Parameters
-    public static Iterable<Object[]> specifications() {
-        final List<String> specifications = Collections.singletonList("/openapi/v3/petstore.json");
+    static Stream<Arguments> specifications() {
+        final String specification;
+        try (InputStream in = UnifiedXmlDataShapeGenerator.class.getResourceAsStream("/openapi/v3/petstore.json")) {
+            specification = IOUtils.toString(in, StandardCharsets.UTF_8);
+        } catch (final IOException e) {
+            throw new AssertionError("Unable to load swagger specification", e);
+        }
 
-        final List<Object[]> parameters = new ArrayList<>();
+        final ObjectNode json;
+        try {
+            json = (ObjectNode) JsonUtils.reader().readTree(specification);
+        } catch (final IOException e) {
+            throw new AssertionError("Unable to parse swagger specification", e);
+        }
+        final Oas30Document openApiDoc = (Oas30Document) Library.readDocumentFromJSONString(specification);
 
-        specifications.forEach(specification -> {
-            final String specificationContent;
-            try (InputStream in = UnifiedXmlDataShapeGenerator.class.getResourceAsStream(specification)) {
-                specificationContent = IOUtils.toString(in, StandardCharsets.UTF_8);
-            } catch (final IOException e) {
-                throw new AssertionError("Unable to load swagger specification in path: " + specification, e);
-            }
+        return openApiDoc.paths.getPathItems()
+            .stream()
+            .flatMap(pathItem -> fromPathItem(openApiDoc, json, specification, (Oas30PathItem) pathItem));
+    }
 
-            ObjectNode json;
-            try {
-                json = (ObjectNode) JsonUtils.reader().readTree(specificationContent);
-            } catch (final IOException e) {
-                throw new AssertionError("Unable to parse swagger specification in path as JSON: " + specification, e);
-            }
-            final Oas30Document openApiDoc = (Oas30Document) Library.readDocumentFromJSONString(specificationContent);
+    static Stream<Arguments> fromPathItem(final Oas30Document openApiDoc, final ObjectNode json, String specification, final Oas30PathItem pathItem) {
+        return Oas30ModelHelper.getOperationMap(pathItem).values().stream().map(operation -> {
+            final Optional<DataShapeGenerator.NameAndSchema> bodySchema = generator.findBodySchema(openApiDoc, operation);
 
-            openApiDoc.paths.getPathItems()
-                .forEach(pathItem -> {
-                    Oas30ModelHelper.getOperationMap(pathItem).forEach((path, operation) -> {
-                        final Optional<DataShapeGenerator.NameAndSchema> bodySchema = generator.findBodySchema(openApiDoc, operation);
-                        if (!bodySchema.isPresent()) {
-                            // by default we resort to JSON for payloads without
-                            // body, i.e.
-                            // only parameters
-                            return;
-                        }
-
-                        parameters.add(new Object[] {json, openApiDoc, operation, specification});
-                });
-            });
-        });
-
-        return parameters;
+            return bodySchema.map(x -> Arguments.of(json, openApiDoc, operation, specification));
+        })
+            .filter(Optional::isPresent)
+            .map(Optional::get);
     }
 
     private static StreamSource source(final String xml) {

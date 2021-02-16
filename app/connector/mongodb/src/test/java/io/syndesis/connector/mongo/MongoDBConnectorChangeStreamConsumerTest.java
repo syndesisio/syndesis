@@ -26,10 +26,10 @@ import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,18 +40,18 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
 
     protected MongoCollection<Document> collection;
 
-    @BeforeClass
+    @BeforeAll
     public static void doCollectionSetup() {
         EmbedMongoConfiguration.DATABASE.createCollection(COLLECTION);
         LOG.debug("Created a change stream collection named {}", COLLECTION);
     }
 
-    @Before
+    @BeforeEach
     public void before(){
         collection = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION);
     }
 
-    @After
+    @AfterEach
     public void after(){
         collection.drop();
     }
@@ -64,7 +64,7 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
     @Test
     public void singleInsertTest() throws Exception {
         // When
-        MockEndpoint mock = getMockEndpoint("mock:result");
+        MockEndpoint mock = context().getEndpoint("mock:result", MockEndpoint.class);
         mock.setRetainLast(1);
         mock.expectedMessageCount(2);
         mock.expectedMessagesMatches((Exchange e) -> {

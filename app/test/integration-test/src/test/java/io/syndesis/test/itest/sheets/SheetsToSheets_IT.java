@@ -21,7 +21,7 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.http.server.HttpServer;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

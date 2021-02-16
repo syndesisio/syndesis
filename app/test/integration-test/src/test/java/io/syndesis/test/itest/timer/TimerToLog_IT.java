@@ -29,7 +29,7 @@ import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.integration.source.JsonIntegrationSource;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 /**

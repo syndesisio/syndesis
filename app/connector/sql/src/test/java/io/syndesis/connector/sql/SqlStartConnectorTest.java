@@ -26,8 +26,8 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.sql.common.DbEnum;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -57,7 +57,7 @@ public class SqlStartConnectorTest extends SqlConnectorTestSupport {
             dbProductName = db.connection.getMetaData().getDatabaseProductName();
         } catch (SQLException e) {
             e.printStackTrace();
-            Assert.fail(e.getMessage());
+            Assertions.fail(e.getMessage());
         }
         if (DbEnum.POSTGRESQL.equals(DbEnum.fromName(dbProductName))) {
             return Arrays.asList("CREATE TABLE NAME ("
@@ -143,7 +143,7 @@ public class SqlStartConnectorTest extends SqlConnectorTestSupport {
         @SuppressWarnings("unchecked")
         List<String> jsonBeans = template.requestBody("direct:start", body, List.class);
         
-        Assert.assertEquals(expectedResults.isEmpty(), jsonBeans.isEmpty());
+        Assertions.assertEquals(expectedResults.isEmpty(), jsonBeans.isEmpty());
 
         for (Map<String, String[]> result : expectedResults) {
             for (Map.Entry<String, String[]> resultEntry : result.entrySet()) {

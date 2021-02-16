@@ -31,8 +31,8 @@ import io.syndesis.server.runtime.BaseITCase;
 import okio.Okio;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.context.annotation.Bean;
@@ -68,7 +68,7 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
         }
     }
 
-    @Before
+    @BeforeEach
     public void createConnectorTemplates() {
         dataManager.create(template);
     }

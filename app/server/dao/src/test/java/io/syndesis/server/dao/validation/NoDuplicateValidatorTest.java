@@ -15,8 +15,8 @@
  */
 package io.syndesis.server.dao.validation;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.lang.reflect.Field;
@@ -35,7 +35,7 @@ import javax.validation.ValidatorFactory;
 import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.internal.cfg.context.DefaultConstraintMapping;
 import org.hibernate.validator.internal.constraintvalidators.bv.NotNullValidator;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.Action.Pattern;
 import io.syndesis.common.model.action.ConnectorAction;

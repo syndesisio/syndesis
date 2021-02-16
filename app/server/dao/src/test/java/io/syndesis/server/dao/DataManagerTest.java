@@ -32,9 +32,9 @@ import io.syndesis.common.util.cache.LRUCacheManager;
 import io.syndesis.server.dao.manager.DataAccessObject;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
@@ -48,7 +48,7 @@ public class DataManagerTest {
     private CacheManager cacheManager;
     private DataManager dataManager = null;
 
-    @Before
+    @BeforeEach
     public void setup() {
         cacheManager = new LRUCacheManager(100);
 
@@ -67,9 +67,9 @@ public class DataManagerTest {
         ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
             .contains("activemq", "amqp", "fhir", "ftp","sftp", "sql", "salesforce", "jira", "twitter", "aws-s3", "mqtt", "http4", "https4", "dropbox", "slack", "gmail", "webhook", "odata", "box");
-        Assert.assertTrue(connectors.getTotalCount() > 1);
-        Assert.assertTrue(connectors.getItems().size() > 1);
-        Assert.assertTrue(connectors.getTotalCount() >= connectors.getItems().size());
+        Assertions.assertTrue(connectors.getTotalCount() > 1);
+        Assertions.assertTrue(connectors.getItems().size() > 1);
+        Assertions.assertTrue(connectors.getTotalCount() >= connectors.getItems().size());
     }
 
     @Test
@@ -102,15 +102,15 @@ public class DataManagerTest {
     @Test
     public void getTwitterConnector() {
         Connector connector = dataManager.fetch(Connector.class, "twitter");
-        Assert.assertEquals("First Connector in the deployment.json is Twitter", "Twitter", connector.getName());
-        Assert.assertEquals(4, connector.getActions().size());
+        Assertions.assertEquals("Twitter", connector.getName(), "First Connector in the deployment.json is Twitter");
+        Assertions.assertEquals(4, connector.getActions().size());
     }
 
     @Test
     public void getSalesforceConnector() {
         Connector connector = dataManager.fetch(Connector.class, "salesforce");
-        Assert.assertEquals("Second Connector in the deployment.json is Salesforce", "Salesforce", connector.getName());
-        Assert.assertEquals(10, connector.getActions().size());
+        Assertions.assertEquals("Salesforce", connector.getName(), "Second Connector in the deployment.json is Salesforce");
+        Assertions.assertEquals(10, connector.getActions().size());
     }
 
     @Test

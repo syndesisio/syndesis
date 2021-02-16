@@ -15,12 +15,19 @@
  */
 package io.syndesis.connector.odata;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.syndesis.common.model.DataShape;
+import io.syndesis.connector.odata.customizer.json.ClientCollectionValueSerializer;
+import io.syndesis.connector.odata.customizer.json.ClientComplexValueSerializer;
+import io.syndesis.connector.odata.customizer.json.ClientEntitySerializer;
+import io.syndesis.connector.odata.customizer.json.ClientEnumValueSerializer;
+import io.syndesis.connector.odata.customizer.json.ClientPrimitiveValueSerializer;
+import io.syndesis.connector.odata.meta.ODataMetaDataRetrieval;
+import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
+
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.http.HttpStatus;
 import org.apache.olingo.client.api.ODataClient;
@@ -37,17 +44,18 @@ import org.apache.olingo.client.core.domain.ClientEnumValueImpl;
 import org.apache.olingo.client.core.domain.ClientPrimitiveValueImpl;
 import org.apache.olingo.client.core.domain.ClientPropertyImpl;
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -56,17 +64,13 @@ import com.github.fge.jsonschema.core.load.configuration.LoadingConfiguration;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import io.syndesis.common.model.DataShape;
-import io.syndesis.connector.odata.customizer.json.ClientCollectionValueSerializer;
-import io.syndesis.connector.odata.customizer.json.ClientComplexValueSerializer;
-import io.syndesis.connector.odata.customizer.json.ClientEntitySerializer;
-import io.syndesis.connector.odata.customizer.json.ClientEnumValueSerializer;
-import io.syndesis.connector.odata.customizer.json.ClientPrimitiveValueSerializer;
-import io.syndesis.connector.odata.meta.ODataMetaDataRetrieval;
-import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DirtiesContext
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(
     classes = {
         ODataSerializerTest.TestConfiguration.class
@@ -88,7 +92,7 @@ public class ODataSerializerTest extends AbstractODataTest {
     private static final String TEST_COMPLEX = "test-complex.json";
     private static final String TEST_ENUM = "test-enum.json";
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() {
         SimpleModule module = new SimpleModule(ClientEntitySet.class.getSimpleName(),
                                                        new Version(1, 0, 0, null, null, null));

@@ -18,7 +18,7 @@ package io.syndesis.server.credential.salesforce;
 import io.syndesis.server.credential.salesforce.SalesforceConfiguration.SalesforceApplicator;
 import io.syndesis.common.model.connection.Connection;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.salesforce.api.Salesforce;
 import org.springframework.social.salesforce.connect.SalesforceConnectionFactory;

@@ -22,8 +22,8 @@ import java.nio.file.Paths;
 
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.util.json.JsonUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Christoph Deppisch
@@ -34,13 +34,13 @@ public class IntegrationExportSourceTest {
     public void shouldGetFromZip() throws IOException {
         Integration expected = JsonUtils.readFromStream(IntegrationExportSourceTest.class.getResourceAsStream("TimerToLog.json"), Integration.class);
         IntegrationExportSource source = new IntegrationExportSource(IntegrationExportSourceTest.class.getResourceAsStream("TimerToLog-export.zip"));
-        Assert.assertEquals(expected, source.get());
+        Assertions.assertEquals(expected, source.get());
     }
 
     @Test
     public void shouldGetFromDirectory() throws IOException, URISyntaxException {
         Integration expected = JsonUtils.readFromStream(IntegrationExportSourceTest.class.getResourceAsStream("TimerToLog.json"), Integration.class);
         IntegrationExportSource source = new IntegrationExportSource(Paths.get(IntegrationExportSourceTest.class.getResource("TimerToLog-export").toURI()));
-        Assert.assertEquals(expected, source.get());
+        Assertions.assertEquals(expected, source.get());
     }
 }

@@ -37,7 +37,7 @@ import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.ToDefinition;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
 import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;

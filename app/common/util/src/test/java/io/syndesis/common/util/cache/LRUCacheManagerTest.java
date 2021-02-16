@@ -15,37 +15,18 @@
  */
 package io.syndesis.common.util.cache;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Arrays;
-import java.util.Collection;
-
-@RunWith(Parameterized.class)
 public class LRUCacheManagerTest {
 
-    private final boolean soft;
-
-
-    public LRUCacheManagerTest(boolean soft) {
-        this.soft = soft;
-    }
-
-    @Parameterized.Parameters(name = "LRUCacheManagerTest(soft={0})")
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][]{
-            {Boolean.FALSE},
-            {Boolean.TRUE}
-        });
-    }
-
-    @Test
-    public void testEviction() {
+    @ParameterizedTest(name = "LRUCacheManagerTest(soft={0})")
+    @ValueSource(booleans = {true, false})
+    public void testEviction(final boolean soft) {
         CacheManager manager = new LRUCacheManager(2);
-        Cache<String, Object> cache = manager.getCache("cache", this.soft);
+        Cache<String, Object> cache = manager.getCache("cache", soft);
 
         String one = "1";
         String two = "2";
@@ -61,13 +42,14 @@ public class LRUCacheManagerTest {
         assertThat(cache.get(three)).isNotNull();
     }
 
-    @Test
-    public void testIdentity() {
+    @ParameterizedTest(name = "LRUCacheManagerTest(soft={0})")
+    @ValueSource(booleans = {true, false})
+    public void testIdentity(final boolean soft) {
         CacheManager manager = new LRUCacheManager(2);
-        Cache<String, String> cache1 = manager.getCache("cache", this.soft);
-        Cache<String, String> cache2 = manager.getCache("cache", this.soft);
+        Cache<String, String> cache1 = manager.getCache("cache", soft);
+        Cache<String, String> cache2 = manager.getCache("cache", soft);
         // same cache, but warning printed
-        Cache<String, String> cache3 = manager.getCache("cache", !this.soft);
+        Cache<String, String> cache3 = manager.getCache("cache", !soft);
 
         assertThat(cache1).isEqualTo(cache2);
         assertThat(cache1).isEqualTo(cache3);

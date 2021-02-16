@@ -27,7 +27,7 @@ import javax.validation.ValidatorFactory;
 import io.syndesis.common.model.validation.AllValidations;
 import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.internal.cfg.context.DefaultConstraintMapping;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.syndesis.common.model.validation.UniquenessRequired;
 import io.syndesis.common.model.validation.integration.NoDuplicateIntegration;

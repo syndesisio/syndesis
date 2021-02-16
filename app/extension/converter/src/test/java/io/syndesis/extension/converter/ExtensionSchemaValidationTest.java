@@ -23,39 +23,23 @@ import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.extension.Extension;
 
 import io.syndesis.common.util.json.JsonUtils;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ExtensionSchemaValidationTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExtensionSchemaValidationTest.class);
-
     private static final ObjectMapper OBJECT_MAPPER = JsonUtils.copyObjectMapperConfiguration();
-
-    @Test
-    @Ignore("Used to generate the initial extension definition")
-    public void generateBaseExtensionDefinition() throws Exception {
-
-        JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(OBJECT_MAPPER);
-        com.fasterxml.jackson.module.jsonSchema.JsonSchema schema = schemaGen.generateSchema(Extension.class);
-
-        LOG.info(OBJECT_MAPPER.writeValueAsString(schema));
-    }
 
     @Test
     public void validateStepExtensionTest() throws ProcessingException, IOException {
@@ -83,7 +67,7 @@ public class ExtensionSchemaValidationTest {
 
         JsonNode tree = converter.toPublicExtension(extension);
         ProcessingReport report = schema.validate(tree);
-        assertFalse(report.toString(), report.iterator().hasNext());
+        assertFalse(report.iterator().hasNext(), report.toString());
 
         Extension extensionClone = converter.toInternalExtension(tree);
         assertEquals(extensionClone, extension);
@@ -106,7 +90,7 @@ public class ExtensionSchemaValidationTest {
 
         JsonNode tree = converter.toPublicExtension(extension);
         ProcessingReport report = schema.validate(tree);
-        assertFalse(report.toString(), report.iterator().hasNext());
+        assertFalse(report.iterator().hasNext(), report.toString());
 
         Extension extensionClone = converter.toInternalExtension(tree);
         assertNotEquals(extensionClone, extension);
@@ -126,7 +110,7 @@ public class ExtensionSchemaValidationTest {
                 .put("version", "1.0.0");
 
         ProcessingReport report = schema.validate(tree);
-        assertFalse(report.toString(), report.iterator().hasNext());
+        assertFalse(report.iterator().hasNext(), report.toString());
 
         Extension extension = converter.toInternalExtension(tree);
         assertEquals(ExtensionConverter.getCurrentSchemaVersion(), extension.getSchemaVersion());

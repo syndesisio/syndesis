@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import io.syndesis.connector.email.AbstractEmailServerTest;
 import io.syndesis.connector.email.verifier.receive.ReceiveEMailVerifier;
 import io.syndesis.connector.email.verifier.send.SendEMailVerifier;

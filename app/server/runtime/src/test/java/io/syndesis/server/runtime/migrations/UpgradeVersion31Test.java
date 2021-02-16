@@ -29,7 +29,7 @@ import io.syndesis.server.jsondb.dao.Migrator;
 import io.syndesis.server.jsondb.impl.MemorySqlJsonDB;
 import io.syndesis.server.runtime.DefaultMigrator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skife.jdbi.v2.Handle;
 import org.skife.jdbi.v2.tweak.HandleCallback;
 import org.springframework.core.io.DefaultResourceLoader;

@@ -15,27 +15,21 @@
  */
 package io.syndesis.integration.component.proxy;
 
-import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.processor.Pipeline;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
-@RunWith(Parameterized.class)
 public class ProcessorsTest {
-
-    private final BiConsumer<ComponentProxyComponent, Processor> adder;
-
-    private final Function<ComponentProxyComponent, Processor> getter;
 
     private final Processor processor1 = mock(Processor.class);
 
@@ -43,13 +37,9 @@ public class ProcessorsTest {
 
     private final Processor processor3 = mock(Processor.class);
 
-    public ProcessorsTest(final Function<ComponentProxyComponent, Processor> getter, final BiConsumer<ComponentProxyComponent, Processor> adder) {
-        this.getter = getter;
-        this.adder = adder;
-    }
-
-    @Test
-    public void shouldAddProcessors() {
+    @ParameterizedTest
+    @MethodSource("mutators")
+    public void shouldAddProcessors(Function<ComponentProxyComponent, Processor> getter, BiConsumer<ComponentProxyComponent, Processor> adder) {
         final ComponentProxyComponent component = createComponent();
 
         adder.accept(component, processor1);
@@ -57,8 +47,10 @@ public class ProcessorsTest {
         assertThat(getter.apply(component)).isEqualTo(processor1);
     }
 
-    @Test
-    public void shouldCombineMultipleBeforeProducersIntoPipeline() {
+    @ParameterizedTest
+    @MethodSource("mutators")
+    public void shouldCombineMultipleBeforeProducersIntoPipeline(Function<ComponentProxyComponent, Processor> getter,
+        BiConsumer<ComponentProxyComponent, Processor> adder) {
         final ComponentProxyComponent component = createComponent();
 
         adder.accept(component, processor1);
@@ -71,8 +63,10 @@ public class ProcessorsTest {
         assertThat(pipeline.getProcessors()).containsExactly(processor1, processor2, processor3);
     }
 
-    @Test
-    public void shouldCombineTwoProcessorsIntoPipeline() {
+    @ParameterizedTest
+    @MethodSource("mutators")
+    public void shouldCombineTwoProcessorsIntoPipeline(Function<ComponentProxyComponent, Processor> getter,
+        BiConsumer<ComponentProxyComponent, Processor> adder) {
         final ComponentProxyComponent component = createComponent();
 
         adder.accept(component, processor1);
@@ -84,19 +78,18 @@ public class ProcessorsTest {
         assertThat(pipeline.getProcessors()).containsExactly(processor1, processor2);
     }
 
-    @Parameters
-    public static Iterable<Object[]> mutators() {
-        return Arrays.asList(
+    public static Stream<Arguments> mutators() {
+        return Stream.of(
             createCase(c -> c.getBeforeProducer(), (c, p) -> Processors.addBeforeProducer(c, p)),
             createCase(c -> c.getAfterProducer(), (c, p) -> Processors.addAfterProducer(c, p)),
             createCase(c -> c.getBeforeConsumer(), (c, p) -> Processors.addBeforeConsumer(c, p)),
             createCase(c -> c.getAfterConsumer(), (c, p) -> Processors.addAfterConsumer(c, p)));
     }
 
-    static Object[] createCase(final Function<ComponentProxyComponent, Processor> getter,
+    static Arguments createCase(final Function<ComponentProxyComponent, Processor> getter,
         final BiConsumer<ComponentProxyComponent, Processor> adder) {
 
-        return new Object[] {getter, adder};
+        return Arguments.of(getter, adder);
     }
 
     private static ComponentProxyComponent createComponent() {

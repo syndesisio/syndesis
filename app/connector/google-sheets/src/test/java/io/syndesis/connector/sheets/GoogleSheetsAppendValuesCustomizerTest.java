@@ -26,9 +26,9 @@ import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
 import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
 import org.apache.camel.impl.DefaultExchange;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
 import io.syndesis.connector.support.util.ConnectorOptions;
@@ -37,7 +37,7 @@ public class GoogleSheetsAppendValuesCustomizerTest extends AbstractGoogleSheets
 
     private GoogleSheetsAppendValuesCustomizer customizer;
 
-    @Before
+    @BeforeEach
     public void setupCustomizer() {
         customizer = new GoogleSheetsAppendValuesCustomizer();
     }
@@ -54,16 +54,16 @@ public class GoogleSheetsAppendValuesCustomizerTest extends AbstractGoogleSheets
         Exchange inbound = new DefaultExchange(createCamelContext());
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
-        Assert.assertEquals("append", ConnectorOptions.extractOption(options, "methodName"));
+        Assertions.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assertions.assertEquals("append", ConnectorOptions.extractOption(options, "methodName"));
 
-        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
-        Assert.assertEquals("A1", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
-        Assert.assertEquals(RangeCoordinate.DIMENSION_ROWS, inbound.getIn().getHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION));
-        Assert.assertEquals("RAW", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
+        Assertions.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertEquals("A1", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
+        Assertions.assertEquals(RangeCoordinate.DIMENSION_ROWS, inbound.getIn().getHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION));
+        Assertions.assertEquals("RAW", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
 
         ValueRange valueRange = (ValueRange) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values");
-        Assert.assertEquals(0L, valueRange.getValues().size());
+        Assertions.assertEquals(0L, valueRange.getValues().size());
     }
 
     @Test
@@ -84,18 +84,18 @@ public class GoogleSheetsAppendValuesCustomizerTest extends AbstractGoogleSheets
 
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
-        Assert.assertEquals("append", ConnectorOptions.extractOption(options, "methodName"));
+        Assertions.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assertions.assertEquals("append", ConnectorOptions.extractOption(options, "methodName"));
 
-        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
-        Assert.assertEquals("A1:B1", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
-        Assert.assertEquals(RangeCoordinate.DIMENSION_ROWS, inbound.getIn().getHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION));
-        Assert.assertEquals("USER_ENTERED", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
+        Assertions.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertEquals("A1:B1", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
+        Assertions.assertEquals(RangeCoordinate.DIMENSION_ROWS, inbound.getIn().getHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION));
+        Assertions.assertEquals("USER_ENTERED", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
 
         ValueRange valueRange = (ValueRange) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values");
-        Assert.assertEquals(1L, valueRange.getValues().size());
-        Assert.assertEquals("a1", valueRange.getValues().get(0).get(0));
-        Assert.assertEquals("b1", valueRange.getValues().get(0).get(1));
+        Assertions.assertEquals(1L, valueRange.getValues().size());
+        Assertions.assertEquals("a1", valueRange.getValues().get(0).get(0));
+        Assertions.assertEquals("b1", valueRange.getValues().get(0).get(1));
     }
 
     @Test
@@ -117,18 +117,18 @@ public class GoogleSheetsAppendValuesCustomizerTest extends AbstractGoogleSheets
 
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
-        Assert.assertEquals("append", ConnectorOptions.extractOption(options, "methodName"));
+        Assertions.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assertions.assertEquals("append", ConnectorOptions.extractOption(options, "methodName"));
 
-        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
-        Assert.assertEquals("A1:A2", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
-        Assert.assertEquals(RangeCoordinate.DIMENSION_COLUMNS, inbound.getIn().getHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION));
-        Assert.assertEquals("USER_ENTERED", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
+        Assertions.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertEquals("A1:A2", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
+        Assertions.assertEquals(RangeCoordinate.DIMENSION_COLUMNS, inbound.getIn().getHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION));
+        Assertions.assertEquals("USER_ENTERED", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
 
         ValueRange valueRange = (ValueRange) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values");
-        Assert.assertEquals(1L, valueRange.getValues().size());
-        Assert.assertEquals("a1", valueRange.getValues().get(0).get(0));
-        Assert.assertEquals("a2", valueRange.getValues().get(0).get(1));
+        Assertions.assertEquals(1L, valueRange.getValues().size());
+        Assertions.assertEquals("a1", valueRange.getValues().get(0).get(0));
+        Assertions.assertEquals("a2", valueRange.getValues().get(0).get(1));
     }
 
     @Test
@@ -154,18 +154,18 @@ public class GoogleSheetsAppendValuesCustomizerTest extends AbstractGoogleSheets
 
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals("A1:B2", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
-        Assert.assertEquals(RangeCoordinate.DIMENSION_ROWS, inbound.getIn().getHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION));
-        Assert.assertEquals("USER_ENTERED", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
+        Assertions.assertEquals("A1:B2", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
+        Assertions.assertEquals(RangeCoordinate.DIMENSION_ROWS, inbound.getIn().getHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION));
+        Assertions.assertEquals("USER_ENTERED", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
 
         ValueRange valueRange = (ValueRange) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values");
-        Assert.assertEquals(2L, valueRange.getValues().size());
-        Assert.assertEquals(2L, valueRange.getValues().get(0).size());
-        Assert.assertEquals("a1", valueRange.getValues().get(0).get(0));
-        Assert.assertEquals("b1", valueRange.getValues().get(0).get(1));
-        Assert.assertEquals(2L, valueRange.getValues().get(1).size());
-        Assert.assertEquals("a2", valueRange.getValues().get(1).get(0));
-        Assert.assertEquals("b2", valueRange.getValues().get(1).get(1));
+        Assertions.assertEquals(2L, valueRange.getValues().size());
+        Assertions.assertEquals(2L, valueRange.getValues().get(0).size());
+        Assertions.assertEquals("a1", valueRange.getValues().get(0).get(0));
+        Assertions.assertEquals("b1", valueRange.getValues().get(0).get(1));
+        Assertions.assertEquals(2L, valueRange.getValues().get(1).size());
+        Assertions.assertEquals("a2", valueRange.getValues().get(1).get(0));
+        Assertions.assertEquals("b2", valueRange.getValues().get(1).get(1));
     }
 
     @Test
@@ -193,17 +193,17 @@ public class GoogleSheetsAppendValuesCustomizerTest extends AbstractGoogleSheets
 
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals("A1:B2", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
-        Assert.assertEquals(RangeCoordinate.DIMENSION_COLUMNS, inbound.getIn().getHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION));
-        Assert.assertEquals("USER_ENTERED", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
+        Assertions.assertEquals("A1:B2", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
+        Assertions.assertEquals(RangeCoordinate.DIMENSION_COLUMNS, inbound.getIn().getHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION));
+        Assertions.assertEquals("USER_ENTERED", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
 
         ValueRange valueRange = (ValueRange) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values");
-        Assert.assertEquals(2L, valueRange.getValues().size());
-        Assert.assertEquals(2L, valueRange.getValues().get(0).size());
-        Assert.assertEquals("a1", valueRange.getValues().get(0).get(0));
-        Assert.assertEquals("a2", valueRange.getValues().get(0).get(1));
-        Assert.assertEquals(2L, valueRange.getValues().get(1).size());
-        Assert.assertEquals("b1", valueRange.getValues().get(1).get(0));
-        Assert.assertEquals("b2", valueRange.getValues().get(1).get(1));
+        Assertions.assertEquals(2L, valueRange.getValues().size());
+        Assertions.assertEquals(2L, valueRange.getValues().get(0).size());
+        Assertions.assertEquals("a1", valueRange.getValues().get(0).get(0));
+        Assertions.assertEquals("a2", valueRange.getValues().get(0).get(1));
+        Assertions.assertEquals(2L, valueRange.getValues().get(1).size());
+        Assertions.assertEquals("b1", valueRange.getValues().get(1).get(0));
+        Assertions.assertEquals("b2", valueRange.getValues().get(1).get(1));
     }
 }

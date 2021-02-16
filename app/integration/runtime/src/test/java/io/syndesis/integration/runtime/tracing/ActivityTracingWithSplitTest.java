@@ -39,21 +39,21 @@ import org.apache.camel.Handler;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
 import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegration;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ActivityTracingWithSplitTest {
     protected CamelContext context;
     protected ArrayList<JaegerSpan> activityEvents;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
 
         activityEvents = new ArrayList<>();
@@ -133,7 +133,7 @@ public class ActivityTracingWithSplitTest {
         dumpRoutes(context, routeBuilder.getRouteCollection());
     }
 
-    @After
+    @AfterEach
     public void after() throws Exception {
         context.stop();
     }

@@ -38,29 +38,21 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.quartz2.QuartzEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.ModelCamelContext;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class TimerIntegrationTest {
 
     private static final String DESIRED_CRON_EXPRESSION = "0 0/1 * * * ?";
 
     private static final Connector TIMER = loadConnector();
 
-    private final ConnectorAction action;
-
-    public TimerIntegrationTest(final ConnectorAction action) {
-        this.action = action;
-    }
-
-    @Test
-    public void shouldSupportCronExpressions() throws Exception {
-        final RouteBuilder builder = createRouteBuilder();
+    @ParameterizedTest
+    @MethodSource("cases")
+    public void shouldSupportCronExpressions(final ConnectorAction action) throws Exception {
+        final RouteBuilder builder = createRouteBuilder(action);
 
         final CamelContext context = builder.getContext();
         builder.addRoutesToCamelContext(context);
@@ -75,7 +67,7 @@ public class TimerIntegrationTest {
         }
     }
 
-    RouteBuilder createRouteBuilder() {
+    RouteBuilder createRouteBuilder(final ConnectorAction action) {
         return new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
             @Override
             protected ModelCamelContext createContainer() {
@@ -92,7 +84,6 @@ public class TimerIntegrationTest {
         };
     }
 
-    @Parameters
     public static Iterable<ConnectorAction> cases() {
         return Arrays.asList(cronAction("0+0/1+*+*+*+?"), cronAction("0 0/1 * * * ?"));
     }

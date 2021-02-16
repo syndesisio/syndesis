@@ -21,8 +21,8 @@ import java.util.UUID;
 
 import io.syndesis.common.model.integration.Integration;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +31,7 @@ public class JsonHandlingITCase extends BaseITCase {
 
     private final String id = UUID.randomUUID().toString();
 
-    @After
+    @AfterEach
     public void removeIntegration() {
         dataManager.getDataAccessObject(Integration.class).delete(id);
     }

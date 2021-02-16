@@ -16,17 +16,17 @@
 package io.syndesis.common.model.integration.step.template;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import org.junit.After;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import io.syndesis.common.util.StringConstants;
 
 public class TestFreeMarkerTemplatePreProcessor implements StringConstants {
 
     private final FreeMarkerTemplatePreProcessor processor = new FreeMarkerTemplatePreProcessor();
 
-    @After
+    @AfterEach
     public void tearDown() {
         processor.reset();
     }

@@ -18,8 +18,8 @@ package io.syndesis.connector.mongo;
 import com.mongodb.client.MongoCollection;
 import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
 import org.bson.Document;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class MongoDBConnectorProducerTestSupport extends MongoDBConnectorTestSupport{
 
@@ -27,12 +27,12 @@ public abstract class MongoDBConnectorProducerTestSupport extends MongoDBConnect
 
     public abstract String getCollectionName();
 
-    @Before
+    @BeforeEach
     public void before(){
         collection = EmbedMongoConfiguration.DATABASE.getCollection(getCollectionName());
     }
 
-    @After
+    @AfterEach
     public void after(){
         collection.drop();
     }

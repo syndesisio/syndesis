@@ -26,26 +26,28 @@ import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContaine
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.ftpserver.DataConnectionConfiguration;
 import org.apache.ftpserver.DataConnectionConfigurationFactory;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * @author Christoph Deppisch
  */
 @ContextConfiguration(classes = FtpToDB_IT.EndpointConfig.class)
 @DirtiesContext
+@Testcontainers
 public class FtpToDB_IT extends FtpTestSupport {
 
     /**
      * Integration periodically retrieves tasks as FTP file transfer and maps those to the database.
      * The integration uses data mapper topmost collection support to map all entries in batch insert to the database.
      */
-    @ClassRule
+    @Container
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
             .name("ftp-to-db")
             .fromExport(FtpToDB_IT.class.getResource("FtpToDB-export"))

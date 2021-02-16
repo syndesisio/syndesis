@@ -16,25 +16,24 @@
 
 package io.syndesis.connector.sheets;
 
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-import org.apache.camel.test.junit4.CamelTestSupport;
-
 import java.util.UUID;
 
-public abstract class AbstractGoogleSheetsCustomizerTestSupport extends CamelTestSupport {
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+
+import org.apache.camel.CamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
+
+public abstract class AbstractGoogleSheetsCustomizerTestSupport {
 
     private final ComponentProxyComponent component = new ComponentProxyComponent("google-sheets-1", "google-sheets");
     private final String spreadsheetId = UUID.randomUUID().toString();
 
-    @Override
-    public boolean isUseRouteBuilder() {
-        return false;
-    }
+    protected static CamelContext createCamelContext() {
+        final DefaultCamelContext context = new DefaultCamelContext();
+        context.disableJMX();
+        context.setAutoStartup(false);
 
-    @Override
-    public boolean isCreateCamelContextPerClass() {
-        // only create the context once for this class
-        return true;
+        return context;
     }
 
     /**

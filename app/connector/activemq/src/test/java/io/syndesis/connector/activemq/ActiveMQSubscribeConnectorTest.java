@@ -19,16 +19,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import javax.jms.ConnectionFactory;
+
 import io.syndesis.common.model.integration.Step;
+
 import org.apache.camel.component.mock.MockEndpoint;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.jms.core.JmsTemplate;
+import org.zapodot.junit5.jms.annotations.EmbeddedJms;
 
 public class ActiveMQSubscribeConnectorTest extends ActiveMQConnectorTestSupport {
 
-    // **************************
-    // Set up
-    // **************************
+    @EmbeddedJms 
+    private ConnectionFactory connectionFactory;
 
     @Override
     protected List<Step> createSteps() {
@@ -36,7 +39,7 @@ public class ActiveMQSubscribeConnectorTest extends ActiveMQConnectorTestSupport
             newActiveMQEndpointStep(
                 "io.syndesis.connector:connector-activemq-subscribe",
                 builder -> {
-                    builder.putConfiguredProperty("destinationName", testName.getMethodName());
+                    builder.putConfiguredProperty("destinationName", "subscribeTest");
                     builder.putConfiguredProperty("destinationType", "queue");
                 }),
             newSimpleEndpointStep(
@@ -53,12 +56,12 @@ public class ActiveMQSubscribeConnectorTest extends ActiveMQConnectorTestSupport
     public void subscribeTest() throws InterruptedException {
         final String message = UUID.randomUUID().toString();
 
-        MockEndpoint mock = getMockEndpoint("mock:result");
+        MockEndpoint mock = context().getEndpoint("mock:result", MockEndpoint.class);
         mock.expectedMessageCount(1);
         mock.expectedBodiesReceived(message);
 
-        JmsTemplate template = new JmsTemplate(broker.createConnectionFactory());
-        template.send(testName.getMethodName(), session -> session.createTextMessage(message));
+        JmsTemplate template = new JmsTemplate(connectionFactory);
+        template.send("subscribeTest", session -> session.createTextMessage(message));
 
         mock.assertIsSatisfied();
     }

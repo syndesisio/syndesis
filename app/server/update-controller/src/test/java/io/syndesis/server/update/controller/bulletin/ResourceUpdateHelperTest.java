@@ -24,7 +24,7 @@ import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.bulletin.IntegrationBulletinBoard;
 import io.syndesis.common.model.bulletin.LeveledMessage;
 import io.syndesis.common.model.connection.ConfigurationProperty;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

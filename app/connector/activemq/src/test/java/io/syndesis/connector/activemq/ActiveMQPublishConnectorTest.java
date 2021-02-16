@@ -19,18 +19,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import javax.jms.ConnectionFactory;
 import javax.jms.TextMessage;
 
 import io.syndesis.common.model.integration.Step;
+
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.jms.core.JmsTemplate;
+import org.zapodot.junit5.jms.annotations.EmbeddedJms;
 
 public class ActiveMQPublishConnectorTest extends ActiveMQConnectorTestSupport {
 
-    // **************************
-    // Set up
-    // **************************
+    @EmbeddedJms
+    private ConnectionFactory connectionFactory;
 
     @Override
     protected List<Step> createSteps() {
@@ -41,7 +43,7 @@ public class ActiveMQPublishConnectorTest extends ActiveMQConnectorTestSupport {
             newActiveMQEndpointStep(
                 "io.syndesis.connector:connector-activemq-publish",
                 builder -> {
-                    builder.putConfiguredProperty("destinationName", testName.getMethodName());
+                    builder.putConfiguredProperty("destinationName", "subscribeTest");
                     builder.putConfiguredProperty("destinationType", "queue");
                 })
         );
@@ -57,8 +59,8 @@ public class ActiveMQPublishConnectorTest extends ActiveMQConnectorTestSupport {
 
         template().sendBody("direct:start", message);
 
-        JmsTemplate template = new JmsTemplate(broker.createConnectionFactory());
-        Object answer = template.receive(testName.getMethodName());
+        JmsTemplate template = new JmsTemplate(connectionFactory);
+        Object answer = template.receive("subscribeTest");
 
         Assertions.assertThat(answer).isInstanceOf(TextMessage.class);
         Assertions.assertThat(answer).hasFieldOrPropertyWithValue("text", message);

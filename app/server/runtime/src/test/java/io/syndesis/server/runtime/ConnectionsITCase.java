@@ -20,8 +20,8 @@ import java.util.UUID;
 
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.model.connection.Connection;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +75,7 @@ public class ConnectionsITCase extends BaseITCase {
             new Violation.Builder().property("name").error("NotNull").message("Value is required").build());
     }
 
-    @Before
+    @BeforeEach
     public void preexistingConnection() {
         final Connection connection = new Connection.Builder().name("Existing connection").id(id).build();
 

@@ -19,19 +19,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import javax.jms.ConnectionFactory;
 import javax.jms.TextMessage;
 
 import io.syndesis.common.model.integration.Step;
+
 import org.apache.camel.component.sjms.SjmsComponent;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.jms.core.JmsTemplate;
+import org.zapodot.junit5.jms.annotations.EmbeddedJms;
 
 public class ActiveMQSharedConnectionTest extends ActiveMQConnectorTestSupport {
 
-    // **************************
-    // Set up
-    // **************************
+    @EmbeddedJms
+    private ConnectionFactory connectionFactory;
 
     @Override
     protected List<Step> createSteps() {
@@ -39,16 +41,15 @@ public class ActiveMQSharedConnectionTest extends ActiveMQConnectorTestSupport {
             newActiveMQEndpointStep(
                 "io.syndesis.connector:connector-activemq-subscribe",
                 builder -> {
-                    builder.putConfiguredProperty("destinationName", "sub-"  + testName.getMethodName());
+                    builder.putConfiguredProperty("destinationName", "sub-sharedConnectionTest");
                     builder.putConfiguredProperty("destinationType", "queue");
                 }),
             newActiveMQEndpointStep(
                 "io.syndesis.connector:connector-activemq-publish",
                 builder -> {
-                    builder.putConfiguredProperty("destinationName", "pub-" + testName.getMethodName());
+                    builder.putConfiguredProperty("destinationName", "pub-sharedConnectionTest");
                     builder.putConfiguredProperty("destinationType", "queue");
-                })
-        );
+                }));
     }
 
     // **************************
@@ -58,14 +59,14 @@ public class ActiveMQSharedConnectionTest extends ActiveMQConnectorTestSupport {
     @Test
     public void sharedConnectionTest() {
         final String message = UUID.randomUUID().toString();
-        final SjmsComponent sjms1 = context.getComponent("sjms-sjms-0-0", SjmsComponent.class);
-        final SjmsComponent sjms2 = context.getComponent("sjms-sjms-0-1", SjmsComponent.class);
+        final SjmsComponent sjms1 = context().getComponent("sjms-sjms-0-0", SjmsComponent.class);
+        final SjmsComponent sjms2 = context().getComponent("sjms-sjms-0-1", SjmsComponent.class);
 
         Assertions.assertThat(sjms1).isEqualTo(sjms2);
 
-        JmsTemplate template = new JmsTemplate(broker.createConnectionFactory());
-        template.send("sub-" + testName.getMethodName(), session -> session.createTextMessage(message));
-        Object answer = template.receive("pub-" + testName.getMethodName());
+        JmsTemplate template = new JmsTemplate(connectionFactory);
+        template.send("sub-sharedConnectionTest", session -> session.createTextMessage(message));
+        Object answer = template.receive("pub-sharedConnectionTest");
 
         Assertions.assertThat(answer).isInstanceOf(TextMessage.class);
         Assertions.assertThat(answer).hasFieldOrPropertyWithValue("text", message);

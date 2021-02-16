@@ -24,9 +24,9 @@ import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollecti
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
 import org.apache.camel.impl.DefaultExchange;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import com.google.api.services.sheets.v4.model.Sheet;
 import com.google.api.services.sheets.v4.model.SheetProperties;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
@@ -42,7 +42,7 @@ public class GoogleSheetsCreateSpreadsheetCustomizerTest extends AbstractGoogleS
 
     private GoogleSheetsCreateSpreadsheetCustomizer customizer;
 
-    @Before
+    @BeforeEach
     public void setupCustomizer() {
         customizer = new GoogleSheetsCreateSpreadsheetCustomizer();
     }
@@ -59,16 +59,16 @@ public class GoogleSheetsCreateSpreadsheetCustomizerTest extends AbstractGoogleS
         Exchange inbound = new DefaultExchange(createCamelContext());
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
-        Assert.assertEquals("create", ConnectorOptions.extractOption(options, "methodName"));
+        Assertions.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assertions.assertEquals("create", ConnectorOptions.extractOption(options, "methodName"));
 
         Spreadsheet spreadsheet = (Spreadsheet) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "content");
-        Assert.assertNull(spreadsheet.getSpreadsheetId());
-        Assert.assertEquals("SyndesisTest", spreadsheet.getProperties().getTitle());
-        Assert.assertEquals("America/New_York", spreadsheet.getProperties().getTimeZone());
-        Assert.assertEquals("en", spreadsheet.getProperties().getLocale());
+        Assertions.assertNull(spreadsheet.getSpreadsheetId());
+        Assertions.assertEquals("SyndesisTest", spreadsheet.getProperties().getTitle());
+        Assertions.assertEquals("America/New_York", spreadsheet.getProperties().getTimeZone());
+        Assertions.assertEquals("en", spreadsheet.getProperties().getLocale());
 
-        Assert.assertNull(spreadsheet.getSheets());
+        Assertions.assertNull(spreadsheet.getSheets());
     }
 
     @Test
@@ -93,14 +93,14 @@ public class GoogleSheetsCreateSpreadsheetCustomizerTest extends AbstractGoogleS
         getComponent().getBeforeProducer().process(inbound);
 
         Spreadsheet spreadsheet = (Spreadsheet) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "content");
-        Assert.assertNull(spreadsheet.getSpreadsheetId());
-        Assert.assertEquals("SyndesisTest", spreadsheet.getProperties().getTitle());
-        Assert.assertEquals("America/New_York", spreadsheet.getProperties().getTimeZone());
-        Assert.assertEquals("en", spreadsheet.getProperties().getLocale());
+        Assertions.assertNull(spreadsheet.getSpreadsheetId());
+        Assertions.assertEquals("SyndesisTest", spreadsheet.getProperties().getTitle());
+        Assertions.assertEquals("America/New_York", spreadsheet.getProperties().getTimeZone());
+        Assertions.assertEquals("en", spreadsheet.getProperties().getLocale());
 
-        Assert.assertNotNull(spreadsheet.getSheets());
-        Assert.assertEquals(1, spreadsheet.getSheets().size());
-        Assert.assertEquals("Sheet1", spreadsheet.getSheets().get(0).getProperties().getTitle());
+        Assertions.assertNotNull(spreadsheet.getSheets());
+        Assertions.assertEquals(1, spreadsheet.getSheets().size());
+        Assertions.assertEquals("Sheet1", spreadsheet.getSheets().get(0).getProperties().getTitle());
     }
 
     @Test
@@ -130,15 +130,15 @@ public class GoogleSheetsCreateSpreadsheetCustomizerTest extends AbstractGoogleS
         getComponent().getAfterProducer().process(inbound);
 
         GoogleSpreadsheet model = (GoogleSpreadsheet) inbound.getIn().getBody();
-        Assert.assertEquals(getSpreadsheetId(), model.getSpreadsheetId());
-        Assert.assertEquals("SyndesisTest", model.getTitle());
-        Assert.assertEquals("America/New_York", model.getTimeZone());
-        Assert.assertEquals("en", model.getLocale());
+        Assertions.assertEquals(getSpreadsheetId(), model.getSpreadsheetId());
+        Assertions.assertEquals("SyndesisTest", model.getTitle());
+        Assertions.assertEquals("America/New_York", model.getTimeZone());
+        Assertions.assertEquals("en", model.getLocale());
 
-        Assert.assertEquals(1, model.getSheets().size());
-        Assert.assertEquals("Sheet1", model.getSheets().get(0).getTitle());
-        Assert.assertEquals(Integer.valueOf(1), model.getSheets().get(0).getSheetId());
-        Assert.assertEquals(Integer.valueOf(1), model.getSheets().get(0).getIndex());
+        Assertions.assertEquals(1, model.getSheets().size());
+        Assertions.assertEquals("Sheet1", model.getSheets().get(0).getTitle());
+        Assertions.assertEquals(Integer.valueOf(1), model.getSheets().get(0).getSheetId());
+        Assertions.assertEquals(Integer.valueOf(1), model.getSheets().get(0).getIndex());
     }
 
 }

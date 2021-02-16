@@ -26,9 +26,9 @@ import java.util.Map;
 import io.syndesis.connector.sql.SqlSupport;
 import io.syndesis.connector.sql.common.SqlConnectionRule;
 import io.syndesis.connector.sql.common.stored.StoredProcedureMetadata;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +42,7 @@ public class SqlStoredProcedureTest  {
     @ClassRule
     public static SqlConnectionRule db = new SqlConnectionRule();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         setupStoredProcedure(db.connection, db.properties);
     }

@@ -19,30 +19,15 @@ package io.syndesis.connector.sheets.model;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * @author Christoph Deppisch
  */
-@RunWith(Parameterized.class)
 public class CellCoordinateTest {
 
-    private final String cellId;
-    private final String columnName;
-    private final int rowIndexCheck;
-    private final int columnIndexCheck;
-
-    public CellCoordinateTest(String columnName, String rowIndex, int rowIndexCheck, int columnIndexCheck) {
-        this.cellId = columnName + rowIndex;
-        this.columnName = columnName;
-        this.rowIndexCheck = rowIndexCheck;
-        this.columnIndexCheck = columnIndexCheck;
-    }
-
-    @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
             { "A", "1", 0, 0},
@@ -59,24 +44,27 @@ public class CellCoordinateTest {
         });
     }
 
-    @Test
-    public void testFromCellId() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void testFromCellId(final String columnName, final String rowIndex, final int rowIndexCheck, final int columnIndexCheck) {
+        String cellId = columnName + rowIndex;
         CellCoordinate coordinate = CellCoordinate.fromCellId(cellId);
-        Assert.assertEquals(rowIndexCheck, coordinate.getRowIndex());
-        Assert.assertEquals(columnIndexCheck, coordinate.getColumnIndex());
+        Assertions.assertEquals(rowIndexCheck, coordinate.getRowIndex());
+        Assertions.assertEquals(columnIndexCheck, coordinate.getColumnIndex());
     }
 
-    @Test
-    public void testGetColumnName() {
-        Assert.assertEquals(columnName, CellCoordinate.getColumnName(columnIndexCheck));
+    @ParameterizedTest
+    @MethodSource("data")
+    public void testGetColumnName(final String columnName, final String rowIndex, final int rowIndexCheck, final int columnIndexCheck) {
+        Assertions.assertEquals(columnName, CellCoordinate.getColumnName(columnIndexCheck));
 
         String[] names = new String[columnIndexCheck];
         Arrays.fill(names, "Foo");
-        Assert.assertEquals(columnName, CellCoordinate.getColumnName(columnIndexCheck, 0, names));
+        Assertions.assertEquals(columnName, CellCoordinate.getColumnName(columnIndexCheck, 0, names));
 
         names = new String[columnIndexCheck + 1];
         Arrays.fill(names, "Foo");
-        Assert.assertEquals("Foo", CellCoordinate.getColumnName(columnIndexCheck, 0, names));
-        Assert.assertEquals("Foo", CellCoordinate.getColumnName(columnIndexCheck, columnIndexCheck, names));
+        Assertions.assertEquals("Foo", CellCoordinate.getColumnName(columnIndexCheck, 0, names));
+        Assertions.assertEquals("Foo", CellCoordinate.getColumnName(columnIndexCheck, columnIndexCheck, names));
     }
 }

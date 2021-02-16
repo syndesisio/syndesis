@@ -33,20 +33,14 @@ import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.openapi.OpenApi;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class IntegrationResourceManagerTest {
 
-    IntegrationResourceManager resourceManager;
-
-    @Before
-    public void setup() {
-        resourceManager = createResourceManager();
-    }
+    IntegrationResourceManager resourceManager = createResourceManager();
 
     @Test
     public void testSanitizeConnectors() {

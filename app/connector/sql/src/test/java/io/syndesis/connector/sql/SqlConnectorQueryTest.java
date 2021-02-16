@@ -30,8 +30,8 @@ import io.syndesis.common.util.SyndesisConnectorException;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -157,20 +157,20 @@ public class SqlConnectorQueryTest extends SqlConnectorTestSupport {
             //check if this was an expected error
             SyndesisConnectorException sce = 
                     SyndesisConnectorException.from(e);
-            Assert.assertEquals(expectedResults.get(0).get("EXCEPTION_MESSAGE"),  sce.getMessage());
-            Assert.assertEquals(expectedResults.get(0).get("EXCEPTION_CATEGORY"), sce.getCategory());
+            Assertions.assertEquals(expectedResults.get(0).get("EXCEPTION_MESSAGE"),  sce.getMessage());
+            Assertions.assertEquals(expectedResults.get(0).get("EXCEPTION_CATEGORY"), sce.getCategory());
             return;
         }
 
         if (expectedResults == null) {
-        	Assert.assertNull(results);
+        	Assertions.assertNull(results);
         } else {
             List<Properties> jsonBeans = results.stream()
                     .map(Object::toString)
                     .map(JSONBeanUtil::parsePropertiesFromJSONBean)
                     .collect(Collectors.toList());
     
-            Assert.assertEquals(expectedResults.isEmpty(), jsonBeans.isEmpty());
+            Assertions.assertEquals(expectedResults.isEmpty(), jsonBeans.isEmpty());
     
             for (Map<String, String[]> result : expectedResults) {
                 for (Map.Entry<String, String[]> resultEntry : result.entrySet()) {

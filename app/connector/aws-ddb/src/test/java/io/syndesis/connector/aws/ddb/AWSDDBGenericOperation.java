@@ -15,9 +15,9 @@
  */
 package io.syndesis.connector.aws.ddb;
 
-
 import java.util.ArrayList;
 import java.util.List;
+
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -26,11 +26,13 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
+
 import org.apache.camel.ProducerTemplate;
-import org.json.JSONException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AWSDDBGenericOperation extends ConnectorTestSupport {
 
@@ -126,14 +128,13 @@ public abstract class AWSDDBGenericOperation extends ConnectorTestSupport {
         result.add(step);
         result.add(newSimpleEndpointStep(
             "mock",
-            builder -> builder.putConfiguredProperty("name", "result"))
-        );
+            builder -> builder.putConfiguredProperty("name", "result")));
 
         return result;
     }
 
     protected void addExtraOperation(List<Step> result, String operation,
-                                     String customizer, Integer order, String element) {
+        String customizer, Integer order, String element) {
         final ConnectorAction action = new ConnectorAction.Builder()
             .descriptor(new ConnectorDescriptor.Builder()
                 .componentScheme("aws-ddb")
@@ -205,25 +206,18 @@ public abstract class AWSDDBGenericOperation extends ConnectorTestSupport {
 
     @Test
     /**
-     * To run this test you need to change the values of the parameters for real values of an
-     * actual account
+     * To run this test you need to change the values of the parameters for real
+     * values of an actual account
      */
-    public void runIt() throws JSONException {
+    public void runIt() throws Exception {
+        assertThat(context()).isNotNull();
 
-        assertNotNull(context());
+        ProducerTemplate template = context().createProducerTemplate();
+        String result = template.requestBody("direct:start",
+            AWSDDBConfiguration.ELEMENT_VALUE, String.class);
 
-        try {
-            ProducerTemplate template = context().createProducerTemplate();
-            @SuppressWarnings("unchecked")
-            String result = template.requestBody("direct:start",
-                AWSDDBConfiguration.ELEMENT_VALUE, String.class);
-
-            JSONAssert.assertEquals(AWSDDBConfiguration.ELEMENT_VALUE, result,
-                JSONCompareMode.STRICT);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        JSONAssert.assertEquals(AWSDDBConfiguration.ELEMENT_VALUE, result,
+            JSONCompareMode.STRICT);
     }
 
 }

@@ -15,14 +15,6 @@
  */
 package io.syndesis.server.api.generator.openapi;
 
-import javax.xml.crypto.NodeSetData;
-import javax.xml.crypto.OctetStreamData;
-import javax.xml.crypto.dsig.CanonicalizationMethod;
-import javax.xml.crypto.dsig.TransformException;
-import javax.xml.crypto.dsig.TransformService;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +27,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.xml.crypto.NodeSetData;
+import javax.xml.crypto.OctetStreamData;
+import javax.xml.crypto.dsig.CanonicalizationMethod;
+import javax.xml.crypto.dsig.TransformException;
+import javax.xml.crypto.dsig.TransformService;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -43,31 +44,22 @@ import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.api.generator.openapi.v2.OpenApiConnectorGeneratorExampleTest;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import static io.syndesis.server.api.generator.openapi.TestHelper.reformatJson;
-import static io.syndesis.server.api.generator.openapi.TestHelper.resource;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class BaseOpenApiGeneratorExampleTest {
 
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
-    protected final Connector expected;
-
-    protected final String specification;
-
-    public BaseOpenApiGeneratorExampleTest(final String connectorQualifier, final String name, final String version) throws IOException {
-        specification = TestHelper.resource("/openapi/" + version + "/" + name + ".json", "/openapi/" + version + "/" + name + ".yaml");
-        expected = JsonUtils.reader().forType(Connector.class)
-            .readValue(resource("/openapi/" + version + "/" + name + "." + connectorQualifier + "_connector.json"));
-    }
-
     @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
-    public void shouldGenerateAsExpected() throws IOException {
+    public void shouldGenerateAsExpected(final String specification, final Connector expected) throws IOException {
 
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
             .putConfiguredProperty("specification", specification)//
@@ -195,5 +187,14 @@ public abstract class BaseOpenApiGeneratorExampleTest {
         ret.remove(key);
 
         return ret;
+    }
+
+    protected static String loadSpecification(final String version, final String name) throws IOException {
+        return TestHelper.resource("/openapi/" + version + "/" + name + ".json", "/openapi/" + version + "/" + name + ".yaml");
+    }
+
+    protected static Connector loadConnector(final String version, final String name, final String connectorQualifier) throws IOException {
+        return JsonUtils.reader().forType(Connector.class)
+            .readValue(TestHelper.resource("/openapi/" + version + "/" + name + "." + connectorQualifier + "_connector.json"));
     }
 }

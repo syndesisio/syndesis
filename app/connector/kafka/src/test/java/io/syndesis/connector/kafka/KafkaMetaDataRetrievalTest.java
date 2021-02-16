@@ -32,7 +32,7 @@ import io.syndesis.connector.kafka.model.crd.KafkaResourceDoneable;
 import io.syndesis.connector.kafka.model.crd.KafkaResourceList;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadataProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.syndesis.connector.kafka.KafkaMetaDataRetrieval.KAFKA_CRD;
 import static org.assertj.core.api.Assertions.assertThat;

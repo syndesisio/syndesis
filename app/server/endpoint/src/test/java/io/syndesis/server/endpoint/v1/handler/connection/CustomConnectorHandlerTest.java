@@ -26,7 +26,7 @@ import io.syndesis.common.model.connection.ConnectorGroup;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
 
 import java.util.HashMap;

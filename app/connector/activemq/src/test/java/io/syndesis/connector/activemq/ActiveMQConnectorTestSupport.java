@@ -15,33 +15,25 @@
  */
 package io.syndesis.connector.activemq;
 
+import java.net.URI;
 import java.util.function.Consumer;
 
 import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
-import org.apache.activemq.junit.EmbeddedActiveMQBroker;
-import org.junit.Rule;
-import org.junit.rules.TestName;
 
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.zapodot.junit5.jms.EmbeddedJmsBroker;
+import org.zapodot.junit5.jms.annotations.EmbeddedJms;
 
+@ExtendWith(EmbeddedJmsBroker.class)
 public abstract class ActiveMQConnectorTestSupport extends ConnectorTestSupport {
-    @Rule
-    public TestName testName = new TestName();
 
-    @Rule
-    public EmbeddedActiveMQBroker broker = new EmbeddedActiveMQBroker() {
-        @Override
-        protected void configure() {
-            disableJMX();
-        }
-    };
-
-    // **************************
-    // Helpers
-    // **************************
+    @EmbeddedJms
+    private URI brokerUri;
 
     protected Step newActiveMQEndpointStep(String actionId, Consumer<Step.Builder> consumer) {
         final Connector connector = getResourceManager().mandatoryLoadConnector("activemq");
@@ -50,9 +42,9 @@ public abstract class ActiveMQConnectorTestSupport extends ConnectorTestSupport 
         final Step.Builder builder = new Step.Builder()
             .stepKind(StepKind.endpoint)
             .action(action)
-            .connection(new io.syndesis.common.model.connection.Connection.Builder()
+            .connection(new Connection.Builder()
                 .connector(connector)
-                .putConfiguredProperty("brokerUrl", broker.getVmURL())
+                .putConfiguredProperty("brokerUrl", brokerUri.toString())
                 .build());
 
         consumer.accept(builder);

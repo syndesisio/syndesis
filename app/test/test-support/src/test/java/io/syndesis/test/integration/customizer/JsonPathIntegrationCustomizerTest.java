@@ -28,8 +28,8 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Christoph Deppisch
@@ -79,9 +79,9 @@ public class JsonPathIntegrationCustomizerTest {
                     .build())
                 .build();
 
-        Assert.assertEquals(toCustomize, new JsonPathIntegrationCustomizer(null, null, null).apply(toCustomize));
-        Assert.assertEquals("customized", new JsonPathIntegrationCustomizer("$..connection-property", "customized").apply(toCustomize).getConnections().get(0).getConfiguredProperties().get("connection-property"));
-        Assert.assertEquals("customized", new JsonPathIntegrationCustomizer("$..customText", "customized").apply(toCustomize).getFlows().get(0).getSteps().get(1).getConfiguredProperties().get("customText"));
-        Assert.assertEquals("foo", new JsonPathIntegrationCustomizer("$..configuredProperties", "new_key", "foo").apply(toCustomize).getFlows().get(0).getSteps().get(1).getConfiguredProperties().get("new_key"));
+        Assertions.assertEquals(toCustomize, new JsonPathIntegrationCustomizer(null, null, null).apply(toCustomize));
+        Assertions.assertEquals("customized", new JsonPathIntegrationCustomizer("$..connection-property", "customized").apply(toCustomize).getConnections().get(0).getConfiguredProperties().get("connection-property"));
+        Assertions.assertEquals("customized", new JsonPathIntegrationCustomizer("$..customText", "customized").apply(toCustomize).getFlows().get(0).getSteps().get(1).getConfiguredProperties().get("customText"));
+        Assertions.assertEquals("foo", new JsonPathIntegrationCustomizer("$..configuredProperties", "new_key", "foo").apply(toCustomize).getFlows().get(0).getSteps().get(1).getConfiguredProperties().get("new_key"));
     }
 }

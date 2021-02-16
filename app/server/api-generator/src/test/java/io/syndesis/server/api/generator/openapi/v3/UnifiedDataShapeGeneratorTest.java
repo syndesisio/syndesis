@@ -19,50 +19,38 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
 
 import static io.syndesis.server.api.generator.openapi.DataShapeGenerator.APPLICATION_JSON;
 import static io.syndesis.server.api.generator.openapi.DataShapeGenerator.APPLICATION_XML;
 import static io.syndesis.server.api.generator.openapi.v3.UnifiedDataShapeGenerator.supports;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.singleton;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class UnifiedDataShapeGeneratorTest {
 
-    @Parameter(0)
-    public String mime;
-
-    @Parameter(1)
-    public Set<String> mimes;
-
-    @Parameter(2)
-    public boolean outcome;
-
-    @Test
-    public void shouldDetermineSupportedMimes() {
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void shouldDetermineSupportedMimes(final String mime, final Set<String> mimes, final boolean outcome) {
         assertThat(supports(mime, mimes)).isEqualTo(outcome);
     }
 
-    @Parameters
-    public static Iterable<Object[]> parameters() {
-        return asList(//
-            new Object[] {APPLICATION_XML, null, false}, //
-            new Object[] {APPLICATION_JSON, null, false}, //
-            new Object[] {APPLICATION_XML, emptySet(), false}, //
-            new Object[] {APPLICATION_JSON, emptySet(), false}, //
-            new Object[] {APPLICATION_XML, singleton(APPLICATION_JSON), false}, //
-            new Object[] {APPLICATION_JSON, singleton(APPLICATION_JSON), true}, //
-            new Object[] {APPLICATION_XML, singleton(APPLICATION_XML), true}, //
-            new Object[] {APPLICATION_JSON, singleton(APPLICATION_XML), false}, //
-            new Object[] {APPLICATION_XML, Stream.of(APPLICATION_JSON, APPLICATION_XML).collect(Collectors.toSet()), true}, //
-            new Object[] {APPLICATION_JSON, Stream.of(APPLICATION_JSON, APPLICATION_XML).collect(Collectors.toSet()), true}//
-        );
+    static Stream<Arguments> parameters() {
+        return Stream.of(
+            Arguments.of(APPLICATION_XML, null, false),
+            Arguments.of(APPLICATION_JSON, null, false),
+            Arguments.of(APPLICATION_XML, emptySet(), false),
+            Arguments.of(APPLICATION_JSON, emptySet(), false),
+            Arguments.of(APPLICATION_XML, singleton(APPLICATION_JSON), false),
+            Arguments.of(APPLICATION_JSON, singleton(APPLICATION_JSON), true),
+            Arguments.of(APPLICATION_XML, singleton(APPLICATION_XML), true),
+            Arguments.of(APPLICATION_JSON, singleton(APPLICATION_XML), false),
+            Arguments.of(APPLICATION_XML, Stream.of(APPLICATION_JSON, APPLICATION_XML).collect(Collectors.toSet()), true),
+            Arguments.of(APPLICATION_JSON, Stream.of(APPLICATION_JSON, APPLICATION_XML).collect(Collectors.toSet()), true));
     }
 }

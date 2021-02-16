@@ -18,7 +18,7 @@ package io.syndesis.connector.calendar;
 import java.util.Arrays;
 import java.util.Collections;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.syndesis.connector.calendar.GoogleCalendarUtils.attendee;
 

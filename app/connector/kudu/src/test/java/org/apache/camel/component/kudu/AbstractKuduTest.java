@@ -25,7 +25,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.spring.SpringCamelContext;
-import org.apache.camel.test.junit4.CamelTestSupport;
 import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
 import org.apache.kudu.Type;
@@ -38,18 +37,19 @@ import org.apache.kudu.client.PartialRow;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-public class AbstractKuduTest extends CamelTestSupport {
+public class AbstractKuduTest {
 
     protected ApplicationContext applicationContext;
 
-    @Override
+    private CamelContext context;
+
     protected CamelContext createCamelContext() throws Exception {
         applicationContext = new AnnotationConfigApplicationContext(MockedKuduConfiguration.class);
 
-        final CamelContext ctx = new SpringCamelContext(applicationContext);
+        context = new SpringCamelContext(applicationContext);
         final PropertiesComponent pc = new PropertiesComponent("classpath:test-options.properties");
-        ctx.addComponent("properties", pc);
-        return ctx;
+        context.addComponent("properties", pc);
+        return context;
     }
 
     protected void createTestTable(final String tableName, final String connection) throws KuduException {
@@ -94,11 +94,11 @@ public class AbstractKuduTest extends CamelTestSupport {
     }
 
     protected Object requestBody(final String endpoint, final Object body) {
-        return template().requestBody(endpoint, body);
+        return context.createProducerTemplate().requestBody(endpoint, body);
     }
 
     protected Object requestBodyAndHeaders(final String endpointUri, final Object body, final Map<String, Object> headers) {
-        return template().requestBodyAndHeaders(endpointUri, body, headers);
+        return context.createProducerTemplate().requestBodyAndHeaders(endpointUri, body, headers);
     }
 
     protected static void deleteTestTable(final String tableName, final String connection) throws KuduException {

@@ -18,11 +18,15 @@ package io.syndesis.connector.mongo;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mongodb.client.model.Filters;
 import io.syndesis.common.model.integration.Step;
+
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import com.mongodb.client.model.Filters;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MongoDBConnectorRemoveTest extends MongoDBConnectorProducerTestSupport {
 
@@ -50,7 +54,7 @@ public class MongoDBConnectorRemoveTest extends MongoDBConnectorProducerTestSupp
         assertEquals(1, docsFound.size());
         // Given
         String removeArguments = "{\"filter\":\"unit\"}";
-        Long result = template.requestBody("direct:start", removeArguments, Long.class);
+        Long result = template().requestBody("direct:start", removeArguments, Long.class);
         // Then
         docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<>());
         Assertions.assertThat(docsFound).hasSize(0);
@@ -71,7 +75,7 @@ public class MongoDBConnectorRemoveTest extends MongoDBConnectorProducerTestSupp
         // Given
         String removeArguments = "{\"filter\":\"unit\"}";
         // Need the header to enable multiple updates!
-        Long result = template.requestBody("direct:start", removeArguments, Long.class);
+        Long result = template().requestBody("direct:start", removeArguments, Long.class);
         // Then
         docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<>());
         Assertions.assertThat(docsFound).hasSize(1);

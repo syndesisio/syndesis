@@ -15,44 +15,36 @@
  */
 package io.syndesis.server.api.generator.soap.parser;
 
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.xml.namespace.QName;
 
 import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaSerializer;
 import org.apache.ws.commons.schema.XmlSchemaType;
-import org.junit.Test;
-import org.junit.runners.Parameterized;
-import org.xml.sax.SAXException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Unit tests for {@link XmlSchemaExtractor}.
  */
 public class XmlSchemaExtractorTypeTest extends AbstractXmlSchemaExtractorTest {
 
-    @Parameterized.Parameter
-    public XmlSchemaType type;
-
-    @Parameterized.Parameter(1)
-    public QName typeName;
-
-    @Parameterized.Parameters(name = "Type {1}")
-    public static List<Object[]> getTypes() throws XmlSchemaSerializer.XmlSchemaSerializerException {
+    static Stream<Arguments> extractTypeParameters() throws XmlSchemaSerializer.XmlSchemaSerializerException {
         if (sourceSchemas == null) {
             AbstractXmlSchemaExtractorTest.setupClass();
         }
         // extract all top level types from source schema
         return Arrays.stream(sourceSchemas.getXmlSchemas())
             .flatMap(s -> s.getSchemaTypes().values().stream())
-            .map(t -> new Object[]{t, t.getQName()})
-            .collect(Collectors.toList());
+            .map(t -> Arguments.of(t, t.getQName()));
     }
 
-    @Test
-    public void extractType() throws ParserException, XmlSchemaSerializer.XmlSchemaSerializerException, IOException, SAXException {
+    @ParameterizedTest(name = "Type {1}")
+    @MethodSource("extractTypeParameters")
+    public void extractType(final XmlSchemaType type, final QName typeName) throws Exception {
         // create an element of type 'type' in the namespace ""
         final XmlSchemaElement testElement = xmlSchemaExtractor.extract(new QName("", typeName.getLocalPart()), type);
         xmlSchemaExtractor.copyObjects();

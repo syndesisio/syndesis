@@ -18,23 +18,21 @@ package io.syndesis.connector.kudu;
 
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
-import org.apache.camel.test.junit4.CamelTestSupport;
+import org.apache.camel.CamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
 
-public class AbstractKuduCustomizerTestSupport extends CamelTestSupport {
+public class AbstractKuduCustomizerTestSupport {
     private final ComponentProxyComponent component = new ComponentProxyComponent("kudu-1", "kudu");
 
     public ComponentProxyComponent getComponent() {
         return component;
     }
 
-    @Override
-    public boolean isCreateCamelContextPerClass() {
-        // only create the context once for this class
-        return true;
-    }
+    protected static CamelContext createCamelContext() {
+        final DefaultCamelContext context = new DefaultCamelContext();
+        context.disableJMX();
+        context.setAutoStartup(false);
 
-    @Override
-    public boolean isUseRouteBuilder() {
-        return false;
+        return context;
     }
 }

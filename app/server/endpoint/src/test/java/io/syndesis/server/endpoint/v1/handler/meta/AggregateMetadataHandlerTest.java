@@ -29,19 +29,17 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  */
-@RunWith(JUnitParamsRunner.class)
 public class AggregateMetadataHandlerTest {
 
     private final AggregateMetadataHandler metadataHandler = new AggregateMetadataHandler();
@@ -106,23 +104,23 @@ public class AggregateMetadataHandlerTest {
 
         DynamicActionMetadata metadata = metadataHandler.createMetadata(aggregateStep, Collections.singletonList(previousStep), Collections.singletonList(subsequentStep));
 
-        Assert.assertNotNull(metadata.inputShape());
-        Assert.assertEquals(DataShapeKinds.JAVA, metadata.inputShape().getKind());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, metadata.inputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
-        Assert.assertEquals(getSpecification("person-list-spec.json"), metadata.inputShape().getSpecification());
-        Assert.assertEquals(2, metadata.inputShape().getVariants().size());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, metadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals("person", metadata.inputShape().getVariants().get(0).getDescription());
-        Assert.assertEquals("dummy", metadata.inputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertNotNull(metadata.inputShape());
+        Assertions.assertEquals(DataShapeKinds.JAVA, metadata.inputShape().getKind());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, metadata.inputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
+        Assertions.assertEquals(getSpecification("person-list-spec.json"), metadata.inputShape().getSpecification());
+        Assertions.assertEquals(2, metadata.inputShape().getVariants().size());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, metadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals("person", metadata.inputShape().getVariants().get(0).getDescription());
+        Assertions.assertEquals("dummy", metadata.inputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
 
-        Assert.assertNotNull(metadata.outputShape());
-        Assert.assertEquals(DataShapeKinds.JAVA, metadata.outputShape().getKind());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, metadata.outputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
-        Assert.assertEquals(getSpecification("person-spec.json"), metadata.outputShape().getSpecification());
-        Assert.assertEquals(2, metadata.outputShape().getVariants().size());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, metadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals("person-list", metadata.outputShape().getVariants().get(0).getDescription());
-        Assert.assertEquals("dummy", metadata.outputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertNotNull(metadata.outputShape());
+        Assertions.assertEquals(DataShapeKinds.JAVA, metadata.outputShape().getKind());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, metadata.outputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
+        Assertions.assertEquals(getSpecification("person-spec.json"), metadata.outputShape().getSpecification());
+        Assertions.assertEquals(2, metadata.outputShape().getVariants().size());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, metadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals("person-list", metadata.outputShape().getVariants().get(0).getDescription());
+        Assertions.assertEquals("dummy", metadata.outputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
     }
 
     @Test
@@ -149,16 +147,16 @@ public class AggregateMetadataHandlerTest {
 
         DynamicActionMetadata metadata = metadataHandler.createMetadata(aggregateStep, Collections.singletonList(previousStep), Collections.singletonList(subsequentStep));
 
-        Assert.assertEquals(StepMetadataHelper.ANY_SHAPE, metadata.inputShape());
-        Assert.assertEquals(StepMetadataHelper.ANY_SHAPE, metadata.outputShape());
+        Assertions.assertEquals(StepMetadataHelper.ANY_SHAPE, metadata.inputShape());
+        Assertions.assertEquals(StepMetadataHelper.ANY_SHAPE, metadata.outputShape());
     }
 
     @Test
     public void shouldCreateMetaDataFromEmptySurroundingSteps() {
         DynamicActionMetadata metadata = metadataHandler.createMetadata(aggregateStep, Collections.emptyList(), Collections.emptyList());
 
-        Assert.assertEquals(StepMetadataHelper.NO_SHAPE, metadata.inputShape());
-        Assert.assertEquals(StepMetadataHelper.NO_SHAPE, metadata.outputShape());
+        Assertions.assertEquals(StepMetadataHelper.NO_SHAPE, metadata.inputShape());
+        Assertions.assertEquals(StepMetadataHelper.NO_SHAPE, metadata.outputShape());
     }
 
     @Test
@@ -185,15 +183,15 @@ public class AggregateMetadataHandlerTest {
 
         DynamicActionMetadata enrichedMetadata = metadataHandler.handle(metadata);
 
-        Assert.assertEquals(StepMetadataHelper.NO_SHAPE, enrichedMetadata.inputShape());
-        Assert.assertNotNull(enrichedMetadata.outputShape());
-        Assert.assertEquals(DataShapeKinds.JAVA, enrichedMetadata.outputShape().getKind());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
-        Assert.assertEquals(getSpecification("person-list-spec.json"), enrichedMetadata.outputShape().getSpecification());
-        Assert.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals("person", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
+        Assertions.assertEquals(StepMetadataHelper.NO_SHAPE, enrichedMetadata.inputShape());
+        Assertions.assertNotNull(enrichedMetadata.outputShape());
+        Assertions.assertEquals(DataShapeKinds.JAVA, enrichedMetadata.outputShape().getKind());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
+        Assertions.assertEquals(getSpecification("person-list-spec.json"), enrichedMetadata.outputShape().getSpecification());
+        Assertions.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals("person", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
     }
 
     @Test
@@ -220,16 +218,16 @@ public class AggregateMetadataHandlerTest {
 
         DynamicActionMetadata enrichedMetadata = metadataHandler.handle(metadata);
 
-        Assert.assertNotNull(enrichedMetadata.inputShape());
-        Assert.assertEquals(DataShapeKinds.JAVA, enrichedMetadata.inputShape().getKind());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
-        Assert.assertEquals(getSpecification("person-spec.json"), enrichedMetadata.inputShape().getSpecification());
-        Assert.assertEquals(2, enrichedMetadata.inputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.inputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals("person-list", enrichedMetadata.inputShape().getVariants().get(1).getDescription());
+        Assertions.assertNotNull(enrichedMetadata.inputShape());
+        Assertions.assertEquals(DataShapeKinds.JAVA, enrichedMetadata.inputShape().getKind());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
+        Assertions.assertEquals(getSpecification("person-spec.json"), enrichedMetadata.inputShape().getSpecification());
+        Assertions.assertEquals(2, enrichedMetadata.inputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.inputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals("person-list", enrichedMetadata.inputShape().getVariants().get(1).getDescription());
 
-        Assert.assertEquals(StepMetadataHelper.NO_SHAPE, enrichedMetadata.outputShape());
+        Assertions.assertEquals(StepMetadataHelper.NO_SHAPE, enrichedMetadata.outputShape());
     }
 
     @Test
@@ -256,15 +254,15 @@ public class AggregateMetadataHandlerTest {
 
         DynamicActionMetadata enrichedMetadata = metadataHandler.handle(metadata);
 
-        Assert.assertEquals(StepMetadataHelper.NO_SHAPE, enrichedMetadata.inputShape());
-        Assert.assertNotNull(enrichedMetadata.outputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.outputShape().getKind());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
-        Assert.assertEquals(getSpecification("person-list-schema.json"), enrichedMetadata.outputShape().getSpecification());
-        Assert.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals("person-schema", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
+        Assertions.assertEquals(StepMetadataHelper.NO_SHAPE, enrichedMetadata.inputShape());
+        Assertions.assertNotNull(enrichedMetadata.outputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.outputShape().getKind());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
+        Assertions.assertEquals(getSpecification("person-list-schema.json"), enrichedMetadata.outputShape().getSpecification());
+        Assertions.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals("person-schema", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
     }
 
     @Test
@@ -291,16 +289,16 @@ public class AggregateMetadataHandlerTest {
 
         DynamicActionMetadata enrichedMetadata = metadataHandler.handle(metadata);
 
-        Assert.assertNotNull(enrichedMetadata.inputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.inputShape().getKind());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
-        Assert.assertEquals(getSpecification("person-schema.json"), enrichedMetadata.inputShape().getSpecification());
-        Assert.assertEquals(2, enrichedMetadata.inputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.inputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals("person-list-schema", enrichedMetadata.inputShape().getVariants().get(1).getDescription());
+        Assertions.assertNotNull(enrichedMetadata.inputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.inputShape().getKind());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
+        Assertions.assertEquals(getSpecification("person-schema.json"), enrichedMetadata.inputShape().getSpecification());
+        Assertions.assertEquals(2, enrichedMetadata.inputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.inputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals("person-list-schema", enrichedMetadata.inputShape().getVariants().get(1).getDescription());
 
-        Assert.assertEquals(StepMetadataHelper.NO_SHAPE, enrichedMetadata.outputShape());
+        Assertions.assertEquals(StepMetadataHelper.NO_SHAPE, enrichedMetadata.outputShape());
     }
 
     @Test
@@ -326,23 +324,23 @@ public class AggregateMetadataHandlerTest {
 
         DynamicActionMetadata enrichedMetadata = metadataHandler.handle(metadata);
 
-        Assert.assertNotNull(enrichedMetadata.inputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.inputShape().getKind());
-        Assert.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-schema.json")), enrichedMetadata.inputShape().getSpecification());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(2, enrichedMetadata.inputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.inputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals("person-list-schema", enrichedMetadata.inputShape().getVariants().get(1).getDescription());
+        Assertions.assertNotNull(enrichedMetadata.inputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.inputShape().getKind());
+        Assertions.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-schema.json")), enrichedMetadata.inputShape().getSpecification());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(2, enrichedMetadata.inputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.inputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals("person-list-schema", enrichedMetadata.inputShape().getVariants().get(1).getDescription());
 
-        Assert.assertNotNull(enrichedMetadata.outputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.outputShape().getKind());
-        Assert.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-list-schema.json")), enrichedMetadata.outputShape().getSpecification());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals("person-schema", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
+        Assertions.assertNotNull(enrichedMetadata.outputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.outputShape().getKind());
+        Assertions.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-list-schema.json")), enrichedMetadata.outputShape().getSpecification());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals("person-schema", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
     }
 
     @Test
@@ -368,19 +366,19 @@ public class AggregateMetadataHandlerTest {
 
         DynamicActionMetadata enrichedMetadata = metadataHandler.handle(metadata);
 
-        Assert.assertNotNull(enrichedMetadata.inputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.inputShape().getKind());
-        Assert.assertEquals(metadata.inputShape().getSpecification(), enrichedMetadata.inputShape().getSpecification());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(1, enrichedMetadata.inputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertNotNull(enrichedMetadata.inputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.inputShape().getKind());
+        Assertions.assertEquals(metadata.inputShape().getSpecification(), enrichedMetadata.inputShape().getSpecification());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(1, enrichedMetadata.inputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
 
-        Assert.assertNotNull(enrichedMetadata.outputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.outputShape().getKind());
-        Assert.assertEquals(metadata.outputShape().getSpecification(), enrichedMetadata.outputShape().getSpecification());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(1, enrichedMetadata.outputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertNotNull(enrichedMetadata.outputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.outputShape().getKind());
+        Assertions.assertEquals(metadata.outputShape().getSpecification(), enrichedMetadata.outputShape().getSpecification());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(1, enrichedMetadata.outputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
     }
 
     @Test
@@ -407,15 +405,15 @@ public class AggregateMetadataHandlerTest {
 
         DynamicActionMetadata enrichedMetadata = metadataHandler.handle(metadata);
 
-        Assert.assertEquals(StepMetadataHelper.NO_SHAPE, enrichedMetadata.inputShape());
-        Assert.assertNotNull(enrichedMetadata.outputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_INSTANCE, enrichedMetadata.outputShape().getKind());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
-        Assert.assertEquals(getSpecification("person-list-instance.json"), enrichedMetadata.outputShape().getSpecification());
-        Assert.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals("person-instance", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
+        Assertions.assertEquals(StepMetadataHelper.NO_SHAPE, enrichedMetadata.inputShape());
+        Assertions.assertNotNull(enrichedMetadata.outputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_INSTANCE, enrichedMetadata.outputShape().getKind());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
+        Assertions.assertEquals(getSpecification("person-list-instance.json"), enrichedMetadata.outputShape().getSpecification());
+        Assertions.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals("person-instance", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
     }
 
     @Test
@@ -442,16 +440,16 @@ public class AggregateMetadataHandlerTest {
 
         DynamicActionMetadata enrichedMetadata = metadataHandler.handle(metadata);
 
-        Assert.assertNotNull(enrichedMetadata.inputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.inputShape().getKind());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
-        Assert.assertEquals(getSpecification("person-instance.json"), enrichedMetadata.inputShape().getSpecification());
-        Assert.assertEquals(2, enrichedMetadata.inputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.inputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals("person-list-instance", enrichedMetadata.inputShape().getVariants().get(1).getDescription());
+        Assertions.assertNotNull(enrichedMetadata.inputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.inputShape().getKind());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata(DataShapeMetaData.VARIANT).orElse(""));
+        Assertions.assertEquals(getSpecification("person-instance.json"), enrichedMetadata.inputShape().getSpecification());
+        Assertions.assertEquals(2, enrichedMetadata.inputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.inputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals("person-list-instance", enrichedMetadata.inputShape().getVariants().get(1).getDescription());
 
-        Assert.assertEquals(StepMetadataHelper.NO_SHAPE, enrichedMetadata.outputShape());
+        Assertions.assertEquals(StepMetadataHelper.NO_SHAPE, enrichedMetadata.outputShape());
     }
 
     @Test
@@ -477,23 +475,23 @@ public class AggregateMetadataHandlerTest {
 
         DynamicActionMetadata enrichedMetadata = metadataHandler.handle(metadata);
 
-        Assert.assertNotNull(enrichedMetadata.inputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_INSTANCE, enrichedMetadata.inputShape().getKind());
-        Assert.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-instance.json")), StringUtils.trimAllWhitespace(enrichedMetadata.inputShape().getSpecification()));
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(2, enrichedMetadata.inputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.inputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals("person-list-instance", enrichedMetadata.inputShape().getVariants().get(1).getDescription());
+        Assertions.assertNotNull(enrichedMetadata.inputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_INSTANCE, enrichedMetadata.inputShape().getKind());
+        Assertions.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-instance.json")), StringUtils.trimAllWhitespace(enrichedMetadata.inputShape().getSpecification()));
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(2, enrichedMetadata.inputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.inputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals("person-list-instance", enrichedMetadata.inputShape().getVariants().get(1).getDescription());
 
-        Assert.assertNotNull(enrichedMetadata.outputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_INSTANCE, enrichedMetadata.outputShape().getKind());
-        Assert.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-list-instance.json")), StringUtils.trimAllWhitespace(enrichedMetadata.outputShape().getSpecification()));
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals("person-instance", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
+        Assertions.assertNotNull(enrichedMetadata.outputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_INSTANCE, enrichedMetadata.outputShape().getKind());
+        Assertions.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-list-instance.json")), StringUtils.trimAllWhitespace(enrichedMetadata.outputShape().getSpecification()));
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals("person-instance", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
     }
 
     @Test
@@ -519,23 +517,23 @@ public class AggregateMetadataHandlerTest {
 
         DynamicActionMetadata enrichedMetadata = metadataHandler.handle(metadata);
 
-        Assert.assertNotNull(enrichedMetadata.inputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_INSTANCE, enrichedMetadata.inputShape().getKind());
-        Assert.assertEquals(metadata.inputShape().getSpecification(), enrichedMetadata.inputShape().getSpecification());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(1, enrichedMetadata.inputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertNotNull(enrichedMetadata.inputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_INSTANCE, enrichedMetadata.inputShape().getKind());
+        Assertions.assertEquals(metadata.inputShape().getSpecification(), enrichedMetadata.inputShape().getSpecification());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(1, enrichedMetadata.inputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
 
-        Assert.assertNotNull(enrichedMetadata.outputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_INSTANCE, enrichedMetadata.outputShape().getKind());
-        Assert.assertEquals(metadata.outputShape().getSpecification(), enrichedMetadata.outputShape().getSpecification());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals(1, enrichedMetadata.outputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertNotNull(enrichedMetadata.outputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_INSTANCE, enrichedMetadata.outputShape().getKind());
+        Assertions.assertEquals(metadata.outputShape().getSpecification(), enrichedMetadata.outputShape().getSpecification());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals(1, enrichedMetadata.outputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
     }
 
-    @Test
-    @Parameters({"person-list-unified-response-schema.json, person-unified-response-schema.json",
+    @ParameterizedTest
+    @CsvSource({"person-list-unified-response-schema.json, person-unified-response-schema.json",
                  "person-list-unified-response-schema-draft-4.json, person-unified-response-schema-draft-4.json",
                  "person-list-unified-response-schema-draft-6.json, person-unified-response-schema-draft-6.json"})
     public void shouldAutoConvertAndExtractJsonUnifiedSchemaVariants(final String collectionSchemaPath, final String schemaPath) throws IOException {
@@ -562,21 +560,21 @@ public class AggregateMetadataHandlerTest {
 
         DynamicActionMetadata enrichedMetadata = metadataHandler.handle(metadata);
 
-        Assert.assertNotNull(enrichedMetadata.inputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.inputShape().getKind());
-        Assert.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-unified-response-schema.json")), enrichedMetadata.inputShape().getSpecification());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals("true", enrichedMetadata.inputShape().getMetadata().get(DataShapeMetaData.UNIFIED));
-        Assert.assertEquals(1, enrichedMetadata.inputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertNotNull(enrichedMetadata.inputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.inputShape().getKind());
+        Assertions.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-unified-response-schema.json")), enrichedMetadata.inputShape().getSpecification());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals("true", enrichedMetadata.inputShape().getMetadata().get(DataShapeMetaData.UNIFIED));
+        Assertions.assertEquals(1, enrichedMetadata.inputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
 
-        Assert.assertNotNull(enrichedMetadata.outputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.outputShape().getKind());
-        Assert.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-list-unified-response-schema.json")), enrichedMetadata.outputShape().getSpecification());
-        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata().get(DataShapeMetaData.VARIANT));
-        Assert.assertEquals("true", enrichedMetadata.outputShape().getMetadata().get(DataShapeMetaData.UNIFIED));
-        Assert.assertEquals(1, enrichedMetadata.outputShape().getVariants().size());
-        Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertNotNull(enrichedMetadata.outputShape());
+        Assertions.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.outputShape().getKind());
+        Assertions.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-list-unified-response-schema.json")), enrichedMetadata.outputShape().getSpecification());
+        Assertions.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata().get(DataShapeMetaData.VARIANT));
+        Assertions.assertEquals("true", enrichedMetadata.outputShape().getMetadata().get(DataShapeMetaData.UNIFIED));
+        Assertions.assertEquals(1, enrichedMetadata.outputShape().getVariants().size());
+        Assertions.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
     }
 
     private static DataShape dummyShape(DataShapeKinds kind) {

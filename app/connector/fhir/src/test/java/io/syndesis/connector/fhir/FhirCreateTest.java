@@ -15,19 +15,21 @@
  */
 package io.syndesis.connector.fhir;
 
-import ca.uhn.fhir.rest.api.MethodOutcome;
+import java.util.Arrays;
+import java.util.List;
+
 import io.syndesis.common.model.integration.Step;
+
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.OperationOutcome;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.List;
+import org.junit.jupiter.api.Test;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.okXml;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+
+import ca.uhn.fhir.rest.api.MethodOutcome;
 
 public class FhirCreateTest extends FhirTestBase {
 
@@ -45,7 +47,7 @@ public class FhirCreateTest extends FhirTestBase {
     public void createTest() {
         stubFhirRequest(post(urlEqualTo("/Patient")).willReturn(okXml(toXml(new OperationOutcome()))));
 
-        template.requestBody("direct:start",
+        template().requestBody("direct:start",
             toXml(new Patient().addName(new HumanName().setFamily("Smith"))), MethodOutcome.class);
     }
 

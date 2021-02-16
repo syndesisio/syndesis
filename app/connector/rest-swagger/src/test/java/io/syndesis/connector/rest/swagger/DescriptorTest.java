@@ -31,7 +31,7 @@ import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.rest.swagger.auth.apikey.ApiKey.Placement;
 
 import org.apache.camel.CamelContext;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

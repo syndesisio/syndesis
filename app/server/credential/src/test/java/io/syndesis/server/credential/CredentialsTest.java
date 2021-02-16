@@ -27,12 +27,12 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.social.connect.support.OAuth1ConnectionFactory;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 import org.springframework.social.oauth1.AuthorizedRequestToken;
@@ -43,7 +43,6 @@ import org.springframework.social.oauth1.OAuthToken;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Operations;
 import org.springframework.social.oauth2.OAuth2Parameters;
-import org.springframework.util.MultiValueMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
@@ -53,7 +52,7 @@ import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CredentialsTest {
 
     private Credentials credentials;
@@ -71,15 +70,12 @@ public class CredentialsTest {
         // simple social properties just for test purposes
     };
 
-    @Before
-    @SuppressWarnings("unchecked")
+    @BeforeEach
     public void setupMocks() {
         credentials = new Credentials(locator, encryptionComponent, dataManager);
 
         properties.setAppId("appId");
         properties.setAppSecret("appSecret");
-
-        when(encryptionComponent.encryptPropertyValues(anyMap(), anyMap())).then(invocation -> invocation.getArgument(0));
     }
 
     @Test
@@ -232,6 +228,8 @@ public class CredentialsTest {
     public void shouldApplyReceivedCredentialsToConnections() {
         final CredentialProvider credentialProvider = mock(CredentialProvider.class);
 
+        when(encryptionComponent.encryptPropertyValues(anyMap(), anyMap())).then(invocation -> invocation.getArgument(0));
+
         when(locator.providerWithId("providerId")).thenReturn(credentialProvider);
 
         final CredentialFlowState flowState = new OAuth2CredentialFlowState.Builder().providerId("providerId")
@@ -267,9 +265,7 @@ public class CredentialsTest {
         final ArgumentCaptor<AuthorizedRequestToken> requestToken = ArgumentCaptor
             .forClass(AuthorizedRequestToken.class);
         final OAuthToken accessToken = new OAuthToken("tokenValue", "tokenSecret");
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        final Class<MultiValueMap<String, String>> multimapType = (Class) MultiValueMap.class;
-        when(operations.exchangeForAccessToken(requestToken.capture(), isNull(multimapType))).thenReturn(accessToken);
+        when(operations.exchangeForAccessToken(requestToken.capture(), isNull())).thenReturn(accessToken);
 
         applicator.setAccessTokenSecretProperty("accessTokenSecretProperty");
         applicator.setAccessTokenValueProperty("accessTokenValueProperty");

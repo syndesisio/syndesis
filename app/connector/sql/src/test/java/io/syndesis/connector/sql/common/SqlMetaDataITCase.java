@@ -21,10 +21,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -70,13 +70,13 @@ public class SqlMetaDataITCase {
         final SqlStatementMetaData paramInfo = sqlParser.parse();
         final List<SqlParam> inputParams = paramInfo.getInParams();
         // information for input
-        Assert.assertEquals(1, inputParams.size());
-        Assert.assertEquals(Character.class, inputParams.get(0).getTypeValue().getClazz());
+        Assertions.assertEquals(1, inputParams.size());
+        Assertions.assertEquals(Character.class, inputParams.get(0).getTypeValue().getClazz());
 
         // information for output of select statement
         final List<SqlParam> outputParams = paramInfo.getOutParams();
-        Assert.assertEquals(7, outputParams.size());
-        Assert.assertEquals(Character.class, outputParams.get(0).getTypeValue().getClazz());
+        Assertions.assertEquals(7, outputParams.size());
+        Assertions.assertEquals(Character.class, outputParams.get(0).getTypeValue().getClazz());
     }
 
     @Test
@@ -94,9 +94,9 @@ public class SqlMetaDataITCase {
 
         final List<SqlParam> paramList = new DbMetaDataHelper(database.createConnection("")).getJDBCInfoByColumnOrder(null, null, "TEST",
                 info.getInParams());
-            Assert.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
-            Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
-            Assert.assertEquals("VARCHAR", paramList.get(2).getJdbcType().getName());
+            Assertions.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
+            Assertions.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
+            Assertions.assertEquals("VARCHAR", paramList.get(2).getJdbcType().getName());
 
     }
 
@@ -115,9 +115,9 @@ public class SqlMetaDataITCase {
 
         final List<SqlParam> paramList = new DbMetaDataHelper(database.createConnection("")).getJDBCInfoByColumnOrder(null, null, "TEST",
                 info.getInParams());
-        Assert.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
-        Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
-        Assert.assertEquals("VARCHAR", paramList.get(2).getJdbcType().getName());
+        Assertions.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
+        Assertions.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
+        Assertions.assertEquals("VARCHAR", paramList.get(2).getJdbcType().getName());
 
     }
 
@@ -137,8 +137,8 @@ public class SqlMetaDataITCase {
 
         final List<SqlParam> paramList = new DbMetaDataHelper(database.createConnection("")).getJDBCInfoByColumnNames(null, null, "TEST",
                 info.getInParams());
-        Assert.assertEquals("VARCHAR", paramList.get(0).getJdbcType().getName());
-        Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
+        Assertions.assertEquals("VARCHAR", paramList.get(0).getJdbcType().getName());
+        Assertions.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
 
     }
 
@@ -156,10 +156,10 @@ public class SqlMetaDataITCase {
 
         final List<SqlParam> paramList = new DbMetaDataHelper(database.createConnection("")).getJDBCInfoByColumnOrder(null, null, "TEST",
                 info.getInParams());
-        Assert.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
+        Assertions.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
     }
 
-    @After
+    @AfterEach
     public void afterClass() throws SQLException {
         try (final Statement stmt = database.createConnection("").createStatement()) {
             stmt.execute("DROP table TEST");

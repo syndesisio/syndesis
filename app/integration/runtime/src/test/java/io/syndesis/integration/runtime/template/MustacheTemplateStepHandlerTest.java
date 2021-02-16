@@ -26,7 +26,7 @@ import io.syndesis.integration.runtime.handlers.AbstractTemplateStepHandlerTest;
 
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.syndesis.integration.runtime.IntegrationTestSupport.data;
 import static io.syndesis.integration.runtime.IntegrationTestSupport.dataPair;

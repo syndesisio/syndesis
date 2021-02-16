@@ -25,9 +25,9 @@ import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
 import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
 import org.apache.camel.impl.DefaultExchange;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
 import com.google.api.services.sheets.v4.model.PivotTable;
 import com.google.api.services.sheets.v4.model.UpdateCellsRequest;
@@ -41,7 +41,7 @@ public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheet
 
     private GoogleSheetsAddPivotTableCustomizer customizer;
 
-    @Before
+    @BeforeEach
     public void setupCustomizer() {
         customizer = new GoogleSheetsAddPivotTableCustomizer();
     }
@@ -56,29 +56,29 @@ public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheet
         Exchange inbound = new DefaultExchange(createCamelContext());
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
-        Assert.assertEquals("batchUpdate", ConnectorOptions.extractOption(options, "methodName"));
+        Assertions.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assertions.assertEquals("batchUpdate", ConnectorOptions.extractOption(options, "methodName"));
 
-        Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
-        Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
 
         BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
-        Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
+        Assertions.assertEquals(1, batchUpdateRequest.getRequests().size());
 
         UpdateCellsRequest updateCellsRequest = batchUpdateRequest.getRequests().get(0).getUpdateCells();
 
-        Assert.assertEquals("pivotTable", updateCellsRequest.getFields());
-        Assert.assertNotNull(updateCellsRequest.getStart());
-        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
-        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getColumnIndex());
-        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getRowIndex());
+        Assertions.assertEquals("pivotTable", updateCellsRequest.getFields());
+        Assertions.assertNotNull(updateCellsRequest.getStart());
+        Assertions.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
+        Assertions.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getColumnIndex());
+        Assertions.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getRowIndex());
 
         PivotTable pivotTable = updateCellsRequest.getRows().get(0).getValues().get(0).getPivotTable();
-        Assert.assertNotNull(pivotTable);
-        Assert.assertNull(pivotTable.getSource());
-        Assert.assertNull(pivotTable.getRows());
-        Assert.assertNull(pivotTable.getColumns());
-        Assert.assertNull(pivotTable.getValues());
+        Assertions.assertNotNull(pivotTable);
+        Assertions.assertNull(pivotTable.getSource());
+        Assertions.assertNull(pivotTable.getRows());
+        Assertions.assertNull(pivotTable.getColumns());
+        Assertions.assertNull(pivotTable.getValues());
     }
 
     @Test
@@ -116,45 +116,45 @@ public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheet
         inbound.getIn().setBody(model);
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
-        Assert.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
 
         BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
-        Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
+        Assertions.assertEquals(1, batchUpdateRequest.getRequests().size());
 
         UpdateCellsRequest updateCellsRequest = batchUpdateRequest.getRequests().get(0).getUpdateCells();
 
-        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
-        Assert.assertEquals(Integer.valueOf(8), updateCellsRequest.getStart().getColumnIndex());
-        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getRowIndex());
+        Assertions.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
+        Assertions.assertEquals(Integer.valueOf(8), updateCellsRequest.getStart().getColumnIndex());
+        Assertions.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getRowIndex());
 
         PivotTable pivotTable = updateCellsRequest.getRows().get(0).getValues().get(0).getPivotTable();
-        Assert.assertEquals("HORIZONTAL", pivotTable.getValueLayout());
+        Assertions.assertEquals("HORIZONTAL", pivotTable.getValueLayout());
 
-        Assert.assertEquals(Integer.valueOf(0), pivotTable.getSource().getStartRowIndex());
-        Assert.assertEquals(Integer.valueOf(10), pivotTable.getSource().getEndRowIndex());
-        Assert.assertEquals(Integer.valueOf(0), pivotTable.getSource().getStartColumnIndex());
-        Assert.assertEquals(Integer.valueOf(7), pivotTable.getSource().getEndColumnIndex());
+        Assertions.assertEquals(Integer.valueOf(0), pivotTable.getSource().getStartRowIndex());
+        Assertions.assertEquals(Integer.valueOf(10), pivotTable.getSource().getEndRowIndex());
+        Assertions.assertEquals(Integer.valueOf(0), pivotTable.getSource().getStartColumnIndex());
+        Assertions.assertEquals(Integer.valueOf(7), pivotTable.getSource().getEndColumnIndex());
 
-        Assert.assertEquals(1, pivotTable.getRows().size());
-        Assert.assertEquals("RowGROUP", pivotTable.getRows().get(0).getLabel());
-        Assert.assertEquals(Integer.valueOf(0), pivotTable.getRows().get(0).getSourceColumnOffset());
-        Assert.assertEquals("DESCENDING", pivotTable.getRows().get(0).getSortOrder());
-        Assert.assertFalse(pivotTable.getRows().get(0).getShowTotals());
-        Assert.assertNotNull(pivotTable.getRows().get(0).getValueBucket());
-        Assert.assertEquals("Bucket", pivotTable.getRows().get(0).getValueBucket().getBuckets().get(0).getStringValue());
+        Assertions.assertEquals(1, pivotTable.getRows().size());
+        Assertions.assertEquals("RowGROUP", pivotTable.getRows().get(0).getLabel());
+        Assertions.assertEquals(Integer.valueOf(0), pivotTable.getRows().get(0).getSourceColumnOffset());
+        Assertions.assertEquals("DESCENDING", pivotTable.getRows().get(0).getSortOrder());
+        Assertions.assertFalse(pivotTable.getRows().get(0).getShowTotals());
+        Assertions.assertNotNull(pivotTable.getRows().get(0).getValueBucket());
+        Assertions.assertEquals("Bucket", pivotTable.getRows().get(0).getValueBucket().getBuckets().get(0).getStringValue());
 
 
-        Assert.assertEquals(1, pivotTable.getColumns().size());
-        Assert.assertEquals("ColumnGROUP", pivotTable.getColumns().get(0).getLabel());
-        Assert.assertEquals(Integer.valueOf(4), pivotTable.getColumns().get(0).getSourceColumnOffset());
-        Assert.assertEquals("ASCENDING", pivotTable.getColumns().get(0).getSortOrder());
-        Assert.assertTrue(pivotTable.getColumns().get(0).getShowTotals());
-        Assert.assertNull(pivotTable.getColumns().get(0).getValueBucket());
+        Assertions.assertEquals(1, pivotTable.getColumns().size());
+        Assertions.assertEquals("ColumnGROUP", pivotTable.getColumns().get(0).getLabel());
+        Assertions.assertEquals(Integer.valueOf(4), pivotTable.getColumns().get(0).getSourceColumnOffset());
+        Assertions.assertEquals("ASCENDING", pivotTable.getColumns().get(0).getSortOrder());
+        Assertions.assertTrue(pivotTable.getColumns().get(0).getShowTotals());
+        Assertions.assertNull(pivotTable.getColumns().get(0).getValueBucket());
 
-        Assert.assertEquals(1, pivotTable.getValues().size());
-        Assert.assertEquals("SUM", pivotTable.getValues().get(0).getSummarizeFunction());
-        Assert.assertEquals(Integer.valueOf(3), pivotTable.getValues().get(0).getSourceColumnOffset());
+        Assertions.assertEquals(1, pivotTable.getValues().size());
+        Assertions.assertEquals("SUM", pivotTable.getValues().get(0).getSummarizeFunction());
+        Assertions.assertEquals(Integer.valueOf(3), pivotTable.getValues().get(0).getSourceColumnOffset());
     }
 
     @Test
@@ -174,17 +174,17 @@ public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheet
         inbound.getIn().setBody(model);
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
-        Assert.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
 
         BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
-        Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
+        Assertions.assertEquals(1, batchUpdateRequest.getRequests().size());
 
         UpdateCellsRequest updateCellsRequest = batchUpdateRequest.getRequests().get(0).getUpdateCells();
 
-        Assert.assertEquals(Integer.valueOf(1), updateCellsRequest.getStart().getSheetId());
-        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getColumnIndex());
-        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getRowIndex());
+        Assertions.assertEquals(Integer.valueOf(1), updateCellsRequest.getStart().getSheetId());
+        Assertions.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getColumnIndex());
+        Assertions.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getRowIndex());
 
         PivotTable pivotTable = updateCellsRequest.getRows().get(0).getValues().get(0).getPivotTable();
         assertSampleValueGroup(pivotTable);
@@ -208,17 +208,17 @@ public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheet
         inbound.getIn().setBody(model);
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
-        Assert.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
 
         BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
-        Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
+        Assertions.assertEquals(1, batchUpdateRequest.getRequests().size());
 
         UpdateCellsRequest updateCellsRequest = batchUpdateRequest.getRequests().get(0).getUpdateCells();
 
-        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
-        Assert.assertEquals(Integer.valueOf(4), updateCellsRequest.getStart().getColumnIndex());
-        Assert.assertEquals(Integer.valueOf(9), updateCellsRequest.getStart().getRowIndex());
+        Assertions.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
+        Assertions.assertEquals(Integer.valueOf(4), updateCellsRequest.getStart().getColumnIndex());
+        Assertions.assertEquals(Integer.valueOf(9), updateCellsRequest.getStart().getRowIndex());
 
         PivotTable pivotTable = updateCellsRequest.getRows().get(0).getValues().get(0).getPivotTable();
         assertSampleValueGroup(pivotTable);
@@ -240,17 +240,17 @@ public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheet
         inbound.getIn().setBody(model);
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
-        Assert.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
 
         BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
-        Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
+        Assertions.assertEquals(1, batchUpdateRequest.getRequests().size());
 
         UpdateCellsRequest updateCellsRequest = batchUpdateRequest.getRequests().get(0).getUpdateCells();
 
-        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
-        Assert.assertEquals(Integer.valueOf(2), updateCellsRequest.getStart().getColumnIndex());
-        Assert.assertEquals(Integer.valueOf(11), updateCellsRequest.getStart().getRowIndex());
+        Assertions.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
+        Assertions.assertEquals(Integer.valueOf(2), updateCellsRequest.getStart().getColumnIndex());
+        Assertions.assertEquals(Integer.valueOf(11), updateCellsRequest.getStart().getRowIndex());
 
         PivotTable pivotTable = updateCellsRequest.getRows().get(0).getValues().get(0).getPivotTable();
         assertSampleValueGroup(pivotTable);
@@ -276,23 +276,23 @@ public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheet
         inbound.getIn().setBody(model);
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
-        Assert.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
 
         BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
-        Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
+        Assertions.assertEquals(1, batchUpdateRequest.getRequests().size());
 
         UpdateCellsRequest updateCellsRequest = batchUpdateRequest.getRequests().get(0).getUpdateCells();
 
-        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
-        Assert.assertEquals(Integer.valueOf(2), updateCellsRequest.getStart().getColumnIndex());
-        Assert.assertEquals(Integer.valueOf(11), updateCellsRequest.getStart().getRowIndex());
+        Assertions.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
+        Assertions.assertEquals(Integer.valueOf(2), updateCellsRequest.getStart().getColumnIndex());
+        Assertions.assertEquals(Integer.valueOf(11), updateCellsRequest.getStart().getRowIndex());
 
         PivotTable pivotTable = updateCellsRequest.getRows().get(0).getValues().get(0).getPivotTable();
 
-        Assert.assertEquals(1, pivotTable.getValues().size());
-        Assert.assertEquals("AVERAGE", pivotTable.getValues().get(0).getSummarizeFunction());
-        Assert.assertEquals(Integer.valueOf(4), pivotTable.getValues().get(0).getSourceColumnOffset());
+        Assertions.assertEquals(1, pivotTable.getValues().size());
+        Assertions.assertEquals("AVERAGE", pivotTable.getValues().get(0).getSummarizeFunction());
+        Assertions.assertEquals(Integer.valueOf(4), pivotTable.getValues().get(0).getSourceColumnOffset());
     }
 
     @Test
@@ -314,24 +314,24 @@ public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheet
         inbound.getIn().setBody(model);
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
-        Assert.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
+        Assertions.assertEquals(model.getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
 
         BatchUpdateSpreadsheetRequest batchUpdateRequest = (BatchUpdateSpreadsheetRequest) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest");
-        Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
+        Assertions.assertEquals(1, batchUpdateRequest.getRequests().size());
 
         UpdateCellsRequest updateCellsRequest = batchUpdateRequest.getRequests().get(0).getUpdateCells();
 
-        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
-        Assert.assertEquals(Integer.valueOf(5), updateCellsRequest.getStart().getColumnIndex());
-        Assert.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getRowIndex());
+        Assertions.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getSheetId());
+        Assertions.assertEquals(Integer.valueOf(5), updateCellsRequest.getStart().getColumnIndex());
+        Assertions.assertEquals(Integer.valueOf(0), updateCellsRequest.getStart().getRowIndex());
 
         PivotTable pivotTable = updateCellsRequest.getRows().get(0).getValues().get(0).getPivotTable();
 
-        Assert.assertEquals(1, pivotTable.getValues().size());
-        Assert.assertEquals("CUSTOM", pivotTable.getValues().get(0).getSummarizeFunction());
-        Assert.assertEquals("=Cost*SUM(Quantity)", pivotTable.getValues().get(0).getFormula());
-        Assert.assertNull(pivotTable.getValues().get(0).getSourceColumnOffset());
+        Assertions.assertEquals(1, pivotTable.getValues().size());
+        Assertions.assertEquals("CUSTOM", pivotTable.getValues().get(0).getSummarizeFunction());
+        Assertions.assertEquals("=Cost*SUM(Quantity)", pivotTable.getValues().get(0).getFormula());
+        Assertions.assertNull(pivotTable.getValues().get(0).getSourceColumnOffset());
     }
 
     private static GooglePivotTable.ValueGroup sampleValueGroup() {
@@ -341,8 +341,8 @@ public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheet
     }
 
     private static void assertSampleValueGroup(PivotTable pivotTable) {
-        Assert.assertEquals(1, pivotTable.getValues().size());
-        Assert.assertEquals("SUM", pivotTable.getValues().get(0).getSummarizeFunction());
-        Assert.assertEquals(Integer.valueOf(2), pivotTable.getValues().get(0).getSourceColumnOffset());
+        Assertions.assertEquals(1, pivotTable.getValues().size());
+        Assertions.assertEquals("SUM", pivotTable.getValues().get(0).getSummarizeFunction());
+        Assertions.assertEquals(Integer.valueOf(2), pivotTable.getValues().get(0).getSourceColumnOffset());
     }
 }

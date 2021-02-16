@@ -18,7 +18,7 @@ package io.syndesis.common.util.immutable;
 import java.util.Set;
 
 import org.immutables.value.Value;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

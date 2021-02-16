@@ -34,7 +34,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.metadata.MetaDataBuilder;
 import org.apache.camel.component.salesforce.api.utils.JsonUtils;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

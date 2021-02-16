@@ -15,8 +15,7 @@
  */
 package io.syndesis.server.api.generator.openapi.util;
 
-import io.syndesis.server.api.generator.openapi.util.XmlSchemaHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

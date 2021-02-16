@@ -15,6 +15,13 @@
  */
 package io.syndesis.connector.kafka;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -24,26 +31,19 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.component.kafka.KafkaEndpoint;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import org.junit.jupiter.api.Test;
 
 public class KafkaConnectorTest extends ConnectorTestSupport {
 
     @Override
-    protected CamelContext createCamelContext() throws Exception {
-        CamelContext context = super.createCamelContext();
+    protected CamelContext createCamelContext() {
+        final CamelContext context = super.createCamelContext();
         context.setAutoStartup(false);
-        context.disableJMX();
 
         return context;
     }
@@ -54,7 +54,7 @@ public class KafkaConnectorTest extends ConnectorTestSupport {
         Map<String, String> options = new HashMap<>();
         options.put("topic", "ciao");
         options = Collections.unmodifiableMap(options);
-        stepList.add( new Step.Builder()
+        stepList.add(new Step.Builder()
             .stepKind(StepKind.endpoint)
             .connection(new Connection.Builder()
                 .putConfiguredProperty("brokers", "domain:1234")
@@ -92,17 +92,16 @@ public class KafkaConnectorTest extends ConnectorTestSupport {
                     .configuredProperties(options)
                     .build())
                 .build())
-            .build()
-        );
+            .build());
 
         return stepList;
     }
 
     @Test
-    public void testKafkaConnector() {
-        assertNotNull(context());
+    public void testKafkaConnector() throws Exception {
+        context().start();
 
-        Optional<Endpoint> endpoint = context.getEndpoints().stream().filter(e -> e instanceof KafkaEndpoint).findFirst();
+        Optional<Endpoint> endpoint = context().getEndpoints().stream().filter(e -> e instanceof KafkaEndpoint).findFirst();
 
         Assertions.assertThat(endpoint.isPresent()).isTrue();
         Assertions.assertThat(endpoint.get().getEndpointUri()).isEqualTo("kafka://ciao?brokers=domain%3A1234");

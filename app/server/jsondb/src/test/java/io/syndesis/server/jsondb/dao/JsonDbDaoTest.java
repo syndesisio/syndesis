@@ -17,6 +17,7 @@ package io.syndesis.server.jsondb.dao;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
@@ -26,10 +27,8 @@ import io.syndesis.common.model.validation.TargetWithDomain;
 import io.syndesis.server.jsondb.JsonDB;
 
 import org.immutables.value.Value;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 
@@ -37,36 +36,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(Parameterized.class)
 public class JsonDbDaoTest<T extends WithId<T> & WithUsage> {
 
     private static final byte[] JSON_BYTES = "{\"uses\":14}".getBytes(StandardCharsets.UTF_8);
 
-    final JsonDbDao<T> dao;
+    static final JsonDB JSONDB = mock(JsonDB.class);
 
-    final JsonDB jsondb = mock(JsonDB.class);
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void shouldDeserializeUsage(final JsonDbDao<T> dao) {
+        final String path = "/" + Kind.from(dao.getType()).getPluralModelName() + "/:id";
+        when(JSONDB.getAsByteArray(path)).thenReturn(JSON_BYTES);
 
-    public JsonDbDaoTest(final Class<T> type) {
-        dao = new JsonDbDao<T>(jsondb) {
-            @Override
-            public Class<T> getType() {
-                return type;
-            }
-        };
-
-        final String path = "/" + Kind.from(type).getPluralModelName() + "/:id";
-        when(jsondb.getAsByteArray(path)).thenReturn(JSON_BYTES);
-    }
-
-    @Test
-    public void shouldDeserializeUsage() {
         final T fetched = dao.fetch("id");
 
         assertThat(fetched.getUses()).isEqualTo(14);
     }
 
-    @Parameters(name = "{0}")
-    public static Set<Class<? extends WithUsage>> parameters() {
+    static Stream<JsonDbDao<?>> parameters() {
         final Reflections reflections = new Reflections(new ConfigurationBuilder()
             .forPackages("io.syndesis")
             .filterInputsBy(r -> !r.contains("Immutable")));
@@ -81,6 +68,23 @@ public class JsonDbDaoTest<T extends WithId<T> & WithUsage> {
         withUsageSubtypes.remove(ConnectionOverview.class); // not sure why this
                                                             // is a DAO type
 
-        return withUsageSubtypes;
+        return withUsageSubtypes.stream()
+            .map(JsonDbDaoTest::stubDao);
     }
+
+    static <T extends WithId<T>> JsonDbDao<?> stubDao(Class<?> type) {
+        return new JsonDbDao<T>(JSONDB) {
+            @SuppressWarnings("unchecked")
+            @Override
+            public Class<T> getType() {
+                return (Class<T>) type;
+            }
+
+            @Override
+            public String toString() {
+                return type.getSimpleName();
+            }
+        };
+    }
+
 }

@@ -28,9 +28,9 @@ import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,8 +42,8 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
 
     protected MongoCollection<Document> collection;
 
-    // JUnit will execute this method after the @BeforeClass of the superclass
-    @BeforeClass
+    // JUnit will execute this method after the @BeforeEachClass of the superclass
+    @BeforeAll
     public static void doCollectionSetup() {
         // The feature only works with capped collections!
         CreateCollectionOptions opts = new CreateCollectionOptions().capped(true).sizeInBytes(1024 * 1024);
@@ -57,7 +57,7 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
             "id");
     }
 
-    @Before
+    @BeforeEach
     public void init(){
         collection = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION);
     }
@@ -67,7 +67,7 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
         // When
         String unique = UUID.randomUUID().toString();
         int id = globalId++;
-        MockEndpoint mock = getMockEndpoint("mock:result");
+        MockEndpoint mock = context().getEndpoint("mock:result", MockEndpoint.class);
         // We just retain last message
         mock.setRetainLast(1);
         mock.expectedMessageCount(1);
