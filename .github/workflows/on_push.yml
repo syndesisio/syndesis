@@ -37,4 +37,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         if: ${{env.SONAR_TOKEN != ''}}
-        run: cd app; ./mvnw -q -B -pl '!:extension-bom,!:integration-bom' jacoco:report && ./mvnw -B -N -Dsonar.login=${{secrets.SONAR_TOKEN}} sonar:sonar
+        run: cd app; ./mvnw -q -B -pl '!:extension-bom,!:integration-bom' jacoco:report && ./mvnw -B -N -Dsonar.login=${{secrets.SONAR_TOKEN}} sonar:sonar  -Dsonar.sources=$(find . -wholename "*/src/main/java" | sed -z 's/\n/,/g;s/,$/\n/') -Dsonar.java.binaries=$(find . -wholename "*/target/classes" | sed -z 's/\n/,/g;s/,$/\n/')
