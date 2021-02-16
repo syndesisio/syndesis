@@ -21,7 +21,6 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Full Build of Syndesis
         run: tools/bin/syndesis build -d --batch-mode --all-images 
-      - name: images
     # Send SonarCloud statistics
       - name: Set up JDK 11 for SonarCloud
         uses: actions/setup-java@v1
