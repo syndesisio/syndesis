@@ -35,11 +35,9 @@ public class IrcVerifierExtension extends DefaultComponentVerifierExtension {
     public Result verify(Scope scope, Map<String, Object> parameters) {
         final String hostname = ConnectorOptions.extractOption(parameters, "hostname");
         final int port = ConnectorOptions.extractOptionAndMap(parameters, "port", Integer::parseInt, 7000);
-        final Socket s = new Socket();
-        try {
+        try(Socket s = new Socket()) {
             s.connect(new InetSocketAddress(hostname,port), 5000);
             s.setSoTimeout(5000);
-            s.close();
             return ResultBuilder.withStatusAndScope(Result.Status.OK, scope).build();
         } catch (UnknownHostException e) {
             return ResultBuilder.withStatusAndScope(Result.Status.ERROR, scope)
