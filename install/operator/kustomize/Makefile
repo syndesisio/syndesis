@@ -12,6 +12,7 @@ ROLENAME := syndesis-operator
 #
 # Vars that can be overridden by external env vars
 #
+DEBUG ?= false
 DB_IMAGE ?= centos/postgresql-10-centos7
 IMAGE ?= docker.io/syndesis/syndesis-operator
 NAMESPACE ?= syndesis
@@ -34,7 +35,11 @@ setup: kubectl
 	$(MAKE) $(MK_OPTIONS) -C bases/role
 	$(MAKE) $(MK_OPTIONS) -C bases/grant
 	#@ Must be invoked by a user with cluster-admin privileges
+ifeq ($(DEBUG), false)
 	kubectl apply -k setup
+else
+	kubectl kustomize setup
+endif
 
 #
 # Alternative to setup that in addition will install the jaeger crd.
@@ -50,7 +55,11 @@ setup-jaeger: kubectl
 	#@ ** This should only be invoked on a non-OperatorHub environment **
 	#@ ******************************************************************
 	#@ Must be invoked by a user with cluster-admin privileges
+ifeq ($(DEBUG), false)
 	kubectl apply -k setup-jaeger
+else
+	kubectl kustomize setup-jaeger
+endif
 
 #
 # Install the operator deployment and related resources
@@ -58,7 +67,11 @@ setup-jaeger: kubectl
 operator: kubectl
 	$(MAKE) $(MK_OPTIONS) -C bases/deployment
 	#@ Must be invoked by a user previously granted permissions using `KUBE_USER=<user> make install-setup`
+ifeq ($(DEBUG), false)
 	kubectl apply -k operator
+else
+	kubectl kustomize operator
+endif
 
 #
 # Installs the operator deployment and in addition installs a default CR
@@ -67,7 +80,11 @@ app: kubectl
 	$(MAKE) $(MK_OPTIONS) -C bases/deployment
 	$(MAKE) $(MK_OPTIONS) -C app
 	#@ Must be invoked by a user previously granted permissions using `KUBE_USER=<user> make install-setup`
+ifeq ($(DEBUG), false)
 	kubectl apply -k app
+else
+	kubectl kustomize app
+endif
 
 #
 #################### Commands for installing in development mode ###################
@@ -83,7 +100,11 @@ dev-operator: kubectl
 	$(MAKE) $(MK_OPTIONS) -C dev/operator
 	#@ Used for development purposes only - allows for a locally compiled operator
 	#@ Must be invoked by a user previously granted permissions using `KUBE_USER=<user> make install-setup`
+ifeq ($(DEBUG), false)
 	kubectl apply -k dev/operator
+else
+	kubectl kustomize dev/operator
+endif
 
 #
 # Installs the operator deployment in development mode
@@ -94,4 +115,8 @@ dev-app: kubectl
 	$(MAKE) $(MK_OPTIONS) -C dev/operator
 	$(MAKE) $(MK_OPTIONS) -C dev/app
 	#@ Must be invoked by a user previously granted permissions using `KUBE_USER=<user> make install-setup`
+ifeq ($(DEBUG), false)
 	kubectl apply -k dev/app
+else
+	kubectl kustomize dev/app
+endif

@@ -15,6 +15,14 @@ sync:
 INSTALLDIR := $(RELEASE_NAME)-installer
 RELEASEDIRS := ../app ../bases ../dev ../operator ../product ../setup ../setup-jaeger
 
+check-vars:
+ifndef RELEASE_VERSION
+	$(error RELEASE_VERSION is not set)
+endif
+ifndef RELEASE_NAME
+	$(error RELEASE_NAME is not set)
+endif
+
 create:
 	#@ Make a new syndesis builddirectory
 	mkdir -p $(INSTALLDIR)
@@ -30,13 +38,7 @@ create:
 	#@ Copy the root Makefile into build directory
 	cp -f ../Makefile $(INSTALLDIR)/
 
-release: sync create
-ifndef RELEASE_VERSION
-	$(error RELEASE_VERSION is not set)
-endif
-ifndef RELEASE_NAME
-	$(error RELEASE_NAME is not set)
-endif
+release: check-vars sync create
 	tar zcvf $(INSTALLDIR)-$(RELEASE_VERSION).tar.gz $(INSTALLDIR)
 
 clean:
