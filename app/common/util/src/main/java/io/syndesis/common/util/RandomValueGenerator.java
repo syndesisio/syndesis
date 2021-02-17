@@ -28,7 +28,7 @@ public final class RandomValueGenerator {
     private static final String ALPHANUM_DOMAIN = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final String ALPHANUM_SCHEME = "alphanum";
 
-    private static final SecureRandom RANDOMIZER = new SecureRandom();;
+    private static final SecureRandom RANDOMIZER = new SecureRandom();
 
     private RandomValueGenerator() {
     }

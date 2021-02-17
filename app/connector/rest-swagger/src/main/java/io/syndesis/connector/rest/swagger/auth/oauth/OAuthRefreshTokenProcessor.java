@@ -47,7 +47,7 @@ class OAuthRefreshTokenProcessor implements Processor {
      * The number of milliseconds we try to refresh the access token before it
      * expires.
      */
-    static final long AHEAD_OF_TIME_REFRESH_MILIS = 60 * 1000;
+    static final long AHEAD_OF_TIME_REFRESH_MILIS = 60L * 1000L;
 
     private static final ObjectMapper JSON = new ObjectMapper();
 
