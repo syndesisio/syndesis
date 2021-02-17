@@ -237,7 +237,8 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
             return shape;
         }
 
-        getLog().info("Generating inspections for connector: " + connector.getId().get() + ", and type: " + shape.getType());
+        getLog().info("Generating inspections for connector: " +
+            connector.getId().orElse("NULL") + ", and type: " + shape.getType());
 
         final List<String> elements = project.getRuntimeClasspathElements();
         final URL[] classpath = new URL[elements.size()];
