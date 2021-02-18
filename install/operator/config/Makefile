@@ -95,19 +95,13 @@ else
 endif
 
 #
-# Checks for a syndesis-pull-secret for accessing the
-# Red Hat registry. If not present then it request credentials
-# and creates accordingly.
+# Creates a dockerconfigjson file for the syndesis-pull-secret
+# used for accessing the Red Hat registry. It requests credentials
+# from the user and creates accordingly.
 #
 secret: kubectl
 	#@ Credentials required for accessing the redhat registry
-	kubectl get secret syndesis-pull-secret &> /dev/null || (\
-	 read -p "enter username for registry.redhat.io and press [ENTER]: " username; \
-	 read -p "enter password for registry.redhat.io and press [ENTER]: " password; \
-	 read -p "enter email address for registry.redhat.io and press [ENTER]: " email; \
-	 kubectl create secret docker-registry syndesis-pull-secret \
-		 --docker-server=registry.redhat.io \
-		 --docker-username=$$username --docker-password=$$password --docker-email=$$email)
+	./scripts/docker-config-json.sh ./operator/dockerconfigjson
 
 #
 # Install the operator deployment and related resources

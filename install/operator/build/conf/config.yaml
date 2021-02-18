@@ -73,9 +73,9 @@ Syndesis:
                     Memory: "255Mi"
                 VolumeCapacity: "1Gi"
                 VolumeAccessMode: "ReadWriteOnce"
-            BackupImage: "crunchydata/crunchy-pgdump:centos7-12.5-4.5.1"
-            RestoreImage: "crunchydata/crunchy-pgrestore:centos7-12.5-4.5.1"
-            LoggerImage: "centos:7"
+            BackupImage: "registry.connect.redhat.com/crunchydata/crunchy-pgdump:ubi7-12.4-4.5.0"
+            RestoreImage: "registry.connect.redhat.com/crunchydata/crunchy-pgrestore:ubi7-12.4-4.5.0"
+            LoggerImage: "registry.redhat.io/ubi8/ubi:8.3"
         Server:
             Image: "docker.io/syndesis/syndesis-server:latest"
             Resources:

@@ -9,5 +9,6 @@ before_launch.sh
 
 **/*.gen.tmpl
 **/*.gen.yaml
+**/operator/dockerconfigjson
 **/release/*-installer*
 **/bundle

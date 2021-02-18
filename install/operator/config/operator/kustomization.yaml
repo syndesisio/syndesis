@@ -1,2 +1,11 @@
 bases:
 - ../manager
+generatorOptions:
+ disableNameSuffixHash: true
+secretGenerator:
+- name: syndesis-pull-secret
+  files:
+    - .dockerconfigjson=dockerconfigjson
+  type: kubernetes.io/dockerconfigjson
+patchesStrategicMerge:
+- ./service-account-secret-patch.yaml

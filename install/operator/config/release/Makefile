@@ -5,7 +5,7 @@ MK_OPTIONS := -s
 
 .PHONY: $(SUBDIRS)
 
-SYNCDIRS := ../app ../crd ../manager ../rbac-grant ../jaeger-crd ../rbac-role ../dev/app ../dev/operator
+SYNCDIRS := ../app ../manager  ../rbac-grant ../jaeger-crd ../rbac-role ../dev/app ../dev/operator
 
 sync:
 	for dir in $(SYNCDIRS); do \
@@ -13,7 +13,7 @@ sync:
   done
 
 INSTALLDIR := $(RELEASE_NAME)-installer
-RELEASEDIRS := ../app ../crd ../manager ../rbac-grant ../jaeger-crd ../rbac-role ../dev ../operator ../setup ../setup-jaeger
+RELEASEDIRS := ../app ../crd ../dev ../jaeger-crd ../manager ../operator ../rbac-grant ../rbac-role ../samples ../setup ../setup-jaeger ../scripts
 
 check-vars:
 ifndef RELEASE_VERSION
