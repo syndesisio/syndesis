@@ -9,7 +9,7 @@ SYNCDIRS := ../app ../bases/crd ../bases/deployment ../bases/grant ../bases/jaeg
 
 sync:
 	for dir in $(SYNCDIRS); do \
-    $(MAKE) $(MK_OPTIONS) -C $$dir; \
+    $(MAKE) $(MK_OPTIONS) -C $$dir init; \
   done
 
 INSTALLDIR := $(RELEASE_NAME)-installer
@@ -30,10 +30,13 @@ create:
 	for dir in $(RELEASEDIRS); do \
     cp -rf $$dir $(INSTALLDIR)/; \
   done
+	#@ Remove any generated yaml files (need the tmpl files)
+	for f in `find $(INSTALLDIR) -name "*.gen.yaml"`; do \
+		rm -f $$f; \
+	done
 	#@ Remove sync rules from Makefiles
 	for f in `find $(INSTALLDIR) -name Makefile`; do \
-		echo "sync:" > $$f; \
-		echo "  #@ Not required in release" >> $$f; \
+		sed -i '/# start-sync/,/# end-sync/c sync:\n  # Not required in release' $$f; \
 	done
 	#@ Copy the root Makefile into build directory
 	cp -f ../Makefile $(INSTALLDIR)/

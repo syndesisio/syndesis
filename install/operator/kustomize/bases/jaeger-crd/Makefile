@@ -1,8 +1,14 @@
 ASSETS := ../../../pkg/generator/assets
-JAEGER_CRD :=  ./jaeger-crd.yml
+TMPL := tmpl
+YAML := yaml
+NAMESPACE_VAR := {NAMESPACE}
+USER_VAR := {KUBE_USER}
 
-.PHONY: sync
+JAEGER_CRD := ./jaeger-crd.gen
 
+.PHONY: sync init
+
+# start-sync
 #
 # Copy the go template from the src directory
 # Convert the go template to a formatted yaml file:
@@ -10,5 +16,9 @@ JAEGER_CRD :=  ./jaeger-crd.yml
 # - Delete any empty lines and comments
 #
 sync:
-	cp $(ASSETS)/install/cluster/jaeger.yml.tmpl $(JAEGER_CRD)
-	sed -i '/^{{\|^#\|^$$/d' $(JAEGER_CRD)
+	cp $(ASSETS)/install/cluster/jaeger.yml.tmpl $(JAEGER_CRD).$(TMPL)
+	sed -i '/^{{\|^#\|^$$/d' $(JAEGER_CRD).$(TMPL)
+# end-sync
+
+init: sync
+	cp $(JAEGER_CRD).$(TMPL) $(JAEGER_CRD).$(YAML)

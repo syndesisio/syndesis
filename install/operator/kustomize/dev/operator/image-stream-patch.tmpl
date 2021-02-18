@@ -4,7 +4,7 @@ metadata:
   name: syndesis-operator
 spec:
   tags:
-  - name: "{{.Tag}}"
+  - name: "{TAG}"
     from:
-      name: {{.Image}}:{{.Tag}}
+      name: syndesis-operator:{TAG}
       kind: ImageStreamTag
