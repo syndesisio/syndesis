@@ -64,7 +64,8 @@ public class DBToSheets_IT extends GoogleSheetsTestSupport {
         runner.when(http().server(googleSheetsApiServer)
                         .receive()
                         .put()
-                        .payload("{\"majorDimension\":\"ROWS\",\"values\":[[\"Joe\",\"Jackson\",\"Red Hat\"],[\"Joanne\",\"Jackson\",\"Red Hat\"]]}"));
+                        .message()
+                        .body("{\"majorDimension\":\"ROWS\",\"values\":[[\"Joe\",\"Jackson\",\"Red Hat\"],[\"Joanne\",\"Jackson\",\"Red Hat\"]]}"));
 
         runner.then(http().server(googleSheetsApiServer)
                         .send()

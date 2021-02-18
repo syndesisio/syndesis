@@ -70,7 +70,8 @@ public class Webhook2DB_IT extends SyndesisIntegrationTestSupport {
         runner.given(http().client(webHookClient)
                 .send()
                 .post()
-                .payload("{\"task\":\"My new task!\"}"));
+                .message()
+                .body("{\"task\":\"My new task!\"}"));
 
         runner.when(http().client(webHookClient)
                 .receive()
@@ -93,7 +94,6 @@ public class Webhook2DB_IT extends SyndesisIntegrationTestSupport {
 
     private void cleanupDatabase(TestCaseRunner runner) {
         runner.given(sql(sampleDb)
-            .dataSource(sampleDb)
             .statement("delete from todo"));
     }
 }

@@ -90,8 +90,9 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().client(todoListApiClient)
                 .receive()
                 .response(HttpStatus.OK)
+                .message()
                 .contentType(VND_OAI_OPENAPI_JSON)
-                .payload(new ClassPathResource("todolist-api.json", TodoApi_IT.class)));
+                .body(new ClassPathResource("todolist-api.json", TodoApi_IT.class)));
     }
 
     @Test
@@ -102,7 +103,8 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
         runner.given(http().client(todoListApiClient)
                 .send()
                 .post("/todos")
-                .payload("[{\"name\":\"Wash the cat\",\"done\":0}," +
+                .message()
+                .body("[{\"name\":\"Wash the cat\",\"done\":0}," +
                             "{\"name\":\"Feed the cat\",\"done\":0}," +
                             "{\"name\":\"Play with the cat\",\"done\":0}]"));
 
@@ -133,7 +135,8 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().client(todoListApiClient)
                 .receive()
                 .response(HttpStatus.OK)
-                .payload("[{\"id\":\"@ignore@\",\"name\":\"Wash the dog\",\"done\":0}," +
+                .message()
+                .body("[{\"id\":\"@ignore@\",\"name\":\"Wash the dog\",\"done\":0}," +
                             "{\"id\":\"@ignore@\",\"name\":\"Feed the dog\",\"done\":0}," +
                             "{\"id\":\"@ignore@\",\"name\":\"Play with the dog\",\"done\":0}]"));
     }
@@ -150,7 +153,8 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().client(todoListApiClient)
                 .receive()
                 .response(HttpStatus.OK)
-                .payload("[]"));
+                .message()
+                .body("[]"));
     }
 
     @Configuration
@@ -165,7 +169,6 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
 
     private void cleanupDatabase(TestCaseRunner runner) {
         runner.given(sql(sampleDb)
-            .dataSource(sampleDb)
             .statement("delete from todo"));
     }
 }

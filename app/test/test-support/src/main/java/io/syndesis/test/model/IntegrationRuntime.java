@@ -31,14 +31,14 @@ public class IntegrationRuntime {
     public static final IntegrationRuntime SPRING_BOOT = new IntegrationRuntime("spring-boot",
             "spring-boot:run",
         "syndesis/syndesis-s2i",
-            Wait.forLogMessage(".*Started Application.*\\s", 1),
+            Wait.forLogMessage("^.*Started Application.*\\n$", 1),
             SpringBootProjectBuilder::new);
 
 
     public static final IntegrationRuntime CAMEL_K = new IntegrationRuntime("camel-k",
             "process-resources exec:java",
         "syndesis/syndesis-s2i-camelk",
-            Wait.forLogMessage(".*Apache Camel .* started.*\\s", 1),
+            Wait.forLogMessage("^.*Apache Camel .* started.*\\n$", 1),
             CamelKProjectBuilder::new);
 
     private final String id;

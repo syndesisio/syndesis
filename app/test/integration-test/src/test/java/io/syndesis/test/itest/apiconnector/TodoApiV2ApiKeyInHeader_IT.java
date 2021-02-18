@@ -84,13 +84,15 @@ public class TodoApiV2ApiKeyInHeader_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().server(todoApiServer)
             .receive()
             .get("/api")
+            .message()
             .header("keyName", "secret"));
 
         runner.then(http().server(todoApiServer)
             .send()
             .response(HttpStatus.OK)
+            .message()
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            .payload("[{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}]"));
+            .body("[{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}]"));
     }
 
     @Configuration

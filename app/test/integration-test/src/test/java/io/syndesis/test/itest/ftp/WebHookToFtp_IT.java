@@ -91,7 +91,8 @@ public class WebHookToFtp_IT extends FtpTestSupport {
                 .send()
                 .post()
                 .fork(true)
-                .payload("{\"first_name\":\"${first_name}\",\"company\":\"${company}\",\"mail\":\"${email}\"}"));
+                .message()
+                .body("{\"first_name\":\"${first_name}\",\"company\":\"${company}\",\"mail\":\"${email}\"}"));
 
         runner.then(receive()
                 .endpoint(ftpTestServer)

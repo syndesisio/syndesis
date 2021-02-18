@@ -16,18 +16,18 @@
 
 package io.syndesis.test.itest.apiconnector;
 
-import java.util.Arrays;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.sql.DataSource;
+import java.util.Arrays;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.container.BeforeTest;
 import com.consol.citrus.container.HamcrestConditionExpression;
+import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
 import com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor;
 import com.consol.citrus.ws.server.WebServiceServer;
 import io.syndesis.test.SyndesisTestEnvironment;
@@ -47,6 +47,7 @@ import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.GenericContainer;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
+import static com.consol.citrus.actions.ExecuteSQLAction.Builder.sql;
 import static com.consol.citrus.actions.ExecuteSQLQueryAction.Builder.query;
 import static com.consol.citrus.container.RepeatOnErrorUntilTrue.Builder.repeatOnError;
 import static com.consol.citrus.ws.actions.SoapActionBuilder.soap;
@@ -104,11 +105,13 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
 
         runner.when(soap().server(soapServer)
             .receive()
-            .payload(REQUEST_PAYLOAD));
+            .message()
+            .body(REQUEST_PAYLOAD));
 
         runner.then(soap().server(soapServer)
             .send()
-            .payload(RESPONSE_PAYLOAD));
+            .message()
+            .body(RESPONSE_PAYLOAD));
 
         runner.run(echo("SayHi waiting for result..."));
         runner.then(repeatOnError()
@@ -155,14 +158,10 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
         }
 
         @Bean
-        public TestRunnerBeforeTestSupport beforeTest(DataSource sampleDb) {
-            return new TestRunnerBeforeTestSupport() {
-                @Override
-                public void beforeTest(TestRunner runner) {
-                    runner.sql(builder -> builder.dataSource(sampleDb)
-                        .statement("delete from contact"));
-                }
-            };
+        public BeforeTest beforeTest(DataSource sampleDb) {
+            return new SequenceBeforeTest.Builder().actions(
+                    sql(sampleDb).statement("delete from contact")
+            ).build();
         }
     }
 }

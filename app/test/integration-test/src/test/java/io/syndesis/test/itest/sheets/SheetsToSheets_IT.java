@@ -59,8 +59,9 @@ public class SheetsToSheets_IT extends GoogleSheetsTestSupport {
             runner.then(http().server(googleSheetsApiServer)
                     .send()
                     .response(HttpStatus.OK)
+                    .message()
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .payload("{" +
+                    .body("{" +
                                 "\"spreadsheetId\": \"testSheetId\"," +
                                 "\"valueRanges\": [" +
                                     "{" +
@@ -74,7 +75,8 @@ public class SheetsToSheets_IT extends GoogleSheetsTestSupport {
             runner.when(http().server(googleSheetsApiServer)
                     .receive()
                     .put("/v4/spreadsheets/testSheetId/values/Copy!A:E")
-                    .payload("{\"majorDimension\":\"ROWS\",\"values\":[[\"a1\", \"b1\", \"c1\", \"d1\", \"e1\"]]}"));
+                    .message()
+                    .body("{\"majorDimension\":\"ROWS\",\"values\":[[\"a1\", \"b1\", \"c1\", \"d1\", \"e1\"]]}"));
 
             runner.then(http().server(googleSheetsApiServer)
                     .send()

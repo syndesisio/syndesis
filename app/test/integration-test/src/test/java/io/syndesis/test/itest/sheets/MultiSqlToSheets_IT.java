@@ -65,7 +65,8 @@ public class MultiSqlToSheets_IT extends GoogleSheetsTestSupport {
         runner.when(http().server(googleSheetsApiServer)
                         .receive()
                         .post()
-                        .payload("{\"majorDimension\":\"ROWS\",\"values\":[[\"Joe\",\"Red Hat\"],[\"Joanne\",\"Red Hat\"]]}"));
+                        .message()
+                        .body("{\"majorDimension\":\"ROWS\",\"values\":[[\"Joe\",\"Red Hat\"],[\"Joanne\",\"Red Hat\"]]}"));
 
         runner.then(http().server(googleSheetsApiServer)
                         .send()
