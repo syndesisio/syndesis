@@ -1,0 +1,114 @@
+apiVersion: syndesis.io/v1beta2
+kind: Syndesis
+metadata:
+  name: app
+spec:
+  #
+  # Uncomment & specify the OpenShift route for the Fuse Online console.
+  # By default, the installation script calculates the route.
+  # routeHostname: my-test-route.com
+  #
+  # Uncomment & specify a cron utility interval to schedule backups of application data and resources.
+  # backup:
+  #   schedule: every 10m
+  #
+  components:
+    meta:
+      resources:
+        # Uncomment & modify to increase the memory / cpu resources for this component.
+        # limit:
+        #   memory: "512Mi"
+        #   cpu: "0"
+        # request:
+        #   memory: "280Mi"
+        #   cpu: "0"
+        #
+        # Uncomment & modify to increase the persistent volume capacity for this component.
+        # volumeCapacity: 1Gi
+    server:
+      features:
+        # Uncomment & modify to restrict the number of running integrations (0 for no limit).
+        # integrationLimit: 0
+        #
+        # Uncomment & specify a 3scale URL to enable discovery of Fuse Online APIs by 3scale.
+        # managementUrlFor3scale: "https://your.3scale.server.com"
+        #
+        # Add any additional Maven repositories.
+        mavenRepositories:
+          # customRepo1: https://customRepo1
+          # customRepo2: https://customRepo2
+      resources:
+        # Uncomment & modify to increase the memory / cpu resources for this component.
+        # limit:
+        #   memory: "800Mi"
+        #   cpu: "750m"
+        # request:
+        #   memory: "256Mi"
+        #   cpu: "450m"
+    database:
+      # Uncomment & specify an external Postgres database URL to use that external database to persist
+      # connection and integration definitions according to the syndesis schema.
+      # externalDbURL: postgresql://custom-postgres-sydnesis:5432
+      #
+      # Uncomment & modify to specify a user name for accessing the external database.
+      # user: syndesis
+      #
+      # Uncomment & modify to specify the external database name.
+      # name: syndesis
+      #
+      # If specifying an external database, add the database password to the syndesis-global-config
+      # secret before installing Fuse Online.
+      #
+      resources:
+        # Uncomment & modify to increase the memory / cpu resources for this component.
+        # limit:
+        #   memory: "256Mi"
+        #   cpu: "100m"
+        # request:
+        #   memory: "20Mi"
+        #   cpu: "10m"
+        #
+        # Uncomment & modify to increase default internal storage for connections & integrations.
+        # volumeCapacity: 1Gi
+        #
+        # Uncomment & modify to select a storage volume of a different mode (possible values ReadWriteOnce or ReadOnlyMany)
+        # Warning: this should be rarely changed as mounting the database from a ReadOnlyMany volume will render the db read-only
+        # volumeAccessMode: ReadWriteOnce
+        #
+        # For advanced use-cases only
+        # (please refer to openshift documentation on persistent storage & the fuse-online knowledgebase):
+        # volumeName: <a specific volume identifier>
+        # volumeStorageClass: <a configured persistent storage class>
+        # volumeLabels:
+        #  <name>: <value>
+        #
+    prometheus:
+      resources:
+        # Uncomment & modify to increase the memory / cpu resources for this component.
+        # limit:
+        #   memory: "512Mi"
+        #   cpu: "0"
+        # request:
+        #   memory: "512Mi"
+        #   cpu: "0"
+        #
+        # Uncomment & modify to increase internal storage for the Prometheus component.
+        # volumeCapacity: "1Gi"
+  addons:
+    # Enables Jaeger activity tracking.
+    jaeger:
+      enabled: true
+    # Enables the Knative component (Technology Preview).
+    knative:
+      enabled: false
+    # Enables Prometheus monitoring.
+    ops:
+      enabled: false
+    # Exposes public REST API endpoints for CI/CD pipelines.
+    publicApi:
+      enabled: false
+      # Uncomment & modify to specify the public address for invoking REST API endpoints.
+      # routeHostname: public-syndesis.a.b.c.d.e
+    # Enables the Todo application for confirming that sample integrations work.
+    todo:
+      enabled: false

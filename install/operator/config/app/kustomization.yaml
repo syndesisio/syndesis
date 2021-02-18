@@ -2,3 +2,5 @@ bases:
 - ../operator
 resources:
 - ./syndesis-cr.gen.yaml
+patchesStrategicMerge:
+- ./product-cr-patch.yaml
