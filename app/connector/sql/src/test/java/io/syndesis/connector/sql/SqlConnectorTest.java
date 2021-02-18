@@ -15,68 +15,104 @@
  */
 package io.syndesis.connector.sql;
 
-import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.sql.common.DbEnum;
-import io.syndesis.connector.sql.common.JSONBeanUtil;
+import io.syndesis.connector.sql.common.SqlTest.ConnectionInfo;
+import io.syndesis.connector.sql.common.SqlTest.Setup;
+import io.syndesis.connector.sql.common.SqlTest.Teardown;
+import io.syndesis.connector.sql.common.SqlTest.Variant;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
 
-@RunWith(Parameterized.class)
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Setup(variants = {
+    @Variant(
+        type = DbEnum.POSTGRESQL,
+        value = "CREATE TABLE ADDRESS (ID SERIAL PRIMARY KEY, street VARCHAR(255), nummer INTEGER)"),
+    @Variant(
+        type = DbEnum.MYSQL,
+        value = "CREATE TABLE ADDRESS (ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, street VARCHAR(255), nummer INTEGER)"),
+    @Variant(
+        type = DbEnum.APACHE_DERBY,
+        value = "CREATE TABLE ADDRESS (ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), street VARCHAR(255), number INTEGER)"),
+    @Variant(
+        type = DbEnum.STANDARD,
+        value = "CREATE TABLE ADDRESS (ID NUMBER GENERATED ALWAYS AS IDENTITY, street VARCHAR(255), nummer INTEGER)")
+})
+@Teardown("DROP TABLE ADDRESS")
 public class SqlConnectorTest extends SqlConnectorTestSupport {
 
-    private final String sqlQuery;
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static final Class<List<String>> LIST_OF_STRINGS = (Class) List.class;
+
     private final List<Map<String, String[]>> expectedResults;
+
     private final Map<String, Object> parameters;
 
-    public SqlConnectorTest(String sqlQuery, List<Map<String, String[]>> expectedResults, Map<String, Object> parameters) {
-        this.sqlQuery = sqlQuery;
+    private final String query;
+
+    static class NoParameters extends SqlConnectorTest {
+
+        public NoParameters(final ConnectionInfo info) {
+            super(info, "INSERT INTO ADDRESS (street, number) VALUES ('East Davie Street', 100)",
+                Collections.singletonList(Collections.singletonMap("ID", new String[] {"1"})), Collections.emptyMap());
+        }
+
+        @Test
+        @Override
+        public void sqlConnectorTest() throws Exception {
+            super.sqlConnectorTest();
+        }
+    }
+
+    static class WithParameters extends SqlConnectorTest {
+
+        public WithParameters(final ConnectionInfo info) {
+            super(info, "INSERT INTO ADDRESS (street, number) VALUES ('East Davie Street', 100)",
+                Collections.singletonList(Collections.singletonMap("ID", new String[] {"1"})), params());
+        }
+
+        @Test
+        @Override
+        public void sqlConnectorTest() throws Exception {
+            super.sqlConnectorTest();
+        }
+
+        private static Map<String, Object> params() {
+            final Map<String, Object> parameters = new HashMap<>();
+            parameters.put("number", 14);
+            parameters.put("street", "LaborInVain");
+
+            return parameters;
+        }
+    }
+
+    public SqlConnectorTest(final ConnectionInfo info, final String query, final List<Map<String, String[]>> expectedResults,
+        final Map<String, Object> parameters) {
+        super(info);
+        this.query = query;
         this.expectedResults = expectedResults;
         this.parameters = parameters;
     }
 
-    @Override
-    protected List<String> setupStatements() {
-        String dbProductName = null;
-        try {
-            dbProductName = db.connection.getMetaData().getDatabaseProductName();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Assertions.fail(e.getMessage());
-        }
-        if (DbEnum.POSTGRESQL.equals(DbEnum.fromName(dbProductName))) {
-            return Collections.singletonList("CREATE TABLE ADDRESS ("
-                    + "ID SERIAL PRIMARY KEY, "
-                    + "street VARCHAR(255), nummer INTEGER)");
-        } else if (DbEnum.MYSQL.equals(DbEnum.fromName(dbProductName))) {
-            return Collections.singletonList("CREATE TABLE ADDRESS ("
-                    + "ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
-                    + "street VARCHAR(255), nummer INTEGER)");
-        } else if (DbEnum.APACHE_DERBY.equals(DbEnum.fromName(dbProductName))) {
-            return Collections.singletonList("CREATE TABLE ADDRESS (ID INTEGER NOT NULL "
-                    + "GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
-                    + "street VARCHAR(255), number INTEGER)");
-        } else {
-            return Collections.singletonList("CREATE TABLE ADDRESS ("
-                    + "ID NUMBER GENERATED ALWAYS AS IDENTITY, "
-                    + "street VARCHAR(255), nummer INTEGER)");
-        }
-    }
+    public void sqlConnectorTest() throws Exception {
+        final List<String> jsonBeans = template().requestBody("direct:start", parameters, LIST_OF_STRINGS);
 
-    @Override
-    protected List<String> cleanupStatements() {
-        return Collections.singletonList("DROP TABLE ADDRESS");
+        assertThat(jsonBeans.isEmpty()).isEqualTo(expectedResults.isEmpty());
+
+        for (final Map<String, String[]> result : expectedResults) {
+            for (final Map.Entry<String, String[]> resultEntry : result.entrySet()) {
+                validateJson(jsonBeans, resultEntry.getKey(), resultEntry.getValue());
+            }
+        }
     }
 
     @Override
@@ -87,55 +123,10 @@ public class SqlConnectorTest extends SqlConnectorTestSupport {
                 builder -> builder.putConfiguredProperty("name", "start")),
             newSqlEndpointStep(
                 "sql-connector",
-                builder -> builder.putConfiguredProperty("query", sqlQuery)),
+                builder -> builder.putConfiguredProperty("query", query)),
             newSimpleEndpointStep(
                 "log",
-                builder -> builder.putConfiguredProperty("loggerName", "test"))
-        );
+                builder -> builder.putConfiguredProperty("loggerName", "test")));
     }
 
-    // **************************
-    // Parameters
-    // **************************
-
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("number", 14);
-        parameters.put("street", "LaborInVain");
-
-        return Arrays.asList(new Object[][] {
-                { "INSERT INTO ADDRESS (street, number) VALUES ('East Davie Street', 100)",
-                        Collections.singletonList(Collections.singletonMap("ID", new String[]{"1"})),
-                        Collections.emptyMap()},
-                { "INSERT INTO ADDRESS (street, number) VALUES (:#street, :#number)",
-                        Collections.singletonList(Collections.singletonMap("ID", new String[]{"1"})),
-                        parameters}
-        });
-    }
-
-    // **************************
-    // Tests
-    // **************************
-
-    @Test
-    public void sqlConnectorTest() throws Exception {
-        String body;
-        if (parameters.isEmpty()) {
-            body = null;
-        } else {
-            body = JSONBeanUtil.toJSONBean(parameters);
-        }
-
-        @SuppressWarnings("unchecked")
-        List<String> jsonBeans = template.requestBody("direct:start", body, List.class);
-
-        Assertions.assertEquals(expectedResults.isEmpty(), jsonBeans.isEmpty());
-
-        for (Map<String, String[]> result : expectedResults) {
-            for (Map.Entry<String, String[]> resultEntry : result.entrySet()) {
-                validateJson(jsonBeans, resultEntry.getKey(), resultEntry.getValue());
-            }
-        }
-    }
 }

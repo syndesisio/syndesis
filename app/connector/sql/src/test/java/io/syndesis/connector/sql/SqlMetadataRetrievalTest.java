@@ -18,10 +18,8 @@ package io.syndesis.connector.sql;
 import java.sql.JDBCType;
 import java.util.Arrays;
 
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
@@ -31,24 +29,14 @@ import com.fasterxml.jackson.module.jsonSchema.types.StringSchema;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class SqlMetadataRetrievalTest {
 
-    private final JDBCType jdbcType;
-
-    private final JsonSchema jsonSchema;
-
-    public SqlMetadataRetrievalTest(final JDBCType jdbcType, final JsonSchema jsonSchema) {
-        this.jdbcType = jdbcType;
-        this.jsonSchema = jsonSchema;
-    }
-
-    @Test
-    public void shouldGenerateExpectedSchema() {
+    @ParameterizedTest(name = "{index}: {0} -> {1}")
+    @MethodSource("expectedSchemasForColumnTypes")
+    public void shouldGenerateExpectedSchema(final JDBCType jdbcType, final JsonSchema jsonSchema) {
         assertThat(SqlMetadataRetrieval.schemaFor(jdbcType)).isEqualTo(jsonSchema);
     }
 
-    @Parameters(name = "{index}: {0} -> {1}")
     public static Iterable<Object[]> expectedSchemasForColumnTypes() {
         final JsonSchemaFactory factory = new JsonSchemaFactory();
 
