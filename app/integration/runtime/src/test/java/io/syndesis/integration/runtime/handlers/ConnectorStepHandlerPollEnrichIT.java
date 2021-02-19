@@ -68,6 +68,22 @@ public class ConnectorStepHandlerPollEnrichIT {
             .build())
         .build();
 
+    private static final ConnectorAction FTP_ACTION_FETCH_DYNAMIC = new ConnectorAction.Builder()
+        .id("io.syndesis.ftp:fetch-dynamic")
+        .pattern(Pattern.PollEnrich)
+        .descriptor(new ConnectorDescriptor.Builder()
+            .addConnectorCustomizer(TestCustomizer.class.getName())
+            .addPropertyDefinitionStep(new ActionDescriptorStep.Builder()
+                .putProperty("directory", new ConfigurationProperty.Builder()
+                    .kind("path")
+                    .build())
+                .putProperty("fileName", new ConfigurationProperty.Builder()
+                    .kind("proxyParameter")
+                    .build())
+                .build())
+            .build())
+        .build();
+
     private static final Connector FTP_CONNECTOR = new Connector.Builder()
         .id("ftp")
         .componentScheme("ftp")
@@ -128,7 +144,7 @@ public class ConnectorStepHandlerPollEnrichIT {
             });
             component.setAfterConsumer(exchange -> {
                 afterInvoked = true;
-                assertThat(exchange.getIn().getBody(String.class)).isEqualTo("Hi there");
+                assertThat(exchange.getIn().getBody(String.class)).matches("Hi .*");
             });
         }
     }
@@ -199,6 +215,77 @@ public class ConnectorStepHandlerPollEnrichIT {
         }
     }
 
+    @Test
+    public void shouldSupportDynamicEndpointParameters() throws Exception {
+        final DefaultCamelContext context = new DefaultCamelContext();
+
+        final PropertiesComponent propertiesComponent = new PropertiesComponent();
+
+        final Properties extra = new Properties();
+        extra.put("flow-0.ftp-2.password", "password");
+        propertiesComponent.setOverrideProperties(extra);
+
+        propertiesComponent.setInitialProperties(extra);
+        context.addComponent("properties", propertiesComponent);
+
+        try {
+            final RouteBuilder routes = newIntegrationRouteBuilder(
+                new Step.Builder()
+                    .stepKind(StepKind.endpoint)
+                    .action(TIMER_ACTION_PERIOD)
+                    .connection(
+                        new Connection.Builder()
+                            .connector(TIMER_CONNECTOR)
+                            .build())
+                    .putConfiguredProperty("period", "1000")
+                    .build(),
+                new Step.Builder()
+                    .stepKind(StepKind.headers)
+                    .putConfiguredProperty("action", "set")
+                    .putConfiguredProperty("CamelFileName", "dynamic.txt")
+                    .build(),
+                new Step.Builder()
+                    .stepKind(StepKind.endpoint)
+                    .action(FTP_ACTION_FETCH_DYNAMIC)
+                    .connection(
+                        new Connection.Builder()
+                            .connector(FTP_CONNECTOR)
+                            .putConfiguredProperty("username", "user")
+                            .putConfiguredProperty("password", "/*encrypted*/")
+                            .putConfiguredProperty("host", "localhost")
+                            .putConfiguredProperty("port", String.valueOf(port))
+                            .build())
+                    .putConfiguredProperty("directory", "/home/user")
+                    .putConfiguredProperty("fileName", "${header.CamelFileName}")
+                    .build(),
+                new Step.Builder()
+                    .stepKind(StepKind.endpoint)
+                    .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                            .componentScheme("mock")
+                            .putConfiguredProperty("name", "result")
+                            .build())
+                        .build())
+                    .build());
+
+            context.addRoutes(routes);
+            context.start();
+
+            final MockEndpoint result = (MockEndpoint) context.getEndpoints().stream().filter(e -> e instanceof MockEndpoint).findFirst().get();
+
+            MockEndpoint.assertWait(2, TimeUnit.SECONDS, result);
+
+            result.expectedBodiesReceived("Hi dynamic");
+
+            MockEndpoint.assertIsSatisfied(context);
+
+            assertThat(TestCustomizer.beforeInvoked).isTrue();
+            assertThat(TestCustomizer.afterInvoked).isTrue();
+        } finally {
+            context.stop();
+        }
+    }
+
     @BeforeClass
     public static void startFtpServer() {
         server = new FakeFtpServer();
@@ -208,6 +295,7 @@ public class ConnectorStepHandlerPollEnrichIT {
         final FileSystem files = new UnixFakeFileSystem();
         files.add(new DirectoryEntry("/home/user"));
         files.add(new FileEntry("/home/user/test.txt", "Hi there"));
+        files.add(new FileEntry("/home/user/dynamic.txt", "Hi dynamic"));
         server.setFileSystem(files);
 
         server.start();

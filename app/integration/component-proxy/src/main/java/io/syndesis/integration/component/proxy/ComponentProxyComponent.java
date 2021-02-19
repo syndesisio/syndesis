@@ -161,9 +161,6 @@ public class ComponentProxyComponent extends DefaultComponent {
         // in DefaultConnectorComponent.validateParameters()
         parameters.clear();
 
-        // remove temporary options
-        this.remainingOptions.clear();
-
         return answer;
     }
 
@@ -403,7 +400,7 @@ public class ComponentProxyComponent extends DefaultComponent {
         }
 
         // add extra options from remaining (context-path)
-        if (remaining != null) {
+        if (ObjectHelper.isNotEmpty(remaining)) {
             String targetUri = componentScheme + ":" + remaining;
             final Map<String, String> extra;
             try {
