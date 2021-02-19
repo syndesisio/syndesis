@@ -55,6 +55,7 @@ public interface ActionDescriptor {
 
     @JsonIgnore
     default Map<String, ActionDescriptorStep> getPropertyDefinitionStepsAsMap() {
-        return getPropertyDefinitionSteps().stream().collect(Collectors.toMap(p -> p.getName(), p -> p));
+        return getPropertyDefinitionSteps().stream().
+            collect(Collectors.toMap(ActionDescriptorStep::getName, p -> p));
     }
 }

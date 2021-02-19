@@ -25,7 +25,7 @@ import java.util.TreeSet;
  */
 public class TagFinder {
 
-    private final SortedSet<String> tags = new TreeSet<String>();
+    private final SortedSet<String> tags = new TreeSet<>();
 
     public TagFinder add(ListResult<? extends WithTags> items) {
         if (items.getItems()!=null) {

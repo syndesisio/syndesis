@@ -53,6 +53,7 @@ import io.fabric8.openshift.api.model.DeploymentConfig;
 public class TestSupportHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestSupportHandler.class);
+    public static final String WHITESPACE = "[\n|\r|\t]";
 
     private final DataManager dataMgr;
     private final List<DataAccessObject<?>> daos;
@@ -81,7 +82,7 @@ public class TestSupportHandler {
     public void resetDBToDefault() {
         // Replace pattern-breaking characters
         // https://owasp.org/www-community/attacks/Log_Injection
-        final String user = context.getRemoteUser().replaceAll("[\n|\r|\t]", "_");
+        final String user = context.getRemoteUser().replaceAll(WHITESPACE, "_");
         LOG.warn("user {} is resetting DB", user);
         // Deployments must be also deleted because we it is not possible to reach them after deleting DB.
         deleteDeployments();
@@ -99,7 +100,7 @@ public class TestSupportHandler {
     public void restoreDB(ModelData<?>... data) {
         // Replace pattern-breaking characters
         // https://owasp.org/www-community/attacks/Log_Injection
-        final String user = context.getRemoteUser().replaceAll("[\n|\r|\t]", "_");
+        final String user = context.getRemoteUser().replaceAll(WHITESPACE, "_");
         LOG.warn("user {} is restoring db state", user);
         resetDBToDefault();
         for (ModelData<?> modelData : data) {
@@ -113,7 +114,7 @@ public class TestSupportHandler {
     public void deleteDeployments() {
         // Replace pattern-breaking characters
         // https://owasp.org/www-community/attacks/Log_Injection
-        final String user = context.getRemoteUser().replaceAll("[\n|\r|\t]", "_");
+        final String user = context.getRemoteUser().replaceAll(WHITESPACE, "_");
         LOG.warn("user {} is deleting all integration deploymets", user);
         final List<DeploymentConfig> integrationDeployments = openShiftService.getDeploymentsByLabel(Collections.singletonMap(OpenShiftService.INTEGRATION_ID_LABEL, null));
         for (DeploymentConfig integrationDeployment : integrationDeployments) {
@@ -153,7 +154,7 @@ public class TestSupportHandler {
     public List<ModelData<? extends WithId<?>>> snapshotDB() {
         // Replace pattern-breaking characters
         // https://owasp.org/www-community/attacks/Log_Injection
-        LOG.info("user {} is making snapshot", context.getRemoteUser().replaceAll("[\n|\r|\t]", "_"));
+        LOG.info("user {} is making snapshot", context.getRemoteUser().replaceAll(WHITESPACE, "_"));
         ArrayList<ModelData<?>> result = new ArrayList<>();
         for (DataAccessObject<?> dao : daos) {
             ListResult<? extends WithId<?>> l = dao.fetchAll();
