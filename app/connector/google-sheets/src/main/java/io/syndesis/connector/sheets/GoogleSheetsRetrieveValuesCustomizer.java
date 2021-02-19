@@ -39,6 +39,10 @@ import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 public class GoogleSheetsRetrieveValuesCustomizer implements ComponentProxyCustomizer {
 
     private static final String ROW_PREFIX = "#";
+    public static final String SPREADSHEET_ID = "spreadsheetId";
+    public static final String MAJOR_DIMENSION = "majorDimension";
+    public static final String RANGE = "range";
+    public static final String COLUMN_NAMES = "columnNames";
 
     private String spreadsheetId;
     private String range;
@@ -53,10 +57,10 @@ public class GoogleSheetsRetrieveValuesCustomizer implements ComponentProxyCusto
     }
 
     private void setApiMethod(Map<String, Object> options) {
-        spreadsheetId = ConnectorOptions.extractOption(options, "spreadsheetId");
-        range = ConnectorOptions.extractOption(options, "range");
-        majorDimension = ConnectorOptions.extractOption(options, "majorDimension", RangeCoordinate.DIMENSION_ROWS);
-        columnNames = ConnectorOptions.extractOptionAndMap(options, "columnNames",
+        spreadsheetId = ConnectorOptions.extractOption(options, SPREADSHEET_ID);
+        range = ConnectorOptions.extractOption(options, RANGE);
+        majorDimension = ConnectorOptions.extractOption(options, MAJOR_DIMENSION, RangeCoordinate.DIMENSION_ROWS);
+        columnNames = ConnectorOptions.extractOptionAndMap(options, COLUMN_NAMES,
             names -> names.split(","), new String[]{});
         Arrays.parallelSetAll(columnNames, (i) -> columnNames[i].trim());
 
@@ -67,9 +71,9 @@ public class GoogleSheetsRetrieveValuesCustomizer implements ComponentProxyCusto
 
     private void beforeProducer(Exchange exchange) {
         final Message in = exchange.getIn();
-        in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "spreadsheetId", spreadsheetId);
-        in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "range", range);
-        in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "majorDimension", majorDimension);
+        in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + SPREADSHEET_ID, spreadsheetId);
+        in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + RANGE, range);
+        in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + MAJOR_DIMENSION, majorDimension);
     }
 
     private void afterProducer(Exchange exchange) throws JsonProcessingException {
@@ -95,7 +99,7 @@ public class GoogleSheetsRetrieveValuesCustomizer implements ComponentProxyCusto
             if (ObjectHelper.equal(RangeCoordinate.DIMENSION_ROWS, majorDimension)) {
                 for (List<Object> values : valueRange.getValues()) {
                     final Map<String, Object> model = new HashMap<>();
-                    model.put("spreadsheetId", spreadsheetId);
+                    model.put(SPREADSHEET_ID, spreadsheetId);
                     int columnIndex = rangeCoordinate.getColumnStartIndex();
                     for (Object value : values) {
                         model.put(CellCoordinate.getColumnName(columnIndex, rangeCoordinate.getColumnStartIndex(), columnNames), value);
@@ -106,7 +110,7 @@ public class GoogleSheetsRetrieveValuesCustomizer implements ComponentProxyCusto
             } else if (ObjectHelper.equal(RangeCoordinate.DIMENSION_COLUMNS, majorDimension)) {
                 for (List<Object> values : valueRange.getValues()) {
                     final Map<String, Object> model = new HashMap<>();
-                    model.put("spreadsheetId", spreadsheetId);
+                    model.put(SPREADSHEET_ID, spreadsheetId);
                     int rowIndex = rangeCoordinate.getRowStartIndex() + 1;
                     for (Object value : values) {
                         model.put(ROW_PREFIX + rowIndex, value);

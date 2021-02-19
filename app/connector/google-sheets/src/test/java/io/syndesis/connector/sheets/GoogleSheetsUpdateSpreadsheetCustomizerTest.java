@@ -46,6 +46,13 @@ import io.syndesis.connector.support.util.ConnectorOptions;
  */
 public class GoogleSheetsUpdateSpreadsheetCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
 
+    public static final String SYNDESIS_TEST = "SyndesisTest";
+    public static final String AMERICA_NEW_YORK = "America/New_York";
+    public static final String EN = "en";
+    public static final String TITLE_TIME_ZONE_LOCALE = "title,timeZone,locale";
+    public static final String SHEET_1 = "Sheet1";
+    public static final String SHEET_2 = "Sheet2";
+    public static final String TITLE = "title";
     private GoogleSheetsUpdateSpreadsheetCustomizer customizer;
 
     @Before
@@ -57,9 +64,9 @@ public class GoogleSheetsUpdateSpreadsheetCustomizerTest extends AbstractGoogleS
     public void testBeforeProducerFromOptions() throws Exception {
         Map<String, Object> options = new HashMap<>();
         options.put("spreadsheetId", getSpreadsheetId());
-        options.put("title", "SyndesisTest");
-        options.put("timeZone", "America/New_York");
-        options.put("locale", "en");
+        options.put(TITLE, SYNDESIS_TEST);
+        options.put("timeZone", AMERICA_NEW_YORK);
+        options.put("locale", EN);
 
         customizer.customize(getComponent(), options);
 
@@ -76,10 +83,10 @@ public class GoogleSheetsUpdateSpreadsheetCustomizerTest extends AbstractGoogleS
         Assert.assertEquals(1, batchUpdateRequest.getRequests().size());
 
         UpdateSpreadsheetPropertiesRequest updateSpreadsheetPropertiesRequest = batchUpdateRequest.getRequests().get(0).getUpdateSpreadsheetProperties();
-        Assert.assertEquals("title,timeZone,locale", updateSpreadsheetPropertiesRequest.getFields());
-        Assert.assertEquals("SyndesisTest", updateSpreadsheetPropertiesRequest.getProperties().getTitle());
-        Assert.assertEquals("America/New_York", updateSpreadsheetPropertiesRequest.getProperties().getTimeZone());
-        Assert.assertEquals("en", updateSpreadsheetPropertiesRequest.getProperties().getLocale());
+        Assert.assertEquals(TITLE_TIME_ZONE_LOCALE, updateSpreadsheetPropertiesRequest.getFields());
+        Assert.assertEquals(SYNDESIS_TEST, updateSpreadsheetPropertiesRequest.getProperties().getTitle());
+        Assert.assertEquals(AMERICA_NEW_YORK, updateSpreadsheetPropertiesRequest.getProperties().getTimeZone());
+        Assert.assertEquals(EN, updateSpreadsheetPropertiesRequest.getProperties().getLocale());
     }
 
     @Test
@@ -90,17 +97,17 @@ public class GoogleSheetsUpdateSpreadsheetCustomizerTest extends AbstractGoogleS
 
         GoogleSpreadsheet model = new GoogleSpreadsheet();
         model.setSpreadsheetId(getSpreadsheetId());
-        model.setTitle("SyndesisTest");
-        model.setTimeZone("America/New_York");
-        model.setLocale("en");
+        model.setTitle(SYNDESIS_TEST);
+        model.setTimeZone(AMERICA_NEW_YORK);
+        model.setLocale(EN);
 
         GoogleSheet sheet1 = new GoogleSheet();
-        sheet1.setTitle("Sheet1");
+        sheet1.setTitle(SHEET_1);
         sheet1.setSheetId(1);
         sheet1.setIndex(1);
 
         GoogleSheet sheet2 = new GoogleSheet();
-        sheet2.setTitle("Sheet2");
+        sheet2.setTitle(SHEET_2);
         sheet2.setSheetId(2);
 
         model.setSheets(Arrays.asList(sheet1, sheet2));
@@ -115,22 +122,22 @@ public class GoogleSheetsUpdateSpreadsheetCustomizerTest extends AbstractGoogleS
         Assert.assertEquals(3, batchUpdateRequest.getRequests().size());
 
         UpdateSpreadsheetPropertiesRequest updateSpreadsheetPropertiesRequest = batchUpdateRequest.getRequests().get(0).getUpdateSpreadsheetProperties();
-        Assert.assertEquals("title,timeZone,locale", updateSpreadsheetPropertiesRequest.getFields());
-        Assert.assertEquals("SyndesisTest", updateSpreadsheetPropertiesRequest.getProperties().getTitle());
-        Assert.assertEquals("America/New_York", updateSpreadsheetPropertiesRequest.getProperties().getTimeZone());
-        Assert.assertEquals("en", updateSpreadsheetPropertiesRequest.getProperties().getLocale());
+        Assert.assertEquals(TITLE_TIME_ZONE_LOCALE, updateSpreadsheetPropertiesRequest.getFields());
+        Assert.assertEquals(SYNDESIS_TEST, updateSpreadsheetPropertiesRequest.getProperties().getTitle());
+        Assert.assertEquals(AMERICA_NEW_YORK, updateSpreadsheetPropertiesRequest.getProperties().getTimeZone());
+        Assert.assertEquals(EN, updateSpreadsheetPropertiesRequest.getProperties().getLocale());
 
         UpdateSheetPropertiesRequest updateSheetPropertiesRequest = batchUpdateRequest.getRequests().get(1).getUpdateSheetProperties();
-        Assert.assertEquals("title", updateSheetPropertiesRequest.getFields());
+        Assert.assertEquals(TITLE, updateSheetPropertiesRequest.getFields());
         Assert.assertEquals(Integer.valueOf(1), updateSheetPropertiesRequest.getProperties().getIndex());
         Assert.assertEquals(Integer.valueOf(1), updateSheetPropertiesRequest.getProperties().getSheetId());
-        Assert.assertEquals("Sheet1", updateSheetPropertiesRequest.getProperties().getTitle());
+        Assert.assertEquals(SHEET_1, updateSheetPropertiesRequest.getProperties().getTitle());
 
         updateSheetPropertiesRequest = batchUpdateRequest.getRequests().get(2).getUpdateSheetProperties();
-        Assert.assertEquals("title", updateSheetPropertiesRequest.getFields());
+        Assert.assertEquals(TITLE, updateSheetPropertiesRequest.getFields());
         Assert.assertNull(updateSheetPropertiesRequest.getProperties().getIndex());
         Assert.assertEquals(Integer.valueOf(2), updateSheetPropertiesRequest.getProperties().getSheetId());
-        Assert.assertEquals("Sheet2", updateSheetPropertiesRequest.getProperties().getTitle());
+        Assert.assertEquals(SHEET_2, updateSheetPropertiesRequest.getProperties().getTitle());
     }
 
     @Test
@@ -145,14 +152,14 @@ public class GoogleSheetsUpdateSpreadsheetCustomizerTest extends AbstractGoogleS
         Spreadsheet spreadsheet = new Spreadsheet();
         spreadsheet.setSpreadsheetId(getSpreadsheetId());
         SpreadsheetProperties spreadsheetProperties = new SpreadsheetProperties();
-        spreadsheetProperties.setTitle("SyndesisTest");
-        spreadsheetProperties.setTimeZone("America/New_York");
-        spreadsheetProperties.setLocale("en");
+        spreadsheetProperties.setTitle(SYNDESIS_TEST);
+        spreadsheetProperties.setTimeZone(AMERICA_NEW_YORK);
+        spreadsheetProperties.setLocale(EN);
         spreadsheet.setProperties(spreadsheetProperties);
 
         Sheet sheet = new Sheet();
         SheetProperties sheetProperties = new SheetProperties();
-        sheetProperties.setTitle("Sheet1");
+        sheetProperties.setTitle(SHEET_1);
         sheetProperties.setSheetId(1);
         sheetProperties.setIndex(1);
         sheet.setProperties(sheetProperties);
@@ -166,12 +173,12 @@ public class GoogleSheetsUpdateSpreadsheetCustomizerTest extends AbstractGoogleS
 
         GoogleSpreadsheet model = (GoogleSpreadsheet) inbound.getIn().getBody();
         Assert.assertEquals(getSpreadsheetId(), model.getSpreadsheetId());
-        Assert.assertEquals("SyndesisTest", model.getTitle());
-        Assert.assertEquals("America/New_York", model.getTimeZone());
-        Assert.assertEquals("en", model.getLocale());
+        Assert.assertEquals(SYNDESIS_TEST, model.getTitle());
+        Assert.assertEquals(AMERICA_NEW_YORK, model.getTimeZone());
+        Assert.assertEquals(EN, model.getLocale());
 
         Assert.assertEquals(1, model.getSheets().size());
-        Assert.assertEquals("Sheet1", model.getSheets().get(0).getTitle());
+        Assert.assertEquals(SHEET_1, model.getSheets().get(0).getTitle());
         Assert.assertEquals(Integer.valueOf(1), model.getSheets().get(0).getSheetId());
         Assert.assertEquals(Integer.valueOf(1), model.getSheets().get(0).getIndex());
     }

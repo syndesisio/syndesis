@@ -48,6 +48,10 @@ import java.util.Set;
 public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
 
     static final ObjectMapper MAPPER = io.atlasmap.v2.Json.mapper();
+    public static final String FHIR = "FHIR ";
+    public static final String CA_UHN_FHIR_REST_API_METHOD_OUTCOME = "ca.uhn.fhir.rest.api.MethodOutcome";
+    public static final String RESOURCE_TYPE = "resourceType";
+    public static final String CONTAINED_RESOURCE_TYPES = "containedResourceTypes";
 
     /**
      * TODO: use local extension, remove when switching to camel 2.22.x
@@ -63,10 +67,10 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
         if (actionId.contains("transaction")) {
             //Transaction is not part of the FHIR spec, but we use it as a workaround for DataMapper to include
             //a number of resources in a transaction, because the DataMapper support for lists and choice fields is limited.
-            properties.put("resourceType", "Transaction");
+            properties.put(RESOURCE_TYPE, "Transaction");
         }
 
-        if (!properties.containsKey("resourceType")) {
+        if (!properties.containsKey(RESOURCE_TYPE)) {
             return SyndesisMetadata.EMPTY;
         }
 
@@ -76,10 +80,10 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
             t -> resourceTypeResult.add(new PropertyPair(t, t))
         );
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
-        enrichedProperties.put("resourceType",resourceTypeResult);
-        enrichedProperties.put("containedResourceTypes", resourceTypeResult);
+        enrichedProperties.put(RESOURCE_TYPE,resourceTypeResult);
+        enrichedProperties.put(CONTAINED_RESOURCE_TYPES, resourceTypeResult);
 
-        if (ObjectHelper.isNotEmpty(ConnectorOptions.extractOption(properties, "resourceType"))) {
+        if (ObjectHelper.isNotEmpty(ConnectorOptions.extractOption(properties, RESOURCE_TYPE))) {
             return createSyndesisMetadata(actionId, properties, enrichedProperties);
         }
 
@@ -87,19 +91,19 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
     }
 
     private static SyndesisMetadata createSyndesisMetadata(String actionId, Map<String, Object> properties, Map<String, List<PropertyPair>> enrichedProperties) {
-        String containedResourceTypes = ConnectorOptions.extractOption(properties, "containedResourceTypes");
-        String type = ConnectorOptions.extractOption(properties, "resourceType");
+        String containedResourceTypes = ConnectorOptions.extractOption(properties, CONTAINED_RESOURCE_TYPES);
+        String type = ConnectorOptions.extractOption(properties, RESOURCE_TYPE);
 
         if (actionId.contains("read")) {
             return new SyndesisMetadata(
                 enrichedProperties,
                 new DataShape.Builder().kind(DataShapeKinds.JAVA)//
                     .type(FhirResourceId.class.getName())
-                    .description("FHIR " + actionId)
+                    .description(FHIR + actionId)
                     .name(actionId).build(),
                 new DataShape.Builder().kind(DataShapeKinds.XML_SCHEMA_INSPECTED)//
                     .type(type)
-                    .description("FHIR " + type)
+                    .description(FHIR + type)
                     .specification(newResourceSpecification(type, containedResourceTypes))
                     .name(type).build());
         } else if (actionId.contains("search")) {
@@ -107,11 +111,11 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
                 enrichedProperties,
                 new DataShape.Builder().kind(DataShapeKinds.JAVA)
                     .type(FhirResourceQuery.class.getName())
-                    .description("FHIR " + actionId)
+                    .description(FHIR + actionId)
                     .name(actionId).build(),
                 new DataShape.Builder().kind(DataShapeKinds.XML_SCHEMA_INSPECTED)//
                     .type(type)
-                    .description("FHIR " + type)
+                    .description(FHIR + type)
                     .specification(newResourceSpecification(type, containedResourceTypes))
                     .name(type).build());
         } else if (actionId.contains("delete")) {
@@ -119,11 +123,11 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
                 enrichedProperties,
                 new DataShape.Builder().kind(DataShapeKinds.JAVA)//
                     .type(FhirResourceId.class.getName())
-                    .description("FHIR " + actionId)
+                    .description(FHIR + actionId)
                     .name(actionId).build(),
                 new DataShape.Builder().kind(DataShapeKinds.JAVA)//
-                    .type("ca.uhn.fhir.rest.api.MethodOutcome")
-                    .description("FHIR " + actionId)
+                    .type(CA_UHN_FHIR_REST_API_METHOD_OUTCOME)
+                    .description(FHIR + actionId)
                     .name(actionId).build());
         } else if (actionId.contains("patch")) {
             Integer operationNumber = ConnectorOptions.extractOptionAndMap(
@@ -133,11 +137,11 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
                 new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA)//
                     .type(type)
                     .specification(newPatchSpecification(operationNumber))
-                    .description("FHIR " + actionId)
+                    .description(FHIR + actionId)
                     .name(actionId).build(),
                 new DataShape.Builder().kind(DataShapeKinds.JAVA)//
-                    .type("ca.uhn.fhir.rest.api.MethodOutcome")
-                    .description("FHIR " + actionId)
+                    .type(CA_UHN_FHIR_REST_API_METHOD_OUTCOME)
+                    .description(FHIR + actionId)
                     .name(actionId).build());
         } else if (actionId.contains("transaction")) {
             String specification = newResourceSpecification(type, containedResourceTypes);
@@ -145,12 +149,12 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
                 enrichedProperties,
                 new DataShape.Builder().kind(DataShapeKinds.XML_SCHEMA_INSPECTED)//
                     .type(type)
-                    .description("FHIR " + type)
+                    .description(FHIR + type)
                     .specification(specification)
                     .name(type).build(),
                 new DataShape.Builder().kind(DataShapeKinds.XML_SCHEMA_INSPECTED)//
                     .type(type)
-                    .description("FHIR " + type)
+                    .description(FHIR + type)
                     .specification(specification)
                     .name(actionId).build());
         } else {
@@ -159,12 +163,12 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
                 enrichedProperties,
                 new DataShape.Builder().kind(DataShapeKinds.XML_SCHEMA_INSPECTED)//
                     .type(type)
-                    .description("FHIR " + type)
+                    .description(FHIR + type)
                     .specification(newResourceSpecification(type, containedResourceTypes))
                     .name(type).build(),
                 new DataShape.Builder().kind(DataShapeKinds.JAVA)//
-                    .type("ca.uhn.fhir.rest.api.MethodOutcome")
-                    .description("FHIR " + actionId)
+                    .type(CA_UHN_FHIR_REST_API_METHOD_OUTCOME)
+                    .description(FHIR + actionId)
                     .name(actionId).build());
         }
     }

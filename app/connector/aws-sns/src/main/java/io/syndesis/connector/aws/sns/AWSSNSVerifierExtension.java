@@ -37,6 +37,10 @@ import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class AWSSNSVerifierExtension extends DefaultComponentVerifierExtension {
 
+    public static final String SECRET_KEY = "secretKey";
+    public static final String ACCESS_KEY = "accessKey";
+    public static final String REGION = "region";
+
     protected AWSSNSVerifierExtension(String defaultScheme, CamelContext context) {
         super(defaultScheme, context);
     }
@@ -49,14 +53,14 @@ public class AWSSNSVerifierExtension extends DefaultComponentVerifierExtension {
     @Override
     protected Result verifyParameters(Map<String, Object> parameters) {
 
-        ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS).error(ResultErrorHelper.requiresOption("accessKey", parameters))
-            .error(ResultErrorHelper.requiresOption("secretKey", parameters)).error(ResultErrorHelper.requiresOption("region", parameters));
+        ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS).error(ResultErrorHelper.requiresOption(ACCESS_KEY, parameters))
+            .error(ResultErrorHelper.requiresOption(SECRET_KEY, parameters)).error(ResultErrorHelper.requiresOption(REGION, parameters));
 
         // Validate using the catalog
 
-        if (ObjectHelper.isEmpty(ConnectorOptions.extractOption(parameters, "secretKey")) || ObjectHelper.isEmpty(ConnectorOptions.extractOption(parameters, "accessKey"))) {
+        if (ObjectHelper.isEmpty(ConnectorOptions.extractOption(parameters, SECRET_KEY)) || ObjectHelper.isEmpty(ConnectorOptions.extractOption(parameters, ACCESS_KEY))) {
             builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.GENERIC,
-                    "You must specify a secretKey and an accessKey").parameterKey("secretKey").parameterKey("accessKey").build());
+                "You must specify a secretKey and an accessKey").parameterKey(SECRET_KEY).parameterKey(ACCESS_KEY).build());
         }
 
         return builder.build();

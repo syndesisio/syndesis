@@ -32,6 +32,11 @@ import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifierExtension {
     private static final Logger LOG = LoggerFactory.getLogger(ActiveMQConnectorVerifierExtension.class);
+    public static final String BROKER_URL = "brokerUrl";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
+    public static final String BROKER_CERTIFICATE = "brokerCertificate";
+    public static final String CLIENT_CERTIFICATE = "clientCertificate";
 
     public ActiveMQConnectorVerifierExtension(CamelContext camelContext) {
         super("activemq-connector", camelContext);
@@ -44,7 +49,7 @@ public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifier
     @Override
     protected Result verifyParameters(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
-            .error(ResultErrorHelper.requiresOption("brokerUrl", parameters));
+            .error(ResultErrorHelper.requiresOption(BROKER_URL, parameters));
 
         if (builder.build().getErrors().isEmpty()) {
             verifyCredentials(builder, parameters);
@@ -65,13 +70,13 @@ public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifier
     }
 
     private static void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
-        final String brokerUrl = ConnectorOptions.extractOption(parameters, "brokerUrl");
-        final String username = ConnectorOptions.extractOption(parameters, "username");
-        final String password = ConnectorOptions.extractOption(parameters, "password");
+        final String brokerUrl = ConnectorOptions.extractOption(parameters, BROKER_URL);
+        final String username = ConnectorOptions.extractOption(parameters, USERNAME);
+        final String password = ConnectorOptions.extractOption(parameters, PASSWORD);
         final boolean skipCertificateCheck = ConnectorOptions.extractOptionAndMap(parameters,
             "skipCertificateCheck", Boolean::parseBoolean, false);
-        final String brokerCertificate = ConnectorOptions.extractOption(parameters, "brokerCertificate");
-        final String clientCertificate = ConnectorOptions.extractOption(parameters, "clientCertificate");
+        final String brokerCertificate = ConnectorOptions.extractOption(parameters, BROKER_CERTIFICATE);
+        final String clientCertificate = ConnectorOptions.extractOption(parameters, CLIENT_CERTIFICATE);
 
         LOG.debug("Validating AMQ connection to {}", brokerUrl);
 
@@ -90,15 +95,15 @@ public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifier
             connection.start();
         } catch (JMSException e) {
             final Map<String, Object> redacted = new HashMap<>(parameters);
-            redacted.replace("password", "********");
+            redacted.replace(PASSWORD, "********");
 
             LOG.warn("Unable to connect to ActiveMQ Broker with parameters {}, Message: {}, error code: {}",
                 redacted, e.getMessage(), e.getErrorCode(), e);
 
             builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, e.getMessage())
-                .parameterKey("brokerUrl")
-                .parameterKey("username")
-                .parameterKey("password")
+                .parameterKey(BROKER_URL)
+                .parameterKey(USERNAME)
+                .parameterKey(PASSWORD)
                 .build());
         } finally {
             if (connection != null) {

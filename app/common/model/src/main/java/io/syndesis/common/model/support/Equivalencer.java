@@ -37,6 +37,12 @@ import io.syndesis.common.util.StringConstants;
 public class Equivalencer implements StringConstants {
 
     static final Object NULL = "null";
+    public static final String CONFIGURED_PROPERTIES = "configured-properties";
+    public static final String DEPENDENCIES = "dependencies";
+    public static final String METADATA = "metadata";
+    public static final String NAME = "name";
+    public static final String ID = "id";
+    public static final String DESCRIPTION = "description";
 
     private Deque<EquivContext> failureContext;
 
@@ -234,11 +240,11 @@ public class Equivalencer implements StringConstants {
 
         return compare(one.getName(), one.getClass(),
                        pair(one.getStepKind(), another.getStepKind(), "step-kind"),
-                       pair(one.getName(), another.getName(), "name"),
-                       pair(one.getId(), another.getId(), "id"),
-                       pair(one.getConfiguredProperties(), another.getConfiguredProperties(), "configured-properties"),
-                       pair(one.getDependencies(), another.getDependencies(), "dependencies"),
-                       pair(one.getMetadata(), another.getMetadata(), "metadata"));
+                       pair(one.getName(), another.getName(), NAME),
+                       pair(one.getId(), another.getId(), ID),
+                       pair(one.getConfiguredProperties(), another.getConfiguredProperties(), CONFIGURED_PROPERTIES),
+                       pair(one.getDependencies(), another.getDependencies(), DEPENDENCIES),
+                       pair(one.getMetadata(), another.getMetadata(), METADATA));
     }
 
     /**
@@ -288,16 +294,16 @@ public class Equivalencer implements StringConstants {
                        pair(one.getSchemaVersion(), another.getSchemaVersion(), "schema-version"),
                        pair(one.getStatus(), another.getStatus(), "status"),
                        pair(one.getIcon(), another.getIcon(), "icon"),
-                       pair(one.getDescription(), another.getDescription(), "description"),
+                       pair(one.getDescription(), another.getDescription(), DESCRIPTION),
                        pair(one.getUserId(), another.getUserId(), "user-id"),
                        pair(one.getExtensionType(), another.getExtensionType(), "extension-type"),
-                       pair(one.getId(), another.getId(), "id"),
-                       pair(one.getName(), another.getName(), "name"),
+                       pair(one.getId(), another.getId(), ID),
+                       pair(one.getName(), another.getName(), NAME),
                        pair(one.getTags(), another.getTags(), "tags"),
                        pair(one.getProperties(), another.getProperties(), "properties"),
-                       pair(one.getConfiguredProperties(), another.getConfiguredProperties(), "configured-properties"),
-                       pair(one.getDependencies(), another.getDependencies(), "dependencies"),
-                       pair(one.getMetadata(), another.getMetadata(), "metadata"));
+                       pair(one.getConfiguredProperties(), another.getConfiguredProperties(), CONFIGURED_PROPERTIES),
+                       pair(one.getDependencies(), another.getDependencies(), DEPENDENCIES),
+                       pair(one.getMetadata(), another.getMetadata(), METADATA));
     }
 
     /**
@@ -348,11 +354,11 @@ public class Equivalencer implements StringConstants {
         }
 
         return compare(one.getName(), one.getClass(),
-                       pair(one.getKind(), another.getKind(), "id"),
+                       pair(one.getKind(), another.getKind(), ID),
                        pair(one.getResources(), another.getResources(), "resources"),
                        pair(one.getTags(), another.getTags(), "tags"),
-                       pair(one.getDescription(), another.getDescription(), "description"),
-                       pair(one.getName(), another.getName(), "name"));
+                       pair(one.getDescription(), another.getDescription(), DESCRIPTION),
+                       pair(one.getName(), another.getName(), NAME));
     }
 
     /**
@@ -398,10 +404,10 @@ public class Equivalencer implements StringConstants {
         }
 
         return compare(one.getName(), one.getClass(),
-                       pair(one.getId(), another.getId(), "id"),
-                       pair(one.getDescription(), another.getDescription(), "description"),
+                       pair(one.getId(), another.getId(), ID),
+                       pair(one.getDescription(), another.getDescription(), DESCRIPTION),
                        pair(one.getTags(), another.getTags(), "tags"),
-                       pair(one.getName(), another.getName(), "name"));
+                       pair(one.getName(), another.getName(), NAME));
     }
 
     /**
@@ -446,18 +452,18 @@ public class Equivalencer implements StringConstants {
         }
 
         return compare(one.getName(), one.getClass(),
-                       pair(one.getId(), another.getId(), "id"),
+                       pair(one.getId(), another.getId(), ID),
                        pair(one.getOrganization(), another.getOrganization(), "organization"),
                        pair(one.getOrganizationId(), another.getOrganizationId(), "organization-id"),
                        pair(one.getConnectorId(), another.getConnectorId(), "connector-id"),
                        pair(one.getOptions(), another.getOptions(), "options"),
                        pair(one.getIcon(), another.getIcon(), "icon"),
-                       pair(one.getDescription(), another.getDescription(), "description"),
+                       pair(one.getDescription(), another.getDescription(), DESCRIPTION),
                        pair(one.getUserId(), another.getUserId(), "user-id"),
                        pair(one.isDerived(), another.isDerived(), "is-derived"),
                        pair(one.getTags(), another.getTags(), "tags"),
-                       pair(one.getName(), another.getName(), "name"),
-                       pair(one.getConfiguredProperties(), another.getConfiguredProperties(), "configured-properties"));
+                       pair(one.getName(), another.getName(), NAME),
+                       pair(one.getConfiguredProperties(), another.getConfiguredProperties(), CONFIGURED_PROPERTIES));
     }
 
     /**
@@ -507,20 +513,20 @@ public class Equivalencer implements StringConstants {
         return compare(one.getName(), one.getClass(),
                        pair(one.getConnectorGroup(), another.getConnectorGroup(), "connector-group"),
                        pair(one.getConnectorGroupId(), another.getConnectorGroupId(), "connector-group-id"),
-                       pair(one.getDescription(), another.getDescription(), "description"),
+                       pair(one.getDescription(), another.getDescription(), DESCRIPTION),
                        pair(one.getIcon(), another.getIcon(), "icon"),
                        pair(one.getKind(), another.getKind(), "kind"),
                        pair(one.getComponentScheme(), another.getComponentScheme(), "component-schema"),
                        pair(one.getConnectorFactory(), another.getConnectorFactory(), "connector-factory"),
                        pair(one.getConnectorCustomizers(), another.getConnectorCustomizers(), "connector-customizers"),
                        pair(one.getExceptionHandler(), another.getExceptionHandler(), "exception-handler"),
-                       pair(one.getId(), another.getId(), "id"),
+                       pair(one.getId(), another.getId(), ID),
                        pair(one.getTags(), another.getTags(), "tags"),
-                       pair(one.getName(), another.getName(), "name"),
+                       pair(one.getName(), another.getName(), NAME),
                        pair(one.getProperties(), another.getProperties(), "properties"),
-                       pair(one.getConfiguredProperties(), another.getConfiguredProperties(), "configured-properties"),
-                       pair(one.getDependencies(), another.getDependencies(), "dependencies"),
-                       pair(one.getMetadata(), another.getMetadata(), "metadata"));
+                       pair(one.getConfiguredProperties(), another.getConfiguredProperties(), CONFIGURED_PROPERTIES),
+                       pair(one.getDependencies(), another.getDependencies(), DEPENDENCIES),
+                       pair(one.getMetadata(), another.getMetadata(), METADATA));
     }
 
     /**
@@ -622,12 +628,12 @@ public class Equivalencer implements StringConstants {
 
         return compare(one.getName(), one.getClass(),
                        pair(one.getActionType(), another.getActionType(), "action-type"),
-                       pair(one.getDescription(), another.getDescription(), "description"),
+                       pair(one.getDescription(), another.getDescription(), DESCRIPTION),
                        pair(one.getPattern(), another.getPattern(), "pattern"),
-                       pair(one.getId(), another.getId(), "id"),
-                       pair(one.getName(), another.getName(), "name"),
+                       pair(one.getId(), another.getId(), ID),
+                       pair(one.getName(), another.getName(), NAME),
                        pair(one.getTags(), another.getTags(), "tags"),
-                       pair(one.getMetadata(), another.getMetadata(), "metadata"));
+                       pair(one.getMetadata(), another.getMetadata(), METADATA));
     }
 
     /**
@@ -673,12 +679,12 @@ public class Equivalencer implements StringConstants {
 
         return compare(one.getName(), one.getClass(),
                        pair(one.getActionType(), another.getActionType(), "action-type"),
-                       pair(one.getDescription(), another.getDescription(), "description"),
+                       pair(one.getDescription(), another.getDescription(), DESCRIPTION),
                        pair(one.getPattern(), another.getPattern(), "pattern"),
-                       pair(one.getId(), another.getId(), "id"),
-                       pair(one.getName(), another.getName(), "name"),
+                       pair(one.getId(), another.getId(), ID),
+                       pair(one.getName(), another.getName(), NAME),
                        pair(one.getTags(), another.getTags(), "tags"),
-                       pair(one.getMetadata(), another.getMetadata(), "metadata"));
+                       pair(one.getMetadata(), another.getMetadata(), METADATA));
     }
 
     /**
@@ -779,6 +785,6 @@ public class Equivalencer implements StringConstants {
                        pair(one.getInputDataShape(), another.getInputDataShape(), "input-data-shape"),
                        pair(one.getOutputDataShape(), another.getOutputDataShape(), "output-data-shape"),
                        pair(one.getPropertyDefinitionSteps(), another.getPropertyDefinitionSteps(), "property-defn-steps"),
-                       pair(one.getConfiguredProperties(), another.getConfiguredProperties(), "configured-properties"));
+                       pair(one.getConfiguredProperties(), another.getConfiguredProperties(), CONFIGURED_PROPERTIES));
     }
 }
