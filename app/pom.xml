@@ -80,7 +80,7 @@
 
     <maven.version>3.5.4</maven.version>
 
-    <errorprone.version>2.3.3</errorprone.version>
+    <errorprone.version>2.5.1</errorprone.version>
     <commons.compress.version>1.20</commons.compress.version>
 
     <!-- opentracing dependencies -->
