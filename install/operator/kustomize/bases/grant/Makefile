@@ -1,15 +1,23 @@
 ASSETS := ../../../pkg/generator/assets
-GRANT := ./grant.yml
-GRANT_JAEGER := ./grant-jaeger.yml
-GRANT_KAFKA := ./grant-kafka.yml
-GRANT_OLM := ./grant-olm.yml
-GRANT_PUBLIC_API := ./grant-public-api.yml
+TMPL := tmpl
+YAML := yaml
+NAMESPACE_VAR := {NAMESPACE}
+USER_VAR := {KUBE_USER}
+
+ROLENAME := syndesis-operator
+GRANT := ./grant.gen
+GRANT_JAEGER := ./grant-jaeger.gen
+GRANT_KAFKA := ./grant-kafka.gen
+GRANT_OLM := ./grant-olm.gen
+GRANT_PUBLIC_API := ./grant-public-api.gen
+
+# User customisable variables
 KUBE_USER ?= developer
 NAMESPACE ?= syndesis
-ROLENAME ?= syndesis-operator
 
-.PHONY: sync
+.PHONY: sync init
 
+# start-sync
 #
 # Copy the go template from the src directory
 # Convert the go template to a formatted yaml file:
@@ -17,25 +25,33 @@ ROLENAME ?= syndesis-operator
 # - Delete any if & end codeword lines
 #
 sync:
-	cp $(ASSETS)/install/grant/grant_role.yml.tmpl $(GRANT)
-	sed -i 's/{{ .Kind }}/Role/' $(GRANT)
-	sed -i 's/{{ .Role }}/$(ROLENAME)/' $(GRANT)
-	sed -i 's/{{ .User }}/$(KUBE_USER)/' $(GRANT)
-	sed -i 's/{{ .Namespace }}/$(NAMESPACE)/' $(GRANT)
-	sed -i '/{{- if\|{{- end/d' $(GRANT)
-	cp $(ASSETS)/install/grant/grant_cluster_role_jaeger.yml.tmpl $(GRANT_JAEGER)
-	sed -i '/^{{\|^$$/d' $(GRANT_JAEGER)
-	sed -i 's/^- /\n---\n/' $(GRANT_JAEGER)
-	sed -i 's/^  //' $(GRANT_JAEGER)
-	sed -i 's/{{ .Namespace }}/$(NAMESPACE)/' $(GRANT_JAEGER)
-	sed -i 's/{{ .User }}/$(KUBE_USER)/' $(GRANT_JAEGER)
-	cp $(ASSETS)/install/grant/grant_cluster_role_kafka.yml.tmpl $(GRANT_KAFKA)
-	sed -i 's/{{ .Namespace }}/$(NAMESPACE)/' $(GRANT_KAFKA)
-	cp $(ASSETS)/install/grant/grant_cluster_role_olm.yml.tmpl $(GRANT_OLM)
-	sed -i '/^{{\|^$$/d' $(GRANT_OLM)
-	sed -i 's/^- /\n---\n/' $(GRANT_OLM)
-	sed -i 's/^  //' $(GRANT_OLM)
-	sed -i 's/{{ .Role }}/$(ROLENAME)/' $(GRANT_OLM)
-	sed -i 's/{{ .User }}/$(KUBE_USER)/' $(GRANT_OLM)
-	cp $(ASSETS)/install/grant/grant_cluster_role_public_api.yml.tmpl $(GRANT_PUBLIC_API)
-	sed -i 's/{{.Namespace}}/$(NAMESPACE)/' $(GRANT_PUBLIC_API)
+	cp $(ASSETS)/install/grant/grant_role.yml.tmpl $(GRANT).$(TMPL)
+	sed -i 's/{{ .Kind }}/Role/' $(GRANT).$(TMPL)
+	sed -i 's/{{ .Role }}/$(ROLENAME)/' $(GRANT).$(TMPL)
+	sed -i 's/{{ .User }}/$(USER_VAR)/' $(GRANT).$(TMPL)
+	sed -i 's/{{ .Namespace }}/$(NAMESPACE_VAR)/' $(GRANT).$(TMPL)
+	sed -i '/{{- if\|{{- end/d' $(GRANT).$(TMPL)
+	cp $(ASSETS)/install/grant/grant_cluster_role_jaeger.yml.tmpl $(GRANT_JAEGER).$(TMPL)
+	sed -i 's/{{ .User }}/$(USER_VAR)/' $(GRANT_JAEGER).$(TMPL)
+	sed -i 's/{{ .Namespace }}/$(NAMESPACE_VAR)/' $(GRANT_JAEGER).$(TMPL)
+	sed -i '/^{{\|^$$/d' $(GRANT_JAEGER).$(TMPL)
+	sed -i 's/^- /\n---\n/' $(GRANT_JAEGER).$(TMPL)
+	sed -i 's/^  //' $(GRANT_JAEGER).$(TMPL)
+	cp $(ASSETS)/install/grant/grant_cluster_role_kafka.yml.tmpl $(GRANT_KAFKA).$(TMPL)
+	sed -i 's/{{ .Namespace }}/$(NAMESPACE_VAR)/' $(GRANT_KAFKA).$(TMPL)
+	cp $(ASSETS)/install/grant/grant_cluster_role_olm.yml.tmpl $(GRANT_OLM).$(TMPL)
+	sed -i 's/{{ .Role }}/$(ROLENAME)/' $(GRANT_OLM).$(TMPL)
+	sed -i 's/{{ .User }}/$(USER_VAR)/' $(GRANT_OLM).$(TMPL)
+	sed -i '/^{{\|^$$/d' $(GRANT_OLM).$(TMPL)
+	sed -i 's/^- /\n---\n/' $(GRANT_OLM).$(TMPL)
+	sed -i 's/^  //' $(GRANT_OLM).$(TMPL)
+	cp $(ASSETS)/install/grant/grant_cluster_role_public_api.yml.tmpl $(GRANT_PUBLIC_API).$(TMPL)
+	sed -i 's/{{.Namespace}}/$(NAMESPACE_VAR)/' $(GRANT_PUBLIC_API).$(TMPL)
+# end-sync
+
+init: sync
+	for resource in $(GRANT) $(GRANT_JAEGER) $(GRANT_KAFKA) $(GRANT_OLM) $(GRANT_PUBLIC_API); do \
+		cp $${resource}.$(TMPL) $${resource}.$(YAML); \
+		sed -i 's/$(NAMESPACE_VAR)/$(NAMESPACE)/' $${resource}.$(YAML); \
+		sed -i 's/$(USER_VAR)/$(KUBE_USER)/' $${resource}.$(YAML); \
+	done

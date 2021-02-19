@@ -1,3 +1,4 @@
-**/*.yml
-release/syndesis*
-release/*.tar.gz
+**/*.gen.tmpl
+**/*.gen.yaml
+
+release/*-installer*

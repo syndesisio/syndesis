@@ -1,4 +1,4 @@
 bases:
 - ../operator
 resources:
-- ./syndesis-cr.yml
+- ./syndesis-cr.gen.yaml

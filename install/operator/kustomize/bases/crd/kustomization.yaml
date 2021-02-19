@@ -1,2 +1,2 @@
 resources:
-- syndesis-crd.yml
+- syndesis-crd.gen.yaml
