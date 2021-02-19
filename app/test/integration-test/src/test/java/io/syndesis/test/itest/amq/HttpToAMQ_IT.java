@@ -90,11 +90,13 @@ public class HttpToAMQ_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().server(todoApiServer)
                 .send()
                 .response(HttpStatus.OK)
-                .payload("[{\"id\": \"1\", \"task\":\"Learn to play drums\", \"completed\": 0}," +
+                .message()
+                .body("[{\"id\": \"1\", \"task\":\"Learn to play drums\", \"completed\": 0}," +
                           "{\"id\": \"2\", \"task\":\"Learn to play guitar\", \"completed\": 1}]"));
 
         runner.then(receive().endpoint(todoJms)
-                        .payload("[{\"id\": \"1\", \"name\":\"Learn to play drums\", \"done\": 0}," +
+                        .message()
+                        .body("[{\"id\": \"1\", \"name\":\"Learn to play drums\", \"done\": 0}," +
                                   "{\"id\": \"2\", \"name\":\"Learn to play guitar\", \"done\": 1}]"));
     }
 
@@ -108,10 +110,12 @@ public class HttpToAMQ_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().server(todoApiServer)
                 .send()
                 .response(HttpStatus.OK)
-                .payload("[]"));
+                .message()
+                .body("[]"));
 
         runner.then(receive().endpoint(todoJms)
-                        .payload("[]"));
+                        .message()
+                        .body("[]"));
     }
 
     @Configuration

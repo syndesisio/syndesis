@@ -76,7 +76,8 @@ public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().client(webHookClient)
                 .send()
                 .post()
-                .payload(contacts( "Red Hat", "John", "Johnny")));
+                .message()
+                .body(contacts( "Red Hat", "John", "Johnny")));
 
         runner.then(http().client(webHookClient)
                 .receive()
@@ -93,7 +94,8 @@ public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().client(webHookClient)
                 .send()
                 .post()
-                .payload(contacts("Microsoft", "Bill", "Johnny")));
+                .message()
+                .body(contacts("Microsoft", "Bill", "Johnny")));
 
         runner.then(http().client(webHookClient)
                 .receive()
@@ -110,7 +112,8 @@ public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().client(webHookClient)
                 .send()
                 .post()
-                .payload(contacts( "Red Hat", "Unknown")));
+                .message()
+                .body(contacts( "Red Hat", "Unknown")));
 
         runner.then(http().client(webHookClient)
                 .receive()
@@ -147,7 +150,6 @@ public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
 
     private void cleanupDatabase(TestCaseRunner runner) {
         runner.given(sql(sampleDb)
-            .dataSource(sampleDb)
             .statement("delete from contact"));
     }
 }

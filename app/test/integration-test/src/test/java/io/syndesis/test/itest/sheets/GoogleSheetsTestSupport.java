@@ -79,7 +79,6 @@ public class GoogleSheetsTestSupport extends SyndesisIntegrationTestSupport {
                     .endpoint(googleSheetsApiServer));
 
         runner.given(sql(sampleDb)
-            .dataSource(sampleDb)
             .statement("delete from contact"));
     }
 }

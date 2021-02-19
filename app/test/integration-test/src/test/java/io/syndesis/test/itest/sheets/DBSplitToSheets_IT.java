@@ -64,7 +64,8 @@ public class DBSplitToSheets_IT extends GoogleSheetsTestSupport {
         runner.when(http().server(googleSheetsApiServer)
                         .receive()
                         .put()
-                        .payload("{\"majorDimension\":\"ROWS\",\"values\":[[\"Joe\",\"Jackson\",\"Red Hat\"]]}"));
+                        .message()
+                        .body("{\"majorDimension\":\"ROWS\",\"values\":[[\"Joe\",\"Jackson\",\"Red Hat\"]]}"));
 
         runner.then(http().server(googleSheetsApiServer)
                         .send()
@@ -73,7 +74,8 @@ public class DBSplitToSheets_IT extends GoogleSheetsTestSupport {
         runner.then(http().server(googleSheetsApiServer)
                 .receive()
                 .put()
-                .payload("{\"majorDimension\":\"ROWS\",\"values\":[[\"Joanne\",\"Jackson\",\"Red Hat\"]]}"));
+                .message()
+                .body("{\"majorDimension\":\"ROWS\",\"values\":[[\"Joanne\",\"Jackson\",\"Red Hat\"]]}"));
 
         runner.then(http().server(googleSheetsApiServer)
                 .send()

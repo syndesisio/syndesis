@@ -89,8 +89,9 @@ public class TodoApi_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().client(todoApiClient)
                 .receive()
                 .response(HttpStatus.OK)
+                .message()
                 .contentType(VND_OAI_OPENAPI_JSON)
-                .payload(new ClassPathResource("todo-api.json", TodoApi_IT.class)));
+                .body(new ClassPathResource("todo-api.json", TodoApi_IT.class)));
     }
 
     @Test
@@ -108,7 +109,8 @@ public class TodoApi_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().client(todoApiClient)
                 .receive()
                 .response(HttpStatus.OK)
-                .payload("{\"name\":\"Walk the dog\",\"done\":0}"));
+                .message()
+                .body("{\"name\":\"Walk the dog\",\"done\":0}"));
     }
 
     @Test
@@ -128,7 +130,8 @@ public class TodoApi_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().client(todoApiClient)
                 .receive()
                 .response(HttpStatus.OK)
-                .payload("[{\"name\":\"Wash the dog\",\"done\":0}," +
+                .message()
+                .body("[{\"name\":\"Wash the dog\",\"done\":0}," +
                             "{\"name\":\"Feed the dog\",\"done\":0}," +
                             "{\"name\":\"Play with the dog\",\"done\":0}]"));
     }
@@ -152,7 +155,8 @@ public class TodoApi_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().client(todoApiClient)
                 .receive()
                 .response(HttpStatus.OK)
-                .payload("[{\"name\":\"Wash the dog\",\"done\":0}," +
+                .message()
+                .body("[{\"name\":\"Wash the dog\",\"done\":0}," +
                             "{\"name\":\"Feed the dog\",\"done\":0}," +
                             "{\"name\":\"Play with the dog\",\"done\":0}]"));
     }
@@ -176,7 +180,8 @@ public class TodoApi_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().client(todoApiClient)
                 .receive()
                 .response(HttpStatus.OK)
-                .payload("[{\"name\":\"Play piano\",\"done\":1}," +
+                .message()
+                .body("[{\"name\":\"Play piano\",\"done\":1}," +
                             "{\"name\":\"Play guitar\",\"done\":1}]"));
     }
 
@@ -192,7 +197,6 @@ public class TodoApi_IT extends SyndesisIntegrationTestSupport {
 
     private void cleanupDatabase(TestCaseRunner runner) {
         runner.given(sql(sampleDb)
-            .dataSource(sampleDb)
             .statement("delete from todo"));
     }
 }
