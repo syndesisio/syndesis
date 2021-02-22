@@ -17,8 +17,9 @@ package io.syndesis.integration.component.proxy;
 
 import java.util.Collection;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
-import org.apache.camel.model.language.ConstantExpression;
+import org.apache.camel.model.language.SimpleExpression;
 import org.apache.camel.processor.Pipeline;
 import org.apache.camel.processor.PollEnricher;
 
@@ -89,9 +90,11 @@ public final class Processors {
     }
 
     public static Processor pollEnricher(final String endpointUri, final ComponentProxyComponent proxyComponent) {
-        final PollEnricher pollEnricher = new PollEnricher(new ConstantExpression(endpointUri), -1);
+        final PollEnricher pollEnricher = new PollEnricher(new SimpleExpression(endpointUri), 0);
+        final CamelContext camelContext = proxyComponent.getCamelContext();
+        pollEnricher.setCamelContext(camelContext);
         pollEnricher.setDefaultAggregationStrategy();
 
-        return Pipeline.newInstance(proxyComponent.getCamelContext(), proxyComponent.getBeforeConsumer(), pollEnricher, proxyComponent.getAfterConsumer());
+        return Pipeline.newInstance(camelContext, proxyComponent.getBeforeConsumer(), pollEnricher, proxyComponent.getAfterConsumer());
     }
 }

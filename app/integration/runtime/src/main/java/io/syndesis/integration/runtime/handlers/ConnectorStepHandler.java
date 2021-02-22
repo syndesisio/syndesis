@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.syndesis.common.model.action.Action.Pattern;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -147,28 +148,45 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         }
         context.addComponent(component.getComponentId(), component);
 
-        final ProcessorDefinition<?> definition;
-        if (route == null) {
-            // we're at step 0
-            definition = builder.from(componentId);
-        } else {
-            // route exists we passed step 0
-            final Pattern pattern = action.getPattern().orElse(Pattern.To);
-            switch (pattern) {
-            case To:
-            case Pipe:
-            case From: // sql-start connector uses From
-                definition = route.to(componentId);
-                break;
-            case PollEnrich:
-                definition = route.process(pollEnricher(componentId, component));
-                break;
-            default:
-                throw new UnsupportedOperationException("'" + pattern + "' pattern not supported");
-            }
-        }
+        final String endpointUri = createProxyComponentUri(flowIndex, stepIndex, scheme, step);
+
+        final ProcessorDefinition<?> definition = createRouteElement(route, builder, action, component, endpointUri);
 
         return Optional.ofNullable(definition);
+    }
+
+    static ProcessorDefinition<?> createRouteElement(final ProcessorDefinition<?> route, final IntegrationRouteBuilder builder, final ConnectorAction action,
+        final ComponentProxyComponent component, final String endpointUri) {
+        if (route == null) {
+            // we're at step 0
+            return builder.from(endpointUri);
+        }
+
+        // route exists we passed step 0
+        final Pattern pattern = action.getPattern().orElse(Pattern.To);
+        switch (pattern) {
+        case To:
+        case Pipe:
+        case From: // sql-start connector uses From
+            return route.to(endpointUri);
+        case PollEnrich:
+            return route.process(pollEnricher(endpointUri, component));
+        default:
+            throw new UnsupportedOperationException("'" + pattern + "' pattern not supported");
+        }
+    }
+
+    static String createProxyComponentUri(final String flowIndex, final String stepIndex, final String scheme, final Step step) {
+        final String dynamicParamaters = step.getConfiguredProperties().entrySet().stream()
+            .filter(e -> isProxyEndpointProperty(step, e.getKey()))
+            .map(e -> e.getKey() + "=" + e.getValue())
+            .collect(Collectors.joining(","));
+
+        if (ObjectHelper.isEmpty(dynamicParamaters)) {
+            return scheme + "-" + flowIndex + "-" + stepIndex;
+        }
+
+        return scheme + "-" + flowIndex + "-" + stepIndex + ":?" + dynamicParamaters;
     }
 
     // *************************
@@ -186,6 +204,12 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         }
 
         return factory.newInstance(componentId, componentScheme);
+    }
+
+    private static boolean isProxyEndpointProperty(final Step step, final String propertyName) {
+        return step.getAction()
+            .map(d -> d.isProxyEndpointProperty(propertyName))
+            .orElse(false);
     }
 
     private static Optional<ComponentProxyFactory> resolveComponentProxyFactory(final CamelContext context, final Optional<String> componentProxyFactory) {

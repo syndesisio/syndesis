@@ -63,6 +63,12 @@ public interface WithConfigurationProperties {
     }
 
     @JsonIgnore
+    default boolean isProxyEndpointProperty(final String propertyName) {
+        final ConfigurationProperty property = getProperties().get(propertyName);
+        return property != null && "proxyParameter".equals(property.getKind());
+    }
+
+    @JsonIgnore
     default boolean isSecret(Entry<String, String> e) {
         return this.isSecret(e.getKey());
     }

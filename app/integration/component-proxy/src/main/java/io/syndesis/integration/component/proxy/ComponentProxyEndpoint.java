@@ -73,7 +73,7 @@ public class ComponentProxyEndpoint extends DefaultEndpoint implements DelegateE
     @Override
     public PollingConsumer createPollingConsumer() throws Exception {
         final PollingConsumer consumer = endpoint.createPollingConsumer();
-        configureConsumer(consumer);
+        configurePollingConsumer(consumer);
 
         return consumer;
     }
