@@ -42,6 +42,10 @@ import org.apache.camel.util.ObjectHelper;
 
 public class GoogleSheetsUpdateSpreadsheetCustomizer implements ComponentProxyCustomizer {
 
+    public static final String SPREADSHEET_ID = "spreadsheetId";
+    public static final String TITLE = "title";
+    public static final String TIME_ZONE = "timeZone";
+    public static final String LOCALE = "locale";
     private String spreadsheetId;
     private String title;
     private String timeZone;
@@ -55,10 +59,10 @@ public class GoogleSheetsUpdateSpreadsheetCustomizer implements ComponentProxyCu
     }
 
     private void setApiMethod(Map<String, Object> options) {
-        spreadsheetId = ConnectorOptions.extractOption(options, "spreadsheetId");
-        title = ConnectorOptions.extractOption(options, "title");
-        timeZone = ConnectorOptions.extractOption(options, "timeZone");
-        locale = ConnectorOptions.extractOption(options, "locale");
+        spreadsheetId = ConnectorOptions.extractOption(options, SPREADSHEET_ID);
+        title = ConnectorOptions.extractOption(options, TITLE);
+        timeZone = ConnectorOptions.extractOption(options, TIME_ZONE);
+        locale = ConnectorOptions.extractOption(options, LOCALE);
 
         options.put("apiName",
                 GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName());
@@ -105,7 +109,7 @@ public class GoogleSheetsUpdateSpreadsheetCustomizer implements ComponentProxyCu
                 properties.setIndex(sheet.getIndex());
                 properties.setTitle(sheet.getTitle());
                 updateSheetPropertiesRequest.setProperties(properties);
-                updateSheetPropertiesRequest.setFields("title");
+                updateSheetPropertiesRequest.setFields(TITLE);
                 batchUpdateRequest.getRequests().add(new Request().setUpdateSheetProperties(updateSheetPropertiesRequest));
             }
         }
@@ -154,17 +158,17 @@ public class GoogleSheetsUpdateSpreadsheetCustomizer implements ComponentProxyCu
 
         if (ObjectHelper.isNotEmpty(title)) {
             spreadsheetProperties.setTitle(title);
-            fields.add("title");
+            fields.add(TITLE);
         }
 
         if (ObjectHelper.isNotEmpty(timeZone)) {
             spreadsheetProperties.setTimeZone(timeZone);
-            fields.add("timeZone");
+            fields.add(TIME_ZONE);
         }
 
         if (ObjectHelper.isNotEmpty(locale)) {
             spreadsheetProperties.setLocale(locale);
-            fields.add("locale");
+            fields.add(LOCALE);
         }
 
         return spreadsheetProperties;

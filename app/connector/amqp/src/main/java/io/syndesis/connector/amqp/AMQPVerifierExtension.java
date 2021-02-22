@@ -38,6 +38,11 @@ import io.syndesis.connector.support.util.ConnectorOptions;
 public class AMQPVerifierExtension extends DefaultComponentVerifierExtension {
 
     private static final Logger LOG = LoggerFactory.getLogger(AMQPVerifierExtension.class);
+    public static final String CONNECTION_URI = "connectionUri";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
+    public static final String BROKER_CERTIFICATE = "brokerCertificate";
+    public static final String CLIENT_CERTIFICATE = "clientCertificate";
 
     protected AMQPVerifierExtension(String defaultScheme, CamelContext context) {
         super(defaultScheme, context);
@@ -50,7 +55,7 @@ public class AMQPVerifierExtension extends DefaultComponentVerifierExtension {
     @Override
     protected Result verifyParameters(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
-                .error(ResultErrorHelper.requiresOption("connectionUri", parameters));
+                .error(ResultErrorHelper.requiresOption(CONNECTION_URI, parameters));
 
         if (builder.build().getErrors().isEmpty()) {
             verifyCredentials(builder, parameters);
@@ -70,13 +75,13 @@ public class AMQPVerifierExtension extends DefaultComponentVerifierExtension {
 
     private static void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
-        final String connectionUri = ConnectorOptions.extractOption(parameters, "connectionUri");
-        final String username = ConnectorOptions.extractOption(parameters, "username");
-        final String password = ConnectorOptions.extractOption(parameters, "password");
+        final String connectionUri = ConnectorOptions.extractOption(parameters, CONNECTION_URI);
+        final String username = ConnectorOptions.extractOption(parameters, USERNAME);
+        final String password = ConnectorOptions.extractOption(parameters, PASSWORD);
         final boolean skipCertificateCheck = ConnectorOptions.extractOptionAndMap(parameters,
             "skipCertificateCheck", Boolean::parseBoolean, false);
-        final String brokerCertificate = ConnectorOptions.extractOption(parameters, "brokerCertificate");
-        final String clientCertificate = ConnectorOptions.extractOption(parameters, "clientCertificate");
+        final String brokerCertificate = ConnectorOptions.extractOption(parameters, BROKER_CERTIFICATE);
+        final String clientCertificate = ConnectorOptions.extractOption(parameters, CLIENT_CERTIFICATE);
 
         LOG.debug("Validating AMQP connection to {}", connectionUri);
         final AMQPUtil.ConnectionParameters connectionParameters = new AMQPUtil.ConnectionParameters(connectionUri,
@@ -89,14 +94,14 @@ public class AMQPVerifierExtension extends DefaultComponentVerifierExtension {
             connection.start();
         } catch (JMSException e) {
             final Map<String, Object> redacted = new HashMap<>(parameters);
-            redacted.replace("password", "********");
+            redacted.replace(PASSWORD, "********");
             LOG.warn("Unable to connect to AMQP Broker with parameters {}, Message: {}, error code: {}",
                     redacted, e.getMessage(), e.getErrorCode(), e);
             builder.error(ResultErrorBuilder.withCodeAndDescription(
                     VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, e.getMessage())
-                    .parameterKey("connectionUri")
-                    .parameterKey("username")
-                    .parameterKey("password")
+                    .parameterKey(CONNECTION_URI)
+                    .parameterKey(USERNAME)
+                    .parameterKey(PASSWORD)
                     .build());
         } finally {
             if (connection != null) {

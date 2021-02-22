@@ -324,7 +324,7 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                         // No installed extension found, this happen if the
                         // extension
                         // has been deleted.
-                        if (ids.size() == 0) {
+                        if (ids.isEmpty()) {
                             messages.add(
                                 supplier.get()
                                     .level(LeveledMessage.Level.WARN)

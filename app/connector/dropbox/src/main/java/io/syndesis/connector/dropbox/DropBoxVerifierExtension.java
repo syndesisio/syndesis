@@ -31,6 +31,9 @@ import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class DropBoxVerifierExtension extends DefaultComponentVerifierExtension {
 
+    public static final String ACCESS_TOKEN = "accessToken";
+    public static final String CLIENT_IDENTIFIER = "clientIdentifier";
+
     protected DropBoxVerifierExtension(String defaultScheme, CamelContext context) {
         super(defaultScheme, context);
     }
@@ -41,8 +44,8 @@ public class DropBoxVerifierExtension extends DefaultComponentVerifierExtension 
     @Override
     protected Result verifyParameters(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
-                .error(ResultErrorHelper.requiresOption("accessToken", parameters))
-                .error(ResultErrorHelper.requiresOption("clientIdentifier", parameters));
+                .error(ResultErrorHelper.requiresOption(ACCESS_TOKEN, parameters))
+                .error(ResultErrorHelper.requiresOption(CLIENT_IDENTIFIER, parameters));
 
         return builder.build();
     }
@@ -58,8 +61,8 @@ public class DropBoxVerifierExtension extends DefaultComponentVerifierExtension 
 
     private static void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
-        String token = ConnectorOptions.extractOption(parameters, "accessToken");
-        String clientId = ConnectorOptions.extractOption(parameters, "clientIdentifier");
+        String token = ConnectorOptions.extractOption(parameters, ACCESS_TOKEN);
+        String clientId = ConnectorOptions.extractOption(parameters, CLIENT_IDENTIFIER);
 
         try {
             // Create Dropbox client
@@ -70,7 +73,7 @@ public class DropBoxVerifierExtension extends DefaultComponentVerifierExtension 
             builder.error(ResultErrorBuilder
                     .withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION,
                             "Invalid client identifier and/or access token")
-                    .parameterKey("accessToken").parameterKey("clientIdentifier").build());
+                    .parameterKey(ACCESS_TOKEN).parameterKey(CLIENT_IDENTIFIER).build());
         }
 
     }
