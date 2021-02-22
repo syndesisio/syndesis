@@ -57,8 +57,8 @@ If you already created the Twitter to Salesforce sample then it takes
 
 |Prerequisites
 |Twitter developer account, Salesforce developer account
-|Salesforce developer account, sample `todo` application enabled
-|Sample `todo` application enabled 
+|Salesforce developer account, sample `todo` application enabled, and sample Postgres database enabled
+|Sample `todo` application and sample Postgres database enabled 
 
 |===
 
