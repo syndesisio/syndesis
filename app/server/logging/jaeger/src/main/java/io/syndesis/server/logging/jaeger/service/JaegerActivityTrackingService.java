@@ -66,7 +66,7 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
             Activity activity = null;
             ArrayList<ActivityStep> steps = new ArrayList<>();
 
-            if (trace.spans != null && trace.spans.size() >= 1) {
+            if (trace.spans != null) {
 
                 for (JaegerQueryAPI.Span span : trace.spans) {
                     String kind = span.findTag(Tags.SPAN_KIND.getKey(), String.class);

@@ -115,7 +115,7 @@ public class ExtensionActivator {
     }
 
     private void updateConnectors(Extension extension) {
-        if (extension.getConnectorActions().size() == 0) {
+        if (extension.getConnectorActions().isEmpty()) {
             // No connector to create, but delete any previously created connector
             doDeleteRelatedObjects(extension);
             return;
