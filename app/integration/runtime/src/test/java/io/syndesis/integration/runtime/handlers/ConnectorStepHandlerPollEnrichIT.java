@@ -30,6 +30,7 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
@@ -174,6 +175,7 @@ public class ConnectorStepHandlerPollEnrichIT {
                     .putConfiguredProperty("period", "1000")
                     .build(),
                 new Step.Builder()
+                    .id("expected")
                     .stepKind(StepKind.endpoint)
                     .action(FTP_ACTION_FETCH)
                     .connection(
@@ -205,6 +207,7 @@ public class ConnectorStepHandlerPollEnrichIT {
             MockEndpoint.assertWait(2, TimeUnit.SECONDS, result);
 
             result.expectedBodiesReceived("Hi there");
+            result.allMessages().exchangeProperty(OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP).convertTo(String.class).contains("expected");
 
             MockEndpoint.assertIsSatisfied(context);
 
@@ -245,6 +248,7 @@ public class ConnectorStepHandlerPollEnrichIT {
                     .putConfiguredProperty("CamelFileName", "dynamic.txt")
                     .build(),
                 new Step.Builder()
+                    .id("expected")
                     .stepKind(StepKind.endpoint)
                     .action(FTP_ACTION_FETCH_DYNAMIC)
                     .connection(
@@ -276,6 +280,7 @@ public class ConnectorStepHandlerPollEnrichIT {
             MockEndpoint.assertWait(2, TimeUnit.SECONDS, result);
 
             result.expectedBodiesReceived("Hi dynamic");
+            result.allMessages().exchangeProperty(OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP).convertTo(String.class).contains("expected");
 
             MockEndpoint.assertIsSatisfied(context);
 
