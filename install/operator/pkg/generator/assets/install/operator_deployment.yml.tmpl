@@ -31,6 +31,13 @@ spec:
         syndesis.io/app: syndesis
         syndesis.io/type: operator
         syndesis.io/component: syndesis-operator
+        com.company: Red_Hat
+        rht.prod_name: Red_Hat_Integration
+        rht.prod_ver: "{{.Version}}"
+        rht.comp: Fuse
+        rht.comp_ver: "{{.Version}}"
+        rht.subcomp: syndesis-operator
+        rht.subcomp_t: infrastructure
     spec:
       serviceAccountName: syndesis-operator
       containers:

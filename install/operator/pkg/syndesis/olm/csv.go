@@ -426,6 +426,7 @@ func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 		ExporterImage   string
 		DevSupport      bool
 		LogLevel        int
+		Version         string
 	}{
 		Image:           c.image,
 		Tag:             c.tag,
@@ -442,6 +443,7 @@ func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 		ExporterImage:   c.config.Syndesis.Components.Database.Exporter.Image,
 		DevSupport:      false, // Never be true in CSV generation - here for template compatibility
 		LogLevel:        0,     // Never to be more in CSV generation - here for template compatibility
+		Version:         c.version,
 	}
 
 	g, err := generator.Render("./install/operator_deployment.yml.tmpl", context)
