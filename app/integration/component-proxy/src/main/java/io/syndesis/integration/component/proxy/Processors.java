@@ -18,12 +18,33 @@ package io.syndesis.integration.component.proxy;
 import java.util.Collection;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.model.language.SimpleExpression;
 import org.apache.camel.processor.Pipeline;
 import org.apache.camel.processor.PollEnricher;
+import org.apache.camel.processor.aggregate.AggregationStrategy;
 
 public final class Processors {
+
+    private static final class EnrichmentAggregator implements AggregationStrategy {
+        public static final AggregationStrategy INSTANCE = new EnrichmentAggregator();
+
+        @Override
+        public Exchange aggregate(final Exchange previousExchange, final Exchange currentExchange) {
+            final Message previousMessage = previousExchange.getIn();
+            final Message currentMessage = currentExchange.getIn();
+            previousMessage.setBody(currentMessage.getBody());
+            if (currentMessage.hasAttachments()) {
+                previousMessage.getAttachmentObjects().putAll(currentMessage.getAttachmentObjects());
+            }
+            previousMessage.getHeaders().putAll(currentMessage.getHeaders());
+            previousExchange.getProperties().putAll(currentExchange.getProperties());
+
+            return previousExchange;
+        }
+    }
 
     private Processors() {
         // utility class
@@ -93,7 +114,7 @@ public final class Processors {
         final PollEnricher pollEnricher = new PollEnricher(new SimpleExpression(endpointUri), 0);
         final CamelContext camelContext = proxyComponent.getCamelContext();
         pollEnricher.setCamelContext(camelContext);
-        pollEnricher.setDefaultAggregationStrategy();
+        pollEnricher.setAggregationStrategy(EnrichmentAggregator.INSTANCE);
 
         return Pipeline.newInstance(camelContext, proxyComponent.getBeforeConsumer(), pollEnricher, proxyComponent.getAfterConsumer());
     }
