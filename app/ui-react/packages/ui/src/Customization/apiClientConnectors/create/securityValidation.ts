@@ -10,6 +10,7 @@ export default function validateSecurity(values: ICreateConnectorPropsUi) {
 
   if (
     values.authenticationType === 'basic' ||
+    values.authenticationType === 'basic:username_password' ||
     values.authenticationType === 'ws-security-ut'
   ) {
     if (values.passwordType !== 'PasswordNone') {
