@@ -191,6 +191,11 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis)
 
 	// Install the resources..
 	for _, res := range all {
+		err = PreProcessForAffinityTolerations(ctx, rtClient, syndesis, &res)
+		if err != nil {
+			return err // Fail-fast for core components
+		}
+
 		o, err := a.installResource(ctx, rtClient, syndesis, res)
 		if err != nil {
 			return err // Fail-fast for core components
@@ -242,6 +247,12 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis)
 		// try and continue to install the other addons
 		//
 		for _, res := range resources {
+			err = PreProcessForAffinityTolerations(ctx, rtClient, syndesis, &res)
+			if err != nil {
+				a.log.Error(err, "Install of addon failed", "addon", addonInfo.Name())
+				break
+			}
+
 			o, err := a.installResource(ctx, rtClient, syndesis, res)
 			if err != nil {
 				a.log.Error(err, "Install of addon failed", "addon", addonInfo.Name())
@@ -532,4 +543,62 @@ func linkSecret(sa *corev1.ServiceAccount, secret string) bool {
 	}
 
 	return false
+}
+
+func PreProcessForAffinityTolerations(ctx context.Context, cl client.Client, syndesis *v1beta2.Syndesis, resource *unstructured.Unstructured) error {
+	kind := resource.GetKind()
+	if kind != "DeploymentConfig" && kind != "Jaeger" {
+		return nil // only deployment-configs and jaeger CR to be processed
+	}
+
+	if syndesis.Spec.InfraScheduling.Affinity == nil && len(syndesis.Spec.InfraScheduling.Tolerations) == 0 {
+		return nil // No infra-scheduling defined so ignore
+	}
+
+	if syndesis.Spec.InfraScheduling.Affinity != nil {
+		affinityData, err := runtime.DefaultUnstructuredConverter.ToUnstructured(syndesis.Spec.InfraScheduling.Affinity)
+		if err != nil {
+			return err
+		}
+
+		path := make([]string, 0)
+		if kind == "DeploymentConfig" {
+			path = append(path, "spec", "template")
+		}
+
+		// Jaeger does not need the same prefix
+		path = append(path, "spec", "affinity")
+
+		err = unstructured.SetNestedField(resource.UnstructuredContent(), affinityData, path...)
+		if err != nil {
+			return err
+		}
+	}
+
+	if len(syndesis.Spec.InfraScheduling.Tolerations) > 0 {
+		tolerations := make([]interface{}, len(syndesis.Spec.InfraScheduling.Tolerations))
+
+		for i, toleration := range syndesis.Spec.InfraScheduling.Tolerations {
+			tolerationData, err := runtime.DefaultUnstructuredConverter.ToUnstructured(&toleration)
+			if err != nil {
+				return err
+			}
+			tolerations[i] = tolerationData
+		}
+
+		path := make([]string, 0)
+		if kind == "DeploymentConfig" {
+			path = append(path, "spec", "template")
+		}
+
+		// Jaeger does not need the same prefix
+		path = append(path, "spec", "tolerations")
+
+		err := unstructured.SetNestedSlice(resource.UnstructuredContent(), tolerations, path...)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
