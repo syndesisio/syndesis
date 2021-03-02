@@ -192,19 +192,82 @@
     <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
   </properties>
 
-  <modules>
-    <module>common</module>
-    <module>extension</module>
-    <module>integration</module>
-    <module>connector</module>
-    <module>server</module>
-    <module>s2i</module>
-    <module>meta</module>
-    <module>ui-react</module>
-  </modules>
-
   <profiles>
+    <!-- build profiles used to build only a subset -->
+    <profile>
+      <id>build-all</id>
+      <activation>
+        <property>
+          <name>!build-selection</name>
+        </property>
+      </activation>
+      <modules>
+        <module>common</module>
+        <module>extension</module>
+        <module>integration</module>
+        <module>connector</module>
+        <module>server</module>
+        <module>s2i</module>
+        <module>meta</module>
+        <module>ui-react</module>
+      </modules>
+    </profile>
 
+    <profile>
+      <id>build-common</id>
+      <modules>
+        <module>common</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>build-extension</id>
+      <modules>
+        <module>extension</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>build-integration</id>
+      <modules>
+        <module>integration</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>build-connector</id>
+      <modules>
+        <module>connector</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>build-server</id>
+      <modules>
+        <module>server</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>build-s2i</id>
+      <modules>
+        <module>s2i</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>build-meta</id>
+      <modules>
+        <module>meta</module>
+      </modules>
+    </profile>
+
+    <profile>
+      <id>build-ui-react</id>
+      <modules>
+        <module>ui-react</module>
+      </modules>
+    </profile>
     <!--
     =========================================================================
     Profiles (which can and should be combined)
