@@ -32,8 +32,6 @@ import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 public class FtpConnectorCustomizer implements ComponentProxyCustomizer {
 
-    static final String CAMEL_FILE_NAME = "CamelFileName";
-
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
 
@@ -46,14 +44,15 @@ public class FtpConnectorCustomizer implements ComponentProxyCustomizer {
     // Before Uploading or Updating a named file (pattern: to)
     private static void doBeforeProducer(Exchange exchange) throws JsonMappingException, JsonProcessingException {
         final Message in = exchange.getIn();
-        if (in.getBody(String.class) != null && JsonUtils.isJson(in.getBody(String.class))) {
-            final FtpPayload payLoad = new ObjectMapper().readValue(in.getBody(String.class), FtpPayload.class);
+        final String body = in.getBody(String.class);
+        if (body != null && JsonUtils.isJson(body)) {
+            final FtpPayload payLoad = new ObjectMapper().readValue(body, FtpPayload.class);
             if (payLoad.getFileName()==null || payLoad.getFileName().equals("error")) {
-                throw new SyndesisConnectorException(ErrorCategory.DATA_ACCESS_ERROR, "FileName"
-                        + " could not be parsed correctly");
+                throw new SyndesisConnectorException(ErrorCategory.DATA_ACCESS_ERROR, "FileName '"
+                       + payLoad.getFileName()  + "' could not be parsed correctly");
             } else {
-                exchange.getIn().setHeader(CAMEL_FILE_NAME, payLoad.getFileName());
-                exchange.getIn().setBody(payLoad.getFileContent());
+                in.setHeader(Exchange.FILE_NAME, payLoad.getFileName());
+                in.setBody(payLoad.getFileContent());
             }
         }
     }
@@ -61,13 +60,14 @@ public class FtpConnectorCustomizer implements ComponentProxyCustomizer {
     // Before Downloading a named file (pattern: pollEnrich)
     private static void doBeforeConsumer(Exchange exchange) throws JsonMappingException, JsonProcessingException {
         final Message in = exchange.getIn();
-        if (in.getBody(String.class) != null && JsonUtils.isJson(in.getBody(String.class))) {
+        final String body = in.getBody(String.class);
+        if (body != null && JsonUtils.isJson(body)) {
             FtpPayload payLoad = new ObjectMapper().readValue(in.getBody(String.class), FtpPayload.class);
             if (payLoad.getFileName()==null || payLoad.getFileName().equals("error")) {
                 throw new SyndesisConnectorException(ErrorCategory.DATA_ACCESS_ERROR, "FileName"
                         + " could not be parsed correctly");
             } else {
-                exchange.getIn().setHeader(CAMEL_FILE_NAME, payLoad.getFileName());
+                exchange.getIn().setHeader(Exchange.FILE_NAME, payLoad.getFileName());
             }
         }
     }
@@ -79,9 +79,10 @@ public class FtpConnectorCustomizer implements ComponentProxyCustomizer {
                     ErrorCategory.CONNECTOR_ERROR, exchange.getException());
         }
         final Message in = exchange.getIn();
-        final String fileName = in.getHeader(CAMEL_FILE_NAME, String.class);
-        if (in.getBody()!=null) {
-            final FtpPayload payLoad = new FtpPayload(in.getBody(String.class));
+        final String body = in.getBody(String.class);
+        final String fileName = in.getHeader(Exchange.FILE_NAME, String.class);
+        if (body!=null) {
+            final FtpPayload payLoad = new FtpPayload(body);
             payLoad.setFileName(fileName);
             final String jsonPayload = new ObjectMapper().writeValueAsString(payLoad);
             in.setBody(jsonPayload);

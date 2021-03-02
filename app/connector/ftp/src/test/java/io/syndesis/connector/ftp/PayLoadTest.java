@@ -23,8 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class PayLoadTest {
 
- 
-
     @Test
     public void mapToJsonBeanTest() throws JsonProcessingException {
         String body = "{\n"
@@ -35,11 +33,8 @@ public class PayLoadTest {
 
         ObjectMapper mapper = new ObjectMapper();
         FtpPayload payLoad = mapper.readValue(body, FtpPayload.class);
-        
-        System.out.println(mapper.writeValueAsString(payLoad));
 
         Assert.assertEquals("myFileName", payLoad.getFileName());
     }
 
-  
 }
