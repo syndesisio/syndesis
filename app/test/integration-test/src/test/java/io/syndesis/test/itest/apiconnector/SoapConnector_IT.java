@@ -16,15 +16,19 @@
 
 package io.syndesis.test.itest.apiconnector;
 
-import java.util.Arrays;
-
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
+import java.util.Arrays;
 
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
+import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor;
+import com.consol.citrus.ws.server.WebServiceServer;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
-
 import org.apache.wss4j.common.WSS4JConstants;
 import org.apache.wss4j.common.ext.WSPasswordCallback;
 import org.junit.jupiter.api.Test;
@@ -33,13 +37,6 @@ import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor;
-import com.consol.citrus.ws.server.WebServiceServer;
 
 /**
  * @author Dhiraj Bokde
@@ -85,6 +82,9 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testSayHi(@CitrusResource TestRunner runner) {
+        runner.sql(builder -> builder.dataSource(sampleDb())
+            .statement("delete from contact"));
+
         runner.echo("SayHi operation");
 
         runner.soap(builder -> builder.server(SOAP_SERVER)

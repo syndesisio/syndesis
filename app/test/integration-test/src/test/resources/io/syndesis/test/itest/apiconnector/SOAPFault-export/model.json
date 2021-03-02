@@ -289,7 +289,7 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-sql:1.11-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-sql:1.12-SNAPSHOT",
             "type": "MAVEN"
           },
           {
@@ -360,7 +360,7 @@
         "tags": [
           "verifier"
         ],
-        "version": 10
+        "version": 1
       },
       "connectorId": "sql",
       "description": "Connection to SampleDB",
@@ -800,11 +800,11 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-timer:1.11-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-timer:1.12-SNAPSHOT",
             "type": "MAVEN"
           },
           {
-            "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-780030",
+            "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-790029",
             "type": "MAVEN"
           }
         ],
@@ -815,7 +815,7 @@
           "hide-from-connection-pages": "true"
         },
         "name": "Timer",
-        "version": 10
+        "version": 1
       },
       "connectorId": "timer",
       "description": "Trigger integration execution based on an interval or a cron expression",
@@ -1431,7 +1431,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-sql:1.11-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-sql:1.12-SNAPSHOT",
           "type": "MAVEN"
         },
         {
@@ -1502,7 +1502,7 @@
       "tags": [
         "verifier"
       ],
-      "version": 10
+      "version": 1
     },
     ":timer": {
       "actions": [
@@ -1589,11 +1589,11 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-timer:1.11-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-timer:1.12-SNAPSHOT",
           "type": "MAVEN"
         },
         {
-          "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-780030",
+          "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-790029",
           "type": "MAVEN"
         }
       ],
@@ -1604,12 +1604,12 @@
         "hide-from-connection-pages": "true"
       },
       "name": "Timer",
-      "version": 10
+      "version": 1
     }
   },
   "integrations": {
     ":i-MOBiiqfU-JWFvkAVB0vz": {
-      "createdAt": 1607605087659,
+      "createdAt": 1618943296112,
       "flows": [
         {
           "id": "-MOBhllHTwHye5JsPzDt",
@@ -1617,11 +1617,11 @@
             {
               "action": {
                 "actionType": "connector",
-                "description": "Specify a cron utility expression for a more complex integration execution schedule.",
+                "description": "Specify an amount of time and its unit to periodically trigger integration execution. ",
                 "descriptor": {
-                  "componentScheme": "quartz2",
+                  "componentScheme": "timer",
                   "configuredProperties": {
-                    "triggerName": "syndesis-quartz"
+                    "timerName": "syndesis-timer"
                   },
                   "inputDataShape": {
                     "kind": "none"
@@ -1631,31 +1631,31 @@
                   },
                   "propertyDefinitionSteps": [
                     {
-                      "name": "cron",
+                      "name": "Period",
                       "properties": {
-                        "cron": {
+                        "period": {
                           "componentProperty": false,
-                          "defaultValue": "0 0/1 * * * ?",
+                          "defaultValue": 60000,
                           "deprecated": false,
-                          "description": "A cron expression, for example the expression for every minute is 0 0/1 * * * ?",
-                          "displayName": "Cron Expression",
-                          "javaType": "string",
+                          "description": "Period",
+                          "displayName": "Period",
+                          "javaType": "long",
                           "kind": "parameter",
-                          "labelHint": "Delay between scheduling (executing) the integration expressed as a cron expression",
+                          "labelHint": "Delay between each execution of the integration.",
                           "required": true,
                           "secret": false,
-                          "type": "string"
+                          "type": "duration"
                         }
                       }
                     }
                   ]
                 },
-                "id": "io.syndesis:timer-chron",
-                "name": "Cron",
+                "id": "io.syndesis:timer-action",
+                "name": "Simple",
                 "pattern": "From"
               },
               "configuredProperties": {
-                "cron": "0 0/1 * * * ?"
+                "period": "60000"
               },
               "connection": {
                 "connector": {
@@ -1743,11 +1743,11 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-timer:1.11-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-timer:1.12-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-780030",
+                      "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-790029",
                       "type": "MAVEN"
                     }
                   ],
@@ -1758,7 +1758,7 @@
                     "hide-from-connection-pages": "true"
                   },
                   "name": "Timer",
-                  "version": 10
+                  "version": 1
                 },
                 "connectorId": "timer",
                 "description": "Trigger integration execution based on an interval or a cron expression",
@@ -1794,14 +1794,27 @@
                 }
               },
               "configuredProperties": {
-                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlDataSource\",\"id\":\"-MOBohZcTwHye5JsPzDt\",\"uri\":\"atlas:xml:-MOBohZcTwHye5JsPzDt\",\"dataSourceType\":\"TARGET\",\"template\":null,\"xmlNamespaces\":{\"xmlNamespace\":[{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"}]}}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.977942\",\"inputField\":[{\"jsonType\":\"io.atlasmap.v2.PropertyField\",\"name\":\"/arg0\",\"path\":\"/arg0\",\"fieldType\":\"STRING\",\"docId\":\"DOC.Properties.753953\",\"value\":\"Testing Errors\"}],\"outputField\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlField\",\"name\":\"arg0\",\"path\":\"/tns:Envelope/tns:Body/ns1:sayHi/ns1:arg0\",\"fieldType\":\"STRING\",\"docId\":\"-MOBohZcTwHye5JsPzDt\",\"userCreated\":false}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[{\"name\":\"arg0\",\"value\":\"Testing Errors\",\"fieldType\":\"STRING\"}]}}}"
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlDataSource\",\"id\":\"-MOBohZcTwHye5JsPzDt\",\"name\":\"3 - sayHi\",\"description\":\"Data input for operation sayHi\",\"uri\":\"atlas:xml:-MOBohZcTwHye5JsPzDt\",\"dataSourceType\":\"TARGET\",\"template\":null,\"xmlNamespaces\":{\"xmlNamespace\":[{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"}]}}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.604014\",\"inputField\":[{\"jsonType\":\"io.atlasmap.v2.PropertyField\",\"name\":\"arg0\",\"path\":\"/arg0\",\"fieldType\":\"STRING\",\"scope\":\"current\",\"docId\":\"DOC.Properties.347754\",\"value\":\"Testing Errors\"}],\"outputField\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlField\",\"name\":\"arg0\",\"path\":\"/tns:Envelope/tns:Body/ns1:sayHi/arg0\",\"fieldType\":\"STRING\",\"docId\":\"-MOBohZcTwHye5JsPzDt\",\"attribute\":false,\"userCreated\":false}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[{\"name\":\"arg0\",\"value\":\"Testing Errors\",\"fieldType\":\"STRING\",\"scope\":\"current\",\"dataSourceType\":\"SOURCE\"}]}}}"
               },
-              "id": "-MOBotqaTwHye5JsPzDt",
+              "id": "-MYkYlhLZATfE1Lrmown",
               "metadata": {
                 "configured": "true"
               },
               "name": "Data Mapper",
               "stepKind": "mapper"
+            },
+            {
+              "configuredProperties": {
+                "bodyLoggingEnabled": "true",
+                "contextLoggingEnabled": "false",
+                "customText": "SOAP request"
+              },
+              "id": "-MUmQ_96Se1b5D1Gv05j",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Log",
+              "stepKind": "log"
             },
             {
               "action": {
@@ -2179,6 +2192,19 @@
               "stepKind": "endpoint"
             },
             {
+              "configuredProperties": {
+                "bodyLoggingEnabled": "true",
+                "contextLoggingEnabled": "false",
+                "customText": "SOAP response"
+              },
+              "id": "-MUmQcRNSe1b5D1Gv05j",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Log",
+              "stepKind": "log"
+            },
+            {
               "action": {
                 "actionType": "step",
                 "descriptor": {
@@ -2199,14 +2225,27 @@
                 }
               },
               "configuredProperties": {
-                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlDataSource\",\"id\":\"-MOBotqaTwHye5JsPzDt\",\"uri\":\"atlas:xml:-MOBotqaTwHye5JsPzDt\",\"dataSourceType\":\"SOURCE\",\"xmlNamespaces\":{\"xmlNamespace\":[{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"}]}},{\"jsonType\":\"io.atlasmap.xml.v2.XmlDataSource\",\"id\":\"-MOBohZcTwHye5JsPzDt\",\"uri\":\"atlas:xml:-MOBohZcTwHye5JsPzDt\",\"dataSourceType\":\"SOURCE\",\"xmlNamespaces\":{\"xmlNamespace\":[{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"}]}},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-MOBi61qTwHye5JsPzDt\",\"uri\":\"atlas:json:-MOBi61qTwHye5JsPzDt\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.319629\",\"inputField\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlField\",\"name\":\"faultactor\",\"path\":\"/tns:Envelope/tns:Body/tns:Fault/tns:faultactor\",\"fieldType\":\"UNSUPPORTED\",\"docId\":\"-MOBohZcTwHye5JsPzDt\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-MOBi61qTwHye5JsPzDt\",\"userCreated\":false}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.785603\",\"inputField\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlField\",\"name\":\"faultcode\",\"path\":\"/tns:Envelope/tns:Body/tns:Fault/tns:faultcode\",\"fieldType\":\"UNSUPPORTED\",\"docId\":\"-MOBohZcTwHye5JsPzDt\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-MOBi61qTwHye5JsPzDt\",\"userCreated\":false}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.424726\",\"inputField\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlField\",\"name\":\"faultstring\",\"path\":\"/tns:Envelope/tns:Body/tns:Fault/tns:faultstring\",\"fieldType\":\"STRING\",\"docId\":\"-MOBohZcTwHye5JsPzDt\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"last_name\",\"path\":\"/last_name\",\"fieldType\":\"STRING\",\"docId\":\"-MOBi61qTwHye5JsPzDt\",\"userCreated\":false}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlDataSource\",\"id\":\"-MYkYlhLZATfE1Lrmown\",\"name\":\"2 - sayHi\",\"description\":\"Data input for operation sayHi\",\"uri\":\"atlas:xml:-MYkYlhLZATfE1Lrmown\",\"dataSourceType\":\"SOURCE\",\"xmlNamespaces\":{\"xmlNamespace\":[{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"}]}},{\"jsonType\":\"io.atlasmap.xml.v2.XmlDataSource\",\"id\":\"-MOBohZcTwHye5JsPzDt\",\"name\":\"4 - sayHiResponse\",\"description\":\"Data output for operation sayHi\",\"uri\":\"atlas:xml:-MOBohZcTwHye5JsPzDt\",\"dataSourceType\":\"SOURCE\",\"xmlNamespaces\":{\"xmlNamespace\":[{\"alias\":\"tns\",\"uri\":\"http://schemas.xmlsoap.org/soap/envelope/\"},{\"alias\":\"ns1\",\"uri\":\"http://camel.apache.org/cxf/wsrm\"}]}},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-MOBi61qTwHye5JsPzDt\",\"name\":\"7 - SQL Parameter\",\"description\":\"Parameters of SQL [INSERT INTO CONTACT ( first_name, last_name, company ) VALUES ( :#first_name, :#last_name, :#company )]\",\"uri\":\"atlas:json:-MOBi61qTwHye5JsPzDt\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.448494\",\"inputField\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlField\",\"name\":\"faultactor\",\"path\":\"/tns:Envelope/tns:Body/tns:Fault/faultactor\",\"fieldType\":\"STRING\",\"docId\":\"-MOBohZcTwHye5JsPzDt\",\"attribute\":false,\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-MOBi61qTwHye5JsPzDt\"}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.516463\",\"inputField\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlField\",\"name\":\"faultcode\",\"path\":\"/tns:Envelope/tns:Body/tns:Fault/faultcode\",\"fieldType\":\"STRING\",\"docId\":\"-MOBohZcTwHye5JsPzDt\",\"attribute\":false,\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-MOBi61qTwHye5JsPzDt\"}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.958419\",\"inputField\":[{\"jsonType\":\"io.atlasmap.xml.v2.XmlField\",\"name\":\"faultstring\",\"path\":\"/tns:Envelope/tns:Body/tns:Fault/faultstring\",\"fieldType\":\"STRING\",\"docId\":\"-MOBohZcTwHye5JsPzDt\",\"attribute\":false,\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"last_name\",\"path\":\"/last_name\",\"fieldType\":\"STRING\",\"docId\":\"-MOBi61qTwHye5JsPzDt\"}]}]},\"name\":\"UI.0\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
               },
-              "id": "-MOb5m_193XAVb7O4lYT",
+              "id": "-MYkYtHMZATfE1Lrmown",
               "metadata": {
                 "configured": "true"
               },
               "name": "Data Mapper",
               "stepKind": "mapper"
+            },
+            {
+              "configuredProperties": {
+                "bodyLoggingEnabled": "true",
+                "contextLoggingEnabled": "false",
+                "customText": "SQL insert"
+              },
+              "id": "-MUmQfloSe1b5D1Gv05j",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Log",
+              "stepKind": "log"
             },
             {
               "action": {
@@ -2233,7 +2272,6 @@
                   },
                   "propertyDefinitionSteps": [
                     {
-                      "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
                       "name": "SQL statement",
                       "properties": {
                         "batch": {
@@ -2602,7 +2640,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:1.11-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:1.12-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {
@@ -2673,7 +2711,7 @@
                   "tags": [
                     "verifier"
                   ],
-                  "version": 10
+                  "version": 1
                 },
                 "connectorId": "sql",
                 "description": "Connection to SampleDB",
@@ -2708,8 +2746,8 @@
         "sql",
         "timer"
       ],
-      "updatedAt": 1608047626820,
-      "version": 5
+      "updatedAt": 1618943650133,
+      "version": 10
     }
   }
 }
