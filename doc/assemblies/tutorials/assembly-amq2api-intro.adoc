@@ -28,11 +28,8 @@ ifeval::["{location}" == "downstream"]
 .Prerequisites
 
 * You must be logged in to {prodname}.
-If you are not already logged in, see
-link:{LinkSyndesisTutorials}#logging-in-and-out_tutorials[What to expect the first time that you use {prodname}.]
 
-* You are working in a {prodname} evaluation environment that is running
-on OpenShift Dedicated or you are working in a {prodname}
+* You are working in a {prodname}
 environment that is running in an OpenShift Container Platform project in which
 an administrator added the {prodname} sample data, which provides the sample *PostgresDB* connection and the *To Do* app for confirming that the integration works as expected.
 endif::[]
