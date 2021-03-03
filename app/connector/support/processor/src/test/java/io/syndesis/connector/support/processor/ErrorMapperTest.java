@@ -21,41 +21,40 @@ import java.nio.file.FileAlreadyExistsException;
 import java.util.Collections;
 import java.util.Map;
 
+import org.apache.camel.component.file.GenericFileOperationFailedException;
 import org.junit.Test;
 
 import io.syndesis.common.util.CamelCase;
 import io.syndesis.common.util.ErrorCategory;
 import io.syndesis.common.util.SyndesisConnectorException;
-import io.syndesis.connector.support.processor.ErrorMapper;
-import io.syndesis.connector.support.processor.ErrorStatusInfo;
 
 public class ErrorMapperTest {
 
     static final Map<String, Integer> errorResponseCodeMappings=
-            ErrorMapper.jsonToMap("{\"SQL_CONNECTOR_ERROR\":500,\"SERVER_ERROR\":500,"
-                    + "\"SQL_DATA_ACCESS_ERROR\":400,\"SQL_ENTITY_NOT_FOUND_ERROR\":404}");
+            ErrorMapper.jsonToMap("{\"CONNECTOR_ERROR\":500,\"SERVER_ERROR\":500,"
+                    + "\"DATA_ACCESS_ERROR\":400,\"DUPLICATE_KEY_ERROR\":409,\"ENTITY_NOT_FOUND_ERROR\":404}");
 
     @Test
     public void testJsonToMap() {
-        assertThat(errorResponseCodeMappings.size()).isEqualTo(4);
-        assertThat(errorResponseCodeMappings.containsKey("SQL_CONNECTOR_ERROR")).isTrue();
+        assertThat(errorResponseCodeMappings.size()).isEqualTo(5);
+        assertThat(errorResponseCodeMappings.containsKey("CONNECTOR_ERROR")).isTrue();
     }
 
     @Test
     public void testEmptyMap() {
-        SyndesisConnectorException sce = new SyndesisConnectorException("SQL_CONNECTOR_ERROR", "error msg test");
+        SyndesisConnectorException sce = new SyndesisConnectorException("CONNECTOR_ERROR", "error msg test");
         ErrorStatusInfo info = ErrorMapper.mapError(sce, Collections.emptyMap(), 200);
         assertThat(info.getHttpResponseCode()).isEqualTo(200);
-        assertThat(info.getCategory()).isEqualTo("SQL_CONNECTOR_ERROR");
+        assertThat(info.getCategory()).isEqualTo("CONNECTOR_ERROR");
         assertThat(info.getMessage()).isEqualTo("error msg test");
     }
 
     @Test
     public void testSyndesisEntityNotFOund() {
-        Exception e = new SyndesisConnectorException("SQL_ENTITY_NOT_FOUND_ERROR", "entity not found");
+        Exception e = new SyndesisConnectorException("ENTITY_NOT_FOUND_ERROR", "entity not found");
         ErrorStatusInfo info = ErrorMapper.mapError(e, errorResponseCodeMappings, 200);
         assertThat(info.getHttpResponseCode()).isEqualTo(404);
-        assertThat(info.getCategory()).isEqualTo("SQL_ENTITY_NOT_FOUND_ERROR");
+        assertThat(info.getCategory()).isEqualTo("ENTITY_NOT_FOUND_ERROR");
         assertThat(info.getMessage()).isEqualTo("entity not found");
     }
 
@@ -70,12 +69,12 @@ public class ErrorMapperTest {
 
     @Test
     public void testFileAlreadyExistsException() {
-        Exception e = new FileAlreadyExistsException("myfile");
+        Exception e = new GenericFileOperationFailedException("myfile");
         ErrorStatusInfo info = ErrorMapper.mapError(e, errorResponseCodeMappings, 200);
-        assertThat(info.getHttpResponseCode()).isEqualTo(500);
-        assertThat(info.getCategory()).isEqualTo("SERVER_ERROR");
+        assertThat(info.getHttpResponseCode()).isEqualTo(409);
+        assertThat(info.getCategory()).isEqualTo("DUPLICATE_KEY_ERROR");
         assertThat(info.getMessage()).isEqualTo("myfile");
-        assertThat(info.getError()).isEqualTo("file_already_exists_error");
+        assertThat(info.getError()).isEqualTo("generic_file_operation_failed_error");
     }
 
     @Test

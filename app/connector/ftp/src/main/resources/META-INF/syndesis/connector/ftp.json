@@ -71,7 +71,7 @@
                 "group": "producer",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
-                "labelHint": "Simple language expression that resolves to a file name",
+                "labelHint": "Simple file language expression that resolves to a file name, examples are '${file:name}', '${file:onlyname.noext}.txt' (files with extension *.txt)",
                 "required": false,
                 "secret": false,
                 "type": "string"
@@ -110,7 +110,216 @@
     },
     {
       "actionType": "connector",
-      "description": "Download a file from the FTP server",
+      "description": "Upload a named file to the FTP server",
+      "descriptor": {
+        "configuredProperties": {},
+        "standardizedErrors": [
+          {
+            "name": "DATA_ACCESS_ERROR",
+            "displayName": "DataAccessError"
+          },
+          {
+            "name": "DUPLICATE_KEY_ERROR",
+            "displayName": "DuplicateKeyError"
+          },
+          {
+            "name": "CONNECTOR_ERROR",
+            "displayName": "ConnectorError"
+          }
+        ],
+        "connectorCustomizers": [
+          "io.syndesis.connector.ftp.FtpConnectorCustomizer"
+        ],
+        "inputDataShape": {
+          "description": "FTP upload payload",
+          "kind": "json-schema",
+          "name": "FtpPayload",
+          "specification": "{ \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"type\": \"object\", \"properties\": { \"fileName\": { \"type\": \"string\" }, \"fileContent\": { \"type\": \"string\" } }, \"required\": [ \"fileName\", \"fileContent\" ] }"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Upload to FTP server",
+            "name": "Upload to FTP server",
+            "properties": {
+              "directoryName": {
+                "deprecated": false,
+                "displayName": "FTP directory",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "FTP directory name in which to upload file",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "fileExist": {
+                "defaultValue": "Override",
+                "deprecated": false,
+                "displayName": "If file exists",
+                "enum": [
+                  {
+                    "label": "Override",
+                    "value": "Override"
+                  },
+                  {
+                    "label": "Append",
+                    "value": "Append"
+                  },
+                  {
+                    "label": "Fail",
+                    "value": "Fail"
+                  },
+                  {
+                    "label": "Ignore",
+                    "value": "Ignore"
+                  },
+                  {
+                    "label": "Move",
+                    "value": "Move"
+                  },
+                  {
+                    "label": "TryRename",
+                    "value": "TryRename"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "Desired behavior when the file being uploaded is already on the server",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "tempFileName": {
+                "deprecated": false,
+                "displayName": "Temporary file name while copying",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Temporary file name while copying",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "tempPrefix": {
+                "deprecated": false,
+                "displayName": "Temporary file prefix while copying",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Temporary file prefix while copying",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:ftp-upload-named-file-connector",
+      "name": "UploadNamedFile",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Download a named file from the FTP server",
+      "descriptor": {
+        "configuredProperties": {},
+        "standardizedErrors": [
+          {
+            "name": "DATA_ACCESS_ERROR",
+            "displayName": "DataAccessError"
+          },
+          {
+            "name": "ENTITY_NOT_FOUND_ERROR",
+            "displayName": "EntityNotFoundError"
+          },
+          {
+            "name": "CONNECTOR_ERROR",
+            "displayName": "ConnectorError"
+          }
+        ],
+        "connectorCustomizers": [
+          "io.syndesis.connector.ftp.FtpConnectorCustomizer"
+        ],
+        "inputDataShape": {
+          "description": "FTP Header",
+          "kind": "json-schema",
+          "name": "FtpPayloadHeader",
+          "specification": "{ \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"type\": \"object\", \"properties\": { \"fileName\": { \"type\": \"string\" } }, \"required\": [ \"fileName\" ] }"
+        },
+        "outputDataShape": {
+          "description": "FTP download payload",
+          "kind": "json-schema",
+          "name": "FtpPayloadFromServer",
+          "specification": "{ \"$schema\": \"http://json-schema.org/draft-04/schema#\", \"type\": \"object\", \"properties\": { \"fileName\": { \"type\": \"string\" }, \"fileContent\": { \"type\": \"string\" } }, \"required\": [ \"fileName\", \"fileContent\" ] }"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Download a named file from FTP server",
+            "name": "Download named file from FTP server",
+            "properties": {
+              "delete": {
+                "defaultValue": "false",
+                "deprecated": false,
+                "displayName": "Delete file after download",
+                "enum": [
+                  {
+                    "label": "No",
+                    "value": "false"
+                  },
+                  {
+                    "label": "Yes",
+                    "value": "true"
+                  }
+                ],
+                "group": "consumer",
+                "javaType": "boolean",
+                "kind": "parameter",
+                "labelHint": "Delete the file from the server after downloading it",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "directoryName": {
+                "deprecated": false,
+                "displayName": "FTP directory",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "FTP directory name from which to download file",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "fileName" : {
+                "defaultValue": "${header.CamelFileName}",
+                "deprecated": false,
+                "displayName": "File name expression",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "proxyParameter",
+                "labelHint": "Simple language expression that resolves to a file name",
+                "required": false,
+                "secret": false,
+                "type": "hidden"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:ftp-download-named-file-connector",
+      "name": "DownloadNamedFile",
+      "pattern": "PollEnrich"
+    },
+    {
+      "actionType": "connector",
+      "description": "Download files from the FTP server",
       "descriptor": {
         "configuredProperties": {},
         "inputDataShape": {
@@ -175,7 +384,7 @@
                 "group": "producer",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
-                "labelHint": "Simple language expression that resolves to a file name",
+                "labelHint": "Simple file language expression that resolves to a file name, examples are '${file:name}', '${file:onlyname.noext}.txt' (files with extension *.txt)",
                 "required": false,
                 "secret": false,
                 "type": "string"

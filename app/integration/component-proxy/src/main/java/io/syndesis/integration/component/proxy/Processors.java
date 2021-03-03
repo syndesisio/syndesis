@@ -34,14 +34,18 @@ public final class Processors {
         @Override
         public Exchange aggregate(final Exchange previousExchange, final Exchange currentExchange) {
             final Message previousMessage = previousExchange.getIn();
-            final Message currentMessage = currentExchange.getIn();
-            previousMessage.setBody(currentMessage.getBody());
-            if (currentMessage.hasAttachments()) {
-                previousMessage.getAttachmentObjects().putAll(currentMessage.getAttachmentObjects());
+            if (currentExchange==null) {
+                previousExchange.getIn().setBody(null);
+                previousExchange.setOut(null);
+            } else {
+                final Message currentMessage = currentExchange.getIn();
+                previousMessage.setBody(currentMessage.getBody());
+                if (currentMessage.hasAttachments()) {
+                    previousMessage.getAttachmentObjects().putAll(currentMessage.getAttachmentObjects());
+                }
+                previousMessage.getHeaders().putAll(currentMessage.getHeaders());
+                previousExchange.getProperties().putAll(currentExchange.getProperties());
             }
-            previousMessage.getHeaders().putAll(currentMessage.getHeaders());
-            previousExchange.getProperties().putAll(currentExchange.getProperties());
-
             return previousExchange;
         }
     }
