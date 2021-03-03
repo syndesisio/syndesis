@@ -30,8 +30,6 @@ It takes less than two minutes to obtain a Salesforce account.
 
 ifeval::["{location}" == "downstream"]
 * You must be logged in to your {prodname} environment. 
-If you are not already logged in, see 
-link:{LinkSyndesisTutorials}#logging-in-and-out_tutorials[What to expect the first time that you use {prodname}.] 
 endif::[]
 
 To implement, deploy, and test this sample integration, the main steps are:
