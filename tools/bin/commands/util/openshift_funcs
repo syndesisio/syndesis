@@ -299,7 +299,7 @@ create_or_delete_openshift_resource() {
             fi
         fi
     else
-        local url="https://raw.githubusercontent.com/syndesisio/syndesis/${tag:-master}/${resource}"
+        local url="https://raw.githubusercontent.com/syndesisio/syndesis/${tag:-$(curl -s https://api.github.com/repos/syndesisio/syndesis |jq -r .default_branch)}/${resource}"
 
         if [ -z "$parameters" ]; then
             result=$(oc $what -f $url >$ERROR_FILE 2>&1)
@@ -334,9 +334,10 @@ wait_for_deployments() {
       echo "Waiting for $dc to be scaled to ${replicas_desired}"
       local replicas=$(get_replicas $dc)
       while [ -z "$replicas" ] || [ "$replicas" -ne $replicas_desired ]; do
-          echo "Sleeping 10s ..."
+          echo "Waiting for $dcs - Sleeping 10s ..."
           sleep 10
           replicas=$(get_replicas $dc)
+          echo $replicas
       done
   done
   kill $watch_pid
@@ -344,12 +345,12 @@ wait_for_deployments() {
 
 get_replicas() {
   local dc=${1}
-  local hasDc=$(oc get dc -o name | grep $dc)
+  local hasDc=$(oc get deployment -o name | grep $dc)
   if [ -z "$hasDc" ]; then
       echo "0"
       return
   fi
-  oc get dc $dc -o jsonpath="{.status.availableReplicas}"
+  oc get deployment $dc -o jsonpath="{.status.availableReplicas}"
 }
 
 pod() {
