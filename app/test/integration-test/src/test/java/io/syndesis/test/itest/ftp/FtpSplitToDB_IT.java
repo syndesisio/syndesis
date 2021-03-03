@@ -16,30 +16,24 @@
 
 package io.syndesis.test.itest.ftp;
 
+import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
+
+import org.apache.commons.net.ftp.FTPCmd;
+import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.ftp.message.FtpMessage;
-import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
-import org.apache.commons.net.ftp.FTPCmd;
-import org.apache.ftpserver.DataConnectionConfiguration;
-import org.apache.ftpserver.DataConnectionConfigurationFactory;
-import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = FtpSplitToDB_IT.EndpointConfig.class)
-@DirtiesContext
 @Testcontainers
 public class FtpSplitToDB_IT extends FtpTestSupport {
 
@@ -48,7 +42,7 @@ public class FtpSplitToDB_IT extends FtpTestSupport {
      * The integration uses a split step to pass entries one by one to the database.
      */
     @Container
-    public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
+    public static final SyndesisIntegrationRuntimeContainer INTEGRATION_CONTAINER = new SyndesisIntegrationRuntimeContainer.Builder()
             .name("ftp-split-to-db")
             .fromExport(FtpSplitToDB_IT.class.getResource("FtpSplitToDB-export"))
             .customize("$..configuredProperties.delay", "60000")
@@ -80,25 +74,19 @@ public class FtpSplitToDB_IT extends FtpTestSupport {
                         return index > 10;
                     }
                 })
-                .actions(runner.query(builder -> builder.dataSource(sampleDb)
+                .actions(runner.query(builder -> builder.dataSource(sampleDb())
                         .statement("select count(*) as found_records from todo")
                         .validate("found_records", String.valueOf(3))));
 
-        runner.query(builder -> builder.dataSource(sampleDb)
+        runner.query(builder -> builder.dataSource(sampleDb())
                 .statement("select task, completed from todo")
                 .validate("task", "FTP task #1", "FTP task #2", "FTP task #3")
                 .validate("completed", "0", "1", "0"));
     }
 
-    @Configuration
-    public static class EndpointConfig {
-
-        @Bean
-        public DataConnectionConfiguration dataConnectionConfiguration() {
-            DataConnectionConfigurationFactory dataConnectionFactory = new DataConnectionConfigurationFactory();
-            dataConnectionFactory.setPassiveExternalAddress(integrationContainer.getInternalHostIp());
-            dataConnectionFactory.setPassivePorts(String.valueOf(PASSIVE_PORT));
-            return dataConnectionFactory.createDataConnectionConfiguration();
-        }
+    @Override
+    protected SyndesisIntegrationRuntimeContainer integrationContainer() {
+        return INTEGRATION_CONTAINER;
     }
+
 }

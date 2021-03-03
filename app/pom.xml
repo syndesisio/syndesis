@@ -111,6 +111,7 @@
 
     <!-- Plugin versions -->
     <dep.plugin.surefire.version>3.0.0-M5</dep.plugin.surefire.version>
+    <dep.plugin.failsafe.version>3.0.0-M5</dep.plugin.failsafe.version>
     <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
     <!-- FIXME: update to 6.19 when released we're seeing:
       https://github.com/pmd/pmd/issues/1969
@@ -268,32 +269,19 @@
         <module>ui-react</module>
       </modules>
     </profile>
+
+    <profile>
+      <id>build-integration-test</id>
+      <modules>
+        <module>test</module>
+      </modules>
+    </profile>
+
     <!--
     =========================================================================
     Profiles (which can and should be combined)
     =========================================================================
     -->
-
-    <!-- Profile for building Docker images -->
-    <profile>
-      <id>image</id>
-      <activation>
-        <property>
-          <name>::image</name>
-        </property>
-      </activation>
-
-      <modules>
-        <module>server</module>
-        <module>meta</module>
-        <module>ui-react</module>
-      </modules>
-
-      <build>
-        <defaultGoal>install</defaultGoal>
-      </build>
-    </profile>
-
     <!-- No checks enabled -->
     <profile>
       <id>skip-checks</id>

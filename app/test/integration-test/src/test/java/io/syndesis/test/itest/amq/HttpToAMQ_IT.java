@@ -18,33 +18,30 @@ package io.syndesis.test.itest.amq;
 
 import javax.jms.ConnectionFactory;
 
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.http.server.HttpServer;
-import com.consol.citrus.jms.endpoint.JmsEndpoint;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.amq.JBossAMQBrokerContainer;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.SocketUtils;
 import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
+import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.jms.endpoint.JmsEndpoint;
+
 /**
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = HttpToAMQ_IT.EndpointConfig.class)
 @org.testcontainers.junit.jupiter.Testcontainers
 public class HttpToAMQ_IT extends SyndesisIntegrationTestSupport {
 
@@ -53,38 +50,45 @@ public class HttpToAMQ_IT extends SyndesisIntegrationTestSupport {
         Testcontainers.exposeHostPorts(TODO_SERVER_PORT);
     }
 
-    @Autowired
-    private HttpServer todoApiServer;
+    private static final HttpServer TODO_API_SERVER = startup(CitrusEndpoints.http()
+        .server()
+        .port(TODO_SERVER_PORT)
+        .autoStart(true)
+        .timeout(60000L)
+        .build());
 
-    @Autowired
-    private JmsEndpoint todoJms;
+    private final JmsEndpoint todoJms = CitrusEndpoints.jms()
+        .asynchronous()
+        .connectionFactory(connectionFactory())
+        .destination("todos")
+        .build();
 
     @Container
-    public static JBossAMQBrokerContainer amqBrokerContainer = new JBossAMQBrokerContainer();
+    public static final JBossAMQBrokerContainer AMQ_BROKER = new JBossAMQBrokerContainer();
 
     /**
      * Integration periodically requests list of tasks (as Json array) from Http service and maps the results to AMQ queue.
      * AMQ queue is provided with all tasks (Json array) as message payload.
      */
     @Container
-    public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
+    public static final SyndesisIntegrationRuntimeContainer INTEGRATION_CONTAINER = new SyndesisIntegrationRuntimeContainer.Builder()
             .name("http-to-amq")
             .fromExport(HttpToAMQ_IT.class.getResource("HttpToAMQ-export"))
             .customize("$..configuredProperties.schedulerExpression", "5000")
             .customize("$..configuredProperties.baseUrl",
                         String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, TODO_SERVER_PORT))
             .build()
-            .withNetwork(amqBrokerContainer.getNetwork())
+            .withNetwork(AMQ_BROKER.getNetwork())
             .waitingFor(Wait.defaultWaitStrategy().withStartupTimeout(SyndesisTestEnvironment.getContainerStartupTimeout()));
 
     @Test
     @CitrusTest
     public void testHttpToAMQ(@CitrusResource TestRunner runner) {
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.http(builder -> builder.server(TODO_API_SERVER)
                 .receive()
                 .get());
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.http(builder -> builder.server(TODO_API_SERVER)
                 .send()
                 .response(HttpStatus.OK)
                 .payload("[{\"id\": \"1\", \"task\":\"Learn to play drums\", \"completed\": 0}," +
@@ -98,11 +102,11 @@ public class HttpToAMQ_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testHttpToAMQEmptyList(@CitrusResource TestRunner runner) {
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.http(builder -> builder.server(TODO_API_SERVER)
                 .receive()
                 .get());
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.http(builder -> builder.server(TODO_API_SERVER)
                 .send()
                 .response(HttpStatus.OK)
                 .payload("[]"));
@@ -111,32 +115,9 @@ public class HttpToAMQ_IT extends SyndesisIntegrationTestSupport {
                         .payload("[]"));
     }
 
-    @Configuration
-    public static class EndpointConfig {
-        @Bean
-        public ConnectionFactory connectionFactory() {
-            return new ActiveMQConnectionFactory(amqBrokerContainer.getUsername(),
-                                                 amqBrokerContainer.getPassword(),
-                                                 String.format("tcp://localhost:%s", amqBrokerContainer.getOpenwirePort()));
-        }
-
-        @Bean
-        public JmsEndpoint todoJms() {
-            return CitrusEndpoints.jms()
-                    .asynchronous()
-                    .connectionFactory(connectionFactory())
-                    .destination("todos")
-                    .build();
-        }
-
-        @Bean
-        public HttpServer todoApiServer() {
-            return CitrusEndpoints.http()
-                    .server()
-                    .port(TODO_SERVER_PORT)
-                    .autoStart(true)
-                    .timeout(60000L)
-                    .build();
-        }
+    private static ConnectionFactory connectionFactory() {
+        return new ActiveMQConnectionFactory(AMQ_BROKER.getUsername(),
+            AMQ_BROKER.getPassword(),
+            String.format("tcp://localhost:%s", AMQ_BROKER.getOpenwirePort()));
     }
 }

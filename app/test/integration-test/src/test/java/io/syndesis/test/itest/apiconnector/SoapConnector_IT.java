@@ -16,38 +16,34 @@
 
 package io.syndesis.test.itest.apiconnector;
 
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
-import com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor;
-import com.consol.citrus.ws.server.WebServiceServer;
+import java.util.Arrays;
+
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.UnsupportedCallbackException;
+
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
+
 import org.apache.wss4j.common.WSS4JConstants;
 import org.apache.wss4j.common.ext.WSPasswordCallback;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.SocketUtils;
 import org.springframework.ws.soap.security.wss4j2.Wss4jSecurityInterceptor;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.UnsupportedCallbackException;
-import javax.sql.DataSource;
-import java.util.Arrays;
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
+import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor;
+import com.consol.citrus.ws.server.WebServiceServer;
 
 /**
  * @author Dhiraj Bokde
  */
-@ContextConfiguration(classes = SoapConnector_IT.EndpointConfig.class)
 @Testcontainers
 public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
 
@@ -56,11 +52,7 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
         org.testcontainers.Testcontainers.exposeHostPorts(SOAP_SERVER_PORT);
     }
 
-    @Autowired
-    private WebServiceServer soapServer;
-
-    @Autowired
-    private DataSource sampleDb;
+    private static final WebServiceServer SOAP_SERVER = startup(soapServer());
 
     private static final String REQUEST_PAYLOAD =
         "<ns1:sayHi xmlns:ns1=\"http://camel.apache.org/cxf/wsrm\">" +
@@ -79,7 +71,7 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
      *  Invoke operation sayHi.
      */
     @Container
-    public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
+    public static final SyndesisIntegrationRuntimeContainer INTEGRATION_CONTAINER = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("soap-helloworld-client")
                             .fromExport(SoapConnector_IT.class.getResource("HelloWorldSoapConnector-export"))
                             .customize("$..configuredProperties.period", "5000")
@@ -95,11 +87,11 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
     public void testSayHi(@CitrusResource TestRunner runner) {
         runner.echo("SayHi operation");
 
-        runner.soap(builder -> builder.server(soapServer)
+        runner.soap(builder -> builder.server(SOAP_SERVER)
             .receive()
             .payload(REQUEST_PAYLOAD));
 
-        runner.soap(builder -> builder.server(soapServer)
+        runner.soap(builder -> builder.server(SOAP_SERVER)
             .send()
             .payload(RESPONSE_PAYLOAD));
 
@@ -107,54 +99,39 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
             .index("retries")
             .autoSleep(1000L)
             .until((index, rules) -> index <= 6)
-            .actions(runner.query(builder -> builder.dataSource(sampleDb)
+            .actions(runner.query(builder -> builder.dataSource(sampleDb())
                 .statement("select count(*) as found_records from contact where first_name like 'Hello Hello!'")
                 .validateScript("assert rows.get(0).get(\"found_records\") > 0", "groovy")));
     }
 
-    @Configuration
-    public static class EndpointConfig {
+    private static WebServiceServer soapServer() {
+        // WS-Security validation
+        final Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
+        interceptor.setValidationActions("UsernameToken Timestamp");
+        interceptor.setSecurementPasswordType(WSS4JConstants.PW_TEXT);
+        interceptor.setSecurementUsernameTokenCreated(true);
+        interceptor.setSecurementUsernameTokenNonce(true);
 
-        @Bean
-        public WebServiceServer soapServer() {
-            // WS-Security validation
-            final Wss4jSecurityInterceptor interceptor = new Wss4jSecurityInterceptor();
-            interceptor.setValidationActions("UsernameToken Timestamp");
-            interceptor.setSecurementPasswordType(WSS4JConstants.PW_TEXT);
-            interceptor.setSecurementUsernameTokenCreated(true);
-            interceptor.setSecurementUsernameTokenNonce(true);
-
-            interceptor.setValidationCallbackHandler(callbacks -> {
-                for (Callback callback : callbacks) {
-                    if (callback instanceof WSPasswordCallback) {
-                        final WSPasswordCallback passwordCallback = (WSPasswordCallback) callback;
-                        if ("admin".equals(passwordCallback.getIdentifier())) {
-                            passwordCallback.setPassword("secret");
-                        }
-                    } else {
-                        throw new UnsupportedCallbackException(callback, "Unrecognized Callback");
+        interceptor.setValidationCallbackHandler(callbacks -> {
+            for (Callback callback : callbacks) {
+                if (callback instanceof WSPasswordCallback) {
+                    final WSPasswordCallback passwordCallback = (WSPasswordCallback) callback;
+                    if ("admin".equals(passwordCallback.getIdentifier())) {
+                        passwordCallback.setPassword("secret");
                     }
+                } else {
+                    throw new UnsupportedCallbackException(callback, "Unrecognized Callback");
                 }
-            });
+            }
+        });
 
-            return CitrusEndpoints.soap()
-                .server()
-                .port(SOAP_SERVER_PORT)
-                .interceptors(Arrays.asList(new LoggingEndpointInterceptor(), interceptor))
-                .autoStart(true)
-                .timeout(600000L)
-                .build();
-        }
-
-        @Bean
-        public TestRunnerBeforeTestSupport beforeTest(DataSource sampleDb) {
-            return new TestRunnerBeforeTestSupport() {
-                @Override
-                public void beforeTest(TestRunner runner) {
-                    runner.sql(builder -> builder.dataSource(sampleDb)
-                        .statement("delete from contact"));
-                }
-            };
-        }
+        return CitrusEndpoints.soap()
+            .server()
+            .port(SOAP_SERVER_PORT)
+            .interceptors(Arrays.asList(new LoggingEndpointInterceptor(), interceptor))
+            .autoStart(true)
+            .timeout(600000L)
+            .build();
     }
+
 }

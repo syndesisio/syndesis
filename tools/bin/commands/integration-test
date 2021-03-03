@@ -20,7 +20,7 @@ EOT
 integration-test::run() {
     source "$(basedir)/commands/util/maven_funcs"
 
-    call_maven "$(maven_args)" ":test-parent,:test-support,:integration-test"
+    call_maven "$(maven_args)" "integration-test"
 }
 
 maven_args() {

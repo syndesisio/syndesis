@@ -36,7 +36,7 @@ public class WebhookToGMail_IT extends SyndesisIntegrationTestSupport {
      * Webhook receives POST request and sends an e-mail via GMail REST API.
      */
     @Container
-    public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
+    public static final SyndesisIntegrationRuntimeContainer INTEGRATION_CONTAINER = new SyndesisIntegrationRuntimeContainer.Builder()
         .name("webhook-to-gmail")
         .fromExport(WebhookToGMail_IT.class.getResource("webhook-to-gmail-export"))
         .build()
@@ -50,6 +50,6 @@ public class WebhookToGMail_IT extends SyndesisIntegrationTestSupport {
             .method(HttpMethod.GET)
             .seconds(10L)
             .status(HttpStatus.OK)
-            .url(String.format("http://localhost:%s/actuator/health", integrationContainer.getManagementPort()));
+            .url(String.format("http://localhost:%s/actuator/health", INTEGRATION_CONTAINER.getManagementPort()));
     }
 }

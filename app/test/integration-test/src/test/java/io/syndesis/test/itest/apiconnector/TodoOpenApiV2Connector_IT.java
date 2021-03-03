@@ -16,30 +16,27 @@
 
 package io.syndesis.test.itest.apiconnector;
 
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.http.server.HttpServer;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
+
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.SocketUtils;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
+import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.http.server.HttpServer;
+
 /**
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = TodoOpenApiV2Connector_IT.EndpointConfig.class)
 @Testcontainers
 public class TodoOpenApiV2Connector_IT extends SyndesisIntegrationTestSupport {
 
@@ -48,8 +45,12 @@ public class TodoOpenApiV2Connector_IT extends SyndesisIntegrationTestSupport {
         org.testcontainers.Testcontainers.exposeHostPorts(TODO_SERVER_PORT);
     }
 
-    @Autowired
-    private HttpServer todoApiServer;
+    private static final HttpServer TODO_API_SERVER = startup(CitrusEndpoints.http()
+        .server()
+        .port(TODO_SERVER_PORT)
+        .autoStart(true)
+        .timeout(600000L)
+        .build());
 
     /**
      * Integration uses api connector to send OpenAPI client requests to a REST endpoint. The client API connector was generated
@@ -63,7 +64,7 @@ public class TodoOpenApiV2Connector_IT extends SyndesisIntegrationTestSupport {
      *  DELETE /api/{id} delete task
      */
     @Container
-    public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
+    public static final SyndesisIntegrationRuntimeContainer INTEGRATION_CONTAINER = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("todo-api-client")
                             .fromExport(TodoOpenApiV2Connector_IT.class.getResource("TodoOpenApiV2Connector-export"))
                             .customize("$..configuredProperties.period", "5000")
@@ -81,13 +82,13 @@ public class TodoOpenApiV2Connector_IT extends SyndesisIntegrationTestSupport {
 
         runner.echo("Add new task");
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.http(builder -> builder.server(TODO_API_SERVER)
             .receive()
             .post("/api")
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
             .payload("{\"task\":\"${task}\", \"completed\": 0}"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.http(builder -> builder.server(TODO_API_SERVER)
             .send()
             .response(HttpStatus.CREATED)
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -95,13 +96,13 @@ public class TodoOpenApiV2Connector_IT extends SyndesisIntegrationTestSupport {
 
         runner.echo("Update task");
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.http(builder -> builder.server(TODO_API_SERVER)
             .receive()
             .put("/api/${id}")
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
             .payload("{\"id\": ${id}, \"task\":\"citrus:upperCase(${task})\", \"completed\": 0}"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.http(builder -> builder.server(TODO_API_SERVER)
             .send()
             .response(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -109,11 +110,11 @@ public class TodoOpenApiV2Connector_IT extends SyndesisIntegrationTestSupport {
 
         runner.echo("Fetch task by id");
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.http(builder -> builder.server(TODO_API_SERVER)
             .receive()
             .get("/api/${id}"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.http(builder -> builder.server(TODO_API_SERVER)
             .send()
             .response(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -121,11 +122,11 @@ public class TodoOpenApiV2Connector_IT extends SyndesisIntegrationTestSupport {
 
         runner.echo("List all tasks");
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.http(builder -> builder.server(TODO_API_SERVER)
             .receive()
             .get("/api"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.http(builder -> builder.server(TODO_API_SERVER)
             .send()
             .response(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -133,25 +134,12 @@ public class TodoOpenApiV2Connector_IT extends SyndesisIntegrationTestSupport {
 
         runner.echo("Delete task by id");
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.http(builder -> builder.server(TODO_API_SERVER)
             .receive()
             .delete("/api/${id}"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.http(builder -> builder.server(TODO_API_SERVER)
             .send()
             .response(HttpStatus.NO_CONTENT));
-    }
-
-    @Configuration
-    public static class EndpointConfig {
-        @Bean
-        public HttpServer todoApiServer() {
-            return CitrusEndpoints.http()
-                .server()
-                .port(TODO_SERVER_PORT)
-                .autoStart(true)
-                .timeout(600000L)
-                .build();
-        }
     }
 }

@@ -16,37 +16,33 @@
 
 package io.syndesis.test.itest.ftp;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.ftp.client.FtpEndpointConfiguration;
-import com.consol.citrus.ftp.server.FtpServer;
+import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
+
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.ftpserver.DataConnectionConfiguration;
+import org.apache.ftpserver.DataConnectionConfigurationFactory;
 import org.apache.ftpserver.listener.ListenerFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.SocketUtils;
 import org.testcontainers.Testcontainers;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.ftp.client.FtpEndpointConfiguration;
+import com.consol.citrus.ftp.server.FtpServer;
 
 /**
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = FtpTestSupport.EndpointConfig.class)
 public abstract class FtpTestSupport extends SyndesisIntegrationTestSupport {
 
     /** Logger */
@@ -59,56 +55,47 @@ public abstract class FtpTestSupport extends SyndesisIntegrationTestSupport {
         Testcontainers.exposeHostPorts(PASSIVE_PORT);
     }
 
-    @Autowired
-    protected DataSource sampleDb;
+    protected FtpServer ftpTestServer = startup(ftpTestServer());
 
-    @Autowired
-    protected FtpServer ftpTestServer;
+    private FtpServer ftpTestServer() {
+        final DataConnectionConfiguration dataConnectionConfiguration = dataConnectionConfiguration();
 
-    @Configuration
-    public static class EndpointConfig {
+        FtpEndpointConfiguration endpointConfiguration = new FtpEndpointConfiguration();
+        endpointConfiguration.setAutoConnect(true);
+        endpointConfiguration.setAutoLogin(true);
+        endpointConfiguration.setAutoHandleCommands(
+                String.join(",", FTPCmd.PORT.getCommand(),
+                        FTPCmd.MKD.getCommand(),
+                        FTPCmd.PWD.getCommand(),
+                        FTPCmd.CWD.getCommand(),
+                        FTPCmd.PASV.getCommand(),
+                        FTPCmd.NOOP.getCommand(),
+                        FTPCmd.SYST.getCommand(),
+                        FTPCmd.LIST.getCommand(),
+                        FTPCmd.NLST.getCommand(),
+                        FTPCmd.QUIT.getCommand(),
+                        FTPCmd.TYPE.getCommand()));
+        endpointConfiguration.setPort(FTP_TEST_SERVER_PORT);
 
-        @Bean
-        public FtpServer ftpTestServer(DataConnectionConfiguration dataConnectionConfiguration) {
-            FtpEndpointConfiguration endpointConfiguration = new FtpEndpointConfiguration();
-            endpointConfiguration.setAutoConnect(true);
-            endpointConfiguration.setAutoLogin(true);
-            endpointConfiguration.setAutoHandleCommands(
-                    String.join(",", FTPCmd.PORT.getCommand(),
-                            FTPCmd.MKD.getCommand(),
-                            FTPCmd.PWD.getCommand(),
-                            FTPCmd.CWD.getCommand(),
-                            FTPCmd.PASV.getCommand(),
-                            FTPCmd.NOOP.getCommand(),
-                            FTPCmd.SYST.getCommand(),
-                            FTPCmd.LIST.getCommand(),
-                            FTPCmd.NLST.getCommand(),
-                            FTPCmd.QUIT.getCommand(),
-                            FTPCmd.TYPE.getCommand()));
-            endpointConfiguration.setPort(FTP_TEST_SERVER_PORT);
+        FtpServer ftpServer = new FtpServer(endpointConfiguration);
+        ftpServer.setUserManagerProperties(new ClassPathResource("ftp.server.properties", FtpTestSupport.class));
+        ftpServer.setAutoStart(true);
 
-            FtpServer ftpServer = new FtpServer(endpointConfiguration);
-            ftpServer.setUserManagerProperties(new ClassPathResource("ftp.server.properties", FtpTestSupport.class));
-            ftpServer.setAutoStart(true);
+        ListenerFactory listenerFactory = new ListenerFactory();
+        listenerFactory.setDataConnectionConfiguration(dataConnectionConfiguration);
+        ftpServer.setListenerFactory(listenerFactory);
 
-            ListenerFactory listenerFactory = new ListenerFactory();
-            listenerFactory.setDataConnectionConfiguration(dataConnectionConfiguration);
-            ftpServer.setListenerFactory(listenerFactory);
-
-            return ftpServer;
-        }
-
-        @Bean
-        public TestRunnerBeforeTestSupport beforeTest(DataSource sampleDb) {
-            return new TestRunnerBeforeTestSupport() {
-                @Override
-                public void beforeTest(TestRunner runner) {
-                    runner.sql(builder -> builder.dataSource(sampleDb)
-                            .statement("delete from todo"));
-                }
-            };
-        }
+        return ftpServer;
     }
+
+    private DataConnectionConfiguration dataConnectionConfiguration() {
+        DataConnectionConfigurationFactory dataConnectionFactory = new DataConnectionConfigurationFactory();
+        dataConnectionFactory.setPassiveExternalAddress(integrationContainer().getInternalHostIp());
+        dataConnectionFactory.setPassivePorts(String.valueOf(PASSIVE_PORT));
+        return dataConnectionFactory.createDataConnectionConfiguration();
+    }
+
+    protected abstract SyndesisIntegrationRuntimeContainer integrationContainer();
 
     @BeforeAll
     public static void setupFtpUserHome() {

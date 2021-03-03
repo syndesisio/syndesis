@@ -16,46 +16,98 @@
 
 package io.syndesis.test.itest;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import javax.sql.DataSource;
 
-import com.consol.citrus.dsl.junit.JUnit4CitrusTest;
 import io.syndesis.test.container.db.SyndesisDbContainer;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
-import org.springframework.test.context.ContextConfiguration;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+import com.consol.citrus.dsl.junit.jupiter.CitrusExtension;
+import com.zaxxer.hikari.HikariDataSource;
 
 /**
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = SyndesisIntegrationTestSupport.EndpointConfig.class)
-public abstract class SyndesisIntegrationTestSupport extends JUnit4CitrusTest {
+@ExtendWith(CitrusExtension.class)
+@Testcontainers
+public abstract class SyndesisIntegrationTestSupport {
 
-    private static final SyndesisDbContainer syndesisDb;
+    private static final List<DisposableBean> DESTRUCTION_LIST = new CopyOnWriteArrayList<>();
 
-    static {
-        syndesisDb = new SyndesisDbContainer();
-        syndesisDb.start();
+    private static final ConcurrentMap<String, DataSource> SYNDESIS_DB_POOLS = new ConcurrentHashMap<>();
+
+    @Container
+    private static final SyndesisDbContainer syndesisDb = new SyndesisDbContainer();
+
+    @BeforeEach
+    void truncateSampleDbTables() throws SQLException {
+        try (Connection connection = sampleDb().getConnection();
+            ResultSet tables = connection.getMetaData().getTables(null, null, null, null);
+            Statement statement = connection.createStatement()) {
+
+            while (tables.next()) {
+                if ("TABLE".equals(tables.getString("TABLE_TYPE"))) {
+                    statement.execute("TRUNCATE TABLE " + tables.getString("TABLE_NAME"));
+                }
+            }
+        }
     }
 
-    @Configuration
-    public static class EndpointConfig {
-        @Bean
-        public DataSource sampleDb() {
-            return new SingleConnectionDataSource(syndesisDb.getJdbcUrl(),
-                                                    syndesisDb.getUsername(),
-                                                    syndesisDb.getPassword(), true);
+    @AfterAll
+    public static void shutdown() {
+        for (final DisposableBean toDestroy : DESTRUCTION_LIST) {
+            try {
+                toDestroy.destroy();
+            } catch (final Exception ignore) {
+            }
         }
+    }
 
-        @Bean
-        public DataSource syndesisDb() {
-            return new SingleConnectionDataSource(syndesisDb.getJdbcUrl(),
-                                                    "syndesis",
-                                                    syndesisDb.getPassword(), true);
-        }
+    private static DataSource syndesisDbDataSourceFor(final String username) {
+        final HikariDataSource dataSource = new HikariDataSource();
+        dataSource.setJdbcUrl(syndesisDb.getJdbcUrl());
+        dataSource.setUsername(username);
+        dataSource.setPassword(syndesisDb.getPassword());
+
+        return dataSource;
     }
 
     protected static SyndesisDbContainer getSyndesisDb() {
         return syndesisDb;
+    }
+
+    protected static DataSource sampleDb() {
+        return SYNDESIS_DB_POOLS.computeIfAbsent(syndesisDb.getUsername(), SyndesisIntegrationTestSupport::syndesisDbDataSourceFor);
+    }
+
+    protected static <T extends InitializingBean & DisposableBean> T startup(final T service) {
+        try {
+            service.afterPropertiesSet();
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        DESTRUCTION_LIST.add(service);
+
+        return service;
+    }
+
+    protected static DataSource syndesisDb() {
+        return SYNDESIS_DB_POOLS.computeIfAbsent("syndesis", SyndesisIntegrationTestSupport::syndesisDbDataSourceFor);
     }
 }

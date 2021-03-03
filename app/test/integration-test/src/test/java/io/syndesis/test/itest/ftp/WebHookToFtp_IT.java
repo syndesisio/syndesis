@@ -20,6 +20,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import io.syndesis.test.SyndesisTestEnvironment;
+import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
+
+import org.apache.commons.net.ftp.FTPCmd;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
@@ -33,40 +44,23 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonTextMessageValidator;
-import io.syndesis.test.SyndesisTestEnvironment;
-import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
-import org.apache.commons.net.ftp.FTPCmd;
-import org.apache.ftpserver.DataConnectionConfiguration;
-import org.apache.ftpserver.DataConnectionConfigurationFactory;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = WebHookToFtp_IT.EndpointConfig.class)
-@DirtiesContext
 @Testcontainers
 public class WebHookToFtp_IT extends FtpTestSupport {
 
-    @Autowired
-    private HttpClient webHookClient;
+    private final HttpClient webHookClient = CitrusEndpoints.http().client()
+        .requestUrl(String.format("http://localhost:%s/webhook/contact", INTEGRATION_CONTAINER.getServerPort()))
+        .build();;
 
     /**
      * Integration receives a WebHook trigger with contact information as Json object. The contact is transformed to a csv like
      * comma delimited String and pushed to Ftp server as new file.
      */
     @Container
-    public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
+    public static final SyndesisIntegrationRuntimeContainer INTEGRATION_CONTAINER = new SyndesisIntegrationRuntimeContainer.Builder()
             .name("webhook-to-ftp")
             .fromExport(WebHookToFtp_IT.class.getResource("WebhookToFtp-export"))
             .customize("$..configuredProperties.contextPath", "contact")
@@ -111,23 +105,10 @@ public class WebHookToFtp_IT extends FtpTestSupport {
 
         runner.run(new VerifyFtpUploadTestAction());
     }
-
-    @Configuration
-    public static class EndpointConfig {
-        @Bean
-        public HttpClient webHookClient() {
-            return CitrusEndpoints.http().client()
-                    .requestUrl(String.format("http://localhost:%s/webhook/contact", integrationContainer.getServerPort()))
-                    .build();
-        }
-
-        @Bean
-        public DataConnectionConfiguration dataConnectionConfiguration() {
-            DataConnectionConfigurationFactory dataConnectionFactory = new DataConnectionConfigurationFactory();
-            dataConnectionFactory.setPassiveExternalAddress(integrationContainer.getInternalHostIp());
-            dataConnectionFactory.setPassivePorts(String.valueOf(PASSIVE_PORT));
-            return dataConnectionFactory.createDataConnectionConfiguration();
-        }
+    
+    @Override
+    protected SyndesisIntegrationRuntimeContainer integrationContainer() {
+        return INTEGRATION_CONTAINER;
     }
 
     /*
