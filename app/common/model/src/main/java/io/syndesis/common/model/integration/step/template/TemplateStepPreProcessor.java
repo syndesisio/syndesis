@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.SymbolSyntax;
 
-public interface TemplateStepPreProcessor extends TemplateStepConstants {
+public interface TemplateStepPreProcessor<C extends ProcessingContext> {
 
     /**
      * Takes a template and conducts checks to ensure it is compatible
@@ -31,11 +31,6 @@ public interface TemplateStepPreProcessor extends TemplateStepConstants {
      * @throws exception if processing fails
      */
     String preProcess(String template) throws TemplateProcessingException;
-
-    /**
-     * Resets the processor to its initial state
-     */
-    void reset();
 
     /**
      * Parameters required for the endpoint
@@ -55,4 +50,6 @@ public interface TemplateStepPreProcessor extends TemplateStepConstants {
      * @return whether the given symbol is recognised by this pre-processor
      */
     boolean isMySymbol(String symbol);
+
+    C createContext();
 }

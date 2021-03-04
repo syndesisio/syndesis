@@ -16,28 +16,24 @@
 
 package io.syndesis.test.itest.sheets;
 
-import javax.servlet.Filter;
-import javax.sql.DataSource;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
-import com.consol.citrus.http.server.HttpServer;
-import com.consol.citrus.http.servlet.RequestCachingServletFilter;
+import javax.servlet.Filter;
+
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
 import io.syndesis.test.itest.sheets.util.GzipServletFilter;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.ContextConfiguration;
+
 import org.springframework.util.SocketUtils;
 import org.testcontainers.Testcontainers;
+
+import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
+import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.http.servlet.RequestCachingServletFilter;
 
 /**
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = GoogleSheetsTestSupport.EndpointConfig.class)
 public class GoogleSheetsTestSupport extends SyndesisIntegrationTestSupport {
 
     static final int GOOGLE_SHEETS_SERVER_PORT = SocketUtils.findAvailableTcpPort();
@@ -45,34 +41,22 @@ public class GoogleSheetsTestSupport extends SyndesisIntegrationTestSupport {
         Testcontainers.exposeHostPorts(GOOGLE_SHEETS_SERVER_PORT);
     }
 
-    @Configuration
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    public static class EndpointConfig {
+    protected HttpServer googleSheetsApiServer = startup(googleSheetsApiServer());
 
-        @Bean
-        public HttpServer googleSheetsApiServer() {
-            Map<String, Filter> filterMap = new LinkedHashMap<>();
-            filterMap.put("request-caching-filter", new RequestCachingServletFilter());
-            filterMap.put("gzip-filter", new GzipServletFilter());
+    private static final HttpServer googleSheetsApiServer() {
+        Map<String, Filter> filterMap = new LinkedHashMap<>();
+        filterMap.put("request-caching-filter", new RequestCachingServletFilter());
+        filterMap.put("gzip-filter", new GzipServletFilter());
 
-            return CitrusEndpoints.http()
-                    .server()
-                    .port(GOOGLE_SHEETS_SERVER_PORT)
-                    .autoStart(true)
-                    .timeout(60000L)
-                    .filters(filterMap)
-                    .build();
-        }
+        final HttpServer server = CitrusEndpoints.http()
+                .server()
+                .port(GOOGLE_SHEETS_SERVER_PORT)
+                .autoStart(true)
+                .timeout(60000L)
+                .filters(filterMap)
+                .build();
 
-        @Bean
-        public TestRunnerBeforeTestSupport beforeTest(DataSource sampleDb) {
-            return new TestRunnerBeforeTestSupport() {
-                @Override
-                public void beforeTest(TestRunner runner) {
-                    runner.sql(builder -> builder.dataSource(sampleDb)
-                            .statement("delete from contact"));
-                }
-            };
-        }
+        return server;
     }
+
 }

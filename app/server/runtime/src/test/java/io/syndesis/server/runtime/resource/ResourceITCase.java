@@ -22,9 +22,9 @@ import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.server.runtime.BaseITCase;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -34,7 +34,7 @@ public class ResourceITCase extends BaseITCase {
 
     private static final String ID = "openapi-1";
 
-    @After
+    @AfterEach
     public void removeTestDocument() {
         dataManager.delete(OpenApi.class, ID);
     }
@@ -49,7 +49,7 @@ public class ResourceITCase extends BaseITCase {
         assertThat(resource.getBody()).isEqualTo("specification");
     }
 
-    @Before
+    @BeforeEach
     public void storeOpenApiDocument() {
         dataManager.store(new OpenApi.Builder()
             .id(ID)

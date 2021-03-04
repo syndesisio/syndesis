@@ -22,7 +22,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 
 import io.syndesis.common.util.json.JsonUtils;
 import org.json.JSONException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 

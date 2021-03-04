@@ -37,7 +37,7 @@ import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Condition;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.stubbing.Answer;

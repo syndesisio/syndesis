@@ -19,7 +19,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.util.CollectionHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.acme.corp.AcmeComponent;
 

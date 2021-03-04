@@ -18,21 +18,22 @@ package io.syndesis.connector.sql.stored;
 import java.util.Arrays;
 import java.util.List;
 
-import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.connector.sql.common.SqlTest.ConnectionInfo;
+import io.syndesis.connector.sql.common.SqlTest.Setup;
+import io.syndesis.connector.sql.common.SqlTest.Teardown;
+import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
+
 import org.apache.camel.ProducerTemplate;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+@Setup(SampleStoredProcedures.DERBY_DEMO_ADD_SQL)
+@Teardown("DROP PROCEDURE DEMO_ADD")
 public class SqlStoredConnectorWitDefaultsTest extends SqlConnectorTestSupport {
 
-    // **************************
-    // Set up
-    // **************************
-
-    @Override
-    protected void doPreSetup() throws Exception {
-        SqlStoredCommon.setupStoredProcedure(db.connection, db.properties);
+    public SqlStoredConnectorWitDefaultsTest(ConnectionInfo info) {
+        super(info);
     }
 
     @Override
@@ -42,23 +43,20 @@ public class SqlStoredConnectorWitDefaultsTest extends SqlConnectorTestSupport {
                 "direct",
                 builder -> builder.putConfiguredProperty("name", "start")),
             newSqlEndpointStep(
+                info,
                 "sql-stored-connector",
                 nop(Step.Builder.class),
-                builder -> builder.replaceConfigurationProperty("template", b -> b.defaultValue("DEMO_ADD(INTEGER ${body[a]}, INTEGER ${body[b]}, OUT INTEGER c)"))),
+                builder -> builder.replaceConfigurationProperty("template",
+                    b -> b.defaultValue("DEMO_ADD(INTEGER ${body[a]}, INTEGER ${body[b]}, OUT INTEGER c)"))),
             newSimpleEndpointStep(
                 "mock",
-                builder -> builder.putConfiguredProperty("name", "result"))
-        );
+                builder -> builder.putConfiguredProperty("name", "result")));
     }
-
-    // **************************
-    // Tests
-    // **************************
 
     @Test
     public void sqlStoredStartConnectorTest() throws Exception {
         String jsonBody = "{\"a\":20,\"b\":30}";
-        ProducerTemplate template = context.createProducerTemplate();
+        ProducerTemplate template = context().createProducerTemplate();
         String result = template.requestBody("direct:start", jsonBody, String.class);
 
         Assertions.assertThat(result).isEqualTo("{\"c\":50}");

@@ -80,11 +80,6 @@
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-annotations</artifactId>
     </dependency>
 
@@ -106,10 +101,15 @@
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
+    <dependency>
+      <groupId>io.syndesis.test</groupId>
+      <artifactId>junit4-stub</artifactId>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
     </dependency>
 

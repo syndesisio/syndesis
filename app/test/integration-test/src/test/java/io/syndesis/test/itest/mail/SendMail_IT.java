@@ -16,53 +16,51 @@
 
 package io.syndesis.test.itest.mail;
 
-import javax.sql.DataSource;
 import java.io.IOException;
+
+import io.syndesis.test.SyndesisTestEnvironment;
+import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
+import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.util.SocketUtils;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
 import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
 import com.consol.citrus.mail.message.MailMessage;
 import com.consol.citrus.mail.server.MailServer;
 import com.consol.citrus.util.FileUtils;
-import io.syndesis.test.SyndesisTestEnvironment;
-import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
-import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.util.SocketUtils;
-import org.testcontainers.Testcontainers;
-import org.testcontainers.containers.GenericContainer;
 
 /**
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = SendMail_IT.EndpointConfig.class)
+@Testcontainers
 public class SendMail_IT extends SyndesisIntegrationTestSupport {
 
     private static final int MAIL_SERVER_PORT = SocketUtils.findAvailableTcpPort();
     static {
-        Testcontainers.exposeHostPorts(MAIL_SERVER_PORT);
+        org.testcontainers.Testcontainers.exposeHostPorts(MAIL_SERVER_PORT);
     }
 
-    @Autowired
-    private HttpClient webHookClient;
+    private final HttpClient webHookClient = CitrusEndpoints.http().client()
+        .requestUrl(String.format("http://localhost:%s/webhook/test-webhook", INTEGRATION_CONTAINER.getServerPort()))
+        .build();;
 
-    @Autowired
-    private MailServer mailServer;
-
-    @Autowired
-    private DataSource sampleDb;
+    private static final MailServer MAIL_SERVER = startup(CitrusEndpoints.mail().server()
+        .timeout(60000L)
+        .autoStart(true)
+        .autoAccept(true)
+        .port(MAIL_SERVER_PORT)
+        .build());
 
     /**
      * This integration provides a webhook that expects a POST request with some contact Json object as payload. The
@@ -70,8 +68,8 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
      *
      * After the mail is sent a new task entry for that contact is added to the sample database.
      */
-    @ClassRule
-    public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
+    @Container
+    public static final SyndesisIntegrationRuntimeContainer INTEGRATION_CONTAINER = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("send-mail")
                             .fromExport(SendMail_IT.class.getResource("SendMail-export"))
                             .customize("$..configuredProperties.host", GenericContainer.INTERNAL_HOST_HOSTNAME)
@@ -94,7 +92,7 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
                 .payload(getWebhookPayload()));
 
         String mailBody = FileUtils.readToString(new ClassPathResource("mail.txt", SendMail_IT.class));
-        runner.receive(builder -> builder.endpoint(mailServer)
+        runner.receive(builder -> builder.endpoint(MAIL_SERVER)
                         .message(MailMessage.request()
                                 .from("people-team@syndesis.org")
                                 .to("${email}")
@@ -103,7 +101,7 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
                                 .subject("Welcome!")
                                 .body(mailBody, "text/plain; charset=UTF-8")));
 
-        runner.send(builder -> builder.endpoint(mailServer)
+        runner.send(builder -> builder.endpoint(MAIL_SERVER)
                         .message(MailMessage.response(250, "OK")));
 
         runner.http(builder -> builder.client(webHookClient)
@@ -126,12 +124,12 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
                 .fork(true)
                 .payload(getWebhookPayload()));
 
-        runner.receive(builder -> builder.endpoint(mailServer)
+        runner.receive(builder -> builder.endpoint(MAIL_SERVER)
                         .header(CitrusMailMessageHeaders.MAIL_FROM, "people-team@syndesis.org")
                         .header(CitrusMailMessageHeaders.MAIL_TO, "${email}")
                         .header(CitrusMailMessageHeaders.MAIL_SUBJECT, "Welcome!"));
 
-        runner.send(builder -> builder.endpoint(mailServer)
+        runner.send(builder -> builder.endpoint(MAIL_SERVER)
                         .message(MailMessage.response(421, "Service not available, closing transmission channel")));
 
         runner.http(builder -> builder.client(webHookClient)
@@ -145,40 +143,10 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
         return "{\"first_name\":\"${first_name}\",\"company\":\"${company}\",\"mail\":\"${email}\"}";
     }
 
-    private void verifyRecordsInDb(TestRunner runner, int numberOfRecords, String task) {
-        runner.query(builder -> builder.dataSource(sampleDb)
+    private static void verifyRecordsInDb(TestRunner runner, int numberOfRecords, String task) {
+        runner.query(builder -> builder.dataSource(sampleDb())
                 .statement("select count(*) as found_records from todo where task='" + task + "'")
                 .validate("found_records", String.valueOf(numberOfRecords)));
     }
 
-    @Configuration
-    public static class EndpointConfig {
-        @Bean
-        public HttpClient webHookClient() {
-            return CitrusEndpoints.http().client()
-                    .requestUrl(String.format("http://localhost:%s/webhook/test-webhook", integrationContainer.getServerPort()))
-                    .build();
-        }
-
-        @Bean
-        public MailServer mailServer() {
-            return CitrusEndpoints.mail().server()
-                    .timeout(60000L)
-                    .autoStart(true)
-                    .autoAccept(true)
-                    .port(MAIL_SERVER_PORT)
-                    .build();
-        }
-
-        @Bean
-        public TestRunnerBeforeTestSupport beforeTest(DataSource sampleDb) {
-            return new TestRunnerBeforeTestSupport() {
-                @Override
-                public void beforeTest(TestRunner runner) {
-                    runner.sql(builder -> builder.dataSource(sampleDb)
-                                                 .statement("delete from todo where task like 'New hire for%'"));
-                }
-            };
-        }
-    }
 }

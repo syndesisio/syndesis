@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 
-import static junit.framework.TestCase.assertNotNull;
 import static org.mockito.Mockito.mock;
 
 public class MockedKuduConfiguration {
@@ -37,7 +36,6 @@ public class MockedKuduConfiguration {
 
         KuduClient mockedDbConnection = mock(KuduClient.class);
 
-        assertNotNull(mockedDbConnection);
         return mockedDbConnection;
     }
 }

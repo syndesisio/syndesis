@@ -19,9 +19,9 @@ package io.syndesis.connector.kudu;
 import io.syndesis.common.util.json.JsonUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultExchange;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +29,7 @@ import java.util.Map;
 public class KuduInsertCustomizerTest extends AbstractKuduCustomizerTestSupport {
     private KuduInsertCustomizer customizer;
 
-    @Before
+    @BeforeEach
     public void setupCustomizer() {
         customizer = new KuduInsertCustomizer();
     }
@@ -52,9 +52,9 @@ public class KuduInsertCustomizerTest extends AbstractKuduCustomizerTestSupport 
 
         Map<?, ?> body = inbound.getIn().getMandatoryBody(Map.class);
 
-        Assert.assertEquals("The row has the expected elements", 5, body.size());
-        Assert.assertEquals("First element of the row is an integer", 5, body.get("id"));
-        Assert.assertEquals("Second element of the row is the title", "Mr.", body.get("title"));
+        Assertions.assertEquals(5, body.size(), "The row has the expected elements");
+        Assertions.assertEquals(5, body.get("id"), "First element of the row is an integer");
+        Assertions.assertEquals("Mr.", body.get("title"), "Second element of the row is the title");
     }
 
     @Test
@@ -75,13 +75,13 @@ public class KuduInsertCustomizerTest extends AbstractKuduCustomizerTestSupport 
 
         String model = (String) inbound.getIn().getBody();
 
-        Assert.assertNotNull("Model is not null", model);
+        Assertions.assertNotNull(model, "Model is not null");
 
         Map<String, Object> modelMap = JsonUtils.reader().forType(Map.class).readValue(model);
 
-        Assert.assertEquals("Model has all elements", 5, modelMap.size());
+        Assertions.assertEquals(5, modelMap.size(), "Model has all elements");
 
-        Assert.assertEquals("First element is the id", 5, modelMap.get("id"));
-        Assert.assertEquals("Third element is the name", "Samuel", modelMap.get("name"));
+        Assertions.assertEquals(5, modelMap.get("id"), "First element is the id");
+        Assertions.assertEquals("Samuel", modelMap.get("name"), "Third element is the name");
     }
 }

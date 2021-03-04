@@ -25,7 +25,7 @@ import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DataShapeConnectorTest {
 

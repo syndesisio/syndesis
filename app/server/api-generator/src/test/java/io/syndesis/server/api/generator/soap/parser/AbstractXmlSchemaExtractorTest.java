@@ -28,10 +28,8 @@ import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaSerializer;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -45,7 +43,6 @@ import static org.assertj.core.api.Assertions.fail;
 /**
  * Unit tests for {@link XmlSchemaExtractor}.
  */
-@RunWith(Parameterized.class)
 public abstract class AbstractXmlSchemaExtractorTest {
 
     public static final String TEST_SCHEMA = "/soap/parser/test-schema.xsd";
@@ -54,7 +51,7 @@ public abstract class AbstractXmlSchemaExtractorTest {
 
     protected XmlSchemaExtractor xmlSchemaExtractor;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() throws XmlSchemaSerializer.XmlSchemaSerializerException {
         if (sourceSchemas == null) {
             final InputSource inputSource = new InputSource(AbstractXmlSchemaExtractorTest.class
@@ -78,7 +75,7 @@ public abstract class AbstractXmlSchemaExtractorTest {
         }
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         final SchemaCollection targetSchemas = new SchemaCollection();
         xmlSchemaExtractor = new XmlSchemaExtractor(targetSchemas, sourceSchemas);

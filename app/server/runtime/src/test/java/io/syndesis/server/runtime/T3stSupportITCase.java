@@ -22,7 +22,7 @@ import java.util.Objects;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ModelData;
 import io.syndesis.common.model.integration.Integration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

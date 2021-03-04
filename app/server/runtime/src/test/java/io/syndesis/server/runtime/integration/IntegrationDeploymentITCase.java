@@ -25,8 +25,8 @@ import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.server.runtime.BaseITCase;
 
 import org.awaitility.Awaitility;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -41,7 +41,7 @@ public class IntegrationDeploymentITCase extends BaseITCase {
 
     }
 
-    @Before
+    @BeforeEach
     public void setupIntegration() {
         final Integration integration = new Integration.Builder().id("test-id").name("test").build();
 

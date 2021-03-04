@@ -16,41 +16,36 @@
 
 package io.syndesis.test.itest.apiprovider;
 
-import javax.sql.DataSource;
 import java.util.Arrays;
+
+import io.syndesis.test.SyndesisTestEnvironment;
+import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
+import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
 import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
 import com.consol.citrus.http.client.HttpClient;
-import io.syndesis.test.SyndesisTestEnvironment;
-import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
-import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = TodoOpenApiV3_IT.EndpointConfig.class)
+@Testcontainers
 public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
 
     private static final String VND_OAI_OPENAPI_JSON = "application/vnd.oai.openapi+json";
 
-    @Autowired
-    private HttpClient todoApiClient;
-
-    @Autowired
-    private DataSource sampleDb;
+    private final HttpClient todoApiClient = CitrusEndpoints.http().client()
+        .requestUrl(String.format("http://localhost:%s", INTEGRATION_CONTAINER.getServerPort()))
+        .build();
 
     /**
      * Integration uses api provider to enable rest service operations for accessing tasks in the sample database.
@@ -61,8 +56,8 @@ public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
      *  GET /api/open provides all uncompleted tasks as Json array (using basic filter)
      *  GET /api/done provides all completed tasks as Json array (using basic filter)
      */
-    @ClassRule
-    public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
+    @Container
+    public static final SyndesisIntegrationRuntimeContainer INTEGRATION_CONTAINER = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("todo-api")
                             .fromExport(TodoOpenApiV3_IT.class.getResource("TodoOpenApiV3-export"))
                             .build()
@@ -77,7 +72,7 @@ public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
             .method(HttpMethod.GET)
             .seconds(10L)
             .status(HttpStatus.OK)
-            .url(String.format("http://localhost:%s/actuator/health", integrationContainer.getManagementPort()));
+            .url(String.format("http://localhost:%s/actuator/health", INTEGRATION_CONTAINER.getManagementPort()));
     }
 
     @Test
@@ -99,7 +94,7 @@ public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
     public void testGetTask(@CitrusResource TestRunner runner) {
         runner.variable("id", "citrus:randomNumber(4)");
 
-        runner.sql(builder -> builder.dataSource(sampleDb)
+        runner.sql(builder -> builder.dataSource(sampleDb())
                 .statement("insert into todo (id, task, completed) values (${id}, 'Walk the dog', 0)"));
 
         runner.http(builder -> builder.client(todoApiClient)
@@ -131,7 +126,7 @@ public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
     public void testUpdateTask(@CitrusResource TestRunner runner) {
         runner.variable("id", "citrus:randomNumber(4)");
 
-        runner.sql(builder -> builder.dataSource(sampleDb)
+        runner.sql(builder -> builder.dataSource(sampleDb())
             .statement("insert into todo (id, task, completed) values (${id}, 'Walk the dog', 0)"));
 
         runner.http(builder -> builder.client(todoApiClient)
@@ -144,7 +139,7 @@ public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
             .response(HttpStatus.OK)
             .payload("{\"id\":${id},\"task\":\"WALK THE DOG\",\"completed\":1}"));
 
-        runner.query(builder -> builder.dataSource(sampleDb)
+        runner.query(builder -> builder.dataSource(sampleDb())
             .statement("select task, completed from todo where id=${id}")
             .validate("TASK", "WALK THE DOG")
             .validate("COMPLETED", "1"));
@@ -155,7 +150,7 @@ public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
     public void testDeleteTask(@CitrusResource TestRunner runner) {
         runner.variable("id", "citrus:randomNumber(4)");
 
-        runner.sql(builder -> builder.dataSource(sampleDb)
+        runner.sql(builder -> builder.dataSource(sampleDb())
             .statement("insert into todo (id, task, completed) values (${id}, 'Walk the dog', 0)"));
 
         runner.http(builder -> builder.client(todoApiClient)
@@ -166,7 +161,7 @@ public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
             .receive()
             .response(HttpStatus.NO_CONTENT));
 
-        runner.query(builder -> builder.dataSource(sampleDb)
+        runner.query(builder -> builder.dataSource(sampleDb())
             .statement("select count(task) as TASKS_FOUND from todo where id=${id}")
             .validate("TASKS_FOUND", "0"));
     }
@@ -174,7 +169,7 @@ public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testListTasks(@CitrusResource TestRunner runner) {
-        runner.sql(builder -> builder.dataSource(sampleDb)
+        runner.sql(builder -> builder.dataSource(sampleDb())
                 .statements(Arrays.asList("insert into todo (task, completed) values ('Wash the dog', 0)",
                         "insert into todo (task, completed) values ('Feed the dog', 0)",
                         "insert into todo (task, completed) values ('Play with the dog', 0)")));
@@ -193,24 +188,4 @@ public class TodoOpenApiV3_IT extends SyndesisIntegrationTestSupport {
                     "]"));
     }
 
-    @Configuration
-    public static class EndpointConfig {
-        @Bean
-        public HttpClient todoApiClient() {
-            return CitrusEndpoints.http().client()
-                    .requestUrl(String.format("http://localhost:%s", integrationContainer.getServerPort()))
-                    .build();
-        }
-
-        @Bean
-        public TestRunnerBeforeTestSupport beforeTest(DataSource sampleDb) {
-            return new TestRunnerBeforeTestSupport() {
-                @Override
-                public void beforeTest(TestRunner runner) {
-                    runner.sql(builder -> builder.dataSource(sampleDb)
-                            .statement("delete from todo"));
-                }
-            };
-        }
-    }
 }

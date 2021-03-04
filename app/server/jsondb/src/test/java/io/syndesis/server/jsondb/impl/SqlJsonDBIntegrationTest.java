@@ -21,8 +21,8 @@ import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.SyndesisServerException;
 
 import org.h2.jdbcx.JdbcConnectionPool;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.skife.jdbi.v2.DBI;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,7 +39,7 @@ public class SqlJsonDBIntegrationTest {
 
     private SqlJsonDB jsonDB;
 
-    @Before
+    @BeforeEach
     public void prepare() {
         bus = mock(EventBus.class);
 

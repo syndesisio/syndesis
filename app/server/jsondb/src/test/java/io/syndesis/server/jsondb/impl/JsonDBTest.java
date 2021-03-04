@@ -29,8 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.h2.jdbcx.JdbcDataSource;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.skife.jdbi.v2.DBI;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -53,7 +53,7 @@ public class JsonDBTest {
 
     private final GetOptions prettyPrint = new GetOptions().prettyPrint(true);
 
-    @Before
+    @BeforeEach
     public void before() {
         JdbcDataSource ds = new JdbcDataSource();
         ds.setURL("jdbc:h2:mem:test1;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");

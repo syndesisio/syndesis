@@ -21,7 +21,7 @@ import java.util.TreeSet;
 
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.util.json.JsonUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

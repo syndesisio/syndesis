@@ -25,7 +25,7 @@ import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
 import io.syndesis.connector.support.verifier.api.Verifier;
 import io.syndesis.connector.support.verifier.api.VerifierResponse;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
 
@@ -47,7 +47,7 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("password", EmbedMongoConfiguration.PASSWORD);
         params.put("database", EmbedMongoConfiguration.ADMIN_DB);
         //Given
-        List<VerifierResponse> response = VERIFIER.verify(this.context,
+        List<VerifierResponse> response = VERIFIER.verify(context(),
             CONNECTOR_ID, params);
         //Then
         Assertions.assertThat(params.get("adminDB")).isEqualTo(params.get("database"));
@@ -64,7 +64,7 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("password", EmbedMongoConfiguration.PASSWORD);
         params.put("database", DATABASE);
         //Given
-        List<VerifierResponse> response = VERIFIER.verify(this.context,
+        List<VerifierResponse> response = VERIFIER.verify(context(),
             CONNECTOR_ID, params);
         //Then
         Assertions.assertThat(params.get("adminDB")).isEqualTo(params.get("database"));
@@ -82,7 +82,7 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("database", DATABASE);
         params.put("adminDB", EmbedMongoConfiguration.ADMIN_DB);
         //Given
-        List<VerifierResponse> response = VERIFIER.verify(this.context,
+        List<VerifierResponse> response = VERIFIER.verify(context(),
             CONNECTOR_ID, params);
         //Then
         Assertions.assertThat(params.get("adminDB")).isNotEqualTo(params.get("database"));
@@ -99,7 +99,7 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("password", EmbedMongoConfiguration.PASSWORD);
         params.put("database", DATABASE);
         //Given
-        List<VerifierResponse> response = VERIFIER.verify(this.context,
+        List<VerifierResponse> response = VERIFIER.verify(context(),
             CONNECTOR_ID, params);
         //Then
         response.stream().filter(verifierResponse -> verifierResponse.getScope() == Verifier.Scope.CONNECTIVITY).
@@ -114,7 +114,7 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("user", EmbedMongoConfiguration.USER);
         params.put("database", DATABASE);
         //Given
-        List<VerifierResponse> response = VERIFIER.verify(this.context,
+        List<VerifierResponse> response = VERIFIER.verify(context(),
             CONNECTOR_ID, params);
         //Then
         response.stream().filter(verifierResponse -> verifierResponse.getScope() == Verifier.Scope.PARAMETERS).
@@ -130,7 +130,7 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("password", "wrongPassword");
         params.put("database", DATABASE);
         //Given
-        List<VerifierResponse> response = VERIFIER.verify(this.context,
+        List<VerifierResponse> response = VERIFIER.verify(context(),
             CONNECTOR_ID, params);
         //Then
         response.stream().filter(verifierResponse -> verifierResponse.getScope() == Verifier.Scope.CONNECTIVITY).
@@ -147,7 +147,7 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("adminDB", "someAdminDB");
         params.put("database", DATABASE);
         //Given
-        List<VerifierResponse> response = VERIFIER.verify(this.context,
+        List<VerifierResponse> response = VERIFIER.verify(context(),
             CONNECTOR_ID, params);
         //Then
         response.stream().filter(verifierResponse -> verifierResponse.getScope() == Verifier.Scope.CONNECTIVITY).
@@ -163,7 +163,7 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("password", EmbedMongoConfiguration.PASSWORD);
         params.put("database", DATABASE);
         //Given
-        List<VerifierResponse> response = VERIFIER.verify(this.context,
+        List<VerifierResponse> response = VERIFIER.verify(context(),
             CONNECTOR_ID, params);
         //Then
         response.stream().filter(verifierResponse -> verifierResponse.getScope() == Verifier.Scope.CONNECTIVITY).

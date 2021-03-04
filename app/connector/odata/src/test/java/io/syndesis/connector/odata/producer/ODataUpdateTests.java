@@ -15,13 +15,23 @@
  */
 package io.syndesis.connector.odata.producer;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.connector.odata.AbstractODataRouteTest;
+import io.syndesis.connector.odata.component.ODataComponentFactory;
+import io.syndesis.connector.odata.customizer.ODataPatchCustomizer;
+import io.syndesis.connector.support.util.PropertyBuilder;
+
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
@@ -46,33 +56,27 @@ import org.apache.olingo.commons.api.edm.constants.ODataServiceVersion;
 import org.apache.olingo.commons.api.format.ContentType;
 import org.apache.olingo.commons.api.http.HttpHeader;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.syndesis.common.model.DataShape;
-import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.connector.odata.AbstractODataRouteTest;
-import io.syndesis.connector.odata.component.ODataComponentFactory;
-import io.syndesis.connector.odata.customizer.ODataPatchCustomizer;
-import io.syndesis.connector.support.util.PropertyBuilder;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DirtiesContext
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(
     classes = {
         ODataUpdateTests.TestConfiguration.class
@@ -121,7 +125,7 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
         }
     }
 
-    @After
+    @AfterEach
     public void deconstruct() throws Exception {
         //
         // Refresh server data back to original

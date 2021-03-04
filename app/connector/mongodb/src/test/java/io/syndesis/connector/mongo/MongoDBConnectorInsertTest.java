@@ -24,7 +24,7 @@ import com.mongodb.client.model.Filters;
 import io.syndesis.common.model.integration.Step;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MongoDBConnectorInsertTest extends MongoDBConnectorProducerTestSupport {
 
@@ -48,7 +48,7 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorProducerTestSupp
         Document doc = Document.parse(message);
         // Given
         @SuppressWarnings("unchecked")
-        List<String> resultsAsString = template.requestBody("direct:start", message, List.class);
+        List<String> resultsAsString = template().requestBody("direct:start", message, List.class);
         // Then
         Assertions.assertThat(resultsAsString).hasSize(1);
         Document result = resultsAsString.stream().map(Document::parse).collect(Collectors.toList()).get(0);
@@ -68,7 +68,7 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorProducerTestSupp
         List<Document> batchMessage = formatBatchMessageDocument(batchId);
         // Given
         @SuppressWarnings("unchecked")
-        List<String> resultsAsString = template.requestBody("direct:start", batchMessage, List.class);
+        List<String> resultsAsString = template().requestBody("direct:start", batchMessage, List.class);
         List<Document> result = resultsAsString.stream().map(Document::parse).collect(Collectors.toList());
         // Then
         List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<>());
@@ -96,7 +96,7 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorProducerTestSupp
         List<String> jsonStrings = batchMessage.stream().map(Document::toJson).collect(Collectors.toList());
         // Given
         @SuppressWarnings("unchecked")
-        List<String> resultsAsString = template.requestBody("direct:start", jsonStrings, List.class);
+        List<String> resultsAsString = template().requestBody("direct:start", jsonStrings, List.class);
         List<Document> result = resultsAsString.stream().map(Document::parse).collect(Collectors.toList());
         // Then
         List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<>());

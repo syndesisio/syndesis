@@ -16,37 +16,31 @@
 
 package io.syndesis.test.itest.webhook;
 
-import javax.sql.DataSource;
+import io.syndesis.test.SyndesisTestEnvironment;
+import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
+import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
 import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
 import com.consol.citrus.http.client.HttpClient;
-import io.syndesis.test.SyndesisTestEnvironment;
-import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
-import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = WebHookToDB_IT.EndpointConfig.class)
+@Testcontainers
 public class WebHookToDB_IT extends SyndesisIntegrationTestSupport {
 
-    @Autowired
-    private HttpClient webHookClient;
-
-    @Autowired
-    private DataSource sampleDb;
+    private final HttpClient webHookClient =  CitrusEndpoints.http().client()
+        .requestUrl(String.format("http://localhost:%s/webhook/test-webhook", INTEGRATION_CONTAINER.getServerPort()))
+        .build();
 
     /**
      * This integration provides a webhook that expects a POST request to store contacts to the sample database. The
@@ -56,8 +50,8 @@ public class WebHookToDB_IT extends SyndesisIntegrationTestSupport {
      *  Basic filter applies to the company name property to be "Red Hat"
      *  Advanced filter applies to the first_name property to not be like "Unknown"
      */
-    @ClassRule
-    public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
+    @Container
+    public static final SyndesisIntegrationRuntimeContainer INTEGRATION_CONTAINER = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("webhook-to-db")
                             .fromExport(WebHookToDB_IT.class.getResource("WebhookToDB-export"))
                             .build()
@@ -72,7 +66,7 @@ public class WebHookToDB_IT extends SyndesisIntegrationTestSupport {
                 .method(HttpMethod.GET)
                 .seconds(10L)
                 .status(HttpStatus.OK)
-                .url(String.format("http://localhost:%s/actuator/health", integrationContainer.getManagementPort()));
+                .url(String.format("http://localhost:%s/actuator/health", INTEGRATION_CONTAINER.getManagementPort()));
     }
 
     @Test
@@ -124,30 +118,10 @@ public class WebHookToDB_IT extends SyndesisIntegrationTestSupport {
         return String.format("{\"first_name\":\"%s\",\"company\":\"%s\"}", firstName, company);
     }
 
-    private void verifyRecordsInDb(TestRunner runner, int numberOfRecords) {
-        runner.query(builder -> builder.dataSource(sampleDb)
+    private static void verifyRecordsInDb(TestRunner runner, int numberOfRecords) {
+        runner.query(builder -> builder.dataSource(sampleDb())
                 .statement("select count(*) as found_records from contact where lead_source='webhook'")
                 .validate("found_records", String.valueOf(numberOfRecords)));
     }
 
-    @Configuration
-    public static class EndpointConfig {
-        @Bean
-        public HttpClient webHookClient() {
-            return CitrusEndpoints.http().client()
-                    .requestUrl(String.format("http://localhost:%s/webhook/test-webhook", integrationContainer.getServerPort()))
-                    .build();
-        }
-
-        @Bean
-        public TestRunnerBeforeTestSupport beforeTest(DataSource sampleDb) {
-            return new TestRunnerBeforeTestSupport() {
-                @Override
-                public void beforeTest(TestRunner runner) {
-                    runner.sql(builder -> builder.dataSource(sampleDb)
-                                                 .statement("delete from contact"));
-                }
-            };
-        }
-    }
 }

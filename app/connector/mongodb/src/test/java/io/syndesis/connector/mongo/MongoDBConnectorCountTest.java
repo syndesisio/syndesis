@@ -20,7 +20,7 @@ import java.util.List;
 import io.syndesis.common.model.integration.Step;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class MongoDBConnectorCountTest extends MongoDBConnectorProducerTestSupport {
 
@@ -46,7 +46,7 @@ public class MongoDBConnectorCountTest extends MongoDBConnectorProducerTestSuppo
         collection.insertOne(Document.parse(json2));
         // Given
         String countArguments = "{\"someText\":\"single\"}";
-        Long result = template.requestBody("direct:start", countArguments, Long.class);
+        Long result = template().requestBody("direct:start", countArguments, Long.class);
         // Then
         Assertions.assertThat(result).isEqualTo(1L);
     }
@@ -62,7 +62,7 @@ public class MongoDBConnectorCountTest extends MongoDBConnectorProducerTestSuppo
         collection.insertOne(Document.parse(json3));
         // Given
         String countArguments = "{\"someText\": \"unit\"}";
-        Long result = template.requestBody("direct:start", countArguments, Long.class);
+        Long result = template().requestBody("direct:start", countArguments, Long.class);
         // Then
         Assertions.assertThat(result).isEqualTo(2L);
     }

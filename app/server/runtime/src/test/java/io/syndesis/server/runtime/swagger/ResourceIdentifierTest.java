@@ -24,7 +24,7 @@ import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.util.json.JsonUtils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

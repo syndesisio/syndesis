@@ -39,7 +39,7 @@ import org.apache.camel.catalog.connector.CamelConnectorCatalog;
 import org.apache.camel.catalog.connector.DefaultCamelConnectorCatalog;
 import org.apache.camel.catalog.maven.DefaultMavenArtifactProvider;
 import org.apache.camel.catalog.maven.MavenArtifactProvider;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;

@@ -20,12 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
-
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import java.util.stream.Stream;
 
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
@@ -35,26 +31,17 @@ import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.api.generator.openapi.TestHelper;
 import io.syndesis.server.api.generator.soap.parser.SoapApiModelParserTest;
 
+import org.junit.jupiter.params.provider.Arguments;
+
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SPECIFICATION_PROPERTY;
 import static java.util.Objects.requireNonNull;
 
 /**
  * Base class for example WSDL driven tests.
  */
-@RunWith(Parameterized.class)
 public abstract class AbstractSoapExampleTest {
 
-    protected final String specification;
-    protected final ConnectorGenerator connectorGenerator;
-
-    public AbstractSoapExampleTest(String resource) throws IOException {
-        if (resource.startsWith("http")) {
-            this.specification = resource;
-        } else {
-            this.specification = IOStreams.readText(SoapApiModelParserTest.class.getResourceAsStream(resource));
-        }
-        connectorGenerator = generator();
-    }
+    protected final ConnectorGenerator connectorGenerator = generator();
 
     public static String resource(final String path) throws IOException {
         final String resource;
@@ -78,28 +65,33 @@ public abstract class AbstractSoapExampleTest {
         }
     }
 
-    protected ConnectorSettings getConnectorSettings() {
+    protected ConnectorSettings getConnectorSettings(final String specification) {
         return new ConnectorSettings.Builder()
             .putConfiguredProperty(SPECIFICATION_PROPERTY, specification)
             .build();
     }
 
-    @Parameterized.Parameters(name = "{0}")
-    public static List<String> parameters() {
-        return Arrays.asList(
-            "/soap/HelloWorld.wsdl",
-            "/soap/StockQuote.wsdl",
-            "/soap/SoapFault11.wsdl",
-            "/soap/SoapFault12.wsdl",
+    static Stream<Arguments> parameters() throws IOException {
+        return Stream.of(
+            load("/soap/HelloWorld.wsdl"),
+            load("/soap/StockQuote.wsdl"),
+            load("/soap/SoapFault11.wsdl"),
+            load("/soap/SoapFault12.wsdl"),
             // ALL WorkDay WSDLs
-            "https://community.workday.com/sites/default/files/file-hosting/productionapi/Absence_Management/v33.1/Absence_Management.wsdl",
-            "https://community.workday.com/sites/default/files/file-hosting/productionapi/Academic_Foundation/v33.1/Academic_Foundation.wsdl",
-            "https://community.workday.com/sites/default/files/file-hosting/productionapi/External_Integrations/v33.1/External_Integrations.wsdl",
-            "https://community.workday.com/sites/default/files/file-hosting/productionapi/Human_Resources/v33.1/Human_Resources.wsdl",
-            "https://community.workday.com/sites/default/files/file-hosting/productionapi/Integrations/v33.1/Integrations.wsdl",
-            "https://community.workday.com/sites/default/files/file-hosting/productionapi/Resource_Management/v33.1/Resource_Management.wsdl",
-            "https://community.workday.com/sites/default/files/file-hosting/productionapi/Workday_Connect/v33.1/Workday_Connect.wsdl",
-            "https://community.workday.com/sites/default/files/file-hosting/productionapi/Workday_Extensibility/v33.1/Workday_Extensibility.wsdl"
+            load("/soap/Absence_Management.wsdl"),
+            load("/soap/Academic_Foundation.wsdl"),
+            load("/soap/External_Integrations.wsdl"),
+            load("/soap/Human_Resources.wsdl"),
+            load("/soap/Integrations.wsdl"),
+            load("/soap/Resource_Management.wsdl"),
+            load("/soap/Workday_Connect.wsdl"),
+            load("/soap/Workday_Extensibility.wsdl")
         );
+    }
+
+    static Arguments load(String path) throws IOException {
+        try (InputStream is = SoapApiModelParserTest.class.getResourceAsStream(path)) {
+            return Arguments.of(path, IOStreams.readText(is));
+        }
     }
 }

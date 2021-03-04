@@ -31,9 +31,9 @@ import org.apache.kudu.client.KuduClient;
 import org.apache.kudu.client.KuduException;
 import org.apache.kudu.client.KuduScanner;
 import org.apache.kudu.client.KuduTable;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 
 public class KuduScanCustomizerTest extends AbstractKuduCustomizerTestSupport {
     private static final String HOST = "quickstart.cloudera";
@@ -41,7 +41,7 @@ public class KuduScanCustomizerTest extends AbstractKuduCustomizerTestSupport {
     private KuduClient connection;
     private KuduScanCustomizer customizer;
 
-    @Before
+    @BeforeEach
     public void setupCustomizer() {
         customizer = new KuduScanCustomizer();
         final Map<String, Object> options = new HashMap<>();
@@ -51,12 +51,12 @@ public class KuduScanCustomizerTest extends AbstractKuduCustomizerTestSupport {
         connection = KuduSupport.createConnection(options);
     }
 
-    @After
+    @AfterEach
     public void shutDown() throws KuduException {
         connection.shutdown();
     }
 
-    @Ignore
+    @Disabled
     public void testBeforeConsumer() throws Exception {
         final Map<String, Object> options = new HashMap<>();
 

@@ -15,218 +15,134 @@
  */
 package io.syndesis.connector.sql;
 
-import static org.assertj.core.api.Assertions.fail;
-import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.syndesis.common.util.json.JsonUtils;
-import org.apache.camel.CamelContext;
-import org.apache.camel.component.extension.MetaDataExtension.MetaData;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.commons.io.IOUtils;
-import org.json.JSONException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import io.syndesis.connector.sql.common.DbEnum;
+import io.syndesis.connector.sql.common.SqlTest;
+import io.syndesis.connector.sql.common.SqlTest.ConnectionInfo;
+import io.syndesis.connector.sql.common.SqlTest.Setup;
+import io.syndesis.connector.sql.common.SqlTest.Teardown;
 import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 
+import org.apache.camel.component.extension.MetaDataExtension.MetaData;
+import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import com.fasterxml.jackson.databind.ObjectWriter;
+
+import static java.util.Collections.emptyMap;
+
+import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
+
+@ExtendWith(SqlTest.class)
+@Setup("CREATE TABLE NAME (ID INTEGER PRIMARY KEY, FIRSTNAME VARCHAR(255), LASTNAME VARCHAR(255))")
+@Teardown("DROP TABLE NAME")
 public class SqlMetadataAdapterTest {
-    private static final String DERBY_DEMO_ADD2_SQL =
-            "CREATE PROCEDURE DEMO_ADD2( IN A INTEGER, IN B INTEGER, OUT C INTEGER ) " +
-            "PARAMETER STYLE JAVA " +
-            "LANGUAGE JAVA " +
-            "EXTERNAL NAME 'io.syndesis.connector.SampleStoredProcedures.demo_add'";
-    public static final String DERBY_DEMO_ADD_SQL =
-            "CREATE PROCEDURE DEMO_ADD( IN A INTEGER, IN B INTEGER, OUT C INTEGER ) " +
-            "PARAMETER STYLE JAVA " +
-            "LANGUAGE JAVA " +
-            "EXTERNAL NAME 'io.syndesis.connector.SampleStoredProcedures.demo_add'";
-    public static final String DERBY_DEMO_OUT_SQL =
-            "CREATE PROCEDURE DEMO_OUT( OUT C INTEGER ) " +
-            "PARAMETER STYLE JAVA " +
-            "LANGUAGE JAVA " +
-            "EXTERNAL NAME 'io.syndesis.connector.SampleStoredProcedures.demo_add'";
 
-    private static Connection conn;
-    private static final Properties PROPS = new Properties();
+    private static final DefaultCamelContext CAMEL_CONTEXT = new DefaultCamelContext();
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws IOException {
-        try (InputStream is = SqlMetadataAdapterTest.class.getClassLoader().getResourceAsStream("test-options.properties")) {
-            PROPS.load(is);
-            String user     = PROPS.getProperty("sql-connector.user");
-            String password = PROPS.getProperty("sql-connector.password");
-            String url      = PROPS.getProperty("sql-connector.url");
+    private static final SqlConnectorMetaDataExtension SQL_CONNECTOR_META = new SqlConnectorMetaDataExtension(CAMEL_CONTEXT);
 
-            conn = DriverManager.getConnection(url,user,password);
-            String dbProductName = conn.getMetaData().getDatabaseProductName();
-            if (DbEnum.APACHE_DERBY.equals(DbEnum.fromName(dbProductName))) {
-                try (Statement stmt = conn.createStatement()) {
-                    stmt.execute(DERBY_DEMO_OUT_SQL);
-                    stmt.execute(DERBY_DEMO_ADD_SQL);
-                    stmt.execute(DERBY_DEMO_ADD2_SQL);
-                } catch (SQLException e) {
-                    fail("Exception during Stored Procedure Creation.", e);
-                }
-            }
-            Statement stmt = conn.createStatement();
-            String createTable = "CREATE TABLE NAME (ID INTEGER PRIMARY KEY, FIRSTNAME VARCHAR(255), " +
-                    "LASTNAME VARCHAR(255))";
-            stmt.executeUpdate(createTable);
-        } catch (SQLException ex) {
-            fail("Exception", ex);
+    private static final SqlStoredConnectorMetaDataExtension SQL_STORED_CONNECTOR_META = new SqlStoredConnectorMetaDataExtension(CAMEL_CONTEXT);
+
+    private static final ObjectWriter WRITTER = JsonUtils.writer();
+
+    private final ConnectionInfo info;
+
+    public SqlMetadataAdapterTest(final ConnectionInfo info) {
+        this.info = info;
+    }
+
+    @ParameterizedTest(name = "sql-connector: {0}")
+    @CsvSource(
+        delimiterString = "->",
+        value = {
+            "query=SELECT * FROM NAME -> name_sql_no_param_metadata.json",
+            "query=SELECT * FROM NAME WHERE ID=:#id -> name_sql_metadata.json",
+            "query=INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES ('Sheldon', 'Cooper') -> name_sql_update_no_param_metadata.json",
+            "query=INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES (:#firstname, :#lastname) -> name_sql_update_metadata.json",
+            "query=INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES (:#firstname, :#lastname); batch=true -> name_sql_batch_update_metadata.json"
+        })
+    public void sqlConnectorCases(final String parameters, final String jsonPath)
+        throws IOException, JSONException {
+        final SyndesisMetadata metadata = fetchMetadata(info, SQL_CONNECTOR_META, "sql-connector", mapFrom(parameters));
+        assertMetadataEqualTo(metadata, jsonPath);
+    }
+
+    @ParameterizedTest(name = "sql-stored-connector: {0}")
+    @CsvSource(
+        delimiterString = "->",
+        value = {
+            " -> stored_procedure_list.json",
+            "Pattern=From -> stored_start_procedure_list.json",
+            "procedureName=DEMO_ADD -> demo_add_metadata.json"
+        })
+    @Setup({
+        "CREATE PROCEDURE DEMO_ADD2(IN A INTEGER, IN B INTEGER, OUT C INTEGER) PARAMETER STYLE JAVA LANGUAGE JAVA  EXTERNAL NAME 'io.syndesis.connector.SampleStoredProcedures.demo_add'",
+        "CREATE PROCEDURE DEMO_ADD(IN A INTEGER, IN B INTEGER, OUT C INTEGER) PARAMETER STYLE JAVA LANGUAGE JAVA EXTERNAL NAME 'io.syndesis.connector.SampleStoredProcedures.demo_add'",
+        "CREATE PROCEDURE DEMO_OUT(OUT C INTEGER) PARAMETER STYLE JAVA LANGUAGE JAVA EXTERNAL NAME 'io.syndesis.connector.SampleStoredProcedures.demo_add'"
+    })
+    @Teardown({
+        "DROP PROCEDURE DEMO_ADD2",
+        "DROP PROCEDURE DEMO_ADD",
+        "DROP PROCEDURE DEMO_OUT",
+    })
+    public void sqlStoredCases(final String parameters, final String jsonPath) throws IOException, JSONException {
+        final SyndesisMetadata metadata = fetchMetadata(info, SQL_STORED_CONNECTOR_META, "sql-stored-connector", mapFrom(parameters));
+        assertMetadataEqualTo(metadata, jsonPath);
+    }
+
+    @AfterAll
+    public static void shutdown() throws Exception {
+        CAMEL_CONTEXT.stop();
+    }
+
+    static void assertMetadataEqualTo(final SyndesisMetadata metadata, final String fileName) throws IOException, JSONException {
+        try (InputStream resource = SqlMetadataAdapterTest.class.getResourceAsStream("/sql/" + fileName)) {
+            final String expectedMetadata = IOUtils.toString(resource, StandardCharsets.UTF_8).trim();
+
+            final String actualMetadata = WRITTER.writeValueAsString(metadata);
+
+            assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
         }
     }
 
-    @AfterClass
-    public static void afterClass() throws SQLException {
-        if (conn!=null && !conn.isClosed()) {
-            Statement stmt = conn.createStatement();
-            stmt.execute("DROP TABLE NAME");
-            conn.close();
-        }
+    static SyndesisMetadata fetchMetadata(final ConnectionInfo info, final AbstractMetaDataExtension metadataExtension, final String connectorId,
+        final Map<String, String> additionalParameters) {
+        final Map<String, Object> parameters = new HashMap<>();
+        parameters.put("user", info.username);
+        parameters.put("password", info.password);
+        parameters.put("url", info.url);
+        parameters.putAll(additionalParameters);
+
+        final Optional<MetaData> metadata = metadataExtension.meta(parameters);
+        final SqlMetadataRetrieval adapter = new SqlMetadataRetrieval();
+
+        return adapter.adapt(metadataExtension.getCamelContext(), "sql", connectorId, parameters, metadata.get());
     }
 
-    @Test
-    public void adaptForSqlTest() throws IOException, JSONException {
-        CamelContext camelContext = new DefaultCamelContext();
-        SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
-        Map<String,Object> parameters = new HashMap<>();
-        for (final String name: PROPS.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf('.') + 1), PROPS.getProperty(name));
+    static Map<String, String> mapFrom(final String additionalParameters) {
+        if (additionalParameters == null) {
+            return emptyMap();
         }
-        parameters.put("query", "SELECT * FROM NAME WHERE ID=:#id");
-        Optional<MetaData> metadata = ext.meta(parameters);
-        SqlMetadataRetrieval adapter = new SqlMetadataRetrieval();
 
-        SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-connector", parameters, metadata.get());
-        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_metadata.json"), StandardCharsets.UTF_8).trim();
-        ObjectWriter writer = JsonUtils.writer();
-        String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
-        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
-
-    }
-
-    @Test
-    public void adaptForSqlNoParamTest() throws IOException, JSONException {
-        CamelContext camelContext = new DefaultCamelContext();
-        SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
-        Map<String,Object> parameters = new HashMap<>();
-        for (final String name: PROPS.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf('.') + 1), PROPS.getProperty(name));
-        }
-        parameters.put("query", "SELECT * FROM NAME");
-        Optional<MetaData> metadata = ext.meta(parameters);
-        SqlMetadataRetrieval adapter = new SqlMetadataRetrieval();
-
-        SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-connector", parameters, metadata.get());
-        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_no_param_metadata.json"), StandardCharsets.UTF_8).trim();
-        ObjectWriter writer = JsonUtils.writer();
-        String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
-        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
-    }
-
-    @Test
-    public void adaptForSqlUpdateTest() throws IOException, JSONException {
-        CamelContext camelContext = new DefaultCamelContext();
-        SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
-        Map<String,Object> parameters = new HashMap<>();
-        for (final String name: PROPS.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf('.') + 1), PROPS.getProperty(name));
-        }
-        parameters.put("query", "INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES (:#firstname, :#lastname)");
-        Optional<MetaData> metadata = ext.meta(parameters);
-        SqlMetadataRetrieval adapter = new SqlMetadataRetrieval();
-
-        SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-connector", parameters, metadata.get());
-        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_update_metadata.json"), StandardCharsets.UTF_8).trim();
-        ObjectWriter writer = JsonUtils.writer();
-        String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
-        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
-    }
-
-    @Test
-    public void adaptForSqlBatchUpdateTest() throws IOException, JSONException {
-        CamelContext camelContext = new DefaultCamelContext();
-        SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
-        Map<String,Object> parameters = new HashMap<>();
-        for (final String name: PROPS.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf('.') + 1), PROPS.getProperty(name));
-        }
-        parameters.put("query", "INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES (:#firstname, :#lastname)");
-        parameters.put("batch", true);
-        Optional<MetaData> metadata = ext.meta(parameters);
-        SqlMetadataRetrieval adapter = new SqlMetadataRetrieval();
-
-        SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-connector", parameters, metadata.get());
-        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_batch_update_metadata.json"), StandardCharsets.UTF_8).trim();
-        ObjectWriter writer = JsonUtils.writer();
-        String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
-        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
-    }
-
-    @Test
-    public void adaptForSqlUpdateNoParamTest() throws IOException, JSONException {
-        CamelContext camelContext = new DefaultCamelContext();
-        SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
-        Map<String,Object> parameters = new HashMap<>();
-        for (final String name: PROPS.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf('.') + 1), PROPS.getProperty(name));
-        }
-        parameters.put("query", "INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES ('Sheldon', 'Cooper')");
-        Optional<MetaData> metadata = ext.meta(parameters);
-        SqlMetadataRetrieval adapter = new SqlMetadataRetrieval();
-
-        SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-connector", parameters, metadata.get());
-        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_update_no_param_metadata.json"), StandardCharsets.UTF_8).trim();
-        ObjectWriter writer = JsonUtils.writer();
-        String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
-        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
-    }
-
-    @Test
-    public void adaptForSqlStoredTest() throws IOException, JSONException {
-        CamelContext camelContext = new DefaultCamelContext();
-        SqlStoredConnectorMetaDataExtension ext = new SqlStoredConnectorMetaDataExtension(camelContext);
-        Map<String,Object> parameters = new HashMap<>();
-        for (final String name: PROPS.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf(".")+1), PROPS.getProperty(name));
-        }
-        Optional<MetaData> metadata = ext.meta(parameters);
-
-        SqlMetadataRetrieval adapter = new SqlMetadataRetrieval();
-        SyndesisMetadata syndesisMetaData = adapter.adapt(camelContext, "sql", "sql-stored-connector", parameters, metadata.get());
-
-        ObjectWriter writer = JsonUtils.writer();
-
-        String expectedListOfProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8).trim();
-        String actualListOfProcedures = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData);
-        assertEquals(expectedListOfProcedures, actualListOfProcedures, JSONCompareMode.STRICT);
-
-        parameters.put(SqlMetadataRetrieval.PATTERN, SqlMetadataRetrieval.FROM_PATTERN);
-        String expectedListOfStartProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8).trim();
-        String actualListOfStartProcedures = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData);
-        assertEquals(expectedListOfStartProcedures, actualListOfStartProcedures, JSONCompareMode.STRICT);
-
-        parameters.put("procedureName", "DEMO_ADD");
-        SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-stored-connector", parameters, metadata.get());
-        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/demo_add_metadata.json"), StandardCharsets.UTF_8).trim();
-        String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
-        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
-
+        return Stream.of(additionalParameters.split(";\\s+"))
+            .map(s -> s.split("=", 2))
+            .collect(Collectors.toMap(a -> a[0], a -> a[1]));
     }
 }

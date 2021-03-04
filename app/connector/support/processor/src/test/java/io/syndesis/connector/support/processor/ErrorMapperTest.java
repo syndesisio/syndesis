@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.apache.camel.component.file.GenericFileOperationFailedException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.syndesis.common.util.CamelCase;
 import io.syndesis.common.util.ErrorCategory;

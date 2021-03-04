@@ -20,7 +20,7 @@ import io.syndesis.common.model.integration.Step;
 import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.OperationOutcome;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +45,7 @@ public class FhirUpdateTest extends FhirTestBase {
     public void updateTest() {
         stubFhirRequest(put(urlEqualTo("/Patient/1234")).willReturn(okXml(toXml(new OperationOutcome()))));
 
-        template.requestBody("direct:start",
+        template().requestBody("direct:start",
             toXml(new Patient().addName(new HumanName().setFamily("Smith")).setId("1234")), MethodOutcome.class);
     }
 

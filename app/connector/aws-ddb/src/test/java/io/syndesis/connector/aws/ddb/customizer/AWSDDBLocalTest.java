@@ -15,18 +15,16 @@
  */
 package io.syndesis.connector.aws.ddb.customizer;
 
-
-import static org.junit.Assert.assertEquals;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.component.aws.ddb.DdbConstants;
 import org.apache.camel.component.aws.ddb.DdbOperations;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AWSDDBLocalTest {
-
 
     @Test
     public void putItemCustomizer() {
@@ -35,9 +33,9 @@ public class AWSDDBLocalTest {
         Exchange exchange = new DefaultExchange(new DefaultCamelContext());
         customizer.doBeforeProducer(exchange);
 
-        assertEquals("true", exchange.getIn().getHeader(DdbConstants.CONSISTENT_READ));
-        assertEquals("ALL_OLD", exchange.getIn().getHeader(DdbConstants.RETURN_VALUES));
-        assertEquals(DdbOperations.PutItem, exchange.getIn().getHeader(DdbConstants.OPERATION));
+        assertThat(exchange.getIn().getHeader(DdbConstants.CONSISTENT_READ)).isEqualTo("true");
+        assertThat(exchange.getIn().getHeader(DdbConstants.RETURN_VALUES)).isEqualTo("ALL_OLD");
+        assertThat(exchange.getIn().getHeader(DdbConstants.OPERATION)).isEqualTo(DdbOperations.PutItem);
     }
 
     @Test
@@ -47,9 +45,9 @@ public class AWSDDBLocalTest {
         Exchange exchange = new DefaultExchange(new DefaultCamelContext());
         customizer.doBeforeProducer(exchange);
 
-        assertEquals("true", exchange.getIn().getHeader(DdbConstants.CONSISTENT_READ));
-        assertEquals("ALL_OLD", exchange.getIn().getHeader(DdbConstants.RETURN_VALUES));
-        assertEquals(DdbOperations.GetItem, exchange.getIn().getHeader(DdbConstants.OPERATION));
+        assertThat(exchange.getIn().getHeader(DdbConstants.CONSISTENT_READ)).isEqualTo("true");
+        assertThat(exchange.getIn().getHeader(DdbConstants.RETURN_VALUES)).isEqualTo("ALL_OLD");
+        assertThat(exchange.getIn().getHeader(DdbConstants.OPERATION)).isEqualTo(DdbOperations.GetItem);
     }
 
 }

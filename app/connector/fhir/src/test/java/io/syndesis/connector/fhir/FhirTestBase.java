@@ -15,22 +15,6 @@
  */
 package io.syndesis.connector.fhir;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
-import com.github.tomakehurst.wiremock.client.MappingBuilder;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.github.tomakehurst.wiremock.stubbing.StubMapping;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.connection.Connection;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.connector.support.test.ConnectorTestSupport;
-import org.apache.commons.io.IOUtils;
-import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.junit.Before;
-import org.junit.Rule;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -38,16 +22,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.connector.support.test.ConnectorTestSupport;
+
+import org.apache.commons.io.IOUtils;
+import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.RegisterExtension;
+
+import com.github.tomakehurst.wiremock.client.MappingBuilder;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.stubbing.StubMapping;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.okXml;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
+import de.mkammerer.wiremock.WireMockExtension;
 
 public abstract class FhirTestBase extends ConnectorTestSupport {
 
-    @Rule
-    public WireMockRule fhirServer =  new WireMockRule(options().dynamicPort());
+    @RegisterExtension
+    final WireMockExtension fhirServer = new WireMockExtension(wireMockConfig().port(WireMockConfiguration.DYNAMIC_PORT));
 
     protected FhirContext fhirContext = new FhirContext(FhirVersionEnum.valueOf("DSTU3"));
 
@@ -75,7 +79,7 @@ public abstract class FhirTestBase extends ConnectorTestSupport {
         return null;
     }
 
-    @Before
+    @BeforeEach
     public void stubFhirServerMetadata() throws IOException {
         try (InputStream metadataResponseIn = FhirReadTest.class.getResourceAsStream("metadata_response.xml")) {
             String metadataResponse = IOUtils.toString(metadataResponseIn, StandardCharsets.UTF_8);

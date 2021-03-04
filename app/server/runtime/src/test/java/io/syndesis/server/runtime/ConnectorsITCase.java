@@ -21,9 +21,9 @@ import io.syndesis.common.model.connection.Connection;
 import io.syndesis.server.verifier.AlwaysOkVerifier;
 import io.syndesis.server.verifier.Verifier;
 
-import org.junit.Assume;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamResource;
@@ -121,12 +121,10 @@ public class ConnectorsITCase extends BaseITCase {
     }
 
     @Test
-    @Ignore
     public void verifyBadTwitterConnectionSettings() throws IOException {
-
         // AlwaysOkVerifier never fails.. do don't try this test case, if that's
         // whats being used.
-        Assume.assumeFalse(verifier instanceof AlwaysOkVerifier);
+        Assumptions.assumeFalse(verifier instanceof AlwaysOkVerifier);
 
         final Properties credentials = new Properties();
         try (InputStream is = getClass().getResourceAsStream("/valid-twitter-keys.properties")) {
@@ -209,7 +207,7 @@ public class ConnectorsITCase extends BaseITCase {
     // Disabled as it works only for the LocalProcessVerifier which would needs
     // some update
     @Test
-    @Ignore
+    @Disabled
     public void verifyGoodTwitterConnectionSettings() throws IOException {
         final Properties credentials = new Properties();
         try (InputStream is = getClass().getResourceAsStream("/valid-twitter-keys.properties")) {

@@ -41,16 +41,36 @@ import io.syndesis.integration.project.generator.ProjectGenerator;
 import io.syndesis.integration.project.generator.ProjectGeneratorConfiguration;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
-import org.apache.camel.CamelContext;
-import org.apache.camel.RoutesBuilder;
-import org.apache.camel.test.junit4.CamelTestSupport;
-import org.assertj.core.api.Assertions;
 
-public abstract class ConnectorTestSupport extends CamelTestSupport {
+import org.apache.camel.CamelContext;
+import org.apache.camel.ProducerTemplate;
+import org.apache.camel.RoutesBuilder;
+import org.apache.camel.component.properties.PropertiesComponent;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+
+public abstract class ConnectorTestSupport {
     private final ResourceManager resourceManager;
 
+    private CamelContext camel;
+
+    private ProducerTemplate producer;
+
     public ConnectorTestSupport() {
-        this.resourceManager = new ResourceManager();
+        resourceManager = new ResourceManager();
+    }
+
+    protected CamelContext createCamelContext() {
+        final CamelContext camel = new DefaultCamelContext();
+        camel.disableJMX();
+
+        final PropertiesComponent propertiesComponent = camel.getComponent("properties", PropertiesComponent.class);
+        final Properties properties = useOverridePropertiesWithPropertiesComponent();
+        propertiesComponent.setOverrideProperties(properties);
+
+        return camel;
     }
 
     protected ResourceManager getResourceManager() {
@@ -59,19 +79,37 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
 
     protected abstract List<Step> createSteps();
 
-    // ******************************
-    // Configure camel
-    // ******************************
-
-    @Override
-    protected CamelContext createCamelContext() throws Exception {
-        CamelContext context = super.createCamelContext();
-        context.disableJMX();
-
-        return context;
+    protected final CamelContext context() {
+        return camel;
     }
 
-    @Override
+    protected final ProducerTemplate template() {
+        return producer;
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @BeforeEach
+    public final void setupAndStart() throws Exception {
+        final CamelContext camel = createCamelContext();
+        this.camel = camel;
+
+        producer = camel.createProducerTemplate();
+
+        camel.addRoutes(createRouteBuilder());
+
+        if (camel.isAutoStartup()) {
+            camel.start();
+        }
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @AfterEach
+    public final void stop() throws Exception {
+        producer.stop();
+        camel.stop();
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected RoutesBuilder createRouteBuilder() throws Exception {
         return new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
             @Override
@@ -81,7 +119,6 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
         };
     }
 
-    @Override
     protected Properties useOverridePropertiesWithPropertiesComponent() {
         try {
             ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
@@ -111,7 +148,8 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
             .build();
     }
 
-    protected final Step newEndpointStep(String connectorId, String actionId, Consumer<Connection.Builder> connectionConsumer, Consumer<Step.Builder> stepConsumer) {
+    protected final Step newEndpointStep(String connectorId, String actionId, Consumer<Connection.Builder> connectionConsumer,
+        Consumer<Step.Builder> stepConsumer) {
         Connector connector = resourceManager.mandatoryLoadConnector(connectorId);
         ConnectorAction action = resourceManager.mandatoryLookupAction(connector, actionId);
 
@@ -123,7 +161,6 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
 
         return stepBuilder.build();
     }
-
 
     protected final Integration newIntegration() {
         return new Integration.Builder()

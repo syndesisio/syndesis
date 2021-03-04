@@ -28,8 +28,8 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.test.SyndesisTestEnvironment;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Christoph Deppisch
@@ -88,9 +88,9 @@ public class SpringBootProjectBuilderTest {
                                                         .withOutputDirectory(SyndesisTestEnvironment.getOutputDirectory());
 
         Path projectDir = projectBuilder.build(() -> integration);
-        Assert.assertNotNull(projectDir.resolve("pom.xml"));
-        Assert.assertNotNull(projectDir.resolve("src").resolve("main").resolve("resources").resolve("application.properties"));
-        Assert.assertNotNull(projectDir.resolve("src").resolve("main").resolve("resources").resolve("syndesis").resolve("integration").resolve("integration.json"));
+        Assertions.assertNotNull(projectDir.resolve("pom.xml"));
+        Assertions.assertNotNull(projectDir.resolve("src").resolve("main").resolve("resources").resolve("application.properties"));
+        Assertions.assertNotNull(projectDir.resolve("src").resolve("main").resolve("resources").resolve("syndesis").resolve("integration").resolve("integration.json"));
     }
 
 }

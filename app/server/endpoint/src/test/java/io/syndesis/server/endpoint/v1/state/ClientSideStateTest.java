@@ -31,7 +31,7 @@ import javax.ws.rs.core.NewCookie;
 import io.syndesis.common.util.immutable.ImmutablesStyle;
 
 import org.immutables.value.Value.Immutable;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 

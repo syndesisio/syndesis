@@ -20,7 +20,7 @@ import java.io.InputStream;
 
 import io.syndesis.common.util.json.JsonUtils;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;

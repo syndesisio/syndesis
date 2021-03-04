@@ -24,10 +24,9 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import io.syndesis.common.model.WithId;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
@@ -59,13 +58,12 @@ import static io.syndesis.common.model.monitoring.IntegrationDeploymentDetailedS
 import static io.syndesis.common.model.monitoring.IntegrationDeploymentDetailedState.STARTING;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.given;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Used to unit test the {@link io.syndesis.server.monitoring.DeploymentStateMonitor} implementation.
  */
-@RunWith(Parameterized.class)
 public class DeploymentStateMonitorControllerTest {
 
     private static final String INTEGRATION_ID = "test-integration";
@@ -80,31 +78,13 @@ public class DeploymentStateMonitorControllerTest {
     private static final PodStatus RUNNING_STATUS = new PodStatusBuilder().withPhase("Running").build();
     private static final PodStatus SUCCEEDED_STATUS = new PodStatusBuilder().withPhase("Succeeded").build();
 
-    @Parameterized.Parameter(value = 0)
-    public Pod deploymentPod;
-
-    @Parameterized.Parameter(value = 1)
-    public ReplicationController replicationController;
-
-    @Parameterized.Parameter(value = 2)
-    public Pod deployerPod;
-
-    @Parameterized.Parameter(value = 3)
-    public Build build;
-
-    @Parameterized.Parameter(value = 4)
-    public Pod buildPod;
-
-    @Parameterized.Parameter(value = 5)
-    public IntegrationDeploymentStateDetails expectedDetails;
-
     private DataManager dataManager;
 
     private final NamespacedOpenShiftClient client = Mockito.mock(NamespacedOpenShiftClient.class);
 
     private static final String TEST_NAMESPACE = "test-namespace";
 
-    @Before
+    @BeforeEach
     @SuppressWarnings("unchecked")
     public void before() throws Exception {
         try {
@@ -141,8 +121,9 @@ public class DeploymentStateMonitorControllerTest {
 
     }
 
-    @Test
-    public void testMonitoringController() throws IOException {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void testMonitoringController(final Pod deploymentPod, final ReplicationController replicationController, final Pod deployerPod, final Build build, final Pod buildPod, final IntegrationDeploymentStateDetails expectedDetails) throws IOException {
 
         final MonitoringConfiguration configuration = new MonitoringConfiguration();
         configuration.setInitialDelay(5);
@@ -195,7 +176,6 @@ public class DeploymentStateMonitorControllerTest {
 
     }
 
-    @Parameterized.Parameters
     public static Iterable<Object[]> data() {
 
         final ReplicationController replicationController = new ReplicationControllerBuilder()

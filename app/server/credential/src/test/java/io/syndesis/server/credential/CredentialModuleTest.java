@@ -20,7 +20,7 @@ import java.net.URI;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.social.oauth1.OAuthToken;
 
 import static org.assertj.core.api.Assertions.assertThat;

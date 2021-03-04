@@ -27,14 +27,12 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import io.syndesis.common.util.IOStreams;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(JUnitParamsRunner.class)
 public class JsonSchemaInspectorTest {
 
     private static final String JSON_SCHEMA_KIND = "json-schema";
@@ -50,8 +48,8 @@ public class JsonSchemaInspectorTest {
         assertThat(paths).doesNotContainAnyElementsOf(JsonSchemaInspector.COLLECTION_PATHS);
     }
 
-    @Test
-    @Parameters({"/petstore-unified-schema.json",
+    @ParameterizedTest
+    @ValueSource(strings = {"/petstore-unified-schema.json",
                  "/petstore-unified-schema-draft-4.json",
                  "/petstore-unified-schema-draft-6.json"})
     public void shouldCollectPathsFromUnifiedJsonSchema(final String schemaPath) throws IOException {

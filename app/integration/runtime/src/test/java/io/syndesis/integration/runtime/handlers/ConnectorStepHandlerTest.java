@@ -33,7 +33,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.component.twitter.timeline.TwitterTimelineEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
 import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;

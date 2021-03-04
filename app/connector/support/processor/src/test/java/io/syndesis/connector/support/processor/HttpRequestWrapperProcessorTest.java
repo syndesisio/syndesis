@@ -31,11 +31,8 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.spi.HeadersMapFactory;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,18 +40,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(Parameterized.class)
 public class HttpRequestWrapperProcessorTest {
 
     private static final String PARAMS_AND_BODY = "{\"parameters\":{\"param1\":\"param_value1\",\"param2\":[\"param_value2_1\",\"param_value2_2\"]},\"body\":{\"body1\":\"body_value1\",\"body2\":\"body_value2\"}}";
 
     private static final String ONLY_PARAMS = "{\"parameters\":{\"param1\":\"param_value1\",\"param2\":[\"param_value2_1\",\"param_value2_2\"]}}";
-
-    @Parameter(0)
-    public Object givenBody;
-
-    @Parameter(1)
-    public Object replacedBody;
 
     final ObjectSchema schema = new ObjectSchema();
 
@@ -70,19 +60,19 @@ public class HttpRequestWrapperProcessorTest {
         schema.putProperty("body", body);
     }
 
-    @Parameters
     public static Collection<Object[]> cases() {
-        return Arrays.asList(//
-            new Object[] {null, ONLY_PARAMS}, //
-            new Object[] {"", ONLY_PARAMS}, //
-            new Object[] {"{\"body1\":\"body_value1\",\"body2\":\"body_value2\"}", PARAMS_AND_BODY}, //
-            new Object[] {new ByteArrayInputStream(new byte[0]), ONLY_PARAMS}//
+        return Arrays.asList(
+            new Object[] {null, ONLY_PARAMS},
+            new Object[] {"", ONLY_PARAMS},
+            new Object[] {"{\"body1\":\"body_value1\",\"body2\":\"body_value2\"}", PARAMS_AND_BODY},
+            new Object[] {new ByteArrayInputStream(new byte[0]), ONLY_PARAMS}
         );
 
     }
 
-    @Test
-    public void shouldMapValuesFromMessageHeaders() throws Exception {
+    @ParameterizedTest
+    @MethodSource("cases")
+    public void shouldMapValuesFromMessageHeaders(final Object givenBody, final Object replacedBody) throws Exception {
         String schemaStr = JsonUtils.writer().forType(JsonSchema.class).writeValueAsString(schema);
         JsonNode schemaNode = JsonUtils.reader().forType(JsonNode.class).readTree(schemaStr);
         final HttpRequestWrapperProcessor processor = new HttpRequestWrapperProcessor(schemaNode);
@@ -104,8 +94,9 @@ public class HttpRequestWrapperProcessorTest {
         assertThat(replacement.getValue().getBody()).isEqualTo(replacedBody);
     }
 
-    @Test
-    public void shouldMapValuesFromHttpRequest() throws Exception {
+    @ParameterizedTest
+    @MethodSource("cases")
+    public void shouldMapValuesFromHttpRequest(final Object givenBody, final Object replacedBody) throws Exception {
         final String schemaStr = JsonUtils.writer().forType(JsonSchema.class).writeValueAsString(schema);
         final JsonNode schemaNode = JsonUtils.reader().forType(JsonNode.class).readTree(schemaStr);
         final HttpRequestWrapperProcessor processor = new HttpRequestWrapperProcessor(schemaNode);

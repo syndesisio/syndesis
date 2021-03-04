@@ -21,20 +21,21 @@ import java.util.stream.Collectors;
 
 import org.apache.camel.component.extension.ComponentVerifierExtension.Result;
 import org.apache.camel.component.extension.ComponentVerifierExtension.VerificationError;
-import org.apache.camel.test.junit4.CamelTestSupport;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assume.assumeNotNull;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BoxVerifierExtensionTest extends CamelTestSupport {
+public class BoxVerifierExtensionTest {
 
     private BoxVerifierExtension verifier;
 
     private static final Map<String, Object> parameters = new HashMap<>();
 
-    @BeforeClass
+    @BeforeAll
     public static void testConditions() {
         String userName = System.getenv("SYNDESIS_BOX_USERNAME");
         String userPassword = System.getenv("SYNDESIS_BOX_PASSWORD");
@@ -42,10 +43,10 @@ public class BoxVerifierExtensionTest extends CamelTestSupport {
         String clientSecret = System.getenv("SYNDESIS_BOX_CLIENT_SECRET");
 
         // run tests only when those credentials are provided
-        assumeNotNull(userName);
-        assumeNotNull(userPassword);
-        assumeNotNull(clientId);
-        assumeNotNull(clientSecret);
+        assumeFalse(userName == null);
+        assumeFalse(userPassword == null);
+        assumeFalse(clientId == null);
+        assumeFalse(clientSecret == null);
 
         parameters.put("userName", userName);
         parameters.put("userPassword", userPassword);
@@ -53,23 +54,21 @@ public class BoxVerifierExtensionTest extends CamelTestSupport {
         parameters.put("clientSecret", clientSecret);
     }
 
-    @Before
+    @BeforeEach
     public void setupVerifier() throws Exception {
-        verifier = new BoxVerifierExtension("box-connector", createCamelContext());
+        verifier = new BoxVerifierExtension("box-connector", new DefaultCamelContext());
     }
 
     @Test
     public void verifyParameters() {
         Result result = verifier.verifyParameters(parameters);
-        assertEquals(errorDescriptions(result),
-            Result.Status.OK, result.getStatus());
+        assertEquals(Result.Status.OK, result.getStatus(), errorDescriptions(result));
     }
 
     @Test
     public void verifyConnectivity() {
         Result result = verifier.verifyConnectivity(parameters);
-        assertEquals(errorDescriptions(result),
-            Result.Status.OK, result.getStatus());
+        assertEquals(Result.Status.OK, result.getStatus(), errorDescriptions(result));
     }
 
     private static String errorDescriptions(Result result) {

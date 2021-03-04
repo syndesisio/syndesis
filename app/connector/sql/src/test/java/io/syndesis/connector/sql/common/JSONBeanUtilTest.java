@@ -22,13 +22,13 @@ import java.util.Properties;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.SqlParameterValue;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class JSONBeanUtilTest {
 
@@ -77,7 +77,7 @@ public class JSONBeanUtilTest {
         map.put("c", 50);
         map.put("#update-count-1", 0);
         final String jsonBeanActual = JSONBeanUtil.toJSONBean(map);
-        Assert.assertEquals(jsonBeanExpected, jsonBeanActual);
+        Assertions.assertEquals(jsonBeanExpected, jsonBeanActual);
     }
 
     @Test
@@ -89,10 +89,10 @@ public class JSONBeanUtilTest {
         final String jsonBean = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(bean);
 
         final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(jsonBean);
-        Assert.assertTrue(properties.containsKey("a"));
-        Assert.assertEquals("20", properties.get("a"));
-        Assert.assertTrue(properties.containsKey("b"));
-        Assert.assertEquals("30", properties.get("b"));
+        Assertions.assertTrue(properties.containsKey("a"));
+        Assertions.assertEquals("20", properties.get("a"));
+        Assertions.assertTrue(properties.containsKey("b"));
+        Assertions.assertEquals("30", properties.get("b"));
     }
 
     /**

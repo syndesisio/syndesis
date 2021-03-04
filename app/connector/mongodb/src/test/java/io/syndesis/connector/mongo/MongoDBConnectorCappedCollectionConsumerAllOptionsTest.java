@@ -28,12 +28,14 @@ import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends MongoDBConnectorTestSupport {
 
@@ -44,8 +46,8 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
 
     protected MongoCollection<Document> collection;
 
-    // JUnit will execute this method after the @BeforeClass of the superclass
-    @BeforeClass
+    // JUnit will execute this method after the @BeforeEachClass of the superclass
+    @BeforeAll
     public static void doCollectionSetup() {
         // The feature only works with capped collections!
         CreateCollectionOptions opts = new CreateCollectionOptions().capped(true).sizeInBytes(1024 * 1024);
@@ -58,13 +60,13 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
     /**
      * The test will be interrupted and we do expect to have the valid tracked stored before completion
      */
-    @AfterClass
+    @AfterAll
     public static void testTrackingIdValue() {
         List<Document> docsFound = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION_TRACKING).find().into(new ArrayList<>());
         assertEquals(25, (int) docsFound.get(0).getInteger(COLLECTION_TRACKING_FIELD));
     }
 
-    @Before
+    @BeforeEach
     public void init(){
         collection = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION);
     }
@@ -79,7 +81,7 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
     @Test
     public void mongoTest() throws Exception {
         // When
-        MockEndpoint mock = getMockEndpoint("mock:result");
+        MockEndpoint mock = context().getEndpoint("mock:result", MockEndpoint.class);
         // We just retain last message
         mock.setRetainLast(1);
         mock.expectedMessageCount(3);

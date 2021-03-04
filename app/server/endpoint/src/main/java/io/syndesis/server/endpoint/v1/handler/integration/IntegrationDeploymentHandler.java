@@ -58,7 +58,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Path("/integrations/{id}/deployments")
 @Tag(name = "integration-deployments")
 @Component
-public final class IntegrationDeploymentHandler extends BaseHandler {
+public class IntegrationDeploymentHandler extends BaseHandler {
 
     private final OpenShiftService openShiftService;
     private final UserConfigurationProperties properties;
@@ -143,7 +143,7 @@ public final class IntegrationDeploymentHandler extends BaseHandler {
         final IntegrationDeployment deployment = new IntegrationDeployment.Builder()
             .id(IntegrationDeployment.compositeId(id, version)).spec(integration).version(version)
             .userId(sec.getUserPrincipal().getName())
-            .createdAt(System.currentTimeMillis())
+            .createdAt(now())
             .statusMessage(validationStatus).build();
 
         return getDataManager().create(deployment);
@@ -195,6 +195,10 @@ public final class IntegrationDeploymentHandler extends BaseHandler {
             .filter(d -> !integrationId.equals(d.getMetadata().getLabels().get(OpenShiftService.INTEGRATION_ID_LABEL)))
             .filter(d -> d.getSpec().getReplicas() > 0)
             .count();
+    }
+
+    long now() {
+        return System.currentTimeMillis();
     }
 
 }

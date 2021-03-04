@@ -23,34 +23,22 @@ import org.apache.olingo.odata2.api.edm.Edm;
 import org.apache.olingo.odata2.api.edm.EdmException;
 import org.apache.olingo.odata2.api.ep.EntityProviderException;
 import org.apache.olingo.odata2.client.api.ODataClient;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RunWith(Parameterized.class)
 public class ODataUtilTests extends AbstractODataTest {
-
-    @Parameter(0)
-    public String resource;
-    @Parameter(1)
-    public String data;
-    @Parameter(2)
-    public String expected;
 
     private static Edm testMetadata;
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() throws IOException, EdmException, EntityProviderException {
         testMetadata = ODataUtil.readEdm(odataTestServer.getServiceUri(), Collections.emptyMap());
     }
 
-    @Parameters
     public static Iterable<Object[]> testData() {
         return Arrays.asList(
             new Object[] { DRIVERS, "1", "(1)" },
@@ -80,17 +68,18 @@ public class ODataUtilTests extends AbstractODataTest {
         );
     }
 
-    @Test
-    public void testFormattingKeyPredicate() {
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void testFormattingKeyPredicate(String resource, String data, String expected) {
         final String result = ODataUtil.formatKeyPredicate(data);
         assertEquals(expected, result);
 
         assertThatCode(() -> {
-            ODataClient.newInstance().parseUri(testMetadata, resourcePath(result));
+            ODataClient.newInstance().parseUri(testMetadata, resourcePath(resource, result));
         }).doesNotThrowAnyException();
     }
 
-    private String resourcePath(String keyPredicate) {
+    private static String resourcePath(String resource, String keyPredicate) {
         return resource + keyPredicate;
     }
 }

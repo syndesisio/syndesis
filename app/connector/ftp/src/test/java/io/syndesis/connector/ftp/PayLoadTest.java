@@ -15,8 +15,8 @@
  */
 package io.syndesis.connector.ftp;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,7 +34,7 @@ public class PayLoadTest {
         ObjectMapper mapper = new ObjectMapper();
         FtpPayload payLoad = mapper.readValue(body, FtpPayload.class);
 
-        Assert.assertEquals("myFileName", payLoad.getFileName());
+        Assertions.assertEquals("myFileName", payLoad.getFileName());
     }
 
 }

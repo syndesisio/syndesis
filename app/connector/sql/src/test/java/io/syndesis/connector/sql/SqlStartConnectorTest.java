@@ -15,140 +15,116 @@
  */
 package io.syndesis.connector.sql;
 
-import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.sql.common.DbEnum;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
+import io.syndesis.connector.sql.common.Params;
+import io.syndesis.connector.sql.common.SqlTest;
+import io.syndesis.connector.sql.common.SqlTest.ConnectionInfo;
+import io.syndesis.connector.sql.common.SqlTest.Setup;
+import io.syndesis.connector.sql.common.SqlTest.Teardown;
+import io.syndesis.connector.sql.common.SqlTest.Variant;
+import io.syndesis.connector.sql.common.TestParameters;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException"})
-@RunWith(Parameterized.class)
-public class SqlStartConnectorTest extends SqlConnectorTestSupport {
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.TestTemplate;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-    private final String sqlQuery;
-    private final List<Map<String, String[]>> expectedResults;
-    private final Map<String, Object> parameters;
+@ExtendWith(SqlTest.class)
+@Setup(
+    value = {
+        "INSERT INTO NAME (firstname, lastname) VALUES ('Joe', 'Jackson')",
+        "INSERT INTO NAME (firstname, lastname) VALUES ('Roger', 'Waters')"
+    },
+    variants = {
+        @Variant(type = DbEnum.POSTGRESQL, value = "CREATE TABLE NAME (ID SERIAL PRIMARY KEY, firstName VARCHAR(255), lastName VARCHAR(255))"),
+        @Variant(type = DbEnum.MYSQL, value = "CREATE TABLE NAME (ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, firstName VARCHAR(255), lastName VARCHAR(255))"),
+        @Variant(type = DbEnum.APACHE_DERBY,
+            value = "CREATE TABLE NAME (ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), firstName VARCHAR(255), lastName VARCHAR(255))"),
+        @Variant(type = DbEnum.STANDARD, value = "CREATE TABLE NAME (ID NUMBER GENERATED ALWAYS AS IDENTITY, firstName VARCHAR(255), lastName VARCHAR(255))"),
+    })
+@Teardown("DROP TABLE NAME")
+public class SqlStartConnectorTest {
 
-    public SqlStartConnectorTest(String sqlQuery, List<Map<String, String[]>> expectedResults, Map<String, Object> parameters) {
-        this.sqlQuery = sqlQuery;
-        this.expectedResults = expectedResults;
-        this.parameters = parameters;
+    private SqlStartConnectorTest() {
+        // only a container for test cases
     }
 
-    @Override
-    protected List<String> cleanupStatements() {
-        return Collections.singletonList("DROP TABLE NAME");
-    }
+    @ExtendWith(Cases.class)
+    static class Case extends SqlConnectorTestSupport {
 
-    @Override
-    protected List<String> setupStatements() {
-        String dbProductName = null;
-        try {
-            dbProductName = db.connection.getMetaData().getDatabaseProductName();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        }
-        if (DbEnum.POSTGRESQL.equals(DbEnum.fromName(dbProductName))) {
-            return Arrays.asList("CREATE TABLE NAME ("
-                    + "ID SERIAL PRIMARY KEY, "
-                    + "firstName VARCHAR(255), lastName VARCHAR(255))",
-                    "INSERT INTO NAME (firstname, lastname) VALUES ('Joe', 'Jackson')",
-                    "INSERT INTO NAME (firstname, lastname) VALUES ('Roger', 'Waters')");
-        } else if (DbEnum.MYSQL.equals(DbEnum.fromName(dbProductName))) {
-            return Arrays.asList("CREATE TABLE NAME ("
-                    + "ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
-                    + "firstName VARCHAR(255), lastName VARCHAR(255))",
-                    "INSERT INTO NAME (firstname, lastname) VALUES ('Joe', 'Jackson')",
-                    "INSERT INTO NAME (firstname, lastname) VALUES ('Roger', 'Waters')");
-        } else if (DbEnum.APACHE_DERBY.equals(DbEnum.fromName(dbProductName))) {
-            return Arrays.asList("CREATE TABLE NAME (ID INTEGER NOT NULL "
-                    + "GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
-                    + "firstName VARCHAR(255), lastName VARCHAR(255))",
-                    "INSERT INTO NAME (firstname, lastname) VALUES ('Joe', 'Jackson')",
-                    "INSERT INTO NAME (firstname, lastname) VALUES ('Roger', 'Waters')");
-        } else {
-            return Arrays.asList("CREATE TABLE NAME ("
-                    + "ID NUMBER GENERATED ALWAYS AS IDENTITY, "
-                    + "firstName VARCHAR(255), lastName VARCHAR(255))",
-                    "INSERT INTO NAME (firstname, lastname) VALUES ('Joe', 'Jackson')",
-                    "INSERT INTO NAME (firstname, lastname) VALUES ('Roger', 'Waters')");
-        }
-    }
+        private final Params params;
 
-    @Override
-    protected List<Step> createSteps() {
-        return Arrays.asList(
-            newSimpleEndpointStep(
-                "direct",
-                builder -> builder.putConfiguredProperty("name", "start")),
-            newSqlEndpointStep(
-                "sql-start-connector",
-                builder -> builder.putConfiguredProperty("query", sqlQuery)),
-            newSimpleEndpointStep(
-                "log",
-                builder -> builder.putConfiguredProperty("loggerName", "test")),
-            newSimpleEndpointStep(
-                "mock",
-                builder -> builder.putConfiguredProperty("name", "result"))
-        );
-    }
-
-    // **************************
-    // Parameters
-    // **************************
-
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
-                { "SELECT * FROM NAME ORDER BY id", Arrays.asList(Collections.singletonMap("ID", new String[] { "1", "2" }),
-                        Collections.singletonMap("FIRSTNAME", new String[] { "Joe", "Roger" }),
-                        Collections.singletonMap("LASTNAME", new String[] { "Jackson", "Waters" })),
-                        Collections.emptyMap()},
-                { "SELECT * FROM NAME WHERE id = 2", Arrays.asList(Collections.singletonMap("ID", new String[] { "2" }),
-                        Collections.singletonMap("FIRSTNAME", new String[] { "Roger" }),
-                        Collections.singletonMap("LASTNAME", new String[] { "Waters" })),
-                        Collections.emptyMap()},
-                { "SELECT * FROM NAME WHERE id = 99", Collections.emptyList(), Collections.emptyMap()},
-                { "INSERT INTO NAME (firstname, lastname) VALUES ('Kurt', 'Cobain')",
-                        Collections.singletonList(Collections.singletonMap("ID", new String[]{"3"})),
-                        Collections.emptyMap()}
-        });
-    }
-
-    // **************************
-    // Tests
-    // **************************
-
-    @Test
-    public void sqlStartConnectorTest() throws Exception {
-
-        String body;
-        if (parameters.isEmpty()) {
-            body = null;
-        } else {
-            body = JSONBeanUtil.toJSONBean(parameters);
+        Case(final ConnectionInfo info, final Params params) {
+            super(info);
+            this.params = params;
         }
 
-        @SuppressWarnings("unchecked")
-        List<String> jsonBeans = template.requestBody("direct:start", body, List.class);
-        
-        Assert.assertEquals(expectedResults.isEmpty(), jsonBeans.isEmpty());
-
-        for (Map<String, String[]> result : expectedResults) {
-            for (Map.Entry<String, String[]> resultEntry : result.entrySet()) {
-                validateJson(jsonBeans, resultEntry.getKey(), resultEntry.getValue());
+        @TestTemplate
+        void runCases() {
+            String body;
+            if (params.parameters.isEmpty()) {
+                body = null;
+            } else {
+                body = JSONBeanUtil.toJSONBean(params.parameters);
             }
+
+            @SuppressWarnings("unchecked")
+            final List<String> jsonBeans = template().requestBody("direct:start", body, List.class);
+
+            Assertions.assertEquals(params.expectedResults.isEmpty(), jsonBeans.isEmpty());
+
+            for (final Map<String, String[]> result : params.expectedResults) {
+                for (final Map.Entry<String, String[]> resultEntry : result.entrySet()) {
+                    validateJson(jsonBeans, resultEntry.getKey(), resultEntry.getValue());
+                }
+            }
+        }
+
+        @Override
+        protected List<Step> createSteps() {
+            return Arrays.asList(
+                newSimpleEndpointStep(
+                    "direct",
+                    builder -> builder.putConfiguredProperty("name", "start")),
+                newSqlEndpointStep(
+                    "sql-start-connector",
+                    builder -> builder.putConfiguredProperty("query", params.query)),
+                newSimpleEndpointStep(
+                    "log",
+                    builder -> builder.putConfiguredProperty("loggerName", "test")),
+                newSimpleEndpointStep(
+                    "mock",
+                    builder -> builder.putConfiguredProperty("name", "result")));
+        }
+    }
+
+    static class Cases extends TestParameters {
+        public Cases() {
+            super(Stream.of(
+
+                Params.query("SELECT * FROM NAME ORDER BY id")
+                    .withResultColumnValues("ID", "1", "2")
+                    .withResultColumnValues("FIRSTNAME", "Joe", "Roger")
+                    .withResultColumnValues("LASTNAME", "Jackson", "Waters"),
+
+                Params.query("SELECT * FROM NAME WHERE id = 2")
+                    .withResultColumnValues("ID", "2")
+                    .withResultColumnValues("FIRSTNAME", "Roger")
+                    .withResultColumnValues("LASTNAME", "Waters"),
+
+                Params.query("SELECT * FROM NAME WHERE id = 99"),
+
+                Params.query("INSERT INTO NAME (firstname, lastname) VALUES ('Kurt', 'Cobain')")
+                    .withResultColumnValues("ID", "3")
+
+            ));
         }
     }
 }

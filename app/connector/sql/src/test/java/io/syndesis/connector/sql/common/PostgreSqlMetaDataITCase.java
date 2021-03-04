@@ -21,20 +21,20 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-import org.junit.Rule;
-import org.junit.Test;
+import io.syndesis.connector.sql.common.DatabaseContainers.Database;
+
+import org.junit.jupiter.api.TestTemplate;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.PostgreSQLContainer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@ExtendWith(DatabaseContainers.class)
+@Database("postgres:11.11")
 public class PostgreSqlMetaDataITCase {
 
-    @Rule
-    public final JdbcDatabaseContainer<?> postgresql = new PostgreSQLContainer<>();
-
-    @Test
-    public void shouldCreateMetadataForPostgreSqlSpecificDataTypes() throws SQLException {
+    @TestTemplate
+    public void shouldCreateMetadataForPostgreSqlSpecificDataTypes(final JdbcDatabaseContainer<?> postgresql) throws SQLException {
         try (Connection connection = postgresql.createConnection("")) {
             try (Statement stmt = connection.createStatement()) {
                 final String createTable = "CREATE TABLE TEST (uuid UUID)";

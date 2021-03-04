@@ -21,16 +21,12 @@ import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.jsondb.impl.SqlJsonDB;
 
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -38,16 +34,10 @@ import static io.syndesis.common.util.json.JsonUtils.map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest()
+@SpringBootTest
 @ActiveProfiles("test")
 @ContextConfiguration(classes = {Application.class, DataSourceConfiguration.class, DataStoreConfiguration.class,})
 public class MigrationsITCase {
-
-    @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
-
-    @Rule
-    public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
     @Autowired
     private SqlJsonDB jsondb;

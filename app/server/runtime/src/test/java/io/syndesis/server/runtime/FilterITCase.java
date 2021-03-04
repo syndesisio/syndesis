@@ -16,8 +16,8 @@
 package io.syndesis.server.runtime;
 
 import io.syndesis.common.model.filter.FilterOptions;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -26,6 +26,6 @@ public class FilterITCase extends BaseITCase {
     public void shouldGetGlobalFilterOptions() {
        ResponseEntity<FilterOptions> response = get("/api/v1/integrations/filters/options", FilterOptions.class, tokenRule.validToken(), HttpStatus.OK);
        FilterOptions filterOptions = response.getBody();
-       Assert.assertNotNull(filterOptions);
+       Assertions.assertNotNull(filterOptions);
     }
 }

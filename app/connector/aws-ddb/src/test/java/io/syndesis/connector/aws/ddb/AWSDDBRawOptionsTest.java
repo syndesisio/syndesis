@@ -15,12 +15,12 @@
  */
 package io.syndesis.connector.aws.ddb;
 
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -29,14 +29,17 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
+
 import org.apache.camel.Endpoint;
 import org.apache.camel.component.aws.ddb.DdbComponentVerifierExtension;
 import org.apache.camel.component.aws.ddb.DdbEndpoint;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-@Ignore("Make sure the AWSDDBConfiguration has the proper credentials before running this test")
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Disabled("Make sure the AWSDDBConfiguration has the proper credentials before running this test")
 public class AWSDDBRawOptionsTest extends ConnectorTestSupport {
     @Override
     protected List<Step> createSteps() {
@@ -125,22 +128,22 @@ public class AWSDDBRawOptionsTest extends ConnectorTestSupport {
 
     @Test
     public void testRawOptions() {
-        assertNotNull(context());
+        assertThat(context()).isNotNull();
 
         Optional<Endpoint> endpoint =
-            context.getEndpoints().stream().filter(e -> e instanceof DdbEndpoint).findFirst();
+            context().getEndpoints().stream().filter(e -> e instanceof DdbEndpoint).findFirst();
 
         String expected = "aws-ddb-aws-ddb-0-1://" + AWSDDBConfiguration.TABLENAME_VALUE +
             "?accessKey=RAW(" + AWSDDBConfiguration.ACCESSKEY_VALUE + ")&region=" +
             AWSDDBConfiguration.REGION_VALUE + "&secretKey=RAW(" + AWSDDBConfiguration.SECRETKEY_VALUE + ")";
 
-        assertTrue(endpoint.isPresent());
-        assertEquals(expected, endpoint.get().getEndpointUri());
+        assertThat(endpoint.isPresent()).isTrue();
+        assertThat(endpoint.get().getEndpointUri()).isEqualTo(expected);
     }
 
     @Test
     public void testRealConfiguration() {
-        assertNotNull(context());
+        assertThat(context()).isNotNull();
         DdbComponentVerifierExtension verifier = new DdbComponentVerifierExtension();
         try {
             verifier.setCamelContext(context());
@@ -159,11 +162,11 @@ public class AWSDDBRawOptionsTest extends ConnectorTestSupport {
                 , parameters);
 
 
-        assertTrue(result.getErrors().isEmpty());
+        assertThat(result.getErrors()).isEmpty();
         result =
             verifier.verify(ComponentVerifierExtension.Scope.CONNECTIVITY
                 , parameters);
 
-        assertTrue(result.getErrors().isEmpty());
+        assertThat(result.getErrors()).isEmpty();
     }
 }

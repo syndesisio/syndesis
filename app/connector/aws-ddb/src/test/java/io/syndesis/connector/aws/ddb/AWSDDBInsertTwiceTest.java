@@ -17,12 +17,14 @@ package io.syndesis.connector.aws.ddb;
 
 import org.apache.camel.ProducerTemplate;
 import org.json.JSONException;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-@Ignore("Make sure the AWSDDBConfiguration has the proper credentials before running this test")
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Disabled("Make sure the AWSDDBConfiguration has the proper credentials before running this test")
 public class AWSDDBInsertTwiceTest extends AWSDDBGenericOperation {
 
     @Override
@@ -48,8 +50,7 @@ public class AWSDDBInsertTwiceTest extends AWSDDBGenericOperation {
      * actual account
      */
     public void runIt() throws JSONException {
-
-        assertNotNull(context());
+        assertThat(context()).isNotNull();
 
         ProducerTemplate template = context().createProducerTemplate();
 

@@ -18,63 +18,48 @@ package io.syndesis.connector.soap.cxf;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.List;
+import java.io.OutputStream;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.Source;
 
+import io.syndesis.connector.soap.cxf.payload.RequestSoapPayloadConverter;
+import io.syndesis.connector.soap.cxf.payload.ResponseSoapPayloadConverter;
+
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.cxf.CxfPayload;
-import org.apache.camel.test.junit4.CamelTestSupport;
-import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.DefaultExchange;
+import org.apache.commons.io.output.NullOutputStream;
 import org.apache.cxf.binding.soap.Soap12;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.staxutils.StaxUtils;
 import org.assertj.core.api.Assertions;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.w3c.dom.Document;
+import org.xmlunit.assertj.XmlAssert;
 
-import io.syndesis.connector.soap.cxf.payload.RequestSoapPayloadConverter;
-import io.syndesis.connector.soap.cxf.payload.ResponseSoapPayloadConverter;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import static org.xmlunit.matchers.CompareMatcher.isSimilarTo;
+public class SoapPayloadConverterTest {
 
-@RunWith(Parameterized.class)
-public class SoapPayloadConverterTest extends CamelTestSupport {
+    private final RequestSoapPayloadConverter requestConverter = new RequestSoapPayloadConverter(Soap12.getInstance());
+    private final ResponseSoapPayloadConverter responseConverter = new ResponseSoapPayloadConverter();
+    private static final CamelContext CONTEXT = new DefaultCamelContext();
 
-    private RequestSoapPayloadConverter requestConverter;
-    private ResponseSoapPayloadConverter responseConverter;
-
-    @Parameter
-    public String fileName;
-
-    private InputStream inputStream;
-
-    @Parameters(name = "{index}: {0}")
-    public static List<String> getPayloadFileNames() {
-        return Arrays.asList("/sayHi.xml", "/getTradePrice.xml");
-    }
-
-    @Before
-    public void setup() {
-        requestConverter = new RequestSoapPayloadConverter(Soap12.getInstance());
-        responseConverter = new ResponseSoapPayloadConverter();
-        inputStream = SoapPayloadConverterTest.class.getResourceAsStream(fileName);
-    }
-
-    @Test
-    public void convertXmlToCxfToXml() throws IOException, XMLStreamException {
+    @ParameterizedTest(name = "{index}: {0}")
+    @ValueSource(strings = { "/sayHi.xml", "/getTradePrice.xml" })
+    public void convertXmlToCxfToXml(final String fileName) throws IOException, XMLStreamException {
+        final ByteArrayInputStream bis;
+        try (InputStream inputStream = SoapPayloadConverterTest.class.getResourceAsStream(fileName)) {
+            bis = new ByteArrayInputStream(IOUtils.readBytesFromStream(inputStream));
+        }
 
         // read XML bytes as an XML Document
-        final ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.readBytesFromStream(inputStream));
         final Document request = StaxUtils.read(bis);
         bis.reset();
 
@@ -90,18 +75,21 @@ public class SoapPayloadConverterTest extends CamelTestSupport {
         in.setHeader("CamelCxfMessage", soapMessage);
         responseConverter.process(exchange);
 
-        assertIsInstanceOf(InputStream.class, in.getBody());
+        assertThat(in.getBody()).isInstanceOf(InputStream.class);
         Document response = StaxUtils.read((InputStream) in.getBody());
 
-        XMLUnit.setIgnoreAttributeOrder(true);
-        assertThat(response, isSimilarTo(request).ignoreWhitespace());
+        XmlAssert.assertThat(response).and(request).ignoreWhitespace().areSimilar();
     }
 
-    @Test
-    public void convertXmlToValidCxfPayload() throws IOException, XMLStreamException {
+    @ParameterizedTest(name = "{index}: {0}")
+    @ValueSource(strings = { "/sayHi.xml", "/getTradePrice.xml" })
+    public void convertXmlToValidCxfPayload(final String fileName) throws IOException, XMLStreamException {
+        final ByteArrayInputStream bis;
+        try (InputStream inputStream = SoapPayloadConverterTest.class.getResourceAsStream(fileName)) {
+            bis = new ByteArrayInputStream(IOUtils.readBytesFromStream(inputStream));
+        }
 
         // read XML bytes as an XML Document
-        ByteArrayInputStream bis = new ByteArrayInputStream(IOUtils.readBytesFromStream(inputStream));
         StaxUtils.read(bis);
         bis.reset();
 
@@ -124,8 +112,19 @@ public class SoapPayloadConverterTest extends CamelTestSupport {
         }
     }
 
-    private static void validateXml(Source part) throws XMLStreamException {
+
+    static Exchange createExchangeWithBody(ByteArrayInputStream bis) {
+        final DefaultExchange exchange = new DefaultExchange(CONTEXT);
+        final Message in = exchange.getIn();
+        in.setBody(bis);
+
+        return exchange;
+    }
+
+    static void validateXml(Source part) throws XMLStreamException, IOException {
         // try to write the part using an XML stream writer
-        StaxUtils.copy(part, new ByteArrayOutputStream());
+        try (OutputStream nowhere = new NullOutputStream()){
+            StaxUtils.copy(part, nowhere);
+        }
     }
 }

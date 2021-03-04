@@ -30,32 +30,16 @@ import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValue
 import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
 import org.apache.camel.impl.DefaultExchange;
 import org.assertj.core.api.Assertions;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
 import io.syndesis.connector.support.util.ConnectorOptions;
 
-@RunWith(Parameterized.class)
 public class GoogleSheetsNamedColumnsTest extends AbstractGoogleSheetsCustomizerTestSupport {
 
-    private final String range;
-    private final String columnNames;
-    private final List<List<Object>> values;
-    private final List<String> model;
-
-    public GoogleSheetsNamedColumnsTest(String range, List<List<Object>> values, List<String> model, String columnNames) {
-        this.range = range;
-        this.values = values;
-        this.model = model;
-        this.columnNames = columnNames;
-    }
-
-    @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
                 { "A1:A3", Arrays.asList(Collections.singletonList("a1"), Collections.singletonList("a2"), Collections.singletonList("a3")),
@@ -71,8 +55,9 @@ public class GoogleSheetsNamedColumnsTest extends AbstractGoogleSheetsCustomizer
         });
     }
 
-    @Test
-    public void testGetValuesCustomizer() throws Exception {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void testGetValuesCustomizer(final String range, final List<List<Object>> values, final List<String> model, final String columnNames) throws Exception {
         Map<String, Object> options = new HashMap<>();
         options.put("spreadsheetId", getSpreadsheetId());
         options.put("range", range);
@@ -92,20 +77,21 @@ public class GoogleSheetsNamedColumnsTest extends AbstractGoogleSheetsCustomizer
         inbound.getIn().setBody(valueRange);
         getComponent().getBeforeConsumer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
-        Assert.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
+        Assertions.assertThat(ConnectorOptions.extractOption(options, "apiName")).isEqualTo(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName());
+        Assertions.assertThat(ConnectorOptions.extractOption(options, "methodName")).isEqualTo("get");
 
         @SuppressWarnings("unchecked")
         List<String> body = inbound.getIn().getBody(List.class);
-        Assert.assertEquals(model.size(), body.size());
+        Assertions.assertThat(body).hasSameSizeAs(model);
         Iterator<String> modelIterator = body.iterator();
         for (String expected : model) {
             JSONAssert.assertEquals(String.format(expected, getSpreadsheetId()), modelIterator.next(), JSONCompareMode.STRICT);
         }
     }
 
-    @Test
-    public void testUpdateValuesCustomizer() throws Exception {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void testUpdateValuesCustomizer(final String range, final List<List<Object>> values, final List<String> model, final String columnNames) throws Exception {
         Map<String, Object> options = new HashMap<>();
         options.put("columnNames", columnNames);
         options.put("range", range);

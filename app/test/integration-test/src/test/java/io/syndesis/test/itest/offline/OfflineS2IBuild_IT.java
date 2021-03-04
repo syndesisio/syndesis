@@ -24,7 +24,7 @@ import io.syndesis.test.integration.project.ProjectBuilder;
 import io.syndesis.test.integration.project.SpringBootProjectBuilder;
 
 import org.assertj.core.description.Description;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.wait.strategy.LogMessageWaitStrategy;
 import org.testcontainers.containers.wait.strategy.WaitStrategy;
 import org.testcontainers.utility.LogUtils;

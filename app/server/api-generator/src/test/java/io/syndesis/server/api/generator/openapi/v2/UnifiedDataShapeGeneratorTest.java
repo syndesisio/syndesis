@@ -16,63 +16,50 @@
 package io.syndesis.server.api.generator.openapi.v2;
 
 import java.util.List;
+import java.util.stream.Stream;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 
 import static io.syndesis.server.api.generator.openapi.DataShapeGenerator.APPLICATION_JSON;
 import static io.syndesis.server.api.generator.openapi.DataShapeGenerator.APPLICATION_XML;
 import static io.syndesis.server.api.generator.openapi.v2.UnifiedDataShapeGenerator.supports;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(Parameterized.class)
 public class UnifiedDataShapeGeneratorTest {
 
-    @Parameter(1)
-    public List<String> defaultMimes;
-
-    @Parameter(0)
-    public String mime;
-
-    @Parameter(2)
-    public List<String> mimes;
-
-    @Parameter(3)
-    public boolean outcome;
-
-    @Test
-    public void shouldDetermineSupportedMimes() {
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void shouldDetermineSupportedMimes(final String mime, final List<String> defaultMimes, final List<String> mimes, final boolean outcome) {
         assertThat(supports(mime, defaultMimes, mimes)).isEqualTo(outcome);
     }
 
-    @Parameters
-    public static Iterable<Object[]> parameters() {
-        return asList(//
-            new Object[] {APPLICATION_XML, null, null, false}, //
-            new Object[] {APPLICATION_JSON, null, null, false}, //
-            new Object[] {APPLICATION_XML, emptyList(), null, false}, //
-            new Object[] {APPLICATION_JSON, emptyList(), null, false}, //
-            new Object[] {APPLICATION_XML, null, emptyList(), false}, //
-            new Object[] {APPLICATION_JSON, null, emptyList(), false}, //
-            new Object[] {APPLICATION_XML, emptyList(), emptyList(), false}, //
-            new Object[] {APPLICATION_JSON, emptyList(), emptyList(), false}, //
-            new Object[] {APPLICATION_XML, emptyList(), singletonList(APPLICATION_JSON), false}, //
-            new Object[] {APPLICATION_JSON, emptyList(), singletonList(APPLICATION_JSON), true}, //
-            new Object[] {APPLICATION_XML, emptyList(), singletonList(APPLICATION_XML), true}, //
-            new Object[] {APPLICATION_JSON, emptyList(), singletonList(APPLICATION_XML), false}, //
-            new Object[] {APPLICATION_XML, singletonList(APPLICATION_JSON), emptyList(), false}, //
-            new Object[] {APPLICATION_JSON, singletonList(APPLICATION_JSON), emptyList(), true}, //
-            new Object[] {APPLICATION_XML, singletonList(APPLICATION_XML), emptyList(), true}, //
-            new Object[] {APPLICATION_JSON, singletonList(APPLICATION_XML), emptyList(), false}, //
-            new Object[] {APPLICATION_XML, emptyList(), asList(APPLICATION_JSON, APPLICATION_XML), true}, //
-            new Object[] {APPLICATION_JSON, emptyList(), asList(APPLICATION_JSON, APPLICATION_XML), true}, //
-            new Object[] {APPLICATION_JSON, emptyList(), asList(APPLICATION_JSON, APPLICATION_XML), true}//
-        );
+    static Stream<Arguments> parameters() {
+        return Stream.of(
+            Arguments.of(APPLICATION_XML, null, null, false),
+            Arguments.of(APPLICATION_JSON, null, null, false),
+            Arguments.of(APPLICATION_XML, emptyList(), null, false),
+            Arguments.of(APPLICATION_JSON, emptyList(), null, false),
+            Arguments.of(APPLICATION_XML, null, emptyList(), false),
+            Arguments.of(APPLICATION_JSON, null, emptyList(), false),
+            Arguments.of(APPLICATION_XML, emptyList(), emptyList(), false),
+            Arguments.of(APPLICATION_JSON, emptyList(), emptyList(), false),
+            Arguments.of(APPLICATION_XML, emptyList(), singletonList(APPLICATION_JSON), false),
+            Arguments.of(APPLICATION_JSON, emptyList(), singletonList(APPLICATION_JSON), true),
+            Arguments.of(APPLICATION_XML, emptyList(), singletonList(APPLICATION_XML), true),
+            Arguments.of(APPLICATION_JSON, emptyList(), singletonList(APPLICATION_XML), false),
+            Arguments.of(APPLICATION_XML, singletonList(APPLICATION_JSON), emptyList(), false),
+            Arguments.of(APPLICATION_JSON, singletonList(APPLICATION_JSON), emptyList(), true),
+            Arguments.of(APPLICATION_XML, singletonList(APPLICATION_XML), emptyList(), true),
+            Arguments.of(APPLICATION_JSON, singletonList(APPLICATION_XML), emptyList(), false),
+            Arguments.of(APPLICATION_XML, emptyList(), asList(APPLICATION_JSON, APPLICATION_XML), true),
+            Arguments.of(APPLICATION_JSON, emptyList(), asList(APPLICATION_JSON, APPLICATION_XML), true),
+            Arguments.of(APPLICATION_JSON, emptyList(), asList(APPLICATION_JSON, APPLICATION_XML), true));
     }
 }

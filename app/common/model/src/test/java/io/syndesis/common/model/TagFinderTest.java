@@ -17,8 +17,8 @@ package io.syndesis.common.model;
 
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.integration.Integration;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TagFinderTest {
 
@@ -37,10 +37,10 @@ public class TagFinderTest {
             .add(ListResult.of(connection))
             .getResult();
 
-        Assert.assertEquals( 3, allTags.getTotalCount());
-        Assert.assertTrue(allTags.getItems().contains("tag1") );
-        Assert.assertTrue(allTags.getItems().contains("tag2") );
-        Assert.assertTrue(allTags.getItems().contains("tag3") );
+        Assertions.assertEquals( 3, allTags.getTotalCount());
+        Assertions.assertTrue(allTags.getItems().contains("tag1") );
+        Assertions.assertTrue(allTags.getItems().contains("tag2") );
+        Assertions.assertTrue(allTags.getItems().contains("tag3") );
 
     }
 

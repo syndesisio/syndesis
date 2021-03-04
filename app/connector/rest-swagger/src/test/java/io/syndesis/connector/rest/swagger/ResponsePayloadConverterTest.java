@@ -18,7 +18,7 @@ package io.syndesis.connector.rest.swagger;
 import io.syndesis.common.model.DataShapeKinds;
 
 import org.apache.camel.Exchange;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.syndesis.connector.rest.swagger.PayloadConverterHelper.createExhangeWithBody;
 

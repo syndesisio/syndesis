@@ -15,54 +15,120 @@
  */
 package io.syndesis.connector.sql;
 
-import org.apache.camel.CamelExecutionException;
-import org.assertj.core.api.Assertions;
-
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.Types;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.springframework.dao.DuplicateKeyException;
-
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
+import io.syndesis.connector.sql.common.SqlTest;
+import io.syndesis.connector.sql.common.SqlTest.ConnectionInfo;
+import io.syndesis.connector.sql.common.SqlTest.Setup;
+import io.syndesis.connector.sql.common.SqlTest.Teardown;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
 
-@RunWith(Parameterized.class)
+import org.apache.camel.CamelExecutionException;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.dao.DuplicateKeyException;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+@ExtendWith(SqlTest.class)
+@Setup({
+    "CREATE TABLE ADDRESS ( id INTEGER NOT NULL, street VARCHAR(255), nummer INTEGER NOT NULL)",
+    "ALTER TABLE ADDRESS ADD PRIMARY KEY(id)"
+})
+@Teardown("DROP TABLE ADDRESS")
 public class SqlConnectorIdExistsTest extends SqlConnectorTestSupport {
 
-    private final String sqlQuery;
-    private final Map<String, Object> parameters;
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static final Class<List<String>> LIST_OF_STRINGS = (Class) List.class;
 
-    public SqlConnectorIdExistsTest(String sqlQuery, List<Map<String, String[]>> expectedResults, Map<String, Object> parameters) {
-        this.sqlQuery = sqlQuery;
-        this.parameters = parameters;
-    }
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    @BeforeClass
-    public static void beforeClass() throws SQLException {
-        try (Statement stmt = db.connection.createStatement()) {
-            stmt.executeUpdate("CREATE TABLE ADDRESS ( id INTEGER NOT NULL," + 
-                    "  street VARCHAR(255), nummer INTEGER NOT NULL)");
-            stmt.executeUpdate("ALTER TABLE ADDRESS ADD PRIMARY KEY(id)");
+    private final String query;
+
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    static class NoParameters extends SqlConnectorIdExistsTest {
+
+        public NoParameters(final ConnectionInfo info) {
+            super(info, "INSERT INTO ADDRESS (id, street, nummer) VALUES (1, 'East Davie Street', 100)");
+        }
+
+        @Test
+        @Order(2)
+        public void duplicateKey() {
+            assertThatThrownBy(() -> {
+                template().requestBody("direct:start", null, LIST_OF_STRINGS);
+            }).isInstanceOf(CamelExecutionException.class)
+                // Should throw an exception on the second insert
+                .hasCauseInstanceOf(DuplicateKeyException.class);
+        }
+
+        @Test
+        @Order(1)
+        public void noParameters() {
+            final List<String> jsonBeans = template().requestBody("direct:start", null, LIST_OF_STRINGS);
+            assertThat(jsonBeans).isNull();
         }
     }
 
-    @AfterClass
-    public static void afterClass() throws SQLException {
-        try (Statement stmt = db.connection.createStatement()) {
-                stmt.executeUpdate("DROP TABLE ADDRESS");
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    static class WithParameters extends SqlConnectorIdExistsTest {
+
+        final Map<String, Object> parameters;
+
+        public WithParameters(final ConnectionInfo info) {
+            super(info, "INSERT INTO ADDRESS (id, street, nummer) VALUES (1, :#street, :#number)");
+
+            parameters = new HashMap<>();
+            parameters.put("number", 14);
+            parameters.put("street", "LaborInVain");
         }
+
+        @Test
+        @Order(2)
+        public void duplicateKey() {
+            assertThatThrownBy(() -> {
+                template().requestBody("direct:start", JSONBeanUtil.toJSONBean(parameters), LIST_OF_STRINGS);
+            }).isInstanceOf(CamelExecutionException.class)
+                // Should throw an exception on the second insert
+                .hasCauseInstanceOf(DuplicateKeyException.class);
+        }
+
+        @Test
+        @Order(1)
+        public void withParameters() throws JsonProcessingException {
+            final List<String> jsonBeans = template().requestBody("direct:start", JSONBeanUtil.toJSONBean(parameters), LIST_OF_STRINGS);
+
+            final Map<String, Map<String, Object>> result = new HashMap<>();
+            result.put("number", valueMap(Types.INTEGER, "14"));
+            result.put("street", valueMap(Types.VARCHAR, "LaborInVain"));
+
+            assertThat(jsonBeans).hasSize(1);
+
+            final String bean = jsonBeans.get(0);
+            final Map<String, Object> received = MAPPER.readerForMapOf(Object.class).readValue(bean);
+
+            assertThat(received).containsExactlyEntriesOf(result);
+        }
+
+    }
+
+    public SqlConnectorIdExistsTest(final ConnectionInfo info, final String query) {
+        super(info);
+        this.query = query;
     }
 
     @Override
@@ -73,53 +139,22 @@ public class SqlConnectorIdExistsTest extends SqlConnectorTestSupport {
                 builder -> builder.putConfiguredProperty("name", "start")),
             newSqlEndpointStep(
                 "sql-connector",
-                builder -> builder.putConfiguredProperty("query", sqlQuery)),
+                builder -> builder.putConfiguredProperty("query", query)),
             newSimpleEndpointStep(
                 "log",
-                builder -> builder.putConfiguredProperty("loggerName", "test"))
-        );
+                builder -> builder.putConfiguredProperty("loggerName", "test")));
     }
 
-    // **************************
-    // Parameters
-    // **************************
+    static Map<String, Object> valueMap(final int type, final Object value) {
+        final Map<String, Object> val = new LinkedHashMap<>();
+        val.put("name", null);
+        val.put("sqlType", type);
+        val.put("typeName", null);
+        val.put("scale", null);
+        val.put("value", value);
+        val.put("resultsParameter", false);
+        val.put("inputValueProvided", true);
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("number", 14);
-        parameters.put("street", "LaborInVain");
-
-        return Arrays.asList(new Object[][] {
-                { "INSERT INTO ADDRESS (id, street, nummer) VALUES (1, 'East Davie Street', 100)",
-                        Collections.singletonList(Collections.singletonMap("ID", new String[]{"1"})),
-                        Collections.emptyMap()},
-                { "INSERT INTO ADDRESS (id, street, nummer) VALUES (1, :#street, :#number)",
-                        Collections.singletonList(Collections.singletonMap("ID", new String[]{"1"})),
-                        parameters}
-        });
-    }
-
-    // **************************
-    // Tests
-    // **************************
-
-    @Test
-    public void sqlConnectorTest() {
-        String body;
-        if (parameters.isEmpty()) {
-            body = null;
-            @SuppressWarnings("unchecked")
-            List<String> jsonBeans = template.requestBody("direct:start", body, List.class);
-            Assertions.assertThat(jsonBeans).isNull();
-        } else {
-            body = JSONBeanUtil.toJSONBean(parameters);
-            Assertions.assertThatThrownBy(() -> {
-               @SuppressWarnings({ "unchecked", "unused" })
-               List<String> jsonBeans = template.requestBody("direct:start", body, List.class);
-            }).isInstanceOf(CamelExecutionException.class)
-                //Should throw an exception on the second insert
-                .hasCauseInstanceOf(DuplicateKeyException.class);
-        }
+        return val;
     }
 }

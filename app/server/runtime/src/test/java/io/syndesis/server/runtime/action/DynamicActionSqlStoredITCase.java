@@ -21,7 +21,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
@@ -33,9 +32,10 @@ import java.util.Map;
 import java.util.UUID;
 
 import io.syndesis.common.model.action.ConnectorDescriptor;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -44,7 +44,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
@@ -56,23 +55,20 @@ public class DynamicActionSqlStoredITCase extends BaseITCase {
 
     private final String connectionId = UUID.randomUUID().toString();
 
-    @BeforeClass
-    public static void startMockIfNeeded() {
-        if (wireMock==null || !wireMock.isRunning()) {
-            wireMock = new WireMockRule(wireMockConfig().dynamicPort());
-            wireMock.start();
-        }
-    }
-
-    @Before
+    @BeforeEach
     public void setupConnection() {
         dataManager.create(new Connection.Builder().id(connectionId).connectorId("sql")
             .putConfiguredProperty("user", "sa").build());
     }
 
-    @Before
+    @BeforeAll
+    public static void startMockIfNeeded() {
+        WIRE_MOCK.start();
+    }
+
+    @BeforeEach
     public void setupMocks() {
-        WireMock.configureFor(wireMock.port());
+        WireMock.configureFor(WIRE_MOCK.port());
         stubFor(WireMock
             .post(urlEqualTo(
                 "/api/v1/connectors/sql/actions/sql-stored-connector"))//

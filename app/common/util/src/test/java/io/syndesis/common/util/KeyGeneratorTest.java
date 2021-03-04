@@ -17,9 +17,9 @@ package io.syndesis.common.util;
 
 import org.assertj.core.api.Condition;
 import org.assertj.core.data.Offset;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -40,7 +40,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class KeyGeneratorTest {
 
-    @Before
+    @BeforeEach
     public void resetToDefaults() {
         KeyGenerator.clock = KeyGenerator.DEFAULT_CLOCK;
         KeyGenerator.randomnessByte = (byte) ThreadLocalRandom.current().nextInt();
@@ -81,8 +81,8 @@ public class KeyGeneratorTest {
             }
         }).collect(Collectors.toSet());
 
-        Assert.assertEquals("If " + count + " key generations are performed in parallel, it should yield " + count
-            + " of distinct keys", count, keys.size());
+        Assertions.assertEquals(count, keys.size(), "If " + count + " key generations are performed in parallel, it should yield " + count
+            + " of distinct keys");
     }
 
 

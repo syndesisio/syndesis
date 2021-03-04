@@ -17,18 +17,18 @@ package io.syndesis.extensions.maven.annotation.processing;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+
 import javax.tools.StandardLocation;
+
+import io.syndesis.extension.maven.annotation.processing.ActionProcessor;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import com.google.testing.compile.Compilation;
 import com.google.testing.compile.Compiler;
 import com.google.testing.compile.JavaFileObjects;
-import io.syndesis.extension.maven.annotation.processing.ActionProcessor;
-import org.junit.Ignore;
-import org.junit.Test;
 
-import static junit.framework.TestCase.assertTrue;
-
-@Ignore
 public class ActionProcessorTest {
     @Test
     public void test() throws URISyntaxException, MalformedURLException {
@@ -48,6 +48,6 @@ public class ActionProcessorTest {
             )
         );
 
-        assertTrue(compilation.generatedFile(StandardLocation.SOURCE_OUTPUT, "test/AnnotatedClassTest-action-id.json").isPresent());
+        Assertions.assertTrue(compilation.generatedFile(StandardLocation.SOURCE_OUTPUT, "test/AnnotatedClassTest-action-id.json").isPresent());
     }
 }

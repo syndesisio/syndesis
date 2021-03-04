@@ -19,9 +19,9 @@ package io.syndesis.integration.component.proxy;
 import java.io.IOException;
 
 import org.apache.camel.catalog.DefaultCamelCatalog;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class ComponentDefinitionTest {
@@ -29,13 +29,14 @@ public class ComponentDefinitionTest {
     @Test
     public void testForScheme() throws IOException {
         ComponentDefinition definition = ComponentDefinition.forScheme(new DefaultCamelCatalog(), "direct");
-        Assert.assertNotNull(definition);
-        Assert.assertEquals("direct:name", definition.getComponent().getSyntax());
+        assertThat(definition).isNotNull();
+        assertThat(definition.getComponent().getSyntax()).isEqualTo("direct:name");
     }
 
     @Test
     public void testForSchemeNotFound() {
         assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> ComponentDefinition.forScheme(new DefaultCamelCatalog(), "unknown"))
-            .withMessage("Failed to find component definition for scheme 'unknown'. Missing component definition in classpath 'org/apache/camel/catalog/components/unknown.json'");
+            .withMessage(
+                "Failed to find component definition for scheme 'unknown'. Missing component definition in classpath 'org/apache/camel/catalog/components/unknown.json'");
     }
 }

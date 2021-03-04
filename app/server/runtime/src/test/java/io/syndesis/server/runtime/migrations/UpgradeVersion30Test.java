@@ -28,7 +28,7 @@ import io.syndesis.server.jsondb.dao.Migrator;
 import io.syndesis.server.jsondb.impl.MemorySqlJsonDB;
 import io.syndesis.server.runtime.DefaultMigrator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 
 import static io.syndesis.server.runtime.migrations.MigrationsHelper.load;

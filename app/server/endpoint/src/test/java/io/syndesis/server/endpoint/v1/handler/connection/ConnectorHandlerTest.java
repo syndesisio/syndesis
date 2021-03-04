@@ -30,8 +30,13 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
-import org.junit.Test;
+import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
+
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.core.Options.ChunkedEncodingPolicy;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -55,8 +60,6 @@ import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import io.syndesis.server.verifier.Verifier;
 
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.BufferedSource;
@@ -70,6 +73,9 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
 
 public class ConnectorHandlerTest {
 
@@ -100,14 +106,25 @@ public class ConnectorHandlerTest {
 
     @Test
     public void connectorIconShouldHaveCorrectContentType() throws IOException {
-        try (MockWebServer mockWebServer = new MockWebServer(); final Buffer resultBuffer = new Buffer()) {
-            mockWebServer.start();
+        final WireMockServer wiremock = new WireMockServer(WireMockConfiguration.options()
+            .dynamicPort()
+            .useChunkedTransferEncoding(ChunkedEncodingPolicy.NEVER));
 
-            resultBuffer.writeAll(Okio.source(getClass().getResourceAsStream("test-image.png")));
+        wiremock.start();
 
-            mockWebServer.enqueue(new MockResponse().setHeader(CONTENT_TYPE, "image/png").setBody(resultBuffer));
+        try {
+            byte[] png = IOUtils.toByteArray(ConnectorHandlerTest.class.getResource("test-image.png"));
+            wiremock.stubFor(get("/u/23079786")
+                .willReturn(aResponse()
+                    .withHeader(CONTENT_TYPE, "image/png")
+                    .withHeader(CONTENT_LENGTH, String.valueOf(png.length))
+                    .withBody(png)
+                )
+            );
 
-            final Connector connector = new Connector.Builder().id("connector-id").icon(mockWebServer.url("/u/23079786").toString())
+            final Connector connector = new Connector.Builder()
+                .id("connector-id")
+                .icon("http://localhost:" + wiremock.port() + "/u/23079786")
                 .build();
             when(dataManager.fetch(Connector.class, "connector-id")).thenReturn(connector);
             when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(Collections.emptyList()));
@@ -136,6 +153,8 @@ public class ConnectorHandlerTest {
                     }
                 }
             }
+        } finally {
+            wiremock.stop();
         }
     }
 

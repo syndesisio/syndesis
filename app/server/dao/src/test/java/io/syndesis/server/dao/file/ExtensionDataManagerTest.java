@@ -23,7 +23,7 @@ import java.util.Collections;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.extension.Extension;
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;

@@ -19,22 +19,24 @@ import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
 
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.runner.TestRunner;
 
+@Testcontainers
 public class WebhookToGMail_IT extends SyndesisIntegrationTestSupport {
 
     /**
      * Webhook receives POST request and sends an e-mail via GMail REST API.
      */
-    @ClassRule
-    public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
+    @Container
+    public static final SyndesisIntegrationRuntimeContainer INTEGRATION_CONTAINER = new SyndesisIntegrationRuntimeContainer.Builder()
         .name("webhook-to-gmail")
         .fromExport(WebhookToGMail_IT.class.getResource("webhook-to-gmail-export"))
         .build()
@@ -48,6 +50,6 @@ public class WebhookToGMail_IT extends SyndesisIntegrationTestSupport {
             .method(HttpMethod.GET)
             .seconds(10L)
             .status(HttpStatus.OK)
-            .url(String.format("http://localhost:%s/actuator/health", integrationContainer.getManagementPort()));
+            .url(String.format("http://localhost:%s/actuator/health", INTEGRATION_CONTAINER.getManagementPort()));
     }
 }

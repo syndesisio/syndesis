@@ -113,8 +113,8 @@
 
     <!-- test -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
     </dependency>
 
@@ -148,8 +148,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.activemq.tooling</groupId>
-      <artifactId>activemq-junit</artifactId>
+      <groupId>org.zapodot</groupId>
+      <artifactId>embedded-jms-junit5</artifactId>
+      <version>0.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>

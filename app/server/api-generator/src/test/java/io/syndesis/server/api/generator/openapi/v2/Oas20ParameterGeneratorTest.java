@@ -22,7 +22,7 @@ import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.syndesis.common.model.connection.ConfigurationProperty;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.syndesis.server.api.generator.openapi.TestHelper.resource;
 import static org.assertj.core.api.Assertions.assertThat;

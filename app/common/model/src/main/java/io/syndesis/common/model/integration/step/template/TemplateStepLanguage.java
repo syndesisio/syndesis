@@ -63,9 +63,9 @@ public class TemplateStepLanguage {
 
     private final String camelHeaderConstant;
 
-    private final TemplateStepPreProcessor preProcessor;
+    private final TemplateStepPreProcessor<?> preProcessor;
 
-    private TemplateStepLanguage(String name, String mvnDependency, String camelHeader, TemplateStepPreProcessor preProcessor) {
+    private TemplateStepLanguage(String name, String mvnDependency, String camelHeader, TemplateStepPreProcessor<?> preProcessor) {
         this.name = name;
         this.mvnDependency = mvnDependency;
         this.camelHeaderConstant = camelHeader;
@@ -98,7 +98,6 @@ public class TemplateStepLanguage {
     }
 
     public String preProcess(String template) throws TemplateProcessingException {
-        preProcessor.reset();
         return preProcessor.preProcess(template);
     }
 

@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.SymbolSyntax;
 
-class FreeMarkerTemplatePreProcessor extends AbstractTemplatePreProcessor {
+class FreeMarkerTemplatePreProcessor extends AbstractTemplatePreProcessor<ProcessingContext> {
 
     private static final Pattern LITERAL_PATTERN = Pattern.compile(
       "(?<leading>.*?)" + // Leading text / punctuation
@@ -31,18 +31,18 @@ class FreeMarkerTemplatePreProcessor extends AbstractTemplatePreProcessor {
     private static final Pattern SYMBOL_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z0-9_@\\$\\.]+");
 
     FreeMarkerTemplatePreProcessor() {
-        super(new SymbolSyntax(DOLLAR_SIGN + OPEN_BRACE, CLOSE_BRACE));
+        super(new SymbolSyntax("${", "}"));
     }
 
     @Override
-    protected boolean isText(String token) {
+    protected boolean isText(ProcessingContext context, String token) {
         SymbolSyntax symbolSyntax = getSymbolSyntaxes().get(0);
         return !token.contains(symbolSyntax.open()) &&
                         !token.contains(symbolSyntax.close());
     }
 
     @Override
-    protected void parseSymbol(String literal) throws TemplateProcessingException {
+    protected void parseSymbol(ProcessingContext context, String literal, StringBuilder buff) throws TemplateProcessingException {
         //
         // Scanner does not delineate between two symbols
         // with no whitespace between so match and loop
@@ -54,7 +54,7 @@ class FreeMarkerTemplatePreProcessor extends AbstractTemplatePreProcessor {
             String symbol = labelledGroup(m, "symbol");
             String ctag = labelledGroup(m, "ctag");
 
-            append(leading);
+            buff.append(leading);
 
             checkValidTags(otag, symbol, ctag);
 
@@ -66,7 +66,7 @@ class FreeMarkerTemplatePreProcessor extends AbstractTemplatePreProcessor {
             // the found symbol by using appendTail (see below)
             StringBuffer buf = new StringBuffer();
             m.appendReplacement(buf, Matcher.quoteReplacement(replacement));
-            append(buf.toString());
+            buff.append(buf.toString());
         }
 
         //
@@ -78,7 +78,7 @@ class FreeMarkerTemplatePreProcessor extends AbstractTemplatePreProcessor {
         StringBuffer buf = new StringBuffer();
         m.appendTail(buf);
         if (! buf.toString().equals(literal)) {
-            append(buf.toString());
+            buff.append(buf.toString());
         }
     }
 

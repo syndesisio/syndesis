@@ -36,17 +36,16 @@ import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import io.syndesis.integration.runtime.util.JsonSupport;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +63,6 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(JUnitParamsRunner.class)
 public class SplitStepHandlerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(SplitStepHandlerTest.class);
 
@@ -74,7 +72,7 @@ public class SplitStepHandlerTest {
 
     private final ActivityTracker activityTracker = Mockito.mock(ActivityTracker.class);
 
-    @Before
+    @BeforeEach
     public void setupMocks() {
         reset(activityTracker);
 
@@ -341,8 +339,8 @@ public class SplitStepHandlerTest {
         }
     }
 
-    @Test
-    @Parameters({"/person-unified-schema.json",
+    @ParameterizedTest
+    @ValueSource(strings = {"/person-unified-schema.json",
                  "/person-unified-schema-draft-4.json",
                  "/person-unified-schema-draft-6.json"})
     public void testSplitUnifiedJsonStep(final String schemaPath) throws Exception {

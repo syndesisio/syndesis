@@ -19,7 +19,7 @@ import ca.uhn.fhir.context.FhirVersionEnum;
 import io.atlasmap.xml.inspect.XmlSchemaInspector;
 import io.syndesis.connector.fhir.FhirMetaDataExtension;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;

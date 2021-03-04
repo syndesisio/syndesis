@@ -17,7 +17,7 @@ package io.syndesis.server.api.generator.openapi;
 
 import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
 import io.syndesis.common.model.connection.ConfigurationProperty;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

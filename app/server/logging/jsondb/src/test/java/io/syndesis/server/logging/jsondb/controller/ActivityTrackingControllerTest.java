@@ -44,9 +44,9 @@ import io.syndesis.server.jsondb.impl.SqlJsonDB;
 import io.syndesis.server.openshift.OpenShiftService;
 
 import org.h2.jdbcx.JdbcDataSource;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.skife.jdbi.v2.DBI;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -114,7 +114,7 @@ public class ActivityTrackingControllerTest {
 
     private KubernetesClient client;
 
-    @Before
+    @BeforeEach
     public void before() {
         JdbcDataSource ds = new JdbcDataSource();
         ds.setURL("jdbc:h2:mem:t;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
@@ -126,7 +126,7 @@ public class ActivityTrackingControllerTest {
         when(client.getConfiguration()).thenReturn(new ConfigBuilder().withMasterUrl("http://master").build());
     }
 
-    @After
+    @AfterEach
     public void destroyEverything() {
         jsondb.dropTables();
     }

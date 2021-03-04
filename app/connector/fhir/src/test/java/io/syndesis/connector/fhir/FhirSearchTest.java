@@ -20,7 +20,7 @@ import org.assertj.core.api.Assertions;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Enumerations;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -59,7 +59,7 @@ public class FhirSearchTest extends FhirTestBase {
         FhirResourceQuery query = new FhirResourceQuery();
         query.setQuery("gender=unknown");
 
-        String result = template.requestBody("direct:start", query, String.class);
+        String result = template().requestBody("direct:start", query, String.class);
 
         Assertions.assertThat(result).isEqualTo(
             "[<Patient xmlns=\"http://hl7.org/fhir\"><id value=\"one\"/><gender value=\"unknown\"/></Patient>, " +

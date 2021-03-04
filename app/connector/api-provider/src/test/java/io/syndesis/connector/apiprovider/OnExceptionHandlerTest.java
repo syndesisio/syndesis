@@ -23,8 +23,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.builder.ExchangeBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import io.syndesis.common.util.SyndesisConnectorException;
 
@@ -57,8 +57,8 @@ public class OnExceptionHandlerTest {
         handler.process(exchange);
 
         Message in = exchange.getIn();
-        Assert.assertEquals(Integer.valueOf(500)             ,in.getHeader(Exchange.HTTP_RESPONSE_CODE));
-        Assert.assertEquals(""                               ,in.getBody());
+        Assertions.assertEquals(Integer.valueOf(500)             ,in.getHeader(Exchange.HTTP_RESPONSE_CODE));
+        Assertions.assertEquals(""                               ,in.getBody());
     }
 
     @Test
@@ -82,8 +82,8 @@ public class OnExceptionHandlerTest {
         handler.process(exchange);
 
         Message in = exchange.getIn();
-        Assert.assertEquals(Integer.valueOf(404),in.getHeader(Exchange.HTTP_RESPONSE_CODE));
-        Assert.assertEquals(expectedBody        ,in.getBody());
+        Assertions.assertEquals(Integer.valueOf(404),in.getHeader(Exchange.HTTP_RESPONSE_CODE));
+        Assertions.assertEquals(expectedBody        ,in.getBody());
 
     }
 }

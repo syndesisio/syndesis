@@ -16,7 +16,7 @@
 
 package io.syndesis.server.api.generator.openapi;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.syndesis.server.api.generator.openapi.OpenApiPropertyGenerator.createHostUri;
 import static org.assertj.core.api.Assertions.assertThat;

@@ -17,6 +17,8 @@ package io.syndesis.server.runtime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import de.mkammerer.wiremock.WireMockExtension;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,9 +30,8 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import io.syndesis.common.util.json.JsonUtils;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Rule;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,11 +53,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.jsondb.impl.SqlJsonDB;
@@ -65,7 +63,7 @@ import io.syndesis.server.jsondb.impl.SqlJsonDB;
 @ActiveProfiles("test")
 @ContextConfiguration(
     classes = {
-		Application.class,
+        Application.class,
         CacheConfiguration.class,
         DataStoreConfiguration.class,
         FileStoreConfiguration.class,
@@ -78,7 +76,8 @@ public abstract class BaseITCase {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseITCase.class);
 
-    public static WireMockRule wireMock;
+    @RegisterExtension
+    public static final WireMockExtension WIRE_MOCK = new WireMockExtension();
 
     @Autowired
     protected SqlJsonDB jsondb;
@@ -86,7 +85,7 @@ public abstract class BaseITCase {
     @Autowired
     protected DataManager dataManager;
 
-    @BeforeClass
+    @BeforeAll
     public static void envSetup() {
         // On some systems (like running a build in a k8s pod), you don't get home dir.
         if( System.getProperty("user.home")==null ) {
@@ -110,15 +109,8 @@ public abstract class BaseITCase {
         this.jsondb.createTables();
     }
 
-    @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
-
-    @Rule
-    public final SpringMethodRule springMethodRule = new SpringMethodRule();
-
     private TestRestTemplate restTemplate;
 
-    @Rule
     public final APITokenRule tokenRule = new APITokenRule();
 
     public TestRestTemplate restTemplate() {
@@ -130,7 +122,7 @@ public abstract class BaseITCase {
         public void initialize(final ConfigurableApplicationContext applicationContext) {
             final ConfigurableEnvironment environment = applicationContext.getEnvironment();
             environment.getPropertySources().addFirst(new MapPropertySource("test-source",
-                    Collections.singletonMap("meta.service", "localhost:" + wireMock.port())));
+                    Collections.singletonMap("meta.service", "localhost:" + WIRE_MOCK.port())));
         }
     }
 

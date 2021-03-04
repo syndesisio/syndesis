@@ -16,24 +16,21 @@
 
 package io.syndesis.test.itest.sheets;
 
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.http.server.HttpServer;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.testcontainers.containers.GenericContainer;
+
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.runner.TestRunner;
 
 /**
  * @author Christoph Deppisch
  */
 public class SheetsToSheets_IT extends GoogleSheetsTestSupport {
-
-    @Autowired
-    private HttpServer googleSheetsApiServer;
 
     /**
      * Integration periodically retrieves all values from Google Sheets spreadsheet range A:E and maps the column names to custom names. The obtained

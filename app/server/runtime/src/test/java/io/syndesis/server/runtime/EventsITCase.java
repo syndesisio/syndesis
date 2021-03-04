@@ -26,7 +26,7 @@ import io.syndesis.common.model.EventMessage;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.server.runtime.Recordings.Invocation;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

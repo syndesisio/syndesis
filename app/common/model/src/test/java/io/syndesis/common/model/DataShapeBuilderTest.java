@@ -23,8 +23,8 @@ import java.util.Base64;
 import java.util.zip.GZIPInputStream;
 
 import io.syndesis.common.util.IOStreams;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Christoph Deppisch
@@ -42,8 +42,8 @@ public class DataShapeBuilderTest {
                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "false")
                 .specification(SPECIFICATION);
 
-        Assert.assertEquals(SPECIFICATION, shape.build().getSpecification());
-        Assert.assertEquals(SPECIFICATION, shape.compress().build().getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.build().getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.compress().build().getSpecification());
     }
 
     @Test
@@ -52,9 +52,9 @@ public class DataShapeBuilderTest {
                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
                 .specification(SPECIFICATION);
 
-        Assert.assertEquals(SPECIFICATION, shape.build().getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.build().getSpecification());
         assertCompressedSpecification(SPECIFICATION, shape.compress().build().getSpecification());
-        Assert.assertEquals(SPECIFICATION, shape.compress().decompress().build().getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.compress().decompress().build().getSpecification());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class DataShapeBuilderTest {
                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
                 .specification(COMPRESSED_SPECIFICATION);
 
-        Assert.assertEquals(SPECIFICATION, shape.decompress().build().getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.decompress().build().getSpecification());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class DataShapeBuilderTest {
                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
                 .specification(COMPRESSED_SPECIFICATION);
 
-        Assert.assertEquals(SPECIFICATION, shape.decompress().decompress().build().getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.decompress().decompress().build().getSpecification());
     }
 
     @Test
@@ -94,12 +94,12 @@ public class DataShapeBuilderTest {
                                 .specification(VARIANT_SPECIFICATION)
                                 .build());
 
-        Assert.assertEquals(SPECIFICATION, shape.build().getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.build().getSpecification());
         assertCompressedSpecification(SPECIFICATION, shape.compress().build().getSpecification());
-        Assert.assertEquals(SPECIFICATION, shape.compress().decompress().build().getSpecification());
-        Assert.assertEquals(VARIANT_SPECIFICATION, shape.build().getVariants().get(0).getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.compress().decompress().build().getSpecification());
+        Assertions.assertEquals(VARIANT_SPECIFICATION, shape.build().getVariants().get(0).getSpecification());
         assertCompressedSpecification(VARIANT_SPECIFICATION, shape.compress().build().getVariants().get(0).getSpecification());
-        Assert.assertEquals(VARIANT_SPECIFICATION, shape.compress().decompress().build().getVariants().get(0).getSpecification());
+        Assertions.assertEquals(VARIANT_SPECIFICATION, shape.compress().decompress().build().getVariants().get(0).getSpecification());
     }
 
     @Test
@@ -112,8 +112,8 @@ public class DataShapeBuilderTest {
                                 .specification(COMPRESSED_VARIANT_SPECIFICATION)
                                 .build());
 
-        Assert.assertEquals(SPECIFICATION, shape.decompress().build().getSpecification());
-        Assert.assertEquals(VARIANT_SPECIFICATION, shape.decompress().build().getVariants().get(0).getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.decompress().build().getSpecification());
+        Assertions.assertEquals(VARIANT_SPECIFICATION, shape.decompress().build().getVariants().get(0).getSpecification());
     }
 
     @Test
@@ -126,11 +126,11 @@ public class DataShapeBuilderTest {
                                 .specification(VARIANT_SPECIFICATION)
                                 .build());
 
-        Assert.assertEquals(SPECIFICATION, shape.build().getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.build().getSpecification());
         assertCompressedSpecification(SPECIFICATION, shape.compress().build().getSpecification());
-        Assert.assertEquals(SPECIFICATION, shape.compress().decompress().build().getSpecification());
-        Assert.assertEquals(VARIANT_SPECIFICATION, shape.build().getVariants().get(0).getSpecification());
-        Assert.assertEquals(VARIANT_SPECIFICATION, shape.compress().build().getVariants().get(0).getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.compress().decompress().build().getSpecification());
+        Assertions.assertEquals(VARIANT_SPECIFICATION, shape.build().getVariants().get(0).getSpecification());
+        Assertions.assertEquals(VARIANT_SPECIFICATION, shape.compress().build().getVariants().get(0).getSpecification());
     }
 
     @Test
@@ -145,13 +145,13 @@ public class DataShapeBuilderTest {
                                 .specification(VARIANT_SPECIFICATION)
                                 .build());
 
-        Assert.assertEquals(SPECIFICATION, shape.build().getSpecification());
-        Assert.assertEquals(SPECIFICATION, shape.compress().build().getSpecification());
-        Assert.assertEquals(SPECIFICATION, shape.compress().decompress().build().getSpecification());
-        Assert.assertEquals(VARIANT_SPECIFICATION, shape.build().getVariants().get(0).getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.build().getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.compress().build().getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.compress().decompress().build().getSpecification());
+        Assertions.assertEquals(VARIANT_SPECIFICATION, shape.build().getVariants().get(0).getSpecification());
         assertCompressedSpecification(VARIANT_SPECIFICATION, shape.compress().build().getVariants().get(0).getSpecification());
-        Assert.assertEquals(VARIANT_SPECIFICATION, shape.build().getVariants().get(1).getSpecification());
-        Assert.assertEquals(VARIANT_SPECIFICATION, shape.compress().build().getVariants().get(1).getSpecification());
+        Assertions.assertEquals(VARIANT_SPECIFICATION, shape.build().getVariants().get(1).getSpecification());
+        Assertions.assertEquals(VARIANT_SPECIFICATION, shape.compress().build().getVariants().get(1).getSpecification());
     }
 
     @Test
@@ -180,15 +180,15 @@ public class DataShapeBuilderTest {
                         .compress()
                         .build());
 
-        Assert.assertEquals(SPECIFICATION, shape.decompress().decompress().build().getSpecification());
-        Assert.assertEquals(VARIANT_SPECIFICATION, shape.decompress().decompress().build().getVariants().get(0).getSpecification());
+        Assertions.assertEquals(SPECIFICATION, shape.decompress().decompress().build().getSpecification());
+        Assertions.assertEquals(VARIANT_SPECIFICATION, shape.decompress().decompress().build().getVariants().get(0).getSpecification());
     }
 
     private static void assertCompressedSpecification(String expected, String compressed) throws IOException {
         byte[] data = Base64.getDecoder().decode(compressed);
 
         try (InputStream is = new GZIPInputStream(new ByteArrayInputStream(data))) {
-            Assert.assertEquals(expected, IOStreams.readText(is));
+            Assertions.assertEquals(expected, IOStreams.readText(is));
         }
     }
 

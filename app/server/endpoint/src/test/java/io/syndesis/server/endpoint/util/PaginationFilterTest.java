@@ -21,25 +21,17 @@ import java.util.List;
 
 import io.syndesis.common.model.ListResult;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
-@RunWith(Parameterized.class)
 public class PaginationFilterTest {
 
     private static final List<Integer> ints = Arrays.asList(1, 2, 3, 4, 5);
-    private final Parameter parameter;
 
-    public PaginationFilterTest(Parameter parameter) {
-        this.parameter = parameter;
-    }
-
-    @Parameterized.Parameters
-    public static List<Parameter> getParameters() {
+    static List<Parameter> parameters() {
         return Arrays.asList(
             new Parameter(1, 1, ints, Arrays.asList(1), null),
             new Parameter(2, 1, ints, Arrays.asList(2), null),
@@ -51,18 +43,19 @@ public class PaginationFilterTest {
         );
     }
 
-    @Test
-    public void apply() throws Exception {
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void apply(final Parameter parameter) throws Exception {
         try {
             ListResult<Integer> filtered = new PaginationFilter<Integer>(new PaginationOptions() {
                 @Override
                 public int getPage() {
-                    return PaginationFilterTest.this.parameter.page;
+                    return parameter.page;
                 }
 
                 @Override
                 public int getPerPage() {
-                    return PaginationFilterTest.this.parameter.perPage;
+                    return parameter.perPage;
                 }
             }).apply(new ListResult.Builder<Integer>().items(parameter.inputList).totalCount(parameter.inputList.size()).build());
 

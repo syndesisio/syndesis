@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Modules with running pods
-POD_MODULES="meta server ui operator"
-
 call_maven() {
     local args=$1
     local maven_modules=$2
@@ -22,19 +19,17 @@ call_maven() {
     if [ "EVERYTHING" == "${maven_modules}" ]; then
       _call_maven_internal "$args_to_use" "Building everything"
     else
+      if [ "$(hasflag --dependencies -d)" ]; then
+          args_to_use+=" -am"
+      fi
+
       echo "Modules: $maven_modules"
-      _call_maven_internal "-N $args_to_use -Pflash" "Installing parent"
+      args_to_use+=" -Dbuild-selection -P"
       for module in $maven_modules; do
-        if [ "${module//:/}" != "${module}" ]; then
-            # build submodule defined with [groupId]:artifactId
-            if [ "$(hasflag --dependencies -d)" ]; then
-                args_to_use+=" -am"
-            fi
-            _call_maven_internal "$args_to_use -pl $module" "Processing submodule $module"
-        else
-            _call_maven_internal "$args_to_use -f $module" "Processing submodule $module"
-        fi
+        args_to_use+="build-${module//:/},"
       done
+      args_to_use=${args_to_use%?}
+      _call_maven_internal "$args_to_use" "Building specified modules"
     fi
 
     popd >/dev/null

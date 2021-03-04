@@ -28,11 +28,10 @@ import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.TypeConverter;
 import org.apache.camel.spi.AsyncProcessorAwaitManager;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -43,10 +42,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 
+import de.mkammerer.wiremock.WireMockExtension;
+
 public class AuthenticationCustomizerTest {
 
-    @Rule
-    public WireMockRule wiremock = new WireMockRule(WireMockConfiguration.options().dynamicPort());
+    @RegisterExtension
+    WireMockExtension wiremock = new WireMockExtension(WireMockConfiguration.options().dynamicPort());
 
     @Test
     public void shouldSetBasicAuthorizationHeader() throws Exception {

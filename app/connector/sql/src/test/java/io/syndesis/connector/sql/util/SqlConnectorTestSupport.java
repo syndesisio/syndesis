@@ -15,9 +15,9 @@
  */
 package io.syndesis.connector.sql.util;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.function.Consumer;
@@ -27,71 +27,26 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.connector.sql.common.DbEnum;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
-import io.syndesis.connector.sql.common.SqlConnectionRule;
+import io.syndesis.connector.sql.common.SqlTest;
+import io.syndesis.connector.sql.common.SqlTest.ConnectionInfo;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.ClassRule;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+@ExtendWith(SqlTest.class)
 public abstract class SqlConnectorTestSupport extends ConnectorTestSupport {
-    @ClassRule
-    public static SqlConnectionRule db = new SqlConnectionRule();
 
-    protected List<String> setupStatements() {
-        return Collections.emptyList();
+    protected final ConnectionInfo info;
+
+    public SqlConnectorTestSupport(final ConnectionInfo info) {
+        this.info = info;
     }
 
-    protected List<String> cleanupStatements() {
-        return Collections.emptyList();
-    }
-
-    // **************************
-    // Set up
-    // **************************
-
-    @Override
-    protected void doPreSetup() throws Exception {
-        try (Statement stmt = db.connection.createStatement()) {
-            for (String sql : setupStatements()) {
-                stmt.executeUpdate(sql);
-            }
-        }
-    }
-
-    @After
-    public void after() throws SQLException {
-        try (Statement stmt = db.connection.createStatement()) {
-            for (String sql : cleanupStatements()) {
-                stmt.executeUpdate(sql);
-            }
-        }
-    }
-
-    // **************************
-    // Helpers
-    // **************************
-
-    protected Step newSqlEndpointStep(String actionId, Consumer<Step.Builder> consumer) {
-        final Connector connector = getResourceManager().mandatoryLoadConnector("sql");
-        final ConnectorAction action = getResourceManager().mandatoryLookupAction(connector, actionId);
-
-        final Step.Builder builder = new Step.Builder()
-            .stepKind(StepKind.endpoint)
-            .action(action)
-            .connection(new io.syndesis.common.model.connection.Connection.Builder()
-                .connector(connector)
-                .putConfiguredProperty("user", db.properties.getProperty("sql-connector.user"))
-                .putConfiguredProperty("password", db.properties.getProperty("sql-connector.password"))
-                .putConfiguredProperty("url", db.properties.getProperty("sql-connector.url"))
-                .build());
-
-        consumer.accept(builder);
-
-        return builder.build();
-    }
-
-    protected Step newSqlEndpointStep(String actionId, Consumer<Step.Builder> stepConsumer, Consumer<ConnectorDescriptor.Builder> descriptorConsumer) {
+    protected Step newSqlEndpointStep(final ConnectionInfo info, final String actionId, final Consumer<Step.Builder> stepConsumer,
+        final Consumer<ConnectorDescriptor.Builder> descriptorConsumer) {
         final Connector connector = getResourceManager().mandatoryLoadConnector("sql");
         final ConnectorAction action = getResourceManager().mandatoryLookupAction(connector, actionId);
         final ConnectorDescriptor.Builder descriptorBuilder = new ConnectorDescriptor.Builder().createFrom(action.getDescriptor());
@@ -103,9 +58,9 @@ public abstract class SqlConnectorTestSupport extends ConnectorTestSupport {
             .action(new ConnectorAction.Builder().createFrom(action).descriptor(descriptorBuilder.build()).build())
             .connection(new io.syndesis.common.model.connection.Connection.Builder()
                 .connector(connector)
-                .putConfiguredProperty("user", db.properties.getProperty("sql-connector.user"))
-                .putConfiguredProperty("password", db.properties.getProperty("sql-connector.password"))
-                .putConfiguredProperty("url", db.properties.getProperty("sql-connector.url"))
+                .putConfiguredProperty("user", info.username)
+                .putConfiguredProperty("password", info.password)
+                .putConfiguredProperty("url", info.url)
                 .build());
 
         stepConsumer.accept(builder);
@@ -113,21 +68,46 @@ public abstract class SqlConnectorTestSupport extends ConnectorTestSupport {
         return builder.build();
     }
 
-    protected void validateProperty(List<Properties> propertyList, String propertyName, String ... expectedValues) {
-        Assert.assertEquals(expectedValues.length, propertyList.size());
+    protected Step newSqlEndpointStep(final String actionId, final Consumer<Step.Builder> consumer) {
+        final Connector connector = getResourceManager().mandatoryLoadConnector("sql");
+        final ConnectorAction action = getResourceManager().mandatoryLookupAction(connector, actionId);
+
+        final Step.Builder builder = new Step.Builder()
+            .stepKind(StepKind.endpoint)
+            .action(action)
+            .connection(new io.syndesis.common.model.connection.Connection.Builder()
+                .connector(connector)
+                .putConfiguredProperty("user", info.username)
+                .putConfiguredProperty("password", info.password)
+                .putConfiguredProperty("url", info.url)
+                .build());
+
+        consumer.accept(builder);
+
+        return builder.build();
+    }
+
+    protected static void validateJson(final List<String> jsonBeans, final String propertyName, final String... expectedValues) {
+        Assertions.assertEquals(expectedValues.length, jsonBeans.size());
 
         for (int i = 0; i < expectedValues.length; i++) {
-            Assert.assertEquals(expectedValues[i], propertyList.get(i).get(propertyName).toString());
+            final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(jsonBeans.get(i));
+            Assertions.assertEquals(expectedValues[i], properties.get(propertyName).toString());
         }
     }
-    
-    protected void validateJson(List<String> jsonBeans, String propertyName, String ... expectedValues) {
-        Assert.assertEquals(expectedValues.length, jsonBeans.size());
+
+    protected static void validateProperty(final List<Properties> propertyList, final String propertyName, final String... expectedValues) {
+        Assertions.assertEquals(expectedValues.length, propertyList.size());
 
         for (int i = 0; i < expectedValues.length; i++) {
-            Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(jsonBeans.get(i));
-            Assert.assertEquals(expectedValues[i], properties.get(propertyName).toString());
+            Assertions.assertEquals(expectedValues[i], propertyList.get(i).get(propertyName).toString());
         }
+    }
+
+    public static DbEnum determineDatabaseTypeFrom(final Connection con) throws SQLException {
+        final DatabaseMetaData metaData = con.getMetaData();
+        final String databaseProductName = metaData.getDatabaseProductName();
+        return DbEnum.fromName(databaseProductName);
     }
 
     protected static <T> Consumer<T> nop(final Class<T> ofType) {

@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.UUID;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -32,9 +31,10 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.runtime.BaseITCase;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -47,7 +47,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ContextConfiguration(initializers = BaseITCase.TestConfigurationInitializer.class)
@@ -113,15 +112,12 @@ public class DynamicActionSalesforceITCase extends BaseITCase {
             ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contacts"))
         .build();
 
-    @BeforeClass
+    @BeforeAll
     public static void startMockIfNeeded() {
-        if (wireMock==null || !wireMock.isRunning()) {
-            wireMock = new WireMockRule(wireMockConfig().dynamicPort());
-            wireMock.start();
-        }
+        WIRE_MOCK.start();
     }
 
-    @Before
+    @BeforeEach
     public void setupConnection() {
         dataManager.create(new Connection.Builder().id(connectionId).connectorId("salesforce")
             .putConfiguredProperty("clientId", "a-client-id").build());
@@ -135,9 +131,9 @@ public class DynamicActionSalesforceITCase extends BaseITCase {
         dataManager.update(withCreateOrUpdateAction);
     }
 
-    @Before
+    @BeforeEach
     public void setupMocks() {
-        WireMock.configureFor(wireMock.port());
+        WireMock.configureFor(WIRE_MOCK.port());
         stubFor(WireMock
 
             .post(urlEqualTo(

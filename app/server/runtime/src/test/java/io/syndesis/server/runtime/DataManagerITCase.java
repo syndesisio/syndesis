@@ -20,7 +20,7 @@ import javax.persistence.EntityExistsException;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.Connection;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 

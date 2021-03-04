@@ -21,22 +21,22 @@ import java.util.Map;
 import java.util.Optional;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import io.syndesis.connector.odata.AbstractODataTest;
 import io.syndesis.connector.odata.server.ODataTestServer;
 
 public class ODataMetaDataTest extends AbstractODataTest {
 
-    @Before
+    @BeforeEach
     public void setup() throws Exception {
         context = new DefaultCamelContext();
         context.disableJMX();
         context.start();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (context != null) {
             context.stop();

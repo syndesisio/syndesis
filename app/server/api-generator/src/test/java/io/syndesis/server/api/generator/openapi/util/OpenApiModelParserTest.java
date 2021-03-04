@@ -25,7 +25,7 @@ import io.syndesis.common.model.Violation;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.syndesis.server.api.generator.openapi.TestHelper.resource;
 import static org.assertj.core.api.Assertions.assertThat;

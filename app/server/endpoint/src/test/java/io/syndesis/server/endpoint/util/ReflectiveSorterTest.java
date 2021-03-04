@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.function.Function;
 
 import io.syndesis.common.model.ListResult;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author roland

@@ -15,17 +15,14 @@
  */
 package io.syndesis.connector.soap.cxf;
 
-import org.apache.wss4j.common.ConfigurationConstants;
-
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.connector.soap.cxf.auth.AuthenticationType;
 import io.syndesis.connector.soap.cxf.auth.PasswordType;
 
-import com.github.tomakehurst.wiremock.client.BasicCredentials;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.apache.wss4j.common.ConfigurationConstants;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import com.github.tomakehurst.wiremock.client.BasicCredentials;
+
 import static io.syndesis.connector.soap.cxf.ComponentProperties.ADDRESS;
 import static io.syndesis.connector.soap.cxf.ComponentProperties.ADD_TIMESTAMP;
 import static io.syndesis.connector.soap.cxf.ComponentProperties.AUTHENTICATION_TYPE;
@@ -33,6 +30,11 @@ import static io.syndesis.connector.soap.cxf.ComponentProperties.PASSWORD;
 import static io.syndesis.connector.soap.cxf.ComponentProperties.SOAP_VERSION;
 import static io.syndesis.connector.soap.cxf.ComponentProperties.SPECIFICATION;
 import static io.syndesis.connector.soap.cxf.ComponentProperties.USERNAME;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+
+import de.mkammerer.wiremock.WireMockExtension;
 
 public class BasicAuthIntegrationTest extends IntegrationTestBase {
 
@@ -63,7 +65,7 @@ public class BasicAuthIntegrationTest extends IntegrationTestBase {
     }
 
     @Override
-    protected void verifyWireMock(WireMockRule wiremock) {
+    protected void verifyWireMock(WireMockExtension wiremock) {
         wiremock.verify(postRequestedFor(urlEqualTo("/"))
             .withBasicAuth(new BasicCredentials(TEST_USER, TEST_PASSWORD)));
     }

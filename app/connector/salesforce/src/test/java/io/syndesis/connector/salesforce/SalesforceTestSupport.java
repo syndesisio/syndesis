@@ -25,23 +25,12 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
-import org.apache.camel.CamelContext;
 
 public abstract class SalesforceTestSupport extends ConnectorTestSupport {
-
-    @Override
-    protected CamelContext createCamelContext() throws Exception {
-        CamelContext context = super.createCamelContext();
-        context.setAutoStartup(false);
-
-        return context;
-    }
 
     protected final Step newSalesforceEndpointStep(String actionId, Consumer<Connection.Builder> connectionConsumer, Consumer<Step.Builder> stepConsumer) {
         return newEndpointStep("salesforce", "io.syndesis.connector:connector-salesforce:" + actionId, connectionConsumer, stepConsumer);
     }
-
-
 
     public static Connector mandatoryLookupConnector() {
         Connector connector;

@@ -15,43 +15,35 @@
  */
 package io.syndesis.server.api.generator.soap.parser;
 
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import javax.xml.namespace.QName;
 
 import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaSerializer;
-import org.junit.Test;
-import org.junit.runners.Parameterized;
-import org.xml.sax.SAXException;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Unit tests for {@link XmlSchemaExtractor}.
  */
 public class XmlSchemaExtractorElementTest extends AbstractXmlSchemaExtractorTest {
 
-    @Parameterized.Parameter
-    public XmlSchemaElement element;
-
-    @Parameterized.Parameter(1)
-    public QName elementName;
-
-    @Parameterized.Parameters(name = "Element {1}")
-    public static Collection<Object[]> getElements() throws XmlSchemaSerializer.XmlSchemaSerializerException {
+    static Stream<Arguments> parameters() throws XmlSchemaSerializer.XmlSchemaSerializerException {
         if (sourceSchemas == null) {
             AbstractXmlSchemaExtractorTest.setupClass();
         }
         // extract all top level elements from source schema
         return Arrays.stream(sourceSchemas.getXmlSchemas())
             .flatMap(s -> s.getElements().values().stream())
-            .map(e -> new Object[] {e, e.getQName()})
-            .collect(Collectors.toList());
+            .map(e -> Arguments.of(e, e.getQName()));
     }
 
-    @Test
-    public void extractElement() throws ParserException, XmlSchemaSerializer.XmlSchemaSerializerException, IOException, SAXException {
+    @ParameterizedTest(name = "Element {1}")
+    @MethodSource("parameters")
+    public void extractElement(final XmlSchemaElement element, QName name) throws Exception {
         final XmlSchemaElement testElement = xmlSchemaExtractor.extract(element);
         xmlSchemaExtractor.copyObjects();
 

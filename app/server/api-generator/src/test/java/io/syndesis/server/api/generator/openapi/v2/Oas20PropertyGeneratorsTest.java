@@ -28,7 +28,7 @@ import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.OpenApiSecurityScheme;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

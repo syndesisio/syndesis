@@ -44,15 +44,15 @@ import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.SimpleRegistry;
 import org.apache.camel.model.ModelCamelContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.stubbing.Scenario;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,6 +67,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.status;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
+import de.mkammerer.wiremock.WireMockExtension;
+
+@ExtendWith(HttpErrorDetail.class)
+@ExtendWith(WireMockExtension.class)
 public class RestSwaggerConnectorIntegrationTest {
 
     private static final String DOGGIE = "{\"id\":123,\"category\":{\"id\":1,\"name\":\"Hounds\"},\"name\":\"Doggie the dog\",\"photoUrls\":[\"doggie.png\"],\"tags\":[{\"id\":1,\"name\":\"drooler\"}],\"status\":\"available\"}";
@@ -81,17 +85,14 @@ public class RestSwaggerConnectorIntegrationTest {
 
     private static final Connector REST_OPENAPI_CONNECTOR = loadConnector();
 
-    @Rule
-    public HttpErrorDetailRule httpErrorDetail = new HttpErrorDetailRule();
-
-    @Rule
-    public WireMockRule wiremock = new WireMockRule(WireMockConfiguration.options().dynamicPort());
+    @RegisterExtension
+    WireMockExtension wiremock = new WireMockExtension(WireMockConfiguration.options().dynamicPort());
 
     private Connection connection;
 
     private CamelContext context;
 
-    @Before
+    @BeforeEach
     public void setup() throws Exception {
         connection = new Connection.Builder()
             .putConfiguredProperty("host", "http://localhost:" + wiremock.port())
@@ -119,7 +120,7 @@ public class RestSwaggerConnectorIntegrationTest {
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/pet/123"))
             .withHeader("Accept", equalTo("application/json"))
-            .withRequestBody(WireMock.equalTo("")));
+            .withRequestBody(WireMock.absent()));
     }
 
     @Test
@@ -135,7 +136,7 @@ public class RestSwaggerConnectorIntegrationTest {
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/pet/123"))
             .withHeader("Accept", equalTo("application/json"))
-            .withRequestBody(WireMock.equalTo("")));
+            .withRequestBody(WireMock.absent()));
     }
 
     @Test
@@ -161,7 +162,7 @@ public class RestSwaggerConnectorIntegrationTest {
             .withoutHeader("Forwarded")
             .withoutHeader("Cookie")
             .withoutHeader("Authorization")
-            .withRequestBody(WireMock.equalTo("")));
+            .withRequestBody(WireMock.absent()));
     }
 
     @Test
@@ -177,7 +178,7 @@ public class RestSwaggerConnectorIntegrationTest {
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/pet/123"))
             .withHeader("Accept", equalTo("application/json"))
-            .withRequestBody(WireMock.equalTo("")));
+            .withRequestBody(WireMock.absent()));
     }
 
     @Test
@@ -194,7 +195,7 @@ public class RestSwaggerConnectorIntegrationTest {
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/pet/findByStatus?status=available&status=pending"))
             .withHeader("Accept", equalTo("application/json"))
-            .withRequestBody(WireMock.equalTo("")));
+            .withRequestBody(WireMock.absent()));
     }
 
     @Test
@@ -208,7 +209,7 @@ public class RestSwaggerConnectorIntegrationTest {
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/user/logout"))
             .withHeader("apiKey", equalTo("supersecret"))
-            .withRequestBody(WireMock.equalTo("")));
+            .withRequestBody(WireMock.absent()));
     }
 
     @Test
@@ -220,7 +221,7 @@ public class RestSwaggerConnectorIntegrationTest {
             .isEqualTo("");
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/secured/user/logout?api_key=supersecret"))
-            .withRequestBody(WireMock.equalTo("")));
+            .withRequestBody(WireMock.absent()));
     }
 
     @Test
@@ -232,7 +233,7 @@ public class RestSwaggerConnectorIntegrationTest {
             .isEqualTo("");
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/secured/pet/findByStatus?api_key=supersecret&status=available"))
-            .withRequestBody(WireMock.equalTo("")));
+            .withRequestBody(WireMock.absent()));
     }
 
     @Test
@@ -246,7 +247,7 @@ public class RestSwaggerConnectorIntegrationTest {
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/user/logout"))
             .withBasicAuth(new BasicCredentials("luser", "supersecret"))
-            .withRequestBody(WireMock.equalTo("")));
+            .withRequestBody(WireMock.absent()));
     }
 
     @Test
@@ -260,7 +261,7 @@ public class RestSwaggerConnectorIntegrationTest {
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/user/logout"))
             .withHeader("Authorization", equalTo("Bearer access-token"))
-            .withRequestBody(WireMock.equalTo("")));
+            .withRequestBody(WireMock.absent()));
     }
 
     @Test
@@ -278,7 +279,7 @@ public class RestSwaggerConnectorIntegrationTest {
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/pet/findByStatus?status=available"))
             .withQueryParam("status", equalTo("available"))
             .withHeader("Accept", equalTo("application/json"))
-            .withRequestBody(WireMock.equalTo("")));
+            .withRequestBody(WireMock.absent()));
     }
 
     @Test
@@ -311,7 +312,7 @@ public class RestSwaggerConnectorIntegrationTest {
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/user/logout"))
             .withHeader("Authorization", equalTo("Bearer new-token"))
-            .withRequestBody(WireMock.equalTo("")));
+            .withRequestBody(WireMock.absent()));
     }
 
     @Test
@@ -348,10 +349,10 @@ public class RestSwaggerConnectorIntegrationTest {
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/pet/123"))
             .withHeader("Authorization", equalTo("Bearer new-token"))
-            .withRequestBody(WireMock.equalTo("")));
+            .withRequestBody(WireMock.absent()));
     }
 
-    @After
+    @AfterEach
     public void teardown() throws Exception {
         context.stop();
     }

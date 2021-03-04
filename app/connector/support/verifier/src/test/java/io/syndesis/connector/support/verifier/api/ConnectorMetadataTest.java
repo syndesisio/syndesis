@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.syndesis.connector.support.verifier.api.sample.SampleConnectorMetaDataRetrieval;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

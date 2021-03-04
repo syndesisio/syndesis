@@ -15,26 +15,10 @@
  */
 package io.syndesis.connector.email.consumer;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import org.apache.camel.Endpoint;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.mail.MailEndpoint;
-import org.apache.camel.component.mock.MockEndpoint;
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -50,8 +34,27 @@ import io.syndesis.connector.email.model.EMailMessageModel;
 import io.syndesis.connector.email.server.EMailTestServer;
 import io.syndesis.connector.support.util.PropertyBuilder;
 
+import org.apache.camel.Endpoint;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.mail.MailEndpoint;
+import org.apache.camel.component.mock.MockEndpoint;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestExecutionListeners;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @DirtiesContext
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(
     classes = {
         EMailReadRouteTest.TestConfiguration.class
@@ -72,7 +75,7 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
 
     private EMailTestServer server;
 
-    @After
+    @AfterEach
     @Override
     public void tearDown() throws Exception {
         super.tearDown();

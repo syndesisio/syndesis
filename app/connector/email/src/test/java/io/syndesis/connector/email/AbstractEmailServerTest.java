@@ -17,9 +17,11 @@ package io.syndesis.connector.email;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.BeforeClass;
+
 import io.syndesis.connector.email.server.EMailTestServer;
 import io.syndesis.connector.email.server.EMailTestServer.Options;
+
+import org.junit.jupiter.api.BeforeAll;
 
 public abstract class AbstractEmailServerTest extends AbstractEmailTest {
 
@@ -38,7 +40,7 @@ public abstract class AbstractEmailServerTest extends AbstractEmailTest {
 
     private static final Map<Options, EMailTestServer> mailServers = new HashMap<>();
 
-    @BeforeClass
+    @BeforeAll
     public static void scaffold() throws Exception {
         for (Options option : serverTypes) {
             if (! mailServers.containsKey(option)) {

@@ -17,7 +17,7 @@ package io.syndesis.server.credential;
 
 import java.util.Collections;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;

@@ -32,7 +32,7 @@ import org.apache.camel.component.salesforce.api.dto.AbstractDTOBase;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.processor.Pipeline;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DataShapeCustomizerTest extends SalesforceTestSupport {
     private static final Processor BEFORE_PROCESSOR = DataShapeCustomizerTest::nop;
@@ -93,7 +93,7 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
     @Test
     public void shouldAllowNullInput() throws Exception {
         final ComponentProxyComponent component = setUpComponent("salesforce-create-sobject");
-        final Exchange exchange = new DefaultExchange(context);
+        final Exchange exchange = new DefaultExchange(context());
         final Message in = exchange.getIn();
 
         component.getBeforeProducer().process(exchange);
@@ -104,7 +104,7 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
     @Test
     public void shouldAllowNullOutput() throws Exception {
         final ComponentProxyComponent component = setUpComponent("salesforce-create-sobject");
-        final Exchange exchange = new DefaultExchange(context);
+        final Exchange exchange = new DefaultExchange(context());
         final Message out = exchange.getOut();
 
         component.getAfterProducer().process(exchange);
@@ -115,7 +115,7 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
     @Test
     public void shouldNotConvertFailedExchanges() throws Exception {
         final ComponentProxyComponent component = setUpComponent("salesforce-create-sobject");
-        final Exchange exchange = new DefaultExchange(context);
+        final Exchange exchange = new DefaultExchange(context());
         final Message out = exchange.getOut();
 
         exchange.setException(new Exception());
@@ -129,7 +129,7 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
     @Test
     public void shouldUnmarshallToSpecifiedInputType() throws Exception {
         final ComponentProxyComponent component = setUpComponent("salesforce-delete-sobject");
-        final Exchange exchange = new DefaultExchange(context);
+        final Exchange exchange = new DefaultExchange(context());
         final Message in = exchange.getIn();
         in.setBody("{}");
 
@@ -141,7 +141,7 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
     @Test
     public void shouldUnmarshallToSpecifiedInputTypeWithoutConversion() throws Exception {
         final ComponentProxyComponent component = setUpComponent("salesforce-delete-sobject");
-        final Exchange exchange = new DefaultExchange(context);
+        final Exchange exchange = new DefaultExchange(context());
         final Message in = exchange.getIn();
         in.setBody(new SalesforceIdentifier("test"));
 
@@ -154,7 +154,7 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
     @Test
     public void shouldFailToUnmarshallToSpecifiedInputTypeFromString() throws Exception {
         final ComponentProxyComponent component = setUpComponent("salesforce-delete-sobject");
-        final Exchange exchange = new DefaultExchange(context);
+        final Exchange exchange = new DefaultExchange(context());
         final Message in = exchange.getIn();
         in.setBody("invalid");
 
@@ -167,7 +167,7 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
     @Test
     public void shouldFailToUnmarshallToSpecifiedInputType() throws Exception {
         final ComponentProxyComponent component = setUpComponent("salesforce-delete-sobject");
-        final Exchange exchange = new DefaultExchange(context);
+        final Exchange exchange = new DefaultExchange(context());
         final Message in = exchange.getIn();
         in.setBody(new Object());
 
@@ -180,7 +180,7 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
     @Test
     public void shouldUnmarshallToSpecifiedOutputType() throws Exception {
         final ComponentProxyComponent component = setUpComponent("salesforce-create-sobject");
-        final Exchange exchange = new DefaultExchange(context);
+        final Exchange exchange = new DefaultExchange(context());
         final Message out = exchange.getIn();
         out.setBody("{}");
 

@@ -21,122 +21,98 @@ import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.Test;
-import org.junit.experimental.runners.Enclosed;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(Enclosed.class)
 public class UrlsTest {
 
-    @RunWith(Parameterized.class)
-    public static class InvalidTests {
-
-        @Parameter(0)
-        public String invalidHeader;
-
-        @Test
-        public void shouldDiscardInvalidOriginHeaders() {
-            assertThat(Urls.parseOrigin(invalidHeader)).isEmpty();
-        }
-
-        @Parameters(name = "{index}: header=\"{0}\"")
-        public static Collection<String> values() {
-            return Arrays.asList(null, "", "for;host;proto", "for=;host=;proto=", "for=;host=:;proto=",
-                "for=;host=:;proto=https", "for=;host=abc:;proto=https", "for=;host=:abc;proto=https",
-                "for=;host=:123;proto=https", "for=;host=::;proto=https", "for=;host=abc:-123;proto=https");
-        }
+    @ParameterizedTest(name = "{index}: header=\"{0}\"")
+    @MethodSource("invalidValues")
+    public void shouldDiscardInvalidOriginHeaders(final String invalidHeader) {
+        assertThat(Urls.parseOrigin(invalidHeader)).isEmpty();
     }
 
-    @RunWith(Parameterized.class)
-    public static class ValidTests {
-
-        @Parameter(0)
-        public String header;
-
-        @Parameter(1)
-        public URI expected;
-
-        @Test
-        public void shouldDiscardInvalidOriginHeaders() {
-            assertThat(Urls.parseOrigin(header)).hasValue(expected);
-        }
-
-        @Parameters(name = "{index}: header=\"{0}\"")
-        public static Collection<Object[]> values() {
-            return Arrays.asList(
-                new Object[] {"for=localhost;host=host:8080;proto=https", URI.create("https://host:8080")},
-                new Object[] {"proto=http; for=localhost; host=host", URI.create("http://host")},
-                new Object[] {"host=hostname:12345;proto=http; for=localhost", URI.create("http://hostname:12345")});
-        }
+    public static Collection<String> invalidValues() {
+        return Arrays.asList(null, "", "for;host;proto", "for=;host=;proto=", "for=;host=:;proto=",
+            "for=;host=:;proto=https", "for=;host=abc:;proto=https", "for=;host=:abc;proto=https",
+            "for=;host=:123;proto=https", "for=;host=::;proto=https", "for=;host=abc:-123;proto=https");
     }
 
-    @SuppressWarnings("JdkObsolete")
-    public static class UnitTests {
-        @Test
-        public void shouldAbsolutizeReturnUrl() {
-            final HttpServletRequest httpRequest = mock(HttpServletRequest.class);
+    @ParameterizedTest(name = "{index}: header=\"{0}\"")
+    @MethodSource("validValues")
+    public void shouldDiscardInvalidOriginHeaders(final String header, final URI expected) {
+        assertThat(Urls.parseOrigin(header)).hasValue(expected);
+    }
 
-            when(httpRequest.getRequestURL())
-                .thenReturn(new StringBuffer("https://syndesis.io/api/v1/connections/1/credentials"));
+    public static Collection<Object[]> validValues() {
+        return Arrays.asList(
+            new Object[] {"for=localhost;host=host:8080;proto=https", URI.create("https://host:8080")},
+            new Object[] {"proto=http; for=localhost; host=host", URI.create("http://host")},
+            new Object[] {"host=hostname:12345;proto=http; for=localhost", URI.create("http://hostname:12345")});
+    }
 
-            final URI uri = Urls.absoluteTo(httpRequest, URI.create("/ui?ret=true#state"));
+    @Test
+    public void shouldAbsolutizeReturnUrl() {
+        final HttpServletRequest httpRequest = mock(HttpServletRequest.class);
 
-            assertThat(uri).isEqualTo(URI.create("https://syndesis.io/ui?ret=true#state"));
-        }
+        when(httpRequest.getRequestURL())
+            .thenReturn(new StringBuffer("https://syndesis.io/api/v1/connections/1/credentials"));
 
-        @Test
-        public void shouldComputeApiBase() {
-            final HttpServletRequest request = mock(HttpServletRequest.class);
-            when(request.getRequestURL())
-                .thenReturn(new StringBuffer("https://syndesis.io/api/v1/resource/subresource"));
+        final URI uri = Urls.absoluteTo(httpRequest, URI.create("/ui?ret=true#state"));
 
-            assertThat(Urls.apiBase(request)).isEqualTo(URI.create("https://syndesis.io/api/v1/"));
-        }
+        assertThat(uri).isEqualTo(URI.create("https://syndesis.io/ui?ret=true#state"));
+    }
 
-        @Test
-        public void shouldComputeBasePath() {
-            assertThat(Urls.basePath("/api/v1/resource/subresource")).isEqualTo("/api/v1/");
-            assertThat(Urls.basePath("/api/v1")).isEqualTo("/api/v1/");
-            assertThat(Urls.basePath("/api/v1/")).isEqualTo("/api/v1/");
-            assertThat(Urls.basePath("/api/v1/resource")).isEqualTo("/api/v1/");
-        }
+    @Test
+    public void shouldComputeApiBase() {
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getRequestURL())
+            .thenReturn(new StringBuffer("https://syndesis.io/api/v1/resource/subresource"));
 
-        @Test
-        public void shouldDetermineCurrentUriFromRequest() {
-            final HttpServletRequest request = mock(HttpServletRequest.class);
-            when(request.getRequestURL())
-                .thenReturn(new StringBuffer("https://syndesis.io/api/v1/resource/subresource"));
+        assertThat(Urls.apiBase(request)).isEqualTo(URI.create("https://syndesis.io/api/v1/"));
+    }
 
-            assertThat(Urls.currentUri(request))
-                .isEqualTo(URI.create("https://syndesis.io/api/v1/resource/subresource"));
-        }
+    @Test
+    public void shouldComputeBasePath() {
+        assertThat(Urls.basePath("/api/v1/resource/subresource")).isEqualTo("/api/v1/");
+        assertThat(Urls.basePath("/api/v1")).isEqualTo("/api/v1/");
+        assertThat(Urls.basePath("/api/v1/")).isEqualTo("/api/v1/");
+        assertThat(Urls.basePath("/api/v1/resource")).isEqualTo("/api/v1/");
+    }
 
-        @Test
-        public void shouldDetermineCurrentUriFromRequestAndOriginHeader() {
-            final HttpServletRequest request = mock(HttpServletRequest.class);
-            when(request.getRequestURL())
-                .thenReturn(new StringBuffer("https://syndesis.io/api/v1/resource/subresource"));
-            when(request.getHeader(Urls.ORIGIN_HEADER)).thenReturn("for=127.0.0.1;host=localhost:4200;proto=https");
+    @Test
+    public void shouldDetermineCurrentUriFromRequest() {
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getRequestURL())
+            .thenReturn(new StringBuffer("https://syndesis.io/api/v1/resource/subresource"));
 
-            assertThat(Urls.currentUri(request))
-                .isEqualTo(URI.create("https://localhost:4200/api/v1/resource/subresource"));
-        }
+        assertThat(Urls.currentUri(request))
+            .isEqualTo(URI.create("https://syndesis.io/api/v1/resource/subresource"));
+    }
 
-        @Test
-        public void shouldDetermineCurrentUriFromRequestAndOriginHeaderWithoutPortNumber() {
-            final HttpServletRequest request = mock(HttpServletRequest.class);
-            when(request.getRequestURL())
-                .thenReturn(new StringBuffer("https://syndesis.io/api/v1/resource/subresource"));
-            when(request.getHeader(Urls.ORIGIN_HEADER)).thenReturn("for=127.0.0.1;host=localhost;proto=https");
+    @Test
+    public void shouldDetermineCurrentUriFromRequestAndOriginHeader() {
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getRequestURL())
+            .thenReturn(new StringBuffer("https://syndesis.io/api/v1/resource/subresource"));
+        when(request.getHeader(Urls.ORIGIN_HEADER)).thenReturn("for=127.0.0.1;host=localhost:4200;proto=https");
 
-            assertThat(Urls.currentUri(request)).isEqualTo(URI.create("https://localhost/api/v1/resource/subresource"));
-        }
+        assertThat(Urls.currentUri(request))
+            .isEqualTo(URI.create("https://localhost:4200/api/v1/resource/subresource"));
+    }
+
+    @Test
+    public void shouldDetermineCurrentUriFromRequestAndOriginHeaderWithoutPortNumber() {
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getRequestURL())
+            .thenReturn(new StringBuffer("https://syndesis.io/api/v1/resource/subresource"));
+        when(request.getHeader(Urls.ORIGIN_HEADER)).thenReturn("for=127.0.0.1;host=localhost;proto=https");
+
+        assertThat(Urls.currentUri(request)).isEqualTo(URI.create("https://localhost/api/v1/resource/subresource"));
     }
 }

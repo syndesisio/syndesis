@@ -31,8 +31,8 @@ import io.syndesis.integration.runtime.util.JsonSupport;
 import org.apache.camel.CamelContext;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +44,7 @@ public abstract class AbstractActivityLoggingTest {
     protected ActivityTracker activityTracker;
     protected ArrayList<ActivityEvent> activityEvents;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         activityEvents = new ArrayList<>();
 
@@ -69,7 +69,7 @@ public abstract class AbstractActivityLoggingTest {
         context.start();
     }
 
-    @After
+    @AfterEach
     public void after() throws Exception {
         context.stop();
     }

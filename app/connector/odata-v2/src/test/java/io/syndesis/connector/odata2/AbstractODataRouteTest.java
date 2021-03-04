@@ -33,8 +33,8 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpCoreContext;
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 public abstract class AbstractODataRouteTest extends AbstractODataTest {
 
@@ -63,12 +63,12 @@ public abstract class AbstractODataRouteTest extends AbstractODataTest {
         this.connectorAction = createConnectorAction();
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         context = createCamelContext();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (context != null) {
             context.stop();

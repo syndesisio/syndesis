@@ -18,7 +18,7 @@ package io.syndesis.connector.support.util;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

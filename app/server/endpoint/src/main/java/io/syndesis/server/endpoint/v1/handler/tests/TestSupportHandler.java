@@ -154,8 +154,8 @@ public class TestSupportHandler {
     public List<ModelData<? extends WithId<?>>> snapshotDB() {
         // Replace pattern-breaking characters
         // https://owasp.org/www-community/attacks/Log_Injection
-        LOG.info("user {} is making snapshot", context.getRemoteUser().replaceAll(WHITESPACE, "_"));
-        ArrayList<ModelData<?>> result = new ArrayList<>();
+        LOG.info("user {} is making snapshot", context.getRemoteUser().replaceAll("[\n|\r|\t]", "_"));
+        ArrayList<ModelData<? extends WithId<?>>> result = new ArrayList<>();
         for (DataAccessObject<?> dao : daos) {
             ListResult<? extends WithId<?>> l = dao.fetchAll();
             for (WithId<?> entity : l.getItems()) {

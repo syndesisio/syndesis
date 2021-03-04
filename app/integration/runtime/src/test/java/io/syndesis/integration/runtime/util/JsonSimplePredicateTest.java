@@ -25,19 +25,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import io.syndesis.common.util.IOStreams;
-import junitparams.JUnitParamsRunner;
-import junitparams.Parameters;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static io.syndesis.integration.runtime.util.JsonSimplePredicate.convertSimpleToOGNLForMaps;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(JUnitParamsRunner.class)
 public class JsonSimplePredicateTest {
 
     public static class Bean {
@@ -50,19 +48,19 @@ public class JsonSimplePredicateTest {
 
     private static final DefaultCamelContext CONTEXT = new DefaultCamelContext();
 
-    @Test
-    @Parameters({"2 == 1, 2 == 1", //
-        "${body.prop} == 1, ${body[prop]} == 1", //
+    @ParameterizedTest
+    @CsvSource({"2 == 1, 2 == 1",
+        "${body.prop} == 1, ${body[prop]} == 1",
         "${body.prop} == 1 OR ${body.fr_op.gl$op.ml0op[3]} == '2.4', ${body[prop]} == 1 OR ${body[fr_op][gl$op][ml0op][3]} == '2.4'"})
     public void shouldConvertSimpleExpressionsToOgnl(final String simple, final String ognl) {
         assertThat(convertSimpleToOGNLForMaps(simple)).isEqualTo(ognl);
     }
 
-    @Test
-    @Parameters({"body.prop, body[prop]", //
-        "body.size(), body.size()", //
-        "body[3], body[3]", //
-        "body[3].prop, body[3][prop]", //
+    @ParameterizedTest
+    @CsvSource({"body.prop, body[prop]",
+        "body.size(), body.size()",
+        "body[3], body[3]",
+        "body[3].prop, body[3][prop]",
         "body.fr_op.gl$op.ml0op[3], body[fr_op][gl\\$op][ml0op][3]"})
     public void shouldConvertSimpleToOgnl(final String simple, final String ognl) {
         final Matcher matcher = Pattern.compile("(.*)").matcher(simple);
@@ -84,8 +82,8 @@ public class JsonSimplePredicateTest {
         assertThat(predicate.matches(exchangeWith("wat"))).isEqualTo(false);
     }
 
-    @Test
-    @Parameters({"{}, false", "{\"prop\": 1}, true", "{\"prop\": 2}, false"})
+    @ParameterizedTest
+    @CsvSource({"{}, false", "{\"prop\": 1}, true", "{\"prop\": 2}, false"})
     public void shouldFilterInputStreams(final String payload, final boolean expected) throws IOException {
         SingleReadInputStream inputStream = new SingleReadInputStream(payload);
         Exchange exchange = exchangeWith(inputStream);
@@ -95,15 +93,15 @@ public class JsonSimplePredicateTest {
         assertThat(IOStreams.readText(exchange.getIn().getBody(InputStream.class))).isEqualTo(payload);
     }
 
-    @Test
-    @Parameters({"{}, false", "{\"prop\": 1}, true", "{\"prop\": 2}, false"})
+    @ParameterizedTest
+    @CsvSource({"{}, false", "{\"prop\": 1}, true", "{\"prop\": 2}, false"})
     public void shouldFilterOnJsonStrings(final String payload, final boolean expected) {
         final JsonSimplePredicate predicate = new JsonSimplePredicate("${body.prop} == 1", CONTEXT);
         assertThat(predicate.matches(exchangeWith(payload))).isEqualTo(expected);
     }
 
-    @Test
-    @Parameters({"[], false", "[{\"prop\": 1}], true", "[{\"prop\": 2}], false"})
+    @ParameterizedTest
+    @CsvSource({"[], false", "[{\"prop\": 1}], true", "[{\"prop\": 2}], false"})
     public void shouldFilterOnJsonArrayStrings(final String payload, final boolean expected) {
         final JsonSimplePredicate predicate = new JsonSimplePredicate("${body.size()} == 1 && ${body[0].prop} == 1", CONTEXT);
         assertThat(predicate.matches(exchangeWith(payload))).isEqualTo(expected);
@@ -147,6 +145,24 @@ public class JsonSimplePredicateTest {
             }
 
             return delegate.read();
+        }
+
+        @Override
+        public int read(byte[] b) throws IOException {
+            if (closed) {
+                throw new IllegalStateException("Read after close");
+            }
+
+            return delegate.read(b);
+        }
+
+        @Override
+        public int read(byte[] b, int off, int len) throws IOException {
+            if (closed) {
+                throw new IllegalStateException("Read after close");
+            }
+
+            return delegate.read(b, off, len);
         }
 
         public boolean isClosed() {

@@ -24,8 +24,8 @@ import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
 import org.apache.camel.spi.HeadersMapFactory;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -43,7 +43,7 @@ public class HttpRequestUnwrapperProcessorTest {
 
     HttpRequestUnwrapperProcessor processor = new HttpRequestUnwrapperProcessor(schema());
 
-    @Before
+    @BeforeEach
     public void setupMocks() {
         final HeadersMapFactory factory = mock(HeadersMapFactory.class);
         when(camelContext.getHeadersMapFactory()).thenReturn(factory);

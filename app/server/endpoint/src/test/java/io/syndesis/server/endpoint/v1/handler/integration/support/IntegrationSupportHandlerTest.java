@@ -17,7 +17,7 @@ package io.syndesis.server.endpoint.v1.handler.integration.support;
 
 import io.syndesis.common.model.ModelExport;
 import io.syndesis.common.util.json.JsonUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -43,9 +43,9 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -63,7 +63,7 @@ import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrat
 import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class AbstractTemplateStepHandlerTest {
 
@@ -73,12 +73,12 @@ public abstract class AbstractTemplateStepHandlerTest {
 
     protected CamelContext context;
 
-    @Before
+    @BeforeEach
     public void setup() throws Exception {
         context = new DefaultCamelContext();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         context.stop();
         context = null;

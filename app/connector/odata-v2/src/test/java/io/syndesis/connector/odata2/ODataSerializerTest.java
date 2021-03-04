@@ -34,21 +34,21 @@ import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.olingo.odata2.api.edm.Edm;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DirtiesContext
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(
     classes = {
         ODataSerializerTest.TestConfiguration.class
@@ -66,7 +66,7 @@ import static org.junit.Assert.assertTrue;
 )
 public class ODataSerializerTest extends AbstractODataTest {
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() {
         SimpleModule module = new SimpleModule(ODataEntry.class.getSimpleName(),
                                                        new Version(1, 0, 0, null, null, null));

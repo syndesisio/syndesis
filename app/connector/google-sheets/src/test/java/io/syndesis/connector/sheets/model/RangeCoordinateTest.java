@@ -19,32 +19,15 @@ package io.syndesis.connector.sheets.model;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * @author Christoph Deppisch
  */
-@RunWith(Parameterized.class)
 public class RangeCoordinateTest {
 
-    private final String range;
-    private final int rowStartIndex;
-    private final int rowEndIndex;
-    private final int columnStartIndex;
-    private final int columnEndIndex;
-
-    public RangeCoordinateTest(String range, int rowStartIndex, int rowEndIndex, int columnStartIndex, int columnEndIndex) {
-        this.range = range;
-        this.rowStartIndex = rowStartIndex;
-        this.rowEndIndex = rowEndIndex;
-        this.columnStartIndex = columnStartIndex;
-        this.columnEndIndex = columnEndIndex;
-    }
-
-    @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
             { "A1:A5", 0, 5, 0, 1},
@@ -59,13 +42,14 @@ public class RangeCoordinateTest {
         });
     }
 
-    @Test
-    public void testFromRange() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void testFromRange(final String range, final int rowStartIndex, final int rowEndIndex, final int columnStartIndex, final int columnEndIndex) {
         RangeCoordinate coordinate = RangeCoordinate.fromRange(range);
-        Assert.assertEquals(rowStartIndex, coordinate.getRowStartIndex());
-        Assert.assertEquals(rowEndIndex, coordinate.getRowEndIndex());
-        Assert.assertEquals(columnStartIndex, coordinate.getColumnStartIndex());
-        Assert.assertEquals(columnEndIndex, coordinate.getColumnEndIndex());
+        Assertions.assertEquals(rowStartIndex, coordinate.getRowStartIndex());
+        Assertions.assertEquals(rowEndIndex, coordinate.getRowEndIndex());
+        Assertions.assertEquals(columnStartIndex, coordinate.getColumnStartIndex());
+        Assertions.assertEquals(columnEndIndex, coordinate.getColumnEndIndex());
 
     }
 }

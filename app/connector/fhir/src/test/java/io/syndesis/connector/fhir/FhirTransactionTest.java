@@ -20,7 +20,7 @@ import org.hl7.fhir.dstu3.model.Account;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Meta;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -56,7 +56,7 @@ public class FhirTransactionTest extends FhirTestBase {
                 "<Patient xmlns=\"http://hl7.org/fhir\"><name><family value=\"Jackson\"/></name></Patient></resource>" +
                 "<request><method value=\"POST\"/></request></entry>")).willReturn(okXml(toXml(bundle))));
 
-        template.requestBody("direct:start",
+        template().requestBody("direct:start",
             "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
                 "<tns:Transaction xmlns:tns=\"http://hl7.org/fhir\">" +
                 "<tns:Account><tns:name value=\"Joe\"/></tns:Account>" +

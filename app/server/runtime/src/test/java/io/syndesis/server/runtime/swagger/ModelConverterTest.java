@@ -18,7 +18,7 @@ package io.syndesis.server.runtime.swagger;
 import java.lang.reflect.Method;
 import java.util.Collections;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod;

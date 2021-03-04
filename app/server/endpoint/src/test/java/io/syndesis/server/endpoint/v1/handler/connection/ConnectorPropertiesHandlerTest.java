@@ -30,7 +30,7 @@ import com.netflix.hystrix.HystrixExecutable;
 import io.syndesis.common.model.connection.DynamicConnectionPropertiesMetadata;
 import io.syndesis.common.model.connection.WithDynamicProperties;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import static org.assertj.core.api.Assertions.assertThat;

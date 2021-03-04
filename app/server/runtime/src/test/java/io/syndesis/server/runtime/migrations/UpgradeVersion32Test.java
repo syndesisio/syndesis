@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.DefaultResourceLoader;
 
 import io.syndesis.common.model.environment.Environment;

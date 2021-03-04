@@ -25,6 +25,7 @@ import io.syndesis.connector.sql.db.DbOracle;
 import io.syndesis.connector.sql.db.DbPostgresql;
 import io.syndesis.connector.sql.db.DbStandard;
 import io.syndesis.connector.sql.db.DbTeiid;
+import io.syndesis.connector.sql.db.MariaDB;
 
 public class DbAdapter {
 
@@ -44,6 +45,8 @@ public class DbAdapter {
 
         case APACHE_DERBY:
             return new DbDerby();
+        case MARIADB:
+            return new MariaDB();
         case MYSQL:
             return new DbMysql();
         case ORACLE:

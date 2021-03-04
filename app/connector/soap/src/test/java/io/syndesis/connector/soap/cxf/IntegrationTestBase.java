@@ -25,10 +25,10 @@ import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.SimpleRegistry;
 import org.apache.camel.model.ModelCamelContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
@@ -46,12 +46,14 @@ import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+
+import de.mkammerer.wiremock.WireMockExtension;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class IntegrationTestBase {
@@ -82,14 +84,14 @@ public abstract class IntegrationTestBase {
 
     protected static final Connector SOAP_CXF_CONNECTOR = loadConnector();
 
-    @Rule
-    public WireMockRule wiremock = new WireMockRule(WireMockConfiguration.options().dynamicPort());
+    @RegisterExtension
+    WireMockExtension wiremock = new WireMockExtension(WireMockConfiguration.options().dynamicPort());
 
     protected Connection connection;
 
     private CamelContext context;
 
-    @Before
+    @BeforeEach
     public void setup() throws Exception {
         createConnection();
 
@@ -119,11 +121,11 @@ public abstract class IntegrationTestBase {
         verifyWireMock(wiremock);
     }
 
-    protected void verifyWireMock(WireMockRule wiremock) {
+    protected void verifyWireMock(WireMockExtension wiremock) {
         // override in derived class for extra verification
     }
 
-    @After
+    @AfterEach
     public void teardown() throws Exception {
         context.stop();
     }

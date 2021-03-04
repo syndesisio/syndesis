@@ -20,7 +20,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.camel.impl.DefaultMessage;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import com.google.api.services.calendar.model.Event;
 

@@ -29,8 +29,9 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.component.aws.s3.S3Component;
 import org.apache.camel.component.aws.s3.S3Configuration;
 import org.apache.camel.component.aws.s3.S3Endpoint;
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -101,9 +102,8 @@ public class AWSS3RawOptionsTest extends ConnectorTestSupport {
     }
 
     @Override
-    protected CamelContext createCamelContext() throws Exception {
+    protected CamelContext createCamelContext() {
         CamelContext camelContext = super.createCamelContext();
-        camelContext.setAutoStartup(false);
         camelContext.addComponent("aws-s3", new S3Component() {
             @Override
             protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
@@ -134,11 +134,9 @@ public class AWSS3RawOptionsTest extends ConnectorTestSupport {
 
     @Test
     public void testRawOptions() {
-        assertNotNull(context());
+        Optional<Endpoint> endpoint = context().getEndpoints().stream().filter(e -> e instanceof S3Endpoint).findFirst();
 
-        Optional<Endpoint> endpoint = context.getEndpoints().stream().filter(e -> e instanceof S3Endpoint).findFirst();
-
-        Assertions.assertThat(endpoint.isPresent()).isTrue();
-        Assertions.assertThat(endpoint.get().getEndpointUri()).isEqualTo("aws-s3://my-bucketNameOrArn?accessKey=RAW(my-accessKey)&region=EU_CENTRAL_1&secretKey=RAW(my-secretKey)");
+        assertThat(endpoint.isPresent()).isTrue();
+        assertThat(endpoint.get().getEndpointUri()).isEqualTo("aws-s3://my-bucketNameOrArn?accessKey=RAW(my-accessKey)&region=EU_CENTRAL_1&secretKey=RAW(my-secretKey)");
     }
 }

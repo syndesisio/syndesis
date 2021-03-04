@@ -15,10 +15,10 @@
  */
 package io.syndesis.connector.sql;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,26 +27,24 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.common.SqlParam;
 import io.syndesis.connector.sql.common.SqlStatementParser;
+import io.syndesis.connector.sql.common.SqlTest.ConnectionInfo;
+import io.syndesis.connector.sql.common.SqlTest.Setup;
+import io.syndesis.connector.sql.common.SqlTest.Teardown;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
 
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+@Setup("CREATE TABLE ALLTYPES (charType CHAR, varcharType VARCHAR(255), numericType NUMERIC, decimalType DECIMAL, smallType SMALLINT, dateType DATE, timeType TIME )")
+@Teardown("DROP TABLE ALLTYPES")
 public class SqlConnectorInputParamTest extends SqlConnectorTestSupport {
+    public SqlConnectorInputParamTest(ConnectionInfo info) {
+        super(info);
+    }
+
     private static final String STATEMENT = "INSERT INTO ALLTYPES " +
         "(charType, varcharType, numericType, decimalType, smallType) VALUES " +
         "(:#CHARVALUE, :#VARCHARVALUE, :#NUMERICVALUE, :#DECIMALVALUE, :#SMALLINTVALUE)";
-
-    @Override
-    protected List<String> setupStatements() {
-        return Collections.singletonList("CREATE TABLE ALLTYPES (charType CHAR, varcharType VARCHAR(255), " +
-                "numericType NUMERIC, decimalType DECIMAL, smallType SMALLINT," +
-                "dateType DATE, timeType TIME )");
-    }
-
-    @Override
-    protected List<String> cleanupStatements() {
-        return Collections.singletonList("DROP TABLE ALLTYPES");
-    }
 
     @Override
     protected List<Step> createSteps() {
@@ -59,39 +57,37 @@ public class SqlConnectorInputParamTest extends SqlConnectorTestSupport {
                 builder -> builder.putConfiguredProperty("query", STATEMENT)),
             newSimpleEndpointStep(
                 "log",
-                builder -> builder.putConfiguredProperty("loggerName", "test"))
-        );
+                builder -> builder.putConfiguredProperty("loggerName", "test")));
     }
 
-    // **************************
-    // Tests
-    // **************************
-
     @Test
-    public void sqlConnectorTest() throws Exception {
-        SqlStatementParser parser = new SqlStatementParser(db.connection, null, STATEMENT);
-        parser.parse();
+    public void sqlConnectorTest(Connection con) throws Exception {
+        try (Connection connection = con) {
+            SqlStatementParser parser = new SqlStatementParser(connection, null, STATEMENT);
+            parser.parse();
 
-        Map<String,Object> values = new HashMap<>();
-        values.put("CHARVALUE", SqlParam.SqlSampleValue.CHAR_VALUE);
-        values.put("VARCHARVALUE", SqlParam.SqlSampleValue.STRING_VALUE);
-        values.put("NUMERICVALUE", SqlParam.SqlSampleValue.DECIMAL_VALUE);
-        values.put("DECIMALVALUE", SqlParam.SqlSampleValue.DECIMAL_VALUE);
-        values.put("SMALLINTVALUE", SqlParam.SqlSampleValue.INTEGER_VALUE);
+            Map<String, Object> values = new HashMap<>();
+            values.put("CHARVALUE", SqlParam.SqlSampleValue.CHAR_VALUE);
+            values.put("VARCHARVALUE", SqlParam.SqlSampleValue.STRING_VALUE);
+            values.put("NUMERICVALUE", SqlParam.SqlSampleValue.DECIMAL_VALUE);
+            values.put("DECIMALVALUE", SqlParam.SqlSampleValue.DECIMAL_VALUE);
+            values.put("SMALLINTVALUE", SqlParam.SqlSampleValue.INTEGER_VALUE);
 
-        String result = template.requestBody("direct:start", JSONBeanUtil.toJSONBean(values), String.class);
+            String result = template().requestBody("direct:start", JSONBeanUtil.toJSONBean(values), String.class);
 
-        Assertions.assertThat(result).isNotNull();
+            Assertions.assertThat(result).isNotNull();
 
-        try (Statement stmt = db.connection.createStatement()) {
-            stmt.execute("SELECT * FROM ALLTYPES");
-            ResultSet resultSet = stmt.getResultSet();
-            resultSet.next();
-            Assertions.assertThat(resultSet.getString(1)).isEqualTo(SqlParam.SqlSampleValue.CHAR_VALUE.toString());
-            Assertions.assertThat(resultSet.getString(2)).isEqualTo(SqlParam.SqlSampleValue.STRING_VALUE);
-            Assertions.assertThat(resultSet.getString(3)).isEqualTo(SqlParam.SqlSampleValue.DECIMAL_VALUE.toString());
-            Assertions.assertThat(resultSet.getString(4)).isEqualTo(SqlParam.SqlSampleValue.DECIMAL_VALUE.toString());
-            Assertions.assertThat(resultSet.getString(5)).isEqualTo(SqlParam.SqlSampleValue.INTEGER_VALUE.toString());
+            try (Statement stmt = connection.createStatement()) {
+                stmt.execute("SELECT * FROM ALLTYPES");
+                try (ResultSet resultSet = stmt.getResultSet()) {
+                    resultSet.next();
+                    Assertions.assertThat(resultSet.getString(1)).isEqualTo(SqlParam.SqlSampleValue.CHAR_VALUE.toString());
+                    Assertions.assertThat(resultSet.getString(2)).isEqualTo(SqlParam.SqlSampleValue.STRING_VALUE);
+                    Assertions.assertThat(resultSet.getString(3)).isEqualTo(SqlParam.SqlSampleValue.DECIMAL_VALUE.toString());
+                    Assertions.assertThat(resultSet.getString(4)).isEqualTo(SqlParam.SqlSampleValue.DECIMAL_VALUE.toString());
+                    Assertions.assertThat(resultSet.getString(5)).isEqualTo(SqlParam.SqlSampleValue.INTEGER_VALUE.toString());
+                }
+            }
         }
     }
 }

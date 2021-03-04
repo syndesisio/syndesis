@@ -21,9 +21,9 @@ import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultExchange;
 import org.apache.kudu.Schema;
 import org.apache.kudu.client.CreateTableOptions;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +31,7 @@ import java.util.Map;
 public class KuduCreateTableCustomizerTest extends AbstractKuduCustomizerTestSupport {
     private KuduCreateTableCustomizer customizer;
 
-    @Before
+    @BeforeEach
     public void setupCustomizer() {
         customizer = new KuduCreateTableCustomizer();
     }
@@ -49,15 +49,15 @@ public class KuduCreateTableCustomizerTest extends AbstractKuduCustomizerTestSup
         Schema schema = (Schema) inbound.getIn().getHeader("Schema");
         CreateTableOptions builder = (CreateTableOptions) inbound.getIn().getHeader("TableOptions");
 
-        Assert.assertNotNull(schema);
-        Assert.assertNotNull(builder);
+        Assertions.assertNotNull(schema);
+        Assertions.assertNotNull(builder);
 
-        Assert.assertEquals("Table schema has all elements", 4, schema.getColumnCount());
-        Assert.assertEquals("Name of the first column matches", "id", schema.getColumn("id").getName());
-        Assert.assertEquals("Type of the first column matches", "int32", schema.getColumn("id").getType().getName());
+        Assertions.assertEquals(4, schema.getColumnCount(), "Table schema has all elements");
+        Assertions.assertEquals("id", schema.getColumn("id").getName(), "Name of the first column matches");
+        Assertions.assertEquals("int32", schema.getColumn("id").getType().getName(), "Type of the first column matches");
 
-        Assert.assertEquals("Name of the first column matches", "name", schema.getColumn("name").getName());
-        Assert.assertEquals("Type of the first column matches", "string", schema.getColumn("name").getType().getName());
+        Assertions.assertEquals("name", schema.getColumn("name").getName(), "Name of the first column matches");
+        Assertions.assertEquals("string", schema.getColumn("name").getType().getName(), "Type of the first column matches");
     }
 
     @Test
@@ -85,15 +85,15 @@ public class KuduCreateTableCustomizerTest extends AbstractKuduCustomizerTestSup
         Schema schema = (Schema) inbound.getIn().getHeader("Schema");
         CreateTableOptions builder = (CreateTableOptions) inbound.getIn().getHeader("TableOptions");
 
-        Assert.assertNotNull(schema);
-        Assert.assertNotNull(builder);
+        Assertions.assertNotNull(schema);
+        Assertions.assertNotNull(builder);
 
-        Assert.assertEquals("Table schema has all elements", 4, schema.getColumnCount());
-        Assert.assertEquals("Name of the first column matches", "id", schema.getColumn("id").getName());
-        Assert.assertEquals("Type of the first column matches", "int32", schema.getColumn("id").getType().getName());
+        Assertions.assertEquals(4, schema.getColumnCount(), "Table schema has all elements");
+        Assertions.assertEquals("id", schema.getColumn("id").getName(), "Name of the first column matches");
+        Assertions.assertEquals("int32", schema.getColumn("id").getType().getName(), "Type of the first column matches");
 
-        Assert.assertEquals("Name of the first column matches", "name", schema.getColumn("name").getName());
-        Assert.assertEquals("Type of the first column matches", "string", schema.getColumn("name").getType().getName());
+        Assertions.assertEquals("name", schema.getColumn("name").getName(), "Name of the first column matches");
+        Assertions.assertEquals("string", schema.getColumn("name").getType().getName(), "Type of the first column matches");
     }
 
     @Test
@@ -120,8 +120,8 @@ public class KuduCreateTableCustomizerTest extends AbstractKuduCustomizerTestSup
 
         KuduTable table = (KuduTable) inbound.getIn().getBody();
 
-        Assert.assertNotNull(table);
-        Assert.assertEquals("Table name matches", "KuduTestTable", table.getName());
-        Assert.assertEquals("Right ammount of columns", 4, table.getSchema().getColumns().length);
+        Assertions.assertNotNull(table);
+        Assertions.assertEquals(table.getName(), "KuduTestTable", "Table name matches");
+        Assertions.assertEquals(4, table.getSchema().getColumns().length, "Right ammount of columns");
     }
 }

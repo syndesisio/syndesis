@@ -15,10 +15,8 @@
  */
 package io.syndesis.connector.sql;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,45 +24,30 @@ import java.util.Map;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.sql.common.DbEnum;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
+import io.syndesis.connector.sql.common.SqlTest;
+import io.syndesis.connector.sql.common.SqlTest.ConnectionInfo;
+import io.syndesis.connector.sql.common.SqlTest.Setup;
+import io.syndesis.connector.sql.common.SqlTest.Teardown;
+import io.syndesis.connector.sql.common.SqlTest.Variant;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
-import org.junit.Assert;
-import org.junit.Test;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+@ExtendWith(SqlTest.class)
+@Setup(variants = {
+    @Variant(type = DbEnum.POSTGRESQL, value = "CREATE TABLE ADDRESS (ID SERIAL PRIMARY KEY, street VARCHAR(255), nummer INTEGER)"),
+    @Variant(type = DbEnum.MYSQL, value = "CREATE TABLE ADDRESS (ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, street VARCHAR(255), nummer INTEGER)"),
+    @Variant(type = DbEnum.APACHE_DERBY,
+        value = "CREATE TABLE ADDRESS (ID INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), street VARCHAR(255), number INTEGER)"),
+    @Variant(type = DbEnum.STANDARD, value = "CREATE TABLE ADDRESS (ID NUMBER GENERATED ALWAYS AS IDENTITY, street VARCHAR(255), nummer INTEGER)"),
+})
+@Teardown("DROP TABLE ADDRESS")
 public class SqlConnectorBatchUpdateTest extends SqlConnectorTestSupport {
 
-    private final String sqlQuery = "INSERT INTO ADDRESS (street, number) VALUES (:#street, :#number)";
-
-    @Override
-    protected List<String> setupStatements() {
-        String dbProductName = null;
-        try {
-            dbProductName = db.connection.getMetaData().getDatabaseProductName();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
-        }
-        if (DbEnum.POSTGRESQL.equals(DbEnum.fromName(dbProductName))) {
-            return Collections.singletonList("CREATE TABLE ADDRESS ("
-                    + "ID SERIAL PRIMARY KEY, "
-                    + "street VARCHAR(255), nummer INTEGER)");
-        } else if (DbEnum.MYSQL.equals(DbEnum.fromName(dbProductName))) {
-            return Collections.singletonList("CREATE TABLE ADDRESS ("
-                    + "ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
-                    + "street VARCHAR(255), nummer INTEGER)");
-        } else if (DbEnum.APACHE_DERBY.equals(DbEnum.fromName(dbProductName))) {
-            return Collections.singletonList("CREATE TABLE ADDRESS (ID INTEGER NOT NULL "
-                    + "GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
-                    + "street VARCHAR(255), number INTEGER)");
-        } else {
-            return Collections.singletonList("CREATE TABLE ADDRESS ("
-                    + "ID NUMBER GENERATED ALWAYS AS IDENTITY, "
-                    + "street VARCHAR(255), nummer INTEGER)");
-        }
-    }
-
-    @Override
-    protected List<String> cleanupStatements() {
-        return Collections.singletonList("DROP TABLE ADDRESS");
+    public SqlConnectorBatchUpdateTest(final ConnectionInfo info) {
+        super(info);
     }
 
     @Override
@@ -76,12 +59,11 @@ public class SqlConnectorBatchUpdateTest extends SqlConnectorTestSupport {
             newSqlEndpointStep(
                 "sql-connector",
                 builder -> builder
-                        .putConfiguredProperty("batch", "true")
-                        .putConfiguredProperty("query", sqlQuery)),
+                    .putConfiguredProperty("batch", "true")
+                    .putConfiguredProperty("query", "INSERT INTO ADDRESS (street, number) VALUES (:#street, :#number)")),
             newSimpleEndpointStep(
                 "log",
-                builder -> builder.putConfiguredProperty("loggerName", "test"))
-        );
+                builder -> builder.putConfiguredProperty("loggerName", "test")));
     }
 
     @Test
@@ -110,9 +92,9 @@ public class SqlConnectorBatchUpdateTest extends SqlConnectorTestSupport {
         }
 
         @SuppressWarnings("unchecked")
-        List<String> jsonBeans = template.requestBody("direct:start", body, List.class);
+        List<String> jsonBeans = template().requestBody("direct:start", body, List.class);
 
-        Assert.assertFalse(jsonBeans.isEmpty());
+        Assertions.assertFalse(jsonBeans.isEmpty());
 
         validateJson(jsonBeans, "ID", "3");
     }

@@ -23,7 +23,7 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -18,6 +18,7 @@ package io.syndesis.server.dao.validation;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.stream.Stream;
 
 import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
 import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
@@ -29,12 +30,10 @@ import io.syndesis.common.model.validation.UniqueProperty;
 import io.syndesis.server.dao.manager.DataManager;
 
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -42,14 +41,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(Parameterized.class)
 public class UniquePropertyValidatorTest {
-
-    @Parameter(0)
-    public WithId<?> connection;
-
-    @Parameter(1)
-    public boolean validity;
 
     private final UniquePropertyValidator validator = new UniquePropertyValidator();
 
@@ -57,7 +49,7 @@ public class UniquePropertyValidatorTest {
         validator.initialize(Connection.class.getAnnotation(UniqueProperty.class));
     }
 
-    @Before
+    @BeforeEach
     public void setupMocks() {
         validator.dataManager = mock(DataManager.class);
 
@@ -67,8 +59,9 @@ public class UniquePropertyValidatorTest {
             .thenReturn(Collections.emptySet());
     }
 
-    @Test
-    public void shouldAscertainPropertyUniqueness() {
+    @ParameterizedTest
+    @MethodSource("parameters")
+    public void shouldAscertainPropertyUniqueness(final WithId<?> connection, final boolean validity) {
         final HibernateConstraintValidatorContext context = mock(HibernateConstraintValidatorContext.class);
         when(context.unwrap(HibernateConstraintValidatorContext.class)).thenReturn(context);
         when(context.addExpressionVariable(eq("nonUnique"), anyString())).thenReturn(context);
@@ -80,8 +73,7 @@ public class UniquePropertyValidatorTest {
         assertThat(validator.isValid(connection, context)).isEqualTo(validity);
     }
 
-    @Parameters
-    public static Iterable<Object[]> parameters() {
+    public static Stream<Arguments> parameters() {
 
         final Connection existingNameNoId = new Connection.Builder().name("Existing").build();
 
@@ -94,12 +86,12 @@ public class UniquePropertyValidatorTest {
 
         final Integration existingButDeleted = new Integration.Builder().name("Existing").id("different").build();
 
-        return Arrays.asList(//
-            new Object[] {existingNameNoId, false}, //
-            new Object[] {existingNameWithSameId, true}, //
-            new Object[] {existingNameWithDifferentId, false}, //
-            new Object[] {uniqueNameNoId, true}, //
-            new Object[] {existingButDeleted, true}//
+        return Stream.of(
+            Arguments.of(existingNameNoId, false),
+            Arguments.of(existingNameWithSameId, true),
+            Arguments.of(existingNameWithDifferentId, false),
+            Arguments.of(uniqueNameNoId, true),
+            Arguments.of(existingButDeleted, true)
         );
     }
 }

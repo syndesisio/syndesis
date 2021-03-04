@@ -20,7 +20,6 @@ import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.util.Collections;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -38,9 +37,9 @@ import io.fabric8.kubernetes.client.NamespacedKubernetesClient;
 import io.syndesis.server.jsondb.JsonDB;
 import io.syndesis.server.openshift.OpenShiftService;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.skife.jdbi.v2.DBI;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,7 +53,7 @@ public class KubernetesSupportIT {
 
     HttpServer server;
 
-    @Before
+    @BeforeEach
     public void setup() throws IOException {
         server = HttpServer.create(new InetSocketAddress("0.0.0.0", 0), 0);
         server.setExecutor(Executors.newCachedThreadPool());
@@ -85,7 +84,7 @@ public class KubernetesSupportIT {
     }
 
     @Test
-    public void shouldTolerateNetworkTimeouts() throws IOException, InterruptedException, ExecutionException {
+    public void shouldTolerateNetworkTimeouts() {
         final String masterUrl = "http://0.0.0.0:" + server.getAddress().getPort();
         final Config config = new ConfigBuilder().withMasterUrl(masterUrl).withNamespace("syndesis").build();
 
@@ -148,8 +147,8 @@ public class KubernetesSupportIT {
         }
     }
 
-    @After
-    public void stopServer() throws IOException {
+    @AfterEach
+    public void stopServer() {
         running.compareAndSet(true, false);
         server.stop(0);
     }

@@ -18,7 +18,7 @@ package io.syndesis.integration.runtime.template.velocity;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.Arrays;
 import org.apache.camel.builder.RouteBuilder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for velocity formal template step handler, ie. using the formal

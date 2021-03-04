@@ -25,9 +25,9 @@ import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.util.EventBus;
 
 import io.syndesis.common.util.json.JsonUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -71,7 +71,7 @@ public class ResourceUpdateControllerTest {
         }
     }
 
-    @Before
+    @BeforeEach
     public void startController() {
         controller.start();
 
@@ -80,7 +80,7 @@ public class ResourceUpdateControllerTest {
         assertThat(controller.running).isTrue();
     }
 
-    @After
+    @AfterEach
     public void stopController() {
         controller.stop();
 

@@ -18,23 +18,21 @@ package io.syndesis.connector.sql.stored;
 import java.util.Arrays;
 import java.util.List;
 
-import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
 import io.syndesis.common.model.integration.Step;
-import org.apache.camel.ProducerTemplate;
+import io.syndesis.connector.sql.common.SqlTest.ConnectionInfo;
+import io.syndesis.connector.sql.common.SqlTest.Setup;
+import io.syndesis.connector.sql.common.SqlTest.Teardown;
+import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
+
 import org.apache.camel.component.mock.MockEndpoint;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static io.syndesis.connector.sql.stored.SqlStoredCommon.setupStoredProcedure;
-
+@Setup(SampleStoredProcedures.DERBY_DEMO_OUT_SQL)
+@Teardown("DROP PROCEDURE DEMO_OUT")
 public class SqlStartStoredConnectorTest extends SqlConnectorTestSupport {
 
-    // **************************
-    // Set up
-    // **************************
-
-    @Override
-    protected void doPreSetup() throws Exception {
-        setupStoredProcedure(db.connection, db.properties);
+    public SqlStartStoredConnectorTest(ConnectionInfo info) {
+        super(info);
     }
 
     @Override
@@ -48,8 +46,7 @@ public class SqlStartStoredConnectorTest extends SqlConnectorTestSupport {
                 builder -> builder.putConfiguredProperty("template", "DEMO_OUT( OUT INTEGER c)")),
             newSimpleEndpointStep(
                 "mock",
-                builder -> builder.putConfiguredProperty("name", "result"))
-        );
+                builder -> builder.putConfiguredProperty("name", "result")));
     }
 
     // **************************
@@ -58,12 +55,11 @@ public class SqlStartStoredConnectorTest extends SqlConnectorTestSupport {
 
     @Test
     public void sqlStoredStartConnectorTest() throws Exception {
-        MockEndpoint mock = context.getEndpoint("mock:result", MockEndpoint.class);
+        MockEndpoint mock = context().getEndpoint("mock:result", MockEndpoint.class);
         mock.expectedMessageCount(1);
         mock.expectedBodiesReceived("{\"c\":60}");
 
-        ProducerTemplate template = context.createProducerTemplate();
-        template.sendBody("direct:start", null);
+        template().sendBody("direct:start", null);
 
         mock.assertIsSatisfied();
     }

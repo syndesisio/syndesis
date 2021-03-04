@@ -15,12 +15,13 @@
  */
 package io.syndesis.connector.aws.ddb;
 
-
 import java.util.List;
-import io.syndesis.common.model.integration.Step;
-import org.junit.Ignore;
 
-@Ignore("Make sure the AWSDDBConfiguration has the proper credentials before running this test")
+import io.syndesis.common.model.integration.Step;
+
+import org.junit.jupiter.api.Disabled;
+
+@Disabled("Make sure the AWSDDBConfiguration has the proper credentials before running this test")
 public class AWSDDBQueryItemTest extends AWSDDBGenericOperation {
 
     @Override
@@ -31,7 +32,7 @@ public class AWSDDBQueryItemTest extends AWSDDBGenericOperation {
     @Override
     String getCustomizer() {
         return "io.syndesis.connector.aws.ddb.customizer" +
-                ".DDBConnectorCustomizerQuery";
+            ".DDBConnectorCustomizerQuery";
     }
 
     @Override

@@ -16,41 +16,36 @@
 
 package io.syndesis.test.itest.apiprovider;
 
-import javax.sql.DataSource;
 import java.util.Arrays;
+
+import io.syndesis.test.SyndesisTestEnvironment;
+import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
+import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
 import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
 import com.consol.citrus.http.client.HttpClient;
-import io.syndesis.test.SyndesisTestEnvironment;
-import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
-import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.test.context.ContextConfiguration;
 
 /**
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = TodoListApi_IT.EndpointConfig.class)
+@Testcontainers
 public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
 
     private static final String VND_OAI_OPENAPI_JSON = "application/vnd.oai.openapi+json";
 
-    @Autowired
-    private HttpClient todoListApiClient;
-
-    @Autowired
-    private DataSource sampleDb;
+    private final HttpClient todoListApiClient = CitrusEndpoints.http().client()
+        .requestUrl(String.format("http://localhost:%s", INTEGRATION_CONTAINER.getServerPort()))
+        .build();
 
     /**
      * Integration uses api provider to enable rest service operations for accessing tasks in the sample database.
@@ -59,8 +54,8 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
      *  POST /todos stores given tasks (Json array) to the sample database (using inbound collection support and split/aggregate)
      *  GET /todos provides all available tasks as Json array (using collection support)
      */
-    @ClassRule
-    public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
+    @Container
+    public static final SyndesisIntegrationRuntimeContainer INTEGRATION_CONTAINER = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("todo-list-api")
                             .fromExport(TodoListApi_IT.class.getResource("TodoListApi-export"))
                             .build()
@@ -75,7 +70,7 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
                 .method(HttpMethod.GET)
                 .seconds(10L)
                 .status(HttpStatus.OK)
-                .url(String.format("http://localhost:%s/actuator/health", integrationContainer.getManagementPort()));
+                .url(String.format("http://localhost:%s/actuator/health", INTEGRATION_CONTAINER.getManagementPort()));
 
         runner.http(action -> action.client(todoListApiClient)
                 .send()
@@ -102,7 +97,7 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
                 .receive()
                 .response(HttpStatus.CREATED));
 
-        runner.query(builder -> builder.dataSource(sampleDb)
+        runner.query(builder -> builder.dataSource(sampleDb())
                 .statement("select task, completed from todo")
                 .validate("task", "Wash the cat", "Feed the cat", "Play with the cat")
                 .validate("completed", "0", "0", "0"));
@@ -111,7 +106,7 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testGetTodoList(@CitrusResource TestRunner runner) {
-        runner.sql(builder -> builder.dataSource(sampleDb)
+        runner.sql(builder -> builder.dataSource(sampleDb())
                 .statements(Arrays.asList("insert into todo (task, completed) values ('Wash the dog', 0)",
                         "insert into todo (task, completed) values ('Feed the dog', 0)",
                         "insert into todo (task, completed) values ('Play with the dog', 0)")));
@@ -141,25 +136,4 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
                 .payload("[]"));
     }
 
-    @Configuration
-    public static class EndpointConfig {
-        @Bean
-        public HttpClient todoListApiClient() {
-            return CitrusEndpoints.http().client()
-                    .requestUrl(String.format("http://localhost:%s", integrationContainer.getServerPort()))
-                    .build();
-        }
-
-        @Bean
-        @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-        public TestRunnerBeforeTestSupport beforeTest(DataSource sampleDb) {
-            return new TestRunnerBeforeTestSupport() {
-                @Override
-                public void beforeTest(TestRunner runner) {
-                    runner.sql(builder -> builder.dataSource(sampleDb)
-                            .statement("delete from todo"));
-                }
-            };
-        }
-    }
 }

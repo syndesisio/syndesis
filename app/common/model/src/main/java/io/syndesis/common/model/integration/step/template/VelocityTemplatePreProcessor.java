@@ -15,13 +15,11 @@
  */
 package io.syndesis.common.model.integration.step.template;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.SymbolSyntax;
 
-class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
+class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor<VelocityContext> {
 
     private static final Pattern LITERAL_PATTERN = Pattern.compile(
       "(?<leading>.*?)" + // Leading text / punctuation
@@ -34,16 +32,10 @@ class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
 
     private static final String SET_LITERAL = "#set(";
 
-    // Record velocity-only symbols to ignore them since they don't require a prefix
-    private final List<String> vOnlySymbols = new ArrayList<>();
-
-    // Flag if the symbol is a declaration for a velocity-only symbol
-    private boolean vSymbolDeclaration;
-
     VelocityTemplatePreProcessor() {
         super(
-              new SymbolSyntax(DOLLAR_SIGN + OPEN_BRACE, CLOSE_BRACE),
-              new SymbolSyntax(DOLLAR_SIGN, EMPTY_STRING));
+              new SymbolSyntax("${", "}"),
+              new SymbolSyntax("$", ""));
     }
 
     @Override
@@ -53,26 +45,26 @@ class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
     }
 
     @Override
-    protected boolean isText(String token) {
+    protected boolean isText(VelocityContext context, String token) {
         if (SET_LITERAL.equals(token)) {
-            vSymbolDeclaration = true;
+            context.vSymbolDeclaration = true;
         }
-        return !token.contains(DOLLAR_SIGN);
+        return !token.contains("$");
     }
 
     @Override
-    protected void parseSymbol(String literal) throws TemplateProcessingException {
-        if (vSymbolDeclaration) {
-            vOnlySymbols.add(literal);
+    protected void parseSymbol(VelocityContext context, String literal, StringBuilder buff) throws TemplateProcessingException {
+        if (context.vSymbolDeclaration) {
+            context.vOnlySymbols.add(literal);
             // found the declaration so turn off the flag
-            vSymbolDeclaration = false;
-            append(literal);
+            context.vSymbolDeclaration = false;
+            buff.append(literal);
             return;
         }
 
-        if (vOnlySymbols.contains(literal)) {
+        if (context.vOnlySymbols.contains(literal)) {
             // Ignore these symbols since they are velocity only
-            append(literal);
+            buff.append(literal);
             return;
         }
 
@@ -87,7 +79,7 @@ class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
             String symbol = labelledGroup(m, "symbol");
             String ctag = labelledGroup(m, "ctag");
 
-            append(leading);
+            buff.append(leading);
 
             checkValidTags(otag, symbol, ctag);
 
@@ -108,7 +100,7 @@ class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
             // the found symbol by using appendTail (see below)
             StringBuffer buf = new StringBuffer();
             m.appendReplacement(buf, Matcher.quoteReplacement(replacement.toString()));
-            append(buf.toString());
+            buff.append(buf.toString());
         }
 
         //
@@ -120,7 +112,12 @@ class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
         StringBuffer buf = new StringBuffer();
         m.appendTail(buf);
         if (! buf.toString().equals(literal)) {
-            append(buf.toString());
+            buff.append(buf.toString());
         }
+    }
+
+    @Override
+    public VelocityContext createContext() {
+        return new VelocityContext();
     }
 }
