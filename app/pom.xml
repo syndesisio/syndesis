@@ -91,7 +91,7 @@
     <opentracing.spring.web.starter.version>3.0.0</opentracing.spring.web.starter.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.23.2.fuse-790009</camel.version>
+    <camel.version>2.23.2.fuse-790023</camel.version>
 
     <undertow.version>2.0.30.Final</undertow.version>
 
@@ -1112,7 +1112,7 @@
             <useNativeGit>true</useNativeGit>
           </configuration>
         </plugin>
-        
+
         <plugin>
           <groupId>org.sonarsource.scanner.maven</groupId>
           <artifactId>sonar-maven-plugin</artifactId>
