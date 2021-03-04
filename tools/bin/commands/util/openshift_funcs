@@ -337,7 +337,6 @@ wait_for_deployments() {
           echo "Waiting for $dcs - Sleeping 10s ..."
           sleep 10
           replicas=$(get_replicas $dc)
-          echo $replicas
       done
   done
   kill $watch_pid
