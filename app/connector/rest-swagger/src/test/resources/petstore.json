@@ -41,6 +41,32 @@
     "http"
   ],
   "paths": {
+    "/status": {
+      "get": {
+        "operationId": "status",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "component",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        }
+      }
+    },
     "/pet": {
       "post": {
         "tags": [

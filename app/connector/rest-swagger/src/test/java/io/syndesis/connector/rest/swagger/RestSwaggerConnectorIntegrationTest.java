@@ -279,6 +279,25 @@ public class RestSwaggerConnectorIntegrationTest {
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/pet/findByStatus?status=available"))
             .withQueryParam("status", equalTo("available"))
             .withHeader("Accept", equalTo("application/json"))
+            .withoutHeader("status")
+            .withRequestBody(WireMock.absent()));
+    }
+
+    @Test
+    public void shouldPassHeaderParameters() throws Exception {
+        final String response = "{\"code\": 200, \"type\": \"INFO\", \"message\": \"Working\"}";
+        wiremock.givenThat(get("/v2/status")
+            .withHeader("component", equalTo("store"))
+            .willReturn(ok(response)
+                .withHeader("Content-Type", "application/json")));
+
+        assertThat(context.createProducerTemplate().requestBody("direct:status",
+            "{\"parameters\":{\"component\":\"store\"}}", String.class))
+                .isEqualTo(response);
+
+        wiremock.verify(getRequestedFor(urlEqualTo("/v2/status"))
+            .withHeader("component", equalTo("store"))
+            .withHeader("Accept", equalTo("application/json"))
             .withRequestBody(WireMock.absent()));
     }
 
@@ -404,6 +423,7 @@ public class RestSwaggerConnectorIntegrationTest {
             .addFlow(headerAuthenticationFlow())
             .addFlow(queryParameterAuthenticationFlow())
             .addFlow(additionalQueryParameterAuthenticationFlow())
+            .addFlow(testFlow("status", JSON_SCHEMA_SHAPE, JSON_SCHEMA_SHAPE))
             .build();
     }
 
@@ -594,7 +614,7 @@ public class RestSwaggerConnectorIntegrationTest {
         }
     }
 
-    protected static String readSpecification(String filename) {
+    protected static String readSpecification(final String filename) {
         try {
             return Resources.getResourceAsText(filename);
         } catch (final IOException e) {

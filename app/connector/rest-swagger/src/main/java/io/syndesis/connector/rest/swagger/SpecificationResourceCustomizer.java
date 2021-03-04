@@ -109,8 +109,8 @@ public final class SpecificationResourceCustomizer implements ComponentProxyCust
     private static Optional<String> getNameFromDefinition(String securityDefinitionSelectedByUser) {
         if (securityDefinitionSelectedByUser != null && securityDefinitionSelectedByUser.indexOf(':') > 0) {
             return Optional.of(securityDefinitionSelectedByUser.substring(securityDefinitionSelectedByUser.indexOf(':') + 1).trim());
-        } else {
-            return Optional.empty();
         }
+
+        return Optional.empty();
     }
 }

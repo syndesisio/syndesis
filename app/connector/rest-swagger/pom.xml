@@ -142,10 +142,21 @@
       <classifier>annotations</classifier>
     </dependency>
 
+    <dependency>
+      <groupId>io.apicurio</groupId>
+      <artifactId>apicurio-data-models</artifactId>
+    </dependency>
+
     <!-- testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
       <scope>test</scope>
     </dependency>
 

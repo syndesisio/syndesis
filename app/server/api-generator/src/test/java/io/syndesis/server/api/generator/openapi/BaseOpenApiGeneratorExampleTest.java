@@ -81,7 +81,7 @@ public abstract class BaseOpenApiGeneratorExampleTest {
         assertThat(generated.getProperties().keySet()).as("Expecting the same properties to be generated")
             .containsOnlyElementsOf(expected.getProperties().keySet());
         assertThat(generated.getProperties()).containsAllEntriesOf(expected.getProperties());
-        assertThat(generated).isEqualToIgnoringGivenFields(expected, "id", "icon", "properties", "configuredProperties", "actions");
+        assertThat(generated).isEqualToIgnoringGivenFields(expected, "id", "icon", "properties", "configuredProperties", "actions", "connectorCustomizers");
         assertThat(generated.getIcon()).startsWith("data:image");
         assertThat(generated.getActions()).hasSameSizeAs(expected.getActions());
 

@@ -32,7 +32,7 @@ public class SetHttpHeaderTest {
         new SetHttpHeader("name", "value").process(exchange);
 
         assertThat(exchange.getIn().getHeader("name")).isEqualTo("value");
-        assertThat(SyndesisHeaderStrategy.isWhitelisted(exchange, "name")).isTrue();
+        assertThat(SyndesisHeaderStrategy.isAllowed(exchange, "name")).isTrue();
     }
 
 }

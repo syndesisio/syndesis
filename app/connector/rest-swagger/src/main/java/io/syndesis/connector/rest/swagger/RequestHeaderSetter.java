@@ -43,10 +43,10 @@ final class RequestHeaderSetter implements Processor {
         final Map<String, Object> headers = in.getHeaders();
         headers.putAll(httpHeaders);
 
-        SyndesisHeaderStrategy.whitelist(exchange, httpHeaders.keySet());
+        SyndesisHeaderStrategy.allow(exchange, httpHeaders.keySet());
     }
 
-    private static String determineContentTypeOf(final DataShape outputDataShape) {
+    static String determineContentTypeOf(final DataShape outputDataShape) {
         if (outputDataShape == null) {
             return DEFAULT_CONTENT_TYPE;
         }

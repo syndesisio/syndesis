@@ -32,7 +32,7 @@ public class SetAuthorizationHeaderTest {
         new SetAuthorizationHeader("value").process(exchange);
 
         assertThat(exchange.getIn().getHeader("Authorization")).isEqualTo("value");
-        assertThat(SyndesisHeaderStrategy.isWhitelisted(exchange, "Authorization")).isTrue();
+        assertThat(SyndesisHeaderStrategy.isAllowed(exchange, "Authorization")).isTrue();
     }
 
 }

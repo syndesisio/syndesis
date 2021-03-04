@@ -212,6 +212,7 @@ public class DescriptorTest {
                 .order(2)
                 .build())
             .putConfiguredProperty("componentName", "connector-rest-swagger-http4")
+            .addConnectorCustomizer(HeaderParametersCustomizer.class.getName())
             .addConnectorCustomizer(SpecificationResourceCustomizer.class.getName())
             .addConnectorCustomizer(AuthenticationCustomizer.class.getName())
             .addConnectorCustomizer(RequestCustomizer.class.getName())
