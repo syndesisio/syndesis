@@ -82,7 +82,7 @@ class OAuthRefreshTokenProcessor implements Processor {
         final Message in = exchange.getIn();
         in.setHeader("Authorization", "Bearer " + state.getAccessToken());
 
-        SyndesisHeaderStrategy.whitelist(exchange, "Authorization");
+        SyndesisHeaderStrategy.allow(exchange, "Authorization");
     }
 
     CloseableHttpClient createHttpClient() {

@@ -29,7 +29,7 @@ public class SetHttpHeader extends SetHeader {
     public void process(final Exchange exchange) throws Exception {
         super.process(exchange);
 
-        SyndesisHeaderStrategy.whitelist(exchange, headerName);
+        SyndesisHeaderStrategy.allow(exchange, headerName);
     }
 
 }

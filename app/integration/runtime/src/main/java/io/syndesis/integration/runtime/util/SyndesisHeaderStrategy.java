@@ -25,27 +25,27 @@ public final class SyndesisHeaderStrategy extends HttpHeaderFilterStrategy {
 
     public static final SyndesisHeaderStrategy INSTANCE = new SyndesisHeaderStrategy();
 
-    public static final String WHITELISTED_HEADERS = "syndesis-whitelisted-headers";
+    public static final String ALLOWED_HEADERS = "syndesis-allowed-headers";
 
     /**
      * Filters headers passed on from Camel message to (possibly) external
-     * service by configured filters and the whitelist. The whitelist needs to
+     * service by configured filters and the allow list. The allow list needs to
      * be a {@link Collection} of {@link String}s under the
-     * {@link SyndesisHeaderStrategy#WHITELISTED_HEADERS} name.
+     * {@link SyndesisHeaderStrategy#ALLOWED_HEADERS} name.
      */
     @Override
     public boolean applyFilterToCamelHeaders(final String headerName, final Object headerValue, final Exchange exchange) {
-        if (isWhitelisted(exchange, headerName)) {
+        if (isAllowed(exchange, headerName)) {
             return false; // allow the header
         }
 
         return super.applyFilterToCamelHeaders(headerName, headerValue, exchange);
     }
 
-    public static boolean isWhitelisted(final Exchange exchange, String headerName) {
-        final Collection<String> whitelisted = whitelisted(exchange);
+    public static boolean isAllowed(final Exchange exchange, String headerName) {
+        final Collection<String> allowed = allowList(exchange);
 
-        return whitelisted != null && whitelisted.contains(headerName);
+        return allowed != null && allowed.contains(headerName);
     }
 
     @Override
@@ -59,33 +59,33 @@ public final class SyndesisHeaderStrategy extends HttpHeaderFilterStrategy {
         setInFilterPattern("^(?!Content-Type).*$");
     }
 
-    public static void whitelist(final Exchange exchange, final Collection<String> headerNames) {
+    public static void allow(final Exchange exchange, final Collection<String> headerNames) {
         for (final String headerName : headerNames) {
-            whitelist(exchange, headerName);
+            allow(exchange, headerName);
         }
     }
 
-    public static void whitelist(final Exchange exchange, final String headerName) {
-        final Collection<String> existing = whitelisted(exchange);
+    public static void allow(final Exchange exchange, final String headerName) {
+        final Collection<String> existing = allowList(exchange);
 
-        Collection<String> whitelisted = existing;
+        Collection<String> allowed = existing;
         if (existing == null) {
-            whitelisted = new HashSet<>();
+            allowed = new HashSet<>();
         }
 
         try {
-            whitelisted.add(headerName);
+            allowed.add(headerName);
         } catch (final UnsupportedOperationException ignored) {
             // handle unmodifiable collections
-            whitelisted = new HashSet<>(existing);
-            whitelisted.add(headerName);
+            allowed = new HashSet<>(existing);
+            allowed.add(headerName);
         }
 
-        exchange.setProperty(WHITELISTED_HEADERS, whitelisted);
+        exchange.setProperty(ALLOWED_HEADERS, allowed);
     }
 
     @SuppressWarnings("unchecked")
-    private static Collection<String> whitelisted(final Exchange exchange) {
-        return exchange.getProperty(WHITELISTED_HEADERS, Collection.class);
+    private static Collection<String> allowList(final Exchange exchange) {
+        return exchange.getProperty(ALLOWED_HEADERS, Collection.class);
     }
 }
