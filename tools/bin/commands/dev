@@ -17,18 +17,19 @@ dev::description() {
 }
 
 dev::usage() {
-    cat <<"EOT"
-    --debug <name>            Setup a port forwarding to <name> pod (default: server)
-    --cookie                  Loads a local valid cookie to access Syndesis APIs when using Minishift
+    cat <<"EOF"
+    --bump-camel <version>    Bump the camel version to the one specified
     --cleanup                 Removes 'Completed' pods
     --cleanup --nuke          Remove all Syndesis created OpenShift objects and remove all data from the database
+    --cookie                  Loads a local valid cookie to access Syndesis APIs when using Minishift
                               (both switches need to be specified)
+    --debug <name>            Setup a port forwarding to <name> pod (default: server)
+    --install-maven-mirror    Install Maven Nexus app as mirror to current cluster.
     --refresh                 Used in conjuction with --cookie, forces a refresh of the cookie.
                               Ex: curl -k --cookie $(syndesis dev --cookie --refresh)  "https://$(oc get route syndesis  --template={{.spec.host}})/api/v1/connections"
     --update-manifest <name>  Updates the json manifest for the given connector
-    --install-maven-mirror    Install Maven Nexus app as mirror to current cluster.
     --version                 Show running version of cluster
-EOT
+EOF
 }
 
 extract_and_escape() {
@@ -152,6 +153,29 @@ dev::run() {
 
         local pod=$(oc get -o name pod -l syndesis.io/component=syndesis-${name})
         oc port-forward ${pod//*\//} 5005:5005
+    elif [ $(hasflag --bump-camel) ]; then
+        local camel_version=$(readopt --bump-camel)
+        if [ -z "${camel_version}" ]; then
+            echo "You must provide a valid camel version"
+            exit 1
+        fi
+        appdir=$(appdir)
+        # test if the new camel version is available on maven repo
+        artifact_url=https://repository.jboss.org/nexus/content/groups/ea/org/apache/camel/camel-core/${camel_version}/camel-core-${camel_version}.pom
+        artifact_ok=$(curl -k -X GET -I ${artifact_url} 2>/dev/null | head -n 1 | cut -d$' ' -f2)
+        if [ ${artifact_ok} != 200 ]; then
+          echo "Camel ${camel_version} is not available in ${artifact_url}"
+          echo "Camel version did not change."
+          exit 1
+        fi
+        current_camel=$(grep '<camel.version>' ${appdir}/pom.xml  | head -1 | cut -d '>' -f 2|cut -d '<' -f 1)
+        echo "Changing camel version from \"$current_camel\" to \"$camel_version\""
+        sed -i "s/$current_camel/$camel_version/g" \
+            ${appdir}/pom.xml \
+            ${appdir}/extension/bom/pom.xml \
+            ${appdir}/integration/bom/pom.xml
+        git status
+        echo "You should use git to add the files and commit them"
     elif [ $(hasflag --cookie) ]; then
         local cookie_cached="$HOME/.syndesis_api_cookie"
         if [ ! -f $cookie_cached ] || [ -n "$(hasflag --refresh)" ]; then
