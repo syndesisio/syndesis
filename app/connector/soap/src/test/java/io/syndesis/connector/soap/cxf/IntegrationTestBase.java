@@ -69,9 +69,9 @@ public abstract class IntegrationTestBase {
     protected static final String TEST_USER = "TestUser";
     protected static final String TEST_PASSWORD = "TestPassword";
 
-    private static String wrapInEnvelope(String body) {
+    private String wrapInEnvelope(String body) {
         return  "<?xml version='1.0' encoding='UTF-8'?>" +
-                "<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
+                "<soap:Envelope xmlns:soap=\"" + getSoapNamespace() + "\">" +
                     "<soap:Body>" + body + "</soap:Body>" +
                 "</soap:Envelope>";
     }
@@ -103,22 +103,31 @@ public abstract class IntegrationTestBase {
         context.start();
     }
 
+    protected String getSoapNamespace() {
+        return "http://schemas.xmlsoap.org/soap/envelope/";
+    }
+
     protected abstract void createConnection();
 
     @Test
     public void shouldInvokeRemoteApis() {
         wiremock.givenThat(post("/")
-            .willReturn(ok(wrapInEnvelope(RESPONSE_PAYLOAD))
+            .willReturn(ok(wrapInEnvelope(getResponsePayload()))
                 .withHeader("Content-Type", "application/xml")));
 
         assertThat(context.createProducerTemplate().requestBody("direct:sayHi",
             wrapInEnvelope(REQUEST_PAYLOAD), String.class))
-                .isEqualTo(wrapInEnvelope(RESPONSE_PAYLOAD));
+                .isEqualTo(wrapInEnvelope(getResponsePayload()));
 
         wiremock.verify(postRequestedFor(urlEqualTo("/"))
             .withRequestBody(WireMock.matching(requestEnvelopePattern(REQUEST_PAYLOAD))));
 
         verifyWireMock(wiremock);
+    }
+
+    // override in derived class for a different response
+    protected String getResponsePayload() {
+        return RESPONSE_PAYLOAD;
     }
 
     protected void verifyWireMock(WireMockExtension wiremock) {
