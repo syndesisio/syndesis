@@ -23,6 +23,7 @@ export type DataShapeKindType =
   | 'XML_SCHEMA'
   | 'XML_SCHEMA_INSPECTED'
   | 'XML_INSTANCE'
+  | 'CSV_INSTANCE'
   | 'NONE';
 
 // Data shape kind enum when working with the DataShape type
@@ -34,6 +35,7 @@ export enum DataShapeKinds {
   XML_SCHEMA = 'xml-schema',
   XML_SCHEMA_INSPECTED = 'xml-schema-inspected',
   XML_INSTANCE = 'xml-instance',
+  CSV_INSTANCE = 'csv-instance',
   NONE = 'none',
 }
 

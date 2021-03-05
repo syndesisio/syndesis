@@ -87,6 +87,13 @@ export function stepToProps(
         inspectionResult: dataShape.specification!,
         inspectionType: InspectionType.SCHEMA,
       };
+    case DataShapeKinds.CSV_INSTANCE:
+      return {
+        ...basicInfo,
+        documentType: DocumentType.CSV,
+        inspectionSource: dataShape.specification!,
+        inspectionType: InspectionType.INSTANCE,
+      };
     default:
       return false;
   }
@@ -122,6 +129,7 @@ export function isSupportedDataShape(dataShape: DataShape): boolean {
       DataShapeKinds.XML_INSTANCE,
       DataShapeKinds.XML_SCHEMA,
       DataShapeKinds.XML_SCHEMA_INSPECTED,
+      DataShapeKinds.CSV_INSTANCE,
     ]
       .map(k => k.toUpperCase())
       .indexOf(dataShape.kind.toUpperCase()) > -1

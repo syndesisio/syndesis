@@ -26,6 +26,7 @@ public enum DataShapeKinds {
     XML_SCHEMA("xml-schema"),
     XML_SCHEMA_INSPECTED("xml-schema-inspected"),
     XML_INSTANCE("xml-instance"),
+    CSV_INSTANCE("csv-instance"),
     NONE("none");
 
     private final String string;

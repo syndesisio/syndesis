@@ -36,6 +36,10 @@ const kinds = [
     label: 'XML Instance',
     value: 'xml-instance',
   },
+  {
+    label: 'CSV Instance',
+    value: 'csv-instance',
+  },
 ];
 
 export interface IDescribeDataShapeFormProps {

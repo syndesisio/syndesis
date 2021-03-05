@@ -41,7 +41,7 @@ export interface IDataMapperAdapterProps {
   baseJavaInspectionServiceUrl: string;
   baseXMLInspectionServiceUrl: string;
   baseJSONInspectionServiceUrl: string;
-  baseCSVInspectionServiceUrl?: string;
+  baseCSVInspectionServiceUrl: string;
   baseMappingServiceUrl: string;
   onMappings(mappings: string): void;
 }
@@ -76,9 +76,7 @@ export const DataMapperAdapter: React.FunctionComponent<IDataMapperAdapterProps>
       baseJavaInspectionServiceUrl={baseJavaInspectionServiceUrl}
       baseMappingServiceUrl={baseMappingServiceUrl}
       baseXMLInspectionServiceUrl={baseXMLInspectionServiceUrl}
-      baseCSVInspectionServiceUrl={
-        baseCSVInspectionServiceUrl || `${baseMappingServiceUrl}csv/`
-      }
+      baseCSVInspectionServiceUrl={baseCSVInspectionServiceUrl}
       externalDocument={externalDocument}
       onMappingChange={onMappings}
     >

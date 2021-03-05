@@ -16,6 +16,7 @@ export const WithConfig = ({ children }: mockIWithConfigProps) => {
       },
       consoleUrl: 'https://console.address/console',
       datamapper: {
+        baseCSVInspectionServiceUrl: '/api/v1/atlas/csv/',
         baseJSONInspectionServiceUrl: '/api/v1/atlas/json/',
         baseJavaInspectionServiceUrl: '/api/v1/atlas/java/',
         baseMappingServiceUrl: '/api/v1/atlas/',

@@ -729,6 +729,7 @@
               "xml-schema",
               "xml-schema-inspected",
               "xml-instance",
+              "csv-instance",
               "none"
             ],
             "type": "string"
