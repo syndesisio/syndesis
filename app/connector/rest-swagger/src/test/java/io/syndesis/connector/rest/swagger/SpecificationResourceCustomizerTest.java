@@ -20,47 +20,21 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+
 import org.apache.camel.util.StringHelper;
 import org.junit.jupiter.api.Test;
+import org.yaml.snakeyaml.Yaml;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SpecificationResourceCustomizerTest {
 
     private static final ComponentProxyComponent NOT_USED = null;
-
-    @Test
-    public void shouldStoreSpecificationInTemporaryDirectory() {
-        final SpecificationResourceCustomizer customizer = new SpecificationResourceCustomizer();
-
-        final Map<String, Object> options = new HashMap<>();
-        options.put("specification", "the specification is here");
-
-        customizer.customize(NOT_USED, options);
-
-        assertThat(options).containsKey("specificationUri");
-        assertThat(options).doesNotContainKey("specification");
-        assertThat(new File(StringHelper.after(ConnectorOptions.extractOption(options, "specificationUri"), "file:"))).hasContent("the specification is here");
-    }
-
-    @Test
-    public void shouldRemoveUnwantedSecurity() throws IOException {
-        final SpecificationResourceCustomizer customizer = new SpecificationResourceCustomizer();
-        final String spec = RestSwaggerConnectorIntegrationTest.readSpecification("apikey.json");
-        final String specUpdated = RestSwaggerConnectorIntegrationTest.readSpecification("apikey-security-updated.json");
-
-        final Map<String, Object> options = new HashMap<>();
-        options.put("specification", spec);
-        options.put("authenticationType", "apiKey: api-key-header");
-
-        customizer.customize(NOT_USED, options);
-
-        assertThat(options).containsKey("specificationUri");
-        assertThat(options).doesNotContainKey("specification");
-        assertThat(new File(StringHelper.after(ConnectorOptions.extractOption(options, "specificationUri"), "file:"))).hasContent(specUpdated);
-    }
 
     @Test
     public void shouldNotUpdateSpecificationOnMissingSecurityDefinitionName() throws IOException {
@@ -90,6 +64,52 @@ public class SpecificationResourceCustomizerTest {
 
         assertThat(options).containsKey("specificationUri");
         assertThat(options).doesNotContainKey("specification");
+        assertThat(new File(StringHelper.after(ConnectorOptions.extractOption(options, "specificationUri"), "file:"))).hasContent(spec);
+    }
+
+    @Test
+    public void shouldRemoveUnwantedSecurity() throws IOException {
+        final SpecificationResourceCustomizer customizer = new SpecificationResourceCustomizer();
+        final String spec = RestSwaggerConnectorIntegrationTest.readSpecification("apikey.json");
+        final String specUpdated = RestSwaggerConnectorIntegrationTest.readSpecification("apikey-security-updated.json");
+
+        final Map<String, Object> options = new HashMap<>();
+        options.put("specification", spec);
+        options.put("authenticationType", "apiKey: api-key-header");
+
+        customizer.customize(NOT_USED, options);
+
+        assertThat(options).containsKey("specificationUri");
+        assertThat(options).doesNotContainKey("specification");
+        assertThat(new File(StringHelper.after(ConnectorOptions.extractOption(options, "specificationUri"), "file:"))).hasContent(specUpdated);
+    }
+
+    @Test
+    public void shouldStoreSpecificationInTemporaryDirectory() {
+        final SpecificationResourceCustomizer customizer = new SpecificationResourceCustomizer();
+
+        final Map<String, Object> options = new HashMap<>();
+        options.put("specification", "the specification is here");
+
+        customizer.customize(NOT_USED, options);
+
+        assertThat(options).containsKey("specificationUri");
+        assertThat(options).doesNotContainKey("specification");
+        assertThat(new File(StringHelper.after(ConnectorOptions.extractOption(options, "specificationUri"), "file:"))).hasContent("the specification is here");
+    }
+
+    @Test // issue #9411
+    void shouldNotFailToUpdateSpecificationWithApiKeyAuthEmptyArray() {
+        final SpecificationResourceCustomizer customizer = new SpecificationResourceCustomizer();
+        final String specYaml = RestSwaggerConnectorIntegrationTest.readSpecification("twitter-api.yaml");
+        final JsonNode jsonNode = JsonUtils.convertValue(new Yaml().load(specYaml), JsonNode.class);
+        final String spec = JsonUtils.toString(jsonNode);
+
+        final Map<String, Object> options = new HashMap<>();
+        options.put("specification", spec);
+        options.put("authenticationType", "apiKey: ApiKeyAuth");
+
+        customizer.customize(NOT_USED, options);
         assertThat(new File(StringHelper.after(ConnectorOptions.extractOption(options, "specificationUri"), "file:"))).hasContent(spec);
     }
 }

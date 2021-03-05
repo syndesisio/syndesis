@@ -48,19 +48,21 @@ import io.syndesis.common.util.SyndesisServerException;
 public final class JsonUtils {
 
     private static final ObjectMapper OBJECT_MAPPER;
+    private static final ObjectMapper INCLUSIVE_MAPPER;
     private static final ObjectWriter OBJECT_WRITER;
     private static final ObjectReader OBJECT_READER;
 
     static {
-        OBJECT_MAPPER = new ObjectMapper()
-                .registerModules(new Jdk8Module(), new JavaTimeModule())
+        INCLUSIVE_MAPPER = new ObjectMapper()
+            .registerModules(new Jdk8Module(), new JavaTimeModule())
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
+            .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
+            .disable(JsonParser.Feature.AUTO_CLOSE_SOURCE)
+            .enable(MapperFeature.BLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES);
+        OBJECT_MAPPER = INCLUSIVE_MAPPER.copy()
                 // keep using the deprecated method here in order to align with the jackson version (2.8.11) being used at integration runtime
-                .setPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY))
-                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-                .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
-                .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
-                .disable(JsonParser.Feature.AUTO_CLOSE_SOURCE)
-                .enable(MapperFeature.BLOCK_UNSAFE_POLYMORPHIC_BASE_TYPES);
+                .setPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY));
         OBJECT_READER = OBJECT_MAPPER.reader();
         OBJECT_WRITER = OBJECT_MAPPER.writer();
     }
@@ -122,7 +124,7 @@ public final class JsonUtils {
     }
 
     public static <T> T convertValue(final Object fromValue, final Class<T> toValueType) {
-        return OBJECT_MAPPER.convertValue(fromValue, toValueType);
+        return INCLUSIVE_MAPPER.convertValue(fromValue, toValueType);
     }
 
     /**

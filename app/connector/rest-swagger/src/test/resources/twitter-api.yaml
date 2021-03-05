@@ -1,0 +1,46 @@
+openapi: 3.0.2
+info:
+  title: Tweeter API - GET
+  description: some description
+  version: 0.1.9
+servers:
+  - url: https://api.twitter.com
+    description: Optional server description, e.g. Main (production) server
+paths:
+  /labs/2/users/{id}:
+    get:
+      summary: Get types.
+      parameters:
+        - name: id
+          in: path
+          description: User ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: A list of types.
+          content:
+            application/json:
+              schema:
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: Error
+components:
+  schemas:
+    User:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        username:
+          type: string
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+security:
+- ApiKeyAuth: []
