@@ -182,7 +182,7 @@
             </goals>
             <phase />
             <configuration>
-              <jvmArguments>-Dencrypt.key=supersecret -Dcontrollers.dblogging.enabled=false -Dopenshift.enabled=false -Dmetrics.kind=noop -Dfeatures.monitoring.enabled=false</jvmArguments>
+              <jvmArguments>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8888 -Dcontrollers.dblogging.enabled=false -Dencrypt.key=supersecret -Dfeatures.monitoring.enabled=false -Dmeta.service=localhost:9090 -Dmetrics.kind=noop -Dopenshift.enabled=false -Dmetrics.kind=noop -Dspring.cloud.kubernetes.enabled=false</jvmArguments>
             </configuration>
           </execution>
         </executions>

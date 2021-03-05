@@ -489,7 +489,6 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
-          <jvmArguments>-server -Xms256m -Xmx512m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000</jvmArguments>
           <layout>ZIP</layout>
         </configuration>
         <executions>
@@ -498,6 +497,17 @@
               <goal>repackage</goal>
               <goal>build-info</goal>
             </goals>
+          </execution>
+          <execution>
+            <?m2e ignore ?>
+            <id>default-cli</id>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <phase />
+            <configuration>
+              <jvmArguments>-server -Xms256m -Xmx512m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=9999 -Dserver.port=9090 -Dmanagement.server.port=9091 -DLOADER_HOME=target</jvmArguments>
+            </configuration>
           </execution>
         </executions>
       </plugin>
