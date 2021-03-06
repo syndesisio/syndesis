@@ -488,7 +488,7 @@ git_commit_files() {
 
     echo "==== Committing files to local git"
     cd $dir
-    git_commit pom.xml "Update pom.xmls to $version"
+    git_commit 'pom.xml|install/operator/build/conf/config.yaml' "chore: release version $version"
 }
 
 git_tag_release() {
@@ -583,7 +583,7 @@ git_commit() {
     check_error $release_version
 
     if [ ! $(hasflag --dry-run -n) ]; then
-        git ls-files --modified | grep $pattern | xargs git commit -m "[$release_version]: $message"
+        git ls-files --modified | grep -E $pattern | xargs git commit -m "[$release_version]: $message"
     fi
 }
 
