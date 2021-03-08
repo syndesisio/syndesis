@@ -74,37 +74,37 @@ continue to the next step. To grant authorization to {prodname} in another
 Google project, choose or create that project. 
 If this Google account does not already
 have a project, you must create one. 
-.. Enable Google APIs:
+.. For each Google API (Calendar, Gmail, or Sheets) that you want to enable:
 ... In the upper left corner, click 
-image:images/connecting/Hamburger.png[Navigation menu icon] and select
+image:images/connecting/Hamburger.png[Navigation menu icon] and then select
 *APIs and Services* > *Library*.
-... If necessary, scroll down to see the *G Suite* row of cards. 
-... Click the *Google Calendar API* card, which displays a page that indicates
-that the Google Calendar API is enabled.  
+... If necessary, scroll down to see the *Google Workspace* row of cards. 
+... Click a *Google API* card (*Calendar*, *Gmail*, or *Sheets*).
++
+A summary page for the Google API opens. 
+... Click *Enable*. Google enables the API and opens the API's overview page.
 ... Scroll down and click the *Gmail API* card, which displays a page that indicates
 that the Gmail API is enabled.
-... In the upper left corner, click 
-image:images/connecting/Hamburger.png[Navigation menu icon] and select
-*APIs and Services* > *Library*.
-... If necessary, scroll down to see the *G Suite* row of cards. 
-... Click the *Google Sheets API* card, which displays a page that indicates
-that the Google Sheets API is enabled.  
 .. Give your client application a name:
-... Click *MANAGE*. 
-... In the page that appears, in the left navigation panel, click
-*Credentials* and then on the right, click *Credentials in APIs & Services*.
-... Click the *OAuth consent screen* tab.
-... In the page that appears, in the *Application Name* field, enter a name for the {prodname}
-client application. For example, enter `*{prodname} client application*`.
+... In the API overview page, in the left navigation panel, click
+*Credentials* and then click *Configure Consent Screen*.
++
+The *OAuth consent screen* appears.
+... In the *Application Name* field, select *External*.
++
+*Note:* You can alternately select *Internal* if you are a Google Workspace user.
+... Click *Create*.
+... Type a name for the {prodname} client application. For example, type `*{prodname} client application*`.
 ... Skip the other fields.
-... Click *Save*.
+... Click *Save and continue*.
+... On the *Scopes* and *Test Users* pages, skip the options and click *Save and continue*. 
 .. Obtain client application credentials as follows:
 ... To the right of *Create Credentials*, click the down arrow to
 display a menu and select *OAuth client ID*.
-... In the page that appears, select *Web application* to display more content.
-... In the *Name* field, enter a name for the OAuth client ID for
+... In the page that appears, for *Application types*, select *Web application*.
+... In the *Name* field, type a name for the OAuth client ID for
 your {prodname} environment. This is different from the name that you
-entered for the client application itself. For example, enter
+entered for the client application itself. For example, type
 `OAuth client ID for {prodname}`.
 ... Skip *Authorized JavaScript origins*.
 ... In the *Authorized redirect URIs* field, paste the callback URL
