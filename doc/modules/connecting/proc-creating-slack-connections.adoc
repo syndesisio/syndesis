@@ -10,9 +10,9 @@ You can use the same Slack connection in any number of integrations.
 
 .Prerequisites
 
-* You created a Slack app for connecting {prodname} to Slack.
+* You https://api.slack.com/apps[created and installed a Slack app] for connecting {prodname} to Slack.
 * You can obtain the Slack webhook URL for your Slack app.
-* You can obtain a legacy token that authorizes access to your Slack app. 
+* You can obtain the *Bot User OAuth Access Token* that authorizes access to your Slack app.
 
 .Procedure
 
@@ -23,9 +23,7 @@ display any available connections.
 . Click the *Slack* connector.
 . In the *Slack webhook URL* field, enter the webhook URL for your 
 Slack app. 
-. In the *Token for accessing Slack API* field, enter the Slack-provided token, 
-which you can 
-https://api.slack.com/custom-integrations/legacy-tokens[obtain from Slack.]
+. In the *Token for accessing Slack API* field, enter the *Bot User OAuth Access Token*, which you can obtain from the Slack app's *OAuth & Permissions* page.
 . Optionally, enter values for additional parameters:
 +
 * In the *Sending username for messages* field, enter the user name that 
