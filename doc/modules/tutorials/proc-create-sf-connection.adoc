@@ -19,10 +19,6 @@ integrations.
 
 .Prerequisites
 * You are logged in to {prodname}. 
-ifeval::["{location}" == "downstream"]
-The URL for accessing {prodname} is in the 
-email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
-endif::[]
 * {prodname} is open in a web browser. 
 * You must have already registered your {prodname} environment as an
 application that can access Salesforce. 
