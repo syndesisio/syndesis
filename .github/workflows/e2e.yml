@@ -3,7 +3,35 @@ name: Integration Tests 1.x branch
 on: pull_request
 
 jobs:
+  # JOB to run change detection
+  changes:
+    runs-on: ubuntu-latest
+    # Set job outputs to values from filter step
+    outputs:
+      app: ${{ steps.filter.outputs.app }}
+      docs: ${{ steps.filter.outputs.docs }}
+      ui: ${{ steps.filter.outputs.ui }}
+    steps:
+    # For pull requests it's not necessary to checkout the code
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        # Added all possible filters even if we just use app
+        filters: |
+          app:
+            - 'app/**'
+          docs:
+            - 'doc/**'
+          ui:
+            - 'app/ui-react/**'
+            - 'package.json'
+            - 'yarn.lock'
+            - 'node_modules/**'
+
+
   integration-tests:
+    needs: changes
+    if: ${{ needs.changes.outputs.app == 'true' }}
     runs-on: ubuntu-latest
 
     steps:
