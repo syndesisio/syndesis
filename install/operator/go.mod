@@ -7,7 +7,7 @@ module github.com/syndesisio/syndesis/install/operator
 // replace github.com/chirino/hawtgo => /Users/chirino/sandbox/hawtgo
 
 require (
-	github.com/DATA-DOG/go-sqlmock v1.4.1
+	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/aws/aws-sdk-go v1.30.9
 	github.com/chirino/hawtgo v0.0.1
 	github.com/docker/go-connections v0.4.0
