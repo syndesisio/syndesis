@@ -47,6 +47,10 @@ export const ApiConnectorCreatorSecurityForm: React.FunctionComponent<IApiConnec
   });
   const [values, setValues] = React.useState(defaultValues);
 
+  React.useEffect(() => {
+    setErrors(validateSecurity(values));
+  }, []);
+
   const handleSubmit = (event: { preventDefault: () => void }) => {
     if (event) {
       event.preventDefault();
