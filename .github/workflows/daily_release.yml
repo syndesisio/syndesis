@@ -1,0 +1,39 @@
+name: Syndesis daily release
+
+on:
+  schedule:
+    - cron:  '0 5 * * *'
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - branch: 1.12.x
+            java: 8
+          - branch: 2.x
+            java: 11
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ matrix.branch }}
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Cache Maven Repository
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+      - name: Daily release of ${{ matrix.branch }}
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          QUAYIO_USER: ${{ secrets.QUAYIO_USER }}
+          QUAYIO_PASSWORD: ${{ secrets.QUAYIO_PASSWORD }}
+        run: tools/bin/syndesis release --snapshot-release --git-remote origin --docker-user "${DOCKER_USER}" --docker-password "${DOCKER_PASSWORD}" --quayio-user "${QUAYIO_USER}" --quayio-password "${QUAYIO_PASSWORD}"
