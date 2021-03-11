@@ -40,5 +40,5 @@ jobs:
         run: |
           git config user.email admin@syndesis.io
           git config user.name 'Syndesis CI'
-          git config "http.https://github.com.extraheader=Authorization: basic ${SYNDESISCI_TOKEN}"
+          git config 'http.https://github.com.extraheader' "Authorization: basic ${SYNDESISCI_TOKEN}"
           tools/bin/syndesis release --snapshot-release --git-remote origin --docker-user "${DOCKER_USER}" --docker-password "${DOCKER_PASSWORD}" --quayio-user "${QUAYIO_USER}" --quayio-password "${QUAYIO_PASSWORD}"
