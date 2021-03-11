@@ -28,6 +28,8 @@ release::usage() {
                               temporary directory will be used (and removed after the release)
     --docker-user <user>      Docker user for Docker Hub
     --docker-password <pwd>   Docker password for Docker Hub
+    --github-user <user>      User for GitHub, used to release and publish artifacts
+    --github-token <token>    Token with (full) 'repo' permission
     --quayio-user <user>      User for Quay.io
     --quayio-password <pwd>   Password for Quay.io
     --no-git-push             Don't push the release tag (and symbolic major.minor tag) at the end
@@ -248,30 +250,6 @@ update_image_versions() {
     done
 }
 
-check_github_username() {
-    if [ -z "${GITHUB_USERNAME}" ]; then
-        echo "ERROR: environment variable GITHUB_USERNAME has not been set."
-        echo "Please populate it with your github id"
-        return 1
-    fi
-}
-
-check_github_access_token() {
-    if [ -z "${GITHUB_ACCESS_TOKEN}" ]; then
-        echo "ERROR: environment variable GITHUB_ACCESS_TOKEN has not been set."
-        echo "Please populate it with a valid personal access token from github (with 'repo', 'admin:org_hook' and 'admin:repo_hook' scopes)."
-        return 1
-    fi
-}
-
-check_gren_access_token() {
-    if [ -z "${GREN_GITHUB_TOKEN}" ]; then
-        echo "ERROR: environment variable GREN_GITHUB_TOKEN has not been set."
-        echo "Please populate it with a valid personal access token from github (with 'repo', 'admin:org_hook' and 'admin:repo_hook' scopes)."
-        return 1
-    fi
-}
-
 prepare_binaries() {
     local from=$1
     local to=$2
@@ -295,11 +273,19 @@ publish_artifacts() {
     local tag=$2
     local prerelease=$3
 
-    check_github_access_token
-    check_github_username
-    # check_gren_access_token
+    local github_username
+    github_username="$(readopt --github-user)"
 
-    local data="{\
+    local github_token
+    github_token="$(readopt --github-token)"
+
+    if [ -n "${github_username}" ] && [ -n "$(readopt --github-token)" ]; then
+      echo "ERROR: missing --github-user and --github-token parameters"
+      return 1
+    fi
+
+    local data
+    data="{\
         \"tag_name\": \"${tag}\", \
         \"name\": \"${tag}\", \
         \"target_commitish\": \"$(git rev-parse HEAD)\", \
@@ -307,7 +293,8 @@ publish_artifacts() {
     }"
 
     local remote=origin
-    local github_api_url=$(git config --get remote.${remote:-origin}.url)
+    local github_api_url
+    github_api_url=$(git config --get remote.${remote:-origin}.url)
     # try to get URL to GitHub API server from remote should support both git and HTTP style remotes
     # e.g for:
     # git@github.com:syndesisio/syndesis.git
@@ -318,33 +305,36 @@ publish_artifacts() {
     github_api_url=${github_api_url/%.git/} # remove .git at the end
     github_api_url=${github_api_url/*@/https:\//} # remove any username in ...@api.github.com
 
-    if [ ${prerelease} == true ]; then
+    if [ "${prerelease}" == true ]; then
         # keep only last 10 snapshot releases
         local major_minor=${tag%.*} # this relies on having two dots in $tag, i.e. at least X.Y.Z
         if [ -z "${major_minor}" ]; then
             echo "ERROR: refusing to proceed MAJOR.MINOR version calculated as empty this would delete all releases"
             return 1
         fi
-        local versions_to_discard=$(git for-each-ref --format="%(refname:short)" --sort=creatordate refs/tags/${major_minor}*|head -n -10)
-        if [ ! -z "${versions_to_discard}" ]; then
+        local versions_to_discard
+        versions_to_discard=$(git for-each-ref --format="%(refname:short)" --sort=creatordate refs/tags/"${major_minor}"*|head -n -10)
+        if [ -n "${versions_to_discard}" ]; then
             echo "About to remove the following tags: ${versions_to_discard}"
             for version in ${versions_to_discard}; do
-                local release_url=$(curl -q -s -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} "${github_api_url}/releases/tags/${version}" | jq -r .url)
+                local release_url
+                release_url=$(curl -q -s -u "${github_username}:${github_token}" "${github_api_url}/releases/tags/${version}" | jq -r .url)
                 if [ "${release_url}" != "null" ]; then
-                    curl -q -s -S --fail -X DELETE -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} ${release_url}
+                    curl -q -s -S --fail -X DELETE -u "${github_username}:${github_token}" "${release_url}"
                 fi
             done
             git push --delete origin ${versions_to_discard}
         fi
     fi
 
-    local upload_url=$(curl -q -s -S --fail \
+    local upload_url
+    upload_url=$(curl -q -s -S --fail \
       -X POST \
-      -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
+      -u "${github_username}:${github_token}" \
       -H "Accept: application/vnd.github.v3+json" \
       -H "Content-Type: application/json" \
       -d "$data" \
-      ${github_api_url}/releases | jq -r '.upload_url | sub("{.*"; "")'
+      "${github_api_url}/releases" | jq -r '.upload_url | sub("{.*"; "")'
     )
 
     if [[ ! $upload_url == http* ]]; then
@@ -352,13 +342,13 @@ publish_artifacts() {
         return 1
     fi
 
-    for file in $top_dir/install/operator/releases/*; do
+    for file in "$top_dir/install/operator/releases/"*; do
         echo -n "Upload $file to $upload_url ..."
-        curl -q -s -S --fail -X POST -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
+        curl -q -s -S --fail -X POST -u "${github_username}:${github_token}" \
           -H "Accept: application/vnd.github.v3+json" \
           -H "Content-Type: application/tar+gzip" \
           --data-binary "@${file}" \
-          ${upload_url}?name=${file##*/} >/dev/null 2>&1
+          "${upload_url}?name=${file##*/}" >/dev/null 2>&1
           echo "done"
         local err=$?
         if [ $err -ne 0 ]; then
@@ -368,11 +358,11 @@ publish_artifacts() {
     done
 
     echo -n "Upload syndesis-cli.zip to $upload_url ..."
-    (cd "$top_dir/tools/bin/" && zip -q -r - . | curl -q -s -S --fail -X POST -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
+    (cd "$top_dir/tools/bin/" && zip -q -r - . | curl -q -s -S --fail -X POST -u "${github_username}:${github_token}" \
       -H "Accept: application/vnd.github.v3+json" \
       -H "Content-Type: application/zip" \
       --data-binary @- \
-      ${upload_url}?name=syndesis-cli.zip >/dev/null) 2>&1
+      "${upload_url}?name=syndesis-cli.zip" >/dev/null) 2>&1
       echo "done"
     local err=$?
     if [ $err -ne 0 ]; then
