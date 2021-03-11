@@ -36,4 +36,9 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           QUAYIO_USER: ${{ secrets.QUAYIO_USER }}
           QUAYIO_PASSWORD: ${{ secrets.QUAYIO_PASSWORD }}
-        run: tools/bin/syndesis release --snapshot-release --git-remote origin --docker-user "${DOCKER_USER}" --docker-password "${DOCKER_PASSWORD}" --quayio-user "${QUAYIO_USER}" --quayio-password "${QUAYIO_PASSWORD}"
+          SYNDESISCI_TOKEN: ${{ secrets.SYNDESISCI_TOKEN }}
+        run: |
+          git config --user user.email admin@syndesis.io
+          git config --user user.name 'Syndesis CI'
+          git config --user "http.https://github.com.extraheader=Authorization: basic ${SYNDESISCI_TOKEN}"
+          tools/bin/syndesis release --snapshot-release --git-remote origin --docker-user "${DOCKER_USER}" --docker-password "${DOCKER_PASSWORD}" --quayio-user "${QUAYIO_USER}" --quayio-password "${QUAYIO_PASSWORD}"
