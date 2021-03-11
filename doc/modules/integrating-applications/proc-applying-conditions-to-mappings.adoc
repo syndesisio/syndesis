@@ -109,7 +109,7 @@ For this example, after you complete entering the expression,
 the data mapping is: 
 
 +
-image:images/integrating-applications/second-conditional-mapping.png[lastName, firstName, orderId, phone are mapped to customerName]
+image:images/integrating-applications/second-conditional-mapping.png[lastName firstName orderId phone are mapped to customerName]
 
 +
 In the conditional expression, if you remove a field name that is in 
@@ -123,6 +123,13 @@ by clicking image:images/integrating-applications/preview-mapping-icon.png[the S
 . Type sample data in the source preview input field(s) 
 to ensure that the target field or target fields
 get(s) the correct value. 
+
+. Optionally, apply transformations to one or more source or target fields in the selected mapping by clicking image:images/integrating-applications/lightning-bolt-icon.png[Lightning bolt icon] next to each field to which you want to apply a transformation and then selecting the desired transformation from the pull-down menu.
++
+For example, in the same mapping presented in this procedure, in the
+*Mapping Details* panel, you could apply the `Uppercase`
+ transformation to the `firstName` field. You can test this by entering
+ data in the `firstName` field's preview input field. 
 
 . Edit the conditional expression as needed to obtain the desired result.  
 

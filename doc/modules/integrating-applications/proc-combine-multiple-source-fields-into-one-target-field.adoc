@@ -19,7 +19,7 @@ link:{LinkSyndesisIntegrationGuide}#example-missing-unwanted-data_map[Example of
 . In the *Target* panel, click the field into which you want to map more 
 than one source field and then click image:images/integrating-applications/create-mapping-icon.png[the Create new mapping icon]. The *Mapping Details* panel opens. 
 
-. In the *Mapping Details* panel,from the Source drop-down list, select one or more data fields that you want to map to.
+. In the *Mapping Details* panel, from the *Source* drop-down list, select one or more data fields that you want to map to.
 +
 When you are done you should see a line from each of the source fields to
 the target field. 
@@ -29,10 +29,6 @@ displays the default multiplicity transformation, which is *Concatenate*.
 This indicates that execution of the mapping applies the *Concatenate*
 transformation to the values in the selected source fields and maps 
 the concatenated value to the selected target field. 
-+
-[NOTE]
-For information about other transformations that you can apply to 
-multiple source values see 
 
 . In the *Mapping Details* panel, configure the mapping as follows: 
 
@@ -40,8 +36,7 @@ multiple source values see
 the character that the data mapper inserts in the target field between 
 the content from different source fields. The default is a space.
 
-.. Optionally, in each source field entry, you can click image:images/integrating-applications/transformation-icon.png[the Transformation icon] to apply a transformation to the source field value before it gets 
-mapped to the target field. 
+.. Optionally, in each source field entry, you can click image:images/integrating-applications/transformation-icon.png[the Transformation icon] to apply a transformation to the source field value before it gets mapped to the target field. 
 
 .. Under *Sources*, check the order of the entries for the source 
 fields that you selected. The entries must be in the same order as 
