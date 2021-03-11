@@ -9,6 +9,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         include:
           - branch: 1.12.x
