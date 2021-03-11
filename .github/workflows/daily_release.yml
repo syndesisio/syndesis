@@ -29,10 +29,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
+          key: release-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: release-${{ runner.os }}-m2
       - name: Daily release of ${{ matrix.branch }}
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
