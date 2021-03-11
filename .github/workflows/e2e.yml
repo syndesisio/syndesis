@@ -3,7 +3,35 @@ name: Integration Tests for PR
 on: pull_request
 
 jobs:
+  # JOB to run change detection
+  changes:
+    runs-on: ubuntu-latest
+    # Set job outputs to values from filter step
+    outputs:
+      app: ${{ steps.filter.outputs.app }}
+      docs: ${{ steps.filter.outputs.docs }}
+      ui: ${{ steps.filter.outputs.ui }}
+    steps:
+    # For pull requests it's not necessary to checkout the code
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        # Added all possible filters even if we just use app
+        filters: |
+          app:
+            - 'app/**'
+          docs:
+            - 'doc/**'
+          ui:
+            - 'app/ui-react/**'
+            - 'package.json'
+            - 'yarn.lock'
+            - 'node_modules/**'
+
+
   integration-tests:
+    needs: changes
+    if: ${{ needs.changes.outputs.app == 'true' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -12,11 +40,16 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
       - name: Build Syndesis
         run: tools/bin/syndesis build --backend --dependencies --flash --clean
       - name: Build Docker images
         run: tools/bin/syndesis build -m s2i --image --flash --docker
       - name: Run integration tests
         run: tools/bin/syndesis integration-test --s2i --logging
-
 

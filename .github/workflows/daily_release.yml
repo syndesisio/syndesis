@@ -1,4 +1,4 @@
-name: Syndesis 2.x Daily release
+name: Syndesis daily release
 
 on:
   schedule:
@@ -8,25 +8,39 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - branch: 1.12.x
+            java: 8
+          - branch: 2.x
+            java: 11
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
         with:
-          ref: 2.x
-      - name: Set up JDK 11
+          ref: ${{ matrix.branch }}
+          persist-credentials: false
+      - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: ${{ matrix.java }}
       - name: Cache Maven Repository
         uses: actions/cache@v1
         with:
           path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-      - name: Daily release
+          key: release-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: release-${{ runner.os }}-m2
+      - name: Daily release of ${{ matrix.branch }}
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           QUAYIO_USER: ${{ secrets.QUAYIO_USER }}
           QUAYIO_PASSWORD: ${{ secrets.QUAYIO_PASSWORD }}
-        run: tools/bin/syndesis release --snapshot-release --git-remote origin --docker-user "${DOCKER_USER}" --docker-password "${DOCKER_PASSWORD}" --quayio-user "${QUAYIO_USER}" --quayio-password "${QUAYIO_PASSWORD}"
+          SYNDESISCI_TOKEN: ${{ secrets.SYNDESISCI_TOKEN }}
+        run: |
+          git config --global user.email admin@syndesis.io
+          git config --global user.name 'Syndesis CI'
+          git config --global 'http.https://github.com/.extraheader' "Authorization: basic $(echo -n x-access-token:${SYNDESISCI_TOKEN}|base64 --wrap=0)"
+          tools/bin/syndesis release --snapshot-release --git-remote origin --docker-user "${DOCKER_USER}" --docker-password "${DOCKER_PASSWORD}" --github-user syndesisci --github-token "${SYNDESISCI_TOKEN}" --quayio-user "${QUAYIO_USER}" --quayio-password "${QUAYIO_PASSWORD}"
