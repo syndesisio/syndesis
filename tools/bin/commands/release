@@ -36,6 +36,8 @@ release::usage() {
     --git-remote              Name of the git remote to push to. If not given, its trying to be pushed
                               to the git remote to which the currently checked out branch is attached to.
                               Works only when on a branch, not when checked out directly.
+    --gpg-keyname             Name of the GPG key to sign with (USER-ID)
+    --gpg-passphrase          Passphrase used to unlock the GPG key
     --log <log-file>          Write full log to <log-file>, only print progress to screen
     --skip-tests              Do not run tests
     --no-strict-checksums     Do not insist on strict checksum policy for downloaded Maven artifacts
@@ -88,15 +90,9 @@ release::run() {
     # Verify that there are no modified file in git repo
     check_git_clean "$topdir"
 
-    # Temporary local repository to guarantee a clean build
-    local local_maven_repo=$(readopt --local-maven-repo)
-    if [ -z "$local_maven_repo" ]; then
-        local_maven_repo=$(mktemp -d 2>/dev/null || mktemp -d -t 'maven_repo')
-        trap "echo 'Removing temp maven repo $local_maven_repo' && rm -rf $local_maven_repo" "EXIT"
-    fi
-
     # Calculate common maven options
-    local maven_opts="$(extract_maven_opts $local_maven_repo)"
+    local maven_opts
+    maven_opts="$(extract_maven_opts "${topdir}")"
 
     # Set pom.xml version to the given release_version
     update_pom_versions "$topdir" "$release_version" "$maven_opts"
@@ -543,26 +539,40 @@ drop_staging_repo() {
 # Helper
 
 extract_maven_opts() {
-    local maven_opts="-Dmaven.repo.local=$1 --batch-mode -V -e"
+    local topdir="$1"
 
-    if [ $(hasflag --quiet -q) ]; then
+    local maven_opts
+    maven_opts="--no-transfer-progress --batch-mode -V -e"
+
+    if [ "$(hasflag --quiet -q)" ]; then
         maven_opts="$maven_opts -q"
     fi
 
-    local settings_xml=$(readopt --settings-xml --settings)
+    local settings_xml
+    settings_xml=$(readopt --settings-xml --settings)
     if [ -n "${settings_xml}" ]; then
         maven_opts="$maven_opts -s $settings_xml"
     fi
 
-    if [ $(hasflag --skip-tests) ]; then
+    if [ "$(hasflag --skip-tests)" ]; then
         maven_opts="$maven_opts -DskipTests -DskipITs"
     fi
 
-    if [ ! $(hasflag --no-strict-checksums) ]; then
+    if [ ! "$(hasflag --no-strict-checksums)" ]; then
         maven_opts="$maven_opts -C"
     fi
 
-    echo $maven_opts
+    local gpg_keyname
+    gpg_keyname=$(readopt --gpg-keyname)
+
+    local gpg_passphrase
+    gpg_passphrase=$(readopt --gpg-passphrase)
+
+    if [ -n "${gpg_keyname}" ] && [ -n "${gpg_passphrase}" ]; then
+        maven_opts+=" -Dgpg.keyname=${gpg_keyname} -Dgpg.passphrase=${gpg_passphrase}"
+    fi
+
+    echo "${maven_opts}"
 }
 
 git_commit() {
