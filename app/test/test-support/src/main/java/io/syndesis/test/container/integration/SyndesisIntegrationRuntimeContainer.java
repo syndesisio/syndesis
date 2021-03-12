@@ -345,7 +345,7 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
         }
 
         private static String getDebugJvmArguments() {
-            return String.format("-Drun.jvmArguments=\"-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=%s\"", SyndesisTestEnvironment.getDebugPort());
+            return String.format("-Dspring-boot.run.jvmArguments=\"-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=%s\"", SyndesisTestEnvironment.getDebugPort());
         }
     }
 
