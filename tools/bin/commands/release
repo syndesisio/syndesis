@@ -291,7 +291,7 @@ publish_artifacts() {
     local github_token
     github_token="$(readopt --github-token)"
 
-    if [ -n "${github_username}" ] && [ -n "$(readopt --github-token)" ]; then
+    if [ -z "${github_username}" ] || [ -z "${github_token}" ]; then
       echo "ERROR: missing --github-user and --github-token parameters"
       return 1
     fi
@@ -585,7 +585,7 @@ git_commit() {
     check_error $release_version
 
     if [ ! $(hasflag --dry-run -n) ]; then
-        git ls-files --modified | ${GREP} $pattern | xargs git commit -m "[$release_version]: $message"
+        git ls-files --modified | ${GREP} -E $pattern | xargs git commit -m "[$release_version]: $message"
     fi
 }
 
