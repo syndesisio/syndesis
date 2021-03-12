@@ -279,8 +279,8 @@ publish_artifacts() {
     local github_token
     github_token="$(readopt --github-token)"
 
-    if [ -n "${github_username}" ] && [ -n "$(readopt --github-token)" ]; then
-      echo "ERROR: missing --github-user and --github-token parameters"
+    if [ -z "${github_username}" ] || [ -z "${github_token}" ]; then
+      echo "ERROR: Missing --github-user and --github-token parameters"
       return 1
     fi
 
