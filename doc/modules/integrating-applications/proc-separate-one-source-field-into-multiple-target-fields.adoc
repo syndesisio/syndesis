@@ -25,7 +25,8 @@ source field to each of the target fields that you selected.
 At the top of the *Mapping Details* panel, the data mapper displays 
 *Split* to indicate that execution of the mapping splits the source 
 field value and maps it to multiple target fields. 
-* Under *Targets*, there is an entry for each target field that 
++
+Under *Targets*, there is an entry for each target field that 
 you selected.
 
 . In the *Mapping Details* panel, configure the mapping as follows: 
@@ -60,7 +61,7 @@ the target field and then apply a transformation as described in link:{LinkSynde
 . Optionally, preview the data mapping result: 
 .. Click image:images/integrating-applications/preview-mapping-icon.png[the Show/Hide Preview Mapping icon] to display a text input field on the source
 field and read-only result fields on each target field. 
-.. In the source field's data input field, type a smaple value. Be sure to enter
+.. In the source field's data input field, type a sample value. Be sure to enter
 the separator character between the parts of the field. The mapping result appears in the read-only fields for the target fields.
 +
 If you reorder the target fields or add a transformation to a target field 

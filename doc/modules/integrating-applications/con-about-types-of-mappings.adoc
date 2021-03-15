@@ -1,0 +1,15 @@
+// This module is included in these assemblies:
+// assembly_mapping-data.adoc
+
+[id='about-types-of-mappings_{context}']
+= About types of mappings
+
+The data mapper supports the following general types of mappings:
+
+* *One to one* — Map one source field to one target field.
+
+* *Many to one* — Map multiple source fields to one target field. You specify the delimiter character that the data mapper inserts in the target field between the mapped source fields. The default delimiter is a space.
+
+* *One to many*  — Map one source field to multiple target fields. You specify the delimiter character that is in the source field. AtlasMap maps each delimited value to a target field that you select.
+
+* *For each* — Iteratively map one source collection field to one target collection field.

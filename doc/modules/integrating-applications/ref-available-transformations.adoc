@@ -81,6 +81,12 @@ subsequent word.
 | `value`
 | Return true if a field contains the specified value.
 
+| `CopyTo`
+| any simple type
+| any simple type
+| index*
+| For a collection, copy the value of a string field into a specified field of a target collection without splitting. The index parameter defines the index of the field in the target collection. The default is `0` (the first field in the target collection). 
+
 | `ConvertAreaUnit`
 | number
 | number
@@ -311,6 +317,12 @@ supplied `newString`. The default `newString` is an empty string.
 | In a string, replace the first occurrence of the specified `match` string
 with the specified `newString`. The default `newString` is an empty string.
 
+| `Repeat`
+| any simple type
+| array
+| None
+| When mapping a simple type to an array type, fill multiple array elements with the value taken from the simple type.
+
 | `Round`
 | number
 | number
@@ -330,6 +342,12 @@ plus (+), and equals (=) with a hyphen (-).
 |None
 |Replace each occurrence of whitespace, colon (:), hyphen (-), plus (+),
 and equals (=) with an underscore (_).
+
+| `Split`
+| compound type
+| any
+| None
+| Separate a compound source field into multiple target fields based on a delimiter in the source compound field. The default delimiter is a space.
 
 | `StartsWith`
 | string

@@ -7,8 +7,14 @@
 In the data mapper, after you define a mapping, you can transform
 any field in the mapping. 
 Transforming a data field defines how you want to store the data. 
-For example, you could specify the *Capitalize* transformation to ensure that the first
-letter of a data value is uppercase.
+For example, you could specify the *Capitalize* transformation to ensure that the first letter of a data value is uppercase.
+
+You can apply different transformations to different fields in the same mapping.
+In a one-to-one mapping, which maps one source field to one target field, it does not matter whether you apply the transformation to the source field or the target field. 
+
+In a one-to-many or many-to-one mapping, consider what the target field value needs to be when you specify a transformation. For example, consider a many-to-one mapping that combines source fields for number, street, city, and state into one target address field. If you want the strings in the target address field to all be uppercase, select the target address field and apply the uppercase transformation. If only the state needs to be uppercase, select the source state field, and apply the uppercase transformation.
+
+You can think of a source field transformation as performing pre-processing, while a target field transformation performs post-processing.
 
 *Note:* If you want to add a condition to a mapping, you need to place any transformations within the conditional expression as described in link:{LinkSyndesisIntegrationGuide}#applying-conditions-to-mappings_map[Applying conditions to mappings].
 
