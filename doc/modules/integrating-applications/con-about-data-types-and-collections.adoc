@@ -3,7 +3,9 @@
 // as_mapping-data.adoc
 
 [id='about-data-types-and-collections_{context}']
-= About data types and collections in the data mapper
+= About data types and collections
+
+The data mapper displays source fields and target fields and you define the field-to-field mappings that you need.
 
 In the data mapper, a field can be:
 
@@ -18,7 +20,7 @@ Here are some examples:
 
 * `ID` is a primitive type field (`int`). At runtime, an employee can have only one `ID`. For example, `ID=823`. Therefore, `ID` is a primitive type that is not also a collection. In the data mapper, `ID` is not expandable.
 
-* `email` is a primitive type field (string). At runtime, an employee can have multiple `email` values. For example, `email<0>=aslan@home.com` and `email<1>=aslan@business.com`. 
+* `email` is a primitive type field (string). At runtime, an employee can have multiple `email` values. For example, `email<0>=\aslan@home.com` and `email<1>=\aslan@business.com`. 
 Therefore, `email` is a primitive type that also is a collection. The data mapper uses  image:images/integrating-applications/collection-icon.png[the Collection icon] to indicate that the `email` field is a collection but `email` is not expandable because it is a primitive type (it does not have child fields). 
 
 * `employee` is a complex object field that has several child fields, including `ID` and `email`. At runtime, `employee` is also a collection, because the company has many employees. +

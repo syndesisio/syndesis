@@ -61,9 +61,6 @@ the data mapper inserts each split value into its own element in the target
 collection. For example, if the source field is split into 4 values 
 then the target collection has 4 elements. 
 
-In this release, the *Split* transformation is the only transformation that 
-you can apply to a one-to-many mapping. 
-
 For example, consider a non-collection, `cities` source field that contains:
 
 `Boston Paris Tokyo`

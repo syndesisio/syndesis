@@ -1,0 +1,45 @@
+// This module is included in the following assemblies:
+// as_mapping-data.adoc
+
+[id='supplying-source-values-missing_{context}']
+= Supplying source or target values that are missing
+
+When you map fields, you might find that a source data shape does not provide a value that a target data shape requires, or vice versa. You can choose to supply values that are missing by either defining a property or a constant. 
+
+For example, suppose that a target data shape defines a *Layout* field whose value must be HORIZONTAL or VERTICAL. The source data shape does not provide this field. You can create a constant and then map it to the *Layout* target field.
+
+.Prerequisite
+
+* In the data mapper, the *Mapping Details* panel is open.
+
+.Procedure
+
+To define a constant:
+
+. At the top of the *Source* or *Target* panel, to the right of *Constants*, click *Add* (+).
++
+The *Create Constant* dialog opens.
+. Type the value of the constant.
+. Select a data type. 
+. Click *Save* to create a new field.
+
+To define a property:
+
+. At the top of the *Source* or *Target* panel, to the right of *Properties*, click *Add* (+).
++
+The *Create Property* dialog opens.
+. Type the property name.
++
+Note that at runtime, if there is an environment variable or a Java system property with the same name as the property, it is possible for this default value to be overridden. 
+
+. Type the property’s default value.
+. Select a data type. 
+. From the *Scope* pull-down menu, select one of the options to define the scope of the property:
+* *Current message header* - The message header passed into the Data Mapper step from the previous step.
+* *Camel Exchange Property* - For Camel-specific properties.
+* *Result*  - A message header from any previous step.
++
+IMPORTANT: The Scope option is a Technology Preview feature only. Technology Preview features are not supported with Red Hat production service level agreements (SLAs) and might not be functionally complete. Red Hat does not recommend using them in production.These features provide early access to upcoming product features, enabling customers to test functionality and provide feedback during the development process.For more information about the support scope of Red Hat Technology Preview features, see https://access.redhat.com/support/offerings/techpreview/[Technology Preview Features Support Scope].
+
+. Click *Save* to create a new field.
+
