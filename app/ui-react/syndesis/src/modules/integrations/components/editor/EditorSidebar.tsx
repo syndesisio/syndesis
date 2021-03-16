@@ -121,7 +121,6 @@ export const EditorSidebar: React.FunctionComponent<IEditorSidebarProps & {
             <>
               {UISteps.map((s, idx) => {
                 const isActive = idx === activeIndex;
-                const step = isActive && activeStep ? activeStep : s;
                 const hasAddStep = isAdding && activeIndex === idx + 1;
                 const isAfterActiveAddStep = activeIndex - 1 < idx;
                 const position =
@@ -129,41 +128,29 @@ export const EditorSidebar: React.FunctionComponent<IEditorSidebarProps & {
 
                 return (
                   <React.Fragment key={idx}>
-                    {!isAdding && isActive && !activeStep ? (
-                      makeActiveStep(
-                        position,
-                        expanded,
-                        'Set up this step',
-                        'Choose a step',
-                        undefined
-                      )
-                    ) : (
-                      <IntegrationFlowStepWithOverview
-                        icon={
-                          <EntityIcon
-                            alt={step.name}
-                            entity={step}
-                            width={24}
-                            height={24}
-                          />
-                        }
-                        i18nTitle={`${position}. ${step.name}`}
-                        i18nTooltip={`${position}. ${step.title}`}
-                        active={
-                          isAdding
-                            ? isActive && !isAfterActiveAddStep
-                            : isActive
-                        }
-                        showDetails={expanded}
-                        name={step.name}
-                        action={step.action && step.action.name!}
-                        dataType={
-                          idx === 0
-                            ? getDataShapeText(step.stepKind!, step.outputDataShape)
-                            : getDataShapeText(step.stepKind!, step.inputDataShape)
-                        }
-                      />
-                    )}
+                    <IntegrationFlowStepWithOverview
+                      icon={
+                        <EntityIcon
+                          alt={s.name}
+                          entity={s}
+                          width={24}
+                          height={24}
+                        />
+                      }
+                      i18nTitle={`${position}. ${s.name}`}
+                      i18nTooltip={`${position}. ${s.title}`}
+                      active={
+                        isAdding ? isActive && !isAfterActiveAddStep : isActive
+                      }
+                      showDetails={expanded}
+                      name={s.name}
+                      action={s.action && s.action.name!}
+                      dataType={
+                        idx === 0
+                          ? getDataShapeText(s.stepKind!, s.outputDataShape)
+                          : getDataShapeText(s.stepKind!, s.inputDataShape)
+                      }
+                    />
                     {hasAddStep
                       ? makeActiveStep(
                           position + 1,
