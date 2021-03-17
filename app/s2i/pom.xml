@@ -188,36 +188,6 @@
       </plugin>
       <!-- END: all of the above plugins are not needed and disabled -->
 
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>license-maven-plugin</artifactId>
-        <version>2.0.0</version>
-        <executions>
-          <execution>
-            <!--
-              Collect licenses to place them in the built image, the licenses
-              are placed in target/image/licenses*
-            -->
-            <id>collect-licenses</id>
-            <goals>
-              <goal>aggregate-download-licenses</goal>
-            </goals>
-            <phase>generate-resources</phase>
-            <configuration>
-              <licenseUrlReplacements>
-                <licenseUrlReplacement>
-                  <regexp>http.*://www.apache.org/licenses/LICENSE-2.0.*</regexp>
-                  <replacement>file://${project.basedir}/src/main/license/apache_license_2.0.txt</replacement>
-                </licenseUrlReplacement>
-              </licenseUrlReplacements>
-              <skipAggregateDownloadLicenses>false</skipAggregateDownloadLicenses>
-              <executeOnlyOnRootModule>false</executeOnlyOnRootModule>
-              <licensesOutputDirectory>${image.build.directory}/licenses</licensesOutputDirectory>
-              <licensesOutputFile>${image.build.directory}/licenses.xml</licensesOutputFile>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
 
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
@@ -376,7 +346,7 @@
               contains additional (Red Hat) repositories.
             -->
             <id>cache-artifacts</id>
-            <phase>package</phase>
+            <phase>pre-package</phase>
             <goals>
               <goal>run</goal>
             </goals>
@@ -453,6 +423,42 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.gmavenplus</groupId>
+        <artifactId>gmavenplus-plugin</artifactId>
+        <version>1.12.1</version>
+        <executions>
+          <execution>
+            <id>download-licenses</id>
+            <phase>package</phase>
+            <goals>
+              <goal>execute</goal>
+            </goals>
+            <configuration>
+              <scripts>
+                <script><![CDATA[
+                // invoke license-maven-plugin here
+                ]]></script>
+              </scripts>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>3.0.7</version>
+            <scope>runtime</scope>
+          </dependency>
+          <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-ant</artifactId>
+            <version>3.0.7</version>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <plugin>
