@@ -204,6 +204,7 @@
         </property>
       </activation>
       <modules>
+        <module>transitional</module>
         <module>common</module>
         <module>extension</module>
         <module>integration</module>
@@ -218,6 +219,7 @@
     <profile>
       <id>build-common</id>
       <modules>
+        <module>transitional</module>
         <module>common</module>
       </modules>
     </profile>
@@ -465,16 +467,6 @@
             <executions>
               <execution>
                 <id>default</id>
-                <phase />
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <artifactId>maven-source-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>basepom.default</id>
                 <phase />
               </execution>
             </executions>
@@ -1571,7 +1563,7 @@
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.test</groupId>
+        <groupId>io.syndesis.transitional</groupId>
         <artifactId>junit4-stub</artifactId>
         <version>${project.version}</version>
       </dependency>

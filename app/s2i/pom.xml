@@ -187,7 +187,36 @@
         </executions>
       </plugin>
       <!-- END: all of the above plugins are not needed and disabled -->
-
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>2.0.0</version>
+        <executions>
+          <execution>
+            <!--
+              Collect licenses to place them in the built image, the licenses
+              are placed in target/image/licenses*
+            -->
+            <id>collect-licenses</id>
+            <goals>
+              <goal>aggregate-download-licenses</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <licenseUrlReplacements>
+                <licenseUrlReplacement>
+                  <regexp>http.*://www.apache.org/licenses/LICENSE-2.0.*</regexp>
+                  <replacement>file://${project.basedir}/src/main/license/apache_license_2.0.txt</replacement>
+                </licenseUrlReplacement>
+              </licenseUrlReplacements>
+              <skipAggregateDownloadLicenses>false</skipAggregateDownloadLicenses>
+              <executeOnlyOnRootModule>false</executeOnlyOnRootModule>
+              <licensesOutputDirectory>${image.build.directory}/licenses</licensesOutputDirectory>
+              <licensesOutputFile>${image.build.directory}/licenses.xml</licensesOutputFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>

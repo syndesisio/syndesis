@@ -99,7 +99,6 @@
   <modules>
     <module>test-support</module>
     <module>integration-test</module>
-    <module>junit4-stub</module>
   </modules>
 
   <profiles>

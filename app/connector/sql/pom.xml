@@ -145,7 +145,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.syndesis.test</groupId>
+      <groupId>io.syndesis.transitional</groupId>
       <artifactId>junit4-stub</artifactId>
       <scope>test</scope>
     </dependency>

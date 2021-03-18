@@ -91,7 +91,7 @@
       <artifactId>test-support</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.syndesis.test</groupId>
+      <groupId>io.syndesis.transitional</groupId>
       <artifactId>junit4-stub</artifactId>
     </dependency>
 
@@ -400,7 +400,7 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <configuration>
           <ignoredUnusedDeclaredDependencies>
-            <ignoredUnusedDeclaredDependency>io.syndesis.test:junit4-stub:jar</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>io.syndesis.transitional:junit4-stub:jar</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>
       </plugin>
