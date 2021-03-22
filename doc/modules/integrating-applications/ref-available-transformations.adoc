@@ -83,7 +83,7 @@ subsequent word.
 
 | `CopyTo`
 | any simple type
-| any simple type
+| any simple type in an array
 | index*
 | For a collection, copy the value of a string field into a specified field of a target collection without splitting. The index parameter defines the index of the field in the target collection. The default is `0` (the first field in the target collection). 
 
@@ -319,8 +319,8 @@ with the specified `newString`. The default `newString` is an empty string.
 
 | `Repeat`
 | any simple type
-| array
-| None
+| any simple type in an array
+| `count` * (Required when the source field is _not_ in an array)
 | When mapping a simple type to an array type, fill multiple array elements with the value taken from the simple type.
 
 | `Round`

@@ -29,10 +29,6 @@ To define a property:
 +
 The *Create Property* dialog opens.
 . Type the property name.
-+
-Note that at runtime, if there is an environment variable or a Java system property with the same name as the property, it is possible for this default value to be overridden. 
-
-. Type the property’s default value.
 . Select a data type. 
 . From the *Scope* pull-down menu, select one of the options to define the scope of the property:
 * *Current message header* - The message header passed into the Data Mapper step from the previous step.
