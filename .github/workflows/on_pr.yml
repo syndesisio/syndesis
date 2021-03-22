@@ -1,9 +1,9 @@
 name: On PR
 
-on: 
+on:
   pull_request
 
-jobs:  
+jobs:
   # JOB to run change detection
   changes:
     runs-on: ubuntu-latest
@@ -28,7 +28,7 @@ jobs:
             - 'package.json'
             - 'yarn.lock'
             - 'node_modules/**'
-            
+
 
   full-pr-build:
     needs: changes
@@ -50,51 +50,72 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
+      - name: Display Space Availability
+        run: |
+          echo Space of VM ...
+          df -h
+          echo Space in Docker ...
+          docker system df
+          echo Filesystem Details ...
+          sudo du -sh /home/runner/*
+        continue-on-error: true
       - name: Full Build of Syndesis
         run: tools/bin/syndesis build -d  --batch-mode --all-images --docker
       - name: images
         run: docker images
-      - name: docker save
+      - name: Display Space Availability After Build
         run: |
-          mkdir $IMAGES_DIR
-          IMAGES=`docker images --filter=reference='syndesis/syndesis-*' --format "{{.Repository}}"`
-          for image in $IMAGES
-          do
-            echo Saving $image ..
-            COMPONENT=$(echo $image | cut -d '/' -f 2)
-            echo $image -> $IMAGES_DIR/$COMPONENT.tar
-            docker save $image -o $IMAGES_DIR/$COMPONENT.tar
-          done
-          echo "{ \"run_id\": \"$GITHUB_RUN_ID\", \"github_pr_id\": \"$PR_NUMBER\", \"commit_id\": \"$COMMIT_ID\" }" > $IMAGES_DIR/github-metadata.json
-      - name: env
-        run: env
-      - name: Saving docker images
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.IMAGES_DIR }}
-          path: ${{ env.IMAGES_DIR }}
-          retention-days: 4
+          echo Space of VM ...
+          df -h
+          echo Space in Docker ...
+          docker system df
+          echo Filesystem Details ...
+          sudo du -sh /home/runner/*
+        continue-on-error: true
+#
+# Temporarily disabled whilst sorting out device space issues
+#
+#      - name: docker save
+#        run: |
+#          mkdir $IMAGES_DIR
+#          IMAGES=`docker images --filter=reference='syndesis/syndesis-*' --format "{{.Repository}}"`
+#          for image in $IMAGES
+#          do
+#            echo Saving $image ..
+#            COMPONENT=$(echo $image | cut -d '/' -f 2)
+#            echo $image -> $IMAGES_DIR/$COMPONENT.tar
+#            docker save $image -o $IMAGES_DIR/$COMPONENT.tar
+#          done
+#          echo "{ \"run_id\": \"$GITHUB_RUN_ID\", \"github_pr_id\": \"$PR_NUMBER\", \"commit_id\": \"$COMMIT_ID\" }" > $IMAGES_DIR/github-metadata.json
+#      - name: env
+#        run: env
+#      - name: Saving docker images
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: ${{ env.IMAGES_DIR }}
+#          path: ${{ env.IMAGES_DIR }}
+#          retention-days: 1
       - name: notify quay
         uses: satak/webrequest-action@master
         with:
           url: 'https://ci.fabric8.io/generic-webhook-trigger/invoke?token=syndesis-github-to-quay'
           method: POST
           payload: '{"run_id":"${{ github.run_id }}", "github_pr_id": "${{ env.PR_NUMBER }}", "commit_id": "${{ env.COMMIT_ID }}" }'
-    # Send SonarCloud statistics
-      - name: Set up JDK 11 for SonarCloud
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-      - name: Install Java 11
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        if: ${{env.SONAR_TOKEN != ''}}
-        uses: AdoptOpenJDK/install-jdk@v1
-        with:
-          version: '11'
-      - name: Send analysis to SonarCloud
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        if: ${{env.SONAR_TOKEN != ''}}
-        run: cd app; ./mvnw -q -B -pl '!:extension-bom,!:integration-bom' jacoco:report && ./mvnw -B -N -Dsonar.login=${{secrets.SONAR_TOKEN}} sonar:sonar -Dsonar.sources=$(find . -wholename "*/src/main/java" | sed -z 's/\n/,/g;s/,$/\n/') -Dsonar.java.binaries=$(find . -wholename "*/target/classes" | sed -z 's/\n/,/g;s/,$/\n/')
+#    # Send SonarCloud statistics
+#      - name: Set up JDK 11 for SonarCloud
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: 11
+#      - name: Install Java 11
+#        env:
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#        if: ${{env.SONAR_TOKEN != ''}}
+#        uses: AdoptOpenJDK/install-jdk@v1
+#        with:
+#          version: '11'
+#      - name: Send analysis to SonarCloud
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+#        if: ${{env.SONAR_TOKEN != ''}}
+#        run: cd app; ./mvnw -q -B -pl '!:extension-bom,!:integration-bom' jacoco:report && ./mvnw -B -N -Dsonar.login=${{secrets.SONAR_TOKEN}} sonar:sonar -Dsonar.sources=$(find . -wholename "*/src/main/java" | sed -z 's/\n/,/g;s/,$/\n/') -Dsonar.java.binaries=$(find . -wholename "*/target/classes" | sed -z 's/\n/,/g;s/,$/\n/')
