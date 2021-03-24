@@ -50,6 +50,7 @@
     <fabric8.maven.plugin.version>4.2.0</fabric8.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
     <dep.plugin.deploy.version>2.8.2</dep.plugin.deploy.version>
+    <dep.plugin.javadoc.version>2.10.4</dep.plugin.javadoc.version> <!-- fails with errors otherwise -->
     <clean-maven-plugin-version>2.4.1</clean-maven-plugin-version>
     <frontend-maven-plugin-version>1.8.0</frontend-maven-plugin-version>
     <node.version>v10.15.1</node.version>
@@ -203,6 +204,7 @@
         </property>
       </activation>
       <modules>
+        <module>transitional</module>
         <module>common</module>
         <module>extension</module>
         <module>integration</module>
@@ -217,6 +219,7 @@
     <profile>
       <id>build-common</id>
       <modules>
+        <module>transitional</module>
         <module>common</module>
       </modules>
     </profile>
@@ -317,6 +320,11 @@
     <!-- Release profile -->
     <profile>
       <id>release</id>
+      <properties>
+        <basepom.check.skip-all>true</basepom.check.skip-all>
+        <basepom.it.skip>true</basepom.it.skip>
+        <skipTests>true</skipTests>
+      </properties>
       <build>
         <plugins>
 
@@ -397,6 +405,207 @@
               </execution>
             </executions>
           </plugin>
+
+          <plugin>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-testCompile</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-testResources</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>basepom.default-it</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-test</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>${exec-maven-plugin.version}</version>
+            <executions>
+              <execution>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-failsafe-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>spotbugs</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>com.hubspot.maven.plugins</groupId>
+            <artifactId>dependency-scope-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>com.ning.maven.plugins</groupId>
+            <artifactId>maven-dependency-versions-check-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>com.hubspot.maven.plugins</groupId>
+            <artifactId>dependency-management-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.basepom.maven</groupId>
+            <artifactId>duplicate-finder-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>basepom.default-it</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>create-tool-jar</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>com.mycila</groupId>
+            <artifactId>license-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+
         </plugins>
       </build>
     </profile>
@@ -1060,7 +1269,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.10.4</version>
+          <version>${dep.plugin.javadoc.version}</version>
           <executions>
             <execution>
               <id>attach-javadocs</id>
@@ -1155,13 +1364,13 @@
           <groupId>pl.project13.maven</groupId>
           <artifactId>git-commit-id-plugin</artifactId>
           <version>${dep.plugin.git-commit-id.version}</version>
-          <configuration>
-            <injectAllReactorProjects>true</injectAllReactorProjects>
-            <offline>true</offline>
-            <runOnlyOnce>true</runOnlyOnce>
-            <skipPoms>false</skipPoms>
-            <useNativeGit>true</useNativeGit>
-          </configuration>
+          <inherited>false</inherited>
+          <executions>
+            <execution>
+              <id>basepom.default</id>
+              <phase />
+            </execution>
+          </executions>
         </plugin>
 
         <plugin>
@@ -1173,6 +1382,24 @@
     </pluginManagement>
 
     <plugins>
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <version>${dep.plugin.git-commit-id.version}</version>
+        <inherited>false</inherited>
+        <executions>
+          <execution>
+            <id>set-git-properties</id>
+            <configuration>
+              <injectAllReactorProjects>true</injectAllReactorProjects>
+              <offline>true</offline>
+              <runOnlyOnce>true</runOnlyOnce>
+              <skipPoms>false</skipPoms>
+              <useNativeGit>true</useNativeGit>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
@@ -1336,7 +1563,7 @@
       </dependency>
 
       <dependency>
-        <groupId>io.syndesis.test</groupId>
+        <groupId>io.syndesis.transitional</groupId>
         <artifactId>junit4-stub</artifactId>
         <version>${project.version}</version>
       </dependency>
