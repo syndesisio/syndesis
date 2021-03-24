@@ -59,6 +59,8 @@ require (
 
 replace k8s.io/client-go => k8s.io/client-go v0.18.2 // Required by prometheus-operator
 
+replace golang.org/x/text => golang.org/x/text v0.3.3
+
 replace (
 	github.com/docker/docker => github.com/moby/moby v0.7.3-0.20190826074503-38ab9da00309 // Required by Helm
 	github.com/openshift/api => github.com/openshift/api v0.0.0-20200205145930-e9d93e317dd1
