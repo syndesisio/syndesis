@@ -2,7 +2,7 @@
 //
 :prodname: Syndesis
 
-:syndesis-version: 1.11
+:syndesis-version: 1.12
 
 :location: upstream
 
@@ -10,11 +10,11 @@
 
 :productpkg: red_hat_fuse
 
-:version: 7.8
+:version: 7.9
 
 :cdk-version: 3.11
 
-:3scaleVersion: 2.9
+:3scaleVersion: 2.10
 
 :syndesis-quickstart-url: https://github.com/syndesisio/syndesis-quickstarts/tree/{syndesis-version}
 

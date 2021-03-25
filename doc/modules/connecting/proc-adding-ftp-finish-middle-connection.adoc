@@ -22,13 +22,25 @@ prompting you to choose the finish connection.
 to upload files. 
 
 . On the *Choose an action* page, select *Upload*. 
-. In the *File name expression* field, if you want to upload only one
-particular file, then enter an 
-http://camel.apache.org/simple.html[Apache Camel Simple language]
-expression that resolves to a file name. This is the name of the
-file that the action uploads to the server. 
-You cannot specify a regular expression. To upload more than one
-file, leave this field blank. 
+select one of the upload actions:
+* *UploadNamedFile* - To upload a single file.
+* *UploadFiles* - To upload multiple files.
+
+. . In the *File name expression* field, type an 
+link:{LinkCamelDevGuide}/file[Apache Camel Simple File language] expression that specifies the file or files to download. (Note that you cannot specify a regular expression.)
++
+For example, if you chose the *UploadNamedFile* action, you can specify the name of the file that you want to push to the FTP server. The following example specifies the `mytest.txt` file:
++
+`'fileName=mytest.txt'`
++
+For another example, if you chose a *UploadFiles* action, you can filter for all files that have a specific extension from the FTP server. The following example specifies all files with a `.doc` extension:
++
+`'${file:onlyname.noext}.doc'`
++
+Leave the *File name expression* field blank if you want to upload all files in the FTP directory.
++
+The connection polls (periodically checks) the server for the file or files and uploads them when found.
+
 . In the *FTP directory* field, enter the absolute or relative name of a server directory.
 If the *File name expression* field contains an expression, 
 then the connection stores the specified file in this directory. If the

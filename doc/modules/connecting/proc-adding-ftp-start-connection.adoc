@@ -19,7 +19,10 @@ You created an FTP or SFTP connection.
 . On the *Choose a connection* page, click the 
 FTP or SFTP connection that
 you want to use to poll an FTP or SFTP server. 
-. On the *Choose an action* page, select *Download*.
+. On the *Choose an action* page, select one of the download actions:
+* *DownloadNamedFile* - To download a single file.
+* *DownloadFiles* - To download multiple files.
+
 . In the *File name expression* field, if you are interested in a single file, 
 then enter an 
 http://camel.apache.org/simple.html[Apache Camel Simple language]
@@ -28,6 +31,22 @@ expression. The connection
 polls (periodically checks) the server for this file and downloads it 
 when it is found. Leave this field blank if you want to download more
 than one file.
+
+. In the *File name expression* field, type an 
+link:{LinkCamelDevGuide}/file[Apache Camel Simple File language] expression that specifies the file or files to download. (Note that you cannot specify a regular expression.)
++
+For example, if you chose the *DownloadNamedFile* action, you can specify the name of the file that you want to pull from the FTP server. The following example specifies the `mytest.txt` file:
++
+`'fileName=mytest.txt'`
++
+For another example, if you chose a *DownloadFiles* action, you can filter for all files that have a specific extension from the FTP server. The following example specifies all files with a `.doc` extension:
++
+`'${file:onlyname.noext}.doc'`
++
+Leave the *File name expression* field blank if you want to download all files in the FTP directory.
++
+The connection polls (periodically checks) the server for the file or files and downloads them when found.
+
 . In the *FTP directory* field, enter the absolute or relative path of 
 the server directory to
 poll. The connection watches this directory for any content and downloads
