@@ -9,7 +9,7 @@ in the middle of a flow or to finish a simple integration. To do this,
 add an FTP or SFTP connection to the middle of a flow or as a simple 
 integration's finish connection. 
 
-.Prerequisite
+.Prerequisites
 * You created an FTP or SFTP connection. 
 * You are creating or editing a flow and {prodname} is prompting you
 to add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
@@ -20,26 +20,15 @@ want to add the connection. Skip this step if {prodname} is
 prompting you to choose the finish connection. 
 . Click the FTP or SFTP connection that you want to use
 to upload files. 
-
 . On the *Choose an action* page, select *Upload*. 
-select one of the upload actions:
-* *UploadNamedFile* - To upload a single file.
-* *UploadFiles* - To upload multiple files.
-
-. . In the *File name expression* field, type an 
-link:{LinkCamelDevGuide}/file[Apache Camel Simple File language] expression that specifies the file or files to download. (Note that you cannot specify a regular expression.)
+. In the *File name expression* field, type an 
+link:{LinkCamelDevGuide}/file[Apache Camel File language] expression that specifies the file or files to download. (Note that you cannot specify a regular expression.)
 +
-For example, if you chose the *UploadNamedFile* action, you can specify the name of the file that you want to push to the FTP server. The following example specifies the `mytest.txt` file:
-+
-`'fileName=mytest.txt'`
-+
-For another example, if you chose a *UploadFiles* action, you can filter for all files that have a specific extension from the FTP server. The following example specifies all files with a `.doc` extension:
+For example, you can filter for all files that have a specific extension from the FTP server. The following example specifies all files with a `.doc` extension:
 +
 `'${file:onlyname.noext}.doc'`
 +
 Leave the *File name expression* field blank if you want to upload all files in the FTP directory.
-+
-The connection polls (periodically checks) the server for the file or files and uploads them when found.
 
 . In the *FTP directory* field, enter the absolute or relative name of a server directory.
 If the *File name expression* field contains an expression, 

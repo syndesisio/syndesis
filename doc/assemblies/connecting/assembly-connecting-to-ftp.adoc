@@ -8,17 +8,29 @@
 
 In an integration, you can connect to an FTP or SFTP server to download or 
 upload files. To do this, create an FTP or SFTP connection and then add  
-it to an integration flow. The following topics provide details:
+it to an integration flow. 
+
+For the first step in an integration, you can download files that you define with an Apache Camel File Language expression.
+
+For the middle or last step in an integration, you can download or upload a named file (where the previous step in the integration provides the name of the file). You can also upload files that you define with an Apache Camel File Language expression.
+
+The following topics provide details:
 
 * xref:creating-ftp-connections_{context}[]
 * xref:adding-ftp-start-connection_{context}[]
+* xref:adding-ftp-connection-download-named_{context}[]
 * xref:adding-ftp-finish-middle-connection_{context}[]
+* xref:adding-ftp-connection-upload-named_{context}[]
 
 include::../../modules/connecting/proc-creating-ftp-connections.adoc[leveloffset=+1]
 
 include::../../modules/connecting/proc-adding-ftp-start-connection.adoc[leveloffset=+1]
 
+include::../../modules/connecting/proc-adding-ftp-connection-download-named.adoc[leveloffset=+1]
+
 include::../../modules/connecting/proc-adding-ftp-finish-middle-connection.adoc[leveloffset=+1]
+
+include::../../modules/connecting/proc-adding-ftp-connection-upload-named.adoc[leveloffset=+1]
 
 
 :context: connectors
