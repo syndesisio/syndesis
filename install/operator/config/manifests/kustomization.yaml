@@ -1,0 +1,36 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Adds namespace to all resources.
+#namespace:
+
+# Value of this field is prepended to the
+# names of all resources, e.g. a deployment named
+# "wordpress" becomes "alices-wordpress".
+# Note that it should also match with the prefix (text before '-') of the namespace
+# field above.
+#namePrefix: memcached-operator-
+
+# Labels to add to all resources and selectors.
+commonLabels:
+  app: syndesis
+
+# [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix including the one in
+# crd/kustomization.yaml
+#- ../webhook
+# [CERTMANAGER] To enable cert-manager, uncomment all sections with 'CERTMANAGER'. 'WEBHOOK' components are required.
+#- ../certmanager
+# [PROMETHEUS] To enable prometheus monitor, uncomment all sections with 'PROMETHEUS'.
+#- ../prometheus
+
+resources:
+- ../rbac-role/role.gen.yaml
+- ../rbac-role/cluster-role-kafka.gen.yaml
+- ../rbac-role/cluster-role-olm.gen.yaml
+- ../rbac-role/cluster-role-public-api.gen.yaml
+- ../rbac-grant/grant-kafka.gen.yaml
+- ../rbac-grant/grant-olm.gen.yaml
+- ../rbac-grant/grant-public-api.gen.yaml
+- ../manager
+- ../crd/bases
+- ../samples

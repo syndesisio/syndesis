@@ -79,12 +79,19 @@ func toGroupVersionKindMap(resources []unstructured.Unstructured) map[v1.GroupVe
 	waintingOn := map[v1.GroupVersionKind]bool{}
 	for _, res := range resources {
 		if res.GetKind() == "CustomResourceDefinition" {
-			gvk := v1.GroupVersionKind{
-				Group:   util.MustRenderGoTemplate("{{.spec.group}}", res.Object),
-				Version: util.MustRenderGoTemplate("{{.spec.version}}", res.Object),
-				Kind:    util.MustRenderGoTemplate("{{.spec.names.kind}}", res.Object),
+
+			versions, _, _ := unstructured.NestedSlice(res.UnstructuredContent(), "spec", "versions")
+			for _, version := range versions {
+
+				v, _ := version.(map[string]interface{})
+
+				gvk := v1.GroupVersionKind{
+					Group:   util.MustRenderGoTemplate("{{.spec.group}}", res.Object),
+					Version: v["name"].(string),
+					Kind:    util.MustRenderGoTemplate("{{.spec.names.kind}}", res.Object),
+				}
+				waintingOn[gvk] = true
 			}
-			waintingOn[gvk] = true
 		}
 	}
 	return waintingOn

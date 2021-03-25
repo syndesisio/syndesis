@@ -44,7 +44,6 @@ import (
 
 	"k8s.io/apimachinery/pkg/util/yaml"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
@@ -732,7 +731,7 @@ func getSyndesisEnvVarsFromOpenShiftNamespace(secret *corev1.Secret) (map[string
 	return nil, errors.New("no configuration found")
 }
 
-func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis, syndesisRouteHost string) error {
+func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, syndesis *v1beta2.Syndesis, syndesisRouteHost string) error {
 	if syndesisRouteHost == "" {
 		return nil
 	}
@@ -767,7 +766,7 @@ func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, 
 	return nil
 }
 
-func reconcileConsoleLink(ctx context.Context, syndesis *v1beta1.Syndesis, routeHost string, link *consolev1.ConsoleLink, client client.Client) error {
+func reconcileConsoleLink(ctx context.Context, syndesis *v1beta2.Syndesis, routeHost string, link *consolev1.ConsoleLink, client client.Client) error {
 	updateConsoleLink := false
 	url := "https://" + routeHost
 	if link.Spec.Href != url {
@@ -790,11 +789,11 @@ func reconcileConsoleLink(ctx context.Context, syndesis *v1beta1.Syndesis, route
 	return nil
 }
 
-func consoleLinkName(syndesis *v1beta1.Syndesis) string {
+func consoleLinkName(syndesis *v1beta2.Syndesis) string {
 	return syndesis.Name + "-" + syndesis.Namespace
 }
 
-func createNamespaceDashboardLink(name string, routeHost string, syndesis *v1beta1.Syndesis) *consolev1.ConsoleLink {
+func createNamespaceDashboardLink(name string, routeHost string, syndesis *v1beta2.Syndesis) *consolev1.ConsoleLink {
 	return &consolev1.ConsoleLink{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:   name,

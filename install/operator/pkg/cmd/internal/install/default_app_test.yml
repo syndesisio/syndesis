@@ -5,4 +5,3 @@ metadata:
 spec:
   addons:
 status:
-  apiVersion: v1beta2

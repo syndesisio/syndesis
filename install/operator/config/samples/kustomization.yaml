@@ -1,0 +1,4 @@
+resources:
+- syndesis.io_v1alpha1_syndesis_cr.yaml
+- syndesis.io_v1beta1_syndesis_cr.yaml
+- syndesis.io_v1beta2_syndesis_cr.yaml

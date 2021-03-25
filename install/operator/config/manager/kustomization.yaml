@@ -1,0 +1,3 @@
+resources:
+- manager-install.gen.yaml
+- manager.gen.yaml

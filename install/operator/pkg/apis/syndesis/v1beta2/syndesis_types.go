@@ -43,8 +43,8 @@ type SyndesisSpec struct {
 	// Optional add on features that can be enabled.
 	Addons AddonsSpec `json:"addons,omitempty"`
 
-	// Something
-	ForceMigration bool `json:"forceMigration"`
+	// Force migration of CR to new version
+	ForceMigration bool `json:"forceMigration,omitempty"`
 
 	// Configuration of Affinity and Toleration for infrastructure component pods
 	InfraScheduling SchedulingSpec `json:"infraScheduling,omitempty"`
@@ -319,6 +319,9 @@ const (
 // +kubebuilder:subresource:status
 // +kubebuilder:object:root=true
 // +kubebuilder:storageversion
+// +kubebuilder:resource:path=syndesises,scope=Namespaced
+// +kubebuilder:printcolumn:name="Phase",description="The syndesis phase",type=string,JSONPath=`.status.phase`
+// +kubebuilder:printcolumn:name="Version",description="The syndesis version",type=string,JSONPath=`.status.version`
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type Syndesis struct {
 	metav1.TypeMeta   `json:",inline"`

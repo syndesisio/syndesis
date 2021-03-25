@@ -51,6 +51,7 @@ type SyndesisSpec struct {
 
 // SyndesisStatus defines the observed state of Syndesis
 // +k8s:openapi-gen=false
+
 type SyndesisStatus struct {
 	Phase              SyndesisPhase        `json:"phase,omitempty"`
 	UpgradeAttempts    int32                `json:"upgradeAttempts,omitempty"`
@@ -206,6 +207,9 @@ const (
 // Syndesis is the Schema for the syndeses API
 // +kubebuilder:subresource:status
 // +kubebuilder:object:root=true
+// +kubebuilder:resource:path=syndesises,scope=Namespaced
+// +kubebuilder:printcolumn:name="Phase",description="The syndesis phase",type=string,JSONPath=`.status.phase`
+// +kubebuilder:printcolumn:name="Version",description="The syndesis version",type=string,JSONPath=`.status.version`
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type Syndesis struct {
 	metav1.TypeMeta   `json:",inline"`

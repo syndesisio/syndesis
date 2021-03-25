@@ -170,7 +170,7 @@ func schema_pkg_apis_syndesis_v1beta2_SyndesisSpec(ref common.ReferenceCallback)
 					},
 					"forceMigration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Something",
+							Description: "Force migration of CR to new version",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -188,7 +188,6 @@ func schema_pkg_apis_syndesis_v1beta2_SyndesisSpec(ref common.ReferenceCallback)
 						},
 					},
 				},
-				Required: []string{"forceMigration"},
 			},
 		},
 		Dependencies: []string{

@@ -1,0 +1,4 @@
+bases:
+- ../crd/bases
+- ../rbac-role
+- ../rbac-grant
