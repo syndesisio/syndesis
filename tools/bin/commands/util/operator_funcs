@@ -89,18 +89,17 @@ download_operator_binary() {
     esac
 
     if [[ "${pattern}" != "unknown" ]]; then
-        release_uri="https://api.github.com/repos/syndesisio/syndesis/releases?per_page=1"
+        release_uri="https://api.github.com/repos/syndesisio/syndesis/releases?per_page=4"
         release_tag="$(readopt --tag)"
 
         if [[ -n "$release_tag" ]]; then
             release_uri="https://api.github.com/repos/syndesisio/syndesis/releases/tags/${release_tag}"
         fi
 
+        asset_name="${OPERATOR}-${pattern}"
         url=$(curl -s $release_uri \
-            | grep browser_download_url \
-            | grep ${OPERATOR} \
-            | grep ${pattern} \
-            | cut -d '"' -f 4)
+            | jq -r '.[]| select(.tag_name |startswith("2.")|not)| .assets[] | select(.name |startswith("'"${asset_name}"'"))| .browser_download_url' \
+            | head -1)
 
         #
         # Check curl returns a valid url
@@ -122,7 +121,8 @@ download_operator_binary() {
         fi
 
         if $(check_operator_binary); then
-            echo "operator binary successfully downloaded"
+            _version=$(echo ${url}| cut -d "/" -f 8)
+            echo "syndesis-operator ${_version} binary successfully downloaded"
             return 0
         else
             echo "operator binary download failed. Please try manually downloading from ${url} into $(dirname ${OPERATOR_BINARY})"

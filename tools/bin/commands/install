@@ -48,6 +48,10 @@ install::run() {
     fi
     download_operator_binary || print_error_and_exit "unable to download the operator binary, exit"
 
+    # syndesis-operator install --help prints the version in the --tag description
+    operator_version=$($OPERATOR_BINARY install --help|grep '\-\-tag'|cut -d "\"" -f 2)
+    echo "Syndesis version: ${operator_version}"
+
     local prep_only="false"
     if [[ $(hasflag -s --setup) ]]; then
         echo "Installing Syndesis CRD"

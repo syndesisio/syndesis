@@ -81,6 +81,10 @@ crc::run() {
 
     if [ $(hasflag --install) ]; then
 
+        # syndesis-operator install --help prints the version in the --tag description
+        operator_version=$($OPERATOR_BINARY install --help|grep '\-\-tag'|cut -d "\"" -f 2)
+        echo "Syndesis version: ${operator_version}"
+
         # Switch to the proper context
         local profile=$(readopt --profile)
         if [ -n "${profile}" ]; then
