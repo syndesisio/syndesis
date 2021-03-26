@@ -9,7 +9,7 @@ import {
 } from '@syndesis/models';
 import { key } from '@syndesis/utils';
 import { saveAs } from 'file-saver';
-import produce from 'immer';
+import produce, { setAutoFreeze } from 'immer';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
@@ -29,6 +29,8 @@ import {
   setStepInFlow,
   throwStandardError,
 } from './helpers';
+
+setAutoFreeze(false);
 
 export const useIntegrationHelpers = () => {
   const apiContext = React.useContext(ApiContext);
