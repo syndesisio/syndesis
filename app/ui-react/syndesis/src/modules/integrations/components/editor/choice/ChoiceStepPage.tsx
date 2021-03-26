@@ -65,7 +65,11 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
               <WithRouteData<IChoiceStepRouteParams, IChoiceStepRouteState>>
                 {(params, state, { history }) => {
                   const positionAsNumber = parseInt(params.position, 10);
-                  const dataShape = getOutputDataShapeFromPreviousStep(state.integration, params.flowId, positionAsNumber);
+                  const dataShape = getOutputDataShapeFromPreviousStep(
+                    state.integration,
+                    params.flowId,
+                    positionAsNumber
+                  );
                   const step = state.step;
                   // parse the configured properties
                   const configuration = createChoiceConfiguration(
@@ -88,8 +92,14 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                     routingScheme: configuration.routingScheme,
                     useDefaultFlow: configuration.defaultFlowEnabled,
                   };
-                  const hasConfiguration = (values: IChoiceFormConfiguration) => {
-                    return values.flowConditions.some(option => (option.condition! || option.path! || option.value!).length > 0);
+                  const hasConfiguration = (
+                    values: IChoiceFormConfiguration
+                  ) => {
+                    return values.flowConditions.some(
+                      option =>
+                        (option.condition! || option.path! || option.value!)
+                          .length > 0
+                    );
                   };
                   const onUpdatedIntegration = async (
                     values: IChoiceFormConfiguration
@@ -115,11 +125,9 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                     };
                     const flowCollection = values.flowConditions.map(
                       flowCondition => {
-                        // Create a flow for new conditions or grab the
-                        // existing flow if we're working with an existing
-                        // configuration.  Ensure that if there's a flow
+                        // Create a flow for new conditions. Ensure that if there's a flow
                         // ID set and we can't find one, create a new one
-                        const flow =
+                        const newFlow =
                           typeof flowCondition.flowId === 'undefined'
                             ? createConditionalFlow(
                                 NEW_CONDITIONAL_FLOW_NAME,
@@ -129,11 +137,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                                 data,
                                 updatedStep
                               )
-                            : getFlow(
-                                state.updatedIntegration || state.integration,
-                                flowCondition.flowId
-                              ) ||
-                              createConditionalFlow(
+                            : createConditionalFlow(
                                 NEW_CONDITIONAL_FLOW_NAME,
                                 getFlowDescription(flowCondition),
                                 FlowKind.CONDITIONAL,
@@ -142,12 +146,11 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                                 updatedStep,
                                 flowCondition.flowId
                               )!;
-                        // update the description
-                        flow.description = getFlowDescription(flowCondition);
+
                         return {
                           condition: flowCondition.condition,
-                          flow,
-                          flowId: flow.id,
+                          flow: newFlow,
+                          flowId: newFlow.id,
                           op: flowCondition.op,
                           path: flowCondition.path,
                           value: flowCondition.value,
@@ -219,7 +222,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                         {
                           ...state,
                           step: stepWithUpdatedDescriptor,
-                          updatedIntegration: reconciledIntegration
+                          updatedIntegration: reconciledIntegration,
                         } as IChoiceStepRouteState
                       )
                     );
@@ -249,7 +252,12 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                         })}
                         content={
                           <WithFilterOptions dataShape={dataShape}>
-                            {({ data: options, error: optionsError, errorMessage: optionsErrorMessage, hasData: hasOptions }) => (
+                            {({
+                              data: options,
+                              error: optionsError,
+                              errorMessage: optionsErrorMessage,
+                              hasData: hasOptions,
+                            }) => (
                               <WithLoader
                                 error={optionsError}
                                 loading={!hasOptions}
@@ -268,9 +276,17 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                                     onUpdatedIntegration={onUpdatedIntegration}
                                     stepId={step.id!}
                                   >
-                                    {({ fields, isValid, submitForm, values }) => (
+                                    {({
+                                      fields,
+                                      isValid,
+                                      submitForm,
+                                      values,
+                                    }) => (
                                       <ChoicePageCard
-                                        backHref={this.props.backHref(params, state)}
+                                        backHref={this.props.backHref(
+                                          params,
+                                          state
+                                        )}
                                         header={
                                           <ChoiceCardHeader
                                             i18nConditions={'Conditions'}
@@ -278,11 +294,13 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                                         }
                                         i18nBack={'Choose Action'}
                                         i18nDone={'Next'}
-                                        isBackAllowed={!hasConfiguration(values)}
+                                        isBackAllowed={
+                                          !hasConfiguration(values)
+                                        }
                                         isValid={isValid}
                                         submitForm={submitForm}
                                       >
-                                          {fields}
+                                        {fields}
                                       </ChoicePageCard>
                                     )}
                                   </WithChoiceConfigurationForm>
