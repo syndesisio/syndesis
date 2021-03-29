@@ -23,30 +23,65 @@ import java.util.List;
 
 import io.syndesis.connector.sql.common.DatabaseContainers.Database;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(DatabaseContainers.class)
 @Database("postgres:11.11")
 public class PostgreSqlMetaDataITCase {
 
+    @BeforeEach
+    public void createTestTable(final JdbcDatabaseContainer<?> postgresql) throws SQLException {
+        try (Connection connection = postgresql.createConnection("")) {
+            try (Statement stmt = connection.createStatement()) {
+                final String createTable = "CREATE TABLE UUID_TABLE (uuid UUID)";
+                stmt.executeUpdate(createTable);
+            }
+        }
+    }
+
+    @AfterEach
+    public void dropTestTable(final JdbcDatabaseContainer<?> postgresql) throws SQLException {
+        try (Connection connection = postgresql.createConnection("")) {
+            try (Statement stmt = connection.createStatement()) {
+                final String createTable = "DROP TABLE UUID_TABLE";
+                stmt.executeUpdate(createTable);
+            }
+        }
+    }
+
+    @ExtendWith(DatabaseContainers.class)
     @TestTemplate
     public void shouldCreateMetadataForPostgreSqlSpecificDataTypes(final JdbcDatabaseContainer<?> postgresql) throws SQLException {
         try (Connection connection = postgresql.createConnection("")) {
-            try (Statement stmt = connection.createStatement()) {
-                final String createTable = "CREATE TABLE TEST (uuid UUID)";
-                stmt.executeUpdate(createTable);
-            }
-
-            final SqlStatementParser parser = new SqlStatementParser(connection, "INSERT INTO TEST VALUES (:#uuid)");
+            final SqlStatementParser parser = new SqlStatementParser(connection, "INSERT INTO UUID_TABLE VALUES (:#uuid)");
             final SqlStatementMetaData info = parser.parse();
             final List<SqlParam> inParams = info.getInParams();
 
             final DbMetaDataHelper helper = new DbMetaDataHelper(connection);
-            final List<SqlParam> paramList = helper.getJDBCInfoByColumnOrder(null, null, "TEST", inParams);
+            final List<SqlParam> paramList = helper.getJDBCInfoByColumnOrder(null, null, "UUID_TABLE", inParams);
+
+            assertThat(paramList).hasSize(1);
+
+            final SqlParam sqlParam = paramList.get(0);
+            assertThat(sqlParam.getJdbcType()).isEqualTo(JDBCType.VARCHAR);
+        }
+    }
+
+    @ExtendWith(DatabaseContainers.class)
+    @TestTemplate
+    public void shouldCreateMetadataForSelectPostgreSqlSpecificDataTypes(final JdbcDatabaseContainer<?> postgresql) throws SQLException {
+        try (Connection connection = postgresql.createConnection("")) {
+            final SqlStatementParser parser = new SqlStatementParser(connection, "SELECT * FROM UUID_TABLE");
+            final SqlStatementMetaData info = parser.parse();
+            final List<SqlParam> outParams = info.getOutParams();
+
+            final DbMetaDataHelper helper = new DbMetaDataHelper(connection);
+            final List<SqlParam> paramList = helper.getJDBCInfoByColumnOrder(null, null, "UUID_TABLE", outParams);
 
             assertThat(paramList).hasSize(1);
 

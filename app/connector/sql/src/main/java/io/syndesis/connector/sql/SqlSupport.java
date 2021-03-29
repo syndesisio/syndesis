@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.syndesis.connector.sql.common.DbMetaDataHelper;
+import io.syndesis.connector.sql.common.JDBCTypeHelper;
 import io.syndesis.connector.sql.common.stored.ColumnMode;
 import io.syndesis.connector.sql.common.stored.StoredProcedureColumn;
 import io.syndesis.connector.sql.common.stored.StoredProcedureMetadata;
@@ -59,7 +60,9 @@ public final class SqlSupport {
                         final StoredProcedureColumn column = new StoredProcedureColumn();
                         column.setName(columnSet.getString("COLUMN_NAME"));
                         column.setMode(mode);
-                        column.setJdbcType(JDBCType.valueOf(columnSet.getInt("DATA_TYPE")));
+
+                        final JDBCType jdbcType = JDBCTypeHelper.determineJDBCType(columnSet);
+                        column.setJdbcType(jdbcType);
                         columnList.add(column);
                     }
                 }
