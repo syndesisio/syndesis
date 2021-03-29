@@ -22,15 +22,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.syndesis.connector.sql.db.Db;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public final class DbMetaDataHelper {
 
@@ -161,7 +161,8 @@ public final class DbMetaDataHelper {
             if (metaData.getColumnCount()>0){
                 for (int i=1; i<=metaData.getColumnCount(); i++) {
                     SqlParam param = new SqlParam(metaData.getColumnName(i));
-                    param.setJdbcType(JDBCType.valueOf(metaData.getColumnType(i)));
+                    final JDBCType type = JDBCTypeHelper.determineJDBCType(metaData, i);
+                    param.setJdbcType(type);
                     paramList.add(param);
                 }
             }
@@ -192,7 +193,7 @@ public final class DbMetaDataHelper {
             // this issue was reported in https://issues.jboss.org/browse/ENTESB-12159
             // against Oracle 12.1
             String name = resultSet.getString("COLUMN_NAME");
-            JDBCType type = determineJDBCType(resultSet);
+            JDBCType type = JDBCTypeHelper.determineJDBCType(resultSet);
             String columnDefString = resultSet.getString("COLUMN_DEF");
             String autoIncString = resultSet.getString("IS_AUTOINCREMENT");
 
@@ -206,26 +207,6 @@ public final class DbMetaDataHelper {
             list.add(columnMetaData);
         }
         return list;
-    }
-
-    private static JDBCType determineJDBCType(final ResultSet resultSet) throws SQLException {
-        final int dataType = resultSet.getInt("DATA_TYPE");
-        if (dataType == Types.OTHER) {
-            return determineOtherJDBCType(resultSet);
-        }
-
-        return JDBCType.valueOf(dataType);
-    }
-
-    private static JDBCType determineOtherJDBCType(ResultSet resultSet) throws SQLException {
-        final String typeName = resultSet.getString("TYPE_NAME");
-
-        if ("uuid".equalsIgnoreCase(typeName)) {
-            // treat UUID column type as VARCHAR
-            return JDBCType.VARCHAR;
-        }
-
-        return JDBCType.OTHER;
     }
 
 }
