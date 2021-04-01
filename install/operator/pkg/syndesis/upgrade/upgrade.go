@@ -37,7 +37,6 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	k8serr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/dynamic"
@@ -280,7 +279,7 @@ func (s step) apiClient() kubernetes.Interface {
 }
 
 type scaleTracker interface {
-	obj() runtime.Object
+	obj() client.Object
 	hasScaled() bool
 }
 
@@ -294,7 +293,7 @@ func newDeploymentTracker() scaleTracker {
 	}
 }
 
-func (d *deploymentTracker) obj() runtime.Object {
+func (d *deploymentTracker) obj() client.Object {
 	return &d.deployment
 }
 
@@ -316,7 +315,7 @@ func newDeploymentConfigTracker() scaleTracker {
 	}
 }
 
-func (d *deploymentConfigTracker) obj() runtime.Object {
+func (d *deploymentConfigTracker) obj() client.Object {
 	return &d.deployment
 }
 

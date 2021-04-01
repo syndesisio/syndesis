@@ -22,7 +22,6 @@ import (
 	olmapiv1 "github.com/operator-framework/api/pkg/operators/v1"
 	olmapiv1alpha1 "github.com/operator-framework/api/pkg/operators/v1alpha1"
 	olmpkgsvr "github.com/operator-framework/operator-lifecycle-manager/pkg/package-server/apis/operators/v1"
-	opmktv1 "github.com/operator-framework/operator-marketplace/pkg/apis/operators/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
@@ -67,7 +66,6 @@ func (ck *ClientTools) RuntimeClient() (c client.Client, err error) {
 		// AddToScheme is deprecated in the OS api but schemeBuilder is still private
 		// whereas operator-marketplace has SchemeBuilder as public.
 		//
-		opmktv1.SchemeBuilder.AddToScheme(s)
 		olmapiv1alpha1.SchemeBuilder.AddToScheme(s)
 		olmapiv1.SchemeBuilder.AddToScheme(s)
 		olmpkgsvr.SchemeBuilder.AddToScheme(s)

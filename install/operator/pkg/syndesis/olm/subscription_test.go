@@ -22,7 +22,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/blang/semver"
+	semver "github.com/blang/semver/v4"
 	osappsv1 "github.com/openshift/api/apps/v1"
 	"github.com/operator-framework/api/pkg/lib/version"
 	olmapiv1 "github.com/operator-framework/api/pkg/operators/v1"

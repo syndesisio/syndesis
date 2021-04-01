@@ -459,9 +459,7 @@ func installSyndesisRoute(ctx context.Context, cl client.Client, syndesis *v1bet
 
 	// Let's try to get the route from OpenShift to check the host field
 	var key client.ObjectKey
-	if key, err = client.ObjectKeyFromObject(route); err != nil {
-		return nil, err
-	}
+	key = client.ObjectKeyFromObject(route)
 	err = cl.Get(ctx, key, route)
 	if err != nil {
 		return nil, err

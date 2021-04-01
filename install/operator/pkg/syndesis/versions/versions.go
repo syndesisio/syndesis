@@ -25,7 +25,7 @@ import (
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 
-	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	"github.com/go-logr/logr"
 
