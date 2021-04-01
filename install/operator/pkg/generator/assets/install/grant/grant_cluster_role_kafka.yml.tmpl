@@ -1,6 +1,8 @@
 #
-# Must be a ClusterRoleBinding as the user
-# wants to list kafaks across namespaces
+# Must be a ClusterRoleBinding as the kafka services must
+# be acquired from across namespaces. Provides the OPERATOR
+# service account with the necessary permissions to in turn
+# grant those same permissions to the OPERAND service accounts.
 #
 # Note.
 # A RoleBinding binding to a ClusterRole will only
@@ -9,16 +11,16 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: syndesis-server-{{ .Namespace }}-kafka
+  name: syndesis-operator-{{ .Namespace }}-kafka
   labels:
     app: syndesis
     syndesis.io/app: syndesis
-    syndesis.io/type: infrastructure
-    syndesis.io/component: syndesis-server
 subjects:
 - kind: ServiceAccount
-  name: syndesis-server
-  namespace: {{ .Namespace }}
+  name: syndesis-operator
+  namespace: {{.Namespace}}
+- kind: User
+  name: {{.User}}
 roleRef:
   kind: ClusterRole
   name: syndesis-server-kafka

@@ -49,6 +49,7 @@ func TestManifest_Generate(t *testing.T) {
 		config:     conf,
 		path:       dir,
 		crd:        &crd{},
+		croles:     &croles{},
 		annotation: &annotation{config: conf},
 		csv:        &csv{config: conf, image: "operator", tag: "latest"},
 		docker:     &docker{config: conf},
@@ -58,6 +59,7 @@ func TestManifest_Generate(t *testing.T) {
 	assert.DirExists(t, filepath.Join(dir, m.config.Version, "manifests"))
 	assert.FileExists(t, filepath.Join(dir, m.config.Version, "manifests", "syndesis.crd.yaml"))
 	assert.FileExists(t, filepath.Join(dir, m.config.Version, "manifests", "syndesis.clusterserviceversion.yaml"))
+	assert.FileExists(t, filepath.Join(dir, m.config.Version, "manifests", "syndesis.clusterroles.yaml"))
 	assert.DirExists(t, filepath.Join(dir, m.config.Version, "metadata"))
 	assert.FileExists(t, filepath.Join(dir, m.config.Version, "metadata", "annotations.yaml"))
 

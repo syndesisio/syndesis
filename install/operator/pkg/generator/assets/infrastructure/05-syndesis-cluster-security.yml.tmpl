@@ -1,0 +1,63 @@
+#
+# Bindings will be applied by the operator (syndesis-operator account)
+# to allow the operand service accounts these privileges. This occurs
+# during the install of the operands.
+#
+# In order for this to succeed, the operator's service account must have
+# the same privileges hence it is bound to the requisite cluster roles
+# during the "grant" command or given the privileges by the CSV during
+# the OLM install.
+#
+
+#
+# Must be a ClusterRoleBinding as the syndesis-server service account
+# wants to list kafaks across namespaces
+#
+# Note.
+# A RoleBinding binding to a ClusterRole will only
+# allow the permissions at the namespace-scope level
+#
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRoleBinding
+  metadata:
+    name: syndesis-server-{{.OpenShiftProject}}-kafka
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-server
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-server
+    namespace: {{.OpenShiftProject}}
+  roleRef:
+    kind: ClusterRole
+    name: syndesis-server-kafka
+    apiGroup: rbac.authorization.k8s.io
+
+#
+# Must be a ClusterRoleBinding as the syndesis-public-oauthproxy
+# service account has to review tokens of the user and this has to
+# occur at the cluster-scope level.
+#
+# Note.
+# A RoleBinding binding to a ClusterRole will only
+# allow the permissions at the namespace-scope level
+#
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRoleBinding
+  metadata:
+    name: syndesis-public-authproxy-{{.OpenShiftProject}}-auth-delegator
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-public-oauthproxy
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-public-oauthproxy
+    namespace: {{.OpenShiftProject}}
+  roleRef:
+    kind: ClusterRole
+    name: syndesis-auth-delegator
+    apiGroup: rbac.authorization.k8s.io
