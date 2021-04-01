@@ -115,7 +115,7 @@ func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *v1beta2.S
 	target.Status.ForceUpgrade = false
 
 	rtClient, _ := a.clientTools.RuntimeClient()
-	err = rtClient.Update(ctx, target)
+	err = rtClient.Status().Update(ctx, target)
 	time.Sleep(3 * time.Second)
 	return
 }
@@ -127,7 +127,7 @@ func (a *upgradeAction) setPhaseToRun(ctx context.Context, syndesis *v1beta2.Syn
 	target.Status.Description = "Perform the first install run after syndesis resource was upgraded"
 
 	rtClient, _ := a.clientTools.RuntimeClient()
-	err = rtClient.Update(ctx, target)
+	err = rtClient.Status().Update(ctx, target)
 	time.Sleep(3 * time.Second)
 	return
 }
@@ -143,7 +143,7 @@ func (a *upgradeAction) setPhaseToFailureBackoff(ctx context.Context, syndesis *
 	target.Status.UpgradeAttempts = target.Status.UpgradeAttempts + 1
 
 	rtClient, _ := a.clientTools.RuntimeClient()
-	err = rtClient.Update(ctx, target)
+	err = rtClient.Status().Update(ctx, target)
 	time.Sleep(3 * time.Second)
 	return
 }

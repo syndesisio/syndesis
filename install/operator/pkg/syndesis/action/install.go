@@ -308,7 +308,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis)
 		target.Status.Phase = v1beta2.SyndesisPhaseStarting
 		target.Status.Reason = v1beta2.SyndesisStatusReasonMissing
 		target.Status.Description = ""
-		_, _, err := util.CreateOrUpdate(ctx, rtClient, target, "kind", "apiVersion")
+		err := rtClient.Status().Update(ctx, target)
 		if err != nil {
 			return err
 		}
@@ -319,7 +319,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis)
 		target.Status.Phase = v1beta2.SyndesisPhasePostUpgradeRunSucceed
 		target.Status.Reason = v1beta2.SyndesisStatusReasonMissing
 		target.Status.Description = ""
-		_, _, err := util.CreateOrUpdate(ctx, rtClient, target, "kind", "apiVersion")
+		err := rtClient.Status().Update(ctx, target)
 		if err != nil {
 			return err
 		}
