@@ -204,14 +204,15 @@ const (
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// Syndesis is the Schema for the syndeses API
+// Syndesis is the Schema for the Syndeses API
 // +kubebuilder:subresource:status
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:path=syndesises,scope=Namespaced
 // +kubebuilder:printcolumn:name="Phase",description="The syndesis phase",type=string,JSONPath=`.status.phase`
 // +kubebuilder:printcolumn:name="Version",description="The syndesis version",type=string,JSONPath=`.status.version`
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-// +operator-sdk:csv:customresourcedefinitions:resources={{ServiceAccount,v1,syndesis-operator},{ClusterRole,rbac.authorization.k8s.io/v1,syndesis-server-kafka},{ClusterRole,rbac.authorization.k8s.io/v1,syndesis-auth-delegator},{ClusterRole,rbac.authorization.k8s.io/v1,syndesis-operator-cluster-role-bindings},{ClusterRole,rbac.authorization.k8s.io/v1,syndesis-operator},{Role,rbac.authorization.k8s.io/v1,syndesis-operator},{Deployment,apps/v1,syndesis-operator},{Secret,v1,syndesis-global-config},{Subscription,operators.coreos.com/v1alpha1,jaeger-product}}
+// +operator-sdk:csv:customresourcedefinitions:displayName="Syndesis"
+// +operator-sdk:csv:customresourcedefinitions:resources={{ServiceAccount,v1},{ClusterRole,rbac.authorization.k8s.io/v1},{Role,rbac.authorization.k8s.io/v1},{Deployment,apps/v1},{Secret,v1},{Subscription,operators.coreos.com/v1alpha1}}
 type Syndesis struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

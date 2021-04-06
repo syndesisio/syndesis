@@ -29,7 +29,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Syndesis is the Schema for the syndeses API
+        description: Syndesis is the Schema for the Syndeses API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -362,7 +362,7 @@ spec:
     name: v1beta1
     schema:
       openAPIV3Schema:
-        description: Syndesis is the Schema for the syndeses API
+        description: Syndesis is the Schema for the Syndeses API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -1993,7 +1993,7 @@ spec:
     name: v1beta2
     schema:
       openAPIV3Schema:
-        description: Syndesis is the Schema for the syndeses API
+        description: Syndesis is the Schema for the Syndeses API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation

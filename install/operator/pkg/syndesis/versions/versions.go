@@ -28,7 +28,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	"github.com/go-logr/logr"
-
+	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/types"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -75,9 +75,6 @@ func ApiMigrator(ctx context.Context, c client.Client, n string) (r SyndesisApiM
 			},
 		},
 	}
-	if err := c.List(ctx, list, options); err != nil {
-		return nil, err
-	}
 
 	api := syndesisApi{
 		client:           c,
@@ -93,6 +90,16 @@ func ApiMigrator(ctx context.Context, c client.Client, n string) (r SyndesisApiM
 		v1alpha1: &v1alpha1.Syndesis{
 			TypeMeta: metav1.TypeMeta{Kind: "Syndesis", APIVersion: "syndesis.io/v1alpha1"},
 		},
+	}
+
+	if err := c.List(ctx, list, options); err != nil {
+		if meta.IsNoMatchError(err) {
+			// Returns api but with empty list
+			return api, nil
+		}
+		return nil, err
+	} else {
+		api.unstructuredApis = list
 	}
 
 	v1alpha1s := []*v1alpha1.Syndesis{}
@@ -198,6 +205,11 @@ func ApiMigrator(ctx context.Context, c client.Client, n string) (r SyndesisApiM
 }
 
 func (api syndesisApi) Migrate() (err error) {
+	if len(api.unstructuredApis.Items) == 0 {
+		// Nothing to do
+		return nil
+	}
+
 	if api.v1alpha1 != nil {
 		if err = api.v1alpha1ToV1beta2(); err != nil {
 			return err

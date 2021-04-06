@@ -89,7 +89,7 @@ func schema_pkg_apis_syndesis_v1beta2_Syndesis(ref common.ReferenceCallback) com
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Syndesis is the Schema for the syndeses API",
+				Description: "Syndesis is the Schema for the Syndeses API",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
