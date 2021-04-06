@@ -22,22 +22,58 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class LabelsTest {
 
     @Test
-    public void testValid() {
+    public void testValidValues() {
         assertThat(Labels.isValid("abcdefghijklmnopqrstyvwxyz0123456789")).isTrue();
         assertThat(Labels.isValid("012345678901234567890123456789012345678901234567890123456789123")).isTrue();
     }
 
     @Test
-    public void testInvalid() {
-        assertThat(Labels.isValid("-abcdefghijklmnopqrstyvwxyz0123456789")).isFalse();
-        assertThat(Labels.isValid("abcdefghijklmnopqrstyvwxyz0123456789-")).isFalse();
-        assertThat(Labels.isValid("01234567890123456789012345678901234567890123456789012345678912345")).isFalse();
+    public void testValidateValues() {
+        assertThat(Labels.validate("abcdefghijklmnopqrstyvwxyz0123456789"))
+            .isEqualTo("abcdefghijklmnopqrstyvwxyz0123456789");
+        assertThat(Labels.validate("012345678901234567890123456789012345678901234567890123456789123"))
+            .isEqualTo("012345678901234567890123456789012345678901234567890123456789123");
     }
 
     @Test
-    public void testValidateGeneratedKeys() {
+    public void testInvalidValues() {
+        assertThat(Labels.isValid("-abcdefghijklmnopqrstyvwxyz0123456789")).isFalse();
+        assertThat(Labels.isValid("abcdefghijklmnopqrstyvwxyz0123456789-")).isFalse();
+        assertThat(Labels.isValid("01234567890123456789012345678901234567890123456789012345678912345")).isFalse();
+        assertThat(Labels.isValid("syndesis.io/value")).isFalse();
+    }
+
+    @Test
+    public void testValidateValueGeneratedKeys() {
         for (int i = 0; i < 1000; i++) {
             assertThat(Labels.isValid(KeyGenerator.createKey())).isTrue();
         }
+    }
+
+    @Test
+    public void testValidKeys() {
+        assertThat(Labels.isValidKey("key")).isTrue();
+        assertThat(Labels.isValidKey("my-service.io/key")).isTrue();
+        assertThat(Labels.isValidKey("syndesis.io-key")).isTrue();
+    }
+
+    @Test
+    public void testValidateKeys() {
+        assertThat(Labels.validateKey("key")).isEqualTo("key");
+        assertThat(Labels.validateKey("my-service.io/key")).isEqualTo("my-service.io/key");
+        assertThat(Labels.validateKey("syndesis.io-key")).isEqualTo("syndesis.io-key");
+    }
+
+    @Test
+    public void testInvalidKeys() {
+        assertThat(Labels.isValidKey("01234567890123456789012345678901234567890123456789012345" +
+            "67891234501234567890123456789012345678901234567890123456789012345678912345012345678" +
+            "90123456789012345678901234567890123456789012345678912345012345678901234567890123456" +
+            "78901234567890123456789012345678912345012345678901234567890123456789012345678901234" +
+            "56789012345678912345")).isFalse();
+        assertThat(Labels.isValidKey("%wrong!")).isFalse();
+        assertThat(Labels.isValidKey("syndesis.io/key")).isFalse();
+        assertThat(Labels.isValidKey("k8s.io/key")).isFalse();
+        assertThat(Labels.isValidKey("kubernetes.io/key")).isFalse();
     }
 }

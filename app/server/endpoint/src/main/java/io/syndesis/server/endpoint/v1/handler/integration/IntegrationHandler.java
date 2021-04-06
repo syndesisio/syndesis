@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
+import io.syndesis.common.util.Labels;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -98,8 +99,17 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         final Integration updatedIntegration = new Integration.Builder().createFrom(encryptedIntegration)
             .createdAt(System.currentTimeMillis()).build();
 
+        validateLabels(updatedIntegration);
+
         // Create the the integration.
         return getDataManager().create(updatedIntegration);
+    }
+
+    private static void validateLabels(Integration integration){
+        integration.getLabels().forEach((k, v) -> {
+            Labels.validateKey(k);
+            Labels.validate(v);
+        });
     }
 
     @Override
