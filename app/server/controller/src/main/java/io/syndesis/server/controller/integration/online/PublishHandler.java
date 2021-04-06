@@ -15,17 +15,6 @@
  */
 package io.syndesis.server.controller.integration.online;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentError;
@@ -45,6 +34,11 @@ import io.syndesis.server.openshift.OpenShiftService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.util.*;
 
 @Qualifier("s2i")
 @Component()
@@ -149,6 +143,7 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
             .addSecretEntry("application.properties", propsToString(applicationProperties));
 
         integration.getConfiguredProperties().forEach(deploymentDataBuilder::addProperty);
+        integration.getLabels().forEach((k, v) -> deploymentDataBuilder.addLabel(Labels.validateKey(k), Labels.validate(v)));
 
         DeploymentData data = deploymentDataBuilder.build();
 
