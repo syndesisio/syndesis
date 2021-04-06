@@ -8,3 +8,4 @@ spec:
     addons:
         ops:
             enabled: "true"
+status: {}

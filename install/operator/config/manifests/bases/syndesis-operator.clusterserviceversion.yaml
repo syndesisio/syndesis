@@ -21,6 +21,34 @@ spec:
       displayName: Syndesis
       kind: Syndesis
       name: syndesises.syndesis.io
+      resources:
+      - kind: Subscription
+        name: jaeger-product
+        version: operators.coreos.com/v1alpha1
+      - kind: ClusterRole
+        name: syndesis-auth-delegator
+        version: rbac.authorization.k8s.io/v1
+      - kind: Secret
+        name: syndesis-global-config
+        version: v1
+      - kind: ClusterRole
+        name: syndesis-operator
+        version: rbac.authorization.k8s.io/v1
+      - kind: Deployment
+        name: syndesis-operator
+        version: apps/v1
+      - kind: Role
+        name: syndesis-operator
+        version: rbac.authorization.k8s.io/v1
+      - kind: ServiceAccount
+        name: syndesis-operator
+        version: v1
+      - kind: ClusterRole
+        name: syndesis-operator-cluster-role-bindings
+        version: rbac.authorization.k8s.io/v1
+      - kind: ClusterRole
+        name: syndesis-server-kafka
+        version: rbac.authorization.k8s.io/v1
       version: v1beta2
   description: |
     ### Syndesis operator

@@ -12,3 +12,4 @@ spec:
       enabled: false
     todo:
       enabled: false
+status: {}

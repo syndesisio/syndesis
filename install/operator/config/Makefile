@@ -232,8 +232,7 @@ bundle: generate-crds kustomize
 			--kustomize-dir $(MANIFESTS) $(BUNDLE_METADATA_OPTS)
 	@rm -f $(BUNDLE_DIR)/manifests/*clusterrolebinding.yaml
 	@mv bundle.Dockerfile $(BUNDLE_DIR)/Dockerfile && \
-		sed -i 's/bundle\///g' $(BUNDLE_DIR)/Dockerfile && \
-		sed -i '/COPY tests\/scorecard/d' $(BUNDLE_DIR)/Dockerfile
+		sed -i 's/bundle\///g' $(BUNDLE_DIR)/Dockerfile
 	@operator-sdk bundle validate $(BUNDLE_DIR)
 
 # Build the bundle image.
