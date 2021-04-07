@@ -220,17 +220,25 @@ bundle: generate-crds kustomize
 	@$(MAKE) $(MK_OPTIONS) -C $(ROLE) init
 	@$(MAKE) $(MK_OPTIONS) -C $(GRANT) init
 	@$(MAKE) $(MK_OPTIONS) -C $(MANAGER) init
+# (Re)-generate the manifests directory
 	@operator-sdk generate kustomize manifests \
 		--apis-dir $(PKG)/apis \
 		--input-dir $(MANIFESTS) \
 		--output-dir $(MANIFESTS)
+# Updates the icon in the csv
 	@sed -i 's/base64data:.*/base64data: $(CSV_ICON)/' $(MANIFESTS)/bases/syndesis-operator.clusterserviceversion.yaml
+# Sets the operator image to the preferred image:tag
 	@cd $(MANIFESTS) && $(KUSTOMIZE) edit set image $(DEFAULT_IMAGE)=$(IMAGE):$(TAG)
+# Generates the bundle complete with manifests
 	@$(KUSTOMIZE) build $(KOPTIONS) $(MANIFESTS) | \
 		operator-sdk generate bundle \
 			-q --overwrite --version $(VERSION) \
 			--kustomize-dir $(MANIFESTS) $(BUNDLE_METADATA_OPTS)
+# Remove unserved CRDs from owned section
+	@sed -i '/- kind: Syndesis/,/version: v1beta1/d' $(BUNDLE_DIR)/$(MANIFESTS)/*.clusterserviceversion.yaml
+# Removes any clusterrolebindings necessary for clusterroles to be added but not required for the manifests
 	@rm -f $(BUNDLE_DIR)/manifests/*clusterrolebinding.yaml
+# Moves the docker file into the bundle directory
 	@mv bundle.Dockerfile $(BUNDLE_DIR)/Dockerfile && \
 		sed -i 's/bundle\///g' $(BUNDLE_DIR)/Dockerfile
 	@operator-sdk bundle validate $(BUNDLE_DIR)
