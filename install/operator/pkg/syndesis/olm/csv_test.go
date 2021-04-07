@@ -122,7 +122,7 @@ func Test_csv_loadRolesFromTemplate(t *testing.T) {
 		{
 			"operator-role",
 			"./install/role.yml.tmpl",
-			46,
+			47,
 		},
 		{
 			"olm-roles",
