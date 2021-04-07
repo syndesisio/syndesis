@@ -149,7 +149,6 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
             .addSecretEntry("application.properties", propsToString(applicationProperties));
 
         integration.getConfiguredProperties().forEach((k, v) -> deploymentDataBuilder.addProperty(k, v));
-        integration.getLabels().forEach((k, v) -> deploymentDataBuilder.addLabel(Labels.validateKey(k), Labels.validate(v)));
 
         DeploymentData data = deploymentDataBuilder.build();
 
