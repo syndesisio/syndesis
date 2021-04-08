@@ -19,17 +19,21 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Holds information on the diff change between two records on the database.
+ * Holds information on the changes between two records on the database.
  */
 public class AuditRecord {
 
-    private String type;
-    private String name;
-    private Long timestamp;
-    private String user;
-    private List<AuditEvent> events;
+    private final List<AuditEvent> events;
 
-    public AuditRecord(String type, String name, Long timestamp, String user, List<AuditEvent> events) {
+    private final String name;
+
+    private final Long timestamp;
+
+    private final String type;
+
+    private final String user;
+
+    public AuditRecord(final String type, final String name, final Long timestamp, final String user, final List<AuditEvent> events) {
         this.type = type;
         this.name = name;
         this.timestamp = timestamp;
@@ -37,8 +41,29 @@ public class AuditRecord {
         this.events = events;
     }
 
-    public String type() {
-        return type;
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof AuditRecord)) {
+            return false;
+        }
+        final AuditRecord that = (AuditRecord) o;
+        return Objects.equals(type, that.type) &&
+            Objects.equals(name, that.name) &&
+            Objects.equals(timestamp, that.timestamp) &&
+            Objects.equals(user, that.user) &&
+            Objects.equals(events, that.events);
+    }
+
+    public List<AuditEvent> events() {
+        return events;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, name, timestamp, user, events);
     }
 
     public String name() {
@@ -49,32 +74,11 @@ public class AuditRecord {
         return timestamp;
     }
 
+    public String type() {
+        return type;
+    }
+
     public String user() {
         return user;
-    }
-
-    public List<AuditEvent> events() {
-        return events;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof AuditRecord)) {
-            return false;
-        }
-        AuditRecord that = (AuditRecord) o;
-        return Objects.equals(type, that.type) &&
-                   Objects.equals(name, that.name) &&
-                   Objects.equals(timestamp, that.timestamp) &&
-                   Objects.equals(user, that.user) &&
-                   Objects.equals(events, that.events);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(type, name, timestamp, user, events);
     }
 }

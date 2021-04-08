@@ -19,28 +19,19 @@ import java.util.Objects;
 
 public class AuditEvent {
 
-    private String type;
-    private String property;
-    private String previous;
-    private String current;
+    private final String current;
 
-    public AuditEvent(String type, String property, String previous, String current) {
+    private final String previous;
+
+    private final String property;
+
+    private final String type;
+
+    public AuditEvent(final String type, final String property, final String previous, final String current) {
         this.type = type;
         this.property = property;
         this.previous = previous;
         this.current = current;
-    }
-
-    public String type() {
-        return type;
-    }
-
-    public String property() {
-        return property;
-    }
-
-    public String previous() {
-        return previous;
     }
 
     public String current() {
@@ -48,18 +39,18 @@ public class AuditEvent {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
         if (!(o instanceof AuditEvent)) {
             return false;
         }
-        AuditEvent that = (AuditEvent) o;
+        final AuditEvent that = (AuditEvent) o;
         return Objects.equals(type, that.type) &&
-                   Objects.equals(property, that.property) &&
-                   Objects.equals(previous, that.previous) &&
-                   Objects.equals(current, that.current);
+            Objects.equals(property, that.property) &&
+            Objects.equals(previous, that.previous) &&
+            Objects.equals(current, that.current);
     }
 
     @Override
@@ -67,13 +58,25 @@ public class AuditEvent {
         return Objects.hash(type, property, previous, current);
     }
 
+    public String previous() {
+        return previous;
+    }
+
+    public String property() {
+        return property;
+    }
+
     @Override
     public String toString() {
         return "AuditEvent{" +
-                   "type='" + type + '\'' +
-                   ", property='" + property + '\'' +
-                   ", previous='" + previous + '\'' +
-                   ", current='" + current + '\'' +
-                   '}';
+            "type='" + type + '\'' +
+            ", property='" + property + '\'' +
+            ", previous='" + previous + '\'' +
+            ", current='" + current + '\'' +
+            '}';
+    }
+
+    public String type() {
+        return type;
     }
 }

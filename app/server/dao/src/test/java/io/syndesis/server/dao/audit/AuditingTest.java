@@ -15,30 +15,33 @@
  */
 package io.syndesis.server.dao.audit;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class AuditingTest {
 
-	Long testTime = 123456789l;
-	String username = "username";
-	Auditing auditing = new Auditing(() -> testTime, () -> username);
+    Long testTime = 123456789l;
+
+    String username = "username";
+
+    Auditing auditing = new Auditing(() -> testTime, () -> username);
 
     @Test
     public void shouldAuditConnectionNameChanges() {
-        Connection old = new Connection.Builder()
-                             .name("Old name")
-                             .build();
+        final Connection old = new Connection.Builder()
+            .name("Old name")
+            .build();
 
-        Connection changed = new Connection.Builder()
-                                 .name("New name")
-                                 .build();
+        final Connection changed = new Connection.Builder()
+            .name("New name")
+            .build();
 
-        AuditRecord record = auditing.create(old, changed).get();
+        final AuditRecord record = auditing.create(old, changed).get();
 
         assertThat(record.type()).isEqualTo("Connection");
         assertThat(record.name()).isEqualTo("New name");
@@ -49,26 +52,31 @@ public class AuditingTest {
     }
 
     @Test
-    public void shouldNotGenerateRecordsForSameConnections() {
-        Connection same = new Connection.Builder()
-                              .name("Same name")
-                              .build();
+    public void shouldAuditConnectionPropertyAdditionChanges() {
+        final Connection old = new Connection.Builder()
+            .build();
 
-        assertThat(auditing.create(same, same)).isEmpty();
+        final Connection changed = new Connection.Builder()
+            .putConfiguredProperty("accessKey", "OEIUFLKJHFLKJH")
+            .build();
+
+        final AuditRecord record = auditing.create(old, changed).get();
+
+        assertThat(record.events()).containsOnly(new AuditEvent("change", "configuredProperties.accessKey",
+            null, "OEIUFLKJHFLKJH"));
     }
-
 
     @Test
     public void shouldAuditConnectionPropertyChanges() {
-        Connection old = new Connection.Builder()
-                             .putConfiguredProperty("accessKey", "AKJFNWEUGALASJ")
-                             .build();
+        final Connection old = new Connection.Builder()
+            .putConfiguredProperty("accessKey", "AKJFNWEUGALASJ")
+            .build();
 
-        Connection changed = new Connection.Builder()
-                                 .putConfiguredProperty("accessKey", "OEIUFLKJHFLKJH")
-                                 .build();
+        final Connection changed = new Connection.Builder()
+            .putConfiguredProperty("accessKey", "OEIUFLKJHFLKJH")
+            .build();
 
-        AuditRecord record = auditing.create(old, changed).get();
+        final AuditRecord record = auditing.create(old, changed).get();
 
         assertThat(record.type()).isEqualTo("Connection");
         assertThat(record.timestamp()).isEqualTo(testTime);
@@ -79,55 +87,48 @@ public class AuditingTest {
     }
 
     @Test
+    public void shouldAuditConnectionPropertyRemovalChanges() {
+        final Connection old = new Connection.Builder()
+            .putConfiguredProperty("accessKey", "OEIUFLKJHFLKJH")
+            .build();
+
+        final Connection changed = new Connection.Builder()
+            .build();
+
+        final AuditRecord record = auditing.create(old, changed).get();
+
+        assertThat(record.events()).containsOnly(new AuditEvent("change", "configuredProperties.accessKey",
+            "OEIUFLKJHFLKJH", null));
+    }
+
+    @Test
     public void shouldAuditSecretConnectionPropertyChanges() {
         final String secretKey = "secretKey";
-        Connection old = new Connection.Builder()
-                             .connector(new Connector.Builder()
-                                            .putProperty(secretKey,
-                                                new ConfigurationProperty.Builder()
-                                                    .secret(true)
-                                                    .build())
-                                            .build()
-                             )
-                             .putConfiguredProperty(secretKey, "12345")
-                             .build();
+        final Connection old = new Connection.Builder()
+            .connector(new Connector.Builder()
+                .putProperty(secretKey,
+                    new ConfigurationProperty.Builder()
+                        .secret(true)
+                        .build())
+                .build())
+            .putConfiguredProperty(secretKey, "12345")
+            .build();
 
-        Connection changed = new Connection.Builder()
-                                 .putConfiguredProperty(secretKey, "98765")
-                                 .build();
+        final Connection changed = new Connection.Builder()
+            .putConfiguredProperty(secretKey, "98765")
+            .build();
 
-        AuditRecord record = auditing.create(old, changed).get();
+        final AuditRecord record = auditing.create(old, changed).get();
         assertThat(record.events()).containsOnly(new AuditEvent("change", "configuredProperties." + secretKey, null,
             null));
     }
 
     @Test
-    public void shouldAuditConnectionPropertyAdditionChanges() {
-        Connection old = new Connection.Builder()
-                             .build();
+    public void shouldNotGenerateRecordsForSameConnections() {
+        final Connection same = new Connection.Builder()
+            .name("Same name")
+            .build();
 
-        Connection changed = new Connection.Builder()
-                                 .putConfiguredProperty("accessKey", "OEIUFLKJHFLKJH")
-                                 .build();
-
-        AuditRecord record = auditing.create(old, changed).get();
-
-        assertThat(record.events()).containsOnly(new AuditEvent("change", "configuredProperties.accessKey",
-            null, "OEIUFLKJHFLKJH"));
-    }
-
-    @Test
-    public void shouldAuditConnectionPropertyRemovalChanges() {
-        Connection old = new Connection.Builder()
-                                 .putConfiguredProperty("accessKey", "OEIUFLKJHFLKJH")
-                                 .build();
-
-        Connection changed = new Connection.Builder()
-                                 .build();
-
-        AuditRecord record = auditing.create(old, changed).get();
-
-        assertThat(record.events()).containsOnly(new AuditEvent("change", "configuredProperties.accessKey",
-            "OEIUFLKJHFLKJH", null));
+        assertThat(auditing.create(same, same)).isEmpty();
     }
 }
