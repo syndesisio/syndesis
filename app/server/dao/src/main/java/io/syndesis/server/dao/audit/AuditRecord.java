@@ -21,7 +21,7 @@ import java.util.Objects;
 /**
  * Holds information on the changes between two records on the database.
  */
-public class AuditRecord {
+public final class AuditRecord {
 
     private final List<AuditEvent> events;
 

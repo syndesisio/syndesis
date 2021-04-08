@@ -30,10 +30,6 @@ import io.syndesis.common.model.connection.Connector;
 
 public final class Auditing {
 
-    public static final String CHANGE = "change";
-
-    public static final String CONFIGURED_PROPERTIES_PREFIX = "configuredProperties.";
-
     private final Supplier<Long> time;
 
     private final Supplier<String> username;
@@ -55,8 +51,7 @@ public final class Auditing {
 
     private static void addBaseChangesTo(final List<AuditEvent> changes, final WithName old, final WithName current) {
         if (!Objects.equals(old.getName(), current.getName())) {
-            changes.add(new AuditEvent(CHANGE, "name", old.getName(),
-                current.getName()));
+            changes.add(AuditEvent.propertyChanged("name", old.getName(), current.getName()));
         }
     }
 
@@ -74,9 +69,8 @@ public final class Auditing {
 
             // Objects.equals when comparing two null values will return true
             if (!Objects.equals(oldConfiguredValue, currentConfiguredValue)) {
-                changes.add(new AuditEvent(CHANGE, CONFIGURED_PROPERTIES_PREFIX + propertyName,
-                    isSecret ? null : oldConfiguredValue,
-                    isSecret ? null : currentConfiguredValue));
+                changes.add(AuditEvent.propertyChanged("configuredProperties." + propertyName, isSecret ? "**********" : oldConfiguredValue,
+                    isSecret ? "**********" : currentConfiguredValue));
             }
         }
     }

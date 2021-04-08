@@ -17,7 +17,7 @@ package io.syndesis.server.dao.audit;
 
 import java.util.Objects;
 
-public class AuditEvent {
+public final class AuditEvent {
 
     private final String current;
 
@@ -27,7 +27,7 @@ public class AuditEvent {
 
     private final String type;
 
-    public AuditEvent(final String type, final String property, final String previous, final String current) {
+    private AuditEvent(final String type, final String property, final String previous, final String current) {
         this.type = type;
         this.property = property;
         this.previous = previous;
@@ -78,5 +78,9 @@ public class AuditEvent {
 
     public String type() {
         return type;
+    }
+
+    public static AuditEvent propertyChanged(final String propertyName, final String previous, final String current) {
+        return new AuditEvent("change", propertyName, previous, current);
     }
 }

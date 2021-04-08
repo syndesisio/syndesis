@@ -25,9 +25,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AuditingTest {
 
-    Long testTime = 123456789l;
+    static Long testTime = 123456789L;
 
-    String username = "username";
+    static String username = "username";
 
     Auditing auditing = new Auditing(() -> testTime, () -> username);
 
@@ -48,7 +48,7 @@ public class AuditingTest {
         assertThat(record.timestamp()).isEqualTo(testTime);
         assertThat(record.user()).isEqualTo(username);
 
-        assertThat(record.events()).containsOnly(new AuditEvent("change", "name", "Old name", "New name"));
+        assertThat(record.events()).containsOnly(AuditEvent.propertyChanged("name", "Old name", "New name"));
     }
 
     @Test
@@ -62,8 +62,7 @@ public class AuditingTest {
 
         final AuditRecord record = auditing.create(old, changed).get();
 
-        assertThat(record.events()).containsOnly(new AuditEvent("change", "configuredProperties.accessKey",
-            null, "OEIUFLKJHFLKJH"));
+        assertThat(record.events()).containsOnly(AuditEvent.propertyChanged("configuredProperties.accessKey", null, "OEIUFLKJHFLKJH"));
     }
 
     @Test
@@ -82,8 +81,7 @@ public class AuditingTest {
         assertThat(record.timestamp()).isEqualTo(testTime);
         assertThat(record.user()).isEqualTo(username);
 
-        assertThat(record.events()).containsOnly(new AuditEvent("change", "configuredProperties.accessKey",
-            "AKJFNWEUGALASJ", "OEIUFLKJHFLKJH"));
+        assertThat(record.events()).containsOnly(AuditEvent.propertyChanged("configuredProperties.accessKey", "AKJFNWEUGALASJ", "OEIUFLKJHFLKJH"));
     }
 
     @Test
@@ -97,8 +95,7 @@ public class AuditingTest {
 
         final AuditRecord record = auditing.create(old, changed).get();
 
-        assertThat(record.events()).containsOnly(new AuditEvent("change", "configuredProperties.accessKey",
-            "OEIUFLKJHFLKJH", null));
+        assertThat(record.events()).containsOnly(AuditEvent.propertyChanged("configuredProperties.accessKey", "OEIUFLKJHFLKJH", null));
     }
 
     @Test
@@ -119,8 +116,7 @@ public class AuditingTest {
             .build();
 
         final AuditRecord record = auditing.create(old, changed).get();
-        assertThat(record.events()).containsOnly(new AuditEvent("change", "configuredProperties." + secretKey, null,
-            null));
+        assertThat(record.events()).containsOnly(AuditEvent.propertyChanged("configuredProperties." + secretKey, "**********", "**********"));
     }
 
     @Test
