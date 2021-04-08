@@ -24,6 +24,9 @@ TAG ?= $(VERSION:.0=)
 NAMESPACE ?= syndesis
 KUBE_USER ?= developer
 
+CHANNELS := $(VERSION:.0=.x)
+DEFAULT_CHANNEL := $(VERSION:.0=.x)
+PACKAGE := syndesis
 BUNDLE_DIR := bundle
 PKG := ../pkg
 CRD := crd/bases
@@ -147,7 +150,10 @@ endif
 ifneq ($(origin DEFAULT_CHANNEL), undefined)
 BUNDLE_DEFAULT_CHANNEL := --default-channel=$(DEFAULT_CHANNEL)
 endif
-BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
+ifneq ($(origin PACKAGE), undefined)
+BUNDLE_PACKAGE := --package=$(PACKAGE)
+endif
+BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL) $(BUNDLE_PACKAGE)
 
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd:trivialVersions=true"
@@ -226,7 +232,7 @@ bundle: generate-crds kustomize
 		--input-dir $(MANIFESTS) \
 		--output-dir $(MANIFESTS)
 # Updates the icon in the csv
-	@sed -i 's/base64data:.*/base64data: $(CSV_ICON)/' $(MANIFESTS)/bases/syndesis-operator.clusterserviceversion.yaml
+	@sed -i 's/base64data:.*/base64data: $(CSV_ICON)/' $(MANIFESTS)/bases/*.clusterserviceversion.yaml
 # Sets the operator image to the preferred image:tag
 	@cd $(MANIFESTS) && $(KUSTOMIZE) edit set image $(DEFAULT_IMAGE)=$(IMAGE):$(TAG)
 # Generates the bundle complete with manifests

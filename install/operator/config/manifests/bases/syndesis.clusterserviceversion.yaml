@@ -11,7 +11,7 @@ metadata:
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
     repository: https://github.com/syndesisio/syndesis/
     support: Syndesis
-  name: syndesis-operator.vX.Y.Z
+  name: syndesis.vX.Y.Z
   namespace: placeholder
 spec:
   apiservicedefinitions: {}

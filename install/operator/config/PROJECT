@@ -1,6 +1,6 @@
 domain: syndesis.io
 layout: go.kubebuilder.io/v2
-projectName: syndesis-operator
+projectName: syndesis
 repo: github.com/syndesisio/syndesis
 resources:
 - group: syndesis.io
