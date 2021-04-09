@@ -50,7 +50,10 @@ public final class Auditing {
             return Optional.empty();
         }
 
-        return Optional.of(new AuditRecord("Connection", current.getName(), time.get(), username.get(), events));
+        final String id = current.getId().orElse("*");
+        final String name = current.getName();
+
+        return Optional.of(new AuditRecord(id, "Connection", name, time.get(), username.get(), events));
     }
 
     private static void addBaseChangesTo(final List<AuditEvent> changes, final WithName previous, final WithName current) {

@@ -64,7 +64,7 @@ public class AuditingInterceptorTest {
 
     @Test
     public void shouldAuditConnectionUpdates(@Autowired final ConnectionDao dao, @Autowired final AuditingRecorder auditingRecorder) {
-        final Connection current = new Connection.Builder().name("current").build();
+        final Connection current = new Connection.Builder().id("id").name("current").build();
         final Connection previous = new Connection.Builder().name("previous").build();
 
         Mockito.when(dao.update(current)).thenReturn(previous);
@@ -72,6 +72,6 @@ public class AuditingInterceptorTest {
         dao.update(current);
 
         verify(auditingRecorder)
-            .record(new AuditRecord("Connection", "current", 123456789L, "testuser", singletonList(AuditEvent.propertyChanged("name", "previous", "current"))));
+            .record(new AuditRecord("id", "Connection", "current", 123456789L, "testuser", singletonList(AuditEvent.propertyChanged("name", "previous", "current"))));
     }
 }

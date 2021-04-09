@@ -38,11 +38,13 @@ public class AuditingTest {
             .build();
 
         final Connection changed = new Connection.Builder()
+            .id("id")
             .name("New name")
             .build();
 
         final AuditRecord record = auditing.create(old, changed).get();
 
+        assertThat(record.id()).isEqualTo("id");
         assertThat(record.type()).isEqualTo("Connection");
         assertThat(record.name()).isEqualTo("New name");
         assertThat(record.timestamp()).isEqualTo(testTime);

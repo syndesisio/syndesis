@@ -28,6 +28,9 @@ public final class AuditRecord {
     @JsonProperty(index = 6)
     private final List<AuditEvent> events;
 
+    @JsonProperty(index = 1)
+    private final String id;
+
     @JsonProperty(index = 3)
     private final String name;
 
@@ -40,7 +43,8 @@ public final class AuditRecord {
     @JsonProperty(index = 5)
     private final String user;
 
-    public AuditRecord(final String type, final String name, final Long timestamp, final String user, final List<AuditEvent> events) {
+    public AuditRecord(final String id, final String type, final String name, final Long timestamp, final String user, final List<AuditEvent> events) {
+        this.id = id;
         this.type = type;
         this.name = name;
         this.timestamp = timestamp;
@@ -57,7 +61,8 @@ public final class AuditRecord {
             return false;
         }
         final AuditRecord that = (AuditRecord) o;
-        return Objects.equals(type, that.type) &&
+        return Objects.equals(id, that.id) &&
+            Objects.equals(type, that.type) &&
             Objects.equals(name, that.name) &&
             Objects.equals(timestamp, that.timestamp) &&
             Objects.equals(user, that.user) &&
@@ -70,7 +75,11 @@ public final class AuditRecord {
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, name, timestamp, user, events);
+        return Objects.hash(id, type, name, timestamp, user, events);
+    }
+
+    public String id() {
+        return id;
     }
 
     public String name() {
@@ -84,7 +93,8 @@ public final class AuditRecord {
     @Override
     public String toString() {
         return "AuditRecord" +
-            "type='" + type + '\'' +
+            "id='" + id + '\'' +
+            ", type='" + type + '\'' +
             ", name='" + name + '\'' +
             ", timestamp='" + timestamp + '\'' +
             ", user='" + user + '\'' +
