@@ -9,7 +9,7 @@ import {
 } from '@syndesis/models';
 import { key } from '@syndesis/utils';
 import { saveAs } from 'file-saver';
-import produce from 'immer';
+import produce, { freeze, setAutoFreeze } from 'immer';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
@@ -32,6 +32,7 @@ import {
 
 export const useIntegrationHelpers = () => {
   const apiContext = React.useContext(ApiContext);
+  setAutoFreeze(false);
 
   const fetchStepDescriptors = async (steps: Step[]): Promise<Step[]> => {
     const response = await callFetch({
@@ -458,14 +459,16 @@ export const useIntegrationHelpers = () => {
     flowId: string,
     position: number
   ) => {
-    return produce(integration, () => {
-      return removeStepFromFlow(
-        integration,
-        flowId,
-        position,
-        fetchStepDescriptors
-      );
-    });
+    return freeze(
+      produce(integration, () => {
+        return removeStepFromFlow(
+          integration,
+          flowId,
+          position,
+          fetchStepDescriptors
+        );
+      })
+    );
   };
 
   return {
