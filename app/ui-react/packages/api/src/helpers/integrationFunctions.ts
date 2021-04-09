@@ -302,7 +302,8 @@ export function isActionShapeless(descriptor: ActionDescriptor) {
   return (
     inputDataShape &&
     outputDataShape &&
-    inputDataShape.kind && outputDataShape.kind &&
+    inputDataShape.kind &&
+    outputDataShape.kind &&
     (toDataShapeKinds(inputDataShape.kind) === DataShapeKinds.ANY ||
       toDataShapeKinds(outputDataShape.kind) === DataShapeKinds.ANY)
   );
@@ -572,14 +573,14 @@ export function setDescriptorOnAction(
       descriptor.inputDataShape.kind &&
       toDataShapeKinds(descriptor.inputDataShape.kind) !==
         DataShapeKinds.NONE &&
-        !descriptor.inputDataShape.specification);
+      !descriptor.inputDataShape.specification);
   const preserveOutput =
     isUserDefinedDataShape(oldOutputDataShape) ||
     (descriptor.outputDataShape &&
       descriptor.outputDataShape.kind &&
       toDataShapeKinds(descriptor.outputDataShape.kind) !==
         DataShapeKinds.NONE &&
-        !descriptor.outputDataShape.specification);
+      !descriptor.outputDataShape.specification);
   return {
     ...action,
     descriptor: {
