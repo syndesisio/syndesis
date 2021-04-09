@@ -18,19 +18,26 @@ package io.syndesis.server.dao.audit;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Holds information on the changes between two records on the database.
  */
 public final class AuditRecord {
 
+    @JsonProperty(index = 6)
     private final List<AuditEvent> events;
 
+    @JsonProperty(index = 3)
     private final String name;
 
+    @JsonProperty(index = 4)
     private final Long timestamp;
 
+    @JsonProperty(index = 2)
     private final String type;
 
+    @JsonProperty(index = 5)
     private final String user;
 
     public AuditRecord(final String type, final String name, final Long timestamp, final String user, final List<AuditEvent> events) {
@@ -72,6 +79,17 @@ public final class AuditRecord {
 
     public Long timestamp() {
         return timestamp;
+    }
+
+    @Override
+    public String toString() {
+        return "AuditRecord" +
+            "type='" + type + '\'' +
+            ", name='" + name + '\'' +
+            ", timestamp='" + timestamp + '\'' +
+            ", user='" + user + '\'' +
+            ", events='" + events + '\'' +
+            '}';
     }
 
     public String type() {

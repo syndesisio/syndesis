@@ -17,14 +17,20 @@ package io.syndesis.server.dao.audit;
 
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public final class AuditEvent {
 
+    @JsonProperty(index = 4)
     private final String current;
 
+    @JsonProperty(index = 3)
     private final String previous;
 
+    @JsonProperty(index = 2)
     private final String property;
 
+    @JsonProperty(index = 1)
     private final String type;
 
     private AuditEvent(final String type, final String property, final String previous, final String current) {

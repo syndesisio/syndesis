@@ -22,6 +22,8 @@ import java.util.List;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import io.syndesis.server.endpoint.v1.state.ClientSideStateProperties;
 import io.syndesis.server.endpoint.v1.state.StaticEdition;
+import io.syndesis.server.jsondb.dao.audit.AuditingInterceptor;
+
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,6 +136,11 @@ public class Application extends SpringBootServletInitializer {
         factory.register(new ValidatorContextResolver(localValidatorFactoryBean));
 
         return localValidatorFactoryBean;
+    }
+
+    @Bean
+    public AuditingInterceptor auditingInterceptor() {
+        return new AuditingInterceptor();
     }
 
 }

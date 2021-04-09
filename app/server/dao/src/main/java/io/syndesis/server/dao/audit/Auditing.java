@@ -39,8 +39,12 @@ public final class Auditing {
         this.username = username;
     }
 
-    public Optional<AuditRecord> create(final Connection old, final Connection current) {
-        final List<AuditEvent> events = computeEvents(old, current);
+    public Auditing(final Supplier<String> username) {
+        this(System::currentTimeMillis, username);
+    }
+
+    public Optional<AuditRecord> create(final Connection previous, final Connection current) {
+        final List<AuditEvent> events = computeEvents(previous, current);
 
         if (events.isEmpty()) {
             return Optional.empty();
@@ -49,36 +53,36 @@ public final class Auditing {
         return Optional.of(new AuditRecord("Connection", current.getName(), time.get(), username.get(), events));
     }
 
-    private static void addBaseChangesTo(final List<AuditEvent> changes, final WithName old, final WithName current) {
-        if (!Objects.equals(old.getName(), current.getName())) {
-            changes.add(AuditEvent.propertyChanged("name", old.getName(), current.getName()));
+    private static void addBaseChangesTo(final List<AuditEvent> changes, final WithName previous, final WithName current) {
+        if (!Objects.equals(previous.getName(), current.getName())) {
+            changes.add(AuditEvent.propertyChanged("name", previous.getName(), current.getName()));
         }
     }
 
-    private static void addConfiguredPropertiesChanges(final List<AuditEvent> changes, final Connection old, final Connection current) {
-        final Map<String, String> oldConfiguredProperties = old.getConfiguredProperties();
+    private static void addConfiguredPropertiesChanges(final List<AuditEvent> changes, final Connection previous, final Connection current) {
+        final Map<String, String> previousConfiguredProperties = previous.getConfiguredProperties();
         final Map<String, String> currentConfiguredProperties = current.getConfiguredProperties();
 
-        final Set<String> propertyNames = new HashSet<>(oldConfiguredProperties.keySet());
+        final Set<String> propertyNames = new HashSet<>(previousConfiguredProperties.keySet());
         propertyNames.addAll(currentConfiguredProperties.keySet());
 
         for (final String propertyName : propertyNames) {
-            final boolean isSecret = connectorFor(old).map(c -> c.isSecret(propertyName)).orElse(false);
-            final String oldConfiguredValue = oldConfiguredProperties.get(propertyName);
+            final boolean isSecret = connectorFor(previous).map(c -> c.isSecret(propertyName)).orElse(false);
+            final String previousConfiguredValue = previousConfiguredProperties.get(propertyName);
             final String currentConfiguredValue = currentConfiguredProperties.get(propertyName);
 
             // Objects.equals when comparing two null values will return true
-            if (!Objects.equals(oldConfiguredValue, currentConfiguredValue)) {
-                changes.add(AuditEvent.propertyChanged("configuredProperties." + propertyName, isSecret ? "**********" : oldConfiguredValue,
+            if (!Objects.equals(previousConfiguredValue, currentConfiguredValue)) {
+                changes.add(AuditEvent.propertyChanged("configuredProperties." + propertyName, isSecret ? "**********" : previousConfiguredValue,
                     isSecret ? "**********" : currentConfiguredValue));
             }
         }
     }
 
-    private static List<AuditEvent> computeEvents(final Connection old, final Connection current) {
+    private static List<AuditEvent> computeEvents(final Connection previous, final Connection current) {
         final List<AuditEvent> changes = new ArrayList<>();
-        addBaseChangesTo(changes, old, current);
-        addConfiguredPropertiesChanges(changes, old, current);
+        addBaseChangesTo(changes, previous, current);
+        addConfiguredPropertiesChanges(changes, previous, current);
         return changes;
     }
 
