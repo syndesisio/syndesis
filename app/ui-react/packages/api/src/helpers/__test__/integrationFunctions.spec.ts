@@ -5,10 +5,11 @@ import {
   Integration,
   Step,
 } from '@syndesis/models';
-import produce from 'immer';
+import produce, { isDraft } from 'immer';
 import { DataShapeKinds } from '../../constants';
 import {
   getFlow,
+  getSteps,
   hasDataShape,
   isIntegrationApiProvider,
   isPrimaryFlow,
@@ -121,34 +122,7 @@ describe('integration functions', () => {
     expect(isIntegrationApiProvider(integration)).toBeTruthy();
   });
 
-  it(`should remove banana step from the provided integration`, async () => {
-    const customPosition = 1;
-    const fetchStepDescriptors = jest.fn().mockImplementation(() => {
-      return steps;
-    });
-
-    const removeStep = async (
-      integration: Integration,
-      flowId: string,
-      position: number
-    ) => {
-      return produce(integration, () => {
-        return removeStepFromFlow(
-          integration,
-          flowId,
-          position,
-          fetchStepDescriptors
-        );
-      });
-    };
-
-    /**
-     * If step is first or last position,
-     * the step should be deleted and user
-     * redirected to the step select
-     * page for that position.
-     */
-
+  it(`getSteps should return steps from given integration object`, () => {
     const steps: Step[] = [
       {
         connection: { name: 'peach' },
@@ -160,10 +134,6 @@ describe('integration functions', () => {
       },
       {
         connection: { name: 'apple' },
-        id: '1234567',
-      },
-      {
-        connection: { name: 'mango' },
         id: '1234567',
       },
     ];
@@ -181,12 +151,58 @@ describe('integration functions', () => {
       name: 'Tiny Integration',
     };
 
-    const newInt = await removeStep(
-      customIntegration,
-      '-MW_06XdNSe0O_IutbEY',
-      customPosition
-    );
+    const someSteps = getSteps(customIntegration, flows[0].id!);
+    // Expect original length to be the same
+    expect(someSteps).toHaveLength(3);
+    expect(customIntegration.flows![0].steps).toHaveLength(3);
+  });
 
-    expect(newInt!.flows![0].steps).toHaveLength(3);
+  it(`removeStepFromFlow should remove a step from a defined flow`, async () => {
+    const customSteps: Step[] = [
+      {
+        connection: { name: 'peach' },
+        id: '1234567',
+      },
+      {
+        connection: { name: 'banana' },
+        id: '1234567',
+      },
+      {
+        connection: { name: 'mango' },
+        id: '1234567',
+      },
+    ];
+
+    const customFlowId = '-MW_06XdNSe0O_IutbEY';
+
+    const customFlows: Flow[] = [
+      {
+        id: customFlowId,
+        name: 'My Fun Flow',
+        steps: customSteps,
+      },
+    ];
+
+    const customIntegration: Integration = {
+      flows: customFlows,
+      name: 'Tiny Integration',
+    };
+
+    const fetchStepDescriptors = jest.fn().mockImplementation(() => {
+      return customIntegration.flows![0].steps;
+    });
+
+    const newInt = await produce(customIntegration, () => {
+      return removeStepFromFlow(
+        customIntegration,
+        customFlowId,
+        1,
+        fetchStepDescriptors
+      );
+    });
+
+    expect(customIntegration.flows![0].steps).toHaveLength(2);
+    expect(newInt.flows![0].steps).toHaveLength(2);
+    expect(isDraft(newInt)).toBeFalsy();
   });
 });

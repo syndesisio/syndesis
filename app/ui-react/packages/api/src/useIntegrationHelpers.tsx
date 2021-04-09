@@ -30,10 +30,9 @@ import {
   throwStandardError,
 } from './helpers';
 
-setAutoFreeze(false);
-
 export const useIntegrationHelpers = () => {
   const apiContext = React.useContext(ApiContext);
+  setAutoFreeze(false);
 
   const fetchStepDescriptors = async (steps: Step[]): Promise<Step[]> => {
     const response = await callFetch({
