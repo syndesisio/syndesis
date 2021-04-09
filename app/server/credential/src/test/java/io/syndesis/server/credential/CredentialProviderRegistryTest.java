@@ -56,4 +56,26 @@ public class CredentialProviderRegistryTest {
             assertThat(p.getProperties().getAppSecret()).isEqualTo("a-client-secret");
         });
     }
+
+    @Test
+    public void shouldSupportDescriptiveAuthenticationTypes() {
+        // authentication types from OpenAPI are generated in the form of
+        // `type:id`, this is to distinguish different security constraints
+        // of the same type, alas with different IDs
+        final Connector connector = new Connector.Builder()
+            .putProperty("authType", new ConfigurationProperty.Builder()
+                .addTag(Credentials.AUTHENTICATION_TYPE_TAG)
+                .build())
+            .build();
+
+        assertThat(CredentialProviderRegistry.determineProviderFrom(withAuthenticationType(connector, "oauth2"))).isEqualTo("oauth2");
+        assertThat(CredentialProviderRegistry.determineProviderFrom(withAuthenticationType(connector, "oauth2:"))).isEqualTo("oauth2");
+        assertThat(CredentialProviderRegistry.determineProviderFrom(withAuthenticationType(connector, "oauth2:id"))).isEqualTo("oauth2");
+    }
+
+    private static Connector withAuthenticationType(final Connector connector, String type) {
+        return connector.builder()
+            .putOrRemoveConfiguredPropertyTaggedWith(Credentials.AUTHENTICATION_TYPE_TAG, type)
+            .build();
+    }
 }

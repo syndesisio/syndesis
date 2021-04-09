@@ -77,9 +77,11 @@ final class CredentialProviderRegistry implements CredentialProviderLocator {
         }
     }
 
-    private static String determineProviderFrom(final Connector connector) {
+    static String determineProviderFrom(final Connector connector) {
         final Optional<String> authentication = connector.propertyTaggedWith(Credentials.AUTHENTICATION_TYPE_TAG);
 
-        return authentication.orElse(connector.getId().get());
+        return authentication
+            .map(a -> a.replaceFirst(":.*", ""))
+            .orElseGet(() -> connector.getId().get());
     }
 }
