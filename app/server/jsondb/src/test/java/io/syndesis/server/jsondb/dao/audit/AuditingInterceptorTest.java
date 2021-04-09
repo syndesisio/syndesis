@@ -24,7 +24,6 @@ import io.syndesis.server.jsondb.dao.JsonDbDao;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +35,7 @@ import static java.util.Collections.singletonList;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
 
 @ExtendWith(SpringExtension.class)
@@ -63,15 +63,38 @@ public class AuditingInterceptorTest {
     }
 
     @Test
+    public void shouldAuditConnectionCreation(@Autowired final ConnectionDao dao, @Autowired final AuditingRecorder auditingRecorder) {
+        final Connection fresh = new Connection.Builder().id("id").name("fresh").build();
+
+        when(dao.create(fresh)).thenReturn(fresh);
+
+        dao.create(fresh);
+
+        verify(auditingRecorder)
+            .record(new AuditRecord("id", "Connection", "fresh", 123456789L, "testuser", singletonList(AuditEvent.propertySet("name", "fresh"))));
+    }
+
+    @Test
+    public void shouldAuditConnectionSet(@Autowired final ConnectionDao dao, @Autowired final AuditingRecorder auditingRecorder) {
+        final Connection fresh = new Connection.Builder().id("id").name("fresh").build();
+
+        dao.set(fresh);
+
+        verify(auditingRecorder)
+            .record(new AuditRecord("id", "Connection", "fresh", 123456789L, "testuser", singletonList(AuditEvent.propertySet("name", "fresh"))));
+    }
+
+    @Test
     public void shouldAuditConnectionUpdates(@Autowired final ConnectionDao dao, @Autowired final AuditingRecorder auditingRecorder) {
         final Connection current = new Connection.Builder().id("id").name("current").build();
         final Connection previous = new Connection.Builder().name("previous").build();
 
-        Mockito.when(dao.update(current)).thenReturn(previous);
+        when(dao.update(current)).thenReturn(previous);
 
         dao.update(current);
 
         verify(auditingRecorder)
-            .record(new AuditRecord("id", "Connection", "current", 123456789L, "testuser", singletonList(AuditEvent.propertyChanged("name", "previous", "current"))));
+            .record(new AuditRecord("id", "Connection", "current", 123456789L, "testuser",
+                singletonList(AuditEvent.propertyChanged("name", "previous", "current"))));
     }
 }

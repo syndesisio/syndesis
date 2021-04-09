@@ -33,6 +33,10 @@ public final class AuditEvent {
     @JsonProperty(index = 1)
     private final String type;
 
+    private AuditEvent(final String type, final String property, final String value) {
+        this(type, property, null, value);
+    }
+
     private AuditEvent(final String type, final String property, final String previous, final String current) {
         this.type = type;
         this.property = property;
@@ -88,5 +92,9 @@ public final class AuditEvent {
 
     public static AuditEvent propertyChanged(final String propertyName, final String previous, final String current) {
         return new AuditEvent("change", propertyName, previous, current);
+    }
+
+    public static AuditEvent propertySet(final String propertyName, final String value) {
+        return new AuditEvent("set", propertyName, value);
     }
 }

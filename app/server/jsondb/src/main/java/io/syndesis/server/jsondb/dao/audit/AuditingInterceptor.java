@@ -15,11 +15,9 @@
  */
 package io.syndesis.server.jsondb.dao.audit;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import io.syndesis.common.model.connection.Connection;
-import io.syndesis.server.dao.audit.AuditRecord;
 import io.syndesis.server.dao.audit.Auditing;
 import io.syndesis.server.dao.audit.AuditingRecorder;
 import io.syndesis.server.dao.audit.LoggingAuditingRecorder;
@@ -56,12 +54,25 @@ public final class AuditingInterceptor {
             auditingRecorder);
     }
 
-    @AfterReturning(pointcut = "execution(* io.syndesis.server.jsondb.dao.JsonDbDao.update(io.syndesis.common.model.WithId)) && args(current)",
-        returning = "previous")
-    public void updated(final Connection previous, final Connection current) {
-        final Optional<AuditRecord> record = auditing.create(previous, current);
+    @AfterReturning(pointcut = "execution(void io.syndesis.server.jsondb.dao.JsonDbDao.set(io.syndesis.common.model.WithId)) && args(given)")
+    public void set(final Connection given) {
+        record(given);
+    }
 
-        record.ifPresent(r -> recorder.record(r));
+    @AfterReturning(pointcut = "execution(* io.syndesis.server.jsondb.dao.JsonDbDao.update(io.syndesis.common.model.WithId)) && args(given)",
+        returning = "returned")
+    public void updated(final Connection given, final Connection returned) {
+        record(given, returned);
+    }
+
+    private void record(final Connection given) {
+        auditing.create(given)
+            .ifPresent(r -> recorder.record(r));
+    }
+
+    private void record(final Connection given, final Connection returned) {
+        auditing.create(returned, given)
+            .ifPresent(r -> recorder.record(r));
     }
 
     private static String currentUsername() {

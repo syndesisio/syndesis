@@ -43,6 +43,15 @@ public final class Auditing {
         this(System::currentTimeMillis, username);
     }
 
+    public Optional<AuditRecord> create(final Connection created) {
+        final String id = created.getId().orElse("*");
+        final String name = created.getName();
+
+        final List<AuditEvent> events = computeEvents(created);
+
+        return Optional.of(new AuditRecord(id, "Connection", name, time.get(), username.get(), events));
+    }
+
     public Optional<AuditRecord> create(final Connection previous, final Connection current) {
         final List<AuditEvent> events = computeEvents(previous, current);
 
@@ -56,9 +65,34 @@ public final class Auditing {
         return Optional.of(new AuditRecord(id, "Connection", name, time.get(), username.get(), events));
     }
 
+    private List<AuditEvent> computeEvents(final Connection created) {
+        final List<AuditEvent> changes = new ArrayList<>();
+        addBaseChangesTo(changes, created);
+        addConfiguredPropertiesChanges(changes, created);
+
+        return changes;
+    }
+
+    private static void addBaseChangesTo(final List<AuditEvent> changes, final WithName created) {
+        changes.add(AuditEvent.propertySet("name", created.getName()));
+    }
+
     private static void addBaseChangesTo(final List<AuditEvent> changes, final WithName previous, final WithName current) {
         if (!Objects.equals(previous.getName(), current.getName())) {
             changes.add(AuditEvent.propertyChanged("name", previous.getName(), current.getName()));
+        }
+    }
+
+    private static void addConfiguredPropertiesChanges(final List<AuditEvent> changes, final Connection created) {
+        final Map<String, String> configuredProperties = created.getConfiguredProperties();
+
+        for (final Map.Entry<String, String> configuredProperty : configuredProperties.entrySet()) {
+            final String propertyName = configuredProperty.getKey();
+            final String value = configuredProperty.getValue();
+
+            final boolean isSecret = connectorFor(created).map(c -> c.isSecret(propertyName)).orElse(false);
+
+            changes.add(AuditEvent.propertySet("configuredProperties." + propertyName, isSecret ? "**********" : value));
         }
     }
 
