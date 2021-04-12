@@ -23,6 +23,7 @@ IMAGE ?= $(DEFAULT_IMAGE)
 TAG ?= $(VERSION:.0=)
 NAMESPACE ?= syndesis
 KUBE_USER ?= developer
+LEGACY ?= false
 
 CHANNELS := $(VERSION:.0=.x)
 DEFAULT_CHANNEL := $(VERSION:.0=.x)
@@ -49,11 +50,20 @@ endif
 setup: kubectl
 	$(MAKE) $(MK_OPTIONS) -C $(ROLE) init
 	$(MAKE) $(MK_OPTIONS) -C $(GRANT) init
+ifeq ($(LEGACY), true)
+	@cd setup && \
+		$(KUSTOMIZE) edit remove resource ../crd/bases && \
+		$(KUSTOMIZE) edit add resource ../crd/deprecated
+else
+	@cd setup && \
+		$(KUSTOMIZE) edit remove resource ../crd/deprecated && \
+		$(KUSTOMIZE) edit add resource ../crd/bases
+endif
 	#@ Must be invoked by a user with cluster-admin privileges
 ifeq ($(DEBUG), false)
-	kubectl apply -k setup
+	@$(KUSTOMIZE) build $(KOPTIONS) setup | kubectl apply -f -
 else
-	kubectl kustomize setup
+	@$(KUSTOMIZE) build $(KOPTIONS) setup
 endif
 
 #
@@ -65,14 +75,23 @@ setup-jaeger: kubectl
 	$(MAKE) $(MK_OPTIONS) -C jaeger-crd init
 	$(MAKE) $(MK_OPTIONS) -C $(ROLE) init
 	$(MAKE) $(MK_OPTIONS) -C $(GRANT) init
+ifeq ($(LEGACY), true)
+	@cd setup-jaeger && \
+		$(KUSTOMIZE) edit remove resource ../jaeger-crd && \
+		$(KUSTOMIZE) edit add resource ../jaeger-crd/deprecated
+else
+	@cd setup-jaeger && \
+		$(KUSTOMIZE) edit remove resource ../jaeger-crd/deprecated && \
+		$(KUSTOMIZE) edit add resource ../jaeger-crd
+endif
 	#@ *************************** Warning ******************************
 	#@ ** This should only be invoked on a non-OperatorHub environment **
 	#@ ******************************************************************
 	#@ Must be invoked by a user with cluster-admin privileges
 ifeq ($(DEBUG), false)
-	kubectl apply -k setup-jaeger
+	@$(KUSTOMIZE) build $(KOPTIONS) setup-jaeger | kubectl apply -f -
 else
-	kubectl kustomize setup-jaeger
+	@$(KUSTOMIZE) build $(KOPTIONS) setup-jaeger
 endif
 
 #
@@ -82,9 +101,9 @@ operator: kubectl
 	$(MAKE) $(MK_OPTIONS) -C $(MANAGER) init
 	#@ Must be invoked by <user> previously granted permissions using `KUBE_USER=<user> make setup`
 ifeq ($(DEBUG), false)
-	kubectl apply -k operator
+	@$(KUSTOMIZE) build $(KOPTIONS) operator | kubectl apply -f -
 else
-	kubectl kustomize operator
+	@$(KUSTOMIZE) build $(KOPTIONS) operator
 endif
 
 #
@@ -95,9 +114,9 @@ app: kubectl
 	$(MAKE) $(MK_OPTIONS) -C app init
 	#@ Must be invoked by <user> previously granted permissions using `KUBE_USER=<user> make setup`
 ifeq ($(DEBUG), false)
-	kubectl apply -k app
+	@$(KUSTOMIZE) build $(KOPTIONS) app | kubectl apply -f -
 else
-	kubectl kustomize app
+	@$(KUSTOMIZE) build $(KOPTIONS) app
 endif
 
 #
@@ -115,9 +134,9 @@ dev-operator: kubectl
 	#@ Used for development purposes only - allows for a locally compiled operator
 	#@ Must be invoked by <user> previously granted permissions using `KUBE_USER=<user> make setup`
 ifeq ($(DEBUG), false)
-	kubectl apply -k dev/operator
+	@$(KUSTOMIZE) build $(KOPTIONS) dev/operator | kubectl apply -f -
 else
-	kubectl kustomize dev/operator
+	@$(KUSTOMIZE) build $(KOPTIONS) dev/operator
 endif
 
 #
@@ -130,9 +149,9 @@ dev-app: kubectl
 	$(MAKE) $(MK_OPTIONS) -C dev/app init
 	#@ Must be invoked by <user> previously granted permissions using `KUBE_USER=<user> make setup`
 ifeq ($(DEBUG), false)
-	kubectl apply -k dev/app
+	@$(KUSTOMIZE) build $(KOPTIONS) dev/app | kubectl apply -f -
 else
-	kubectl kustomize dev/app
+	@$(KUSTOMIZE) build $(KOPTIONS) dev/app
 endif
 
 #

@@ -1,4 +1,7 @@
-bases:
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
 - ../crd/bases
 - ../rbac-role
 - ../rbac-grant

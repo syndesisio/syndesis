@@ -23,6 +23,7 @@ import (
 	olmapiv1alpha1 "github.com/operator-framework/api/pkg/operators/v1alpha1"
 	olmpkgsvr "github.com/operator-framework/operator-lifecycle-manager/pkg/package-server/apis/operators/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
@@ -35,6 +36,7 @@ import (
 type ClientTools struct {
 	restConfig    *rest.Config
 	runtimeClient *client.Client
+	scheme        *runtime.Scheme
 	dynamicClient dynamic.Interface
 	apiClient     kubernetes.Interface
 	coreV1Client  corev1.CoreV1Interface
@@ -50,26 +52,35 @@ func (ck *ClientTools) RestConfig() (c *rest.Config) {
 	return ck.restConfig
 }
 
-func (ck *ClientTools) RuntimeClient() (c client.Client, err error) {
-	if ck.runtimeClient == nil {
+func (ck *ClientTools) GetScheme() *runtime.Scheme {
+	if ck.scheme == nil {
 		//
 		// Add schemes that the client should be capable of retrieving
 		// scheme.Scheme provides most of the fundamental types
 		// whilst runtime.Scheme is the empty equivalent.
 		//
-		s := scheme.Scheme
+		ck.scheme = scheme.Scheme
 
 		// Openshift types such as DeploymentConfig
-		osappsv1.AddToScheme(s)
+		osappsv1.AddToScheme(ck.scheme)
 
 		//
 		// AddToScheme is deprecated in the OS api but schemeBuilder is still private
 		// whereas operator-marketplace has SchemeBuilder as public.
 		//
-		olmapiv1alpha1.SchemeBuilder.AddToScheme(s)
-		olmapiv1.SchemeBuilder.AddToScheme(s)
-		olmpkgsvr.SchemeBuilder.AddToScheme(s)
-		projectv1.AddToScheme(s)
+		olmapiv1alpha1.SchemeBuilder.AddToScheme(ck.scheme)
+		olmapiv1.SchemeBuilder.AddToScheme(ck.scheme)
+		olmpkgsvr.SchemeBuilder.AddToScheme(ck.scheme)
+		projectv1.AddToScheme(ck.scheme)
+	}
+
+	return ck.scheme
+}
+
+func (ck *ClientTools) RuntimeClient() (c client.Client, err error) {
+	if ck.runtimeClient == nil {
+
+		s := ck.GetScheme()
 
 		// Register
 		options := client.Options{
