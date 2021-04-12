@@ -57,7 +57,7 @@ public class UniquePropertyValidator implements ConstraintValidator<UniqueProper
         @SuppressWarnings("unchecked")
         final Set<String> ids = dataManager.fetchIdsByPropertyValue(modelClass, property, propertyValue);
 
-        final boolean isUnique = ids.isEmpty() || value.getId().map(id -> ids.contains(id)).orElse(false);
+        final boolean isUnique = ids.isEmpty() || value.getId().map(ids::contains).orElse(false);
 
         if (!isUnique) {
             context.disableDefaultConstraintViolation();

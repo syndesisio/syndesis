@@ -47,6 +47,7 @@ import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.ImageStreamTag;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSupportHandler;
@@ -138,7 +139,7 @@ public class SupportUtil {
         ListResult<IntegrationOverview> list = integrationHandler.list(uriInfo);
         list.getItems().stream()
             .filter(integration -> integrationName.equalsIgnoreCase(integration.getName().replace(' ', '-')))
-            .map(integration -> integration.getId())
+            .map(WithResourceId::getId)
             .forEach(
                 integrationId -> {
                     integrationId.ifPresent(id -> {

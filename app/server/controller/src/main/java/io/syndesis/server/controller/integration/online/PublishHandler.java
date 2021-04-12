@@ -148,7 +148,7 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
             .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
             .addSecretEntry("application.properties", propsToString(applicationProperties));
 
-        integration.getConfiguredProperties().forEach((k, v) -> deploymentDataBuilder.addProperty(k, v));
+        integration.getConfiguredProperties().forEach(deploymentDataBuilder::addProperty);
 
         DeploymentData data = deploymentDataBuilder.build();
 

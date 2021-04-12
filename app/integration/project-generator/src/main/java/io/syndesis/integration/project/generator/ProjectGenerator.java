@@ -146,7 +146,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
                 final Optional<Action> maybeAction = step.getAction();
 
-                final boolean isConnectorAction = maybeAction.map(a -> a instanceof ConnectorAction).orElse(Boolean.FALSE);
+                final boolean isConnectorAction = maybeAction.map(ConnectorAction.class::isInstance).orElse(Boolean.FALSE);
                 final boolean usesConnection = step.getConnection().isPresent();
 
                 // Check if a step has the required options

@@ -125,44 +125,44 @@ class XmlSchemaExtractor {
         // initialize handler map
         HANDLER_MAP.put(s -> s instanceof XmlSchemaItemWithRef && ((XmlSchemaItemWithRef<?>) s).isRef(),
                 (x, t, s) -> x.handleItemWithRef((XmlSchemaItemWithRef<?>) t, (XmlSchemaItemWithRef<?>) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaAttribute, (x, t, s) -> x.handleAttribute((XmlSchemaAttribute) t,
+        HANDLER_MAP.put(XmlSchemaAttribute.class::isInstance, (x, t, s) -> x.handleAttribute((XmlSchemaAttribute) t,
                 (XmlSchemaAttribute) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaAttributeGroup, (x, t, s) -> x.handleAttributeGroup((XmlSchemaAttributeGroup) t,
+        HANDLER_MAP.put(XmlSchemaAttributeGroup.class::isInstance, (x, t, s) -> x.handleAttributeGroup((XmlSchemaAttributeGroup) t,
                 (XmlSchemaAttributeGroup) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaElement, (x, t, s) -> x.handleElement((XmlSchemaElement) t,
+        HANDLER_MAP.put(XmlSchemaElement.class::isInstance, (x, t, s) -> x.handleElement((XmlSchemaElement) t,
                 (XmlSchemaElement) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaSimpleType, (x, t, s) -> x.handleSimpleType((XmlSchemaSimpleType) t
+        HANDLER_MAP.put(XmlSchemaSimpleType.class::isInstance, (x, t, s) -> x.handleSimpleType((XmlSchemaSimpleType) t
                 , (XmlSchemaSimpleType) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaSimpleTypeList,
+        HANDLER_MAP.put(XmlSchemaSimpleTypeList.class::isInstance,
                 (x, t, s) -> x.handleSimpleTypeList((XmlSchemaSimpleTypeList) t, (XmlSchemaSimpleTypeList) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaSimpleTypeRestriction,
+        HANDLER_MAP.put(XmlSchemaSimpleTypeRestriction.class::isInstance,
                 (x, t, s) -> x.handleSimpleTypeRestriction((XmlSchemaSimpleTypeRestriction) t,
                         (XmlSchemaSimpleTypeRestriction) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaSimpleTypeUnion,
+        HANDLER_MAP.put(XmlSchemaSimpleTypeUnion.class::isInstance,
                 (x, t, s) -> x.handleSimpleTypeUnion((XmlSchemaSimpleTypeUnion) t, (XmlSchemaSimpleTypeUnion) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaSimpleContentExtension,
+        HANDLER_MAP.put(XmlSchemaSimpleContentExtension.class::isInstance,
                 (x, t, s) -> x.handleSimpleContentExtension((XmlSchemaSimpleContentExtension) t,
                         (XmlSchemaSimpleContentExtension) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaSimpleContentRestriction,
+        HANDLER_MAP.put(XmlSchemaSimpleContentRestriction.class::isInstance,
                 (x, t, s) -> x.handleSimpleContentRestriction((XmlSchemaSimpleContentRestriction) t,
                         (XmlSchemaSimpleContentRestriction) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaComplexType,
+        HANDLER_MAP.put(XmlSchemaComplexType.class::isInstance,
                 (x, t, s) -> x.handleComplexType((XmlSchemaComplexType) t, (XmlSchemaComplexType) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaContentModel,
+        HANDLER_MAP.put(XmlSchemaContentModel.class::isInstance,
                 (x, t, s) -> x.handleContentModel((XmlSchemaContentModel) t, (XmlSchemaContentModel) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaComplexContentExtension,
+        HANDLER_MAP.put(XmlSchemaComplexContentExtension.class::isInstance,
                 (x, t, s) -> x.handleComplexContentExtension((XmlSchemaComplexContentExtension) t,
                         (XmlSchemaComplexContentExtension) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaComplexContentRestriction,
+        HANDLER_MAP.put(XmlSchemaComplexContentRestriction.class::isInstance,
                 (x, t, s) -> x.handleComplexContentRestriction((XmlSchemaComplexContentRestriction) t,
                         (XmlSchemaComplexContentRestriction) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaGroupParticle,
+        HANDLER_MAP.put(XmlSchemaGroupParticle.class::isInstance,
                 (x, t, s) -> x.handleGroupParticle((XmlSchemaGroupParticle) t, (XmlSchemaGroupParticle) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaGroupRef,
+        HANDLER_MAP.put(XmlSchemaGroupRef.class::isInstance,
                 (x, t, s) -> x.handleGroupRef((XmlSchemaGroupRef) t, (XmlSchemaGroupRef) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaGroup,
+        HANDLER_MAP.put(XmlSchemaGroup.class::isInstance,
                 (x, t, s) -> x.handleGroup((XmlSchemaGroup) t, (XmlSchemaGroup) s));
-        HANDLER_MAP.put(s -> s instanceof XmlSchemaAny, (x, t, s) -> {});
+        HANDLER_MAP.put(XmlSchemaAny.class::isInstance, (x, t, s) -> {});
     }
 
     XmlSchemaExtractor(SchemaCollection targetSchemas, SchemaCollection sourceSchemas) {

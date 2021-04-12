@@ -48,7 +48,7 @@ public interface APISummary extends WithName, WithConfigurationProperties, WithC
                         .collect(
                             Collectors.groupingBy(
                                 Function.identity(),
-                                Collectors.reducing(0, (e) -> 1, Integer::sum)
+                                Collectors.reducing(0, e -> 1, Integer::sum)
                             )
                         )
                 )
