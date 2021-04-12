@@ -234,7 +234,7 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
         final List<Integration> integrations = dataManager.fetchAll(Integration.class).getItems();
         final List<IntegrationDeployment> deployments = dataManager.fetchAll(IntegrationDeployment.class).getItems();
         final Set<Integration> deployedIintegrations = deployments.stream()
-            .map(d -> d.getSpec())
+            .map(IntegrationDeployment::getSpec)
             .collect(Collectors.toSet());
         final List<Connection> connections = dataManager.fetchAll(Connection.class).getItems();
         final Collection<Integration> allIntegrations = new ArrayList<>(integrations.size() + deployedIintegrations.size());

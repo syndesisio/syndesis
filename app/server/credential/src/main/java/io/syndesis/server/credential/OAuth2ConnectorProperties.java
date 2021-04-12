@@ -58,7 +58,7 @@ public class OAuth2ConnectorProperties extends ConnectorSettings {
         scope = optionalProperty(connector, Credentials.SCOPE_TAG).orElse(null);
 
         additionalQueryParameters = optionalProperty(connector, Credentials.ADDITIONAL_QUERY_PARAMETERS_TAG)
-            .map(params -> readJsonMap(params))
+            .map(OAuth2ConnectorProperties::readJsonMap)
             .orElse(Collections.emptyMap());
     }
 

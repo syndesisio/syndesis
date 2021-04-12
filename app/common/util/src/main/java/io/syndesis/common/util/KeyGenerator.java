@@ -23,20 +23,18 @@ import java.security.SecureRandom;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.LongSupplier;
 
-import static java.lang.System.currentTimeMillis;
-
 /**
  * Generates lexically sortable unique keys based on:
- *
+ * <p>
  * https://firebase.googleblog.com/2015/02/the-2120-ways-to-ensure-unique_68.html
- *
+ * <p>
  * You can also consider the generated kys to be like UUIDS except:
  * (1) strictly increment from the generating node's point of view
  * (2) loosely increment based on relative machine time when viewed across nodes.
  */
 public final class KeyGenerator {
 
-    static final LongSupplier DEFAULT_CLOCK = () -> currentTimeMillis();
+    static final LongSupplier DEFAULT_CLOCK = System::currentTimeMillis;
 
     static LongSupplier clock = DEFAULT_CLOCK;
 
@@ -91,7 +89,7 @@ public final class KeyGenerator {
         }
         ByteBuffer buffer = ByteBuffer.allocate(8);
         buffer.position(2);
-        buffer.put(decoded, 0 ,6);
+        buffer.put(decoded, 0, 6);
         buffer.flip();
         return buffer.getLong();
     }

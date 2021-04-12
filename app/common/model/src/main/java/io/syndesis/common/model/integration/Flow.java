@@ -92,7 +92,7 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithM
                 .map(Connection::getId),
 
             getSteps().stream()
-                .map(s -> s.getConnectionId()))
+                .map(Step::getConnectionId))
 
             .filter(Optional::isPresent)
             .map(Optional::get)
