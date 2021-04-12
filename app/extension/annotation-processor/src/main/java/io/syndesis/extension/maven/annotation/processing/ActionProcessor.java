@@ -463,7 +463,7 @@ public class ActionProcessor extends AbstractProcessor {
          */
         static String sanitize(String name) {
             return name
-                .replaceAll(SPACE, DASH)
+                .replace(SPACE, DASH)
                 .replaceAll(INVALID_CHARACTER_REGEX, BLANK)
                 .toLowerCase(Locale.US)
                 .chars()

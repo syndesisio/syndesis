@@ -57,8 +57,8 @@ public final class GoogleSheetsConnectorHelper {
         NetHttpTransport.Builder transport = new NetHttpTransport.Builder();
 
         if (validateCertificates && ObjectHelper.isNotEmpty(serverCertificate)) {
-            byte [] decoded = Base64.getDecoder().decode(serverCertificate.replaceAll(BEGIN_CERT, "")
-                    .replaceAll(END_CERT, ""));
+            byte [] decoded = Base64.getDecoder().decode(serverCertificate.replace(BEGIN_CERT, "")
+                    .replace(END_CERT, ""));
             transport.trustCertificatesFromStream(new ByteArrayInputStream(decoded));
         } else {
             transport.doNotValidateCertificate();
