@@ -98,8 +98,6 @@ public final class CollectionsUtils {
 
     @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> immutableMapOf(K key, V value, Object... keyVals) {
-        return Collections.unmodifiableMap(
-            mapOf(HashMap::new, key, value, keyVals)
-        );
+        return immutableMapOf(HashMap::new, key, value, keyVals);
     }
 }

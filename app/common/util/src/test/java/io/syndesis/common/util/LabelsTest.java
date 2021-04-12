@@ -40,4 +40,11 @@ public class LabelsTest {
             assertThat(Labels.isValid(KeyGenerator.createKey())).isTrue();
         }
     }
+
+    @Test
+    void sanitize() {
+        String pre = "-abcdefghijklmnopqrs tyvwxyz0123456789  ";
+        assertThat(Labels.isValid(pre)).isFalse();
+        assertThat(Labels.isValid(Labels.sanitize(pre))).isTrue();
+    }
 }
