@@ -18,6 +18,7 @@ package io.syndesis.server.dao.audit;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.server.dao.audit.AuditRecord.RecordType;
 
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +33,24 @@ public class AuditingTest {
     Auditing auditing = new Auditing(() -> testTime, () -> username);
 
     @Test
+    public void shouldAuditConnectionDeletion() {
+        final Connection deleted = new Connection.Builder()
+            .id("id")
+            .name("Name")
+            .build();
+
+        final AuditRecord record = auditing.onDelete(deleted).get();
+
+        assertThat(record.id()).isEqualTo("id");
+        assertThat(record.type()).isEqualTo("connection");
+        assertThat(record.name()).isEqualTo("Name");
+        assertThat(record.timestamp()).isEqualTo(testTime);
+        assertThat(record.user()).isEqualTo(username);
+        assertThat(record.recordType()).isEqualTo(RecordType.deleted);
+        assertThat(record.events()).isEmpty();
+    }
+
+    @Test
     public void shouldAuditConnectionNameChanges() {
         final Connection old = new Connection.Builder()
             .name("Old name")
@@ -42,14 +61,14 @@ public class AuditingTest {
             .name("New name")
             .build();
 
-        final AuditRecord record = auditing.create(old, changed).get();
+        final AuditRecord record = auditing.onUpdate(old, changed).get();
 
         assertThat(record.id()).isEqualTo("id");
         assertThat(record.type()).isEqualTo("connection");
         assertThat(record.name()).isEqualTo("New name");
         assertThat(record.timestamp()).isEqualTo(testTime);
         assertThat(record.user()).isEqualTo(username);
-
+        assertThat(record.recordType()).isEqualTo(RecordType.updated);
         assertThat(record.events()).containsOnly(AuditEvent.propertyChanged("name", "Old name", "New name"));
     }
 
@@ -62,7 +81,7 @@ public class AuditingTest {
             .putConfiguredProperty("accessKey", "OEIUFLKJHFLKJH")
             .build();
 
-        final AuditRecord record = auditing.create(old, changed).get();
+        final AuditRecord record = auditing.onUpdate(old, changed).get();
 
         assertThat(record.events()).containsOnly(AuditEvent.propertyChanged("configuredProperties.accessKey", null, "OEIUFLKJHFLKJH"));
     }
@@ -77,12 +96,12 @@ public class AuditingTest {
             .putConfiguredProperty("accessKey", "OEIUFLKJHFLKJH")
             .build();
 
-        final AuditRecord record = auditing.create(old, changed).get();
+        final AuditRecord record = auditing.onUpdate(old, changed).get();
 
         assertThat(record.type()).isEqualTo("connection");
         assertThat(record.timestamp()).isEqualTo(testTime);
         assertThat(record.user()).isEqualTo(username);
-
+        assertThat(record.recordType()).isEqualTo(RecordType.updated);
         assertThat(record.events()).containsOnly(AuditEvent.propertyChanged("configuredProperties.accessKey", "AKJFNWEUGALASJ", "OEIUFLKJHFLKJH"));
     }
 
@@ -95,8 +114,8 @@ public class AuditingTest {
         final Connection changed = new Connection.Builder()
             .build();
 
-        final AuditRecord record = auditing.create(old, changed).get();
-
+        final AuditRecord record = auditing.onUpdate(old, changed).get();
+        assertThat(record.recordType()).isEqualTo(RecordType.updated);
         assertThat(record.events()).containsOnly(AuditEvent.propertyChanged("configuredProperties.accessKey", "OEIUFLKJHFLKJH", null));
     }
 
@@ -117,7 +136,7 @@ public class AuditingTest {
             .putConfiguredProperty(secretKey, "98765")
             .build();
 
-        final AuditRecord record = auditing.create(old, changed).get();
+        final AuditRecord record = auditing.onUpdate(old, changed).get();
         assertThat(record.events()).containsOnly(AuditEvent.propertyChanged("configuredProperties." + secretKey, "**********", "**********"));
     }
 
@@ -127,6 +146,6 @@ public class AuditingTest {
             .name("Same name")
             .build();
 
-        assertThat(auditing.create(same, same)).isEmpty();
+        assertThat(auditing.onUpdate(same, same)).isEmpty();
     }
 }

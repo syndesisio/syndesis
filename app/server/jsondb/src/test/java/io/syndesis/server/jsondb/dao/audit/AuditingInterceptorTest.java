@@ -15,10 +15,13 @@
  */
 package io.syndesis.server.jsondb.dao.audit;
 
+import java.util.Collections;
+
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.server.dao.ConnectionDao;
 import io.syndesis.server.dao.audit.AuditEvent;
 import io.syndesis.server.dao.audit.AuditRecord;
+import io.syndesis.server.dao.audit.AuditRecord.RecordType;
 import io.syndesis.server.dao.audit.AuditingRecorder;
 import io.syndesis.server.jsondb.dao.JsonDbDao;
 
@@ -62,12 +65,18 @@ public class AuditingInterceptorTest {
         @Bean
         public ConnectionDao dao() {
             return (ConnectionDao) mock(JsonDbDao.class, withSettings().extraInterfaces(ConnectionDao.class).defaultAnswer(invocation -> {
+                // we can't program the mocks with `when()`, as this would
+                // invoke the Aspect, so we program the default answers instead
                 final Class<?> returnType = invocation.getMethod().getReturnType();
                 if (void.class.equals(returnType)) {
-                    return null;
+                    return null; // for set()
+                } else if (boolean.class.equals(returnType)) {
+                    return true; // for delete()
+                } else if (Class.class.equals(returnType)) {
+                    return Connection.class; // for getType()
                 }
 
-                return previous;
+                return previous; // for update and create
             }));
         }
     }
@@ -84,7 +93,30 @@ public class AuditingInterceptorTest {
         dao.create(fresh);
 
         verify(auditingRecorder)
-            .record(new AuditRecord("id", "connection", "fresh", 123456789L, "testuser", singletonList(AuditEvent.propertySet("name", "fresh"))));
+            .record(new AuditRecord("id", "connection", "fresh", 123456789L, "testuser", RecordType.created,
+                singletonList(AuditEvent.propertySet("name", "fresh"))));
+    }
+
+    @Test
+    public void shouldAuditConnectionDeletion(@Autowired final ConnectionDao dao, @Autowired final AuditingRecorder auditingRecorder) {
+        final Connection object = new Connection.Builder().id("id").name("name").build();
+
+        dao.delete(object);
+
+        verify(auditingRecorder)
+            .record(new AuditRecord("id", "connection", "name", 123456789L, "testuser", RecordType.deleted,
+                Collections.emptyList()));
+    }
+
+    @Test
+    public void shouldAuditConnectionDeletionViaId(@Autowired final ConnectionDao dao, @Autowired final AuditingRecorder auditingRecorder) {
+        final Connection object = new Connection.Builder().id("id").name("name").build();
+
+        dao.delete("id");
+
+        verify(auditingRecorder)
+            .record(new AuditRecord("id", "connection", "*", 123456789L, "testuser", RecordType.deleted,
+                Collections.emptyList()));
     }
 
     @Test
@@ -94,7 +126,8 @@ public class AuditingInterceptorTest {
         dao.set(fresh);
 
         verify(auditingRecorder)
-            .record(new AuditRecord("id", "connection", "fresh", 123456789L, "testuser", singletonList(AuditEvent.propertySet("name", "fresh"))));
+            .record(new AuditRecord("id", "connection", "fresh", 123456789L, "testuser", RecordType.updated,
+                singletonList(AuditEvent.propertySet("name", "fresh"))));
     }
 
     @Test
@@ -104,7 +137,7 @@ public class AuditingInterceptorTest {
         dao.update(current);
 
         verify(auditingRecorder)
-            .record(new AuditRecord("id", "connection", "current", 123456789L, "testuser",
+            .record(new AuditRecord("id", "connection", "current", 123456789L, "testuser", RecordType.updated,
                 singletonList(AuditEvent.propertyChanged("name", "previous", "current"))));
     }
 }

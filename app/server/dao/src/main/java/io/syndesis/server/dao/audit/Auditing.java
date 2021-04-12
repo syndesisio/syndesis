@@ -16,6 +16,7 @@
 package io.syndesis.server.dao.audit;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.server.dao.audit.AuditRecord.RecordType;
 
 public final class Auditing {
 
@@ -45,16 +47,22 @@ public final class Auditing {
         this(System::currentTimeMillis, username);
     }
 
-    public <T extends WithId<T>> Optional<AuditRecord> create(final T created) {
-        final String id = created.getId().orElse("*");
-        final String name = determineName(created);
-
-        final List<AuditEvent> events = computeEvents(created);
-
-        return Optional.of(new AuditRecord(id, modelName(created), name, time.get(), username.get(), events));
+    public <T extends WithId<T>> Optional<AuditRecord> onCreate(final T created) {
+        return createdOrUpdated(created, RecordType.created);
     }
 
-    public <T extends WithId<T>> Optional<AuditRecord> create(final T previous, final T current) {
+    public <T extends WithId<T>> Optional<AuditRecord> onDelete(final T deleted) {
+        final String id = deleted.getId().get();
+        final String name = determineName(deleted);
+
+        return Optional.of(new AuditRecord(id, modelName(deleted), name, time.get(), username.get(), RecordType.deleted, Collections.emptyList()));
+    }
+
+    public <T extends WithId<T>> Optional<AuditRecord> onUpdate(final T updated) {
+        return createdOrUpdated(updated, RecordType.updated);
+    }
+
+    public <T extends WithId<T>> Optional<AuditRecord> onUpdate(final T previous, final T current) {
         final List<AuditEvent> events = computeEvents(previous, current);
 
         if (events.isEmpty()) {
@@ -64,7 +72,16 @@ public final class Auditing {
         final String id = current.getId().orElse("*");
         final String name = determineName(current);
 
-        return Optional.of(new AuditRecord(id, modelName(current), name, time.get(), username.get(), events));
+        return Optional.of(new AuditRecord(id, modelName(current), name, time.get(), username.get(), RecordType.updated, events));
+    }
+
+    private <T extends WithId<T>> Optional<AuditRecord> createdOrUpdated(final T object, final RecordType recordType) {
+        final String id = object.getId().orElse("*");
+        final String name = determineName(object);
+
+        final List<AuditEvent> events = computeEvents(object);
+
+        return Optional.of(new AuditRecord(id, modelName(object), name, time.get(), username.get(), recordType, events));
     }
 
     private static <T extends WithId<T>> void addBaseChangesTo(final List<AuditEvent> changes, final T created) {

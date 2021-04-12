@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public final class AuditRecord {
 
-    @JsonProperty(index = 6)
+    @JsonProperty(index = 7)
     private final List<AuditEvent> events;
 
     @JsonProperty(index = 1)
@@ -33,6 +33,9 @@ public final class AuditRecord {
 
     @JsonProperty(index = 3)
     private final String name;
+
+    @JsonProperty(index = 6)
+    private final RecordType recordType;
 
     @JsonProperty(index = 4)
     private final Long timestamp;
@@ -43,12 +46,18 @@ public final class AuditRecord {
     @JsonProperty(index = 5)
     private final String user;
 
-    public AuditRecord(final String id, final String type, final String name, final Long timestamp, final String user, final List<AuditEvent> events) {
+    public enum RecordType {
+        created, deleted, updated
+    }
+
+    public AuditRecord(final String id, final String type, final String name, final Long timestamp, final String user, final RecordType recordType,
+        final List<AuditEvent> events) {
         this.id = id;
         this.type = type;
         this.name = name;
         this.timestamp = timestamp;
         this.user = user;
+        this.recordType = recordType;
         this.events = events;
     }
 
@@ -66,6 +75,7 @@ public final class AuditRecord {
             Objects.equals(name, that.name) &&
             Objects.equals(timestamp, that.timestamp) &&
             Objects.equals(user, that.user) &&
+            Objects.equals(recordType, that.recordType) &&
             Objects.equals(events, that.events);
     }
 
@@ -75,7 +85,7 @@ public final class AuditRecord {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, name, timestamp, user, events);
+        return Objects.hash(id, type, name, timestamp, user, recordType, events);
     }
 
     public String id() {
@@ -84,6 +94,10 @@ public final class AuditRecord {
 
     public String name() {
         return name;
+    }
+
+    public RecordType recordType() {
+        return recordType;
     }
 
     public Long timestamp() {
@@ -98,6 +112,7 @@ public final class AuditRecord {
             ", name='" + name + '\'' +
             ", timestamp='" + timestamp + '\'' +
             ", user='" + user + '\'' +
+            ", recordType='" + recordType + '\'' +
             ", events='" + events + '\'' +
             '}';
     }
