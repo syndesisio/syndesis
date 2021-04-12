@@ -24,6 +24,8 @@ import java.util.OptionalInt;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import io.syndesis.common.model.Audited;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ToJson;
 import io.syndesis.common.model.WithDependencies;
@@ -42,6 +44,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(builder = Connector.Builder.class)
 @SuppressWarnings("immutables")
+@Audited
 public interface Connector extends WithId<Connector>, WithIdVersioned<Connector>, WithVersion.AutoUpdatable, WithActions<ConnectorAction>, WithTags, WithName, WithProperties, WithDependencies, WithMetadata, ToJson, Serializable {
 
     class Builder extends ImmutableConnector.Builder implements WithPropertiesBuilder<Builder> {

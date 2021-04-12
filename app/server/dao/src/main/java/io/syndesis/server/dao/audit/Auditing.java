@@ -25,12 +25,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import io.syndesis.common.model.Audited;
 import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.dao.audit.AuditRecord.RecordType;
+
+import org.springframework.util.ClassUtils;
 
 public final class Auditing {
 
@@ -48,6 +51,10 @@ public final class Auditing {
     }
 
     public <T extends WithId<T>> Optional<AuditRecord> onCreate(final T created) {
+        if (!shouldAudit(created)) {
+            return Optional.empty();
+        }
+
         return createdOrUpdated(created, RecordType.created);
     }
 
@@ -179,5 +186,21 @@ public final class Auditing {
 
     private static <T extends WithId<T>> String modelName(final T created) {
         return created.getKind().getModelName();
+    }
+
+    private static <T extends WithId<T>> boolean shouldAudit(final T object) {
+        final Class<?> type = object.getClass();
+
+        if (type.isAnnotationPresent(Audited.class)) {
+            return true;
+        }
+
+        for (final Class<?> inf : ClassUtils.getAllInterfacesForClass(type)) {
+            if (inf.isAnnotationPresent(Audited.class)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

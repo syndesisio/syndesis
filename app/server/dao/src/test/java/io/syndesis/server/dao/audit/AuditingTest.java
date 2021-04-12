@@ -15,6 +15,12 @@
  */
 package io.syndesis.server.dao.audit;
 
+import java.util.Collections;
+import java.util.Optional;
+
+import io.syndesis.common.model.Audited;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
@@ -31,6 +37,31 @@ public class AuditingTest {
     static String username = "username";
 
     Auditing auditing = new Auditing(() -> testTime, () -> username);
+
+    private static class Base implements WithId<Base> {
+        @Override
+        public Optional<String> getId() {
+            return Optional.of("id");
+        }
+
+        @Override
+        public Kind getKind() {
+            return Kind.Action; // needs to be typesafe
+        }
+
+        @Override
+        public Base withId(final String id) {
+            return null;
+        }
+
+    }
+
+    @Audited
+    private static class Marked extends Base {
+    }
+
+    private static class Unmarked extends Base {
+    }
 
     @Test
     public void shouldAuditConnectionDeletion() {
@@ -117,6 +148,13 @@ public class AuditingTest {
         final AuditRecord record = auditing.onUpdate(old, changed).get();
         assertThat(record.recordType()).isEqualTo(RecordType.updated);
         assertThat(record.events()).containsOnly(AuditEvent.propertyChanged("configuredProperties.accessKey", "OEIUFLKJHFLKJH", null));
+    }
+
+    @Test
+    public void shouldAuditOnlyMarkedTypes() {
+        assertThat(auditing.onCreate(new Unmarked())).isEmpty();
+        assertThat(auditing.onCreate(new Marked()))
+            .contains(new AuditRecord("id", "action", "*", testTime, username, RecordType.created, Collections.emptyList()));
     }
 
     @Test
