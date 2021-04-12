@@ -24,6 +24,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import io.syndesis.common.model.WithConfiguredProperties;
+import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
@@ -43,16 +45,16 @@ public final class Auditing {
         this(System::currentTimeMillis, username);
     }
 
-    public Optional<AuditRecord> create(final Connection created) {
+    public <T extends WithId<T>> Optional<AuditRecord> create(final T created) {
         final String id = created.getId().orElse("*");
-        final String name = created.getName();
+        final String name = determineName(created);
 
         final List<AuditEvent> events = computeEvents(created);
 
         return Optional.of(new AuditRecord(id, "Connection", name, time.get(), username.get(), events));
     }
 
-    public Optional<AuditRecord> create(final Connection previous, final Connection current) {
+    public <T extends WithId<T>> Optional<AuditRecord> create(final T previous, final T current) {
         final List<AuditEvent> events = computeEvents(previous, current);
 
         if (events.isEmpty()) {
@@ -60,35 +62,41 @@ public final class Auditing {
         }
 
         final String id = current.getId().orElse("*");
-        final String name = current.getName();
+        final String name = determineName(current);
 
         return Optional.of(new AuditRecord(id, "Connection", name, time.get(), username.get(), events));
     }
 
-    private static void addBaseChangesTo(final List<AuditEvent> changes, final WithName created) {
-        changes.add(AuditEvent.propertySet("name", created.getName()));
-    }
-
-    private static void addBaseChangesTo(final List<AuditEvent> changes, final WithName previous, final WithName current) {
-        if (!Objects.equals(previous.getName(), current.getName())) {
-            changes.add(AuditEvent.propertyChanged("name", previous.getName(), current.getName()));
+    private static <T extends WithId<T>> void addBaseChangesTo(final List<AuditEvent> changes, final T created) {
+        if (created instanceof WithName) {
+            changes.add(AuditEvent.propertySet("name", ((WithName) created).getName()));
         }
     }
 
-    private static void addConfiguredPropertiesChanges(final List<AuditEvent> changes, final Connection created) {
+    private static <T extends WithId<T>> void addBaseChangesTo(final List<AuditEvent> changes, final T previous, final T current) {
+        if (previous instanceof WithName) {
+            final String previousName = ((WithName) previous).getName();
+            final String currentName = ((WithName) current).getName();
+
+            if (!Objects.equals(previousName, currentName)) {
+                changes.add(AuditEvent.propertyChanged("name", previousName, currentName));
+            }
+        }
+    }
+
+    private static void addConfiguredPropertiesChanges(final List<AuditEvent> changes, final WithConfiguredProperties created) {
         final Map<String, String> configuredProperties = created.getConfiguredProperties();
 
         for (final Map.Entry<String, String> configuredProperty : configuredProperties.entrySet()) {
             final String propertyName = configuredProperty.getKey();
             final String value = configuredProperty.getValue();
 
-            final boolean isSecret = connectorFor(created).map(c -> c.isSecret(propertyName)).orElse(false);
-
-            changes.add(AuditEvent.propertySet("configuredProperties." + propertyName, isSecret ? "**********" : value));
+            changes.add(AuditEvent.propertySet("configuredProperties." + propertyName, isSecret(created, propertyName) ? "**********" : value));
         }
     }
 
-    private static void addConfiguredPropertiesChanges(final List<AuditEvent> changes, final Connection previous, final Connection current) {
+    private static void addConfiguredPropertiesChanges(final List<AuditEvent> changes, final WithConfiguredProperties previous,
+        final WithConfiguredProperties current) {
         final Map<String, String> previousConfiguredProperties = previous.getConfiguredProperties();
         final Map<String, String> currentConfiguredProperties = current.getConfiguredProperties();
 
@@ -96,34 +104,59 @@ public final class Auditing {
         propertyNames.addAll(currentConfiguredProperties.keySet());
 
         for (final String propertyName : propertyNames) {
-            final boolean isSecret = connectorFor(previous).map(c -> c.isSecret(propertyName)).orElse(false);
             final String previousConfiguredValue = previousConfiguredProperties.get(propertyName);
             final String currentConfiguredValue = currentConfiguredProperties.get(propertyName);
 
             // Objects.equals when comparing two null values will return true
             if (!Objects.equals(previousConfiguredValue, currentConfiguredValue)) {
-                changes.add(AuditEvent.propertyChanged("configuredProperties." + propertyName, isSecret ? "**********" : previousConfiguredValue,
-                    isSecret ? "**********" : currentConfiguredValue));
+                final boolean secret = isSecret(current, propertyName) || isSecret(previous, propertyName);
+
+                changes.add(
+                    AuditEvent.propertyChanged("configuredProperties." + propertyName, secret ? "**********" : previousConfiguredValue,
+                        secret ? "**********" : currentConfiguredValue));
             }
         }
     }
 
-    private static List<AuditEvent> computeEvents(final Connection created) {
+    private static <T extends WithId<T>> List<AuditEvent> computeEvents(final T created) {
         final List<AuditEvent> changes = new ArrayList<>();
         addBaseChangesTo(changes, created);
-        addConfiguredPropertiesChanges(changes, created);
+
+        if (created instanceof WithConfiguredProperties) {
+            addConfiguredPropertiesChanges(changes, (WithConfiguredProperties) created);
+        }
 
         return changes;
     }
 
-    private static List<AuditEvent> computeEvents(final Connection previous, final Connection current) {
+    private static <T extends WithId<T>> List<AuditEvent> computeEvents(final T previous, final T current) {
         final List<AuditEvent> changes = new ArrayList<>();
         addBaseChangesTo(changes, previous, current);
-        addConfiguredPropertiesChanges(changes, previous, current);
+
+        if (current instanceof WithConfiguredProperties) {
+            addConfiguredPropertiesChanges(changes, (WithConfiguredProperties) previous, (WithConfiguredProperties) current);
+        }
+
         return changes;
     }
 
     private static Optional<Connector> connectorFor(final Connection connection) {
         return connection.getConnector();
+    }
+
+    private static <T extends WithId<T>> String determineName(final T created) {
+        if (created instanceof WithName) {
+            return ((WithName) created).getName();
+        }
+
+        return "*";
+    }
+
+    private static boolean isSecret(final WithConfiguredProperties withConfiguredProperties, final String propertyName) {
+        if (withConfiguredProperties instanceof Connection) {
+            return connectorFor((Connection) withConfiguredProperties).map(c -> c.isSecret(propertyName)).orElse(false);
+        }
+
+        return false;
     }
 }

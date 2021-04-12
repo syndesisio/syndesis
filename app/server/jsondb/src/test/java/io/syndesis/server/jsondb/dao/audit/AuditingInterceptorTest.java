@@ -22,6 +22,7 @@ import io.syndesis.server.dao.audit.AuditRecord;
 import io.syndesis.server.dao.audit.AuditingRecorder;
 import io.syndesis.server.jsondb.dao.JsonDbDao;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,13 +35,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import static java.util.Collections.singletonList;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
 
 @ExtendWith(SpringExtension.class)
 @WithMockUser(username = "testuser")
 public class AuditingInterceptorTest {
+
+    final static Connection previous = new Connection.Builder().name("previous").build();
 
     @Configuration
     @EnableAspectJAutoProxy
@@ -58,15 +61,25 @@ public class AuditingInterceptorTest {
 
         @Bean
         public ConnectionDao dao() {
-            return (ConnectionDao) mock(JsonDbDao.class, withSettings().extraInterfaces(ConnectionDao.class));
+            return (ConnectionDao) mock(JsonDbDao.class, withSettings().extraInterfaces(ConnectionDao.class).defaultAnswer(invocation -> {
+                final Class<?> returnType = invocation.getMethod().getReturnType();
+                if (void.class.equals(returnType)) {
+                    return null;
+                }
+
+                return previous;
+            }));
         }
+    }
+
+    @BeforeEach
+    public void resetMocks(@Autowired final ConnectionDao dao, @Autowired final AuditingRecorder auditingRecorder) {
+        reset(dao, auditingRecorder);
     }
 
     @Test
     public void shouldAuditConnectionCreation(@Autowired final ConnectionDao dao, @Autowired final AuditingRecorder auditingRecorder) {
         final Connection fresh = new Connection.Builder().id("id").name("fresh").build();
-
-        when(dao.create(fresh)).thenReturn(fresh);
 
         dao.create(fresh);
 
@@ -87,9 +100,6 @@ public class AuditingInterceptorTest {
     @Test
     public void shouldAuditConnectionUpdates(@Autowired final ConnectionDao dao, @Autowired final AuditingRecorder auditingRecorder) {
         final Connection current = new Connection.Builder().id("id").name("current").build();
-        final Connection previous = new Connection.Builder().name("previous").build();
-
-        when(dao.update(current)).thenReturn(previous);
 
         dao.update(current);
 

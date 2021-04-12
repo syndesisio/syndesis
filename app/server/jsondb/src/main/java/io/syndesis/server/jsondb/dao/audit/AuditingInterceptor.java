@@ -17,7 +17,8 @@ package io.syndesis.server.jsondb.dao.audit;
 
 import java.util.function.Supplier;
 
-import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.WithId;
+import io.syndesis.common.model.WithName;
 import io.syndesis.server.dao.audit.Auditing;
 import io.syndesis.server.dao.audit.AuditingRecorder;
 import io.syndesis.server.dao.audit.LoggingAuditingRecorder;
@@ -54,23 +55,34 @@ public final class AuditingInterceptor {
             auditingRecorder);
     }
 
-    @AfterReturning(pointcut = "execution(void io.syndesis.server.jsondb.dao.JsonDbDao.set(io.syndesis.common.model.WithId)) && args(given)")
-    public void set(final Connection given) {
+    @AfterReturning(pointcut = "execution(* io.syndesis.server.jsondb.dao.JsonDbDao.create(io.syndesis.common.model.WithId)) && args(given)")
+    public <T extends WithId<T> & WithName> void created(final T given) {
+        record(given);
+    }
+
+    @AfterReturning(pointcut = "execution(* io.syndesis.server.jsondb.dao.JsonDbDao.set(io.syndesis.common.model.WithId)) && args(given)")
+    public <T extends WithId<T> & WithName> void set(final T given) {
         record(given);
     }
 
     @AfterReturning(pointcut = "execution(* io.syndesis.server.jsondb.dao.JsonDbDao.update(io.syndesis.common.model.WithId)) && args(given)",
         returning = "returned")
-    public void updated(final Connection given, final Connection returned) {
-        record(given, returned);
+    public <T extends WithId<T> & WithName> void updated(final T given, final Object returned) {
+        // return needs to be an Object, otherwise AspectJ won't match, could be
+        // generic types, not sure, AuditingInterceptorTest fails with `T
+        // returned`, not with `Object returned`
+        @SuppressWarnings("unchecked")
+        final T returnedAsT = (T) returned;
+
+        record(given, returnedAsT);
     }
 
-    private void record(final Connection given) {
+    private <T extends WithId<T> & WithName> void record(final T given) {
         auditing.create(given)
             .ifPresent(r -> recorder.record(r));
     }
 
-    private void record(final Connection given, final Connection returned) {
+    private <T extends WithId<T> & WithName> void record(final T given, final T returned) {
         auditing.create(returned, given)
             .ifPresent(r -> recorder.record(r));
     }
