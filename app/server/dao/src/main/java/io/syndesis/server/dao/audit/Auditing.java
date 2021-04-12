@@ -51,7 +51,7 @@ public final class Auditing {
 
         final List<AuditEvent> events = computeEvents(created);
 
-        return Optional.of(new AuditRecord(id, "Connection", name, time.get(), username.get(), events));
+        return Optional.of(new AuditRecord(id, modelName(created), name, time.get(), username.get(), events));
     }
 
     public <T extends WithId<T>> Optional<AuditRecord> create(final T previous, final T current) {
@@ -64,7 +64,7 @@ public final class Auditing {
         final String id = current.getId().orElse("*");
         final String name = determineName(current);
 
-        return Optional.of(new AuditRecord(id, "Connection", name, time.get(), username.get(), events));
+        return Optional.of(new AuditRecord(id, modelName(current), name, time.get(), username.get(), events));
     }
 
     private static <T extends WithId<T>> void addBaseChangesTo(final List<AuditEvent> changes, final T created) {
@@ -158,5 +158,9 @@ public final class Auditing {
         }
 
         return false;
+    }
+
+    private static <T extends WithId<T>> String modelName(final T created) {
+        return created.getKind().getModelName();
     }
 }

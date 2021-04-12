@@ -84,7 +84,7 @@ public class AuditingInterceptorTest {
         dao.create(fresh);
 
         verify(auditingRecorder)
-            .record(new AuditRecord("id", "Connection", "fresh", 123456789L, "testuser", singletonList(AuditEvent.propertySet("name", "fresh"))));
+            .record(new AuditRecord("id", "connection", "fresh", 123456789L, "testuser", singletonList(AuditEvent.propertySet("name", "fresh"))));
     }
 
     @Test
@@ -94,7 +94,7 @@ public class AuditingInterceptorTest {
         dao.set(fresh);
 
         verify(auditingRecorder)
-            .record(new AuditRecord("id", "Connection", "fresh", 123456789L, "testuser", singletonList(AuditEvent.propertySet("name", "fresh"))));
+            .record(new AuditRecord("id", "connection", "fresh", 123456789L, "testuser", singletonList(AuditEvent.propertySet("name", "fresh"))));
     }
 
     @Test
@@ -104,7 +104,7 @@ public class AuditingInterceptorTest {
         dao.update(current);
 
         verify(auditingRecorder)
-            .record(new AuditRecord("id", "Connection", "current", 123456789L, "testuser",
+            .record(new AuditRecord("id", "connection", "current", 123456789L, "testuser",
                 singletonList(AuditEvent.propertyChanged("name", "previous", "current"))));
     }
 }

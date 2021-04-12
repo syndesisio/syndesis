@@ -45,7 +45,7 @@ public class AuditingTest {
         final AuditRecord record = auditing.create(old, changed).get();
 
         assertThat(record.id()).isEqualTo("id");
-        assertThat(record.type()).isEqualTo("Connection");
+        assertThat(record.type()).isEqualTo("connection");
         assertThat(record.name()).isEqualTo("New name");
         assertThat(record.timestamp()).isEqualTo(testTime);
         assertThat(record.user()).isEqualTo(username);
@@ -79,7 +79,7 @@ public class AuditingTest {
 
         final AuditRecord record = auditing.create(old, changed).get();
 
-        assertThat(record.type()).isEqualTo("Connection");
+        assertThat(record.type()).isEqualTo("connection");
         assertThat(record.timestamp()).isEqualTo(testTime);
         assertThat(record.user()).isEqualTo(username);
 
