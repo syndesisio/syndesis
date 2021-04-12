@@ -26,16 +26,16 @@ add_to_trap "print_error ${ERROR_FILE}"
 #
 trap "process_trap" EXIT
 
-IMAGE_NAME="syndesis-operator"
+export IMAGE_NAME="syndesis-operator"
 
-CONTAINER_REGISTRY="$(readopt  --registry           docker.io)"
-IMAGE_NAMESPACE="$(readopt     --image-namespace    syndesis)"
-IMAGE_TAG="$(readopt           --image-tag          latest)"
+export CONTAINER_REGISTRY="$(readopt  --registry           docker.io)"
+export IMAGE_NAMESPACE="$(readopt     --image-namespace    syndesis)"
+export IMAGE_TAG="$(readopt           --image-tag          latest)"
 S2I_STREAM_NAME="$(readopt     --s2i-stream-name    syndesis-operator)"
 OPERATOR_BUILD_MODE="$(readopt --operator-build     auto)"
 IMAGE_BUILD_MODE="$(readopt    --image-build        auto)"
 SOURCE_GEN="$(readopt          --source-gen         on)"
-GO_BUILD_OPTIONS="$(readopt    --go-options         '')"
+export GO_BUILD_OPTIONS="$(readopt    --go-options         '')"
 GO_PROXY_URL="$(readopt        --go-proxy           https://proxy.golang.org)"
 
 if [[ -n "$(readopt --help)" ]] ; then
@@ -62,22 +62,12 @@ fi
 #
 # Timestamp for the building of the operator
 #
-BUILD_TIME=$(date +%Y-%m-%dT%H:%M:%S%z)
-
-# Custom registry needs to be injected into the operator so that
-# the image coordinate in the operator resource can be rendered
-# pointing to the registry
-#
-FULL_OPERATOR_IMAGE_NAME="${CONTAINER_REGISTRY}/${IMAGE_NAMESPACE}/${IMAGE_NAME}"
+export BUILD_TIME=$(date +%Y-%m-%dT%H:%M:%S%z)
 
 if [ $OPERATOR_BUILD_MODE != "skip" ] ; then
-	LD_FLAGS=$(echo "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=${FULL_OPERATOR_IMAGE_NAME}" \
-		"-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorTag=${IMAGE_TAG}" \
-		"-X github.com/syndesisio/syndesis/install/operator/pkg.BuildDateTime=${BUILD_TIME}")
-	echo "LD_FLAGS: ${LD_FLAGS}"
-  build_operator $OPERATOR_BUILD_MODE "$SOURCE_GEN" "$GO_PROXY_URL" -ldflags "${LD_FLAGS}" $GO_BUILD_OPTIONS
+  build_operator $OPERATOR_BUILD_MODE "$SOURCE_GEN" "$GO_PROXY_URL"
 fi
 
 if [ $IMAGE_BUILD_MODE != "skip" ] ; then
-  build_image $IMAGE_BUILD_MODE $CONTAINER_REGISTRY $IMAGE_NAMESPACE $IMAGE_NAME $IMAGE_TAG $S2I_STREAM_NAME
+  build_image $IMAGE_BUILD_MODE $S2I_STREAM_NAME
 fi

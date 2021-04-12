@@ -44,6 +44,12 @@ build_container_operator()
 {
     local container_cmd="${1:-}"
     shift
+    local goos="$1"
+    shift
+    local goarch="$1"
+    shift
+    local go_proxy_url="$1"
+    shift
 
     if [ -z "${container_cmd}" ]; then
         echo "ERROR: Container command is not defined. Either podman or docker are supported."
@@ -51,50 +57,26 @@ build_container_operator()
     fi
 
     local BUILDER_IMAGE_NAME="operator-builder"
-    echo ======================================================
-    echo Building executable with ${container_cmd}
-    echo ======================================================
-    rm -rf build/_output
 
-    OPTS=""
-    for i in "$@" ; do
-        OPTS="$OPTS '$i'"
-    done
-
-    cat > "${BUILDER_IMAGE_NAME}.tmp" <<EODockerfile
-FROM golang:1.13.7
-WORKDIR /go/src/${OPERATOR_GO_PACKAGE}
-ENV GO111MODULE=on
-ENV GOPROXY=$go_proxy_url
-COPY . .
-RUN go generate ./pkg/...
-RUN go test -test.short -mod=vendor ./cmd/... ./pkg/...
-RUN GOOS=linux   GOARCH=amd64 go build $OPTS -o /dist/linux-amd64/syndesis-operator    -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
-RUN GOOS=darwin  GOARCH=amd64 go build $OPTS -o /dist/darwin-amd64/syndesis-operator   -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
-RUN GOOS=windows GOARCH=amd64 go build $OPTS -o /dist/windows-amd64/syndesis-operator  -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
-RUN GOOS=linux   GOARCH=amd64 go build $OPTS -o /dist/linux-amd64/platform-detect      -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/detect
-RUN GOOS=darwin  GOARCH=amd64 go build $OPTS -o /dist/darwin-amd64/platform-detect     -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/detect
-RUN GOOS=windows GOARCH=amd64 go build $OPTS -o /dist/windows-amd64/platform-detect    -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/detect
-EODockerfile
-
-  ${container_cmd} build -t "${BUILDER_IMAGE_NAME}" . -f "${BUILDER_IMAGE_NAME}.tmp"
-  rm -f "${BUILDER_IMAGE_NAME}.tmp"
+  ${container_cmd} build --target=builder \
+      -e GOOS=${goos} -e GOARCH=${goarch} -e GOPROXY=${go_proxy_url} \
+      --build-arg CONTAINER_REGISTRY=${CONTAINER_REGISTRY} \
+      --build-arg IMAGE_NAMESPACE=${IMAGE_NAMESPACE} \
+      --build-arg IMAGE_NAME=${IMAGE_NAME} \
+      --build-arg IMAGE_TAG=${IMAGE_TAG} \
+      --build-arg BUILD_TIME=${BUILD_TIME} \
+      --build-arg GO_BUILD_OPTIONS=${GO_BUILD_OPTIONS} \
+      -t "${BUILDER_IMAGE_NAME}" . -f ./build/Dockerfile
 
   echo ======================================================
 
-  for GOARCH in amd64 ; do
-    for GOOS in linux darwin windows ; do
-      echo extracting operator executable to ./dist/${GOOS}-${GOARCH}/syndesis-operator
-      mkdir -p ./dist/${GOOS}-${GOARCH}
-      ${container_cmd} run "${BUILDER_IMAGE_NAME}" cat /dist/${GOOS}-${GOARCH}/syndesis-operator > ./dist/${GOOS}-${GOARCH}/syndesis-operator
+  echo extracting operator executable to ./dist/${goos}-${goarch}/syndesis-operator
+  mkdir -p ./dist/${goos}-${goarch}
+  ${container_cmd} run "${BUILDER_IMAGE_NAME}" cat /out/syndesis-operator > ./dist/${goos}-${goarch}/syndesis-operator
 
-      echo extracting platform-detect executable to ./dist/${GOOS}-${GOARCH}/platform-detect
-      ${container_cmd} run "${BUILDER_IMAGE_NAME}" cat /dist/${GOOS}-${GOARCH}/platform-detect > ./dist/${GOOS}-${GOARCH}/platform-detect
-    done
-  done
+  echo extracting platform-detect executable to ./dist/${goos}-${goarch}/platform-detect
+  ${container_cmd} run "${BUILDER_IMAGE_NAME}" cat /out/platform-detect > ./dist/${goos}-${goarch}/platform-detect
   chmod a+x ./dist/*/*-*
-  mkdir -p ./build/_output/bin
-  cp ./dist/linux-amd64/syndesis-operator ./build/_output/bin/syndesis-operator
 }
 
 build_operator()
@@ -178,16 +160,19 @@ build_operator()
             GOOSLIST="linux darwin windows"
         fi
 
+        LDFLAGS="-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=${CONTAINER_REGISTRY}/${IMAGE_NAMESPACE}/${IMAGE_NAME} -X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorTag=${IMAGE_TAG} -X github.com/syndesisio/syndesis/install/operator/pkg.BuildDateTime=${BUILD_TIME}"
         for GOARCH in amd64 ; do
           for GOOS in ${GOOSLIST} ; do
             export GOARCH GOOS
             echo building ./dist/${GOOS}-${GOARCH}/syndesis-operator executable
-            go build  "$@" -o ./dist/${GOOS}-${GOARCH}/syndesis-operator \
+            go build -ldflags "${LDFLAGS}" ${GO_BUILD_OPTIONS} \
+            -o ./dist/${GOOS}-${GOARCH}/syndesis-operator \
                 -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor \
                 ./cmd/manager
 
             echo building ./dist/${GOOS}-${GOARCH}/platform-detect executable
-            go build -o ./dist/${GOOS}-${GOARCH}/platform-detect \
+            go build -ldflags "${LDFLAGS}" ${GO_BUILD_OPTIONS} \
+            -o ./dist/${GOOS}-${GOARCH}/platform-detect \
                 -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor \
                 ./cmd/detect
           done
@@ -201,16 +186,36 @@ build_operator()
             echo "$hasdocker"
             exit 1
         fi
+        echo ======================================================
+        echo Building executable with podman
+        echo ======================================================
 
-        build_container_operator "podman" "$@"
+        rm -rf build/_output
+        for GOARCH in amd64 ; do
+          for GOOS in ${GOOSLIST} ; do
+            build_container_operator "podman" "$GOARCH" "$GOOS" "$go_proxy_url"
+          done
+        done
+        mkdir -p ./build/_output/bin
+        cp ./dist/linux-amd64/syndesis-operator ./build/_output/bin/syndesis-operator
     ;;
     "docker")
         if [ "$hasdocker" != "OK" ]; then
             echo "$hasdocker"
             exit 1
         fi
+        echo ======================================================
+        echo Building executable with docker
+        echo ======================================================
 
-        build_container_operator "docker" "$@"
+        rm -rf build/_output
+        for GOARCH in amd64 ; do
+          for GOOS in ${GOOSLIST} ; do
+            build_container_operator "docker" "$GOARCH" "$GOOS" "$go_proxy_url"
+          done
+        done
+        mkdir -p ./build/_output/bin
+        cp ./dist/linux-amd64/syndesis-operator ./build/_output/bin/syndesis-operator
     ;;
     *)
         echo invalid build strategy: $strategy
@@ -228,10 +233,6 @@ build_operator()
 build_container_image()
 {
     local container_cmd="${1:-}"
-    local registry="${2:-}"
-    local image_namespace="${3:-}"
-    local image_name="${4:-}"
-    local image_tag="${5:-}"
 
     if [ -z "${container_cmd}" ]; then
         echo "ERROR: Container command is not defined. Either podman or docker are supported."
@@ -239,48 +240,48 @@ build_container_image()
     fi
 
 
-    if [ -n "${image_namespace}" ]; then
-      full_image_name="${image_namespace}/${image_name}"
+    if [ -n "${IMAGE_NAMESPACE}" ]; then
+      full_image_name="${IMAGE_NAMESPACE}/${IMAGE_NAME}"
     else
-      full_image_name="${image_name}"
+      full_image_name="${IMAGE_NAME}"
     fi
 
-    if [ -n "${registry}" ]; then
+    if [ -n "${CONTAINER_REGISTRY}" ]; then
         #
         # Need to apply the registry to the image name so that the
         # operator image is built with the correct image location
         #
-        full_image_name=${registry}/${full_image_name}
+        full_image_name=${CONTAINER_REGISTRY}/${full_image_name}
     fi
 
     echo ======================================================
     echo Building image with ${container_cmd}
     echo ======================================================
-    ${container_cmd} build -f "build/Dockerfile" -t "${full_image_name}:${image_tag}" .
+    ${container_cmd} build -f "build/Dockerfile" -t "${full_image_name}:${IMAGE_TAG}" .
     echo ======================================================
     echo "Operator Image Built: ${full_image_name}"
     echo ======================================================
 
-    if [ "${registry}" == "docker.io" ] && [ "${image_namespace}" == "syndesis" ]; then
+    if [ "${CONTAINER_REGISTRY}" == "docker.io" ] && [ "${IMAGE_NAMESPACE}" == "syndesis" ]; then
         #
         # Do not push if registry and namespace are the defaults
         #
         return
-    elif [ -n "${registry}" ]; then
+    elif [ -n "${CONTAINER_REGISTRY}" ]; then
         #
         # If registry defined then push image to container registry
         #
         echo ======================================================
-        echo Pushing image to container registry: ${registry}
+        echo Pushing image to container registry: ${CONTAINER_REGISTRY}
         echo ======================================================
 
         #
         # Checks the container image has been built
         # and available to be pushed.
         #
-        image_id=$(${container_cmd} images --filter reference=${full_image_name}:${image_tag} | grep -v IMAGE | awk '{print $3}' | uniq)
+        image_id=$(${container_cmd} images --filter reference=${full_image_name}:${IMAGE_TAG} | grep -v IMAGE | awk '{print $3}' | uniq)
         if [ -z ${image_id} ]; then
-            check_error "ERROR: Cannot find newly-built container image of ${full_image_name}:${image_tag}"
+            check_error "ERROR: Cannot find newly-built container image of ${full_image_name}:${IMAGE_TAG}"
         fi
 
 
@@ -288,9 +289,9 @@ build_container_image()
         # Push to the registry
         #
         if [ "${container_cmd}" == "docker" ]; then
-            ${container_cmd} push "${full_image_name}:${image_tag}"
+            ${container_cmd} push "${full_image_name}:${IMAGE_TAG}"
         elif [ "${container_cmd}" == "podman" ]; then
-            ${container_cmd} push "${image_id}" "${full_image_name}:${image_tag}"
+            ${container_cmd} push "${image_id}" "${full_image_name}:${IMAGE_TAG}"
         else
             echo "Pushing to registry not supported by ${container_cmd}"
         fi
@@ -298,12 +299,12 @@ build_container_image()
         #
         # Check the image is present in the registry
         #
-        status=$(curl -sLk https://${registry}/v2/${image_namespace}/${image_name}/tags/list)
+        status=$(curl -sLk https://${CONTAINER_REGISTRY}/v2/${IMAGE_NAMESPACE}/${IMAGE_NAME}/tags/list)
         if [ -z "${status##*errors*}" ] ;then
             check_error "ERROR: Cannot verify image has been pushed to registry."
         else
             echo ======================================================
-            echo "Operator Image Pushed to Registry: ${registry}"
+            echo "Operator Image Pushed to Registry: ${CONTAINER_REGISTRY}"
             echo ======================================================
         fi
     fi
@@ -312,20 +313,12 @@ build_container_image()
 #
 # Parameters:
 # IMAGE_BUILD_MODE   - [auto, s2i, docker, podman]
-# CONTAINER_REGISTRY - docker.io by default
-# IMAGE_NAMESPACE    - syndesis by default
-# IMAGE_NAME         - syndesis-operator by default
-# IMAGE_TAG          - latest by default
 # s2i_stream_name    - syndesis-operator by default
 #
 build_image()
 {
     local strategy="${1:-auto}"
-    local registry="${2:-docker.io}"
-    local image_namespace="${3:-syndesis}"
-    local image_name="${4:-syndesis-operator}"
-    local image_tag="${5:-latest}"
-    local s2i_stream_name="${6:-syndesis-operator}"
+    local s2i_stream_name="${2:-syndesis-operator}"
 
     local hasdocker=$(docker_is_available)
     local haspodman=$(podman_is_available)
@@ -387,8 +380,8 @@ build_image()
         fi
 
         if [ -z "$(oc get bc -o name | grep ${s2i_stream_name})" ]; then
-            echo "Creating BuildConfig ${s2i_stream_name} with tag ${image_tag}"
-            oc new-build --strategy=docker --binary=true --to="${image_namespace}/${image_name}:${image_tag}" --name ${s2i_stream_name}
+            echo "Creating BuildConfig ${s2i_stream_name} with tag ${IMAGE_TAG}"
+            oc new-build --strategy=docker --binary=true --to="${IMAGE_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG}" --name ${s2i_stream_name}
         fi
         local arch="$(mktemp -t ${s2i_stream_name}-dockerXXX).tar"
         echo $arch
@@ -408,14 +401,14 @@ build_image()
             check_error "$hasdocker"
         fi
 
-        build_container_image "docker" ${registry} ${image_namespace} ${image_name} ${image_tag}
+        build_container_image "docker"
     ;;
     "podman")
         if [ "$haspodman" != "OK" ]; then
             check_error "$hasdocker"
         fi
 
-        build_container_image "podman" ${registry} ${image_namespace} ${image_name} ${image_tag}
+        build_container_image "podman"
     ;;
     *)
         echo invalid build strategy: $1
