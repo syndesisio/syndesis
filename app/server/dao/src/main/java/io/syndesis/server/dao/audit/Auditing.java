@@ -65,14 +65,6 @@ public final class Auditing {
         return Optional.of(new AuditRecord(id, "Connection", name, time.get(), username.get(), events));
     }
 
-    private List<AuditEvent> computeEvents(final Connection created) {
-        final List<AuditEvent> changes = new ArrayList<>();
-        addBaseChangesTo(changes, created);
-        addConfiguredPropertiesChanges(changes, created);
-
-        return changes;
-    }
-
     private static void addBaseChangesTo(final List<AuditEvent> changes, final WithName created) {
         changes.add(AuditEvent.propertySet("name", created.getName()));
     }
@@ -114,6 +106,14 @@ public final class Auditing {
                     isSecret ? "**********" : currentConfiguredValue));
             }
         }
+    }
+
+    private static List<AuditEvent> computeEvents(final Connection created) {
+        final List<AuditEvent> changes = new ArrayList<>();
+        addBaseChangesTo(changes, created);
+        addConfiguredPropertiesChanges(changes, created);
+
+        return changes;
     }
 
     private static List<AuditEvent> computeEvents(final Connection previous, final Connection current) {
