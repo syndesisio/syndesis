@@ -176,7 +176,7 @@ public class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
             } else {
                 inDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                     .name("Parameters")
-                    .description(String.format("Query parameters."))
+                    .description("Query parameters.")
                     .specification(JsonUtils.writer().writeValueAsString(builderIn));
 
                 inDataShapeBuilder.putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT);
@@ -188,7 +188,7 @@ public class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
             } else {
                 outDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                     .name("Result")
-                    .description(String.format("Attributes on the result."))
+                    .description("Attributes on the result.")
                     .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
                     .specification(JsonUtils.writer().writeValueAsString(builderOut));
             }
