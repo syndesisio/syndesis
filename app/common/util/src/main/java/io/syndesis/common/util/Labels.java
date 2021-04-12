@@ -37,7 +37,7 @@ public final class Labels {
      */
     public static String sanitize(String name) {
         return trim(name
-            .replaceAll(SPACE, DASH)
+            .replace(SPACE, DASH)
             .chars()
             .filter(Labels::isValidChar)
             //Handle consecutive dashes

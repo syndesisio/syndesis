@@ -52,7 +52,7 @@ public enum DbEnum {
 
     public static DbEnum fromName(final String dbProductName) {
         try {
-            return valueOf(dbProductName.toUpperCase(Locale.US).replaceAll(" ", "_"));
+            return valueOf(dbProductName.toUpperCase(Locale.US).replace(" ", "_"));
         } catch (IllegalArgumentException e) {
             LOG.info(dbProductName + " -> DbEnum.STANDARD");
             return STANDARD;

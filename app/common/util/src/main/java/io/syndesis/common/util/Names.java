@@ -51,8 +51,8 @@ public final class Names {
      */
     public static String sanitize(String name) {
         final String firstPass = name
-            .replaceAll(SPACE, DASH)
-            .replaceAll(UNDERSCORE, DASH)
+            .replace(SPACE, DASH)
+            .replace(UNDERSCORE, DASH)
             .replaceAll(DOT, DASH)
             .toLowerCase(Locale.US);
 

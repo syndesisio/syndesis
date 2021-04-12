@@ -35,7 +35,7 @@ class EquivContext implements StringConstants {
 
     EquivContext(String name, Class<?> klazz) {
         this.name = name;
-        this.type = klazz.getSimpleName().replaceAll("Immutable", EMPTY_STRING);
+        this.type = klazz.getSimpleName().replace("Immutable", EMPTY_STRING);
     }
 
     public String id() {
