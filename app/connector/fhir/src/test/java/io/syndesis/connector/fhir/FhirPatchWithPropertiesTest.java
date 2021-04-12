@@ -27,7 +27,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.okXml;
 import static com.github.tomakehurst.wiremock.client.WireMock.patch;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
-public class FhirPatchTest extends FhirTestBase {
+public class FhirPatchWithPropertiesTest extends FhirTestBase {
 
     @Override
     protected List<Step> createSteps() {
@@ -37,16 +37,15 @@ public class FhirPatchTest extends FhirTestBase {
             newFhirEndpointStep("io.syndesis:fhir-patch-connector", builder -> {
                 builder.putConfiguredProperty("resourceType", "Patient");
                 builder.putConfiguredProperty("id", "1");
+                builder.putConfiguredProperty("patch", "[{\"op\":\"replace\", \"path\":\"active\", \"value\":true}]");
             }));
     }
 
     @Test
-    public void patchTest() {
+    public void shouldPatchWithPropertiesOnlyTest() {
         stubFhirRequest(patch(urlEqualTo("/Patient/1?_format=xml")).willReturn(okXml(toXml(new OperationOutcome()))));
 
         template.requestBody("direct:start",
-            "[{\"op\":\"replace\", \"path\":\"active\", \"value\":true}]", MethodOutcome.class);
+            null , MethodOutcome.class);
     }
-
-
 }
