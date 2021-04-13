@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 import io.syndesis.common.model.Audited;
@@ -34,6 +35,8 @@ import io.syndesis.server.dao.audit.handlers.AuditHandler;
 public final class Auditing {
 
     private static final Map<Class<?>, AuditHandler<?>> HANDLERS = AuditHandler.handlers();
+
+    private final Map<Class<?>, List<AuditHandler<?>>> handlerCache = new ConcurrentHashMap<>();
 
     private final Supplier<Long> time;
 
@@ -80,6 +83,30 @@ public final class Auditing {
         return Optional.of(new AuditRecord(id, modelName(current), name, time.get(), username.get(), RecordType.updated, events));
     }
 
+    <T extends WithId<T>> Collection<AuditHandler<T>> handlersFor(final T current) {
+        // We're playing fast and loose with generic type erasure, that's what
+        // we get when we play with generics at this complexity, hopefully code
+        // coverage helps us with edge cases
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        final Map<Class<T>, List<AuditHandler<T>>> muddled = (Map) handlerCache;
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        final Class<T> clazz = (Class) current.getClass();
+
+        return muddled.computeIfAbsent(clazz, Auditing::determineHandlersFor);
+    }
+
+    private <T extends WithId<T>> List<AuditEvent> computeEvents(final T current, final Optional<T> previous) {
+        final List<AuditEvent> changes = new ArrayList<>();
+
+        for (final AuditHandler<T> handler : handlersFor(current)) {
+            final List<AuditEvent> changesFromHandler = handler.handle(current, previous);
+            changes.addAll(changesFromHandler);
+        }
+
+        return changes;
+    }
+
     private <T extends WithId<T>> Optional<AuditRecord> createdOrUpdated(final T object, final RecordType recordType) {
         final String id = object.getId().orElse("*");
         final String name = determineName(object);
@@ -111,10 +138,22 @@ public final class Auditing {
         return ret;
     }
 
-    static Set<Class<?>> allTypesOf(final Object object) {
-        final Class<?> clazz = object.getClass();
+    static <T extends WithId<T>> List<AuditHandler<T>> determineHandlersFor(final Class<T> clazz) {
+        final List<AuditHandler<T>> handlers = new ArrayList<>();
 
-        return allTypesIn(clazz);
+        for (final Class<?> type : allTypesIn(clazz)) {
+            // This is not correct & true, AuditHandler will not be
+            // AuditHandler<T>, but of the `inf` type, generic type information
+            // is erased by the compiler so it ends up working
+            @SuppressWarnings("unchecked")
+            final AuditHandler<T> handler = (AuditHandler<T>) HANDLERS.get(type);
+            if (handler != null) {
+                handlers.add(handler);
+            }
+
+        }
+
+        return handlers;
     }
 
     static <T extends WithId<T>> boolean shouldAudit(final T object) {
@@ -133,41 +172,12 @@ public final class Auditing {
         return false;
     }
 
-    private static <T extends WithId<T>> List<AuditEvent> computeEvents(final T current, final Optional<T> previous) {
-        final List<AuditEvent> changes = new ArrayList<>();
-
-        for (final AuditHandler<T> handler : handlersFor(current)) {
-            final List<AuditEvent> changesFromHandler = handler.handle(current, previous);
-            changes.addAll(changesFromHandler);
-        }
-
-        return changes;
-    }
-
     private static <T extends WithId<T>> String determineName(final T created) {
         if (created instanceof WithName) {
             return ((WithName) created).getName();
         }
 
         return "*";
-    }
-
-    private static <T extends WithId<T>> Collection<AuditHandler<T>> handlersFor(final T current) {
-        final List<AuditHandler<T>> handlers = new ArrayList<>();
-
-        for (final Class<?> inf : allTypesOf(current)) {
-            // This is not correct & true, AuditHandler will not be
-            // AuditHandler<T>, but of the `inf` type, generic type information
-            // is erased by the compiler so it ends up working
-            @SuppressWarnings("unchecked")
-            final AuditHandler<T> handler = (AuditHandler<T>) HANDLERS.get(inf);
-            if (handler != null) {
-                handlers.add(handler);
-            }
-
-        }
-
-        return handlers;
     }
 
     private static <T extends WithId<T>> String modelName(final T created) {

@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.dao.audit;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import io.syndesis.common.model.Audited;
@@ -26,10 +27,15 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.dao.audit.AuditRecord.RecordType;
+import io.syndesis.server.dao.audit.handlers.AuditHandler;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.atMostOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 
 public class AuditingTest {
 
@@ -183,6 +189,23 @@ public class AuditingTest {
 
         final AuditRecord record = auditing.onUpdate(old, changed).get();
         assertThat(record.events()).containsOnly(AuditEvent.propertyChanged("configuredProperties." + secretKey, "**********", "**********"));
+    }
+
+    @Test
+    public void shouldCacheHandlerLookup() {
+        try (final MockedStatic<Auditing> mock = mockStatic(Auditing.class)) {
+            final Auditing forCacheTest = new Auditing(() -> "user");
+
+            final Connection connection1 = new Connection.Builder().build();
+            mock.when(() -> Auditing.determineHandlersFor((Class) connection1.getClass())).thenReturn(Collections.singletonList(mock(AuditHandler.class)));
+
+            assertThat(forCacheTest.handlersFor(connection1)).isNotEmpty();
+
+            final Connection connection2 = new Connection.Builder().build();
+            assertThat(forCacheTest.handlersFor(connection2)).isNotEmpty();
+
+            mock.verify(() -> Auditing.determineHandlersFor(Connection.class), atMostOnce());
+        }
     }
 
     @Test
