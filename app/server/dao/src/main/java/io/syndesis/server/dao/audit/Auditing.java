@@ -33,8 +33,6 @@ import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.dao.audit.AuditRecord.RecordType;
 
-import org.springframework.util.ClassUtils;
-
 public final class Auditing {
 
     private final Supplier<Long> time;
@@ -89,6 +87,50 @@ public final class Auditing {
         final List<AuditEvent> events = computeEvents(object);
 
         return Optional.of(new AuditRecord(id, modelName(object), name, time.get(), username.get(), recordType, events));
+    }
+
+    static Set<Class<?>> allTypesIn(final Class<?> start) {
+        Class<?> clazz = start;
+
+        final Set<Class<?>> ret = new HashSet<>();
+
+        while (clazz != null) {
+            ret.add(clazz);
+            for (final Class<?> inf : clazz.getInterfaces()) {
+                if (ret.contains(inf)) {
+                    continue;
+                }
+
+                ret.add(inf);
+                ret.addAll(allTypesIn(inf));
+            }
+
+            clazz = clazz.getSuperclass();
+        }
+
+        return ret;
+    }
+
+    static Set<Class<?>> allTypesOf(final Object object) {
+        final Class<?> clazz = object.getClass();
+
+        return allTypesIn(clazz);
+    }
+
+    static <T extends WithId<T>> boolean shouldAudit(final T object) {
+        final Class<?> clazz = object.getClass();
+
+        if (clazz.isAnnotationPresent(Audited.class)) {
+            return true;
+        }
+
+        for (final Class<?> type : allTypesIn(clazz)) {
+            if (type.isAnnotationPresent(Audited.class)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static <T extends WithId<T>> void addBaseChangesTo(final List<AuditEvent> changes, final T created) {
@@ -186,21 +228,5 @@ public final class Auditing {
 
     private static <T extends WithId<T>> String modelName(final T created) {
         return created.getKind().getModelName();
-    }
-
-    private static <T extends WithId<T>> boolean shouldAudit(final T object) {
-        final Class<?> type = object.getClass();
-
-        if (type.isAnnotationPresent(Audited.class)) {
-            return true;
-        }
-
-        for (final Class<?> inf : ClassUtils.getAllInterfacesForClass(type)) {
-            if (inf.isAnnotationPresent(Audited.class)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

@@ -15,7 +15,6 @@
  */
 package io.syndesis.server.dao.audit;
 
-import java.util.Collections;
 import java.util.Optional;
 
 import io.syndesis.common.model.Audited;
@@ -58,6 +57,10 @@ public class AuditingTest {
 
     @Audited
     private static class Marked extends Base {
+        // example test case class
+    }
+
+    private static class MarkedSubclass extends Marked {
         // example test case class
     }
 
@@ -154,9 +157,9 @@ public class AuditingTest {
 
     @Test
     public void shouldAuditOnlyMarkedTypes() {
-        assertThat(auditing.onCreate(new Unmarked())).isEmpty();
-        assertThat(auditing.onCreate(new Marked()))
-            .contains(new AuditRecord("id", "action", "*", testTime, username, RecordType.created, Collections.emptyList()));
+        assertThat(Auditing.shouldAudit(new Unmarked())).isFalse();
+        assertThat(Auditing.shouldAudit(new Marked())).isTrue();
+        assertThat(Auditing.shouldAudit(new MarkedSubclass())).isTrue();
     }
 
     @Test
