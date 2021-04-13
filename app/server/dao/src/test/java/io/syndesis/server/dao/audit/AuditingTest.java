@@ -20,6 +20,8 @@ import java.util.Optional;
 import io.syndesis.common.model.Audited;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
+import io.syndesis.common.model.WithKind;
+import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
@@ -181,6 +183,12 @@ public class AuditingTest {
 
         final AuditRecord record = auditing.onUpdate(old, changed).get();
         assertThat(record.events()).containsOnly(AuditEvent.propertyChanged("configuredProperties." + secretKey, "**********", "**********"));
+    }
+
+    @Test
+    public void shouldFindAllTypesIn() {
+        assertThat(Auditing.allTypesIn(MarkedSubclass.class)).containsOnly(MarkedSubclass.class, Marked.class, Base.class, WithId.class, WithResourceId.class,
+            WithKind.class, Object.class);
     }
 
     @Test
