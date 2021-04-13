@@ -99,11 +99,10 @@ public class SoapConnectorFault_IT extends SyndesisIntegrationTestSupport {
         runner.repeatOnError()
             .index("retries")
             .autoSleep(1000L)
-            .until(is(6))
+            .until(is(60))
             .actions(runner.query(builder -> builder.dataSource(sampleDb)
-                .statement("select count(*) as found_records from contact where first_name like '" +
-                    THE_TEST_FAILED_MISERABLY + "'")
-                .validateScript("assert rows.get(0).get(\"found_records\") > 0", "groovy")));
+                .statement("select count(*) as found_records from contact where first_name='CITRUS:999'")
+                .validate("FOUND_RECORDS", "1")));
 
     }
 
