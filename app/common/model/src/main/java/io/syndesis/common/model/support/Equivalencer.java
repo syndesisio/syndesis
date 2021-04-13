@@ -53,7 +53,7 @@ public class Equivalencer implements StringConstants {
 
     private boolean push(String id, Class<?> klazz) {
         if (failureContext == null) {
-            failureContext = new ArrayDeque<EquivContext>();
+            failureContext = new ArrayDeque<>();
         }
 
         EquivContext ctx = new EquivContext(id, klazz);
@@ -63,7 +63,7 @@ public class Equivalencer implements StringConstants {
 
     private boolean push(String id, Class<?> klazz, String failingProperty, Object a, Object b) {
         if (failureContext == null) {
-            failureContext = new ArrayDeque<EquivContext>();
+            failureContext = new ArrayDeque<>();
         }
 
         EquivContext ctx = new EquivContext(id, klazz);
