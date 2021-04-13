@@ -24,8 +24,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.component.servicenow.ServiceNowConstants;
+import org.apache.camel.component.servicenow.ServiceNowMetaDataExtensionWrapper;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,9 +35,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ServiceNowMetaDataExtensionTest {
 
     @Test
+    @Disabled("This is not a unit test but an integration test")
     public void retrieveTableListTes() {
         CamelContext context = new DefaultCamelContext();
-        ServiceNowMetaDataExtension extension = new ServiceNowMetaDataExtension(context);
+        MetaDataExtension extension = ServiceNowMetaDataExtensionWrapper.getServiceNowMetaDataExtension(context);
 
         Map<String, Object> properties = new HashMap<>();
         properties.put("instanceName", System.getProperty("servicenow.instance"));

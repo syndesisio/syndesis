@@ -34,16 +34,14 @@ import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.component.servicenow.ServiceNowConstants;
+import org.apache.camel.component.servicenow.ServiceNowMetaDataExtensionWrapper;
 import org.apache.camel.util.ObjectHelper;
 
 public final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieval {
 
-    /**
-     * TODO: use local extension, remove when switching to camel 2.22.x
-     */
     @Override
     protected MetaDataExtension resolveMetaDataExtension(CamelContext context, Class<? extends MetaDataExtension> metaDataExtensionClass, String componentId, String actionId) {
-        return new ServiceNowMetaDataExtension(context);
+        return ServiceNowMetaDataExtensionWrapper.getServiceNowMetaDataExtension(context);
     }
 
     @Override
