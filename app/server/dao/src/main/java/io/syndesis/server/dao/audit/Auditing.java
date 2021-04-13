@@ -16,24 +16,24 @@
 package io.syndesis.server.dao.audit;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
 import io.syndesis.common.model.Audited;
-import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithName;
-import io.syndesis.common.model.connection.Connection;
-import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.dao.audit.AuditRecord.RecordType;
+import io.syndesis.server.dao.audit.handlers.AuditHandler;
 
 public final class Auditing {
+
+    private static final Map<Class<?>, AuditHandler<?>> HANDLERS = AuditHandler.handlers();
 
     private final Supplier<Long> time;
 
@@ -68,7 +68,7 @@ public final class Auditing {
     }
 
     public <T extends WithId<T>> Optional<AuditRecord> onUpdate(final T previous, final T current) {
-        final List<AuditEvent> events = computeEvents(previous, current);
+        final List<AuditEvent> events = computeEvents(current, Optional.of(previous));
 
         if (events.isEmpty()) {
             return Optional.empty();
@@ -84,7 +84,7 @@ public final class Auditing {
         final String id = object.getId().orElse("*");
         final String name = determineName(object);
 
-        final List<AuditEvent> events = computeEvents(object);
+        final List<AuditEvent> events = computeEvents(object, Optional.empty());
 
         return Optional.of(new AuditRecord(id, modelName(object), name, time.get(), username.get(), recordType, events));
     }
@@ -133,81 +133,15 @@ public final class Auditing {
         return false;
     }
 
-    private static <T extends WithId<T>> void addBaseChangesTo(final List<AuditEvent> changes, final T created) {
-        if (created instanceof WithName) {
-            changes.add(AuditEvent.propertySet("name", ((WithName) created).getName()));
-        }
-    }
-
-    private static <T extends WithId<T>> void addBaseChangesTo(final List<AuditEvent> changes, final T previous, final T current) {
-        if (previous instanceof WithName) {
-            final String previousName = ((WithName) previous).getName();
-            final String currentName = ((WithName) current).getName();
-
-            if (!Objects.equals(previousName, currentName)) {
-                changes.add(AuditEvent.propertyChanged("name", previousName, currentName));
-            }
-        }
-    }
-
-    private static void addConfiguredPropertiesChanges(final List<AuditEvent> changes, final WithConfiguredProperties created) {
-        final Map<String, String> configuredProperties = created.getConfiguredProperties();
-
-        for (final Map.Entry<String, String> configuredProperty : configuredProperties.entrySet()) {
-            final String propertyName = configuredProperty.getKey();
-            final String value = configuredProperty.getValue();
-
-            changes.add(AuditEvent.propertySet("configuredProperties." + propertyName, isSecret(created, propertyName) ? "**********" : value));
-        }
-    }
-
-    private static void addConfiguredPropertiesChanges(final List<AuditEvent> changes, final WithConfiguredProperties previous,
-        final WithConfiguredProperties current) {
-        final Map<String, String> previousConfiguredProperties = previous.getConfiguredProperties();
-        final Map<String, String> currentConfiguredProperties = current.getConfiguredProperties();
-
-        final Set<String> propertyNames = new HashSet<>(previousConfiguredProperties.keySet());
-        propertyNames.addAll(currentConfiguredProperties.keySet());
-
-        for (final String propertyName : propertyNames) {
-            final String previousConfiguredValue = previousConfiguredProperties.get(propertyName);
-            final String currentConfiguredValue = currentConfiguredProperties.get(propertyName);
-
-            // Objects.equals when comparing two null values will return true
-            if (!Objects.equals(previousConfiguredValue, currentConfiguredValue)) {
-                final boolean secret = isSecret(current, propertyName) || isSecret(previous, propertyName);
-
-                changes.add(
-                    AuditEvent.propertyChanged("configuredProperties." + propertyName, secret ? "**********" : previousConfiguredValue,
-                        secret ? "**********" : currentConfiguredValue));
-            }
-        }
-    }
-
-    private static <T extends WithId<T>> List<AuditEvent> computeEvents(final T created) {
+    private static <T extends WithId<T>> List<AuditEvent> computeEvents(final T current, final Optional<T> previous) {
         final List<AuditEvent> changes = new ArrayList<>();
-        addBaseChangesTo(changes, created);
 
-        if (created instanceof WithConfiguredProperties) {
-            addConfiguredPropertiesChanges(changes, (WithConfiguredProperties) created);
+        for (final AuditHandler<T> handler : handlersFor(current)) {
+            final List<AuditEvent> changesFromHandler = handler.handle(current, previous);
+            changes.addAll(changesFromHandler);
         }
 
         return changes;
-    }
-
-    private static <T extends WithId<T>> List<AuditEvent> computeEvents(final T previous, final T current) {
-        final List<AuditEvent> changes = new ArrayList<>();
-        addBaseChangesTo(changes, previous, current);
-
-        if (current instanceof WithConfiguredProperties) {
-            addConfiguredPropertiesChanges(changes, (WithConfiguredProperties) previous, (WithConfiguredProperties) current);
-        }
-
-        return changes;
-    }
-
-    private static Optional<Connector> connectorFor(final Connection connection) {
-        return connection.getConnector();
     }
 
     private static <T extends WithId<T>> String determineName(final T created) {
@@ -218,12 +152,22 @@ public final class Auditing {
         return "*";
     }
 
-    private static boolean isSecret(final WithConfiguredProperties withConfiguredProperties, final String propertyName) {
-        if (withConfiguredProperties instanceof Connection) {
-            return connectorFor((Connection) withConfiguredProperties).map(c -> c.isSecret(propertyName)).orElse(false);
+    private static <T extends WithId<T>> Collection<AuditHandler<T>> handlersFor(final T current) {
+        final List<AuditHandler<T>> handlers = new ArrayList<>();
+
+        for (final Class<?> inf : allTypesOf(current)) {
+            // This is not correct & true, AuditHandler will not be
+            // AuditHandler<T>, but of the `inf` type, generic type information
+            // is erased by the compiler so it ends up working
+            @SuppressWarnings("unchecked")
+            final AuditHandler<T> handler = (AuditHandler<T>) HANDLERS.get(inf);
+            if (handler != null) {
+                handlers.add(handler);
+            }
+
         }
 
-        return false;
+        return handlers;
     }
 
     private static <T extends WithId<T>> String modelName(final T created) {
