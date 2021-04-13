@@ -28,6 +28,8 @@ public final class AuditRecord {
     @JsonProperty(index = 7)
     private final List<AuditEvent> events;
 
+    private int hashCode = Integer.MIN_VALUE;
+
     @JsonProperty(index = 1)
     private final String id;
 
@@ -70,7 +72,8 @@ public final class AuditRecord {
             return false;
         }
         final AuditRecord that = (AuditRecord) o;
-        return Objects.equals(id, that.id) &&
+        return Objects.equals(hashCode, that.hashCode) &&
+            Objects.equals(id, that.id) &&
             Objects.equals(type, that.type) &&
             Objects.equals(name, that.name) &&
             Objects.equals(timestamp, that.timestamp) &&
@@ -85,7 +88,11 @@ public final class AuditRecord {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, name, timestamp, user, recordType, events);
+        if (hashCode == Integer.MIN_VALUE) {
+            hashCode = calculateHashCode();
+        }
+
+        return hashCode;
     }
 
     public String id() {
@@ -123,5 +130,10 @@ public final class AuditRecord {
 
     public String user() {
         return user;
+    }
+
+    private int calculateHashCode() {
+        return Objects.hash(id, type, name, timestamp, user, recordType, events);
+
     }
 }

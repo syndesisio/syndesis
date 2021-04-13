@@ -24,6 +24,8 @@ public final class AuditEvent {
     @JsonProperty(index = 4)
     private final String current;
 
+    private int hashCode = Integer.MIN_VALUE;
+
     @JsonProperty(index = 3)
     private final String previous;
 
@@ -57,7 +59,8 @@ public final class AuditEvent {
             return false;
         }
         final AuditEvent that = (AuditEvent) o;
-        return Objects.equals(type, that.type) &&
+        return Objects.equals(hashCode, that.hashCode) &&
+            Objects.equals(type, that.type) &&
             Objects.equals(property, that.property) &&
             Objects.equals(previous, that.previous) &&
             Objects.equals(current, that.current);
@@ -65,7 +68,11 @@ public final class AuditEvent {
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, property, previous, current);
+        if (hashCode == Integer.MIN_VALUE) {
+            hashCode = calculateHashCode();
+        }
+
+        return hashCode;
     }
 
     public String previous() {
@@ -88,6 +95,10 @@ public final class AuditEvent {
 
     public String type() {
         return type;
+    }
+
+    private int calculateHashCode() {
+        return Objects.hash(type, property, previous, current);
     }
 
     public static AuditEvent propertyChanged(final String propertyName, final String previous, final String current) {
