@@ -58,9 +58,11 @@ public class AuditingTest {
 
     @Audited
     private static class Marked extends Base {
+        // example test case class
     }
 
     private static class Unmarked extends Base {
+        // example test case class
     }
 
     @Test
