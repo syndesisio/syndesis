@@ -10,7 +10,7 @@ MK_OPTIONS := -s
 #
 # See https://kubectl.docs.kubernetes.io/faq/kustomize
 #
-KOPTIONS := --load_restrictor LoadRestrictionsNone
+KOPTIONS := --load-restrictor LoadRestrictionsNone
 
 #
 # Vars that can be overridden by external env vars
@@ -208,7 +208,7 @@ ifeq (, $(shell which kustomize))
 	KUSTOMIZE_GEN_TMP_DIR=$$(mktemp -d) ;\
 	cd $$KUSTOMIZE_GEN_TMP_DIR ;\
 	go mod init tmp ;\
-	go get sigs.k8s.io/kustomize/kustomize/v3@v3.5.4 ;\
+	go get sigs.k8s.io/kustomize/kustomize/v4@v4.0.5 ;\
 	rm -rf $$KUSTOMIZE_GEN_TMP_DIR ;\
 	}
 KUSTOMIZE=$(GOBIN)/kustomize
