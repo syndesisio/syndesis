@@ -21,16 +21,54 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithName;
 import io.syndesis.server.dao.audit.AuditEvent;
 
 public abstract class AuditHandler<T> {
+
+    private static class PrefixedHandler<T> extends AuditHandler<T> {
+
+        private final AuditHandler<T> delegate;
+
+        private final BiFunction<T, String, String> prefixer;
+
+        public PrefixedHandler(final AuditHandler<T> delegate, final BiFunction<T, String, String> prefixer) {
+            this.delegate = delegate;
+            this.prefixer = prefixer;
+        }
+
+        private List<AuditEvent> prefix(final T object, final List<AuditEvent> events) {
+            final List<AuditEvent> prefixed = new ArrayList<>(events.size());
+
+            for (final AuditEvent event : events) {
+                prefixed.add(event.withProperty(prefixer.apply(object, event.property())));
+            }
+
+            return prefixed;
+        }
+
+        @Override
+        protected List<AuditEvent> definition(final T current) {
+            return prefix(current, delegate.definition(current));
+        }
+
+        @Override
+        protected List<AuditEvent> difference(final T current, final T previous) {
+            return prefix(current == null ? previous : current, delegate.difference(current, previous));
+        }
+    }
+
     public final List<AuditEvent> handle(final T current, final Optional<T> previous) {
         return previous
             .map(p -> difference(current, p))
             .orElseGet(() -> definition(current));
+    }
+
+    final AuditHandler<T> prefixedWith(final BiFunction<T, String, String> prefixer) {
+        return new PrefixedHandler<>(this, prefixer);
     }
 
     protected abstract List<AuditEvent> definition(T current);
