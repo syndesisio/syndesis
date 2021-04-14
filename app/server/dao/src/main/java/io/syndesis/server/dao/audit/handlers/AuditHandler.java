@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.dao.audit.handlers;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -22,12 +23,19 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.stream.Collector;
 
 import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithName;
+import io.syndesis.common.model.integration.Integration;
 import io.syndesis.server.dao.audit.AuditEvent;
 
 public abstract class AuditHandler<T> {
+    static final Collector<List<AuditEvent>, List<AuditEvent>, List<AuditEvent>> MERGE_EVENT_LISTS = Collector.of(
+        ArrayList::new,
+        AuditHandler::concat,
+        AuditHandler::concat,
+        Collector.Characteristics.IDENTITY_FINISH);
 
     private static class PrefixedHandler<T> extends AuditHandler<T> {
 
@@ -80,6 +88,7 @@ public abstract class AuditHandler<T> {
 
         handlers.put(WithName.class, new WithNameAuditHandler());
         handlers.put(WithConfiguredProperties.class, new WithConfiguredPropertiesAuditHandler());
+        handlers.put(Integration.class, new IntegrationAuditHandler());
 
         return Collections.unmodifiableMap(handlers);
     }
@@ -90,5 +99,11 @@ public abstract class AuditHandler<T> {
         }
 
         return Optional.empty();
+    }
+
+    private static List<AuditEvent> concat(final List<AuditEvent> a, final List<AuditEvent> b) {
+        a.addAll(b);
+
+        return a;
     }
 }
