@@ -33,7 +33,7 @@ require (
 	k8s.io/api v0.20.5
 	k8s.io/apimachinery v0.20.5
 	k8s.io/client-go v12.0.0+incompatible
-	k8s.io/code-generator v0.20.5
+	k8s.io/code-generator v0.21.0
 	k8s.io/gengo v0.0.0-20210203185629-de9496dff47b
 	k8s.io/kube-openapi v0.0.0-20210323165736-1a6458611d18
 	sigs.k8s.io/yaml v1.2.0
