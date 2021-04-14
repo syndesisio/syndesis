@@ -75,7 +75,11 @@ final class WithConfiguredPropertiesAuditHandler extends AuditHandler<WithConfig
 
     static boolean isSecret(final WithConfiguredProperties withConfiguredProperties, final String propertyName) {
         if (withConfiguredProperties instanceof Connection) {
-            return connectorFor((Connection) withConfiguredProperties).map(c -> c.isSecret(propertyName)).orElse(false);
+            return connectorFor((Connection) withConfiguredProperties).map(c -> isSecret(propertyName, c)).orElse(false);
+        }
+
+        if (withConfiguredProperties instanceof Connector) {
+            return isSecret(propertyName, (Connector) withConfiguredProperties);
         }
 
         return false;
@@ -83,5 +87,9 @@ final class WithConfiguredPropertiesAuditHandler extends AuditHandler<WithConfig
 
     private static Optional<Connector> connectorFor(final Connection connection) {
         return connection.getConnector();
+    }
+
+    private static boolean isSecret(final String propertyName, final Connector connector) {
+        return connector.isSecret(propertyName);
     }
 }
