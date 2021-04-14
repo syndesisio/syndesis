@@ -44,8 +44,20 @@ public class AuditEventTest {
     }
 
     @Test
+    public void shouldAllowChangingPropertyNames() {
+        assertPropertyChangeFor(AuditEvent.propertySet("x", "value"));
+        assertPropertyChangeFor(AuditEvent.propertyChanged("x", "previous", "current"));
+    }
+
+    @Test
     public void shouldUpholdEqualsHashCodeContract() {
         EqualsVerifier.forClass(AuditEvent.class).withCachedHashCode("hashCode", "calculateHashCode", AuditEvent.propertySet("property", "value"))
             .verify();
+    }
+
+    private void assertPropertyChangeFor(final AuditEvent event) {
+        assertThat(event.withProperty("y"))
+            .isEqualToIgnoringGivenFields(event, "property", "hashCode")
+            .extracting(AuditEvent::property).isEqualTo("y");
     }
 }

@@ -99,6 +99,10 @@ public final class AuditEvent {
         return type;
     }
 
+    public AuditEvent withProperty(final String newProperty) {
+        return new AuditEvent(type, newProperty, previous, current);
+    }
+
     private int calculateHashCode() {
         return Objects.hash(type, property, previous, current);
     }
