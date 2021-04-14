@@ -22,7 +22,7 @@ import java.util.function.Function;
 
 import io.syndesis.server.dao.audit.AuditEvent;
 
-abstract class SinglePropertyAuditHandler<T> extends AuditHandler<T> {
+class SinglePropertyAuditHandler<T> extends AuditHandler<T> {
 
     private final Function<T, String> propertyExtractor;
 
@@ -35,17 +35,25 @@ abstract class SinglePropertyAuditHandler<T> extends AuditHandler<T> {
 
     @Override
     public final List<AuditEvent> definition(final T current) {
-        final AuditEvent event = AuditEvent.propertySet(propertyName, propertyExtractor.apply(current));
+        final AuditEvent event = AuditEvent.propertySet(propertyName, extractValueFrom(current));
 
         return Collections.singletonList(event);
     }
 
     @Override
     public final List<AuditEvent> difference(final T current, final T previous) {
-        final Optional<AuditEvent> event = AuditHandler.propertyDifference(propertyName, propertyExtractor.apply(current), propertyExtractor.apply(previous));
+        final Optional<AuditEvent> event = AuditHandler.propertyDifference(propertyName, extractValueFrom(current), extractValueFrom(previous));
 
         return event
             .map(Collections::singletonList)
             .orElseGet(Collections::emptyList);
+    }
+
+    private String extractValueFrom(final T object) {
+        if (object == null) {
+            return null;
+        }
+
+        return propertyExtractor.apply(object);
     }
 }
