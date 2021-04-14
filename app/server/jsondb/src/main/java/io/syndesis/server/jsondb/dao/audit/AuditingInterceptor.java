@@ -148,6 +148,10 @@ public final class AuditingInterceptor {
         final SecurityContext context = SecurityContextHolder.getContext();
         final Authentication authentication = context.getAuthentication();
 
+        if (authentication == null) {
+            return "SYSTEM";
+        }
+
         return authentication.getName();
     }
 }
