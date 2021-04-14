@@ -1,0 +1,11 @@
+# Syndesis installation parameters with default values used
+# All of them are optional except 'routeHostname' for now
+apiVersion: "syndesis.io/v1alpha1"
+kind: "Syndesis"
+metadata:
+    name: "syndesis-alpha"
+spec:
+    addons:
+        ops:
+            enabled: "true"
+status: {}

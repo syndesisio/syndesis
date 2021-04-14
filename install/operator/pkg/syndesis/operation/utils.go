@@ -1,6 +1,8 @@
 package operation
 
 import (
+	"strings"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -11,7 +13,20 @@ import (
 
 func SetNamespaceAndOwnerReference(resource interface{}, syndesis *v1beta2.Syndesis) {
 	object := util.ToMetaObject(resource)
-	object.SetNamespace(syndesis.Namespace)
+	if r, ok := resource.(unstructured.Unstructured); ok {
+		//
+		// Cluster-level resources do not require a namespace to be set
+		//
+		if !strings.HasPrefix(r.GetKind(), "Cluster") {
+			object.SetNamespace(syndesis.Namespace)
+		}
+	} else {
+		//
+		// Ensures any other resources still have a namespace set
+		//
+		object.SetNamespace(syndesis.Namespace)
+	}
+
 	object.SetOwnerReferences([]metav1.OwnerReference{
 		*metav1.NewControllerRef(syndesis, schema.GroupVersionKind{
 			Group:   v1beta2.SchemeGroupVersion.Group,

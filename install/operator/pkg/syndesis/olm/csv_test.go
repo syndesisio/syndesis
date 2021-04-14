@@ -122,12 +122,12 @@ func Test_csv_loadRolesFromTemplate(t *testing.T) {
 		{
 			"operator-role",
 			"./install/role.yml.tmpl",
-			46,
+			47,
 		},
 		{
 			"olm-roles",
 			"./install/cluster_role_olm.yml.tmpl",
-			5,
+			6,
 		},
 		{
 			"kafka-roles",

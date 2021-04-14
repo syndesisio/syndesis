@@ -82,14 +82,12 @@ type ReconcileSyndesis struct {
 // Note:
 // The Controller will requeue the Request to be processed again if the returned error is non-nil or
 // Result.Requeue is true, otherwise upon completion it will remove the work from the queue.
-func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Result, error) {
+func (r *ReconcileSyndesis) Reconcile(ctx context.Context, request reconcile.Request) (reconcile.Result, error) {
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
 	reqLogger.V(2).Info("Reconciling Syndesis")
 
 	// Fetch the Syndesis syndesis
 	syndesis := &syndesisv1beta2.Syndesis{}
-
-	ctx := context.TODO()
 
 	client, _ := r.clientTools.RuntimeClient()
 

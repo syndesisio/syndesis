@@ -9,7 +9,6 @@ import (
 	"github.com/spf13/pflag"
 	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
@@ -23,7 +22,7 @@ func init() {
 	FlagSet.BoolVar(&showResourceDiffs, "print-resource-diffs", false, "Enable printing resource diffs for resources that get updated.")
 }
 
-func CreateOrUpdate(ctx context.Context, cl client.Client, o runtime.Object, skipFields ...string) (*unstructured.Unstructured, controllerutil.OperationResult, error) {
+func CreateOrUpdate(ctx context.Context, cl client.Client, o client.Object, skipFields ...string) (*unstructured.Unstructured, controllerutil.OperationResult, error) {
 
 	desired, err := ToUnstructured(o)
 	if err != nil {

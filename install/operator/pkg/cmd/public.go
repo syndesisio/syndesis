@@ -48,14 +48,10 @@ func NewOperator(ctx context.Context) (*cobra.Command, error) {
 	options.Command = &cmd
 
 	// Lets rexport the flags installed by the controller runtime, and make them a little less kube specific
-	f := *flag.CommandLine.Lookup("kubeconfig")
+	f := flag.Lookup("kubeconfig")
 	f.Name = "config"
 	f.Usage = "path to the config file to connect to the cluster"
-	cmd.PersistentFlags().AddGoFlag(&f)
-
-	f = *flag.CommandLine.Lookup("master")
-	f.Usage = "the address of the cluster API server."
-	cmd.PersistentFlags().AddGoFlag(&f)
+	cmd.PersistentFlags().AddGoFlag(f)
 
 	// cmd.PersistentFlags().StringVar(&options.KubeConfig, "config", , "path to the config file to connect to the cluster")
 	namespace, found := os.LookupEnv("NAMESPACE")

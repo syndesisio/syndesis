@@ -47,11 +47,15 @@
     - daemonsets
     - deployments
     - deployments/scale
-    - ingresses
     - networkpolicies
     - replicasets
     - replicasets/scale
     - replicationcontrollers/scale
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+  - apiGroups:
+    - networking.k8s.io
+    resources:
+    - ingresses
     verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
   - apiGroups:
     - ""
@@ -238,11 +242,18 @@
     - daemonsets
     - deployments
     - deployments/scale
-    - ingresses
     - networkpolicies
     - replicasets
     - replicasets/scale
     - replicationcontrollers/scale
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - networking.k8s.io
+    resources:
+    - ingresses
     verbs:
     - get
     - list

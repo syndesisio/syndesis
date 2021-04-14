@@ -76,21 +76,21 @@ func (a *startupAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis)
 		target.Status.Reason = v1beta2.SyndesisStatusReasonMissing
 		target.Status.Description = ""
 		a.log.Info("Syndesis resource installed successfully", "name", syndesis.Name)
-		return rtClient.Update(ctx, target)
+		return rtClient.Status().Update(ctx, target)
 	} else if failedDeployment != nil {
 		target := syndesis.DeepCopy()
 		target.Status.Phase = v1beta2.SyndesisPhaseStartupFailed
 		target.Status.Reason = v1beta2.SyndesisStatusReasonDeploymentNotReady
 		target.Status.Description = "Some Syndesis deployments failed to startup within the allowed time frame"
 		a.log.V(synpkg.DEBUG_LOGGING_LVL).Info("Startup failed for Syndesis resource. Deployment not ready", "name", syndesis.Name, "deployment", *failedDeployment)
-		return rtClient.Update(ctx, target)
+		return rtClient.Status().Update(ctx, target)
 	} else {
 		target := syndesis.DeepCopy()
 		target.Status.Phase = v1beta2.SyndesisPhaseStarting
 		target.Status.Reason = v1beta2.SyndesisStatusReasonMissing
 		target.Status.Description = ""
 		a.log.V(synpkg.DEBUG_LOGGING_LVL).Info("Waiting for Syndesis resource to startup", "name", syndesis.Name)
-		return rtClient.Update(ctx, target)
+		return rtClient.Status().Update(ctx, target)
 	}
 }
 

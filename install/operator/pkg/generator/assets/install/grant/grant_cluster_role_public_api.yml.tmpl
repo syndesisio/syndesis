@@ -3,6 +3,11 @@
 # has to review tokens of the user and this has to
 # occur at the cluster-scope level.
 #
+#
+# Provides the OPERATOR service account with the necessary
+# permissions to in turn grant those same permissions to the
+# OPERAND service accounts.
+#
 # Note.
 # A RoleBinding binding to a ClusterRole will only
 # allow the permissions at the namespace-scope level
@@ -10,16 +15,16 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: syndesis-{{.Namespace}}-auth-delegator
+  name: syndesis-operator-{{.Namespace}}-auth-delegator
   labels:
     app: syndesis
     syndesis.io/app: syndesis
-    syndesis.io/type: infrastructure
-    syndesis.io/component: syndesis-public-oauthproxy
 subjects:
 - kind: ServiceAccount
-  name: syndesis-public-oauthproxy
+  name: syndesis-operator
   namespace: {{.Namespace}}
+- kind: User
+  name: {{.User}}
 roleRef:
   kind: ClusterRole
   name: syndesis-auth-delegator

@@ -1,17 +1,34 @@
+#
+# Provides permissions for syndesis-operator service-account to
+# create the necessary ClusterRoleBindings for the operand service-accounts
+#
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRoleBinding
+  metadata:
+    name: syndesis-operator-{{ .Namespace }}-cluster-role-bindings
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: syndesis-operator-cluster-role-bindings
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-operator
+    namespace: {{ .Namespace }}
+
 {{- if .ApiServer.ConsoleLink }}
 
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: ClusterRoleBinding
   metadata:
-    name: {{ .Role }}-{{ .User }}-consolelink
+    name: syndesis-operator-{{ .Namespace }}-consolelink
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
     name: syndesis-operator-consolelink
   subjects:
-  - apiGroup: rbac.authorization.k8s.io
-    kind: User
-    name: {{ .User }}
+  - kind: ServiceAccount
+    name: syndesis-operator
+    namespace: {{ .Namespace }}
 
 {{- end }}
 {{- if .ApiServer.OlmSupport }}
@@ -19,14 +36,14 @@
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: ClusterRoleBinding
   metadata:
-    name: {{ .Role }}-{{ .User }}-olm
+    name: syndesis-operator-{{ .Namespace }}-olm
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
     name: syndesis-operator-olm
   subjects:
-  - apiGroup: rbac.authorization.k8s.io
-    kind: User
-    name: {{ .User }}
+  - kind: ServiceAccount
+    name: syndesis-operator
+    namespace: {{ .Namespace }}
 
 {{end}}

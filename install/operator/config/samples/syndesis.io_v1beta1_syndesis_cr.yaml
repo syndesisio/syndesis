@@ -1,0 +1,9 @@
+apiVersion: syndesis.io/v1beta1
+kind: Syndesis
+metadata:
+    name: "syndesis-beta"
+spec:
+    addons:
+        ops:
+            enabled: true
+status: {}

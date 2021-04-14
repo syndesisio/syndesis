@@ -76,7 +76,7 @@ func syndesisPhaseIs(syndesis *v1beta2.Syndesis, statuses ...v1beta2.SyndesisPha
 	return false
 }
 
-func createOrReplaceForce(ctx context.Context, client client.Client, res runtime.Object, force bool) error {
+func createOrReplaceForce(ctx context.Context, client client.Client, res client.Object, force bool) error {
 	if err := client.Create(ctx, res); err != nil && k8serrors.IsAlreadyExists(err) {
 		if force || canResourceBeReplaced(res) {
 			err = client.Delete(ctx, res)

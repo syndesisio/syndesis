@@ -7,9 +7,13 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	"k8s.io/apiextensions-apiserver/pkg/apis/apiextensions"
+	apiextensionsv1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
+	apiextensionsv1beta1 "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 func (o *Install) installClusterResources() error {
@@ -19,10 +23,32 @@ func (o *Install) installClusterResources() error {
 		return err
 	}
 
+	//
+	// Determine if the extensions v1 API is supported (openshift 3.11 does not)
+	//
+	isApiExtensionsV1, err := o.isExtensionsV1APISupported()
+	if err != nil {
+		return err
+	}
+
+	if !isApiExtensionsV1 {
+		//
+		// Not supported so downgrade the extension v1 API to v1beta1
+		//
+		resources, err = o.downgradeApiExtensions(resources)
+		if err != nil {
+			return err
+		}
+	}
+
 	if o.ejectedResources != nil {
 		o.ejectedResources = append(o.ejectedResources, resources...)
 	} else {
 		// Installing CRDs needs admin rights, so skip this step if possible...
+		//
+		// crds will be a map of [gvk, served] where served is a boolean flag
+		// signifying whether the CRD version is being served or not, ie. visible
+		//
 		crds := toGroupVersionKindMap(resources)
 		if err := o.removeInstalledCRDs(crds); err != nil {
 			return o.cleanUpCrdError(err)
@@ -79,22 +105,136 @@ func toGroupVersionKindMap(resources []unstructured.Unstructured) map[v1.GroupVe
 	waintingOn := map[v1.GroupVersionKind]bool{}
 	for _, res := range resources {
 		if res.GetKind() == "CustomResourceDefinition" {
-			gvk := v1.GroupVersionKind{
-				Group:   util.MustRenderGoTemplate("{{.spec.group}}", res.Object),
-				Version: util.MustRenderGoTemplate("{{.spec.version}}", res.Object),
-				Kind:    util.MustRenderGoTemplate("{{.spec.names.kind}}", res.Object),
+
+			versions, _, _ := unstructured.NestedSlice(res.UnstructuredContent(), "spec", "versions")
+			for _, version := range versions {
+
+				v, _ := version.(map[string]interface{})
+
+				gvk := v1.GroupVersionKind{
+					Group:   util.MustRenderGoTemplate("{{.spec.group}}", res.Object),
+					Version: v["name"].(string),
+					Kind:    util.MustRenderGoTemplate("{{.spec.names.kind}}", res.Object),
+				}
+
+				//
+				// Served determines whether a CRD version is visible & can be discovered by the api.Discovery client
+				//
+				waintingOn[gvk] = v["served"].(bool)
 			}
-			waintingOn[gvk] = true
 		}
 	}
 	return waintingOn
 }
 
+func (o *Install) isExtensionsV1APISupported() (bool, error) {
+	api, err := o.ClientTools().ApiClient()
+	if err != nil {
+		return false, err
+	}
+
+	r, _ := api.Discovery().ServerResourcesForGroupVersion("apiextensions.k8s.io/v1")
+	if r == nil || r.Size() == 0 {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func (o *Install) downgradeApiExtensions(resources []unstructured.Unstructured) ([]unstructured.Unstructured, error) {
+	downgraded := []unstructured.Unstructured{}
+	scheme := o.ClientTools().GetScheme()
+
+	err := apiextensionsv1.AddToScheme(scheme)
+	if err != nil {
+		return downgraded, err
+	}
+
+	err = apiextensionsv1beta1.AddToScheme(scheme)
+	if err != nil {
+		return downgraded, err
+	}
+
+	for _, resource := range resources {
+
+		object, err := util.RuntimeObjectFromUnstructured(scheme, &resource)
+		if err != nil {
+			return downgraded, err
+		}
+
+		v1Crd := object.(*apiextensionsv1.CustomResourceDefinition)
+
+		//
+		// v1 CRDs have the latest version at the END of the versions array
+		// v1beta1 conversion takes the FIRST version from the versions array and
+		// sets it as the deprecated spec.version attribute
+		//
+		// If CRD has multiple versions, reverse them so the correct version is chosen.
+		//
+		reverseVersions(v1Crd)
+
+		v1beta1Crd := &apiextensionsv1beta1.CustomResourceDefinition{}
+		crd := &apiextensions.CustomResourceDefinition{}
+
+		err = apiextensionsv1.Convert_v1_CustomResourceDefinition_To_apiextensions_CustomResourceDefinition(v1Crd, crd, nil)
+		if err != nil {
+			return downgraded, err
+		}
+
+		err = apiextensionsv1beta1.Convert_apiextensions_CustomResourceDefinition_To_v1beta1_CustomResourceDefinition(crd, v1beta1Crd, nil)
+		if err != nil {
+			return downgraded, err
+		}
+
+		//
+		// This metadata seems to be missed off of the final converted object
+		//
+		v1beta1Crd.SetGroupVersionKind(
+			schema.GroupVersionKind{
+				Group:   "apiextensions.k8s.io",
+				Version: "v1beta1",
+				Kind:    "CustomResourceDefinition",
+			})
+
+		dgdUns, err := util.ToUnstructured(v1beta1Crd)
+		if err != nil {
+			return downgraded, err
+		}
+
+		downgraded = append(downgraded, *dgdUns)
+	}
+
+	return downgraded, nil
+}
+
+func reverseVersions(crd *apiextensionsv1.CustomResourceDefinition) {
+
+	if len(crd.Spec.Versions) < 2 {
+		return // nothing to do
+	}
+
+	versions := make([]apiextensionsv1.CustomResourceDefinitionVersion, len(crd.Spec.Versions))
+	copy(versions, crd.Spec.Versions)
+
+	for i := len(versions)/2 - 1; i >= 0; i-- {
+		opp := len(versions) - 1 - i
+		versions[i], versions[opp] = versions[opp], versions[i]
+	}
+
+	crd.Spec.Versions = versions
+}
+
 func (o *Install) removeInstalledCRDs(crds map[v1.GroupVersionKind]bool) error {
-	for crd, _ := range crds {
+	for crd, served := range crds {
 		if found, err := o.IsCRDInstalled(crd); err != nil {
 			return err
 		} else if found {
+			delete(crds, crd)
+		} else if !served {
+			//
+			// CRD has not been found but its also not being served
+			// so whether its installed or not is irrelevant
+			//
 			delete(crds, crd)
 		}
 	}

@@ -6,3 +6,8 @@ dist
 build.sh
 before_launch.sh
 /operator-builder.tmp
+
+**/*.gen.tmpl
+**/*.gen.yaml
+**/release/*-installer*
+**/bundle

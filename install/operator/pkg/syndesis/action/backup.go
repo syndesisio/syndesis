@@ -72,7 +72,7 @@ func (a *backupAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis) 
 			syndesis.Status.Backup.Previous = entries[0].Prev.String()
 
 			client, _ := a.clientTools.RuntimeClient()
-			return client.Update(ctx, syndesis)
+			return client.Status().Update(ctx, syndesis)
 		} else {
 			return fmt.Errorf("unsopported number of entries for cron instance, cron %v", c)
 		}

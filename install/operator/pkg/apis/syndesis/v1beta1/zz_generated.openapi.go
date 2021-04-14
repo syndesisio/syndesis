@@ -89,7 +89,7 @@ func schema_pkg_apis_syndesis_v1beta1_Syndesis(ref common.ReferenceCallback) com
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
-				Description: "Syndesis is the Schema for the syndeses API",
+				Description: "Syndesis is the Schema for the Syndeses API",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
@@ -170,7 +170,7 @@ func schema_pkg_apis_syndesis_v1beta1_SyndesisSpec(ref common.ReferenceCallback)
 					},
 					"forceMigration": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Something",
+							Description: "Force migration of CR to new version",
 							Type:        []string{"boolean"},
 							Format:      "",
 						},
@@ -188,7 +188,6 @@ func schema_pkg_apis_syndesis_v1beta1_SyndesisSpec(ref common.ReferenceCallback)
 						},
 					},
 				},
-				Required: []string{"forceMigration"},
 			},
 		},
 		Dependencies: []string{

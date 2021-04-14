@@ -1,3 +1,0 @@
-resources:
-- operator-install.gen.yaml
-- deployment.gen.yaml

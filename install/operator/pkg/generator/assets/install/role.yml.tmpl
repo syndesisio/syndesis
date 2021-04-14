@@ -75,6 +75,11 @@
     - replicationcontrollers/scale
     verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
   - apiGroups:
+    - networking.k8s.io
+    resources:
+    - ingresses
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+  - apiGroups:
     - ""
     resources:
     - bindings

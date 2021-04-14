@@ -11,6 +11,8 @@ import (
 	appsv1 "k8s.io/api/apps/v1"
 	rbac "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	"k8s.io/apimachinery/pkg/util/intstr"
 
 	"github.com/operator-framework/api/pkg/lib/version"
 )
@@ -59,10 +61,11 @@ type StrategyDeploymentPermissions struct {
 	Rules              []rbac.PolicyRule `json:"rules"`
 }
 
-// StrategyDeploymentSpec contains the name and spec for the deployment ALM should create
+// StrategyDeploymentSpec contains the name, spec and labels for the deployment ALM should create
 type StrategyDeploymentSpec struct {
-	Name string                `json:"name"`
-	Spec appsv1.DeploymentSpec `json:"spec"`
+	Name  string                `json:"name"`
+	Spec  appsv1.DeploymentSpec `json:"spec"`
+	Label labels.Set            `json:"label,omitempty"`
 }
 
 // StrategyDetailsDeployment represents the parsed details of a Deployment
@@ -159,16 +162,22 @@ const (
 	ValidatingAdmissionWebhook WebhookAdmissionType = "ValidatingAdmissionWebhook"
 	// MutatingAdmissionWebhook is for mutating admission webhooks
 	MutatingAdmissionWebhook WebhookAdmissionType = "MutatingAdmissionWebhook"
+	// ConversionWebhook is for conversion webhooks
+	ConversionWebhook WebhookAdmissionType = "ConversionWebhook"
 )
 
 // WebhookDescription provides details to OLM about required webhooks
 // +k8s:openapi-gen=true
 type WebhookDescription struct {
 	GenerateName string `json:"generateName"`
-	// +kubebuilder:validation:Enum=ValidatingAdmissionWebhook;MutatingAdmissionWebhook
-	Type                    WebhookAdmissionType                            `json:"type"`
-	DeploymentName          string                                          `json:"deploymentName,omitempty"`
+	// +kubebuilder:validation:Enum=ValidatingAdmissionWebhook;MutatingAdmissionWebhook;ConversionWebhook
+	Type           WebhookAdmissionType `json:"type"`
+	DeploymentName string               `json:"deploymentName,omitempty"`
+	// +kubebuilder:validation:Maximum=65535
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:default=443
 	ContainerPort           int32                                           `json:"containerPort,omitempty"`
+	TargetPort              *intstr.IntOrString                             `json:"targetPort,omitempty"`
 	Rules                   []admissionregistrationv1.RuleWithOperations    `json:"rules,omitempty"`
 	FailurePolicy           *admissionregistrationv1.FailurePolicyType      `json:"failurePolicy,omitempty"`
 	MatchPolicy             *admissionregistrationv1.MatchPolicyType        `json:"matchPolicy,omitempty"`
@@ -178,6 +187,7 @@ type WebhookDescription struct {
 	AdmissionReviewVersions []string                                        `json:"admissionReviewVersions"`
 	ReinvocationPolicy      *admissionregistrationv1.ReinvocationPolicyType `json:"reinvocationPolicy,omitempty"`
 	WebhookPath             *string                                         `json:"webhookPath,omitempty"`
+	ConversionCRDs          []string                                        `json:"conversionCRDs,omitempty"`
 }
 
 // GetValidatingWebhook returns a ValidatingWebhook generated from the WebhookDescription
@@ -197,6 +207,7 @@ func (w *WebhookDescription) GetValidatingWebhook(namespace string, namespaceSel
 				Name:      w.DomainName() + "-service",
 				Namespace: namespace,
 				Path:      w.WebhookPath,
+				Port:      &w.ContainerPort,
 			},
 			CABundle: caBundle,
 		},
@@ -220,6 +231,7 @@ func (w *WebhookDescription) GetMutatingWebhook(namespace string, namespaceSelec
 				Name:      w.DomainName() + "-service",
 				Namespace: namespace,
 				Path:      w.WebhookPath,
+				Port:      &w.ContainerPort,
 			},
 			CABundle: caBundle,
 		},
@@ -367,6 +379,7 @@ const (
 	CSVReasonCannotModifyStaticOperatorGroupProvidedAPIs ConditionReason = "CannotModifyStaticOperatorGroupProvidedAPIs"
 	CSVReasonDetectedClusterChange                       ConditionReason = "DetectedClusterChange"
 	CSVReasonInvalidWebhookDescription                   ConditionReason = "InvalidWebhookDescription"
+	CSVReasonOperatorConditionNotUpgradeable             ConditionReason = "OperatorConditionNotUpgradeable"
 )
 
 // HasCaResources returns true if the CSV has owned APIServices or Webhooks.

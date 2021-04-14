@@ -1,3 +1,0 @@
-bases:
-- ../setup
-- ../bases/jaeger-crd

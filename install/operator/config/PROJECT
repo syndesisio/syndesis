@@ -1,0 +1,11 @@
+domain: syndesis.io
+layout: go.kubebuilder.io/v2
+projectName: syndesis
+repo: github.com/syndesisio/syndesis
+resources:
+- group: syndesis.io
+  kind: Syndesis
+  version: v1beta2
+version: "3"
+plugins:
+  go.sdk.operatorframework.io/v2-alpha: {}

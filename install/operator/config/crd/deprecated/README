@@ -1,0 +1,3 @@
+This CRD should only be used for the installation of the syndesis API on Openshift 3.11.
+
+It is referenced during the kustomize install procedure.

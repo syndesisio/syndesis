@@ -30,7 +30,6 @@ import (
 	"go.uber.org/zap"
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	runtime "k8s.io/apimachinery/pkg/runtime"
 	cgofake "k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -149,7 +148,7 @@ type EvtFakeRuntimeClient struct {
 	client.Client
 }
 
-func (evt EvtFakeRuntimeClient) Create(ctx context.Context, runtimeObj runtime.Object, opts ...client.CreateOption) error {
+func (evt EvtFakeRuntimeClient) Create(ctx context.Context, runtimeObj client.Object, opts ...client.CreateOption) error {
 	if dep, ok := runtimeObj.(*appsv1.Deployment); ok {
 		//
 		// Fake the creation of a replica on the create db-upgrade deployment

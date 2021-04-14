@@ -1,4 +1,0 @@
-**/*.gen.tmpl
-**/*.gen.yaml
-
-release/*-installer*

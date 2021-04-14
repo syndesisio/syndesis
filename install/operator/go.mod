@@ -13,51 +13,80 @@ require (
 	github.com/docker/go-connections v0.4.0
 	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
-	github.com/go-logr/logr v0.1.0
-	github.com/go-openapi/spec v0.19.8
-	github.com/imdario/mergo v0.3.9
-	github.com/lib/pq v1.3.0
+	github.com/go-logr/logr v0.4.0
+	github.com/go-openapi/spec v0.20.3
+	github.com/imdario/mergo v0.3.12
+	github.com/lib/pq v1.8.0
 	github.com/openshift/api v3.9.1-0.20190927182313-d4a64ec2cbd8+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0
-	github.com/prometheus/client_golang v1.5.1
+	github.com/prometheus/client_golang v1.10.0
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/shurcooL/httpfs v0.0.0-20190707220628-8d4bc4ba7749
 	github.com/shurcooL/vfsgen v0.0.0-20181202132449-6a9ea43bcacd
 	github.com/spf13/cast v1.3.1
-	github.com/spf13/cobra v1.0.0
+	github.com/spf13/cobra v1.1.1
 	github.com/spf13/pflag v1.0.5
-	github.com/stretchr/testify v1.5.1
+	github.com/stretchr/testify v1.6.1
 	github.com/testcontainers/testcontainers-go v0.3.1
-	gopkg.in/yaml.v2 v2.2.8
-	k8s.io/api v0.18.2
-	k8s.io/apimachinery v0.18.2
+	gopkg.in/yaml.v2 v2.4.0
+	k8s.io/api v0.20.5
+	k8s.io/apimachinery v0.20.5
 	k8s.io/client-go v12.0.0+incompatible
-	k8s.io/code-generator v0.18.2
-	k8s.io/gengo v0.0.0-20200114144118-36b2048a9120
-	k8s.io/kube-openapi v0.0.0-20200121204235-bf4fb3bd569c
+	k8s.io/code-generator v0.20.5
+	k8s.io/gengo v0.0.0-20210203185629-de9496dff47b
+	k8s.io/kube-openapi v0.0.0-20210323165736-1a6458611d18
 	sigs.k8s.io/yaml v1.2.0
 )
 
-require (
-	github.com/blang/semver v3.5.1+incompatible
-	github.com/coreos/prometheus-operator v0.39.0 // indirect
-	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
-	github.com/go-logr/zapr v0.1.1
-	github.com/go-openapi/swag v0.19.7 // indirect
-	github.com/operator-framework/api v0.3.5
-	github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200521062108-408ca95d458f // Tag 0.15.1
-	github.com/operator-framework/operator-marketplace v0.0.0-20200515051804-e0148822df25
-	github.com/operator-framework/operator-sdk v0.0.0-20200428193249-b34ae44ff198 // Not a release but a bump commit aligning with client-go 0.18.2
-	github.com/rogpeppe/go-internal v1.5.0
-	github.com/spf13/afero v1.2.2
-	go.uber.org/zap v1.14.1
-	golang.org/x/lint v0.0.0-20200130185559-910be7a94367 // indirect
-	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d // indirect
-	sigs.k8s.io/controller-runtime v0.6.0
+replace (
+	k8s.io/api => k8s.io/api v0.19.2
+	k8s.io/apimachinery => k8s.io/apimachinery v0.19.2
+	k8s.io/code-generator => k8s.io/code-generator v0.19.2
 )
 
-replace k8s.io/client-go => k8s.io/client-go v0.18.2 // Required by prometheus-operator
+require (
+	github.com/blang/semver/v4 v4.0.0
+	github.com/coreos/prometheus-operator v0.39.0 // indirect
+	github.com/emicklei/go-restful v2.15.0+incompatible // indirect
+	github.com/ghodss/yaml v1.0.1-0.20190212211648-25d852aebe32 // indirect
+	github.com/go-logr/zapr v0.2.0
+	github.com/go-openapi/swag v0.19.15 // indirect
+	github.com/gogo/protobuf v1.3.2 // indirect
+	github.com/golang/protobuf v1.5.2 // indirect
+	github.com/google/gofuzz v1.2.0 // indirect
+	github.com/google/uuid v1.2.0 // indirect
+	github.com/googleapis/gnostic v0.5.4 // indirect
+	github.com/mailru/easyjson v0.7.7 // indirect
+	github.com/operator-framework/api v0.5.1
+	github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200521062108-408ca95d458f // Tag 0.15.1
+	github.com/operator-framework/operator-sdk v0.19.3 // Not a release but a bump commit aligning with client-go 0.18.2
+	github.com/prometheus/common v0.20.0 // indirect
+	github.com/rogpeppe/go-internal v1.5.0
+	github.com/spf13/afero v1.2.2
+	go.uber.org/zap v1.15.0
+	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2 // indirect
+	golang.org/x/mod v0.4.2 // indirect
+	golang.org/x/net v0.0.0-20210331212208-0fccb6fa2b5c // indirect
+	golang.org/x/oauth2 v0.0.0-20210323180902-22b0adad7558 // indirect
+	golang.org/x/sys v0.0.0-20210331175145-43e1dd70ce54 // indirect
+	golang.org/x/term v0.0.0-20210317153231-de623e64d2a6 // indirect
+	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba // indirect
+	golang.org/x/tools v0.1.0 // indirect
+	google.golang.org/appengine v1.6.7 // indirect
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	k8s.io/apiextensions-apiserver v0.20.5
+	k8s.io/klog/v2 v2.8.0 // indirect
+	k8s.io/utils v0.0.0-20210305010621-2afb4311ab10 // indirect
+	sigs.k8s.io/controller-runtime v0.7.0
+	sigs.k8s.io/structured-merge-diff/v4 v4.1.0 // indirect
+)
+
+replace github.com/operator-framework/operator-sdk => github.com/operator-framework/operator-sdk v0.19.3
+
+replace sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.7.0
+
+replace k8s.io/client-go => k8s.io/client-go v0.19.2 // Required by prometheus-operator
 
 replace golang.org/x/text => golang.org/x/text v0.3.3
 

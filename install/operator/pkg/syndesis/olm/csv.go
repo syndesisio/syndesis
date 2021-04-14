@@ -232,26 +232,16 @@ func (c *csv) build() (err error) {
 		return err
 	}
 
-	if synOpPerm, err := c.installPerm("syndesis-operator", "./install/cluster_role_olm.yml.tmpl"); err == nil {
+	//
+	// Gives syndesis-operator necessary cluster-level privileges,
+	// inc. createing the clusterrolebindings for the operand service accounts
+	//
+	if synOpPerm, err := c.installPerm(
+		"syndesis-operator",
+		"./install/cluster_role_olm.yml.tmpl",
+		"./install/cluster_role_kafka.yml.tmpl",
+		"./install/cluster_role_public_api.yml.tmpl"); err == nil {
 		clusterRuleSpecs = append(clusterRuleSpecs, synOpPerm)
-	} else {
-		return err
-	}
-
-	//
-	// syndesis-server service account for kafka addon
-	//
-	if synSvrPerm, err := c.installPerm("syndesis-server", "./install/cluster_role_kafka.yml.tmpl"); err == nil {
-		clusterRuleSpecs = append(clusterRuleSpecs, synSvrPerm)
-	} else {
-		return err
-	}
-
-	//
-	// syndesis-public-oauthproxy service account for public-api addon
-	//
-	if synPubPerm, err := c.installPerm("syndesis-public-oauthproxy", "./install/cluster_role_public_api.yml.tmpl"); err == nil {
-		clusterRuleSpecs = append(clusterRuleSpecs, synPubPerm)
 	} else {
 		return err
 	}

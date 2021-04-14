@@ -1,6 +1,0 @@
-bases:
-- ../../bases/deployment
-patchesStrategicMerge:
-- ./env-var-patch.yaml
-- ./annotation-patch.gen.yaml
-- ./image-stream-patch.gen.yaml

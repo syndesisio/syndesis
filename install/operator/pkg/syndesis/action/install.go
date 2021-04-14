@@ -308,7 +308,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis)
 		target.Status.Phase = v1beta2.SyndesisPhaseStarting
 		target.Status.Reason = v1beta2.SyndesisStatusReasonMissing
 		target.Status.Description = ""
-		_, _, err := util.CreateOrUpdate(ctx, rtClient, target, "kind", "apiVersion")
+		err := rtClient.Status().Update(ctx, target)
 		if err != nil {
 			return err
 		}
@@ -319,7 +319,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis)
 		target.Status.Phase = v1beta2.SyndesisPhasePostUpgradeRunSucceed
 		target.Status.Reason = v1beta2.SyndesisStatusReasonMissing
 		target.Status.Description = ""
-		_, _, err := util.CreateOrUpdate(ctx, rtClient, target, "kind", "apiVersion")
+		err := rtClient.Status().Update(ctx, target)
 		if err != nil {
 			return err
 		}
@@ -459,9 +459,7 @@ func installSyndesisRoute(ctx context.Context, cl client.Client, syndesis *v1bet
 
 	// Let's try to get the route from OpenShift to check the host field
 	var key client.ObjectKey
-	if key, err = client.ObjectKeyFromObject(route); err != nil {
-		return nil, err
-	}
+	key = client.ObjectKeyFromObject(route)
 	err = cl.Get(ctx, key, route)
 	if err != nil {
 		return nil, err

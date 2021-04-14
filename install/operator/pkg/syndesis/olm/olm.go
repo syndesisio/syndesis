@@ -40,6 +40,7 @@ func Build(config *configuration.Config, path string, image string, tag string) 
 		operator:   fmt.Sprintf("%s:%s", image, tag),
 		csv:        &csv{config: config, image: image, tag: tag},
 		crd:        &crd{},
+		croles:     &croles{},
 		annotation: &annotation{config: config},
 		docker:     &docker{config: config},
 		container:  &container{},
@@ -55,6 +56,7 @@ type manifest struct {
 
 	csv        *csv
 	crd        *crd
+	croles     *croles
 	annotation *annotation
 	docker     *docker
 	container  *container
@@ -70,6 +72,10 @@ func (m manifest) Generate() (err error) {
 	}
 
 	if err = m.crd.build(); err != nil {
+		return err
+	}
+
+	if err = m.croles.build(); err != nil {
 		return err
 	}
 
@@ -94,6 +100,10 @@ func (m manifest) Generate() (err error) {
 	}
 
 	if err = ioutil.WriteFile(filepath.Join(m.path, m.config.Version, "manifests", "syndesis.clusterserviceversion.yaml"), m.csv.body, 0644); err != nil {
+		return err
+	}
+
+	if err = ioutil.WriteFile(filepath.Join(m.path, m.config.Version, "manifests", "syndesis.clusterroles.yaml"), m.croles.body, 0644); err != nil {
 		return err
 	}
 

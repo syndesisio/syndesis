@@ -59,7 +59,7 @@ func (a checkUpdatesAction) setPhaseToUpgrading(ctx context.Context, syndesis *v
 	target.Status.ForceUpgrade = false
 
 	client, _ := a.clientTools.RuntimeClient()
-	err = client.Update(ctx, target)
+	err = client.Status().Update(ctx, target)
 	time.Sleep(3 * time.Second)
 	return
 }
