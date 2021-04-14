@@ -15,11 +15,34 @@
  */
 package io.syndesis.server.dao.audit;
 
+import net.jqwik.api.ForAll;
+import net.jqwik.api.Property;
+import net.jqwik.api.constraints.WithNull;
+
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 public class AuditEventTest {
+    @Property
+    public void shouldAbbreviateValues(@ForAll @WithNull final String value) {
+        assertThat(AuditEvent.abbreviate(value)).satisfiesAnyOf(
+            s -> {
+                assertThat(value).isNull();
+                assertThat(s).isNull();
+            },
+            s -> {
+                assertThat(s).hasSizeLessThanOrEqualTo(AuditEvent.MAX_LENGTH);
+            });
+    }
+
+    @Test
+    public void shouldAbbreviateWithThreeDots() {
+        assertThat(AuditEvent.abbreviate("really long value here put for the purposes of the test")).hasSize(AuditEvent.MAX_LENGTH).endsWith("...");
+    }
+
     @Test
     public void shouldUpholdEqualsHashCodeContract() {
         EqualsVerifier.forClass(AuditEvent.class).withCachedHashCode("hashCode", "calculateHashCode", AuditEvent.propertySet("property", "value"))

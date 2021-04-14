@@ -21,6 +21,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class AuditEvent {
 
+    static final int MAX_LENGTH = 30;
+
     @JsonProperty(index = 4)
     private final String current;
 
@@ -42,8 +44,8 @@ public final class AuditEvent {
     private AuditEvent(final String type, final String property, final String previous, final String current) {
         this.type = type;
         this.property = property;
-        this.previous = previous;
-        this.current = current;
+        this.previous = abbreviate(previous);
+        this.current = abbreviate(current);
     }
 
     public String current() {
@@ -107,5 +109,17 @@ public final class AuditEvent {
 
     public static AuditEvent propertySet(final String propertyName, final String value) {
         return new AuditEvent("set", propertyName, value);
+    }
+
+    static String abbreviate(final String value) {
+        if (value == null) {
+            return null;
+        }
+
+        if (value.length() > MAX_LENGTH) {
+            return value.substring(0, MAX_LENGTH - 3) + "...";
+        }
+
+        return value;
     }
 }
