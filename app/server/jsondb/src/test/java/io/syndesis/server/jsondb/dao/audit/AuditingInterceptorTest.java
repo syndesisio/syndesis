@@ -32,18 +32,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.Environment;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static java.util.Collections.singletonList;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.withSettings;
+import static org.springframework.test.context.support.TestPropertySourceUtils.addInlinedPropertiesToEnvironment;
 
 @ExtendWith(SpringExtension.class)
 @WithMockUser(username = "testuser")
+@TestPropertySource(properties = "features.auditing.enabled=true")
 public class AuditingInterceptorTest {
 
     final static Connection previous = new Connection.Builder().name("previous").build();
@@ -53,8 +59,8 @@ public class AuditingInterceptorTest {
     public static class TestConfiguration {
 
         @Bean
-        public AuditingInterceptor auditingInterceptor(final AuditingRecorder auditingRecorder) {
-            return new AuditingInterceptor(() -> 123456789L, auditingRecorder);
+        public AuditingInterceptor auditingInterceptor(final AuditingRecorder auditingRecorder, final Environment environment) {
+            return new AuditingInterceptor(() -> 123456789L, auditingRecorder, environment);
         }
 
         @Bean
@@ -110,7 +116,7 @@ public class AuditingInterceptorTest {
 
     @Test
     public void shouldAuditConnectionDeletionViaId(@Autowired final ConnectionDao dao, @Autowired final AuditingRecorder auditingRecorder) {
-        final Connection object = new Connection.Builder().id("id").name("name").build();
+        new Connection.Builder().id("id").name("name").build();
 
         dao.delete("id");
 
@@ -139,5 +145,22 @@ public class AuditingInterceptorTest {
         verify(auditingRecorder)
             .record(new AuditRecord("id", "connection", "current", 123456789L, "testuser", RecordType.updated,
                 singletonList(AuditEvent.propertyChanged("name", "previous", "current"))));
+    }
+
+    @Test
+    public void shouldToggleAuditingOnConfigurationRefresh(@Autowired final AuditingInterceptor interceptor,
+        @Autowired final ConfigurableEnvironment environment) {
+        assertThat(interceptor.isEnabled()).isTrue();
+
+        addInlinedPropertiesToEnvironment(environment, "features.auditing.enabled=false");
+
+        try {
+            interceptor.onApplicationEvent(null);
+
+            assertThat(interceptor.isEnabled()).isFalse();
+        } finally {
+            addInlinedPropertiesToEnvironment(environment, "features.auditing.enabled=true");
+            interceptor.onApplicationEvent(null);
+        }
     }
 }

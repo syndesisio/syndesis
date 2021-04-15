@@ -28,6 +28,9 @@ import io.syndesis.server.dao.manager.DataAccessObject;
 
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.cloud.context.scope.refresh.RefreshScopeRefreshedEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,9 +40,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * them as audit records.
  */
 @Aspect
-public final class AuditingInterceptor {
+public final class AuditingInterceptor implements ApplicationListener<RefreshScopeRefreshedEvent> {
 
     private final Auditing auditing;
+
+    // disabled by default, the only way to disable is to set
+    // `features.auditing.enabled=false`, can't remove advice, once applied the
+    // advised instance is already injected
+    private boolean enabled = false;
+
+    private final Environment environment;
 
     private final AuditingRecorder recorder;
 
@@ -69,29 +79,37 @@ public final class AuditingInterceptor {
         }
     }
 
-    public AuditingInterceptor() {
-        this(new Auditing(AuditingInterceptor::currentUsername),
-            new LoggingAuditingRecorder());
-    }
-
-    public AuditingInterceptor(final Auditing auditing, final AuditingRecorder recorder) {
+    public AuditingInterceptor(final Auditing auditing, final AuditingRecorder recorder, final Environment environment) {
         this.auditing = auditing;
         this.recorder = recorder;
+        this.environment = environment;
+        setEnabled();
     }
 
-    public AuditingInterceptor(final Supplier<Long> time, final AuditingRecorder auditingRecorder) {
-        this(new Auditing(time, AuditingInterceptor::currentUsername),
-            auditingRecorder);
+    public AuditingInterceptor(final Environment environment) {
+        this(new Auditing(AuditingInterceptor::currentUsername), new LoggingAuditingRecorder(), environment);
+    }
+
+    public AuditingInterceptor(final Supplier<Long> time, final AuditingRecorder auditingRecorder, final Environment environment) {
+        this(new Auditing(time, AuditingInterceptor::currentUsername), auditingRecorder, environment);
     }
 
     @AfterReturning(pointcut = "execution(* io.syndesis.server.jsondb.dao.JsonDbDao.create(io.syndesis.common.model.WithId)) && args(given)")
     public <T extends WithId<T>> void created(final T given) {
+        if (!enabled) {
+            return;
+        }
+
         recordCreated(given);
     }
 
     @AfterReturning(pointcut = "execution(* io.syndesis.server.jsondb.dao.JsonDbDao.delete(java.lang.String)) && args(id) && this(that)")
     @SuppressWarnings("unchecked")
     public <T extends WithId<T>> void deleted(final DataAccessObject<T> that, final String id) {
+        if (!enabled) {
+            return;
+        }
+
         final Class<T> type = that.getType();
 
         final Kind kind = Kind.from(type);
@@ -104,11 +122,28 @@ public final class AuditingInterceptor {
 
     @AfterReturning(pointcut = "execution(* io.syndesis.server.jsondb.dao.JsonDbDao.delete(io.syndesis.common.model.WithId)) && args(given)")
     public <T extends WithId<T>> void deleted(final T given) {
+        if (!enabled) {
+            return;
+        }
+
         recordDeleted(given);
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public void onApplicationEvent(final RefreshScopeRefreshedEvent event) {
+        setEnabled();
     }
 
     @AfterReturning(pointcut = "execution(* io.syndesis.server.jsondb.dao.JsonDbDao.set(io.syndesis.common.model.WithId)) && args(given)")
     public <T extends WithId<T>> void set(final T given) {
+        if (!enabled) {
+            return;
+        }
+
         // set in JsonDB doesn't return a value, not to perform the lookup of
         // the old value first, we just record update with the current values
         recordUpdated(given);
@@ -117,6 +152,10 @@ public final class AuditingInterceptor {
     @AfterReturning(pointcut = "execution(* io.syndesis.server.jsondb.dao.JsonDbDao.update(io.syndesis.common.model.WithId)) && args(given)",
         returning = "returned")
     public <T extends WithId<T>> void updated(final T given, final Object returned) {
+        if (!enabled) {
+            return;
+        }
+
         // return needs to be an Object, otherwise AspectJ won't match, could be
         // generic types, not sure, AuditingInterceptorTest fails with `T
         // returned`, not with `Object returned`
@@ -144,6 +183,10 @@ public final class AuditingInterceptor {
     private <T extends WithId<T>> void recordUpdated(final T given, final T returned) {
         auditing.onUpdate(returned, given)
             .ifPresent(r -> recorder.record(r));
+    }
+
+    private void setEnabled() {
+        enabled = environment.getProperty("features.auditing.enabled", boolean.class, false);
     }
 
     private static String currentUsername() {

@@ -31,20 +31,20 @@ public class AuditingITCase {
 
     @ExtendWith(SpringExtension.class)
     @ContextConfiguration(classes = AuditingConfiguration.class)
-    static class AuditingDisabledByDefault {
+    @TestPropertySource(properties = "features.auditing.enabled=true")
+    static class AuditingCanBeEnabled {
         @Test
-        public void byDefaultAuditingShouldBeDisabled(@Autowired(required = false) AuditingInterceptor auditingInterceptor) {
-            assertThat(auditingInterceptor).isNull();
+        public void byDefaultAuditingShouldBeDisabled(final @Autowired AuditingInterceptor auditingInterceptor) {
+            assertThat(auditingInterceptor.isEnabled()).isTrue();
         }
     }
 
     @ExtendWith(SpringExtension.class)
     @ContextConfiguration(classes = AuditingConfiguration.class)
-    @TestPropertySource(properties = "features.auditing.enabled=true")
-    static class AuditingCanBeEnabled {
+    static class AuditingDisabledByDefault {
         @Test
-        public void byDefaultAuditingShouldBeDisabled(@Autowired AuditingInterceptor auditingInterceptor) {
-            assertThat(auditingInterceptor).isNotNull();
+        public void byDefaultAuditingShouldBeDisabled(final @Autowired AuditingInterceptor auditingInterceptor) {
+            assertThat(auditingInterceptor.isEnabled()).isFalse();
         }
     }
 }

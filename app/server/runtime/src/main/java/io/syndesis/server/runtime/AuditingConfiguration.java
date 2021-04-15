@@ -17,17 +17,16 @@ package io.syndesis.server.runtime;
 
 import io.syndesis.server.jsondb.dao.audit.AuditingInterceptor;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 
 @Configuration
 public class AuditingConfiguration {
 
     @Bean
-    @ConditionalOnProperty(value = "features.auditing.enabled", havingValue = "true", matchIfMissing = false)
-    public AuditingInterceptor auditingInterceptor() {
-        return new AuditingInterceptor();
+    public AuditingInterceptor auditingInterceptor(final Environment environment) {
+        return new AuditingInterceptor(environment);
     }
 
 }
