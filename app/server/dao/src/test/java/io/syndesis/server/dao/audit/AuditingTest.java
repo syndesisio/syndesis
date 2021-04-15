@@ -23,6 +23,7 @@ import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithKind;
 import io.syndesis.common.model.WithResourceId;
+import io.syndesis.common.model.bulletin.ConnectionBulletinBoard;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
@@ -168,6 +169,7 @@ public class AuditingTest {
         assertThat(Auditing.shouldAudit(new Unmarked())).isFalse();
         assertThat(Auditing.shouldAudit(new Marked())).isTrue();
         assertThat(Auditing.shouldAudit(new MarkedSubclass())).isTrue();
+        assertThat(Auditing.shouldAudit(new ConnectionBulletinBoard.Builder().build())).isFalse();
     }
 
     @Test

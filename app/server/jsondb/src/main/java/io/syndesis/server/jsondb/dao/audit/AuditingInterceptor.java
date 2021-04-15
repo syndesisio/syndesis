@@ -18,6 +18,7 @@ package io.syndesis.server.jsondb.dao.audit;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import io.syndesis.common.model.Audited;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
 import io.syndesis.server.dao.audit.Auditing;
@@ -42,6 +43,7 @@ public final class AuditingInterceptor {
 
     private final AuditingRecorder recorder;
 
+    @Audited
     private static final class Standin<T extends WithId<T>> implements WithId<T> {
         private final String id;
         private final Kind kind;

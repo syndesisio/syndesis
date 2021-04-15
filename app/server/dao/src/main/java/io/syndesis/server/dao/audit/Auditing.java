@@ -60,6 +60,10 @@ public final class Auditing {
     }
 
     public <T extends WithId<T>> Optional<AuditRecord> onDelete(final T deleted) {
+        if (!shouldAudit(deleted)) {
+            return Optional.empty();
+        }
+
         final String id = deleted.getId().get();
         final String name = determineName(deleted);
 
@@ -67,10 +71,18 @@ public final class Auditing {
     }
 
     public <T extends WithId<T>> Optional<AuditRecord> onUpdate(final T updated) {
+        if (!shouldAudit(updated)) {
+            return Optional.empty();
+        }
+
         return createdOrUpdated(updated, RecordType.updated);
     }
 
     public <T extends WithId<T>> Optional<AuditRecord> onUpdate(final T previous, final T current) {
+        if (!shouldAudit(current)) {
+            return Optional.empty();
+        }
+
         final List<AuditEvent> events = computeEvents(current, Optional.of(previous));
 
         if (events.isEmpty()) {
