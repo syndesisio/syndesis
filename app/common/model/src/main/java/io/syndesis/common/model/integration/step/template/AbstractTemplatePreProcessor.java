@@ -59,9 +59,6 @@ abstract class AbstractTemplatePreProcessor<C extends ProcessingContext> impleme
         }
     }
 
-    @Override
-    public abstract boolean isMySymbol(String literal);
-
     private boolean isSymbol(String symbol) throws TemplateProcessingException {
         if (isMySymbol(symbol)) {
             return true;

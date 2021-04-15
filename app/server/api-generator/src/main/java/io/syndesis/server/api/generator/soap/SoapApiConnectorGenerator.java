@@ -277,7 +277,7 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
 
     // release cached TLS model info
     private static void releaseModelInfo() {
-        LOCAL_MODEL_INFO.set(null);
+        LOCAL_MODEL_INFO.remove();
     }
 
     // return a json representation of map of ports
