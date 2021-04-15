@@ -119,7 +119,7 @@
     -->
     <dep.pmd.version>6.17.0</dep.pmd.version>
     <!-- TODO: revisit when we upgrade basepom version -->
-    <dep.plugin.git-commit-id.version>4.0.0</dep.plugin.git-commit-id.version>
+    <dep.plugin.git-commit-id.version>4.0.4</dep.plugin.git-commit-id.version>
 
     <!-- Maven versions -->
     <maven-archetype-packaging.version>2.0</maven-archetype-packaging.version>
