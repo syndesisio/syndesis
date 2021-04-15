@@ -60,7 +60,7 @@ require (
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/operator-framework/api v0.5.1
 	github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200521062108-408ca95d458f // Tag 0.15.1
-	github.com/operator-framework/operator-sdk v0.19.3 // Not a release but a bump commit aligning with client-go 0.18.2
+	github.com/operator-framework/operator-sdk v0.19.4
 	github.com/prometheus/common v0.20.0 // indirect
 	github.com/rogpeppe/go-internal v1.5.0
 	github.com/spf13/afero v1.2.2
@@ -82,7 +82,7 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.1.0 // indirect
 )
 
-replace github.com/operator-framework/operator-sdk => github.com/operator-framework/operator-sdk v0.19.3
+replace github.com/operator-framework/operator-sdk => github.com/operator-framework/operator-sdk v0.19.4
 
 replace sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.7.0
 
