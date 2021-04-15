@@ -57,23 +57,23 @@ public class FhirPatchCustomizer implements ComponentProxyCustomizer {
 
     private void beforeProducer(Exchange exchange) {
         Message in = exchange.getIn();
-        if (StringUtils.isNotBlank(id)) {
-            in.setHeader("CamelFhir.stringId", resourceType + "/" + id);
-        }
 
         in.setHeader("CamelFhir.preferReturn", null);
 
-        if (StringUtils.isBlank(patch)) {
-            String body = in.getBody(String.class);
-            if (body != null) {
-                try {
-                    Map<String, Object> map = MAPPER.readValue(body, JSON_PATCH_MAP);
+        String body = in.getBody(String.class);
+        if (body != null) {
+            try {
+                Map<String, Object> map = MAPPER.readValue(body, JSON_PATCH_MAP);
 
+                if (StringUtils.isBlank(id)) {
+                    Object bodyId = map.get("id");
+                    id = bodyId != null ? bodyId.toString() : null;
+                }
+
+                if (StringUtils.isBlank(patch)) {
                     List<Map<String, String>> list = new ArrayList<>();
                     for (Map.Entry<String, Object> entry : map.entrySet()) {
-                        if ("id".equals(entry.getKey()) && ObjectHelper.isNotEmpty(entry.getValue())) {
-                            in.setHeader("CamelFhir.stringId", resourceType + "/" + entry.getValue());
-                        } else if (entry.getValue() instanceof Map) {
+                        if (entry.getValue() instanceof Map) {
                             @SuppressWarnings("unchecked")
                             Map<String, String> operation = (Map<String, String>) entry.getValue();
                             if (ObjectHelper.isEmpty(ConnectorOptions.extractOption(operation, "op"))) {
@@ -90,12 +90,19 @@ public class FhirPatchCustomizer implements ComponentProxyCustomizer {
                     } catch (IOException e) {
                         throw new CamelExecutionException("Cannot serialize body to json", exchange, e);
                     }
-                } catch (IOException e) {
-                    //Body might be in the correct format already, so use it as is
+                }
+            } catch (IOException e) {
+                //Body might be in the correct format already, so use it as is
+                if (StringUtils.isBlank(patch)) {
                     patch = body;
                 }
             }
         }
+
+        if (StringUtils.isNotBlank(id)) {
+            in.setHeader("CamelFhir.stringId", resourceType + "/" + id);
+        }
+
         in.setHeader("CamelFhir.patchBody", patch);
     }
 }
