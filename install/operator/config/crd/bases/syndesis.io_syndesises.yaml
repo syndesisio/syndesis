@@ -2285,6 +2285,10 @@ spec:
                         type: object
                       features:
                         properties:
+                          auditing:
+                            description: Enable or disable auditing, by default disabled,
+                              set to true to enable
+                            type: boolean
                           deployIntegrations:
                             description: Whether we deploy integrations
                             type: boolean
