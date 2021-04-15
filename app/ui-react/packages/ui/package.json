@@ -97,7 +97,7 @@
     "codemirror": "^5.46.0",
     "freemarker-parser": "1.1.6",
     "mustache": "3.2.1",
-    "react-codemirror2": "^6.0.0",
+    "react-codemirror2": "^7.2.1",
     "react-dropzone": "^10.0.0",
     "react-monaco-editor": "^0.33.0",
     "react-virtualized": "^9.20.1",
