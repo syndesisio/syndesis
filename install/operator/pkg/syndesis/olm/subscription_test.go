@@ -311,7 +311,7 @@ func Test_FindOperatorGroups(t *testing.T) {
 			assert.NoError(t, err)
 
 			pkgManifest, channel := packageManifest(tc.installModes)
-			ns, err := findOrCreateOperatorGroup(context.TODO(), rtClient, coreClient, dynClient, conf, pkgManifest, channel)
+			ns, err := findOrCreateOperatorGroup(context.TODO(), rtClient, coreClient, conf, pkgManifest, channel)
 			assert.Equal(t, tc.expect.Error, err != nil)
 			// Compare operator group and expected result
 			assert.Equal(t, tc.expect.Namespace, ns)
