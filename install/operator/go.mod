@@ -64,7 +64,7 @@ require (
 	github.com/prometheus/common v0.20.0 // indirect
 	github.com/rogpeppe/go-internal v1.5.0
 	github.com/spf13/afero v1.2.2
-	go.uber.org/zap v1.15.0
+	go.uber.org/zap v1.16.0
 	golang.org/x/crypto v0.0.0-20210322153248-0c34fe9e7dc2 // indirect
 	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/net v0.0.0-20210331212208-0fccb6fa2b5c // indirect
