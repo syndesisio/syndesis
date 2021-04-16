@@ -57,8 +57,8 @@ jobs:
           echo Space in Docker ...
           docker system df
         continue-on-error: true
-      - name: Full Flash Build of Syndesis
-        run: tools/bin/syndesis build -d --flash --batch-mode --all-images --docker
+      - name: Full Build of Syndesis with Tests and Checks
+        run: tools/bin/syndesis build -d --batch-mode --all-images --docker
       - name: images
         run: docker images
       - name: Display Space Availability After Build
