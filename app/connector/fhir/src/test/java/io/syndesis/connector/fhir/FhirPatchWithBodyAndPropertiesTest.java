@@ -18,7 +18,7 @@ package io.syndesis.connector.fhir;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import io.syndesis.common.model.integration.Step;
 import org.hl7.fhir.dstu3.model.OperationOutcome;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +44,7 @@ public class FhirPatchWithBodyAndPropertiesTest extends FhirTestBase {
     public void shouldPatchWithIdPropertyAndBodyAsListTest() {
         stubFhirRequest(patch(urlEqualTo("/Patient/1?_format=xml")).willReturn(okXml(toXml(new OperationOutcome()))));
 
-        template.requestBody("direct:start",
+        template().requestBody("direct:start",
             "[{\"op\":\"replace\", \"path\":\"active\", \"value\":true}]" , MethodOutcome.class);
     }
 
@@ -52,7 +52,7 @@ public class FhirPatchWithBodyAndPropertiesTest extends FhirTestBase {
     public void shouldNotOverrideIdPropertyWithIdInBodyTest() {
         stubFhirRequest(patch(urlEqualTo("/Patient/1?_format=xml")).willReturn(okXml(toXml(new OperationOutcome()))));
 
-        template.requestBody("direct:start",
+        template().requestBody("direct:start",
             "{\"id\":\"2\", \"1\": {\"op\":\"replace\", \"path\":\"active\", \"value\":true}}" , MethodOutcome.class);
     }
 }
