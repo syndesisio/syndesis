@@ -67,7 +67,7 @@ require (
 	github.com/operator-framework/operator-sdk v0.19.4
 	github.com/prometheus/common v0.20.0 // indirect
 	github.com/rogpeppe/go-internal v1.5.0
-	github.com/spf13/afero v1.2.2
+	github.com/spf13/afero v1.6.0
 	go.uber.org/zap v1.16.0
 	golang.org/x/mod v0.4.2 // indirect
 	golang.org/x/net v0.0.0-20210331212208-0fccb6fa2b5c // indirect
