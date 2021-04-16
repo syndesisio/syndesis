@@ -31,7 +31,6 @@ import (
 	k8serr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/dynamic"
@@ -113,7 +112,7 @@ func SubscribeOperator(ctx context.Context, clientTools *clienttools.ClientTools
 	//
 	// 4b. No csv listed so try and install an operator-group or use an existing one if available
 	//
-	ns, err := findOrCreateOperatorGroup(ctx, rtClient, coreV1Client, dynClient, configuration, pkgManifest, channel)
+	ns, err := findOrCreateOperatorGroup(ctx, rtClient, coreV1Client, configuration, pkgManifest, channel)
 	if err != nil {
 		return err
 	}
@@ -224,7 +223,7 @@ func createOperatorGroup(ctx context.Context, rtClient client.Client, configurat
 // Find or create a compatible operator-group and
 // return the namespace in which is it located
 //
-func findOrCreateOperatorGroup(ctx context.Context, rtClient client.Client, coreV1Client corev1.CoreV1Interface, dynClient dynamic.Interface, configuration *conf.Config, pkgManifest *olmpkgsvr.PackageManifest, channel *olmpkgsvr.PackageChannel) (string, error) {
+func findOrCreateOperatorGroup(ctx context.Context, rtClient client.Client, coreV1Client corev1.CoreV1Interface, configuration *conf.Config, pkgManifest *olmpkgsvr.PackageManifest, channel *olmpkgsvr.PackageChannel) (string, error) {
 
 	//
 	// 1. Check the install mode of the packagemanifest to see if its ALL
@@ -254,11 +253,6 @@ func findOrCreateOperatorGroup(ctx context.Context, rtClient client.Client, core
 	//
 
 	csvDesc := channel.CurrentCSVDesc
-	ogGvr := schema.GroupVersionResource{
-		Group:    "operators.coreos.com",
-		Version:  "v1",
-		Resource: "operatorgroups",
-	}
 
 	//
 	// Use-cases: 1, 2, 3
@@ -268,10 +262,9 @@ func findOrCreateOperatorGroup(ctx context.Context, rtClient client.Client, core
 
 		//
 		// Locate all operator groups in the cluster
-		// Would like to use runtime client but it cannot seem to detect
-		// operator groups from other namespaces
 		//
-		ogs, err := dynClient.Resource(ogGvr).Namespace("").List(ctx, metav1.ListOptions{})
+		ogs := olmapiv1.OperatorGroupList{}
+		err := rtClient.List(ctx, &ogs, &client.ListOptions{Namespace: ""})
 		if err != nil {
 			sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Error: Cannot get any global namespace operator-groups", "error", err.Error())
 		}
@@ -279,23 +272,15 @@ func findOrCreateOperatorGroup(ctx context.Context, rtClient client.Client, core
 		//
 		// Found some operator-groups in the cluster
 		//
-		if ogs != nil {
-			for _, un := range ogs.Items {
-				var og olmapiv1.OperatorGroup
-				err = runtime.DefaultUnstructuredConverter.FromUnstructured(un.UnstructuredContent(), &og)
-				if err != nil {
-					sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Error: Cannot unstructured to operator-group. Skipping", "error", err.Error())
-				}
-
-				if isAllNamespace(og) {
-					sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Located All-Namespace Operator-Group", "name", og.Name)
-					//
-					// Use-case: 1
-					// Found a global operator-group so return its namespace for
-					// installing the subscription
-					//
-					return og.Namespace, nil
-				}
+		for _, og := range ogs.Items {
+			if isAllNamespace(og) {
+				sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Located All-Namespace Operator-Group", "name", og.Name)
+				//
+				// Use-case: 1
+				// Found a global operator-group so return its namespace for
+				// installing the subscription
+				//
+				return og.Namespace, nil
 			}
 		}
 
