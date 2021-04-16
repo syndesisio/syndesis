@@ -21,6 +21,8 @@ database connection that you want to use to start an integration.
 +
 * *Periodic SQL invocation* obtains data by periodically invoking the
 SQL statement that you specify.
++
+Note that the Database Connector accepts most basic SQL syntax. If you want to use a complex SQL statement, you should use a stored procedure instead since the Database Connector does not validate the SQL syntax in a stored procedure.        
 * *Periodic stored procedure invocation* obtains data by periodically invoking
 the stored procedure that you specify or select.
 . If you selected *Periodic SQL invocation*, in the *Query* field,
