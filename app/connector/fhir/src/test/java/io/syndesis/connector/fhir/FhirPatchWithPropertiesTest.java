@@ -45,7 +45,7 @@ public class FhirPatchWithPropertiesTest extends FhirTestBase {
     public void shouldPatchWithPropertiesOnlyTest() {
         stubFhirRequest(patch(urlEqualTo("/Patient/1")).willReturn(okXml(toXml(new OperationOutcome()))));
 
-        template.requestBody("direct:start",
+        template().requestBody("direct:start",
             null , MethodOutcome.class);
     }
 }
