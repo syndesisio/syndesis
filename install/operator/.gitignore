@@ -12,3 +12,4 @@ before_launch.sh
 **/operator/dockerconfigjson
 **/release/*-installer*
 **/bundle
+**/manifests/bases/fuse-online.clusterserviceversion.yaml

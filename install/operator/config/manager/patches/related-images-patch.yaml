@@ -1,0 +1,25 @@
+- op: add
+  path: /spec/template/spec/containers/0/env
+  value:
+    - name: RELATED_IMAGE_TODO
+      value: registry.redhat.io/rhscl/php-72-rhel7
+    - name: RELATED_IMAGE_OAUTH
+      value: registry.redhat.io/openshift4/ose-oauth-proxy:4.2
+    - name: RELATED_IMAGE_UI
+      value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-ignite-ui:1.9
+    - name: RELATED_IMAGE_S2I
+      value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-ignite-s2i:1.9
+    - name: RELATED_IMAGE_PROMETHEUS
+      value: registry.redhat.io/openshift3/prometheus:v3.9
+    - name: RELATED_IMAGE_UPGRADE
+      value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-ignite-upgrade:1.9
+    - name: RELATED_IMAGE_META
+      value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-ignite-meta:1.9
+    - name: RELATED_IMAGE_DATABASE
+      value: registry.redhat.io/rhscl/postgresql-10-rhel7:1-59
+    - name: RELATED_IMAGE_PSQL_EXPORTER
+      value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-postgres-exporter-rhel7:1.9
+    - name: RELATED_IMAGE_SERVER
+      value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-ignite-server:1.9
+    - name: RELATED_IMAGE_AMQ
+      value: registry.redhat.io/jboss-amq-6/amq63-openshift:1.3

@@ -34,7 +34,8 @@ spec:
         # managementUrlFor3scale: "https://your.3scale.server.com"
         #
         # Add any additional Maven repositories.
-        mavenRepositories:
+        maven:
+          Repositories:
           # customRepo1: https://customRepo1
           # customRepo2: https://customRepo2
       resources:

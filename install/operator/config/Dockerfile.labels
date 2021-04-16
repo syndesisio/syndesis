@@ -1,0 +1,14 @@
+
+# Red Hat Openshift Labels
+LABEL com.redhat.delivery.operator.bundle=true
+LABEL com.redhat.openshift.versions="v4.6"
+
+LABEL name="fuse7/fuse-online-operator-metadata" \
+      version="1.9" \
+      maintainer="Otavio Piske <opiske@redhat.com>" \
+      summary="Operator which manages the lifecycle of the Fuse Online application." \
+      description="Operator which manages the lifecycle of the Fuse Online application." \
+      com.redhat.component="fuse-online-operator-metadata-container" \
+      io.k8s.description="Operator which manages the lifecycle of the Fuse Online application." \
+      io.k8s.display-name="Red Hat Fuse Online Operator" \
+      io.openshift.tags="fuse"

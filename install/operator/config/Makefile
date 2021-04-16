@@ -21,13 +21,13 @@ DB_IMAGE ?= registry.redhat.io/rhscl/postgresql-10-rhel7:1-59
 DEFAULT_IMAGE ?= registry.redhat.io/fuse7/fuse-online-operator
 IMAGE ?= $(DEFAULT_IMAGE)
 TAG ?= 1.9
-NAMESPACE ?= syndesis
+NAMESPACE ?= fuse-online
 KUBE_USER ?= developer
 LEGACY ?= false
 
 CHANNELS ?= $(VERSION:.0=.x)
 DEFAULT_CHANNEL ?= $(VERSION:.0=.x)
-PACKAGE := syndesis
+PACKAGE := fuse-online
 BUNDLE_DIR := bundle
 PKG := ../pkg
 CRD := crd/bases
@@ -169,7 +169,7 @@ endif
 ##################################
 #
 # Default bundle image tag
-BUNDLE_IMG ?= $(IMAGE)-bundle:$(VERSION)
+BUNDLE_IMG ?= $(IMAGE)-metadata:$(VERSION)
 
 # Options for 'bundle-build'
 ifneq ($(origin CHANNELS), undefined)
@@ -248,9 +248,25 @@ generate: generate-deepcopy generate-crds
 
 CSV_ICON=$(shell cat $(PKG)/syndesis/olm/assets/icon)
 CREATED=$(shell date -u +%FT%TZ)
+PRODUCT_SUPPORT := Fuse Online
+UPSTREAM_CSV=$(MANIFESTS)/bases/syndesis.clusterserviceversion.yaml
+DOWNSTREAM_CSV=$(MANIFESTS)/bases/$(PACKAGE).clusterserviceversion.yaml
+TIMESTAMP=$(shell date -u '+%F %T %Z')
+
+#
+# Product manifest CSV is called $(PRODUCT_NAME)
+# so have to rename accordingly.
+# Note. to make the bundle this name must match that specified in PROJECT
+#
+rename-manifest:
+	@cp -f $(UPSTREAM_CSV) $(DOWNSTREAM_CSV)
+	@sed -i 's/support: Syndesis/support: $(PRODUCT_SUPPORT)/' $(DOWNSTREAM_CSV)
+	@sed -i 's/name: .*.\(v.*\)/name: $(PACKAGE).\1/' $(DOWNSTREAM_CSV)
+	@sed -i 's~containerImage: .*~containerImage: $(IMAGE):$(TAG)~' $(DOWNSTREAM_CSV)
+	@sed -i 's/createdAt: .*/createdAt: $(TIMESTAMP)/' $(DOWNSTREAM_CSV)
 
 # Generate bundle manifests and metadata, then validate generated files.
-bundle: generate-crds kustomize
+bundle: generate-crds kustomize rename-manifest
 	@$(MAKE) $(MK_OPTIONS) -C $(ROLE) init
 	@$(MAKE) $(MK_OPTIONS) -C $(GRANT) init
 	@$(MAKE) $(MK_OPTIONS) -C $(MANAGER) init
@@ -277,6 +293,8 @@ bundle: generate-crds kustomize
 # Moves the docker file into the bundle directory
 	@mv bundle.Dockerfile $(BUNDLE_DIR)/Dockerfile && \
 		sed -i 's/bundle\///g' $(BUNDLE_DIR)/Dockerfile
+# Add Product LABELS to Dockerfile
+	@cat Dockerfile.labels >> $(BUNDLE_DIR)/Dockerfile
 	@operator-sdk bundle validate $(BUNDLE_DIR)
 
 # Build the bundle image.

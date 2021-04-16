@@ -1,3 +1,20 @@
 resources:
 - manager-install.gen.yaml
 - manager.gen.yaml
+
+patchesJson6902:
+- target:
+    version: v1
+    kind: Deployment
+    name: syndesis-operator
+  path: ./patches/always-pull-patch.yaml
+- target:
+    version: v1
+    kind: Deployment
+    name: syndesis-operator
+  path: ./patches/related-images-patch.yaml
+- target:
+    version: v1
+    kind: Deployment
+    name: syndesis-operator
+  path: ./patches/deployment-name-patch.yaml
