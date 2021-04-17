@@ -278,6 +278,7 @@ public class ODataTestServer extends Server implements ODataConstants {
         }
 
         httpConnector = new ServerConnector(this);
+        httpConnector.setHost("localhost");
         httpConnector.setPort(httpPort); // Finds next available port if still 0
         this.addConnector(httpConnector);
 
@@ -292,6 +293,7 @@ public class ODataTestServer extends Server implements ODataConstants {
             final SslContextFactory sslContextFactory = new SslContextFactory();
             sslContextFactory.setSslContext(sslContext);
             httpsConnector = new ServerConnector(this, sslContextFactory, new HttpConnectionFactory(httpConfiguration));
+            httpsConnector.setHost("localhost");
             httpsConnector.setPort(httpsPort); // Finds next available port if still 0
             this.addConnector(httpsConnector);
         }

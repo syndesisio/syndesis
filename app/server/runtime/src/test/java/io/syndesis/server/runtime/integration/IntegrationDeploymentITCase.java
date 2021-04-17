@@ -85,7 +85,7 @@ public class IntegrationDeploymentITCase extends BaseITCase {
 
     @Test
     public void shouldDirectlyManipulateDeploymentTargetState() {
-        final ResponseEntity<IntegrationDeployment> version1 = put("/api/v1/integrations/test-id/deployments", null,
+        put("/api/v1/integrations/test-id/deployments", null,
             IntegrationDeployment.class, tokenRule.validToken(), HttpStatus.OK);
 
         post("/api/v1/integrations/test-id/deployments/1/targetState",
@@ -96,9 +96,8 @@ public class IntegrationDeploymentITCase extends BaseITCase {
             final ResponseEntity<IntegrationDeployment> fetched = get("/api/v1/integrations/test-id/deployments/1",
                 IntegrationDeployment.class);
 
-            assertThat(fetched.getBody()).isNotNull()
-                .isEqualTo(version1.getBody().withCurrentState(IntegrationDeploymentState.Unpublished)
-                    .withTargetState(IntegrationDeploymentState.Unpublished));
+            assertThat(fetched.getBody()).isNotNull().extracting(IntegrationDeployment::getTargetState)
+                .isEqualTo(IntegrationDeploymentState.Unpublished);
         });
     }
 }

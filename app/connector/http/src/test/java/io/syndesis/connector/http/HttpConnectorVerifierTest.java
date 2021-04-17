@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.http;
 
+import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +45,7 @@ public class HttpConnectorVerifierTest {
     @BeforeEach
     public void setUp() throws Exception {
         localServer = ServerBootstrap.bootstrap()
+            .setLocalAddress(InetAddress.getLoopbackAddress())
             .setHttpProcessor(getHttpProcessor())
             .registerHandler("/", new BasicValidationHandler("GET", null, null, null))
             .registerHandler("/withPath", new BasicValidationHandler("GET", null, null, null))
@@ -72,11 +74,7 @@ public class HttpConnectorVerifierTest {
     }
 
     private String getLocalServerHostAndPort() {
-        return new StringBuilder()
-            .append(localServer.getInetAddress().getHostName())
-            .append(":")
-            .append(localServer.getLocalPort())
-            .toString();
+        return "localhost:" + localServer.getLocalPort();
     }
 
     @Test

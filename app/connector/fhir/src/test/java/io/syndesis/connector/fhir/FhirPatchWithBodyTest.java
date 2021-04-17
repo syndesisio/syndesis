@@ -18,6 +18,7 @@ package io.syndesis.connector.fhir;
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import io.syndesis.common.model.integration.Step;
 import org.hl7.fhir.dstu3.model.OperationOutcome;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -27,6 +28,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.okXml;
 import static com.github.tomakehurst.wiremock.client.WireMock.patch;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
+@Disabled("https://github.com/syndesisio/syndesis/issues/9504")
 public class FhirPatchWithBodyTest extends FhirTestBase {
 
     @Override

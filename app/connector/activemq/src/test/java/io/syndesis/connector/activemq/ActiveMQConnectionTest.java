@@ -22,15 +22,17 @@ import java.util.function.Consumer;
 import javax.jms.TextMessage;
 
 import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.component.sjms.SjmsComponent;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.jms.core.JmsTemplate;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ActiveMQConnectionTest extends ConnectorTestSupport {
     // **************************
@@ -43,14 +45,14 @@ public class ActiveMQConnectionTest extends ConnectorTestSupport {
             newActiveMQEndpointStep(
                 "io.syndesis.connector:connector-activemq-subscribe",
                 builder -> {
-                    builder.putConfiguredProperty("brokerUrl", "vm://localhost?broker.persistent=false&broker.brokerName=sub");
+                    builder.putConfiguredProperty("brokerUrl", "vm://localhost?broker.persistent=false&broker.brokerName=sub&broker.useJmx=false");
                     builder.putConfiguredProperty("destinationName", "sub-connectionTest");
                     builder.putConfiguredProperty("destinationType", "queue");
                 }),
             newActiveMQEndpointStep(
                 "io.syndesis.connector:connector-activemq-publish",
                 builder -> {
-                    builder.putConfiguredProperty("brokerUrl", "vm://localhost?broker.persistent=false&broker.brokerName=pub");
+                    builder.putConfiguredProperty("brokerUrl", "vm://localhost?broker.persistent=false&broker.brokerName=pub&broker.useJmx=false");
                     builder.putConfiguredProperty("destinationName", "pub-connectionTest");
                     builder.putConfiguredProperty("destinationType", "queue");
                 })
@@ -67,16 +69,16 @@ public class ActiveMQConnectionTest extends ConnectorTestSupport {
         final SjmsComponent sjms1 = context().getComponent("sjms-sjms-0-0", SjmsComponent.class);
         final SjmsComponent sjms2 = context().getComponent("sjms-sjms-0-1", SjmsComponent.class);
 
-        Assertions.assertThat(sjms1).isNotEqualTo(sjms2);
+        assertThat(sjms1).isNotSameAs(sjms2);
 
-        JmsTemplate subTemplate = new JmsTemplate(new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false&broker.brokerName=sub"));
+        JmsTemplate subTemplate = new JmsTemplate(new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false&broker.brokerName=sub&broker.useJmx=false"));
         subTemplate.send("sub-connectionTest", session -> session.createTextMessage(message));
 
-        JmsTemplate pubTemplate = new JmsTemplate(new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false&broker.brokerName=pub"));
+        JmsTemplate pubTemplate = new JmsTemplate(new ActiveMQConnectionFactory("vm://localhost?broker.persistent=false&broker.brokerName=pub&broker.useJmx=false"));
         Object answer = pubTemplate.receive("pub-connectionTest");
 
-        Assertions.assertThat(answer).isInstanceOf(TextMessage.class);
-        Assertions.assertThat(answer).hasFieldOrPropertyWithValue("text", message);
+        assertThat(answer).isInstanceOf(TextMessage.class);
+        assertThat(answer).hasFieldOrPropertyWithValue("text", message);
     }
 
     // **************************
@@ -90,7 +92,7 @@ public class ActiveMQConnectionTest extends ConnectorTestSupport {
         final Step.Builder builder = new Step.Builder()
             .stepKind(StepKind.endpoint)
             .action(action)
-            .connection(new io.syndesis.common.model.connection.Connection.Builder()
+            .connection(new Connection.Builder()
                 .connector(connector)
                 .build());
 
