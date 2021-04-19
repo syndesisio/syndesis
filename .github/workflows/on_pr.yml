@@ -21,6 +21,7 @@ jobs:
         filters: |
           app:
             - 'app/**'
+            - 'install/operator/**'
           docs:
             - 'doc/**'
           ui:
