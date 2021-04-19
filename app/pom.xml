@@ -168,6 +168,7 @@
     <google-api-client-version>1.22.0</google-api-client-version>
     <kafka-clients.version>2.5.0</kafka-clients.version>
     <netty.version>4.1.48.Final</netty.version>
+    <net.jqwik.version>1.5.1</net.jqwik.version>
 
     <!-- Sonar configuration -->
     <sonar.projectKey>${project.artifactId}</sonar.projectKey>
@@ -1502,6 +1503,20 @@
         <version>${junit-jupiter.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>net.jqwik</groupId>
+        <artifactId>jqwik-api</artifactId>
+        <version>${net.jqwik.version}</version>
+        <scope>test</scope>
+      </dependency>
+  
+      <dependency>
+        <groupId>net.jqwik</groupId>
+        <artifactId>jqwik</artifactId>
+        <version>${net.jqwik.version}</version>
+        <scope>test</scope>
       </dependency>
 
       <dependency>
