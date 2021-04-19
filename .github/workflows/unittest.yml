@@ -1,4 +1,4 @@
-name: Integration Tests 1.x branch
+name: Unit Tests 1.x branch
 
 on: pull_request
 
@@ -47,8 +47,23 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven-
       - name: Build Syndesis with Unit Testing
-        run: tools/bin/syndesis build --dependencies --flash --batch-mode --all-images --docker
-      - name: Build Docker images
-        run: tools/bin/syndesis build -m s2i --image --flash --docker
-      - name: Run integration tests
-        run: tools/bin/syndesis integration-test --s2i --logging
+        run: tools/bin/syndesis build --dependencies --batch-mode --all-images --docker
+      # Send SonarCloud statistics
+      - name: Set up JDK 11 for SonarCloud
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Install Java 11
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        if: ${{env.SONAR_TOKEN != ''}}
+        uses: AdoptOpenJDK/install-jdk@v1
+        with:
+          version: '11'
+      - name: Send analysis to SonarCloud
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        if: ${{env.SONAR_TOKEN != ''}}
+        run: cd app; ./mvnw -q -B -pl '!:extension-bom,!:integration-bom' jacoco:report && ./mvnw -B -N -Dsonar.login=${{secrets.SONAR_TOKEN}} sonar:sonar -Dsonar.sources=$(find . -wholename "*/src/main/java" | sed -z 's/\n/,/g;s/,$/\n/') -Dsonar.java.binaries=$(find . -wholename "*/target/classes" | sed -z 's/\n/,/g;s/,$/\n/')
+
