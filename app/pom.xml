@@ -71,7 +71,7 @@
 
     <okhttp3.version>3.12.1</okhttp3.version>
 
-    <swagger.version>2.1.2</swagger.version>
+    <swagger.version>2.1.8</swagger.version>
     <swagger-maven-plugin.version>3.1.8</swagger-maven-plugin.version>
 
     <activemq.version>5.15.14</activemq.version>
