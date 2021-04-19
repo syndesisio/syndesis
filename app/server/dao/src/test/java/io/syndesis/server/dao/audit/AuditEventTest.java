@@ -55,7 +55,7 @@ public class AuditEventTest {
             .verify();
     }
 
-    private void assertPropertyChangeFor(final AuditEvent event) {
+    private static void assertPropertyChangeFor(final AuditEvent event) {
         assertThat(event.withProperty("y"))
             .isEqualToIgnoringGivenFields(event, "property", "hashCode")
             .extracting(AuditEvent::property).isEqualTo("y");
