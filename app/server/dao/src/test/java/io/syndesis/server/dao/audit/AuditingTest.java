@@ -199,7 +199,9 @@ public class AuditingTest {
             final Auditing forCacheTest = new Auditing(() -> "user");
 
             final Connection connection1 = new Connection.Builder().build();
-            mock.when(() -> Auditing.determineHandlersFor((Class) connection1.getClass())).thenReturn(Collections.singletonList(mock(AuditHandler.class)));
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            final Class<Connection> mockConnectionType = (Class) connection1.getClass();
+            mock.when(() -> Auditing.determineHandlersFor(mockConnectionType)).thenReturn(Collections.singletonList(mock(AuditHandler.class)));
 
             assertThat(forCacheTest.handlersFor(connection1)).isNotEmpty();
 
