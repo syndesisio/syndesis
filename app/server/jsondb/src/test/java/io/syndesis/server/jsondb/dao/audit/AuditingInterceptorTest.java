@@ -116,8 +116,6 @@ public class AuditingInterceptorTest {
 
     @Test
     public void shouldAuditConnectionDeletionViaId(@Autowired final ConnectionDao dao, @Autowired final AuditingRecorder auditingRecorder) {
-        new Connection.Builder().id("id").name("name").build();
-
         dao.delete("id");
 
         verify(auditingRecorder)
