@@ -31,9 +31,6 @@ API service available and provides the URL for API calls. This lets you
 link:{LinkSyndesisIntegrationGuide}#trigger-integrations-with-api-calls_ug[trigger integration execution with an API call]. 
 
 * A WSDL file that {prodname} can use to create a connector for a SOAP client.
-+
-*Note:* This is a Technology Preview feature.
-
 * A `JAR` file that implements a {prodname} extension. An extension
 can be any one of the following:  
 +
