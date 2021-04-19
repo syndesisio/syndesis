@@ -2313,11 +2313,7 @@ spec:
                                   type: string
                                 description: Set repositories for maven
                                 type: object
-                            required:
-                            - append
                             type: object
-                        required:
-                        - maven
                         type: object
                       javaOptions:
                         description: JAVA_OPTIONS environment variable

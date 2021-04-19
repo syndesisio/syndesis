@@ -203,7 +203,7 @@ type ServerFeatures struct {
 	DeployIntegrations bool `json:"deployIntegrations,omitempty"`
 
 	// Maven settings
-	Maven MavenConfiguration `json:"maven"`
+	Maven MavenConfiguration `json:"maven,omitempty"`
 
 	// 3scale management URL
 	ManagementUrlFor3scale string `json:"managementUrlFor3scale,omitempty"`
@@ -228,7 +228,7 @@ type ConnectionPool struct {
 
 type MavenConfiguration struct {
 	// Should we append new repositories
-	Append bool `json:"append"`
+	Append bool `json:"append,omitempty"`
 	// additional maven options to be used in integration builds
 	AdditionalArguments string `json:"additionalArguments,omitempty"`
 	// Set repositories for maven
