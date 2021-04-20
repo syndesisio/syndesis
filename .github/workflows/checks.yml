@@ -144,6 +144,8 @@ jobs:
       - name: Build images
         run: tools/bin/syndesis build --batch-mode --flash --docker
       - name: Save images
+        env:
+          IMAGES_DIR: syndesis_images
         run: |
           mkdir $IMAGES_DIR
 
