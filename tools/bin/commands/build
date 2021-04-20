@@ -199,6 +199,10 @@ do_operator() {
         args="$args --source-gen ${source_gen}"
     fi
 
+    if [ ! $(hasflag --image -i --all-images --app-images --infra-images --docker) ]; then
+      args+="--image-build skip"
+    fi
+
     if [ $(hasflag -i --image --docker) ]; then
         ./build.sh $args --image-build=docker --image-name="${image}" --image-tag="$tag"
     else
