@@ -1,0 +1,191 @@
+name: Checks
+on:
+  push:
+    branches:
+      - '[0-9]+.[0-9]+.x'
+  pull_request_target:
+    branches:
+      - '[0-9]+.[0-9]+.x'
+    paths-ignore:
+      - doc/**
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      isDefaultBranch: ${{ steps['info']['outputs']['is-default-branch'] }}
+    steps:
+      - name: Fetch repository information
+        id: info
+        run: |
+          DEFAULT_BRANCH=$(curl -s https://api.github.com/repos/syndesisio/syndesis |jq -r .default_branch)
+          IS_DEFAULT_BRANCH=$(test "refs/heads/${DEFAULT_BRANCH}" == "${GITHUB_REF}" && echo true || echo false)
+          echo "::set-output name=is-default-branch::${IS_DEFAULT_BRANCH}"
+  changes:
+    needs: setup
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      images: ${{ steps.filter.outputs.images }}
+      operator: ${{ steps.filter.outputs.operator }}
+      ui: ${{ steps.filter.outputs.ui }}
+    steps:
+      - uses: actions/checkout@v2
+        if: needs.setup.outputs.isDefaultBranch == 'true'
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'app/(!(ui-react))**'
+            images:
+              - 'app/**'
+              - 'install/operator/**'
+            operator:
+              - 'install/operator/**'
+            ui:
+              - 'app/ui-react/**'
+  backend:
+    needs:
+      - changes
+      - setup
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+            !~/.m2/repository/io/syndesis
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+      - name: Build and test
+        run: tools/bin/syndesis build --batch-mode --backend
+      - name: Publish Test Reports
+        if: always()
+        uses: scacap/action-surefire-report@v1
+      - name: Set up JDK 11
+        if: needs.setup.outputs.is_default_branch == 'true'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Publish Sonar analysis
+        if: needs.setup.outputs.is_default_branch == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          cd app
+          ./mvnw -q -B -pl '!:extension-bom,!:integration-bom' jacoco:report \
+          && ./mvnw -B -N -Dsonar.login=${{secrets.SONAR_TOKEN}} sonar:sonar  -Dsonar.sources=$(find . -wholename "*/src/main/java" | sed -z 's/\n/,/g;s/,$/\n/') -Dsonar.java.binaries=$(find . -wholename "*/target/classes" | sed -z 's/\n/,/g;s/,$/\n/')
+  operator:
+    needs: changes
+    if: needs.changes.outputs.operator == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+            !~/.m2/repository/io/syndesis
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+      - name: Build and test
+        run: tools/bin/syndesis build --batch-mode -m operator --local
+  ui:
+    needs: changes
+    if: needs.changes.outputs.ui == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+            !~/.m2/repository/io/syndesis
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+      - name: Build and test
+        run: tools/bin/syndesis build --batch-mode -m ui-react
+  images:
+    needs: changes
+    if: needs.changes.outputs.images == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+            !~/.m2/repository/io/syndesis
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+      - name: Build images
+        run: tools/bin/syndesis build --batch-mode --flash --docker
+      - name: Save images
+        run: |
+          mkdir $IMAGES_DIR
+
+          IMAGES=`docker images --filter=reference='syndesis/syndesis-*' --format "{{.Repository}}"`
+
+          for image in $IMAGES
+
+          do
+            echo Saving $image ..
+            COMPONENT=$(echo $image | cut -d '/' -f 2)
+            docker save $image | gzip > $IMAGES_DIR/$COMPONENT.tar.gz
+            docker rmi $image
+          done
+
+          echo "{ \"run_id\": \"$GITHUB_RUN_ID\", \"github_pr_id\": \"$PR_NUMBER\", \"commit_id\": \"$COMMIT_ID\" }" > $IMAGES_DIR/github-metadata.json
+      - name: Publish images
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.IMAGES_DIR }}
+          path: ${{ env.IMAGES_DIR }}
+          retention-days: 1
+  integration-tests:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.m2/repository
+            !~/.m2/repository/io/syndesis
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+      - name: Build
+        run: tools/bin/syndesis build --backend --flash --batch-mode
+      - name: Build S2I image
+        run: tools/bin/syndesis build -m s2i --flash --docker
+      - name: Run integration tests
+        run: tools/bin/syndesis integration-test --s2i --logging
