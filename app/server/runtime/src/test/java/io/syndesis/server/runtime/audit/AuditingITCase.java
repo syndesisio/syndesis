@@ -29,6 +29,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AuditingITCase {
 
+    private AuditingITCase() {
+      // only holds the two cases below
+    }
+
     @ExtendWith(SpringExtension.class)
     @ContextConfiguration(classes = AuditingConfiguration.class)
     @TestPropertySource(properties = "features.auditing.enabled=true")
