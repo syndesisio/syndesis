@@ -46,19 +46,19 @@ public final class AuditingInterceptor implements ApplicationListener<RefreshSco
 
     // disabled by default, the only way to disable is to set
     // `features.auditing.enabled=false`, can't remove advice, once applied the
-    // advised instance is already injected
-    private boolean enabled = false;
+    // advised instance is already injected, `false` by default
+    private boolean enabled;
 
     private final Environment environment;
 
     private final AuditingRecorder recorder;
 
     @Audited
-    private static final class Standin<T extends WithId<T>> implements WithId<T> {
+    static final class Standin<T extends WithId<T>> implements WithId<T> {
         private final String id;
         private final Kind kind;
 
-        private Standin(final String id, final Kind kind) {
+        Standin(final String id, final Kind kind) {
             this.id = id;
             this.kind = kind;
         }
