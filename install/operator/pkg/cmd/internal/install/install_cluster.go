@@ -44,31 +44,20 @@ func (o *Install) installClusterResources() error {
 	if o.ejectedResources != nil {
 		o.ejectedResources = append(o.ejectedResources, resources...)
 	} else {
-		// Installing CRDs needs admin rights, so skip this step if possible...
-		//
-		// crds will be a map of [gvk, served] where served is a boolean flag
-		// signifying whether the CRD version is being served or not, ie. visible
-		//
 		crds := toGroupVersionKindMap(resources)
-		if err := o.removeInstalledCRDs(crds); err != nil {
-			return o.cleanUpCrdError(err)
-		}
-		if len(crds) == 0 {
-			o.Println("shared resources were previously installed")
-		} else {
-			return util.RunAsMinishiftAdminIfPossible(o.ClientTools().RestConfig(), func() error {
-				err := o.install("cluster resources were", resources)
-				if err != nil {
-					return err
-				}
+		return util.RunAsMinishiftAdminIfPossible(o.ClientTools().RestConfig(), func() error {
+			err := o.install("cluster resources were", resources)
 
-				// Wait for all CRDs to be installed before proceeding
-				if err := o.waitForCustomResourceDefinitions(25*time.Second, crds); err != nil {
-					return o.cleanUpCrdError(err)
-				}
-				return nil
-			})
-		}
+			if err != nil {
+				return err
+			}
+
+			// Wait for all CRDs to be installed before proceeding
+			if err := o.waitForCustomResourceDefinitions(25*time.Second, crds); err != nil {
+				return o.cleanUpCrdError(err)
+			}
+			return nil
+		})
 	}
 
 	return nil
@@ -76,24 +65,39 @@ func (o *Install) installClusterResources() error {
 
 // waitForCustomResourceDefinitions waits until all crds are installed
 func (o *Install) waitForCustomResourceDefinitions(timeout time.Duration, crds map[v1.GroupVersionKind]bool) error {
-	waintingOn := map[v1.GroupVersionKind]bool{}
+	waitingOn := map[v1.GroupVersionKind]bool{}
 	for k, v := range crds {
-		waintingOn[k] = v
+		waitingOn[k] = v
 	}
 
 	deadline := time.Now().Add(timeout)
 	for {
-		err := o.removeInstalledCRDs(waintingOn)
-		if err != nil {
-			return err
+		count := 0
+		for w, served := range waitingOn {
+			installed, err := o.IsCRDInstalled(w)
+			if err != nil {
+				return err
+			}
+
+			//
+			// Add to count if CRD is now installed
+			// or CRD is not served
+			//
+			if installed || !served {
+				count++
+			}
 		}
-		if len(waintingOn) == 0 {
+
+		if count == len(waitingOn) {
 			return nil
 		}
 
+		//
 		// Check after 2 seconds if not expired
+		//
+
 		if time.Now().After(deadline) {
-			return errors.New("cannot check CRD installation after " + strconv.FormatInt(timeout.Nanoseconds()/1000000000, 10) + " seconds")
+			return errors.New("Timed out waiting on CRD installation after " + strconv.FormatInt(timeout.Nanoseconds()/1000000000, 10) + " seconds")
 		}
 
 		o.Println("waiting for syndesis crds to be ready...")
@@ -222,23 +226,6 @@ func reverseVersions(crd *apiextensionsv1.CustomResourceDefinition) {
 	}
 
 	crd.Spec.Versions = versions
-}
-
-func (o *Install) removeInstalledCRDs(crds map[v1.GroupVersionKind]bool) error {
-	for crd, served := range crds {
-		if found, err := o.IsCRDInstalled(crd); err != nil {
-			return err
-		} else if found {
-			delete(crds, crd)
-		} else if !served {
-			//
-			// CRD has not been found but its also not being served
-			// so whether its installed or not is irrelevant
-			//
-			delete(crds, crd)
-		}
-	}
-	return nil
 }
 
 // IsCRDInstalled check if the given CRD kind is installed
