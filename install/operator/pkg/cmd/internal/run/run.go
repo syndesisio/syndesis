@@ -31,7 +31,6 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/versions"
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/types"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 
@@ -55,8 +54,10 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis"
 	"github.com/syndesisio/syndesis/install/operator/pkg/controller"
 	"github.com/syndesisio/syndesis/install/operator/pkg/openshift"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/labels"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
-
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 )
 
@@ -120,22 +121,37 @@ func New(parent *internal.Options) *cobra.Command {
 // The new operator installed by this
 //
 func removeLegacyOperatorDeployment(ctx context.Context, clientTools *clienttools.ClientTools, namespace string) error {
-	client, err := clientTools.RuntimeClient()
+	rtClient, err := clientTools.RuntimeClient()
 	if err != nil {
 		return err
 	}
 
-	dc := &oappsv1.DeploymentConfig{}
-	if err := client.Get(ctx, types.NamespacedName{Namespace: namespace, Name: OperatorName}, dc); err != nil {
+	fmt.Println("Removing...")
+
+	dcList := oappsv1.DeploymentConfigList{
+		TypeMeta: metav1.TypeMeta{
+			Kind: "DeploymentConfig",
+		},
+	}
+
+	labelSelector, _ := labels.Parse("syndesis.io/component=syndesis-operator")
+	options := client.ListOptions{
+		Namespace:     namespace,
+		LabelSelector: labelSelector,
+	}
+
+	if err := rtClient.List(ctx, &dcList, &options); err != nil {
 		if !k8errors.IsNotFound(err) {
 			return err // genuine problematic error
 		}
 	} else {
-		if err := client.Delete(ctx, dc); err != nil {
-			log.Error(err, "Failed to delete legacy operator DeploymentConfig")
-			return err
-		} else {
-			log.V(2).Info("Deleted legacy operator DeploymentConfig")
+		for _, dc := range dcList.Items {
+			if err := rtClient.Delete(ctx, &dc); err != nil {
+				log.Error(err, "Failed to delete legacy operator DeploymentConfig")
+				return err
+			} else {
+				log.V(2).Info("Deleted legacy operator DeploymentConfig")
+			}
 		}
 	}
 
