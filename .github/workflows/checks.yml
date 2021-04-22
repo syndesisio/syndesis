@@ -127,6 +127,8 @@ jobs:
     needs: changes
     if: needs.changes.outputs.images == 'true'
     runs-on: ubuntu-latest
+    env:
+      IMAGES_DIR: syndesis_images
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 8
@@ -144,8 +146,6 @@ jobs:
       - name: Build images
         run: tools/bin/syndesis build --batch-mode --flash --docker
       - name: Save images
-        env:
-          IMAGES_DIR: syndesis_images
         run: |
           mkdir $IMAGES_DIR
 
