@@ -16,6 +16,8 @@
 package io.syndesis.common.model.connection;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
+import io.syndesis.common.model.Audited;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.validation.UniqueProperty;
@@ -32,6 +34,7 @@ import org.immutables.value.Value;
 @UniqueProperty(value = "name", groups = UniquenessRequired.class)
 @SuppressWarnings("immutables")
 @IndexedProperty("connectorId")
+@Audited
 public interface Connection extends WithId<Connection>, ConnectionBase {
 
     @Override

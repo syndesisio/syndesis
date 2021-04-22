@@ -15,6 +15,7 @@
  */
 package io.syndesis.common.model.integration;
 
+import io.syndesis.common.model.Audited;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.validation.UniquenessRequired;
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonDeserialize(builder = Integration.Builder.class)
 @NoDuplicateIntegration(groups = UniquenessRequired.class)
 @SuppressWarnings("immutables")
+@Audited
 public interface Integration extends WithId<Integration>, IntegrationBase {
 
     @Override

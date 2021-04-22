@@ -205,6 +205,7 @@ type ServerFeatures struct {
 	OpenShiftMaster               string             // Public OpenShift master address
 	ManagementUrlFor3scale        string             // 3scale management URL
 	Maven                         MavenConfiguration // Maven settings
+	Auditing                      bool               // Enable auditing support
 }
 
 // Connectin Pool parameters used in syndesis-server to manage the connections to the database

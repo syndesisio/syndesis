@@ -22,6 +22,7 @@ import java.util.List;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import io.syndesis.server.endpoint.v1.state.ClientSideStateProperties;
 import io.syndesis.server.endpoint.v1.state.StaticEdition;
+
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

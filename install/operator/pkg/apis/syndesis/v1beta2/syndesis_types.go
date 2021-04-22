@@ -193,6 +193,8 @@ type ResourcesWithPersistentVolume struct {
 }
 
 type ServerFeatures struct {
+	// Enable or disable auditing, by default disabled, set to true to enable
+	Auditing bool `json:"auditing,omitempty"`
 	// Maximum number of integrations single user can create
 	IntegrationLimit int `json:"integrationLimit,omitempty"`
 

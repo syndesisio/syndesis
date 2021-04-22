@@ -91,6 +91,8 @@
       {{- end}}
         service.name: syndesis-server
 {{- end}}
+        auditing:
+          enabled: {{.Syndesis.Components.Server.Features.Auditing}}
 {{- if .Syndesis.Components.Server.Features.Maven.Repositories}}
       maven:
         repositories:
