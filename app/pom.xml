@@ -612,10 +612,15 @@
     </profile>
 
     <profile>
-      <id>non-staging</id>
+      <id>non-release</id>
       <activation>
         <property>
-          <name>!stagingDescription</name>
+          <name>expression:not-release-and-not-building-subset</name>
+          <!--
+            We don't want this profile to be active if we're doing a release
+            or if we're building a subset of projects
+          -->
+          <value>!activeProfileIds.contains("release") &amp;&amp; !isdef build-selection</value>
         </property>
       </activation>
 
