@@ -167,6 +167,12 @@ jobs:
           name: ${{ env.IMAGES_DIR }}
           path: ${{ env.IMAGES_DIR }}
           retention-days: 1
+      - name: Trigger image transfer
+        uses: satak/webrequest-action@v1.2.4 
+        with:
+          url: 'https://ci.fabric8.io/generic-webhook-trigger/invoke?token=syndesis-github-to-quay'
+          method: POST
+          payload: '{"run_id":"${{ github.run_id }}", "github_pr_id": "${{ env.PR_NUMBER }}", "commit_id": "${{ env.COMMIT_ID }}" }'
   integration-tests:
     needs: changes
     if: needs.changes.outputs.backend == 'true'
