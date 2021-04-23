@@ -140,7 +140,7 @@
     <shrinkwrap.version>2.2.6</shrinkwrap.version>
 
     <mailapi.version>1.6.4</mailapi.version>
-    <json-schema-core.version>1.2.8</json-schema-core.version>
+    <json-schema-core.version>1.2.14</json-schema-core.version>
     <json-schema-validator.version>2.2.10</json-schema-validator.version>
     <junit-jupiter.version>5.7.1</junit-jupiter.version>
     <powermock.version>2.0.4</powermock.version>
