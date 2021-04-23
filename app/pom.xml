@@ -1455,6 +1455,26 @@
             </bannedDependencies>
           </rules>
         </configuration>
+        <executions>
+          <execution>
+            <id>enforce-git-info</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <fail>true</fail>
+              <rules>
+                <requireProperty>
+                  <property>git.commit.id</property>
+                  <message>The `git.commit.id` property was not set</message>
+                  <regex>[0-9a-f]+</regex>
+                  <regexMessage>`git.commit.id` property must be a git commit id</regexMessage>
+                </requireProperty>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
