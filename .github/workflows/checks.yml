@@ -30,7 +30,7 @@ jobs:
       ui: ${{ steps.filter.outputs.ui }}
     steps:
       - uses: actions/checkout@v2
-        if: needs.setup.outputs.isDefaultBranch == 'true'
+        if: needs.setup.outputs.is_default_branch == 'true'
       - uses: dorny/paths-filter@v2
         id: filter
         with:
