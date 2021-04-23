@@ -12,7 +12,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
-      isDefaultBranch: ${{ steps['info']['outputs']['is-default-branch'] }}
+      is_default_branch: ${{ steps['info']['outputs']['is-default-branch'] }}
     steps:
       - name: Fetch repository information
         id: info
