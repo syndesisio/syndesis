@@ -60,7 +60,7 @@
     "immer": "^8.0.1",
     "monaco-editor-core": "^0.19.3",
     "monaco-languageclient": "^0.10.2",
-    "react-monaco-editor": "^0.33.0",
+    "react-monaco-editor": "^0.40.0",
     "react-fast-compare": "^2.0.2",
     "vscode-ws-jsonrpc": "^0.1.1"
   },

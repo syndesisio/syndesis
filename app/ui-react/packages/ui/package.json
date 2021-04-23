@@ -99,7 +99,7 @@
     "mustache": "3.2.1",
     "react-codemirror2": "^6.0.0",
     "react-dropzone": "^10.0.0",
-    "react-monaco-editor": "^0.33.0",
+    "react-monaco-editor": "^0.40.0",
     "react-virtualized": "^9.20.1",
     "velocityjs": "2.0.0"
   },
