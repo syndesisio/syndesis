@@ -39,7 +39,7 @@ public class VersionITCase extends BaseITCase {
         final ResponseEntity<Map<String, String>> detailed = http(HttpMethod.GET, "/api/v1/version", null, MAP_OF_STRINGS,
             tokenRule.validToken(), headers, HttpStatus.OK);
 
-        assertThat(detailed.getBody()).isNotEmpty();
+        assertThat(detailed.getBody()).containsKeys("version", "commit-id");
     }
 
     @Test

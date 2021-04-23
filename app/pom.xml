@@ -1390,7 +1390,7 @@
         <inherited>false</inherited>
         <executions>
           <execution>
-            <id>set-git-properties</id>
+            <id>basepom.default</id>
             <configuration>
               <injectAllReactorProjects>true</injectAllReactorProjects>
               <offline>true</offline>
