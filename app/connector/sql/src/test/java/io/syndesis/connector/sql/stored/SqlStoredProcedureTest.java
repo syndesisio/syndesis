@@ -30,10 +30,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.syndesis.connector.sql.stored.SampleStoredProcedures.DERBY_FUNCTION_DEMO_OUT_SQL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SqlTest.class)
-@Setup(SampleStoredProcedures.DERBY_DEMO_ADD_SQL)
+@Setup({SampleStoredProcedures.DERBY_DEMO_ADD_SQL, DERBY_FUNCTION_DEMO_OUT_SQL})
 @Teardown("DROP PROCEDURE DEMO_ADD")
 public class SqlStoredProcedureTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlStoredProcedureTest.class);
@@ -45,10 +46,12 @@ public class SqlStoredProcedureTest {
         parameters.put("password", info.password);
         parameters.put("url", info.url);
 
-        Map<String, StoredProcedureMetadata> storedProcedures = SqlSupport.getStoredProcedures(parameters);
+        Map<String, StoredProcedureMetadata> storedProcedures = SqlSupport.getProceduresAndFunctions(parameters);
         assertThat(storedProcedures.isEmpty()).isFalse();
+        assertThat(storedProcedures.size()).isEqualTo(2);
         // Find 'demo_add'
         assertThat(storedProcedures.keySet().contains("DEMO_ADD")).isTrue();
+        assertThat(storedProcedures.keySet().contains("DEMO_OUT_DEGREES")).isTrue();
 
         for (String storedProcedureName : storedProcedures.keySet()) {
             StoredProcedureMetadata md = storedProcedures.get(storedProcedureName);
