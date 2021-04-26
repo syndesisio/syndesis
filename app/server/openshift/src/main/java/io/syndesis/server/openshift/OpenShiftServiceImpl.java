@@ -129,6 +129,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     public String deploy(String name, DeploymentData deploymentData) {
         final String sanitizedName = openshiftName(name);
         LOGGER.debug("Deploy {}", sanitizedName);
+        LOGGER.info("Hello");
 
         ensureDeploymentConfig(sanitizedName, deploymentData);
         ensureSecret(sanitizedName, deploymentData);
