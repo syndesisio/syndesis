@@ -81,7 +81,8 @@
 
     <maven.version>3.5.4</maven.version>
 
-    <errorprone.version>2.3.3</errorprone.version>
+    <errorprone.javac.version>9+181-r4173-1</errorprone.javac.version>
+    <errorprone.version>2.6.0</errorprone.version>
     <commons.compress.version>1.20</commons.compress.version>
 
     <!-- opentracing dependencies -->
@@ -153,7 +154,7 @@
     <resteasy.version>4.5.6.Final</resteasy.version>
     <resteasy-spring-boot-starter.version>4.6.1.Final</resteasy-spring-boot-starter.version>
 
-    <immutables.version>2.8.1</immutables.version>
+    <immutables.version>2.8.2</immutables.version>
 
     <jdbi.version>2.78</jdbi.version>
     <postgresql.version>42.2.16</postgresql.version>
@@ -875,36 +876,30 @@
           <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
             <configuration>
-              <compilerId>javac-with-errorprone</compilerId>
-              <forceJavacCompilerUse>true</forceJavacCompilerUse>
+              <fork>true</fork>
               <compilerArgs>
+                <arg>-J-Xbootclasspath/p:${settings.localRepository}/com/google/errorprone/javac/${errorprone.javac.version}/javac-${errorprone.javac.version}.jar</arg>
+                <arg>-XDcompilePolicy=simple</arg>
+                <arg>-Xplugin:ErrorProne -XepDisableWarningsInGeneratedCode -XepExcludedPaths:.*/generated-sources/.* -Xep:ConstantField:WARN -Xep:ExpectedExceptionChecker:WARN -Xep:FieldCanBeFinal:WARN -Xep:LambdaFunctionalInterface:WARN -Xep:MethodCanBeStatic:WARN -XepOpt:MethodCanBeStatic:FindingPerSite -Xep:PackageLocation:WARN -Xep:PrivateConstructorForUtilityClass:WARN -Xep:RemoveUnusedImports:WARN -Xep:SwitchDefault:WARN -Xep:TestExceptionChecker:WARN -Xep:ThrowsUncheckedException:WARN -Xep:TryFailRefactoring:WARN -Xep:UnnecessaryStaticImport:WARN -Xep:WildcardImport:WARN -Xep:BanSerializableRead -Xep:ClassName -Xep:ComparisonContractViolated ${errorprone.autofix.arg1} ${errorprone.autofix.arg2}</arg>
                 <arg>-Xlint:all</arg>
                 <arg>-Xlint:-deprecation</arg>
                 <arg>-Xlint:-processing</arg>
                 <arg>-Xlint:-serial</arg>
+                <!--
+                  com.sun.xml.bind.*:* jars have Classpath in META-INF/MANIFEST.MF,
+                  that trips the compiler to add them on paths that do not make
+                  much sense like $HOME/.m2/repository/com/sun/xml/bind/jaxb-core/2.3.0/jaxb-api.jar
+                -->
+                <arg>-Xlint:-path</arg>
                 <arg>${javac.werror}</arg>
-                <arg>-XepDisableWarningsInGeneratedCode</arg>
-                <arg>-XepExcludedPaths:.*/generated-sources/.*</arg>
-                <arg>-Xep:ConstantField:WARN</arg>
-                <arg>-Xep:ExpectedExceptionRefactoring:WARN</arg>
-                <arg>-Xep:FieldCanBeFinal:WARN</arg>
-                <arg>-Xep:LambdaFunctionalInterface:WARN</arg>
-                <arg>-Xep:MethodCanBeStatic:WARN</arg>
-                <arg>-XepOpt:MethodCanBeStatic:FindingPerSite</arg>
-                <arg>-Xep:PackageLocation:WARN</arg>
-                <arg>-Xep:PrivateConstructorForUtilityClass:WARN</arg>
-                <arg>-Xep:RemoveUnusedImports:WARN</arg>
-                <arg>-Xep:SwitchDefault:WARN</arg>
-                <arg>-Xep:TestExceptionRefactoring:WARN</arg>
-                <arg>-Xep:ThrowsUncheckedException:WARN</arg>
-                <arg>-Xep:TryFailRefactoring:WARN</arg>
-                <arg>-Xep:UnnecessaryStaticImport:WARN</arg>
-                <arg>-Xep:WildcardImport:WARN</arg>
                 <arg>-implicit:none</arg>
-                <arg>${errorprone.autofix.arg1}</arg>
-                <arg>${errorprone.autofix.arg2}</arg>
               </compilerArgs>
               <annotationProcessorPaths>
+                <annotationProcessorPath>
+                  <groupId>com.google.errorprone</groupId>
+                  <artifactId>error_prone_core</artifactId>
+                  <version>${errorprone.version}</version>
+                </annotationProcessorPath>
                 <annotationProcessorPath>
                   <groupId>org.immutables</groupId>
                   <artifactId>value</artifactId>
@@ -919,16 +914,9 @@
             </configuration>
             <dependencies>
               <dependency>
-                <groupId>org.codehaus.plexus</groupId>
-                <artifactId>plexus-compiler-javac-errorprone</artifactId>
-                <version>2.8.5</version>
-              </dependency>
-              <!-- override plexus-compiler-javac-errorprone's dependency on
-             Error Prone with the latest version -->
-              <dependency>
                 <groupId>com.google.errorprone</groupId>
-                <artifactId>error_prone_core</artifactId>
-                <version>${errorprone.version}</version>
+                <artifactId>javac</artifactId>
+                <version>${errorprone.javac.version}</version>
               </dependency>
             </dependencies>
           </plugin>
@@ -941,7 +929,7 @@
       <properties>
         <!-- -Werror is given to javac it never reaches the GENERATE task, and fails in COMPILATION, and refactorings are applied in GENERATE task, so they would be skipped -->
         <javac.werror></javac.werror>
-        <errorprone.autofix.arg1>-XepPatchChecks:BadImport,DeadException,DefaultCharset,MissingOverride,UnnecessaryParentheses,UnusedVariable,UnusedMethod,FieldCanBeFinal,MethodCanBeStatic,ClassCanBeStatic,RemoveUnusedImports,ThrowsUncheckedException</errorprone.autofix.arg1>
+        <errorprone.autofix.arg1>-XepPatchChecks:BadImport,DeadException,DefaultCharset,MissingOverride,UnnecessaryParentheses,UnusedVariable,UnusedMethod,FieldCanBeFinal,MethodCanBeStatic,ClassCanBeStatic,RemoveUnusedImports,ThrowsUncheckedException,EmptyBlockTag,UnnecessaryMethodReference,ProtectedMembersInFinalClass,InvalidParam,NonCanonicalType,ZoneIdOfZ</errorprone.autofix.arg1>
         <errorprone.autofix.arg2>-XepPatchLocation:IN_PLACE</errorprone.autofix.arg2>
       </properties>
     </profile>
@@ -1516,7 +1504,7 @@
         <version>${net.jqwik.version}</version>
         <scope>test</scope>
       </dependency>
-  
+
       <dependency>
         <groupId>net.jqwik</groupId>
         <artifactId>jqwik</artifactId>
@@ -2886,7 +2874,7 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>27.0.1-jre</version>
+        <version>30.1.1-jre</version>
       </dependency>
 
       <dependency>
