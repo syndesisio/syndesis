@@ -34,6 +34,9 @@ import io.syndesis.connector.sql.common.stored.StoredProcedureMetadata;
 import io.syndesis.connector.support.util.ConnectorOptions;
 
 public final class SqlSupport {
+
+    public enum TYPE { STORED_PROCEDURE, FUNCTION }
+
     private SqlSupport() {
     }
 
@@ -45,14 +48,16 @@ public final class SqlSupport {
         );
     }
 
-    public static StoredProcedureMetadata getStoredProcedureMetadata(final Connection connection, final String catalog,
-                                                                     final String schema, final String procedureName) {
+    public static StoredProcedureMetadata getFunctionOrProcedureMetadata(final Connection connection, final String catalog,
+                                                                         final String schema, final String procedureName, TYPE type) {
 
         final StoredProcedureMetadata storedProcedureMetadata = new StoredProcedureMetadata();
         storedProcedureMetadata.setName(procedureName);
         try {
             final DbMetaDataHelper dbHelper = new DbMetaDataHelper(connection);
-            try (ResultSet columnSet = dbHelper.fetchProcedureColumns(catalog, schema, procedureName)) {
+            try (ResultSet columnSet = (TYPE.STORED_PROCEDURE == type ?
+                    dbHelper.fetchProcedureColumns(catalog, schema, procedureName) :
+                    dbHelper.fetchFunctionColumns(catalog, schema, procedureName))) {
                 final List<StoredProcedureColumn> columnList = new ArrayList<>();
                 while (columnSet.next()) {
                     final ColumnMode mode = ColumnMode.valueOf(columnSet.getInt("COLUMN_TYPE"));
@@ -78,14 +83,14 @@ public final class SqlSupport {
         }
     }
 
-    public static Map<String, StoredProcedureMetadata> getStoredProcedures(final Map<String, Object> parameters) {
+    public static Map<String, StoredProcedureMetadata> getProceduresAndFunctions(final Map<String, Object> parameters) {
 
         final Map<String, StoredProcedureMetadata> storedProcedures = new HashMap<>();
 
         try (Connection connection = DriverManager.getConnection(
                     ConnectorOptions.extractOption(parameters, "url"),
                     ConnectorOptions.extractOption(parameters, "user"),
-                    ConnectorOptions.extractOption(parameters, "password"));) {
+                    ConnectorOptions.extractOption(parameters, "password"))) {
 
             final DbMetaDataHelper dbHelper = new DbMetaDataHelper(connection);
             final String catalog = ConnectorOptions.extractOption(parameters, "catalog");
@@ -93,17 +98,34 @@ public final class SqlSupport {
             final String schemaPattern = ConnectorOptions.extractOption(parameters, "schema", defaultSchema);
             final String procedurePattern = ConnectorOptions.extractOption(parameters, "procedure-pattern");
 
+            // Procedures were added to postgresql 11, but before that the jdbc getProcedures method returned the list
+            // of database functions, then, to maintain compatibility with previous behavior, syndesis will return the
+            // list of procedures and functions.
+
             try (ResultSet procedureSet = dbHelper.fetchProcedures(catalog, schemaPattern, procedurePattern)) {
                 while (procedureSet.next()) {
                     final String name = procedureSet.getString("PROCEDURE_NAME");
-                    final StoredProcedureMetadata storedProcedureMetadata = getStoredProcedureMetadata(connection,
-                        catalog, schemaPattern, name);
+                    final StoredProcedureMetadata storedProcedureMetadata = getFunctionOrProcedureMetadata(connection,
+                        catalog, schemaPattern, name, TYPE.STORED_PROCEDURE);
                     storedProcedureMetadata.setName(name);
                     storedProcedureMetadata.setType(procedureSet.getString("PROCEDURE_TYPE"));
                     storedProcedureMetadata.setRemark(procedureSet.getString("REMARKS"));
                     storedProcedures.put(storedProcedureMetadata.getName(), storedProcedureMetadata);
                 }
             }
+
+            try (ResultSet functionsSet = dbHelper.fetchFunctions(catalog, schemaPattern, procedurePattern)) {
+                while (functionsSet.next()) {
+                    final String name = functionsSet.getString("FUNCTION_NAME");
+                    final StoredProcedureMetadata storedProcedureMetadata = getFunctionOrProcedureMetadata(connection,
+                        catalog, schemaPattern, name, TYPE.FUNCTION);
+                    storedProcedureMetadata.setName(name);
+                    storedProcedureMetadata.setType(functionsSet.getString("FUNCTION_TYPE"));
+                    storedProcedureMetadata.setRemark(functionsSet.getString("REMARKS"));
+                    storedProcedures.put(storedProcedureMetadata.getName(), storedProcedureMetadata);
+                }
+            }
+
             return storedProcedures;
 
         } catch (final SQLException e) {

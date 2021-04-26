@@ -41,12 +41,30 @@ public class DbStandard implements Db {
     }
 
     @Override
+    public ResultSet fetchFunctionColumns(final DatabaseMetaData meta, final String catalog, final String schema, final String functionName) throws SQLException {
+        return meta.getFunctionColumns(
+                catalog,
+                adaptPattern(schema),
+                adaptPattern(functionName),
+                adaptPattern(null));
+    }
+
+    @Override
     public ResultSet fetchProcedures(final DatabaseMetaData meta, final String catalog, final String schemaPattern, final String procedurePattern)
             throws SQLException {
         return meta.getProcedures(
                 catalog,
                 adaptPattern(schemaPattern),
                 adaptPattern(procedurePattern));
+    }
+
+    @Override
+    public ResultSet fetchFunctions(final DatabaseMetaData meta, final String catalog, final String schemaPattern, final String functionPattern)
+        throws SQLException {
+        return meta.getFunctions(
+            catalog,
+            adaptPattern(schemaPattern),
+            adaptPattern(functionPattern));
     }
 
     @Override

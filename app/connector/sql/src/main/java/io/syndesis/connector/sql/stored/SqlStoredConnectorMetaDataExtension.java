@@ -32,9 +32,8 @@ public class SqlStoredConnectorMetaDataExtension extends AbstractMetaDataExtensi
 
     @Override
     public Optional<MetaData> meta(final Map<String, Object> properties) {
-        final Map<String, StoredProcedureMetadata> list = SqlSupport.getStoredProcedures(properties);
+        final Map<String, StoredProcedureMetadata> list = SqlSupport.getProceduresAndFunctions(properties);
         final MetaData metaData = new DefaultMetaData(null, null, list);
-
         return Optional.of(metaData);
     }
 }

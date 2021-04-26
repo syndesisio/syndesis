@@ -31,6 +31,14 @@ public final class SampleStoredProcedures {
             "LANGUAGE JAVA " +
             "EXTERNAL NAME 'io.syndesis.connector.sql.stored.SampleStoredProcedures.demo_out'";
 
+    public static final String DERBY_FUNCTION_DEMO_OUT_SQL =
+        "CREATE FUNCTION DEMO_OUT_DEGREES " +
+            "( RADIANS DOUBLE ) " +
+            "RETURNS DOUBLE " +
+            "PARAMETER STYLE JAVA " +
+            "NO SQL LANGUAGE JAVA " +
+            "EXTERNAL NAME 'java.lang.Math.toDegrees'";
+
     /**
      * SQL to create the DEMO_ADD procedure in Oracle
      */
