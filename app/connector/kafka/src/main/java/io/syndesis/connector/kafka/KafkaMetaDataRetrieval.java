@@ -47,7 +47,7 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaMetaDataRetrieval.class);
 
     static final CustomResourceDefinition KAFKA_CRD = new CustomResourceDefinitionBuilder()
-        .withApiVersion("apiextensions.k8s.io/v1beta1")
+        .withApiVersion("apiextensions.k8s.io/v1beta2")
         .withKind("CustomResourceDefinition")
         .withNewMetadata()
             .withName("kafkas.kafka.strimzi.io")
@@ -55,7 +55,7 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
         .withNewSpec()
             .withGroup("kafka.strimzi.io")
             .withScope("Namespaced")
-            .withVersion("v1beta1")
+            .withVersion("v1beta2")
             .withNewNames()
                 .withKind("Kafka")
                 .withListKind("KafkaList")
