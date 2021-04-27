@@ -84,7 +84,7 @@
     "react-dom": "^16.6.0"
   },
   "dependencies": {
-    "@atlasmap/atlasmap": "^2.2.0-M.6",
+    "@atlasmap/atlasmap": "^2.2.0-M.7",
     "react-fast-compare": "^2.0.2"
   },
   "jest": {
