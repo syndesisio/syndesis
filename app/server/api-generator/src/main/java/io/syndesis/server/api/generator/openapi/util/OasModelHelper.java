@@ -44,9 +44,6 @@ import org.apache.commons.lang3.StringUtils;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
-/**
- * @author Christoph Deppisch
- */
 public final class OasModelHelper {
 
     public static final String URL_EXTENSION = "x-syndesis-swagger-url";

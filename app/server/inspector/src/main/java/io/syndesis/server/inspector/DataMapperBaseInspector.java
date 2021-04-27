@@ -161,7 +161,6 @@ abstract class DataMapperBaseInspector<T> implements Inspector {
      * Checks if the the specified class name is terminal (we can't further
      * expand the path). Examples of terminals are primitive, or java.lang
      * classes.
-     *
      * @param fullyQualifiedName The specified class name.
      * @return True if terminal, false otherwise.
      */

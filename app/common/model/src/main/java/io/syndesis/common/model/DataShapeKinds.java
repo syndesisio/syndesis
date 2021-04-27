@@ -18,8 +18,6 @@ package io.syndesis.common.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- */
 public enum DataShapeKinds {
     ANY("any"),
     JAVA("java"),

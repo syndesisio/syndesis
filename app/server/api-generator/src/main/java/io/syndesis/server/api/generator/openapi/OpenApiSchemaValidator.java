@@ -37,9 +37,6 @@ import org.slf4j.LoggerFactory;
 
 import static java.util.Optional.ofNullable;
 
-/**
- * @author Christoph Deppisch
- */
 public interface OpenApiSchemaValidator {
 
     /**

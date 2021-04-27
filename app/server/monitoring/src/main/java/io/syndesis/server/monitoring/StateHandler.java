@@ -22,7 +22,6 @@ import io.syndesis.common.model.integration.IntegrationDeployment;
 /**
  * Handles integration deployment states.
  * Primarily for publish/un-publish state detail tracking.
- * @author dhirajsb
  */
 public interface StateHandler extends Consumer<IntegrationDeployment> {
 

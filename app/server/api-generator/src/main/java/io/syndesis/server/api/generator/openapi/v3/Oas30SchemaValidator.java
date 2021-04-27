@@ -20,9 +20,6 @@ import io.syndesis.server.api.generator.openapi.OpenApiSchemaValidator;
 
 import com.github.fge.jsonschema.main.JsonSchema;
 
-/**
- * @author Christoph Deppisch
- */
 public class Oas30SchemaValidator implements OpenApiSchemaValidator {
 
     private static final JsonSchema OPENAPI_3_0_SCHEMA = OpenApiSchemaValidator.loadSchema("schema/openapi-3.0-schema.json", "https://spec.openapis.org/oas/3.0/schema/2019-04-02");

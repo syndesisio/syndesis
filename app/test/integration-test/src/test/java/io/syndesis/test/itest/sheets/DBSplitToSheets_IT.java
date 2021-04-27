@@ -32,9 +32,6 @@ import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.runner.TestRunner;
 
-/**
- * @author Christoph Deppisch
- */
 @Testcontainers
 public class DBSplitToSheets_IT extends GoogleSheetsTestSupport {
 

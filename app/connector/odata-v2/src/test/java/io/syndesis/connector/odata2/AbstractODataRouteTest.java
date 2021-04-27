@@ -118,7 +118,6 @@ public abstract class AbstractODataRouteTest extends AbstractODataTest {
     /*
      * Taken with appreciation from camel-olingo4 code found at
      * https://github.com/apache/camel/blob/master/components/camel-olingo4/camel-olingo4-component/src/test/java/org/apache/camel/component/olingo4/AbstractOlingo4TestSupport.java#L77
-     *
      * Every request to the demo OData 4.0
      * (http://services.odata.org/TripPinRESTierService) generates unique
      * service URL with postfix like (S(tuivu3up5ygvjzo5fszvnwfv)) for each

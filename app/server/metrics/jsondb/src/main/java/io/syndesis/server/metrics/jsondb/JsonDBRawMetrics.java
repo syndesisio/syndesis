@@ -74,11 +74,9 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
 
     /**
      * Obtains all RawMetrics entries in the DB for the current integration
-     *
      * @param integrationId - the integrationId for which we are obtaining the metrics
      * @return a Map containing all RawMetrics entries for the current integration,
      * the key is either HISTORY or the podName.
-     * @throws IOException
      */
     @Override
     public Map<String,RawMetrics> getRawMetrics(String integrationId) throws IOException {
@@ -96,11 +94,6 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
      * Adds the RawMetrics of dead pods to a special HISTORY bucket. Each
      * Integration should only have 1 HISTORY bucket and 1 bucket per live
      * pod.
-     *
-     * @param integrationId
-     * @param metrics
-     * @param livePodIds
-     * @throws IOException
      */
     @Override
     public void curate(
@@ -142,10 +135,6 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
 
     /**
      * If Integrations get deleted we should also delete their metrics
-     *
-     * @param activeIntegrationIds
-     * @throws IOException
-     * @throws JsonMappingException
      */
     @Override
     public void curate(Set<String> activeIntegrationIds) throws IOException, JsonMappingException {

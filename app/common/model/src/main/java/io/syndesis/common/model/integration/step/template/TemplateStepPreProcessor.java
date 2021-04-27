@@ -25,28 +25,24 @@ public interface TemplateStepPreProcessor<C extends ProcessingContext> {
      * Takes a template and conducts checks to ensure it is compatible
      * with the processing endpoint, eg. ensure 'body' prefix is present on each of
      * the symbols.
-     *
-     * @param template
-     * @return pre-processed template
      * @throws exception if processing fails
      */
     String preProcess(String template) throws TemplateProcessingException;
 
     /**
      * Parameters required for the endpoint
-     *
-     * @return
      */
     Map<String, Object> getUriParams();
 
     /**
+     * Syntaxes for the template language.
      * @return the syntax for the language's symbol, eg. '{{...}}' or '${...}'
      * Note: returns an array since languages can have more than one
      */
     List<SymbolSyntax> getSymbolSyntaxes();
 
     /**
-     * @param symbol
+     * Determines if the given symbol is recognised by this pre-processor.
      * @return whether the given symbol is recognised by this pre-processor
      */
     boolean isMySymbol(String symbol);

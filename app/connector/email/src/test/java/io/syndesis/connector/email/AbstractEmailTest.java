@@ -67,7 +67,6 @@ public class AbstractEmailTest implements EMailConstants {
      * Creates a camel context complete with a properties component that handles
      * lookups of secret values such as passwords. Fetches the values from external
      * properties file.
-     *
      * @return CamelContext
      */
     protected CamelContext createCamelContext() {

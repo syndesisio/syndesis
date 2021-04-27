@@ -24,7 +24,6 @@ import io.syndesis.common.model.integration.Integration;
 public interface IntegrationProjectGenerator {
     /**
      * Generate the project files in form of tar input stream
-     *
      * @param integration the Integration
      * @param errorHandler the error handler is provided with potential async errors raised during project generation
      * @return an {@link InputStream} which holds a tar archive and which can be directly used for

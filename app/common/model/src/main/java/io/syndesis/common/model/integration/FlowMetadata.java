@@ -16,9 +16,6 @@
 
 package io.syndesis.common.model.integration;
 
-/**
- * @author Christoph Deppisch
- */
 public enum FlowMetadata {
     EXCERPT("excerpt");
 

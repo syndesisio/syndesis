@@ -25,15 +25,11 @@ import org.immutables.value.Value;
 /**
  * The result of a verification of connection parameters.
  * It's format is inspired by the discussion from https://issues.apache.org/jira/browse/CAMEL-10795
- *
- * @author roland
- * @since 23/02/2017
  */
 public interface Verifier {
 
     /**
      * Verify a connector
-     *
      * @param connectorId id of the connector to verify
      * @param parameters options for the connector to verify
      * @return the result of the verification as a list, one element for each scope checked

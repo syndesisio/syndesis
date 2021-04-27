@@ -20,10 +20,6 @@ import java.util.Map;
 
 import org.apache.camel.CamelContext;
 
-/**
- * @author roland
- * @since 28/03/2017
- */
 public interface Verifier {
 
     List<VerifierResponse> verify(CamelContext context, String connectorId, Map<String, Object> parameters);

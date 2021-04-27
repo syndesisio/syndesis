@@ -15,11 +15,16 @@
  */
 package io.syndesis.common.model.filter;
 
+import java.io.IOException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import io.syndesis.common.util.json.JsonUtils;
+
 import org.apache.camel.language.simple.types.BinaryOperatorType;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,24 +32,40 @@ public class OpTest {
 
     @Test
     public void allOperationsShouldBeKnownCamelSimpleOperations() {
-        assertThat(Stream.of(Op.DEFAULT_OPTS)
+        assertThat(Stream.of(Op.values())
             .map(Op::getOperator))
                 .allSatisfy(BinaryOperatorType::asOperator);
     }
 
     @Test
     public void allOperationsShouldHaveDistinctBinaryOperator() {
-        assertThat(Stream.of(Op.DEFAULT_OPTS)
+        assertThat(Stream.of(Op.values())
             .map(Op::getOperator)
             .collect(Collectors.toSet()))
-                .hasSameSizeAs(Op.DEFAULT_OPTS);
+                .hasSameSizeAs(Op.values());
     }
 
     @Test
     public void allOperationsShouldHaveDistinctLabels() {
-        assertThat(Stream.of(Op.DEFAULT_OPTS)
+        assertThat(Stream.of(Op.values())
             .map(Op::getLabel)
             .collect(Collectors.toSet()))
-                .hasSameSizeAs(Op.DEFAULT_OPTS);
+                .hasSameSizeAs(Op.values());
+    }
+
+    @ParameterizedTest
+    @MethodSource("operations")
+    public void shouldSerializeAndDeserializeToKnownJson(final Op op) {
+        assertThat(JsonUtils.toString(op)).isEqualTo("{\"label\":\"" + op.getLabel() + "\",\"operator\":\"" + op.getOperator() + "\"}");
+    }
+
+    @ParameterizedTest
+    @MethodSource("operations")
+    public void shouldDeserializeAndDeserializeToKnownJson(final Op op) throws IOException {
+        assertThat(JsonUtils.reader().readValue("{\"label\":\"" + op.getLabel() + "\",\"operator\":\"" + op.getOperator() + "\"}", Op.class)).isEqualTo(op);
+    }
+
+    static Stream<Op> operations() {
+        return Stream.of(Op.values());
     }
 }

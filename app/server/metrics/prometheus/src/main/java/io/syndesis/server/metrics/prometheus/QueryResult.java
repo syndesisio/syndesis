@@ -33,7 +33,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
  * Query result from Prometheus HTTP API.
- * @author dhirajb
  */
 @Value.Immutable
 @SuppressWarnings("immutables")

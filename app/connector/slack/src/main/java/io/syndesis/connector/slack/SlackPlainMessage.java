@@ -15,10 +15,6 @@
  */
 package io.syndesis.connector.slack;
 
-/**
- * @author roland
- * @since 30.04.18
- */
 public class SlackPlainMessage {
 
     private String message;

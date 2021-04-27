@@ -24,14 +24,15 @@ import io.syndesis.common.model.WithId;
 public interface DataAccessObject<T extends WithId<T>> {
 
     /**
-     * @return true if this object cannot be used to create/update entities.
+     * Returns true if this object cannot be used to create/update entities.
+     * @return true if the object is readonly
      */
     default boolean isReadOnly() {
         return false;
     }
 
     /**
-     * @return The Type of entity it supports.
+     * The Type of entity it supports.
      */
     Class<T> getType();
 
@@ -44,7 +45,6 @@ public interface DataAccessObject<T extends WithId<T>> {
 
     /**
      * Fetches all ids that have the specified property with the given value.
-     *
      * @param property      The name of the property.
      * @param propertyValue The value of the property.
      * @return              All identifiers with specified property and value combination.
@@ -53,7 +53,6 @@ public interface DataAccessObject<T extends WithId<T>> {
 
     /**
      * Fetches all ids.
-     *
      * @return All identifiers
      */
     Set<String> fetchIds();
@@ -93,7 +92,6 @@ public interface DataAccessObject<T extends WithId<T>> {
     /**
      * Creates or Updates the specified entity.
      * @param entity    The entity.
-     * @return          The previous value or null.
      */
     default void set(T entity) {
         T fetched = fetch(entity.getId().get());
@@ -118,7 +116,6 @@ public interface DataAccessObject<T extends WithId<T>> {
      * @return          True on successful deletion, false otherwise.
      */
     boolean delete(String id);
-
 
     default void deleteAll() {
         fetchAll().forEach(this::delete);

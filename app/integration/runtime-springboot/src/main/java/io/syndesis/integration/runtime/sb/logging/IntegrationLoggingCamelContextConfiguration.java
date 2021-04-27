@@ -24,9 +24,6 @@ import org.apache.camel.spring.boot.CamelContextConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Christoph Deppisch
- */
 public class IntegrationLoggingCamelContextConfiguration implements CamelContextConfiguration {
 
     private static final Logger LOG = LoggerFactory.getLogger(IntegrationLoggingCamelContextConfiguration.class);

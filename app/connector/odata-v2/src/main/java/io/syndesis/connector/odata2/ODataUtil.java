@@ -64,6 +64,7 @@ public class ODataUtil implements ODataConstants {
     }
 
     /**
+     * One more method to check if URL is HTTPS or not.
      * @return whether url is an ssl (https) url or not.
      */
     public static boolean isServiceSSL(String url) {
@@ -119,7 +120,6 @@ public class ODataUtil implements ODataConstants {
 
     /**
      * Creates a new {@link HttpClientBuilder} for the given options.
-     *
      * @return the new http client builder
      */
     public static HttpClientBuilder createHttpClientBuilder(Map<String, Object> options) {
@@ -143,7 +143,6 @@ public class ODataUtil implements ODataConstants {
 
     /**
      * Creates a new {@link HttpClientBuilder} for the given options.
-     *
      * @return the new http client builder
      */
     public static HttpAsyncClientBuilder createHttpAsyncClientBuilder(Map<String, Object> options) {
@@ -167,7 +166,6 @@ public class ODataUtil implements ODataConstants {
 
     /**
      * Creates a new {@link CloseableHttpClient} for the given options.
-     *
      * @return the new http(s) client
      */
     public static CloseableHttpClient createHttpClient(Map<String, Object> options) {
@@ -176,7 +174,6 @@ public class ODataUtil implements ODataConstants {
 
     /**
      * Remove the slashes at the end of the given string
-     *
      * @return string sans slashes
      */
     public static String removeEndSlashes(String path) {
@@ -230,6 +227,7 @@ public class ODataUtil implements ODataConstants {
     }
 
     /**
+     * Another method to format key predicates.
      * @param keyPredicate the predicate to be formatted
      * @return the keyPredicate formatted with quotes and brackets
      */

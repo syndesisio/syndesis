@@ -37,9 +37,6 @@ import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.OpenApiValidationRules;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 
-/**
- * @author Christoph Deppisch
- */
 public class Oas20ValidationRules extends OpenApiValidationRules<Oas20Response, Oas20SecurityScheme, Oas20SchemaDefinition> {
 
     Oas20ValidationRules(APIValidationContext context) {

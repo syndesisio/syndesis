@@ -15,12 +15,17 @@
  */
 package io.syndesis.server.dao;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Spliterator;
@@ -28,11 +33,6 @@ import java.util.Spliterators;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import org.apache.camel.catalog.CamelCatalog;
 import org.apache.camel.catalog.DefaultCamelCatalog;
 import org.apache.camel.catalog.connector.CamelConnectorCatalog;
@@ -40,9 +40,6 @@ import org.apache.camel.catalog.connector.DefaultCamelConnectorCatalog;
 import org.apache.camel.catalog.maven.DefaultMavenArtifactProvider;
 import org.apache.camel.catalog.maven.MavenArtifactProvider;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 
 /**
  * Downloads all connectors defined in {@code deployment.json} and tries to
@@ -138,7 +135,7 @@ public class DeploymentDescriptorIT {
 
         final Map<String, Long> multipleCoordinates = coordinatesWithCount.entrySet().stream()
             .filter(e -> e.getValue() > 1)
-            .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         assertThat(multipleCoordinates).as("Expected connector GAV coordinates to be unique").isEmpty();
     }
@@ -151,7 +148,7 @@ public class DeploymentDescriptorIT {
             .map(action -> action.get("name").asText()).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
         final Map<String, Long> multipleNames = namesWithCount.entrySet().stream().filter(e -> e.getValue() > 1)
-            .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         assertThat(multipleNames).as("Expected unique action names").isEmpty();
     }

@@ -20,7 +20,6 @@ import java.util.Set;
 
 /**
  * The interface for a cache.
- *
  */
 public interface Cache<K, V> {
 

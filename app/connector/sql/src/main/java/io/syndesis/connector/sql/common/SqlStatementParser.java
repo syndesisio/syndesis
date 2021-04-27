@@ -32,9 +32,7 @@ public class SqlStatementParser {
      * R - SELECT FIRSTNAME, LASTNAME FROM NAME WHERE ID=:id
      * U - UPDATE NAME SET FIRSTNAME=:firstname WHERE ID=:id
      * D - DELETE FROM NAME WHERE ID=:id
-     *
      * DEMO_ADD(INTEGER ${body[A]}
-     *
      * validate no "AS"
      * input params
      * output params
@@ -220,11 +218,8 @@ public class SqlStatementParser {
     /**
      * INSERT INTO table_name (column1, column2, column3, ...)
      * VALUES (value1, value2, value3, ...);
-     *
      * INSERT INTO table_name
      * VALUES (value1, value2, value3, ...);
-     * @param tableName
-     * @return
      */
     List<SqlParam> findInsertParams(String tableName) {
         boolean isColumnName = false;

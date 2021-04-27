@@ -123,7 +123,6 @@ public class ComponentProxyComponent extends DefaultComponent {
 
     /**
      * Allows the definition to be overridden if required by specific components
-     *
      * @return definition
      */
     protected ComponentDefinition getDefinition() {

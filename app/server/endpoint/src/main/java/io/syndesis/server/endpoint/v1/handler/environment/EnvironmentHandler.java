@@ -228,6 +228,7 @@ public class EnvironmentHandler extends BaseHandler {
         return tagForRelease(integrationId, environments, false);
     }
 
+    @SuppressWarnings("JavaUtilDate") // TODO refactor
     public static ContinuousDeliveryEnvironment createOrUpdateTag(Map<String, ContinuousDeliveryEnvironment> deliveryState,
                                                                   String environmentId, Date lastTaggedAt) {
 
@@ -255,6 +256,7 @@ public class EnvironmentHandler extends BaseHandler {
                 .orElseThrow(() -> new ClientErrorException("Missing environment " + environment, Response.Status.NOT_FOUND));
     }
 
+    @SuppressWarnings("JavaUtilDate") // TODO refactor
     public void updateCDEnvironments(List<Integration> integrations, String environmentId, Date taggedAt,
                                      Function<ContinuousDeliveryEnvironment.Builder, ContinuousDeliveryEnvironment.Builder> operator) {
         integrations.forEach(i -> {
@@ -265,6 +267,7 @@ public class EnvironmentHandler extends BaseHandler {
         });
     }
 
+    @SuppressWarnings("JavaUtilDate") // TODO refactor
     private Map<String, ContinuousDeliveryEnvironment> tagForRelease(String integrationId, List<String> environments,
                                                                      boolean deleteOtherTags) {
 

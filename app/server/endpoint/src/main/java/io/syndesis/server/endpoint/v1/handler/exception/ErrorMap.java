@@ -35,8 +35,6 @@ public final class ErrorMap {
 
     /**
      * Performs best effort to parse the rawMsg. If all parsers fail it returns the raw message.
-     *
-     * @param rawMsg
      * @return the underlying error message.
      */
     public static String from(String rawMsg) {
@@ -52,7 +50,6 @@ public final class ErrorMap {
     /**
      * Tries to parse the rawMsg assuming it is JSON formatted.
      * defaults to the rawMsg if parsing fails.
-     * @param rawMsg
      * @return ErrorMap
      */
     static String parseWith(String rawMsg, ObjectMapper mapper) {

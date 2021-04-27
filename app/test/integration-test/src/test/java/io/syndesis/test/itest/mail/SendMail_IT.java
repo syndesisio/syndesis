@@ -40,9 +40,6 @@ import com.consol.citrus.mail.message.MailMessage;
 import com.consol.citrus.mail.server.MailServer;
 import com.consol.citrus.util.FileUtils;
 
-/**
- * @author Christoph Deppisch
- */
 @Testcontainers
 public class SendMail_IT extends SyndesisIntegrationTestSupport {
 
@@ -65,7 +62,6 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
     /**
      * This integration provides a webhook that expects a POST request with some contact Json object as payload. The
      * incoming contact (first_name, company, mail) triggers a send mail activity with a welcome message.
-     *
      * After the mail is sent a new task entry for that contact is added to the sample database.
      */
     @Container

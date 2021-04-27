@@ -75,7 +75,6 @@ abstract class AbstractResourceUpdateHandler<T extends WithId<T>> implements Res
 
     /**
      * Compute the bulletin boards for the given change.
-     *
      * @param event the event.
      * @return a list of boards or an empty collection.
      */

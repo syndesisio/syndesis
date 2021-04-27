@@ -35,7 +35,6 @@ public final class FilterUtil {
 
     /**
      * Extract any <strong>:#variable</strong> parameter format
-     *
      * @param filter the filter expression, ie {"test": ":#var1"}
      * @return a list of parameters expected by the filter
      */
@@ -51,9 +50,6 @@ public final class FilterUtil {
 
     /**
      * Check whether the filter contains any parameter or is a static one
-     *
-     * @param filter
-     * @return
      */
     public static boolean hasAnyParameter(String filter) {
         return filter != null && filter.contains(":#");
@@ -61,10 +57,8 @@ public final class FilterUtil {
 
     /**
      * Merge the parameters found in the filter with the values found in the JSON message
-     *
      * @param filter an expression containing :#variable parameters
      * @param jsonMessage a message formatted as JSON
-     * @return
      */
     public static String merge(String filter, String jsonMessage) {
         if (filter == null){

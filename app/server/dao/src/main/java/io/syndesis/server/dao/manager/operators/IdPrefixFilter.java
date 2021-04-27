@@ -24,7 +24,6 @@ import io.syndesis.common.model.WithResourceId;
 
 /**
  * Filters the by id prefix.
- *
  * @param <T> The type of the elements in the filtered list.
  */
 public final class IdPrefixFilter<T extends WithResourceId> implements Function<ListResult<T>, ListResult<T>> {
@@ -33,7 +32,6 @@ public final class IdPrefixFilter<T extends WithResourceId> implements Function<
 
     /**
      * Creates the filter with the specified prefix filter.
-     *
      * @param prefix the prefix to match
      */
     public IdPrefixFilter(String prefix) {
@@ -42,7 +40,6 @@ public final class IdPrefixFilter<T extends WithResourceId> implements Function<
 
     /**
      * Applies the filter to the provided list.
-     *
      * @param result The result to filter.
      * @return  all entries with ids that start with specified prefix
      */

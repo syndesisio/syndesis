@@ -34,9 +34,6 @@ import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.http.client.HttpClient;
 
-/**
- * @author Christoph Deppisch
- */
 @Testcontainers
 public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
 
@@ -47,7 +44,6 @@ public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
     /**
      * This integration provides a webhook that expects a POST request to store contacts to the sample database. The
      * webhook defines a Json instance schema as Json array and saves incoming contacts to the DB.
-     *
      * Inbound requests are split first and then filtered in two ways
      *  Basic filter applies to the company name property to be "Red Hat"
      *  Advanced filter applies to the first_name property to not be like "Unknown"

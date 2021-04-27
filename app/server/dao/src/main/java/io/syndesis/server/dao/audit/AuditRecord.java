@@ -72,7 +72,7 @@ public final class AuditRecord {
             return false;
         }
         final AuditRecord that = (AuditRecord) o;
-        return Objects.equals(hashCode(), that.hashCode()) &&
+        return hashCode() == that.hashCode() &&
             Objects.equals(id, that.id) &&
             Objects.equals(type, that.type) &&
             Objects.equals(name, that.name) &&

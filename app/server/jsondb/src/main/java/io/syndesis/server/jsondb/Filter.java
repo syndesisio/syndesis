@@ -20,9 +20,6 @@ import java.util.Arrays;
 import io.syndesis.server.jsondb.impl.ChildFilter;
 import io.syndesis.server.jsondb.impl.LogicalFilter;
 
-/**
- *
- */
 public interface Filter {
 
     enum Op {

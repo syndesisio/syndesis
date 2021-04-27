@@ -38,7 +38,6 @@ public interface BodyLogger {
      * in readable format even if objects overwrite {@link Object#toString()}. This is required when grouped body aggregation
      * exchanges are logged because these exchanges do overwrite {@link Object#toString()}
      * in {@link org.apache.camel.processor.aggregate.AbstractListAggregationStrategy}
-     *
      * Other body types are delegated to simple language "${body}" expression for logging the body as String.
      */
     class Default implements BodyLogger {

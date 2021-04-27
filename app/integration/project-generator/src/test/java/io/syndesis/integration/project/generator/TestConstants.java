@@ -26,17 +26,17 @@ import io.syndesis.common.util.MavenProperties;
 
 final class TestConstants {
 
-    protected static final MavenProperties MAVEN_PROPERTIES;
+    static final MavenProperties MAVEN_PROPERTIES;
 
-    protected static final String SYNDESIS_VERSION;
-    protected static final String CAMEL_VERSION;
-    protected static final ConnectorAction PERIODIC_TIMER_ACTION;
-    protected static final Connector TIMER_CONNECTOR;
-    protected static final ConnectorAction HTTP_GET_ACTION;
-    protected static final ConnectorAction HTTP_POST_ACTION;
-    protected static final Connector HTTP_CONNECTOR;
-    protected static final ConnectorAction TWITTER_MENTION_ACTION;
-    protected static final Connector TWITTER_CONNECTOR;
+    static final String SYNDESIS_VERSION;
+    static final String CAMEL_VERSION;
+    static final ConnectorAction PERIODIC_TIMER_ACTION;
+    static final Connector TIMER_CONNECTOR;
+    static final ConnectorAction HTTP_GET_ACTION;
+    static final ConnectorAction HTTP_POST_ACTION;
+    static final Connector HTTP_CONNECTOR;
+    static final ConnectorAction TWITTER_MENTION_ACTION;
+    static final Connector TWITTER_CONNECTOR;
 
     static {
         MAVEN_PROPERTIES = new MavenProperties();

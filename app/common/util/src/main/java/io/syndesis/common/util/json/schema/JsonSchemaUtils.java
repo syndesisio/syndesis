@@ -33,9 +33,6 @@ import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 
-/**
- * @author Christoph Deppisch
- */
 public final class JsonSchemaUtils {
 
     /** Logger */
@@ -48,13 +45,10 @@ public final class JsonSchemaUtils {
     /**
      * This method creates a copy of the default ObjectMapper configuration and adds special Json schema compatibility handlers
      * for supporting draft-03, draft-04 and draft-06 level at the same time.
-     *
      * Auto converts "$id" to "id" property for draft-04 compatibility.
-     *
      * In case the provided schema specification to read uses draft-04 and draft-06 specific features such as "examples" or a list of "required"
      * properties as array these information is more or less lost and auto converted to draft-03 compatible defaults. This way we can
      * read the specification to draft-03 compatible objects and use those.
-     * @return
      */
     public static ObjectReader reader() {
         return JsonUtils.copyObjectMapperConfiguration()

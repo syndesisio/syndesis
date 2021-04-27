@@ -53,7 +53,6 @@ public interface OpenShiftService {
 
     /**
      * Start a previously created build with the data from the given directory
-     *
      * @param name name of the build
      * @param data the deployment data to use
      * @param tarInputStream input stream representing a tar file containing the project files
@@ -63,7 +62,6 @@ public interface OpenShiftService {
 
     /**
      * Perform a deployment
-     *
      * @param data the deployment data to use
      * @param name name of the deployment to trigger
      * @return the revision of the deployment.
@@ -72,7 +70,6 @@ public interface OpenShiftService {
 
     /**
      * Check whether a deployment is ready
-     *
      * @param name name of the deployment to check
      * @return true if deployment is ready, false otherwise
      */
@@ -101,7 +98,6 @@ public interface OpenShiftService {
 
     /**
      * Scale the deployment (Deployment and Build configurations, Image Streams etc)
-     *
      * @param name of the deployment to delete
      * @param labels a set of labels that need to be match.
      * @param desiredReplicas how many replicas to scale to
@@ -141,7 +137,6 @@ public interface OpenShiftService {
 
     /**
      * Returns the hostname exposed by Openshift for the integration, if any.
-     *
      * @param name the name of the route to check
      * @return a Optional containing the URL
      */
@@ -149,7 +144,6 @@ public interface OpenShiftService {
 
     /**
      * Create a Custom Resource Definition (CRD) given the Yaml definition as an InputStream
-     *
      * @param cdrYamlStream the CRD yaml definition as an {@link InputStream}
      * @return a List of {@link HasMetadata} as the operation result
      */
@@ -157,7 +151,6 @@ public interface OpenShiftService {
 
     /**
      * Create a Custom Resource Definition.
-     *
      * @param crd the {@link CustomResourceDefinition} to create
      * @return the {@link CustomResourceDefinition} created
      */
@@ -165,7 +158,6 @@ public interface OpenShiftService {
 
     /**
      * Get a Custom Resource Definition (CRD) given the Name
-     *
      * @param crdName the CRD name
      * @return an Optional containing the {@link CustomResourceDefinition}
      */
@@ -173,7 +165,6 @@ public interface OpenShiftService {
 
     /**
      * Delete the given CR.
-     *
      * @param <T>   The Kubernetes resource type.
      * @param <L>   The list variant of the Kubernetes resource type.
      * @param <D>   The doneable variant of the Kubernetes resource type.
@@ -189,7 +180,6 @@ public interface OpenShiftService {
 
     /**
      * Delete the given CR.
-     *
      * @param <T>   The Kubernetes resource type.
      * @param <L>   The list variant of the Kubernetes resource type.
      * @param <D>   The doneable variant of the Kubernetes resource type.
@@ -253,7 +243,7 @@ public interface OpenShiftService {
      * @param resourceType the type of T
      * @param resourceListType the type of L
      * @param doneableResourceType the type of D
-     * @param watcher a BiConsumer<Watcher.Action,T> function to be executed for each received Action on T
+     * @param watcher a {@code BiConsumer<Watcher.Action,T>} function to be executed for each received Action on T
      * @return the Watch
      */
     <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> Watch watchCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, BiConsumer<Watcher.Action,T> watcher);

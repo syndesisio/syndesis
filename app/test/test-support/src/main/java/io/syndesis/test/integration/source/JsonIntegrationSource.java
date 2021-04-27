@@ -26,9 +26,6 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.util.IOStreams;
 import io.syndesis.common.util.json.JsonUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class JsonIntegrationSource implements IntegrationSource {
 
     private final byte[] json;

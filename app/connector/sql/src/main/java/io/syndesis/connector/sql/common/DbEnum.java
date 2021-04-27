@@ -24,10 +24,6 @@ import org.slf4j.LoggerFactory;
  * Enumeration of Database products we have tested, and for which we ship
  * drivers for. One caveat is the Oracle Driver which cannot be shipped due to
  * restrictions on its license.
- *
- * @since 09/11/17
- * @author kstam
- *
  */
 public enum DbEnum {
     APACHE_DERBY("APACHE DERBY"),

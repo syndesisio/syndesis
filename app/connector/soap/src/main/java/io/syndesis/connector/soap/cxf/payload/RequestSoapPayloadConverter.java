@@ -40,7 +40,6 @@ public final class RequestSoapPayloadConverter extends AbstractSoapPayloadConver
     private final SoapVersion soapVersion;
 
     public RequestSoapPayloadConverter(SoapVersion soapVersion) {
-        super();
         this.soapVersion = soapVersion;
     }
 
@@ -84,7 +83,7 @@ public final class RequestSoapPayloadConverter extends AbstractSoapPayloadConver
         }
     }
 
-    protected static Source bodyAsSource(final Message in) throws InvalidPayloadException {
+    static Source bodyAsSource(final Message in) throws InvalidPayloadException {
         return new StreamSource(in.getMandatoryBody(InputStream.class));
     }
 

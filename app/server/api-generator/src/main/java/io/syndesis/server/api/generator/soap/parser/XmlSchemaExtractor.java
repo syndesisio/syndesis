@@ -238,7 +238,6 @@ class XmlSchemaExtractor {
 
     /**
      * Copy all objects from source schema to target schema after calling extract methods to setup objects to extract.
-     *
      * @throws ParserException on error.
      */
     public void copyObjects() throws ParserException {

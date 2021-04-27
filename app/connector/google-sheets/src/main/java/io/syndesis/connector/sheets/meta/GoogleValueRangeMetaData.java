@@ -18,9 +18,6 @@ package io.syndesis.connector.sheets.meta;
 
 import java.util.Arrays;
 
-/**
- * @author Christoph Deppisch
- */
 public class GoogleValueRangeMetaData {
 
     private String spreadsheetId;
@@ -37,8 +34,6 @@ public class GoogleValueRangeMetaData {
 
     /**
      * Specifies the spreadsheetId.
-     *
-     * @param spreadsheetId
      */
     public void setSpreadsheetId(String spreadsheetId) {
         this.spreadsheetId = spreadsheetId;
@@ -50,8 +45,6 @@ public class GoogleValueRangeMetaData {
 
     /**
      * Specifies the columnNames.
-     *
-     * @param columnNames
      */
     public void setColumnNames(String ... columnNames) {
         this.columnNames = Arrays.copyOf(columnNames, columnNames.length);
@@ -63,8 +56,6 @@ public class GoogleValueRangeMetaData {
 
     /**
      * Specifies the headerRow.
-     *
-     * @param headerRow
      */
     public void setHeaderRow(String headerRow) {
         this.headerRow = headerRow;
@@ -76,8 +67,6 @@ public class GoogleValueRangeMetaData {
 
     /**
      * Specifies the range.
-     *
-     * @param range
      */
     public void setRange(String range) {
         this.range = range;
@@ -89,8 +78,6 @@ public class GoogleValueRangeMetaData {
 
     /**
      * Specifies the majorDimension.
-     *
-     * @param majorDimension
      */
     public void setMajorDimension(String majorDimension) {
         this.majorDimension = majorDimension;
@@ -102,8 +89,6 @@ public class GoogleValueRangeMetaData {
 
     /**
      * Specifies the split.
-     *
-     * @param split
      */
     public void setSplit(boolean split) {
         this.split = split;

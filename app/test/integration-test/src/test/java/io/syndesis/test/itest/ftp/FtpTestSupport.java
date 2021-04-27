@@ -40,9 +40,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.client.FtpEndpointConfiguration;
 import com.consol.citrus.ftp.server.FtpServer;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class FtpTestSupport extends SyndesisIntegrationTestSupport {
 
     /** Logger */

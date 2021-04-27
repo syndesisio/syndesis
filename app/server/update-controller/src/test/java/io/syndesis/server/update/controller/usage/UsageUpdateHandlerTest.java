@@ -15,12 +15,14 @@
  */
 package io.syndesis.server.update.controller.usage;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import static java.util.Collections.emptyList;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Dependency;
-import io.syndesis.common.model.Dependency.Type;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.extension.Extension;
@@ -28,16 +30,10 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.server.dao.manager.DataManager;
-
+import java.util.Arrays;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static java.util.Collections.emptyList;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
 
 public class UsageUpdateHandlerTest {
 
@@ -61,7 +57,7 @@ public class UsageUpdateHandlerTest {
             .addStep(new Step.Builder()
                 .addDependency(new Dependency.Builder()
                     .id("extension-1")
-                    .type(Type.EXTENSION)
+                    .type(Dependency.Type.EXTENSION)
                     .build())
                 .build())
             .build())
@@ -71,7 +67,7 @@ public class UsageUpdateHandlerTest {
         .id("integration-2")
         .addDependency(new Dependency.Builder()
             .id("extension-1")
-            .type(Type.EXTENSION_TAG)
+            .type(Dependency.Type.EXTENSION_TAG)
             .build())
         .build();
 
@@ -80,7 +76,7 @@ public class UsageUpdateHandlerTest {
         .addFlow(new Flow.Builder()
             .addDependency(new Dependency.Builder()
                 .id("extension-1")
-                .type(Type.EXTENSION_TAG)
+                .type(Dependency.Type.EXTENSION_TAG)
                 .build())
             .build())
         .build();

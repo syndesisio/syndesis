@@ -26,10 +26,6 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * @author roland
- * @since 13/12/16
- */
 public class ReflectiveSorterTest {
 
     @Test

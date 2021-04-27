@@ -62,12 +62,10 @@ public class KubernetesSupport {
 
     /*
      * Feeds the controller of the given podName to the callback handler for processing.
-     *
      * We do this instead of using the watchLog() feature of the k8s client lib because it really sucks due to:
      *  1. You can't configure the timestamps option or the sinceTime option.  Need to resume log downloads.
      *  2. It seems to need extra threads..
      *  3. It might be hiding some of the http failure conditions.
-     *
      */
     protected void watchLog(String podName, Consumer<InputStream> handler, String sinceTime, Executor executor) throws IOException {
         try {

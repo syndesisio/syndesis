@@ -15,12 +15,10 @@
  */
 package io.syndesis.server.api.generator.openapi.v3;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Stream;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30PathItem;
@@ -28,18 +26,16 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.openapi.UnifiedXmlDataShapeSupport;
 import io.syndesis.server.api.generator.openapi.util.XmlSchemaHelper;
-
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Stream;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class UnifiedXmlDataShapeGeneratorTest {
 
@@ -52,7 +48,7 @@ public class UnifiedXmlDataShapeGeneratorTest {
     public void shouldCreateArrayFromExamples(final String jsonSchemaSnippet, final String xmlSchemaSnippet, final String arrayItemName,
         final String arrayElementName) throws IOException {
         final Map<String, Oas30Schema> namedPropertyMap = propertyFrom(jsonSchemaSnippet);
-        final Entry<String, Oas30Schema> namedProperty = namedPropertyMap.entrySet().iterator().next();
+        final Map.Entry<String, Oas30Schema> namedProperty = namedPropertyMap.entrySet().iterator().next();
 
         final String propertyName = namedProperty.getKey();
         final Oas30Schema array = namedProperty.getValue();

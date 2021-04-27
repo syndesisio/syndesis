@@ -40,9 +40,6 @@ import org.dom4j.Element;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class UnifiedXmlDataShapeSupport<T extends OasDocument, O extends OasOperation, R extends OasResponse> implements DataShapeGenerator<T, O> {
 
     protected static final String SCHEMA_SET_NS = "http://atlasmap.io/xml/schemaset/v2";

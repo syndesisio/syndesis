@@ -126,9 +126,8 @@ public abstract class AbstractODataTest implements ODataConstants {
     }
 
     /**
-     * @param inStream
+     * Another method that converts streams to Strings, use carefuly.
      * @return a string representation of the content of the given stream
-     * @throws IOException
      */
     public static String streamToString(InputStream inStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
@@ -166,7 +165,6 @@ public abstract class AbstractODataTest implements ODataConstants {
      * Creates a camel context complete with a properties component that handles
      * lookups of secret values such as passwords. Fetches the values from external
      * properties file.
-     *
      * @return CamelContext
      */
     protected CamelContext createCamelContext() {

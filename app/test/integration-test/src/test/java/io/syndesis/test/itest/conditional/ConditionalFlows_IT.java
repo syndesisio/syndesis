@@ -31,9 +31,6 @@ import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.http.client.HttpClient;
 
-/**
- * @author Christoph Deppisch
- */
 @Testcontainers
 public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
 
@@ -44,7 +41,6 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
     /**
      * This integration provides a webhook that expects a POST request to store task entries to the sample database. The
      * webhook defines a Json instance schema that represents a contact with first_name and company properties.
-     *
      * Inbound requests are routed to different conditional flows based on condition evaluation on the message body.
      *  When body.fist_name == 'John' save 'Drink beer with John' as task to the DB
      *  When body.company == 'Red Hat' save 'Meet {{first_name}} from Red Hat' as task to the DB

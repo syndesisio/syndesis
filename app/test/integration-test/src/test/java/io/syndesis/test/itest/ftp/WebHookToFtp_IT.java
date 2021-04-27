@@ -45,9 +45,6 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonTextMessageValidator;
 
-/**
- * @author Christoph Deppisch
- */
 @Testcontainers
 public class WebHookToFtp_IT extends FtpTestSupport {
 

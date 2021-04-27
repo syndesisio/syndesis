@@ -19,10 +19,6 @@ import io.syndesis.connector.support.verifier.api.ComponentVerifier;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
 
-/**
- * @author kstam
- * @since 8/29/2017
- */
 public class SqlVerifier extends ComponentVerifier {
     public SqlVerifier() {
         super("sql");

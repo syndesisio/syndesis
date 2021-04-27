@@ -21,7 +21,6 @@ package io.syndesis.common.util;
 public interface EventBus {
     /**
      * Constants for known event types.
-     *
      * NOTE: May be better to use enums but EventBus is all about strings.
      */
     @SuppressWarnings("PMD.ConstantsInInterface")
@@ -31,7 +30,6 @@ public interface EventBus {
 
     /**
      * Constants for known event action
-     *
      * NOTE: May be better to use enums but EventBus is all about strings.
      */
     @SuppressWarnings("PMD.ConstantsInInterface")
@@ -49,7 +47,6 @@ public interface EventBus {
 
         /**
          * This method must never block.
-         *
          * @param event the type of event being delivered
          * @param data the data associated the the event type
          */
@@ -58,7 +55,6 @@ public interface EventBus {
 
     /**
      * Adds a subscription to the event bus.
-     *
      * @param subscriberId unique id for the subscription.
      * @param handler the callback that will receive the events.
      * @return the previously registered subscription with that id or null.

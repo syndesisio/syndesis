@@ -34,9 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-/**
- * @author Christoph Deppisch
- */
 class AggregateMetadataHandler implements StepMetadataHandler {
 
     private static final String JSON_SCHEMA_ORG_SCHEMA = "http://json-schema.org/schema#";
@@ -231,10 +228,6 @@ class AggregateMetadataHandler implements StepMetadataHandler {
      * Converts unified Json body specification. Unified Json schema specifications hold
      * the actual body specification in a property. This method converts this body specification
      * from array to single element if necessary.
-     *
-     * @param specification
-     * @return
-     * @throws IOException
      */
     private static String adaptUnifiedJsonBodySpecToSingleElement(String specification) throws IOException {
         JsonSchema schema = JsonSchemaUtils.reader().readValue(specification);
@@ -256,10 +249,6 @@ class AggregateMetadataHandler implements StepMetadataHandler {
      * Converts unified Json body specification. Unified Json schema specifications hold
      * the actual body specification in a property. This method converts this body specification
      * from single element to collection if necessary.
-     *
-     * @param specification
-     * @return
-     * @throws IOException
      */
     private static String adaptUnifiedJsonBodySpecToCollection(String specification) throws IOException {
         JsonSchema schema = JsonSchemaUtils.reader().readValue(specification);

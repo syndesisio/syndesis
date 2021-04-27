@@ -19,9 +19,6 @@ import io.syndesis.integration.runtime.util.DefaultRoutePolicy;
 import org.apache.camel.Exchange;
 import org.apache.camel.Route;
 
-/**
- * @author Christoph Deppisch
- */
 public final class FlowActivityTrackingPolicy extends DefaultRoutePolicy {
     private final ActivityTracker tracker;
 

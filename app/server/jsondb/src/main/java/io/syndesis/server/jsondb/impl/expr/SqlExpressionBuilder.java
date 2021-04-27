@@ -75,7 +75,7 @@ public abstract class SqlExpressionBuilder {
         }
     }
 
-    private static String toSqlOp(ChildFilter.Op op) {
+    private static String toSqlOp(Filter.Op op) {
         switch(op) {
             case EQ: return " = ";
             case NEQ: return " <> ";

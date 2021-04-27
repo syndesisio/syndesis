@@ -398,8 +398,6 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
     /**
      * Tests alternative key predicate that is a string value
      * @see https://github.com/syndesisio/syndesis/issues/5241
-     *
-     * @throws Exception
      */
     @Test
     public void testPatchODataRouteOnRefServer() throws Exception {

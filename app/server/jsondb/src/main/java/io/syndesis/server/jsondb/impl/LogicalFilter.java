@@ -20,9 +20,6 @@ import java.util.List;
 import io.syndesis.server.jsondb.Filter;
 import io.syndesis.common.model.ToJson;
 
-/**
- *
- */
 public class LogicalFilter implements Filter, ToJson {
 
     public enum Op {

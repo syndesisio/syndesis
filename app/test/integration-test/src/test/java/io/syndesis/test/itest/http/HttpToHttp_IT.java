@@ -34,9 +34,6 @@ import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.http.server.HttpServer;
 
-/**
- * @author Christoph Deppisch
- */
 @org.testcontainers.junit.jupiter.Testcontainers
 public class HttpToHttp_IT extends SyndesisIntegrationTestSupport {
 

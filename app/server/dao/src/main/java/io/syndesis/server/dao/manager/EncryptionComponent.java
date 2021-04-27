@@ -31,7 +31,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * Handy methods used to apply encryption to configured secrets.
- *
  */
 @Component
 public class EncryptionComponent {

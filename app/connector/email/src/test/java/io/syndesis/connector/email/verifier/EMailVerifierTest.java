@@ -83,7 +83,6 @@ public class EMailVerifierTest extends AbstractEmailServerTest {
         /*
          * With no secure type, the connection to the mail store will fail & timeout
          * However, we want it to fail fast & return fast.
-         *
          * Add a timeout property to cut the default timeout (10secs) to a more
          * test-friendly time of 2secs.
          */
@@ -122,7 +121,6 @@ public class EMailVerifierTest extends AbstractEmailServerTest {
         /*
          * With no secure type, the connection to the mail store will fail & timeout
          * However, we want it to fail fast & return fast.
-         *
          * Add a timeout property to cut the default timeout (10secs) to a more
          * test-friendly time of 2secs.
          */
@@ -161,7 +159,6 @@ public class EMailVerifierTest extends AbstractEmailServerTest {
         /*
          * With no secure type, the connection to the mail store will fail & timeout
          * However, we want it to fail fast & return fast.
-         *
          * Add a timeout property to cut the default timeout (10secs) to a more
          * test-friendly time of 2secs.
          */
@@ -308,7 +305,6 @@ public class EMailVerifierTest extends AbstractEmailServerTest {
     /**
      * This test must be manually run since it requires a StartTLS enabled imap server.
      * No such test server is available (GreenMail doesn't support StartTLS)
-     *
      * Change the credentials in the fields above then execute.
      */
     @Test

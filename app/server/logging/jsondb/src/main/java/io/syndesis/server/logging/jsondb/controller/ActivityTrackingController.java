@@ -151,8 +151,6 @@ public class ActivityTrackingController implements BackendController, Closeable 
 
     /**
      * TODO: push this into the jsondb API.
-     *
-     * @param path
      */
     int deleteKeepingRetention(String path) {
         return dbi.inTransaction((conn, status) -> {

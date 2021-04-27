@@ -128,7 +128,7 @@ public class ExtensionHandler extends BaseHandler implements Getter<Extension>, 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @SuppressWarnings("PMD.CyclomaticComplexity")
+    @SuppressWarnings({"PMD.CyclomaticComplexity","JavaUtilDate"}) // TODO refactor
     public Extension upload(MultipartFormDataInput dataInput, @Context SecurityContext sec, @QueryParam("updatedId") String updatedId) {
         Date rightNow = new Date();
         String id = KeyGenerator.createKey();

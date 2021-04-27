@@ -38,9 +38,6 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-/**
- * @author Dhiraj Bokde
- */
 @Testcontainers
 public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
 
@@ -63,7 +60,6 @@ public class SoapConnector_IT extends SyndesisIntegrationTestSupport {
     /**
      * Integration uses api connector to send SOAP client requests to a REST endpoint. The client API connector was generated
      * from SOAP WSDL1.1 specification.
-     *
      * The integration invokes following sequence of client requests on the test server
      *  Invoke operation sayHi.
      */

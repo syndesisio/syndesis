@@ -18,9 +18,6 @@ package io.syndesis.integration.api;
 
 import java.util.function.Consumer;
 
-/**
- * @author Christoph Deppisch
- */
 @FunctionalInterface
 public interface IntegrationErrorHandler extends Consumer<Throwable> {
     // type to easily use in code, rather than types with long generics

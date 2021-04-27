@@ -98,8 +98,6 @@ public class JSONBeanUtilTest {
     /**
      * Address issue when sql is parsed but contains no sql parameters
      * @see https://github.com/syndesisio/syndesis/issues/2706
-     *
-     * @throws JsonProcessingException
      */
     @Test
     public void parseSqlParametersFromJSONBeanWhenNoParameters() throws JsonProcessingException {

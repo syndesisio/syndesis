@@ -23,7 +23,6 @@ import io.syndesis.common.model.ListResult;
 
 /**
  * Filters the list with the provided pagination options.
- *
  * @param <T> The type of the elements in the filtered list.
  */
 public class PaginationFilter<T> implements Function<ListResult<T>, ListResult<T>> {
@@ -33,7 +32,6 @@ public class PaginationFilter<T> implements Function<ListResult<T>, ListResult<T
 
     /**
      * Creates the filter with the specified pagination options.
-     *
      * @param options The pagination options. Note that page and per_page must both be greater than 0.
      * @throws IllegalArgumentException If page or perPage are less than 1.
      */
@@ -50,7 +48,6 @@ public class PaginationFilter<T> implements Function<ListResult<T>, ListResult<T
 
     /**
      * Applies the filter to the provided list.
-     *
      * @param result The result to filter.
      * @return The relevant page of the provided list. Returns an empty list if the requested page would be outside of the provided list range.
      */

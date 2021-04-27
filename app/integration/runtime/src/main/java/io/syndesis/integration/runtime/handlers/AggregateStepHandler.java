@@ -145,8 +145,6 @@ public class AggregateStepHandler implements IntegrationStepHandler {
 
         /**
          * Specifies the script.
-         *
-         * @param script
          */
         public void setScript(String script) {
             this.script = script;
@@ -154,8 +152,6 @@ public class AggregateStepHandler implements IntegrationStepHandler {
 
         /**
          * Specifies the language.
-         *
-         * @param language
          */
         public void setLanguage(String language) {
             this.language = language;

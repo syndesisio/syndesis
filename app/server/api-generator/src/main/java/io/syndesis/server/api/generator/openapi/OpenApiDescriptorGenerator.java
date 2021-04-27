@@ -25,7 +25,6 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 /**
  * Generator creates a connector descriptor and adds properties and data shapes generated from the
  * OpenAPI operation specification. This is the abstract base class for specific specific 2.x and 3.x OpenAPI implementations.
- * @author Christoph Deppisch
  */
 public class OpenApiDescriptorGenerator<T extends OasDocument, O extends OasOperation> {
 

@@ -38,10 +38,6 @@ public class SyndesisConnectorException extends RuntimeException {
         this.category = category!=null?category:ErrorCategory.SERVER_ERROR;
     }
 
-    /**
-     * Obtains the category.
-     * @return
-     */
     public String getCategory() {
         return category;
     }
@@ -58,11 +54,6 @@ public class SyndesisConnectorException extends RuntimeException {
         return new SyndesisConnectorException(category, detailedMsg, cause);
     }
 
-    /**
-     * Returns a SyndesysConnectorException
-     * @param cause
-     * @return SyndesysConnectorException
-     */
     public static SyndesisConnectorException from(Throwable exception) {
 
         if (exception instanceof SyndesisConnectorException) {

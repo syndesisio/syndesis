@@ -224,7 +224,6 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
      * * DataManager returns the modified connection
      * * DataManager returns the original integration
      * * DataManager returns the original deployment
-     *
      * Both the integration and deployment and computed to be stale
      */
     @Test
@@ -338,7 +337,6 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
      * * DataManager returns the modified connection
      * * DataManager returns the modified integration
      * * DataManager returns the original deployment
-     *
      * Only the deployment is stale while the modified integration is fine.
      */
     @Test

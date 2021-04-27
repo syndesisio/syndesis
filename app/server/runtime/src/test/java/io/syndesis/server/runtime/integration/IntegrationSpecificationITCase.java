@@ -44,6 +44,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegrationSpecificationITCase extends BaseITCase {
     @Test
+    @SuppressWarnings("ReturnValueIgnored")
     public void shouldServeOpenApiSpecificationInJsonFormat() throws IOException, JSONException {
         final MultiValueMap<Object, Object> data = specification("/io/syndesis/server/runtime/test-swagger.json");
 
@@ -72,6 +73,7 @@ public class IntegrationSpecificationITCase extends BaseITCase {
     }
 
     @Test
+    @SuppressWarnings("ReturnValueIgnored")
     public void shouldServeOpenApiSpecificationInYamlFormat() throws IOException, JSONException {
         final MultiValueMap<Object, Object> data = specification("/io/syndesis/server/runtime/test-swagger.yaml");
 

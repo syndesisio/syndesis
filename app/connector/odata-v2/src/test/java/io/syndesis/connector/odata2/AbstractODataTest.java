@@ -131,6 +131,7 @@ public abstract class AbstractODataTest implements ODataConstants {
     }
 
     /**
+     * Another method to read the stream into a String, use carefuly.
      * @return a string representation of the content of the given stream
      */
     public static String streamToString(InputStream inStream) throws IOException {

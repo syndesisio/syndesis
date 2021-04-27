@@ -130,14 +130,12 @@ final class UpdatesHelper {
 
     /*
      * https://github.com/syndesisio/syndesis/issues/2247
-     *
      * When the UI ask for an integration its component (connector, extensions,
      * etc) are updated and moved to their latest version and this work just
      * fine for static actions. For dynamic action (for which metadata is
      * retrieved from the syndesis-meta service), this is problematic as the
      * action is replaced with its latest version thus all the enriched data are
      * lost.
-     *
      * This _ UGLY _ hack tries to merge old and new actions but it does not
      * take into account properties that may have updated, so if a new property
      * has i.e. new default values, the new default is not taken into account

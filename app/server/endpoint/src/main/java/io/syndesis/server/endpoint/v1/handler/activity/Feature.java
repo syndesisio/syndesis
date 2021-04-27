@@ -15,8 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.activity;
 
-/**
- */
 public class Feature {
     private boolean enabled;
 

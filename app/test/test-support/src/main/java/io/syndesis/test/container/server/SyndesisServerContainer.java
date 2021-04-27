@@ -34,9 +34,6 @@ import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.HttpWaitStrategy;
 import org.testcontainers.images.builder.ImageFromDockerfile;
 
-/**
- * @author Christoph Deppisch
- */
 public class SyndesisServerContainer extends GenericContainer<SyndesisServerContainer> {
 
     private static final int SERVER_PORT = 8080;

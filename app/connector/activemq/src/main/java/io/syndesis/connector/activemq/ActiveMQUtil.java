@@ -30,8 +30,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for ActiveMQ Connection factory configuration.
- *
- * @author dhirajsb
  */
 public final class ActiveMQUtil {
 

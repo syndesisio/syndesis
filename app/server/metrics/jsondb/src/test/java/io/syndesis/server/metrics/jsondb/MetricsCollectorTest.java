@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -153,7 +152,7 @@ public class MetricsCollectorTest {
         assertThat(summary.getMessages()).isEqualTo(9);
         assertThat(summary.getErrors()).isEqualTo(3);
         //Oldest living pod
-        assertThat(summary.getStart().get()).isEqualTo(ZonedDateTime.of(2018, 01, 31, 10, 20, 56, 0, ZoneId.of("Z")).toInstant());
+        assertThat(summary.getStart().get()).isEqualTo(ZonedDateTime.of(2018, 01, 31, 10, 20, 56, 0, ZoneOffset.UTC).toInstant());
 
         //Update pod2, add 6 messages
         jsondb.update(JsonDBRawMetrics.path("intId1","pod2"), JsonUtils.writer().writeValueAsString(raw("intId1","2","pod2",9L,"31-01-2018 10:22:56")));
@@ -180,7 +179,7 @@ public class MetricsCollectorTest {
         assertThat(summary.getMessages()).isEqualTo(18);
         assertThat(summary.getErrors()).isEqualTo(3);
         //Oldest living pod is now pod2
-        assertThat(summary.getStart().get()).isEqualTo(ZonedDateTime.of(2018, 01, 31, 10, 22, 56, 0, ZoneId.of("Z")).toInstant());
+        assertThat(summary.getStart().get()).isEqualTo(ZonedDateTime.of(2018, 01, 31, 10, 22, 56, 0, ZoneOffset.UTC).toInstant());
 
         collector.close();
     }

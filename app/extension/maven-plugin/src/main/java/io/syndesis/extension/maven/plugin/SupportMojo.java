@@ -76,8 +76,6 @@ public abstract class SupportMojo extends RepackageMojo {
     /**
      * Optional method used to specify the set of fields you want to write. Often uses `writeFieldViaReflection` to do
      * its job.
-     * @throws NoSuchFieldException
-     * @throws IllegalAccessException
      */
     protected void writeAdditionalPrivateFields() throws NoSuchFieldException, IllegalAccessException{
         // codacy bot should find another job
@@ -103,7 +101,6 @@ public abstract class SupportMojo extends RepackageMojo {
 
     /**
      * Defines the default set of artifacts to exclude from the repackaged module
-     * @return
      */
     protected Collection<ArtifactsFilter> getAdditionalFilters() {
         return new ArrayList<>();
@@ -111,9 +108,6 @@ public abstract class SupportMojo extends RepackageMojo {
 
     /**
      * Utility method to find a reference to a Field in the Superclass hiearchy to be set via reflection.
-     * @param fieldName
-     * @return
-     * @throws NoSuchFieldException
      */
     protected Field obtainAccessibleFieldInAncestors(String fieldName) throws NoSuchFieldException {
         Class<?> clazz = SupportMojo.class.getSuperclass();

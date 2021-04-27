@@ -17,6 +17,7 @@ package io.syndesis.connector.twitter;
 
 import java.util.Date;
 
+@SuppressWarnings("JavaUtilDate") // TODO refactor
 public class DirectMessage {
 
     private long id;

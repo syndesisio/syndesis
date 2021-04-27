@@ -113,10 +113,8 @@ public class SplitStepHandler implements IntegrationStepHandler {
     /**
      * Split expression that is aware of special list of Json beans representation provided by some connectors such as
      * SQL. Also handles Json array String representation and splits its array elements accordingly.
-     *
      * Expression receives a delegate expression that usually evaluates the part of the body or header that should be split. By
      * default this is a simple body expression.
-     *
      * When delegate expression evaluates to something else that a Json array or list of Json beans nothing is performed on top of
      * the delegate expression.
      */
@@ -149,7 +147,6 @@ public class SplitStepHandler implements IntegrationStepHandler {
     /**
      * Expression extracts body property from unified Json schema typed input. The unified Json holds the actual body in
      * a nested property. This property is extracted and set as expression result so follow up expressions can operate on the body.
-     *
      * Expression receives a delegate expression that usually evaluates the part of the body or header that should be
      * treated as unified Json. By default this is a simple body expression.
      */
@@ -183,7 +180,6 @@ public class SplitStepHandler implements IntegrationStepHandler {
     /**
      * Helper tries to convert given value to a String representation that can be split. For instance a remote file object
      * with Json array as content is converted to String and then split using the elements in that Json array.
-     *
      * Some types are already supported by Camel's splitter such as List or Scanner. Do not touch these types and skip conversion.
      * @param value the value to convert.
      * @param exchange the current exchange.

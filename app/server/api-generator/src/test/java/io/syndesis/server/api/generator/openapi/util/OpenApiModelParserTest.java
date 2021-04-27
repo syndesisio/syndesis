@@ -30,9 +30,6 @@ import org.junit.jupiter.api.Test;
 import static io.syndesis.server.api.generator.openapi.TestHelper.resource;
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * @author Christoph Deppisch
- */
 public class OpenApiModelParserTest {
 
     @Test

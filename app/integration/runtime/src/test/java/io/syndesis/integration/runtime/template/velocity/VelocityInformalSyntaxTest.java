@@ -21,7 +21,6 @@ import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.S
 /**
  * Tests for velocity informal template step handler, ie. using the informal
  * syntax for velocity symbols, eg. $xyz
- *
  */
 public class VelocityInformalSyntaxTest extends AbstractVelocityTemplateStepHandlerTest {
 

@@ -22,8 +22,6 @@ public interface ActivityTrackingPolicyFactory {
 
     /**
      * Factory method creating new route policy instance.
-     * @param flowId
-     * @return
      */
     RoutePolicy createRoutePolicy(String flowId);
 

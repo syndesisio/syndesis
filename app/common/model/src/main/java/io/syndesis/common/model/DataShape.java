@@ -69,7 +69,6 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
 
     /**
      * Holds the variants available for this data shape.
-     *
      * A variant could be the single element inspection of collection
      */
     @Value.Default

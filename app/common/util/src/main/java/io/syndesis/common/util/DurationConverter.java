@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 
 /**
  * Converts from String to a Duration.
- *
  * I wish spring boot could load and apply to config props automatically.
  */
 public class DurationConverter {

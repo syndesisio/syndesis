@@ -33,9 +33,6 @@ import io.syndesis.common.util.json.JsonUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class JsonIntegrationSourceTest {
 
     @Test

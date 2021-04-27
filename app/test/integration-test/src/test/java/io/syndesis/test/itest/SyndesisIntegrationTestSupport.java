@@ -40,9 +40,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import com.consol.citrus.dsl.junit.jupiter.CitrusExtension;
 import com.zaxxer.hikari.HikariDataSource;
 
-/**
- * @author Christoph Deppisch
- */
 @ExtendWith(CitrusExtension.class)
 @Testcontainers
 public abstract class SyndesisIntegrationTestSupport {

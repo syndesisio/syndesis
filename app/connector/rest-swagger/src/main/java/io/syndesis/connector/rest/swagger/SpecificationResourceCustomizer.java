@@ -66,7 +66,6 @@ public final class SpecificationResourceCustomizer implements ComponentProxyCust
 
     /**
      * Get the name from the security definition or an empty value
-     *
      * @param securityDefinitionSelectedByUser with format type:name (ie,
      *            apiKey: api-key-security)
      * @return the name of the definition or an empty value
@@ -85,7 +84,6 @@ public final class SpecificationResourceCustomizer implements ComponentProxyCust
      * configuration (such as apikey) through other channels not requested by
      * user, for example, query parameters when the user only wants to provide
      * api key through http headers.
-     *
      * @param specification the swagger/openapi original specification
      * @param securityDefinitionSelectedByUser the securityDefinition picked by
      *            the user

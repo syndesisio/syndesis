@@ -35,9 +35,6 @@ import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.http.client.HttpClient;
 
-/**
- * @author Christoph Deppisch
- */
 @Testcontainers
 public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
 
@@ -49,7 +46,6 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
 
     /**
      * Integration uses api provider to enable rest service operations for accessing tasks in the sample database.
-     *
      * Available flows in api
      *  POST /todos stores given tasks (Json array) to the sample database (using inbound collection support and split/aggregate)
      *  GET /todos provides all available tasks as Json array (using collection support)

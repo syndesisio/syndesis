@@ -24,7 +24,6 @@ import java.io.IOException;
  * User-facing (public) extensions must follow a schema that is subject to backward-compatible changes only.
  * In order to allow the core API to evolve while supporting old extensions, the two schemas must be separated and
  * object should be converted.
- *
  * The public Extension model must respect the json schema contained in the extension-api module (syndesis/syndesis-extension-definition-schema.json).
  */
 public interface ExtensionConverter {

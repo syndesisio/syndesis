@@ -21,7 +21,6 @@ import com.amazonaws.regions.Regions;
 /**
  * To be able to run these integration tests you have to provide valid credentials, region
  * and a valid table name.
- *
  * These tests (at the moment) do write and read contents on your tables, so make sure
  * you use a table specifically for testing.
  */

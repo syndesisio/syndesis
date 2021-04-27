@@ -262,9 +262,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
     /**
      * Adds out message capture message processor to save current message to memory for later usage.
-     * @param parent
-     * @param stepId
-     * @return
      */
     private ProcessorDefinition<?> captureOutMessage(final ProcessorDefinition<?> parent, String stepId) {
         ProcessorDefinition<?> definition;

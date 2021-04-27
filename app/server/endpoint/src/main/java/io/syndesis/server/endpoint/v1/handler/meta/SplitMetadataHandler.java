@@ -34,9 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-/**
- * @author Christoph Deppisch
- */
 class SplitMetadataHandler implements StepMetadataHandler {
 
     /** Logger */
@@ -161,10 +158,6 @@ class SplitMetadataHandler implements StepMetadataHandler {
     /**
      * Extract unified Json body specification from data shape specification. Unified Json schema specifications hold
      * the actual body specification in a property. This method extracts this property as new body specification.
-     *
-     * @param specification
-     * @return
-     * @throws IOException
      */
     private static String extractUnifiedJsonBodySpec(String specification) throws IOException {
         JsonSchema schema = JsonSchemaUtils.reader().readValue(specification);

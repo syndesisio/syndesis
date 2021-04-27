@@ -204,6 +204,7 @@ public class PublicApiHandler {
     @GET
     @Path("integrations/{env}/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    @SuppressWarnings("JavaUtilDate") // TODO refactor
     public Response exportResources(@NotNull @PathParam("env") @Parameter(required = true) String environment,
                                     @QueryParam("all") @Parameter boolean exportAll,
                                     @QueryParam("ignoreTimestamp") @Parameter boolean ignoreTimestamp) throws IOException {
@@ -281,6 +282,7 @@ public class PublicApiHandler {
     @Path("integrations")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @SuppressWarnings("JavaUtilDate") // TODO refactor
     public ContinuousDeliveryImportResults importResources(@Context SecurityContext sec,
         @NotNull @MultipartForm @Parameter(required = true) ImportFormDataInput formInput) {
 
@@ -351,6 +353,7 @@ public class PublicApiHandler {
     @Path("connections/{id}/properties")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
+    @SuppressWarnings("JavaUtilDate") // TODO refactor
     public ConnectionOverview configureConnection(@Context SecurityContext sec,
                                                   @NotNull @PathParam("id") @Parameter(required = true) String connectionId,
                                                   @NotNull @QueryParam("refreshIntegrations") @Parameter Boolean refeshIntegrations,
@@ -393,6 +396,7 @@ public class PublicApiHandler {
     @PUT
     @Path("integrations/{id}/deployments/stop")
     @Produces(MediaType.APPLICATION_JSON)
+    @SuppressWarnings("JavaUtilDate") // TODO refactor
     public void stopIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @Parameter(required = true) final String integrationId) {
 
         final Integration integration = getIntegration(integrationId);

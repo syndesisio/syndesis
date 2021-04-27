@@ -37,10 +37,8 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
 
     /**
      * These fields are populated using reflection by the HandlerCustomizer class.
-     *
      * The values are resolved then the appropriate setter called, while the original
      * key/value pairs are removed from the options map.
-     *
      * Note:
      * Should a property be secret then its raw value is the property placeholder and
      * the resolving process converts it accordingly hence the importance of doing it

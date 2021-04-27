@@ -31,9 +31,6 @@ import io.syndesis.test.SyndesisTestEnvironment;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class SpringBootProjectBuilderTest {
 
     Integration integration = new Integration.Builder()

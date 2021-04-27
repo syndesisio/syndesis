@@ -24,8 +24,6 @@ import io.syndesis.connector.support.util.KeyStoreHelper;
 
 /**
  * Utility class for creating AMQP ConnectionFactory.
- *
- * @author dhirajsb
  */
 public final class AMQPUtil {
 

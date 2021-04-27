@@ -25,9 +25,6 @@ import org.immutables.value.Value;
 
 /**
  * ConnectorGroups are labels in Camel.
- *
- * @author kstam
- *
  */
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorGroup.Builder.class)

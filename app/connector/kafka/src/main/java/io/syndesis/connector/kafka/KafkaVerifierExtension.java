@@ -33,8 +33,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Component verifier for Kafka Connector.
- *
- * @author valdar
  */
 public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
 

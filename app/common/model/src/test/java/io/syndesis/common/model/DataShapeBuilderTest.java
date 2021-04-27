@@ -26,9 +26,6 @@ import io.syndesis.common.util.IOStreams;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class DataShapeBuilderTest {
 
     private static final String SPECIFICATION = "some uncompressed data";

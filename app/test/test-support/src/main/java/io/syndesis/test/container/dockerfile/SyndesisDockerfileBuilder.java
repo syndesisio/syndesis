@@ -26,8 +26,6 @@ import org.testcontainers.images.builder.ImageFromDockerfile;
 /**
  * Special on the fly Dockerfile builder that automatically adds project sources as directory of jar file to the image.
  * Also takes care on proper file permissions and user settings in the container.
- *
- * @author Christoph Deppisch
  */
 public class SyndesisDockerfileBuilder extends ImageFromDockerfile {
 
@@ -89,7 +87,6 @@ public class SyndesisDockerfileBuilder extends ImageFromDockerfile {
      * @param projectSrc the source marker as key added to the Dockerfile context.
      * @param projectDest the destination path in the container.
      * @param projectPath the actual path to the project sources on the host.
-     * @return
      */
     public SyndesisDockerfileBuilder project(String projectSrc, String projectDest, Path projectPath) {
         this.projectSrc = projectSrc;

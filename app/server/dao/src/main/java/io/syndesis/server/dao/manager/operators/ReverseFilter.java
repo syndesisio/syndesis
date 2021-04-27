@@ -25,7 +25,6 @@ import io.syndesis.common.model.WithResourceId;
 
 /**
  * Reverse the elements in the list.
- *
  * @param <T> The type of the elements in the filtered list.
  */
 public final class ReverseFilter<T extends WithResourceId> implements Function<ListResult<T>, ListResult<T>> {

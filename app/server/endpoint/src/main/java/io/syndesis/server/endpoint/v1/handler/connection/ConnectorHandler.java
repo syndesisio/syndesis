@@ -149,8 +149,6 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     /**
      * Query metadata to retrieve any dynamic property provided by the connector
      * and merge the result into the {@link Connector} returned value
-     *
-     * @param connector
      * @return an enriched {@link Connector}
      */
     Connector enrichConnectorWithDynamicProperties(Connector connector) {
@@ -212,7 +210,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @Path(value = "/{connectorId}/actions/{actionId}/filters/options")
     public FilterOptions getFilterOptions(@PathParam("connectorId") @Parameter(required = true) final String connectorId,
                                           @PathParam("actionId") @Parameter(required = true) final String actionId) {
-        final FilterOptions.Builder builder = new FilterOptions.Builder().addOps(Op.DEFAULT_OPTS);
+        final FilterOptions.Builder builder = new FilterOptions.Builder().addOps(Op.values());
         final Connector connector = getDataManager().fetch(Connector.class, connectorId);
 
         if (connector == null) {

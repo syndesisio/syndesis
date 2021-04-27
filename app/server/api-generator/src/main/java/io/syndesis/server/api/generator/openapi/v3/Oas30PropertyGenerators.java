@@ -101,7 +101,6 @@ public class Oas30PropertyGenerators extends OpenApiPropertyGenerator<Oas30Docum
     /**
      * Extracts authorization flow name from security scheme. In OpenAPI 3.x the security scheme "oauth2" can define multiple authorization flow types.
      * This method searches for authorizationCode flow type first in favor of any other flow type as this is the one Syndesis is supporting at the moment.
-     *
      * Only if that specific flow type is not specified go and visit other flow types defined. Returns null when no authorization flow type is defined
      * which is usually the case for non oauth2 security schemes.
      * @param scheme the security scheme maybe holding authorization flows.

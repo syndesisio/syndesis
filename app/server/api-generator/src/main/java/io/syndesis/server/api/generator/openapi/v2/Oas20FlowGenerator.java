@@ -23,9 +23,6 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.syndesis.server.api.generator.openapi.OpenApiFlowGenerator;
 
-/**
- * @author Christoph Deppisch
- */
 public class Oas20FlowGenerator extends OpenApiFlowGenerator<Oas20Document, Oas20Operation> {
 
     public Oas20FlowGenerator() {

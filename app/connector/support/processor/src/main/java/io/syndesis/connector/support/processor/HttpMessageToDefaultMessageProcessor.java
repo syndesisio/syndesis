@@ -26,10 +26,8 @@ import org.apache.camel.util.ExchangeHelper;
  * Integrations may frequently overwrite message body content. HttpMessage is having issues with that
  * as it tries to read the request input stream cache multiple times in that case. This results to stream already closed
  * errors while processing the message body.
- *
  * Normal stream caching mechanisms on the http message implementation do not solve this issue as message body gets frequently
  * replaced while running the integration and this in particular is not covered.
- *
  * This replaces the message on the exchange so the type of the message is no longer HttpMessage and when copies of the message
  * are attempted the HTTP request stream is not read the second time. At which point the HTTP request stream might be closed.
  */

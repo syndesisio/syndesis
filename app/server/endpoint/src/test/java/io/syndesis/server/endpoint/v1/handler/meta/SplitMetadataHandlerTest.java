@@ -38,9 +38,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class SplitMetadataHandlerTest {
 
     private final SplitMetadataHandler metadataHandler = new SplitMetadataHandler();

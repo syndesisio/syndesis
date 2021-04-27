@@ -31,8 +31,6 @@ import javax.net.ssl.TrustManagerFactory;
 
 /**
  * Utility class for working with X.509 Certificates.
- *
- * @author dhirajsb
  */
 public final class CertificateUtil {
 

@@ -116,8 +116,6 @@ public class KuduEndpoint extends DefaultEndpoint {
 
     /**
      * Set the client to connect to a kudu resource
-     *
-     * @param kuduClient
      */
     public void setKuduClient(KuduClient kuduClient) {
         this.kuduClient = kuduClient;
@@ -129,8 +127,6 @@ public class KuduEndpoint extends DefaultEndpoint {
 
     /**
      * The name of the table where the rows are stored
-     *
-     * @param tableName
      */
     public void setTableName(String tableName) {
         this.tableName = tableName;
@@ -142,8 +138,6 @@ public class KuduEndpoint extends DefaultEndpoint {
 
     /**
      * What kind of operation is to be performed in the table
-     *
-     * @param operation
      */
     public void setOperation(String operation) {
         this.operation = operation;
@@ -155,8 +149,6 @@ public class KuduEndpoint extends DefaultEndpoint {
 
     /**
      * Port where kudu service is listening
-     *
-     * @param port
      */
     public void setPort(String port) {
         this.port = port;
@@ -168,8 +160,6 @@ public class KuduEndpoint extends DefaultEndpoint {
 
     /**
      * Kudu type
-     *
-     * @param type
      */
     public void setType(String type) {
         this.type = type;

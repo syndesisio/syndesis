@@ -364,8 +364,6 @@ public class ODataTestServer extends Server implements ODataConstants {
 
     /**
      * Run our own OData Server
-     *
-     * @param args
      */
     public static void main(String... args) throws Exception {
        ODataTestServer server = new ODataTestServer(Options.HTTP_PORT, Options.HTTPS_PORT, Options.SSL);

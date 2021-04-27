@@ -32,7 +32,6 @@ public interface BinaryExtensionAnalyzer {
 
     /**
      * Analyze a binary extension to obtain the embedded {@link Extension} object.
-     *
      * @param binaryExtension the binary stream of the extension
      * @return the embedded {@code Extension} object
      */
@@ -40,8 +39,6 @@ public interface BinaryExtensionAnalyzer {
 
     /**
      * Get the icon file from the binary extension.
-     *
-     * @param binaryExtension
      * @param path the icon path, it must be an allowed icon path
      * @return the icon of the extension or an empty option
      */

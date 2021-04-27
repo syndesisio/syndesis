@@ -54,9 +54,6 @@ import org.apache.maven.shared.artifact.resolve.ArtifactResult;
 
 /**
  * Simple maven plugin for creating a JSON file holding all connectors descriptors which are supported.
- *
- * @author roland
- * @since 23.09.17
  */
 @Mojo(name = "extract-connector-descriptors", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
@@ -111,7 +108,7 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
                 try {
                     classLoader.close();
                 } catch (IOException ignored) {
-
+                  // ignored
                 }
             }
         }

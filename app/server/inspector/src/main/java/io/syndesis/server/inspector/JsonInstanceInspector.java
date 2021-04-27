@@ -29,9 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-/**
- * @author Christoph Deppisch
- */
 @Component
 public class JsonInstanceInspector implements Inspector {
 

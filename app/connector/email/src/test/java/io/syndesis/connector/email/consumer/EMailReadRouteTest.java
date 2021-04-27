@@ -415,8 +415,6 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
     /**
      * Receive will parse and strip the html from the message
      * and just leave the plain text.
-     *
-     * @throws Exception
      */
     @Test
     public void testImapMessageHTMLToPlainText() throws Exception {

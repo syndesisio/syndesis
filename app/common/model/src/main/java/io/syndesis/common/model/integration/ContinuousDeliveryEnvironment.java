@@ -55,31 +55,26 @@ public interface ContinuousDeliveryEnvironment extends Serializable {
 
     /**
      * Associated {@link io.syndesis.common.model.environment.Environment}.
-     * @return
      */
     String getEnvironmentId();
 
     /**
      * Tag ID updated by release tag service. Used to compare tagged 'version' in destination environment.
-     * @return
      */
     String getReleaseTag();
 
     /**
      * Time when last tagged. Used to test whether integration should be updated.
-     * @return
      */
     Date getLastTaggedAt();
 
     /**
      * Time when last exported. If taggedAt is newer, then integration should be exported.
-     * @return
      */
     Optional<Date> getLastExportedAt();
 
     /**
      * Time when last imported.
-     * @return
      */
     Optional<Date> getLastImportedAt();
 

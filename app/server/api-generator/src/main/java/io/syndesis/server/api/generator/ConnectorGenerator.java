@@ -15,14 +15,6 @@
  */
 package io.syndesis.server.api.generator;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
@@ -31,6 +23,12 @@ import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.server.api.generator.util.IconGenerator;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class ConnectorGenerator {
 
@@ -69,7 +67,7 @@ public abstract class ConnectorGenerator {
         final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties()
             .entrySet().stream()
             .filter(e -> properties.contains(e.getKey()))
-            .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         configuredProperties.putAll(baseConnector.getConfiguredProperties());
 
         final String name = Optional.ofNullable(connectorSettings.getName())
@@ -101,7 +99,6 @@ public abstract class ConnectorGenerator {
 
     /**
      * Determines the newly created connector description.
-     *
      * @param connectorTemplate connector template
      * @param connectorSettings custom connector definition
      */
@@ -111,7 +108,6 @@ public abstract class ConnectorGenerator {
 
     /**
      * Determines the newly created connector name.
-     *
      * @param connectorTemplate connector template
      * @param connectorSettings custom connector definition
      */

@@ -69,8 +69,6 @@ import org.jboss.shrinkwrap.resolver.impl.maven.MavenWorkingSessionContainer;
 
 /**
  * Helper Maven plugin
- *
- * @author pantinor
  */
 @SuppressWarnings({"PMD.ExcessiveImports"})
 @Mojo(name = "repackage-extension", defaultPhase = LifecyclePhase.PACKAGE, requiresProject = true, threadSafe = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
@@ -268,7 +266,6 @@ public class RepackageExtensionMojo extends SupportMojo {
     /*
      * @param artifact The artifact coordinates in the format
      *            {@code <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>}, must not be {@code null}.
-     *
      */
     protected ArtifactResult downloadAndInstallArtifact(String artifact) throws MojoExecutionException {
         ArtifactResult result;

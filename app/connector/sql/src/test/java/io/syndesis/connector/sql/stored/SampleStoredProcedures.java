@@ -75,7 +75,6 @@ public final class SampleStoredProcedures {
             "    OWNER TO postgres;";
     /**
      * Java method implementing the Stored Procedure for Derby.
-     *
      * @param a - input parameter of type integer
      * @param b - input parameter of type integer
      * @param c - output (the result of a + b) of type integer[]
@@ -89,7 +88,6 @@ public final class SampleStoredProcedures {
     }
     /**
      * Java method implementing the Stored Procedure for Derby.
-     *
      * @param c - output (the result of a + b) of type integer[]
      */
     public static void demo_out(

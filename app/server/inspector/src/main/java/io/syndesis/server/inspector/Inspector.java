@@ -23,7 +23,6 @@ interface Inspector {
     /**
      * Collects recursively all possible 'path' of the given shape definition.
      * Each item in the path corresponds to fields, fields of fields and so on.
-     *
      * @param kind the kind of data shape
      * @param type the type of data shape
      * @param specification specification of data shape
@@ -34,7 +33,6 @@ interface Inspector {
 
     /**
      * Can this {@link Inspector} implementation support the given data shape.
-     *
      * @param kind the kind of data shape
      * @param type the type of data shape
      * @param specification specification of data shape

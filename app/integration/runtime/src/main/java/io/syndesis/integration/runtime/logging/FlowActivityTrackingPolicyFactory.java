@@ -19,9 +19,6 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.integration.runtime.ActivityTrackingPolicyFactory;
 import org.apache.camel.spi.RoutePolicy;
 
-/**
- * @author Christoph Deppisch
- */
 public class FlowActivityTrackingPolicyFactory implements ActivityTrackingPolicyFactory {
 
     private final ActivityTracker tracker;

@@ -20,7 +20,6 @@ import io.syndesis.integration.component.proxy.ComponentProxyFactory;
 
 /**
  * {@link ComponentProxyFactory} to create AMQP Connectors.
- * @author dhirajsb
  */
 public class AMQPConnectorFactory implements ComponentProxyFactory {
 

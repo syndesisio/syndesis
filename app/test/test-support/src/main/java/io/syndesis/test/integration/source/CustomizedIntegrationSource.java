@@ -23,9 +23,6 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.test.integration.customizer.IntegrationCustomizer;
 
-/**
- * @author Christoph Deppisch
- */
 public class CustomizedIntegrationSource implements IntegrationSource {
 
     private final IntegrationSource delegate;

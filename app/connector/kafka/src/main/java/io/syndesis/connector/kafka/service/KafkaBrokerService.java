@@ -24,13 +24,11 @@ public interface KafkaBrokerService {
 
     /**
      * Check if a cluster is up and running
-     *
      */
     void ping() throws KafkaBrokerServiceException;
 
     /**
      * Connect to a cluster and recover the list of topics
-     *
      * @return the list of topics
      */
     Set<String> listTopics();

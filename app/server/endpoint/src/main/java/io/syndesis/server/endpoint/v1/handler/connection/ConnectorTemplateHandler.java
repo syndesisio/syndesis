@@ -35,7 +35,7 @@ import org.springframework.stereotype.Component;
 public final class ConnectorTemplateHandler extends BaseHandler
     implements Lister<ConnectorTemplate>, Getter<ConnectorTemplate> {
 
-    protected ConnectorTemplateHandler(final DataManager dataMgr) {
+    ConnectorTemplateHandler(final DataManager dataMgr) {
         super(dataMgr);
     }
 
