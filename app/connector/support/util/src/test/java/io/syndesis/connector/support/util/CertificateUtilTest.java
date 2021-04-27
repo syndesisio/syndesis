@@ -24,8 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test Certificate utility.
- *
- * @author dhirajsb
  */
 public class CertificateUtilTest {
 

@@ -29,7 +29,6 @@ import org.immutables.value.Value;
 /**
  * Holds the result of a list, including the total count of elements. This is used by the client for working out paging
  * when viewing a large list.
- *
  * @param <T> The type of the elements in the returned list.
  */
 @Value.Immutable
@@ -38,13 +37,13 @@ import org.immutables.value.Value;
 public interface ListResult<T> extends Iterable<T> {
 
     /**
-     *
+     * Total.
      * @return The total count of entities available.
      */
     int getTotalCount();
 
     /**
-     *
+     * Items on this page.
      * @return The filtered list of items. Depending on operations, this will contain at most getTotalCount elements.
      */
     @Value.Default

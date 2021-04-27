@@ -22,15 +22,10 @@ import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 
-/**
- * @author Christoph Deppisch
- */
 interface StepMetadataHandler {
 
     /**
      * Adapt dynamic meta data for given step descriptor;
-     * @param metadata
-     * @return
      */
     default DynamicActionMetadata handle(DynamicActionMetadata metadata) {
         return metadata;
@@ -38,7 +33,6 @@ interface StepMetadataHandler {
 
     /**
      * Determine if this handler can handle the specific step kind.
-     * @param kind
      */
     default boolean canHandle(StepKind kind) {
         return false;
@@ -47,10 +41,6 @@ interface StepMetadataHandler {
     /**
      * Creates dynamic metadata for given step. Is provided with list of previous steps and list of subsequent steps in order
      * to adopt data shapes of these in dynamic metadata.
-     * @param step
-     * @param previousSteps
-     * @param subsequentSteps
-     * @return
      */
     default DynamicActionMetadata createMetadata(Step step, List<Step> previousSteps, List<Step> subsequentSteps) {
         return DynamicActionMetadata.NOTHING;

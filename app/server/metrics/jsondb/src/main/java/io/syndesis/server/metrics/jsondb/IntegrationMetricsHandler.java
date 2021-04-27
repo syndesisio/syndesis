@@ -52,8 +52,6 @@ public class IntegrationMetricsHandler {
 
     /**
      * Deletes metrics from delete integrations
-     *
-     * @param activeIntegrationIds
      */
     public void curate(Set<String> activeIntegrationIds) {
         Set<String> summaryIds = dataManager.fetchIds(IntegrationMetricsSummary.class);
@@ -67,11 +65,6 @@ public class IntegrationMetricsHandler {
     /**
      * Computes the IntegrationMetricsSummary from the RawMetrics available for the
      * current integration.
-     *
-     * @param integrationId
-     * @param metrics
-     * @param livePodIds
-     * @return
      */
     public IntegrationMetricsSummary compute(
             String integrationId,

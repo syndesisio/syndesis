@@ -29,10 +29,9 @@ import org.slf4j.LoggerFactory;
 /**
  * A simple mapping mbean to convert some {@link org.apache.camel.api.management.mbean.ManagedCamelContextMBean}
  * metadata fields to Prometheus metrics.
- *
- * @author dhirajsb
  */
 @ManagedResource(description = "Managed Syndesis CamelContext")
+@SuppressWarnings("JavaUtilDate") // it's what Camel API gives us
 public class CamelContextMetadataMBean implements Service, CamelContextAware {
 
     public static final Logger LOG = LoggerFactory.getLogger(CamelContextMetadataMBean.class);

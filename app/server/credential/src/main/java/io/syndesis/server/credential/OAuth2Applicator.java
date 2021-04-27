@@ -32,6 +32,7 @@ import org.springframework.social.oauth2.AccessGrant;
  * {@code camel.component.salesforce.clientSecret} properties on the Salesforce
  * connector.
  */
+@SuppressWarnings("JavaUtilDate") // TODO refactor
 public class OAuth2Applicator implements Applicator<AccessGrant> {
 
     private String accessTokenExpiresAtProperty;

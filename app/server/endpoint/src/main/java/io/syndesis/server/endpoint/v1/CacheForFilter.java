@@ -30,7 +30,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * This filter will set the Cache-Control header depending on if and what the
- * @CacheFor annotation is configured with.  When not set, it disables response caching.
+ * {@link CacheFor} annotation is configured with.  When not set, it disables response caching.
  */
 @Provider
 @Service

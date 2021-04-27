@@ -21,8 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test {@link KeyStoreHelper}.
- *
- * @author dhirajsb
  */
 public class KeyStoreHelperTest {
 

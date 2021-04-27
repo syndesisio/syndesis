@@ -15,20 +15,7 @@
  */
 package io.syndesis.server.api.generator.openapi;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import static java.util.Optional.ofNullable;
 
 import io.apicurio.datamodels.core.models.Extension;
 import io.apicurio.datamodels.core.models.common.Info;
@@ -53,15 +40,26 @@ import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.openapi.util.OpenApiModelParser;
 import io.syndesis.server.api.generator.openapi.util.OperationDescription;
 import io.syndesis.server.api.generator.openapi.util.SpecificationOptimizer;
-import io.syndesis.server.api.generator.openapi.v2.Oas20ParameterGenerator;
 import io.syndesis.server.api.generator.openapi.v2.Oas20DescriptorGenerator;
+import io.syndesis.server.api.generator.openapi.v2.Oas20ParameterGenerator;
 import io.syndesis.server.api.generator.openapi.v2.Oas20PropertyGenerators;
-import io.syndesis.server.api.generator.openapi.v3.Oas30ParameterGenerator;
 import io.syndesis.server.api.generator.openapi.v3.Oas30DescriptorGenerator;
+import io.syndesis.server.api.generator.openapi.v3.Oas30ParameterGenerator;
 import io.syndesis.server.api.generator.openapi.v3.Oas30PropertyGenerators;
 import io.syndesis.server.api.generator.util.ActionComparator;
-
-import static java.util.Optional.ofNullable;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class OpenApiConnectorGenerator extends ConnectorGenerator {
 
@@ -224,7 +222,7 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
         for (final OasPathItem path : OasModelHelper.getPathItems(paths)) {
             final Map<String, OasOperation> operationMap = OasModelHelper.getOperationMap(path);
 
-            for (final Entry<String, OasOperation> entry : operationMap.entrySet()) {
+            for (final Map.Entry<String, OasOperation> entry : operationMap.entrySet()) {
                 final OasOperation operation = entry.getValue();
                 final String operationId = operation.operationId;
                 if (operationId == null) {
@@ -254,7 +252,7 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
                     .name(description.name)
                     .description(description.description)
                     .pattern(Action.Pattern.To)
-                    .descriptor(descriptor).tags(OasModelHelper.sanitizeTags(operation.tags).distinct()::iterator)
+                    .descriptor(descriptor).tags(OasModelHelper.sanitizeTags(operation.tags).distinct().collect(Collectors.toList()))
                     .build();
 
                 actions.add(action);

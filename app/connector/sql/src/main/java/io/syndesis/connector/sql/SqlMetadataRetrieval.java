@@ -226,8 +226,6 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
     }
     /**
      * Puts all stored procedures in the list, as all queries adhere to the `To` pattern.
-     *
-     * @param procedureMap
      * @return list of property pairs containing the stored procedure names
      */
     private static List<PropertyPair> obtainToProcedureList (Map<String, StoredProcedureMetadata> procedureMap) {
@@ -241,8 +239,6 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
     /**
      * Puts stored procedures in the list that have NO input parameters, which adheres to the `From`
      * pattern.
-     *
-     * @param procedureMap
      * @return list of property pairs containing the stored procedure names
      */
     private static List<PropertyPair> obtainFromProcedureList (Map<String, StoredProcedureMetadata> procedureMap) {
@@ -257,8 +253,6 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
     }
     /**
      * Checks if the given stored procedure contains input parameters.
-     *
-     * @param storedProcedure
      * @return boolean - true if input params present, false if no input params.
      */
     private static boolean containsInputParams(StoredProcedureMetadata storedProcedure) {

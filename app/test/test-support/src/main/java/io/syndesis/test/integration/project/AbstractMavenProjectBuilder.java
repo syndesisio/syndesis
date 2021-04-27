@@ -43,9 +43,6 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProjectBuilder<T>> implements ProjectBuilder {
 
     /** Logger */
@@ -197,8 +194,6 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
 
     /**
      * Obtains the name.
-     *
-     * @return
      */
     public String getName() {
         return name;
@@ -206,8 +201,6 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
 
     /**
      * Obtains the projectGeneratorConfiguration.
-     *
-     * @return
      */
     public ProjectGeneratorConfiguration getProjectGeneratorConfiguration() {
         return projectGeneratorConfiguration;
@@ -215,8 +208,6 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
 
     /**
      * Obtains the mavenProperties.
-     *
-     * @return
      */
     public MavenProperties getMavenProperties() {
         return mavenProperties;

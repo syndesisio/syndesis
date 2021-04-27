@@ -16,9 +16,6 @@
 
 package io.syndesis.common.model.expression;
 
-/**
- * @author Christoph Deppisch
- */
 public interface RuleBase {
 
     /**

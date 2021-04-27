@@ -30,23 +30,28 @@ public interface IntegrationDeploymentMetrics extends Serializable {
 
     String getVersion();
     /**
+     * Number of successful messages.
      * @return Number of successful messages
      */
     Long getMessages();
     /**
+     * Number of messages that resulted in error.
      * @return Number of messages that resulted in error
      */
     Long getErrors();
     /**
+     * Most recent start time of the integration.
      * @return most recent (re-) start Date of the integration, empty if no live pods
      * are found for this integration, which would mean that the integration is currently down.
      */
     Optional<Instant> getStart();
     /**
+     * Last message timestamp.
      * @return the TimeStamp of when the last message for processed
      */
     Optional<Instant> getLastProcessed();
     /**
+     * Uptime.
      * @return the duration this deployment is up and running.
      */
     Long getUptimeDuration();

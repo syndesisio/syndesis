@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@SuppressWarnings("PMD.GodClass") // TODO refactor
+@SuppressWarnings({"PMD.GodClass", "JavaUtilDate"}) // TODO refactor
 public class SqlParam {
 
     private final String name;

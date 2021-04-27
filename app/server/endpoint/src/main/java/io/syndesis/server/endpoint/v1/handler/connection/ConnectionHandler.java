@@ -143,6 +143,7 @@ public class ConnectionHandler
     }
 
     @Override
+    @SuppressWarnings("JavaUtilDate") // TODO refactor
     public Connection create(@Context SecurityContext sec, final Connection connection) {
         final Date rightNow = new Date();
 
@@ -201,6 +202,7 @@ public class ConnectionHandler
     }
 
     @Override
+    @SuppressWarnings("JavaUtilDate") // TODO refactor
     public void update(final String id, final Connection connection) {
         // Lets make sure we store encrypt secrets.
         Map<String, String> configuredProperties = connection.getConfiguredProperties();

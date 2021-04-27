@@ -26,9 +26,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * @author Christoph Deppisch
- */
 public class JsonInstanceInspectorTest {
 
     private static final String JSON_INSTANCE_KIND = "json-instance";

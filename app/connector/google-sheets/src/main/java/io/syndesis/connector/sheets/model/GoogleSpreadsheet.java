@@ -34,8 +34,6 @@ public class GoogleSpreadsheet {
 
     /**
      * Specifies the spreadsheetId.
-     *
-     * @param spreadsheetId
      */
     public void setSpreadsheetId(String spreadsheetId) {
         this.spreadsheetId = spreadsheetId;
@@ -47,8 +45,6 @@ public class GoogleSpreadsheet {
 
     /**
      * Specifies the title.
-     *
-     * @param title
      */
     public void setTitle(String title) {
         this.title = title;
@@ -60,8 +56,6 @@ public class GoogleSpreadsheet {
 
     /**
      * Specifies the url.
-     *
-     * @param url
      */
     public void setUrl(String url) {
         this.url = url;
@@ -73,8 +67,6 @@ public class GoogleSpreadsheet {
 
     /**
      * Specifies the timeZone.
-     *
-     * @param timeZone
      */
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
@@ -86,8 +78,6 @@ public class GoogleSpreadsheet {
 
     /**
      * Specifies the locale.
-     *
-     * @param locale
      */
     public void setLocale(String locale) {
         this.locale = locale;
@@ -99,8 +89,6 @@ public class GoogleSpreadsheet {
 
     /**
      * Specifies the sheets.
-     *
-     * @param sheets
      */
     public void setSheets(List<GoogleSheet> sheets) {
         this.sheets = sheets;

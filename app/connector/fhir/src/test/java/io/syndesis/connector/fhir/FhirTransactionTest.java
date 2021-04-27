@@ -31,6 +31,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.okXml;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
+@SuppressWarnings("JavaUtilDate") // TODO refactor
 public class FhirTransactionTest extends FhirTestBase {
 
     @Override

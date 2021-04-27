@@ -19,9 +19,6 @@ package io.syndesis.connector.sheets.model;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Christoph Deppisch
- */
 public class GooglePivotTable {
 
     private String spreadsheetId;
@@ -57,8 +54,6 @@ public class GooglePivotTable {
 
         /**
          * Specifies the label.
-         *
-         * @param label
          */
         public void setLabel(String label) {
             this.label = label;
@@ -70,8 +65,6 @@ public class GooglePivotTable {
 
         /**
          * Specifies the sortOrder.
-         *
-         * @param sortOrder
          */
         public void setSortOrder(String sortOrder) {
             this.sortOrder = sortOrder;
@@ -84,8 +77,6 @@ public class GooglePivotTable {
         /**
          * Specifies the source column that this grouping is based on. The value is supposed to use
          * A1 notation where the column offset of the source range is calculated at runtime.
-         *
-         * @param sourceColumn
          */
         public void setSourceColumn(String sourceColumn) {
             this.sourceColumn = sourceColumn;
@@ -97,8 +88,6 @@ public class GooglePivotTable {
 
         /**
          * Specifies the showTotals. Defaults to true.
-         *
-         * @param showTotals
          */
         public void setShowTotals(boolean showTotals) {
             this.showTotals = showTotals;
@@ -111,8 +100,6 @@ public class GooglePivotTable {
         /**
          * Specifies the information about which values in a pivot group should be used for sorting.
          * The offset in the GooglePivotTable.valueGroups list which the values in this grouping should be sorted by.
-         *
-         * @param valueGroupIndex
          */
         public void setValueGroupIndex(Integer valueGroupIndex) {
             this.valueGroupIndex = valueGroupIndex;
@@ -125,8 +112,6 @@ public class GooglePivotTable {
         /**
          * Specifies the information about which values in a pivot group should be used for sorting.
          * Determines the bucket from which values are chosen to sort.
-         *
-         * @param valueBucket
          */
         public void setValueBucket(String valueBucket) {
             this.valueBucket = valueBucket;
@@ -148,8 +133,6 @@ public class GooglePivotTable {
 
         /**
          * Specifies the function.
-         *
-         * @param function
          */
         public void setFunction(String function) {
             this.function = function;
@@ -162,11 +145,8 @@ public class GooglePivotTable {
         /**
          * Specifies the source column that this grouping is based on. The value is supposed to use
          * A1 notation where the column offset of the source range is calculated at runtime.
-         *
          * This value is exclusive to formula field meaning that either source column or formula is to be used.
          * A specified formula overwrites this setting.
-         *
-         * @param sourceColumn
          */
         public void setSourceColumn(String sourceColumn) {
             this.sourceColumn = sourceColumn;
@@ -178,8 +158,6 @@ public class GooglePivotTable {
 
         /**
          * Specifies the name.
-         *
-         * @param name
          */
         public void setName(String name) {
             this.name = name;
@@ -192,11 +170,8 @@ public class GooglePivotTable {
         /**
          * Specifies the formula as a custom formula to calculate the value.
          * The formula must start with an = character.
-         *
          * This value is exclusive to source column meaning that either formula or source columns is to be used.
          * The formula setting will overwrite a source column setting.
-         *
-         * @param formula
          */
         public void setFormula(String formula) {
             this.formula = formula;
@@ -209,8 +184,6 @@ public class GooglePivotTable {
 
     /**
      * Specifies the spreadsheetId.
-     *
-     * @param spreadsheetId
      */
     public void setSpreadsheetId(String spreadsheetId) {
         this.spreadsheetId = spreadsheetId;
@@ -222,8 +195,6 @@ public class GooglePivotTable {
 
     /**
      * Specifies the sheetId.
-     *
-     * @param sheetId
      */
     public void setSheetId(Integer sheetId) {
         this.sheetId = sheetId;
@@ -235,8 +206,6 @@ public class GooglePivotTable {
 
     /**
      * Specifies the sourceSheetId.
-     *
-     * @param sourceSheetId
      */
     public void setSourceSheetId(Integer sourceSheetId) {
         this.sourceSheetId = sourceSheetId;
@@ -248,8 +217,6 @@ public class GooglePivotTable {
 
     /**
      * Specifies the sourceRange.
-     *
-     * @param sourceRange
      */
     public void setSourceRange(String sourceRange) {
         this.sourceRange = sourceRange;
@@ -261,8 +228,6 @@ public class GooglePivotTable {
 
     /**
      * Specifies the valueGroups.
-     *
-     * @param valueGroups
      */
     public void setValueGroups(List<ValueGroup> valueGroups) {
         this.valueGroups = valueGroups;
@@ -274,8 +239,6 @@ public class GooglePivotTable {
 
     /**
      * Specifies the columnGroups.
-     *
-     * @param columnGroups
      */
     public void setColumnGroups(List<PivotGroup> columnGroups) {
         this.columnGroups = columnGroups;
@@ -287,8 +250,6 @@ public class GooglePivotTable {
 
     /**
      * Specifies the rowGroups.
-     *
-     * @param rowGroups
      */
     public void setRowGroups(List<PivotGroup> rowGroups) {
         this.rowGroups = rowGroups;
@@ -300,8 +261,6 @@ public class GooglePivotTable {
 
     /**
      * Specifies the valueLayout.
-     *
-     * @param valueLayout
      */
     public void setValueLayout(String valueLayout) {
         this.valueLayout = valueLayout;
@@ -314,8 +273,6 @@ public class GooglePivotTable {
     /**
      * Specifies the start cell coordinate of the generated pivot table. This coordinate represents the upper left corner of
      * the newly created pivot table.
-     *
-     * @param start
      */
     public void setStart(String start) {
         this.start = start;

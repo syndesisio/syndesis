@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.syndesis.common.model.Dependency;
-import io.syndesis.common.model.Dependency.Type;
 import io.syndesis.common.model.WithDependencies;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.ConnectionBase;
@@ -207,7 +206,6 @@ public interface IntegrationResourceManager {
 
     /**
      * Sanitize an integration name according a specific set of characters
-     *
      * @param name the name to sanitize
      * @return a sanitized name replacing illegal characters
      */
@@ -263,7 +261,7 @@ public interface IntegrationResourceManager {
                 flatMap(ConnectionBase::getConnector).
                 flatMap(ctr -> Optional.ofNullable(ctr.getIcon())).
                 filter(icon -> icon.startsWith("db:")).
-                ifPresent(icon -> dependencies.add(Dependency.from(Type.ICON, icon)));
+                ifPresent(icon -> dependencies.add(Dependency.from(Dependency.Type.ICON, icon)));
 
             // Connector extension
             Stream.concat(connectorDependencies.stream(), lookedUpConnectorDependencies.stream())

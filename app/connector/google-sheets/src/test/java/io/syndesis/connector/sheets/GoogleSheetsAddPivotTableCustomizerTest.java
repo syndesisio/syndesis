@@ -34,9 +34,6 @@ import com.google.api.services.sheets.v4.model.UpdateCellsRequest;
 import io.syndesis.connector.sheets.model.GooglePivotTable;
 import io.syndesis.connector.support.util.ConnectorOptions;
 
-/**
- * @author Christoph Deppisch
- */
 public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
 
     private GoogleSheetsAddPivotTableCustomizer customizer;

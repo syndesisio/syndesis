@@ -38,6 +38,7 @@ public interface IntegrationMetricsSummary extends WithId<IntegrationMetricsSumm
     }
 
     /**
+     * Accumulated error messages.
      * @return Number of messages that resulted in error
      */
     Long getErrors();
@@ -50,11 +51,13 @@ public interface IntegrationMetricsSummary extends WithId<IntegrationMetricsSumm
     }
 
     /**
+     * Last processed timestamp.
      * @return the TimeStamp of when the last message for processed
      */
     Optional<Instant> getLastProcessed();
 
     /**
+     * Number of successful messages
      * @return Number of successful messages
      */
     Long getMessages();
@@ -62,6 +65,7 @@ public interface IntegrationMetricsSummary extends WithId<IntegrationMetricsSumm
     String getMetricsProvider();
 
     /**
+     * Most recent start time of the integration.
      * @return most recent (re-) start Date of the integration, empty if no live
      *         pods are found for this integration, which would mean that the
      *         integration is currently down.
@@ -69,6 +73,7 @@ public interface IntegrationMetricsSummary extends WithId<IntegrationMetricsSumm
     Optional<Instant> getStart();
 
     /**
+     * Overview of top integrations.
      * @return Map of top 'N' (configured in metrics service, default 5)
      *         integrations by total messages. Only valid when retrieving total
      *         metrics summary.
@@ -76,6 +81,7 @@ public interface IntegrationMetricsSummary extends WithId<IntegrationMetricsSumm
     Optional<Map<String, Long>> getTopIntegrations();
 
     /**
+     * Uptime.
      * @return the duration this application is up and running.
      */
     Long getUptimeDuration();

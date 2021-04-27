@@ -49,18 +49,15 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.hamcrest.CoreMatchers.is;
 
-/**
- * @author delawen
- */
 @Testcontainers
 public class SoapConnectorBasicAuth_IT extends SyndesisIntegrationTestSupport {
 
     private static final int SOAP_SERVER_PORT = SocketUtils.findAvailableTcpPort();
-    public static final String USERNAME = "registered";
-    public static final String PASSWORD = "passw0rd";
-    public static final  List<User> USERS = new ArrayList<User>();
-    public static final String[] ROLES = new String[]{USERNAME};
-    public static final User USER = new User();
+    private static final String USERNAME = "registered";
+    private static final String PASSWORD = "passw0rd";
+    private static final  List<User> USERS = new ArrayList<User>();
+    private static final String[] ROLES = new String[]{USERNAME};
+    private static final User USER = new User();
 
     static {
         org.testcontainers.Testcontainers.exposeHostPorts(SOAP_SERVER_PORT);

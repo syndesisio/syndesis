@@ -41,8 +41,6 @@ import org.springframework.core.io.DefaultResourceLoader;
 /**
  * Test db schema migration to version 28. This migration will auto add split step to integrations with implicit split
  * configured.
- *
- * @author Christoph Deppisch
  */
 public class UpgradeVersion28Test {
 

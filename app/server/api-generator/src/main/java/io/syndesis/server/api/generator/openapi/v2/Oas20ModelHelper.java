@@ -102,8 +102,6 @@ final class Oas20ModelHelper {
 
     /**
      * Find parameter that is defined to live in body.
-     * @param operation
-     * @return
      */
     static Optional<OasParameter> findBodyParameter(Oas20Operation operation) {
         if (operation.parameters == null) {

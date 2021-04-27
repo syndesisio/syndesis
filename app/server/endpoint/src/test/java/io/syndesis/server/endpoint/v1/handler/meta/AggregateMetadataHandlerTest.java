@@ -37,9 +37,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public class AggregateMetadataHandlerTest {
 
     private final AggregateMetadataHandler metadataHandler = new AggregateMetadataHandler();

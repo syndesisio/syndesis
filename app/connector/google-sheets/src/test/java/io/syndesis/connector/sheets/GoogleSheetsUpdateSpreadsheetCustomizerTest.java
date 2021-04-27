@@ -41,9 +41,6 @@ import io.syndesis.connector.sheets.model.GoogleSheet;
 import io.syndesis.connector.sheets.model.GoogleSpreadsheet;
 import io.syndesis.connector.support.util.ConnectorOptions;
 
-/**
- * @author Christoph Deppisch
- */
 public class GoogleSheetsUpdateSpreadsheetCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
 
     public static final String SYNDESIS_TEST = "SyndesisTest";

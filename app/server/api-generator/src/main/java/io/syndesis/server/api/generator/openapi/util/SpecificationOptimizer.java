@@ -31,9 +31,6 @@ import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.syndesis.common.util.json.JsonUtils;
 
-/**
- * @author Christoph Deppisch
- */
 public final class SpecificationOptimizer {
 
     private SpecificationOptimizer() {

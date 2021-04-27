@@ -20,9 +20,6 @@ import java.time.Duration;
 
 import io.syndesis.test.model.IntegrationRuntime;
 
-/**
- * @author Christoph Deppisch
- */
 public final class SyndesisTestEnvironment {
 
     private static final String SYNDESIS_PREFIX = "syndesis.";

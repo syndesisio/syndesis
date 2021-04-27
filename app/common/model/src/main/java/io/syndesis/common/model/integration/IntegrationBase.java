@@ -105,8 +105,6 @@ public interface IntegrationBase
      * Map of target environment ids and continuous delivery states. Names are
      * created/deleted on the fly in the UI (since it's just a string). Managed
      * by release tag service and used by CD export and import service.
-     *
-     * @return
      */
     @Value.Default
     default Map<String, ContinuousDeliveryEnvironment> getContinuousDeliveryState() {

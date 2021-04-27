@@ -27,9 +27,6 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.util.json.JsonUtils;
 import org.apache.camel.util.ObjectHelper;
 
-/**
- * @author Christoph Deppisch
- */
 public class JsonPathIntegrationCustomizer implements IntegrationCustomizer {
 
     private final String expression;

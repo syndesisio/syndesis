@@ -104,7 +104,8 @@ public abstract class BaseITCase {
         try {
             this.dataManager.clearCache();
             this.jsondb.dropTables();
-        } catch (Exception e) {
+        } catch (Exception ignore) {
+          // ignored
         }
         this.jsondb.createTables();
     }

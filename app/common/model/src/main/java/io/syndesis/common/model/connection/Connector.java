@@ -48,9 +48,6 @@ import org.immutables.value.Value;
 public interface Connector extends WithId<Connector>, WithIdVersioned<Connector>, WithVersion.AutoUpdatable, WithActions<ConnectorAction>, WithTags, WithName, WithProperties, WithDependencies, WithMetadata, ToJson, Serializable {
 
     class Builder extends ImmutableConnector.Builder implements WithPropertiesBuilder<Builder> {
-        public Builder putOrRemoveConfiguredPropertyTaggedWith(final String tag, final String value) {
-            return putOrRemoveConfiguredPropertyTaggedWith(this, tag, value);
-        }
     }
 
     default Builder builder() {
@@ -92,8 +89,7 @@ public interface Connector extends WithId<Connector>, WithIdVersioned<Connector>
      * Provides a summary of the connector's actions
      * <p>
      * Note:
-     * Excluded from {@link #hashCode()} and {@link #equals(Object)}
-     *
+     * Excluded from {@link Connector#hashCode()} and {@link Connector#equals(Object)}
      * @return the summary of the connector's actions
      */
     @Value.Auxiliary
@@ -103,8 +99,7 @@ public interface Connector extends WithId<Connector>, WithIdVersioned<Connector>
      * Provide number of connections using this connector
      * <p>
      * Note:
-     * Excluded from {@link #hashCode()} and {@link #equals(Object)}
-     *
+     * Excluded from {@link Connector#hashCode()} and {@link Connector#equals(Object)}
      * @return count of integrations
      */
     @Value.Auxiliary

@@ -18,9 +18,6 @@ package io.syndesis.connector.sheets.model;
 
 import java.util.StringJoiner;
 
-/**
- * @author Christoph Deppisch
- */
 public final class RangeCoordinate extends CellCoordinate {
 
     public static final String DIMENSION_ROWS = "ROWS";
@@ -42,10 +39,7 @@ public final class RangeCoordinate extends CellCoordinate {
     /**
      * Construct range coordinates from range string representation in A1 form. For instance convert
      * range string "A1:C2" to a coordinate with rowStartIndex=1, rowEndIndex=2, columnStartIndex=1, columnEndIndex=3.
-     *
      * Supports missing range ends with "A5" resulting in rowStartIndex=5, rowEndIndex=6, columnStartIndex=1, columnEndIndex=2.
-     * @param range
-     * @return
      */
     public static RangeCoordinate fromRange(String range) {
         RangeCoordinate coordinate = new RangeCoordinate();
@@ -74,8 +68,6 @@ public final class RangeCoordinate extends CellCoordinate {
 
     /**
      * Removes optional sheet name from range expression if any.
-     * @param range
-     * @return
      */
     private static String normalizeRange(String range) {
         if (range.contains("!")) {
@@ -87,7 +79,6 @@ public final class RangeCoordinate extends CellCoordinate {
 
     /**
      * Get all names of columns included in this range.
-     * @return
      */
     public String getColumnNames() {
         StringJoiner delimitedList = new StringJoiner(",");
@@ -103,8 +94,6 @@ public final class RangeCoordinate extends CellCoordinate {
 
     /**
      * Specifies the rowStartIndex.
-     *
-     * @param rowStartIndex
      */
     public void setRowStartIndex(int rowStartIndex) {
         this.rowStartIndex = rowStartIndex;
@@ -116,8 +105,6 @@ public final class RangeCoordinate extends CellCoordinate {
 
     /**
      * Specifies the rowEndIndex.
-     *
-     * @param rowEndIndex
      */
     public void setRowEndIndex(int rowEndIndex) {
         this.rowEndIndex = rowEndIndex;
@@ -129,8 +116,6 @@ public final class RangeCoordinate extends CellCoordinate {
 
     /**
      * Specifies the columnStartIndex.
-     *
-     * @param columnStartIndex
      */
     public void setColumnStartIndex(int columnStartIndex) {
         this.columnStartIndex = columnStartIndex;
@@ -142,8 +127,6 @@ public final class RangeCoordinate extends CellCoordinate {
 
     /**
      * Specifies the columnEndIndex.
-     *
-     * @param columnEndIndex
      */
     public void setColumnEndIndex(int columnEndIndex) {
         this.columnEndIndex = columnEndIndex;

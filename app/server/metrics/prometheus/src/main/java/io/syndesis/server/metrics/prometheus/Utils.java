@@ -36,8 +36,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
  * Catch all for utility methods.
- *
- * @author dhirajsb
  */
 public final class Utils {
 
@@ -64,6 +62,7 @@ public final class Utils {
         return OBJECT_READER;
     }
 
+    @SuppressWarnings("JavaUtilDate")
     public static class EpochMillisTimeModule extends SimpleModule {
         public EpochMillisTimeModule() {
             super();

@@ -29,9 +29,6 @@ import org.apache.camel.component.google.sheets.BatchGoogleSheetsClientFactory;
 import org.apache.camel.component.google.sheets.GoogleSheetsClientFactory;
 import org.apache.camel.util.ObjectHelper;
 
-/**
- * @author Christoph Deppisch
- */
 public final class GoogleSheetsConnectorHelper {
 
     public static final String BEGIN_CERT = "-----BEGIN CERTIFICATE-----";
@@ -46,12 +43,6 @@ public final class GoogleSheetsConnectorHelper {
 
     /**
      * Create Google sheets client factory with given root URL and server certificate.
-     * @param rootUrl
-     * @param serverCertificate
-     * @param validateCertificates
-     * @return
-     * @throws GeneralSecurityException
-     * @throws IOException
      */
     public static GoogleSheetsClientFactory createClientFactory(String rootUrl, String serverCertificate, boolean validateCertificates) throws GeneralSecurityException, IOException {
         NetHttpTransport.Builder transport = new NetHttpTransport.Builder();
@@ -74,9 +65,6 @@ public final class GoogleSheetsConnectorHelper {
 
     /**
      * Create client from given client factory using properties or default values.
-     * @param clientFactory
-     * @param properties
-     * @return
      */
     public static Sheets makeClient(GoogleSheetsClientFactory clientFactory, Map<String, Object> properties) {
         final String clientId = ConnectorOptions.extractOption(properties, "clientId");

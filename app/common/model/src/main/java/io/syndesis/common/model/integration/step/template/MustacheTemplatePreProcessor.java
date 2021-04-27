@@ -135,13 +135,11 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor<Mustache
 
         /*
          * Mustache endpoint has a conflict with ProcessorDefinition.
-         *
          * Once returned, the route (ProcessorDefinition) is resolved. This resolution
          * looks for any properties delimited by {{ and }}, which is the default syntax
          * for mustache properties. Thus, resolution of the mustache properties is
          * incorrectly attempted and fails since these properties are meant for mustache
          * and not camel.
-         *
          * Changing the mustache delimiter patterns avoids this problem and allows the
          * properties to be resolved later by mustache.
          */

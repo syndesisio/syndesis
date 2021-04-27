@@ -30,7 +30,6 @@ public interface OutputDataShapeAware {
     /**
      * Assign the given dataShape to the target object if it implements
      * InputDataShapeAware interface.
-     *
      * @param target the potential InputDataShapeAware target.
      * @param dataShape the data shape.
      */

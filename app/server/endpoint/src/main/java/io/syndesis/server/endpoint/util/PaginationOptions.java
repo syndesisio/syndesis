@@ -21,14 +21,12 @@ package io.syndesis.server.endpoint.util;
 public interface PaginationOptions {
 
     /**
-     *
-     * @return The requested page number.
+     * Returns the requested page number.
      */
     int getPage();
 
     /**
-     *
-     * @return The requested number per page.
+     * Returns the requested number of entries per page.
      */
     int getPerPage();
 

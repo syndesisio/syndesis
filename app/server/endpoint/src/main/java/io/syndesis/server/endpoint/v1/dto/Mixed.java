@@ -39,7 +39,7 @@ abstract class Mixed {
 
             private int level;
 
-            public EnclosedJsonGenerator(final JsonGenerator d) {
+            EnclosedJsonGenerator(final JsonGenerator d) {
                 super(d);
             }
 
@@ -82,7 +82,7 @@ abstract class Mixed {
 
     }
 
-    public Mixed(final Object... parts) {
+    Mixed(final Object... parts) {
         this.parts = Arrays.asList(parts);
     }
 

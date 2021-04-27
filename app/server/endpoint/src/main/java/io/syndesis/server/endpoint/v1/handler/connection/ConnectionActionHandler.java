@@ -15,23 +15,8 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import javax.persistence.EntityNotFoundException;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-
 import com.netflix.hystrix.HystrixExecutable;
 import com.netflix.hystrix.HystrixInvokableInfo;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -46,10 +31,24 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.ConnectionBase;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
+import io.syndesis.common.model.connection.WithDynamicProperties;
 import io.syndesis.common.util.RandomValueGenerator;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.dto.Meta;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.persistence.EntityNotFoundException;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.apache.commons.lang3.StringUtils;
 
 @Tag(name = "actions")
@@ -96,7 +95,7 @@ public class ConnectionActionHandler {
         final Map<String, String> properties = new HashMap<>();
 
         if (props != null) {
-            for (Entry<String, Object> entry : props.entrySet()) {
+            for (Map.Entry<String, Object> entry : props.entrySet()) {
                 if (entry.getValue() == null) {
                     properties.put(entry.getKey(), null);
                 } else if (entry.getValue() instanceof String[]) {
@@ -188,12 +187,12 @@ public class ConnectionActionHandler {
     }
 
     private static ConnectorDescriptor applyMetadataTo(final ConnectorDescriptor descriptor, final DynamicActionMetadata dynamicMetadata) {
-        final Map<String, List<DynamicActionMetadata.ActionPropertySuggestion>> actionPropertySuggestions = dynamicMetadata.properties();
+        final Map<String, List<WithDynamicProperties.ActionPropertySuggestion>> actionPropertySuggestions = dynamicMetadata.properties();
 
         final ConnectorDescriptor.Builder enriched = new ConnectorDescriptor.Builder().createFrom(descriptor);
 
         // Setting enum or dataList as needed by UI widget
-        for (final Entry<String, List<DynamicActionMetadata.ActionPropertySuggestion>> suggestions : actionPropertySuggestions.entrySet()) {
+        for (final Map.Entry<String, List<WithDynamicProperties.ActionPropertySuggestion>> suggestions : actionPropertySuggestions.entrySet()) {
             if (!suggestions.getValue().isEmpty()) {
                 ConfigurationProperty property= enriched.findProperty(suggestions.getKey());
                 if (property != null) {
@@ -206,7 +205,7 @@ public class ConnectionActionHandler {
 
                                     builder.addAllDataList(suggestions.getValue()
                                             .stream()
-                                            .map(ConfigurationProperty.PropertyValue.Builder::value)::iterator);
+                                            .map(ConfigurationProperty.PropertyValue.Builder::value).collect(Collectors.toList()));
                                 });
                     } else {
                         enriched.replaceConfigurationProperty(suggestions.getKey(),
@@ -217,7 +216,7 @@ public class ConnectionActionHandler {
 
                                     builder.addAllEnum(suggestions.getValue()
                                             .stream()
-                                            .map(ConfigurationProperty.PropertyValue.Builder::from)::iterator);
+                                            .map(ConfigurationProperty.PropertyValue.Builder::from).collect(Collectors.toList()));
                                 });
                     }
                 }

@@ -16,9 +16,6 @@
 
 package io.syndesis.test.integration.project;
 
-/**
- * @author Christoph Deppisch
- */
 public class SpringBootProjectBuilder extends AbstractMavenProjectBuilder<SpringBootProjectBuilder> {
 
     public SpringBootProjectBuilder(String name, String syndesisVersion) {

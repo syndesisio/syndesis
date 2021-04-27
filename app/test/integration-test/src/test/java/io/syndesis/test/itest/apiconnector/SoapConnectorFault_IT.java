@@ -32,9 +32,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import static org.hamcrest.CoreMatchers.is;
 
-/**
- * @author delawen
- */
 @Testcontainers
 public class SoapConnectorFault_IT extends SyndesisIntegrationTestSupport {
 

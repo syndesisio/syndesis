@@ -23,10 +23,6 @@ import java.io.StringReader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-/**
- * @author roland
- * @since 29.08.17
- */
 public class RegexBasedMasqueradeReaderTest {
     @Test
     public void basicFilter() throws IOException {

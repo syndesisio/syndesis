@@ -692,8 +692,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     /**
      * Checks if Excpetion can be retried and if retries are left.
-     * @param e
-     * @param retries
      */
     private static void checkRetryPolicy(KubernetesClientException e, int retries) {
         if (retries == 0) {

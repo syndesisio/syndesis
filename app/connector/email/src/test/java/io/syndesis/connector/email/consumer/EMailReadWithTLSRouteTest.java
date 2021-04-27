@@ -91,7 +91,6 @@ public class EMailReadWithTLSRouteTest extends AbstractEmailTest implements Rout
     /**
      * This test must be manually run since it requires a StartTLS enabled imap server.
      * No such test server is available (GreenMail doesn't support StartTLS)
-     *
      * Change the credentials in the fields above then execute.
      */
     @Test

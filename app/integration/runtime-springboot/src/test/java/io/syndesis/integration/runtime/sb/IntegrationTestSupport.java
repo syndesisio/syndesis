@@ -154,9 +154,8 @@ public class IntegrationTestSupport implements StringConstants {
     }
 
     /**
-     * @param inStream
+     * Reads the whole stream into a String, use carefuly could lead to large GC cycles.
      * @return a string representation of the content of the given stream
-     * @throws IOException
      */
     public static String streamToString(InputStream inStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));

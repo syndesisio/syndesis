@@ -23,13 +23,11 @@ import com.fasterxml.jackson.databind.util.Converter;
 
 /**
  * Trims {@code Optional<String>}s and converts empty strings to {@code Optional.empty()}
- *
  * You can enable it on a {@code Optional<String>} field like:
  * <pre>
- *   @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
+ *   &#064;JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
  *   Optional<String> value;
  * </pre>
- *
  */
 public class OptionalStringTrimmingConverter implements Converter<String, Optional<String>> {
     @Override

@@ -34,7 +34,6 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
 /**
  * AMQP Proxy Component.
- * @author dhirajsb
  */
 class AMQPConnector extends ComponentProxyComponent {
 

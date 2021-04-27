@@ -21,10 +21,6 @@ import javax.ws.rs.core.Response.Status;
 
 import org.immutables.value.Value;
 
-/**
- * @author roland
- * @since 07.03.18
- */
 @Value.Immutable
 public interface MetaData {
 

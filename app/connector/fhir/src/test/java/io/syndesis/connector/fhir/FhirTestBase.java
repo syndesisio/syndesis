@@ -57,7 +57,6 @@ public abstract class FhirTestBase extends ConnectorTestSupport {
 
     /**
      * Override to enable basic authentication
-     * @return
      */
     public String getUsername() {
         return null;
@@ -65,7 +64,6 @@ public abstract class FhirTestBase extends ConnectorTestSupport {
 
     /**
      * Override to enable basic authentication.
-     * @return
      */
     public String getPassword() {
         return null;
@@ -73,7 +71,6 @@ public abstract class FhirTestBase extends ConnectorTestSupport {
 
     /**
      * Override to enable bearer token authentication as specified in OAuth 2.0
-     * @return
      */
     public String getBearerToken() {
         return null;

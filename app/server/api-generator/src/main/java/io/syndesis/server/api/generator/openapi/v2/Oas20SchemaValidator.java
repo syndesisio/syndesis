@@ -19,9 +19,6 @@ package io.syndesis.server.api.generator.openapi.v2;
 import com.github.fge.jsonschema.main.JsonSchema;
 import io.syndesis.server.api.generator.openapi.OpenApiSchemaValidator;
 
-/**
- * @author Christoph Deppisch
- */
 public final class Oas20SchemaValidator implements OpenApiSchemaValidator {
 
     private static final JsonSchema SWAGGER_2_0_SCHEMA = OpenApiSchemaValidator.loadSchema("schema/swagger-2.0-schema.json", "http://swagger.io/v2/schema.json#");

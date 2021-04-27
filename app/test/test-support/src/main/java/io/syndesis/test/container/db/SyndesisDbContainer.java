@@ -22,9 +22,6 @@ import com.github.dockerjava.api.model.Ports;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
 
-/**
- * @author Christoph Deppisch
- */
 public class SyndesisDbContainer extends PostgreSQLContainer<SyndesisDbContainer> {
 
     public static final int DB_PORT = 5432;

@@ -23,9 +23,6 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-/**
- * @author Christoph Deppisch
- */
 public enum Certificates {
 
     TEST_SERVICE("certs/server-cert.pem"),

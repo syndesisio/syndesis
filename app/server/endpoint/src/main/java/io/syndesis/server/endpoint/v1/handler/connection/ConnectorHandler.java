@@ -149,8 +149,6 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     /**
      * Query metadata to retrieve any dynamic property provided by the connector
      * and merge the result into the {@link Connector} returned value
-     *
-     * @param connector
      * @return an enriched {@link Connector}
      */
     Connector enrichConnectorWithDynamicProperties(Connector connector) {

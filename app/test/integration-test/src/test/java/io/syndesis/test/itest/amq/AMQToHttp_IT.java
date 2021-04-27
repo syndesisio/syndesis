@@ -39,9 +39,6 @@ import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.jms.endpoint.JmsEndpoint;
 
-/**
- * @author Christoph Deppisch
- */
 @Testcontainers
 public class AMQToHttp_IT extends SyndesisIntegrationTestSupport {
 

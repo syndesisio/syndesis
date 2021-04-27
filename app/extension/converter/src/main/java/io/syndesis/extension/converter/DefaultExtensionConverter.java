@@ -29,7 +29,6 @@ class DefaultExtensionConverter implements ExtensionConverter {
 
     /**
      * Apply any custom conversion from the public model to the internal model here.
-     *
      * Version of the public model is assumed to be latest ({@link ExtensionConverter#getCurrentSchemaVersion()}).
      */
     private static ObjectNode convertInternalToPublicModel(ObjectNode tree) {
@@ -38,7 +37,6 @@ class DefaultExtensionConverter implements ExtensionConverter {
 
     /**
      * Apply any custom conversion from the internal model to the public model here.
-     *
      * Version of the public model is assumed to be latest ({@link ExtensionConverter#getCurrentSchemaVersion()}).
      */
     private static ObjectNode convertPublicToInternalModel(ObjectNode tree) {
@@ -47,7 +45,6 @@ class DefaultExtensionConverter implements ExtensionConverter {
 
     /**
      * Apply any custom transformation to latest public schema versions.
-     *
      * Normally public versions are backward compatible, so this method is likely to remain empty.
      */
     private static ObjectNode convertToLatestSchemaVersion(ObjectNode tree, String sourceVersion) {

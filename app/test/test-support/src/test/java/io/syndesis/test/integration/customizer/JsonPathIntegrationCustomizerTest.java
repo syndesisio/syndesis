@@ -31,9 +31,6 @@ import io.syndesis.common.model.integration.StepKind;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class JsonPathIntegrationCustomizerTest {
 
     @Test

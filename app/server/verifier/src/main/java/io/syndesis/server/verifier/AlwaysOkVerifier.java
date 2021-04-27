@@ -24,9 +24,6 @@ import org.springframework.stereotype.Component;
 
 /**
  * Verifier which returns always "OK" and can be used simulating a developer
- *
- * @author roland
- * @since 23/02/2017
  */
 
 @Component

@@ -40,7 +40,6 @@ import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 
 /**
  * This class contains Syndesis custom validation rules for Open API specifications.
- *
  */
 public abstract class OpenApiValidationRules<T extends OasResponse, S extends SecurityScheme, D extends OasSchema> implements Function<OpenApiModelInfo, OpenApiModelInfo> {
 

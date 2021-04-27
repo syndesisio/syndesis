@@ -18,7 +18,6 @@ package io.syndesis.server.credential;
 
 /**
  * Basic configuration properties for spring social.
- *
  * Taken from https://docs.spring.io/spring-boot/docs/2.0.0.M3/api/org/springframework/boot/autoconfigure/social/SocialProperties.html
  * as temporary solution in order to align our code with newer Spring Boot versions.
  */

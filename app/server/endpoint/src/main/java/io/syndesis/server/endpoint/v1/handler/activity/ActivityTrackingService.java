@@ -18,9 +18,6 @@ package io.syndesis.server.endpoint.v1.handler.activity;
 import java.io.IOException;
 import java.util.List;
 
-/**
- *
- */
 public interface ActivityTrackingService {
     List<Activity> getActivities(String integrationId, String from, Integer limit) throws IOException;
 

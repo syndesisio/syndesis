@@ -15,15 +15,12 @@
  */
 package io.syndesis.server.credential;
 
+import io.syndesis.common.model.connection.Connection;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
-
-import io.syndesis.common.model.connection.Connection;
-
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Operations;
@@ -57,7 +54,7 @@ public final class OAuth2CredentialProvider<S> extends BaseCredentialProvider {
         this.applicator = applicator;
         this.configured = configured;
         this.additionalQueryParameters = additionalQueryParameters.entrySet().stream()
-            .collect(Collectors.toMap(Entry::getKey, e -> Collections.singletonList(e.getValue())));
+            .collect(Collectors.toMap(Map.Entry::getKey, e -> Collections.singletonList(e.getValue())));
     }
 
     @Override

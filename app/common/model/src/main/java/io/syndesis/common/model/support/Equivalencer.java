@@ -208,7 +208,6 @@ public class Equivalencer implements StringConstants {
      * Method can result in 2 instances being equivalent even though some
      * properties are different. Thus, this should only be used in appropriate
      * situations.
-     *
      * @param another a {@link Step} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
@@ -267,7 +266,6 @@ public class Equivalencer implements StringConstants {
      * Method can result in 2 instances being equivalent even though some
      * properties are different. Thus, this should only be used in appropriate
      * situations.
-     *
      * @param another a {@link Extension} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
@@ -326,7 +324,6 @@ public class Equivalencer implements StringConstants {
      * Method can result in 2 instances being equivalent even though some
      * properties are different. Thus, this should only be used in appropriate
      * situations.
-     *
      * @param one a {@link Integration} to compare with
      * @param another a {@link Integration} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
@@ -381,7 +378,6 @@ public class Equivalencer implements StringConstants {
      * Method can result in 2 instances being equivalent even though some
      * properties are different. Thus, this should only be used in appropriate
      * situations.
-     *
      * @param another a {@link Integration} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
@@ -430,7 +426,6 @@ public class Equivalencer implements StringConstants {
      * Method can result in 2 instances being equivalent even though some
      * properties are different. Thus, this should only be used in appropriate
      * situations.
-     *
      * @param another a {@link Connection} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
@@ -486,9 +481,6 @@ public class Equivalencer implements StringConstants {
      * Method can result in 2 instances being equivalent even though some
      * properties are different. Thus, this should only be used in appropriate
      * situations.
-     *
-     * @param parentContext
-     * @param one
      * @param another a {@link Connector} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
@@ -549,7 +541,6 @@ public class Equivalencer implements StringConstants {
      * Method can result in 2 instances being equivalent even though some
      * properties are different. Thus, this should only be used in appropriate
      * situations.
-     *
      * @param another a {@link Action} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
@@ -605,7 +596,6 @@ public class Equivalencer implements StringConstants {
      * Method can result in 2 instances being equivalent even though some
      * properties are different. Thus, this should only be used in appropriate
      * situations.
-     *
      * @param another a {@link StepAction} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
@@ -656,7 +646,6 @@ public class Equivalencer implements StringConstants {
      * Method can result in 2 instances being equivalent even though some
      * properties are different. Thus, this should only be used in appropriate
      * situations.
-     *
      * @param another a {@link ConnectorAction} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
@@ -707,7 +696,6 @@ public class Equivalencer implements StringConstants {
      * Method can result in 2 instances being equivalent even though some
      * properties are different. Thus, this should only be used in appropriate
      * situations.
-     *
      * @param another a {@link StepDescriptor} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
@@ -754,7 +742,6 @@ public class Equivalencer implements StringConstants {
      * Method can result in 2 instances being equivalent even though some
      * properties are different. Thus, this should only be used in appropriate
      * situations.
-     *
      * @param another a {@link ConnectorDescriptor} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */

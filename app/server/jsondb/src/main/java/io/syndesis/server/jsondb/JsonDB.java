@@ -32,12 +32,14 @@ import java.util.function.Consumer;
 public interface JsonDB {
 
     /**
+     * Deltes entry on path.
      * @param path to the json object or value to delete
      * @return true if the object or value existed and was deleted.
      */
     boolean delete(String path);
 
     /**
+     * Checks if entry exists on path.
      * @param path to the json object or value to check if it exists
      * @return true if the object or value exists.
      */
@@ -52,7 +54,6 @@ public interface JsonDB {
     /**
      * Generates a sortable unique id as described at:
      * https://firebase.googleblog.com/2015/02/the-2120-ways-to-ensure-unique_68.html
-     *
      * @return a sortable unique id
      */
     String createKey();
@@ -71,6 +72,7 @@ public interface JsonDB {
     }
 
     /**
+     * Reads path and returns the String of entries at that path.
      * @param path - the object or value to get
      * @param options options that control formatting of the result.
      * @return the json result or null if the path does not exist
@@ -86,7 +88,6 @@ public interface JsonDB {
     /**
      * Creates or Replaces the object or value at the given path
      * with the supplied json document.
-     *
      * @param path to the object or value to set
      * @param json value to set it to, can be a json primitive or struct
      */
@@ -95,6 +96,7 @@ public interface JsonDB {
     }
 
     /**
+     * Updates a path with the given JSON entry.
      * @param path to the object or value to set
      * @param json value to set it to, can be a json primitive or struct
      */
@@ -105,7 +107,6 @@ public interface JsonDB {
     /**
      * Pushes a new value to the the requested path.
      * Same as: {@code set( path + "/" + createKey(), json)}
-     *
      * @param path to the object or value to set
      * @param json value to set it to, can be a json primitive or struct
      * @return the field name that was added to the path object
@@ -171,10 +172,6 @@ public interface JsonDB {
 
     /**
      * If a non-null consumer is returned, it must be used to avoid leaking resources.
-     *
-     * @param path
-     * @param options
-     * @return
      */
     Consumer<OutputStream> getAsStreamingOutput(String path, GetOptions options);
 

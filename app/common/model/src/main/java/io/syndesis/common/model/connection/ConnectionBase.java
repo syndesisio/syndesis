@@ -41,7 +41,6 @@ public interface ConnectionBase
 
     /**
      * Actual options how this connection is configured
-     *
      * @return list of options
      */
     Map<String, String> getOptions();

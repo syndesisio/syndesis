@@ -42,8 +42,6 @@ import io.syndesis.common.util.SyndesisServerException;
 
 /**
  * Utilities for working with Json.
- *
- * @author Christoph Deppisch
  */
 public final class JsonUtils {
 
@@ -73,7 +71,6 @@ public final class JsonUtils {
 
     /**
      * Returns an immutable and thread-safe instance of an ObjectReader, used for object deserialization.
-     * @return
      */
     public static ObjectReader reader() {
         return OBJECT_READER;
@@ -85,7 +82,6 @@ public final class JsonUtils {
 
     /**
      * Returns an immutable and thread-safe instance of an ObjectWriter, used for object serialization
-     * @return
      */
     public static ObjectWriter writer() {
         return OBJECT_WRITER;
@@ -94,9 +90,7 @@ public final class JsonUtils {
     /**
      * The name of this method is super awkward to remind you that there aren't many cases for you to use it.
      * It's main usage is in tests, where you might have reason to configure differently advanced parameters.
-     *
      * This method creates a copy of an ObjectMapper.
-     * @return
      */
     public static ObjectMapper copyObjectMapperConfiguration() {
         return OBJECT_MAPPER.copy();
@@ -129,8 +123,6 @@ public final class JsonUtils {
 
     /**
      * Checks given value to be a Json array of object representation.
-     * @param value
-     * @return
      */
     public static boolean isJson(String value) {
         if (value == null) {
@@ -142,8 +134,6 @@ public final class JsonUtils {
 
     /**
      * Checks given value could be JSON object string.
-     * @param value
-     * @return
      */
     public static boolean isJsonObject(String value) {
         if (Strings.isEmptyOrBlank(value)) {
@@ -157,8 +147,6 @@ public final class JsonUtils {
 
     /**
      * Checks given value could be JSON array string.
-     * @param value
-     * @return
      */
     public static boolean isJsonArray(String value) {
         if (Strings.isEmptyOrBlank(value)) {
@@ -173,9 +161,6 @@ public final class JsonUtils {
     /**
      * Converts array json node to a list of json object strings. Used when splitting a
      * json array with split EIP.
-     * @param json
-     * @return
-     * @throws JsonProcessingException
      */
     public static List<String> arrayToJsonBeans(JsonNode json) throws JsonProcessingException {
         List<String> jsonBeans = new ArrayList<>();
@@ -194,8 +179,6 @@ public final class JsonUtils {
 
     /**
      * Converts list of json object strings to a json array string.
-     * @param jsonBeans
-     * @return
      */
     public static String jsonBeansToArray(List<?> jsonBeans) {
         final StringJoiner joiner = new StringJoiner(",", "[", "]");

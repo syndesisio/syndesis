@@ -24,17 +24,12 @@ public class KuduTable {
     private CreateTableOptions builder;
 
 
-    /**
-     * @return name of the table
-     */
     public String getName() {
         return name;
     }
 
     /**
      * Specifies the name of the table
-     *
-     * @param name
      */
     public void setName(String name) {
         this.name = name;

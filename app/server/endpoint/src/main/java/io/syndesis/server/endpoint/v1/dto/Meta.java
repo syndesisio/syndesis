@@ -15,12 +15,9 @@
  */
 package io.syndesis.server.endpoint.v1.dto;
 
-import java.util.Collections;
-
-import io.syndesis.server.endpoint.v1.dto.MetaData.Type;
-import io.syndesis.server.endpoint.v1.handler.exception.Errors;
-
 import com.netflix.hystrix.HystrixInvokableInfo;
+import io.syndesis.server.endpoint.v1.handler.exception.Errors;
+import java.util.Collections;
 
 public final class Meta<T> extends Mixed {
 
@@ -68,11 +65,11 @@ public final class Meta<T> extends Mixed {
     public static <V> Meta<V> withError(final V value, final Throwable throwable) {
         final String message = Errors.userMessageFrom(throwable);
 
-        return new Meta<>(value, ImmutableMetaData.builder().type(Type.DANGER).message(message).build());
+        return new Meta<>(value, ImmutableMetaData.builder().type(MetaData.Type.DANGER).message(message).build());
     }
 
     public static <V> Meta<V> withWarning(final V value, final String message) {
-        return new Meta<>(value, ImmutableMetaData.builder().type(Type.WARNING).message(message).build());
+        return new Meta<>(value, ImmutableMetaData.builder().type(MetaData.Type.WARNING).message(message).build());
     }
 
 }

@@ -32,9 +32,6 @@ import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class UnifiedJsonDataShapeSupport<T extends OasDocument, O extends OasOperation> implements DataShapeGenerator<T, O> {
 
     private static final List<String> PROPERTIES_TO_REMOVE_ON_MERGE = Arrays.asList("$schema", "title");

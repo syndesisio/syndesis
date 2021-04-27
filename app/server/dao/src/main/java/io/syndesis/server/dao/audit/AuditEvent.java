@@ -61,7 +61,7 @@ public final class AuditEvent {
             return false;
         }
         final AuditEvent that = (AuditEvent) o;
-        return Objects.equals(hashCode(), that.hashCode()) &&
+        return hashCode() == that.hashCode() &&
             Objects.equals(type, that.type) &&
             Objects.equals(property, that.property) &&
             Objects.equals(previous, that.previous) &&

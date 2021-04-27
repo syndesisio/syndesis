@@ -33,7 +33,6 @@ import io.syndesis.connector.support.util.ConnectorOptions;
 
 /**
  * Component verifier for AMQP Connector.
- * @author dhirajsb
  */
 public class AMQPVerifierExtension extends DefaultComponentVerifierExtension {
 

@@ -21,7 +21,6 @@ import java.util.TreeSet;
 /**
  * Finds the unique set of tags set on Syndesis entities WithTags, which are
  * Connections and Integrations.
- *
  */
 public class TagFinder {
 

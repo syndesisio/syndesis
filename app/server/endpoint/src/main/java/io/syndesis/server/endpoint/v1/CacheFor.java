@@ -30,12 +30,12 @@ import java.util.concurrent.TimeUnit;
 public @interface CacheFor {
 
     /**
-     * @return The amount of time to cache this resource.
+     * The amount of time to cache this resource.
      */
     long value();
 
     /**
-     * @return The {@link TimeUnit} for the given {@link #value()}.
+     * The {@link TimeUnit} for the given {@link #value()}.
      */
     TimeUnit unit() default TimeUnit.SECONDS;
 

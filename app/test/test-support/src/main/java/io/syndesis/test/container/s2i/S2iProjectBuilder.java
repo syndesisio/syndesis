@@ -26,9 +26,6 @@ import java.util.Optional;
 import io.syndesis.test.integration.project.ProjectBuilder;
 import io.syndesis.test.integration.source.IntegrationSource;
 
-/**
- * @author Christoph Deppisch
- */
 public class S2iProjectBuilder implements ProjectBuilder {
 
     private final ProjectBuilder delegate;

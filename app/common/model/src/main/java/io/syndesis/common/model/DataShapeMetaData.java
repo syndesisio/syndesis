@@ -16,9 +16,6 @@
 
 package io.syndesis.common.model;
 
-/**
- * @author Christoph Deppisch
- */
 public final class DataShapeMetaData {
 
     public static final String VARIANT = "variant";
@@ -30,10 +27,7 @@ public final class DataShapeMetaData {
     public static final String SHOULD_COMPRESS = "compression";
     public static final String IS_COMPRESSED = "compressed";
 
-    /**
-     * Prevent instantiation of utility class.
-     */
     private DataShapeMetaData() {
-        super();
+      // Prevent instantiation of utility class.
     }
 }

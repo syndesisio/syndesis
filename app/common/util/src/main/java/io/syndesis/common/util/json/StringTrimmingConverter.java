@@ -21,16 +21,14 @@ import com.fasterxml.jackson.databind.util.Converter;
 
 /**
  * Trims Json Strings and converts empty strings to {@code null}
- *
  * You can enable it on a String field like:
  * <pre>
- *   @JsonDeserialize(converter = StringTrimmingConverter.class)
+ * &#064;JsonDeserialize(converter = StringTrimmingConverter.class)
  *   String value;
  * </pre>
- *
  * Or on a String array:
  * <pre>
- *   @JsonDeserialize(contentConverter = StringTrimmingConverter.class)
+ *   &#064;JsonDeserialize(contentConverter = StringTrimmingConverter.class)
  *   String[] value;
  * </pre>
  */

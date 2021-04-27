@@ -28,10 +28,6 @@ import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.springframework.stereotype.Component;
 
-/**
- * @author roland
- * @since 2019-02-11
- */
 @Component
 public class IntegrationPublishValidator {
 
@@ -68,7 +64,6 @@ public class IntegrationPublishValidator {
 
     /**
      * Count the deployments of the owner of the specified integration.
-     *
      * @param deployment The specified IntegrationDeployment.
      * @return The number of deployed integrations (excluding the current).
      */
@@ -90,7 +85,6 @@ public class IntegrationPublishValidator {
 
     /**
      * Counts active integrations (in DB) of the owner of the specified integration.
-     *
      * @param deployment The specified IntegrationDeployment.
      * @return The number of integrations (excluding the current).
      */

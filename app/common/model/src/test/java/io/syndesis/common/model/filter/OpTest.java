@@ -27,24 +27,24 @@ public class OpTest {
 
     @Test
     public void allOperationsShouldBeKnownCamelSimpleOperations() {
-        assertThat(Stream.of(Op.DEFAULT_OPTS)
+        assertThat(Stream.of(Op.values())
             .map(Op::getOperator))
                 .allSatisfy(BinaryOperatorType::asOperator);
     }
 
     @Test
     public void allOperationsShouldHaveDistinctBinaryOperator() {
-        assertThat(Stream.of(Op.DEFAULT_OPTS)
+        assertThat(Stream.of(Op.values())
             .map(Op::getOperator)
             .collect(Collectors.toSet()))
-                .hasSameSizeAs(Op.DEFAULT_OPTS);
+                .hasSameSizeAs(Op.values());
     }
 
     @Test
     public void allOperationsShouldHaveDistinctLabels() {
-        assertThat(Stream.of(Op.DEFAULT_OPTS)
+        assertThat(Stream.of(Op.values())
             .map(Op::getLabel)
             .collect(Collectors.toSet()))
-                .hasSameSizeAs(Op.DEFAULT_OPTS);
+                .hasSameSizeAs(Op.values());
     }
 }

@@ -27,9 +27,6 @@ import io.syndesis.server.api.generator.openapi.OpenApiParameterGenerator;
 import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 
-/**
- * @author Christoph Deppisch
- */
 public final class Oas30ParameterGenerator extends OpenApiParameterGenerator<Oas30Document> {
 
     @Override

@@ -20,9 +20,6 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.syndesis.server.api.generator.openapi.OpenApiDescriptorGenerator;
 
-/**
- * @author Christoph Deppisch
- */
 public class Oas30DescriptorGenerator extends OpenApiDescriptorGenerator<Oas30Document, Oas30Operation> {
 
     public Oas30DescriptorGenerator() {

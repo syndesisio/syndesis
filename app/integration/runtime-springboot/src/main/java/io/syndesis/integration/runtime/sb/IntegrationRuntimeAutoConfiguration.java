@@ -61,7 +61,6 @@ public class IntegrationRuntimeAutoConfiguration {
      * This method is responsible to set up an {@link CamelContextConfiguration}
      * that crates a route builder from the integration.json and set-up a post
      * context start task that dumps the generated routes for debugging purpose.
-     *
      * @return a {@link CamelContextConfiguration}
      */
     @Bean

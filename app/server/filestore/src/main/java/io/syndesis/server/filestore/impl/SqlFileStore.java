@@ -24,8 +24,11 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -52,6 +55,18 @@ public class SqlFileStore {
     enum DatabaseKind {
         PostgreSQL, H2, Apache_Derby
     }
+
+    private static final DateTimeFormatter FILE_DATE_FORMAT =  new DateTimeFormatterBuilder()
+        .appendValue(ChronoField.YEAR, 4)
+        .appendLiteral('-')
+        .appendValue(ChronoField.MONTH_OF_YEAR, 2)
+        .appendLiteral('-')
+        .appendValue(ChronoField.DAY_OF_MONTH, 2)
+        .appendLiteral('-')
+        .appendValue(ChronoField.HOUR_OF_DAY, 2)
+        .appendLiteral('-')
+        .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+        .toFormatter();
 
     private final DBI dbi;
 
@@ -309,8 +324,7 @@ public class SqlFileStore {
     }
 
     private static String newRandomTempFilePath() {
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd-HH-mm", Locale.ROOT);
-        return "/tmp/" + fmt.format(new Date()) + "_" + UUID.randomUUID();
+        return "/tmp/" + LocalDateTime.now(ZoneOffset.UTC).format(FILE_DATE_FORMAT) + "_" + UUID.randomUUID();
     }
 
     private boolean tableExists(Handle h, String tableName) {

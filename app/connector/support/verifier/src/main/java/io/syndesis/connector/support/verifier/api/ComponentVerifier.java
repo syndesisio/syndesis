@@ -30,10 +30,6 @@ import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author roland
- * @since 28/03/2017
- */
 public class ComponentVerifier implements Verifier {
     private static final Logger LOG = LoggerFactory.getLogger(ComponentVerifier.class);
 

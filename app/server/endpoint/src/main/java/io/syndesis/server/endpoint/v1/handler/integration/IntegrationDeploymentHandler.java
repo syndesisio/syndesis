@@ -182,7 +182,6 @@ public class IntegrationDeploymentHandler extends BaseHandler {
     /**
      * Count the deployments of the owner of the specified integration.
      *
-     * @param deployment The specified IntegrationDeployment.
      * @return The number of deployed integrations (excluding the current).
      */
     private int countDeployments(String integrationId, String username) {

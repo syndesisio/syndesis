@@ -22,9 +22,6 @@ import java.util.stream.IntStream;
 
 import org.apache.camel.util.ObjectHelper;
 
-/**
- * @author Christoph Deppisch
- */
 public class CellCoordinate {
 
     private int rowIndex;
@@ -40,9 +37,6 @@ public class CellCoordinate {
     /**
      * Construct grid coordinate from given cell identifier representation in A1 form. For instance convert
      * cell id string "A1" to a coordinate with rowIndex=0, and columnIndex=0.
-     *
-     * @param cellId
-     * @return
      */
     public static CellCoordinate fromCellId(String cellId) {
         CellCoordinate coordinate = new CellCoordinate();
@@ -59,9 +53,6 @@ public class CellCoordinate {
      * Evaluate the column index from cellId in A1 notation. Column name letters are translated to numeric column index values.
      * Column "A" will result in column index 0. Method does support columns with combined name letters such as "AA" where this is
      * the first column after "Z" resulting in a column index of 26.
-     *
-     * @param cellId
-     * @return
      */
     protected static int getColumnIndex(String cellId) {
         char[] characters = cellId.toCharArray();
@@ -76,14 +67,14 @@ public class CellCoordinate {
             int index = 0;
             for (int i = 0; i < chars.size(); i++) {
                 if (i == chars.size() -1) {
-                    index += chars.get(i) - Character.getNumericValue('A');
+                    index += chars.get(i) - Character.digit('A', 26);
                 } else {
-                    index += ((chars.get(i) - Character.getNumericValue('A')) + 1) * 26;
+                    index += ((chars.get(i) - Character.digit('A', 26)) + 1) * 26;
                 }
             }
             return index;
         } else if (chars.size() == 1) {
-            return chars.get(0) - Character.getNumericValue('A');
+            return chars.get(0) - Character.digit('A', 26);
         } else {
             return 0;
         }
@@ -92,9 +83,6 @@ public class CellCoordinate {
     /**
      * Evaluates the row index from a given cellId in A1 notation. Extracts the row number and translates that to an numeric
      * index value beginning with 0.
-     *
-     * @param cellId
-     * @return
      */
     protected static int getRowIndex(String cellId) {
         char[] characters = cellId.toCharArray();
@@ -114,9 +102,6 @@ public class CellCoordinate {
     /**
      * Evaluates column name in A1 notation based on the column index. Index 0 will be "A" and index 25 will be "Z". Method also supports
      * name overflow where index 26 will be "AA" and index 51 will be "AZ" and so on.
-     *
-     * @param columnIndex
-     * @return
      */
     public static String getColumnName(int columnIndex) {
         String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -141,11 +126,6 @@ public class CellCoordinate {
     /**
      * Special getter for column name where user is able to give set of user defined column names. When given column index is resolvable via custom names
      * the custom column name is returned otherwise the evaluated default column name is returned.
-     *
-     * @param columnIndex
-     * @param columnStartIndex
-     * @param columnNames
-     * @return
      */
     public static String getColumnName(int columnIndex, int columnStartIndex, String ... columnNames) {
         String columnName = getColumnName(columnIndex);
@@ -175,8 +155,6 @@ public class CellCoordinate {
 
     /**
      * Specifies the rowIndex.
-     *
-     * @param rowIndex
      */
     public void setRowIndex(int rowIndex) {
         this.rowIndex = rowIndex;
@@ -188,8 +166,6 @@ public class CellCoordinate {
 
     /**
      * Specifies the columnIndex.
-     *
-     * @param columnIndex
      */
     public void setColumnIndex(int columnIndex) {
         this.columnIndex = columnIndex;

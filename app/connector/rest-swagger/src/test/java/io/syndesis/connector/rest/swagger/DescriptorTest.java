@@ -15,25 +15,22 @@
  */
 package io.syndesis.connector.rest.swagger;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import io.syndesis.common.model.Dependency;
+import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.connector.rest.swagger.auth.apikey.ApiKey.Placement;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import io.syndesis.common.model.Dependency;
-import io.syndesis.common.model.Dependency.Type;
-import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.connector.rest.swagger.auth.apikey.ApiKey.Placement;
-
 import org.apache.camel.CamelContext;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class DescriptorTest {
 
@@ -76,7 +73,8 @@ public class DescriptorTest {
                 .displayName("Placement of the API key parameter")
                 .addAllEnum(Stream.of(Placement.values())
                     .sorted()
-                    .map(p -> new PropertyValue.Builder().label(p.toString()).value(p.toString()).build())::iterator)
+                    .map(p -> new PropertyValue.Builder().label(p.toString()).value(p.toString()).build())
+                    .collect(Collectors.toList()))
                 .javaType("java.lang.String")
                 .order(4)
                 .required(true)
@@ -236,7 +234,7 @@ public class DescriptorTest {
     static Dependency mavenDependency(final String id) {
         return new Dependency.Builder()
             .id(id)
-            .type(Type.MAVEN)
+            .type(Dependency.Type.MAVEN)
             .build();
     }
 }

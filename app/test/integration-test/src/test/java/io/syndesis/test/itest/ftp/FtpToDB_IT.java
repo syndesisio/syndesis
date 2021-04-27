@@ -31,9 +31,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.ftp.message.FtpMessage;
 
-/**
- * @author Christoph Deppisch
- */
 @Testcontainers
 public class FtpToDB_IT extends FtpTestSupport {
 

@@ -26,9 +26,6 @@ import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.model.integration.Step;
 
-/**
- * @author Christoph Deppisch
- */
 final class StepMetadataHelper {
 
     static final DataShape ANY_SHAPE = new DataShape.Builder().kind(DataShapeKinds.ANY).name("Any shape").build();
@@ -95,8 +92,6 @@ final class StepMetadataHelper {
 
     /**
      * Checks if given shape is a unified Json schema shape.
-     * @param dataShape
-     * @return
      */
     static boolean isUnifiedJsonSchemaShape(DataShape dataShape) {
         if (dataShape.getKind() == DataShapeKinds.JSON_SCHEMA) {

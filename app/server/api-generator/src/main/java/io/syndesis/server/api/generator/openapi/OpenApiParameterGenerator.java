@@ -31,8 +31,6 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
 /**
  * Generator creates configuration properties from OpenAPI document parameters. Created configuration properties are added
  * to the connector builder. This is the abstract  base class for specific 2.x and 3.x OpenAPI implementations.
- *
- * @author Christoph Deppisch
  */
 public abstract class OpenApiParameterGenerator<T extends OasDocument> {
 

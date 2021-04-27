@@ -411,6 +411,7 @@ public class PublicApiHandlerTest {
     }
 
     @Test
+    @SuppressWarnings("JavaUtilDate") // TODO refactor
     public void testPatchTagsForRelease() throws Exception {
         final DataManager dataManager = mock(DataManager.class);
 

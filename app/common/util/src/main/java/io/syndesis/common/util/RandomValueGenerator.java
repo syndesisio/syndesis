@@ -19,7 +19,6 @@ import java.security.SecureRandom;
 
 /**
  * Generates strings values according to a generator string.
- *
  * Examples of generator string: "alphanum", "alphanum:50".
  */
 public final class RandomValueGenerator {

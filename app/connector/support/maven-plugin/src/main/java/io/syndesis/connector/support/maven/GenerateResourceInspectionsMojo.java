@@ -48,12 +48,9 @@ import org.apache.maven.project.MavenProject;
 
 /**
  * Generates inspections for resources in the given inputDirectory and stores them in the outputDirectory.
- *
  * It deletes files for which inspections have been created.
- *
  * Currently it supports only xml schemas with .xsd extension.
- *
- * It is possible to provide resourcesProcessorClass, which points to a class implementing BiConsumer<Path, Path>.
+ * It is possible to provide resourcesProcessorClass, which points to a class implementing {@code BiConsumer<Path, Path>}.
  * It can implement any processing on resources before running inspections and accepts input and output directories.
  * When the class is provided within the same project, the plugin must be run no sooner than in the process-classes
  * phase so that the class is available on the classpath.

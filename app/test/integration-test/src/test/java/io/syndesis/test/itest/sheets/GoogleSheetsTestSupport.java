@@ -31,9 +31,6 @@ import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.http.servlet.RequestCachingServletFilter;
 
-/**
- * @author Christoph Deppisch
- */
 public class GoogleSheetsTestSupport extends SyndesisIntegrationTestSupport {
 
     static final int GOOGLE_SHEETS_SERVER_PORT = SocketUtils.findAvailableTcpPort();

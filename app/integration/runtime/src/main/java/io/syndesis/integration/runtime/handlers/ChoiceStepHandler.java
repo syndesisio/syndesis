@@ -93,10 +93,6 @@ public class ChoiceStepHandler implements IntegrationStepHandler {
     /**
      * Construct flow endpoint uri using given scheme and flow identifier. By default constructed uri is
      * using "scheme:flowId" pattern.
-     *
-     * @param routingScheme
-     * @param flowId
-     * @return
      */
     private static String getEndpointUri(String routingScheme, String flowId) {
         return routingScheme + ":" + flowId;

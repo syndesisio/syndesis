@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Let's grab the settings from the 'controllers' section, since
  * they are already defined there.
- *
  */
 @Configuration
 @ConfigurationProperties("controllers")

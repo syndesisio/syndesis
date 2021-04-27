@@ -23,9 +23,6 @@ import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 
-/**
- * @author Christoph Deppisch
- */
 class ChoiceMetadataHandler implements StepMetadataHandler {
 
     @Override

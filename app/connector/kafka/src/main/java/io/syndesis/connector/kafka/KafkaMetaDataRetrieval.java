@@ -120,9 +120,6 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
     /**
      * For each Kafka resource found on Kubernetes, extract the listeners and
      * add them to the brokers list.
-     *
-     * @param brokers
-     * @param item
      */
     private static void processKafkaResource(List<PropertyPair> brokers, Kafka item) {
         //Extract an identifier of this broker
@@ -138,7 +135,6 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
 
     /**
      * Get the list of addresses for this connection and add it to the brokers list.
-     *
      * @param listener metadata for this broker
      * @param brokers  list where all brokers are going to be added
      * @param name     identifier of this broker

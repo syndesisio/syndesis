@@ -25,10 +25,6 @@ import java.util.Set;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-/**
- * @author roland
- * @since 20/03/2017
- */
 @JsonDeserialize
 public class VerifierResponse {
 

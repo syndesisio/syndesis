@@ -26,7 +26,6 @@ public interface ComponentCustomizer<T extends Component> {
     /**
      * Customize the specified {@link Component}. The customizer has to
      * remove remove customizer specific properties once they are consumed.
-     *
      * @param component the component to customize
      * @param options the component options
      */

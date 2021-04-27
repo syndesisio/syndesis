@@ -21,6 +21,7 @@ import io.syndesis.common.model.connection.Connection;
 
 import org.springframework.social.oauth1.OAuthToken;
 
+@SuppressWarnings("JavaUtilDate") // TODO refactor
 public class OAuth1Applicator implements Applicator<OAuthToken> {
 
     private String accessTokenSecretProperty;

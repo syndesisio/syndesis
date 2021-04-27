@@ -31,7 +31,6 @@ import io.syndesis.common.util.StringConstants;
  * Fixes an issue with olingo4 not being able to handle URI ending with
  * a '/'. The olingo4 library results in a 'URI is malformed' exception. This
  * filter takes the request and wraps it to exclude the '/'.
- *
  */
 public class ODataPathFilter implements Filter, StringConstants {
 

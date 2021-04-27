@@ -51,14 +51,6 @@ public class ReadApiClientData {
         this.encryptionComponent = encryptionComponent;
     }
 
-    /**
-     *
-     * @param fileName
-     * @return
-     * @throws JsonParseException
-     * @throws JsonMappingException
-     * @throws IOException
-     */
     public List<ModelData<?>> readDataFromFile(String fileName) throws JsonParseException, JsonMappingException, IOException {
         try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName)) {
             if (is==null) {
@@ -85,7 +77,6 @@ public class ReadApiClientData {
     /**
      * Finds tokens surrounded by "@" signs (for example @POSTGRESQL_SAMPLEDB_PASSWORD@) and replaces them
      * with values from System.env if a value is set in the environment.
-     *
      * @param jsonText - String containing tokens
      * @param env - containing tokens
      * @return String with tokens resolved from env

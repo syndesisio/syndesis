@@ -83,8 +83,6 @@ import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
 
 /**
  * Helper Maven plugin
- *
- * @author pantinor
  */
 @Mojo(name = "generate-metadata",
         defaultPhase = LifecyclePhase.PROCESS_CLASSES,
@@ -366,7 +364,6 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
     /**
      * Loads a partial metadata json file, if configured at Maven Plugin level.
-     * @throws MojoExecutionException
      */
     protected void tryImportingPartialJSON() throws MojoExecutionException {
         File template;

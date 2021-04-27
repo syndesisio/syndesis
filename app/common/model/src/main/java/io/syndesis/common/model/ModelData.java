@@ -26,7 +26,6 @@ import io.syndesis.common.util.json.JsonUtils;
 
 /**
  * Used to read the deployment.json file from the client GUI project
- *
  */
 public class ModelData<T extends WithId<T>> implements ToJson {
 

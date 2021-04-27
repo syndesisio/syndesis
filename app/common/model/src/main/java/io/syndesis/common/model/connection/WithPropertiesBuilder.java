@@ -27,7 +27,6 @@ public interface WithPropertiesBuilder<T extends WithPropertiesBuilder<T>> {
     /**
      * Either sets or removes the property depending on if the given value is
      * {@code null}.
-     *
      * @param properties The properties
      * @param key Property key
      * @param value The value to set the property to, if null property will be
@@ -44,23 +43,21 @@ public interface WithPropertiesBuilder<T extends WithPropertiesBuilder<T>> {
 
     /**
      * Sets property tagged with the given tag to the supplied value
-     *
-     * @param properties The properties
      * @param tag The looked after tag
      * @param value The value to set the property to
      * @return The previous value of the property, if any
      */
-    default T putOrRemoveConfiguredPropertyTaggedWith(final WithPropertiesBuilder<T> builder, final String tag,
+    default T putOrRemoveConfiguredPropertyTaggedWith(final String tag,
         final String value) {
-        final WithProperties withProperties = builder.build();
+        final WithProperties withProperties = build();
         final Map<String, String> configuredProperties = withProperties.getConfiguredProperties();
 
         final Map<String, String> mutableCopy = new HashMap<>(configuredProperties);
 
         withProperties.propertyEntryTaggedWith(tag)
-            .map(entry -> putOrRemoveProperty(mutableCopy, entry.getKey(), value));
+            .ifPresent(entry -> putOrRemoveProperty(mutableCopy, entry.getKey(), value));
 
-        return builder.configuredProperties(mutableCopy);
+        return configuredProperties(mutableCopy);
     }
 
     T configuredProperties(Map<String, ? extends String> properties);

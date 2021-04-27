@@ -32,9 +32,6 @@ import io.syndesis.test.integration.source.JsonIntegrationSource;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.wait.strategy.Wait;
 
-/**
- * @author Christoph Deppisch
- */
 public class TimerToLog_IT {
 
     @Test

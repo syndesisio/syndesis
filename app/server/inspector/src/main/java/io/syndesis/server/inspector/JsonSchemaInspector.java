@@ -15,18 +15,16 @@
  */
 package io.syndesis.server.inspector;
 
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
+import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
+import io.syndesis.common.util.json.schema.JsonSchemaUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
-
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
-import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
-import io.syndesis.common.util.json.schema.JsonSchemaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -82,7 +80,7 @@ public class JsonSchemaInspector implements Inspector {
     }
 
     static void fetchPaths(final String context, final List<String> paths, final Map<String, JsonSchema> properties) {
-        for (final Entry<String, JsonSchema> entry : properties.entrySet()) {
+        for (final Map.Entry<String, JsonSchema> entry : properties.entrySet()) {
             final JsonSchema subschema = entry.getValue();
 
             String path;

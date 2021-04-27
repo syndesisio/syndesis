@@ -42,7 +42,6 @@ import java.util.stream.Stream;
 /**
  * Monitor Integrations based on their deployment state.
  * Used for PUBLISHING status updates. Can be utilized in the future for other purposes.
- * @author dhirajsb
  */
 @Service
 @ConditionalOnProperty(value = "features.monitoring.enabled", havingValue = "true")

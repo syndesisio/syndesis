@@ -60,7 +60,6 @@ public class PaginationOptionsFromQueryParams implements PaginationOptions {
     }
 
     /**
-     *
      * @return The requested page number.
      */
     @Override
@@ -69,7 +68,6 @@ public class PaginationOptionsFromQueryParams implements PaginationOptions {
     }
 
     /**
-     *
      * @return The requested number per page.
      */
     @Override

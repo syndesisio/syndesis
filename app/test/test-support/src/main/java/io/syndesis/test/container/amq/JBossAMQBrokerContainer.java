@@ -20,9 +20,6 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
 
-/**
- * @author Christoph Deppisch
- */
 public class JBossAMQBrokerContainer extends GenericContainer<JBossAMQBrokerContainer> {
 
     private static final int OPENWIRE_PORT = 61616;

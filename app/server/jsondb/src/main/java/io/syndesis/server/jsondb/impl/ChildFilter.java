@@ -18,9 +18,6 @@ package io.syndesis.server.jsondb.impl;
 import io.syndesis.server.jsondb.Filter;
 import io.syndesis.common.model.ToJson;
 
-/**
- *
- */
 public class ChildFilter implements Filter, ToJson {
 
     private final String field;

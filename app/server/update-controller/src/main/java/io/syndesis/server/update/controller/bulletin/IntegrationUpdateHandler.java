@@ -75,7 +75,6 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
      * manager. Adds a message with the missing code if there is no connection
      * available or adds a message with the difference code if the connections
      * differ in their metadata.
-     *
      * @param connection the connection to compare
      * @param dbConnection the connection from the data manager
      * @param messages the messages collection to add the message to
@@ -228,7 +227,6 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
          * the data manager. This does it once rather than repeatedly in the
          * various loops since getting stuff from the DataManager is quite
          * expensive and slow.
-         *
          * see #3717
          */
         final List<Integration> integrations = dataManager.fetchAll(Integration.class).getItems();
@@ -396,7 +394,6 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                              * that, a change event must be broadcast to all
                              * clients and a call to update() provides such an
                              * event.
-                             *
                              * see #4008
                              */
                             dataManager.update(dbConnection);

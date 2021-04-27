@@ -40,9 +40,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * @author Christoph Deppisch
- */
 public class GoogleSheetsAddChartCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
 
     private GoogleSheetsAddChartCustomizer customizer;

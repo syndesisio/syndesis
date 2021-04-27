@@ -48,8 +48,6 @@ public class PodMetricsReader implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PodMetricsReader.class);
 
-    private static final String JOLOKIA_URL_FORMAT = "%sapi/v1/namespaces/%s/pods/https:%s:8778/proxy/jolokia/";
-
     private static final String ROUTE_ID = "RouteId";
     private static final String START_TIMESTAMP = "StartTimestamp";
     private static final String EXCHANGES_TOTAL = "ExchangesTotal";
@@ -144,8 +142,6 @@ public class PodMetricsReader implements Runnable {
      * Code borrowed from the DefaultCamelController: https://github.com/apache/camel/blob/master/platforms/commands/commands-jolokia/src/main/java/org/apache/camel/commands/jolokia/DefaultJolokiaCamelController.java
      * Slight modifications have been applied.
      * Credits to: Claus & Tomo
-     * @throws J4pException
-     * @throws MalformedObjectNameException
      */
     private ObjectName lookupCamelContext(String camelContextName) throws MalformedObjectNameException, J4pException {
         ObjectName on = cache.get(camelContextName);
@@ -228,13 +224,12 @@ public class PodMetricsReader implements Runnable {
 
     /**
      * Creates a {@link J4pClient} for the specified pod.
-     *
      * @param kubernetes The {@link KubernetesClient} instance.
      * @param pod        The name of the pod.
      * @return An instance of the {@link J4pClient}.
      */
     private static J4pClient forPod(KubernetesClient kubernetes, String pod) {
-        String jolokiaUrl = String.format(JOLOKIA_URL_FORMAT, kubernetes.getMasterUrl(), kubernetes.getNamespace(), pod);
+        String jolokiaUrl = String.format("%sapi/v1/namespaces/%s/pods/https:%s:8778/proxy/jolokia/", kubernetes.getMasterUrl(), kubernetes.getNamespace(), pod);
         try {
             return new J4pClientBuilder()
                 .url(jolokiaUrl)
@@ -250,7 +245,6 @@ public class PodMetricsReader implements Runnable {
 
     /**
      * Removes all leading and ending quotes (single and double) from the string
-     *
      * @param s  the string
      * @return the string without leading and ending quotes (single and double)
      */
@@ -273,7 +267,6 @@ public class PodMetricsReader implements Runnable {
 
     /**
      * Tests whether the value is <tt>null</tt> or an empty string.
-     *
      * @param value  the value, if its a String it will be tested for text length as well
      * @return true if empty
      */
@@ -283,7 +276,6 @@ public class PodMetricsReader implements Runnable {
 
     /**
      * Tests whether the value is <b>not</b> <tt>null</tt>, an empty string or an empty collection/map.
-     *
      * @param value  the value, if its a String it will be tested for text length as well
      * @return true if <b>not</b> empty
      */

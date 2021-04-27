@@ -34,9 +34,6 @@ import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.http.server.HttpServer;
 
-/**
- * @author Christoph Deppisch
- */
 @Testcontainers
 public class TodoOpenApiV3Connector_IT extends SyndesisIntegrationTestSupport {
 
@@ -55,7 +52,6 @@ public class TodoOpenApiV3Connector_IT extends SyndesisIntegrationTestSupport {
     /**
      * Integration uses api connector to send OpenAPI client requests to a REST endpoint. The client API connector was generated
      * from OpenAPI 3.x specification.
-     *
      * The integration invokes following sequence of client requests on the test server
      *  POST /api adds a new task
      *  PUT /api update task

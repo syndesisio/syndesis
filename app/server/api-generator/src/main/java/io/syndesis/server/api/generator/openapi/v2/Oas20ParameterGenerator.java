@@ -23,9 +23,6 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinitions;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.server.api.generator.openapi.OpenApiParameterGenerator;
 
-/**
- * @author Christoph Deppisch
- */
 public final class Oas20ParameterGenerator extends OpenApiParameterGenerator<Oas20Document> {
 
     @Override

@@ -42,9 +42,6 @@ import org.yaml.snakeyaml.Yaml;
 
 import static java.util.Optional.ofNullable;
 
-/**
- * @author Christoph Deppisch
- */
 public final class OpenApiModelParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(OpenApiModelParser.class);

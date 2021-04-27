@@ -35,8 +35,6 @@ import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 
 /**
  * Factory to create the verifiers for the connection.
- *
- * @author delawen
  */
 public class DDBVerifier extends ComponentVerifier {
     public DDBVerifier() {

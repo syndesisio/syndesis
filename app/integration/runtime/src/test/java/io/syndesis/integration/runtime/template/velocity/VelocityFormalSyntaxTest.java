@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Tests for velocity formal template step handler, ie. using the formal
  * syntax for velocity symbols, eg. ${xyz}
- *
  */
 public class VelocityFormalSyntaxTest extends AbstractVelocityTemplateStepHandlerTest {
 

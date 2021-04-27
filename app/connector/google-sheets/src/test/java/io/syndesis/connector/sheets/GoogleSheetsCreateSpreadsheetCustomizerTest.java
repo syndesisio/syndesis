@@ -35,9 +35,6 @@ import io.syndesis.connector.sheets.model.GoogleSheet;
 import io.syndesis.connector.sheets.model.GoogleSpreadsheet;
 import io.syndesis.connector.support.util.ConnectorOptions;
 
-/**
- * @author Christoph Deppisch
- */
 public class GoogleSheetsCreateSpreadsheetCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
 
     private GoogleSheetsCreateSpreadsheetCustomizer customizer;

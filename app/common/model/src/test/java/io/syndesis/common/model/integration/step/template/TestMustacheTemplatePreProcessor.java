@@ -98,8 +98,6 @@ public class TestMustacheTemplatePreProcessor implements StringConstants {
      * Unlike other languages, mustache does allow spaces in its symbols
      * Does make the pre-processed template look hideous but then no
      * one is supposed to read it so no real problem.
-     *
-     * @throws Exception
      */
     @Test
     public void testTemplateSymbolsWithSpaces() throws Exception {

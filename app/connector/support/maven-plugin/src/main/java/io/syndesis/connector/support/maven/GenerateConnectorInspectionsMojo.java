@@ -156,11 +156,8 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
 
     /**
      * Validate the given file against the connection schema
-     *
-     * @param jsonStream {@link InputStream} of the file to validate.
-     *                                          Method will close the stream after use.
+     * @param jsonFile the file to validate.
      * @return the {@link JsonNode} of the file content or throw exception if an error
-     * @throws MojoExecutionException
      */
     public JsonNode validateWithSchema(File jsonFile) throws MojoExecutionException {
         InputStream jsonStream = null;

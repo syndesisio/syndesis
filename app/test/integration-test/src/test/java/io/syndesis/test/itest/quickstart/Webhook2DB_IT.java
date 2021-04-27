@@ -31,9 +31,6 @@ import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.http.client.HttpClient;
 
-/**
- * @author Christoph Deppisch
- */
 @Testcontainers
 public class Webhook2DB_IT extends SyndesisIntegrationTestSupport {
 

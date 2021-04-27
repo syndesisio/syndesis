@@ -21,8 +21,6 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 /**
  * Helper Maven plugin
- *
- * @author pantinor
  */
 @Mojo(name = "repackage-integration", defaultPhase = LifecyclePhase.PACKAGE, requiresProject = true, threadSafe = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class RepackageIntegrationMojo extends SupportMojo {

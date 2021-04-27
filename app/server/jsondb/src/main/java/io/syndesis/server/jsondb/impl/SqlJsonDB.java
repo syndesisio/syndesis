@@ -72,7 +72,6 @@ import io.syndesis.server.jsondb.impl.expr.SqlExpressionBuilder;
 
 /**
  * Implements the JsonDB via DBI/JDBC
- *
  * Each value in the JSON tree is stored a simple record with the primary key being the
  * path to the value.
  */

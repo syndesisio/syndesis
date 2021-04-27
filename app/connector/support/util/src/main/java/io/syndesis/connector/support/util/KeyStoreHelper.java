@@ -40,8 +40,6 @@ import javax.net.ssl.X509TrustManager;
 
 /**
  * Helper class to create KeyStores from Certificates.
- *
- * @author dhirajsb
  */
 public class KeyStoreHelper {
 
@@ -68,7 +66,6 @@ public class KeyStoreHelper {
     /**
      * Create a keystore helper by generating a local temporary keystore file with a self signed certificate.
      * You may need to use {@link #clean()} method afterward.
-     *
      * @return an helper object used to get keystore location and password
      */
     public KeyStoreHelper store() {

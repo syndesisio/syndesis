@@ -30,11 +30,8 @@ import org.testcontainers.images.builder.dockerfile.statement.MultiArgsStatement
  * Syndesis S2i container that performs assemble step on a give project
  * directory. The project sources are assembled to a runnable project fat jar
  * using fabric8 S2i assemble script.
- *
  * The container uses the Syndesis S2i image as base. This image already holds
  * all required Syndesis libraries and artifacts with the given version.
- *
- * @author Christoph Deppisch
  */
 public class SyndesisS2iAssemblyContainer extends GenericContainer<SyndesisS2iAssemblyContainer> {
 

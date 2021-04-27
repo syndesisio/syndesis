@@ -19,7 +19,6 @@ import io.syndesis.common.model.integration.IntegrationDeploymentState;
 
 /**
  * Interface to register {@link StateHandler}s with {@link DeploymentStateMonitorController}.
- * @author dhirajsb
  */
 public interface DeploymentStateMonitor {
     /**

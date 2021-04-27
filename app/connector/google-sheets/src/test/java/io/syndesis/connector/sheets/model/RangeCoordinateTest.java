@@ -23,9 +23,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-/**
- * @author Christoph Deppisch
- */
 public class RangeCoordinateTest {
 
     public static Collection<Object[]> data() {

@@ -137,7 +137,6 @@ public class TemplateStepLanguage {
 
     /**
      * Update the integration by visiting its {@link Flow}s and their {@link Step}s
-     *
      * @param integration the integration
      * @return the update integration
      */
@@ -158,7 +157,6 @@ public class TemplateStepLanguage {
 
     /**
      * Update the flow by visiting its {@link Step}s
-     *
      * @param flow the flow
      * @return the newly updated flow
      */
@@ -178,7 +176,6 @@ public class TemplateStepLanguage {
 
     /**
      * Update the template step {@link Step} with required dependencies
-     *
      * @param step the template step
      * @return the new step
      */
