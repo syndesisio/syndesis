@@ -226,19 +226,19 @@
   dependencies:
     tslib "^1.9.0"
 
-"@atlasmap/atlasmap@^2.2.0-M.6":
-  version "2.2.0-M.6"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap/-/atlasmap-2.2.0-M.6.tgz#3da67f37ffa9edc101da425cb4322e27ae2ec636"
-  integrity sha512-5HCXBlpzOzGxIPZQUOYOiiIcRU9cC5KhYGfeMopc+tOWbnyivdaTGDsKlRHLc5wYYkMyvG23Owl3tz0jXGClmg==
+"@atlasmap/atlasmap@^2.2.0-M.7":
+  version "2.2.0-M.7"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap/-/atlasmap-2.2.0-M.7.tgz#2f93e34e9476d322a9a0c007873ca4d13fe70dfa"
+  integrity sha512-FOzso73kWxVXzD7MHnj205p8XzMtRhFLwlyD4V+JaBGWdot8WrJiB+mvBUKCEYjO4wgzVpd2dBXLrkFdJmPuCQ==
   dependencies:
-    "@atlasmap/core" "^2.2.0-M.6"
+    "@atlasmap/core" "^2.2.0-M.7"
     react-sage "^0.0.42"
     use-debounce "^3.4.2"
 
-"@atlasmap/core@^2.2.0-M.6":
-  version "2.2.0-M.6"
-  resolved "https://registry.yarnpkg.com/@atlasmap/core/-/core-2.2.0-M.6.tgz#24b28f1e46379bc328bf2e17a91ed77cfa15db73"
-  integrity sha512-pa3gyh5UE9oQNJDMtiu6dzdLft6fwtp9Owc/w0mPFTDNpm9wrLGaAz9cRKizEJ0OJu3L+g6htc06W1n6GjYp9Q==
+"@atlasmap/core@^2.2.0-M.7":
+  version "2.2.0-M.7"
+  resolved "https://registry.yarnpkg.com/@atlasmap/core/-/core-2.2.0-M.7.tgz#eb322b1b660bd95b6ebcdfbc5e85f9b3d6656c25"
+  integrity sha512-9ru8cRoaoyDYjgYgUlgcvVZ1MsY9rztdAsgDullxur0uIe9JQG5ptk1dobnw9fiPbfyscFxYNLxTXtdS14Yq/g==
   dependencies:
     file-saver "2.0.2"
     loglevel "^1.6.7"
