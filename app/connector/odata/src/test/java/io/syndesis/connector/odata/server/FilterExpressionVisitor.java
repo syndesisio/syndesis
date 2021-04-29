@@ -316,4 +316,10 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
         throw new ODataApplicationException("Lamdba references are not implemented",
             HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ENGLISH);
     }
+
+    @Override
+    public Object visitBinaryOperator(BinaryOperatorKind operator, Object left, List<Object> right) throws ExpressionVisitException, ODataApplicationException {
+        throw new ODataApplicationException("Lamdba references are not implemented",
+            HttpStatusCode.NOT_IMPLEMENTED.getStatusCode(), Locale.ENGLISH);
+    }
 }
