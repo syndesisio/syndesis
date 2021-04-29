@@ -1,0 +1,384 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: friday
+    time: "23:00"
+  labels:
+  - group/ui
+  - dependencies
+  ignore:
+  - dependency-name: husky
+    versions:
+    - 5.1.1
+    - 5.2.0
+  - dependency-name: "@commitlint/config-conventional"
+    versions:
+    - 12.0.0
+- package-ecosystem: maven
+  directory: "/app"
+  schedule:
+    interval: weekly
+    day: friday
+    time: "23:00"
+  labels:
+  - dependencies
+  ignore:
+  - dependency-name: ca.uhn.hapi.fhir:hapi-fhir-base
+    versions:
+    - "> 4.1.0"
+  - dependency-name: ca.uhn.hapi.fhir:hapi-fhir-client
+    versions:
+    - "> 4.1.0"
+  - dependency-name: ca.uhn.hapi.fhir:hapi-fhir-structures-dstu3
+    versions:
+    - "> 3.5.0"
+  - dependency-name: ca.uhn.hapi.fhir:org.hl7.fhir.dstu3
+    versions:
+    - "> 4.1.0"
+  - dependency-name: com.amazonaws:aws-java-sdk-core
+    versions:
+    - "> 1.11.714"
+  - dependency-name: com.atlassian.jira:jira-rest-java-client-api
+    versions:
+    - "> 5.1.6"
+  - dependency-name: com.atlassian.jira:jira-rest-java-client-core
+    versions:
+    - "> 5.1.6"
+  - dependency-name: com.google.apis:google-api-services-calendar
+    versions:
+    - "> v3-rev291-1.22.0"
+  - dependency-name: com.google.apis:google-api-services-gmail
+    versions:
+    - "> v1-rev81-1.22.0"
+  - dependency-name: com.google.apis:google-api-services-sheets
+    versions:
+    - "> v4-rev551-1.22.0"
+  - dependency-name: com.squareup.okhttp3:okhttp
+    versions:
+    - "> 3.12.1"
+  - dependency-name: com.sun.jersey:jersey-json
+    versions:
+    - "> 1.19, < 1.20"
+  - dependency-name: io.atlassian.fugue:fugue
+    versions:
+    - "> 3.0.0"
+  - dependency-name: io.opentracing.contrib:opentracing-spring-jaeger-web-starter
+    versions:
+    - "> 1.0.1"
+  - dependency-name: io.swagger:swagger-parser
+    versions:
+    - "> 1.0.34"
+  - dependency-name: io.undertow:undertow-core
+    versions:
+    - "> 2.0.30.Final"
+  - dependency-name: io.undertow:undertow-servlet
+    versions:
+    - "> 2.0.30.Final"
+  - dependency-name: io.undertow:undertow-websockets-jsr
+    versions:
+    - "> 2.0.30.Final"
+  - dependency-name: mysql:mysql-connector-java
+    versions:
+    - "> 8.0.17"
+  - dependency-name: org.apache.camel:camel-connector-maven-plugin
+    versions:
+    - "> 2.23.2.fuse-760011"
+  - dependency-name: org.apache.camel:camel-spring-boot-dependencies
+    versions:
+    - "> 2.23.2.fuse-760011"
+  - dependency-name: org.apache.cxf:cxf-core
+    versions:
+    - "> 3.3.7"
+  - dependency-name: org.apache.cxf:cxf-rt-bindings-soap
+    versions:
+    - "> 3.3.7"
+  - dependency-name: org.apache.cxf:cxf-rt-features-logging
+    versions:
+    - "> 3.3.7"
+  - dependency-name: org.apache.cxf:cxf-rt-frontend-jaxrs
+    versions:
+    - "> 3.3.7"
+  - dependency-name: org.apache.cxf:cxf-rt-frontend-jaxws
+    versions:
+    - "> 3.3.7"
+  - dependency-name: org.apache.cxf:cxf-rt-rs-client
+    versions:
+    - "> 3.3.7"
+  - dependency-name: org.apache.cxf:cxf-rt-rs-extension-providers
+    versions:
+    - "> 3.3.7"
+  - dependency-name: org.apache.cxf:cxf-rt-wsdl
+    versions:
+    - "> 3.3.7"
+  - dependency-name: org.apache.cxf:cxf-rt-ws-security
+    versions:
+    - "> 3.3.7"
+  - dependency-name: org.apache.kudu:kudu-client
+    versions:
+    - "> 1.7.0"
+  - dependency-name: org.apache.olingo:odata-client-api
+    versions:
+    - "> 4.6.0"
+  - dependency-name: org.apache.olingo:odata-client-core
+    versions:
+    - "> 4.6.0"
+  - dependency-name: org.apache.olingo:odata-commons-api
+    versions:
+    - "> 4.6.0"
+  - dependency-name: org.apache.olingo:odata-commons-core
+    versions:
+    - "> 4.6.0"
+  - dependency-name: org.apache.olingo:odata-server-api
+    versions:
+    - "> 4.6.0"
+  - dependency-name: org.apache.olingo:odata-server-core
+    versions:
+    - "> 4.6.0"
+  - dependency-name: org.assertj:assertj-core
+    versions:
+    - "> 3.16.1"
+  - dependency-name: org.hibernate.validator:hibernate-validator
+    versions:
+    - "> 6.0.20.Final, < 7"
+  - dependency-name: org.hibernate.validator:hibernate-validator
+    versions:
+    - ">= 7.a, < 8"
+  - dependency-name: org.hibernate.validator:hibernate-validator-annotation-processor
+    versions:
+    - "> 6.0.20.Final, < 7"
+  - dependency-name: org.hibernate.validator:hibernate-validator-annotation-processor
+    versions:
+    - ">= 7.a, < 8"
+  - dependency-name: org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec
+    versions:
+    - "> 1.0.0.Final"
+  - dependency-name: org.springframework.cloud:spring-cloud-dependencies
+    versions:
+    - "> Greenwich.SR3"
+  - dependency-name: org.springframework.security:spring-security-config
+    versions:
+    - "> 5.3.3.RELEASE"
+  - dependency-name: org.springframework.security:spring-security-core
+    versions:
+    - "> 5.3.3.RELEASE"
+  - dependency-name: org.springframework.security:spring-security-web
+    versions:
+    - "> 5.3.3.RELEASE"
+  - dependency-name: org.teiid.connectors:translator-jdbc
+    versions:
+    - "> 13.0.1, < 13.1"
+  - dependency-name: org.teiid:spring-data-mongodb
+    versions:
+    - "> 1.3.0, < 1.4"
+  - dependency-name: org.teiid:spring-data-mongodb
+    versions:
+    - ">= 1.4.a, < 1.5"
+  - dependency-name: org.teiid:spring-data-salesforce
+    versions:
+    - "> 1.3.0, < 1.4"
+  - dependency-name: org.teiid:spring-data-salesforce
+    versions:
+    - ">= 1.4.a, < 1.5"
+  - dependency-name: org.teiid:teiid-api
+    versions:
+    - "> 13.0.1, < 13.1"
+  - dependency-name: org.teiid:teiid-client
+    versions:
+    - "> 13.0.1, < 13.1"
+  - dependency-name: org.teiid:teiid-common-core
+    versions:
+    - "> 13.0.1, < 13.1"
+  - dependency-name: org.teiid:teiid-engine
+    versions:
+    - "> 13.0.1, < 13.1"
+  - dependency-name: org.teiid:teiid-runtime
+    versions:
+    - "> 13.0.1, < 13.1"
+  - dependency-name: org.apache.activemq:activemq-openwire-legacy
+    versions:
+    - 5.16.1
+  - dependency-name: org.apache.activemq:activemq-client
+    versions:
+    - 5.16.1
+  - dependency-name: io.swagger.core.v3:swagger-maven-plugin
+    versions:
+    - 2.1.6
+    - 2.1.7
+  - dependency-name: io.swagger.core.v3:swagger-jaxrs2
+    versions:
+    - 2.1.6
+    - 2.1.7
+  - dependency-name: io.swagger.core.v3:swagger-annotations
+    versions:
+    - 2.1.6
+    - 2.1.7
+  - dependency-name: io.swagger.core.v3:swagger-models
+    versions:
+    - 2.1.6
+    - 2.1.7
+  - dependency-name: io.swagger.core.v3:swagger-core
+    versions:
+    - 2.1.6
+    - 2.1.7
+  - dependency-name: com.google.errorprone:error_prone_annotations
+    versions:
+    - 2.5.1
+    - 2.6.0
+  - dependency-name: com.google.errorprone:error_prone_core
+    versions:
+    - 2.5.1
+    - 2.6.0
+  - dependency-name: pl.project13.maven:git-commit-id-plugin
+    versions:
+    - 4.0.3
+  - dependency-name: io.atlasmap:atlasmap-maven-plugin
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:camel-atlasmap
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:atlas-model
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:atlas-service
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:atlas-xml-service
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:atlas-xml-module
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:atlas-json-service
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:atlas-json-module
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:atlas-xml-core
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:atlas-xml-model
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:atlas-java-service
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:atlas-java-module
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:atlas-java-core
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:atlas-java-model
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:atlas-core
+    versions:
+    - 2.1.6
+  - dependency-name: io.atlasmap:atlas-api
+    versions:
+    - 2.1.6
+  - dependency-name: org.mongodb:bson
+    versions:
+    - 4.1.1
+  - dependency-name: org.mongodb:mongodb-driver-sync
+    versions:
+    - 4.1.1
+  - dependency-name: org.mongodb:mongodb-driver-core
+    versions:
+    - 4.1.1
+  - dependency-name: jakarta.ws.rs:jakarta.ws.rs-api
+    versions:
+    - 3.0.0
+- package-ecosystem: gomod
+  directory: "/install/operator"
+  schedule:
+    interval: weekly
+    day: friday
+    time: "23:00"
+  labels:
+  - group/operator
+  - dependencies
+  ignore:
+  - dependency-name: github.com/aws/aws-sdk-go
+    versions:
+    - 1.37.30
+    - 1.38.1
+    - 1.38.12
+    - 1.38.17
+    - 1.38.19
+    - 1.38.20
+    - 1.38.4
+  - dependency-name: k8s.io/api
+    versions:
+    - 0.20.2
+    - 0.20.4
+    - 0.20.5
+    - 0.21.0
+  - dependency-name: go.uber.org/zap
+    versions:
+    - 1.16.0
+  - dependency-name: k8s.io/apimachinery
+    versions:
+    - 0.20.2
+    - 0.20.4
+    - 0.20.5
+    - 0.21.0
+  - dependency-name: k8s.io/code-generator
+    versions:
+    - 0.20.2
+    - 0.20.4
+    - 0.20.5
+    - 0.21.0
+  - dependency-name: github.com/go-logr/logr
+    versions:
+    - 0.3.0
+    - 0.4.0
+- package-ecosystem: npm
+  directory: "/app/ui-react"
+  schedule:
+    interval: weekly
+    day: friday
+    time: "23:00"
+  labels:
+  - group/ui
+  - dependencies
+  ignore:
+  - dependency-name: "@angular-devkit/build-ng-packagr"
+    versions:
+    - "> 0.13.4"
+  - dependency-name: formik
+    versions:
+    - "> 1.5.8"
+  - dependency-name: monaco-languageclient
+    versions:
+    - "> 0.10.2"
+  - dependency-name: rollup
+    versions:
+    - "> 0.66.6"
+  - dependency-name: rollup-plugin-node-resolve
+    versions:
+    - "> 3.4.0"
+  - dependency-name: sw2dts
+    versions:
+    - "> 2.6.1"
+  - dependency-name: ts-jest
+    versions:
+    - ">= 26.a, < 27"
+  - dependency-name: d3-scale
+    versions:
+    - 3.2.3
+  - dependency-name: http-proxy
+    versions:
+    - 1.18.1
+  - dependency-name: typescript
+    versions:
+    - 3.9.7
+    - 3.9.8
+  - dependency-name: karma
+    versions:
+    - 5.2.3
