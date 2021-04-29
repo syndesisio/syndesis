@@ -210,6 +210,12 @@ github.com/josharian/intern
 github.com/json-iterator/go
 # github.com/konsorten/go-windows-terminal-sequences v1.0.3
 github.com/konsorten/go-windows-terminal-sequences
+# github.com/leanovate/gopter v0.2.9
+## explicit
+github.com/leanovate/gopter
+github.com/leanovate/gopter/arbitrary
+github.com/leanovate/gopter/gen
+github.com/leanovate/gopter/prop
 # github.com/lib/pq v1.8.0
 ## explicit
 github.com/lib/pq
