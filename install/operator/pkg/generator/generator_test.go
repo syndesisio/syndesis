@@ -3,8 +3,13 @@ package generator_test
 import (
 	"context"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/leanovate/gopter"
+	"github.com/leanovate/gopter/arbitrary"
+	"github.com/leanovate/gopter/gen"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -12,6 +17,7 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/util/yaml"
 
 	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
 )
@@ -661,4 +667,82 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 			})
 		})
 	}
+}
+
+func TestAuditingFeatureToggle(t *testing.T) {
+	for _, givenEnabled := range []bool{true, false} {
+		syndesis := v1beta2.Syndesis{
+			Spec: v1beta2.SyndesisSpec{
+				Components: v1beta2.ComponentsSpec{
+					Server: v1beta2.ServerConfiguration{
+						Features: v1beta2.ServerFeatures{
+							Auditing: givenEnabled,
+						},
+					},
+				},
+			},
+		}
+
+		resource := renderResource(t, &syndesis, "./infrastructure/03-syndesis-server-config.yml.tmpl")
+
+		assert.True(t, len(resource) == 1, "Expected server config map to be rendered")
+
+		data := resource[0].Object["data"].(map[string]interface{})
+		assert.NotNil(t, data, "Expected server config map to contain data")
+
+		applicationYAML := data["application.yml"]
+		assert.NotNil(t, applicationYAML, "Expected server config map to contain application.yaml in data")
+
+		appConfiguration := map[string]interface{}{}
+		err := yaml.Unmarshal([]byte(applicationYAML.(string)), &appConfiguration)
+		require.NoError(t, err, "Unable to unmarshal application.yml")
+
+		features := appConfiguration["features"]
+		assert.NotNil(t, features, "Expected application.yml to contain the key `features`")
+
+		auditing := features.(map[string]interface{})["auditing"].(map[string]interface{})
+		assert.NotNil(t, auditing, "Expected application.yml to contain the key `features.auditing`")
+
+		enabled := auditing["enabled"].(bool)
+		assert.NotNil(t, enabled)
+		assert.Equalf(t, givenEnabled, enabled, "Expected features.auditing.enabled to be %v", givenEnabled)
+	}
+}
+
+// TestGeneratorProperty makes sure that no matter what configuration
+// is provided resulting YAML files can be parsed. The
+// generator.Render* methods use Go templates and parse the results
+// as YAML.
+func TestGeneratorProperty(t *testing.T) {
+	// if the test fails, comment above and use this instead
+	// pass in the seed to troubleshoot
+	//parameters := gopter.DefaultTestParametersWithSeed(...)
+	parameters := gopter.DefaultTestParameters()
+	parameters.MaxSize = 10
+
+	arbitraries := arbitrary.DefaultArbitraries()
+	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(v1beta2.ResourcesWithPersistentVolume{}), map[string]gopter.Gen{
+		"VolumeLabels": gen.MapOf(gen.Identifier(), gen.Identifier()), // we can't have volume labels with keys that are empty strings
+	}))
+
+	properties := gopter.NewProperties(parameters)
+
+	clientTools := syntesting.FakeClientTools()
+
+	properties.Property("all combinations render correctly", arbitraries.ForAll(
+		func(spec *v1beta2.SyndesisSpec) bool {
+			configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config.yaml", clientTools, &v1beta2.Syndesis{Spec: *spec})
+			require.NoError(t, err)
+
+			rendered, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure/", configuration)
+
+			if err != nil {
+				panic(err)
+			}
+
+			return len(rendered) > 0
+		},
+	))
+
+	properties.TestingRun(t)
 }

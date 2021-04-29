@@ -61,6 +61,7 @@ require (
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/uuid v1.2.0 // indirect
 	github.com/googleapis/gnostic v0.5.4 // indirect
+	github.com/leanovate/gopter v0.2.9
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/operator-framework/api v0.5.1
 	github.com/operator-framework/operator-lifecycle-manager v0.0.0-20200521062108-408ca95d458f // Tag 0.15.1
