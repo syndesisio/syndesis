@@ -31,50 +31,47 @@ that you want to update.
 from a previous step in the flow, which is typically what you want 
 to do. Otherwise, specify the resource 
 ID of the resource whose fields you want to update.  
-// start update for ENTESB-14237 where the JSON patch feature is not working
+
+. Specify a JSON patch that describes the updates. 
+The JSON patch must have the format described in 
+link:http://jsonpatch.com/[What is a JSON Patch?].
 +
-*Note*: For the current release, the JSON patch option does not work. Instead, use the Data Mapper to update the fields as described in the following steps.
-//. Specify a JSON patch that describes the updates. 
-//The JSON patch must have the format described in 
-//link:http://jsonpatch.com/[What is a JSON Patch?].
-//+
-//*Examples of patches for a `Patient` resource*: 
-//+
-//Set the `active` field to `true`:
-//+
-//----
-//[{ "op":"replace", "path":"/active", "value": true }]
-//----
-//+
-//Replace the value of the `name` field, which is an array of the patient’s names. 
-//In this example, the patient has one name. If the patient had more than one 
-//name, a similarly formatted patch could replace all of the patient’s names:
-//+
-//----
-//[{ "op":"replace", "path":"/name", "value": [{"given": ["Bob"]}] }]
-//----
-//+
-//Replace the given name of a patient:
-//+
-//----
-//[{ "op":"replace", "path":"/name/0/given/0", "value": "John" }]
-//----
-//+
-//Add another name to a patient before the first name:
-//+
-//----
-//[{ "op":"add", "path":"/name/0", "value": {"given": ["Anthony"]} }]
-//----
-//+
-//For some updates, you must specify the JSON patch when you 
-//configure the *Patch* action. For example, if you want to copy the 
-//value of a resource field to another field. For other updates, 
-//you can leave the *JSON Patch* field blank and instead map values 
-//that define each update.  
+*Examples of patches for a `Patient` resource*: 
++
+Set the `active` field to `true`:
++
+----
+[{ "op":"replace", "path":"/active", "value": true }]
+----
++
+Replace the value of the `name` field, which is an array of the patient’s names. 
+In this example, the patient has one name. If the patient had more than one 
+name, a similarly formatted patch could replace all of the patient’s names:
++
+----
+[{ "op":"replace", "path":"/name", "value": [{"given": ["Bob"]}] }]
+----
++
+Replace the given name of a patient:
++
+----
+[{ "op":"replace", "path":"/name/0/given/0", "value": "John" }]
+----
++
+Add another name to a patient before the first name:
++
+----
+[{ "op":"add", "path":"/name/0", "value": {"given": ["Anthony"]} }]
+----
++
+For some updates, you must specify the JSON patch when you 
+configure the *Patch* action. For example, if you want to copy the 
+value of a resource field to another field. For other updates, 
+you can leave the *JSON Patch* field blank and instead map values 
+that define each update.  
 . Click *Next* to add this connection to the flow. 
-//. If you did not specify a JSON patch and/or a resource ID, then 
-//add a data mapper step:
-. Add a data mapper step:
+. If you did not specify a JSON patch and/or a resource ID, then 
+add a data mapper step:
 .. In the flow visualization, click the plus sign that is
 before the FHIR connection that you just added. 
 .. Click *Data Mapper*. 
