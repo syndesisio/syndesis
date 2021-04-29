@@ -95,6 +95,10 @@ spec:
     - todo: a simple todo application
 
     To enable addons, set "addon_name": {"enabled": true} in the CR.
+    If you enable the todo addon, you should link the previously created syndesis-pull-secret to the builder serviceAccount.
+    ```
+    oc secrets link builder syndesis-pull-secret --for=pull,mount
+    ```
 
     For a more detailed set of instructions and a complete reference of config options,
     please refer to the product documentation at https://access.redhat.com/documentation/en-us/red_hat_fuse

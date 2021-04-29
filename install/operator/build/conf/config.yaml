@@ -15,14 +15,14 @@ Syndesis:
             Olm:
                 Package: "jaeger-product"
                 Channel: "stable"
-            ImageAgent: "jaegertracing/jaeger-agent:1.13"
-            ImageAllInOne: "jaegertracing/all-in-one:1.13"
-            ImageOperator: "jaegertracing/jaeger-operator:1.13"
+            ImageAgent: "registry.redhat.io/distributed-tracing/jaeger-agent-rhel7:1.13"
+            ImageAllInOne: "registry.redhat.io/distributed-tracing/jaeger-all-in-one-rhel7:1.13"
+            ImageOperator: "registry.redhat.io/distributed-tracing/jaeger-rhel7-operator:1.13"
         Ops:
             Enabled: false
         Todo:
             Enabled: false
-            Image: "docker.io/centos/php-72-centos7"
+            Image: "registry.redhat.io/ubi8/php-72"
         Knative:
             Enabled: false
         PublicApi:
@@ -30,7 +30,7 @@ Syndesis:
             DisableSarCheck: false
     Components:
         Oauth:
-            Image: "quay.io/openshift/origin-oauth-proxy:4.7"
+            Image: "registry.redhat.io/openshift4/ose-oauth-proxy:v4.7"
             DisableSarCheck: false
         UI:
             Image: "docker.io/syndesis/syndesis-ui:latest"
@@ -38,7 +38,7 @@ Syndesis:
             Image: "docker.io/syndesis/syndesis-s2i:latest"
         Prometheus:
             Rules: ""
-            Image: "docker.io/prom/prometheus:v2.23.0"
+            Image: "docker.io/prom/prometheus:v2.1.0"
             Resources:
                 Limit:
                     Memory: "512Mi"
@@ -63,7 +63,7 @@ Syndesis:
             Name: "syndesis"
             User: "syndesis"
             URL: "postgresql://syndesis-db:5432/syndesis?sslmode=disable"
-            Image: "registry.redhat.io/rhscl/postgresql-12-rhel7"
+            Image: "registry.redhat.io/rhel8/postgresql-12:1"
             Exporter:
                 Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"
             Resources:
