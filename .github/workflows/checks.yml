@@ -25,7 +25,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       backend: ${{ steps.filter.outputs.backend }}
-      images: ${{ steps.filter.outputs.images }}
       operator: ${{ steps.filter.outputs.operator }}
       ui: ${{ steps.filter.outputs.ui }}
     steps:
@@ -37,9 +36,6 @@ jobs:
           filters: |
             backend:
               - 'app/(!(ui-react))**'
-            images:
-              - 'app/**'
-              - 'install/operator/**'
             operator:
               - 'install/operator/**'
             ui:
@@ -123,56 +119,6 @@ jobs:
           restore-keys: ${{ runner.os }}-maven-
       - name: Build and test
         run: tools/bin/syndesis build --batch-mode -m ui-react
-  images:
-    needs: changes
-    if: needs.changes.outputs.images == 'true'
-    runs-on: ubuntu-latest
-    env:
-      IMAGES_DIR: syndesis_images
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 8
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.m2/repository
-            !~/.m2/repository/io/syndesis
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-maven-
-      - name: Build images
-        run: tools/bin/syndesis build --batch-mode --flash --docker
-      - name: Save images
-        run: |
-          mkdir $IMAGES_DIR
-
-          IMAGES=`docker images --filter=reference='syndesis/syndesis-*' --format "{{.Repository}}"`
-
-          for image in $IMAGES
-
-          do
-            echo Saving $image ..
-            COMPONENT=$(echo $image | cut -d '/' -f 2)
-            docker save $image | gzip > $IMAGES_DIR/$COMPONENT.tar.gz
-            docker rmi $image
-          done
-
-          echo "{ \"run_id\": \"$GITHUB_RUN_ID\", \"github_pr_id\": \"$PR_NUMBER\", \"commit_id\": \"$COMMIT_ID\" }" > $IMAGES_DIR/github-metadata.json
-      - name: Publish images
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.IMAGES_DIR }}
-          path: ${{ env.IMAGES_DIR }}
-          retention-days: 1
-      - name: Trigger image transfer
-        uses: satak/webrequest-action@v1.2.4 
-        with:
-          url: 'https://ci.fabric8.io/generic-webhook-trigger/invoke?token=syndesis-github-to-quay'
-          method: POST
-          payload: '{"run_id":"${{ github.run_id }}", "github_pr_id": "${{ env.PR_NUMBER }}", "commit_id": "${{ env.COMMIT_ID }}" }'
   integration-tests:
     needs: changes
     if: needs.changes.outputs.backend == 'true'
