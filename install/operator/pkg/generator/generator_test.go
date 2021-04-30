@@ -721,6 +721,7 @@ func TestGeneratorProperty(t *testing.T) {
 	parameters.MaxSize = 10
 
 	arbitraries := arbitrary.DefaultArbitraries()
+	arbitraries.RegisterGen(gen.AlphaNumChar())
 	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(v1beta2.ResourcesWithPersistentVolume{}), map[string]gopter.Gen{
 		"VolumeLabels": gen.MapOf(gen.Identifier(), gen.Identifier()), // we can't have volume labels with keys that are empty strings
 	}))
