@@ -190,7 +190,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                       updatedFlows.push(defaultFlow);
                     }
                     const updatedIntegration = await (this.props.mode ===
-                      'adding'
+                      'adding' && !step.id
                       ? addStep
                       : updateStep)(
                       state.updatedIntegration || state.integration,
