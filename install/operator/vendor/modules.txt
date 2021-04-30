@@ -216,7 +216,7 @@ github.com/leanovate/gopter
 github.com/leanovate/gopter/arbitrary
 github.com/leanovate/gopter/gen
 github.com/leanovate/gopter/prop
-# github.com/lib/pq v1.8.0
+# github.com/lib/pq v1.10.1
 ## explicit
 github.com/lib/pq
 github.com/lib/pq/oid
