@@ -62,7 +62,7 @@
     "moment": "2.23.0",
     "ngx-bootstrap": "3.2.0",
     "ngx-clipboard": "11.1.9",
-    "patternfly": "3.59.1",
+    "patternfly": "3.59.5",
     "pluralize": "7.0.0",
     "rxjs": "6.5.3",
     "zone.js": "0.8.28"
@@ -89,7 +89,7 @@
     "bootstrap": "~3.4",
     "ngx-bootstrap": "3.2.0",
     "ngx-clipboard": "11.1.9",
-    "patternfly": "3.59.1",
+    "patternfly": "3.59.5",
     "pluralize": "7.0.0",
     "rxjs": "6.5.3",
     "zone.js": "0.8.28",
