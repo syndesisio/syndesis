@@ -725,6 +725,9 @@ func TestGeneratorProperty(t *testing.T) {
 	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(v1beta2.ResourcesWithPersistentVolume{}), map[string]gopter.Gen{
 		"VolumeLabels": gen.MapOf(gen.Identifier(), gen.Identifier()), // we can't have volume labels with keys that are empty strings
 	}))
+	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(v1beta2.DatabaseConfiguration{}), map[string]gopter.Gen{
+		"ExternalDbURL": gen.Identifier(),
+	}))
 
 	properties := gopter.NewProperties(parameters)
 
@@ -733,11 +736,17 @@ func TestGeneratorProperty(t *testing.T) {
 	properties.Property("all combinations render correctly", arbitraries.ForAll(
 		func(spec *v1beta2.SyndesisSpec) bool {
 			configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config.yaml", clientTools, &v1beta2.Syndesis{Spec: *spec})
-			require.NoError(t, err)
+			if err != nil {
+				// it's best to panic that gives gopter a chance to
+				// handle the error and fill in the details, we need
+				// the seed to be able to reproduce the issue
+				panic(err)
+			}
 
 			rendered, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure/", configuration)
 
 			if err != nil {
+				// see above
 				panic(err)
 			}
 
