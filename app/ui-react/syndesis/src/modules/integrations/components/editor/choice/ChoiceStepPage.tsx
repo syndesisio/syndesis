@@ -244,10 +244,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                           activeIndex: positionAsNumber,
                           activeStep: toUIStep(state.step),
                           steps: toUIStepCollection(
-                            getSteps(
-                              state.updatedIntegration || state.integration,
-                              params.flowId
-                            )
+                            getSteps(state.integration, params.flowId)
                           ),
                         })}
                         content={
