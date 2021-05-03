@@ -30,12 +30,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static io.syndesis.connector.sql.stored.SampleStoredProcedures.DERBY_FUNCTION_DEMO_OUT_SQL;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SqlTest.class)
-@Setup({SampleStoredProcedures.DERBY_DEMO_ADD_SQL, DERBY_FUNCTION_DEMO_OUT_SQL})
-@Teardown("DROP PROCEDURE DEMO_ADD")
+@Setup({SampleStoredProcedures.DERBY_DEMO_ADD_SQL, "CREATE FUNCTION DEMO_OUT_DEGREES ( RADIANS DOUBLE ) RETURNS DOUBLE PARAMETER STYLE JAVA NO SQL LANGUAGE JAVA EXTERNAL NAME 'java.lang.Math.toDegrees'"})
+@Teardown({"DROP PROCEDURE DEMO_ADD", "DROP FUNCTION DEMO_OUT_DEGREES"})
 public class SqlStoredProcedureTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlStoredProcedureTest.class);
 
