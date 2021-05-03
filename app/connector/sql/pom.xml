@@ -43,6 +43,11 @@
       <artifactId>spring-tx</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.github.jsqlparser</groupId>
+      <artifactId>jsqlparser</artifactId>
+      <version>4.0</version>
+    </dependency>
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connector-support-verifier</artifactId>
       <optional>true</optional>
