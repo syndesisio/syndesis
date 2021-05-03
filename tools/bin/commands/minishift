@@ -84,7 +84,7 @@ minishift::run() {
     fi
 
     # Ensure OC is in the path
-    eval $(minishift oc-env)
+    eval $(minishift oc-env --shell bash)
 
     if [ $(hasflag --maven-mirror) ]; then
         install_maven_mirror
