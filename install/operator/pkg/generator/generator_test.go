@@ -721,12 +721,15 @@ func TestGeneratorProperty(t *testing.T) {
 	parameters.MaxSize = 10
 
 	arbitraries := arbitrary.DefaultArbitraries()
-	arbitraries.RegisterGen(gen.AlphaNumChar())
+	arbitraries.RegisterGen(gen.AlphaString())
 	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(v1beta2.ResourcesWithPersistentVolume{}), map[string]gopter.Gen{
 		"VolumeLabels": gen.MapOf(gen.Identifier(), gen.Identifier()), // we can't have volume labels with keys that are empty strings
 	}))
 	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(v1beta2.DatabaseConfiguration{}), map[string]gopter.Gen{
 		"ExternalDbURL": gen.Identifier(),
+	}))
+	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(v1beta2.MavenConfiguration{}), map[string]gopter.Gen{
+		"Repositories": gen.MapOf(gen.Identifier(), gen.Identifier()), // we can't have Maven repositories with illegal characters
 	}))
 
 	properties := gopter.NewProperties(parameters)
