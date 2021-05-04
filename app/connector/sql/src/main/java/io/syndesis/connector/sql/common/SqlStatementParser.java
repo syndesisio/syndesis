@@ -248,10 +248,15 @@ public final class SqlStatementParser {
     }
 
     void assertTablesExist(final List<String> speculativeTables) throws SQLException {
-        final Set<String> tablesInDatabase = helper.fetchTables(null, schema, null);
+        final Set<String> tablesInDatabase = uppercase(helper.fetchTables(null, schema, null));
 
-        final Set<String> nonExistantTables = new HashSet<>(speculativeTables);
-        nonExistantTables.removeAll(tablesInDatabase);
+        final Set<String> nonExistantTables = new HashSet<>();
+        for (final String table : speculativeTables) {
+            if (!tablesInDatabase.contains(table.toUpperCase(Locale.US))) {
+                nonExistantTables.add(table);
+            }
+        }
+
         if (!nonExistantTables.isEmpty()) {
             throw new SQLException(String.format("Table(s) '%s' cannot be found in schema '%s'", String.join("', '", nonExistantTables), schema));
         }
@@ -371,6 +376,16 @@ public final class SqlStatementParser {
         }
 
         throw new IllegalArgumentException("Unsupported statement type: " + statement.getClass().getSimpleName());
+    }
+
+    static Set<String> uppercase(final Set<String> tables) {
+        final Set<String> uppercased = new HashSet<>(tables.size());
+
+        for (final String table : tables) {
+            uppercased.add(table.toUpperCase(Locale.US));
+        }
+
+        return uppercased;
     }
 
 }

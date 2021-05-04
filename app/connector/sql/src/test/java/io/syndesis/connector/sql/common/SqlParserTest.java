@@ -27,8 +27,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-
 @ExtendWith(SqlTest.class)
 @Setup({
     "CREATE TABLE NAME0 (id INTEGER PRIMARY KEY, firstName VARCHAR(255), lastName VARCHAR(255))",
@@ -322,17 +320,6 @@ public class SqlParserTest {
             Assertions.assertEquals("lastname", info.getInParams().get(0).getName());
             Assertions.assertEquals(1, info.getInParams().get(0).getColumnPos());
             Assertions.assertEquals("LASTNAME", info.getInParams().get(0).getColumn());
-        }
-    }
-
-    @Test
-    public void parseSelectFromNoneExistingTable(final Connection con) throws SQLException {
-        try (Connection connection = con) {
-            final SqlStatementParser parser = new SqlStatementParser(connection,
-                "SELECT FIRSTNAME, LASTNAME FROM NAME_NOTEXIST WHERE FIRSTNAME LIKE :#first");
-
-            assertThatExceptionOfType(SQLException.class).isThrownBy(() -> parser.parse())
-                .withMessage("Table(s) 'NAME_NOTEXIST' cannot be found in schema 'SA'");
         }
     }
 
