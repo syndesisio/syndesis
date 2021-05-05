@@ -2,12 +2,12 @@
 // as_connecting-to-ftp.adoc
 
 [id='adding-ftp-connection-upload-named_{context}']
-= Uploading a named file to an FTP or SFTP server
+= Uploading a named file to an FTP server
 
-In an integration, you can upload a specific file to an FTP or SFTP server in the middle of a flow or to finish a simple integration. To do this, add an FTP or SFTP connection to the middle of a flow or as a simple integration’s finish connection.  
+In an integration, you can upload a specific file to an FTP server in the middle of a flow or to finish a simple integration. To do this, add an FTP connection to the middle of a flow or as a simple integration’s finish connection.  
 
 .Prerequisites
-* You created an FTP or SFTP connection. 
+* You created an FTP connection. 
 * You are creating or editing a flow and {prodname} is prompting you
 to add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
 
@@ -15,7 +15,7 @@ to add to the integration. Or, {prodname} is prompting you to choose a finish co
 . On the *Add to Integration* page, click the plus sign where you 
 want to add the connection. Skip this step if {prodname} is
 prompting you to choose the finish connection. 
-. Click the FTP or SFTP connection that you want to use
+. Click the FTP connection that you want to use
 to upload files. 
 . On the *Choose an action* page, select *UploadNamedFile*.
 . In the *FTP directory* field, enter the absolute or relative name of a server directory. At runtime, the connection uploads the named file (that was received from the previous step) to this directory.
