@@ -57,11 +57,6 @@ public final class DbMetaDataHelper {
         return db.fetchProcedureColumns(meta, catalog, schema, procedureName);
     }
 
-    public ResultSet fetchFunctionColumns(final String catalog,
-        final String schema, final String procedureName) throws SQLException {
-        return db.fetchFunctionColumns(meta, catalog, schema, procedureName);
-    }
-
     public ResultSet fetchProcedures(final String catalog,
         final String schemaPattern, final String procedurePattern) throws SQLException {
         return db.fetchProcedures(meta, catalog, schemaPattern, procedurePattern);
