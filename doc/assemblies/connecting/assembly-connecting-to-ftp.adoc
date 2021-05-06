@@ -12,7 +12,7 @@ it to an integration flow.
 
 For the first step in an integration, you can download files that you define with an Apache Camel File Language expression.
 
-For the middle or last step in an integration, you can download or upload a named file (where the previous step in the integration provides the name of the file). You can also upload files that you define with an Apache Camel File Language expression.
+For the middle or last step in an integration, you can upload files that you define with an Apache Camel File Language expression. For an FTP server only, you can also download or upload a named file (where the previous step in the integration provides the name of the file).
 
 The following topics provide details:
 

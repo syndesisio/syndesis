@@ -22,7 +22,7 @@ prompting you to choose the finish connection.
 to upload files. 
 . On the *Choose an action* page, select *Upload*. 
 . In the *File name expression* field, type an 
-link:{LinkCamelDevGuide}/file[Apache Camel File language] expression that specifies the file or files to download. (Note that you cannot specify a regular expression.)
+link:{LinkCamelDevGuide}/file[Apache Camel File language] expression that specifies the file or files to upload. (Note that you cannot specify a regular expression.)
 +
 For example, you can filter for all files that have a specific extension from the FTP server. The following example specifies all files with a `.doc` extension:
 +

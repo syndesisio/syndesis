@@ -2,12 +2,12 @@
 // as_connecting-to-ftp.adoc
 
 [id='adding-ftp-connection-download-named_{context}']
-= Obtaining a named file from an FTP or SFTP server
+= Obtaining a named file from an FTP server
 
-In an integration, you can download a specific file from an FTP or SFTP server in the middle of a flow or to finish a simple integration. To do this, add an FTP or SFTP connection to the middle of a flow or as a simple integration’s finish connection.  
+In an integration, you can download a specific file from an FTP server in the middle of a flow or to finish a simple integration. To do this, add an FTP connection to the middle of a flow or as a simple integration’s finish connection.  
 
 .Prerequisites
-* You created an FTP or SFTP connection. 
+* You created an FTP connection. 
 * You are creating or editing a flow and {prodname} is prompting you
 to add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
 
@@ -15,13 +15,11 @@ to add to the integration. Or, {prodname} is prompting you to choose a finish co
 . On the *Add to Integration* page, click the plus sign where you 
 want to add the connection. Skip this step if {prodname} is
 prompting you to choose the finish connection. 
-. Click the FTP or SFTP connection that you want to use
-to download files. 
+. Click the FTP connection that you want to use to download files. 
 . On the *Choose an action* page, select *DownloadNamedFile*.
 . In the *Delete after download* field, accept the default of *No* or select *Yes* to download the file and then delete it from the server. 
 . In the *FTP directory* field, enter the absolute or relative name of a server directory. At runtime, the connection watches this directory for the named file and downloads it when it finds it. 
 . Click *Next*. 
 
 .Result
-The connection appears in the integration visualization
-where you added it. 
+The connection appears in the integration visualization where you added it. 
