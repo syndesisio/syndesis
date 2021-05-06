@@ -130,8 +130,11 @@ public final class SqlStatementParser {
             final SelectBody body = select.getSelectBody();
 
             final TablesNamesFinder tableNames = new TablesNamesFinder();
-            // TODO assumes there will be only one table in a SELECT statement
-            tableName = tableNames.getTableList(select).get(0);
+            final List<String> tableList = tableNames.getTableList(select);
+            if (!tableList.isEmpty()) {
+                // TODO assumes there will be only one table in a SELECT statement
+                tableName = tableList.get(0);
+            }
 
             body.accept(new SelectVisitorAdapter() {
                 @Override
@@ -302,8 +305,13 @@ public final class SqlStatementParser {
             return;
         }
 
+        final List<String> tableNames = metadata.getTableNames();
+        if (tableNames.isEmpty()) {
+            return;
+        }
+
         // TODO assumes there will be only one table in a INSERT statement
-        final String tableName = metadata.getTableNames().get(0);
+        final String tableName = tableNames.get(0);
         final List<SqlParam> autoIncrementParameters = helper.getAutoIncrementColumnList(null, schema, tableName);
         if (autoIncrementParameters.isEmpty()) {
             return;
