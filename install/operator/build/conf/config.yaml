@@ -38,7 +38,7 @@ Syndesis:
             Image: "docker.io/syndesis/syndesis-s2i:latest"
         Prometheus:
             Rules: ""
-            Image: "docker.io/prom/prometheus:v2.1.0"
+            Image: "registry.redhat.io/openshift4/ose-prometheus:v4.7"
             Resources:
                 Limit:
                     Memory: "512Mi"
