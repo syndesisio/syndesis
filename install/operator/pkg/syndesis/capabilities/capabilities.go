@@ -37,7 +37,7 @@ type RequiredApiSpec struct {
 	routes                    string
 	imagestreams              string
 	oauthclientauthorizations string
-	catalogsources            string
+	packagemanifests          string
 	consolelinks              string
 }
 
@@ -45,7 +45,7 @@ var RequiredApi = RequiredApiSpec{
 	routes:                    "routes.route.openshift.io/v1",
 	imagestreams:              "imagestreams.image.openshift.io/v1",
 	oauthclientauthorizations: "oauthclientauthorizations.oauth.openshift.io/v1",
-	catalogsources:            "catalogsources.operators.coreos.com/v1alpha1",
+	packagemanifests:          "packagemanifests.packages.operators.coreos.com/v1",
 	consolelinks:              "consolelinks.console.openshift.io/v1",
 }
 
@@ -100,7 +100,7 @@ func ApiCapabilities(clientTools *clienttools.ClientTools) (*ApiServerSpec, erro
 	apiSpec.Routes = contains(resIndex, RequiredApi.routes)
 	apiSpec.ImageStreams = contains(resIndex, RequiredApi.imagestreams)
 	apiSpec.EmbeddedProvider = contains(resIndex, RequiredApi.oauthclientauthorizations)
-	apiSpec.OlmSupport = contains(resIndex, RequiredApi.catalogsources)
+	apiSpec.OlmSupport = contains(resIndex, RequiredApi.packagemanifests)
 	apiSpec.ConsoleLink = contains(resIndex, RequiredApi.consolelinks)
 
 	return &apiSpec, nil
