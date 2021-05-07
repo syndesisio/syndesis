@@ -4,7 +4,7 @@
     "@commitlint/cli": "^12.1.1",
     "@commitlint/config-conventional": "^12.1.1",
     "husky": "~6",
-    "lint-staged": "~10",
+    "lint-staged": "~11",
     "npm-run-all": "~4"
   },
   "husky": {
