@@ -1,4 +1,4 @@
-FROM golang:1.10-alpine
+FROM golang:1.16.3-alpine
 
 # Install extras
 RUN apk update \
