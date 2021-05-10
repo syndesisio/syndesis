@@ -25,8 +25,6 @@ public interface Db {
     String adaptPattern(String pattern);
     ResultSet fetchProcedureColumns(DatabaseMetaData meta, String catalog,
         String schema, String procedureName) throws SQLException;
-    ResultSet fetchFunctionColumns(DatabaseMetaData meta, String catalog,
-        String schema, String functionName) throws SQLException;
     ResultSet fetchProcedures(DatabaseMetaData meta, String catalog,
         String schemaPattern, String procedurePattern) throws SQLException;
     ResultSet fetchFunctions(DatabaseMetaData meta, String catalog,
