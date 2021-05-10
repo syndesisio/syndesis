@@ -63,7 +63,7 @@ Syndesis:
             Name: "syndesis"
             User: "syndesis"
             URL: "postgresql://syndesis-db:5432/syndesis?sslmode=disable"
-            Image: "registry.redhat.io/rhel8/postgresql-12:1"
+            Image: "registry.redhat.io/rhscl/postgresql-12-rhel7"
             Exporter:
                 Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"
             Resources:
