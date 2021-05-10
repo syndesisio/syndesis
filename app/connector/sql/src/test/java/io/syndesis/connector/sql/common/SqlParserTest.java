@@ -18,6 +18,7 @@ package io.syndesis.connector.sql.common;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import io.syndesis.connector.sql.common.SqlTest.Setup;
 import io.syndesis.connector.sql.common.SqlTest.Teardown;
@@ -25,8 +26,6 @@ import io.syndesis.connector.sql.common.SqlTest.Teardown;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @ExtendWith(SqlTest.class)
 @Setup({
@@ -325,13 +324,28 @@ public class SqlParserTest {
     }
 
     @Test
-    public void parseSelectFromNoneExistingTable(final Connection con) throws SQLException {
+    public void parseCastExpressions(final Connection con) throws SQLException {
         try (Connection connection = con) {
             final SqlStatementParser parser = new SqlStatementParser(connection,
-                "SELECT FIRSTNAME, LASTNAME FROM NAME-NOTEXIST WHERE FIRSTNAME LIKE :#first");
+                "INSERT INTO NAME0 (FIRSTNAME, LASTNAME) VALUES (CAST(:#firstname AS VARCHAR), CAST(:#lastname AS VARCHAR))");
 
-            assertThatExceptionOfType(SQLException.class).isThrownBy(() -> parser.parse())
-                .withMessage("Table 'NAME-NOTEXIST' does not exist in schema 'SA'");
+            final SqlStatementMetaData info = parser.parse();
+            Assertions.assertEquals("NAME0", info.getTableNames().get(0));
+
+            final List<SqlParam> inParams = info.getInParams();
+            Assertions.assertEquals(2, inParams.size());
+
+            final SqlParam firstParameter = inParams.get(0);
+            Assertions.assertEquals("firstname", firstParameter.getName());
+            Assertions.assertEquals("FIRSTNAME", firstParameter.getColumn());
+            Assertions.assertEquals(String.class, firstParameter.getTypeValue().getClazz());
+            Assertions.assertEquals(0, firstParameter.getColumnPos());
+
+            final SqlParam secondParameter = inParams.get(1);
+            Assertions.assertEquals("lastname", secondParameter.getName());
+            Assertions.assertEquals("LASTNAME", secondParameter.getColumn());
+            Assertions.assertEquals(String.class, secondParameter.getTypeValue().getClazz());
+            Assertions.assertEquals(1, secondParameter.getColumnPos());
         }
     }
 }
