@@ -46,9 +46,14 @@ public final class SqlSupport {
         );
     }
 
-    public static StoredProcedureMetadata getFunctionOrProcedureMetadata(final Connection connection, final String catalog,
+    public static StoredProcedureMetadata getProcedureMetadata(final Connection connection, final String catalog,
                                                                          final String schema, final String procedureName) {
-
+        // We fetch procedure columns as this is what the connector
+        // supports, functions might work as a side effect, we have very
+        // little support for them. We (currently) test PostgreSQL and
+        // MariaDB functions and stored procedures, and fetching
+        // meta data for both via stored procedures meta data seems to
+        // yield best results
         final StoredProcedureMetadata storedProcedureMetadata = new StoredProcedureMetadata();
         storedProcedureMetadata.setName(procedureName);
         try {
@@ -101,7 +106,7 @@ public final class SqlSupport {
             try (ResultSet procedureSet = dbHelper.fetchProcedures(catalog, schemaPattern, procedurePattern)) {
                 while (procedureSet.next()) {
                     final String name = procedureSet.getString("PROCEDURE_NAME");
-                    final StoredProcedureMetadata storedProcedureMetadata = getFunctionOrProcedureMetadata(connection,
+                    final StoredProcedureMetadata storedProcedureMetadata = getProcedureMetadata(connection,
                         catalog, schemaPattern, name);
                     storedProcedureMetadata.setName(name);
                     storedProcedureMetadata.setType(procedureSet.getString("PROCEDURE_TYPE"));
@@ -113,7 +118,7 @@ public final class SqlSupport {
             try (ResultSet functionsSet = dbHelper.fetchFunctions(catalog, schemaPattern, procedurePattern)) {
                 while (functionsSet.next()) {
                     final String name = functionsSet.getString("FUNCTION_NAME");
-                    final StoredProcedureMetadata storedProcedureMetadata = getFunctionOrProcedureMetadata(connection,
+                    final StoredProcedureMetadata storedProcedureMetadata = getProcedureMetadata(connection,
                         catalog, schemaPattern, name);
                     storedProcedureMetadata.setName(name);
                     storedProcedureMetadata.setType(functionsSet.getString("FUNCTION_TYPE"));

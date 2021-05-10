@@ -53,7 +53,7 @@ public class SqlStoredConnectorMetaDataExtensionTest {
         when(result.getInt("DATA_TYPE")).thenReturn(JDBCType.INTEGER.getVendorTypeNumber(),
             JDBCType.INTEGER.getVendorTypeNumber(), JDBCType.INTEGER.getVendorTypeNumber());
 
-        final StoredProcedureMetadata metadata = SqlSupport.getFunctionOrProcedureMetadata(connection, "catalog", "schema",
+        final StoredProcedureMetadata metadata = SqlSupport.getProcedureMetadata(connection, "catalog", "schema",
             "procedureName");
 
         final StoredProcedureColumn columnA = new StoredProcedureColumn();
@@ -100,7 +100,7 @@ public class SqlStoredConnectorMetaDataExtensionTest {
         when(result.getInt("COLUMN_TYPE")).thenReturn(ColumnMode.IN.ordinal());
         when(result.getInt("DATA_TYPE")).thenReturn(JDBCType.INTEGER.getVendorTypeNumber());
 
-        final StoredProcedureMetadata metadata = SqlSupport.getFunctionOrProcedureMetadata(connection, "catalog", "schema",
+        final StoredProcedureMetadata metadata = SqlSupport.getProcedureMetadata(connection, "catalog", "schema",
             "procedureName");
 
         final StoredProcedureColumn columnA = new StoredProcedureColumn();

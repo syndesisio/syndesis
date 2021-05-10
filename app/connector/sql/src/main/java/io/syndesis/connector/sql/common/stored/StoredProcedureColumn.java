@@ -57,7 +57,7 @@ public class StoredProcedureColumn {
     }
 
     public String toProcedureParameterString() {
-        if (mode == ColumnMode.IN) {
+        if (mode == ColumnMode.IN || mode == ColumnMode.INOUT) {
             return jdbcType + " ${body[" + name + "]}";
         } else if (mode == ColumnMode.OUT) {
             return mode.name() + " " + jdbcType + " " + name;
