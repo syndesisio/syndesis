@@ -170,6 +170,7 @@
     <kafka-clients.version>2.5.0</kafka-clients.version>
     <netty.version>4.1.48.Final</netty.version>
     <net.jqwik.version>1.5.1</net.jqwik.version>
+    <io.github.zregvart.junit-github-reporter.version>0.3.0</io.github.zregvart.junit-github-reporter.version>
 
     <!-- Sonar configuration -->
     <sonar.projectKey>${project.artifactId}</sonar.projectKey>
@@ -932,6 +933,51 @@
         <errorprone.autofix.arg1>-XepPatchChecks:BadImport,DeadException,DefaultCharset,MissingOverride,UnnecessaryParentheses,UnusedVariable,UnusedMethod,FieldCanBeFinal,MethodCanBeStatic,ClassCanBeStatic,RemoveUnusedImports,ThrowsUncheckedException,EmptyBlockTag,UnnecessaryMethodReference,ProtectedMembersInFinalClass,InvalidParam,NonCanonicalType,ZoneIdOfZ</errorprone.autofix.arg1>
         <errorprone.autofix.arg2>-XepPatchLocation:IN_PLACE</errorprone.autofix.arg2>
       </properties>
+    </profile>
+
+    <profile>
+      <id>github</id>
+      <activation>
+        <property>
+          <name>env.GITHUB_WORKSPACE</name>
+        </property>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <artifactId>maven-surefire-plugin</artifactId>
+              <configuration>
+                <additionalClasspathElements>
+                  <additionalClasspathElement>${settings.localRepository}/io/github/zregvart/junit-github-reporter/${io.github.zregvart.junit-github-reporter.version}/junit-github-reporter-${io.github.zregvart.junit-github-reporter.version}.jar</additionalClasspathElement>
+                </additionalClasspathElements>
+              </configuration>
+              <dependencies>
+                <dependency>
+                  <groupId>io.github.zregvart</groupId>
+                  <artifactId>junit-github-reporter</artifactId>
+                  <version>${io.github.zregvart.junit-github-reporter.version}</version>
+                </dependency>
+              </dependencies>
+            </plugin>
+            <plugin>
+              <artifactId>maven-failsafe-plugin</artifactId>
+              <configuration>
+                <additionalClasspathElements>
+                  <additionalClasspathElement>${settings.localRepository}/io/github/zregvart/junit-github-reporter/${io.github.zregvart.junit-github-reporter.version}/junit-github-reporter-${io.github.zregvart.junit-github-reporter.version}.jar</additionalClasspathElement>
+                </additionalClasspathElements>
+              </configuration>
+              <dependencies>
+                <dependency>
+                  <groupId>io.github.zregvart</groupId>
+                  <artifactId>junit-github-reporter</artifactId>
+                  <version>${io.github.zregvart.junit-github-reporter.version}</version>
+                </dependency>
+              </dependencies>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
     </profile>
 
   </profiles>
