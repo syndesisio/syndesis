@@ -98,4 +98,4 @@ Syndesis:
                         repo-02-redhat-ga: "https://maven.repository.redhat.com/ga/"
                         repo-03-jboss-ea: "https://repository.jboss.org/nexus/content/groups/ea/"
         AMQ:
-            Image: "registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.4"
+            Image: "registry.redhat.io/amq7/amq-broker-rhel8:7.8"
