@@ -170,7 +170,7 @@
     <kafka-clients.version>2.5.0</kafka-clients.version>
     <netty.version>4.1.48.Final</netty.version>
     <net.jqwik.version>1.5.1</net.jqwik.version>
-    <io.github.zregvart.junit-github-reporter.version>0.3.0</io.github.zregvart.junit-github-reporter.version>
+    <io.github.zregvart.junit-github-reporter.version>0.4.0</io.github.zregvart.junit-github-reporter.version>
 
     <!-- Sonar configuration -->
     <sonar.projectKey>${project.artifactId}</sonar.projectKey>
