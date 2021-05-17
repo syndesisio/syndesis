@@ -76,7 +76,7 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
 
     String getControlHint();
 
-    Object getDefaultValue();
+    String getDefaultValue();
 
     Boolean getDeprecated();
 
