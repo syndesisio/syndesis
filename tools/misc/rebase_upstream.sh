@@ -44,6 +44,24 @@ function resolve_conflict {
     git add pkg/generator/assets_vfsdata.go)
 }
 
+function rebase_pull_requests() {
+  # first, and hopefuly only 100 pull requests
+  curl -s "https://${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN}@api.github.com/repos/jboss-fuse/syndesis/pulls?per_page=100" | jq -r '.[] | .number,.base.ref,.head.repo.clone_url,.head.ref' | xargs -L 4 | while read -r number base_ref clone_url head_ref; do
+    if [ "${base_ref}" != "${branch}" ]; then
+      continue
+    fi
+
+    local local_branch="pr-${number}"
+    echo "INFO: Rebasing pull request #${number}"
+    git fetch origin "pull/${number}/head:${local_branch}"
+    git switch "${local_branch}"
+    git rebase origin
+    git remote add "pr-${number}-remote" "${clone_url}"
+    git push -f "pr-${number}-remote" "HEAD:${head_ref}"
+    git remote remove "pr-${number}-remote"
+  done
+}
+
 # if there is a previous rebase attempt, abort it
 is_rebasing && git rebase --abort
 
@@ -71,3 +89,5 @@ while is_rebasing; do
 done
 
 git push --force --set-upstream origin "${branch}"
+
+rebase_pull_requests
