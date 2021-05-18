@@ -122,7 +122,7 @@
         "i18nAddElementText": "Add a custom property",
         "minElements": 0
       },
-      "defaultValue": [],
+      "defaultValue": "",
       "displayName": "Extra Options",
       "type": "array"
     },

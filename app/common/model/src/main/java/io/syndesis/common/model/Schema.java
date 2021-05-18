@@ -20,7 +20,7 @@ package io.syndesis.common.model;
  */
 public final class Schema {
     // changing this kick of migration of the DB data to this version.
-    public static final int VERSION = 42;
+    public static final int VERSION = 43;
 
     private Schema() {
       // quasi utility class
