@@ -130,8 +130,6 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
 
         final Integration updated = updateResponse.getBody();
 
-        existing.getId().get();
-
         // not present in updated-test-swagger.json
         assertThat(updated.findFlowBy(operationIdEquals("fetch-task"))).isNotPresent();
 
