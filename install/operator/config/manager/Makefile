@@ -14,7 +14,7 @@ MANAGER_INSTALL := ./manager-install.gen
 
 # User customisable variables
 VERSION ?= 7.9
-DB_IMAGE ?= registry.redhat.io/rhscl/postgresql-10-rhel7:1-59
+DB_IMAGE ?= registry.redhat.io/rhscl/postgresql-12-rhel7
 IMAGE ?= registry.redhat.io/fuse7/fuse-online-operator
 NAMESPACE ?= syndesis
 TAG ?= 1.9
