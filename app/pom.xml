@@ -1433,7 +1433,6 @@
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>
         <version>${dep.plugin.git-commit-id.version}</version>
-        <inherited>false</inherited>
         <executions>
           <execution>
             <id>basepom.default</id>
