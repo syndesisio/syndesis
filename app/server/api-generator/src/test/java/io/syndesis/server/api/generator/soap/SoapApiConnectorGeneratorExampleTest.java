@@ -105,7 +105,7 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
         assertThat(connector).isNotNull();
         assertThat(connector.getName()).isNotEmpty();
         assertThat(connector.getDescription()).isNotEmpty();
-        assertThat(connector.getIcon()).isNotEmpty();
+        assertThat(connector.getIcon()).startsWith("data:image");
 
         // assert summary
         final Optional<ActionsSummary> actionsSummary = connector.getActionsSummary();
