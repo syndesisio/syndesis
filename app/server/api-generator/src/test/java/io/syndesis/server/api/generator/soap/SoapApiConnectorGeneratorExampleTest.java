@@ -59,7 +59,7 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
 
     private static final Logger LOG = LoggerFactory.getLogger(SoapApiConnectorGeneratorExampleTest.class);
 
-    @ParameterizedTest(name = "{1}")
+    @ParameterizedTest(name = "{0}")
     @MethodSource("parameters")
     public void shouldProvideInfo(final String path, final String specification) throws IOException {
 
@@ -96,7 +96,7 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
         assertThat(actionsSummary.getActionCountByTags()).isNotEmpty();
     }
 
-    @ParameterizedTest(name = "{1}")
+    @ParameterizedTest(name = "{0}")
     @MethodSource("parameters")
     public void shouldGenerateConnector(final String path, final String specification) throws IOException, SAXException {
 
@@ -105,6 +105,7 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
         assertThat(connector).isNotNull();
         assertThat(connector.getName()).isNotEmpty();
         assertThat(connector.getDescription()).isNotEmpty();
+        assertThat(connector.getIcon()).startsWith("data:image");
 
         // assert summary
         final Optional<ActionsSummary> actionsSummary = connector.getActionsSummary();
