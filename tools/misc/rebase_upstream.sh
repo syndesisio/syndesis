@@ -54,7 +54,7 @@ function rebase_pull_requests() {
     local local_branch="pr-${number}"
     echo "INFO: Rebasing pull request #${number}"
     git fetch origin "pull/${number}/head:${local_branch}"
-    git switch "${local_branch}"
+    git checkout "${local_branch}"
     git rebase origin
     git remote add "pr-${number}-remote" "${clone_url}"
     git push -f "pr-${number}-remote" "HEAD:${head_ref}"
