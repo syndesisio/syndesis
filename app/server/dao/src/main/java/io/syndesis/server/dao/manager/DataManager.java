@@ -18,7 +18,6 @@ package io.syndesis.server.dao.manager;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceException;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -496,10 +495,7 @@ public class DataManager implements DataAccessObjectRegistry {
     private <T extends WithId<T>> void validateNoDuplicateName(final T entity, final String ignoreSelfId) {
         if (entity instanceof Connection) {
             Connection c = (Connection) entity;
-            if (c.getName() == null) {
-                LOGGER.error("Connection name is a required field");
-                throw new PersistenceException("'Name' is a required field");
-            }
+
             Set<String> ids = fetchIdsByPropertyValue(Connection.class, "name", c.getName());
             if (ids != null) {
                 ids.remove(ignoreSelfId);
