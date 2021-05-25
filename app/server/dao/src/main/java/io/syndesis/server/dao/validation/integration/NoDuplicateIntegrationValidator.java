@@ -48,9 +48,6 @@ public class NoDuplicateIntegrationValidator implements ConstraintValidator<NoDu
         }
 
         final String name = value.getName();
-        if (name == null) {
-            return true;
-        }
 
         // name should be unique among all other draft and deployed integrations
         final Set<String> names = dataManager.fetchAll(Integration.class).getItems().stream()
@@ -68,9 +65,6 @@ public class NoDuplicateIntegrationValidator implements ConstraintValidator<NoDu
     private static boolean isValid(final IntegrationWithDomain value, final ConstraintValidatorContext context) {
         final Integration target = value.getTarget();
         final String name = target.getName();
-        if (name == null) {
-            return true;
-        }
 
         // name should be unique among all other draft and deployed integrations
         final Set<String> names = value.getDomain().stream()
