@@ -21,7 +21,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -197,11 +196,10 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
 
     private Connection includeConnector(final Connection connection) {
         if (connection == null) {
-            return connection;
+            return null;
         }
 
-        final Optional<Connector> connectorOptional = connection.getConnector();
-        if (connectorOptional != null && connectorOptional.isPresent()) {
+        if (connection.getConnector().isPresent()) {
             return connection;
         }
 

@@ -27,6 +27,9 @@ import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.WithUsage;
 import io.syndesis.common.model.environment.Organization;
+import io.syndesis.common.model.validation.AllValidations;
+
+import javax.validation.constraints.NotNull;
 
 public interface ConnectionBase
     extends WithResourceId, WithTags, WithName, WithConfiguredProperties, WithMetadata, ToJson, WithUsage {
@@ -35,6 +38,7 @@ public interface ConnectionBase
 
     Optional<String> getOrganizationId();
 
+    @NotNull(groups = AllValidations.class)
     Optional<Connector> getConnector();
 
     String getConnectorId();
