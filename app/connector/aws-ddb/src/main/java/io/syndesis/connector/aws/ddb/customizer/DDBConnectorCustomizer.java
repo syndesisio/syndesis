@@ -80,7 +80,7 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
             output.put(element.getKey(), Util.getValue(element.getValue()).toString());
         }
 
-        String json = "{}";
+        String json;
 
         try {
             //Convert Map to JSON
@@ -98,13 +98,12 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
     /**
      * Setup the common headers for all operations.
      */
-    @SuppressWarnings("unchecked")
     protected void doBeforeProducer(Exchange exchange) {
         exchange.getIn().setHeader(DdbConstants.CONSISTENT_READ, "true");
         exchange.getIn().setHeader(DdbConstants.RETURN_VALUES, "ALL_OLD");
 
         if(this.options == null) {
-            this.options = new HashMap<String, Object>();
+            this.options = new HashMap<>();
         }
 
         String element = (String) this.options.get("element");
@@ -115,40 +114,44 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
         //Do we have variables from atlas?
         Object body = exchange.getIn().getBody();
         if (body != null) {
-            Map<String, Object> map = null;
+            Map<String, Object> map = parseMapFromBody(body);
 
-            if (body instanceof Map) {
-                map = (Map<String, Object>) body;
-            } else {
-                try {
-                    map = (Map<String, Object>) mapper.readValue(body.toString(), Map.class);
-                } catch (Exception e) {
-                    LOG.error("Couldn't parse parameters." + e);
-                }
-            }
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                if (entry.getKey().startsWith("#") && entry.getValue() != null) {
+                    final String searchKey = ":" + entry.getKey();
+                    final String replacement = entry.getValue().toString();
 
-            if (map != null && !map.isEmpty()) {
-                for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    if (entry.getKey().startsWith("#") && entry.getValue() != null) {
-                        final String searchKey = ":" + entry.getKey();
-                        final String replacement = entry.getValue().toString();
-
-                        element = element.replace(searchKey, replacement);
-                        if(attributes != null) {
-                            attributes = attributes.replace(searchKey, replacement);
-                        }
+                    element = element.replace(searchKey, replacement);
+                    if(attributes != null) {
+                        attributes = attributes.replace(searchKey, replacement);
                     }
                 }
+
             }
         }
 
-        Map<String, Object> options = new HashMap<String, Object>();
+        Map<String, Object> options = new HashMap<>();
         options.put("element", element);
         options.put("attributes", attributes);
 
         LOG.trace("post this.options: " + options);
 
         customize(exchange, options);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> parseMapFromBody(Object body) {
+
+        if (body instanceof Map) {
+            return (Map<String, Object>) body;
+        } else {
+            try {
+                return (Map<String, Object>) mapper.readValue(body.toString(), Map.class);
+            } catch (Exception e) {
+                LOG.error("Couldn't parse parameters." + e);
+            }
+        }
+        return new HashMap<>();
     }
 
 
