@@ -63,7 +63,7 @@ public class EndpointMetricsFilter implements ContainerRequestFilter, ContainerR
             throws IOException {
         Sample sample = (Sample) requestContext.getProperty(TIMING_SAMPLE);
         if (sample != null) {
-            List<Tag> tags = new ArrayList<Tag>();
+            List<Tag> tags = new ArrayList<>();
             tags.add(Tag.of("method", getMethod(requestContext)));
             tags.add(Tag.of("status", getStatus(responseContext)));
             tags.add(Tag.of("uri", getUri()));

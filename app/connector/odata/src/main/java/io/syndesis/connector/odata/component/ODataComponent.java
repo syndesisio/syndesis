@@ -170,7 +170,7 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
     }
 
     private Map<String, Object> bundleOptions(Map<String, Object> options) {
-        PropertyBuilder<Object> builder = new PropertyBuilder<Object>();
+        PropertyBuilder<Object> builder = new PropertyBuilder<>();
 
         for (Map.Entry<String, Object> option : options.entrySet()) {
             builder.propertyIfNotNull(option.getKey(), option.getValue());

@@ -56,11 +56,11 @@ public class AWSSQSMetaDataExtension extends AbstractMetaDataExtension {
         clientBuilder = AmazonSQSClientBuilder.standard().withCredentials(credentialsProvider);
         clientBuilder = clientBuilder.withRegion(Regions.valueOf(region));
         AmazonSQS sqsClient = clientBuilder.build();
-        List<String> attributeNames = new ArrayList<String>();
+        List<String> attributeNames = new ArrayList<>();
         attributeNames.add("All");
         try {
             ListQueuesResult result = sqsClient.listQueues();
-            Set<String> setQueue = new HashSet<String>();
+            Set<String> setQueue = new HashSet<>();
             if (result.getQueueUrls() != null) {
                 for (String entry : result.getQueueUrls()) {
                     GetQueueAttributesRequest req = new GetQueueAttributesRequest();

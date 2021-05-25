@@ -171,7 +171,7 @@ public class PodMetricsReader implements Runnable {
             throw new IllegalStateException("Need to connect to remote jolokia first");
         }
 
-        List<Map<String, String>> answer = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> answer = new ArrayList<>();
 
         ObjectName found = camelContextName != null ? lookupCamelContext(camelContextName) : null;
         if (found != null) {
@@ -179,7 +179,7 @@ public class PodMetricsReader implements Runnable {
             String pattern = String.format("%s:context=%s,type=routes,*", found.getDomain(), found.getKeyProperty("context"));
             J4pSearchResponse sr = jolokia.execute(new J4pSearchRequest(pattern));
 
-            List<J4pReadRequest> list = new ArrayList<J4pReadRequest>();
+            List<J4pReadRequest> list = new ArrayList<>();
             for (ObjectName on : sr.getObjectNames()) {
                 list.add(new J4pReadRequest(on, ROUTE_ID, RESET_TIMESTAMP, EXCHANGES_TOTAL, EXCHANGES_FAILED, LAST_COMPLETED_TIMESTAMP, LAST_FAILED_TIMESTAMP, START_TIMESTAMP ));
             }
@@ -188,7 +188,7 @@ public class PodMetricsReader implements Runnable {
             for (J4pReadResponse rr : lrr) {
                 String routeId = rr.getValue(ROUTE_ID).toString();
                 if (filter == null || routeId.matches(filter)) {
-                    Map<String, String> row = new LinkedHashMap<String, String>();
+                    Map<String, String> row = new LinkedHashMap<>();
                     for (String attribute : rr.getAttributes()) {
                         if (rr.getValue(attribute) != null) {
                             row.put(attribute, rr.getValue(attribute).toString());

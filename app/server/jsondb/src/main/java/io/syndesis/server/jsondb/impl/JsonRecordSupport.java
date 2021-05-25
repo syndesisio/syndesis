@@ -246,7 +246,7 @@ public final class JsonRecordSupport {
             seq = seq.substring(0, dot);
         }
 
-        ArrayList<String> seqs = new ArrayList<String>();
+        ArrayList<String> seqs = new ArrayList<>();
         seqs.add(seq);
         while (seq.length() > 1) {
             seq = Integer.toString(seq.length());

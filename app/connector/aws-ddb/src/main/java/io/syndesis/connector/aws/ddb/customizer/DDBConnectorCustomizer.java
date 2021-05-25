@@ -74,7 +74,7 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
 
     private String mapToJSON(Map<String, AttributeValue> item) {
         Set<Map.Entry<String, AttributeValue>> elements = item.entrySet();
-        Map<String, Object> output = new HashMap<String, Object>();
+        Map<String, Object> output = new HashMap<>();
 
         for (Map.Entry<String, AttributeValue> element : elements) {
             output.put(element.getKey(), Util.getValue(element.getValue()).toString());
@@ -104,7 +104,7 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
         exchange.getIn().setHeader(DdbConstants.RETURN_VALUES, "ALL_OLD");
 
         if(this.options == null) {
-            this.options = new HashMap<String, Object>();
+            this.options = new HashMap<>();
         }
 
         String element = (String) this.options.get("element");
@@ -142,7 +142,7 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
             }
         }
 
-        Map<String, Object> options = new HashMap<String, Object>();
+        Map<String, Object> options = new HashMap<>();
         options.put("element", element);
         options.put("attributes", attributes);
 

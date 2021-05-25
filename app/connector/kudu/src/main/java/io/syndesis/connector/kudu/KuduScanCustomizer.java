@@ -57,7 +57,7 @@ public class KuduScanCustomizer implements ComponentProxyCustomizer {
             RowResultIterator results = scanner.nextRows();
 
             while (results.hasNext()) {
-                Map<String, Object> row = new HashMap<String, Object>();
+                Map<String, Object> row = new HashMap<>();
                 RowResult result = results.next();
 
                 for (int i = 0; i < result.getSchema().getColumnCount(); i++) {
