@@ -24,9 +24,6 @@ build::usage() {
 -p  --project <project>        Specifies the project / namespace to create images
 -g  --goals <g1>,<g2>, ..      Use custom Maven goals to execute for the build. Default goal is `install`
 -s  --settings <path>          Path to Maven settings.xml
--l  --local                    If building the operators, use a locally installed go
-                               Otherwise run the Go build from a container (either local or Minishift's Docker  daemon)
-    --clean-cache              Used for the operator build to remove the local dependency cache.
 -c  --clean                    Run clean builds (mvn clean)
     --incremental [ref]        Run an incremental build, i.e. skip building of a module if committed or uncomitted changes
                                against [ref] (default branch) are not part of that module
