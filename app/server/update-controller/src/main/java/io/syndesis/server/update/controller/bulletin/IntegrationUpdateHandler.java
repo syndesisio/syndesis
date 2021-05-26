@@ -216,7 +216,11 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
             .build();
     }
 
-    @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.NPathComplexity"})
+    /**
+     * When a resource is changed, recalculate and redeploy integrations
+     * @param event the event.
+     * @return the list of integration bulletin boards
+     */
     @Override
     protected List<IntegrationBulletinBoard> compute(final ChangeEvent event) {
         final List<IntegrationBulletinBoard> boards = new ArrayList<>();
@@ -231,243 +235,282 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
          */
         final List<Integration> integrations = dataManager.fetchAll(Integration.class).getItems();
         final List<IntegrationDeployment> deployments = dataManager.fetchAll(IntegrationDeployment.class).getItems();
-        final Set<Integration> deployedIintegrations = deployments.stream()
+        final Set<Integration> deployedIntegrations = deployments.stream()
             .map(IntegrationDeployment::getSpec)
             .collect(Collectors.toSet());
         final List<Connection> connections = dataManager.fetchAll(Connection.class).getItems();
-        final Collection<Integration> allIntegrations = new ArrayList<>(integrations.size() + deployedIintegrations.size());
+
+        final Collection<Integration> allIntegrations =
+            new ArrayList<>(integrations.size() + deployedIntegrations.size());
         allIntegrations.addAll(integrations);
-        allIntegrations.addAll(deployedIintegrations);
+        allIntegrations.addAll(deployedIntegrations);
 
-        final List<LeveledMessage> messages = new ArrayList<>();
-
+        // Now iterate all existing integrations and update them if needed
         for (final Integration integration : integrations) {
-            final String id = integration.getId().get();
-
-            final IntegrationBulletinBoard board = dataManager.fetchByPropertyValue(IntegrationBulletinBoard.class, "targetResourceId", id).orElse(null);
-            final IntegrationBulletinBoard.Builder builder;
-
-            if (board != null) {
-                builder = new IntegrationBulletinBoard.Builder()
-                    .createFrom(board);
-            } else {
-                builder = new IntegrationBulletinBoard.Builder()
-                    .id(KeyGenerator.createKey())
-                    .targetResourceId(id)
-                    .createdAt(System.currentTimeMillis());
-            }
-
-            // reuse messages
-            messages.clear();
-
-            final List<Flow> flows = integration.getFlows();
-
-            for (int f = 0; f < flows.size(); f++) {
-                final Flow flow = flows.get(f);
-                final String flowId = flow.getId().orElse("flow-" + f);
-                final List<Step> steps = flow.getSteps();
-
-                // the following code is quite ugly but the integration model
-                // duplicates
-                // the resources definition in every step so we definitively
-                // need to
-                // shrink the model and avoid duplication !
-                //
-                // A step should only include the user defined property and a
-                // reference
-                // to the resources the properties apply to
-                for (int s = 0; s < steps.size(); s++) {
-                    final Step step = steps.get(s);
-                    final String stepId = step.getId().orElse("step-" + s);
-                    final Supplier<LeveledMessage.Builder> supplier = () -> new LeveledMessage.Builder().putMetadata("flow", flowId).putMetadata("step",
-                        stepId);
-
-                    if (!step.getAction().isPresent()) {
-                        continue;
-                    }
-
-                    // **********************
-                    // Integration
-                    // **********************
-
-                    final TargetWithDomain<Integration> intTarget = new IntegrationWithDomain(integration, allIntegrations);
-                    messages.addAll(computeValidatorMessages(supplier, intTarget));
-
-                    // **********************
-                    // Extension Action
-                    // **********************
-
-                    step.getAction().filter(StepAction.class::isInstance).map(StepAction.class::cast).ifPresent(action -> {
-                        if (!step.getExtension().isPresent()) {
-                            return;
-                        }
-
-                        final Extension extension = step.getExtension().get();
-
-                        // When an extension is updated a new entity is written
-                        // to the db
-                        // so we can't simply lookup by ID but whe need to
-                        // search for the
-                        // latest installed extension.
-                        //
-                        // This fetchIdsByPropertyValue is not really optimized
-                        // as it
-                        // ends up in multiple statements sent to the db, we
-                        // maybe need
-                        // to have a better support for this use-case.
-                        final Set<String> ids = dataManager.fetchIdsByPropertyValue(Extension.class,
-                            "extensionId", extension.getExtensionId(),
-                            "status", Extension.Status.Installed.name());
-
-                        // No installed extension found, this happen if the
-                        // extension
-                        // has been deleted.
-                        if (ids.isEmpty()) {
-                            messages.add(
-                                supplier.get()
-                                    .level(LeveledMessage.Level.WARN)
-                                    .code(LeveledMessage.Code.SYNDESIS004)
-                                    .build());
-
-                            return;
-                        }
-
-                        // More than one installed extension found, this should
-                        // not
-                        // happen unless something wrong happen at extension
-                        // activation
-                        // phase
-                        if (ids.size() > 1) {
-                            messages.add(
-                                supplier.get()
-                                    .level(LeveledMessage.Level.WARN)
-                                    .code(LeveledMessage.Code.SYNDESIS010)
-                                    .build());
-
-                            return;
-                        }
-
-                        final Extension newExtension = dataManager.fetch(Extension.class, ids.iterator().next());
-                        if (newExtension == null) {
-                            messages.add(
-                                supplier.get()
-                                    .level(LeveledMessage.Level.WARN)
-                                    .code(LeveledMessage.Code.SYNDESIS004)
-                                    .build());
-                        } else {
-                            final Action newAction = newExtension.findActionById(action.getId().get()).orElse(null);
-                            if (newAction == null) {
-                                messages.add(
-                                    supplier.get()
-                                        .level(LeveledMessage.Level.WARN)
-                                        .code(LeveledMessage.Code.SYNDESIS005)
-                                        .build());
-                            } else {
-                                messages.addAll(computePropertiesDiffMessages(supplier, action.getProperties(), newAction.getProperties()));
-                                messages.addAll(computeMissingMandatoryPropertiesMessages(supplier, newAction.getProperties(), step.getConfiguredProperties()));
-                                messages.addAll(computeSecretsUpdateMessages(supplier, newAction.getProperties(), step.getConfiguredProperties()));
-                            }
-                        }
-                    });
-
-                    // **********************
-                    // Connector Action
-                    // **********************
-
-                    step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).ifPresent(action -> {
-                        if (!step.getConnection().isPresent()) {
-                            return;
-                        }
-
-                        final Connection connection = step.getConnection().get();
-                        final Connection dbConnection = getDataManager().fetch(Connection.class, connection.getId().get());
-
-                        if (dbConnection != null &&
-                            Kind.Integration.equals(event.getKind().map(Kind::from).orElse(null))) {
-                            /*
-                             * An integration event will create, delete or
-                             * update it. This has an impact on associated
-                             * connections in that their augmented properties,
-                             * ie. those appended by the {@link
-                             * ConnectionHandler#augmentedWithUsage}, eg. uses,
-                             * need to be re-synced by clients. In order to do
-                             * that, a change event must be broadcast to all
-                             * clients and a call to update() provides such an
-                             * event.
-                             * see #4008
-                             */
-                            dataManager.update(dbConnection);
-                        }
-
-                        if (connection.getId().isPresent() && (!connection.getConnector().isPresent() || !connection.getConnector().get().getTags().contains("dynamic"))) {
-                            //
-                            // Compare the connection in the draft integration's
-                            // step
-                            // with the connection from the data manager and log
-                            // the
-                            // result using the given message codes
-                            //
-                            compareConnection(
-                                connection,
-                                dbConnection,
-                                messages,
-                                supplier,
-                                LeveledMessage.Code.SYNDESIS009,
-                                LeveledMessage.Code.SYNDESIS011);
-                        }
-
-                        final Connector newConnector = dataManager.fetch(Connector.class, connection.getConnectorId());
-                        if (newConnector == null) {
-                            messages.add(
-                                supplier.get()
-                                    .level(LeveledMessage.Level.WARN)
-                                    .code(LeveledMessage.Code.SYNDESIS003)
-                                    .build());
-                        } else {
-                            final Action newAction = newConnector.findActionById(action.getId().get()).orElse(null);
-                            if (newAction == null) {
-                                messages.add(
-                                    supplier.get()
-                                        .level(LeveledMessage.Level.WARN)
-                                        .code(LeveledMessage.Code.SYNDESIS005)
-                                        .build());
-                            } else {
-                                final Map<String, String> configuredProperties = CollectionsUtils.aggregate(connection.getConfiguredProperties(),
-                                    step.getConfiguredProperties());
-
-                                final ConnectionWithDomain connTarget = new ConnectionWithDomain(connection, connections);
-                                messages.addAll(computeValidatorMessages(supplier, connTarget));
-                                messages.addAll(computePropertiesDiffMessages(supplier, action.getProperties(), newAction.getProperties()));
-                                messages.addAll(computeMissingMandatoryPropertiesMessages(supplier, newAction.getProperties(), configuredProperties));
-                                messages.addAll(computeSecretsUpdateMessages(supplier, newAction.getProperties(), configuredProperties));
-                            }
-                        }
-                    });
-
-                }
-            }
-
-            // **********************
-            // Integration Deployments
-            // **********************
-            messages.addAll(computeDeploymentDifferences(integration, deployments));
-
-            builder.errors(countMessagesWithLevel(LeveledMessage.Level.ERROR, messages));
-            builder.warnings(countMessagesWithLevel(LeveledMessage.Level.WARN, messages));
-            builder.notices(countMessagesWithLevel(LeveledMessage.Level.INFO, messages));
-            builder.putMetadata("integration-id", id);
-            builder.putMetadata("integration-version", Integer.toString(integration.getVersion()));
-            builder.messages(messages);
-
-            final IntegrationBulletinBoard updated = builder.build();
-            if (!updated.equals(board)) {
-                boards.add(builder.updatedAt(System.currentTimeMillis()).build());
-            }
-
-            // reuse messages
-            messages.clear();
+            updateIntegration(event, boards, dataManager, deployments,
+                                connections, allIntegrations,
+                                integration);
         }
 
         return boards;
+    }
+
+    /**
+     * For each integration existing in the platform, checks the flow (steps) and update it.
+     * The message boards {@see IntegrationBulletinBoard} will be updated with any info, warn or error.
+     * @param event change event that triggered this action
+     * @param boards list of bulletin boards
+     * @param dataManager helper to get data
+     * @param deployments list of integration deployments
+     * @param connections list of available connections
+     * @param allIntegrations list of all integrations
+     * @param integration specific integration we want to update
+     */
+    private void updateIntegration(ChangeEvent event, List<IntegrationBulletinBoard> boards, DataManager dataManager,
+                                    List<IntegrationDeployment> deployments, List<Connection> connections,
+                                    Collection<Integration> allIntegrations, Integration integration) {
+
+        //Get integration details
+        final String id = integration.getId().get();
+        final String version = Integer.toString(integration.getVersion());
+
+        //Create a board to show messages to the user
+        final IntegrationBulletinBoard board = dataManager.fetchByPropertyValue(IntegrationBulletinBoard.class, "targetResourceId", id).orElse(null);
+        final IntegrationBulletinBoard.Builder builder = getBoardBuilder(id, version, board);
+        final List<LeveledMessage> messages = new ArrayList<>();
+
+        // Iterates through the flow to process each step with the connectors and actions.
+        // If there is no change, this shouldn't change the integration, in theory.
+        processAndUpdateFlow(event, dataManager, connections, allIntegrations, messages, integration);
+        messages.addAll(computeDeploymentDifferences(integration, deployments));
+
+        //Update the board to show messages to the user
+        builder.errors(countMessagesWithLevel(LeveledMessage.Level.ERROR, messages));
+        builder.warnings(countMessagesWithLevel(LeveledMessage.Level.WARN, messages));
+        builder.notices(countMessagesWithLevel(LeveledMessage.Level.INFO, messages));
+        builder.messages(messages);
+
+        //If the board is not already in the list of boards, add it
+        final IntegrationBulletinBoard updated = builder.build();
+        if (!updated.equals(board)) {
+            boards.add(builder.updatedAt(System.currentTimeMillis()).build());
+        }
+    }
+
+    /**
+     *
+     * If a board already exists for the give integration ID, then create a builder based on it.
+     * If there is no existing board, create a new builder from scratch.
+     *
+     * @param id identifier of the integration
+     * @param version version of the integration
+     * @param board integration bulletin board
+     * @return a new builder of the integration bulletin board
+     */
+    private static IntegrationBulletinBoard.Builder getBoardBuilder(String id, String version, IntegrationBulletinBoard board) {
+        final IntegrationBulletinBoard.Builder builder;
+        if (board != null) {
+            builder = new IntegrationBulletinBoard.Builder()
+                .createFrom(board);
+        } else {
+            builder = new IntegrationBulletinBoard.Builder()
+                .id(KeyGenerator.createKey())
+                .targetResourceId(id)
+                .createdAt(System.currentTimeMillis());
+        }
+        builder.putMetadata("integration-id", id);
+        builder.putMetadata("integration-version", version);
+        return builder;
+    }
+
+    private void processAndUpdateFlow(ChangeEvent event, DataManager dataManager, List<Connection> connections,
+                                        Collection<Integration> allIntegrations, List<LeveledMessage> messages,
+                                        Integration integration) {
+
+        //For each existing flow in this integration, process all the elements if needed
+        final List<Flow> flows = integration.getFlows();
+
+        for (int f = 0; f < flows.size(); f++) {
+            final Flow flow = flows.get(f);
+            final String flowId = flow.getId().orElse("flow-" + f);
+            final List<Step> steps = flow.getSteps();
+
+            // the following code is quite ugly but the integration model
+            // duplicates the resources definition in every step so we
+            // definitively need to shrink the model and avoid duplication!
+            //
+            // A step should only include the user defined property and a
+            // reference to the resources the properties apply to
+            for (int s = 0; s < steps.size(); s++) {
+                final Step step = steps.get(s);
+                final String stepId = step.getId().orElse("step-" + s);
+                final Supplier<LeveledMessage.Builder> supplier =
+                    () -> new LeveledMessage.Builder().putMetadata("flow", flowId).putMetadata("step",
+                    stepId);
+
+                if (!step.getAction().isPresent()) {
+                    continue;
+                }
+
+                // **********************
+                // Integration
+                // **********************
+
+                final TargetWithDomain<Integration> intTarget = new IntegrationWithDomain(integration, allIntegrations);
+                messages.addAll(computeValidatorMessages(supplier, intTarget));
+
+                checkAndUpdateExtensions(dataManager, messages, step, supplier);
+                checkAndUpdateConnectors(event, dataManager, connections, messages, step, supplier);
+
+            }
+        }
+    }
+
+    // **********************
+    // Extension Action
+    // **********************
+    private void checkAndUpdateExtensions(DataManager dataManager, List<LeveledMessage> messages, Step step,
+                                          Supplier<LeveledMessage.Builder> supplier) {
+        step.getAction().filter(StepAction.class::isInstance).map(StepAction.class::cast).ifPresent(action -> {
+            if (!step.getExtension().isPresent()) {
+                return;
+            }
+
+            final Extension extension = step.getExtension().get();
+
+            // When an extension is updated a new entity is written
+            // to the db so we can't simply lookup by ID but whe need to
+            // search for the latest installed extension.
+            //
+            // This fetchIdsByPropertyValue is not really optimized
+            // as it ends up in multiple statements sent to the db, we
+            // maybe need to have a better support for this use-case.
+            final Set<String> ids = dataManager.fetchIdsByPropertyValue(Extension.class,
+                "extensionId", extension.getExtensionId(),
+                "status", Extension.Status.Installed.name());
+
+            // No installed extension found, this happen if the
+            // extension
+            // has been deleted.
+            if (ids.isEmpty()) {
+                messages.add(
+                    supplier.get()
+                        .level(LeveledMessage.Level.WARN)
+                        .code(LeveledMessage.Code.SYNDESIS004)
+                        .build());
+
+                return;
+            }
+
+            // More than one installed extension found, this should
+            // not happen unless something wrong happen at extension
+            // activation phase
+            if (ids.size() > 1) {
+                messages.add(
+                    supplier.get()
+                        .level(LeveledMessage.Level.WARN)
+                        .code(LeveledMessage.Code.SYNDESIS010)
+                        .build());
+
+                return;
+            }
+
+            final Extension newExtension = dataManager.fetch(Extension.class, ids.iterator().next());
+            if (newExtension == null) {
+                messages.add(
+                    supplier.get()
+                        .level(LeveledMessage.Level.WARN)
+                        .code(LeveledMessage.Code.SYNDESIS004)
+                        .build());
+            } else {
+                final Action newAction = newExtension.findActionById(action.getId().get()).orElse(null);
+                if (newAction == null) {
+                    messages.add(
+                        supplier.get()
+                            .level(LeveledMessage.Level.WARN)
+                            .code(LeveledMessage.Code.SYNDESIS005)
+                            .build());
+                } else {
+                    messages.addAll(computePropertiesDiffMessages(supplier, action.getProperties(), newAction.getProperties()));
+                    messages.addAll(computeMissingMandatoryPropertiesMessages(supplier, newAction.getProperties(), step.getConfiguredProperties()));
+                    messages.addAll(computeSecretsUpdateMessages(supplier, newAction.getProperties(), step.getConfiguredProperties()));
+                }
+            }
+        });
+    }
+
+    // **********************
+    // Connector Action
+    // **********************
+    private void checkAndUpdateConnectors(ChangeEvent event, DataManager dataManager, List<Connection> connections, List<LeveledMessage> messages, Step step, Supplier<LeveledMessage.Builder> supplier) {
+        step.getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).ifPresent(action -> {
+            if (!step.getConnection().isPresent()) {
+                return;
+            }
+
+            final Connection connection = step.getConnection().get();
+            final Connection dbConnection = getDataManager().fetch(Connection.class, connection.getId().get());
+
+            if (dbConnection != null &&
+                Kind.Integration.equals(event.getKind().map(Kind::from).orElse(null))) {
+                /*
+                 * An integration event will create, delete or
+                 * update it. This has an impact on associated
+                 * connections in that their augmented properties,
+                 * ie. those appended by the {@link
+                 * ConnectionHandler#augmentedWithUsage}, eg. uses,
+                 * need to be re-synced by clients. In order to do
+                 * that, a change event must be broadcast to all
+                 * clients and a call to update() provides such an
+                 * event.
+                 * see #4008
+                 */
+                dataManager.update(dbConnection);
+            }
+
+            if (connection.getId().isPresent() && (!connection.getConnector().isPresent() || !connection.getConnector().get().getTags().contains("dynamic"))) {
+                //
+                // Compare the connection in the draft integration's
+                // step
+                // with the connection from the data manager and log
+                // the
+                // result using the given message codes
+                //
+                compareConnection(
+                    connection,
+                    dbConnection,
+                    messages,
+                    supplier,
+                    LeveledMessage.Code.SYNDESIS009,
+                    LeveledMessage.Code.SYNDESIS011);
+            }
+
+            final Connector newConnector = dataManager.fetch(Connector.class, connection.getConnectorId());
+            if (newConnector == null) {
+                messages.add(
+                    supplier.get()
+                        .level(LeveledMessage.Level.WARN)
+                        .code(LeveledMessage.Code.SYNDESIS003)
+                        .build());
+            } else {
+                final Action newAction = newConnector.findActionById(action.getId().get()).orElse(null);
+                if (newAction == null) {
+                    messages.add(
+                        supplier.get()
+                            .level(LeveledMessage.Level.WARN)
+                            .code(LeveledMessage.Code.SYNDESIS005)
+                            .build());
+                } else {
+                    final Map<String, String> configuredProperties = CollectionsUtils.aggregate(connection.getConfiguredProperties(),
+                        step.getConfiguredProperties());
+
+                    final ConnectionWithDomain connTarget = new ConnectionWithDomain(connection, connections);
+                    messages.addAll(computeValidatorMessages(supplier, connTarget));
+                    messages.addAll(computePropertiesDiffMessages(supplier, action.getProperties(), newAction.getProperties()));
+                    messages.addAll(computeMissingMandatoryPropertiesMessages(supplier, newAction.getProperties(), configuredProperties));
+                    messages.addAll(computeSecretsUpdateMessages(supplier, newAction.getProperties(), configuredProperties));
+                }
+            }
+        });
     }
 }
