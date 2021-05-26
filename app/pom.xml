@@ -62,12 +62,12 @@
     <json-patch.version>1.9</json-patch.version>
     <kubernetes.client.version>4.9.0</kubernetes.client.version>
 
-    <spring.version>5.2.9.RELEASE</spring.version>
-    <spring-boot.version>2.3.4.RELEASE</spring-boot.version>
+    <spring.version>5.2.13.RELEASE</spring.version>
+    <spring-boot.version>2.3.9.RELEASE</spring-boot.version>
     <spring-social.version>1.1.6.RELEASE</spring-social.version>
     <spring-social-twitter.version>1.1.2.RELEASE</spring-social-twitter.version>
-    <spring-cloud.version>Hoxton.SR8</spring-cloud.version>
-    <spring-security.version>5.3.3.RELEASE</spring-security.version>
+    <spring-cloud.version>Hoxton.SR11</spring-cloud.version>
+    <spring-security.version>5.3.8.RELEASE</spring-security.version>
 
     <okhttp3.version>3.12.1</okhttp3.version>
 
@@ -95,10 +95,10 @@
     <!-- Global camel version used everywhere -->
     <camel.version>2.23.2.fuse-790029</camel.version>
 
-    <undertow.version>2.0.30.Final</undertow.version>
+    <undertow.version>2.2.5.Final</undertow.version>
 
     <!-- CXF version, to be kept in sync with the one referenced by camel version above -->
-    <cxf.version>3.3.6.fuse-780018</cxf.version>
+    <cxf.version>3.3.6.fuse-790037</cxf.version>
     <wss4j.version>2.2.2</wss4j.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
@@ -165,10 +165,10 @@
     <version.javax.activation>1.2.1</version.javax.activation>
 
     <javac.werror>-Werror</javac.werror>
-    <jetty.version>9.4.30.v20200611</jetty.version>
+    <jetty.version>9.4.40.v20210413</jetty.version>
     <google-api-client-version>1.22.0</google-api-client-version>
     <kafka-clients.version>2.5.0</kafka-clients.version>
-    <netty.version>4.1.48.Final</netty.version>
+    <netty.version>4.1.63.Final</netty.version>
     <net.jqwik.version>1.5.1</net.jqwik.version>
     <io.github.zregvart.junit-github-reporter.version>0.4.0</io.github.zregvart.junit-github-reporter.version>
 
@@ -2511,6 +2511,10 @@
             <groupId>org.jboss.spec.javax.annotation</groupId>
             <artifactId>jboss-annotations-api_1.2_spec</artifactId>
           </exclusion>
+            <exclusion>
+              <groupId>org.jboss.spec.javax.annotation</groupId>
+              <artifactId>jboss-annotations-api_1.3_spec</artifactId>
+            </exclusion>
         </exclusions>
       </dependency>
 
