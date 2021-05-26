@@ -20,8 +20,6 @@ install::usage() {
                               version from is installed
     --force                   Override an existing "Syndesis" if present
 -w  --watch                   Wait until cluster is up
-    --local                   install from local Git repo when using. By default the resource descriptor is
-                              downloaded from GitHub remotely.
 -f  --force-binary-download   By default if the binary cli is present in the expected path, it will
                               be used. With this option enabled, the binary will be removed and downloaded,
                               ensuring it is the latest version

@@ -31,7 +31,6 @@ minishift::usage() {
     --openshift-version <ver> Set OpenShift version to use when reseting (default: $DEFAULT_OPENSHIFT_VERSION)
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version is installed
-    --local                   Use the local resource files instead of fetching them from GitHub
 -f  --force-binary-download   By default if the binary cli is present in the expected path, it will
                               be used. With this option enabled, the binary will be removed and downloaded,
                               ensuring it is the latest version

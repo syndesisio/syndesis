@@ -25,8 +25,6 @@ crc::usage() {
     --pull-secret-file <file> File holding the OCP4 pull secret
     --vm-driver <driver>      Which virtual machine driver to use (depends on OS)
     --bundle <path-to-bundle> Path to system bundle (required when using virtualbox vm-driver)
-    --local                   Use the local resource files instead of fetching them from GitHub
-                              By default "syndesis.<project_name>.apps-crc.testing" is used.
 -f  --force-binary-download   By default if the binary cli is present in the expected path, it will
                               be used. With this option enabled, the binary will be removed and downloaded,
                               ensuring it is the latest version
