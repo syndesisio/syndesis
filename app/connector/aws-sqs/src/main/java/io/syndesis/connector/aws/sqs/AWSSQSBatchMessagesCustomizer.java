@@ -40,7 +40,7 @@ public class AWSSQSBatchMessagesCustomizer implements ComponentProxyCustomizer {
     public void beforeProducer(final Exchange exchange) throws IOException {
         final Message in = exchange.getIn();
         final List<SQSMessage> messages = in.getBody(List.class);
-        List<String> messageList = new ArrayList<String>();
+        List<String> messageList = new ArrayList<>();
         if (messages != null && !messages.isEmpty()) {
             for (Iterator<SQSMessage> iterator = messages.iterator(); iterator.hasNext();) {
                 SQSMessage singleMessage = iterator.next();

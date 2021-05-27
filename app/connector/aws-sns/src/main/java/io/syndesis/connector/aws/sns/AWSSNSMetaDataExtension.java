@@ -52,7 +52,7 @@ public class AWSSNSMetaDataExtension extends AbstractMetaDataExtension {
         AmazonSNS sqsClient = clientBuilder.build();
         try {
             ListTopicsResult result = sqsClient.listTopics();
-            Set<String> setTopic = new HashSet<String>();
+            Set<String> setTopic = new HashSet<>();
             if (result.getTopics() != null) {
                 for (Topic entry : result.getTopics()) {
                 	setTopic.add(entry.getTopicArn());

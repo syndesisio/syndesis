@@ -41,7 +41,7 @@ public final class Util {
      */
     public static Map<String, AttributeValue> getAttributeValueMap(
     final String parameterName, Map<String, Object> options) {
-        final Map<String, AttributeValue> attributeMap = new HashMap<String, AttributeValue>();
+        final Map<String, AttributeValue> attributeMap = new HashMap<>();
 
 
         String element = ConnectorOptions.extractOption(options, parameterName, "");

@@ -710,7 +710,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     static Map<String, String> defaultLabels() {
-        final HashMap<String, String> labels = new HashMap<String, String>();
+        final HashMap<String, String> labels = new HashMap<>();
         labels.put("syndesis.io/type", "integration");
         labels.put("syndesis.io/app", "syndesis");
 

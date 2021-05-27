@@ -21,7 +21,7 @@ import java.util.Properties;
 
 public class PropertyBuilder<V> {
 
-    private final Map<String, V> properties = new HashMap<String, V>();
+    private final Map<String, V> properties = new HashMap<>();
 
     public PropertyBuilder<V> property(String key, V value) {
         properties.put(key, value);

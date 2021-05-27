@@ -74,7 +74,7 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
 
     private String mapToJSON(Map<String, AttributeValue> item) {
         Set<Map.Entry<String, AttributeValue>> elements = item.entrySet();
-        Map<String, Object> output = new HashMap<String, Object>();
+        Map<String, Object> output = new HashMap<>();
 
         for (Map.Entry<String, AttributeValue> element : elements) {
             output.put(element.getKey(), Util.getValue(element.getValue()).toString());

@@ -34,7 +34,7 @@ public class DDBConnectorCustomizerQuery extends DDBConnectorCustomizer {
         exchange.getIn().setHeader(DdbConstants.KEY, element);
         exchange.getIn().setHeader(DdbConstants.OPERATION, DdbOperations.GetItem);
 
-        List<String> attributes = new ArrayList<String>();
+        List<String> attributes = new ArrayList<>();
         String optionAttributes = ConnectorOptions.extractOption(options, "attributes", "");
         if (!optionAttributes.isEmpty()) {
             Splitter splitter = Splitter.on(',');

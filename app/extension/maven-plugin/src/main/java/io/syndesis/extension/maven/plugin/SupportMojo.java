@@ -85,7 +85,7 @@ public abstract class SupportMojo extends RepackageMojo {
     protected Set<Artifact> filterDependencies(Set<Artifact> dependencies,
                                                FilterArtifacts filters) throws MojoExecutionException {
         try {
-            Set<Artifact> filtered = new LinkedHashSet<Artifact>(dependencies);
+            Set<Artifact> filtered = new LinkedHashSet<>(dependencies);
 
             @SuppressWarnings("unchecked")
             Collection<ArtifactsFilter> filtersToUse = filters.getFilters();

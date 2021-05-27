@@ -155,7 +155,7 @@ public class TemplateStepHandler implements IntegrationStepHandler, StringConsta
          * into a mustache map keyed with "body".
          */
         private static void refactorKeys(Map<String, Object> map) {
-            ArrayList<String> keys = new ArrayList<String>(map.keySet());
+            ArrayList<String> keys = new ArrayList<>(map.keySet());
             keys.stream().forEach(key -> {
                 Object value = map.remove(key);
                 if (key.startsWith("body.")) {

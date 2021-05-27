@@ -66,7 +66,7 @@ public class GoogleCalendarMetaDataExtension extends AbstractMetaDataExtension {
             throw new IllegalStateException("Unable to fetch the list of calendars", e);
         }
 
-        Set<CalendarListEntry> setCalendars = new HashSet<CalendarListEntry>();
+        Set<CalendarListEntry> setCalendars = new HashSet<>();
         if (calendars.getItems() != null) {
             for (CalendarListEntry entry : calendars.getItems()) {
                 setCalendars.add(entry);

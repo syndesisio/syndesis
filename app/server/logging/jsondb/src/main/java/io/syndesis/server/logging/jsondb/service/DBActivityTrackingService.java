@@ -31,7 +31,6 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import io.syndesis.server.endpoint.v1.handler.activity.Activity;
-import io.syndesis.server.endpoint.v1.handler.activity.ActivityStep;
 import io.syndesis.server.endpoint.v1.handler.activity.ActivityTrackingService;
 import io.syndesis.server.jsondb.GetOptions;
 import io.syndesis.server.jsondb.JsonDB;
@@ -83,7 +82,7 @@ public class DBActivityTrackingService implements ActivityTrackingService {
                 String value = entry.getValue().textValue();
                 Activity activity = JsonUtils.reader().forType(Activity.class).readValue(value);
                 if (activity.getSteps() == null){
-                    activity.setSteps(new ArrayList<ActivityStep>());
+                    activity.setSteps(new ArrayList<>());
                 }
                 rc.add(activity);
             } catch (RuntimeException ignored) {
