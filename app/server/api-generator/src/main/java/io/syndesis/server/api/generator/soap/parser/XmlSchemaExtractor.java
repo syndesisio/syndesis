@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -67,6 +69,7 @@ import org.apache.ws.commons.schema.XmlSchemaSimpleTypeRestriction;
 import org.apache.ws.commons.schema.XmlSchemaSimpleTypeUnion;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.apache.ws.commons.schema.constants.Constants;
+import org.apache.ws.commons.schema.utils.NamespaceMap;
 import org.apache.ws.commons.schema.utils.XmlSchemaNamed;
 import org.apache.ws.commons.schema.utils.XmlSchemaNamedWithForm;
 import org.apache.ws.commons.schema.utils.XmlSchemaObjectBase;
@@ -224,6 +227,14 @@ class XmlSchemaExtractor {
         XmlSchema targetSchema = targetSchemas.getSchemaByTargetNamespace(namespaceURI);
         if (targetSchema == null) {
             targetSchema = targetSchemas.newXmlSchemaInCollection(namespaceURI);
+            final NamespaceMap namespaceContext = new NamespaceMap();
+
+            // add the usual suspects, for some reason these seem to be missing from the
+            // generated SchemaSet
+            namespaceContext.add("xsd", XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            namespaceContext.add(XMLConstants.XML_NS_PREFIX, XMLConstants.XML_NS_URI);
+
+            targetSchema.setNamespaceContext(namespaceContext);
 
             final XmlSchema sourceSchema = sourceSchemas.getSchemaByTargetNamespace(namespaceURI);
             if (sourceSchema != null) {
