@@ -426,7 +426,7 @@ public class BindingHelper {
             final XmlSchemaAnnotated annotated = part.getXmlSchema() != null ? part.getXmlSchema() :
                 schemaCollection.getTypeByQName(part.getTypeQName());
 
-            final QName name = part.getConcreteName();
+            final QName name = part.getName();
             final XmlSchemaElement element;
             if (annotated instanceof XmlSchemaElement) {
                 // extract element
