@@ -26,7 +26,7 @@
 
     <message name="GetTradePriceInput">
         <part name="tickerSymbol" type="xsd:string"/>
-        <part name="time" type="xsd:timeInstant"/>
+        <part name="time" type="xsd:dateTime"/>
     </message>
 
     <message name="GetTradePriceOutput">
