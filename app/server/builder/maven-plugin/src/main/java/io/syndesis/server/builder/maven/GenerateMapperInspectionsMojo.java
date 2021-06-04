@@ -80,7 +80,11 @@ public class GenerateMapperInspectionsMojo extends AbstractMojo {
             final Set<File> generated = new HashSet<>();
 
             final ReadApiClientData reader = new ReadApiClientData();
-            final List<ModelData<?>> modelList = reader.readDataFromFile("io/syndesis/server/dao/deployment.json");
+            final List<ModelData<?>> modelList = reader.readDataFromFile("io" + File.separator +
+                                                                                    "syndesis" + File.separator +
+                                                                                    "server" + File.separator +
+                                                                                    "dao" + File.separator +
+                                                                                    "deployment.json");
             for (final ModelData<?> model : modelList) {
                 if (model.getKind() == Kind.Connector) {
                     final Connector connector = (Connector) model.getData();
@@ -111,7 +115,7 @@ public class GenerateMapperInspectionsMojo extends AbstractMojo {
 
         final DataShape shape = maybeShape.get();
         getLog().info("Generating for connector: " + connector.getId().get() + ", and type: " + shape.getType());
-        final File outputFile = new File(outputDir, resourceDir + "/" + connector.getId().get() + "/" + shape.getType() + ".json");
+        final File outputFile = new File(outputDir, resourceDir + File.separator + connector.getId().get() + File.separator + shape.getType() + ".json");
 
         if (generated.contains(outputFile)) {
             return;

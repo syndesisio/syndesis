@@ -17,11 +17,14 @@ package io.syndesis.server.inspector;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.io.File;
+
 @ConfigurationProperties("inspector")
 public class ClassInspectorConfigurationProperties {
 
     private static final String DEFAULT_INSPECTOR_HOST = "syndesis-atlasmap";
-    private static final String DEFAULT_INSPECTOR_PATH = "/v2/atlas/java/class";
+    private static final String DEFAULT_INSPECTOR_PATH = File.separator + "v2" + File.separator + "atlas" +
+                                                             File.separator + "java" + File.separator + "class";
     private static final String DEFAULT_CLASSNAME_PARAMETER = "className";
 
     private String host = DEFAULT_INSPECTOR_HOST;
