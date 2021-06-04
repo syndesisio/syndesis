@@ -271,6 +271,12 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>atlas-xml-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
