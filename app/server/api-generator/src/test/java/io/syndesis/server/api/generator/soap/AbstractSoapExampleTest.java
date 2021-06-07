@@ -69,7 +69,8 @@ public abstract class AbstractSoapExampleTest {
             load("/soap/Integrations.wsdl"),
             load("/soap/Resource_Management.wsdl"),
             load("/soap/Workday_Connect.wsdl"),
-            load("/soap/Workday_Extensibility.wsdl")
+            load("/soap/Workday_Extensibility.wsdl"),
+            load("/soap/suitecrm_rpc_literal.wsdl")
         );
     }
 

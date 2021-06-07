@@ -74,8 +74,32 @@ import static javax.jws.soap.SOAPBinding.Use.ENCODED;
 public class BindingHelper {
 
     private static final String SCHEMA_SET_XML =
-        "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\">" +
-            "<d:AdditionalSchemas/>" +
+        "<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xml=\"http://www.w3.org/XML/1998/namespace\">" +
+            "<d:AdditionalSchemas>" +
+                "<xsd:schema targetNamespace=\"http://www.w3.org/XML/1998/namespace\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">" +
+                    "<xsd:attribute name=\"lang\">" +
+                        "<xsd:simpleType>" +
+                            "<xsd:union memberTypes=\"xsd:language\">" +
+                                "<xsd:simpleType>" +
+                                    "<xsd:restriction base=\"xsd:string\">" +
+                                        "<xsd:enumeration value=\"\"/>" +
+                                    "</xsd:restriction>" +
+                                "</xsd:simpleType>" +
+                            "</xsd:union>" +
+                        "</xsd:simpleType>" +
+                    "</xsd:attribute>" +
+                    "<xsd:attribute name=\"space\">" +
+                        "<xsd:simpleType>" +
+                            "<xsd:restriction base=\"xsd:NCName\">" +
+                                "<xsd:enumeration value=\"default\"/>" +
+                                "<xsd:enumeration value=\"preserve\"/>" +
+                            "</xsd:restriction>" +
+                        "</xsd:simpleType>" +
+                    "</xsd:attribute>" +
+                    "<xsd:attribute name=\"base\" type=\"xsd:anyURI\"/>" +
+                    "<xsd:attribute name=\"id\" type=\"xsd:ID\"/>" +
+                "</xsd:schema>" +
+            "</d:AdditionalSchemas>" +
         "</d:SchemaSet>";
 
     private static final SchemaCollection SOAP_SCHEMAS;
@@ -426,7 +450,7 @@ public class BindingHelper {
             final XmlSchemaAnnotated annotated = part.getXmlSchema() != null ? part.getXmlSchema() :
                 schemaCollection.getTypeByQName(part.getTypeQName());
 
-            final QName name = part.getConcreteName();
+            final QName name = part.getName();
             final XmlSchemaElement element;
             if (annotated instanceof XmlSchemaElement) {
                 // extract element
