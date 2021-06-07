@@ -229,6 +229,15 @@ public final class SqlStatementParser {
         try {
             statement = CCJSqlParserUtil.parse(sql);
         } catch (final JSQLParserException e) {
+            // if we failed we try to parse with the legacy parser
+            // if that fails as well we throw the original exception
+            final SqlStatementLegacyParser legacyParser = new SqlStatementLegacyParser(helper.connection, sql);
+            try {
+                return legacyParser.parse();
+            } catch (SQLException fromLegacyParser) {
+                LOGGER.warn("Parsing with SQL and legacy parser failed, will rethrow the first exception only", fromLegacyParser);
+            }
+
             throw new SQLException(e);
         }
 
