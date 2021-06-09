@@ -1,5 +1,6 @@
-import { IApiSummarySoap } from '@syndesis/models';
 import * as React from 'react';
+
+import { IApiSummarySoap } from '@syndesis/models';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
 
@@ -55,17 +56,10 @@ export function useApiConnectorSummary(
         if (summary.errorCode) {
           throw new Error(summary.userMsg);
         }
-        if (!summary.actionsSummary) {
-          let errorMessage = '';
-          // we should be getting an array of error objects
-          if (Array.isArray(summary.errors)) {
-            errorMessage = summary.errors
+        if (Array.isArray(summary.errors) && summary.errors.length > 0) {
+          const errorMessage = summary.errors
               .map((e: string | any) => (e.message ? e.message : e))
               .join('\n');
-          } else {
-            // but in case we don't, let's show what we got and hope for the best
-            errorMessage = JSON.stringify(summary);
-          }
           throw new Error(errorMessage);
         }
         setApiSummary(summary as IApiSummarySoap);
@@ -78,5 +72,5 @@ export function useApiConnectorSummary(
     fetchSummary();
   }, [specification, apiContext, setLoading, setApiSummary, setError]);
 
-  return { apiSummary, loading, error };
+  return { apiSummary, loading, error, setError };
 }
