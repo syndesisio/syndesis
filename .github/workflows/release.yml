@@ -1,0 +1,46 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Set version
+        id: setup
+        run: echo ::set-output name=version::${GITHUB_REF#refs/*/}
+      - name: Set up JDK 8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - name: Cache Maven Repository
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: release-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: release-${{ runner.os }}-m2
+      - name: Perform release
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          QUAYIO_USER: ${{ secrets.QUAYIO_USER }}
+          QUAYIO_PASSWORD: ${{ secrets.QUAYIO_PASSWORD }}
+          SYNDESISCI_TOKEN: ${{ secrets.SYNDESISCI_TOKEN }}
+          GPG_KEYNAME: ${{ secrets.GPG_KEYNAME }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_KEY: ${{ secrets.GPG_KEY }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
+        run: |
+          git config --global user.email ci@syndesis.io
+          git config --global user.name 'Syndesis CI'
+          git config --global 'http.https://github.com/.extraheader' "Authorization: basic $(echo -n x-access-token:${SYNDESISCI_TOKEN}|base64 --wrap=0)"
+          gpg --batch --import <(echo "${GPG_KEY}")
+          export GPG_TTY=$(tty)
+          tools/bin/syndesis release --dry-run --settings .mvn/settings.release.xml --release-version ${{ steps.setup.outputs.version }} --git-remote origin --docker-user "${DOCKER_USER}" --docker-password "${DOCKER_PASSWORD}" --github-user syndesisci --github-token "${SYNDESISCI_TOKEN}" --quayio-user "${QUAYIO_USER}" --quayio-password "${QUAYIO_PASSWORD}" --gpg-keyname "${GPG_KEYNAME}" --gpg-passphrase "${GPG_PASSPHRASE}"
