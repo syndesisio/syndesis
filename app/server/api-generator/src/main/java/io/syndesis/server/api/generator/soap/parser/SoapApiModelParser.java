@@ -163,10 +163,24 @@ public final class SoapApiModelParser {
         } catch (WSDLException | BusException e) {
             addError(builder, "Error parsing WSDL: " + e.getMessage(), e);
         } catch (TransformerException e) {
-            addError(builder, "Error condensing WSDL: " + e.getMessage(), e);
+            addError(builder, "Error parsing WSDL: " + messageFrom(e), e);
         }
 
         return builder.build();
+    }
+
+    private static String messageFrom(final TransformerException e) {
+        TransformerException last = e;
+        while (last.getCause() instanceof TransformerException) {
+            last = (TransformerException) e.getCause();
+        }
+
+        final Throwable lastCause = last.getCause();
+        if (lastCause != null) {
+            return lastCause.getMessage();
+        }
+
+        return last.getMessage();
     }
 
     public static String getAddress(Definition definition, QName service, String port) {

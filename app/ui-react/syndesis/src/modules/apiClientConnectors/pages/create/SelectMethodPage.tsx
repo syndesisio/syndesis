@@ -1,4 +1,5 @@
-import { useApiConnectorSummary } from '@syndesis/api';
+import * as React from 'react';
+
 import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
@@ -9,9 +10,11 @@ import {
   PageLoader,
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
-import * as React from 'react';
-import { Translation } from 'react-i18next';
 import { ApiError, PageTitle } from '../../../../shared';
+
+import { useApiConnectorSummary } from '@syndesis/api';
+import { Translation } from 'react-i18next';
+import { UIContext } from '../../../../app';
 import resolvers from '../../resolvers';
 
 export const SelectMethodPage: React.FunctionComponent = () => {
@@ -20,10 +23,22 @@ export const SelectMethodPage: React.FunctionComponent = () => {
   const [spec, setSpec] = React.useState('');
   const [showSoapConfig, setShowSoapConfig] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  const { apiSummary, error, loading } = useApiConnectorSummary(
+  const { apiSummary, error, loading, setError } = useApiConnectorSummary(
     spec,
     connectorTemplateId
   );
+  const uiContext = React.useContext(UIContext);
+
+  React.useEffect(() => {
+    if (error) {
+      uiContext.pushNotification((error as Error).message, 'error');
+      setError(false);
+      setShowSoapConfig(false);
+      setIsLoading(false);
+      setSpec('');
+      setConnectorTemplateId('');
+    }
+  }, [error, uiContext, history, setError]);
 
   /**
    * Only use the loader state from useApiConnectorSummary

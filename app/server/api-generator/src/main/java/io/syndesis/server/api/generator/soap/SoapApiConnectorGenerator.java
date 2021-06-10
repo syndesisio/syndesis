@@ -158,6 +158,13 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
     private APISummary getApiSummary(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings,
                                      SoapApiModelInfo modelInfo) {
 
+        if (!modelInfo.getResolvedSpecification().isPresent()) {
+            return new APISummary.Builder()
+                .errors(modelInfo.getErrors())
+                .warnings(modelInfo.getWarnings())
+                .build();
+        }
+
         final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
 
         // create connector from template and connectorSettings, and add connector properties and parse warnings and errors
