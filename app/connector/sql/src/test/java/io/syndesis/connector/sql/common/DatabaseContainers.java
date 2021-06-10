@@ -35,6 +35,7 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.MariaDBContainer;
+import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 public class DatabaseContainers implements TestTemplateInvocationContextProvider {
@@ -119,6 +120,8 @@ public class DatabaseContainers implements TestTemplateInvocationContextProvider
             return new PostgreSQLContainer<>(imageName);
         case "mariadb":
             return new MariaDBContainer<>(imageName);
+        case "mysql":
+            return new MySQLContainer<>(imageName);
         default:
             throw new IllegalArgumentException("Unsupported container: " + imageName);
         }
