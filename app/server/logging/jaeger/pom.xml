@@ -104,6 +104,12 @@
       <scope>runtime</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-client</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>
