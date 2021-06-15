@@ -325,7 +325,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.github.fge</groupId>
+      <groupId>com.github.java-json-tools</groupId>
       <artifactId>json-patch</artifactId>
     </dependency>
 
