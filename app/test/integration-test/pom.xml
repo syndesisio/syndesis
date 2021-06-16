@@ -85,14 +85,48 @@
     <dependency>
       <groupId>io.syndesis.common</groupId>
       <artifactId>common-model</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.syndesis.test</groupId>
       <artifactId>test-support</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.syndesis.transitional</groupId>
       <artifactId>junit4-stub</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.server</groupId>
+      <artifactId>server-api-generator</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-rest-swagger</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis.server</groupId>
+      <artifactId>server-dao</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-util</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.jayway.jsonpath</groupId>
+      <artifactId>json-path</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <!-- Citrus -->

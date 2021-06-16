@@ -60,9 +60,11 @@
   "componentScheme": "rest-openapi",
   "configuredProperties": {
     "authenticationType": "none",
-    "specification": "{\"swagger\":\"2.0\",\"paths\":{\"/machines\":{\"get\":{\"operationId\":\"getAllMachines\",\"produces\":[\"application/json\"]}},\"/machines/{id}\":{\"get\":{\"operationId\":\"getMachine\",\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}]}}}}"
+    "componentName": "connector-rest-swagger-http4",
+    "specification": "{\"swagger\":\"2.0\",\"paths\":{\"/machines\":{\"get\":{\"produces\":[\"application/json\"],\"operationId\":\"getAllMachines\",\"parameters\":[]}},\"/machines/{id}\":{\"get\":{\"produces\":[\"application/json\"],\"operationId\":\"getMachine\",\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}]},\"parameters\":[]}}}"
   },
   "connectorCustomizers": [
+    "io.syndesis.connector.rest.swagger.HeaderParametersCustomizer",
     "io.syndesis.connector.rest.swagger.SpecificationResourceCustomizer",
     "io.syndesis.connector.rest.swagger.AuthenticationCustomizer",
     "io.syndesis.connector.rest.swagger.RequestCustomizer",

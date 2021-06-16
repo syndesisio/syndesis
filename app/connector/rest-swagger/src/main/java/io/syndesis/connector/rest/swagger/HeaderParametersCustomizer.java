@@ -27,8 +27,13 @@ import io.apicurio.datamodels.core.models.common.Operation;
 import io.apicurio.datamodels.core.models.common.Parameter;
 import io.apicurio.datamodels.core.visitors.ITraverser;
 import io.apicurio.datamodels.core.visitors.TraverserDirection;
+import io.apicurio.datamodels.openapi.models.OasParameter;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
+import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinition;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
+import io.apicurio.datamodels.openapi.v3.models.Oas30ParameterDefinition;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import io.syndesis.integration.component.proxy.Processors;
@@ -83,20 +88,70 @@ public class HeaderParametersCustomizer implements ComponentProxyCustomizer {
                 return;
             }
 
-            final String in;
+            final OasParameter resolved;
             if (node instanceof Oas20Parameter) {
                 final Oas20Parameter oas20Parameter = (Oas20Parameter) node;
-                in = oas20Parameter.in;
+
+                resolved = resolveParameter(oas20Parameter);
             } else if (node instanceof Oas30Parameter) {
                 final Oas30Parameter oas30Parameter = (Oas30Parameter) node;
-                in = oas30Parameter.in;
+
+                resolved = resolveParameter(oas30Parameter);
             } else {
                 throw new IllegalArgumentException("Given parameter type is not OpenAPI 2.x or 3.x" + node.getClass().getName());
             }
 
-            if ("header".equals(in)) {
-                operationHeaderParameters.add(node.name);
+            if (resolved != null && "header".equals(resolved.in)) {
+                operationHeaderParameters.add(resolved.getName());
             }
+        }
+
+        private static String nameFromReference(final String ref) {
+            return ref.replaceAll("^.*/", "");
+        }
+
+        private static OasParameter resolveParameter(final Oas20Parameter parameter) {
+            if (parameter.$ref == null) {
+                return parameter;
+            }
+
+            final Oas20Document document = (Oas20Document) parameter.ownerDocument();
+
+            if (document.parameters == null) {
+                return null;
+            }
+
+            final String name = nameFromReference(parameter.$ref);
+
+            final Oas20ParameterDefinition resolvedParameter = document.parameters.getItem(name);
+
+            if (resolvedParameter == null) {
+                return null;
+            }
+
+            return resolvedParameter;
+        }
+
+        private static OasParameter resolveParameter(final Oas30Parameter parameter) {
+            if (parameter.$ref == null) {
+                return parameter;
+            }
+
+            final Oas30Document document = (Oas30Document) parameter.ownerDocument();
+
+            if (document.components == null || document.components.parameters == null) {
+                return null;
+            }
+
+            final String name = nameFromReference(parameter.$ref);
+
+            final Oas30ParameterDefinition resolvedParameter = document.components.parameters.get(name);
+
+            if (resolvedParameter == null) {
+                return null;
+            }
+
+            return resolvedParameter;
         }
     }
 

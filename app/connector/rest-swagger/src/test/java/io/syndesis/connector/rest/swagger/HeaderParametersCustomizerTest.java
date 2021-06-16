@@ -23,7 +23,9 @@ import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinition;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
+import io.apicurio.datamodels.openapi.v3.models.Oas30ParameterDefinition;
 
 import org.junit.jupiter.api.Test;
 
@@ -74,6 +76,50 @@ public class HeaderParametersCustomizerTest {
     }
 
     @Test
+    void shouldDereferenceParametersFromOpenApi2() {
+        final Oas20Document document = new Oas20Document();
+        addOperationWithReferences(document);
+
+        document.parameters = document.createParameterDefinitions();
+
+        final Oas20ParameterDefinition h1 = document.parameters.createParameter("h1");
+        h1.in = "header";
+        document.parameters.addParameter("h1", h1);
+
+        final Oas20ParameterDefinition h2 = document.parameters.createParameter("h2");
+        h2.in = "header";
+        document.parameters.addParameter("h2", h2);
+
+        final Oas20ParameterDefinition p2 = document.parameters.createParameter("p2");
+        p2.in = "query";
+        document.parameters.addParameter("p2", p2);
+
+        assertThat(findHeaderParametersIn(document, "get")).containsOnly("h1", "h2");
+    }
+
+    @Test
+    void shouldDereferenceParametersFromOpenApi3() {
+        final Oas30Document document = new Oas30Document();
+        addOperationWithReferences(document);
+
+        document.components = document.createComponents();
+
+        final Oas30ParameterDefinition h1 = document.components.createParameterDefinition("h1");
+        h1.in = "header";
+        document.components.addParameterDefinition("h1", h1);
+
+        final Oas30ParameterDefinition h2 = document.components.createParameterDefinition("h2");
+        h2.in = "header";
+        document.components.addParameterDefinition("h2", h2);
+
+        final Oas30ParameterDefinition p2 = document.components.createParameterDefinition("p2");
+        p2.in = "query";
+        document.components.addParameterDefinition("p2", p2);
+
+        assertThat(findHeaderParametersIn(document, "get")).containsOnly("h1", "h2");
+    }
+
+    @Test
     void shouldFindHeaderParametersInOperationFromOpenApi2() {
         assertThat(findHeaderParametersIn(createTestDocument(new Oas20Document()), "get")).containsOnly("h1");
         assertThat(findHeaderParametersIn(createTestDocument(new Oas20Document()), "post")).containsOnly("h2", "h3");
@@ -91,5 +137,32 @@ public class HeaderParametersCustomizerTest {
         final String json = Library.writeDocumentToJSONString(doc);
 
         assertThat(HeaderParametersCustomizer.findHeaderParametersFor(json, "")).isEmpty();
+    }
+
+    private static void addOperationWithReferences(final OasDocument document) {
+        document.paths = document.createPaths();
+
+        final OasPathItem slash = document.paths.createPathItem("/");
+        document.paths.addPathItem("slash", slash);
+
+        final OasOperation get = slash.createOperation("get");
+        get.operationId = "get";
+        slash.setOperation(get);
+
+        final OasParameter ref1 = slash.createParameter();
+        ref1.$ref = "#/parameters/h1";
+        slash.addParameter(ref1);
+
+        final OasParameter ref2 = get.createParameter();
+        ref2.$ref = "#/parameters/h2";
+        get.addParameter(ref2);
+
+        final OasParameter ref3 = get.createParameter();
+        ref3.$ref = "#/parameters/p1";
+        get.addParameter(ref3);
+
+        final OasParameter ref4 = get.createParameter();
+        ref4.$ref = "#/parameters/p2";
+        get.addParameter(ref4);
     }
 }

@@ -24,8 +24,11 @@
       "id": "_id_:operation-61",
       "name": "GET /articles",
       "pattern": "To",
-      "tags": [ "articles" ]
-    }, {
+      "tags": [
+        "articles"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Full taxonomy tree of categories including middle categories",
       "descriptor": {
@@ -49,8 +52,11 @@
       "id": "_id_:operation-7",
       "name": "Full taxonomy tree of categories including middle categories",
       "pattern": "To",
-      "tags": [ "categories" ]
-    }, {
+      "tags": [
+        "categories"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send GET request to /categories/flat",
       "descriptor": {
@@ -74,8 +80,11 @@
       "id": "_id_:operation-5",
       "name": "GET /categories/flat",
       "pattern": "To",
-      "tags": [ "categories" ]
-    }, {
+      "tags": [
+        "categories"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get category details",
       "descriptor": {
@@ -99,8 +108,11 @@
       "id": "_id_:operation-6",
       "name": "Get category details",
       "pattern": "To",
-      "tags": [ "categories" ]
-    }, {
+      "tags": [
+        "categories"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get subcategory details",
       "descriptor": {
@@ -124,8 +136,11 @@
       "id": "_id_:operation-8",
       "name": "Get subcategory details",
       "pattern": "To",
-      "tags": [ "categories" ]
-    }, {
+      "tags": [
+        "categories"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "List of supported product categories",
       "descriptor": {
@@ -149,8 +164,11 @@
       "id": "_id_:operation-4",
       "name": "List of supported product categories",
       "pattern": "To",
-      "tags": [ "categories" ]
-    }, {
+      "tags": [
+        "categories"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send GET request to /comparison_shopping_pages/{id}",
       "descriptor": {
@@ -174,8 +192,11 @@
       "id": "_id_:operation-68",
       "name": "GET /comparison_shopping_pages/{id}",
       "pattern": "To",
-      "tags": [ "comparison_shopping_pages" ]
-    }, {
+      "tags": [
+        "comparison_shopping_pages"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Return new or used listings for a comparison shopping page",
       "descriptor": {
@@ -199,8 +220,11 @@
       "id": "_id_:operation-69",
       "name": "Return new or used listings for a comparison shopping page",
       "pattern": "To",
-      "tags": [ "comparison_shopping_pages" ]
-    }, {
+      "tags": [
+        "comparison_shopping_pages"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Returns a set of comparison shopping pages based on the current params",
       "descriptor": {
@@ -224,8 +248,11 @@
       "id": "_id_:operation-66",
       "name": "Returns a set of comparison shopping pages based on the current params",
       "pattern": "To",
-      "tags": [ "comparison_shopping_pages" ]
-    }, {
+      "tags": [
+        "comparison_shopping_pages"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Show comparison shopping page",
       "descriptor": {
@@ -249,8 +276,11 @@
       "id": "_id_:operation-67",
       "name": "Show comparison shopping page",
       "pattern": "To",
-      "tags": [ "comparison_shopping_pages" ]
-    }, {
+      "tags": [
+        "comparison_shopping_pages"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "View reviews of a comparison shopping page",
       "descriptor": {
@@ -274,8 +304,11 @@
       "id": "_id_:operation-70",
       "name": "View reviews of a comparison shopping page",
       "pattern": "To",
-      "tags": [ "comparison_shopping_pages" ]
-    }, {
+      "tags": [
+        "comparison_shopping_pages"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Make an offer to the other participant in the conversation",
       "descriptor": {
@@ -299,8 +332,11 @@
       "id": "_id_:operation-39",
       "name": "Make an offer to the other participant in the conversation",
       "pattern": "To",
-      "tags": [ "conversations" ]
-    }, {
+      "tags": [
+        "conversations"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Retrieve a list of country codes with corresponding subregions",
       "descriptor": {
@@ -324,8 +360,11 @@
       "id": "_id_:operation-151",
       "name": "Retrieve a list of country codes with corresponding subregions",
       "pattern": "To",
-      "tags": [ "countries" ]
-    }, {
+      "tags": [
+        "countries"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send GET request to /curated_sets/{slug}",
       "descriptor": {
@@ -349,8 +388,11 @@
       "id": "_id_:operation-38",
       "name": "GET /curated_sets/{slug}",
       "pattern": "To",
-      "tags": [ "curated_sets" ]
-    }, {
+      "tags": [
+        "curated_sets"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "List of supported display currencies for browsing listings",
       "descriptor": {
@@ -374,8 +416,11 @@
       "id": "_id_:operation-72",
       "name": "List of supported display currencies for browsing listings",
       "pattern": "To",
-      "tags": [ "currencies" ]
-    }, {
+      "tags": [
+        "currencies"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "List of supported listing currencies for shops",
       "descriptor": {
@@ -399,8 +444,11 @@
       "id": "_id_:operation-71",
       "name": "List of supported listing currencies for shops",
       "pattern": "To",
-      "tags": [ "currencies" ]
-    }, {
+      "tags": [
+        "currencies"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Feedback details",
       "descriptor": {
@@ -424,8 +472,11 @@
       "id": "_id_:operation-46",
       "name": "Feedback details",
       "pattern": "To",
-      "tags": [ "feedback" ]
-    }, {
+      "tags": [
+        "feedback"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get results from a handpicked collection",
       "descriptor": {
@@ -449,8 +500,11 @@
       "id": "_id_:operation-9",
       "name": "Get results from a handpicked collection",
       "pattern": "To",
-      "tags": [ "handpicked" ]
-    }, {
+      "tags": [
+        "handpicked"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "List of supported product conditions",
       "descriptor": {
@@ -474,8 +528,11 @@
       "id": "_id_:operation-65",
       "name": "List of supported product conditions",
       "pattern": "To",
-      "tags": [ "listing_conditions" ]
-    }, {
+      "tags": [
+        "listing_conditions"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "All listings including used, handmade, and brand new",
       "descriptor": {
@@ -499,8 +556,11 @@
       "id": "_id_:operation-19",
       "name": "All listings including used, handmade, and brand new",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Bump a listing",
       "descriptor": {
@@ -524,8 +584,11 @@
       "id": "_id_:operation-18",
       "name": "Bump a listing",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Create a listing",
       "descriptor": {
@@ -549,8 +612,11 @@
       "id": "_id_:operation-11",
       "name": "Create a listing",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Create a review for a listing",
       "descriptor": {
@@ -574,8 +640,11 @@
       "id": "_id_:operation-24",
       "name": "Create a review for a listing",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Default search of listings includes only used & handmade. Add a filter to view all listings or use the /listings/all endpoint.",
       "descriptor": {
@@ -599,8 +668,11 @@
       "id": "_id_:operation-10",
       "name": "Default search of listings includes only used & handmade. Add a filter to view all listings or use the /listings/all endpoint.",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Delete a draft listing. Cannot be used on non-drafts.",
       "descriptor": {
@@ -624,8 +696,11 @@
       "id": "_id_:operation-22",
       "name": "Delete a draft listing. Cannot be used on non-drafts.",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Delete an image from a listing",
       "descriptor": {
@@ -649,8 +724,11 @@
       "id": "_id_:operation-15",
       "name": "Delete an image from a listing",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Edit listing.",
       "descriptor": {
@@ -674,8 +752,11 @@
       "id": "_id_:operation-26",
       "name": "Edit listing.",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Find a product bundle attached to a listing",
       "descriptor": {
@@ -699,8 +780,11 @@
       "id": "_id_:operation-16",
       "name": "Find a product bundle attached to a listing",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Flag a listing for inappropriate content or fraud",
       "descriptor": {
@@ -724,8 +808,11 @@
       "id": "_id_:operation-25",
       "name": "Flag a listing for inappropriate content or fraud",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Individual facets",
       "descriptor": {
@@ -749,8 +836,11 @@
       "id": "_id_:operation-28",
       "name": "Individual facets",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Listing details",
       "descriptor": {
@@ -774,8 +864,11 @@
       "id": "_id_:operation-20",
       "name": "Listing details",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Listing details",
       "descriptor": {
@@ -799,8 +892,11 @@
       "id": "_id_:operation-27",
       "name": "Listing details",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Make an offer to the seller of a listing",
       "descriptor": {
@@ -824,8 +920,11 @@
       "id": "_id_:operation-29",
       "name": "Make an offer to the seller of a listing",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Returns the latest negotiation for the requesting user given a listing id",
       "descriptor": {
@@ -849,8 +948,11 @@
       "id": "_id_:operation-30",
       "name": "Returns the latest negotiation for the requesting user given a listing id",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "See all sales that include a listing.",
       "descriptor": {
@@ -874,8 +976,11 @@
       "id": "_id_:operation-13",
       "name": "See all sales that include a listing.",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Start a conversation with a seller",
       "descriptor": {
@@ -899,8 +1004,11 @@
       "id": "_id_:operation-12",
       "name": "Start a conversation with a seller",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Update a listing",
       "descriptor": {
@@ -924,8 +1032,11 @@
       "id": "_id_:operation-21",
       "name": "Update a listing",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "View available bump tiers and stats for a listing",
       "descriptor": {
@@ -949,8 +1060,11 @@
       "id": "_id_:operation-17",
       "name": "View available bump tiers and stats for a listing",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "View reviews of a listing",
       "descriptor": {
@@ -974,8 +1088,11 @@
       "id": "_id_:operation-23",
       "name": "View reviews of a listing",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "View the images associated with a particular listing",
       "descriptor": {
@@ -999,8 +1116,11 @@
       "id": "_id_:operation-14",
       "name": "View the images associated with a particular listing",
       "pattern": "To",
-      "tags": [ "listings" ]
-    }, {
+      "tags": [
+        "listings"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Accept an offer",
       "descriptor": {
@@ -1024,8 +1144,11 @@
       "id": "_id_:operation-104",
       "name": "Accept an offer",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Add a listing to your wishlist",
       "descriptor": {
@@ -1049,8 +1172,11 @@
       "id": "_id_:operation-109",
       "name": "Add a listing to your wishlist",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Counter an offer",
       "descriptor": {
@@ -1074,8 +1200,11 @@
       "id": "_id_:operation-106",
       "name": "Counter an offer",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Create a new address in your address book",
       "descriptor": {
@@ -1099,8 +1228,11 @@
       "id": "_id_:operation-144",
       "name": "Create a new address in your address book",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send DELETE request to /my/curated_set/product/{product_id}",
       "descriptor": {
@@ -1124,8 +1256,11 @@
       "id": "_id_:operation-95",
       "name": "DELETE /my/curated_set/product/{product_id}",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send DELETE request to /my/follows/{follow_id}/alert",
       "descriptor": {
@@ -1149,8 +1284,11 @@
       "id": "_id_:operation-126",
       "name": "DELETE /my/follows/{follow_id}/alert",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Decline an offer",
       "descriptor": {
@@ -1174,8 +1312,11 @@
       "id": "_id_:operation-107",
       "name": "Decline an offer",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Delete a follow",
       "descriptor": {
@@ -1199,8 +1340,11 @@
       "id": "_id_:operation-127",
       "name": "Delete a follow",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Delete an existing address in your address book",
       "descriptor": {
@@ -1224,8 +1368,11 @@
       "id": "_id_:operation-146",
       "name": "Delete an existing address in your address book",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Display conversation details with messages in natural time order (oldest to newest)",
       "descriptor": {
@@ -1249,8 +1396,11 @@
       "id": "_id_:operation-99",
       "name": "Display conversation details with messages in natural time order (oldest to newest)",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "End a listing",
       "descriptor": {
@@ -1274,8 +1424,11 @@
       "id": "_id_:operation-89",
       "name": "End a listing",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Follow a brand",
       "descriptor": {
@@ -1299,8 +1452,11 @@
       "id": "_id_:operation-136",
       "name": "Follow a brand",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Follow a category",
       "descriptor": {
@@ -1324,8 +1480,11 @@
       "id": "_id_:operation-114",
       "name": "Follow a category",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Follow a collection",
       "descriptor": {
@@ -1349,8 +1508,11 @@
       "id": "_id_:operation-133",
       "name": "Follow a collection",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Follow a handpicked collection",
       "descriptor": {
@@ -1374,8 +1536,11 @@
       "id": "_id_:operation-120",
       "name": "Follow a handpicked collection",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Follow a search",
       "descriptor": {
@@ -1399,8 +1564,11 @@
       "id": "_id_:operation-129",
       "name": "Follow a search",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Follow a shop",
       "descriptor": {
@@ -1424,8 +1592,11 @@
       "id": "_id_:operation-123",
       "name": "Follow a shop",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Follow a subcategory",
       "descriptor": {
@@ -1449,8 +1620,11 @@
       "id": "_id_:operation-117",
       "name": "Follow a subcategory",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Follow status for a brand",
       "descriptor": {
@@ -1474,8 +1648,11 @@
       "id": "_id_:operation-135",
       "name": "Follow status for a brand",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Follow status for a category",
       "descriptor": {
@@ -1499,8 +1676,11 @@
       "id": "_id_:operation-113",
       "name": "Follow status for a category",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Follow status for a collection",
       "descriptor": {
@@ -1524,8 +1704,11 @@
       "id": "_id_:operation-132",
       "name": "Follow status for a collection",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Follow status for a handpicked collection",
       "descriptor": {
@@ -1549,8 +1732,11 @@
       "id": "_id_:operation-119",
       "name": "Follow status for a handpicked collection",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Follow status for a search",
       "descriptor": {
@@ -1574,8 +1760,11 @@
       "id": "_id_:operation-128",
       "name": "Follow status for a search",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Follow status for a shop",
       "descriptor": {
@@ -1599,8 +1788,11 @@
       "id": "_id_:operation-122",
       "name": "Follow status for a shop",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Follow status for a subcategory",
       "descriptor": {
@@ -1624,8 +1816,11 @@
       "id": "_id_:operation-116",
       "name": "Follow status for a subcategory",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get a list of active negotiations as a buyer",
       "descriptor": {
@@ -1649,8 +1844,11 @@
       "id": "_id_:operation-103",
       "name": "Get a list of active negotiations as a buyer",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get a list of active negotiations as a seller",
       "descriptor": {
@@ -1674,8 +1872,11 @@
       "id": "_id_:operation-88",
       "name": "Get a list of active negotiations as a seller",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get a list of payouts",
       "descriptor": {
@@ -1699,8 +1900,11 @@
       "id": "_id_:operation-147",
       "name": "Get a list of payouts",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get a list of refund requests as a seller",
       "descriptor": {
@@ -1724,8 +1928,11 @@
       "id": "_id_:operation-92",
       "name": "Get a list of refund requests as a seller",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get a list of wishlisted items",
       "descriptor": {
@@ -1749,8 +1956,11 @@
       "id": "_id_:operation-108",
       "name": "Get a list of wishlisted items",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get a list of your conversations",
       "descriptor": {
@@ -1774,8 +1984,11 @@
       "id": "_id_:operation-96",
       "name": "Get a list of your conversations",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get a list of your lists (wishlist, watch list, etc)",
       "descriptor": {
@@ -1799,8 +2012,11 @@
       "id": "_id_:operation-111",
       "name": "Get a list of your lists (wishlist, watch list, etc)",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get a list of your recently viewed listings.",
       "descriptor": {
@@ -1824,8 +2040,11 @@
       "id": "_id_:operation-141",
       "name": "Get a list of your recently viewed listings.",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get account details",
       "descriptor": {
@@ -1849,8 +2068,11 @@
       "id": "_id_:operation-149",
       "name": "Get account details",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get all seller orders, newest first.",
       "descriptor": {
@@ -1874,8 +2096,11 @@
       "id": "_id_:operation-74",
       "name": "Get all seller orders, newest first.",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get listings from your feed",
       "descriptor": {
@@ -1899,8 +2124,11 @@
       "id": "_id_:operation-138",
       "name": "Get listings from your feed",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get offer details",
       "descriptor": {
@@ -1924,8 +2152,11 @@
       "id": "_id_:operation-105",
       "name": "Get offer details",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get payment",
       "descriptor": {
@@ -1949,8 +2180,11 @@
       "id": "_id_:operation-91",
       "name": "Get payment",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get payments",
       "descriptor": {
@@ -1974,8 +2208,11 @@
       "id": "_id_:operation-90",
       "name": "Get payments",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get seller orders awaiting shipment, newest first.",
       "descriptor": {
@@ -1999,8 +2236,11 @@
       "id": "_id_:operation-77",
       "name": "Get seller orders awaiting shipment, newest first.",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get unpaid seller orders, newest first.",
       "descriptor": {
@@ -2024,8 +2264,11 @@
       "id": "_id_:operation-76",
       "name": "Get unpaid seller orders, newest first.",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get your actionable status counts",
       "descriptor": {
@@ -2049,8 +2292,11 @@
       "id": "_id_:operation-142",
       "name": "Get your actionable status counts",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Initiate a refund for a sold order",
       "descriptor": {
@@ -2074,8 +2320,11 @@
       "id": "_id_:operation-75",
       "name": "Initiate a refund for a sold order",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "List of orders that need feedback",
       "descriptor": {
@@ -2099,8 +2348,11 @@
       "id": "_id_:operation-73",
       "name": "List of orders that need feedback",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "List of received feedback",
       "descriptor": {
@@ -2124,8 +2376,11 @@
       "id": "_id_:operation-102",
       "name": "List of received feedback",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "List of sent feedback",
       "descriptor": {
@@ -2149,8 +2404,11 @@
       "id": "_id_:operation-101",
       "name": "List of sent feedback",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Mark a conversation read/unread",
       "descriptor": {
@@ -2174,8 +2432,11 @@
       "id": "_id_:operation-100",
       "name": "Mark a conversation read/unread",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Marks an order as picked up",
       "descriptor": {
@@ -2199,8 +2460,11 @@
       "id": "_id_:operation-80",
       "name": "Marks an order as picked up",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Marks an order as received by the buyer",
       "descriptor": {
@@ -2224,8 +2488,11 @@
       "id": "_id_:operation-85",
       "name": "Marks an order as received by the buyer",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Marks an order as shipped",
       "descriptor": {
@@ -2249,8 +2516,11 @@
       "id": "_id_:operation-79",
       "name": "Marks an order as shipped",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send POST request to /my/curated_set/product/{product_id}",
       "descriptor": {
@@ -2274,8 +2544,11 @@
       "id": "_id_:operation-94",
       "name": "POST /my/curated_set/product/{product_id}",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send POST request to /my/follows/{follow_id}/alert",
       "descriptor": {
@@ -2299,8 +2572,11 @@
       "id": "_id_:operation-125",
       "name": "POST /my/follows/{follow_id}/alert",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Read the line items of a payout",
       "descriptor": {
@@ -2324,8 +2600,11 @@
       "id": "_id_:operation-148",
       "name": "Read the line items of a payout",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Remove a listing from your wishlist",
       "descriptor": {
@@ -2349,8 +2628,11 @@
       "id": "_id_:operation-110",
       "name": "Remove a listing from your wishlist",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Retrieve a list of live listings for the seller. To search all listings specify state=all",
       "descriptor": {
@@ -2374,8 +2656,11 @@
       "id": "_id_:operation-86",
       "name": "Retrieve a list of live listings for the seller. To search all listings specify state=all",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Retrieve a list your draft listings",
       "descriptor": {
@@ -2399,8 +2684,11 @@
       "id": "_id_:operation-87",
       "name": "Retrieve a list your draft listings",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Returns a user's ArticleCategoryFollows",
       "descriptor": {
@@ -2424,8 +2712,11 @@
       "id": "_id_:operation-130",
       "name": "Returns a user's ArticleCategoryFollows",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Returns all orders, newest first.",
       "descriptor": {
@@ -2449,8 +2740,11 @@
       "id": "_id_:operation-82",
       "name": "Returns all orders, newest first.",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Returns order details for a buyer",
       "descriptor": {
@@ -2474,8 +2768,11 @@
       "id": "_id_:operation-84",
       "name": "Returns order details for a buyer",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Returns order details for a seller",
       "descriptor": {
@@ -2499,8 +2796,11 @@
       "id": "_id_:operation-78",
       "name": "Returns order details for a seller",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Returns unpaid orders, newest first.",
       "descriptor": {
@@ -2524,8 +2824,11 @@
       "id": "_id_:operation-83",
       "name": "Returns unpaid orders, newest first.",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "See all addresses in your address book",
       "descriptor": {
@@ -2549,8 +2852,11 @@
       "id": "_id_:operation-143",
       "name": "See all addresses in your address book",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "See previous orders from buyer",
       "descriptor": {
@@ -2574,8 +2880,11 @@
       "id": "_id_:operation-81",
       "name": "See previous orders from buyer",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "See what the user is following",
       "descriptor": {
@@ -2599,8 +2908,11 @@
       "id": "_id_:operation-112",
       "name": "See what the user is following",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send a message",
       "descriptor": {
@@ -2624,8 +2936,11 @@
       "id": "_id_:operation-98",
       "name": "Send a message",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Set a user's ArticleCategoryFollows",
       "descriptor": {
@@ -2649,8 +2964,11 @@
       "id": "_id_:operation-131",
       "name": "Set a user's ArticleCategoryFollows",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Start a conversation",
       "descriptor": {
@@ -2674,8 +2992,11 @@
       "id": "_id_:operation-97",
       "name": "Start a conversation",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Unfollow a brand",
       "descriptor": {
@@ -2699,8 +3020,11 @@
       "id": "_id_:operation-137",
       "name": "Unfollow a brand",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Unfollow a category",
       "descriptor": {
@@ -2724,8 +3048,11 @@
       "id": "_id_:operation-115",
       "name": "Unfollow a category",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Unfollow a collection",
       "descriptor": {
@@ -2749,8 +3076,11 @@
       "id": "_id_:operation-134",
       "name": "Unfollow a collection",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Unfollow a handpicked collection",
       "descriptor": {
@@ -2774,8 +3104,11 @@
       "id": "_id_:operation-121",
       "name": "Unfollow a handpicked collection",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Unfollow a shop",
       "descriptor": {
@@ -2799,8 +3132,11 @@
       "id": "_id_:operation-124",
       "name": "Unfollow a shop",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Unfollow a subcategory",
       "descriptor": {
@@ -2824,8 +3160,11 @@
       "id": "_id_:operation-118",
       "name": "Unfollow a subcategory",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Update a refund request for a sold order",
       "descriptor": {
@@ -2849,8 +3188,11 @@
       "id": "_id_:operation-93",
       "name": "Update a refund request for a sold order",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Update account details",
       "descriptor": {
@@ -2874,8 +3216,11 @@
       "id": "_id_:operation-150",
       "name": "Update account details",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Update an existing address in your address book",
       "descriptor": {
@@ -2899,8 +3244,11 @@
       "id": "_id_:operation-145",
       "name": "Update an existing address in your address book",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "get your feed",
       "descriptor": {
@@ -2924,8 +3272,11 @@
       "id": "_id_:operation-139",
       "name": "get your feed",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "get your feed customization options",
       "descriptor": {
@@ -2949,8 +3300,11 @@
       "id": "_id_:operation-140",
       "name": "get your feed customization options",
       "pattern": "To",
-      "tags": [ "my" ]
-    }, {
+      "tags": [
+        "my"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Add feedback about an order's buyer",
       "descriptor": {
@@ -2974,8 +3328,11 @@
       "id": "_id_:operation-3",
       "name": "Add feedback about an order's buyer",
       "pattern": "To",
-      "tags": [ "orders" ]
-    }, {
+      "tags": [
+        "orders"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Add feedback about an order's seller",
       "descriptor": {
@@ -2999,8 +3356,11 @@
       "id": "_id_:operation-1",
       "name": "Add feedback about an order's seller",
       "pattern": "To",
-      "tags": [ "orders" ]
-    }, {
+      "tags": [
+        "orders"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Feedback details for an order's buyer",
       "descriptor": {
@@ -3024,8 +3384,11 @@
       "id": "_id_:operation-2",
       "name": "Feedback details for an order's buyer",
       "pattern": "To",
-      "tags": [ "orders" ]
-    }, {
+      "tags": [
+        "orders"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Feedback details for an order's seller",
       "descriptor": {
@@ -3049,8 +3412,11 @@
       "id": "_id_:operation-0",
       "name": "Feedback details for an order's seller",
       "pattern": "To",
-      "tags": [ "orders" ]
-    }, {
+      "tags": [
+        "orders"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get list of payment methods",
       "descriptor": {
@@ -3074,8 +3440,11 @@
       "id": "_id_:operation-64",
       "name": "Get list of payment methods",
       "pattern": "To",
-      "tags": [ "payment_methods" ]
-    }, {
+      "tags": [
+        "payment_methods"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get a list of paginated transactions for a price guide.",
       "descriptor": {
@@ -3099,8 +3468,11 @@
       "id": "_id_:operation-41",
       "name": "Get a list of paginated transactions for a price guide.",
       "pattern": "To",
-      "tags": [ "priceguide" ]
-    }, {
+      "tags": [
+        "priceguide"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get a summary of transactions for a given price guide",
       "descriptor": {
@@ -3124,8 +3496,11 @@
       "id": "_id_:operation-42",
       "name": "Get a summary of transactions for a given price guide",
       "pattern": "To",
-      "tags": [ "priceguide" ]
-    }, {
+      "tags": [
+        "priceguide"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Retrieve a Price Guide",
       "descriptor": {
@@ -3149,8 +3524,11 @@
       "id": "_id_:operation-40",
       "name": "Retrieve a Price Guide",
       "pattern": "To",
-      "tags": [ "priceguide" ]
-    }, {
+      "tags": [
+        "priceguide"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Create a review for a product",
       "descriptor": {
@@ -3174,8 +3552,11 @@
       "id": "_id_:operation-55",
       "name": "Create a review for a product",
       "pattern": "To",
-      "tags": [ "products" ]
-    }, {
+      "tags": [
+        "products"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Update a review",
       "descriptor": {
@@ -3199,8 +3580,11 @@
       "id": "_id_:operation-53",
       "name": "Update a review",
       "pattern": "To",
-      "tags": [ "products" ]
-    }, {
+      "tags": [
+        "products"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "View a review",
       "descriptor": {
@@ -3224,8 +3608,11 @@
       "id": "_id_:operation-52",
       "name": "View a review",
       "pattern": "To",
-      "tags": [ "products" ]
-    }, {
+      "tags": [
+        "products"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "View reviews of a comparison shopping page",
       "descriptor": {
@@ -3249,8 +3636,11 @@
       "id": "_id_:operation-54",
       "name": "View reviews of a comparison shopping page",
       "pattern": "To",
-      "tags": [ "products" ]
-    }, {
+      "tags": [
+        "products"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Add listings to a sale",
       "descriptor": {
@@ -3274,8 +3664,11 @@
       "id": "_id_:operation-59",
       "name": "Add listings to a sale",
       "pattern": "To",
-      "tags": [ "sales" ]
-    }, {
+      "tags": [
+        "sales"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send GET request to /sales/{slug}",
       "descriptor": {
@@ -3299,8 +3692,11 @@
       "id": "_id_:operation-57",
       "name": "GET /sales/{slug}",
       "pattern": "To",
-      "tags": [ "sales" ]
-    }, {
+      "tags": [
+        "sales"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Remove a listing from a sale",
       "descriptor": {
@@ -3324,8 +3720,11 @@
       "id": "_id_:operation-60",
       "name": "Remove a listing from a sale",
       "pattern": "To",
-      "tags": [ "sales" ]
-    }, {
+      "tags": [
+        "sales"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "View upcoming and live Reverb official sales.",
       "descriptor": {
@@ -3349,8 +3748,11 @@
       "id": "_id_:operation-56",
       "name": "View upcoming and live Reverb official sales.",
       "pattern": "To",
-      "tags": [ "sales" ]
-    }, {
+      "tags": [
+        "sales"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "View your created sales.",
       "descriptor": {
@@ -3374,8 +3776,11 @@
       "id": "_id_:operation-58",
       "name": "View your created sales.",
       "pattern": "To",
-      "tags": [ "sales" ]
-    }, {
+      "tags": [
+        "sales"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send GET request to /shipping/regions",
       "descriptor": {
@@ -3399,8 +3804,11 @@
       "id": "_id_:operation-62",
       "name": "GET /shipping/regions",
       "pattern": "To",
-      "tags": [ "shipping" ]
-    }, {
+      "tags": [
+        "shipping"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "List of supported shipping providers",
       "descriptor": {
@@ -3424,8 +3832,11 @@
       "id": "_id_:operation-63",
       "name": "List of supported shipping providers",
       "pattern": "To",
-      "tags": [ "shipping" ]
-    }, {
+      "tags": [
+        "shipping"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Disable vacation mode. All listings will be re-enabled.",
       "descriptor": {
@@ -3449,8 +3860,11 @@
       "id": "_id_:operation-37",
       "name": "Disable vacation mode. All listings will be re-enabled.",
       "pattern": "To",
-      "tags": [ "shop" ]
-    }, {
+      "tags": [
+        "shop"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Enable vacation mode. All listings will be unavailable until vacation mode is turned off.",
       "descriptor": {
@@ -3474,8 +3888,11 @@
       "id": "_id_:operation-36",
       "name": "Enable vacation mode. All listings will be unavailable until vacation mode is turned off.",
       "pattern": "To",
-      "tags": [ "shop" ]
-    }, {
+      "tags": [
+        "shop"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get accepted payment methods",
       "descriptor": {
@@ -3499,8 +3916,11 @@
       "id": "_id_:operation-33",
       "name": "Get accepted payment methods",
       "pattern": "To",
-      "tags": [ "shop" ]
-    }, {
+      "tags": [
+        "shop"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get your own shop details",
       "descriptor": {
@@ -3524,8 +3944,11 @@
       "id": "_id_:operation-31",
       "name": "Get your own shop details",
       "pattern": "To",
-      "tags": [ "shop" ]
-    }, {
+      "tags": [
+        "shop"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "List of supported product conditions",
       "descriptor": {
@@ -3549,8 +3972,11 @@
       "id": "_id_:operation-34",
       "name": "List of supported product conditions",
       "pattern": "To",
-      "tags": [ "shop" ]
-    }, {
+      "tags": [
+        "shop"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Returns shop vacation status",
       "descriptor": {
@@ -3574,8 +4000,11 @@
       "id": "_id_:operation-35",
       "name": "Returns shop vacation status",
       "pattern": "To",
-      "tags": [ "shop" ]
-    }, {
+      "tags": [
+        "shop"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Update your shop profile",
       "descriptor": {
@@ -3599,8 +4028,11 @@
       "id": "_id_:operation-32",
       "name": "Update your shop profile",
       "pattern": "To",
-      "tags": [ "shop" ]
-    }, {
+      "tags": [
+        "shop"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get details on a shop.",
       "descriptor": {
@@ -3624,8 +4056,11 @@
       "id": "_id_:operation-47",
       "name": "Get details on a shop.",
       "pattern": "To",
-      "tags": [ "shops" ]
-    }, {
+      "tags": [
+        "shops"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get seller's feedback",
       "descriptor": {
@@ -3649,8 +4084,11 @@
       "id": "_id_:operation-48",
       "name": "Get seller's feedback",
       "pattern": "To",
-      "tags": [ "shops" ]
-    }, {
+      "tags": [
+        "shops"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get seller's feedback as a buyer",
       "descriptor": {
@@ -3674,8 +4112,11 @@
       "id": "_id_:operation-50",
       "name": "Get seller's feedback as a buyer",
       "pattern": "To",
-      "tags": [ "shops" ]
-    }, {
+      "tags": [
+        "shops"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get seller's feedback as a seller",
       "descriptor": {
@@ -3699,8 +4140,11 @@
       "id": "_id_:operation-49",
       "name": "Get seller's feedback as a seller",
       "pattern": "To",
-      "tags": [ "shops" ]
-    }, {
+      "tags": [
+        "shops"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "List of shipping profiles for your shop",
       "descriptor": {
@@ -3724,8 +4168,11 @@
       "id": "_id_:operation-51",
       "name": "List of shipping profiles for your shop",
       "pattern": "To",
-      "tags": [ "shops" ]
-    }, {
+      "tags": [
+        "shops"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "A list of wanted items by the user",
       "descriptor": {
@@ -3749,8 +4196,11 @@
       "id": "_id_:operation-43",
       "name": "A list of wanted items by the user",
       "pattern": "To",
-      "tags": [ "wants" ]
-    }, {
+      "tags": [
+        "wants"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Mark an item wanted. Returns 200 on success or 422 on failure.",
       "descriptor": {
@@ -3774,8 +4224,11 @@
       "id": "_id_:operation-44",
       "name": "Mark an item wanted. Returns 200 on success or 422 on failure.",
       "pattern": "To",
-      "tags": [ "wants" ]
-    }, {
+      "tags": [
+        "wants"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Unmark an item wanted.",
       "descriptor": {
@@ -3799,8 +4252,11 @@
       "id": "_id_:operation-45",
       "name": "Unmark an item wanted.",
       "pattern": "To",
-      "tags": [ "wants" ]
-    }, {
+      "tags": [
+        "wants"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get details of a webhook registration",
       "descriptor": {
@@ -3824,8 +4280,11 @@
       "id": "_id_:operation-154",
       "name": "Get details of a webhook registration",
       "pattern": "To",
-      "tags": [ "webhooks" ]
-    }, {
+      "tags": [
+        "webhooks"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Get webhook registrations",
       "descriptor": {
@@ -3849,8 +4308,11 @@
       "id": "_id_:operation-152",
       "name": "Get webhook registrations",
       "pattern": "To",
-      "tags": [ "webhooks" ]
-    }, {
+      "tags": [
+        "webhooks"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Register a webhook",
       "descriptor": {
@@ -3874,8 +4336,11 @@
       "id": "_id_:operation-153",
       "name": "Register a webhook",
       "pattern": "To",
-      "tags": [ "webhooks" ]
-    }, {
+      "tags": [
+        "webhooks"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Remove a webhook",
       "descriptor": {
@@ -3899,7 +4364,9 @@
       "id": "_id_:operation-155",
       "name": "Remove a webhook",
       "pattern": "To",
-      "tags": [ "webhooks" ]
+      "tags": [
+        "webhooks"
+      ]
     }
   ],
   "componentScheme": "rest-openapi",
@@ -3910,10 +4377,11 @@
     "componentName": "connector-rest-swagger-http4",
     "host": "https://api.reverb.com",
     "oauthScopes": "public read_feedback read_listings read_lists read_messages read_offers read_orders read_payouts read_profile write_feedback write_listings write_lists write_messages write_offers write_orders write_profile write_reviews",
-    "specification": "{\"openapi\":\"3.0.2\",\"servers\":[{\"url\":\"https://api.reverb.com/api\"}],\"paths\":{\"/orders/{order_id}/feedback/seller\":{\"get\":{\"parameters\":[{\"name\":\"order_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-0\"},\"post\":{\"parameters\":[{\"name\":\"order_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_feedback\"]}],\"operationId\":\"operation-1\"}},\"/orders/{order_id}/feedback/buyer\":{\"get\":{\"parameters\":[{\"name\":\"order_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-2\"},\"post\":{\"parameters\":[{\"name\":\"order_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_feedback\"]}],\"operationId\":\"operation-3\"}},\"/categories\":{\"get\":{\"operationId\":\"operation-4\"}},\"/categories/flat\":{\"get\":{\"operationId\":\"operation-5\"}},\"/categories/{uuid}\":{\"get\":{\"parameters\":[{\"name\":\"uuid\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-6\"}},\"/categories/taxonomy\":{\"get\":{\"operationId\":\"operation-7\"}},\"/categories/{product_type}/{category}\":{\"get\":{\"parameters\":[{\"name\":\"product_type\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-8\"}},\"/handpicked/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"query\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"auction_price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"product_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"conditions\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"decade\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"finish\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"handmade\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"item_city\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_country\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_region\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_state\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"make\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"model\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"must_not\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"price_min\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"currency\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"year_max\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"year_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"accepts_gift_cards\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"preferred_seller\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"shop\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"shop_id\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"listing_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"ships_to\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"exclude_auctions\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"accepts_payment_plans\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"watchers_count_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"not_ids\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"operationId\":\"operation-9\"}},\"/listings\":{\"get\":{\"parameters\":[{\"name\":\"query\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"auction_price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"product_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"conditions\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"decade\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"finish\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"handmade\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"item_city\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_country\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_region\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_state\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"make\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"model\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"must_not\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"price_min\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"currency\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"year_max\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"year_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"accepts_gift_cards\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"preferred_seller\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"shop\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"shop_id\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"listing_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"ships_to\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"exclude_auctions\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"accepts_payment_plans\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"watchers_count_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"not_ids\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"operationId\":\"operation-10\"},\"post\":{\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-11\"}},\"/listings/{listing_id}/conversations\":{\"post\":{\"parameters\":[{\"name\":\"listing_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_messages\"]}],\"operationId\":\"operation-12\"}},\"/listings/{listing_id}/sales\":{\"get\":{\"parameters\":[{\"name\":\"listing_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-13\"}},\"/listings/{listing_id}/images\":{\"get\":{\"parameters\":[{\"name\":\"listing_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_listings\"]}],\"operationId\":\"operation-14\"}},\"/listings/{listing_id}/images/{image_id}\":{\"delete\":{\"parameters\":[{\"name\":\"listing_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"image_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-15\"}},\"/listings/{listing_id}/product_bundle\":{\"get\":{\"parameters\":[{\"name\":\"listing_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"for_seller\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"}],\"operationId\":\"operation-16\"}},\"/listings/{listing_id}/bump\":{\"get\":{\"parameters\":[{\"name\":\"listing_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_listings\"]}],\"operationId\":\"operation-17\"}},\"/listings/{listing_id}/bump/{budget_type}\":{\"post\":{\"parameters\":[{\"name\":\"listing_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"budget_type\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-18\"}},\"/listings/all\":{\"get\":{\"parameters\":[{\"name\":\"query\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"auction_price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"product_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"conditions\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"decade\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"finish\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"handmade\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"item_city\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_country\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_region\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_state\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"make\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"model\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"must_not\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"price_min\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"currency\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"year_max\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"year_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"accepts_gift_cards\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"preferred_seller\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"shop\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"shop_id\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"listing_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"ships_to\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"exclude_auctions\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"accepts_payment_plans\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"watchers_count_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"not_ids\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"operationId\":\"operation-19\"}},\"/listings/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-20\"},\"put\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-21\"},\"delete\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-22\"}},\"/listings/{slug}/reviews\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-23\"},\"post\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_reviews\"]}],\"operationId\":\"operation-24\"}},\"/listings/{slug}/flag\":{\"post\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-25\"}},\"/listings/{slug}/edit\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-26\"}},\"/listings/{slug}/similar_listings\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-27\"}},\"/listings/facets/seller_location\":{\"get\":{\"operationId\":\"operation-28\"}},\"/listings/{id}/offer\":{\"post\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_offers\"]}],\"operationId\":\"operation-29\"}},\"/listings/{id}/negotiation\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_offers\"]}],\"operationId\":\"operation-30\"}},\"/shop\":{\"get\":{\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-31\"},\"put\":{\"security\":[{\"oauth2\":[\"write_profile\"]}],\"operationId\":\"operation-32\"}},\"/shop/payment_methods\":{\"get\":{\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-33\"}},\"/shop/listing_conditions\":{\"get\":{\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-34\"}},\"/shop/vacation\":{\"get\":{\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-35\"},\"post\":{\"security\":[{\"oauth2\":[\"write_profile\"]}],\"operationId\":\"operation-36\"},\"delete\":{\"security\":[{\"oauth2\":[\"write_profile\"]}],\"operationId\":\"operation-37\"}},\"/curated_sets/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-38\"}},\"/conversations/{conversation_id}/offer\":{\"post\":{\"parameters\":[{\"name\":\"conversation_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_offers\"]}],\"operationId\":\"operation-39\"}},\"/priceguide/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-40\"}},\"/priceguide/{id}/transactions\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"condition\",\"schema\":{\"default\":\"used\",\"type\":\"string\"},\"in\":\"query\"}],\"operationId\":\"operation-41\"}},\"/priceguide/{id}/transactions/summary\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"number_of_months\",\"schema\":{\"default\":3,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"condition\",\"schema\":{\"default\":\"used\",\"type\":\"string\"},\"in\":\"query\"}],\"operationId\":\"operation-42\"}},\"/wants\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-43\"}},\"/wants/{id}\":{\"put\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-44\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-45\"}},\"/feedback/{feedback_id}\":{\"get\":{\"parameters\":[{\"name\":\"feedback_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-46\"}},\"/shops/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"include_listing_count\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"}],\"operationId\":\"operation-47\"}},\"/shops/{slug}/feedback\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-48\"}},\"/shops/{slug}/feedback/seller\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-49\"}},\"/shops/{slug}/feedback/buyer\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-50\"}},\"/shops/{shop_id}/shipping_profiles\":{\"get\":{\"parameters\":[{\"name\":\"shop_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-51\"}},\"/products/reviews/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-52\"},\"put\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_reviews\"]}],\"operationId\":\"operation-53\"}},\"/products/{slug}/reviews\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-54\"},\"post\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_reviews\"]}],\"operationId\":\"operation-55\"}},\"/sales/reverb\":{\"get\":{\"security\":[{\"oauth2\":[\"read_listings\"]}],\"operationId\":\"operation-56\"}},\"/sales/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-57\"}},\"/sales/seller\":{\"get\":{\"security\":[{\"oauth2\":[\"read_listings\"]}],\"operationId\":\"operation-58\"}},\"/sales/{sale_id}/listings\":{\"post\":{\"parameters\":[{\"name\":\"sale_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-59\"},\"delete\":{\"parameters\":[{\"name\":\"sale_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-60\"}},\"/articles\":{\"get\":{\"parameters\":[{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"query\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"exclude_featured\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"operationId\":\"operation-61\"}},\"/shipping/regions\":{\"get\":{\"operationId\":\"operation-62\"}},\"/shipping/providers\":{\"get\":{\"operationId\":\"operation-63\"}},\"/payment_methods\":{\"get\":{\"operationId\":\"operation-64\"}},\"/listing_conditions\":{\"get\":{\"operationId\":\"operation-65\"}},\"/comparison_shopping_pages\":{\"get\":{\"operationId\":\"operation-66\"}},\"/comparison_shopping_pages/find\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"}],\"operationId\":\"operation-67\"}},\"/comparison_shopping_pages/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-68\"}},\"/comparison_shopping_pages/{id}/listings\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"condition\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"operationId\":\"operation-69\"}},\"/comparison_shopping_pages/{id}/reviews\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-70\"}},\"/currencies/listing\":{\"get\":{\"operationId\":\"operation-71\"}},\"/currencies/display\":{\"get\":{\"operationId\":\"operation-72\"}},\"/my/orders/awaiting_feedback\":{\"get\":{\"security\":[{\"oauth2\":[\"read_feedback\"]}],\"operationId\":\"operation-73\"}},\"/my/orders/selling/all\":{\"get\":{\"parameters\":[{\"name\":\"created_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"created_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-74\"}},\"/my/orders/selling/{order_id}/refund_requests\":{\"post\":{\"parameters\":[{\"name\":\"order_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_orders\"]}],\"operationId\":\"operation-75\"}},\"/my/orders/selling/unpaid\":{\"get\":{\"parameters\":[{\"name\":\"created_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"created_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-76\"}},\"/my/orders/selling/awaiting_shipment\":{\"get\":{\"parameters\":[{\"name\":\"created_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"created_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-77\"}},\"/my/orders/selling/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-78\"}},\"/my/orders/selling/{id}/ship\":{\"post\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_orders\"]}],\"operationId\":\"operation-79\"}},\"/my/orders/selling/{id}/mark_picked_up\":{\"post\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_orders\"]}],\"operationId\":\"operation-80\"}},\"/my/orders/selling/buyer_history/{buyer_id}\":{\"get\":{\"parameters\":[{\"name\":\"buyer_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-81\"}},\"/my/orders/buying/all\":{\"get\":{\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-82\"}},\"/my/orders/buying/unpaid\":{\"get\":{\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-83\"}},\"/my/orders/buying/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-84\"}},\"/my/orders/buying/{id}/mark_received\":{\"post\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_orders\"]}],\"operationId\":\"operation-85\"}},\"/my/listings\":{\"get\":{\"parameters\":[{\"name\":\"query\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"auction_price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"product_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"conditions\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"decade\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"finish\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"handmade\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"item_city\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_country\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_region\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_state\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"make\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"model\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"must_not\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"price_min\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"currency\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"year_max\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"year_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"accepts_gift_cards\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"preferred_seller\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"shop\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"shop_id\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"listing_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"ships_to\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"exclude_auctions\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"accepts_payment_plans\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"watchers_count_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"not_ids\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"state\",\"schema\":{\"default\":\"live\",\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"sku\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_listings\"]}],\"operationId\":\"operation-86\"}},\"/my/listings/drafts\":{\"get\":{\"parameters\":[{\"name\":\"query\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"auction_price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"product_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"conditions\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"decade\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"finish\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"handmade\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"item_city\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_country\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_region\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_state\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"make\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"model\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"must_not\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"price_min\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"currency\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"year_max\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"year_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"accepts_gift_cards\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"preferred_seller\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"shop\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"shop_id\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"listing_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"ships_to\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"exclude_auctions\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"accepts_payment_plans\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"watchers_count_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"not_ids\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_listings\"]}],\"operationId\":\"operation-87\"}},\"/my/listings/negotiations\":{\"get\":{\"parameters\":[{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_offers\"]}],\"operationId\":\"operation-88\"}},\"/my/listings/{slug}/state/end\":{\"put\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-89\"}},\"/my/payments/selling\":{\"get\":{\"parameters\":[{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"created_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"created_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"order_id\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-90\"}},\"/my/payments/selling/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-91\"}},\"/my/refund_requests/selling\":{\"get\":{\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-92\"}},\"/my/refund_requests/selling/{id}\":{\"put\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_orders\"]}],\"operationId\":\"operation-93\"}},\"/my/curated_set/product/{product_id}\":{\"post\":{\"parameters\":[{\"name\":\"product_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-94\"},\"delete\":{\"parameters\":[{\"name\":\"product_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-95\"}},\"/my/conversations\":{\"get\":{\"parameters\":[{\"name\":\"search\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"unread_only\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_messages\"]}],\"operationId\":\"operation-96\"},\"post\":{\"security\":[{\"oauth2\":[\"write_messages\"]}],\"operationId\":\"operation-97\"}},\"/my/conversations/{conversation_id}/messages\":{\"post\":{\"parameters\":[{\"name\":\"conversation_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_messages\"]}],\"operationId\":\"operation-98\"}},\"/my/conversations/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_messages\"]}],\"operationId\":\"operation-99\"},\"put\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_messages\"]}],\"operationId\":\"operation-100\"}},\"/my/feedback/sent\":{\"get\":{\"security\":[{\"oauth2\":[\"read_feedback\"]}],\"operationId\":\"operation-101\"}},\"/my/feedback/received\":{\"get\":{\"security\":[{\"oauth2\":[\"read_feedback\"]}],\"operationId\":\"operation-102\"}},\"/my/negotiations/buying\":{\"get\":{\"parameters\":[{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_offers\"]}],\"operationId\":\"operation-103\"}},\"/my/negotiations/{id}/accept\":{\"post\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_offers\"]}],\"operationId\":\"operation-104\"}},\"/my/negotiations/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_offers\"]}],\"operationId\":\"operation-105\"}},\"/my/negotiations/{id}/counter\":{\"post\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_offers\"]}],\"operationId\":\"operation-106\"}},\"/my/negotiations/{id}/decline\":{\"post\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_offers\"]}],\"operationId\":\"operation-107\"}},\"/my/wishlist\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-108\"}},\"/my/wishlist/{id}\":{\"put\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-109\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-110\"}},\"/my/lists\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-111\"}},\"/my/follows\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-112\"}},\"/my/follows/categories/{identifier}\":{\"get\":{\"parameters\":[{\"name\":\"identifier\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-113\"},\"post\":{\"parameters\":[{\"name\":\"identifier\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-114\"},\"delete\":{\"parameters\":[{\"name\":\"identifier\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-115\"}},\"/my/follows/categories/{category}/{subcategory}\":{\"get\":{\"parameters\":[{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"subcategory\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-116\"},\"post\":{\"parameters\":[{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"subcategory\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-117\"},\"delete\":{\"parameters\":[{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"subcategory\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-118\"}},\"/my/follows/handpicked/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-119\"},\"post\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-120\"},\"delete\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-121\"}},\"/my/follows/shops/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-122\"},\"post\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-123\"},\"delete\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-124\"}},\"/my/follows/{follow_id}/alert\":{\"post\":{\"parameters\":[{\"name\":\"follow_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-125\"},\"delete\":{\"parameters\":[{\"name\":\"follow_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-126\"}},\"/my/follows/{follow_id}\":{\"delete\":{\"parameters\":[{\"name\":\"follow_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-127\"}},\"/my/follows/search\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-128\"},\"post\":{\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-129\"}},\"/my/follows/articles\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-130\"},\"post\":{\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-131\"}},\"/my/follows/collections/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-132\"},\"post\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-133\"},\"delete\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-134\"}},\"/my/follows/brands/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-135\"},\"post\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-136\"},\"delete\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-137\"}},\"/my/feed\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-138\"}},\"/my/feed/grid\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-139\"}},\"/my/feed/customize\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-140\"}},\"/my/viewed_listings\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-141\"}},\"/my/counts\":{\"get\":{\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-142\"}},\"/my/addresses\":{\"get\":{\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-143\"},\"post\":{\"security\":[{\"oauth2\":[\"write_profile\"]}],\"operationId\":\"operation-144\"}},\"/my/addresses/{address_id}\":{\"put\":{\"parameters\":[{\"name\":\"address_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_profile\"]}],\"operationId\":\"operation-145\"},\"delete\":{\"parameters\":[{\"name\":\"address_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_profile\"]}],\"operationId\":\"operation-146\"}},\"/my/payouts\":{\"get\":{\"security\":[{\"oauth2\":[\"read_payouts\"]}],\"operationId\":\"operation-147\"}},\"/my/payouts/{id}/line_items\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_payouts\"]}],\"operationId\":\"operation-148\"}},\"/my/account\":{\"get\":{\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-149\"},\"put\":{\"security\":[{\"oauth2\":[\"write_profile\"]}],\"operationId\":\"operation-150\"}},\"/countries\":{\"get\":{\"operationId\":\"operation-151\"}},\"/webhooks/registrations\":{\"get\":{\"operationId\":\"operation-152\"},\"post\":{\"operationId\":\"operation-153\"}},\"/webhooks/registrations/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-154\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-155\"}}},\"components\":{\"parameters\":{\"version\":{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\",\"required\":true}},\"securitySchemes\":{\"oauth2\":{\"flows\":{\"authorizationCode\":{\"authorizationUrl\":\"https://reverb.com/oauth/authorize\",\"tokenUrl\":\"https://reverb.com/oauth/token\",\"scopes\":{\"read_profile\":\"read_profile\",\"write_profile\":\"write_profile\",\"read_orders\":\"read_orders\",\"write_orders\":\"write_orders\",\"read_feedback\":\"read_feedback\",\"write_feedback\":\"write_feedback\",\"write_reviews\":\"write_reviews\",\"write_listings\":\"write_listings\",\"read_listings\":\"read_listings\",\"write_messages\":\"write_messages\",\"read_messages\":\"read_messages\",\"read_lists\":\"read_lists\",\"write_lists\":\"write_lists\",\"write_offers\":\"write_offers\",\"read_offers\":\"read_offers\",\"read_payouts\":\"read_payouts\",\"public\":\"public\"}}},\"type\":\"oauth2\"}}}}",
+    "specification": "{\"openapi\":\"3.0.2\",\"servers\":[{\"url\":\"https://api.reverb.com/api\"}],\"paths\":{\"/orders/{order_id}/feedback/seller\":{\"get\":{\"parameters\":[{\"name\":\"order_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-0\"},\"post\":{\"parameters\":[{\"name\":\"order_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_feedback\"]}],\"operationId\":\"operation-1\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/orders/{order_id}/feedback/buyer\":{\"get\":{\"parameters\":[{\"name\":\"order_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-2\"},\"post\":{\"parameters\":[{\"name\":\"order_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_feedback\"]}],\"operationId\":\"operation-3\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/categories\":{\"get\":{\"operationId\":\"operation-4\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/categories/flat\":{\"get\":{\"operationId\":\"operation-5\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/categories/{uuid}\":{\"get\":{\"parameters\":[{\"name\":\"uuid\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-6\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/categories/taxonomy\":{\"get\":{\"operationId\":\"operation-7\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/categories/{product_type}/{category}\":{\"get\":{\"parameters\":[{\"name\":\"product_type\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-8\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/handpicked/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"query\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"auction_price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"product_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"conditions\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"decade\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"finish\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"handmade\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"item_city\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_country\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_region\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_state\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"make\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"model\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"must_not\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"price_min\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"currency\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"year_max\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"year_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"accepts_gift_cards\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"preferred_seller\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"shop\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"shop_id\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"listing_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"ships_to\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"exclude_auctions\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"accepts_payment_plans\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"watchers_count_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"not_ids\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"operationId\":\"operation-9\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings\":{\"get\":{\"parameters\":[{\"name\":\"query\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"auction_price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"product_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"conditions\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"decade\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"finish\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"handmade\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"item_city\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_country\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_region\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_state\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"make\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"model\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"must_not\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"price_min\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"currency\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"year_max\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"year_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"accepts_gift_cards\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"preferred_seller\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"shop\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"shop_id\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"listing_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"ships_to\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"exclude_auctions\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"accepts_payment_plans\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"watchers_count_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"not_ids\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"operationId\":\"operation-10\"},\"post\":{\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-11\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/{listing_id}/conversations\":{\"post\":{\"parameters\":[{\"name\":\"listing_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_messages\"]}],\"operationId\":\"operation-12\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/{listing_id}/sales\":{\"get\":{\"parameters\":[{\"name\":\"listing_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-13\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/{listing_id}/images\":{\"get\":{\"parameters\":[{\"name\":\"listing_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_listings\"]}],\"operationId\":\"operation-14\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/{listing_id}/images/{image_id}\":{\"delete\":{\"parameters\":[{\"name\":\"listing_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"image_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-15\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/{listing_id}/product_bundle\":{\"get\":{\"parameters\":[{\"name\":\"listing_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"for_seller\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"}],\"operationId\":\"operation-16\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/{listing_id}/bump\":{\"get\":{\"parameters\":[{\"name\":\"listing_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_listings\"]}],\"operationId\":\"operation-17\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/{listing_id}/bump/{budget_type}\":{\"post\":{\"parameters\":[{\"name\":\"listing_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"budget_type\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-18\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/all\":{\"get\":{\"parameters\":[{\"name\":\"query\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"auction_price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"product_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"conditions\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"decade\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"finish\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"handmade\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"item_city\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_country\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_region\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_state\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"make\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"model\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"must_not\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"price_min\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"currency\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"year_max\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"year_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"accepts_gift_cards\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"preferred_seller\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"shop\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"shop_id\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"listing_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"ships_to\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"exclude_auctions\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"accepts_payment_plans\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"watchers_count_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"not_ids\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"operationId\":\"operation-19\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-20\"},\"put\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-21\"},\"delete\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-22\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/{slug}/reviews\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-23\"},\"post\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_reviews\"]}],\"operationId\":\"operation-24\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/{slug}/flag\":{\"post\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-25\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/{slug}/edit\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-26\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/{slug}/similar_listings\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-27\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/facets/seller_location\":{\"get\":{\"operationId\":\"operation-28\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/{id}/offer\":{\"post\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_offers\"]}],\"operationId\":\"operation-29\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listings/{id}/negotiation\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_offers\"]}],\"operationId\":\"operation-30\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/shop\":{\"get\":{\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-31\",\"parameters\":[]},\"put\":{\"security\":[{\"oauth2\":[\"write_profile\"]}],\"operationId\":\"operation-32\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/shop/payment_methods\":{\"get\":{\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-33\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/shop/listing_conditions\":{\"get\":{\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-34\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/shop/vacation\":{\"get\":{\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-35\",\"parameters\":[]},\"post\":{\"security\":[{\"oauth2\":[\"write_profile\"]}],\"operationId\":\"operation-36\",\"parameters\":[]},\"delete\":{\"security\":[{\"oauth2\":[\"write_profile\"]}],\"operationId\":\"operation-37\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/curated_sets/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-38\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/conversations/{conversation_id}/offer\":{\"post\":{\"parameters\":[{\"name\":\"conversation_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_offers\"]}],\"operationId\":\"operation-39\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/priceguide/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-40\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/priceguide/{id}/transactions\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"condition\",\"schema\":{\"default\":\"used\",\"type\":\"string\"},\"in\":\"query\"}],\"operationId\":\"operation-41\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/priceguide/{id}/transactions/summary\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"number_of_months\",\"schema\":{\"default\":3,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"condition\",\"schema\":{\"default\":\"used\",\"type\":\"string\"},\"in\":\"query\"}],\"operationId\":\"operation-42\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/wants\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-43\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/wants/{id}\":{\"put\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-44\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-45\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/feedback/{feedback_id}\":{\"get\":{\"parameters\":[{\"name\":\"feedback_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-46\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/shops/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"include_listing_count\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"}],\"operationId\":\"operation-47\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/shops/{slug}/feedback\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-48\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/shops/{slug}/feedback/seller\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-49\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/shops/{slug}/feedback/buyer\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-50\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/shops/{shop_id}/shipping_profiles\":{\"get\":{\"parameters\":[{\"name\":\"shop_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-51\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/products/reviews/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-52\"},\"put\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_reviews\"]}],\"operationId\":\"operation-53\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/products/{slug}/reviews\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-54\"},\"post\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_reviews\"]}],\"operationId\":\"operation-55\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/sales/reverb\":{\"get\":{\"security\":[{\"oauth2\":[\"read_listings\"]}],\"operationId\":\"operation-56\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/sales/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-57\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/sales/seller\":{\"get\":{\"security\":[{\"oauth2\":[\"read_listings\"]}],\"operationId\":\"operation-58\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/sales/{sale_id}/listings\":{\"post\":{\"parameters\":[{\"name\":\"sale_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-59\"},\"delete\":{\"parameters\":[{\"name\":\"sale_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-60\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/articles\":{\"get\":{\"parameters\":[{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"query\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"exclude_featured\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"operationId\":\"operation-61\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/shipping/regions\":{\"get\":{\"operationId\":\"operation-62\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/shipping/providers\":{\"get\":{\"operationId\":\"operation-63\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/payment_methods\":{\"get\":{\"operationId\":\"operation-64\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/listing_conditions\":{\"get\":{\"operationId\":\"operation-65\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/comparison_shopping_pages\":{\"get\":{\"operationId\":\"operation-66\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/comparison_shopping_pages/find\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"}],\"operationId\":\"operation-67\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/comparison_shopping_pages/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-68\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/comparison_shopping_pages/{id}/listings\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"condition\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"operationId\":\"operation-69\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/comparison_shopping_pages/{id}/reviews\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-70\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/currencies/listing\":{\"get\":{\"operationId\":\"operation-71\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/currencies/display\":{\"get\":{\"operationId\":\"operation-72\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/orders/awaiting_feedback\":{\"get\":{\"security\":[{\"oauth2\":[\"read_feedback\"]}],\"operationId\":\"operation-73\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/orders/selling/all\":{\"get\":{\"parameters\":[{\"name\":\"created_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"created_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-74\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/orders/selling/{order_id}/refund_requests\":{\"post\":{\"parameters\":[{\"name\":\"order_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_orders\"]}],\"operationId\":\"operation-75\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/orders/selling/unpaid\":{\"get\":{\"parameters\":[{\"name\":\"created_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"created_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-76\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/orders/selling/awaiting_shipment\":{\"get\":{\"parameters\":[{\"name\":\"created_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"created_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-77\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/orders/selling/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-78\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/orders/selling/{id}/ship\":{\"post\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_orders\"]}],\"operationId\":\"operation-79\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/orders/selling/{id}/mark_picked_up\":{\"post\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_orders\"]}],\"operationId\":\"operation-80\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/orders/selling/buyer_history/{buyer_id}\":{\"get\":{\"parameters\":[{\"name\":\"buyer_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-81\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/orders/buying/all\":{\"get\":{\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-82\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/orders/buying/unpaid\":{\"get\":{\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-83\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/orders/buying/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-84\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/orders/buying/{id}/mark_received\":{\"post\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_orders\"]}],\"operationId\":\"operation-85\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/listings\":{\"get\":{\"parameters\":[{\"name\":\"query\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"auction_price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"product_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"conditions\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"decade\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"finish\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"handmade\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"item_city\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_country\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_region\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_state\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"make\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"model\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"must_not\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"price_min\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"currency\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"year_max\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"year_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"accepts_gift_cards\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"preferred_seller\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"shop\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"shop_id\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"listing_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"ships_to\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"exclude_auctions\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"accepts_payment_plans\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"watchers_count_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"not_ids\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"state\",\"schema\":{\"default\":\"live\",\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"sku\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_listings\"]}],\"operationId\":\"operation-86\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/listings/drafts\":{\"get\":{\"parameters\":[{\"name\":\"query\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"auction_price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"product_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"conditions\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"decade\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"finish\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"handmade\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"item_city\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_country\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_region\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"item_state\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"make\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"},{\"name\":\"model\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"must_not\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"price_max\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"price_min\",\"schema\":{\"format\":\"float\",\"type\":\"number\"},\"in\":\"query\"},{\"name\":\"currency\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"year_max\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"year_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"accepts_gift_cards\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"preferred_seller\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"shop\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"shop_id\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"listing_type\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"ships_to\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"exclude_auctions\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"accepts_payment_plans\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"watchers_count_min\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"not_ids\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_listings\"]}],\"operationId\":\"operation-87\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/listings/negotiations\":{\"get\":{\"parameters\":[{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_offers\"]}],\"operationId\":\"operation-88\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/listings/{slug}/state/end\":{\"put\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_listings\"]}],\"operationId\":\"operation-89\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/payments/selling\":{\"get\":{\"parameters\":[{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"created_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"created_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_start_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"updated_end_date\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"order_id\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-90\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/payments/selling/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-91\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/refund_requests/selling\":{\"get\":{\"security\":[{\"oauth2\":[\"read_orders\"]}],\"operationId\":\"operation-92\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/refund_requests/selling/{id}\":{\"put\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_orders\"]}],\"operationId\":\"operation-93\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/curated_set/product/{product_id}\":{\"post\":{\"parameters\":[{\"name\":\"product_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-94\"},\"delete\":{\"parameters\":[{\"name\":\"product_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-95\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/conversations\":{\"get\":{\"parameters\":[{\"name\":\"search\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"unread_only\",\"schema\":{\"type\":\"boolean\"},\"in\":\"query\"},{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_messages\"]}],\"operationId\":\"operation-96\"},\"post\":{\"security\":[{\"oauth2\":[\"write_messages\"]}],\"operationId\":\"operation-97\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/conversations/{conversation_id}/messages\":{\"post\":{\"parameters\":[{\"name\":\"conversation_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_messages\"]}],\"operationId\":\"operation-98\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/conversations/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_messages\"]}],\"operationId\":\"operation-99\"},\"put\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_messages\"]}],\"operationId\":\"operation-100\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/feedback/sent\":{\"get\":{\"security\":[{\"oauth2\":[\"read_feedback\"]}],\"operationId\":\"operation-101\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/feedback/received\":{\"get\":{\"security\":[{\"oauth2\":[\"read_feedback\"]}],\"operationId\":\"operation-102\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/negotiations/buying\":{\"get\":{\"parameters\":[{\"name\":\"page\",\"schema\":{\"default\":1,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"per_page\",\"schema\":{\"default\":24,\"type\":\"integer\"},\"in\":\"query\"},{\"name\":\"offset\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"security\":[{\"oauth2\":[\"read_offers\"]}],\"operationId\":\"operation-103\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/negotiations/{id}/accept\":{\"post\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_offers\"]}],\"operationId\":\"operation-104\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/negotiations/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_offers\"]}],\"operationId\":\"operation-105\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/negotiations/{id}/counter\":{\"post\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_offers\"]}],\"operationId\":\"operation-106\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/negotiations/{id}/decline\":{\"post\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_offers\"]}],\"operationId\":\"operation-107\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/wishlist\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-108\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/wishlist/{id}\":{\"put\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-109\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-110\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/lists\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-111\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/follows\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-112\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/follows/categories/{identifier}\":{\"get\":{\"parameters\":[{\"name\":\"identifier\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-113\"},\"post\":{\"parameters\":[{\"name\":\"identifier\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-114\"},\"delete\":{\"parameters\":[{\"name\":\"identifier\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-115\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/follows/categories/{category}/{subcategory}\":{\"get\":{\"parameters\":[{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"subcategory\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-116\"},\"post\":{\"parameters\":[{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"subcategory\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-117\"},\"delete\":{\"parameters\":[{\"name\":\"category\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"subcategory\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-118\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/follows/handpicked/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-119\"},\"post\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-120\"},\"delete\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-121\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/follows/shops/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-122\"},\"post\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-123\"},\"delete\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-124\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/follows/{follow_id}/alert\":{\"post\":{\"parameters\":[{\"name\":\"follow_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-125\"},\"delete\":{\"parameters\":[{\"name\":\"follow_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-126\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/follows/{follow_id}\":{\"delete\":{\"parameters\":[{\"name\":\"follow_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-127\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/follows/search\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-128\",\"parameters\":[]},\"post\":{\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-129\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/follows/articles\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-130\",\"parameters\":[]},\"post\":{\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-131\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/follows/collections/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-132\"},\"post\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-133\"},\"delete\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-134\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/follows/brands/{slug}\":{\"get\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-135\"},\"post\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-136\"},\"delete\":{\"parameters\":[{\"name\":\"slug\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_lists\"]}],\"operationId\":\"operation-137\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/feed\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-138\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/feed/grid\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-139\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/feed/customize\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-140\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/viewed_listings\":{\"get\":{\"security\":[{\"oauth2\":[\"read_lists\"]}],\"operationId\":\"operation-141\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/counts\":{\"get\":{\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-142\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/addresses\":{\"get\":{\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-143\",\"parameters\":[]},\"post\":{\"security\":[{\"oauth2\":[\"write_profile\"]}],\"operationId\":\"operation-144\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/addresses/{address_id}\":{\"put\":{\"parameters\":[{\"name\":\"address_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_profile\"]}],\"operationId\":\"operation-145\"},\"delete\":{\"parameters\":[{\"name\":\"address_id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"write_profile\"]}],\"operationId\":\"operation-146\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/payouts\":{\"get\":{\"security\":[{\"oauth2\":[\"read_payouts\"]}],\"operationId\":\"operation-147\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/payouts/{id}/line_items\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"security\":[{\"oauth2\":[\"read_payouts\"]}],\"operationId\":\"operation-148\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/my/account\":{\"get\":{\"security\":[{\"oauth2\":[\"read_profile\"]}],\"operationId\":\"operation-149\",\"parameters\":[]},\"put\":{\"security\":[{\"oauth2\":[\"write_profile\"]}],\"operationId\":\"operation-150\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/countries\":{\"get\":{\"operationId\":\"operation-151\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/webhooks/registrations\":{\"get\":{\"operationId\":\"operation-152\",\"parameters\":[]},\"post\":{\"operationId\":\"operation-153\",\"parameters\":[]},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]},\"/webhooks/registrations/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-154\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"operation-155\"},\"parameters\":[{\"name\":\"Accept-Version\",\"schema\":{\"default\":\"3.0\",\"type\":\"string\"},\"in\":\"header\"}]}},\"components\":{\"securitySchemes\":{\"oauth2\":{\"flows\":{\"authorizationCode\":{\"authorizationUrl\":\"https://reverb.com/oauth/authorize\",\"tokenUrl\":\"https://reverb.com/oauth/token\",\"scopes\":{\"read_profile\":\"read_profile\",\"write_profile\":\"write_profile\",\"read_orders\":\"read_orders\",\"write_orders\":\"write_orders\",\"read_feedback\":\"read_feedback\",\"write_feedback\":\"write_feedback\",\"write_reviews\":\"write_reviews\",\"write_listings\":\"write_listings\",\"read_listings\":\"read_listings\",\"write_messages\":\"write_messages\",\"read_messages\":\"read_messages\",\"read_lists\":\"read_lists\",\"write_lists\":\"write_lists\",\"write_offers\":\"write_offers\",\"read_offers\":\"read_offers\",\"read_payouts\":\"read_payouts\",\"public\":\"public\"}}},\"type\":\"oauth2\"}}}}",
     "tokenEndpoint": "https://reverb.com/oauth/token"
   },
   "connectorCustomizers": [
+    "io.syndesis.connector.rest.swagger.HeaderParametersCustomizer",
     "io.syndesis.connector.rest.swagger.SpecificationResourceCustomizer",
     "io.syndesis.connector.rest.swagger.AuthenticationCustomizer",
     "io.syndesis.connector.rest.swagger.RequestCustomizer",
@@ -3939,7 +4407,6 @@
     }
   ],
   "description": "reverb",
-  "icon": "data:image/svg+xml,%3Csvg%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22200%22%20r%3D%22200%22%20style%3D%22fill%3A%23fff%22%2F%3E%3Cpath%20d%3D%22M%20200%2E0486%2C4%2E99996%20A%20194%2E9514%2C195%200%200%200%205%2E0972058%2C192%2E6378%20l%200%2E8633847%2C0%20c%208%2E2004055%2C0%2013%2E8596845%2C%2D1%2E67314%2016%2E9781575%2C%2D5%203%2E118462%2C%2D3%2E34657%204%2E677184%2C%2D9%2E37626%204%2E677184%2C%2D18%2E08892%20l%200%2C%2D20%2E68637%20c%200%2C%2D12%2E75163%202%2E425915%2C%2D21%2E26114%207%2E276895%2C%2D25%2E5309%204%2E908747%2C%2D4%2E26977%2014%2E552562%2C%2D6%2E40606%2028%2E932227%2C%2D6%2E40606%20l%205%2E370951%2C0%200%2C12%2E46362%20%2D5%2E891271%2C0%20c%20%2D8%2E14272%2C0%20%2D13%2E456215%2C1%2E26983%20%2D15%2E939406%2C3%2E8086%20%2D2%2E483201%2C2%2E5388%20%2D3%2E724222%2C7%2E87566%20%2D3%2E724222%2C16%2E01131%20l%200%2C21%2E46334%20c%200%2C9%2E00112%20%2D1%2E298856%2C15%2E55185%20%2D3%2E897648%2C19%2E64853%20%2D2%2E598742%2C4%2E09668%20%2D7%2E102959%2C6%2E92385%20%2D13%2E513151%2C8%2E48174%206%2E352486%2C1%2E44249%2010%2E826741%2C4%2E21176%2013%2E425473%2C8%2E30844%202%2E656508%2C4%2E09665%203%2E985326%2C10%2E67344%203%2E985326%2C19%2E73232%20l%200%2C21%2E46524%20c%200%2C8%2E13562%201%2E241021%2C13%2E47253%203%2E724222%2C16%2E01132%202%2E483191%2C2%2E53878%207%2E796686%2C3%2E80861%2015%2E939406%2C3%2E80861%20l%205%2E891271%2C0%200%2C12%2E37601%20%2D5%2E370951%2C0%20c%20%2D14%2E379665%2C0%20%2D24%2E02348%2C%2D2%2E13439%20%2D28%2E932227%2C%2D6%2E40414%20%2D4%2E85098%2C%2D4%2E21208%20%2D7%2E276895%2C%2D12%2E69359%20%2D7%2E276895%2C%2D25%2E44522%20l%200%2C%2D20%2E77207%20c%200%2C%2D8%2E59723%20%2D1%2E558722%2C%2D14%2E56903%20%2D4%2E677184%2C%2D17%2E91562%20%2D3%2E060707%2C%2D3%2E28888%20%2D8%2E719986%2C%2D4%2E93403%20%2D16%2E9781575%2C%2D4%2E93403%20L%205%2C205%2E03355%20A%20195%2E16867%2C194%2E99998%200%200%200%20200%2E0486%2C395%20195%2E16867%2C194%2E99998%200%200%200%20395%2C206%2E11464%20l%20%2D0%2E9606%2C0%20c%20%2D8%2E25818%2C0%20%2D13%2E91741%2C1%2E64515%20%2D16%2E97815%2C4%2E93403%20%2D3%2E11845%2C3%2E34659%20%2D4%2E67718%2C9%2E31839%20%2D4%2E67718%2C17%2E91562%20l%200%2C20%2E77207%20c%200%2C12%2E75163%20%2D2%2E42593%2C21%2E23314%20%2D7%2E27691%2C25%2E44522%20%2D4%2E90872%2C4%2E26975%20%2D14%2E55259%2C6%2E40414%20%2D28%2E93222%2C6%2E40414%20l%20%2D5%2E37095%2C0%200%2C%2D12%2E37601%205%2E89128%2C0%20c%208%2E14269%2C0%2013%2E45618%2C%2D1%2E26983%2015%2E9394%2C%2D3%2E80861%202%2E48321%2C%2D2%2E5388%203%2E72422%2C%2D7%2E8757%203%2E72422%2C%2D16%2E01132%20l%200%2C%2D21%2E46524%20c%200%2C%2D9%2E05888%201%2E32884%2C%2D15%2E63567%203%2E98532%2C%2D19%2E73232%202%2E59875%2C%2D4%2E09668%207%2E07303%2C%2D6%2E86595%2013%2E42547%2C%2D8%2E30844%20%2D6%2E4102%2C%2D1%2E55789%20%2D10%2E9144%2C%2D4%2E38506%20%2D13%2E51314%2C%2D8%2E48174%20%2D2%2E59875%2C%2D4%2E09668%20%2D3%2E89765%2C%2D10%2E64741%20%2D3%2E89765%2C%2D19%2E64853%20l%200%2C%2D21%2E46334%20c%200%2C%2D8%2E13565%20%2D1%2E24101%2C%2D13%2E47251%20%2D3%2E72422%2C%2D16%2E01131%20%2D2%2E48322%2C%2D2%2E53877%20%2D7%2E79671%2C%2D3%2E8086%20%2D15%2E9394%2C%2D3%2E8086%20l%20%2D5%2E89128%2C0%200%2C%2D12%2E46362%205%2E37095%2C0%20c%2014%2E37963%2C0%2024%2E0235%2C2%2E13629%2028%2E93222%2C6%2E40606%204%2E85098%2C4%2E26976%207%2E27691%2C12%2E77927%207%2E27691%2C25%2E5309%20l%200%2C20%20c%200%2C8%2E71266%201%2E55873%2C14%2E74235%204%2E67718%2C18%2E08892%203%2E11848%2C3%2E34657%208%2E7777%2C5%2016%2E97815%2C5%20l%200%2E86338%2C0%20A%20194%2E9514%2C195%200%200%200%20200%2E0486%2C4%2E99996%20Z%22%20style%3D%22fill%3A%232c0000%22%2F%3E%3Cpath%20d%3D%22m%20157%2E44%2C210%2E528%200%2C71%2E344%20%2D11%2E424%2C0%200%2C%2D163%2E744%2038%2E976%2C0%20q%2030%2E464%2C0%2045%2E024%2C11%2E256%2014%2E56%2C11%2E256%2014%2E56%2C33%2E88%200%2C16%2E464%20%2D8%2E68%2C27%2E776%20%2D8%2E68%2C11%2E312%20%2D26%2E376%2C16%2E24%20l%2044%2E464%2C74%2E592%20%2D13%2E664%2C0%20%2D42%2E224%2C%2D71%2E344%20%2D40%2E656%2C0%20z%20m%200%2C%2D9%2E856%2031%2E248%2C0%20q%2020%2E72%2C0%2032%2E144%2C%2D9%2E24%2011%2E424%2C%2D9%2E24%2011%2E424%2C%2D27%2E272%200%2C%2D18%2E704%20%2D11%2E2%2C%2D27%2E216%20%2D11%2E2%2C%2D8%2E512%20%2D36%2E512%2C%2D8%2E512%20l%20%2D27%2E104%2C0%200%2C72%2E24%20z%22%20style%3D%22fill%3A%23fff%22%2F%3E%3C%2Fsvg%3E",
   "id": "_id_",
   "name": "reverb",
   "properties": {

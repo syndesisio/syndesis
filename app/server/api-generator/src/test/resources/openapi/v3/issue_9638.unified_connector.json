@@ -2,39 +2,48 @@
   "actions": [
     {
       "actionType": "connector",
-      "description": "Send POST request to /complex/{pathParam}",
+      "description": "Send POST request to /b9qXPYRB3JH3DDogXmxn",
       "descriptor": {
         "configuredProperties": {
-          "operationId": "complexOperation"
+          "operationId": "test endpoint"
         },
         "connectorId": "_id_",
         "inputDataShape": {
           "description": "API request payload",
-          "kind": "xml-schema",
+          "kind": "json-schema",
           "metadata": {
             "unified": "true"
           },
           "name": "Request",
-          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema targetNamespace=\"http://syndesis.io/v1/swagger-connector-template/request\" elementFormDefault=\"qualified\"><xsd:element name=\"request\"><xsd:complexType><xsd:sequence><xsd:element xmlns:p=\"http://syndesis.io/v1/swagger-connector-template/parameters\" ref=\"p:parameters\"></xsd:element><xsd:element name=\"body\"><xsd:complexType><xsd:sequence><xsd:element xmlns:b=\"http://example.com/Complex\" ref=\"b:complex\"></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:schema><d:AdditionalSchemas><xsd:schema targetNamespace=\"http://syndesis.io/v1/swagger-connector-template/parameters\"><xsd:element name=\"parameters\"><xsd:complexType><xsd:sequence><xsd:element name=\"pathParam\" type=\"xsd:string\"/><xsd:element name=\"queryParam\" type=\"xsd:integer\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema><xsd:schema targetNamespace=\"http://example.com/Complex\"><xsd:element name=\"complex\"><xsd:complexType><xsd:sequence><xsd:element name=\"date\" type=\"xsd:string\"/><xsd:element name=\"status\" type=\"xsd:string\"/><xsd:element name=\"children\"><xsd:complexType><xsd:sequence><xsd:element xmlns:p0=\"http://example.com/Child\" ref=\"p0:child\" maxOccurs=\"unbounded\" minOccurs=\"0\"></xsd:element></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"complete\" type=\"xsd:boolean\"/></xsd:sequence><xsd:attribute name=\"id\" type=\"xsd:integer\"/></xsd:complexType></xsd:element></xsd:schema><xsd:schema targetNamespace=\"http://example.com/Child\"><xsd:element name=\"child\"><xsd:complexType><xsd:sequence><xsd:element name=\"description\" type=\"xsd:string\"/></xsd:sequence><xsd:attribute name=\"name\" type=\"xsd:string\"/></xsd:complexType></xsd:element></xsd:schema></d:AdditionalSchemas></d:SchemaSet>"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"local-header\":{\"type\":\"string\",\"title\":\"local-header\"},\"global-header\":{\"type\":\"string\",\"title\":\"global-header\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"ids\":{\"type\":\"string\"},\"start\":{\"type\":\"number\"},\"searchmodifiers\":{\"type\":\"string\"}}}}}"
         },
         "outputDataShape": {
-          "kind": "none"
+          "description": "API response payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Response",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"ids\":{\"type\":\"string\"},\"start\":{\"type\":\"number\"},\"searchmodifiers\":{\"type\":\"string\"}}}}}"
         }
       },
-      "id": "_id_:complexOperation",
-      "name": "POST /complex/{pathParam}",
-      "pattern": "To"
+      "id": "_id_:test endpoint",
+      "name": "test endpoint post",
+      "pattern": "To",
+      "tags": [
+        "test"
+      ]
     }
   ],
   "componentScheme": "rest-openapi",
   "configuredProperties": {
     "authenticationType": "none",
-    "basePath": "/api",
+    "basePath": "/",
     "componentName": "connector-rest-swagger-http4",
-    "host": "http://example.com",
-    "specification": "{\"openapi\":\"3.0.2\",\"servers\":[{\"url\":\"http://example.com/api\"}],\"paths\":{\"/complex/{pathParam}\":{\"post\":{\"parameters\":[{\"name\":\"pathParam\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"},{\"name\":\"queryParam\",\"schema\":{\"type\":\"integer\"},\"in\":\"query\"}],\"operationId\":\"complexOperation\"}}},\"components\":{}}"
+    "specification": "{\"openapi\":\"3.0.0\",\"paths\":{\"/b9qXPYRB3JH3DDogXmxn\":{\"post\":{\"parameters\":[{\"name\":\"local-header\",\"schema\":{\"type\":\"string\"},\"in\":\"header\"}],\"operationId\":\"test endpoint\"},\"parameters\":[{\"name\":\"global-header\",\"schema\":{\"type\":\"string\"},\"in\":\"header\"}]}},\"components\":{}}"
   },
   "connectorCustomizers": [
+    "io.syndesis.connector.rest.swagger.HeaderParametersCustomizer",
     "io.syndesis.connector.rest.swagger.SpecificationResourceCustomizer",
     "io.syndesis.connector.rest.swagger.AuthenticationCustomizer",
     "io.syndesis.connector.rest.swagger.RequestCustomizer",
@@ -61,7 +70,7 @@
   ],
   "description": "unspecified",
   "id": "_id_",
-  "name": "Complex XML",
+  "name": "test api provider",
   "properties": {
     "authenticationType": {
       "componentProperty": true,
@@ -89,7 +98,7 @@
     },
     "basePath": {
       "componentProperty": true,
-      "defaultValue": "/api",
+      "defaultValue": "/",
       "deprecated": false,
       "description": "API basePath for example /v2. Default is unset if set overrides the value present in OpenAPI document.",
       "displayName": "Base path",
@@ -104,7 +113,6 @@
     },
     "host": {
       "componentProperty": true,
-      "defaultValue": "http://example.com",
       "deprecated": false,
       "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port.",
       "displayName": "Host",
