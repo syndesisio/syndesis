@@ -33,9 +33,9 @@ Syndesis:
             Image: "quay.io/openshift/origin-oauth-proxy:4.7"
             DisableSarCheck: false
         UI:
-            Image: "docker.io/syndesis/syndesis-ui:latest"
+            Image: "docker.io/syndesis/syndesis-ui:1.12.0-20210616"
         S2I:
-            Image: "docker.io/syndesis/syndesis-s2i:latest"
+            Image: "docker.io/syndesis/syndesis-s2i:1.12.0-20210616"
         Prometheus:
             Rules: ""
             Image: "docker.io/prom/prometheus:v2.23.0"
@@ -47,11 +47,11 @@ Syndesis:
                 VolumeCapacity: "1Gi"
                 VolumeAccessMode: "ReadWriteOnce"
         Upgrade:
-            Image: "docker.io/syndesis/syndesis-upgrade:latest"
+            Image: "docker.io/syndesis/syndesis-upgrade:1.12.0-20210616"
             Resources:
                 VolumeCapacity: "1Gi"
         Meta:
-            Image: "docker.io/syndesis/syndesis-meta:latest"
+            Image: "docker.io/syndesis/syndesis-meta:1.12.0-20210616"
             Resources:
                 Limit:
                     Memory: "512Mi"
@@ -77,7 +77,7 @@ Syndesis:
             RestoreImage: "crunchydata/crunchy-pgrestore:centos7-12.5-4.5.1"
             LoggerImage: "centos:7"
         Server:
-            Image: "docker.io/syndesis/syndesis-server:latest"
+            Image: "docker.io/syndesis/syndesis-server:1.12.0-20210616"
             Resources:
                 Limit:
                     Memory: "800Mi"
