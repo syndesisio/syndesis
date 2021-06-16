@@ -21,39 +21,43 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import io.apicurio.datamodels.Library;
+import io.apicurio.datamodels.openapi.models.OasDocument;
+import io.apicurio.datamodels.openapi.models.OasOperation;
+import io.apicurio.datamodels.openapi.models.OasParameter;
+import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.syndesis.server.jsondb.impl.JsonRecordSupport;
+
 import org.junit.jupiter.api.Test;
 
 import static io.syndesis.server.api.generator.openapi.TestHelper.resource;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 public class OasModelHelperTest {
 
     @Test
-    public void minimizingShouldProduceReadableV2Specification() throws IOException {
-        final String specification = resource("/openapi/v2/todo.json");
+    public void minimizingShouldNotLooseHeaderParameters() {
+        final String definition = "{\"openapi\": \"3.0.0\", \"paths\": {\"/\": {\"get\": {\"parameters\": [{\"in\": \"header\", \"name\": \"operation-header\"}]},\"parameters\": [{\"in\": \"header\", \"name\": \"path-header\"}]}}}";
 
-        final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(specification);
-        final String minimizedString = SpecificationOptimizer.minimizeForComponent(openApiDoc);
+        final OasDocument original = (OasDocument) Library.readDocumentFromJSONString(definition);
+        final OasPathItem originalPath = original.paths.getPathItem("/");
+        assertThat(originalPath.getParameters()).extracting(OasParameter::getName).containsOnly("path-header");
+        assertThat(originalPath.get.getParameters()).extracting(OasParameter::getName).containsOnly("operation-header");
 
-        final Oas20Document minimized = (Oas20Document) Library.readDocumentFromJSONString(minimizedString);
-        assertThat(minimized.paths.getItems()).hasSize(2);
-    }
+        final String minimizedString = SpecificationOptimizer.minimizeForComponent(original);
 
-    @Test
-    public void minimizingShouldProduceReadableV3Specification() throws IOException {
-        final String specification = resource("/openapi/v3/todo.json");
+        final OasDocument minimized = (OasDocument) Library.readDocumentFromJSONString(minimizedString);
 
-        final Oas30Document openApiDoc = (Oas30Document) Library.readDocumentFromJSONString(specification);
-        final String minimizedString = SpecificationOptimizer.minimizeForComponent(openApiDoc);
+        final OasPathItem path = minimized.paths.getPathItem("/");
+        assertThat(path.getParameters()).extracting(OasParameter::getName).containsOnly("path-header");
 
-        final Oas30Document minimized = (Oas30Document) Library.readDocumentFromJSONString(minimizedString);
-        assertThat(minimized.paths.getItems()).hasSize(2);
+        final OasOperation operation = path.get;
+        assertThat(operation.parameters).extracting(OasParameter::getName).containsOnly("operation-header");
     }
 
     @Test
@@ -95,12 +99,12 @@ public class OasModelHelperTest {
 
         final Oas20Document minimized = (Oas20Document) Library.readDocumentFromJSONString(minimizedString);
 
-        Oas20SecurityScheme apiKeyHeader = new Oas20SecurityScheme("api-key-header");
+        final Oas20SecurityScheme apiKeyHeader = new Oas20SecurityScheme("api-key-header");
         apiKeyHeader.type = "apiKey";
         apiKeyHeader.in = "header";
         apiKeyHeader.name = "API-KEY";
 
-        Oas20SecurityScheme apiKeyParameter = new Oas20SecurityScheme("api-key-parameter");
+        final Oas20SecurityScheme apiKeyParameter = new Oas20SecurityScheme("api-key-parameter");
         apiKeyParameter.type = "apiKey";
         apiKeyParameter.in = "query";
         apiKeyParameter.name = "api_key";
@@ -112,6 +116,28 @@ public class OasModelHelperTest {
         assertThat(minimized.securityDefinitions.getSecurityScheme(apiKeyParameter._schemeName).type).isEqualTo(apiKeyParameter.type);
         assertThat(minimized.securityDefinitions.getSecurityScheme(apiKeyParameter._schemeName).in).isEqualTo(apiKeyParameter.in);
         assertThat(minimized.securityDefinitions.getSecurityScheme(apiKeyParameter._schemeName).name).isEqualTo(apiKeyParameter.name);
+    }
+
+    @Test
+    public void minimizingShouldProduceReadableV2Specification() throws IOException {
+        final String specification = resource("/openapi/v2/todo.json");
+
+        final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(specification);
+        final String minimizedString = SpecificationOptimizer.minimizeForComponent(openApiDoc);
+
+        final Oas20Document minimized = (Oas20Document) Library.readDocumentFromJSONString(minimizedString);
+        assertThat(minimized.paths.getItems()).hasSize(2);
+    }
+
+    @Test
+    public void minimizingShouldProduceReadableV3Specification() throws IOException {
+        final String specification = resource("/openapi/v3/todo.json");
+
+        final Oas30Document openApiDoc = (Oas30Document) Library.readDocumentFromJSONString(specification);
+        final String minimizedString = SpecificationOptimizer.minimizeForComponent(openApiDoc);
+
+        final Oas30Document minimized = (Oas30Document) Library.readDocumentFromJSONString(minimizedString);
+        assertThat(minimized.paths.getItems()).hasSize(2);
     }
 
     @Test

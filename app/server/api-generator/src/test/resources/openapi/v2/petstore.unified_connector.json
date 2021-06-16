@@ -2,40 +2,12 @@
   "actions": [
     {
       "actionType": "connector",
-      "description": "Send PUT request to /pet",
-      "descriptor": {
-        "componentScheme": "rest-openapi",
-        "configuredProperties": {
-          "operationId": "updatePet"
-        },
-        "inputDataShape": {
-          "description": "API request payload",
-          "kind": "json-schema",
-          "metadata": {
-            "unified": "true"
-          },
-          "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"category\": {\"properties\": {\"id\": { \"type\": \"integer\"}, \"name\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Category\"}}, \"id\": { \"type\": \"integer\"}, \"name\": {\"example\": \"doggie\", \"type\": \"string\"}, \"photoUrls\": {\"items\": {\"type\": \"string\"}, \"type\": \"array\", \"xml\": {\"name\": \"photoUrl\", \"wrapped\": true}}, \"status\": {\"description\": \"pet status in the store\", \"enum\": [ \"available\", \"pending\", \"sold\" ], \"type\": \"string\"}, \"tags\": {\"items\": {\"properties\": {\"id\": { \"type\": \"integer\"}, \"name\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Tag\"}}, \"type\": \"array\", \"xml\": {\"name\": \"tag\", \"wrapped\": true}}}, \"required\": [ \"name\", \"photoUrls\" ], \"type\": \"object\", \"xml\": {\"name\": \"Pet\"}}}, \"type\": \"object\"}"
-        },
-        "outputDataShape": {
-          "kind": "none"
-        }
-      },
-      "id": "_id_:updatePet",
-      "name": "Update an existing pet",
-      "pattern": "To",
-      "tags": [
-        "pet"
-      ]
-    },
-    {
-      "actionType": "connector",
       "description": "Send POST request to /pet",
       "descriptor": {
-        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "addPet"
         },
+        "connectorId": "_id_",
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
@@ -43,7 +15,7 @@
             "unified": "true"
           },
           "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\" : {\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"], \"type\" : \"string\"}},\"xml\":{\"name\":\"Pet\"}}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"category\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Category\"}},\"id\":{\"type\":\"integer\"},\"name\":{\"example\":\"doggie\",\"type\":\"string\"},\"photoUrls\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"items\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Tag\"}},\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"required\":[\"name\",\"photoUrls\"],\"xml\":{\"name\":\"Pet\"}}}}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -58,142 +30,12 @@
     },
     {
       "actionType": "connector",
-      "description": "Multiple status values can be provided with comma separated strings",
-      "descriptor": {
-        "componentScheme": "rest-openapi",
-        "configuredProperties": {
-          "operationId": "findPetsByStatus"
-        },
-        "inputDataShape": {
-          "description": "API request payload",
-          "kind": "json-schema",
-          "metadata": {
-            "unified": "true"
-          },
-          "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"status\": {\"description\": \"Status values that need to be considered for filter\", \"items\": {\"enum\": [ \"available\", \"pending\", \"sold\" ], \"type\" : \"string\"}, \"title\": \"status\", \"type\": \"array\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
-        },
-        "outputDataShape": {
-          "description": "API response payload",
-          "kind": "json-schema",
-          "metadata": {
-            "unified": "true"
-          },
-          "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\",  \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"category\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Category\"}},\"id\":{\"type\":\"integer\"},\"name\":{\"example\":\"doggie\",\"type\":\"string\"},\"photoUrls\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"items\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Tag\"}},\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"required\":[\"name\",\"photoUrls\"],\"type\":\"object\",\"xml\":{\"name\":\"Pet\"}},\"type\":\"array\" }}, \"type\":\"object\" }"
-        }
-      },
-      "id": "_id_:findPetsByStatus",
-      "name": "Finds Pets by status",
-      "pattern": "To",
-      "tags": [
-        "pet"
-      ]
-    },
-    {
-      "actionType": "connector",
-      "description": "Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
-      "descriptor": {
-        "componentScheme": "rest-openapi",
-        "configuredProperties": {
-          "operationId": "findPetsByTags"
-        },
-        "inputDataShape": {
-          "description": "API request payload",
-          "kind": "json-schema",
-          "metadata": {
-            "unified": "true"
-          },
-          "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"tags\": {\"description\": \"Tags to filter by\", \"items\": {\"type\": \"string\"}, \"title\": \"tags\", \"type\": \"array\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
-        },
-        "outputDataShape": {
-          "description": "API response payload",
-          "kind": "json-schema",
-          "metadata": {
-            "unified": "true"
-          },
-          "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\",  \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"category\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Category\"}},\"id\":{\"type\":\"integer\"},\"name\":{\"example\":\"doggie\",\"type\":\"string\"},\"photoUrls\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"items\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Tag\"}},\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"required\":[\"name\",\"photoUrls\"],\"type\":\"object\",\"xml\":{\"name\":\"Pet\"}},\"type\":\"array\"}},\"type\":\"object\"}"
-        }
-      },
-      "id": "_id_:findPetsByTags",
-      "name": "Finds Pets by tags",
-      "pattern": "To",
-      "tags": [
-        "pet"
-      ]
-    },
-    {
-      "actionType": "connector",
-      "description": "Returns a single pet",
-      "descriptor": {
-        "componentScheme": "rest-openapi",
-        "configuredProperties": {
-          "operationId": "getPetById"
-        },
-        "inputDataShape": {
-          "description": "API request payload",
-          "kind": "json-schema",
-          "metadata": {
-            "unified": "true"
-          },
-          "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"petId\": {\"description\": \"ID of pet to return\", \"title\": \"petId\", \"type\": \"integer\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
-        },
-        "outputDataShape": {
-          "description": "API response payload",
-          "kind": "json-schema",
-          "metadata": {
-            "unified": "true"
-          },
-          "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"]}},\"xml\":{\"name\":\"Pet\"}}}}"
-        }
-      },
-      "id": "_id_:getPetById",
-      "name": "Find pet by ID",
-      "pattern": "To",
-      "tags": [
-        "pet"
-      ]
-    },
-    {
-      "actionType": "connector",
-      "description": "Send POST request to /pet/{petId}",
-      "descriptor": {
-        "componentScheme": "rest-openapi",
-        "configuredProperties": {
-          "operationId": "updatePetWithForm"
-        },
-        "inputDataShape": {
-          "description": "API request payload",
-          "kind": "json-schema",
-          "metadata": {
-            "unified": "true"
-          },
-          "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"name\": {\"description\": \"Updated name of the pet\", \"title\": \"name\", \"type\": \"string\"}, \"petId\": {\"description\": \"ID of pet that needs to be updated\", \"title\": \"petId\", \"type\": \"integer\"}, \"status\": {\"description\": \"Updated status of the pet\", \"title\": \"status\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
-        },
-        "outputDataShape": {
-          "kind": "none"
-        }
-      },
-      "id": "_id_:updatePetWithForm",
-      "name": "Updates a pet in the store with form data",
-      "pattern": "To",
-      "tags": [
-        "pet"
-      ]
-    },
-    {
-      "actionType": "connector",
       "description": "Send DELETE request to /pet/{petId}",
       "descriptor": {
-        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "deletePet"
         },
+        "connectorId": "_id_",
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
@@ -201,7 +43,7 @@
             "unified": "true"
           },
           "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"api_key_name\": {\"title\": \"api_key_name\", \"type\": \"string\"}, \"petId\": {\"description\": \"Pet id to delete\", \"title\": \"petId\", \"type\": \"integer\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"api_key_name\":{\"type\":\"string\",\"title\":\"api_key_name\"},\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"Pet id to delete\"}}}}}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -216,12 +58,12 @@
     },
     {
       "actionType": "connector",
-      "description": "Send POST request to /pet/{petId}/uploadImage",
+      "description": "Returns a single pet",
       "descriptor": {
-        "componentScheme": "rest-openapi",
         "configuredProperties": {
-          "operationId": "uploadFile"
+          "operationId": "getPetById"
         },
+        "connectorId": "_id_",
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
@@ -229,7 +71,7 @@
             "unified": "true"
           },
           "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"additionalMetadata\": {\"description\": \"Additional data to pass to server\", \"title\": \"additionalMetadata\", \"type\": \"string\"}, \"petId\": {\"description\": \"ID of pet to update\", \"title\": \"petId\", \"type\": \"integer\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"ID of pet to return\"}}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
@@ -238,7 +80,165 @@
             "unified": "true"
           },
           "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"type\":{\"type\":\"string\"},\"message\":{\"type\":\"string\"}}}}}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"category\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Category\"}},\"id\":{\"type\":\"integer\"},\"name\":{\"example\":\"doggie\",\"type\":\"string\"},\"photoUrls\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"items\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Tag\"}},\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"required\":[\"name\",\"photoUrls\"],\"xml\":{\"name\":\"Pet\"}}}}"
+        }
+      },
+      "id": "_id_:getPetById",
+      "name": "Find pet by ID",
+      "pattern": "To",
+      "tags": [
+        "pet"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Multiple status values can be provided with comma separated strings",
+      "descriptor": {
+        "configuredProperties": {
+          "operationId": "findPetsByStatus"
+        },
+        "connectorId": "_id_",
+        "inputDataShape": {
+          "description": "API request payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"status\":{\"type\":\"array\",\"title\":\"status\",\"description\":\"Status values that need to be considered for filter\",\"items\":{\"type\":\"string\",\"enum\":[\"available\",\"pending\",\"sold\"]}}}}}}"
+        },
+        "outputDataShape": {
+          "description": "API response payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Response",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"category\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Category\"}},\"id\":{\"type\":\"integer\"},\"name\":{\"example\":\"doggie\",\"type\":\"string\"},\"photoUrls\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"items\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Tag\"}},\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"required\":[\"name\",\"photoUrls\"],\"xml\":{\"name\":\"Pet\"}}}}}"
+        }
+      },
+      "id": "_id_:findPetsByStatus",
+      "name": "Finds Pets by status",
+      "pattern": "To",
+      "tags": [
+        "pet"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
+      "descriptor": {
+        "configuredProperties": {
+          "operationId": "findPetsByTags"
+        },
+        "connectorId": "_id_",
+        "inputDataShape": {
+          "description": "API request payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"tags\":{\"type\":\"array\",\"title\":\"tags\",\"description\":\"Tags to filter by\",\"items\":{\"type\":\"string\"}}}}}}"
+        },
+        "outputDataShape": {
+          "description": "API response payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Response",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"category\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Category\"}},\"id\":{\"type\":\"integer\"},\"name\":{\"example\":\"doggie\",\"type\":\"string\"},\"photoUrls\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"items\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Tag\"}},\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"required\":[\"name\",\"photoUrls\"],\"xml\":{\"name\":\"Pet\"}}}}}"
+        }
+      },
+      "id": "_id_:findPetsByTags",
+      "name": "Finds Pets by tags",
+      "pattern": "To",
+      "tags": [
+        "pet"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Send PUT request to /pet",
+      "descriptor": {
+        "configuredProperties": {
+          "operationId": "updatePet"
+        },
+        "connectorId": "_id_",
+        "inputDataShape": {
+          "description": "API request payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"category\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Category\"}},\"id\":{\"type\":\"integer\"},\"name\":{\"example\":\"doggie\",\"type\":\"string\"},\"photoUrls\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"items\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Tag\"}},\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"required\":[\"name\",\"photoUrls\"],\"xml\":{\"name\":\"Pet\"}}}}"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        }
+      },
+      "id": "_id_:updatePet",
+      "name": "Update an existing pet",
+      "pattern": "To",
+      "tags": [
+        "pet"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Send POST request to /pet/{petId}",
+      "descriptor": {
+        "configuredProperties": {
+          "operationId": "updatePetWithForm"
+        },
+        "connectorId": "_id_",
+        "inputDataShape": {
+          "description": "API request payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"ID of pet that needs to be updated\"},\"name\":{\"type\":\"string\",\"title\":\"name\",\"description\":\"Updated name of the pet\"},\"status\":{\"type\":\"string\",\"title\":\"status\",\"description\":\"Updated status of the pet\"}}}}}"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        }
+      },
+      "id": "_id_:updatePetWithForm",
+      "name": "Updates a pet in the store with form data",
+      "pattern": "To",
+      "tags": [
+        "pet"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Send POST request to /pet/{petId}/uploadImage",
+      "descriptor": {
+        "configuredProperties": {
+          "operationId": "uploadFile"
+        },
+        "connectorId": "_id_",
+        "inputDataShape": {
+          "description": "API request payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"ID of pet to update\"},\"additionalMetadata\":{\"type\":\"string\",\"title\":\"additionalMetadata\",\"description\":\"Additional data to pass to server\"}}}}}"
+        },
+        "outputDataShape": {
+          "description": "API response payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Response",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"message\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}}}}}"
         }
       },
       "id": "_id_:uploadFile",
@@ -250,108 +250,12 @@
     },
     {
       "actionType": "connector",
-      "description": "Returns a map of status codes to quantities",
-      "descriptor": {
-        "componentScheme": "rest-openapi",
-        "configuredProperties": {
-          "operationId": "getInventory"
-        },
-        "inputDataShape": {
-          "kind": "none"
-        },
-        "outputDataShape": {
-          "description": "API response payload",
-          "kind": "json-schema",
-          "metadata": {
-            "unified": "true"
-          },
-          "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"additionalProperties\":{\"type\":\"integer\"}}}}"
-        }
-      },
-      "id": "_id_:getInventory",
-      "name": "Returns pet inventories by status",
-      "pattern": "To",
-      "tags": [
-        "store"
-      ]
-    },
-    {
-      "actionType": "connector",
-      "description": "Send POST request to /store/order",
-      "descriptor": {
-        "componentScheme": "rest-openapi",
-        "configuredProperties": {
-          "operationId": "placeOrder"
-        },
-        "inputDataShape": {
-          "description": "API request payload",
-          "kind": "json-schema",
-          "metadata": {
-            "unified": "true"
-          },
-          "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"complete\": {\"default\": false, \"type\": \"boolean\"}, \"id\": { \"type\": \"integer\"}, \"petId\": { \"type\": \"integer\"}, \"quantity\": { \"type\": \"integer\"}, \"shipDate\": {\"format\": \"date-time\", \"type\": \"string\"}, \"status\": {\"description\": \"Order Status\", \"enum\": [ \"placed\", \"approved\", \"delivered\" ], \"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Order\"}}}, \"type\": \"object\"}"
-        },
-        "outputDataShape": {
-          "description": "API response payload",
-          "kind": "json-schema",
-          "metadata": {
-            "unified": "true"
-          },
-          "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"petId\":{\"type\":\"integer\"},\"quantity\":{\"type\":\"integer\"},\"shipDate\":{\"type\":\"string\",\"format\":\"date-time\"},\"status\":{\"type\":\"string\",\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"]},\"complete\":{\"type\":\"boolean\",\"default\":false}},\"xml\":{\"name\":\"Order\"}}}}"
-        }
-      },
-      "id": "_id_:placeOrder",
-      "name": "Place an order for a pet",
-      "pattern": "To",
-      "tags": [
-        "store"
-      ]
-    },
-    {
-      "actionType": "connector",
-      "description": "For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions",
-      "descriptor": {
-        "componentScheme": "rest-openapi",
-        "configuredProperties": {
-          "operationId": "getOrderById"
-        },
-        "inputDataShape": {
-          "description": "API request payload",
-          "kind": "json-schema",
-          "metadata": {
-            "unified": "true"
-          },
-          "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"orderId\": {\"description\": \"ID of pet that needs to be fetched\", \"title\": \"orderId\", \"type\": \"integer\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
-        },
-        "outputDataShape": {
-          "description": "API response payload",
-          "kind": "json-schema",
-          "metadata": {
-            "unified": "true"
-          },
-          "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"petId\":{\"type\":\"integer\"},\"quantity\":{\"type\":\"integer\"},\"shipDate\":{\"type\":\"string\",\"format\":\"date-time\"},\"status\":{\"type\":\"string\",\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"]},\"complete\":{\"type\":\"boolean\",\"default\":false}},\"xml\":{\"name\":\"Order\"}}}}"
-        }
-      },
-      "id": "_id_:getOrderById",
-      "name": "Find purchase order by ID",
-      "pattern": "To",
-      "tags": [
-        "store"
-      ]
-    },
-    {
-      "actionType": "connector",
       "description": "For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors",
       "descriptor": {
-        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "deleteOrder"
         },
+        "connectorId": "_id_",
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
@@ -359,7 +263,7 @@
             "unified": "true"
           },
           "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"orderId\": {\"description\": \"ID of the order that needs to be deleted\", \"title\": \"orderId\", \"type\": \"integer\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"orderId\":{\"type\":\"integer\",\"title\":\"orderId\",\"description\":\"ID of the order that needs to be deleted\"}}}}}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -374,12 +278,12 @@
     },
     {
       "actionType": "connector",
-      "description": "This can only be done by the logged in user.",
+      "description": "For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions",
       "descriptor": {
-        "componentScheme": "rest-openapi",
         "configuredProperties": {
-          "operationId": "createUser"
+          "operationId": "getOrderById"
         },
+        "connectorId": "_id_",
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
@@ -387,7 +291,103 @@
             "unified": "true"
           },
           "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": { \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\",  \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"User\"}}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"orderId\":{\"type\":\"integer\",\"title\":\"orderId\",\"description\":\"ID of pet that needs to be fetched\"}}}}}"
+        },
+        "outputDataShape": {
+          "description": "API response payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Response",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"complete\":{\"default\":false,\"type\":\"boolean\"},\"id\":{\"type\":\"integer\"},\"petId\":{\"type\":\"integer\"},\"quantity\":{\"type\":\"integer\"},\"shipDate\":{\"format\":\"date-time\",\"type\":\"string\"},\"status\":{\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"],\"type\":\"string\"}},\"xml\":{\"name\":\"Order\"}}}}"
+        }
+      },
+      "id": "_id_:getOrderById",
+      "name": "Find purchase order by ID",
+      "pattern": "To",
+      "tags": [
+        "store"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Send POST request to /store/order",
+      "descriptor": {
+        "configuredProperties": {
+          "operationId": "placeOrder"
+        },
+        "connectorId": "_id_",
+        "inputDataShape": {
+          "description": "API request payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"complete\":{\"default\":false,\"type\":\"boolean\"},\"id\":{\"type\":\"integer\"},\"petId\":{\"type\":\"integer\"},\"quantity\":{\"type\":\"integer\"},\"shipDate\":{\"format\":\"date-time\",\"type\":\"string\"},\"status\":{\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"],\"type\":\"string\"}},\"xml\":{\"name\":\"Order\"}}}}"
+        },
+        "outputDataShape": {
+          "description": "API response payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Response",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"complete\":{\"default\":false,\"type\":\"boolean\"},\"id\":{\"type\":\"integer\"},\"petId\":{\"type\":\"integer\"},\"quantity\":{\"type\":\"integer\"},\"shipDate\":{\"format\":\"date-time\",\"type\":\"string\"},\"status\":{\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"],\"type\":\"string\"}},\"xml\":{\"name\":\"Order\"}}}}"
+        }
+      },
+      "id": "_id_:placeOrder",
+      "name": "Place an order for a pet",
+      "pattern": "To",
+      "tags": [
+        "store"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Returns a map of status codes to quantities",
+      "descriptor": {
+        "configuredProperties": {
+          "operationId": "getInventory"
+        },
+        "connectorId": "_id_",
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "description": "API response payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Response",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"additionalProperties\":{\"type\":\"integer\"}}}}"
+        }
+      },
+      "id": "_id_:getInventory",
+      "name": "Returns pet inventories by status",
+      "pattern": "To",
+      "tags": [
+        "store"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "This can only be done by the logged in user.",
+      "descriptor": {
+        "configuredProperties": {
+          "operationId": "createUser"
+        },
+        "connectorId": "_id_",
+        "inputDataShape": {
+          "description": "API request payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"xml\":{\"name\":\"User\"}}}}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -404,10 +404,10 @@
       "actionType": "connector",
       "description": "Send POST request to /user/createWithArray",
       "descriptor": {
-        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "createUsersWithArrayInput"
         },
+        "connectorId": "_id_",
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
@@ -415,7 +415,7 @@
             "unified": "true"
           },
           "name": "Request",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"User\"}},\"type\":\"array\"}},\"type\":\"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"xml\":{\"name\":\"User\"}}}}}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -432,10 +432,10 @@
       "actionType": "connector",
       "description": "Send POST request to /user/createWithList",
       "descriptor": {
-        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "createUsersWithListInput"
         },
+        "connectorId": "_id_",
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
@@ -443,7 +443,7 @@
             "unified": "true"
           },
           "name": "Request",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"User\"}},\"type\":\"array\"}},\"type\":\"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"xml\":{\"name\":\"User\"}}}}}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -458,12 +458,12 @@
     },
     {
       "actionType": "connector",
-      "description": "Send GET request to /user/login",
+      "description": "This can only be done by the logged in user.",
       "descriptor": {
-        "componentScheme": "rest-openapi",
         "configuredProperties": {
-          "operationId": "loginUser"
+          "operationId": "deleteUser"
         },
+        "connectorId": "_id_",
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
@@ -471,7 +471,35 @@
             "unified": "true"
           },
           "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"password\": {\"description\": \"The password for login in clear text\", \"title\": \"password\", \"type\": \"string\"}, \"username\": {\"description\": \"The user name for login\", \"title\": \"username\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"username\":{\"type\":\"string\",\"title\":\"username\",\"description\":\"The name that needs to be deleted\"}}}}}"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        }
+      },
+      "id": "_id_:deleteUser",
+      "name": "Delete user",
+      "pattern": "To",
+      "tags": [
+        "user"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Send GET request to /user/{username}",
+      "descriptor": {
+        "configuredProperties": {
+          "operationId": "getUserByName"
+        },
+        "connectorId": "_id_",
+        "inputDataShape": {
+          "description": "API request payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"username\":{\"type\":\"string\",\"title\":\"username\",\"description\":\"The name that needs to be fetched. Use user1 for testing.\"}}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
@@ -480,11 +508,11 @@
             "unified": "true"
           },
           "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"string\"}}}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"xml\":{\"name\":\"User\"}}}}"
         }
       },
-      "id": "_id_:loginUser",
-      "name": "Logs user into the system",
+      "id": "_id_:getUserByName",
+      "name": "Get user by user name",
       "pattern": "To",
       "tags": [
         "user"
@@ -494,10 +522,10 @@
       "actionType": "connector",
       "description": "Send GET request to /user/logout",
       "descriptor": {
-        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "logoutUser"
         },
+        "connectorId": "_id_",
         "inputDataShape": {
           "kind": "none"
         },
@@ -514,12 +542,12 @@
     },
     {
       "actionType": "connector",
-      "description": "Send GET request to /user/{username}",
+      "description": "Send GET request to /user/login",
       "descriptor": {
-        "componentScheme": "rest-openapi",
         "configuredProperties": {
-          "operationId": "getUserByName"
+          "operationId": "loginUser"
         },
+        "connectorId": "_id_",
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
@@ -527,7 +555,7 @@
             "unified": "true"
           },
           "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"username\": {\"description\": \"The name that needs to be fetched. Use user1 for testing.\", \"title\": \"username\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"username\":{\"type\":\"string\",\"title\":\"username\",\"description\":\"The user name for login\"},\"password\":{\"type\":\"string\",\"title\":\"password\",\"description\":\"The password for login in clear text\"}}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
@@ -536,11 +564,11 @@
             "unified": "true"
           },
           "name": "Response",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"username\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"type\":\"integer\",\"description\":\"User Status\"}},\"xml\":{\"name\":\"User\"}}}}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"string\"}}}"
         }
       },
-      "id": "_id_:getUserByName",
-      "name": "Get user by user name",
+      "id": "_id_:loginUser",
+      "name": "Logs user into the system",
       "pattern": "To",
       "tags": [
         "user"
@@ -550,10 +578,10 @@
       "actionType": "connector",
       "description": "This can only be done by the logged in user.",
       "descriptor": {
-        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "updateUser"
         },
+        "connectorId": "_id_",
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
@@ -561,7 +589,7 @@
             "unified": "true"
           },
           "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": { \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\",  \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}},\"type\": \"object\", \"xml\": {\"name\": \"User\"}}, \"parameters\": {\"properties\": {\"username\": {\"description\": \"name that need to be updated\", \"title\": \"username\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"username\":{\"type\":\"string\",\"title\":\"username\",\"description\":\"name that need to be updated\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"xml\":{\"name\":\"User\"}}}}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -573,43 +601,20 @@
       "tags": [
         "user"
       ]
-    },
-    {
-      "actionType": "connector",
-      "description": "This can only be done by the logged in user.",
-      "descriptor": {
-        "componentScheme": "rest-openapi",
-        "configuredProperties": {
-          "operationId": "deleteUser"
-        },
-        "inputDataShape": {
-          "description": "API request payload",
-          "kind": "json-schema",
-          "metadata": {
-            "unified": "true"
-          },
-          "name": "Request",
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"username\": {\"description\": \"The name that needs to be deleted\", \"title\": \"username\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
-        },
-        "outputDataShape": {
-          "kind": "none"
-        }
-      },
-      "id": "_id_:deleteUser",
-      "name": "Delete user",
-      "pattern": "To",
-      "tags": [
-        "user"
-      ]
     }
   ],
   "componentScheme": "rest-openapi",
   "configuredProperties": {
+    "authenticationParameterName": "api_key_name",
+    "authenticationParameterPlacement": "header",
+    "authenticationType": "apiKey:api_key",
     "basePath": "/v2",
+    "componentName": "connector-rest-swagger-http4",
     "host": "http://petstore.swagger.io",
-    "specification": "{\"swagger\":\"2.0\",\"host\":\"petstore.swagger.io\",\"basePath\":\"/v2\",\"schemes\":[\"http\"],\"paths\":{\"/pet\":{\"post\":{\"operationId\":\"addPet\",\"consumes\":[\"application/json\",\"application/xml\"],\"produces\":[\"application/xml\",\"application/json\"],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}]},\"put\":{\"operationId\":\"updatePet\",\"consumes\":[\"application/json\",\"application/xml\"],\"produces\":[\"application/xml\",\"application/json\"],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}]}},\"/pet/findByStatus\":{\"get\":{\"operationId\":\"findPetsByStatus\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"status\",\"in\":\"query\",\"items\":{\"type\":\"string\",\"default\":\"available\",\"enum\":[\"available\",\"pending\",\"sold\"]},\"collectionFormat\":\"multi\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}]}},\"/pet/findByTags\":{\"get\":{\"operationId\":\"findPetsByTags\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"tags\",\"in\":\"query\",\"items\":{\"type\":\"string\"},\"collectionFormat\":\"multi\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"deprecated\":true}},\"/pet/{petId}\":{\"get\":{\"operationId\":\"getPetById\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}],\"security\":[{\"api_key\":[]}]},\"post\":{\"operationId\":\"updatePetWithForm\",\"consumes\":[\"application/x-www-form-urlencoded\"],\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}]},\"delete\":{\"operationId\":\"deletePet\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}]}},\"/pet/{petId}/uploadImage\":{\"post\":{\"operationId\":\"uploadFile\",\"consumes\":[\"multipart/form-data\"],\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}]}},\"/store/inventory\":{\"get\":{\"operationId\":\"getInventory\",\"produces\":[\"application/json\"],\"security\":[{\"api_key\":[]}]}},\"/store/order\":{\"post\":{\"operationId\":\"placeOrder\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/store/order/{orderId}\":{\"get\":{\"operationId\":\"getOrderById\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"orderId\",\"in\":\"path\",\"maximum\":10,\"minimum\":1}]},\"delete\":{\"operationId\":\"deleteOrder\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"orderId\",\"in\":\"path\",\"minimum\":1}]}},\"/user\":{\"post\":{\"operationId\":\"createUser\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/user/createWithArray\":{\"post\":{\"operationId\":\"createUsersWithArrayInput\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/user/createWithList\":{\"post\":{\"operationId\":\"createUsersWithListInput\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/user/login\":{\"get\":{\"operationId\":\"loginUser\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"query\"},{\"name\":\"password\",\"in\":\"query\"}]}},\"/user/logout\":{\"get\":{\"operationId\":\"logoutUser\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/user/{username}\":{\"get\":{\"operationId\":\"getUserByName\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}]},\"put\":{\"operationId\":\"updateUser\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}]},\"delete\":{\"operationId\":\"deleteUser\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}]}}},\"securityDefinitions\":{\"api_key\":{\"type\":\"apiKey\",\"name\":\"api_key_name\",\"in\":\"header\"},\"petstore_auth\":{\"type\":\"oauth2\",\"authorizationUrl\":\"http://petstore.swagger.io/oauth/dialog\",\"flow\":\"implicit\",\"scopes\":{\"read:pets\":\"read your pets\",\"write:pets\":\"modify pets in your account\"}}}}"
+    "specification": "{\"swagger\":\"2.0\",\"host\":\"petstore.swagger.io\",\"basePath\":\"/v2\",\"schemes\":[\"http\"],\"paths\":{\"/pet\":{\"put\":{\"consumes\":[\"application/json\",\"application/xml\"],\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"updatePet\"},\"post\":{\"consumes\":[\"application/json\",\"application/xml\"],\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"addPet\"}},\"/pet/findByStatus\":{\"get\":{\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"status\",\"in\":\"query\",\"items\":{\"type\":\"string\",\"default\":\"available\",\"enum\":[\"available\",\"pending\",\"sold\"]},\"collectionFormat\":\"multi\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"findPetsByStatus\"}},\"/pet/findByTags\":{\"get\":{\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"tags\",\"in\":\"query\",\"items\":{\"type\":\"string\"},\"collectionFormat\":\"multi\"}],\"deprecated\":true,\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"findPetsByTags\"}},\"/pet/{petId}\":{\"get\":{\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}],\"security\":[{\"api_key\":[]}],\"operationId\":\"getPetById\"},\"post\":{\"consumes\":[\"application/x-www-form-urlencoded\"],\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"updatePetWithForm\"},\"delete\":{\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"api_key_name\",\"in\":\"header\"},{\"name\":\"petId\",\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"deletePet\"}},\"/pet/{petId}/uploadImage\":{\"post\":{\"consumes\":[\"multipart/form-data\"],\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"uploadFile\"}},\"/store/inventory\":{\"get\":{\"produces\":[\"application/json\"],\"security\":[{\"api_key\":[]}],\"operationId\":\"getInventory\",\"parameters\":[]}},\"/store/order\":{\"post\":{\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[],\"operationId\":\"placeOrder\"}},\"/store/order/{orderId}\":{\"get\":{\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"orderId\",\"in\":\"path\",\"maximum\":10,\"minimum\":1}],\"operationId\":\"getOrderById\"},\"delete\":{\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"orderId\",\"in\":\"path\",\"minimum\":1}],\"operationId\":\"deleteOrder\"}},\"/user\":{\"post\":{\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[],\"operationId\":\"createUser\"}},\"/user/createWithArray\":{\"post\":{\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[],\"operationId\":\"createUsersWithArrayInput\"}},\"/user/createWithList\":{\"post\":{\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[],\"operationId\":\"createUsersWithListInput\"}},\"/user/login\":{\"get\":{\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"query\"},{\"name\":\"password\",\"in\":\"query\"}],\"operationId\":\"loginUser\"}},\"/user/logout\":{\"get\":{\"produces\":[\"application/xml\",\"application/json\"],\"operationId\":\"logoutUser\",\"parameters\":[]}},\"/user/{username}\":{\"get\":{\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}],\"operationId\":\"getUserByName\"},\"put\":{\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}],\"operationId\":\"updateUser\"},\"delete\":{\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}],\"operationId\":\"deleteUser\"}}},\"securityDefinitions\":{\"api_key\":{\"type\":\"apiKey\",\"name\":\"api_key_name\",\"in\":\"header\"},\"petstore_auth\":{\"flow\":\"implicit\",\"authorizationUrl\":\"http://petstore.swagger.io/oauth/dialog\",\"scopes\":{\"read:pets\":\"read your pets\",\"write:pets\":\"modify pets in your account\"},\"type\":\"oauth2\"}}}"
   },
   "connectorCustomizers": [
+    "io.syndesis.connector.rest.swagger.HeaderParametersCustomizer",
     "io.syndesis.connector.rest.swagger.SpecificationResourceCustomizer",
     "io.syndesis.connector.rest.swagger.AuthenticationCustomizer",
     "io.syndesis.connector.rest.swagger.RequestCustomizer",
@@ -635,6 +640,7 @@
     }
   ],
   "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
+  "id": "_id_",
   "name": "Swagger Petstore",
   "properties": {
     "authenticationParameterName": {
@@ -734,5 +740,6 @@
       ],
       "type": "hidden"
     }
-  }
+  },
+  "version": 1
 }

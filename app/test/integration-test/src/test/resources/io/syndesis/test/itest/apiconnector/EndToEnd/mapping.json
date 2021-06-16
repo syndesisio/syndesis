@@ -1,0 +1,393 @@
+{
+  "AtlasMapping": {
+    "constants": {
+      "constant": [
+        {
+          "fieldType": "STRING",
+          "name": "header1",
+          "value": "header1-value"
+        },
+        {
+          "fieldType": "STRING",
+          "name": "header2",
+          "value": "header2-value"
+        },
+        {
+          "fieldType": "STRING",
+          "name": "header3",
+          "value": "header3-value"
+        },
+        {
+          "fieldType": "STRING",
+          "name": "header4",
+          "value": "header4-value"
+        },
+        {
+          "fieldType": "STRING",
+          "name": "path1",
+          "value": "path1-value"
+        },
+        {
+          "fieldType": "STRING",
+          "name": "path2",
+          "value": "path2-value"
+        },
+        {
+          "fieldType": "STRING",
+          "name": "path3",
+          "value": "path3-value"
+        },
+        {
+          "fieldType": "STRING",
+          "name": "path4",
+          "value": "path4-value"
+        },
+        {
+          "fieldType": "STRING",
+          "name": "query1",
+          "value": "query1-value"
+        },
+        {
+          "fieldType": "STRING",
+          "name": "query2",
+          "value": "query2-value"
+        },
+        {
+          "fieldType": "STRING",
+          "name": "query3",
+          "value": "query3-value"
+        },
+        {
+          "fieldType": "STRING",
+          "name": "query4",
+          "value": "query4-value"
+        },
+        {
+          "fieldType": "STRING",
+          "name": "data",
+          "value": "data-value"
+        }
+      ]
+    },
+    "dataSource": [
+      {
+        "dataSourceType": "TARGET",
+        "id": "a",
+        "jsonType": "io.atlasmap.json.v2.JsonDataSource",
+        "template": null,
+        "uri": "atlas:json:a"
+      }
+    ],
+    "jsonType": "io.atlasmap.v2.AtlasMapping",
+    "lookupTables": {
+      "lookupTable": []
+    },
+    "mappings": {
+      "mapping": [
+        {
+          "id": "mapping.1",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.1",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "path": "header1",
+              "value": "header1-value"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.json.v2.JsonField",
+              "name": "header1",
+              "path": "/parameters/header1",
+              "userCreated": false
+            }
+          ]
+        },
+        {
+          "id": "mapping.2",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.2",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "path": "header2",
+              "value": "header2-value"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.json.v2.JsonField",
+              "name": "header2",
+              "path": "/parameters/header2",
+              "userCreated": false
+            }
+          ]
+        },
+        {
+          "id": "mapping.3",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.3",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "path": "header3",
+              "value": "header3-value"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.json.v2.JsonField",
+              "name": "header3",
+              "path": "/parameters/header3",
+              "userCreated": false
+            }
+          ]
+        },
+        {
+          "id": "mapping.4",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.4",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "path": "header4",
+              "value": "header4-value"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.json.v2.JsonField",
+              "name": "header4",
+              "path": "/parameters/header4",
+              "userCreated": false
+            }
+          ]
+        },
+        {
+          "id": "mapping.5",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.5",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "path": "path1",
+              "value": "path1-value"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.json.v2.JsonField",
+              "name": "path1",
+              "path": "/parameters/path1",
+              "userCreated": false
+            }
+          ]
+        },
+        {
+          "id": "mapping.6",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.6",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "path": "path2",
+              "value": "path2-value"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.json.v2.JsonField",
+              "name": "path2",
+              "path": "/parameters/path2",
+              "userCreated": false
+            }
+          ]
+        },
+        {
+          "id": "mapping.7",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.7",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "path": "path3",
+              "value": "path3-value"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.json.v2.JsonField",
+              "name": "path3",
+              "path": "/parameters/path3",
+              "userCreated": false
+            }
+          ]
+        },
+        {
+          "id": "mapping.8",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.8",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "path": "path4",
+              "value": "path4-value"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.json.v2.JsonField",
+              "name": "path4",
+              "path": "/parameters/path4",
+              "userCreated": false
+            }
+          ]
+        },
+        {
+          "id": "mapping.9",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.9",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "path": "query1",
+              "value": "query1-value"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.json.v2.JsonField",
+              "name": "query1",
+              "path": "/parameters/query1",
+              "userCreated": false
+            }
+          ]
+        },
+        {
+          "id": "mapping.10",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.10",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "path": "query2",
+              "value": "query2-value"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.json.v2.JsonField",
+              "name": "query2",
+              "path": "/parameters/query2",
+              "userCreated": false
+            }
+          ]
+        },
+        {
+          "id": "mapping.11",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.11",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "path": "query3",
+              "value": "query3-value"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.json.v2.JsonField",
+              "name": "query3",
+              "path": "/parameters/query3",
+              "userCreated": false
+            }
+          ]
+        },
+        {
+          "id": "mapping.12",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.12",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "path": "query4",
+              "value": "query4-value"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.json.v2.JsonField",
+              "name": "query4",
+              "path": "/parameters/query4",
+              "userCreated": false
+            }
+          ]
+        },
+        {
+          "id": "mapping.13",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.13",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "path": "data",
+              "value": "data-value"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.json.v2.JsonField",
+              "name": "data",
+              "path": "/body/data",
+              "userCreated": false
+            }
+          ]
+        }
+      ]
+    },
+    "name": "UI.0",
+    "properties": {
+      "property": []
+    }
+  }
+}

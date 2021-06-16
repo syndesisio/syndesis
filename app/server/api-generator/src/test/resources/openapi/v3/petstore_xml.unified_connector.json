@@ -24,8 +24,11 @@
       "id": "_id_:addPet",
       "name": "Add a new pet to the store",
       "pattern": "To",
-      "tags": [ "pet" ]
-    }, {
+      "tags": [
+        "pet"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send DELETE request to /pet/{petId}",
       "descriptor": {
@@ -49,8 +52,11 @@
       "id": "_id_:deletePet",
       "name": "Deletes a pet",
       "pattern": "To",
-      "tags": [ "pet" ]
-    }, {
+      "tags": [
+        "pet"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Returns a single pet",
       "descriptor": {
@@ -80,8 +86,11 @@
       "id": "_id_:getPetById",
       "name": "Find pet by ID",
       "pattern": "To",
-      "tags": [ "pet" ]
-    }, {
+      "tags": [
+        "pet"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Multiple status values can be provided with comma separated strings",
       "descriptor": {
@@ -111,8 +120,11 @@
       "id": "_id_:findPetsByStatus",
       "name": "Finds Pets by status",
       "pattern": "To",
-      "tags": [ "pet" ]
-    }, {
+      "tags": [
+        "pet"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
       "descriptor": {
@@ -142,8 +154,11 @@
       "id": "_id_:findPetsByTags",
       "name": "Finds Pets by tags",
       "pattern": "To",
-      "tags": [ "pet" ]
-    }, {
+      "tags": [
+        "pet"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send PUT request to /pet",
       "descriptor": {
@@ -167,8 +182,11 @@
       "id": "_id_:updatePet",
       "name": "Update an existing pet",
       "pattern": "To",
-      "tags": [ "pet" ]
-    }, {
+      "tags": [
+        "pet"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send POST request to /pet/{petId}",
       "descriptor": {
@@ -183,7 +201,7 @@
             "unified": "true"
           },
           "name": "Request",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"properties\":{\"name\":{\"description\":\"Updated name of the pet\",\"title\":\"name\",\"type\":\"string\"},\"petId\":{\"description\":\"ID of pet that needs to be updated\",\"title\":\"petId\",\"type\":\"integer\"},\"status\":{\"description\":\"Updated status of the pet\",\"title\":\"status\",\"type\":\"string\"}},\"type\":\"object\"}},\"type\":\"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"ID of pet that needs to be updated\"},\"name\":{\"type\":\"string\",\"title\":\"name\",\"description\":\"Updated name of the pet\"},\"status\":{\"type\":\"string\",\"title\":\"status\",\"description\":\"Updated status of the pet\"}}}}}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -192,8 +210,11 @@
       "id": "_id_:updatePetWithForm",
       "name": "Updates a pet in the store with form data",
       "pattern": "To",
-      "tags": [ "pet" ]
-    }, {
+      "tags": [
+        "pet"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send POST request to /pet/{petId}/uploadImage",
       "descriptor": {
@@ -208,7 +229,7 @@
             "unified": "true"
           },
           "name": "Request",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"properties\":{\"additionalMetadata\":{\"description\":\"Additional data to pass to server\",\"title\":\"additionalMetadata\",\"type\":\"string\"},\"file\":{\"description\":\"file to upload\",\"title\":\"file\",\"type\":\"string\"},\"petId\":{\"description\":\"ID of pet to update\",\"title\":\"petId\",\"type\":\"integer\"}},\"type\":\"object\"}},\"type\":\"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"ID of pet to update\"},\"additionalMetadata\":{\"type\":\"string\",\"title\":\"additionalMetadata\",\"description\":\"Additional data to pass to server\"},\"file\":{\"type\":\"string\",\"title\":\"file\",\"description\":\"file to upload\"}}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
@@ -223,8 +244,11 @@
       "id": "_id_:uploadFile",
       "name": "uploads an image",
       "pattern": "To",
-      "tags": [ "pet" ]
-    }, {
+      "tags": [
+        "pet"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors",
       "descriptor": {
@@ -248,8 +272,11 @@
       "id": "_id_:deleteOrder",
       "name": "Delete purchase order by ID",
       "pattern": "To",
-      "tags": [ "store" ]
-    }, {
+      "tags": [
+        "store"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions",
       "descriptor": {
@@ -279,8 +306,11 @@
       "id": "_id_:getOrderById",
       "name": "Find purchase order by ID",
       "pattern": "To",
-      "tags": [ "store" ]
-    }, {
+      "tags": [
+        "store"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send POST request to /store/order",
       "descriptor": {
@@ -310,8 +340,11 @@
       "id": "_id_:placeOrder",
       "name": "Place an order for a pet",
       "pattern": "To",
-      "tags": [ "store" ]
-    }, {
+      "tags": [
+        "store"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Returns a map of status codes to quantities",
       "descriptor": {
@@ -329,8 +362,11 @@
       "id": "_id_:getInventory",
       "name": "Returns pet inventories by status",
       "pattern": "To",
-      "tags": [ "store" ]
-    }, {
+      "tags": [
+        "store"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "This can only be done by the logged in user.",
       "descriptor": {
@@ -354,8 +390,11 @@
       "id": "_id_:createUser",
       "name": "Create user",
       "pattern": "To",
-      "tags": [ "user" ]
-    }, {
+      "tags": [
+        "user"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send POST request to /user/createWithArray",
       "descriptor": {
@@ -379,8 +418,11 @@
       "id": "_id_:createUsersWithArrayInput",
       "name": "Creates list of users with given input array",
       "pattern": "To",
-      "tags": [ "user" ]
-    }, {
+      "tags": [
+        "user"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send POST request to /user/createWithList",
       "descriptor": {
@@ -404,8 +446,11 @@
       "id": "_id_:createUsersWithListInput",
       "name": "Creates list of users with given input array",
       "pattern": "To",
-      "tags": [ "user" ]
-    }, {
+      "tags": [
+        "user"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "This can only be done by the logged in user.",
       "descriptor": {
@@ -429,8 +474,11 @@
       "id": "_id_:deleteUser",
       "name": "Delete user",
       "pattern": "To",
-      "tags": [ "user" ]
-    }, {
+      "tags": [
+        "user"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send GET request to /user/{username}",
       "descriptor": {
@@ -460,8 +508,11 @@
       "id": "_id_:getUserByName",
       "name": "Get user by user name",
       "pattern": "To",
-      "tags": [ "user" ]
-    }, {
+      "tags": [
+        "user"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send GET request to /user/logout",
       "descriptor": {
@@ -479,8 +530,11 @@
       "id": "_id_:logoutUser",
       "name": "Logs out current logged in user session",
       "pattern": "To",
-      "tags": [ "user" ]
-    }, {
+      "tags": [
+        "user"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "Send GET request to /user/login",
       "descriptor": {
@@ -510,8 +564,11 @@
       "id": "_id_:loginUser",
       "name": "Logs user into the system",
       "pattern": "To",
-      "tags": [ "user" ]
-    }, {
+      "tags": [
+        "user"
+      ]
+    },
+    {
       "actionType": "connector",
       "description": "This can only be done by the logged in user.",
       "descriptor": {
@@ -535,7 +592,9 @@
       "id": "_id_:updateUser",
       "name": "Updated user",
       "pattern": "To",
-      "tags": [ "user" ]
+      "tags": [
+        "user"
+      ]
     }
   ],
   "componentScheme": "rest-openapi",
@@ -546,9 +605,10 @@
     "basePath": "/v2",
     "componentName": "connector-rest-swagger-http4",
     "host": "http://petstore.swagger.io",
-    "specification": "{\"openapi\":\"3.0.2\",\"servers\":[{\"url\":\"http://petstore.swagger.io/v2\"}],\"paths\":{\"/pet\":{\"put\":{\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"updatePet\"},\"post\":{\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"addPet\"}},\"/pet/findByStatus\":{\"get\":{\"parameters\":[{\"style\":\"form\",\"explode\":true,\"name\":\"status\",\"schema\":{\"type\":\"array\",\"items\":{\"default\":\"available\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"}},\"in\":\"query\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"findPetsByStatus\"}},\"/pet/findByTags\":{\"get\":{\"parameters\":[{\"style\":\"form\",\"explode\":true,\"name\":\"tags\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"}],\"deprecated\":true,\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"findPetsByTags\"}},\"/pet/{petId}\":{\"get\":{\"parameters\":[{\"name\":\"petId\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"security\":[{\"api_key\":[]}],\"operationId\":\"getPetById\"},\"post\":{\"parameters\":[{\"name\":\"petId\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"updatePetWithForm\"},\"delete\":{\"parameters\":[{\"name\":\"petId\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"deletePet\"}},\"/pet/{petId}/uploadImage\":{\"post\":{\"parameters\":[{\"name\":\"petId\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"uploadFile\"}},\"/store/inventory\":{\"get\":{\"security\":[{\"api_key\":[]}],\"operationId\":\"getInventory\"}},\"/store/order\":{\"post\":{\"operationId\":\"placeOrder\"}},\"/store/order/{orderId}\":{\"get\":{\"parameters\":[{\"name\":\"orderId\",\"schema\":{\"format\":\"int64\",\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"getOrderById\"},\"delete\":{\"parameters\":[{\"name\":\"orderId\",\"schema\":{\"format\":\"int64\",\"minimum\":1,\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"deleteOrder\"}},\"/user\":{\"post\":{\"operationId\":\"createUser\"}},\"/user/createWithArray\":{\"post\":{\"operationId\":\"createUsersWithArrayInput\"}},\"/user/createWithList\":{\"post\":{\"operationId\":\"createUsersWithListInput\"}},\"/user/login\":{\"get\":{\"parameters\":[{\"name\":\"username\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"password\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"}],\"operationId\":\"loginUser\"}},\"/user/logout\":{\"get\":{\"operationId\":\"logoutUser\"}},\"/user/{username}\":{\"get\":{\"parameters\":[{\"name\":\"username\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"getUserByName\"},\"put\":{\"parameters\":[{\"name\":\"username\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"updateUser\"},\"delete\":{\"parameters\":[{\"name\":\"username\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"deleteUser\"}}},\"components\":{\"securitySchemes\":{\"api_key\":{\"type\":\"apiKey\",\"name\":\"api_key\",\"in\":\"header\"},\"petstore_auth\":{\"flows\":{\"implicit\":{\"authorizationUrl\":\"http://petstore.swagger.io/oauth/dialog\",\"scopes\":{\"read:pets\":\"read your pets\",\"write:pets\":\"modify pets in your account\"}}},\"type\":\"oauth2\"}}}}"
+    "specification": "{\"openapi\":\"3.0.2\",\"servers\":[{\"url\":\"http://petstore.swagger.io/v2\"}],\"paths\":{\"/pet\":{\"put\":{\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"updatePet\",\"parameters\":[]},\"post\":{\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"addPet\",\"parameters\":[]}},\"/pet/findByStatus\":{\"get\":{\"parameters\":[{\"style\":\"form\",\"explode\":true,\"name\":\"status\",\"schema\":{\"type\":\"array\",\"items\":{\"default\":\"available\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"}},\"in\":\"query\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"findPetsByStatus\"}},\"/pet/findByTags\":{\"get\":{\"parameters\":[{\"style\":\"form\",\"explode\":true,\"name\":\"tags\",\"schema\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}},\"in\":\"query\"}],\"deprecated\":true,\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"findPetsByTags\"}},\"/pet/{petId}\":{\"get\":{\"parameters\":[{\"name\":\"petId\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"security\":[{\"api_key\":[]}],\"operationId\":\"getPetById\"},\"post\":{\"parameters\":[{\"name\":\"petId\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"updatePetWithForm\"},\"delete\":{\"parameters\":[{\"name\":\"api_key\",\"schema\":{\"type\":\"string\"},\"in\":\"header\"},{\"name\":\"petId\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"deletePet\"}},\"/pet/{petId}/uploadImage\":{\"post\":{\"parameters\":[{\"name\":\"petId\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"operationId\":\"uploadFile\"}},\"/store/inventory\":{\"get\":{\"security\":[{\"api_key\":[]}],\"operationId\":\"getInventory\",\"parameters\":[]}},\"/store/order\":{\"post\":{\"operationId\":\"placeOrder\",\"parameters\":[]}},\"/store/order/{orderId}\":{\"get\":{\"parameters\":[{\"name\":\"orderId\",\"schema\":{\"format\":\"int64\",\"maximum\":10,\"minimum\":1,\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"getOrderById\"},\"delete\":{\"parameters\":[{\"name\":\"orderId\",\"schema\":{\"format\":\"int64\",\"minimum\":1,\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"deleteOrder\"}},\"/user\":{\"post\":{\"operationId\":\"createUser\",\"parameters\":[]}},\"/user/createWithArray\":{\"post\":{\"operationId\":\"createUsersWithArrayInput\",\"parameters\":[]}},\"/user/createWithList\":{\"post\":{\"operationId\":\"createUsersWithListInput\",\"parameters\":[]}},\"/user/login\":{\"get\":{\"parameters\":[{\"name\":\"username\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"},{\"name\":\"password\",\"schema\":{\"type\":\"string\"},\"in\":\"query\"}],\"operationId\":\"loginUser\"}},\"/user/logout\":{\"get\":{\"operationId\":\"logoutUser\",\"parameters\":[]}},\"/user/{username}\":{\"get\":{\"parameters\":[{\"name\":\"username\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"getUserByName\"},\"put\":{\"parameters\":[{\"name\":\"username\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"updateUser\"},\"delete\":{\"parameters\":[{\"name\":\"username\",\"schema\":{\"type\":\"string\"},\"in\":\"path\"}],\"operationId\":\"deleteUser\"}}},\"components\":{\"securitySchemes\":{\"api_key\":{\"type\":\"apiKey\",\"name\":\"api_key\",\"in\":\"header\"},\"petstore_auth\":{\"flows\":{\"implicit\":{\"authorizationUrl\":\"http://petstore.swagger.io/oauth/dialog\",\"scopes\":{\"read:pets\":\"read your pets\",\"write:pets\":\"modify pets in your account\"}}},\"type\":\"oauth2\"}}}}"
   },
   "connectorCustomizers": [
+    "io.syndesis.connector.rest.swagger.HeaderParametersCustomizer",
     "io.syndesis.connector.rest.swagger.SpecificationResourceCustomizer",
     "io.syndesis.connector.rest.swagger.AuthenticationCustomizer",
     "io.syndesis.connector.rest.swagger.RequestCustomizer",
@@ -574,7 +634,6 @@
     }
   ],
   "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
-  "icon": "data:image/svg+xml,%3Csvg%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22200%22%20r%3D%22200%22%20style%3D%22fill%3A%23fff%22%2F%3E%3Cpath%20d%3D%22M%20200%2E0486%2C4%2E99996%20A%20194%2E9514%2C195%200%200%200%205%2E0972058%2C192%2E6378%20l%200%2E8633847%2C0%20c%208%2E2004055%2C0%2013%2E8596845%2C%2D1%2E67314%2016%2E9781575%2C%2D5%203%2E118462%2C%2D3%2E34657%204%2E677184%2C%2D9%2E37626%204%2E677184%2C%2D18%2E08892%20l%200%2C%2D20%2E68637%20c%200%2C%2D12%2E75163%202%2E425915%2C%2D21%2E26114%207%2E276895%2C%2D25%2E5309%204%2E908747%2C%2D4%2E26977%2014%2E552562%2C%2D6%2E40606%2028%2E932227%2C%2D6%2E40606%20l%205%2E370951%2C0%200%2C12%2E46362%20%2D5%2E891271%2C0%20c%20%2D8%2E14272%2C0%20%2D13%2E456215%2C1%2E26983%20%2D15%2E939406%2C3%2E8086%20%2D2%2E483201%2C2%2E5388%20%2D3%2E724222%2C7%2E87566%20%2D3%2E724222%2C16%2E01131%20l%200%2C21%2E46334%20c%200%2C9%2E00112%20%2D1%2E298856%2C15%2E55185%20%2D3%2E897648%2C19%2E64853%20%2D2%2E598742%2C4%2E09668%20%2D7%2E102959%2C6%2E92385%20%2D13%2E513151%2C8%2E48174%206%2E352486%2C1%2E44249%2010%2E826741%2C4%2E21176%2013%2E425473%2C8%2E30844%202%2E656508%2C4%2E09665%203%2E985326%2C10%2E67344%203%2E985326%2C19%2E73232%20l%200%2C21%2E46524%20c%200%2C8%2E13562%201%2E241021%2C13%2E47253%203%2E724222%2C16%2E01132%202%2E483191%2C2%2E53878%207%2E796686%2C3%2E80861%2015%2E939406%2C3%2E80861%20l%205%2E891271%2C0%200%2C12%2E37601%20%2D5%2E370951%2C0%20c%20%2D14%2E379665%2C0%20%2D24%2E02348%2C%2D2%2E13439%20%2D28%2E932227%2C%2D6%2E40414%20%2D4%2E85098%2C%2D4%2E21208%20%2D7%2E276895%2C%2D12%2E69359%20%2D7%2E276895%2C%2D25%2E44522%20l%200%2C%2D20%2E77207%20c%200%2C%2D8%2E59723%20%2D1%2E558722%2C%2D14%2E56903%20%2D4%2E677184%2C%2D17%2E91562%20%2D3%2E060707%2C%2D3%2E28888%20%2D8%2E719986%2C%2D4%2E93403%20%2D16%2E9781575%2C%2D4%2E93403%20L%205%2C205%2E03355%20A%20195%2E16867%2C194%2E99998%200%200%200%20200%2E0486%2C395%20195%2E16867%2C194%2E99998%200%200%200%20395%2C206%2E11464%20l%20%2D0%2E9606%2C0%20c%20%2D8%2E25818%2C0%20%2D13%2E91741%2C1%2E64515%20%2D16%2E97815%2C4%2E93403%20%2D3%2E11845%2C3%2E34659%20%2D4%2E67718%2C9%2E31839%20%2D4%2E67718%2C17%2E91562%20l%200%2C20%2E77207%20c%200%2C12%2E75163%20%2D2%2E42593%2C21%2E23314%20%2D7%2E27691%2C25%2E44522%20%2D4%2E90872%2C4%2E26975%20%2D14%2E55259%2C6%2E40414%20%2D28%2E93222%2C6%2E40414%20l%20%2D5%2E37095%2C0%200%2C%2D12%2E37601%205%2E89128%2C0%20c%208%2E14269%2C0%2013%2E45618%2C%2D1%2E26983%2015%2E9394%2C%2D3%2E80861%202%2E48321%2C%2D2%2E5388%203%2E72422%2C%2D7%2E8757%203%2E72422%2C%2D16%2E01132%20l%200%2C%2D21%2E46524%20c%200%2C%2D9%2E05888%201%2E32884%2C%2D15%2E63567%203%2E98532%2C%2D19%2E73232%202%2E59875%2C%2D4%2E09668%207%2E07303%2C%2D6%2E86595%2013%2E42547%2C%2D8%2E30844%20%2D6%2E4102%2C%2D1%2E55789%20%2D10%2E9144%2C%2D4%2E38506%20%2D13%2E51314%2C%2D8%2E48174%20%2D2%2E59875%2C%2D4%2E09668%20%2D3%2E89765%2C%2D10%2E64741%20%2D3%2E89765%2C%2D19%2E64853%20l%200%2C%2D21%2E46334%20c%200%2C%2D8%2E13565%20%2D1%2E24101%2C%2D13%2E47251%20%2D3%2E72422%2C%2D16%2E01131%20%2D2%2E48322%2C%2D2%2E53877%20%2D7%2E79671%2C%2D3%2E8086%20%2D15%2E9394%2C%2D3%2E8086%20l%20%2D5%2E89128%2C0%200%2C%2D12%2E46362%205%2E37095%2C0%20c%2014%2E37963%2C0%2024%2E0235%2C2%2E13629%2028%2E93222%2C6%2E40606%204%2E85098%2C4%2E26976%207%2E27691%2C12%2E77927%207%2E27691%2C25%2E5309%20l%200%2C20%20c%200%2C8%2E71266%201%2E55873%2C14%2E74235%204%2E67718%2C18%2E08892%203%2E11848%2C3%2E34657%208%2E7777%2C5%2016%2E97815%2C5%20l%200%2E86338%2C0%20A%20194%2E9514%2C195%200%200%200%20200%2E0486%2C4%2E99996%20Z%22%20style%3D%22fill%3A%232c0000%22%2F%3E%3Cpath%20d%3D%22m%20250%2E568%2C239%2E704%20q%200%2C20%2E496%20%2D15%2E064%2C32%2E48%20%2D15%2E064%2C11%2E984%20%2D40%2E04%2C11%2E984%20%2D30%2E016%2C0%20%2D46%2E032%2C%2D6%2E608%20l%200%2C%2D11%2E424%20q%2017%2E696%2C7%2E504%2045%2E136%2C7%2E504%2020%2E16%2C0%2031%2E976%2C%2D9%2E24%2011%2E816%2C%2D9%2E24%2011%2E816%2C%2D24%2E248%200%2C%2D9%2E296%20%2D3%2E92%2C%2D15%2E4%20%2D3%2E92%2C%2D6%2E104%20%2D12%2E768%2C%2D11%2E144%20%2D8%2E848%2C%2D5%2E04%20%2D25%2E984%2C%2D10%2E864%20%2D25%2E088%2C%2D8%2E624%20%2D34%2E664%2C%2D18%2E648%20%2D9%2E576%2C%2D10%2E024%20%2D9%2E576%2C%2D26%2E712%200%2C%2D18%2E368%2014%2E392%2C%2D29%2E96%2014%2E392%2C%2D11%2E592%2037%2E016%2C%2D11%2E592%2023%2E072%2C0%2043%2E344%2C8%2E736%20l%20%2D4%2E144%2C9%2E856%20q%20%2D20%2E384%2C%2D8%2E512%20%2D38%2E976%2C%2D8%2E512%20%2D18%2E144%2C0%20%2D28%2E896%2C8%2E4%20%2D10%2E752%2C8%2E4%20%2D10%2E752%2C22%2E848%200%2C9%2E072%203%2E304%2C14%2E896%203%2E304%2C5%2E824%2010%2E808%2C10%2E472%207%2E504%2C4%2E648%2025%2E76%2C11%2E144%2019%2E152%2C6%2E608%2028%2E784%2C12%2E824%209%2E632%2C6%2E216%2014%2E056%2C14%2E112%204%2E424%2C7%2E896%204%2E424%2C19%2E096%20z%22%20style%3D%22fill%3A%23fff%22%2F%3E%3C%2Fsvg%3E",
   "id": "_id_",
   "name": "Swagger Petstore",
   "properties": {

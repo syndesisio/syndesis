@@ -1,0 +1,157 @@
+{
+  "components": {
+    "parameters": {
+      "header3": {
+        "in": "header",
+        "name": "header3",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "header4": {
+        "in": "header",
+        "name": "header4",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "path3": {
+        "in": "path",
+        "name": "path3",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "path4": {
+        "in": "path",
+        "name": "path4",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "query3": {
+        "in": "query",
+        "name": "query3",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "query4": {
+        "in": "query",
+        "name": "query4",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "End to end test",
+    "version": "1"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/{path1}/{path2}/{path3}/{path4}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "path1",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "$ref": "#/components/parameters/path3"
+        },
+        {
+          "in": "query",
+          "name": "query1",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "$ref": "#/components/parameters/query3"
+        },
+        {
+          "in": "header",
+          "name": "header1",
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "$ref": "#/components/parameters/header3"
+        }
+      ],
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "path2",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/path4"
+          },
+          {
+            "in": "query",
+            "name": "query2",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/query4"
+          },
+          {
+            "in": "header",
+            "name": "header2",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "$ref": "#/components/parameters/header4"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "data": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "All OK"
+          }
+        }
+      }
+    }
+  }
+}

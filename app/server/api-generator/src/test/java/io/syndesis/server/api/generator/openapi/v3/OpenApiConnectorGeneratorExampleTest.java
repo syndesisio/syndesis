@@ -58,7 +58,8 @@ public class OpenApiConnectorGeneratorExampleTest extends BaseOpenApiGeneratorEx
             argument("kie-server"),
             argument("machine_history"),
             argument("damage_service"),
-            argument("doubleclick_reporting"));
+            argument("doubleclick_reporting"),
+            argument("issue_9638"));
     }
 
     static Arguments argument(String name) throws IOException {
