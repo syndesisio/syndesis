@@ -231,7 +231,7 @@ public final class SqlStatementParser {
         } catch (final JSQLParserException e) {
             // if we failed we try to parse with the legacy parser
             // if that fails as well we throw the original exception
-            final SqlStatementLegacyParser legacyParser = new SqlStatementLegacyParser(helper.connection, sql);
+            final SqlStatementLegacyParser legacyParser = new SqlStatementLegacyParser(helper.connection, schema, sql);
             try {
                 return legacyParser.parse();
             } catch (SQLException fromLegacyParser) {

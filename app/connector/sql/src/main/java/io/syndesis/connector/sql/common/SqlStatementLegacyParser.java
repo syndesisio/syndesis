@@ -52,12 +52,7 @@ class SqlStatementLegacyParser {
     private final List<String> sqlArrayUpperCase = new ArrayList<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlStatementParser.class);
 
-    public SqlStatementLegacyParser(Connection connection, String sql) throws SQLException {
-        this(connection, null, sql);
-    }
-
     public SqlStatementLegacyParser(Connection connection, String schema, String sql) throws SQLException {
-        super();
         statementInfo = new SqlStatementMetaData(sql.trim(), schema);
         this.connection = connection;
         dbHelper = new DbMetaDataHelper(connection);
