@@ -39,10 +39,6 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
 
     private static final Processor AFTER_PROCESSOR = DataShapeCustomizerTest::nop;
 
-    // ********************
-    //
-    // ********************
-
     protected ComponentProxyComponent setUpComponent(String actionId) {
         Connector connector = mandatoryLookupConnector();
         ConnectorAction action = mandatoryLookupAction(connector, actionId);
@@ -64,10 +60,6 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
     protected List<Step> createSteps() {
         return Collections.emptyList();
     }
-
-    // ********************
-    //
-    // ********************
 
     @Test
     public void shouldNotRemoveExistingProcessors() {
@@ -187,6 +179,18 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
         component.getAfterProducer().process(exchange);
 
         Assertions.assertThat(out.getBody()).isInstanceOf(AbstractDTOBase.class);
+    }
+
+    @Test
+    public void shouldNotTryToUnmarshallNullBody() throws Exception {
+        final ComponentProxyComponent component = setUpComponent("salesforce-create-sobject");
+        final Exchange exchange = new DefaultExchange(context());
+        final Message out = exchange.getIn();
+        out.setBody(null);
+
+        component.getAfterProducer().process(exchange);
+
+        Assertions.assertThat(out.getBody()).isNull();;
     }
 
     private static void nop(final Exchange exchange) {

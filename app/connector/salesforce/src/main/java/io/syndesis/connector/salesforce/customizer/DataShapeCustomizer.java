@@ -112,6 +112,10 @@ public class DataShapeCustomizer implements ComponentProxyCustomizer, CamelConte
 
             try {
                 final String bodyAsString = exchange.getIn().getBody(String.class);
+                if (bodyAsString == null) {
+                    return;
+                }
+
                 final Object output = JsonUtils.reader().forType(type).readValue(bodyAsString);
                 exchange.getIn().setBody(output);
             } catch (final IOException e) {
