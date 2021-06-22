@@ -328,17 +328,28 @@ publish_artifacts() {
     fi
 
     local upload_url
+    # create or update a GitHub release, the daily builds will create a release
+    # while a proper release will be initiaded by creating a GitHub release first
     upload_url=$(curl -q -s -S --fail \
       -X POST \
       -u "${github_username}:${github_token}" \
       -H "Accept: application/vnd.github.v3+json" \
       -H "Content-Type: application/json" \
       -d "$data" \
-      "${github_api_url}/releases" | jq -r '.upload_url | sub("{.*"; "")'
-    )
+      "${github_api_url}/releases" 2> /dev/null | jq -r '.upload_url | sub("{.*"; "")' \
+    || curl -q -s -S --fail \
+      -X PATCH \
+      -u "${github_username}:${github_token}" \
+      -H "Accept: application/vnd.github.v3+json" \
+      -H "Content-Type: application/json" \
+      -d "$data" \
+      "$(curl -q -s -S --fail \
+         -u "${github_username}:${github_token}" \
+         -H "Accept: application/vnd.github.v3+json" \
+         "${github_api_url}/releases/tags/${tag}" | jq -r .url)" | jq -r '.upload_url | sub("{.*"; "")')
 
     if [[ ! $upload_url == http* ]]; then
-        echo "ERROR: Cannot create release on remote github repository. Check if a release with the same tag already exists."
+        echo "ERROR: Cannot create release on remote github repository."
         return 1
     fi
 
