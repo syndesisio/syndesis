@@ -743,6 +743,12 @@
           "name": {
             "type": "string"
           },
+          "parameters": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
           "specification": {
             "type": "string"
           },

@@ -891,6 +891,7 @@
               "xml-schema",
               "xml-schema-inspected",
               "xml-instance",
+              "csv-instance",
               "none"
             ],
             "type": "string"
@@ -903,6 +904,12 @@
           },
           "name": {
             "type": "string"
+          },
+          "parameters": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
           },
           "specification": {
             "type": "string"
