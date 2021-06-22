@@ -505,12 +505,7 @@ git_push() {
         echo "==== Pushing to GitHub"
         if [ -n "$release_version" ]; then
             echo "* Pushing $release_version"
-            if [ $(hasflag --snapshot-release) ]; then
-                # Force push to allow multiple releases per day
-                git push -f -u $remote $release_version
-            else
-                git push -u $remote $release_version
-            fi
+            git push -f -u $remote $release_version
         fi
         if [ ! $(hasflag --snapshot-release) ] && [ -n "$moving_tag" ]; then
             echo "* Pushing symbolic tag $moving_tag"
