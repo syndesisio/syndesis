@@ -175,7 +175,6 @@
             </goals>
           </execution>
           <execution>
-            <?m2e ignore ?>
             <id>default-cli</id>
             <goals>
               <goal>run</goal>
