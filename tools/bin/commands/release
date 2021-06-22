@@ -75,6 +75,10 @@ release::run() {
     local moving_tag=$(extract_minor_version $release_version)
     check_error $moving_tag
 
+    if [[ $(hasflag --snapshot-release) ]]; then
+      moving_tag+='-prerelease'
+    fi
+
     # Write to logfile if requested
     if [ $(readopt --log) ]; then
         local logfile=$(readopt --log)
@@ -108,7 +112,7 @@ release::run() {
     create_upgrade_container_image "$topdir" "$release_version"
 
     # Create the operator image binaries
-    update_image_versions "$topdir" "$release_version" "$moving_tag"
+    update_image_versions "$topdir" "$release_version"
     "$topdir/install/operator/build.sh" --operator-build docker --image-build docker --image-name "syndesis/syndesis-operator" --image-tag "$release_version"
 
     # For a test run, we are done
