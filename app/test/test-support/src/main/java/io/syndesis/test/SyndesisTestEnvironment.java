@@ -29,7 +29,7 @@ public final class SyndesisTestEnvironment {
     private static final String CAMEL_VERSION = "camel.version";
     private static final String CAMEL_VERSION_ENV = "CAMEL_VERSION";
 
-    private static final String SYNDESIS_VERSION_DEFAULT = "1.12-SNAPSHOT";
+    private static final String SYNDESIS_VERSION_DEFAULT = "1.13-SNAPSHOT";
     private static final String SYNDESIS_VERSION = SYNDESIS_PREFIX + "version";
     private static final String SYNDESIS_VERSION_ENV = SYNDESIS_ENV_PREFIX + "VERSION";
 
