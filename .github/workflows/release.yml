@@ -44,4 +44,4 @@ jobs:
           git config --global 'http.https://github.com/.extraheader' "Authorization: basic $(echo -n x-access-token:${SYNDESISCI_TOKEN}|base64 --wrap=0)"
           gpg --batch --import <(echo "${GPG_KEY}")
           export GPG_TTY=$(tty)
-          tools/bin/syndesis release --dry-run --settings .mvn/settings.release.xml --release-version ${{ steps.setup.outputs.version }} --git-remote origin --docker-user "${DOCKER_USER}" --docker-password "${DOCKER_PASSWORD}" --github-user syndesisci --github-token "${SYNDESISCI_TOKEN}" --quayio-user "${QUAYIO_USER}" --quayio-password "${QUAYIO_PASSWORD}" --gpg-keyname "${GPG_KEYNAME}" --gpg-passphrase "${GPG_PASSPHRASE}"
+          tools/bin/syndesis release --settings .mvn/settings.release.xml --release-version ${{ steps.setup.outputs.version }} --git-remote origin --docker-user "${DOCKER_USER}" --docker-password "${DOCKER_PASSWORD}" --github-user syndesisci --github-token "${SYNDESISCI_TOKEN}" --quayio-user "${QUAYIO_USER}" --quayio-password "${QUAYIO_PASSWORD}" --gpg-keyname "${GPG_KEYNAME}" --gpg-passphrase "${GPG_PASSPHRASE}"
