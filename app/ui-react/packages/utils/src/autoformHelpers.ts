@@ -4,6 +4,7 @@ import {
   IFormErrors,
 } from '@syndesis/auto-form';
 import {
+  ArrayDefinition,
   IConfigurationProperties,
   IConfigurationProperty,
 } from '@syndesis/models';
@@ -21,7 +22,7 @@ export function toFormDefinition(properties: IConfigurationProperties) {
     throw new Error('Undefined value passed to form definition converter');
   }
   const answer: IFormDefinition = {};
-  Object.keys(properties).forEach(key => {
+  Object.keys(properties).forEach((key) => {
     answer[key] = toFormDefinitionProperty(properties[key]);
   });
   return answer;
@@ -65,8 +66,8 @@ export function toFormDefinitionProperty(property: IConfigurationProperty) {
 export function anyFieldsRequired(properties: IConfigurationProperties) {
   return (
     Object.keys(properties)
-      .filter(key => requiredTypeMask(properties[key].type))
-      .filter(key => properties[key].required).length > 0
+      .filter((key) => requiredTypeMask(properties[key].type))
+      .filter((key) => properties[key].required).length > 0
   );
 }
 
@@ -82,10 +83,10 @@ function requiredTypeMask(type?: string) {
 }
 
 export function allFieldsRequired(properties: IConfigurationProperties) {
-  const keys = Object.keys(properties).filter(key =>
+  const keys = Object.keys(properties).filter((key) =>
     requiredTypeMask(properties[key].type)
   );
-  const allRequired = keys.filter(key => properties[key].required);
+  const allRequired = keys.filter((key) => properties[key].required);
   if (allRequired.length === 0) {
     return false;
   }
@@ -121,13 +122,13 @@ export function validateConfiguredProperties(
     return false;
   }
   const allRequired = Object.keys(properties).filter(
-    key => properties[key].required
+    (key) => properties[key].required
   );
   if (allRequired.length === 0) {
     return true;
   }
   const allRequiredSet = allRequired
-    .map(key => validateRequired(values[key]))
+    .map((key) => validateRequired(values[key]))
     .reduce((prev, curr) => curr, false);
   return allRequiredSet;
 }
@@ -155,33 +156,30 @@ function validateRequired(value?: any) {
  * @param values
  */
 export function validateRequiredProperties<T>(
-  definition: IConfigurationProperties | IFormDefinition,
+  definition: IFormDefinition | ArrayDefinition,
   getErrorString: (name: string) => string,
   values?: T,
   prefix = ''
 ): IFormErrors<T> {
   const allRequired = Object.keys(definition)
-    .filter(key => requiredTypeMask(definition[key].type))
-    .filter(key => definition[key].required);
+    .filter((key) => requiredTypeMask(definition[key].type))
+    .filter((key) => definition[key].required);
   if (allRequired.length === 0) {
     return {} as IFormErrors<T>;
   }
   const sanitizedValues = values || ({} as T);
   const validationResults = allRequired
-    .map(key => ({ key, defined: validateRequired(sanitizedValues[key]) }))
-    .reduce(
-      (acc, current) => {
-        if (!current.defined) {
-          acc[`${prefix}${current.key}`] = getErrorString(
-            definition[current.key].displayName || current.key
-          );
-        }
-        return acc;
-      },
-      {} as IFormErrors<T>
-    );
+    .map((key) => ({ key, defined: validateRequired(sanitizedValues[key]) }))
+    .reduce((acc, current) => {
+      if (!current.defined) {
+        acc[`${prefix}${current.key}`] = getErrorString(
+          definition[current.key].displayName || current.key
+        );
+      }
+      return acc;
+    }, {} as IFormErrors<T>);
   const arrayValidationResults = allRequired
-    .filter(key => definition[key].type === 'array')
+    .filter((key) => definition[key].type === 'array')
     .reduce((acc, current) => {
       const arrayValue = sanitizedValues[current] || [];
       const arrayDefinition = definition[current].arrayDefinition!;
@@ -208,7 +206,7 @@ export function validateRequiredProperties<T>(
  */
 export function coerceFormValues(values: any) {
   const updated = {};
-  Object.keys(values).forEach(key => {
+  Object.keys(values).forEach((key) => {
     updated[key] =
       typeof values[key] === 'object'
         ? JSON.stringify(values[key])

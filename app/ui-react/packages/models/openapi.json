@@ -99,8 +99,48 @@
         },
         "type": "object"
       },
+      "ArrayDefinition": {
+        "properties": {
+          "key": {
+            "$ref": "#/components/schemas/ArrayDefinitionElement"
+          },
+          "value": {
+            "$ref": "#/components/schemas/ArrayDefinitionElement"
+          }
+        },
+        "type": "object"
+      },
+      "ArrayDefinitionElement": {
+        "properties": {
+          "displayName": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ArrayDefinitionOptions": {
+        "properties": {
+          "i18nAddElementText": {
+            "type": "string"
+          },
+          "minElements": {
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
       "ConfigurationProperty": {
         "properties": {
+          "arrayDefinition": {
+            "$ref": "#/components/schemas/ArrayDefinition"
+          },
+          "arrayDefinitionOptions": {
+            "$ref": "#/components/schemas/ArrayDefinitionOptions"
+          },
           "componentProperty": {
             "type": "boolean"
           },
@@ -832,6 +872,12 @@
       },
       "Flow": {
         "properties": {
+          "connections": {
+            "items": {
+              "$ref": "#/components/schemas/Connection"
+            },
+            "type": "array"
+          },
           "dependencies": {
             "items": {
               "$ref": "#/components/schemas/Dependency"
@@ -1755,7 +1801,7 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "title": "Syndesis Supported API",
-    "version": "v1-2.0-SNAPSHOT"
+    "version": "v1-1.13-SNAPSHOT"
   },
   "openapi": "3.0.1",
   "paths": {
@@ -1812,6 +1858,7 @@
             "in": "query",
             "name": "extensionType",
             "schema": {
+              "enum": ["Steps", "Connectors", "Libraries"],
               "type": "string"
             }
           }
@@ -1867,7 +1914,7 @@
     },
     "/extensions/validation": {
       "post": {
-        "operationId": "validate_1",
+        "operationId": "validate",
         "requestBody": {
           "content": {
             "application/json": {
@@ -2061,7 +2108,7 @@
     },
     "/extensions/{id}/validation": {
       "post": {
-        "operationId": "validate",
+        "operationId": "validate_1",
         "parameters": [
           {
             "in": "path",
