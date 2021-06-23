@@ -116,9 +116,9 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
 
     String getExtendedProperties();
 
-   Optional<ConfigurationProperty.ArrayDefinition> getArrayDefinition();
+    Optional<ConfigurationProperty.ArrayDefinition> getArrayDefinition();
 
-   Optional<ConfigurationProperty.ArrayDefinitionOptions> getArrayDefinitionOptions();
+    Optional<ConfigurationProperty.ArrayDefinitionOptions> getArrayDefinitionOptions();
 
     @Value.Immutable
     @JsonDeserialize(builder = ConfigurationProperty.ArrayDefinition.Builder.class)
@@ -132,9 +132,9 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
             }
         }
 
-        ArrayDefinitionElement key();
+        ArrayDefinitionElement getKey();
 
-        ArrayDefinitionElement value();
+        ArrayDefinitionElement getValue();
     }
 
     @Value.Immutable
@@ -143,15 +143,15 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
 
         final class Builder extends ImmutableArrayDefinitionElement.Builder {
             public static ConfigurationProperty.ArrayDefinitionElement of(final String displayName,
-                                                                   final String type) {
+                                                                          final String type) {
                 return new ConfigurationProperty.ArrayDefinitionElement.Builder()
                            .displayName(displayName).type(type).build();
             }
         }
 
-        String displayName();
+        String getDisplayName();
 
-        String type();
+        String getType();
     }
 
     @Value.Immutable
@@ -160,16 +160,16 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
 
         final class Builder extends ImmutableArrayDefinitionOptions.Builder {
             public static ConfigurationProperty.ArrayDefinitionOptions of(
-                        final String i18nAddElementText,
-                        final Integer minElements) {
+                final String i18nAddElementText,
+                final Integer minElements) {
                 return new ConfigurationProperty.ArrayDefinitionOptions.Builder()
-                           .i18nAddElementText(i18nAddElementText).minElements(minElements).build();
+                    .i18nAddElementText(i18nAddElementText).minElements(minElements).build();
             }
         }
 
-        String i18nAddElementText();
+        String getI18nAddElementText();
 
-        Integer minElements();
+        Integer getMinElements();
     }
 
     default boolean raw() {
