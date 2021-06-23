@@ -7,17 +7,11 @@
     "lint-staged": "~11",
     "npm-run-all": "~4"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm-run-all pre-commit:*",
-      "pre-push": "npm-run-all pre-push:*",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
   "scripts": {
     "pre-commit:lint-staged": "lint-staged",
     "pre-commit:add-operator-assets-vfsdata": "git add install/operator/pkg/generator/assets_vfsdata.go",
     "pre-commit:ui-react": "cd app/ui-react && yarn pre-commit",
-    "pre-push:ui-react": "./tools/bin/syndesis -m ui-react --incremental"
+    "pre-push:ui-react": "./tools/bin/syndesis -m ui-react --incremental",
+    "postinstall": "husky install"
   }
 }
