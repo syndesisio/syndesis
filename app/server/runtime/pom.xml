@@ -97,6 +97,18 @@
       </testResource>
     </testResources>
 
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <!-- We need a newer version than in basepom, see
+            https://github.com/basepom/basepom/blob/90f18cbc66bd2e1d5f62e8af73219afe0744cef5/foundation/pom.xml#L185-L186
+          -->
+          <version>3.1.2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
 
       <plugin>
@@ -248,6 +260,101 @@
               <outputPath>${apidocs.output.dir}</outputPath>
               <outputFileName>openapi</outputFileName>
               <configurationFilePath>${project.build.outputDirectory}/openapi-public.yaml</configurationFilePath>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <!-- This makes sure that we can use the JSON sort plugin in the prettier execution below -->
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>prepare-prettier-dependencies</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <!-- uncompresses prettier to target/prettier-plugin-sort-json/prettier so that the JSON plugin sort can require it -->
+                  <groupId>org.webjars.npm</groupId>
+                  <artifactId>prettier</artifactId>
+                  <version>2.3.1</version>
+                  <outputDirectory> ${project.build.directory}/prettier-plugin-sort-json/node_modules/prettier</outputDirectory>
+                  <fileMappers>
+                    <org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                      <pattern>^.*/</pattern>
+                      <replacement>./</replacement>
+                    </org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                  </fileMappers>
+                </artifactItem>
+                <artifactItem>
+                  <!-- the plugin to sort JSON -->
+                  <groupId>org.webjars.npm</groupId>
+                  <artifactId>prettier-plugin-sort-json</artifactId>
+                  <version>0.0.2</version>
+                  <outputDirectory> ${project.build.directory}/prettier-plugin-sort-json</outputDirectory>
+                  <fileMappers>
+                    <org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                      <pattern>^.*/</pattern>
+                      <replacement>./</replacement>
+                    </org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                  </fileMappers>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.hubspot.maven.plugins</groupId>
+        <artifactId>prettier-maven-plugin</artifactId>
+        <version>0.14</version>
+        <configuration>
+          <prettierJavaVersion>1.3.0</prettierJavaVersion>
+          <inputGlobs>
+            <!-- inputGlob options are passed straight as command line arguments to prettier, so we take advantage of that to add specific configuration we need -->
+            <inputGlob>--config=${project.basedir}/.prettierrc</inputGlob>
+            <inputGlob>--plugin=${project.build.directory}/prettier-plugin-sort-json</inputGlob>
+            <inputGlob>${apidocs.output.dir}/internal/openapi.json</inputGlob>
+            <inputGlob>${apidocs.output.dir}/openapi.json</inputGlob>
+          </inputGlobs>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>write</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.coderplus.maven.plugins</groupId>
+        <artifactId>copy-rename-maven-plugin</artifactId>
+        <version>1.0.1</version>
+        <executions>
+          <execution>
+            <id>copy-internal-openapi-documents-to-ui-model</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <sourceFile>${apidocs.output.dir}/internal/openapi.json</sourceFile>
+              <destinationFile>${project.basedir}/../../ui-react/packages/models/openapi.internal.json</destinationFile>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-public-openapi-documents-to-ui-model</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy</goal>
+            </goals>
+            <configuration>
+              <sourceFile>${apidocs.output.dir}/openapi.json</sourceFile>
+              <destinationFile>${project.basedir}/../../ui-react/packages/models/openapi.json</destinationFile>
             </configuration>
           </execution>
         </executions>
