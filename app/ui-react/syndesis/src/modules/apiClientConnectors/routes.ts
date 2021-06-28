@@ -10,6 +10,7 @@ export default include('/api-connector', {
     root: '',
     save: 'save',
     security: 'security',
+    servicePort: 'servicePort',
     specification: 'specification',
     upload: 'upload',
   }),

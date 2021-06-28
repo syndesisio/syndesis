@@ -1,16 +1,18 @@
-import { action } from '@storybook/addon-actions';
-import { boolean } from '@storybook/addon-knobs';
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import {
-  ApiConnectorCreatorLayout,
-  ApiConnectorCreatorService,
-} from '../../../src';
+
 import {
   ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorSelectMethod,
   ApiConnectorCreatorToggleList,
 } from '../../../src/Customization/apiClientConnectors/create';
+import {
+  ApiConnectorCreatorLayout,
+  ApiConnectorCreatorService,
+} from '../../../src';
+
+import { action } from '@storybook/addon-actions';
+import { boolean } from '@storybook/addon-knobs';
+import { storiesOf } from '@storybook/react';
 
 const stories = storiesOf(
   'Customization/ApiClientConnector/CreateApiConnector/1 - Provide Document',
@@ -64,6 +66,7 @@ stories.add('Provide Document', () => {
       navigation={
         <ApiConnectorCreatorBreadSteps
           step={1}
+          i18nConfiguration={'Additional Configuration'}
           i18nDetails={'Review/Edit Connector Details'}
           i18nReview={'Imported Operations'}
           i18nSecurity={'Specify Security'}

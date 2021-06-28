@@ -9,6 +9,9 @@
   "apiConnectorsPageTitle": "API Client Connectors",
   "basePath": "Base URL",
   "create": {
+    "configuration": {
+      "title": "Additional Configuration"
+    },
     "details": {
       "saveButton": "Create API Connector",
       "successNotification": "API Connector successfully created",

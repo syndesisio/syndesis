@@ -53,15 +53,6 @@ export function useApiConnectorSummary(
           url: `${apiContext.apiUri}/connectors/custom/info`,
         });
         const summary = await response.json();
-        if (summary.errorCode) {
-          throw new Error(summary.userMsg);
-        }
-        if (Array.isArray(summary.errors) && summary.errors.length > 0) {
-          const errorMessage = summary.errors
-              .map((e: string | any) => (e.message ? e.message : e))
-              .join('\n');
-          throw new Error(errorMessage);
-        }
         setApiSummary(summary as IApiSummarySoap);
       } catch (e) {
         setError(e as Error);

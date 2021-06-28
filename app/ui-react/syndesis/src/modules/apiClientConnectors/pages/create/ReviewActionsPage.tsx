@@ -1,5 +1,6 @@
-import { useApiConnectorSummary } from '@syndesis/api';
 import * as H from '@syndesis/history';
+import * as React from 'react';
+
 import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
@@ -10,10 +11,11 @@ import {
   PageLoader,
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
-import * as React from 'react';
+import { ApiError, PageTitle } from '../../../../shared';
+
+import { useApiConnectorSummary } from '@syndesis/api';
 import { Translation } from 'react-i18next';
 import { UIContext } from '../../../../app';
-import { ApiError, PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
 import { ICreateConnectorProps } from '../../models';
 import resolvers from '../../resolvers';
@@ -48,7 +50,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
 
   return (
     <Translation ns={['apiClientConnectors', 'shared']}>
-      {t => (
+      {(t) => (
         <WithLeaveConfirmation
           i18nTitle={t('apiClientConnectors:create:unsavedChangesTitle')}
           i18nConfirmationMessage={t(
@@ -101,7 +103,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         apiProviderDescription={apiSummary!.description}
                         apiProviderName={apiSummary!.name}
                         i18nOperationsHtmlMessage={`<strong>${
-                          apiSummary!.actionsSummary!.totalActions
+                          apiSummary?.actionsSummary?.totalActions || 0
                         }</strong> operations`}
                         i18nWarningsHeading={t(
                           'apiClientConnectors:create:review:sectionWarnings'
@@ -109,7 +111,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         warningMessages={
                           apiSummary!.warnings
                             ? apiSummary!.warnings!.map(
-                                warning => (warning as any).message
+                                (warning) => (warning as any).message
                               )
                             : undefined
                         }
@@ -119,7 +121,10 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         errorMessages={
                           apiSummary!.errors
                             ? apiSummary!.errors!.map(
-                                (e: any) => `${e.property}: ${e.message}`
+                                (e: any) =>
+                                  `${e.property ? e.property + ': ' : ''} ${
+                                    e.message
+                                  }`
                               )
                             : undefined
                         }
@@ -135,16 +140,28 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         )}
                         isNextLoading={false}
                         isNextDisabled={!!apiSummary!.errors}
-                        nextHref={resolvers.create.security({
-                          configured: state.configured,
-                          connectorTemplateId: state.connectorTemplateId,
-                          specification: apiSummary!,
-                        })}
+                        nextHref={
+                          state.connectorTemplateId ===
+                          'soap-connector-template'
+                            ? resolvers.create.servicePort({
+                                apiSummary: apiSummary!,
+                                configured: state.configured,
+                                connectorTemplateId: state.connectorTemplateId,
+                                specification: state.specification,
+                              })
+                            : resolvers.create.security({
+                                configured: state.configured,
+                                connectorTemplateId: state.connectorTemplateId,
+                                specification: apiSummary!,
+                              })
+                        }
                         reviewEditHref={
-                          !state.connectorTemplateId
+                          !state.connectorTemplateId &&
+                          apiSummary?.configuredProperties
                             ? resolvers.create.specification({
-                                specification: apiSummary!.configuredProperties!
-                                  .specification,
+                                specification:
+                                  apiSummary!.configuredProperties!
+                                    .specification,
                               })
                             : ''
                         }
@@ -153,6 +170,9 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                     navigation={
                       <ApiConnectorCreatorBreadSteps
                         step={2}
+                        i18nConfiguration={t(
+                          'apiClientConnectors:create:configuration:title'
+                        )}
                         i18nDetails={t(
                           'apiClientConnectors:create:details:title'
                         )}

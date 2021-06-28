@@ -100,6 +100,7 @@ const component = (authenticationType: string) => {
       navigation={
         <ApiConnectorCreatorBreadSteps
           step={3}
+          i18nConfiguration={'Additional Configuration'}
           i18nDetails={'Review/Edit Connector Details'}
           i18nReview={'Imported Operations'}
           i18nSecurity={'Specify Security'}

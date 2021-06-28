@@ -1,10 +1,12 @@
+import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
+
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
 import { Connector } from '@syndesis/models';
-import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
 import { IDetailsPageRouteState } from './pages/create/DetailsPage';
 import { IEditSpecificationRouteState } from './pages/create/EditSpecificationPage';
 import { IReviewActionsRouteState } from './pages/create/ReviewActionsPage';
 import { ISecurityPageRouteState } from './pages/create/SecurityPage';
+import { IServicePortRouteState } from './pages/create/ServicePortPage';
 import routes from './routes';
 
 export default {
@@ -57,6 +59,21 @@ export default {
         specification,
       },
     })),
+    servicePort: makeResolver<
+      IServicePortRouteState,
+      null,
+      IServicePortRouteState
+    >(
+      routes.create.servicePort,
+      ({ apiSummary, connectorTemplateId, configured, specification }) => ({
+        state: {
+          apiSummary,
+          configured,
+          connectorTemplateId,
+          specification,
+        },
+      })
+    ),
     security: makeResolver<
       ISecurityPageRouteState,
       null,
