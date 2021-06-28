@@ -3,18 +3,18 @@
 call_maven() {
     local args=$1
     local maven_modules=$2
-    local args_to_use=$args
+    local args_to_use="--show-version --strict-checksums $args"
 
-    check_error $maven_modules
+    check_error "$maven_modules"
     if [ -z "${maven_modules}" ]; then
       return
     fi
 
-    if [ $(hasflag --settings -s) ]; then
+    if [ "$(hasflag --settings -s)" ]; then
       args_to_use+=" -s $(readopt --settings -s)"
     fi
 
-    pushd "$(appdir)" > /dev/null
+    pushd "$(appdir)" || echo ERROR: unable to change directory to "$(appdir)" exit > /dev/null
 
     if [ "EVERYTHING" == "${maven_modules}" ]; then
       _call_maven_internal "$args_to_use" "Building everything"
@@ -32,7 +32,7 @@ call_maven() {
       _call_maven_internal "$args_to_use" "Building specified modules"
     fi
 
-    popd >/dev/null
+    popd || exit >/dev/null
 }
 
 _call_maven_internal() {
