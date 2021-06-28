@@ -1474,6 +1474,9 @@
         <artifactId>maven-enforcer-plugin</artifactId>
         <configuration>
           <rules combine.children="append">
+            <requireJavaVersion>
+              <version>[1.8,1.9)</version>
+            </requireJavaVersion>
             <evaluateBeanshell>
               <message>Your JVM has limited cryptography, please upgrade
                 to 1.8.0_162 or newer or install Unlimited Strength
