@@ -131,7 +131,7 @@ public class ConnectorHandlerTest {
 
             final Response response = handler.getConnectorIcon("connector-id").get();
 
-            assertThat(response.getStatusInfo()).as("Wrong status code").isEqualTo(Response.Status.OK);
+            assertThat(response.getStatusInfo().getStatusCode()).as("Wrong status code").isEqualTo(Response.Status.OK.getStatusCode());
             assertThat(response.getHeaderString(CONTENT_TYPE)).as("Wrong content type").isEqualTo("image/png");
             assertThat(response.getHeaderString(CONTENT_LENGTH)).as("Wrong content length").isEqualTo("2018");
 
