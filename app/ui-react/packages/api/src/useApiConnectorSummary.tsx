@@ -56,7 +56,7 @@ export function useApiConnectorSummary(
         if (summary.errorCode) {
           throw new Error(summary.userMsg);
         }
-        if (Array.isArray(summary.errors) && summary.errors.length > 0) {
+        if (connectorTemplateId === 'soap-connector-template' && Array.isArray(summary.errors) && summary.errors.length > 0) {
           const errorMessage = summary.errors
               .map((e: string | any) => (e.message ? e.message : e))
               .join('\n');
