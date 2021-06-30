@@ -12,9 +12,9 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.4.4",
-    "@patternfly/react-core": "^3.122.4",
-    "@patternfly/react-icons": "^3.14.42",
-    "@patternfly/react-styles": "^3.6.26",
+    "@patternfly/react-core": "^4.128.2",
+    "@patternfly/react-icons": "^4.10.11",
+    "@patternfly/react-styles": "^4.10.11",
     "@storybook/addon-a11y": "^5.3.8",
     "@storybook/addon-actions": "^5.3.8",
     "@storybook/addon-info": "^5.3.8",
@@ -61,9 +61,9 @@
     "build-storybook": "build-storybook -o ../../doc/auto-form"
   },
   "peerDependencies": {
-    "@patternfly/react-core": "^3.122.4",
-    "@patternfly/react-icons": "^3.14.18",
-    "@patternfly/react-styles": "^3.6.5",
+    "@patternfly/react-core": "^4.128.2",
+    "@patternfly/react-icons": "^4.10.11",
+    "@patternfly/react-styles": "^4.10.11",
     "react": "^16.6.0",
     "react-dom": "^16.6.0"
   },
