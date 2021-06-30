@@ -275,6 +275,7 @@
               <goal>unpack</goal>
             </goals>
             <configuration>
+              <skip>false</skip>
               <artifactItems>
                 <artifactItem>
                   <!-- uncompresses prettier to target/prettier-plugin-sort-json/prettier so that the JSON plugin sort can require it -->
