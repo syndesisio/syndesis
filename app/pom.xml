@@ -20,8 +20,8 @@
 
   <parent>
     <groupId>org.basepom</groupId>
-    <artifactId>basepom-oss</artifactId>
-    <version>30</version>
+    <artifactId>basepom8-oss</artifactId>
+    <version>33</version>
   </parent>
 
   <groupId>io.syndesis</groupId>
@@ -49,9 +49,6 @@
 
     <fabric8.maven.plugin.version>4.2.0</fabric8.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
-    <dep.plugin.deploy.version>2.8.2</dep.plugin.deploy.version>
-    <dep.plugin.javadoc.version>2.10.4</dep.plugin.javadoc.version> <!-- fails with errors otherwise -->
-    <clean-maven-plugin-version>2.4.1</clean-maven-plugin-version>
     <frontend-maven-plugin-version>1.8.0</frontend-maven-plugin-version>
     <node.version>v10.15.1</node.version>
     <yarn.version>v1.13.0</yarn.version>
@@ -112,15 +109,11 @@
     <basepom.test.timeout>120</basepom.test.timeout>
 
     <!-- Plugin versions -->
-    <dep.plugin.surefire.version>3.0.0-M5</dep.plugin.surefire.version>
-    <dep.plugin.failsafe.version>3.0.0-M5</dep.plugin.failsafe.version>
     <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
-    <!-- FIXME: update to 6.19 when released we're seeing:
-      https://github.com/pmd/pmd/issues/1969
-    -->
-    <dep.pmd.version>6.17.0</dep.pmd.version>
     <!-- TODO: revisit when we upgrade basepom version -->
     <dep.plugin.git-commit-id.version>4.0.4</dep.plugin.git-commit-id.version>
+    <!-- see https://issues.apache.org/jira/browse/MRESOURCES-237 we have a symbolic link in connector-odata -->
+    <dep.plugin.resources.version>3.1.0</dep.plugin.resources.version>
 
     <!-- Maven versions -->
     <maven-archetype-packaging.version>2.0</maven-archetype-packaging.version>

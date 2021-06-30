@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize(using = MixedSerializer.class)
+@SuppressWarnings("PMD.AbstractClassWithoutAbstractMethod")
 abstract class Mixed {
 
     private final List<Object> parts;

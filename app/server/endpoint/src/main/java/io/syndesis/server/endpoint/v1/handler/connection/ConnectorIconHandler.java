@@ -95,7 +95,7 @@ public final class ConnectorIconHandler extends BaseHandler {
 
             try (BufferedInputStream iconStream = new BufferedInputStream(result)) {
                 MediaType mediaType = filePart.getMediaType();
-                if (!mediaType.getType().equals("image")) {
+                if (!"image".equals(mediaType.getType())) {
                     // URLConnection.guessContentTypeFromStream resets the stream after inspecting the media type so
                     // can continue to be used, rather than being consumed.
                     String guessedMediaType = URLConnection.guessContentTypeFromStream(iconStream);

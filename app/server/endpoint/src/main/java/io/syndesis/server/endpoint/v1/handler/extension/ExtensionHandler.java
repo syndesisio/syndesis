@@ -94,6 +94,7 @@ import org.springframework.stereotype.Component;
 @Tag(name = "extensions")
 @Component
 @ConditionalOnBean(FileDAO.class)
+@SuppressWarnings("PMD.GodClass")
 public class ExtensionHandler extends BaseHandler implements Getter<Extension>, Deleter<Extension> {
 
     private final FileDAO fileStore;

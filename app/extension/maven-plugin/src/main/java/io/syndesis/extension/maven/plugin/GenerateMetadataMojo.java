@@ -90,7 +90,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
         threadSafe = true,
         requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME,
         requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
-@SuppressWarnings({ "PMD.GodClass", "PMD.TooManyFields", "PMD.TooManyMethods" })
+@SuppressWarnings({ "PMD.GodClass", "PMD.TooManyFields", "PMD.TooManyMethods", "PMD.CyclomaticComplexity" })
 public class GenerateMetadataMojo extends AbstractMojo {
     public enum InspectionMode {
         RESOURCE,

@@ -80,7 +80,7 @@ public final class MongoCustomizersUtil {
         // Fallback admin database parameter
         if (!params.containsKey("adminDB")) {
             params.put("adminDB", params.get("database"));
-        } else if (params.get("adminDB").equals("")) {
+        } else if ("".equals(params.get("adminDB"))) {
             params.replace("adminDB", params.get("database"));
         }
     }

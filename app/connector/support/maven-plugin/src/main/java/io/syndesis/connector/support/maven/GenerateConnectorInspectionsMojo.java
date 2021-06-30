@@ -63,6 +63,7 @@ import io.syndesis.common.model.connection.Connector;
     defaultPhase = LifecyclePhase.PROCESS_CLASSES,
     requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME,
     requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
+@SuppressWarnings("PMD.GodClass")
 public class GenerateConnectorInspectionsMojo extends AbstractMojo {
     private static final String CONNECTORS_META_PATH = "META-INF/syndesis/connector/";
 

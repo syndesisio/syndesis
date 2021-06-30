@@ -53,7 +53,7 @@
   <rule ref="category/java/performance.xml/InsufficientStringBufferDeclaration">
     <priority>3</priority>
   </rule>
-  <rule ref="category/java/bestpractices.xml/PositionLiteralsFirstInCaseInsensitiveComparisons">
+  <rule ref="category/java/bestpractices.xml/LiteralsFirstInComparisons">
     <priority>3</priority>
   </rule>
   <rule ref="category/java/errorprone.xml/UseCorrectExceptionLogging">
@@ -249,7 +249,7 @@
   <rule ref="category/java/performance.xml/UselessStringValueOf">
     <priority>3</priority>
   </rule>
-  <rule ref="category/java/errorprone.xml/InvalidSlf4jMessageFormat">
+  <rule ref="category/java/errorprone.xml/InvalidLogMessageFormat">
     <priority>4</priority>
   </rule>
   <rule ref="category/java/errorprone.xml/FinalizeOverloaded">
@@ -260,9 +260,6 @@
   </rule>
   <rule ref="category/java/codestyle.xml/BooleanGetMethodName">
     <priority>4</priority>
-  </rule>
-  <rule ref="category/java/codestyle.xml/UnnecessaryModifier">
-    <priority>3</priority>
   </rule>
   <rule ref="category/java/bestpractices.xml/UseAssertTrueInsteadOfAssertEquals">
     <priority>5</priority>
@@ -377,9 +374,6 @@
   </rule>
   <rule ref="category/java/design.xml/SimplifyBooleanAssertion">
     <priority>3</priority>
-  </rule>
-  <rule ref="category/java/errorprone.xml/EmptyInitializer">
-    <priority>4</priority>
   </rule>
   <rule ref="category/java/errorprone.xml/CompareObjectsWithEquals">
     <priority>3</priority>
@@ -531,9 +525,6 @@
   <rule ref="category/java/multithreading.xml/DoubleCheckedLocking">
     <priority>3</priority>
   </rule>
-  <rule ref="category/java/bestpractices.xml/PositionLiteralsFirstInComparisons">
-    <priority>3</priority>
-  </rule>
   <rule ref="category/java/bestpractices.xml/PreserveStackTrace">
     <priority>3</priority>
   </rule>
@@ -653,9 +644,6 @@
   </rule>
   <rule ref="category/java/errorprone.xml/AvoidCallingFinalize">
     <priority>3</priority>
-  </rule>
-  <rule ref="category/java/bestpractices.xml/GuardLogStatement">
-    <priority>5</priority>
   </rule>
   <rule ref="category/java/bestpractices.xml/JUnit4TestShouldUseTestAnnotation">
     <priority>4</priority>
