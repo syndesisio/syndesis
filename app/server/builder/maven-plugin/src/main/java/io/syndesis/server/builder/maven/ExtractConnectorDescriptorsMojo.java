@@ -215,7 +215,7 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
         int pos = javaType.lastIndexOf('.');
         String path = javaType.substring(0, pos);
         path = path.replace('.', '/');
-        path = new StringBuilder(path).append("/").append(scheme).append(".json").toString();
+        path = new StringBuilder(path).append('/').append(scheme).append(".json").toString();
         return getOpaqueJsonString(classLoader, path);
     }
 

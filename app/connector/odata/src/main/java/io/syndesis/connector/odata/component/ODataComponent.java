@@ -32,6 +32,7 @@ import io.syndesis.connector.support.util.PropertyBuilder;
 import io.syndesis.integration.component.proxy.ComponentDefinition;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
+@SuppressWarnings("PMD.GodClass")
 public final class ODataComponent extends ComponentProxyComponent implements ODataConstants {
 
     /**

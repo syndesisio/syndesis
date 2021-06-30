@@ -101,7 +101,8 @@ public class ResourceUpdateController {
                 if (t == null) {
                     LOGGER.debug("Processed event: {} with data {}", event, data);
                 } else {
-                    LOGGER.warn("Failed to process event: {} with data {}", event, data, t);
+                    final Throwable exception = t;
+                    LOGGER.warn("Failed to process event: {} with data {}", event, data, exception);
                 }
             });
     }
@@ -157,7 +158,8 @@ public class ResourceUpdateController {
                     }
                 }).whenComplete((x, t) -> {
                     if (t != null) {
-                        LOGGER.warn("Failure in scheduled event processing", t);
+                        final Throwable exception = t;
+                        LOGGER.warn("Failure in scheduled event processing", exception);
                     }
                 });
             } else {

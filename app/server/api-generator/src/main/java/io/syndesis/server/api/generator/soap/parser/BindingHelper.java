@@ -71,6 +71,7 @@ import static javax.jws.soap.SOAPBinding.Use.ENCODED;
 /**
  * Helper class for working with {@link SOAPBinding} && {@link javax.wsdl.extensions.soap12.SOAP12Binding}.
  */
+@SuppressWarnings("PMD.GodClass")
 public class BindingHelper {
 
     private static final String SCHEMA_SET_XML =

@@ -79,7 +79,7 @@ import org.apache.ws.commons.schema.utils.XmlSchemaObjectBase;
  * inlines structure with anonymous types
  * and resolves 'ref' and 'type' attributes.
  */
-@SuppressWarnings({"PMD.CouplingBetweenObjects", "PMD.GodClass"})
+@SuppressWarnings({"PMD.CouplingBetweenObjects", "PMD.GodClass", "PMD.CyclomaticComplexity"})
 class XmlSchemaExtractor {
 
     // names of properties to exclude from shallow copy
