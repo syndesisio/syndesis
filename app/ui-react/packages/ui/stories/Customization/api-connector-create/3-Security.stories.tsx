@@ -1,21 +1,20 @@
-import { action } from '@storybook/addon-actions';
-import { boolean } from '@storybook/addon-knobs';
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import {
-  ApiConnectorCreatorLayout,
-  ICreateConnectorPropsUi,
-} from '../../../src/Customization/apiClientConnectors';
+
 import {
   ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorFooter,
   ApiConnectorCreatorSecurity,
   ApiConnectorCreatorToggleList,
 } from '../../../src/Customization/apiClientConnectors/create';
-import validateSecurity, {
-  IErrorValidation,
-} from '../../../src/Customization/apiClientConnectors/create/securityValidation';
+import {
+  ApiConnectorCreatorLayout,
+  ICreateConnectorPropsUi,
+} from '../../../src/Customization/apiClientConnectors';
+
+import { action } from '@storybook/addon-actions';
+import { boolean } from '@storybook/addon-knobs';
 import soapSpec from '../soap-connector';
+import { storiesOf } from '@storybook/react';
 
 const stories = storiesOf(
   'Customization/ApiClientConnector/CreateApiConnector/3 - Select Security',
@@ -24,8 +23,8 @@ const stories = storiesOf(
 
 const preConfiguredValues: ICreateConnectorPropsUi = {
   authenticationType: soapSpec.properties!.authenticationType.defaultValue,
-  authorizationEndpoint: soapSpec.properties!.authorizationEndpoint
-    .defaultValue,
+  authorizationEndpoint:
+    soapSpec.properties!.authorizationEndpoint.defaultValue,
   passwordType: soapSpec.properties!.passwordType.defaultValue,
   tokenEndpoint: soapSpec.properties!.tokenEndpoint.defaultValue,
 };
@@ -42,10 +41,6 @@ const dropdownOptions = {
 const component = (authenticationType: string) => {
   preConfiguredValues.authenticationType = authenticationType;
 
-  const [errors, setErrors] = React.useState<IErrorValidation>({
-    password: undefined,
-    username: undefined,
-  });
   const [values, setValues] = React.useState(preConfiguredValues);
 
   const handleChange = (param: any, event: any) => {
@@ -65,16 +60,11 @@ const component = (authenticationType: string) => {
         localValues.addTimestamp = undefined;
         localValues.addUsernameTokenCreated = undefined;
         localValues.addUsernameTokenNonce = undefined;
-        localValues.username = undefined;
-        localValues.password = undefined;
       }
     }
 
     setValues(() => localValues);
-    setErrors(() => validateSecurity(localValues));
   };
-
-  const isValid = !errors.username && !errors.password;
 
   return (
     <ApiConnectorCreatorLayout
@@ -89,11 +79,9 @@ const component = (authenticationType: string) => {
             '$t(shared:project.name) reads the document to determine the information needed to configure the connector to meet the API’s security requirements. Connections created from this connector always use the authentication type that you select here.'
           }
           i18nNoSecurity={'No Security'}
-          i18nPassword={'Password'}
-          i18nPasswordType={'Password Type'}
           i18nTimestamp={'Timestamp'}
           i18nTitle={'Specify Security'}
-          i18nUsername={'Username'}
+          i18nPasswordType={'Password Type'}
           i18nUsernameTokenCreated={'Username Token Created'}
           i18nUsernameTokenNonce={'Username Token Nonce'}
           values={values}
@@ -106,7 +94,7 @@ const component = (authenticationType: string) => {
           i18nBack={'Back'}
           i18nNext={'Next'}
           isNextLoading={boolean('isNextLoading', false)}
-          isNextDisabled={!isValid}
+          isNextDisabled={false}
         />
       }
       navigation={
