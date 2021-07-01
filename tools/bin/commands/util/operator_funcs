@@ -89,17 +89,19 @@ download_operator_binary() {
     esac
 
     if [[ "${pattern}" != "unknown" ]]; then
-        release_uri="https://api.github.com/repos/syndesisio/syndesis/releases?per_page=4"
         release_tag="$(readopt --tag)"
-
-        if [[ -n "$release_tag" ]]; then
-            release_uri="https://api.github.com/repos/syndesisio/syndesis/releases/tags/${release_tag}"
-        fi
-
         asset_name="${OPERATOR}-${pattern}"
-        url=$(curl -s $release_uri \
-            | jq -r '.[]| select(.tag_name |startswith("2.")|not)| .assets[] | select(.name |startswith("'"${asset_name}"'"))| .browser_download_url' \
-            | head -1)
+
+        local url
+        if [[ -n "$release_tag" ]]; then
+            url=$(curl -s "https://api.github.com/repos/syndesisio/syndesis/releases/tags/${release_tag}" \
+                | jq -r 'select(.tag_name |startswith("2.")|not)| .assets[] | select(.name |startswith("'"${asset_name}"'"))| .browser_download_url' \
+                | head -1)
+        else
+            url=$(curl -s "https://api.github.com/repos/syndesisio/syndesis/releases?per_page=4" \
+                | jq -r '.[]| select(.tag_name |startswith("2.")|not)| .assets[] | select(.name |startswith("'"${asset_name}"'"))| .browser_download_url' \
+                | head -1)
+        fi
 
         #
         # Check curl returns a valid url
