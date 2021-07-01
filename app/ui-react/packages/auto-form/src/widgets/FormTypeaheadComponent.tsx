@@ -94,7 +94,7 @@ export const FormTypeaheadComponent: React.FunctionComponent<IFormControlProps> 
           onToggle={toggleSelectOpen}
           isCreatable={true}
           isDisabled={props.form.isSubmitting || props.property.disabled}
-          isExpanded={isSelectOpen}
+          isOpen={isSelectOpen}
           selections={selectedOption}
           placeholderText={selectedOption}
           variant={SelectVariant.typeahead}
