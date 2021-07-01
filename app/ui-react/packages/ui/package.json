@@ -69,8 +69,8 @@
     "test": "jest",
     "test:watch": "yarn run test --watch",
     "prebuild": "rimraf dist",
-    "build": "microbundle --format cjs --no-compress",
-    "dev": "microbundle watch --format cjs --no-compress",
+    "build": "microbundle --format cjs --no-compress --jsx React.createElement",
+    "dev": "microbundle watch --format cjs --no-compress --jsx React.createElement",
     "storybook": "start-storybook -p 9001",
     "build-storybook": "NODE_OPTIONS=--max-old-space-size=2304 build-storybook -o ../../doc/ui"
   },
