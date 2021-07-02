@@ -23,4 +23,10 @@
     </validated-by>
   </constraint-definition>
 
+  <constraint-definition annotation="io.syndesis.common.model.validation.integration.ValidLabels">
+    <validated-by include-existing-validators="true">
+      <value>io.syndesis.server.dao.validation.integration.LabelsValidator</value>
+    </validated-by>
+  </constraint-definition>
+
 </constraint-mappings>
