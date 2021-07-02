@@ -25,7 +25,7 @@ export const ConnectionsMetric: React.FunctionComponent<IConnectionsMetricProps>
           </StackItem>
           <StackItem isFilled={true}>
             <br />
-            <Title size={'lg'} headingLevel={'h4'}>
+            <Title size={'lg'} headingLevel={'h3'}>
               {i18nTitle}
             </Title>
           </StackItem>
