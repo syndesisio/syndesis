@@ -40,9 +40,7 @@ export const Notifications: React.FunctionComponent<INotificationsProps> = ({
           variant={mapType(type)}
           title={message}
           isLiveRegion={true}
-          action={
-            <AlertActionCloseButton onClose={() => onClose(key)} />
-          }
+          actionClose={<AlertActionCloseButton onClose={() => onClose(key)} />}
         />
       ))}
     </AlertGroup>
