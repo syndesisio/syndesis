@@ -23,48 +23,44 @@ export interface IAggregatedMetricProps {
 const formatNumber = (num: number) =>
   num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 
-export const AggregatedMetricCard: React.FunctionComponent<IAggregatedMetricProps> = ({
-  error,
-  ok,
-  title,
-  total,
-}) => (
-  <Card className={'aggregate-status'}>
-    <CardBody>
-      <Bullseye>
-        <Title size={'lg'}>
-          <span data-testid={'aggregated-metric-card-total-count'}>
-            {formatNumber(total)}
-          </span>
-          <span data-testid={'aggregated-metric-card-title'}> {title}</span>
-        </Title>
-      </Bullseye>
-    </CardBody>
-    <CardBody>
-      <Grid>
-        <GridItem span={6}>
-          <Bullseye>
-            <Title size={'lg'}>
-              <OkIcon color={global_success_color_100.value} />
-              &nbsp;
-              <span data-testid={'aggregated-metric-card-ok-count'}>
-                {formatNumber(ok)}
-              </span>
-            </Title>
-          </Bullseye>
-        </GridItem>
-        <GridItem span={6}>
-          <Bullseye>
-            <Title size={'lg'}>
-              <ErrorCircleOIcon color={global_danger_color_100.value} />
-              &nbsp;
-              <span data-testid={'aggregated-metric-card-error-count'}>
-                {formatNumber(error)}
-              </span>
-            </Title>
-          </Bullseye>
-        </GridItem>
-      </Grid>
-    </CardBody>
-  </Card>
-);
+export const AggregatedMetricCard: React.FunctionComponent<IAggregatedMetricProps> =
+  ({ error, ok, title, total }) => (
+    <Card className={'aggregate-status'}>
+      <CardBody>
+        <Bullseye>
+          <Title size={'lg'} headingLevel={'h3'}>
+            <span data-testid={'aggregated-metric-card-total-count'}>
+              {formatNumber(total)}
+            </span>
+            <span data-testid={'aggregated-metric-card-title'}> {title}</span>
+          </Title>
+        </Bullseye>
+      </CardBody>
+      <CardBody>
+        <Grid>
+          <GridItem span={6}>
+            <Bullseye>
+              <Title size={'lg'} headingLevel={'h4'}>
+                <OkIcon color={global_success_color_100.value} />
+                &nbsp;
+                <span data-testid={'aggregated-metric-card-ok-count'}>
+                  {formatNumber(ok)}
+                </span>
+              </Title>
+            </Bullseye>
+          </GridItem>
+          <GridItem span={6}>
+            <Bullseye>
+              <Title size={'lg'} headingLevel={'h4'}>
+                <ErrorCircleOIcon color={global_danger_color_100.value} />
+                &nbsp;
+                <span data-testid={'aggregated-metric-card-error-count'}>
+                  {formatNumber(error)}
+                </span>
+              </Title>
+            </Bullseye>
+          </GridItem>
+        </Grid>
+      </CardBody>
+    </Card>
+  );
