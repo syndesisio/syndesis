@@ -9,13 +9,11 @@ export interface IConnectionsListViewProps extends IListViewToolbarProps {
   i18nLinkCreateConnection: string;
 }
 
-export class ConnectionsListView extends React.Component<
-  IConnectionsListViewProps
-> {
+export class ConnectionsListView extends React.Component<IConnectionsListViewProps> {
   public render() {
     return (
       <>
-        <PageSection noPadding={true} variant={'light'}>
+        <PageSection padding={{ default: 'noPadding' }} variant={'light'}>
           <ListViewToolbar {...this.props}>
             <div className="form-group">
               <ButtonLink
