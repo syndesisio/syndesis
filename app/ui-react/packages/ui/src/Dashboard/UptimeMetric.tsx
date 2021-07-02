@@ -23,15 +23,20 @@ export const UptimeMetric: React.FunctionComponent<IUptimeMetricProps> = ({
       className="metrics-uptime aggregate-status"
     >
       <CardBody>
-        <Title size="md" className="metrics-uptime__header">
+        <Title size="md" className="metrics-uptime__header" headingLevel={'h3'}>
           <div>{i18nTitle}</div>
-          <div className="metrics-uptime__uptime" data-testid={'dashboard-page-metrics-uptime-since'}>
+          <div
+            className="metrics-uptime__uptime"
+            data-testid={'dashboard-page-metrics-uptime-since'}
+          >
             {i18nSince} {startAsHuman}
           </div>
         </Title>
       </CardBody>
       <CardBody>
-        <span data-testid={'dashboard-page-metrics-uptime-duration'}>{uptimeDuration}</span>
+        <span data-testid={'dashboard-page-metrics-uptime-duration'}>
+          {uptimeDuration}
+        </span>
       </CardBody>
     </Card>
   );
