@@ -21,6 +21,8 @@ import (
 	projectv1 "github.com/openshift/api/project/v1"
 	olmapiv1 "github.com/operator-framework/api/pkg/operators/v1"
 	olmapiv1alpha1 "github.com/operator-framework/api/pkg/operators/v1alpha1"
+	olmapiv1alpha2 "github.com/operator-framework/api/pkg/operators/v1alpha2"
+	olmcli "github.com/operator-framework/operator-lifecycle-manager/pkg/api/client/clientset/versioned"
 	olmpkgsvr "github.com/operator-framework/operator-lifecycle-manager/pkg/package-server/apis/operators/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -40,6 +42,7 @@ type ClientTools struct {
 	dynamicClient dynamic.Interface
 	apiClient     kubernetes.Interface
 	coreV1Client  corev1.CoreV1Interface
+	olmClient     olmcli.Interface
 }
 
 func (ck *ClientTools) RestConfig() (c *rest.Config) {
@@ -68,6 +71,7 @@ func (ck *ClientTools) GetScheme() *runtime.Scheme {
 		// AddToScheme is deprecated in the OS api but schemeBuilder is still private
 		// whereas operator-marketplace has SchemeBuilder as public.
 		//
+		olmapiv1alpha2.SchemeBuilder.AddToScheme(ck.scheme)
 		olmapiv1alpha1.SchemeBuilder.AddToScheme(ck.scheme)
 		olmapiv1.SchemeBuilder.AddToScheme(ck.scheme)
 		olmpkgsvr.SchemeBuilder.AddToScheme(ck.scheme)
@@ -145,4 +149,20 @@ func (ck *ClientTools) CoreV1Client() (corev1.CoreV1Interface, error) {
 
 func (ck *ClientTools) SetCoreV1Client(c corev1.CoreV1Interface) {
 	ck.coreV1Client = c
+}
+
+func (ck *ClientTools) OlmClient() (olmcli.Interface, error) {
+	if ck.olmClient == nil {
+		client, err := olmcli.NewForConfig(ck.RestConfig())
+		if err != nil {
+			return nil, err
+		}
+		ck.olmClient = client
+	}
+
+	return ck.olmClient, nil
+}
+
+func (ck *ClientTools) SetOlmClient(c olmcli.Interface) {
+	ck.olmClient = c
 }
