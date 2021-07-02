@@ -1,4 +1,10 @@
-import { Card, CardBody, CardFooter, CardHeader, Title } from '@patternfly/react-core';
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Title,
+} from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink, Loader, PageSection } from '../Layout';
 
@@ -13,39 +19,40 @@ export interface IConnectionDetailsOauthCardProps {
   isReconnecting: boolean;
 }
 
-export const ConnectionDetailsOauthCard: React.FunctionComponent<
-  IConnectionDetailsOauthCardProps
-> = ({
-  i18nTitle,
-  i18nDescription,
-  i18nValidateButton,
-  i18nReconnectButton,
-  onValidate,
-  isValidating,
-  onReconnect,
-  isReconnecting,
-}) => (
-  <PageSection>
-    <Card>
-      <CardHeader>
-        <Title size="lg">{i18nTitle}</Title>
-      </CardHeader>
-      <CardBody>{i18nDescription}</CardBody>
-      <CardFooter>
-        <ButtonLink disabled={isValidating} onClick={onValidate}>
-          {i18nValidateButton}{' '}
-          {isValidating && <Loader inline={true} size={'xs'} />}
-        </ButtonLink>
-        &nbsp;
-        <ButtonLink
-          disabled={isReconnecting}
-          onClick={onReconnect}
-          as={'primary'}
-        >
-          {i18nReconnectButton}{' '}
-          {isReconnecting && <Loader inline={true} size={'xs'} />}
-        </ButtonLink>
-      </CardFooter>
-    </Card>
-  </PageSection>
-);
+export const ConnectionDetailsOauthCard: React.FunctionComponent<IConnectionDetailsOauthCardProps> =
+  ({
+    i18nTitle,
+    i18nDescription,
+    i18nValidateButton,
+    i18nReconnectButton,
+    onValidate,
+    isValidating,
+    onReconnect,
+    isReconnecting,
+  }) => (
+    <PageSection>
+      <Card>
+        <CardHeader>
+          <Title size="lg" headingLevel={'h3'}>
+            {i18nTitle}
+          </Title>
+        </CardHeader>
+        <CardBody>{i18nDescription}</CardBody>
+        <CardFooter>
+          <ButtonLink disabled={isValidating} onClick={onValidate}>
+            {i18nValidateButton}{' '}
+            {isValidating && <Loader inline={true} size={'xs'} />}
+          </ButtonLink>
+          &nbsp;
+          <ButtonLink
+            disabled={isReconnecting}
+            onClick={onReconnect}
+            as={'primary'}
+          >
+            {i18nReconnectButton}{' '}
+            {isReconnecting && <Loader inline={true} size={'xs'} />}
+          </ButtonLink>
+        </CardFooter>
+      </Card>
+    </PageSection>
+  );
