@@ -2,4 +2,9 @@
 
 . "$(dirname "$0")/_/husky.sh"
 
+if [ -x "${HOME}/.jenv/shims/java" ]
+then
+  export PATH="${HOME}/.jenv/shims":$PATH
+fi
+
 yarn npm-run-all pre-push:*
