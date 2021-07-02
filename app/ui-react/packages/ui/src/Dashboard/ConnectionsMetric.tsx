@@ -12,26 +12,27 @@ export interface IConnectionsMetricProps {
   i18nTitle: string;
 }
 
-export const ConnectionsMetric: React.FunctionComponent<IConnectionsMetricProps> = ({
-  i18nTitle,
-}) => (
-  <Card
-    data-testid={'dashboard-page-total-connections'}
-    className={'aggregate-status'}
-  >
-    <CardBody>
-      <Stack>
-        <StackItem>
-          <br />
-        </StackItem>
-        <StackItem isFilled={true}>
-          <br />
-          <Title size={'lg'}>{i18nTitle}</Title>
-        </StackItem>
-        <StackItem>
-          <br />
-        </StackItem>
-      </Stack>
-    </CardBody>
-  </Card>
-);
+export const ConnectionsMetric: React.FunctionComponent<IConnectionsMetricProps> =
+  ({ i18nTitle }) => (
+    <Card
+      data-testid={'dashboard-page-total-connections'}
+      className={'aggregate-status'}
+    >
+      <CardBody>
+        <Stack>
+          <StackItem>
+            <br />
+          </StackItem>
+          <StackItem isFilled={true}>
+            <br />
+            <Title size={'lg'} headingLevel={'h4'}>
+              {i18nTitle}
+            </Title>
+          </StackItem>
+          <StackItem>
+            <br />
+          </StackItem>
+        </Stack>
+      </CardBody>
+    </Card>
+  );
