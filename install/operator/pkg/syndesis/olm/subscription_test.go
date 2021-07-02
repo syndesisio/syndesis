@@ -27,6 +27,7 @@ import (
 	"github.com/operator-framework/api/pkg/lib/version"
 	olmapiv1 "github.com/operator-framework/api/pkg/operators/v1"
 	olmapiv1alpha1 "github.com/operator-framework/api/pkg/operators/v1alpha1"
+	olmfake "github.com/operator-framework/operator-lifecycle-manager/pkg/api/client/clientset/versioned/fake"
 	olmpkgsvr "github.com/operator-framework/operator-lifecycle-manager/pkg/package-server/apis/operators/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
@@ -38,7 +39,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/runtime/schema"
 	dynfake "k8s.io/client-go/dynamic/fake"
 	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -263,17 +263,15 @@ func Test_FindOperatorGroups(t *testing.T) {
 
 	scheme := createScheme()
 
-	ogGvr := schema.GroupVersionResource{
-		Group:    "operators.coreos.com",
-		Version:  "v1",
-		Resource: "operatorgroups",
-	}
-
 	clientTools := &clienttools.ClientTools{}
 	clientTools.SetApiClient(syntesting.AllApiClient())
 	clientTools.SetCoreV1Client(syntesting.CoreV1Client()) // equipped with syndesis namespace
+	clientTools.SetOlmClient(syntesting.OlmClient())
 
 	coreClient, err := clientTools.CoreV1Client()
+	assert.NoError(t, err)
+
+	olmClient, err := clientTools.OlmClient()
 	assert.NoError(t, err)
 
 	opsNS := &corev1.Namespace{
@@ -291,27 +289,22 @@ func Test_FindOperatorGroups(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {
 
-			dynClient := dynfake.NewSimpleDynamicClient(scheme)
-
 			var rtClient client.Client
 			if tc.og == nil {
 				rtClient = rtfake.NewFakeClientWithScheme(scheme)
 			} else {
 				rtClient = rtfake.NewFakeClientWithScheme(scheme, tc.og)
-
-				uns := operatorGroupAsUnstructured(t, tc.og)
-				_, err := dynClient.Resource(ogGvr).Namespace(tc.og.Namespace).Create(context.TODO(), uns, metav1.CreateOptions{})
-				assert.NoError(t, err)
+				olmClient = olmfake.NewSimpleClientset(tc.og)
 			}
-			clientTools.SetDynamicClient(dynClient)
 			clientTools.SetRuntimeClient(rtClient)
+			clientTools.SetOlmClient(olmClient)
 
 			syndesis, err := v1beta2.NewSyndesis(synns)
 			conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, syndesis)
 			assert.NoError(t, err)
 
 			pkgManifest, channel := packageManifest(tc.installModes)
-			ns, err := findOrCreateOperatorGroup(context.TODO(), rtClient, coreClient, conf, pkgManifest, channel)
+			ns, err := findOrCreateOperatorGroup(context.TODO(), rtClient, olmClient, conf, pkgManifest, channel)
 			assert.Equal(t, tc.expect.Error, err != nil)
 			// Compare operator group and expected result
 			assert.Equal(t, tc.expect.Namespace, ns)

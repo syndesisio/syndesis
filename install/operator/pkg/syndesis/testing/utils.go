@@ -24,6 +24,8 @@ import (
 	"time"
 
 	osappsv1 "github.com/openshift/api/apps/v1"
+	olmcli "github.com/operator-framework/operator-lifecycle-manager/pkg/api/client/clientset/versioned"
+	olmfake "github.com/operator-framework/operator-lifecycle-manager/pkg/api/client/clientset/versioned/fake"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	corev1 "k8s.io/api/core/v1"
@@ -112,10 +114,16 @@ func CoreV1Client(initObjs ...runtime.Object) corev1client.CoreV1Interface {
 	return coreV1Client
 }
 
+func OlmClient(initObjs ...runtime.Object) olmcli.Interface {
+	clientset := olmfake.NewSimpleClientset(initObjs...)
+	return clientset
+}
+
 func FakeClientTools() *clienttools.ClientTools {
 	clientTools := &clienttools.ClientTools{}
 	clientTools.SetRuntimeClient(fakeClient())
 	clientTools.SetApiClient(AllApiClient())
 	clientTools.SetCoreV1Client(CoreV1Client())
+	clientTools.SetOlmClient(OlmClient())
 	return clientTools
 }

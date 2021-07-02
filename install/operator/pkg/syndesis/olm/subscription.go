@@ -24,6 +24,7 @@ import (
 
 	olmapiv1 "github.com/operator-framework/api/pkg/operators/v1"
 	olmapiv1alpha1 "github.com/operator-framework/api/pkg/operators/v1alpha1"
+	olmcli "github.com/operator-framework/operator-lifecycle-manager/pkg/api/client/clientset/versioned"
 	olmpkgsvr "github.com/operator-framework/operator-lifecycle-manager/pkg/package-server/apis/operators/v1"
 	synpkg "github.com/syndesisio/syndesis/install/operator/pkg"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
@@ -34,7 +35,6 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/dynamic"
-	corev1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
@@ -99,7 +99,7 @@ func SubscribeOperator(ctx context.Context, clientTools *clienttools.ClientTools
 		return nil
 	}
 
-	coreV1Client, err := clientTools.CoreV1Client()
+	olmClient, err := clientTools.OlmClient()
 	if err != nil {
 		return err
 	}
@@ -112,7 +112,7 @@ func SubscribeOperator(ctx context.Context, clientTools *clienttools.ClientTools
 	//
 	// 4b. No csv listed so try and install an operator-group or use an existing one if available
 	//
-	ns, err := findOrCreateOperatorGroup(ctx, rtClient, coreV1Client, configuration, pkgManifest, channel)
+	ns, err := findOrCreateOperatorGroup(ctx, rtClient, olmClient, configuration, pkgManifest, channel)
 	if err != nil {
 		return err
 	}
@@ -223,7 +223,7 @@ func createOperatorGroup(ctx context.Context, rtClient client.Client, configurat
 // Find or create a compatible operator-group and
 // return the namespace in which is it located
 //
-func findOrCreateOperatorGroup(ctx context.Context, rtClient client.Client, coreV1Client corev1.CoreV1Interface, configuration *conf.Config, pkgManifest *olmpkgsvr.PackageManifest, channel *olmpkgsvr.PackageChannel) (string, error) {
+func findOrCreateOperatorGroup(ctx context.Context, rtClient client.Client, olmClient olmcli.Interface, configuration *conf.Config, pkgManifest *olmpkgsvr.PackageManifest, channel *olmpkgsvr.PackageChannel) (string, error) {
 
 	//
 	// 1. Check the install mode of the packagemanifest to see if its ALL
@@ -263,8 +263,7 @@ func findOrCreateOperatorGroup(ctx context.Context, rtClient client.Client, core
 		//
 		// Locate all operator groups in the cluster
 		//
-		ogs := olmapiv1.OperatorGroupList{}
-		err := rtClient.List(ctx, &ogs, &client.ListOptions{Namespace: ""})
+		ogs, err := olmClient.OperatorsV1().OperatorGroups("").List(ctx, metav1.ListOptions{})
 		if err != nil {
 			sublog.V(synpkg.DEBUG_LOGGING_LVL).Info("Error: Cannot get any global namespace operator-groups", "error", err.Error())
 		}
