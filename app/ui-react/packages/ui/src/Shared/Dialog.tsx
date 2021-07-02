@@ -20,7 +20,6 @@ export const Dialog: React.FunctionComponent<IDialogProps> = ({
     footer={footer}
     isOpen={true}
     onClose={onHide}
-    isFooterLeftAligned={true}
   >
     {body}
   </Modal>
