@@ -1,4 +1,4 @@
-import { Alert, Expandable } from '@patternfly/react-core';
+import { Alert, ExpandableSection } from '@patternfly/react-core';
 import * as React from 'react';
 
 export enum SyndesisAlertLevel {
@@ -44,12 +44,12 @@ export const SyndesisAlert: React.FunctionComponent<ISyndesisAlertProps> = ({
       }
     >
       {detail && (
-        <Expandable
+        <ExpandableSection
           toggleTextExpanded={i18nTextExpanded}
           toggleTextCollapsed={i18nTextCollapsed}
         >
           <pre>{detail}</pre>
-        </Expandable>
+        </ExpandableSection>
       )}
     </Alert>
   );
