@@ -6,7 +6,6 @@ import {
   Text,
   TextContent,
   Title,
-  TitleLevel,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
@@ -71,136 +70,134 @@ export interface IIntegrationEditorLayoutProps {
  * height and show the right scrollbars.
  * We should really find a smarter way to handle this.
  */
-export const IntegrationEditorLayout: React.FunctionComponent<
-  IIntegrationEditorLayoutProps
-> = ({
-  title,
-  description,
-  toolbar,
-  sidebar,
-  content,
-  onPublish,
-  onCancel,
-  onSave,
-  saveHref,
-  cancelHref,
-  publishHref,
-  primaryFlowHref,
-  isApiProvider,
-  isAlternateFlow,
-  isDefaultFlow,
-  isSaveLoading,
-  isSaveDisabled,
-  isPublishLoading,
-  isPublishDisabled,
-  extraActions,
-}: IIntegrationEditorLayoutProps) => {
-  const condition = isDefaultFlow ? 'OTHERWISE' : 'WHEN';
+export const IntegrationEditorLayout: React.FunctionComponent<IIntegrationEditorLayoutProps> =
+  ({
+    title,
+    description,
+    toolbar,
+    sidebar,
+    content,
+    onPublish,
+    onCancel,
+    onSave,
+    saveHref,
+    cancelHref,
+    publishHref,
+    primaryFlowHref,
+    isApiProvider,
+    isAlternateFlow,
+    isDefaultFlow,
+    isSaveLoading,
+    isSaveDisabled,
+    isPublishLoading,
+    isPublishDisabled,
+    extraActions,
+  }: IIntegrationEditorLayoutProps) => {
+    const condition = isDefaultFlow ? 'OTHERWISE' : 'WHEN';
 
-  return (
-    <div className={'integration-editor-layout'}>
-      <div className={'integration-editor-layout__header'}>
-        <PageSection variant={'light'}>
-          {toolbar}
-          <Level gutter={'sm'}>
-            {isAlternateFlow ? (
-            <>
-              <LevelItem>
-                <TextContent>
-                  <Title size={'2xl'} headingLevel={TitleLevel.h1}>
-                    <strong
-                      className="integration-editor-condition"
-                      data-verb={condition}
-                    >
-                      {condition}
-                    </strong>
-                    &nbsp;{title}
-                  </Title>
-                  <Text>{description}</Text>
-                </TextContent>
-              </LevelItem>
-              <LevelItem>
-                <ButtonLink
-                  id={'integration-editor-back-button'}
-                  href={primaryFlowHref}
-                >
-                  {isApiProvider ?
-                    'Go to Operation Flow' :
-                    'Go to Primary Flow'
-                  }
-                </ButtonLink>
-              </LevelItem>
-            </>
-            ) : (
-            <>
-              <LevelItem>
-                <TextContent>
-                  <Title size={'2xl'} headingLevel={TitleLevel.h1}>
-                    {title}
-                  </Title>
-                  <Text>{description}</Text>
-                </TextContent>
-              </LevelItem>
-              <LevelItem style={{ display: "flex", alignItems: "center" }}>
-                {(cancelHref || onCancel) && (
-                  <>
+    return (
+      <div className={'integration-editor-layout'}>
+        <div className={'integration-editor-layout__header'}>
+          <PageSection variant={'light'}>
+            {toolbar}
+            <Level hasGutter={true}>
+              {isAlternateFlow ? (
+                <>
+                  <LevelItem>
+                    <TextContent>
+                      <Title size={'2xl'} headingLevel={'h1'}>
+                        <strong
+                          className="integration-editor-condition"
+                          data-verb={condition}
+                        >
+                          {condition}
+                        </strong>
+                        &nbsp;{title}
+                      </Title>
+                      <Text>{description}</Text>
+                    </TextContent>
+                  </LevelItem>
+                  <LevelItem>
                     <ButtonLink
-                      id={'integration-editor-cancel-button'}
-                      onClick={onCancel}
-                      href={cancelHref}
+                      id={'integration-editor-back-button'}
+                      href={primaryFlowHref}
                     >
-                      Cancel
+                      {isApiProvider
+                        ? 'Go to Operation Flow'
+                        : 'Go to Primary Flow'}
                     </ButtonLink>
-                    &nbsp;&nbsp;&nbsp;
-                  </>
-                )}
-                {(saveHref || onSave) && (
-                  <>
-                    <ButtonLink
-                      id={'integration-editor-save-button'}
-                      onClick={onSave}
-                      href={saveHref}
-                      disabled={isSaveLoading || isSaveDisabled}
-                      as={publishHref || onPublish ? 'default' : 'primary'}
-                    >
-                      {isSaveLoading ? (
-                        <Loader size={'xs'} inline={true} />
-                      ) : null}
-                      Save
-                    </ButtonLink>
-                    &nbsp;
-                  </>
-                )}
-                {(publishHref || onPublish) && (
-                  <ButtonLink
-                    id={'integration-editor-publish-button'}
-                    onClick={onPublish}
-                    href={publishHref}
-                    as={'primary'}
-                    disabled={isPublishLoading || isPublishDisabled}
-                  >
-                    Publish
-                  </ButtonLink>
-                )}
-                {extraActions}
-              </LevelItem>
-            </>
-            )}
-          </Level>
-        </PageSection>
-      </div>
-      <div className={'integration-editor-layout__body'}>
-        <div className={'integration-editor-layout__sidebarOuter'}>
-          <div className={'integration-editor-layout__sidebarInner'}>
-            {sidebar}
+                  </LevelItem>
+                </>
+              ) : (
+                <>
+                  <LevelItem>
+                    <TextContent>
+                      <Title size={'2xl'} headingLevel={'h1'}>
+                        {title}
+                      </Title>
+                      <Text>{description}</Text>
+                    </TextContent>
+                  </LevelItem>
+                  <LevelItem style={{ display: 'flex', alignItems: 'center' }}>
+                    {(cancelHref || onCancel) && (
+                      <>
+                        <ButtonLink
+                          id={'integration-editor-cancel-button'}
+                          onClick={onCancel}
+                          href={cancelHref}
+                        >
+                          Cancel
+                        </ButtonLink>
+                        &nbsp;&nbsp;&nbsp;
+                      </>
+                    )}
+                    {(saveHref || onSave) && (
+                      <>
+                        <ButtonLink
+                          id={'integration-editor-save-button'}
+                          onClick={onSave}
+                          href={saveHref}
+                          disabled={isSaveLoading || isSaveDisabled}
+                          as={publishHref || onPublish ? 'default' : 'primary'}
+                        >
+                          {isSaveLoading ? (
+                            <Loader size={'xs'} inline={true} />
+                          ) : null}
+                          Save
+                        </ButtonLink>
+                        &nbsp;
+                      </>
+                    )}
+                    {(publishHref || onPublish) && (
+                      <ButtonLink
+                        id={'integration-editor-publish-button'}
+                        onClick={onPublish}
+                        href={publishHref}
+                        as={'primary'}
+                        disabled={isPublishLoading || isPublishDisabled}
+                      >
+                        Publish
+                      </ButtonLink>
+                    )}
+                    {extraActions}
+                  </LevelItem>
+                </>
+              )}
+            </Level>
+          </PageSection>
+        </div>
+        <div className={'integration-editor-layout__body'}>
+          <div className={'integration-editor-layout__sidebarOuter'}>
+            <div className={'integration-editor-layout__sidebarInner'}>
+              {sidebar}
+            </div>
+          </div>
+          <div className={'integration-editor-layout__contentOuter'}>
+            <div className={'integration-editor-layout__contentInner'}>
+              {content}
+            </div>
           </div>
         </div>
-        <div className={'integration-editor-layout__contentOuter'}>
-          <div className={'integration-editor-layout__contentInner'}>
-            {content}
-          </div>
-        </div>
       </div>
-    </div>
-  );
-};
+    );
+  };
