@@ -14,27 +14,23 @@ export interface IOAuthAppExpanderBodyProps {
   i18nAlertDetail: string;
 }
 
-export const OAuthAppExpanderBody: React.FC<
-  IOAuthAppExpanderBodyProps
-> = (
-  {
-    children,
-    disableRemove,
-    disableSave,
-    i18nAlertDetail,
-    i18nAlertTitle,
-    i18nRemoveButtonText,
-    i18nSaveButtonText,
-    onRemove,
-    onSave,
-    showSuccess
-  }) => {
+export const OAuthAppExpanderBody: React.FC<IOAuthAppExpanderBodyProps> = ({
+  children,
+  disableRemove,
+  disableSave,
+  i18nAlertDetail,
+  i18nAlertTitle,
+  i18nRemoveButtonText,
+  i18nSaveButtonText,
+  onRemove,
+  onSave,
+  showSuccess,
+}) => {
   return (
-    <Stack gutter={'md'}>
+    <Stack hasGutter={true}>
       {showSuccess && (
         <StackItem>
-          <Alert variant={'success'}
-                 title={i18nAlertTitle}>
+          <Alert variant={'success'} title={i18nAlertTitle}>
             {i18nAlertDetail}
           </Alert>
         </StackItem>
