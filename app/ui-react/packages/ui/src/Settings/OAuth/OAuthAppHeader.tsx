@@ -1,4 +1,4 @@
-import { Text, TextContent, Title, TitleLevel } from '@patternfly/react-core';
+import { Text, TextContent, Title } from '@patternfly/react-core';
 import * as React from 'react';
 import { PageSection } from '../../Layout';
 import { CopyToClipboard } from '../../Shared/CopyToClipboard';
@@ -18,11 +18,7 @@ export const OAuthAppHeader: React.FunctionComponent<IOAuthAppHeaderProps> = ({
 }) => (
   <PageSection variant={'light'}>
     <TextContent>
-      <Title
-        size={'2xl'}
-        headingLevel={TitleLevel.h1}
-        data-testid={'oauth-title'}
-      >
+      <Title size={'2xl'} headingLevel={'h1'} data-testid={'oauth-title'}>
         {i18nPageTitle}
       </Title>
       <Text dangerouslySetInnerHTML={{ __html: i18nDescription }} />
