@@ -32,15 +32,15 @@ export interface IApiConnectorReviewProps {
   warningMessages?: string[];
 }
 
-export class ApiConnectorReview extends React.Component<
-  IApiConnectorReviewProps
-> {
+export class ApiConnectorReview extends React.Component<IApiConnectorReviewProps> {
   public render() {
     return (
       <PageSection>
         <Card>
           <CardHeader>
-            <Title size="lg">{this.props.i18nTitle}</Title>
+            <Title size="lg" headingLevel={'h2'}>
+              {this.props.i18nTitle}
+            </Title>
           </CardHeader>
           <CardBody>
             {this.props.i18nValidationFallbackMessage ? (
