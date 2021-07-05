@@ -6,14 +6,16 @@ export interface IIntegrationDetailEditableNameProps {
   name?: React.ReactNode;
 }
 
-export class IntegrationDetailEditableName extends React.PureComponent<
-  IIntegrationDetailEditableNameProps
-> {
+export class IntegrationDetailEditableName extends React.PureComponent<IIntegrationDetailEditableNameProps> {
   public render() {
     return (
       <>
         {this.props.name && (
-          <Title size="lg" className="integration-detail-editable-name pf-u-mr-lg">
+          <Title
+            size="lg"
+            className="integration-detail-editable-name pf-u-mr-lg"
+            headingLevel={'h4'}
+          >
             {this.props.name}
           </Title>
         )}
