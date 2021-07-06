@@ -70,7 +70,7 @@ stories.add('Review/Edit Connector Details', () => {
 const cancelLabel = 'Cancel';
 const editLabel = 'Edit';
 const iconLabel = 'Icon';
-const name = 'MyApiConnector';
+const name = 'Beer API 2.0';
 const saveLabel = 'Save';
 const submitText = 'submit called';
 const uploadImageText = 'upload called';
@@ -119,11 +119,20 @@ stories.add(
 stories.add('ApiConnectorDetailCard', () => (
   <ApiConnectorDetailBody
     description={'An OpenAPI 2.0 version of the Beer API.'}
-    icon={icons.beer}
     name={'Beer API 2.0'}
+    handleSubmit={action(submitText)}
+    i18nCancelLabel={'Cancel'}
+    i18nEditLabel={'Edit'}
+    i18nLabelBaseUrl={'Base URL'}
+    i18nLabelDescription={'Description'}
+    i18nLabelHost={'Host'}
+    i18nLabelName={'Name'}
+    i18nNameHelper={'Please provide a name for the API Connector'}
+    i18nRequiredText={'The fields marked with * are required.'}
+    i18nSaveLabel={'Save'}
+    i18nTitle={name + ' Configuration'}
+    icon={icons.beer}
+    i18nLabelAddress={'Address'}
+    propertyKeys={[]}
   />
-));
-
-stories.add('ApiConnectorDetailCard (no icon, no description)', () => (
-  <ApiConnectorDetailBody name={name} />
 ));
