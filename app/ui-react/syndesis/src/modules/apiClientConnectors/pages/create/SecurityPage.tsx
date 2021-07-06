@@ -1,5 +1,6 @@
 import * as H from '@syndesis/history';
-import { IApiSummarySoap } from '@syndesis/models';
+import * as React from 'react';
+
 import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
@@ -9,8 +10,9 @@ import {
   ApiConnectorCreatorSecurityForm,
   ApiConnectorCreatorToggleList,
 } from '@syndesis/ui';
+
+import { IApiSummarySoap } from '@syndesis/models';
 import { useRouteData } from '@syndesis/utils';
-import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
@@ -33,11 +35,8 @@ export const SecurityPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, ISecurityPageRouteState>();
   const { configured, connectorTemplateId, specification } = state;
   const { properties } = specification;
-  const {
-    portName,
-    serviceName,
-    wsdlURL,
-  } = specification.configuredProperties!;
+  const { portName, serviceName, wsdlURL } =
+    specification.configuredProperties!;
 
   const backHref = resolvers.create.review({
     configured,
@@ -59,9 +58,9 @@ export const SecurityPage: React.FunctionComponent = () => {
   };
 
   const dropdowns = {
-    authenticationTypes: (
-      properties!.authenticationType?.enum || []
-    ).sort((a, b) => a.value!.localeCompare(b.value!)),
+    authenticationTypes: (properties!.authenticationType?.enum || []).sort(
+      (a, b) => a.value!.localeCompare(b.value!)
+    ),
     passwordTypes: (properties!.passwordType?.enum || []).sort((a, b) =>
       a.value!.localeCompare(b.value!)
     ),
@@ -88,7 +87,7 @@ export const SecurityPage: React.FunctionComponent = () => {
 
   return (
     <Translation ns={['apiClientConnectors', 'shared']}>
-      {t => (
+      {(t) => (
         <WithLeaveConfirmation
           i18nTitle={t('apiClientConnectors:create:unsavedChangesTitle')}
           i18nConfirmationMessage={t(
@@ -115,9 +114,7 @@ export const SecurityPage: React.FunctionComponent = () => {
                 )}
               />
               <ApiConnectorCreatorSecurityForm defaultValues={defaultValues}>
-                {({ errors, handleChange, values }) => {
-                  const isValid = !errors?.username && !errors.password;
-
+                {({ handleChange, values }) => {
                   return (
                     <ApiConnectorCreatorLayout
                       content={
@@ -139,9 +136,6 @@ export const SecurityPage: React.FunctionComponent = () => {
                           i18nNoSecurity={t(
                             'apiClientConnectors:create:security:noSecurity'
                           )}
-                          i18nPassword={t(
-                            'apiClientConnectors:create:security:password'
-                          )}
                           i18nPasswordType={t(
                             'apiClientConnectors:create:security:passwordType'
                           )}
@@ -150,9 +144,6 @@ export const SecurityPage: React.FunctionComponent = () => {
                           )}
                           i18nTitle={t(
                             'apiClientConnectors:create:security:title'
-                          )}
-                          i18nUsername={t(
-                            'apiClientConnectors:create:security:username'
                           )}
                           i18nUsernameTokenCreated={t(
                             'apiClientConnectors:create:security:usernameTokenCreated'
@@ -170,7 +161,7 @@ export const SecurityPage: React.FunctionComponent = () => {
                           i18nBack={t('shared:Back')}
                           i18nNext={t('shared:Next')}
                           isNextLoading={false}
-                          isNextDisabled={!isValid}
+                          isNextDisabled={false}
                         />
                       }
                       navigation={
