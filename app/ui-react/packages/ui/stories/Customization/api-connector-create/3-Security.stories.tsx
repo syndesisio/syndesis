@@ -1,21 +1,23 @@
-import { action } from '@storybook/addon-actions';
-import { boolean } from '@storybook/addon-knobs';
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import {
-  ApiConnectorCreatorLayout,
-  ICreateConnectorPropsUi,
-} from '../../../src/Customization/apiClientConnectors';
+
 import {
   ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorFooter,
   ApiConnectorCreatorSecurity,
   ApiConnectorCreatorToggleList,
 } from '../../../src/Customization/apiClientConnectors/create';
+import {
+  ApiConnectorCreatorLayout,
+  ICreateConnectorPropsUi,
+} from '../../../src/Customization/apiClientConnectors';
 import validateSecurity, {
   IErrorValidation,
 } from '../../../src/Customization/apiClientConnectors/create/securityValidation';
+
+import { action } from '@storybook/addon-actions';
+import { boolean } from '@storybook/addon-knobs';
 import soapSpec from '../soap-connector';
+import { storiesOf } from '@storybook/react';
 
 const stories = storiesOf(
   'Customization/ApiClientConnector/CreateApiConnector/3 - Select Security',
@@ -24,8 +26,8 @@ const stories = storiesOf(
 
 const preConfiguredValues: ICreateConnectorPropsUi = {
   authenticationType: soapSpec.properties!.authenticationType.defaultValue,
-  authorizationEndpoint: soapSpec.properties!.authorizationEndpoint
-    .defaultValue,
+  authorizationEndpoint:
+    soapSpec.properties!.authorizationEndpoint.defaultValue,
   passwordType: soapSpec.properties!.passwordType.defaultValue,
   tokenEndpoint: soapSpec.properties!.tokenEndpoint.defaultValue,
 };
@@ -112,6 +114,7 @@ const component = (authenticationType: string) => {
       navigation={
         <ApiConnectorCreatorBreadSteps
           step={3}
+          i18nConfiguration={'Additional Configuration'}
           i18nDetails={'Review/Edit Connector Details'}
           i18nReview={'Imported Operations'}
           i18nSecurity={'Specify Security'}

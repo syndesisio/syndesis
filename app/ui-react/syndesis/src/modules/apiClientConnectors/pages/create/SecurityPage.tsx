@@ -1,5 +1,6 @@
 import * as H from '@syndesis/history';
-import { IApiSummarySoap } from '@syndesis/models';
+import * as React from 'react';
+
 import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
@@ -9,8 +10,9 @@ import {
   ApiConnectorCreatorSecurityForm,
   ApiConnectorCreatorToggleList,
 } from '@syndesis/ui';
+
+import { IApiSummarySoap } from '@syndesis/models';
 import { useRouteData } from '@syndesis/utils';
-import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
@@ -33,17 +35,22 @@ export const SecurityPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, ISecurityPageRouteState>();
   const { configured, connectorTemplateId, specification } = state;
   const { properties } = specification;
-  const {
-    portName,
-    serviceName,
-    wsdlURL,
-  } = specification.configuredProperties!;
+  const { portName, serviceName, wsdlURL } =
+    specification.configuredProperties!;
 
-  const backHref = resolvers.create.review({
-    configured,
-    connectorTemplateId,
-    specification: specification.configuredProperties!.specification,
-  });
+  const backHref =
+    connectorTemplateId === 'soap-connector-template'
+      ? resolvers.create.servicePort({
+          apiSummary: specification,
+          configured,
+          connectorTemplateId,
+          specification: specification.configuredProperties!.specification,
+        })
+      : resolvers.create.review({
+          configured,
+          connectorTemplateId,
+          specification: specification.configuredProperties!.specification,
+        });
 
   const defaultValues: ICreateConnectorProps = {
     authenticationType:
@@ -59,9 +66,9 @@ export const SecurityPage: React.FunctionComponent = () => {
   };
 
   const dropdowns = {
-    authenticationTypes: (
-      properties!.authenticationType?.enum || []
-    ).sort((a, b) => a.value!.localeCompare(b.value!)),
+    authenticationTypes: (properties!.authenticationType?.enum || []).sort(
+      (a, b) => a.value!.localeCompare(b.value!)
+    ),
     passwordTypes: (properties!.passwordType?.enum || []).sort((a, b) =>
       a.value!.localeCompare(b.value!)
     ),
@@ -88,7 +95,7 @@ export const SecurityPage: React.FunctionComponent = () => {
 
   return (
     <Translation ns={['apiClientConnectors', 'shared']}>
-      {t => (
+      {(t) => (
         <WithLeaveConfirmation
           i18nTitle={t('apiClientConnectors:create:unsavedChangesTitle')}
           i18nConfirmationMessage={t(
@@ -175,7 +182,10 @@ export const SecurityPage: React.FunctionComponent = () => {
                       }
                       navigation={
                         <ApiConnectorCreatorBreadSteps
-                          step={3}
+                          step={4}
+                          i18nConfiguration={t(
+                            'apiClientConnectors:create:configuration:title'
+                          )}
                           i18nDetails={t(
                             'apiClientConnectors:create:details:title'
                           )}
