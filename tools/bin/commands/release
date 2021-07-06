@@ -446,7 +446,7 @@ push_container_images_to_registry() {
     local release_version=$2
     local moving_tag=$3
 
-    echo "==== Pushing to Docker Hub"
+    echo "==== Pushing to ${registry}"
     for module in $ALL_IMAGE_MODULES; do
         local image="syndesis/syndesis-$module"
         docker tag "$image:$release_version" "$registry/$image:$release_version"
