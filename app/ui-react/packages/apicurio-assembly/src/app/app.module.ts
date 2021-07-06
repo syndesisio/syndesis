@@ -1,3 +1,4 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -7,7 +8,8 @@ import {
   ApicurioCommonComponentsModule,
   ApicurioEditorModule,
 } from 'apicurio-design-studio';
-import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { AppComponent } from './app.component';
 import { ApicurioHostComponent } from './apicurio-host.component';
 import { WindowRef } from './WindowRef';
@@ -15,6 +17,7 @@ import { WindowRef } from './WindowRef';
 @NgModule({
   declarations: [AppComponent, ApicurioHostComponent],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     CommonModule,
     FormsModule,
