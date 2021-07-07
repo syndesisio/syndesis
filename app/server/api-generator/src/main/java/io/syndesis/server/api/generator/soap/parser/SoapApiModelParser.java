@@ -138,9 +138,10 @@ public final class SoapApiModelParser {
             builder.model(definition);
             validateModel(definition, builder);
 
-            // set default service, port and address if present
+            // set default service, port and address to the first service, port and address in the WSDL
+            // otherwise we don't generate any action summary
             final SoapApiModelInfo localBuild = builder.build();
-            if (localBuild.getServices().size() == 1) {
+            if (localBuild.getServices().size() > 1) {
 
                 final QName defaultService = localBuild.getServices().get(0);
                 builder.defaultService(defaultService);
