@@ -43,8 +43,8 @@ export default describe('DataMapperAdapter', () => {
   const onMappings = jest.fn();
 
   it('Should render', () => {
-    const modalContainer = document.createElement("div");
-    modalContainer.id = "modals";
+    const modalContainer = document.createElement('div');
+    modalContainer.id = 'modals';
     document.body.appendChild(modalContainer);
     const { container } = render(
       <DataMapperAdapter
@@ -55,6 +55,7 @@ export default describe('DataMapperAdapter', () => {
         baseJSONInspectionServiceUrl={'/whatever'}
         baseMappingServiceUrl={'/whatever'}
         baseXMLInspectionServiceUrl={'/whatever'}
+        baseCSVInspectionServiceUrl={'/whatever'}
         onMappings={onMappings}
       />
     );

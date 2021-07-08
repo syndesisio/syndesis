@@ -47,6 +47,7 @@ export function toDataShapeKinds(
     | 'XML_SCHEMA'
     | 'XML_SCHEMA_INSPECTED'
     | 'XML_INSTANCE'
+    | 'CSV_INSTANCE'
     | 'NONE'
     | string
 ) {
@@ -70,6 +71,8 @@ export function toDataShapeKinds(
     case 'xml_instance':
     case 'xml-instance':
       return DataShapeKinds.XML_INSTANCE;
+    case 'csv-instance':
+      return DataShapeKinds.CSV_INSTANCE;
     case 'none':
       return DataShapeKinds.NONE;
     default:

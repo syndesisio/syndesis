@@ -3356,6 +3356,18 @@
 
       <dependency>
         <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-csv-module</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.atlasmap</groupId>
+        <artifactId>atlas-csv-service</artifactId>
+        <version>${atlasmap.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.atlasmap</groupId>
         <artifactId>atlas-service</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>

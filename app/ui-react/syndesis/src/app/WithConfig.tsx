@@ -12,9 +12,10 @@ export interface IConfigFile {
     baseJavaInspectionServiceUrl: string;
     baseXMLInspectionServiceUrl: string;
     baseJSONInspectionServiceUrl: string;
+    baseCSVInspectionServiceUrl: string;
     disableMappingPreviewMode: boolean;
   };
-  features: StringMap<any>,
+  features: StringMap<any>;
   branding: {
     logoWhiteBg: string;
     logoDarkBg: string;

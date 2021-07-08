@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+import * as H from '@syndesis/history';
+import * as React from 'react';
+
 import {
   getChoiceConfigMode,
   getFlow,
@@ -23,23 +26,23 @@ import {
   toDataShapeKinds,
   WithIntegrationHelpers,
 } from '@syndesis/api';
-import * as H from '@syndesis/history';
 import { DataShape, Flow, Integration, StepKind } from '@syndesis/models';
-import { IntegrationEditorLayout } from '@syndesis/ui';
-import { WithRouteData } from '@syndesis/utils';
-import * as React from 'react';
-import { PageTitle } from '../../../../../shared';
-import { IEditorSidebarProps } from '../EditorSidebar';
 import {
   IChoiceStepRouteParams,
   IChoiceStepRouteState,
   IPageWithEditorBreadcrumb,
 } from '../interfaces';
-import { WithDescribeDataShapeForm } from '../shape/WithDescribeDataShapeForm';
 import { toUIStep, toUIStepCollection } from '../utils';
-import { createChoiceConfiguration } from "./utils";
 
-export interface IDescribeChoiceDataShapePageProps extends IPageWithEditorBreadcrumb {
+import { IntegrationEditorLayout } from '@syndesis/ui';
+import { WithRouteData } from '@syndesis/utils';
+import { PageTitle } from '../../../../../shared';
+import { IEditorSidebarProps } from '../EditorSidebar';
+import { WithDescribeDataShapeForm } from '../shape/WithDescribeDataShapeForm';
+import { createChoiceConfiguration } from './utils';
+
+export interface IDescribeChoiceDataShapePageProps
+  extends IPageWithEditorBreadcrumb {
   backHref: (
     p: IChoiceStepRouteParams,
     s: IChoiceStepRouteState
@@ -56,18 +59,13 @@ export interface IDescribeChoiceDataShapePageProps extends IPageWithEditorBreadc
   ) => H.LocationDescriptorObject;
 }
 
-export class DescribeChoiceDataShapePage extends React.Component<
-  IDescribeChoiceDataShapePageProps
-> {
+export class DescribeChoiceDataShapePage extends React.Component<IDescribeChoiceDataShapePageProps> {
   public render() {
     return (
       <>
         <WithIntegrationHelpers>
           {({ updateStep }) => (
-            <WithRouteData<
-              IChoiceStepRouteParams,
-              IChoiceStepRouteState
-            >>
+            <WithRouteData<IChoiceStepRouteParams, IChoiceStepRouteState>>
               {(params, state, { history }) => {
                 const positionAsNumber = parseInt(params.position, 10);
                 const descriptor = state.step.action!.descriptor!;
@@ -88,7 +86,10 @@ export class DescribeChoiceDataShapePage extends React.Component<
                 const handleUpdatedDataShape = async (
                   newDataShape: DataShape
                 ) => {
-                  const newDescriptor = { ...descriptor, outputDataShape: newDataShape };
+                  const newDescriptor = {
+                    ...descriptor,
+                    outputDataShape: newDataShape,
+                  };
                   const updatedAction = {
                     ...state.step.action!,
                     descriptor: newDescriptor,
@@ -97,12 +98,16 @@ export class DescribeChoiceDataShapePage extends React.Component<
                     ...state.step,
                     action: updatedAction,
                   };
-                  const updatedFlows = configuration.flows.map(f => {
-                    return getFlow(
-                      state.updatedIntegration || state.integration,
-                      f.flow
-                    ) || {} as Flow
-                  }).filter(f => typeof f.name !== 'undefined');
+                  const updatedFlows = configuration.flows
+                    .map((f) => {
+                      return (
+                        getFlow(
+                          state.updatedIntegration || state.integration,
+                          f.flow
+                        ) || ({} as Flow)
+                      );
+                    })
+                    .filter((f) => typeof f.name !== 'undefined');
                   if (typeof configuration.defaultFlow !== 'undefined') {
                     const defaultFlow = getFlow(
                       state.updatedIntegration || state.integration,
@@ -112,7 +117,7 @@ export class DescribeChoiceDataShapePage extends React.Component<
                       updatedFlows.push(defaultFlow!);
                     }
                   }
-                  const updatedIntegration = await (updateStep)(
+                  const updatedIntegration = await updateStep(
                     state.updatedIntegration || state.integration,
                     updatedStep,
                     params.flowId,
@@ -151,7 +156,7 @@ export class DescribeChoiceDataShapePage extends React.Component<
                   <>
                     <PageTitle title={'Specify Conditional Flows Data Type'} />
                     <IntegrationEditorLayout
-                      title='Specify Output Data Type'
+                      title="Specify Output Data Type"
                       description={
                         'Enter information that defines the data type of the step. All flows must produce this data type.'
                       }
@@ -176,6 +181,7 @@ export class DescribeChoiceDataShapePage extends React.Component<
                           initialDefinition={dataShape.specification}
                           initialName={dataShape.name}
                           initialDescription={dataShape.description}
+                          initialParameters={dataShape.parameters}
                           onUpdatedDataShape={handleUpdatedDataShape}
                           backActionHref={backHref}
                         />

@@ -1,4 +1,8 @@
+import * as H from '@syndesis/history';
+import * as React from 'react';
+
 import {
+  Button,
   Card,
   CardBody,
   CardFooter,
@@ -9,10 +13,9 @@ import {
   Popover,
   TextInput,
 } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
-import * as H from '@syndesis/history';
-import * as React from 'react';
 import { ButtonLink, Container, PageSection } from '../../../Layout';
+
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { TextEditor } from '../../../Shared';
 
 const kinds = [
@@ -36,19 +39,118 @@ const kinds = [
     label: 'XML Instance',
     value: 'xml-instance',
   },
+  {
+    label: 'CSV Instance',
+    parameters: [
+      {
+        boolean: true,
+        label: 'Allow Duplicate Header Names',
+        name: 'allowDuplicateHeaderNames',
+        required: false,
+        value: 'true',
+      },
+      {
+        boolean: true,
+        label: 'Allow Missing Column Names',
+        name: 'allowMissingColumnNames',
+        required: false,
+        value: 'true',
+      },
+      {
+        label: 'Comment Marker',
+        name: 'commentMarker',
+        required: false,
+        value: '',
+      },
+      {
+        label: 'Delimiter',
+        name: 'delimiter',
+        required: false,
+        value: '',
+      },
+      {
+        label: 'Escape',
+        name: 'escape',
+        required: false,
+        value: '',
+      },
+      {
+        boolean: true,
+        label: 'First Record As Header',
+        name: 'firstRecordAsHeader',
+        required: false,
+        value: 'true',
+      },
+      {
+        label: 'Headers',
+        name: 'headers',
+        required: false,
+        value: '',
+      },
+      {
+        boolean: true,
+        label: 'Ignore Empty Lines',
+        name: 'ignoreEmptyLines',
+        required: false,
+        value: 'true',
+      },
+      {
+        boolean: true,
+        label: 'Ignore Header Case',
+        name: 'ignoreHeaderCase',
+        required: false,
+        value: 'true',
+      },
+      {
+        boolean: true,
+        label: 'Ignore Surrounding Spaces',
+        name: 'ignoreSurroundingSpaces',
+        required: false,
+        value: 'true',
+      },
+      {
+        label: 'Null String',
+        name: 'nullString',
+        required: false,
+        value: '',
+      },
+      {
+        boolean: true,
+        label: 'Skip Header Record',
+        name: 'skipHeaderRecord',
+        required: false,
+        value: 'true',
+      },
+    ],
+    value: 'csv-instance',
+  },
 ];
+
+const titleFor = (kind: string): string => {
+  const found = kinds.find(k => k.value === kind);
+  return (found && found.label + ' Parameters') || '';
+};
+
+const parametersFor = (kind: string): [] => {
+  const found = kinds.find(k => k.value === kind);
+  return (found && (found.parameters as [])) || [];
+};
 
 export interface IDescribeDataShapeFormProps {
   kind: string;
   definition?: string;
   name?: string;
   description?: string;
+  parametersDialog?: React.ReactNode;
   i18nSelectType: string;
   i18nSelectTypeHelp: string;
   i18nDataTypeName: string;
   i18nDataTypeNameHelp: string;
   i18nDataTypeDescription: string;
   i18nDataTypeDescriptionHelp: string;
+  i18nDataTypeParameters: string;
+  i18nDataTypeParametersHelp: string;
+  i18nDataTypeParametersAction: string;
   i18nDefinition: string;
   i18nDefinitionHelp: string;
   i18nNext: string;
@@ -59,6 +161,7 @@ export interface IDescribeDataShapeFormProps {
   onDefinitionChange: (text: string) => void;
   onNameChange: (name: string) => void;
   onDescriptionChange: (description: string) => void;
+  onShowParameters: (kind: string, parameters: []) => void;
 }
 
 export const DescribeDataShapeForm: React.FunctionComponent<IDescribeDataShapeFormProps> = ({
@@ -66,6 +169,7 @@ export const DescribeDataShapeForm: React.FunctionComponent<IDescribeDataShapeFo
   definition,
   name,
   description,
+  parametersDialog: parametersDialog,
   i18nDefinition,
   i18nDefinitionHelp,
   i18nSelectType,
@@ -74,6 +178,9 @@ export const DescribeDataShapeForm: React.FunctionComponent<IDescribeDataShapeFo
   i18nDataTypeNameHelp,
   i18nDataTypeDescription,
   i18nDataTypeDescriptionHelp,
+  i18nDataTypeParameters,
+  i18nDataTypeParametersHelp,
+  i18nDataTypeParametersAction,
   i18nNext,
   i18nBackAction,
   backActionHref,
@@ -82,6 +189,7 @@ export const DescribeDataShapeForm: React.FunctionComponent<IDescribeDataShapeFo
   onDefinitionChange,
   onNameChange,
   onDescriptionChange,
+  onShowParameters,
 }) => (
   <PageSection>
     <Container>
@@ -149,6 +257,42 @@ export const DescribeDataShapeForm: React.FunctionComponent<IDescribeDataShapeFo
                       }}
                     />
                   </FormGroup>
+                  {parametersFor(kind).length > 0 && (
+                    <FormGroup
+                      fieldId={'describe-data-shape-form-parameters'}
+                      label={
+                        <>
+                          {i18nDataTypeParameters}
+                          <Popover
+                            aria-label={i18nDataTypeParametersHelp}
+                            bodyContent={i18nDataTypeParametersHelp}
+                          >
+                            <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
+                          </Popover>
+                        </>
+                      }
+                    >
+                      <Container>
+                        <Button
+                          type={'button'}
+                          variant={'tertiary'}
+                          data-testid={
+                            'describe-data-shape-form-parameters-button'
+                          }
+                          onClick={() =>
+                            onShowParameters(
+                              titleFor(kind),
+                              parametersFor(kind)
+                            )
+                          }
+                        >
+                          <i className={'fa fa-ellipsis-h'} />{' '}
+                          {i18nDataTypeParametersAction}
+                        </Button>
+                        {parametersDialog}
+                      </Container>
+                    </FormGroup>
+                  )}
                   <FormGroup
                     fieldId={'describe-data-shape-form-name-input'}
                     label={

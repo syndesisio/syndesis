@@ -19,6 +19,7 @@
     "baseJavaInspectionServiceUrl": "/api/v1/atlas/java/",
     "baseXMLInspectionServiceUrl": "/api/v1/atlas/xml/",
     "baseJSONInspectionServiceUrl": "/api/v1/atlas/json/",
+    "baseCSVInspectionServiceUrl": "/api/v1/atlas/csv/",
     "disableMappingPreviewMode": false,
     "discardNonMockSources": false,
     "addMockJSONMappings": false,

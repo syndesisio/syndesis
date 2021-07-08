@@ -1,9 +1,11 @@
+import * as React from 'react';
+
 import {
   Atlasmap,
   AtlasmapProvider,
   IAtlasmapProviderProps,
+  ParametersDialog,
 } from '@atlasmap/atlasmap';
-import * as React from 'react';
 
 export enum DocumentType {
   JAVA = 'JAVA',
@@ -30,6 +32,7 @@ export interface IDocument {
   inspectionType: InspectionType;
   inspectionSource: string;
   inspectionResult: string;
+  inspectionParameters?: { [key: string]: string };
   showFields: boolean;
 }
 
@@ -41,54 +44,86 @@ export interface IDataMapperAdapterProps {
   baseJavaInspectionServiceUrl: string;
   baseXMLInspectionServiceUrl: string;
   baseJSONInspectionServiceUrl: string;
-  baseCSVInspectionServiceUrl?: string;
+  baseCSVInspectionServiceUrl: string;
   baseMappingServiceUrl: string;
   onMappings(mappings: string): void;
 }
 
-export const DataMapperAdapter: React.FunctionComponent<IDataMapperAdapterProps> = ({
-  documentId,
-  inputDocuments,
-  outputDocument,
-  initialMappings,
-  baseJavaInspectionServiceUrl,
-  baseXMLInspectionServiceUrl,
-  baseJSONInspectionServiceUrl,
-  baseCSVInspectionServiceUrl,
-  baseMappingServiceUrl,
-  onMappings,
-}) => {
-  const externalDocument = React.useMemo(
-    () =>
-      ({
-        documentId,
-        initialMappings,
-        inputDocuments,
-        outputDocument,
-      } as IAtlasmapProviderProps['externalDocument']),
-    [initialMappings, documentId, inputDocuments, outputDocument]
-  );
-  // tslint:disable-next-line: no-console
-  console.log('Atlasmap document', JSON.stringify(externalDocument));
+export const DataMapperAdapter: React.FunctionComponent<IDataMapperAdapterProps> =
+  ({
+    documentId,
+    inputDocuments,
+    outputDocument,
+    initialMappings,
+    baseJavaInspectionServiceUrl,
+    baseXMLInspectionServiceUrl,
+    baseJSONInspectionServiceUrl,
+    baseCSVInspectionServiceUrl,
+    baseMappingServiceUrl,
+    onMappings,
+  }) => {
+    const externalDocument = React.useMemo(
+      () =>
+        ({
+          documentId,
+          initialMappings,
+          inputDocuments,
+          outputDocument,
+        } as IAtlasmapProviderProps['externalDocument']),
+      [initialMappings, documentId, inputDocuments, outputDocument]
+    );
+    // tslint:disable-next-line: no-console
+    console.log('Atlasmap document', JSON.stringify(externalDocument));
+    return (
+      <AtlasmapProvider
+        baseJSONInspectionServiceUrl={baseJSONInspectionServiceUrl}
+        baseJavaInspectionServiceUrl={baseJavaInspectionServiceUrl}
+        baseMappingServiceUrl={baseMappingServiceUrl}
+        baseXMLInspectionServiceUrl={baseXMLInspectionServiceUrl}
+        baseCSVInspectionServiceUrl={baseCSVInspectionServiceUrl}
+        externalDocument={externalDocument}
+        onMappingChange={onMappings}
+      >
+        <Atlasmap
+          allowImport={false}
+          allowExport={false}
+          allowReset={false}
+          allowDelete={false}
+          allowCustomJavaClasses={false}
+        />
+      </AtlasmapProvider>
+    );
+  };
+
+export interface IParameterOption {
+  label: string;
+  value: string;
+}
+
+export interface IParameter {
+  name: string;
+  label: string;
+  value: string;
+  boolean?: boolean;
+  options?: IParameterOption[];
+  hidden?: boolean;
+  required?: boolean;
+}
+
+export const DataShapeParametersDialog: React.FunctionComponent<{
+  title: string;
+  shown: boolean;
+  parameters: IParameter[];
+  onConfirm: (parameters: IParameter[]) => void;
+  onCancel: () => void;
+}> = ({ title, shown, parameters, onConfirm, onCancel }) => {
   return (
-    <AtlasmapProvider
-      baseJSONInspectionServiceUrl={baseJSONInspectionServiceUrl}
-      baseJavaInspectionServiceUrl={baseJavaInspectionServiceUrl}
-      baseMappingServiceUrl={baseMappingServiceUrl}
-      baseXMLInspectionServiceUrl={baseXMLInspectionServiceUrl}
-      baseCSVInspectionServiceUrl={
-        baseCSVInspectionServiceUrl || `${baseMappingServiceUrl}csv/`
-      }
-      externalDocument={externalDocument}
-      onMappingChange={onMappings}
-    >
-      <Atlasmap
-        allowImport={false}
-        allowExport={false}
-        allowReset={false}
-        allowDelete={false}
-        allowCustomJavaClasses={false}
-      />
-    </AtlasmapProvider>
+    <ParametersDialog
+      isOpen={shown}
+      title={title}
+      onCancel={onCancel}
+      onConfirm={onConfirm}
+      parameters={parameters}
+    />
   );
 };

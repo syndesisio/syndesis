@@ -1,3 +1,6 @@
+import * as H from '@syndesis/history';
+import * as React from 'react';
+
 import {
   getStep,
   getSteps,
@@ -8,13 +11,7 @@ import {
   toDataShapeKinds,
   WithIntegrationHelpers,
 } from '@syndesis/api';
-import * as H from '@syndesis/history';
 import { DataShape, Integration, StepKind } from '@syndesis/models';
-import { IntegrationEditorLayout } from '@syndesis/ui';
-import { WithRouteData } from '@syndesis/utils';
-import * as React from 'react';
-import { PageTitle } from '../../../../../shared';
-import { IEditorSidebarProps } from '../EditorSidebar';
 import {
   DataShapeDirection,
   IConfigureActionRouteParams,
@@ -23,8 +20,13 @@ import {
   IDescribeDataShapeRouteState,
   IPageWithEditorBreadcrumb,
 } from '../interfaces';
-import { WithDescribeDataShapeForm } from '../shape/WithDescribeDataShapeForm';
 import { toUIStep, toUIStepCollection } from '../utils';
+
+import { IntegrationEditorLayout } from '@syndesis/ui';
+import { WithRouteData } from '@syndesis/utils';
+import { PageTitle } from '../../../../../shared';
+import { IEditorSidebarProps } from '../EditorSidebar';
+import { WithDescribeDataShapeForm } from '../shape/WithDescribeDataShapeForm';
 
 export interface IDescribeDataShapePageProps extends IPageWithEditorBreadcrumb {
   backHref: (
@@ -46,9 +48,7 @@ export interface IDescribeDataShapePageProps extends IPageWithEditorBreadcrumb {
   ) => H.LocationDescriptorObject;
 }
 
-export class DescribeDataShapePage extends React.Component<
-  IDescribeDataShapePageProps
-> {
+export class DescribeDataShapePage extends React.Component<IDescribeDataShapePageProps> {
   public render() {
     return (
       <>
@@ -214,6 +214,7 @@ export class DescribeDataShapePage extends React.Component<
                           initialDefinition={dataShape.specification}
                           initialName={dataShape.name}
                           initialDescription={dataShape.description}
+                          initialParameters={dataShape.parameters}
                           onUpdatedDataShape={handleUpdatedDataShape}
                           backActionHref={backHref}
                         />

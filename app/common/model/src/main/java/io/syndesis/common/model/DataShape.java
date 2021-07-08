@@ -67,6 +67,8 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
     @Override
     Map<String, String> getMetadata();
 
+    Map<String, String> getParameters();
+
     /**
      * Holds the variants available for this data shape.
      * A variant could be the single element inspection of collection

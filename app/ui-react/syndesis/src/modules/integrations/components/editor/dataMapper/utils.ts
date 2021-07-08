@@ -87,6 +87,14 @@ export function stepToProps(
         inspectionResult: dataShape.specification!,
         inspectionType: InspectionType.SCHEMA,
       };
+    case DataShapeKinds.CSV_INSTANCE:
+      return {
+        ...basicInfo,
+        documentType: DocumentType.CSV,
+        inspectionParameters: dataShape.parameters,
+        inspectionSource: dataShape.specification!,
+        inspectionType: InspectionType.INSTANCE,
+      };
     default:
       return false;
   }
@@ -122,8 +130,9 @@ export function isSupportedDataShape(dataShape: DataShape): boolean {
       DataShapeKinds.XML_INSTANCE,
       DataShapeKinds.XML_SCHEMA,
       DataShapeKinds.XML_SCHEMA_INSPECTED,
+      DataShapeKinds.CSV_INSTANCE,
     ]
-      .map(k => k.toUpperCase())
+      .map((k) => k.toUpperCase())
       .indexOf(dataShape.kind.toUpperCase()) > -1
   );
 }
@@ -144,15 +153,15 @@ export function getInputDocuments(
     AGGREGATE
   );
 
-  const dataShapeAwareSteps = previousSteps.filter(s =>
+  const dataShapeAwareSteps = previousSteps.filter((s) =>
     isSupportedDataShape(s.step.action!.descriptor!.outputDataShape!)
   );
 
   const inputDocuments = dataShapeAwareSteps
-    .map(s =>
+    .map((s) =>
       stepToProps(s.step, true, dataShapeAwareSteps.length === 1, s.index)
     )
-    .filter(s => s) as IDocumentWithShape[];
+    .filter((s) => s) as IDocumentWithShape[];
 
   return inputDocuments;
 }
@@ -168,7 +177,7 @@ export function getOutputDocument(
     integration,
     flowId,
     isAddingStep ? position - 1 : position
-  )!.map(s =>
+  )!.map((s) =>
     isAddingStep
       ? {
           index: s.index + 1,
@@ -178,8 +187,8 @@ export function getOutputDocument(
   );
 
   const outputDocuments = subsequentSteps
-    .map(s => stepToProps(s.step, false, true, s.index))
-    .filter(s => s !== false && s.id !== stepId) as IDocumentWithShape[];
+    .map((s) => stepToProps(s.step, false, true, s.index))
+    .filter((s) => s !== false && s.id !== stepId) as IDocumentWithShape[];
   if (outputDocuments.length === 0) {
     throw new Error('output document shape kind not supported');
   }
