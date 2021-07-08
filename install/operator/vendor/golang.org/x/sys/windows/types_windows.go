@@ -1020,7 +1020,6 @@ const (
 
 	// cf. http://support.microsoft.com/default.aspx?scid=kb;en-us;257460
 
-	IP_HDRINCL         = 0x2
 	IP_TOS             = 0x3
 	IP_TTL             = 0x4
 	IP_MULTICAST_IF    = 0x9
@@ -1028,7 +1027,6 @@ const (
 	IP_MULTICAST_LOOP  = 0xb
 	IP_ADD_MEMBERSHIP  = 0xc
 	IP_DROP_MEMBERSHIP = 0xd
-	IP_PKTINFO         = 0x13
 
 	IPV6_V6ONLY         = 0x1b
 	IPV6_UNICAST_HOPS   = 0x4
@@ -1037,7 +1035,6 @@ const (
 	IPV6_MULTICAST_LOOP = 0xb
 	IPV6_JOIN_GROUP     = 0xc
 	IPV6_LEAVE_GROUP    = 0xd
-	IPV6_PKTINFO        = 0x13
 
 	MSG_OOB       = 0x1
 	MSG_PEEK      = 0x2

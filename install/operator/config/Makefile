@@ -25,8 +25,8 @@ NAMESPACE ?= syndesis
 KUBE_USER ?= developer
 LEGACY ?= false
 
-CHANNELS := $(VERSION:.0=.x)
-DEFAULT_CHANNEL := $(VERSION:.0=.x)
+CHANNELS ?= $(VERSION:.0=.x)
+DEFAULT_CHANNEL ?= $(VERSION:.0=.x)
 PACKAGE := syndesis
 BUNDLE_DIR := bundle
 PKG := ../pkg
@@ -250,6 +250,8 @@ bundle: generate-crds kustomize
 		--apis-dir $(PKG)/apis \
 		--input-dir $(MANIFESTS) \
 		--output-dir $(MANIFESTS)
+# Updates the container-image attribute
+	@sed -i 's~containerImage:.*~containerImage: $(IMAGE):$(TAG)~' $(MANIFESTS)/bases/*.clusterserviceversion.yaml
 # Updates the icon in the csv
 	@sed -i 's/base64data:.*/base64data: $(CSV_ICON)/' $(MANIFESTS)/bases/*.clusterserviceversion.yaml
 # Sets the operator image to the preferred image:tag
