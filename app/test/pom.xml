@@ -21,13 +21,13 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-parent</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.0.0-20210711</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>io.syndesis.test</groupId>
   <artifactId>test-parent</artifactId>
-  <version>2.0-SNAPSHOT</version>
+  <version>2.0.0-20210711</version>
   <packaging>pom</packaging>
 
   <name>Test</name>
