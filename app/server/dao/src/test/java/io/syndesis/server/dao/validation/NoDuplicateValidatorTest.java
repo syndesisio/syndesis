@@ -15,10 +15,6 @@
  */
 package io.syndesis.server.dao.validation;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,10 +28,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import org.hibernate.validator.HibernateValidator;
-import org.hibernate.validator.internal.cfg.context.DefaultConstraintMapping;
-import org.hibernate.validator.internal.constraintvalidators.bv.NotNullValidator;
-import org.junit.jupiter.api.Test;
+
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.Action.Pattern;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -49,10 +42,21 @@ import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.common.model.validation.extension.NoDuplicateExtension;
 import io.syndesis.common.model.validation.integration.IntegrationWithDomain;
 import io.syndesis.common.model.validation.integration.NoDuplicateIntegration;
+import io.syndesis.common.model.validation.integration.ValidLabels;
 import io.syndesis.common.util.StringConstants;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.validation.extension.NoDuplicateExtensionValidator;
+import io.syndesis.server.dao.validation.integration.LabelsValidator;
 import io.syndesis.server.dao.validation.integration.NoDuplicateIntegrationValidator;
+import org.hibernate.validator.HibernateValidator;
+import org.hibernate.validator.internal.cfg.context.DefaultConstraintMapping;
+import org.hibernate.validator.internal.constraintvalidators.bv.NotNullValidator;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class NoDuplicateValidatorTest implements StringConstants {
 
@@ -78,6 +82,8 @@ public class NoDuplicateValidatorTest implements StringConstants {
 
         private final NoDuplicateExtensionValidator noDupExtValidator = new NoDuplicateExtensionValidator();
 
+        private final LabelsValidator labelsValidator = new LabelsValidator();
+
         public InjectionConstraintValidatorFactory(DataManager dataManager) {
             setDataManager(noDupIntValidator, dataManager);
             setDataManager(noDupExtValidator, dataManager);
@@ -102,6 +108,8 @@ public class NoDuplicateValidatorTest implements StringConstants {
                 return (T) noDupIntValidator;
             } else if (key == NoDuplicateExtensionValidator.class) {
                 return (T) noDupExtValidator;
+            }  else if (key == LabelsValidator.class) {
+                return (T) labelsValidator;
             }
 
             throw new UnsupportedOperationException();
@@ -120,6 +128,7 @@ public class NoDuplicateValidatorTest implements StringConstants {
         final DefaultConstraintMapping mapping = new DefaultConstraintMapping();
         mapping.constraintDefinition(NoDuplicateExtension.class).validatedBy(NoDuplicateExtensionValidator.class);
         mapping.constraintDefinition(NoDuplicateIntegration.class).validatedBy(NoDuplicateIntegrationValidator.class);
+        mapping.constraintDefinition(ValidLabels.class).validatedBy(LabelsValidator.class);
 
         final ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class).configure()
             .constraintValidatorFactory(constraintValidatorFactory)
