@@ -18,9 +18,10 @@ package io.syndesis.common.model.integration;
 import io.syndesis.common.model.Audited;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
+import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.common.model.validation.UniquenessRequired;
 import io.syndesis.common.model.validation.integration.NoDuplicateIntegration;
-
+import io.syndesis.common.model.validation.integration.ValidLabels;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @Value.Immutable
 @JsonDeserialize(builder = Integration.Builder.class)
 @NoDuplicateIntegration(groups = UniquenessRequired.class)
+@ValidLabels(groups = AllValidations.class)
 @SuppressWarnings("immutables")
 @Audited
 public interface Integration extends WithId<Integration>, IntegrationBase {

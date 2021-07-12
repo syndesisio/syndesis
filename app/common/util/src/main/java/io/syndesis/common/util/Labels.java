@@ -16,12 +16,13 @@
 package io.syndesis.common.util;
 
 public final class Labels {
-
+    private static final int MAXIMUM_KEY_LENGTH = 253;
+    private static final String VALID_KEY_REGEX = "(?:(?:[A-Za-z0-9][-A-Za-z0-9_./]*)?[A-Za-z0-9])?";
+    private static final int MAXIMUM_VALUE_LENGTH = 63;
     private static final String VALID_VALUE_REGEX = "(?:(?:[A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])?";
 
     private static final String SPACE = " ";
     private static final String DASH = "-";
-    private static final int MAXIMUM_NAME_LENGTH = 63;
 
     private Labels() {
         //Utility
@@ -53,16 +54,30 @@ public final class Labels {
     }
 
 
-    public static boolean isValid(String name) {
-        return name.matches(VALID_VALUE_REGEX) && name.length() <= MAXIMUM_NAME_LENGTH;
+    public static boolean isValid(String value) {
+        return value.matches(VALID_VALUE_REGEX) && value.length() <= MAXIMUM_VALUE_LENGTH;
     }
 
-    public static String validate(String name) {
-        if (!isValid(name)) {
-            throw new IllegalArgumentException("Invalid label: [" + name + "].");
+    public static String validate(String value) {
+        if (!isValid(value)) {
+            throw new IllegalArgumentException("Invalid label value: [" + value + "].");
         }
-        return name;
+        return value;
+    }
 
+    public static boolean isValidKey(String key) {
+        return key.matches(VALID_KEY_REGEX)
+            && key.length() <= MAXIMUM_KEY_LENGTH
+            && !key.startsWith("syndesis.io/")
+            && !key.startsWith("kubernetes.io/")
+            && !key.startsWith("k8s.io/");
+    }
+
+    public static String validateKey(String key) {
+        if (!isValidKey(key)) {
+            throw new IllegalArgumentException("Invalid label key: [" + key + "].");
+        }
+        return key;
     }
 
     private static String trim(String name) {
