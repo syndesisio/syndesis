@@ -96,6 +96,7 @@
     <camel.version>2.23.2.fuse-790029</camel.version>
 
     <undertow.version>2.2.5.Final</undertow.version>
+    <org.jboss.xnio.version>3.8.4.Final</org.jboss.xnio.version>
 
     <!-- CXF version, to be kept in sync with the one referenced by camel version above -->
     <cxf.version>3.3.6.fuse-790025</cxf.version>
@@ -2527,6 +2528,18 @@
         <groupId>io.undertow</groupId>
         <artifactId>undertow-websockets-jsr</artifactId>
         <version>${undertow.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.xnio</groupId>
+        <artifactId>xnio-nio</artifactId>
+        <version>${org.jboss.xnio.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.xnio</groupId>
+        <artifactId>xnio-api</artifactId>
+        <version>${org.jboss.xnio.version}</version>
       </dependency>
 
       <!-- TODO: Maybe import BOM ? -->
