@@ -1256,6 +1256,12 @@
           "id": {
             "type": "string"
           },
+          "labels": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
           "name": {
             "type": "string"
           },
@@ -1609,6 +1615,12 @@
           },
           "id": {
             "type": "string"
+          },
+          "labels": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
           },
           "managementUrl": {
             "type": "string"
