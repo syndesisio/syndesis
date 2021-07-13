@@ -14,8 +14,6 @@ jobs:
         include:
           - branch: 1.13.x
             java: 8
-          - branch: 2.x
-            java: 11
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
