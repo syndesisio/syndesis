@@ -19,7 +19,7 @@
   "devDependencies": {
     "@babel/core": "^7.1.5",
     "@patternfly/react-core": "^3.77.2",
-    "@patternfly/react-icons": "^3.10.15",
+    "@patternfly/react-icons": "^4.10.2",
     "@patternfly/react-styles": "^3.5.7",
     "@patternfly/react-table": "^2.28.29",
     "@patternfly/react-topology": "^2.8.65",
@@ -66,7 +66,7 @@
   },
   "peerDependencies": {
     "@patternfly/react-core": "^3.77.2",
-    "@patternfly/react-icons": "^3.10.15",
+    "@patternfly/react-icons": "^4.10.2",
     "@patternfly/react-styles": "^3.5.7",
     "@patternfly/react-table": "^2.28.29",
     "@patternfly/react-topology": "^2.8.65",

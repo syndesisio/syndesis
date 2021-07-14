@@ -2918,19 +2918,17 @@
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^5.8.1"
 
-"@patternfly/react-icons@^3.10.15", "@patternfly/react-icons@^3.14.42", "@patternfly/react-icons@^3.15.16":
-  version "3.15.16"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-3.15.16.tgz#dedb37e4f37ec8fd787abc1f1a4a9321a5047899"
-  integrity sha512-YOBED8rhkbBEHTQpjEns/OjgD1gDsW8e6rw6u0H0y6S9YwrmZXhgq/aiu2OG0ftmKWOvYvrrDgmNBkkWpEWlEA==
-  dependencies:
-    "@fortawesome/free-brands-svg-icons" "^5.8.1"
-
-"@patternfly/react-icons@^3.14.34":
+"@patternfly/react-icons@^3.14.34", "@patternfly/react-icons@^3.15.16":
   version "3.15.17"
   resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-3.15.17.tgz#97a71fd6469a3f6c08dc46575a340b82cfc7e1db"
   integrity sha512-Q0JAlxEvSAl5kcMSUMItLiKi9fweO941g5+lS45t3o/Rv4Eg91Ig7AyK1YWw6m1ah+/eHslLfox0Uqw7m7usLg==
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^5.8.1"
+
+"@patternfly/react-icons@^4.10.2":
+  version "4.10.2"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-4.10.2.tgz#d0659e7763364b1e73ec0f3b60e20cf9e4f067d6"
+  integrity sha512-mSkBRaEFukpaAoLDyd3nI+6Cj0z2/5DgJTA2i7By/UW1wJifKnBWW8NRO2SsJQVQIUtuuAunjUrjzKHdcxs5IQ==
 
 "@patternfly/react-styles@^3.5.7", "@patternfly/react-styles@^3.6.21", "@patternfly/react-styles@^3.6.26", "@patternfly/react-styles@^3.7.13":
   version "3.7.14"
