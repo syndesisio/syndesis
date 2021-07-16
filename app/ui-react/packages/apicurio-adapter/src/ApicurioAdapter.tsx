@@ -9,7 +9,6 @@ import equal from 'react-fast-compare';
 /* tslint:disable */
 const runtime = require('file-loader?name=apicurio-runtime.js!@syndesis/apicurio-assembly/dist/apicurio/runtime.js');
 const polyfills = require('file-loader?name=apicurio-polyfills.js!@syndesis/apicurio-assembly/dist/apicurio/polyfills.js');
-const styles = require('file-loader?name=apicurio-styles.js!@syndesis/apicurio-assembly/dist/apicurio/styles.js');
 const scripts = require('file-loader?name=apicurio-scripts.js!@syndesis/apicurio-assembly/dist/apicurio/scripts.js');
 const vendor = require('file-loader?name=apicurio-vendor.js!@syndesis/apicurio-assembly/dist/apicurio/vendor.js');
 const main = require('file-loader?name=apicurio-main.js!@syndesis/apicurio-assembly/dist/apicurio/main.js');
@@ -98,12 +97,12 @@ export class ApicurioAdapter extends React.Component<IApicurioAdapterProps> {
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="/apicurio/styles.css">
 </head>
 <body style="background: transparent;">
   <app-root></app-root>
   <script type="text/javascript" src="${runtime}"></script>
   <script type="text/javascript" src="${polyfills}"></script>
-  <script type="text/javascript" src="${styles}"></script>
   <script type="text/javascript" src="${scripts}"></script>
   <script type="text/javascript" src="${vendor}"></script>
   <script type="text/javascript" src="${main}"></script></body>
@@ -122,7 +121,7 @@ export class ApicurioAdapter extends React.Component<IApicurioAdapterProps> {
         style={{ width: '100%', height: '100%', lineHeight: '0' }}
         frameBorder={0}
         {...extraProps}
-        ref={el => (this.iframe = el)}
+        ref={(el) => (this.iframe = el)}
       />
     );
   }
