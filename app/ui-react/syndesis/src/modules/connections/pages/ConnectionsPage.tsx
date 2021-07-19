@@ -10,7 +10,7 @@ export class ConnectionsPage extends React.Component {
   public render() {
     return (
       <Translation ns={['connections', 'shared']}>
-        {t => (
+        {(t) => (
           <WithConnections>
             {({ data, hasData, error, errorMessage }) => (
               <>
@@ -25,10 +25,11 @@ export class ConnectionsPage extends React.Component {
                   includeConnectionMenu={true}
                   loading={!hasData}
                   connections={data.connectionsForDisplay}
-                  getConnectionHref={connection =>
+                  createConnectionButtonStyle={'default'}
+                  getConnectionHref={(connection) =>
                     resolvers.connection.details({ connection })
                   }
-                  getConnectionEditHref={connection =>
+                  getConnectionEditHref={(connection) =>
                     resolvers.connection.edit({ connection })
                   }
                 />

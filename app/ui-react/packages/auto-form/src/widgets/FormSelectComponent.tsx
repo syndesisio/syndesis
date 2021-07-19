@@ -11,12 +11,12 @@ import { getHelperText, getValidationState, toValidHtmlId } from './helpers';
 import './FormSelectComponent.css';
 
 function getSelectedValues(select: HTMLSelectElement) {
-  return Array.from(select.selectedOptions).map(option => option.value);
+  return Array.from(select.selectedOptions).map((option) => option.value);
 }
 
-export const FormSelectComponent: React.FunctionComponent<
-  IFormControlProps
-> = props => {
+export const FormSelectComponent: React.FunctionComponent<IFormControlProps> = (
+  props
+) => {
   const isMultiple =
     props.property.fieldAttributes && props.property.fieldAttributes.multiple;
   const { onChange, onBlur, value, ...field } = props.field;
@@ -69,14 +69,12 @@ export const FormSelectComponent: React.FunctionComponent<
               <FormLabelHintComponent labelHint={props.property.labelHint} />
             )}
           </>
-        ) : (
-          undefined
-        )
+        ) : undefined
       }
       {...props.property.formGroupAttributes}
       fieldId={id}
       isRequired={props.property.required}
-      isValid={getValidationState(props)}
+      validated={getValidationState(props)}
       helperText={helperText}
       helperTextInvalid={helperTextInvalid}
     >

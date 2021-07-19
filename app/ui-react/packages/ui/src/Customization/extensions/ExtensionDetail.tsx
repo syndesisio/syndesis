@@ -8,7 +8,6 @@ import {
   Text,
   TextContent,
   Title,
-  TitleLevel,
   Tooltip,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
@@ -113,9 +112,9 @@ export interface IExtensionDetailProps {
   supportsSection: JSX.Element;
 }
 
-export const ExtensionDetail: React.FunctionComponent<
-  IExtensionDetailProps
-> = props => {
+export const ExtensionDetail: React.FunctionComponent<IExtensionDetailProps> = (
+  props
+) => {
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
 
   const doCancel = () => {
@@ -147,11 +146,11 @@ export const ExtensionDetail: React.FunctionComponent<
         onConfirm={doDelete}
       />
       <PageSection variant={'light'}>
-        <Level gutter={'sm'}>
+        <Level hasGutter={true}>
           <TextContent>
             <Title
               size={'xl'}
-              headingLevel={TitleLevel.h1}
+              headingLevel={'h1'}
               className={'extension-detail__extensionTitle'}
             >
               {props.extensionName}
@@ -169,9 +168,11 @@ export const ExtensionDetail: React.FunctionComponent<
               }
               enableFlip={true}
             >
-              <ButtonLink data-testid={'extension-detail-update-button'}
-                          href={props.linkUpdateExtension}
-                          as={'primary'}>
+              <ButtonLink
+                data-testid={'extension-detail-update-button'}
+                href={props.linkUpdateExtension}
+                as={'primary'}
+              >
                 {props.i18nUpdate}
               </ButtonLink>
             </Tooltip>

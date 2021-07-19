@@ -50,6 +50,8 @@ stories.add('API Connector Detail Body', () => {
       i18nTitle={connector.name + ' Configuration'}
       icon={icons.beer}
       handleSubmit={action('submit')}
+      i18nLabelAddress={'Address'}
+      propertyKeys={[]}
     />
   );
 });

@@ -36,91 +36,94 @@ export interface IApiConnectorCreatorServiceProps {
  * They will be prompted to choose a service and port
  * before proceeding to the next step.
  */
-export const ApiConnectorCreatorService: React.FunctionComponent<IApiConnectorCreatorServiceProps> = ({
-  handleNext,
-  i18nBtnNext,
-  i18nPort,
-  i18nService,
-  i18nServicePortTitle,
-  portName,
-  portsAvailable,
-  serviceName,
-  servicesAvailable,
-}) => {
-  const [port, setPort] = React.useState(portName);
-  const [portsArray, setPortsArray] = React.useState(
-    portsAvailable[serviceName]
-  );
-  const [service, setService] = React.useState(serviceName);
+export const ApiConnectorCreatorService: React.FunctionComponent<IApiConnectorCreatorServiceProps> =
+  ({
+    handleNext,
+    i18nBtnNext,
+    i18nPort,
+    i18nService,
+    i18nServicePortTitle,
+    portName,
+    portsAvailable,
+    serviceName,
+    servicesAvailable,
+  }) => {
+    const [port, setPort] = React.useState(portName);
+    const [portsArray, setPortsArray] = React.useState(
+      portsAvailable[serviceName]
+    );
+    const [service, setService] = React.useState(serviceName);
 
-  const handleChangeSelectedPort = (params: string) => {
-    setPort(params);
-  };
+    const handleChangeSelectedPort = (params: string) => {
+      setPort(params);
+    };
 
-  const handleChangeSelectedService = (params: string) => {
-    setService(params);
-    setPortsArray(portsAvailable[params]);
-  };
+    const handleChangeSelectedService = (params: string) => {
+      setService(params);
+      setPortsArray(portsAvailable[params]);
+    };
 
-  const handleClickNext = () => {
-    handleNext(service, port);
-  };
+    const handleClickNext = () => {
+      handleNext(service, port);
+    };
 
-  return (
-    <Stack style={{ maxWidth: '600px' }} gutter="md">
-      <StackItem>
-        <Title size="lg">{i18nServicePortTitle}</Title>
-      </StackItem>
-      <StackItem>
-        <Form data-testid={`api-client-connector-service-ports`}>
-          <>
-            <FormGroup fieldId={'service'} label={i18nService}>
-              <FormSelect
-                value={service}
-                data-testid={'api-connector-create-service-input'}
-                id={'api-connector-create-service-input'}
-                onChange={handleChangeSelectedService}
-              >
-                {servicesAvailable.map((serviceItem, idx) => (
-                  <FormSelectOption
-                    key={idx}
-                    value={serviceItem}
-                    label={serviceItem}
-                  />
-                ))}
-              </FormSelect>
-            </FormGroup>
-            <FormGroup fieldId={'port'} label={i18nPort}>
-              <FormSelect
-                value={port}
-                data-testid={'api-connector-create-port-input'}
-                id={'api-connector-create-port-input'}
-                onChange={handleChangeSelectedPort}
-              >
-                {portsArray.map(
-                  (portItem: string, idx: string | number | undefined) => (
+    return (
+      <Stack style={{ maxWidth: '600px' }} hasGutter={true}>
+        <StackItem>
+          <Title size="lg" headingLevel={'h2'}>
+            {i18nServicePortTitle}
+          </Title>
+        </StackItem>
+        <StackItem>
+          <Form data-testid={`api-client-connector-service-ports`}>
+            <>
+              <FormGroup fieldId={'service'} label={i18nService}>
+                <FormSelect
+                  value={service}
+                  data-testid={'api-connector-create-service-input'}
+                  id={'api-connector-create-service-input'}
+                  onChange={handleChangeSelectedService}
+                >
+                  {servicesAvailable.map((serviceItem, idx) => (
                     <FormSelectOption
                       key={idx}
-                      value={portItem}
-                      label={portItem}
+                      value={serviceItem}
+                      label={serviceItem}
                     />
-                  )
-                )}
-              </FormSelect>
-            </FormGroup>
-          </>
-        </Form>
-      </StackItem>
-      <StackItem>
-        <ButtonLink
-          id={'button-next'}
-          data-testid={'button-next'}
-          as={'primary'}
-          onClick={handleClickNext}
-        >
-          {i18nBtnNext}
-        </ButtonLink>
-      </StackItem>
-    </Stack>
-  );
-};
+                  ))}
+                </FormSelect>
+              </FormGroup>
+              <FormGroup fieldId={'port'} label={i18nPort}>
+                <FormSelect
+                  value={port}
+                  data-testid={'api-connector-create-port-input'}
+                  id={'api-connector-create-port-input'}
+                  onChange={handleChangeSelectedPort}
+                >
+                  {portsArray.map(
+                    (portItem: string, idx: string | number | undefined) => (
+                      <FormSelectOption
+                        key={idx}
+                        value={portItem}
+                        label={portItem}
+                      />
+                    )
+                  )}
+                </FormSelect>
+              </FormGroup>
+            </>
+          </Form>
+        </StackItem>
+        <StackItem>
+          <ButtonLink
+            id={'button-next'}
+            data-testid={'button-next'}
+            as={'primary'}
+            onClick={handleClickNext}
+          >
+            {i18nBtnNext}
+          </ButtonLink>
+        </StackItem>
+      </Stack>
+    );
+  };

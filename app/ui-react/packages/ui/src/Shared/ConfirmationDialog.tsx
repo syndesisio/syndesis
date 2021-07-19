@@ -102,98 +102,99 @@ export interface IConfirmationDialogProps {
 /**
  * A modal dialog to display when an object is being deleted.
  */
-export const ConfirmationDialog: React.FunctionComponent<IConfirmationDialogProps> = ({
-  buttonStyle,
-  i18nCancelButtonText,
-  i18nConfirmButtonText,
-  i18nConfirmationMessage,
-  i18nDetailsMessage,
-  i18nTitle,
-  icon,
-  onCancel,
-  onConfirm,
-  showDialog,
-}) => {
-  let iconFragment: React.ReactNode | null = null;
-  switch (icon) {
-    case ConfirmationIconType.DANGER:
-      iconFragment = (
-        <ErrorCircleOIcon size={'lg'} color={global_danger_color_100.value} />
-      );
-      break;
-    case ConfirmationIconType.WARNING:
-      iconFragment = (
-        <WarningTriangleIcon
-          size={'lg'}
-          color={global_warning_color_100.value}
-        />
-      );
-      break;
-    case ConfirmationIconType.INFO:
-      iconFragment = (
-        <InfoIcon size={'lg'} color={global_info_color_100.value} />
-      );
-      break;
-    case ConfirmationIconType.OK:
-      iconFragment = (
-        <OkIcon size={'lg'} color={global_success_color_100.value} />
-      );
-      break;
-    default:
-    // No icon
-  }
-  let buttonStyleMapped:
-    | 'primary'
-    | 'secondary'
-    | 'tertiary'
-    | 'danger'
-    | 'link'
-    | 'plain'
-    | 'control' = 'primary';
-  switch (buttonStyle) {
-    case 'danger':
-      buttonStyleMapped = 'danger';
-      break;
-    case 'info':
-      buttonStyleMapped = 'secondary';
-      break;
-    case 'link':
-      buttonStyleMapped = 'link';
-      break;
-    default:
-  }
-  return (
-    <Modal
-      title={i18nTitle}
-      isOpen={showDialog}
-      onClose={onCancel}
-      actions={[
-        <Button key="confirm" variant={buttonStyleMapped} onClick={onConfirm}>
-          {i18nConfirmButtonText}
-        </Button>,
-        <Button key="cancel" variant="link" onClick={onCancel}>
-          {i18nCancelButtonText}
-        </Button>,
-      ]}
-      width={'50%'}
-      isFooterLeftAligned={true}
-      hideTitle={true}
-    >
-      <Stack gutter={'lg'}>
-        <StackItem>
-          <Split gutter={'sm'}>
-            {iconFragment && <SplitItem>{iconFragment}</SplitItem>}
-            <SplitItem isFilled={true}>
-              <Title size={'lg'}>{i18nConfirmationMessage}</Title>
-            </SplitItem>
-          </Split>
-        </StackItem>
-        {i18nDetailsMessage && (
+export const ConfirmationDialog: React.FunctionComponent<IConfirmationDialogProps> =
+  ({
+    buttonStyle,
+    i18nCancelButtonText,
+    i18nConfirmButtonText,
+    i18nConfirmationMessage,
+    i18nDetailsMessage,
+    i18nTitle,
+    icon,
+    onCancel,
+    onConfirm,
+    showDialog,
+  }) => {
+    let iconFragment: React.ReactNode | null = null;
+    switch (icon) {
+      case ConfirmationIconType.DANGER:
+        iconFragment = (
+          <ErrorCircleOIcon size={'lg'} color={global_danger_color_100.value} />
+        );
+        break;
+      case ConfirmationIconType.WARNING:
+        iconFragment = (
+          <WarningTriangleIcon
+            size={'lg'}
+            color={global_warning_color_100.value}
+          />
+        );
+        break;
+      case ConfirmationIconType.INFO:
+        iconFragment = (
+          <InfoIcon size={'lg'} color={global_info_color_100.value} />
+        );
+        break;
+      case ConfirmationIconType.OK:
+        iconFragment = (
+          <OkIcon size={'lg'} color={global_success_color_100.value} />
+        );
+        break;
+      default:
+      // No icon
+    }
+    let buttonStyleMapped:
+      | 'primary'
+      | 'secondary'
+      | 'tertiary'
+      | 'danger'
+      | 'link'
+      | 'plain'
+      | 'control' = 'primary';
+    switch (buttonStyle) {
+      case 'danger':
+        buttonStyleMapped = 'danger';
+        break;
+      case 'info':
+        buttonStyleMapped = 'secondary';
+        break;
+      case 'link':
+        buttonStyleMapped = 'link';
+        break;
+      default:
+    }
+    return (
+      <Modal
+        title={i18nTitle}
+        isOpen={showDialog}
+        onClose={onCancel}
+        actions={[
+          <Button key="confirm" variant={buttonStyleMapped} onClick={onConfirm}>
+            {i18nConfirmButtonText}
+          </Button>,
+          <Button key="cancel" variant="link" onClick={onCancel}>
+            {i18nCancelButtonText}
+          </Button>,
+        ]}
+        width={'50%'}
+      >
+        <Stack hasGutter={true}>
           <StackItem>
-            <Text>{i18nDetailsMessage}</Text>
+            <Split hasGutter={true}>
+              {iconFragment && <SplitItem>{iconFragment}</SplitItem>}
+              <SplitItem isFilled={true}>
+                <Title size={'lg'} headingLevel={'h4'}>
+                  {i18nConfirmationMessage}
+                </Title>
+              </SplitItem>
+            </Split>
           </StackItem>
-        )}
-      </Stack>
-    </Modal>
-  );
-};
+          {i18nDetailsMessage && (
+            <StackItem>
+              <Text>{i18nDetailsMessage}</Text>
+            </StackItem>
+          )}
+        </Stack>
+      </Modal>
+    );
+  };

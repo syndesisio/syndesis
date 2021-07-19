@@ -3,6 +3,6 @@ import * as React from 'react';
 
 export class ConnectionsGrid extends React.Component {
   public render() {
-    return <Gallery gutter={'sm'}>{this.props.children}</Gallery>;
+    return <Gallery hasGutter={true}>{this.props.children}</Gallery>;
   }
 }

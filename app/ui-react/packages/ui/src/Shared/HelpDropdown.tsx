@@ -112,7 +112,7 @@ export class HelpDropdown extends React.Component<
         data-testid={'help-dropdown-about-dropdown-item'}
         key="action"
         component="a"
-        onClick={ev => {
+        onClick={(ev) => {
           ev.preventDefault();
           launchAboutModal();
         }}
@@ -143,7 +143,7 @@ export class HelpDropdown extends React.Component<
                 data-testid={dropdownId}
                 className={classNames('', this.props.className)}
                 onToggle={this.onToggle}
-                iconComponent={null}
+                toggleIndicator={null}
               >
                 <HelpIcon />
               </DropdownToggle>

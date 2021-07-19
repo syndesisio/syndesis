@@ -15,14 +15,17 @@ export interface ITopIntegrationsProps {
   linkCreateIntegration: H.LocationDescriptor;
 }
 
-export class TopIntegrationsCard extends React.Component<
-  ITopIntegrationsProps
-> {
+export class TopIntegrationsCard extends React.Component<ITopIntegrationsProps> {
   public render() {
     return (
-      <Card className={'top-integrations'} data-testid={'dashboard-top-integrations'}>
+      <Card
+        className={'top-integrations'}
+        data-testid={'dashboard-top-integrations'}
+      >
         <CardHeader className={'top-integrations__heading'}>
-          <Title size={'md'}>{this.props.i18nTitle}</Title>
+          <Title size={'md'} headingLevel={'h3'}>
+            {this.props.i18nTitle}
+          </Title>
           <div className={'top-integrations__heading-daterange'}>
             {this.props.i18nLast30Days}
           </div>

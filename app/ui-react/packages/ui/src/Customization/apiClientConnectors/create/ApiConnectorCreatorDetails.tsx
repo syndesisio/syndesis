@@ -37,54 +37,59 @@ export interface IApiConnectorDetailsProps {
   onUploadImage: (event: any) => void;
 }
 
-export const ApiConnectorCreatorDetails: React.FunctionComponent<IApiConnectorDetailsProps> = ({
-  apiConnectorIcon,
-  apiConnectorName,
-  fields,
-  handleSubmit,
-  i18nIconLabel,
-  isEditing,
-  onUploadImage,
-}) => {
-  return (
-    <Stack className="api-connector-details-form__card" gutter={'md'}>
-      {apiConnectorName && (
-        <StackItem>
-          <Title size="lg" className="api-connector-details-form__title">
-            {apiConnectorName}
-          </Title>
-        </StackItem>
-      )}
-      <StackItem className="api-connector-details-form__body">
-        <Form isHorizontal={true} onSubmit={handleSubmit}>
-          <fieldset disabled={!isEditing}>
-            <div className="form-group api-connector-details-form__iconContainer">
-              <label className="control-label" htmlFor="iconFileInput">
-                {i18nIconLabel}
-              </label>
-              <div>
-                {apiConnectorIcon ? (
-                  <img
-                    className="api-connector-details-form__icon"
-                    src={apiConnectorIcon}
+export const ApiConnectorCreatorDetails: React.FunctionComponent<IApiConnectorDetailsProps> =
+  ({
+    apiConnectorIcon,
+    apiConnectorName,
+    fields,
+    handleSubmit,
+    i18nIconLabel,
+    isEditing,
+    onUploadImage,
+  }) => {
+    return (
+      <Stack className="api-connector-details-form__card" hasGutter={true}>
+        {apiConnectorName && (
+          <StackItem>
+            <Title
+              size="lg"
+              className="api-connector-details-form__title"
+              headingLevel={'h1'}
+            >
+              {apiConnectorName}
+            </Title>
+          </StackItem>
+        )}
+        <StackItem className="api-connector-details-form__body">
+          <Form isHorizontal={true} onSubmit={handleSubmit}>
+            <fieldset disabled={!isEditing}>
+              <div className="form-group api-connector-details-form__iconContainer">
+                <label className="control-label" htmlFor="iconFileInput">
+                  {i18nIconLabel}
+                </label>
+                <div>
+                  {apiConnectorIcon ? (
+                    <img
+                      className="api-connector-details-form__icon"
+                      src={apiConnectorIcon}
+                    />
+                  ) : (
+                    <div className="api-connector-details-form__icon">
+                      <i className="fa fa-upload" />
+                    </div>
+                  )}
+                  <input
+                    data-testid={'api-connector-details-form-icon-file-input'}
+                    type="file"
+                    id="iconFileInput"
+                    onChange={onUploadImage}
                   />
-                ) : (
-                  <div className="api-connector-details-form__icon">
-                    <i className="fa fa-upload" />
-                  </div>
-                )}
-                <input
-                  data-testid={'api-connector-details-form-icon-file-input'}
-                  type="file"
-                  id="iconFileInput"
-                  onChange={onUploadImage}
-                />
+                </div>
               </div>
-            </div>
-          </fieldset>
-          {fields}
-        </Form>
-      </StackItem>
-    </Stack>
-  );
-};
+            </fieldset>
+            {fields}
+          </Form>
+        </StackItem>
+      </Stack>
+    );
+  };

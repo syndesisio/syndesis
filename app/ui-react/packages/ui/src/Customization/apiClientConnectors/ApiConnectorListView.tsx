@@ -6,7 +6,7 @@ import {
   EmptyStateVariant,
   Text,
   Title,
-  Tooltip
+  Tooltip,
 } from '@patternfly/react-core';
 import { AddCircleOIcon } from '@patternfly/react-icons';
 import * as React from 'react';
@@ -24,8 +24,8 @@ export interface IApiConnectorListViewProps extends IListViewToolbarProps {
   linkCreateApiConnector: string;
 }
 
-export const ApiConnectorListView: React.FunctionComponent<IApiConnectorListViewProps> = (
-  {
+export const ApiConnectorListView: React.FunctionComponent<IApiConnectorListViewProps> =
+  ({
     children,
     i18nDescription,
     i18nEmptyStateInfo,
@@ -37,57 +37,65 @@ export const ApiConnectorListView: React.FunctionComponent<IApiConnectorListView
     linkCreateApiConnector,
     ...rest
   }) => {
-  return (
-    <PageSection>
-      <ListViewToolbar {...rest}>
-        <div className={'form-group'}>
-          <ButtonLink data-testid={'api-connector-list-view-create-button'}
-                      href={linkCreateApiConnector}
-                      as={'primary'}>
-            {i18nLinkCreateApiConnector}
-          </ButtonLink>
-        </div>
-      </ListViewToolbar>
-      {i18nTitle !== '' && (
-        <Title size="xl">{i18nTitle}</Title>
-      )}
-      {i18nDescription !== '' && (
-        <Text
-          dangerouslySetInnerHTML={{ __html: i18nDescription }}
-        />
-      )}
-      {children ? (
-        <DataList data-testid={'api-connector-list'} 
-                  aria-label={'api connector list'}>
-            {children}
-        </DataList>
-      ) : (
-        <EmptyState variant={EmptyStateVariant.full}>
-          <EmptyStateIcon icon={AddCircleOIcon}/>
-          <Title headingLevel={'h5'} size={'lg'}>
-            {i18nEmptyStateTitle}
+    return (
+      <PageSection>
+        <ListViewToolbar {...rest}>
+          <div className={'form-group'}>
+            <ButtonLink
+              data-testid={'api-connector-list-view-create-button'}
+              href={linkCreateApiConnector}
+              as={'primary'}
+            >
+              {i18nLinkCreateApiConnector}
+            </ButtonLink>
+          </div>
+        </ListViewToolbar>
+        {i18nTitle !== '' && (
+          <Title size="xl" headingLevel={'h2'}>
+            {i18nTitle}
           </Title>
-          <EmptyStateBody>{i18nEmptyStateInfo}</EmptyStateBody>
-          <Tooltip
-            position={'top'}
-            content={
-              i18nLinkCreateApiConnectorTip
-                ? i18nLinkCreateApiConnectorTip
-                : i18nLinkCreateApiConnector
-            }
-            enableFlip={true}
+        )}
+        {i18nDescription !== '' && (
+          <Text dangerouslySetInnerHTML={{ __html: i18nDescription }} />
+        )}
+        {children ? (
+          <DataList
+            data-testid={'api-connector-list'}
+            aria-label={'api connector list'}
           >
-            <>
-              <br/>
-              <ButtonLink data-testid={'api-connector-list-view-empty-state-create-button'}
-                          href={linkCreateApiConnector}
-                          as={'primary'}>
-                {i18nLinkCreateApiConnector}
-              </ButtonLink>
-            </>
-          </Tooltip>
-        </EmptyState>
-      )}
-    </PageSection>
-  );
-};
+            {children}
+          </DataList>
+        ) : (
+          <EmptyState variant={EmptyStateVariant.full}>
+            <EmptyStateIcon icon={AddCircleOIcon} />
+            <Title headingLevel={'h5'} size={'lg'}>
+              {i18nEmptyStateTitle}
+            </Title>
+            <EmptyStateBody>{i18nEmptyStateInfo}</EmptyStateBody>
+            <Tooltip
+              position={'top'}
+              content={
+                i18nLinkCreateApiConnectorTip
+                  ? i18nLinkCreateApiConnectorTip
+                  : i18nLinkCreateApiConnector
+              }
+              enableFlip={true}
+            >
+              <>
+                <br />
+                <ButtonLink
+                  data-testid={
+                    'api-connector-list-view-empty-state-create-button'
+                  }
+                  href={linkCreateApiConnector}
+                  as={'primary'}
+                >
+                  {i18nLinkCreateApiConnector}
+                </ButtonLink>
+              </>
+            </Tooltip>
+          </EmptyState>
+        )}
+      </PageSection>
+    );
+  };

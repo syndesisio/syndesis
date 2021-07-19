@@ -21,8 +21,8 @@ export class RecentUpdatesCard extends React.Component<IRecentUpdatesProps> {
           </Title>
         </CardHeader>
         <CardBody>
-          <br/>
-          <Grid gutter={'md'}>{this.props.children}</Grid>
+          <br />
+          <Grid hasGutter={true}>{this.props.children}</Grid>
         </CardBody>
       </Card>
     );

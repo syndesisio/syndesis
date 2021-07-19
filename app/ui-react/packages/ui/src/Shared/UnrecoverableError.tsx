@@ -8,7 +8,7 @@ import {
   EmptyStatePrimary,
   EmptyStateSecondaryActions,
   EmptyStateVariant,
-  Expandable,
+  ExpandableSection,
   Text,
   Title,
 } from '@patternfly/react-core';
@@ -84,7 +84,7 @@ export const UnrecoverableError: React.FC<IUnrecoverableErrorProps> = ({
             <Text>{i18nInfo}</Text>
             <Text>{i18nHelp}</Text>
             {error && (
-              <Expandable
+              <ExpandableSection
                 isExpanded={showErrorInfo}
                 onToggle={toggleErrorInfo}
                 toggleText={i18nShowErrorInfoLabel}
@@ -95,7 +95,7 @@ export const UnrecoverableError: React.FC<IUnrecoverableErrorProps> = ({
                     <Text component={'pre'}>{errorInfo.componentStack}</Text>
                   )}
                 </Text>
-              </Expandable>
+              </ExpandableSection>
             )}
           </EmptyStateBody>
           <EmptyStatePrimary>

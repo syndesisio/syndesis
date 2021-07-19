@@ -23,49 +23,53 @@ export interface IApiConnectorDetailHeader {
   i18nUsageMessage: string;
 }
 
-export const ApiConnectorDetailHeader: React.FunctionComponent<IApiConnectorDetailHeader> = ({
-  connectorDescription,
-  connectorIcon,
-  connectorName,
-  i18nDescription,
-  i18nUsageLabel,
-  i18nUsageMessage,
-}) => {
-  return (
-    <PageSection variant={'light'}>
-      <Stack gutter={'md'}>
-        <Split gutter={'md'} className={'api-connector-detail-header__row'}>
-          <div>
-            <img
-              className={'api-connector-detail-header__icon'}
-              src={connectorIcon}
-            />
-          </div>
-          <div>{connectorName}</div>
-        </Split>
-        <TextContent>
-          <TextList component={TextListVariants.dl}>
-            <TextListItem
-              className={'api-connector-detail-header__propertyLabel'}
-              component={TextListItemVariants.dt}
-            >
-              {i18nDescription}
-            </TextListItem>
-            <TextListItem component={TextListItemVariants.dd}>
-              {connectorDescription}
-            </TextListItem>
-            <TextListItem
-              className={'api-connector-detail-header__propertyLabel'}
-              component={TextListItemVariants.dt}
-            >
-              {i18nUsageLabel}
-            </TextListItem>
-            <TextListItem component={TextListItemVariants.dd}>
-              {i18nUsageMessage}
-            </TextListItem>
-          </TextList>
-        </TextContent>
-      </Stack>
-    </PageSection>
-  );
-};
+export const ApiConnectorDetailHeader: React.FunctionComponent<IApiConnectorDetailHeader> =
+  ({
+    connectorDescription,
+    connectorIcon,
+    connectorName,
+    i18nDescription,
+    i18nUsageLabel,
+    i18nUsageMessage,
+  }) => {
+    return (
+      <PageSection variant={'light'}>
+        <Stack hasGutter={true}>
+          <Split
+            hasGutter={true}
+            className={'api-connector-detail-header__row'}
+          >
+            <div>
+              <img
+                className={'api-connector-detail-header__icon'}
+                src={connectorIcon}
+              />
+            </div>
+            <div>{connectorName}</div>
+          </Split>
+          <TextContent>
+            <TextList component={TextListVariants.dl}>
+              <TextListItem
+                className={'api-connector-detail-header__propertyLabel'}
+                component={TextListItemVariants.dt}
+              >
+                {i18nDescription}
+              </TextListItem>
+              <TextListItem component={TextListItemVariants.dd}>
+                {connectorDescription}
+              </TextListItem>
+              <TextListItem
+                className={'api-connector-detail-header__propertyLabel'}
+                component={TextListItemVariants.dt}
+              >
+                {i18nUsageLabel}
+              </TextListItem>
+              <TextListItem component={TextListItemVariants.dd}>
+                {i18nUsageMessage}
+              </TextListItem>
+            </TextList>
+          </TextContent>
+        </Stack>
+      </PageSection>
+    );
+  };

@@ -40,7 +40,7 @@ export const Breadcrumb: React.FunctionComponent<IBreadcrumbProps> = ({
     ));
   return (
     <AppBreadcrumb>
-      <Level gutter={'md'}>
+      <Level hasGutter={true}>
         <LevelItem>
           <PFBreadcrumb>{items}</PFBreadcrumb>
         </LevelItem>

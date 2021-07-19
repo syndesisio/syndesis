@@ -16,30 +16,31 @@ export interface IConnectionCreatorStepsProps {
  * creator flow.
  * @see [step]{@link IConnectionCreatorStepsProps#step}
  */
-export const ConnectionCreatorBreadSteps: React.FunctionComponent<IConnectionCreatorStepsProps> = ({
-  i18nConfigureConnection,
-  i18nNameConnection,
-  i18nSelectConnector,
-  step,
-}) => (
-  <WizardNav>
-    <WizardNavItem
-      step={1}
-      isCurrent={step === 1}
-      isDisabled={step < 1}
-      text={i18nSelectConnector}
-    />
-    <WizardNavItem
-      step={2}
-      isCurrent={step === 2}
-      isDisabled={step < 2}
-      text={i18nConfigureConnection}
-    />
-    <WizardNavItem
-      step={3}
-      isCurrent={step === 3}
-      isDisabled={step < 3}
-      text={i18nNameConnection}
-    />
-  </WizardNav>
-);
+export const ConnectionCreatorBreadSteps: React.FunctionComponent<IConnectionCreatorStepsProps> =
+  ({
+    i18nConfigureConnection,
+    i18nNameConnection,
+    i18nSelectConnector,
+    step,
+  }) => (
+    <WizardNav>
+      <WizardNavItem
+        step={1}
+        isCurrent={step === 1}
+        isDisabled={step < 1}
+        content={i18nSelectConnector}
+      />
+      <WizardNavItem
+        step={2}
+        isCurrent={step === 2}
+        isDisabled={step < 2}
+        content={i18nConfigureConnection}
+      />
+      <WizardNavItem
+        step={3}
+        isCurrent={step === 3}
+        isDisabled={step < 3}
+        content={i18nNameConnection}
+      />
+    </WizardNav>
+  );

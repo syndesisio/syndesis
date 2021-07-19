@@ -76,9 +76,11 @@ export const ApiConnectorCreatorSecurity: React.FunctionComponent<IApiConnectorC
     };
 
     return (
-      <Stack style={{ maxWidth: '600px' }} gutter="md">
+      <Stack style={{ maxWidth: '600px' }} hasGutter={true}>
         <StackItem>
-          <Title size="2xl">{i18nTitle}</Title>
+          <Title size="2xl" headingLevel={'h2'}>
+            {i18nTitle}
+          </Title>
         </StackItem>
         <StackItem>
           <Form data-testid={`api-client-connector-auth-type-form`}>

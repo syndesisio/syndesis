@@ -25,7 +25,9 @@ export class AppTopMenu extends React.Component<
       isOpen,
     });
   };
-  public onSelect = (event?: React.SyntheticEvent<HTMLDivElement, Event> | undefined) => {
+  public onSelect = (
+    event?: React.SyntheticEvent<HTMLDivElement, Event> | undefined
+  ) => {
     this.setState({
       isOpen: !this.state.isOpen,
     });
@@ -41,7 +43,7 @@ export class AppTopMenu extends React.Component<
         toggle={
           <DropdownToggle
             data-testid={'app-top-menu-user-dropdown'}
-            iconComponent={null}
+            toggleIndicator={null}
             onToggle={this.onToggle}
           >
             {username}

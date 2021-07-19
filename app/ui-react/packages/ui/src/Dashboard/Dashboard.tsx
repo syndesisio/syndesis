@@ -40,7 +40,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
       <>
         <SimplePageHeader i18nTitle={this.props.i18nTitle} titleSize={'xl'} />
         <PageSection>
-          <Stack gutter={'md'}>
+          <Stack hasGutter={true}>
             <StackItem
               className="dashboard__integrations__actions"
               isFilled={false}
@@ -63,7 +63,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
             </StackItem>
 
             <StackItem className="dashboard__metrics" isFilled={true}>
-              <Grid md={6} xl={3} gutter={'sm'}>
+              <Grid md={6} xl={3} hasGutter={true}>
                 <GridItem>{this.props.integrationsOverview}</GridItem>
                 <GridItem>{this.props.connectionsOverview}</GridItem>
                 <GridItem>{this.props.messagesOverview}</GridItem>
@@ -72,45 +72,47 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
             </StackItem>
 
             <StackItem className="dashboard__integrations" isFilled={false}>
-              {/* TODO last minute empty state hack with minimal changes, this needs a revisit */
-              this.props.noIntegrations ? (
-                <>{this.props.topIntegrations}</>
-              ) : (
-                <>
-                  <Grid gutter={'lg'}>
-                    <GridItem
-                      className={'dashboard__integrations-grid-item'}
-                      xl={7}
-                      xlRowSpan={12}
-                    >
-                      {this.props.topIntegrations}
-                    </GridItem>
-                    <GridItem
-                      className={'dashboard__integrations-grid-item'}
-                      lg={6}
-                      xl={5}
-                      xlRowSpan={6}
-                    >
-                      {this.props.integrationBoard}
-                    </GridItem>
-                    <GridItem
-                      className={'dashboard__integrations-grid-item'}
-                      lg={6}
-                      xl={5}
-                      xlRowSpan={6}
-                    >
-                      {this.props.integrationUpdates}
-                    </GridItem>
-                  </Grid>
-                </>
-              )}
+              {
+                /* TODO last minute empty state hack with minimal changes, this needs a revisit */
+                this.props.noIntegrations ? (
+                  <>{this.props.topIntegrations}</>
+                ) : (
+                  <>
+                    <Grid hasGutter={true}>
+                      <GridItem
+                        className={'dashboard__integrations-grid-item'}
+                        xl={7}
+                        xlRowSpan={12}
+                      >
+                        {this.props.topIntegrations}
+                      </GridItem>
+                      <GridItem
+                        className={'dashboard__integrations-grid-item'}
+                        lg={6}
+                        xl={5}
+                        xlRowSpan={6}
+                      >
+                        {this.props.integrationBoard}
+                      </GridItem>
+                      <GridItem
+                        className={'dashboard__integrations-grid-item'}
+                        lg={6}
+                        xl={5}
+                        xlRowSpan={6}
+                      >
+                        {this.props.integrationUpdates}
+                      </GridItem>
+                    </Grid>
+                  </>
+                )
+              }
             </StackItem>
 
             <StackItem
               className="dashboard__connections__actions"
               isFilled={false}
             >
-              <Title size={'lg'} className={'pull-left'}>
+              <Title size={'lg'} className={'pull-left'} headingLevel={'h3'}>
                 {this.props.i18nConnections}
               </Title>
               <ButtonLink
