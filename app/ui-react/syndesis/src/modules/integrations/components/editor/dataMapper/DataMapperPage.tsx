@@ -50,7 +50,9 @@ export interface IDataMapperPageProps extends IPageWithEditorBreadcrumb {
  * **Warning:** this component will throw an exception if the route state is
  * undefined.
  */
-export const DataMapperPage: React.FunctionComponent<IDataMapperPageProps> = props => {
+export const DataMapperPage: React.FunctionComponent<IDataMapperPageProps> = (
+  props
+) => {
   const appContext = React.useContext(AppContext);
   const mappingsRef = React.useRef<string | undefined>(undefined);
 
@@ -77,7 +79,9 @@ export const DataMapperPage: React.FunctionComponent<IDataMapperPageProps> = pro
               props.mode === 'adding'
             );
             // preserve the initial document in case the user doesn't make any changes in the mapper
-            const initialMappings = (state.step.configuredProperties || {})[MAPPING_KEY];
+            const initialMappings = (state.step.configuredProperties || {})[
+              MAPPING_KEY
+            ];
 
             const saveMappingStep = async () => {
               const newMappings = mappingsRef.current || initialMappings;
@@ -129,7 +133,6 @@ export const DataMapperPage: React.FunctionComponent<IDataMapperPageProps> = pro
                   })}
                   content={
                     <PageSection
-                      noPadding={true}
                       style={{
                         overflow: 'hidden',
                       }}
