@@ -12,6 +12,7 @@ import {
   TextInput,
   Title,
   Toolbar,
+  ToolbarContent,
   ToolbarGroup,
   ToolbarItem,
 } from '@patternfly/react-core';
@@ -155,116 +156,123 @@ export const ListViewToolbar: React.FunctionComponent<IListViewToolbarProps> =
     };
     return (
       <Toolbar className="pf-u-justify-content-space-between pf-u-mx-xl pf-u-my-md">
-        <ToolbarGroup>
-          <ToolbarItem className="pf-u-mr-xl">
-            <InputGroup>
-              {filterTypes && filterTypes.length > 1 && (
+        <ToolbarContent>
+          <ToolbarGroup>
+            <ToolbarItem className="pf-u-mr-xl">
+              <InputGroup>
+                {filterTypes && filterTypes.length > 1 && (
+                  <Dropdown
+                    toggle={
+                      <DropdownToggle
+                        id={'toolbar-filter-type-selector-toggle'}
+                        onToggle={() => setFilterTypeOpen(!filterTypeOpen)}
+                      >
+                        {currentFilterType.title}
+                      </DropdownToggle>
+                    }
+                    isOpen={filterTypeOpen}
+                    dropdownItems={filterTypes.map((filterType, index) => (
+                      <>
+                        {filterType.id !== currentFilterType.id && (
+                          <DropdownItem
+                            key={index}
+                            onClick={() => handleSelectFilterType(filterType)}
+                          >
+                            {filterType.title}
+                          </DropdownItem>
+                        )}
+                      </>
+                    ))}
+                  />
+                )}
+                {renderInput()}
+              </InputGroup>
+            </ToolbarItem>
+            {sortTypes && sortTypes.length > 1 && (
+              <ToolbarItem className="pf-u-mr-md">
                 <Dropdown
                   toggle={
                     <DropdownToggle
-                      id={'toolbar-filter-type-selector-toggle'}
-                      onToggle={() => setFilterTypeOpen(!filterTypeOpen)}
+                      id={'toolbar-sort-type-selector-toggle'}
+                      onToggle={() => setSortTypeOpen(!sortTypeOpen)}
                     >
-                      {currentFilterType.title}
+                      {currentSortType.title}
                     </DropdownToggle>
                   }
-                  isOpen={filterTypeOpen}
-                  dropdownItems={filterTypes.map((filterType, index) => (
+                  isOpen={sortTypeOpen}
+                  dropdownItems={sortTypes.map((sortType, index) => (
                     <>
-                      {filterType.id !== currentFilterType.id && (
+                      {sortType.id !== currentSortType.id && (
                         <DropdownItem
                           key={index}
-                          onClick={() => handleSelectFilterType(filterType)}
+                          onClick={() => handleSelectSortType(sortType)}
                         >
-                          {filterType.title}
+                          {sortType.title}
                         </DropdownItem>
                       )}
                     </>
                   ))}
                 />
-              )}
-              {renderInput()}
-            </InputGroup>
-          </ToolbarItem>
-          {sortTypes && sortTypes.length > 1 && (
-            <ToolbarItem className="pf-u-mr-md">
-              <Dropdown
-                toggle={
-                  <DropdownToggle
-                    id={'toolbar-sort-type-selector-toggle'}
-                    onToggle={() => setSortTypeOpen(!sortTypeOpen)}
-                  >
-                    {currentSortType.title}
-                  </DropdownToggle>
-                }
-                isOpen={sortTypeOpen}
-                dropdownItems={sortTypes.map((sortType, index) => (
-                  <>
-                    {sortType.id !== currentSortType.id && (
-                      <DropdownItem
-                        key={index}
-                        onClick={() => handleSelectSortType(sortType)}
-                      >
-                        {sortType.title}
-                      </DropdownItem>
-                    )}
-                  </>
-                ))}
-              />
-            </ToolbarItem>
-          )}
-          <ToolbarItem className="pf-u-mr-md">
-            <Button
-              variant={ButtonVariant.plain}
-              onClick={onToggleCurrentSortDirection}
-            >
-              {isSortAscending && <SortAlphaDownIcon />}
-              {!isSortAscending && <SortAlphaUpIcon />}
-            </Button>
-          </ToolbarItem>
-        </ToolbarGroup>
-        <ToolbarGroup>
-          <ToolbarItem className={'pf-u-mx-md list-view-toolbar__child-items'}>
-            {children}
-          </ToolbarItem>
-        </ToolbarGroup>
-
-        <ToolbarGroup aria-label={'Results Section'}>
-          <ToolbarItem>
-            {activeFilters && activeFilters.length > 0 && (
-              <>
-                <Title size="lg" headingLevel={'h4'}>
-                  {i18nResultsCount}
-                </Title>
-                <Stack>
-                  <StackItem>
-                    <Title size="md" headingLevel={'h5'}>
-                      Active Filters:
-                    </Title>
-                  </StackItem>
-                  <StackItem>
-                    <ChipGroup>
-                      {activeFilters.map((item: IActiveFilter, index) => (
-                        <Chip key={index} onClick={() => onRemoveFilter(item)}>
-                          {item.title} = {item.value}
-                        </Chip>
-                      ))}
-                    </ChipGroup>
-                  </StackItem>
-                  <StackItem>
-                    <Button
-                      variant={ButtonVariant.link}
-                      data-testid={'list-view-toolbar-clear-filters'}
-                      onClick={(event) => onClearFilters(event as any)}
-                    >
-                      Clear All Filters
-                    </Button>
-                  </StackItem>
-                </Stack>
-              </>
+              </ToolbarItem>
             )}
-          </ToolbarItem>
-        </ToolbarGroup>
+            <ToolbarItem className="pf-u-mr-md">
+              <Button
+                variant={ButtonVariant.plain}
+                onClick={onToggleCurrentSortDirection}
+              >
+                {isSortAscending && <SortAlphaDownIcon />}
+                {!isSortAscending && <SortAlphaUpIcon />}
+              </Button>
+            </ToolbarItem>
+          </ToolbarGroup>
+          <ToolbarGroup>
+            <ToolbarItem
+              className={'pf-u-mx-md list-view-toolbar__child-items'}
+            >
+              {children}
+            </ToolbarItem>
+          </ToolbarGroup>
+
+          <ToolbarGroup aria-label={'Results Section'}>
+            <ToolbarItem>
+              {activeFilters && activeFilters.length > 0 && (
+                <>
+                  <Title size="lg" headingLevel={'h4'}>
+                    {i18nResultsCount}
+                  </Title>
+                  <Stack>
+                    <StackItem>
+                      <Title size="md" headingLevel={'h5'}>
+                        Active Filters:
+                      </Title>
+                    </StackItem>
+                    <StackItem>
+                      <ChipGroup>
+                        {activeFilters.map((item: IActiveFilter, index) => (
+                          <Chip
+                            key={index}
+                            onClick={() => onRemoveFilter(item)}
+                          >
+                            {item.title} = {item.value}
+                          </Chip>
+                        ))}
+                      </ChipGroup>
+                    </StackItem>
+                    <StackItem>
+                      <Button
+                        variant={ButtonVariant.link}
+                        data-testid={'list-view-toolbar-clear-filters'}
+                        onClick={(event) => onClearFilters(event as any)}
+                      >
+                        Clear All Filters
+                      </Button>
+                    </StackItem>
+                  </Stack>
+                </>
+              )}
+            </ToolbarItem>
+          </ToolbarGroup>
+        </ToolbarContent>
       </Toolbar>
     );
   };
