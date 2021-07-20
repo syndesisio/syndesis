@@ -1,9 +1,9 @@
 import {
   Card,
-  CardBody,
-  CardHeader,
+  CardBody
+  ,
   Grid,
-  Title,
+  Title, CardTitle ,
 } from '@patternfly/react-core';
 import * as React from 'react';
 
@@ -15,11 +15,11 @@ export class RecentUpdatesCard extends React.Component<IRecentUpdatesProps> {
   public render() {
     return (
       <Card data-testid={'dashboard-recent-updates'}>
-        <CardHeader>
+        <CardTitle>
           <Title size="md" headingLevel="h2">
             {this.props.i18nTitle}
           </Title>
-        </CardHeader>
+        </CardTitle>
         <CardBody>
           <br />
           <Grid hasGutter={true}>{this.props.children}</Grid>

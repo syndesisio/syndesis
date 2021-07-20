@@ -3,10 +3,10 @@ import {
   Button,
   Card,
   CardBody,
-  CardFooter,
-  CardHeader,
+  CardFooter
+  ,
   Form,
-  Title,
+  Title, CardTitle ,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { Container, Loader, PageSection } from '../Layout';
@@ -113,11 +113,11 @@ export const ConnectionDetailsForm: React.FunctionComponent<IConnectionDetailsFo
       <Container>
         <div className="row row-cards-pf">
           <Card>
-            <CardHeader>
+            <CardTitle>
               <Title size="2xl" headingLevel={'h3'}>
                 {i18nTitle}
               </Title>
-            </CardHeader>
+            </CardTitle>
             <CardBody>
               <Form
                 isHorizontal={true}

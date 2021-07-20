@@ -105,7 +105,7 @@ export const IntegrationEditorLayout: React.FunctionComponent<IIntegrationEditor
                 <>
                   <LevelItem>
                     <TextContent>
-                      <Title size={'2xl'} headingLevel={'h1'}>
+                      <Title size="xl" headingLevel={'h1'}>
                         <strong
                           className="integration-editor-condition"
                           data-verb={condition}
@@ -132,7 +132,7 @@ export const IntegrationEditorLayout: React.FunctionComponent<IIntegrationEditor
                 <>
                   <LevelItem>
                     <TextContent>
-                      <Title size={'2xl'} headingLevel={'h1'}>
+                      <Title size="xl" headingLevel={'h1'}>
                         {title}
                       </Title>
                       <Text>{description}</Text>

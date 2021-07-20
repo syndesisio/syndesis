@@ -1,10 +1,10 @@
 import {
   Card,
-  CardBody,
-  CardHeader,
+  CardBody
+  ,
   Grid,
   GridItem,
-  Title,
+  Title, CardTitle ,
 } from '@patternfly/react-core';
 import { ErrorCircleOIcon } from '@patternfly/react-icons';
 import { global_danger_color_100 } from '@patternfly/react-tokens';
@@ -48,15 +48,15 @@ export const IntegrationDetailMetrics: React.FunctionComponent<IIntegrationDetai
         <Grid md={6} xl={3} hasGutter={true}>
           <GridItem>
             <Card data-testid={'integration-detail-metrics-total-errors-card'}>
-              <CardHeader>
+              <CardTitle>
                 <Title size="lg" headingLevel={'h3'}>
                   {i18nTotalErrors}
                 </Title>
-              </CardHeader>
+              </CardTitle>
               <CardBody>
                 <br />
                 <Title
-                  size={'xl'}
+                  size="xl"
                   data-testid={'integration-detail-metrics-total-errors'}
                   headingLevel={'h4'}
                 >
@@ -70,15 +70,15 @@ export const IntegrationDetailMetrics: React.FunctionComponent<IIntegrationDetai
             <Card
               data-testid={'integration-detail-metrics-last-processed-card'}
             >
-              <CardHeader>
-                <Title size={'lg'} headingLevel={'h3'}>
+              <CardTitle>
+                <Title size="lg" headingLevel={'h3'}>
                   {i18nLastProcessed}
                 </Title>
-              </CardHeader>
+              </CardTitle>
               <CardBody>
                 <br />
                 <Title
-                  size={'xl'}
+                  size="xl"
                   className="integration-detail-metrics__last-processed"
                   data-testid={'integration-detail-metrics-last-processed'}
                   headingLevel={'h4'}

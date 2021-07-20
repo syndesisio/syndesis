@@ -45,7 +45,7 @@ export const SimplePageHeader: React.FunctionComponent<ISimplePageHeaderProps> =
       >
         <TextContent>
           <Title
-            size={titleSize}
+            size="md"
             headingLevel={titleHeadingLevel}
             className={
               'simple-page-header__title ' +

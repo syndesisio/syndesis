@@ -1,11 +1,11 @@
 import { ChartDonut } from '@patternfly/react-charts';
 import {
   Card,
-  CardBody,
-  CardHeader,
+  CardBody
+  ,
   Grid,
   GridItem,
-  Title,
+  Title, CardTitle ,
 } from '@patternfly/react-core';
 import * as React from 'react';
 
@@ -62,11 +62,11 @@ export const IntegrationBoard: React.FunctionComponent<IIntegrationBoardProps> =
 
     return (
       <Card data-testid={'dashboard-integration-board'}>
-        <CardHeader>
-          <Title size={'md'} headingLevel={'h3'}>
+        <CardTitle>
+          <Title size="md" headingLevel={'h3'}>
             {i18nTitle}
           </Title>
-        </CardHeader>
+        </CardTitle>
         <CardBody>
           <Grid>
             <GridItem span={6} offset={3}>

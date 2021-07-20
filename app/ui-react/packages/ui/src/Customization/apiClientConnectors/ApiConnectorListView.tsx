@@ -68,7 +68,7 @@ export const ApiConnectorListView: React.FunctionComponent<IApiConnectorListView
         ) : (
           <EmptyState variant={EmptyStateVariant.full}>
             <EmptyStateIcon icon={AddCircleOIcon} />
-            <Title headingLevel={'h5'} size={'lg'}>
+            <Title headingLevel={'h5'} size="lg">
               {i18nEmptyStateTitle}
             </Title>
             <EmptyStateBody>{i18nEmptyStateInfo}</EmptyStateBody>

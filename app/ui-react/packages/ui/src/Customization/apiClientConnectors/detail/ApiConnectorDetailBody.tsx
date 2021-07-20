@@ -2,9 +2,9 @@ import {
   Button,
   Card,
   CardBody,
-  CardFooter,
-  CardHeader,
-  Title,
+  CardFooter
+  ,
+  Title, CardTitle ,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { PageSection } from '../../../Layout';
@@ -117,11 +117,11 @@ export const ApiConnectorDetailBody: React.FunctionComponent<IApiConnectorDetail
     return (
       <PageSection data-testid={'api-connector-detail-body'}>
         <Card>
-          <CardHeader>
-            <Title size={'2xl'} headingLevel={'h2'}>
+          <CardTitle>
+            <Title size="xl" headingLevel={'h2'}>
               {i18nTitle}
             </Title>
-          </CardHeader>
+          </CardTitle>
           <CardBody>
             {isEditing ? (
               <ApiConnectorDetailConfigEdit

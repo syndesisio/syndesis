@@ -54,7 +54,7 @@ export const ExtensionListView: React.FunctionComponent<IExtensionListViewProps>
           </div>
         </ListViewToolbar>
         {i18nTitle !== '' && (
-          <Title size={'lg'} headingLevel={'h1'}>
+          <Title size="lg" headingLevel={'h1'}>
             {i18nTitle}
           </Title>
         )}
@@ -66,7 +66,7 @@ export const ExtensionListView: React.FunctionComponent<IExtensionListViewProps>
         ) : (
           <EmptyState variant={EmptyStateVariant.full}>
             <EmptyStateIcon icon={AddCircleOIcon} />
-            <Title headingLevel={'h5'} size={'lg'}>
+            <Title headingLevel={'h5'} size="lg">
               {i18nEmptyStateTitle}
             </Title>
             <EmptyStateBody>{i18nEmptyStateInfo}</EmptyStateBody>

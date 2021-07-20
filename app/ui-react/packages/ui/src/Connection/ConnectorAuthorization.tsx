@@ -1,9 +1,9 @@
 import {
   Card,
   CardBody,
-  CardFooter,
-  CardHeader,
-  Title,
+  CardFooter
+  ,
+  Title, CardTitle ,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink, Loader } from '../Layout';
@@ -30,11 +30,11 @@ export const ConnectorAuthorization: React.FunctionComponent<IConnectorAuthoriza
         maxWidth: 600,
       }}
     >
-      <CardHeader>
+      <CardTitle>
         <Title size="lg" className="metrics-uptime__header" headingLevel={'h3'}>
           <div>{i18nTitle}</div>
         </Title>
-      </CardHeader>
+      </CardTitle>
       <CardBody>
         <p>{i18nDescription}</p>
       </CardBody>

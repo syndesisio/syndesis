@@ -1,4 +1,4 @@
-import { Card, CardBody, CardFooter, CardHeader, Form, Title } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter , Form, Title, CardTitle  } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink, Loader, PageSection } from '../Layout';
 
@@ -55,9 +55,9 @@ export const IntegrationSaveForm: React.FunctionComponent<
              }}
         >
           {i18nFormTitle && (
-            <CardHeader>
+            <CardTitle>
               <Title className="syn-card__title" headingLevel="h2" size="md">{i18nFormTitle}</Title>
-            </CardHeader>
+            </CardTitle>
           )}
           <CardBody>
             <Form

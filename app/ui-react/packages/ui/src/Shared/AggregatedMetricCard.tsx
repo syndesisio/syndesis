@@ -28,7 +28,7 @@ export const AggregatedMetricCard: React.FunctionComponent<IAggregatedMetricProp
     <Card className={'aggregate-status'}>
       <CardBody>
         <Bullseye>
-          <Title size={'lg'} headingLevel={'h3'}>
+          <Title size="lg" headingLevel={'h3'}>
             <span data-testid={'aggregated-metric-card-total-count'}>
               {formatNumber(total)}
             </span>
@@ -40,7 +40,7 @@ export const AggregatedMetricCard: React.FunctionComponent<IAggregatedMetricProp
         <Grid>
           <GridItem span={6}>
             <Bullseye>
-              <Title size={'lg'} headingLevel={'h4'}>
+              <Title size="lg" headingLevel={'h4'}>
                 <OkIcon color={global_success_color_100.value} />
                 &nbsp;
                 <span data-testid={'aggregated-metric-card-ok-count'}>
@@ -51,7 +51,7 @@ export const AggregatedMetricCard: React.FunctionComponent<IAggregatedMetricProp
           </GridItem>
           <GridItem span={6}>
             <Bullseye>
-              <Title size={'lg'} headingLevel={'h4'}>
+              <Title size="lg" headingLevel={'h4'}>
                 <ErrorCircleOIcon color={global_danger_color_100.value} />
                 &nbsp;
                 <span data-testid={'aggregated-metric-card-error-count'}>

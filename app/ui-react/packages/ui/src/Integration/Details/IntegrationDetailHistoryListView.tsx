@@ -1,13 +1,13 @@
 import {
   Card,
-  CardBody,
-  CardHeader,
+  CardBody
+  ,
   DataList,
   Split,
   SplitItem,
   Stack,
   StackItem,
-  Title,
+  Title, CardTitle ,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
@@ -46,7 +46,7 @@ export const IntegrationDetailHistoryListView: React.FunctionComponent<IIntegrat
               <CardBody>
                 <Split hasGutter={true}>
                   <SplitItem>
-                    <Title headingLevel="h5" size={'md'}>
+                    <Title headingLevel="h5" size="md">
                       {i18nTextDraft}
                     </Title>
                   </SplitItem>
@@ -77,7 +77,7 @@ export const IntegrationDetailHistoryListView: React.FunctionComponent<IIntegrat
         {children && hasHistory && (
           <StackItem isFilled={true}>
             <Card>
-              <CardHeader>{i18nTextHistory}</CardHeader>
+              <CardTitle>{i18nTextHistory}</CardTitle>
               <CardBody>
                 <DataList aria-label={'integration detail history list'}>
                   {children}

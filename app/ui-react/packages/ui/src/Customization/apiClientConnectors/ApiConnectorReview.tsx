@@ -1,7 +1,7 @@
 import {
   Card,
-  CardBody,
-  CardHeader,
+  CardBody
+  ,
   PageSection,
   Text,
   TextContent,
@@ -10,7 +10,7 @@ import {
   TextListItemVariants,
   TextListVariants,
   TextVariants,
-  Title,
+  Title, CardTitle ,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import './ApiConnectorReview.css';
@@ -37,11 +37,11 @@ export class ApiConnectorReview extends React.Component<IApiConnectorReviewProps
     return (
       <PageSection>
         <Card>
-          <CardHeader>
+          <CardTitle>
             <Title size="lg" headingLevel={'h2'}>
               {this.props.i18nTitle}
             </Title>
-          </CardHeader>
+          </CardTitle>
           <CardBody>
             {this.props.i18nValidationFallbackMessage ? (
               <h5 className="api-connector-review__validationFallbackMessage">

@@ -112,7 +112,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
               className="dashboard__connections__actions"
               isFilled={false}
             >
-              <Title size={'lg'} className={'pull-left'} headingLevel={'h3'}>
+              <Title size="lg" className={'pull-left'} headingLevel={'h3'}>
                 {this.props.i18nConnections}
               </Title>
               <ButtonLink

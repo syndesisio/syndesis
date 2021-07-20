@@ -1,9 +1,9 @@
 import {
   Card,
   CardBody,
-  CardFooter,
-  CardHeader,
-  Title,
+  CardFooter
+  ,
+  Title, CardTitle ,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
@@ -31,11 +31,11 @@ export const ConnectionSetupOAuthCard: React.FunctionComponent<IConnectionSetupO
         maxWidth: 600,
       }}
     >
-      <CardHeader>
+      <CardTitle>
         <Title size="lg" headingLevel={'h3'}>
           <div>{i18nTitle}</div>
         </Title>
-      </CardHeader>
+      </CardTitle>
       <CardBody>
         <p>{i18nDescription}</p>
       </CardBody>

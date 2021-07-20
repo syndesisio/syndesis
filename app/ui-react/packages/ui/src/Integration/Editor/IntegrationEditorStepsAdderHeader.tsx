@@ -4,7 +4,7 @@ import * as React from 'react';
 export const IntegrationEditorStepsAdderHeader: React.FunctionComponent =
   () => (
     <TextContent>
-      <Title size={'2xl'} headingLevel={'h1'}>
+      <Title size="xl" headingLevel={'h1'}>
         Add to Integration
       </Title>
       <Text>

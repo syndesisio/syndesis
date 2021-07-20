@@ -233,12 +233,12 @@ export const ListViewToolbar: React.FunctionComponent<IListViewToolbarProps> =
           <ToolbarItem>
             {activeFilters && activeFilters.length > 0 && (
               <>
-                <Title size={'lg'} headingLevel={'h4'}>
+                <Title size="lg" headingLevel={'h4'}>
                   {i18nResultsCount}
                 </Title>
                 <Stack>
                   <StackItem>
-                    <Title size={'md'} headingLevel={'h5'}>
+                    <Title size="md" headingLevel={'h5'}>
                       Active Filters:
                     </Title>
                   </StackItem>

@@ -1,4 +1,4 @@
-import { Card, CardBody, CardFooter, CardHeader, Form } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter , Form, CardTitle  } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink, Container, PageSection } from '../../../Layout';
 
@@ -17,7 +17,7 @@ export class EditorPageCard extends React.Component<IEditorPageCardProps> {
           <div className="row row-cards-pf">
             <Card>
               {this.props.header && (
-                <CardHeader>{this.props.header}</CardHeader>
+                <CardTitle>{this.props.header}</CardTitle>
               )}
               <CardBody>
                 <Container>

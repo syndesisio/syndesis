@@ -149,7 +149,7 @@ export const ExtensionDetail: React.FunctionComponent<IExtensionDetailProps> = (
         <Level hasGutter={true}>
           <TextContent>
             <Title
-              size={'xl'}
+              size="xl"
               headingLevel={'h1'}
               className={'extension-detail__extensionTitle'}
             >
@@ -201,7 +201,7 @@ export const ExtensionDetail: React.FunctionComponent<IExtensionDetailProps> = (
             <TextContent>
               <Title
                 headingLevel={'h5'}
-                size={'md'}
+                size="md"
                 className={'customization-details__heading'}
               >
                 {props.i18nOverviewSectionTitle}
@@ -210,7 +210,7 @@ export const ExtensionDetail: React.FunctionComponent<IExtensionDetailProps> = (
 
               <Title
                 headingLevel={'h5'}
-                size={'md'}
+                size="md"
                 className={'customization-details__heading'}
               >
                 {props.i18nSupportsSectionTitle}
@@ -219,7 +219,7 @@ export const ExtensionDetail: React.FunctionComponent<IExtensionDetailProps> = (
 
               <Title
                 headingLevel={'h5'}
-                size={'md'}
+                size="md"
                 className={'customization-details__heading'}
               >
                 {props.i18nUsageSectionTitle}

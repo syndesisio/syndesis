@@ -152,7 +152,7 @@ export const ExtensionImportReview: React.FunctionComponent<IExtensionImportRevi
           <Stack hasGutter={true}>
             <Title
               headingLevel={'h1'}
-              size={'xl'}
+              size="xl"
               className={'extension-import-review__title'}
             >
               {props.i18nTitle}

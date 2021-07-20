@@ -59,7 +59,7 @@ export const IntegrationDetailHistoryListViewItem: React.FunctionComponent<IInte
       <DataListItemCells
         dataListCells={[
           <DataListCell key={1} width={2} name={'version-cell'}>
-            <Title headingLevel="h6" size={'md'}>
+            <Title headingLevel="h6" size="md">
               {i18nTextVersion} {version}
             </Title>
           </DataListCell>,

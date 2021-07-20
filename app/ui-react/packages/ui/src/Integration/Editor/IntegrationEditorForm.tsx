@@ -2,10 +2,10 @@ import {
   Alert,
   Card,
   CardBody,
-  CardFooter,
-  CardHeader,
+  CardFooter
+  ,
   Form,
-  Title,
+  Title, CardTitle ,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
@@ -58,11 +58,11 @@ export const IntegrationEditorForm: React.FunctionComponent<IIntegrationEditorFo
         <div className="row row-cards-pf">
           <Card>
             {i18nFormTitle && (
-              <CardHeader>
+              <CardTitle>
                 <Title className="syn-card__title" headingLevel="h2" size="md">
                   {i18nFormTitle}
                 </Title>
-              </CardHeader>
+              </CardTitle>
             )}
             <CardBody>
               <Container>

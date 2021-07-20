@@ -1,9 +1,9 @@
 import {
   Card,
   CardBody,
-  CardFooter,
-  CardHeader,
-  Title,
+  CardFooter
+  ,
+  Title, CardTitle ,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink, Loader, PageSection } from '../Layout';
@@ -32,11 +32,11 @@ export const ConnectionDetailsOauthCard: React.FunctionComponent<IConnectionDeta
   }) => (
     <PageSection>
       <Card>
-        <CardHeader>
+        <CardTitle>
           <Title size="lg" headingLevel={'h3'}>
             {i18nTitle}
           </Title>
-        </CardHeader>
+        </CardTitle>
         <CardBody>{i18nDescription}</CardBody>
         <CardFooter>
           <ButtonLink disabled={isValidating} onClick={onValidate}>

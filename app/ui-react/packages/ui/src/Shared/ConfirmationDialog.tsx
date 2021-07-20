@@ -183,7 +183,7 @@ export const ConfirmationDialog: React.FunctionComponent<IConfirmationDialogProp
             <Split hasGutter={true}>
               {iconFragment && <SplitItem>{iconFragment}</SplitItem>}
               <SplitItem isFilled={true}>
-                <Title size={'lg'} headingLevel={'h4'}>
+                <Title size="lg" headingLevel={'h4'}>
                   {i18nConfirmationMessage}
                 </Title>
               </SplitItem>
