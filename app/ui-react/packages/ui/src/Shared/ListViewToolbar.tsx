@@ -155,7 +155,7 @@ export const ListViewToolbar: React.FunctionComponent<IListViewToolbarProps> =
       }
     };
     return (
-      <Toolbar className="pf-u-justify-content-space-between pf-u-mx-xl pf-u-my-md">
+      <Toolbar className="pf-u-justify-content-space-between pf-u-my-md">
         <ToolbarContent>
           <ToolbarGroup>
             <ToolbarItem className="pf-u-mr-xl">
