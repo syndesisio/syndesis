@@ -1,9 +1,9 @@
 {
   "name": "@syndesis/utils",
   "version": "0.1.0",
-  "main": "dist/utils.js",
+  "main": "dist/index.js",
   "umd:main": "dist/utils.umd.js",
-  "typings": "dist/utils/src/index.d.ts",
+  "typings": "dist/index.d.ts",
   "source": "src/index.ts",
   "files": [
     "dist"

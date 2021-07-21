@@ -1,9 +1,9 @@
 {
   "name": "@syndesis/ui",
   "version": "0.1.0",
-  "main": "dist/ui.js",
+  "main": "dist/index.js",
   "umd:main": "dist/ui.umd.js",
-  "typings": "dist/ui/src/index.d.ts",
+  "typings": "dist/index.d.ts",
   "source": "src/index.ts",
   "style": "dist/ui.css",
   "files": [
