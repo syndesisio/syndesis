@@ -1,9 +1,9 @@
 import {
   Card,
   CardBody,
-  CardFooter
-  ,
-  Title, CardTitle ,
+  CardFooter,
+  CardTitle,
+  Title,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';

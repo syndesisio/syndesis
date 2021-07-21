@@ -1,9 +1,9 @@
 import {
   Card,
   CardBody,
-  CardFooter
-  ,
-  Title, CardTitle ,
+  CardFooter,
+  CardTitle,
+  Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink, Loader } from '../Layout';

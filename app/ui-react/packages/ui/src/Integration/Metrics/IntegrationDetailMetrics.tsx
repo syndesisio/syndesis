@@ -1,10 +1,10 @@
 import {
   Card,
-  CardBody
-  ,
+  CardBody,
+  CardTitle,
   Grid,
   GridItem,
-  Title, CardTitle ,
+  Title,
 } from '@patternfly/react-core';
 import { ErrorCircleOIcon } from '@patternfly/react-icons';
 import { global_danger_color_100 } from '@patternfly/react-tokens';

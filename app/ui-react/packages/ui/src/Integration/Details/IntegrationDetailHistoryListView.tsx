@@ -1,13 +1,13 @@
 import {
   Card,
-  CardBody
-  ,
+  CardBody,
+  CardTitle,
   DataList,
   Split,
   SplitItem,
   Stack,
   StackItem,
-  Title, CardTitle ,
+  Title,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';

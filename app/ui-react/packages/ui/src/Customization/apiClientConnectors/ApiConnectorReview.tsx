@@ -1,7 +1,7 @@
 import {
   Card,
-  CardBody
-  ,
+  CardBody,
+  CardTitle,
   PageSection,
   Text,
   TextContent,
@@ -10,7 +10,7 @@ import {
   TextListItemVariants,
   TextListVariants,
   TextVariants,
-  Title, CardTitle ,
+  Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import './ApiConnectorReview.css';

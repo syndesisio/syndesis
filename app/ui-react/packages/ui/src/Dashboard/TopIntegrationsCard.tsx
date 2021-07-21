@@ -1,4 +1,4 @@
-import { Card, CardBody , Title, CardTitle  } from '@patternfly/react-core';
+import { Card, CardBody, CardTitle, Title } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { IntegrationsEmptyState } from '../Integration';

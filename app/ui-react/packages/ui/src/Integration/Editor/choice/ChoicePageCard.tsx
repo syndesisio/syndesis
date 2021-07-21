@@ -1,4 +1,10 @@
-import { Card, CardBody, CardFooter , Form, CardTitle  } from '@patternfly/react-core';
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardTitle,
+  Form,
+} from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { ButtonLink, Container, PageSection } from '../../../Layout';
@@ -22,12 +28,15 @@ export class ChoicePageCard extends React.Component<IChoicePageCardProps> {
         <Container>
           <div className="row row-cards-pf">
             <Card>
-              {this.props.header && (
-                <CardTitle>{this.props.header}</CardTitle>
-              )}
+              {this.props.header && <CardTitle>{this.props.header}</CardTitle>}
               <CardBody>
                 <Container>
-                  <Form className={'conditional-flow__form'} isHorizontal={true}>{this.props.children}</Form>
+                  <Form
+                    className={'conditional-flow__form'}
+                    isHorizontal={true}
+                  >
+                    {this.props.children}
+                  </Form>
                 </Container>
               </CardBody>
               <CardFooter className="syn-card__footer">

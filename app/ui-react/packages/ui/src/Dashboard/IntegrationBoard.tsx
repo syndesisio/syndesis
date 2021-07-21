@@ -1,11 +1,11 @@
 import { ChartDonut } from '@patternfly/react-charts';
 import {
   Card,
-  CardBody
-  ,
+  CardBody,
+  CardTitle,
   Grid,
   GridItem,
-  Title, CardTitle ,
+  Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
 

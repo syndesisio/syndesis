@@ -3,10 +3,10 @@ import {
   Button,
   Card,
   CardBody,
-  CardFooter
-  ,
+  CardFooter,
+  CardTitle,
   Form,
-  Title, CardTitle ,
+  Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { Container, Loader, PageSection } from '../Layout';

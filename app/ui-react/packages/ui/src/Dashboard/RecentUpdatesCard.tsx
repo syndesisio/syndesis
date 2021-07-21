@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardBody
-  ,
-  Grid,
-  Title, CardTitle ,
-} from '@patternfly/react-core';
+import { Card, CardBody, CardTitle, Grid, Title } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IRecentUpdatesProps {
