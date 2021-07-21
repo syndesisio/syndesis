@@ -12,12 +12,12 @@
   path: /spec/template/spec/containers/0/env/-
   value:
     name: RELATED_IMAGE_UI
-    value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-ignite-ui:1.9
+    value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-online-ui-rhel8:1.9
 - op: add
   path: /spec/template/spec/containers/0/env/-
   value:
     name: RELATED_IMAGE_S2I
-    value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-ignite-s2i:1.9
+    value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-online-builder-rhel8:1.9
 - op: add
   path: /spec/template/spec/containers/0/env/-
   value:
@@ -27,12 +27,12 @@
   path: /spec/template/spec/containers/0/env/-
   value:
     name: RELATED_IMAGE_UPGRADE
-    value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-ignite-upgrade:1.9
+    value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-online-upgrade-rhel8:1.9
 - op: add
   path: /spec/template/spec/containers/0/env/-
   value:
     name: RELATED_IMAGE_META
-    value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-ignite-meta:1.9
+    value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-online-meta-rhel8:1.9
 - op: add
   path: /spec/template/spec/containers/0/env/-
   value:
@@ -42,12 +42,12 @@
   path: /spec/template/spec/containers/0/env/-
   value:
     name: RELATED_IMAGE_PSQL_EXPORTER
-    value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-postgres-exporter-rhel7:1.9
+    value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-postgres-exporter-rhel8:1.9
 - op: add
   path: /spec/template/spec/containers/0/env/-
   value:
     name: RELATED_IMAGE_SERVER
-    value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-ignite-server:1.9
+    value: registry-proxy.engineering.redhat.com/rh-osbs/fuse7-fuse-online-server-rhel8:1.9
 - op: add
   path: /spec/template/spec/containers/0/env/-
   value:
