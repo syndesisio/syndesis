@@ -1,10 +1,9 @@
+import { UI } from './UI';
 import { WithUser } from '@syndesis/api';
 import { IntegrationMonitoring } from '@syndesis/models';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import './App.css';
 import { AppContext } from './AppContext';
-import { UI } from './UI';
 import { IConfigFile } from './WithConfig';
 
 export type IAppRoutes = Array<IAppRoute | IAppRouteWithChildrens>;

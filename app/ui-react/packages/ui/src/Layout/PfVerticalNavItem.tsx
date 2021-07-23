@@ -1,8 +1,8 @@
-import { NavExpandable } from '@patternfly/react-core';
+import { NavExpandable, NavItem } from '@patternfly/react-core';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Route } from 'react-router';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 export interface IPfVerticalNavItem {
   className?: string;
@@ -53,17 +53,20 @@ function PfVerticalNavItem({
         {children}
       </NavExpandable>
     ) : (
-      <li className={'pf-c-nav__item'}>
-        <Link
+      <NavItem>
+        <NavLink
           to={to}
-          className={classNames('pf-c-nav__link', {
-            ['pf-m-current']: isActive,
-          })}
+          className={
+            classNames(
+              // 'pf-c-nav__link',
+              { ['pf-m-current']: isActive, }
+            )
+          }
           aria-current={isActive ? 'page' : undefined}
-          children={<>{label}</>}
-          {...rest}
-        />
-      </li>
+          {...rest}>
+          {label}
+        </NavLink>
+      </NavItem>
     );
   };
 

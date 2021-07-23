@@ -18,11 +18,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.1.5",
-    "@patternfly/react-core": "^3.77.2",
-    "@patternfly/react-icons": "^3.10.15",
-    "@patternfly/react-styles": "^3.5.7",
-    "@patternfly/react-table": "^2.28.29",
-    "@patternfly/react-topology": "^2.8.65",
     "@storybook/addon-info": "^5.3.8",
     "@storybook/addon-options": "^5.3.8",
     "@storybook/react": "^5.3.8",
@@ -32,7 +27,6 @@
     "@types/d3-shape": "^1.3.2",
     "@types/expect": "^24.3.0",
     "@types/jest": "^24.0.11",
-    "@types/patternfly-react": "*",
     "@types/react": "^16.4.18",
     "@types/react-dom": "^16.0.9",
     "expect": "^24.1.0",
@@ -65,27 +59,30 @@
     "dev": "microbundle watch --format cjs --no-compress"
   },
   "peerDependencies": {
-    "@patternfly/react-core": "^3.77.2",
-    "@patternfly/react-icons": "^3.10.15",
-    "@patternfly/react-styles": "^3.5.7",
-    "@patternfly/react-table": "^2.28.29",
-    "@patternfly/react-topology": "^2.8.65",
+    "@patternfly/react-core": "^4.135.0",
+    "@patternfly/react-icons": "^4.11.0",
+    "@patternfly/react-styles": "^4.11.0",
+    "@patternfly/react-table": "^4.29.0",
+    "@patternfly/react-topology": "^4.9.6",
     "d3-scale": "^3.2.0",
     "d3-shape": "^1.3.5",
     "ky": "^0.17.0",
     "lodash.clamp": "^4.0.3",
-    "react-dnd-html5-backend": "^10.0.2",
-    "react-dnd-touch-backend": "^10.0.2",
+    "react": "^16.6.0",
     "react-dnd": "^10.0.2",
+    "react-dom": "^16.6.0",
     "react-file-picker": "0.0.6",
     "react-use-gesture": "^7.0.4",
-    "rxjs": "^6.2.2",
-    "react": "^16.6.0",
-    "react-dom": "^16.6.0"
+    "rxjs": "^6.2.2"
   },
   "dependencies": {
     "@atlasmap/atlasmap": "^2.2.3",
-    "react-fast-compare": "^2.0.2"
+    "@types/patternfly-react": "*",
+    "react-dnd-html5-backend": "^14.0.0",
+    "react-dnd-touch-backend": "^14.0.0",
+    "react-fast-compare": "^2.0.2",
+    "react-sage": "^0.3.1",
+    "use-debounce": "^7.0.0"
   },
   "jest": {
     "setupFilesAfterEnv": [
