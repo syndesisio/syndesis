@@ -15,6 +15,7 @@
   },
   "rulesDirectory": ["node_modules/tslint-microsoft-contrib"],
   "rules": {
+    "ordered-imports": false,
     "no-implicit-dependencies": true,
     "react-unused-props-and-state": [
       true,

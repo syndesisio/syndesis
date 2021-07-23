@@ -1,8 +1,4 @@
-@import url('~@patternfly/patternfly/patternfly-variables.css');
-@import url('~@patternfly/patternfly/patternfly-shield-noninheritable.css');
-@import url('~@patternfly/patternfly/patternfly-common.css');
-@import url('~@patternfly/patternfly/utilities/Spacing/spacing.css');
-@import url('~@patternfly/patternfly/utilities/Display/display.css');
+@import url('~@patternfly/react-core/dist/styles/base.css');
 
 html,
 body {
