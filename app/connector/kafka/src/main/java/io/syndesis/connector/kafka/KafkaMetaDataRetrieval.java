@@ -101,13 +101,17 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
                                                       Map<String, Object> properties) {
         List<PropertyPair> brokers = new ArrayList<>();
         try (KubernetesClient client = createKubernetesClient()) {
-            KafkaResourceList kafkaList = client.customResources(KAFKA_CRD, Kafka.class, KafkaResourceList.class,
-                KafkaResourceDoneable.class).inAnyNamespace().list();
-            kafkaList.getItems().forEach(kafka -> processKafkaResource(brokers, kafka));
+
+            CustomResourceDefinition crd = client.customResourceDefinitions().withName("kafkas.kafka.strimzi.io").get();
+            // verify if strimzi CRD is installed
+            if (crd != null) {
+                KafkaResourceList kafkaList = client.customResources(KAFKA_CRD, Kafka.class, KafkaResourceList.class, KafkaResourceDoneable.class)
+                    .inAnyNamespace().list();
+                kafkaList.getItems().forEach(kafka -> processKafkaResource(brokers, kafka));
+            }
         } catch (Exception t) {
             LOG.warn("Couldn't auto discover any kafka broker.", t);
         }
-
         Map<String, List<PropertyPair>> dynamicProperties = new HashMap<>();
         dynamicProperties.put("brokers", brokers);
         return new SyndesisMetadataProperties(dynamicProperties);

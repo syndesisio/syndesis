@@ -22,6 +22,20 @@ import java.util.Set;
  */
 public interface KafkaBrokerService {
 
+    // property names defined in kafka.json
+    String BROKERS = "brokers";
+    String BROKER_CERTIFICATE = "brokerCertificate";
+    String TRANSPORT_PROTOCOL = "transportProtocol";
+    String SASL_MECHANISM = "saslMechanism";
+    String SASL_LOGIN_CALLBACK_HANDLER_CLASS = "saslLoginCallbackHandlerClass";
+    String USERNAME = "username";
+    String PASSWORD = "password";
+    String OAUTH_TOKEN_ENDPOINT_URI = "oauthTokenEndpointURI";
+    String TOPIC = "topic";
+    String OAUTHBEARER = "OAUTHBEARER";
+    String PLAIN = "PLAIN";
+    String SASL_SSL = "SASL_SSL";
+
     /**
      * Check if a cluster is up and running
      */
@@ -32,4 +46,14 @@ public interface KafkaBrokerService {
      * @return the list of topics
      */
     Set<String> listTopics();
+
+    void setSaslMechanism(String saslMechanism);
+
+    void setSaslLoginCallbackHandlerClass(String saslLoginCallbackHandlerClass);
+
+    void setUsername(String username);
+
+    void setPassword(String password);
+
+    void setOauthTokenEndpointURI(String oauthTokenEndpointURI);
 }

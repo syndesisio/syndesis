@@ -15,40 +15,85 @@
  */
 package io.syndesis.connector.kafka;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.syndesis.connector.kafka.service.KafkaBrokerService;
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.util.KeyStoreHelper;
-
+import io.syndesis.integration.component.proxy.ComponentDefinition;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+import org.apache.camel.Component;
+import org.apache.camel.component.kafka.KafkaComponent;
 import org.apache.camel.component.kafka.KafkaConfiguration;
-
+import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.jsse.KeyManagersParameters;
 import org.apache.camel.util.jsse.KeyStoreParameters;
 import org.apache.camel.util.jsse.SSLContextParameters;
 import org.apache.camel.util.jsse.TrustManagersParameters;
-
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.kafka.common.config.SaslConfigs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static io.syndesis.connector.kafka.service.KafkaBrokerService.OAUTHBEARER;
+import static io.syndesis.connector.kafka.service.KafkaBrokerService.PLAIN;
 
-public class KafkaConnectionCustomizer implements ComponentProxyCustomizer {
+public class KafkaConnector extends ComponentProxyComponent {
 
-    private static final Logger LOG = LoggerFactory.getLogger(KafkaConnectionCustomizer.class);
-    private static final String CERTIFICATE_OPTION = "brokerCertificate";
+    private static final Logger LOG = LoggerFactory.getLogger(KafkaConnector.class);
     public static final ObjectMapper MAPPER = new ObjectMapper();
 
+    // this field is injected by reflection with the unencrypted value
+    private String password;
+
+    public KafkaConnector(String componentId, String componentScheme) {
+        super(componentId, componentScheme);
+    }
+
     @Override
-    public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+    protected void configureDelegateComponent(ComponentDefinition definition, Component component, Map<String, Object> options) {
+        super.configureDelegateComponent(definition, component, options);
+        if (!(component instanceof KafkaComponent)) {
+            return;
+        }
         KafkaConfiguration configuration = new KafkaConfiguration();
-        if (ConnectorOptions.extractOption(options, CERTIFICATE_OPTION) != null) {
+        String certificate = ConnectorOptions.extractOption(options, KafkaBrokerService.BROKER_CERTIFICATE);
+        String transportProtocol = ConnectorOptions.extractOption(options, KafkaBrokerService.TRANSPORT_PROTOCOL);
+        String saslMechanism = ConnectorOptions.extractOption(options, KafkaBrokerService.SASL_MECHANISM);
+        String saslLoginCallbackHandlerClass = ConnectorOptions.extractOption(options, KafkaBrokerService.SASL_LOGIN_CALLBACK_HANDLER_CLASS);
+        String username = ConnectorOptions.extractOption(options, KafkaBrokerService.USERNAME);
+        String passwd = getPassword();
+        String oauthTokenEndpointURI = ConnectorOptions.extractOption(options, KafkaBrokerService.OAUTH_TOKEN_ENDPOINT_URI);
+
+        if (ObjectHelper.isNotEmpty(username) && ObjectHelper.isNotEmpty(passwd)) {
+            configuration.setSecurityProtocol(transportProtocol);
+            configuration.setSaslMechanism(saslMechanism);
+            if (OAUTHBEARER.equals(saslMechanism)) {
+                LOG.info("Using kafka connection with SASL and OAuthBearerLoginModule");
+                String template = "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required " +
+                    "oauth.client.id=\"%s\" " +
+                    "oauth.client.secret=\"%s\" " +
+                    "oauth.token.endpoint.uri=\"%s\" ;";
+                String config = String.format(template, username, passwd, oauthTokenEndpointURI);
+                configuration.setSaslJaasConfig(config);
+                Map<String, Object> additionalProps = new HashMap<>();
+                additionalProps.put(SaslConfigs.SASL_LOGIN_CALLBACK_HANDLER_CLASS, saslLoginCallbackHandlerClass);
+                configuration.setAdditionalProperties(additionalProps);
+            } else if (PLAIN.equals(saslMechanism)) {
+                LOG.info("Using kafka connection with SASL and PlainLoginModule");
+                String template = "org.apache.kafka.common.security.plain.PlainLoginModule required " +
+                    "username=\"%s\" " +
+                    "password=\"%s\" ;";
+                String config = String.format(template, username, passwd);
+                configuration.setSaslJaasConfig(config);
+            }
+        } else if (certificate != null) {
             LOG.info("Setting SSLContextParameters configuration as a self-signed certificate was provided");
-            SSLContextParameters sslContextParameters = createSSLContextParameters(
-                ConnectorOptions.extractOption(options, CERTIFICATE_OPTION));
+            SSLContextParameters sslContextParameters = createSSLContextParameters(certificate);
             configuration.setSslContextParameters(sslContextParameters);
             configuration.setSecurityProtocol("SSL");
             // If present, Kafka client 2.0 is using this parameter to verify host
@@ -86,6 +131,15 @@ public class KafkaConnectionCustomizer implements ComponentProxyCustomizer {
             LOG.error(e.getMessage(), e);
         }
         options.put("configuration", configuration);
+        ((KafkaComponent) component).setConfiguration(configuration);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String passwd) {
+        this.password = passwd;
     }
 
     private static String getCanonicalPropertyName(final String name) {
@@ -94,8 +148,8 @@ public class KafkaConnectionCustomizer implements ComponentProxyCustomizer {
         while (property.contains(".")) {
             int i = property.indexOf('.');
             property = property.substring(0, i)
-                           + property.substring(i + 1, i + 2).toUpperCase(Locale.ENGLISH)
-                           + property.substring(i + 2);
+                + property.substring(i + 1, i + 2).toUpperCase(Locale.ENGLISH)
+                + property.substring(i + 2);
         }
         return property;
     }
@@ -135,4 +189,5 @@ public class KafkaConnectionCustomizer implements ComponentProxyCustomizer {
         trustManagersParams.setKeyStore(keystore);
         return trustManagersParams;
     }
+
 }

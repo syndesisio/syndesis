@@ -101,6 +101,13 @@
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
     </dependency>
+    <!-- this dep is used when user wants to use SASL mechanism OAUTHBEARER -->
+    <dependency>
+      <groupId>io.strimzi</groupId>
+      <artifactId>kafka-oauth-client</artifactId>
+      <version>${io.strimzi.kafka.oauth.version}</version>
+      <scope>runtime</scope>
+    </dependency>
 
     <!-- Testing -->
     <dependency>
