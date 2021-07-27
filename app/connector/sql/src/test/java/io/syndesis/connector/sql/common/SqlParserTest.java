@@ -348,4 +348,22 @@ public class SqlParserTest {
             Assertions.assertEquals(1, secondParameter.getColumnPos());
         }
     }
+
+    @Test
+    public void parseNested(final Connection con) throws SQLException {
+        try (Connection connection = con) {
+            final SqlStatementParser parser = new SqlStatementParser(connection,
+                "SELECT t.* FROM (SELECT * FROM NAME0) t WHERE t.FIRSTNAME = :#first");
+            final SqlStatementMetaData info = parser.parse();
+            Assertions.assertEquals("NAME0", info.getTableNames().get(0));
+            Assertions.assertEquals(1, info.getInParams().size());
+
+            final SqlParam firstParameter = info.getInParams().get(0);
+            Assertions.assertEquals("first", firstParameter.getName());
+            Assertions.assertEquals("FIRSTNAME", firstParameter.getColumn());
+            Assertions.assertEquals(String.class, firstParameter.getTypeValue().getClazz());
+            Assertions.assertEquals(0, firstParameter.getColumnPos());
+
+        }
+    }
 }
