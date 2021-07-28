@@ -85,9 +85,7 @@
   ],
   "componentScheme": "kafka",
   "configuredProperties": {},
-  "connectorCustomizers": [
-    "io.syndesis.connector.kafka.KafkaConnectionCustomizer"
-  ],
+  "connectorFactory": "io.syndesis.connector.kafka.KafkaConnectorFactory",
   "dependencies": [
     {
       "id": "@project.groupId@:@project.artifactId@:@project.version@",
@@ -99,33 +97,6 @@
   "id": "kafka",
   "name": "Kafka Message Broker",
   "properties": {
-    "extraOptions": {
-      "componentProperty": true,
-      "deprecated": false,
-      "group": "common",
-      "kind": "property",
-      "label": "common",
-      "labelHint": "Extra Options for the Kafka connection.",
-      "order": "4",
-      "javaType": "java.util.List",
-      "arrayDefinition": {
-        "key": {
-          "displayName": "Key",
-          "type": "text"
-        },
-        "value": {
-          "displayName": "Value",
-          "type": "text"
-        }
-      },
-      "arrayDefinitionOptions": {
-        "i18nAddElementText": "Add a custom property",
-        "minElements": 0
-      },
-      "defaultValue": "",
-      "displayName": "Extra Options",
-      "type": "array"
-    },
     "brokers": {
       "componentProperty": true,
       "deprecated": false,
@@ -144,7 +115,7 @@
       "componentProperty": true,
       "defaultValue": "PLAINTEXT",
       "deprecated": false,
-      "displayName": "Transport Protocol",
+      "displayName": "Security Protocol",
       "enum": [
         {
           "label": "PLAIN",
@@ -153,16 +124,103 @@
         {
           "label": "TLS",
           "value": "SSL"
+        },
+        {
+          "label": "SASL_SSL",
+          "value": "SASL_SSL"
         }
       ],
       "group": "common,security",
       "javaType": "java.lang.String",
       "kind": "property",
       "label": "security",
-      "labelHint": "The transport protocol. Select TLS for encryption in transit.",
+      "labelHint": "The security protocol. Select TLS for encryption in transit. Select SASL_SSL when authenticating with SASL mechanism and SSL for transport.",
       "order": "2",
       "required": true,
       "secret": false,
+      "type": "string"
+    },
+    "saslMechanism": {
+      "componentProperty": true,
+      "defaultValue": "PLAIN",
+      "deprecated": false,
+      "displayName": "SASL Mechanism",
+      "enum": [
+        {
+          "label": "PLAIN",
+          "value": "PLAIN"
+        },
+        {
+          "label": "OAUTHBEARER",
+          "value": "OAUTHBEARER"
+        }
+      ],
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "security",
+      "labelHint": "The SASL Mechanism used.",
+      "order": "3",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "username": {
+      "componentProperty": false,
+      "deprecated": false,
+      "displayName": "Username",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "security",
+      "labelHint": "OAuth Client ID or the username",
+      "order": "4",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "password": {
+      "componentProperty": false,
+      "deprecated": false,
+      "displayName":  "Password",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "security",
+      "labelHint": "OAuth Client Secret or the password",
+      "order": "5",
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "saslLoginCallbackHandlerClass": {
+      "componentProperty": false,
+      "defaultValue": "io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler",
+      "deprecated": false,
+      "displayName": "SASL Login Callback Handler Class",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "common",
+      "order": "6",
+      "required": false,
+      "secret": false,
+      "placeholder": "io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler",
+      "type": "string"
+    },
+    "oauthTokenEndpointURI": {
+      "componentProperty": false,
+      "defaultValue": "https://identity.api.openshift.com/auth/realms/rhoas/protocol/openid-connect/token",
+      "deprecated": false,
+      "displayName": "OAuth Token Endpoint URI",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common",
+      "order": "7",
+      "required": false,
+      "secret": false,
+      "placeholder": "https://identity.api.openshift.com/auth/realms/rhoas/protocol/openid-connect/token",
       "type": "string"
     },
     "brokerCertificate": {
@@ -174,10 +232,37 @@
       "kind": "property",
       "label": "security",
       "labelHint": "Self-signed certificate",
-      "order": "3",
+      "order": "8",
       "required": false,
       "secret": false,
       "type": "textarea"
+    },
+    "extraOptions": {
+      "componentProperty": false,
+      "deprecated": false,
+      "group": "common",
+      "kind": "property",
+      "label": "common",
+      "labelHint": "Extra Options for the Kafka connection.",
+      "order": "9",
+      "javaType": "java.util.List",
+      "arrayDefinition": {
+        "key": {
+          "displayName": "Key",
+          "type": "text"
+        },
+        "value": {
+          "displayName": "Value",
+          "type": "text"
+        }
+      },
+      "arrayDefinitionOptions": {
+        "i18nAddElementText": "Add a custom property",
+        "minElements": 0
+      },
+      "defaultValue": "",
+      "displayName": "Extra Options",
+      "type": "array"
     }
   },
   "tags": [

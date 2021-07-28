@@ -132,7 +132,7 @@ func Test_csv_loadRolesFromTemplate(t *testing.T) {
 		{
 			"kafka-roles",
 			"./install/cluster_role_kafka.yml.tmpl",
-			1,
+			2,
 		},
 		{
 			"public-api-roles",

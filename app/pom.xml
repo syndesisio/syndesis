@@ -90,7 +90,7 @@
     <opentracing.spring.web.starter.version>3.0.0</opentracing.spring.web.starter.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.23.2.fuse-790029</camel.version>
+    <camel.version>2.23.2.fuse-790053</camel.version>
 
     <undertow.version>2.2.5.Final</undertow.version>
     <org.jboss.xnio.version>3.8.4.Final</org.jboss.xnio.version>
@@ -165,6 +165,7 @@
     <netty.version>4.1.63.Final</netty.version>
     <net.jqwik.version>1.5.1</net.jqwik.version>
     <io.github.zregvart.junit-github-reporter.version>0.4.0</io.github.zregvart.junit-github-reporter.version>
+    <io.strimzi.kafka.oauth.version>0.7.2</io.strimzi.kafka.oauth.version>
 
     <!-- Sonar configuration -->
     <sonar.projectKey>${project.artifactId}</sonar.projectKey>
@@ -1750,6 +1751,12 @@
             <artifactId>javax.annotation-api</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-transports-http</artifactId>
+        <version>${cxf.version}</version>
       </dependency>
 
       <dependency>

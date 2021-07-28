@@ -40,11 +40,17 @@ public class KafkaMetaDataExtension extends AbstractMetaDataExtension {
 
     @Override
     public Optional<MetaData> meta(Map<String, Object> parameters) {
-        final String topic = ConnectorOptions.extractOption(parameters, "topic");
-        final String brokers = ConnectorOptions.extractOption(parameters, "brokers");
-        final String certificate = ConnectorOptions.extractOption(parameters, "brokerCertificate");
-        final String transportProtocol = ConnectorOptions.extractOption(parameters, "transportProtocol");
-        LOG.debug("Getting metadata from Kafka connection to {} with protocol {}", brokers, transportProtocol);
+        final String topic = ConnectorOptions.extractOption(parameters, KafkaBrokerService.TOPIC);
+        final String brokers = ConnectorOptions.extractOption(parameters, KafkaBrokerService.BROKERS);
+        final String certificate = ConnectorOptions.extractOption(parameters, KafkaBrokerService.BROKER_CERTIFICATE);
+        final String securityProtocol = ConnectorOptions.extractOption(parameters, KafkaBrokerService.TRANSPORT_PROTOCOL);
+        final String saslMechanism = ConnectorOptions.extractOption(parameters, KafkaBrokerService.SASL_MECHANISM);
+        final String saslLoginCallbackHandlerClass = ConnectorOptions.extractOption(parameters, KafkaBrokerService.SASL_LOGIN_CALLBACK_HANDLER_CLASS);
+        final String clientId = ConnectorOptions.extractOption(parameters, KafkaBrokerService.USERNAME);
+        final String clientSecret = ConnectorOptions.extractOption(parameters, KafkaBrokerService.PASSWORD);
+        final String oauthTokenEndpointURI = ConnectorOptions.extractOption(parameters, KafkaBrokerService.OAUTH_TOKEN_ENDPOINT_URI);
+
+        LOG.debug("Getting metadata from Kafka connection to {} with protocol {}", brokers, securityProtocol);
 
         Set<String> topicsNames = new HashSet<>();
         if (topic != null) {
@@ -54,8 +60,12 @@ public class KafkaMetaDataExtension extends AbstractMetaDataExtension {
         try {
             if (ObjectHelper.isNotEmpty(brokers)) {
                 LOG.trace("Calling the brokerService to collect topics");
-                KafkaBrokerService kafkaBrokerService =
-                    new KafkaBrokerServiceImpl(brokers, transportProtocol, certificate);
+                KafkaBrokerService kafkaBrokerService = new KafkaBrokerServiceImpl(brokers, securityProtocol, certificate);
+                kafkaBrokerService.setUsername(clientId);
+                kafkaBrokerService.setPassword(clientSecret);
+                kafkaBrokerService.setSaslMechanism(saslMechanism);
+                kafkaBrokerService.setSaslLoginCallbackHandlerClass(saslLoginCallbackHandlerClass);
+                kafkaBrokerService.setOauthTokenEndpointURI(oauthTokenEndpointURI);
                 topicsNames.addAll(kafkaBrokerService.listTopics());
                 topicsNames = Collections.unmodifiableSet(topicsNames);
             } else {
