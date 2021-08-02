@@ -60,7 +60,7 @@
     <kubernetes.client.version>4.9.0</kubernetes.client.version>
 
     <spring.version>5.2.13.RELEASE</spring.version>
-    <spring-boot.version>2.3.9.RELEASE</spring-boot.version>
+    <spring-boot.version>2.5.3</spring-boot.version>
     <spring-social.version>1.1.6.RELEASE</spring-social.version>
     <spring-social-twitter.version>1.1.2.RELEASE</spring-social-twitter.version>
     <spring-cloud.version>Hoxton.SR11</spring-cloud.version>
