@@ -485,7 +485,24 @@
           </execution>
         </executions>
       </plugin>
-
+      <plugin>
+        <artifactId>maven-help-plugin</artifactId>
+        <version>3.2.0</version>
+        <executions>
+          <execution>
+            <id>determine-cxf-version</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>evaluate</goal>
+            </goals>
+            <configuration>
+              <expression>cxf-version</expression>
+              <artifact>org.apache.camel:camel-parent:2.23.2.fuse-790053</artifact>
+              <output>${project.basedir}/src/test/resources/cxf-version.txt</output>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
@@ -584,6 +601,11 @@
       <groupId>io.syndesis.server</groupId>
       <artifactId>server-metrics-jsondb</artifactId>
       <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-core</artifactId>
     </dependency>
 
     <!-- DAO implementations: -->
