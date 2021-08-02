@@ -96,7 +96,7 @@
     <org.jboss.xnio.version>3.8.4.Final</org.jboss.xnio.version>
 
     <!-- CXF version, to be kept in sync with the one referenced by camel version above -->
-    <cxf.version>3.3.6.fuse-790025</cxf.version>
+    <cxf.version>3.3.6.fuse-790048</cxf.version>
     <wss4j.version>2.2.2</wss4j.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
