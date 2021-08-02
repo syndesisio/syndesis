@@ -264,7 +264,7 @@ prepare_binaries() {
     fi
 
     for dist in darwin-amd64 linux-amd64 windows-amd64; do
-        tar -zcf ${to}/syndesis-operator-${dist}.tar.gz -C ${from}/${dist} .
+        tar -zcf ${to}/syndesis-operator-${dist}.tar.gz --owner=0 --group=0 -C ${from}/${dist} .
     done
 }
 
