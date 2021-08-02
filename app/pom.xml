@@ -76,7 +76,7 @@
     <arquillian.version>1.4.0.Final</arquillian.version>
     <arquillian.cube.version>1.18.2</arquillian.cube.version>
 
-    <maven.version>3.5.4</maven.version>
+    <maven.version>3.8.1</maven.version>
 
     <errorprone.javac.version>9+181-r4173-1</errorprone.javac.version>
     <errorprone.version>2.7.1</errorprone.version>
