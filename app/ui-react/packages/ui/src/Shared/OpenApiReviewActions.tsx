@@ -66,7 +66,7 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
             {alert && alert}
             <Title
               headingLevel={'h5'}
-              size={'md'}
+              size="md"
               className={'review-actions__heading'}
             >
               {i18nApiDefinitionHeading}
@@ -89,7 +89,7 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
             </div>
             <Title
               headingLevel={'h5'}
-              size={'md'}
+              size="md"
               className={'review-actions__heading'}
             >
               {i18nImportedHeading}
@@ -123,7 +123,7 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
               <Title
                 data-testid={'api-provider-error-heading'}
                 headingLevel={'h5'}
-                size={'md'}
+                size="md"
                 className={'review-actions__heading'}
               >
                 {i18nErrorsHeading}
@@ -151,7 +151,7 @@ export const OpenApiReviewActions: React.FunctionComponent<IApiProviderReviewAct
               <Title
                 data-testid={'api-provider-warning-heading'}
                 headingLevel={'h5'}
-                size={'md'}
+                size="md"
                 className={'review-actions__heading'}
               >
                 {i18nWarningsHeading}

@@ -1,4 +1,4 @@
-import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
+import { Card, CardBody, CardTitle, Title } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { IntegrationsEmptyState } from '../Integration';
@@ -15,18 +15,21 @@ export interface ITopIntegrationsProps {
   linkCreateIntegration: H.LocationDescriptor;
 }
 
-export class TopIntegrationsCard extends React.Component<
-  ITopIntegrationsProps
-> {
+export class TopIntegrationsCard extends React.Component<ITopIntegrationsProps> {
   public render() {
     return (
-      <Card className={'top-integrations'} data-testid={'dashboard-top-integrations'}>
-        <CardHeader className={'top-integrations__heading'}>
-          <Title size={'md'}>{this.props.i18nTitle}</Title>
+      <Card
+        className={'top-integrations'}
+        data-testid={'dashboard-top-integrations'}
+      >
+        <CardTitle className={'top-integrations__heading'}>
+          <Title size="md" headingLevel={'h3'}>
+            {this.props.i18nTitle}
+          </Title>
           <div className={'top-integrations__heading-daterange'}>
             {this.props.i18nLast30Days}
           </div>
-        </CardHeader>
+        </CardTitle>
         <CardBody>
           {this.props.children ? (
             this.props.children

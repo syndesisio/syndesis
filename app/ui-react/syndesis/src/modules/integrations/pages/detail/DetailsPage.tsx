@@ -17,6 +17,7 @@ import {
   IntegrationExposeVia,
   PageLoader,
 } from '@syndesis/ui';
+import { IMenuActions } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -55,7 +56,7 @@ export const DetailsPage: React.FunctionComponent = () => {
   return (
     <>
       <Translation ns={['integrations', 'shared']}>
-        {t => (
+        {(t) => (
           <WithRouteData<IDetailsRouteParams, IDetailsRouteState>>
             {({ integrationId }, { integration }) => (
               <WithMonitoredIntegration
@@ -214,7 +215,7 @@ export const DetailsPage: React.FunctionComponent = () => {
                                     }
                                     allowEditing={true}
                                     isTextArea={true}
-                                    onChange={value =>
+                                    onChange={(value) =>
                                       handleDescriptionChange(
                                         data.integration.id!,
                                         value
@@ -231,8 +232,9 @@ export const DetailsPage: React.FunctionComponent = () => {
                                   0
                                 }
                                 isDraft={
-                                  (data.integration as IIntegrationOverviewWithDraft)
-                                    .isDraft || false
+                                  (
+                                    data.integration as IIntegrationOverviewWithDraft
+                                  ).isDraft || false
                                 }
                                 i18nTextDraft={t('shared:Draft')}
                                 i18nTextHistory={t(
@@ -264,7 +266,7 @@ export const DetailsPage: React.FunctionComponent = () => {
                                           stopDeploymentAction,
                                           replaceDraftAction,
                                         }) => {
-                                          const actions = [];
+                                          const actions: IMenuActions[] = [];
                                           if (
                                             data.integration.version !==
                                             deployment.version
@@ -295,7 +297,9 @@ export const DetailsPage: React.FunctionComponent = () => {
                                               currentState={
                                                 deployment.currentState!
                                               }
-                                              i18nRunning={t('shared:Published')}
+                                              i18nRunning={t(
+                                                'shared:Published'
+                                              )}
                                               i18nTextLastPublished={t(
                                                 'integrations:detail:lastPublished'
                                               )}

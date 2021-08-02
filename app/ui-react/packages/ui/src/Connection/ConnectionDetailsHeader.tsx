@@ -83,14 +83,12 @@ export interface IConnectionDetailsHeaderProps {
  * Line 2: description label and value
  * Line 3: usage label and value
  */
-export class ConnectionDetailsHeader extends React.Component<
-  IConnectionDetailsHeaderProps
-> {
+export class ConnectionDetailsHeader extends React.Component<IConnectionDetailsHeaderProps> {
   public render() {
     return (
       <PageSection variant={'light'}>
-        <Stack gutter="md">
-          <Split gutter="md" className={'connection-details-header__row'}>
+        <Stack hasGutter={true}>
+          <Split hasGutter={true} className={'connection-details-header__row'}>
             {this.props.connectionIcon}
             <InlineTextEdit
               className="connection-details-header__connectionName"

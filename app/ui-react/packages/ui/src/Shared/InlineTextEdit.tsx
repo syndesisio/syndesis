@@ -7,6 +7,7 @@ import {
   InputGroup,
   TextArea,
   TextInput,
+  ValidatedOptions,
 } from '@patternfly/react-core';
 import { CheckIcon, PencilAltIcon, TimesIcon } from '@patternfly/react-icons';
 import { global_palette_black_600 } from '@patternfly/react-tokens';
@@ -44,7 +45,7 @@ interface IEditWidget
   extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   className?: string;
   value: string;
-  valid: boolean;
+  valid: ValidatedOptions;
   saving: boolean;
   asTextarea: boolean;
   errorMsg?: string;
@@ -68,7 +69,7 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
       <>
         <FormGroup
           fieldId="inline-edit-textarea"
-          isValid={valid}
+          validated={valid}
           helperTextInvalid={errorMsg}
         >
           <InputGroup>
@@ -106,7 +107,7 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
       <>
         <FormGroup
           fieldId={'inline-edit-input'}
-          isValid={valid}
+          validated={valid}
           helperTextInvalid={errorMsg}
         >
           <InputGroup>
@@ -192,9 +193,12 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
   const [currentValue, setCurrentValue] = React.useState(value);
   const [editing, setEditing] = React.useState(false);
   const [saving, setSaving] = React.useState(false);
-  const [{ valid, errorMsg }, setValidity] = React.useState({
-    errorMsg: '',
-    valid: true,
+  const [{ valid, errorMsg }, setValidity] = React.useState<{
+    errorMsg: string;
+    valid: ValidatedOptions;
+  }>({
+    errorMsg: 'error',
+    valid: ValidatedOptions.default,
   });
   const validate = async (valueToValidate: string) => {
     if (onValidate) {
@@ -202,18 +206,18 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
       if (result === true) {
         setValidity({
           errorMsg: '',
-          valid: true,
+          valid: ValidatedOptions.default,
         });
       } else {
         setValidity({
           errorMsg: result,
-          valid: false,
+          valid: ValidatedOptions.error,
         });
       }
     } else {
       setValidity({
         errorMsg: '',
-        valid: true,
+        valid: ValidatedOptions.default,
       });
     }
   };

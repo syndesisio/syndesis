@@ -76,7 +76,7 @@ export interface IOp {
 }
 
 function convertOps(ops: Op[]): Op[] {
-  const answer = [];
+  const answer: IOp[] = [];
   for (const op of ops) {
     // guard against blank label
     const label = op.label || (op as IOp).value || op.operator;
@@ -89,9 +89,7 @@ function convertOps(ops: Op[]): Op[] {
   return answer;
 }
 
-export class WithFilterOptions extends React.Component<
-  IWithFilterOptionsProps
-> {
+export class WithFilterOptions extends React.Component<IWithFilterOptionsProps> {
   public render() {
     const defaultValue = {
       ops: [],

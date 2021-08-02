@@ -1,10 +1,10 @@
 import {
   Card,
-  CardBody,
-  CardHeader,
+  CardBody
+  ,
   Grid,
   GridItem,
-  PageSection,
+  PageSection, CardTitle ,
 } from '@patternfly/react-core';
 import * as React from 'react';
 
@@ -18,11 +18,11 @@ export class StoryWrapper extends React.Component<IStoryWrapperProps> {
   public render() {
     return (
       <PageSection>
-        <Grid gutter={'md'}>
+        <Grid hasGutter>
           <GridItem span={6}>
             {this.props.definition && !this.props.definitionChildren ? (
               <Card>
-                <CardHeader>This form definition object</CardHeader>
+                <CardTitle>This form definition object</CardTitle>
                 <CardBody>
                   <pre>
                     {JSON.stringify(this.props.definition, undefined, 2)}
@@ -37,7 +37,7 @@ export class StoryWrapper extends React.Component<IStoryWrapperProps> {
           </GridItem>
           <GridItem span={6}>
             <Card>
-              <CardHeader>Creates this form</CardHeader>
+              <CardTitle>Creates this form</CardTitle>
               <CardBody>{this.props.children}</CardBody>
             </Card>
           </GridItem>

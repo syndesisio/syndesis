@@ -1,7 +1,7 @@
 import {
   Card,
   CardBody,
-  CardHeader,
+  CardTitle,
   PageSection,
   Text,
   TextContent,
@@ -32,16 +32,16 @@ export interface IApiConnectorReviewProps {
   warningMessages?: string[];
 }
 
-export class ApiConnectorReview extends React.Component<
-  IApiConnectorReviewProps
-> {
+export class ApiConnectorReview extends React.Component<IApiConnectorReviewProps> {
   public render() {
     return (
       <PageSection>
         <Card>
-          <CardHeader>
-            <Title size="lg">{this.props.i18nTitle}</Title>
-          </CardHeader>
+          <CardTitle>
+            <Title size="lg" headingLevel={'h2'}>
+              {this.props.i18nTitle}
+            </Title>
+          </CardTitle>
           <CardBody>
             {this.props.i18nValidationFallbackMessage ? (
               <h5 className="api-connector-review__validationFallbackMessage">

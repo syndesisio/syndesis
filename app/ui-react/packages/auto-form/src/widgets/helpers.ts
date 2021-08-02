@@ -4,7 +4,7 @@ import { IFormControlProps } from '../models';
 export function getValidationState({ form, field }: IFormControlProps) {
   const error = getErrorText(form.errors, field.name);
   const touched = getIn(form.touched, field.name);
-  return touched && error ? false : touched ? undefined : undefined;
+  return touched && error ? 'error' : touched ? undefined : undefined;
 }
 
 export function getErrorText(errors: any, fieldName: string) {

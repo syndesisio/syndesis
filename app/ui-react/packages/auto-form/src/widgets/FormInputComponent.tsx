@@ -4,9 +4,9 @@ import { IFormControlProps } from '../models';
 import { FormLabelHintComponent } from './FormLabelHintComponent';
 import { getHelperText, getValidationState, toValidHtmlId } from './helpers';
 
-export const FormInputComponent: React.FunctionComponent<
-  IFormControlProps
-> = props => {
+export const FormInputComponent: React.FunctionComponent<IFormControlProps> = (
+  props
+) => {
   const { value, onChange, ...field } = props.field;
   const id = toValidHtmlId(field.name);
   const handleChange = (
@@ -30,14 +30,12 @@ export const FormInputComponent: React.FunctionComponent<
               <FormLabelHintComponent labelHint={props.property.labelHint} />
             )}
           </>
-        ) : (
-          undefined
-        )
+        ) : undefined
       }
       {...props.property.formGroupAttributes}
       fieldId={id}
       isRequired={props.property.required}
-      isValid={getValidationState(props)}
+      validated={getValidationState(props)}
       helperText={helperText}
       helperTextInvalid={helperTextInvalid}
     >

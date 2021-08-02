@@ -3,7 +3,7 @@ import {
   Card,
   CardBody,
   CardFooter,
-  CardHeader,
+  CardTitle,
   Form,
   Title,
 } from '@patternfly/react-core';
@@ -39,71 +39,80 @@ export interface IIntegrationEditorFormProps {
  * @see [i18nTitle]{@link IIntegrationEditorFormProps#i18nTitle}
  * @see [i18nSubtitle]{@link IIntegrationEditorFormProps#i18nSubtitle}
  */
-export const IntegrationEditorForm: React.FunctionComponent<IIntegrationEditorFormProps> = ({
-  isValid,
-  i18nNext,
-  handleSubmit,
-  i18nFormTitle,
-  backActionHref,
-  children,
-  error,
-  i18nBackAction,
-  isBackAllowed,
-  isLoading,
-  submitForm,
-}) => {
-  return (
-    <PageSection>
-      <Container>
-        <div className="row row-cards-pf">
-          <Card>
-            {i18nFormTitle && (
-              <CardHeader>
-                <Title className="syn-card__title" headingLevel="h2" size="md">
-                  {i18nFormTitle}
-                </Title>
-              </CardHeader>
-            )}
-            <CardBody>
-              <Container>
-                <Form isHorizontal={true} onSubmit={handleSubmit}>
-                  {error && (
-                    <Alert isInline={true} variant={'warning'} title={error} />
-                  )}
-                  {children}
-                </Form>
-              </Container>
-            </CardBody>
-            <CardFooter className="syn-card__footer">
-              {backActionHref && isBackAllowed && (
-                <>
-                  <ButtonLink
-                    id={'integration-editor-form-back-button'}
-                    href={backActionHref}
+export const IntegrationEditorForm: React.FunctionComponent<IIntegrationEditorFormProps> =
+  ({
+    isValid,
+    i18nNext,
+    handleSubmit,
+    i18nFormTitle,
+    backActionHref,
+    children,
+    error,
+    i18nBackAction,
+    isBackAllowed,
+    isLoading,
+    submitForm,
+  }) => {
+    return (
+      <PageSection>
+        <Container>
+          <div className="row row-cards-pf">
+            <Card>
+              {i18nFormTitle && (
+                <CardTitle>
+                  <Title
+                    className="syn-card__title"
+                    headingLevel="h2"
+                    size="md"
                   >
-                    <i className={'fa fa-chevron-left'} /> {i18nBackAction}
-                  </ButtonLink>
-                  &nbsp;
-                </>
+                    {i18nFormTitle}
+                  </Title>
+                </CardTitle>
               )}
-              <ButtonLink
-                id={'integration-editor-form-next-button'}
-                onClick={submitForm}
-                disabled={!isValid || isLoading}
-                as={'primary'}
-              >
-                {i18nNext}
-                {isLoading && (
+              <CardBody>
+                <Container>
+                  <Form isHorizontal={true} onSubmit={handleSubmit}>
+                    {error && (
+                      <Alert
+                        isInline={true}
+                        variant={'warning'}
+                        title={error}
+                      />
+                    )}
+                    {children}
+                  </Form>
+                </Container>
+              </CardBody>
+              <CardFooter className="syn-card__footer">
+                {backActionHref && isBackAllowed && (
                   <>
-                    &nbsp;&nbsp;
-                    <Loader inline={true} size={'xs'} />
+                    <ButtonLink
+                      id={'integration-editor-form-back-button'}
+                      href={backActionHref}
+                    >
+                      <i className={'fa fa-chevron-left'} /> {i18nBackAction}
+                    </ButtonLink>
+                    &nbsp;
                   </>
                 )}
-              </ButtonLink>
-            </CardFooter>
-          </Card>
-        </div>
-      </Container>
-    </PageSection>
-  );
-};
+                <ButtonLink
+                  id={'integration-editor-form-next-button'}
+                  onClick={submitForm}
+                  disabled={!isValid || isLoading}
+                  as={'primary'}
+                >
+                  {i18nNext}
+                  {isLoading && (
+                    <>
+                      &nbsp;&nbsp;
+                      <Loader inline={true} size={'xs'} />
+                    </>
+                  )}
+                </ButtonLink>
+              </CardFooter>
+            </Card>
+          </div>
+        </Container>
+      </PageSection>
+    );
+  };
