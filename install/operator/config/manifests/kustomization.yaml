@@ -12,8 +12,6 @@ kind: Kustomization
 #namePrefix: memcached-operator-
 
 # Labels to add to all resources and selectors.
-commonLabels:
-  app: syndesis
 
 # [WEBHOOK] To enable webhook, uncomment all the sections with [WEBHOOK] prefix including the one in
 # crd/kustomization.yaml

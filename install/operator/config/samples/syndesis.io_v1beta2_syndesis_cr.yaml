@@ -2,6 +2,8 @@ apiVersion: syndesis.io/v1beta2
 kind: Syndesis
 metadata:
   name: app
+  labels:
+    app: syndesis
 spec:
   addons:
     jaeger:

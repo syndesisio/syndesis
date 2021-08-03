@@ -3,7 +3,7 @@
 LABEL com.redhat.delivery.operator.bundle=true
 LABEL com.redhat.openshift.versions="v4.6"
 
-LABEL name="fuse7/fuse-online-operator-metadata" \
+LABEL name="fuse7/fuse-online-rhel8-operator-metadata" \
       version="1.9" \
       maintainer="Otavio Piske <opiske@redhat.com>" \
       summary="Operator which manages the lifecycle of the Fuse Online application." \

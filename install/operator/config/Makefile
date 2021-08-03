@@ -18,7 +18,7 @@ KOPTIONS := --load-restrictor LoadRestrictionsNone
 VERSION ?= 7.9.0
 DEBUG ?= false
 DB_IMAGE ?= registry.redhat.io/rhscl/postgresql-12-rhel7
-DEFAULT_IMAGE ?= registry.redhat.io/fuse7/fuse-online-operator
+DEFAULT_IMAGE ?= registry.redhat.io/fuse7/fuse-online-rhel8-operator
 IMAGE ?= $(DEFAULT_IMAGE)
 TAG ?= 1.9
 NAMESPACE ?= fuse-online
@@ -290,6 +290,8 @@ bundle: generate-crds kustomize rename-manifest
 	@sed -i '/- kind: Syndesis/,/version: v1beta1/d' $(BUNDLE_DIR)/$(MANIFESTS)/*.clusterserviceversion.yaml
 # Removes any clusterrolebindings necessary for clusterroles to be added but not required for the manifests
 	@rm -f $(BUNDLE_DIR)/manifests/*clusterrolebinding.yaml
+# Workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1934080
+	@rm -f $(BUNDLE_DIR)/manifests/*serviceaccount.yaml
 # Moves the docker file into the bundle directory
 	@mv bundle.Dockerfile $(BUNDLE_DIR)/Dockerfile && \
 		sed -i 's/bundle\///g' $(BUNDLE_DIR)/Dockerfile
