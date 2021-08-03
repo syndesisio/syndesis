@@ -34,7 +34,7 @@ export const useConnectionHelpers = () => {
     configuredProperties?: { [key: string]: string }
   ): Connection => {
     const connection = {} as Connection;
-    return produce(connection, draft => {
+    return produce(connection, (draft) => {
       draft.name = name;
       draft.description = description;
       draft.configuredProperties = configuredProperties;
@@ -64,7 +64,7 @@ export const useConnectionHelpers = () => {
     description?: string,
     configuredProperties?: { [key: string]: string }
   ): Connection => {
-    return produce(connection, draft => {
+    return produce(connection, (draft) => {
       draft.name = name || draft.name;
       // allow empty descriptions
       draft.description =
@@ -85,7 +85,20 @@ export const useConnectionHelpers = () => {
       url: `${apiContext.apiUri}/connectors/${connectorId}/verifier`,
     });
     if (!response.ok) {
-      throw new Error(response.statusText);
+      return [
+        {
+          errors: [
+            {
+              attributes: {},
+              code: response.status.toString(),
+              description: response.statusText,
+              parameters: [],
+            },
+          ],
+          scope: 'CONNECTIVITY',
+          status: 'ERROR',
+        },
+      ];
     }
     return (await response.json()) as IConfigurationValidation[];
   };
@@ -93,7 +106,7 @@ export const useConnectionHelpers = () => {
   const saveConnection = async (
     connection: Connection
   ): Promise<Connection> => {
-    return produce(connection, async draft => {
+    return produce(connection, async (draft) => {
       const response = await callFetch({
         body: draft,
         headers: apiContext.headers,
