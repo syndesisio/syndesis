@@ -12,6 +12,10 @@ MK_OPTIONS := -s
 #
 KOPTIONS := --load-restrictor LoadRestrictionsNone
 
+CONTROLLER_GEN_VERSION := v0.4.1
+OPERATOR_SDK_VERSION := v1.5.0
+KUSTOMIZE_VERSION := v4.1.2
+
 #
 # Vars that can be overridden by external env vars
 #
@@ -193,7 +197,7 @@ ifeq (, $(shell which controller-gen))
 	CONTROLLER_GEN_TMP_DIR=$$(mktemp -d) ;\
 	cd $$CONTROLLER_GEN_TMP_DIR ;\
 	go mod init tmp ;\
-	go get sigs.k8s.io/controller-tools/cmd/controller-gen@v0.3.0 ;\
+	go get sigs.k8s.io/controller-tools/cmd/controller-gen@$(CONTROLLER_GEN_VERSION) ;\
 	rm -rf $$CONTROLLER_GEN_TMP_DIR ;\
 	}
 CONTROLLER_GEN=$(GOBIN)/controller-gen
@@ -208,7 +212,7 @@ ifeq (, $(shell which kustomize))
 	KUSTOMIZE_GEN_TMP_DIR=$$(mktemp -d) ;\
 	cd $$KUSTOMIZE_GEN_TMP_DIR ;\
 	go mod init tmp ;\
-	go get sigs.k8s.io/kustomize/kustomize/v4@v4.0.5 ;\
+	go get sigs.k8s.io/kustomize/kustomize/v4@$(KUSTOMIZE_VERSION) ;\
 	rm -rf $$KUSTOMIZE_GEN_TMP_DIR ;\
 	}
 KUSTOMIZE=$(GOBIN)/kustomize
@@ -216,7 +220,22 @@ else
 KUSTOMIZE=$(shell which kustomize)
 endif
 
-.PHONY: bundle manifests generate generate-deepcopy generate-crds
+operator-sdk:
+ifeq (, $(shell which operator-sdk))
+	@{ \
+	set -e ;\
+	curl \
+		-L https://github.com/operator-framework/operator-sdk/releases/download/$(OPERATOR_SDK_VERSION)/operator-sdk_linux_amd64 \
+		-o operator-sdk ;\
+	chmod +x operator-sdk ;\
+	mv operator-sdk $(GOBIN)/ ;\
+	}
+OPERATOR_SDK=$(GOBIN)/operator-sdk
+else
+OPERATOR_SDK=$(shell which operator-sdk)
+endif
+
+.PHONY: kustomize operator-sdk bundle manifests generate generate-deepcopy generate-crds
 
 generate-deepcopy: controller-gen
 	@$(CONTROLLER_GEN) paths="$(PKG)/..." object
@@ -246,7 +265,7 @@ bundle: generate-crds kustomize
 	@$(MAKE) $(MK_OPTIONS) -C $(GRANT) init
 	@$(MAKE) $(MK_OPTIONS) -C $(MANAGER) init
 # (Re)-generate the manifests directory
-	@operator-sdk generate kustomize manifests \
+	@$(OPERATOR_SDK) generate kustomize manifests \
 		--apis-dir $(PKG)/apis \
 		--input-dir $(MANIFESTS) \
 		--output-dir $(MANIFESTS)
@@ -258,7 +277,7 @@ bundle: generate-crds kustomize
 	@cd $(MANIFESTS) && $(KUSTOMIZE) edit set image $(DEFAULT_IMAGE)=$(IMAGE):$(TAG)
 # Generates the bundle complete with manifests
 	@$(KUSTOMIZE) build $(KOPTIONS) $(MANIFESTS) | \
-		operator-sdk generate bundle \
+		$(OPERATOR_SDK) generate bundle \
 			-q --overwrite --version $(VERSION) \
 			--kustomize-dir $(MANIFESTS) $(BUNDLE_METADATA_OPTS)
 # Remove unserved CRDs from owned section
@@ -268,7 +287,7 @@ bundle: generate-crds kustomize
 # Moves the docker file into the bundle directory
 	@mv bundle.Dockerfile $(BUNDLE_DIR)/Dockerfile && \
 		sed -i 's/bundle\///g' $(BUNDLE_DIR)/Dockerfile
-	@operator-sdk bundle validate $(BUNDLE_DIR)
+	@$(OPERATOR_SDK) bundle validate $(BUNDLE_DIR)
 
 # Build the bundle image.
 .PHONY: bundle-build
