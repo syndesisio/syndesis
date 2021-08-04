@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/go-logr/logr"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -35,8 +35,8 @@ type baseAction struct {
 var actionLog = logf.Log.WithName("action")
 
 type SyndesisOperatorAction interface {
-	CanExecute(syndesis *v1beta2.Syndesis) bool
-	Execute(ctx context.Context, syndesis *v1beta2.Syndesis) error
+	CanExecute(syndesis *synapi.Syndesis) bool
+	Execute(ctx context.Context, syndesis *synapi.Syndesis) error
 }
 
 // NewOperatorActions gives the default set of actions operator will perform
@@ -62,7 +62,7 @@ func newBaseAction(mgr manager.Manager, clientTools *clienttools.ClientTools, ty
 	}
 }
 
-func syndesisPhaseIs(syndesis *v1beta2.Syndesis, statuses ...v1beta2.SyndesisPhase) bool {
+func syndesisPhaseIs(syndesis *synapi.Syndesis, statuses ...synapi.SyndesisPhase) bool {
 	if syndesis == nil {
 		return false
 	}

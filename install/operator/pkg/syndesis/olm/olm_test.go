@@ -24,7 +24,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
 )
@@ -35,7 +35,7 @@ func TestManifest_Generate(t *testing.T) {
 	}
 
 	clientTools := syntesting.FakeClientTools()
-	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &v1beta2.Syndesis{})
+	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &synapi.Syndesis{})
 	assert.NoError(t, err)
 
 	dir, err := ioutil.TempDir("/tmp", "olm-generate-test-")
@@ -72,7 +72,7 @@ func TestManifest_ensureDir(t *testing.T) {
 	}
 
 	clientTools := syntesting.FakeClientTools()
-	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &v1beta2.Syndesis{})
+	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &synapi.Syndesis{})
 	assert.NoError(t, err)
 
 	dir, err := ioutil.TempDir("/tmp", "olm-generate-test-")

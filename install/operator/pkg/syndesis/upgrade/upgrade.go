@@ -33,7 +33,7 @@ import (
 
 	"github.com/go-logr/logr"
 	oappsv1 "github.com/openshift/api/apps/v1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	appsv1 "k8s.io/api/apps/v1"
 	k8serr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -102,7 +102,7 @@ type upgrade struct {
 	backup      sbackup.Runner
 	attempts    []result
 	ctx         context.Context
-	syndesis    *v1beta2.Syndesis
+	syndesis    *synapi.Syndesis
 	clientTools *clienttools.ClientTools
 }
 
@@ -159,7 +159,7 @@ func (u *upgrade) InstallFailed() (count int) {
 }
 
 // build the upgrade struct
-func Build(ctx context.Context, log logr.Logger, syndesis *v1beta2.Syndesis, clientTools *clienttools.ClientTools) (Upgrader, error) {
+func Build(ctx context.Context, log logr.Logger, syndesis *synapi.Syndesis, clientTools *clienttools.ClientTools) (Upgrader, error) {
 	base := step{
 		log:         log,
 		executed:    false,

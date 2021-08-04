@@ -21,7 +21,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	sbackup "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/backup"
 )
 
@@ -31,7 +31,7 @@ type backup struct {
 	sb   sbackup.Runner
 }
 
-func newBackup(base step, s *v1beta2.Syndesis) (*backup, error) {
+func newBackup(base step, s *synapi.Syndesis) (*backup, error) {
 
 	bkp, err := sbackup.NewBackup(base.context, base.clientTools, s,
 		strings.Join([]string{"/tmp/", strconv.FormatInt(time.Now().Unix(), 10)}, ""))

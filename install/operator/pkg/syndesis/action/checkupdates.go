@@ -6,7 +6,7 @@ import (
 
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
@@ -24,13 +24,13 @@ func newCheckUpdatesAction(mgr manager.Manager, clientTools *clienttools.ClientT
 	}
 }
 
-func (a checkUpdatesAction) CanExecute(syndesis *v1beta2.Syndesis) bool {
+func (a checkUpdatesAction) CanExecute(syndesis *synapi.Syndesis) bool {
 	return syndesisPhaseIs(syndesis,
-		v1beta2.SyndesisPhaseInstalled,
-		v1beta2.SyndesisPhaseStartupFailed)
+		synapi.SyndesisPhaseInstalled,
+		synapi.SyndesisPhaseStartupFailed)
 }
 
-func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis) error {
+func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) error {
 	if a.operatorVersion == "" {
 		a.operatorVersion = pkg.DefaultOperatorTag
 	}
@@ -48,11 +48,11 @@ func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *v1beta2.Synde
  * needed to avoid race conditions where k8s wasn't able to update or
  * kubernetes didn't change the object yet
  */
-func (a checkUpdatesAction) setPhaseToUpgrading(ctx context.Context, syndesis *v1beta2.Syndesis) (err error) {
+func (a checkUpdatesAction) setPhaseToUpgrading(ctx context.Context, syndesis *synapi.Syndesis) (err error) {
 	target := syndesis.DeepCopy()
-	target.Status.Phase = v1beta2.SyndesisPhaseUpgrading
+	target.Status.Phase = synapi.SyndesisPhaseUpgrading
 	target.Status.TargetVersion = a.operatorVersion
-	target.Status.Reason = v1beta2.SyndesisStatusReasonMissing
+	target.Status.Reason = synapi.SyndesisStatusReasonMissing
 	target.Status.Description = "Upgrading from " + syndesis.Status.Version + " to " + a.operatorVersion
 	target.Status.LastUpgradeFailure = nil
 	target.Status.UpgradeAttempts = 0

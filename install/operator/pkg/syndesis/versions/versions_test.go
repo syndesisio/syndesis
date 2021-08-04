@@ -34,104 +34,110 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
-func Test_syndesisAPI_unstructuredToV1Beta2(t *testing.T) {
+func Test_syndesisAPI_unstructuredToV1Beta3(t *testing.T) {
 	type args struct {
 		obj unstructured.Unstructured
 	}
 	tests := []struct {
 		name    string
 		args    args
-		wantS   *v1beta2.Syndesis
+		wantS   *v1beta3.Syndesis
 		wantErr bool
 	}{
 		{
+			"An empty instance v1beta3 should be fine",
+			args{obj: getRuntimeObjectAsUnstructured(&v1beta3.Syndesis{})},
+			&v1beta3.Syndesis{}, false,
+		},
+		{
 			"An empty instance v1beta2 should be fine",
 			args{obj: getRuntimeObjectAsUnstructured(&v1beta2.Syndesis{})},
-			&v1beta2.Syndesis{}, false,
+			&v1beta3.Syndesis{}, false,
 		},
 		{
 			"An empty instance v1beta1 should be fine",
 			args{obj: getRuntimeObjectAsUnstructured(&v1beta1.Syndesis{})},
-			&v1beta2.Syndesis{}, false,
+			&v1beta3.Syndesis{}, false,
 		},
 		{
 			"An empty instance of v1alpha1 should be fine",
 			args{obj: getRuntimeObjectAsUnstructured(&v1alpha1.Syndesis{})},
-			&v1beta2.Syndesis{}, false,
+			&v1beta3.Syndesis{}, false,
 		},
 		{
-			"An instance v1beta2 populated should be fine",
-			args{obj: getRuntimeObjectAsUnstructured(&v1beta2.Syndesis{Spec: v1beta2.SyndesisSpec{Components: v1beta2.ComponentsSpec{Server: v1beta2.ServerConfiguration{Resources: v1beta2.Resources{Limit: v1beta2.ResourceParams{Memory: "800Mi"}}}}}})},
-			&v1beta2.Syndesis{Spec: v1beta2.SyndesisSpec{Components: v1beta2.ComponentsSpec{Server: v1beta2.ServerConfiguration{Resources: v1beta2.Resources{Limit: v1beta2.ResourceParams{Memory: "800Mi"}}}}}}, false,
+			"An instance v1beta3 populated should be fine",
+			args{obj: getRuntimeObjectAsUnstructured(&v1beta3.Syndesis{Spec: v1beta3.SyndesisSpec{Components: v1beta3.ComponentsSpec{Server: v1beta3.ServerConfiguration{Resources: v1beta3.Resources{Limit: v1beta3.ResourceParams{Memory: "800Mi"}}}}}})},
+			&v1beta3.Syndesis{Spec: v1beta3.SyndesisSpec{Components: v1beta3.ComponentsSpec{Server: v1beta3.ServerConfiguration{Resources: v1beta3.Resources{Limit: v1beta3.ResourceParams{Memory: "800Mi"}}}}}}, false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			api := syndesisApi{}
-			gotS, err := api.unstructuredToV1Beta2(tt.args.obj)
+			gotS, err := api.unstructuredToV1Beta3(tt.args.obj)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("unstructuredToV1Beta2() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("unstructuredToV1Beta3() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotS, tt.wantS) {
-				t.Errorf("unstructuredToV1Beta2() gotS = %v, want %v", gotS, tt.wantS)
+				t.Errorf("unstructuredToV1Beta3() gotS = %v, want %v", gotS, tt.wantS)
 			}
 		})
 	}
 }
 
-func Test_syndesisAPI_v1alpha1ToV1beta2(t *testing.T) {
+func Test_syndesisAPI_v1alpha1ToV1beta3(t *testing.T) {
 	il := 5
 	ici := 10
 	dsc := true
 	type fields struct {
 		v1alpha1 *v1alpha1.Syndesis
-		v1beta2  *v1beta2.Syndesis
+		v1beta3  *v1beta3.Syndesis
 	}
 	tests := []struct {
 		name    string
 		fields  fields
 		wantErr bool
-		wantB   *v1beta2.Syndesis
+		wantB   *v1beta3.Syndesis
 	}{
 		{
 			"When ForceMigration is true but phase is not Installed, not changes are applied",
 			fields{
 				v1alpha1: &v1alpha1.Syndesis{Status: v1alpha1.SyndesisStatus{Phase: v1alpha1.SyndesisPhaseInstalling}},
-				v1beta2:  &v1beta2.Syndesis{Spec: v1beta2.SyndesisSpec{ForceMigration: true}},
+				v1beta3:  &v1beta3.Syndesis{Spec: v1beta3.SyndesisSpec{ForceMigration: true}},
 			},
 			false,
-			&v1beta2.Syndesis{Spec: v1beta2.SyndesisSpec{ForceMigration: true}},
+			&v1beta3.Syndesis{Spec: v1beta3.SyndesisSpec{ForceMigration: true}},
 		},
 		{
 			"When phase is Installed but ForceMigration is false, not changes are applied",
 			fields{
 				v1alpha1: &v1alpha1.Syndesis{Status: v1alpha1.SyndesisStatus{Phase: v1alpha1.SyndesisPhaseInstalled}},
-				v1beta2:  &v1beta2.Syndesis{Spec: v1beta2.SyndesisSpec{ForceMigration: false}},
+				v1beta3:  &v1beta3.Syndesis{Spec: v1beta3.SyndesisSpec{ForceMigration: false}},
 			},
 			false,
-			&v1beta2.Syndesis{Spec: v1beta2.SyndesisSpec{ForceMigration: false}},
+			&v1beta3.Syndesis{Spec: v1beta3.SyndesisSpec{ForceMigration: false}},
 		},
 		{
 			"When v1alpha1 is migrated, spec changes",
 			fields{
 				v1alpha1: &v1alpha1.Syndesis{Status: v1alpha1.SyndesisStatus{Phase: v1alpha1.SyndesisPhaseInstalled}},
-				v1beta2:  &v1beta2.Syndesis{Spec: v1beta2.SyndesisSpec{ForceMigration: true}},
+				v1beta3:  &v1beta3.Syndesis{Spec: v1beta3.SyndesisSpec{ForceMigration: true}},
 			},
 			false,
-			&v1beta2.Syndesis{
+			&v1beta3.Syndesis{
 				TypeMeta: metav1.TypeMeta{
 					Kind:       "Syndesis",
-					APIVersion: "syndesis.io/v1beta2",
+					APIVersion: "syndesis.io/v1beta3",
 				},
-				Spec: v1beta2.SyndesisSpec{ForceMigration: false},
-				Status: v1beta2.SyndesisStatus{
-					Phase:       v1beta2.SyndesisPhaseInstalled,
-					Reason:      v1beta2.SyndesisStatusReasonMigrated,
-					Description: fmt.Sprintf("App migrated from %s to %s", v1alpha1.SchemeGroupVersion.String(), v1beta2.SchemeGroupVersion.String()),
+				Spec: v1beta3.SyndesisSpec{ForceMigration: false},
+				Status: v1beta3.SyndesisStatus{
+					Phase:       v1beta3.SyndesisPhaseInstalled,
+					Reason:      v1beta3.SyndesisStatusReasonMigrated,
+					Description: fmt.Sprintf("App migrated from %s to %s", v1alpha1.SchemeGroupVersion.String(), v1beta3.SchemeGroupVersion.String()),
 				},
 			},
 		},
@@ -223,54 +229,54 @@ func Test_syndesisAPI_v1alpha1ToV1beta2(t *testing.T) {
 						},
 					},
 				},
-				v1beta2: &v1beta2.Syndesis{Spec: v1beta2.SyndesisSpec{ForceMigration: true}},
+				v1beta3: &v1beta3.Syndesis{Spec: v1beta3.SyndesisSpec{ForceMigration: true}},
 			},
 			false,
-			&v1beta2.Syndesis{
+			&v1beta3.Syndesis{
 				TypeMeta: metav1.TypeMeta{
 					Kind:       "Syndesis",
-					APIVersion: "syndesis.io/v1beta2",
+					APIVersion: "syndesis.io/v1beta3",
 				},
-				Status: v1beta2.SyndesisStatus{
-					Phase:       v1beta2.SyndesisPhaseInstalled,
-					Reason:      v1beta2.SyndesisStatusReasonMigrated,
-					Description: fmt.Sprintf("App migrated from %s to %s", v1alpha1.SchemeGroupVersion.String(), v1beta2.SchemeGroupVersion.String()),
+				Status: v1beta3.SyndesisStatus{
+					Phase:       v1beta3.SyndesisPhaseInstalled,
+					Reason:      v1beta3.SyndesisStatusReasonMigrated,
+					Description: fmt.Sprintf("App migrated from %s to %s", v1alpha1.SchemeGroupVersion.String(), v1beta3.SchemeGroupVersion.String()),
 				},
-				Spec: v1beta2.SyndesisSpec{
+				Spec: v1beta3.SyndesisSpec{
 					ForceMigration: false,
 					RouteHostname:  "routehostname",
-					Addons: v1beta2.AddonsSpec{
-						Jaeger: v1beta2.JaegerConfiguration{Enabled: false},
-						Ops:    v1beta2.AddonSpec{Enabled: true},
-						Todo:   v1beta2.AddonSpec{Enabled: true},
+					Addons: v1beta3.AddonsSpec{
+						Jaeger: v1beta3.JaegerConfiguration{Enabled: false},
+						Ops:    v1beta3.AddonSpec{Enabled: true},
+						Todo:   v1beta3.AddonSpec{Enabled: true},
 					},
-					Components: v1beta2.ComponentsSpec{
-						Oauth: v1beta2.OauthConfiguration{SarNamespace: "sar namespace", DisableSarCheck: dsc},
-						Server: v1beta2.ServerConfiguration{
-							Features: v1beta2.ServerFeatures{
+					Components: v1beta3.ComponentsSpec{
+						Oauth: v1beta3.OauthConfiguration{SarNamespace: "sar namespace", DisableSarCheck: dsc},
+						Server: v1beta3.ServerConfiguration{
+							Features: v1beta3.ServerFeatures{
 								IntegrationLimit:              il,
 								IntegrationStateCheckInterval: ici,
 								ManagementUrlFor3scale:        "ManagementUrlFor3scale",
-								Maven: v1beta2.MavenConfiguration{
+								Maven: v1beta3.MavenConfiguration{
 									Repositories: map[string]string{
 										"repo1": "repo1url",
 										"repo2": "repo2url",
 									},
 								},
 							},
-							Resources: v1beta2.Resources{
-								Limit: v1beta2.ResourceParams{
+							Resources: v1beta3.Resources{
+								Limit: v1beta3.ResourceParams{
 									Memory: "500m",
 								},
-								Request: v1beta2.ResourceParams{
+								Request: v1beta3.ResourceParams{
 									Memory: "500m",
 								},
 							},
 						},
-						Database:   v1beta2.DatabaseConfiguration{User: "user", Name: "database", Resources: v1beta2.ResourcesWithPersistentVolume{VolumeCapacity: "1Gi"}},
-						Meta:       v1beta2.MetaConfiguration{Resources: v1beta2.ResourcesWithPersistentVolume{Limit: v1beta2.ResourceParams{Memory: "300m"}, Request: v1beta2.ResourceParams{Memory: "300m"}, VolumeCapacity: "5Gi"}},
-						Prometheus: v1beta2.PrometheusConfiguration{Resources: v1beta2.ResourcesWithPersistentVolume{Limit: v1beta2.ResourceParams{Memory: "700m"}, Request: v1beta2.ResourceParams{Memory: "700m"}, VolumeCapacity: "2Gi"}},
-						Grafana:    v1beta2.GrafanaConfiguration{Resources: v1beta2.Resources{Limit: v1beta2.ResourceParams{Memory: "500m"}, Request: v1beta2.ResourceParams{Memory: "500m"}}},
+						Database:   v1beta3.DatabaseConfiguration{User: "user", Name: "database", Resources: v1beta3.ResourcesWithPersistentVolume{VolumeCapacity: "1Gi"}},
+						Meta:       v1beta3.MetaConfiguration{Resources: v1beta3.ResourcesWithPersistentVolume{Limit: v1beta3.ResourceParams{Memory: "300m"}, Request: v1beta3.ResourceParams{Memory: "300m"}, VolumeCapacity: "5Gi"}},
+						Prometheus: v1beta3.PrometheusConfiguration{Resources: v1beta3.ResourcesWithPersistentVolume{Limit: v1beta3.ResourceParams{Memory: "700m"}, Request: v1beta3.ResourceParams{Memory: "700m"}, VolumeCapacity: "2Gi"}},
+						Grafana:    v1beta3.GrafanaConfiguration{Resources: v1beta3.Resources{Limit: v1beta3.ResourceParams{Memory: "500m"}, Request: v1beta3.ResourceParams{Memory: "500m"}}},
 					},
 				},
 			},
@@ -280,12 +286,12 @@ func Test_syndesisAPI_v1alpha1ToV1beta2(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			api := syndesisApi{
 				v1alpha1: tt.fields.v1alpha1,
-				v1beta2:  tt.fields.v1beta2,
+				v1beta3:  tt.fields.v1beta3,
 			}
-			if err := api.v1alpha1ToV1beta2(); (err != nil) != tt.wantErr {
-				t.Errorf("v1alpha1ToV1beta2() error = %v, wantErr %v", err, tt.wantErr)
+			if err := api.v1alpha1ToV1beta3(); (err != nil) != tt.wantErr {
+				t.Errorf("v1alpha1ToV1beta3() error = %v, wantErr %v", err, tt.wantErr)
 			} else {
-				assert.Equal(t, tt.wantB, api.v1beta2)
+				assert.Equal(t, tt.wantB, api.v1beta3)
 			}
 		})
 	}
@@ -448,6 +454,169 @@ func Test_syndesisAPI_v1beta1ToV1beta2(t *testing.T) {
 				t.Errorf("v1beta1ToV1beta2() error = %v, wantErr %v", err, tt.wantErr)
 			} else {
 				assert.Equal(t, tt.wantB, api.v1beta2)
+			}
+		})
+	}
+}
+
+func Test_syndesisAPI_v1beta2ToV1beta3(t *testing.T) {
+	il := 5
+	ici := 10
+	dsc := true
+	type fields struct {
+		v1beta2 *v1beta2.Syndesis
+		v1beta3 *v1beta3.Syndesis
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		wantErr bool
+		wantB   *v1beta3.Syndesis
+	}{
+		{
+			"When ForceMigration is true but phase is not Installed, not changes are applied",
+			fields{
+				v1beta2: &v1beta2.Syndesis{Status: v1beta2.SyndesisStatus{Phase: v1beta2.SyndesisPhaseInstalling}},
+				v1beta3: &v1beta3.Syndesis{Spec: v1beta3.SyndesisSpec{ForceMigration: true}},
+			},
+			false,
+			&v1beta3.Syndesis{Spec: v1beta3.SyndesisSpec{ForceMigration: true}},
+		},
+		{
+			"When phase is Installed but ForceMigration is false, not changes are applied",
+			fields{
+				v1beta2: &v1beta2.Syndesis{Status: v1beta2.SyndesisStatus{Phase: v1beta2.SyndesisPhaseInstalled}},
+				v1beta3: &v1beta3.Syndesis{Spec: v1beta3.SyndesisSpec{ForceMigration: false}},
+			},
+			false,
+			&v1beta3.Syndesis{Spec: v1beta3.SyndesisSpec{ForceMigration: false}},
+		},
+		{
+			"When v1beta2 is migrated, spec changes",
+			fields{
+				v1beta2: &v1beta2.Syndesis{
+					TypeMeta: metav1.TypeMeta{
+						Kind:       "Syndesis",
+						APIVersion: "syndesis.io/v1beta2",
+					},
+					Status: v1beta2.SyndesisStatus{Phase: v1beta2.SyndesisPhaseInstalled}},
+				v1beta3: &v1beta3.Syndesis{Spec: v1beta3.SyndesisSpec{ForceMigration: true}},
+			},
+			false,
+			&v1beta3.Syndesis{
+				TypeMeta: metav1.TypeMeta{
+					Kind:       "Syndesis",
+					APIVersion: "syndesis.io/v1beta3",
+				},
+				Spec: v1beta3.SyndesisSpec{ForceMigration: false},
+				Status: v1beta3.SyndesisStatus{
+					Phase:       v1beta3.SyndesisPhaseInstalled,
+					Reason:      v1beta3.SyndesisStatusReasonMigrated,
+					Description: fmt.Sprintf("App migrated from %s to %s", v1beta2.SchemeGroupVersion.String(), v1beta3.SchemeGroupVersion.String()),
+				},
+			},
+		},
+		{
+			"Migration, check fields",
+			fields{
+				v1beta2: &v1beta2.Syndesis{
+					TypeMeta: metav1.TypeMeta{
+						Kind:       "Syndesis",
+						APIVersion: "syndesis.io/v1beta2",
+					},
+					Status: v1beta2.SyndesisStatus{
+						Phase:       v1beta2.SyndesisPhaseInstalled,
+						Reason:      v1beta2.SyndesisStatusReasonMigrated,
+						Description: fmt.Sprintf("App migrated from %s to %s", v1beta2.SchemeGroupVersion.String(), v1beta2.SchemeGroupVersion.String()),
+					},
+					Spec: v1beta2.SyndesisSpec{
+						ForceMigration: false,
+						RouteHostname:  "routehostname",
+						Addons: v1beta2.AddonsSpec{
+							Jaeger: v1beta2.JaegerConfiguration{Enabled: false},
+							Ops:    v1beta2.AddonSpec{Enabled: true},
+							Todo:   v1beta2.AddonSpec{Enabled: true},
+						},
+						Components: v1beta2.ComponentsSpec{
+							Oauth: v1beta2.OauthConfiguration{SarNamespace: "sar namespace", DisableSarCheck: dsc},
+							Server: v1beta2.ServerConfiguration{
+								Features: v1beta2.ServerFeatures{
+									IntegrationLimit:              il,
+									IntegrationStateCheckInterval: ici,
+									DeployIntegrations: true,
+									ManagementUrlFor3scale:        "ManagementUrlFor3scale",
+									Maven: v1beta2.MavenConfiguration{
+										Repositories: map[string]string{
+											"repo1": "repo1url",
+											"repo2": "repo2url",
+										},
+									},
+								},
+								Resources: v1beta2.Resources{Limit: v1beta2.ResourceParams{Memory: "500m"}, Request: v1beta2.ResourceParams{Memory: "500m"}},
+							},
+							Database:   v1beta2.DatabaseConfiguration{User: "user", Name: "database", Resources: v1beta2.ResourcesWithPersistentVolume{VolumeCapacity: "1Gi"}},
+							Meta:       v1beta2.MetaConfiguration{Resources: v1beta2.ResourcesWithPersistentVolume{Limit: v1beta2.ResourceParams{Memory: "300m"}, Request: v1beta2.ResourceParams{Memory: "300m"}, VolumeCapacity: "5Gi"}},
+							Prometheus: v1beta2.PrometheusConfiguration{Resources: v1beta2.ResourcesWithPersistentVolume{Limit: v1beta2.ResourceParams{Memory: "700m"}, Request: v1beta2.ResourceParams{Memory: "700m"}, VolumeCapacity: "2Gi"}},
+							Grafana:    v1beta2.GrafanaConfiguration{Resources: v1beta2.Resources{Limit: v1beta2.ResourceParams{Memory: "500m"}, Request: v1beta2.ResourceParams{Memory: "500m"}}},
+						},
+					},
+				},
+				v1beta3: &v1beta3.Syndesis{Spec: v1beta3.SyndesisSpec{ForceMigration: true}},
+			},
+			false,
+			&v1beta3.Syndesis{
+				TypeMeta: metav1.TypeMeta{
+					Kind:       "Syndesis",
+					APIVersion: "syndesis.io/v1beta3",
+				},
+				Status: v1beta3.SyndesisStatus{
+					Phase:       v1beta3.SyndesisPhaseInstalled,
+					Reason:      v1beta3.SyndesisStatusReasonMigrated,
+					Description: fmt.Sprintf("App migrated from %s to %s", v1beta2.SchemeGroupVersion.String(), v1beta3.SchemeGroupVersion.String()),
+				},
+				Spec: v1beta3.SyndesisSpec{
+					ForceMigration: false,
+					RouteHostname:  "routehostname",
+					Addons: v1beta3.AddonsSpec{
+						Jaeger: v1beta3.JaegerConfiguration{Enabled: false},
+						Ops:    v1beta3.AddonSpec{Enabled: true},
+						Todo:   v1beta3.AddonSpec{Enabled: true},
+					},
+					Components: v1beta3.ComponentsSpec{
+						Oauth: v1beta3.OauthConfiguration{SarNamespace: "sar namespace", DisableSarCheck: dsc},
+						Server: v1beta3.ServerConfiguration{
+							Features: v1beta3.ServerFeatures{
+								IntegrationLimit:              il,
+								IntegrationStateCheckInterval: ici,
+								ManagementUrlFor3scale:        "ManagementUrlFor3scale",
+								Maven: v1beta3.MavenConfiguration{
+									Repositories: map[string]string{
+										"repo1": "repo1url",
+										"repo2": "repo2url",
+									},
+								},
+							},
+							Resources: v1beta3.Resources{Limit: v1beta3.ResourceParams{Memory: "500m"}, Request: v1beta3.ResourceParams{Memory: "500m"}},
+						},
+						Database:   v1beta3.DatabaseConfiguration{User: "user", Name: "database", Resources: v1beta3.ResourcesWithPersistentVolume{VolumeCapacity: "1Gi"}},
+						Meta:       v1beta3.MetaConfiguration{Resources: v1beta3.ResourcesWithPersistentVolume{Limit: v1beta3.ResourceParams{Memory: "300m"}, Request: v1beta3.ResourceParams{Memory: "300m"}, VolumeCapacity: "5Gi"}},
+						Prometheus: v1beta3.PrometheusConfiguration{Resources: v1beta3.ResourcesWithPersistentVolume{Limit: v1beta3.ResourceParams{Memory: "700m"}, Request: v1beta3.ResourceParams{Memory: "700m"}, VolumeCapacity: "2Gi"}},
+						Grafana:    v1beta3.GrafanaConfiguration{Resources: v1beta3.Resources{Limit: v1beta3.ResourceParams{Memory: "500m"}, Request: v1beta3.ResourceParams{Memory: "500m"}}},
+					},
+				},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			api := syndesisApi{
+				v1beta2: tt.fields.v1beta2,
+				v1beta3: tt.fields.v1beta3,
+			}
+			if err := api.v1beta2ToV1beta3(); (err != nil) != tt.wantErr {
+				t.Errorf("v1beta2ToV1beta3() error = %v, wantErr %v", err, tt.wantErr)
+			} else {
+				assert.Equal(t, tt.wantB, api.v1beta3)
 			}
 		})
 	}

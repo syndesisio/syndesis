@@ -7,7 +7,7 @@ import (
 	"reflect"
 
 	oappsv1 "github.com/openshift/api/apps/v1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -24,18 +24,18 @@ type patchOp struct {
 
 type podSchedulingAction struct {
 	baseAction
-	currentIntegrationScheduling v1beta2.SchedulingSpec
+	currentIntegrationScheduling synapi.SchedulingSpec
 	updateIntegrationScheduling  bool
 }
 
 func newPodSchedulingAction(mgr manager.Manager, clientTools *clienttools.ClientTools) SyndesisOperatorAction {
 	return &podSchedulingAction{
-		newBaseAction(mgr, clientTools, "pod_scheduling"), v1beta2.SchedulingSpec{}, false,
+		newBaseAction(mgr, clientTools, "pod_scheduling"), synapi.SchedulingSpec{}, false,
 	}
 }
 
-func (a *podSchedulingAction) CanExecute(syndesis *v1beta2.Syndesis) bool {
-	canExecute := syndesisPhaseIs(syndesis, v1beta2.SyndesisPhaseInstalled)
+func (a *podSchedulingAction) CanExecute(syndesis *synapi.Syndesis) bool {
+	canExecute := syndesisPhaseIs(syndesis, synapi.SyndesisPhaseInstalled)
 	if canExecute {
 		a.updateIntegrationScheduling = !reflect.DeepEqual(a.currentIntegrationScheduling, syndesis.Spec.IntegrationScheduling)
 		canExecute = a.updateIntegrationScheduling
@@ -43,14 +43,14 @@ func (a *podSchedulingAction) CanExecute(syndesis *v1beta2.Syndesis) bool {
 	return canExecute
 }
 
-func (a *podSchedulingAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis) error {
+func (a *podSchedulingAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) error {
 	if a.updateIntegrationScheduling {
 		a.executeIntegrationScheduling(ctx, syndesis)
 	}
 	return nil
 }
 
-func (a *podSchedulingAction) executeIntegrationScheduling(ctx context.Context, syndesis *v1beta2.Syndesis) {
+func (a *podSchedulingAction) executeIntegrationScheduling(ctx context.Context, syndesis *synapi.Syndesis) {
 	list := oappsv1.DeploymentConfigList{
 		TypeMeta: metav1.TypeMeta{
 			Kind: "DeploymentConfig",

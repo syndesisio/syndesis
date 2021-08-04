@@ -84,7 +84,6 @@ Syndesis:
                 IntegrationLimit: 0
                 IntegrationStateCheckInterval: 60
                 DemoData: false
-                DeployIntegrations: true
                 TestSupport: false
                 OpenShiftMaster: "https://localhost:8443"
                 ManagementUrlFor3scale: ""

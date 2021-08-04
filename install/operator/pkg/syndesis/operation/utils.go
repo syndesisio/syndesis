@@ -4,14 +4,14 @@ import (
 	"strings"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
-func SetNamespaceAndOwnerReference(resource interface{}, syndesis *v1beta2.Syndesis) {
+func SetNamespaceAndOwnerReference(resource interface{}, syndesis *synapi.Syndesis) {
 	object := util.ToMetaObject(resource)
 	if r, ok := resource.(unstructured.Unstructured); ok {
 		//
@@ -29,8 +29,8 @@ func SetNamespaceAndOwnerReference(resource interface{}, syndesis *v1beta2.Synde
 
 	object.SetOwnerReferences([]metav1.OwnerReference{
 		*metav1.NewControllerRef(syndesis, schema.GroupVersionKind{
-			Group:   v1beta2.SchemeGroupVersion.Group,
-			Version: v1beta2.SchemeGroupVersion.Version,
+			Group:   synapi.SchemeGroupVersion.Group,
+			Version: synapi.SchemeGroupVersion.Version,
 			Kind:    syndesis.Kind,
 		}),
 	})

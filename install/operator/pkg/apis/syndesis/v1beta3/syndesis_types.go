@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1beta2
+package v1beta3
 
 import (
 	v1 "k8s.io/api/core/v1"
@@ -201,9 +201,6 @@ type ServerFeatures struct {
 	// Interval for checking the state of the integrations
 	IntegrationStateCheckInterval int `json:"integrationStateCheckInterval,omitempty"`
 
-	// Whether we deploy integrations
-	DeployIntegrations bool `json:"deployIntegrations,omitempty"`
-
 	// Maven settings
 	Maven MavenConfiguration `json:"maven,omitempty"`
 
@@ -320,7 +317,7 @@ const (
 // +k8s:openapi-gen=true
 // +kubebuilder:subresource:status
 // +kubebuilder:object:root=true
-// +kubebuilder:unservedversion
+// +kubebuilder:storageversion
 // +kubebuilder:resource:path=syndesises,scope=Namespaced
 // +kubebuilder:printcolumn:name="Phase",description="The syndesis phase",type=string,JSONPath=`.status.phase`
 // +kubebuilder:printcolumn:name="Version",description="The syndesis version",type=string,JSONPath=`.status.version`

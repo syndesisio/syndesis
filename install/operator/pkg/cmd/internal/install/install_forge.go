@@ -26,7 +26,7 @@ import (
 	"unicode"
 
 	"github.com/spf13/cast"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	conf "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -37,7 +37,6 @@ import (
 
 var exceptionalItems = []string{
 	"ENDPOINTS_TEST_SUPPORT_ENABLED",
-	"CONTROLLERS_INTEGRATION_ENABLED",
 	"INTEGRATION_STATE_CHECK_INTERVAL",
 	"MAX_INTEGRATIONS_PER_USER",
 }
@@ -94,7 +93,6 @@ const (
 	EnvUpgradeVolumeCapacity  SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
 	EnvManagementUrlFor3scale SyndesisEnvVar = "OPENSHIFT_MANAGEMENT_URL_FOR3SCALE"
 
-	EnvControllersIntegrationEnabled SyndesisEnvVar = "CONTROLLERS_INTEGRATION_ENABLED"
 	EnvImageStreamNamespace          SyndesisEnvVar = "IMAGE_STREAM_NAMESPACE"
 
 	EnvFuseS2iImage        SyndesisEnvVar = "FUSE_S2I_IMAGE"
@@ -140,7 +138,6 @@ var allTemplateParams = map[SyndesisEnvVar]ConfigSpec{
 	EnvMaxIntegrationsPerUser:        {Value: "1", Required: true, Description: "Maximum number of integrations single user can create"},
 	EnvIntegrationStateCheckInterval: {Value: "60", Required: true, Description: "Interval for checking the state of the integrations"},
 	EnvSarNamespace:                  {Required: true, Description: "The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation"},
-	EnvControllersIntegrationEnabled: {Value: "true", Description: "Should deployment of integrations be enabled?"},
 	EnvManagementUrlFor3scale:        {Value: "", Description: "Url to 3scale for exposing services"},
 
 	EnvFuseS2iImage:        {Value: EMPTY_FIELD, Required: true, Description: "The Fuse S2i image and tag"},
@@ -166,7 +163,7 @@ func (o *Install) installForge() error {
 	// Create an empty syndesis CR which will
 	// be filled with parameters placeholder values
 	//
-	syndesis, _ := v1beta2.NewSyndesis(convertToParam(string(EnvOpenShiftProject)))
+	syndesis, _ := synapi.NewSyndesis(convertToParam(string(EnvOpenShiftProject)))
 	configuration, err := conf.GetProperties(o.Context, conf.TemplateConfig, o.ClientTools(), syndesis)
 	if err != nil {
 		return err

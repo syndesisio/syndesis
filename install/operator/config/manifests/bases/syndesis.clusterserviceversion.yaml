@@ -40,7 +40,7 @@ spec:
       - kind: Subscription
         name: ""
         version: operators.coreos.com/v1alpha1
-      version: v1beta2
+      version: v1beta3
   description: |
     ### Syndesis operator
     Syndesis is a flexible and customizable, open source platform that provides core integration capabilities as a service.

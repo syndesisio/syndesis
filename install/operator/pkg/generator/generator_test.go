@@ -13,7 +13,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -23,36 +23,36 @@ import (
 )
 
 func TestGenerator(t *testing.T) {
-	syndesis := &v1beta2.Syndesis{
-		Spec: v1beta2.SyndesisSpec{
-			Addons: v1beta2.AddonsSpec{
-				Jaeger: v1beta2.JaegerConfiguration{
+	syndesis := &synapi.Syndesis{
+		Spec: synapi.SyndesisSpec{
+			Addons: synapi.AddonsSpec{
+				Jaeger: synapi.JaegerConfiguration{
 					Enabled:      true,
 					SamplerType:  "const",
 					SamplerParam: "0",
 				},
-				Ops:  v1beta2.AddonSpec{Enabled: true},
-				Todo: v1beta2.AddonSpec{Enabled: true},
-				PublicApi: v1beta2.PublicApiConfiguration{
+				Ops:  synapi.AddonSpec{Enabled: true},
+				Todo: synapi.AddonSpec{Enabled: true},
+				PublicApi: synapi.PublicApiConfiguration{
 					Enabled:       true,
 					RouteHostname: "mypublichost.com",
 				},
 			},
-			Components: v1beta2.ComponentsSpec{
-				Oauth: v1beta2.OauthConfiguration{},
-				Server: v1beta2.ServerConfiguration{
-					Resources: v1beta2.Resources{
-						Limit: v1beta2.ResourceParams{
+			Components: synapi.ComponentsSpec{
+				Oauth: synapi.OauthConfiguration{},
+				Server: synapi.ServerConfiguration{
+					Resources: synapi.Resources{
+						Limit: synapi.ResourceParams{
 							Memory: "800Mi",
 							CPU:    "750m",
 						},
-						Request: v1beta2.ResourceParams{
+						Request: synapi.ResourceParams{
 							Memory: "256Mi",
 							CPU:    "450m",
 						},
 					},
-					Features: v1beta2.ServerFeatures{
-						Maven: v1beta2.MavenConfiguration{
+					Features: synapi.ServerFeatures{
+						Maven: synapi.MavenConfiguration{
 							Append: false,
 							Repositories: map[string]string{
 								"central":           "https://repo.maven.apache.org/maven2/",
@@ -62,44 +62,44 @@ func TestGenerator(t *testing.T) {
 						},
 					},
 				},
-				Meta: v1beta2.MetaConfiguration{
-					Resources: v1beta2.ResourcesWithPersistentVolume{
-						Limit: v1beta2.ResourceParams{
+				Meta: synapi.MetaConfiguration{
+					Resources: synapi.ResourcesWithPersistentVolume{
+						Limit: synapi.ResourceParams{
 							Memory: "512Mi",
 						},
-						Request: v1beta2.ResourceParams{
+						Request: synapi.ResourceParams{
 							Memory: "280Mi",
 						},
 						VolumeCapacity: "1Gi",
 					},
 				},
-				Database: v1beta2.DatabaseConfiguration{
+				Database: synapi.DatabaseConfiguration{
 					User: "syndesis",
 					Name: "syndesis",
 					URL:  "postgresql://syndesis-db:5432/syndesis?sslmode=disable",
-					Resources: v1beta2.ResourcesWithPersistentVolume{
-						Limit: v1beta2.ResourceParams{
+					Resources: synapi.ResourcesWithPersistentVolume{
+						Limit: synapi.ResourceParams{
 							Memory: "255Mi",
 						},
-						Request: v1beta2.ResourceParams{
+						Request: synapi.ResourceParams{
 							Memory: "255Mi",
 						},
 						VolumeCapacity: "1Gi",
 					},
 				},
-				Prometheus: v1beta2.PrometheusConfiguration{
-					Resources: v1beta2.ResourcesWithPersistentVolume{
-						Limit: v1beta2.ResourceParams{
+				Prometheus: synapi.PrometheusConfiguration{
+					Resources: synapi.ResourcesWithPersistentVolume{
+						Limit: synapi.ResourceParams{
 							Memory: "512Mi",
 						},
-						Request: v1beta2.ResourceParams{
+						Request: synapi.ResourceParams{
 							Memory: "512Mi",
 						},
 						VolumeCapacity: "1Gi",
 					},
 				},
-				Upgrade: v1beta2.UpgradeConfiguration{
-					Resources: v1beta2.VolumeOnlyResources{VolumeCapacity: "1Gi"},
+				Upgrade: synapi.UpgradeConfiguration{
+					Resources: synapi.VolumeOnlyResources{VolumeCapacity: "1Gi"},
 				},
 			},
 		},
@@ -143,7 +143,7 @@ func TestGenerator(t *testing.T) {
 
 // Run test related with Ops addon
 func TestOpsAddon(t *testing.T) {
-	syndesis := &v1beta2.Syndesis{}
+	syndesis := &synapi.Syndesis{}
 	baseDir := "./addons/ops/"
 
 	clientTools := syntesting.FakeClientTools()
@@ -172,7 +172,7 @@ func TestOpsAddon(t *testing.T) {
 // Checks syndesis-meta resources have had syndesis
 // object values correctly applied
 //
-func checkSynMeta(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta2.Syndesis) int {
+func checkSynMeta(t *testing.T, resource unstructured.Unstructured, syndesis *synapi.Syndesis) int {
 	if resource.GetName() != "syndesis-meta" {
 		return 0
 	}
@@ -186,7 +186,7 @@ func checkSynMeta(t *testing.T, resource unstructured.Unstructured, syndesis *v1
 // Checks syndesis-server resources have had syndesis
 // object values correctly applied
 //
-func checkSynServer(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta2.Syndesis) int {
+func checkSynServer(t *testing.T, resource unstructured.Unstructured, syndesis *synapi.Syndesis) int {
 	if resource.GetName() != "syndesis-server" {
 		return 0
 	}
@@ -208,7 +208,7 @@ func checkSynServer(t *testing.T, resource unstructured.Unstructured, syndesis *
 	return 1
 }
 
-func checkSynGlobalConfig(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta2.Syndesis) int {
+func checkSynGlobalConfig(t *testing.T, resource unstructured.Unstructured, syndesis *synapi.Syndesis) int {
 	if resource.GetName() != "syndesis-global-config" {
 		return 0
 	}
@@ -228,7 +228,7 @@ func checkSynGlobalConfig(t *testing.T, resource unstructured.Unstructured, synd
 	return 1
 }
 
-func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta2.Syndesis) int {
+func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis *synapi.Syndesis) int {
 	if resource.GetName() != "syndesis-ui-config" {
 		return 0
 	}
@@ -236,7 +236,7 @@ func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis
 	return 1
 }
 
-func checkSynOAuthProxy(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta2.Syndesis) int {
+func checkSynOAuthProxy(t *testing.T, resource unstructured.Unstructured, syndesis *synapi.Syndesis) int {
 	if resource.GetName() != "oauth-proxy" {
 		return 0
 	}
@@ -280,7 +280,7 @@ func assertPropStr(t *testing.T, resource map[string]interface{}, expected strin
 	}
 }
 
-func renderResource(t *testing.T, syndesis *v1beta2.Syndesis, resourcePath string) []unstructured.Unstructured {
+func renderResource(t *testing.T, syndesis *synapi.Syndesis, resourcePath string) []unstructured.Unstructured {
 	clientTools := syntesting.FakeClientTools()
 	configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", clientTools, syndesis)
 	require.NoError(t, err)
@@ -291,7 +291,7 @@ func renderResource(t *testing.T, syndesis *v1beta2.Syndesis, resourcePath strin
 	return resources
 }
 
-func checkPesistentVolumeProps(t *testing.T, syndesis *v1beta2.Syndesis, infResource string, pvTest func(t *testing.T, resource unstructured.Unstructured)) {
+func checkPesistentVolumeProps(t *testing.T, syndesis *synapi.Syndesis, infResource string, pvTest func(t *testing.T, resource unstructured.Unstructured)) {
 	resources := renderResource(t, syndesis, infResource)
 
 	for _, resource := range resources {
@@ -305,28 +305,28 @@ func checkPesistentVolumeProps(t *testing.T, syndesis *v1beta2.Syndesis, infReso
 
 func TestGeneratorComponentPVAccessMode(t *testing.T) {
 
-	resources := v1beta2.ResourcesWithPersistentVolume{
-		Limit:            v1beta2.ResourceParams{Memory: "255Mi"},
+	resources := synapi.ResourcesWithPersistentVolume{
+		Limit:            synapi.ResourceParams{Memory: "255Mi"},
 		VolumeCapacity:   "1Gi",
-		VolumeAccessMode: v1beta2.ReadOnlyMany,
+		VolumeAccessMode: synapi.ReadOnlyMany,
 	}
 
 	testData := []struct {
 		name               string
 		path               string
 		expectedAccessMode string
-		syndesis           *v1beta2.Syndesis
+		syndesis           *synapi.Syndesis
 	}{
 		{
 			name:               "syndesis-db-default",
 			path:               "./database/",
-			expectedAccessMode: string(v1beta2.ReadWriteOnce),
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Database: v1beta2.DatabaseConfiguration{
-							Resources: v1beta2.ResourcesWithPersistentVolume{
-								Limit: v1beta2.ResourceParams{
+			expectedAccessMode: string(synapi.ReadWriteOnce),
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Database: synapi.DatabaseConfiguration{
+							Resources: synapi.ResourcesWithPersistentVolume{
+								Limit: synapi.ResourceParams{
 									Memory: "255Mi",
 								},
 								VolumeCapacity: "1Gi",
@@ -339,11 +339,11 @@ func TestGeneratorComponentPVAccessMode(t *testing.T) {
 		{
 			name:               "syndesis-db",
 			path:               "./database/",
-			expectedAccessMode: string(v1beta2.ReadOnlyMany),
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Database: v1beta2.DatabaseConfiguration{
+			expectedAccessMode: string(synapi.ReadOnlyMany),
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Database: synapi.DatabaseConfiguration{
 							Resources: resources,
 						},
 					},
@@ -353,11 +353,11 @@ func TestGeneratorComponentPVAccessMode(t *testing.T) {
 		{
 			name:               "syndesis-meta",
 			path:               "./infrastructure/04-syndesis-meta.yml.tmpl",
-			expectedAccessMode: string(v1beta2.ReadOnlyMany),
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Meta: v1beta2.MetaConfiguration{
+			expectedAccessMode: string(synapi.ReadOnlyMany),
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Meta: synapi.MetaConfiguration{
 							Resources: resources,
 						},
 					},
@@ -367,11 +367,11 @@ func TestGeneratorComponentPVAccessMode(t *testing.T) {
 		{
 			name:               "syndesis-prometheus",
 			path:               "./infrastructure/06-syndesis-prometheus.yml.tmpl",
-			expectedAccessMode: string(v1beta2.ReadOnlyMany),
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Prometheus: v1beta2.PrometheusConfiguration{
+			expectedAccessMode: string(synapi.ReadOnlyMany),
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Prometheus: synapi.PrometheusConfiguration{
 							Resources: resources,
 						},
 					},
@@ -393,8 +393,8 @@ func TestGeneratorComponentPVAccessMode(t *testing.T) {
 }
 
 func TestGeneratorComponentPVNoExtraProps(t *testing.T) {
-	resources := v1beta2.ResourcesWithPersistentVolume{
-		Limit: v1beta2.ResourceParams{
+	resources := synapi.ResourcesWithPersistentVolume{
+		Limit: synapi.ResourceParams{
 			Memory: "255Mi",
 		},
 		VolumeCapacity: "1Gi",
@@ -403,15 +403,15 @@ func TestGeneratorComponentPVNoExtraProps(t *testing.T) {
 	testData := []struct {
 		name     string
 		path     string
-		syndesis *v1beta2.Syndesis
+		syndesis *synapi.Syndesis
 	}{
 		{
 			name: "syndesis-db",
 			path: "./database/",
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Database: v1beta2.DatabaseConfiguration{
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Database: synapi.DatabaseConfiguration{
 							Resources: resources,
 						},
 					},
@@ -421,10 +421,10 @@ func TestGeneratorComponentPVNoExtraProps(t *testing.T) {
 		{
 			name: "syndesis-meta",
 			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Meta: v1beta2.MetaConfiguration{
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Meta: synapi.MetaConfiguration{
 							Resources: resources,
 						},
 					},
@@ -434,10 +434,10 @@ func TestGeneratorComponentPVNoExtraProps(t *testing.T) {
 		{
 			name: "syndesis-prometheus",
 			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Prometheus: v1beta2.PrometheusConfiguration{
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Prometheus: synapi.PrometheusConfiguration{
 							Resources: resources,
 						},
 					},
@@ -465,8 +465,8 @@ func TestGeneratorComponentPVNoExtraProps(t *testing.T) {
 func TestGeneratorComponentPVVolumeName(t *testing.T) {
 	volumeName := "pv0001"
 
-	resources := v1beta2.ResourcesWithPersistentVolume{
-		Limit: v1beta2.ResourceParams{
+	resources := synapi.ResourcesWithPersistentVolume{
+		Limit: synapi.ResourceParams{
 			Memory: "255Mi",
 		},
 		VolumeCapacity: "1Gi",
@@ -476,15 +476,15 @@ func TestGeneratorComponentPVVolumeName(t *testing.T) {
 	testData := []struct {
 		name     string
 		path     string
-		syndesis *v1beta2.Syndesis
+		syndesis *synapi.Syndesis
 	}{
 		{
 			name: "syndesis-db",
 			path: "./database/",
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Database: v1beta2.DatabaseConfiguration{
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Database: synapi.DatabaseConfiguration{
 							Resources: resources,
 						},
 					},
@@ -494,10 +494,10 @@ func TestGeneratorComponentPVVolumeName(t *testing.T) {
 		{
 			name: "syndesis-meta",
 			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Meta: v1beta2.MetaConfiguration{
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Meta: synapi.MetaConfiguration{
 							Resources: resources,
 						},
 					},
@@ -507,10 +507,10 @@ func TestGeneratorComponentPVVolumeName(t *testing.T) {
 		{
 			name: "syndesis-prometheus",
 			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Prometheus: v1beta2.PrometheusConfiguration{
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Prometheus: synapi.PrometheusConfiguration{
 							Resources: resources,
 						},
 					},
@@ -531,8 +531,8 @@ func TestGeneratorComponentPVVolumeName(t *testing.T) {
 func TestGeneratorDBVolumeStorageClass(t *testing.T) {
 	volumeStorageClass := "gluster-fs"
 
-	resources := v1beta2.ResourcesWithPersistentVolume{
-		Limit: v1beta2.ResourceParams{
+	resources := synapi.ResourcesWithPersistentVolume{
+		Limit: synapi.ResourceParams{
 			Memory: "255Mi",
 		},
 		VolumeCapacity:     "1Gi",
@@ -542,15 +542,15 @@ func TestGeneratorDBVolumeStorageClass(t *testing.T) {
 	testData := []struct {
 		name     string
 		path     string
-		syndesis *v1beta2.Syndesis
+		syndesis *synapi.Syndesis
 	}{
 		{
 			name: "syndesis-db",
 			path: "./database/",
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Database: v1beta2.DatabaseConfiguration{
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Database: synapi.DatabaseConfiguration{
 							Resources: resources,
 						},
 					},
@@ -560,10 +560,10 @@ func TestGeneratorDBVolumeStorageClass(t *testing.T) {
 		{
 			name: "syndesis-meta",
 			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Meta: v1beta2.MetaConfiguration{
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Meta: synapi.MetaConfiguration{
 							Resources: resources,
 						},
 					},
@@ -573,10 +573,10 @@ func TestGeneratorDBVolumeStorageClass(t *testing.T) {
 		{
 			name: "syndesis-prometheus",
 			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Prometheus: v1beta2.PrometheusConfiguration{
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Prometheus: synapi.PrometheusConfiguration{
 							Resources: resources,
 						},
 					},
@@ -600,8 +600,8 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 		"aws-availability-zone": "us-east-1",
 	}
 
-	resources := v1beta2.ResourcesWithPersistentVolume{
-		Limit: v1beta2.ResourceParams{
+	resources := synapi.ResourcesWithPersistentVolume{
+		Limit: synapi.ResourceParams{
 			Memory: "255Mi",
 		},
 		VolumeCapacity: "1Gi",
@@ -611,15 +611,15 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 	testData := []struct {
 		name     string
 		path     string
-		syndesis *v1beta2.Syndesis
+		syndesis *synapi.Syndesis
 	}{
 		{
 			name: "syndesis-db",
 			path: "./database/",
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Database: v1beta2.DatabaseConfiguration{
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Database: synapi.DatabaseConfiguration{
 							Resources: resources,
 						},
 					},
@@ -629,10 +629,10 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 		{
 			name: "syndesis-meta",
 			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Meta: v1beta2.MetaConfiguration{
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Meta: synapi.MetaConfiguration{
 							Resources: resources,
 						},
 					},
@@ -642,10 +642,10 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 		{
 			name: "syndesis-prometheus",
 			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
-			syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Components: v1beta2.ComponentsSpec{
-						Prometheus: v1beta2.PrometheusConfiguration{
+			syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Components: synapi.ComponentsSpec{
+						Prometheus: synapi.PrometheusConfiguration{
 							Resources: resources,
 						},
 					},
@@ -671,11 +671,11 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 
 func TestAuditingFeatureToggle(t *testing.T) {
 	for _, givenEnabled := range []bool{true, false} {
-		syndesis := v1beta2.Syndesis{
-			Spec: v1beta2.SyndesisSpec{
-				Components: v1beta2.ComponentsSpec{
-					Server: v1beta2.ServerConfiguration{
-						Features: v1beta2.ServerFeatures{
+		syndesis := synapi.Syndesis{
+			Spec: synapi.SyndesisSpec{
+				Components: synapi.ComponentsSpec{
+					Server: synapi.ServerConfiguration{
+						Features: synapi.ServerFeatures{
 							Auditing: givenEnabled,
 						},
 					},
@@ -722,13 +722,13 @@ func TestGeneratorProperty(t *testing.T) {
 
 	arbitraries := arbitrary.DefaultArbitraries()
 	arbitraries.RegisterGen(gen.AlphaString())
-	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(v1beta2.ResourcesWithPersistentVolume{}), map[string]gopter.Gen{
+	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(synapi.ResourcesWithPersistentVolume{}), map[string]gopter.Gen{
 		"VolumeLabels": gen.MapOf(gen.Identifier(), gen.Identifier()), // we can't have volume labels with keys that are empty strings
 	}))
-	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(v1beta2.DatabaseConfiguration{}), map[string]gopter.Gen{
+	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(synapi.DatabaseConfiguration{}), map[string]gopter.Gen{
 		"ExternalDbURL": gen.Identifier(),
 	}))
-	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(v1beta2.MavenConfiguration{}), map[string]gopter.Gen{
+	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(synapi.MavenConfiguration{}), map[string]gopter.Gen{
 		"Repositories": gen.MapOf(gen.Identifier(), gen.Identifier()), // we can't have Maven repositories with illegal characters
 	}))
 
@@ -737,8 +737,8 @@ func TestGeneratorProperty(t *testing.T) {
 	clientTools := syntesting.FakeClientTools()
 
 	properties.Property("all combinations render correctly", arbitraries.ForAll(
-		func(spec *v1beta2.SyndesisSpec) bool {
-			configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config.yaml", clientTools, &v1beta2.Syndesis{Spec: *spec})
+		func(spec *synapi.SyndesisSpec) bool {
+			configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config.yaml", clientTools, &synapi.Syndesis{Spec: *spec})
 			if err != nil {
 				// it's best to panic that gives gopter a chance to
 				// handle the error and fill in the details, we need

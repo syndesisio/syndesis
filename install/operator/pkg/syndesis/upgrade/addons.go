@@ -18,7 +18,7 @@ package upgrade
 
 import (
 	synpkg "github.com/syndesisio/syndesis/install/operator/pkg"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	conf "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
@@ -36,10 +36,10 @@ const (
 
 type tidyAddons struct {
 	step
-	syndesis *v1beta2.Syndesis
+	syndesis *synapi.Syndesis
 }
 
-func newCleanupAddons(s step, syndesis *v1beta2.Syndesis) (ta *tidyAddons) {
+func newCleanupAddons(s step, syndesis *synapi.Syndesis) (ta *tidyAddons) {
 	ta = &tidyAddons{s, syndesis}
 	ta.name = "Cleanup Addons"
 	return
