@@ -6,10 +6,6 @@ module.exports = {
         return cracoConfig;
     },
     webpack: {
-        alias: {
-            "vscode": require.resolve('monaco-languageclient/lib/vscode-compatibility'),
-            "react": require.resolve('react'),
-            "react-dom": require.resolve('react-dom')
-        }
+        alias: {}
     }
 };

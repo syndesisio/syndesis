@@ -150,7 +150,7 @@ export const SupportPage: React.FunctionComponent = () => {
                                           data-testid={
                                             'support-page-download-button'
                                           }
-                                          className="btn btn-primary"
+                                          className="pf-c-button pf-m-primary"
                                           disabled={
                                             isEmpty(integrationsToDl) &&
                                             selectedLogType === 'specificlogs'

@@ -10,12 +10,6 @@
   ],
   "license": "MIT",
   "private": true,
-  "workspaces": {
-    "nohoist": [
-      "**/babel-loader",
-      "**/babel-jest"
-    ]
-  },
   "devDependencies": {
     "@babel/core": "^7.1.5",
     "@storybook/addon-info": "^5.3.8",

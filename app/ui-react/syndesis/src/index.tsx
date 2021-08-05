@@ -1,6 +1,4 @@
 import './index.css';
-// tslint:disable-next-line:ordered-imports
-// Don't move this line, otherwise we anger the pf4
 import { App, IAppRoute, IAppRouteWithChildrens, WithConfig } from './app';
 import { UnrecoverableError } from '@syndesis/ui';
 import {

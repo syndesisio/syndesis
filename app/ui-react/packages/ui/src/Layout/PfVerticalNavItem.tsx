@@ -58,8 +58,7 @@ function PfVerticalNavItem({
           to={to}
           className={
             classNames(
-              // 'pf-c-nav__link',
-              { ['pf-m-current']: isActive, }
+              { ['pf-m-current']: isActive }
             )
           }
           aria-current={isActive ? 'page' : undefined}

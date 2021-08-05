@@ -10,12 +10,6 @@
     "dist"
   ],
   "private": true,
-  "workspaces": {
-    "nohoist": [
-      "**/babel-loader",
-      "**/babel-jest"
-    ]
-  },
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.4.4",
