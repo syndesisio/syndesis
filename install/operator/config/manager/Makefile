@@ -8,14 +8,11 @@ IMAGE_VAR := {IMAGE}
 DB_IMAGE_VAR := {DB_IMAGE}
 
 ROLENAME := syndesis-operator
-MANAGER := ./manager.gen
+MANAGER_RESOURCE := ./manager.gen
 MANAGER_INSTALL := ./manager-install.gen
 
 # User customisable variables
-DB_IMAGE ?= centos/postgresql-10-centos7
-IMAGE ?= quay.io/syndesis/syndesis-operator
-NAMESPACE ?= syndesis
-TAG ?= 1.12
+include ../vars/Makefile
 
 .PHONY: sync init
 
@@ -40,16 +37,16 @@ sync:
 	sed -i '/{{- \|{{else}}\|{{end}}\|^{{\|^$$/d' $(MANAGER_INSTALL).$(TMPL)
 	sed -i 's/^- /\n---\n/' $(MANAGER_INSTALL).$(TMPL)
 	sed -i 's/^  //' $(MANAGER_INSTALL).$(TMPL)
-	cp $(ASSETS)/install/operator_deployment.yml.tmpl $(MANAGER).$(TMPL)
-	sed -i '/{{- if/,/{{- end}}\|{{end}}/d' $(MANAGER).$(TMPL)
-	sed -i 's/{{.Tag}}/$(TAG_VAR)/' $(MANAGER).$(TMPL)
-	sed -i 's/{{.Image}}/$(IMAGE_VAR)/' $(MANAGER).$(TMPL)
-	sed -i 's/{{.DatabaseImage}}/$(DB_IMAGE_VAR)/' $(MANAGER).$(TMPL)
-	sed -i '/{{- \|{{else}}\|{{end}}\|^$$/d' $(MANAGER).$(TMPL)
+	cp $(ASSETS)/install/operator_deployment.yml.tmpl $(MANAGER_RESOURCE).$(TMPL)
+	sed -i '/{{- if/,/{{- end}}\|{{end}}/d' $(MANAGER_RESOURCE).$(TMPL)
+	sed -i 's/{{.Tag}}/$(TAG_VAR)/' $(MANAGER_RESOURCE).$(TMPL)
+	sed -i 's/{{.Image}}/$(IMAGE_VAR)/' $(MANAGER_RESOURCE).$(TMPL)
+	sed -i 's/{{.DatabaseImage}}/$(DB_IMAGE_VAR)/' $(MANAGER_RESOURCE).$(TMPL)
+	sed -i '/{{- \|{{else}}\|{{end}}\|^$$/d' $(MANAGER_RESOURCE).$(TMPL)
 # end-sync
 
 init: sync
-	for resource in $(MANAGER_INSTALL) $(MANAGER); do \
+	for resource in $(MANAGER_INSTALL) $(MANAGER_RESOURCE); do \
 		cp $${resource}.$(TMPL) $${resource}.$(YAML); \
 		sed -i 's/$(NAMESPACE_VAR)/$(NAMESPACE)/' $${resource}.$(YAML); \
 		sed -i 's/$(TAG_VAR)/$(TAG)/' $${resource}.$(YAML); \

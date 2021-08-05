@@ -13,28 +13,9 @@ MK_OPTIONS := -s
 KOPTIONS := --load-restrictor LoadRestrictionsNone
 
 #
-# Vars that can be overridden by external env vars
+# Configuration vars
 #
-VERSION ?= 1.12.0
-DEBUG ?= false
-DB_IMAGE ?= centos/postgresql-10-centos7
-DEFAULT_IMAGE ?= quay.io/syndesis/syndesis-operator
-IMAGE ?= $(DEFAULT_IMAGE)
-TAG ?= $(VERSION:.0=)
-NAMESPACE ?= syndesis
-KUBE_USER ?= developer
-LEGACY ?= false
-
-CHANNELS ?= $(VERSION:.0=.x)
-DEFAULT_CHANNEL ?= $(VERSION:.0=.x)
-PACKAGE := syndesis
-BUNDLE_DIR := bundle
-PKG := ../pkg
-CRD := crd/bases
-MANAGER := manager
-MANIFESTS := manifests
-GRANT := rbac-grant
-ROLE := rbac-role
+include vars/Makefile
 
 .PHONY: kubectl setup setup-jaeger operator app dev-operator dev-app
 
@@ -159,20 +140,6 @@ endif
 # B U N D L E  G E N E R A T I O N
 ##################################
 #
-# Default bundle image tag
-BUNDLE_IMG ?= $(IMAGE)-bundle:$(VERSION)
-
-# Options for 'bundle-build'
-ifneq ($(origin CHANNELS), undefined)
-BUNDLE_CHANNELS := --channels=$(CHANNELS)
-endif
-ifneq ($(origin DEFAULT_CHANNEL), undefined)
-BUNDLE_DEFAULT_CHANNEL := --default-channel=$(DEFAULT_CHANNEL)
-endif
-ifneq ($(origin PACKAGE), undefined)
-BUNDLE_PACKAGE := --package=$(PACKAGE)
-endif
-BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL) $(BUNDLE_PACKAGE)
 
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd:trivialVersions=true"
@@ -193,7 +160,7 @@ ifeq (, $(shell which controller-gen))
 	CONTROLLER_GEN_TMP_DIR=$$(mktemp -d) ;\
 	cd $$CONTROLLER_GEN_TMP_DIR ;\
 	go mod init tmp ;\
-	go get sigs.k8s.io/controller-tools/cmd/controller-gen@v0.3.0 ;\
+	go get sigs.k8s.io/controller-tools/cmd/controller-gen@$(CONTROLLER_GEN_VERSION) ;\
 	rm -rf $$CONTROLLER_GEN_TMP_DIR ;\
 	}
 CONTROLLER_GEN=$(GOBIN)/controller-gen
@@ -208,7 +175,7 @@ ifeq (, $(shell which kustomize))
 	KUSTOMIZE_GEN_TMP_DIR=$$(mktemp -d) ;\
 	cd $$KUSTOMIZE_GEN_TMP_DIR ;\
 	go mod init tmp ;\
-	go get sigs.k8s.io/kustomize/kustomize/v4@v4.0.5 ;\
+	go get sigs.k8s.io/kustomize/kustomize/v4@$(KUSTOMIZE_VERSION) ;\
 	rm -rf $$KUSTOMIZE_GEN_TMP_DIR ;\
 	}
 KUSTOMIZE=$(GOBIN)/kustomize
@@ -216,7 +183,22 @@ else
 KUSTOMIZE=$(shell which kustomize)
 endif
 
-.PHONY: bundle manifests generate generate-deepcopy generate-crds
+operator-sdk:
+ifeq (, $(shell which operator-sdk))
+	@{ \
+	set -e ;\
+	curl \
+		-L https://github.com/operator-framework/operator-sdk/releases/download/$(OPERATOR_SDK_VERSION)/operator-sdk_linux_amd64 \
+		-o operator-sdk ;\
+	chmod +x operator-sdk ;\
+	mv operator-sdk $(GOBIN)/ ;\
+	}
+OPERATOR_SDK=$(GOBIN)/operator-sdk
+else
+OPERATOR_SDK=$(shell which operator-sdk)
+endif
+
+.PHONY: kustomize operator-sdk bundle manifests generate generate-deepcopy generate-crds
 
 generate-deepcopy: controller-gen
 	@$(CONTROLLER_GEN) paths="$(PKG)/..." object
@@ -237,38 +219,50 @@ generate-crds: controller-gen
 # Generate code
 generate: generate-deepcopy generate-crds
 
-CSV_ICON=$(shell cat $(PKG)/syndesis/olm/assets/icon)
-CREATED=$(shell date -u +%FT%TZ)
+# Tailor the manifest according to default values for this project
+# Note. to make the bundle this name must match that specified in PROJECT
+#
+pre-bundle:
+# bundle name must match that which appears in PROJECT file
+	@sed -i 's/projectName: .*/projectName: $(PACKAGE)/' PROJECT
+# finds the single CSV file and renames it
+	find $(MANIFESTS)/bases -type f -name "*.clusterserviceversion.yaml" -execdir mv '{}' $(CSV_FILENAME) ';'
+	@sed -i 's~^    containerImage: .*~    containerImage: $(IMAGE):$(TAG)~' $(CSV_PATH)
+	@sed -i 's/^    support: .*/    support: $(CSV_SUPPORT)/' $(CSV_PATH)
+	@sed -i 's/^  name: .*.\(v.*\)/  name: $(PACKAGE).v$(VERSION)/' $(CSV_PATH)
+	@sed -i 's/^      displayName: .*/      displayName: $(CSV_DISPLAY_NAME)/' $(CSV_PATH)
+# Updates the icon in the csv
+	@sed -i 's/^  - base64data:.*/  - base64data: $(CSV_ICON)/' $(CSV_PATH)
+	@sed -i 's/^  replaces: .*/  replaces: $(CSV_REPLACES)/' $(CSV_PATH)
+	@sed -i 's/^  version: .*/  version: $(VERSION)/' $(CSV_PATH)
 
 # Generate bundle manifests and metadata, then validate generated files.
-bundle: generate-crds kustomize
+bundle: generate-crds kustomize pre-bundle
 	@$(MAKE) $(MK_OPTIONS) -C $(ROLE) init
 	@$(MAKE) $(MK_OPTIONS) -C $(GRANT) init
 	@$(MAKE) $(MK_OPTIONS) -C $(MANAGER) init
 # (Re)-generate the manifests directory
-	@operator-sdk generate kustomize manifests \
+	@$(OPERATOR_SDK) generate kustomize manifests \
 		--apis-dir $(PKG)/apis \
 		--input-dir $(MANIFESTS) \
 		--output-dir $(MANIFESTS)
-# Updates the container-image attribute
-	@sed -i 's~containerImage:.*~containerImage: $(IMAGE):$(TAG)~' $(MANIFESTS)/bases/*.clusterserviceversion.yaml
-# Updates the icon in the csv
-	@sed -i 's/base64data:.*/base64data: $(CSV_ICON)/' $(MANIFESTS)/bases/*.clusterserviceversion.yaml
 # Sets the operator image to the preferred image:tag
 	@cd $(MANIFESTS) && $(KUSTOMIZE) edit set image $(DEFAULT_IMAGE)=$(IMAGE):$(TAG)
 # Generates the bundle complete with manifests
 	@$(KUSTOMIZE) build $(KOPTIONS) $(MANIFESTS) | \
-		operator-sdk generate bundle \
+		$(OPERATOR_SDK) generate bundle \
 			-q --overwrite --version $(VERSION) \
 			--kustomize-dir $(MANIFESTS) $(BUNDLE_METADATA_OPTS)
 # Remove unserved CRDs from owned section
-	@sed -i '/- kind: Syndesis/,/version: v1beta1/d' $(BUNDLE_DIR)/$(MANIFESTS)/*.clusterserviceversion.yaml
+	@sed -i '/- kind: Syndesis/,/version: v1beta1/d' $(BUNDLE_DIR)/$(MANIFESTS)/$(CSV_FILENAME)
+# Add a timestamp to the new bundle manifest
+	@sed -i '/^    containerImage: .*/ a \ \ \ \ createdAt: $(TIMESTAMP)' $(BUNDLE_DIR)/$(MANIFESTS)/$(CSV_FILENAME)
 # Removes any clusterrolebindings necessary for clusterroles to be added but not required for the manifests
 	@rm -f $(BUNDLE_DIR)/manifests/*clusterrolebinding.yaml
 # Moves the docker file into the bundle directory
 	@mv bundle.Dockerfile $(BUNDLE_DIR)/Dockerfile && \
 		sed -i 's/bundle\///g' $(BUNDLE_DIR)/Dockerfile
-	@operator-sdk bundle validate $(BUNDLE_DIR)
+	@$(OPERATOR_SDK) bundle validate $(BUNDLE_DIR)
 
 # Build the bundle image.
 .PHONY: bundle-build
