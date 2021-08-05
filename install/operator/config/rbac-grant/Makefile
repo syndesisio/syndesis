@@ -5,15 +5,14 @@ NAMESPACE_VAR := {NAMESPACE}
 USER_VAR := {KUBE_USER}
 
 ROLENAME := syndesis-operator
-GRANT := ./grant.gen
+GRANT_USER := ./grant.gen
 GRANT_JAEGER := ./grant-jaeger.gen
 GRANT_KAFKA := ./grant-kafka.gen
 GRANT_OLM := ./grant-olm.gen
 GRANT_PUBLIC_API := ./grant-public-api.gen
 
 # User customisable variables
-KUBE_USER ?= developer
-NAMESPACE ?= syndesis
+include ../vars/Makefile
 
 .PHONY: sync init
 
@@ -25,12 +24,12 @@ NAMESPACE ?= syndesis
 # - Delete any if & end codeword lines
 #
 sync:
-	cp $(ASSETS)/install/grant/grant_role.yml.tmpl $(GRANT).$(TMPL)
-	sed -i 's/{{ .Kind }}\|{{.Kind}}/Role/' $(GRANT).$(TMPL)
-	sed -i 's/{{ .Role }}\|{{.Role}}/$(ROLENAME)/' $(GRANT).$(TMPL)
-	sed -i 's/{{ .User }}\|{{.User}}/$(USER_VAR)/' $(GRANT).$(TMPL)
-	sed -i 's/{{ .Namespace }}\|{{.Namespace}}/$(NAMESPACE_VAR)/' $(GRANT).$(TMPL)
-	sed -i '/{{- if\|{{- end/d' $(GRANT).$(TMPL)
+	cp $(ASSETS)/install/grant/grant_role.yml.tmpl $(GRANT_USER).$(TMPL)
+	sed -i 's/{{ .Kind }}\|{{.Kind}}/Role/' $(GRANT_USER).$(TMPL)
+	sed -i 's/{{ .Role }}\|{{.Role}}/$(ROLENAME)/' $(GRANT_USER).$(TMPL)
+	sed -i 's/{{ .User }}\|{{.User}}/$(USER_VAR)/' $(GRANT_USER).$(TMPL)
+	sed -i 's/{{ .Namespace }}\|{{.Namespace}}/$(NAMESPACE_VAR)/' $(GRANT_USER).$(TMPL)
+	sed -i '/{{- if\|{{- end/d' $(GRANT_USER).$(TMPL)
 	cp $(ASSETS)/install/grant/grant_cluster_role_jaeger.yml.tmpl $(GRANT_JAEGER).$(TMPL)
 	sed -i 's/{{ .User }}\|{{.User}}/$(USER_VAR)/' $(GRANT_JAEGER).$(TMPL)
 	sed -i 's/{{ .Namespace }}\|{{.Namespace}}/$(NAMESPACE_VAR)/' $(GRANT_JAEGER).$(TMPL)
@@ -53,7 +52,7 @@ sync:
 # end-sync
 
 init: sync
-	for resource in $(GRANT) $(GRANT_JAEGER) $(GRANT_KAFKA) $(GRANT_OLM) $(GRANT_PUBLIC_API); do \
+	for resource in $(GRANT_USER) $(GRANT_JAEGER) $(GRANT_KAFKA) $(GRANT_OLM) $(GRANT_PUBLIC_API); do \
 		cp $${resource}.$(TMPL) $${resource}.$(YAML); \
 		sed -i 's/$(NAMESPACE_VAR)/$(NAMESPACE)/' $${resource}.$(YAML); \
 		sed -i 's/$(USER_VAR)/$(KUBE_USER)/' $${resource}.$(YAML); \

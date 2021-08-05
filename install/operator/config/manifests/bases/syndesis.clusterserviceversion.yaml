@@ -5,7 +5,7 @@ metadata:
     capabilities: Seamless Upgrades
     categories: Integration & Delivery
     certified: "false"
-    containerImage: quay.io/syndesis/syndesis-operator:1.12
+    containerImage: quay.io/syndesis/syndesis-operator:X.Y
     description: Manages the installation of Syndesis, a flexible and customizable open source platform that provides core integration capabilities as a service.
     operators.operatorframework.io/builder: operator-sdk-v1.0.5
     operators.operatorframework.io/project_layout: go.kubebuilder.io/v2
@@ -101,5 +101,5 @@ spec:
   provider:
     name: Syndesis Team
     url: https://github.com/syndesisio/syndesis
-  replaces: syndesis-operator.1.11.0
-  version: 1.12.0
+  replaces: syndesis.vA.B.C
+  version: X.Y.Z

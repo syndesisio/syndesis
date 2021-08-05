@@ -7,7 +7,7 @@ PATCH_ANNOTATION := ./annotation-patch
 PATCH_IMG_STREAM := ./image-stream-patch
 
 # User customisable variables
-TAG ?= 1.12
+include ../../vars/Makefile
 
 .PHONY: init
 

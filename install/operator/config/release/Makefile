@@ -13,7 +13,7 @@ sync:
   done
 
 INSTALLDIR := $(RELEASE_NAME)-installer
-RELEASEDIRS := ../app ../crd ../manager ../rbac-grant ../jaeger-crd ../rbac-role ../dev ../operator ../setup ../setup-jaeger
+RELEASEDIRS := ../app ../crd ../manager ../rbac-grant ../jaeger-crd ../rbac-role ../dev ../operator ../setup ../setup-jaeger ../vars
 
 check-vars:
 ifndef RELEASE_VERSION
