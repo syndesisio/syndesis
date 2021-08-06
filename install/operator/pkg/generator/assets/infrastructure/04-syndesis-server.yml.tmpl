@@ -61,8 +61,6 @@
                 fieldPath: metadata.namespace
           - name: ENDPOINTS_TEST_SUPPORT_ENABLED
             value: '{{ .Syndesis.Components.Server.Features.TestSupport }}'
-          - name: CONTROLLERS_INTEGRATION_ENABLED
-            value: '{{ .Syndesis.Components.Server.Features.DeployIntegrations }}'
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
             value: '{{.Syndesis.Components.Database.SampledbPassword}}'
           - name: CLIENT_STATE_AUTHENTICATION_ALGORITHM

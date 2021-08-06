@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
@@ -29,11 +29,11 @@ func newUpgradeBackoffAction(mgr manager.Manager, clientTools *clienttools.Clien
 	}
 }
 
-func (a *upgradeBackoffAction) CanExecute(syndesis *v1beta2.Syndesis) bool {
-	return syndesisPhaseIs(syndesis, v1beta2.SyndesisPhaseUpgradeFailureBackoff)
+func (a *upgradeBackoffAction) CanExecute(syndesis *synapi.Syndesis) bool {
+	return syndesisPhaseIs(syndesis, synapi.SyndesisPhaseUpgradeFailureBackoff)
 }
 
-func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis) error {
+func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) error {
 	rtClient, _ := a.clientTools.RuntimeClient()
 
 	// Check number of attempts to fail fast
@@ -41,8 +41,8 @@ func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *v1beta2.Sy
 		a.log.Error(nil, "Upgrade of Syndesis resource failed too many times and will not be retried", "name", syndesis.Name)
 
 		target := syndesis.DeepCopy()
-		target.Status.Phase = v1beta2.SyndesisPhaseUpgradeFailed
-		target.Status.Reason = v1beta2.SyndesisStatusReasonTooManyUpgradeAttempts
+		target.Status.Phase = synapi.SyndesisPhaseUpgradeFailed
+		target.Status.Reason = synapi.SyndesisStatusReasonTooManyUpgradeAttempts
 		target.Status.Description = "Upgrade failed too many times and will not be retried"
 		target.Status.ForceUpgrade = false
 
@@ -80,8 +80,8 @@ func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *v1beta2.Sy
 		currentAttemptStr := strconv.Itoa(int(syndesis.Status.UpgradeAttempts + 1))
 
 		target := syndesis.DeepCopy()
-		target.Status.Phase = v1beta2.SyndesisPhaseUpgrading
-		target.Status.Reason = v1beta2.SyndesisStatusReasonMissing
+		target.Status.Phase = synapi.SyndesisPhaseUpgrading
+		target.Status.Reason = synapi.SyndesisStatusReasonMissing
 		target.Status.Description = "Upgrading from " + currentVersion + " to " + targetVersion + " (attempt " + currentAttemptStr + ")"
 		target.Status.ForceUpgrade = true
 

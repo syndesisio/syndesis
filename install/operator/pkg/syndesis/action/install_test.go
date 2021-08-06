@@ -6,17 +6,17 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
-func renderResource(t *testing.T, ctx context.Context, clientTools *clienttools.ClientTools, syndesis *v1beta2.Syndesis, resourcePath string) []unstructured.Unstructured {
+func renderResource(t *testing.T, ctx context.Context, clientTools *clienttools.ClientTools, syndesis *synapi.Syndesis, resourcePath string) []unstructured.Unstructured {
 	configuration, err := configuration.GetProperties(ctx, "../../../build/conf/config-test.yaml", clientTools, syndesis)
 	require.NoError(t, err)
 
@@ -27,9 +27,9 @@ func renderResource(t *testing.T, ctx context.Context, clientTools *clienttools.
 }
 
 func TestPreProcessForAffinityTolerationsNotDeploymentConfig(t *testing.T) {
-	syndesis := &v1beta2.Syndesis{
-		Spec: v1beta2.SyndesisSpec{
-			InfraScheduling: v1beta2.SchedulingSpec{
+	syndesis := &synapi.Syndesis{
+		Spec: synapi.SyndesisSpec{
+			InfraScheduling: synapi.SchedulingSpec{
 				Affinity:    &v1.Affinity{},
 				Tolerations: []v1.Toleration{},
 			},
@@ -50,8 +50,8 @@ func TestPreProcessForAffinityTolerationsNotDeploymentConfig(t *testing.T) {
 }
 
 func TestPreProcessForAffinityTolerationsNoInfraScheduling(t *testing.T) {
-	syndesis := &v1beta2.Syndesis{
-		Spec: v1beta2.SyndesisSpec{},
+	syndesis := &synapi.Syndesis{
+		Spec: synapi.SyndesisSpec{},
 	}
 
 	clientTools := syntesting.FakeClientTools()
@@ -68,9 +68,9 @@ func TestPreProcessForAffinityTolerationsNoInfraScheduling(t *testing.T) {
 }
 
 func TestPreProcessForAffinityTolerations(t *testing.T) {
-	syndesis := &v1beta2.Syndesis{
-		Spec: v1beta2.SyndesisSpec{
-			InfraScheduling: v1beta2.SchedulingSpec{
+	syndesis := &synapi.Syndesis{
+		Spec: synapi.SyndesisSpec{
+			InfraScheduling: synapi.SchedulingSpec{
 				Affinity: &v1.Affinity{
 					NodeAffinity: &v1.NodeAffinity{
 						RequiredDuringSchedulingIgnoredDuringExecution: &v1.NodeSelector{
@@ -131,9 +131,9 @@ func TestPreProcessForAffinityTolerations(t *testing.T) {
 }
 
 func TestPreProcessJaegerCR(t *testing.T) {
-	syndesis := &v1beta2.Syndesis{
-		Spec: v1beta2.SyndesisSpec{
-			InfraScheduling: v1beta2.SchedulingSpec{
+	syndesis := &synapi.Syndesis{
+		Spec: synapi.SyndesisSpec{
+			InfraScheduling: synapi.SchedulingSpec{
 				Affinity: &v1.Affinity{
 					NodeAffinity: &v1.NodeAffinity{
 						RequiredDuringSchedulingIgnoredDuringExecution: &v1.NodeSelector{

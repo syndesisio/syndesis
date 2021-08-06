@@ -22,7 +22,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 
@@ -162,7 +162,7 @@ func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 	}
 
 	o.databaseImage = defaultDatabaseImage
-	config, err := configuration.GetProperties(o.Context, configuration.TemplateConfig, o.ClientTools(), &v1beta2.Syndesis{})
+	config, err := configuration.GetProperties(o.Context, configuration.TemplateConfig, o.ClientTools(), &synapi.Syndesis{})
 	if err == nil {
 		o.databaseImage = config.Syndesis.Components.Database.Image
 	}

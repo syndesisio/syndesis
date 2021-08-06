@@ -16,7 +16,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
-	syndesisv1beta2 "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 )
@@ -59,7 +59,7 @@ func add(mgr manager.Manager, r *ReconcileSyndesis) error {
 	}
 
 	// Watch for changes to primary resource Syndesis
-	err = c.Watch(&source.Kind{Type: &syndesisv1beta2.Syndesis{}}, &handler.EnqueueRequestForObject{})
+	err = c.Watch(&source.Kind{Type: &synapi.Syndesis{}}, &handler.EnqueueRequestForObject{})
 	if err != nil {
 		return err
 	}
@@ -87,7 +87,7 @@ func (r *ReconcileSyndesis) Reconcile(ctx context.Context, request reconcile.Req
 	reqLogger.V(2).Info("Reconciling Syndesis")
 
 	// Fetch the Syndesis syndesis
-	syndesis := &syndesisv1beta2.Syndesis{}
+	syndesis := &synapi.Syndesis{}
 
 	client, _ := r.clientTools.RuntimeClient()
 
@@ -137,7 +137,7 @@ func (r *ReconcileSyndesis) Reconcile(ctx context.Context, request reconcile.Req
 	}, nil
 }
 
-func (r *ReconcileSyndesis) isLatestVersion(ctx context.Context, syndesis *syndesisv1beta2.Syndesis) (bool, error) {
+func (r *ReconcileSyndesis) isLatestVersion(ctx context.Context, syndesis *synapi.Syndesis) (bool, error) {
 	refreshed := syndesis.DeepCopy()
 	client, _ := r.clientTools.RuntimeClient()
 	if err := client.Get(ctx, types.NamespacedName{Name: refreshed.Name, Namespace: refreshed.Namespace}, refreshed); err != nil {

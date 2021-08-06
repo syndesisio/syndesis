@@ -30,7 +30,7 @@ import (
 	olmfake "github.com/operator-framework/operator-lifecycle-manager/pkg/api/client/clientset/versioned/fake"
 	olmpkgsvr "github.com/operator-framework/operator-lifecycle-manager/pkg/package-server/apis/operators/v1"
 	"github.com/stretchr/testify/assert"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
@@ -299,7 +299,7 @@ func Test_FindOperatorGroups(t *testing.T) {
 			clientTools.SetRuntimeClient(rtClient)
 			clientTools.SetOlmClient(olmClient)
 
-			syndesis, err := v1beta2.NewSyndesis(synns)
+			syndesis, err := synapi.NewSyndesis(synns)
 			conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, syndesis)
 			assert.NoError(t, err)
 

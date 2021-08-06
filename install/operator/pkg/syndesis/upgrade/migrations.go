@@ -30,7 +30,7 @@ import (
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -42,13 +42,13 @@ import (
 type migration struct {
 	step
 	jobName  string
-	syndesis *v1beta2.Syndesis
+	syndesis *synapi.Syndesis
 	backup   sbackup.Runner
 	timeout  time.Duration
 	interval time.Duration
 }
 
-func newMigration(base step, s *v1beta2.Syndesis, b sbackup.Runner) (m *migration) {
+func newMigration(base step, s *synapi.Syndesis, b sbackup.Runner) (m *migration) {
 	m = &migration{
 		jobName:  "upgrade-db-migration",
 		step:     base,

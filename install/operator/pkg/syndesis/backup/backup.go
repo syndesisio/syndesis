@@ -32,7 +32,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
@@ -74,7 +74,7 @@ type Backup struct {
 	localOnly       bool                     // If true, backup to local location. Otherwise, upload to remote lodation
 	context         context.Context          // Context for backup
 	clientTools     *clienttools.ClientTools // Syndesis client toolkit
-	syndesis        *v1beta2.Syndesis        // Syndesis runtime instance
+	syndesis        *synapi.Syndesis        // Syndesis runtime instance
 	customOptions   string                   // Custom options required for restoring
 	backupDesign    backupDesign             // The credentials for the backup/restore operation
 	payloadComplete bool                     // Is uploading of the restore payload complete
@@ -126,7 +126,7 @@ type Downloader interface {
 	Enabled() (result bool)
 }
 
-func NewBackup(context context.Context, clientTools *clienttools.ClientTools, syndesis *v1beta2.Syndesis, backupDir string) (*Backup, error) {
+func NewBackup(context context.Context, clientTools *clienttools.ClientTools, syndesis *synapi.Syndesis, backupDir string) (*Backup, error) {
 	b := &Backup{
 		isInited:    true,
 		log:         backupLog.WithValues("action", "backup"),

@@ -1,4 +1,4 @@
-Version: "1.12"
+Version: "1.13"
 AllowLocalHost: false
 Productized: false
 DevSupport: false
@@ -88,7 +88,6 @@ Syndesis:
             Features:
                 IntegrationLimit: 0
                 IntegrationStateCheckInterval: 60
-                DeployIntegrations: true
                 TestSupport: false
                 OpenShiftMaster: "https://localhost:8443"
                 ManagementUrlFor3scale: ""

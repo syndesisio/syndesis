@@ -40,7 +40,7 @@ import (
 	"github.com/operator-framework/operator-sdk/pkg/metrics"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -178,7 +178,7 @@ func (o *options) run() error {
 		return err
 	}
 
-	syndesis := &v1beta2.Syndesis{}
+	syndesis := &synapi.Syndesis{}
 	syndesis.SetNamespace(namespace)
 	config, err := configuration.GetProperties(o.Context, configuration.TemplateConfig, o.ClientTools(), syndesis)
 	if err != nil {
@@ -258,7 +258,7 @@ func (o *options) run() error {
 	}
 
 	// Setup metrics. Serves Operator/CustomResource GVKs and generates metrics based on those types
-	installationGVK := []schema.GroupVersionKind{v1beta2.SchemaGroupVersionKind}
+	installationGVK := []schema.GroupVersionKind{synapi.SchemaGroupVersionKind}
 
 	// To generate metrics in other namespaces, add the values below.
 	ns := []string{namespace}

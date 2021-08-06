@@ -20,7 +20,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	syntesting "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/testing"
 
@@ -29,7 +29,7 @@ import (
 
 func Test_annotation_build(t *testing.T) {
 	clientTools := syntesting.FakeClientTools()
-	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &v1beta2.Syndesis{})
+	conf, err := configuration.GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, &synapi.Syndesis{})
 	assert.NoError(t, err)
 
 	a := &annotation{config: conf}

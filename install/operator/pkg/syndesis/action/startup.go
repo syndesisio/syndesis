@@ -6,7 +6,7 @@ import (
 
 	v1 "github.com/openshift/api/apps/v1"
 	synpkg "github.com/syndesisio/syndesis/install/operator/pkg"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -26,13 +26,13 @@ func newStartupAction(mgr manager.Manager, clientTools *clienttools.ClientTools)
 	}
 }
 
-func (a *startupAction) CanExecute(syndesis *v1beta2.Syndesis) bool {
+func (a *startupAction) CanExecute(syndesis *synapi.Syndesis) bool {
 	return syndesisPhaseIs(syndesis,
-		v1beta2.SyndesisPhaseStarting,
-		v1beta2.SyndesisPhaseStartupFailed)
+		synapi.SyndesisPhaseStarting,
+		synapi.SyndesisPhaseStartupFailed)
 }
 
-func (a *startupAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis) error {
+func (a *startupAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) error {
 
 	list := v1.DeploymentConfigList{
 		TypeMeta: metav1.TypeMeta{
@@ -72,22 +72,22 @@ func (a *startupAction) Execute(ctx context.Context, syndesis *v1beta2.Syndesis)
 
 	if ready {
 		target := syndesis.DeepCopy()
-		target.Status.Phase = v1beta2.SyndesisPhaseInstalled
-		target.Status.Reason = v1beta2.SyndesisStatusReasonMissing
+		target.Status.Phase = synapi.SyndesisPhaseInstalled
+		target.Status.Reason = synapi.SyndesisStatusReasonMissing
 		target.Status.Description = ""
 		a.log.Info("Syndesis resource installed successfully", "name", syndesis.Name)
 		return rtClient.Status().Update(ctx, target)
 	} else if failedDeployment != nil {
 		target := syndesis.DeepCopy()
-		target.Status.Phase = v1beta2.SyndesisPhaseStartupFailed
-		target.Status.Reason = v1beta2.SyndesisStatusReasonDeploymentNotReady
+		target.Status.Phase = synapi.SyndesisPhaseStartupFailed
+		target.Status.Reason = synapi.SyndesisStatusReasonDeploymentNotReady
 		target.Status.Description = "Some Syndesis deployments failed to startup within the allowed time frame"
 		a.log.V(synpkg.DEBUG_LOGGING_LVL).Info("Startup failed for Syndesis resource. Deployment not ready", "name", syndesis.Name, "deployment", *failedDeployment)
 		return rtClient.Status().Update(ctx, target)
 	} else {
 		target := syndesis.DeepCopy()
-		target.Status.Phase = v1beta2.SyndesisPhaseStarting
-		target.Status.Reason = v1beta2.SyndesisStatusReasonMissing
+		target.Status.Phase = synapi.SyndesisPhaseStarting
+		target.Status.Reason = synapi.SyndesisStatusReasonMissing
 		target.Status.Description = ""
 		a.log.V(synpkg.DEBUG_LOGGING_LVL).Info("Waiting for Syndesis resource to startup", "name", syndesis.Name)
 		return rtClient.Status().Update(ctx, target)

@@ -21,7 +21,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
@@ -77,7 +77,7 @@ func TestIsExtensionsApiPresentOrNot(t *testing.T) {
 }
 
 func TestDowngradeExtensionsApi(t *testing.T) {
-	syndesis := &v1beta2.Syndesis{}
+	syndesis := &synapi.Syndesis{}
 	client := clfake.NewFakeClient()
 	i := &Install{Options: &internal.Options{}}
 	i.ClientTools().SetRuntimeClient(client)
@@ -100,6 +100,6 @@ func TestDowngradeExtensionsApi(t *testing.T) {
 		assert.Equal(t, "apiextensions.k8s.io/v1beta1", r.GetAPIVersion())
 		version, exists, _ := unstructured.NestedFieldNoCopy(r.UnstructuredContent(), "spec", "version")
 		assert.True(t, exists)
-		assert.Equal(t, "v1beta2", version)
+		assert.Equal(t, "v1beta3", version)
 	}
 }

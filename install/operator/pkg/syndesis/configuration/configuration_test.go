@@ -25,7 +25,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta2"
+	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 )
 
@@ -235,7 +235,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 
 func Test_setSyndesisFromCustomResource(t *testing.T) {
 	type args struct {
-		syndesis *v1beta2.Syndesis
+		syndesis *synapi.Syndesis
 	}
 	tests := []struct {
 		name       string
@@ -245,16 +245,16 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 	}{
 		{
 			name:       "When using an empty syndesis custom resource, the config values from template should remain",
-			args:       args{syndesis: &v1beta2.Syndesis{}},
+			args:       args{syndesis: &synapi.Syndesis{}},
 			wantConfig: getConfigLiteral(),
 			wantErr:    false,
 		},
 		{
 			name: "When using a syndesis custom resource with values, those values should replace the template values",
-			args: args{syndesis: &v1beta2.Syndesis{
-				Spec: v1beta2.SyndesisSpec{
-					Addons: v1beta2.AddonsSpec{
-						Jaeger: v1beta2.JaegerConfiguration{
+			args: args{syndesis: &synapi.Syndesis{
+				Spec: synapi.SyndesisSpec{
+					Addons: synapi.AddonsSpec{
+						Jaeger: synapi.JaegerConfiguration{
 							Enabled:       true,
 							SamplerType:   "const",
 							SamplerParam:  "0",
@@ -262,8 +262,8 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 							ImageAllInOne: "jaegertracing/all-in-one:1.13",
 							ImageOperator: "jaegertracing/jaeger-operator:1.13",
 						},
-						Todo: v1beta2.AddonSpec{Enabled: true},
-						PublicApi: v1beta2.PublicApiConfiguration{
+						Todo: synapi.AddonSpec{Enabled: true},
+						PublicApi: synapi.PublicApiConfiguration{
 							Enabled:       true,
 							RouteHostname: "mypublichost.com",
 						},
@@ -323,12 +323,12 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 
 func Test_MavenSettings(t *testing.T) {
 	c := getConfigLiteral()
-	s := &v1beta2.Syndesis{
-		Spec: v1beta2.SyndesisSpec{
-			Components: v1beta2.ComponentsSpec{
-				Server: v1beta2.ServerConfiguration{
-					Features: v1beta2.ServerFeatures{
-						Maven: v1beta2.MavenConfiguration{
+	s := &synapi.Syndesis{
+		Spec: synapi.SyndesisSpec{
+			Components: synapi.ComponentsSpec{
+				Server: synapi.ServerConfiguration{
+					Features: synapi.ServerFeatures{
+						Maven: synapi.MavenConfiguration{
 							Append: false,
 							Repositories: map[string]string{
 								"rep1": "http://rep1",
@@ -472,7 +472,6 @@ func getConfigLiteral() *Config {
 					Features: ServerFeatures{
 						IntegrationLimit:              0,
 						IntegrationStateCheckInterval: 60,
-						DeployIntegrations:            true,
 						TestSupport:                   false,
 						OpenShiftMaster:               "https://localhost:8443",
 						Maven: MavenConfiguration{
@@ -496,7 +495,7 @@ func getConfigLiteral() *Config {
 							Memory: "280Mi",
 						},
 						VolumeCapacity:   "1Gi",
-						VolumeAccessMode: string(v1beta2.ReadWriteOnce),
+						VolumeAccessMode: string(synapi.ReadWriteOnce),
 					},
 				},
 				Database: DatabaseConfiguration{
@@ -515,7 +514,7 @@ func getConfigLiteral() *Config {
 							Memory: "255Mi",
 						},
 						VolumeCapacity:   "1Gi",
-						VolumeAccessMode: string(v1beta2.ReadWriteOnce),
+						VolumeAccessMode: string(synapi.ReadWriteOnce),
 					},
 				},
 				Prometheus: PrometheusConfiguration{
@@ -528,7 +527,7 @@ func getConfigLiteral() *Config {
 							Memory: "512Mi",
 						},
 						VolumeCapacity:   "1Gi",
-						VolumeAccessMode: string(v1beta2.ReadWriteOnce),
+						VolumeAccessMode: string(synapi.ReadWriteOnce),
 					},
 				},
 				Upgrade: UpgradeConfiguration{
@@ -582,7 +581,7 @@ func TestConfig_SetRoute(t *testing.T) {
 	type args struct {
 		ctx      context.Context
 		client   client.Client
-		syndesis *v1beta2.Syndesis
+		syndesis *synapi.Syndesis
 	}
 	tests := []struct {
 		name    string
