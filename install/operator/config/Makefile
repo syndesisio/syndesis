@@ -226,7 +226,7 @@ pre-bundle:
 # bundle name must match that which appears in PROJECT file
 	@sed -i 's/projectName: .*/projectName: $(PACKAGE)/' PROJECT
 # finds the single CSV file and renames it
-	find $(MANIFESTS)/bases -type f -name "*.clusterserviceversion.yaml" -execdir mv '{}' $(CSV_FILENAME) ';'
+	@find $(MANIFESTS)/bases -type f -name "*.clusterserviceversion.yaml" -execdir mv '{}' $(CSV_FILENAME) ';'
 	@sed -i 's~^    containerImage: .*~    containerImage: $(IMAGE):$(TAG)~' $(CSV_PATH)
 	@sed -i 's/^    support: .*/    support: $(CSV_SUPPORT)/' $(CSV_PATH)
 	@sed -i 's/^  name: .*.\(v.*\)/  name: $(PACKAGE).v$(VERSION)/' $(CSV_PATH)
@@ -237,7 +237,7 @@ pre-bundle:
 	@sed -i 's/^  version: .*/  version: $(VERSION)/' $(CSV_PATH)
 
 # Generate bundle manifests and metadata, then validate generated files.
-bundle: generate-crds kustomize pre-bundle
+bundle: generate-crds operator-sdk kustomize pre-bundle
 	@$(MAKE) $(MK_OPTIONS) -C $(ROLE) init
 	@$(MAKE) $(MK_OPTIONS) -C $(GRANT) init
 	@$(MAKE) $(MK_OPTIONS) -C $(MANAGER) init
@@ -254,11 +254,13 @@ bundle: generate-crds kustomize pre-bundle
 			-q --overwrite --version $(VERSION) \
 			--kustomize-dir $(MANIFESTS) $(BUNDLE_METADATA_OPTS)
 # Remove unserved CRDs from owned section
-	@sed -i '/- kind: Syndesis/,/version: v1beta1/d' $(BUNDLE_DIR)/$(MANIFESTS)/$(CSV_FILENAME)
+	@sed -i '/owned:/,/Schema/{/owned:/! {/Schema/! d } }' $(BUNDLE_DIR)/$(MANIFESTS)/$(CSV_FILENAME)
 # Add a timestamp to the new bundle manifest
 	@sed -i '/^    containerImage: .*/ a \ \ \ \ createdAt: $(TIMESTAMP)' $(BUNDLE_DIR)/$(MANIFESTS)/$(CSV_FILENAME)
 # Removes any clusterrolebindings necessary for clusterroles to be added but not required for the manifests
 	@rm -f $(BUNDLE_DIR)/manifests/*clusterrolebinding.yaml
+# Workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1934080
+	@rm -f $(BUNDLE_DIR)/manifests/*serviceaccount.yaml
 # Moves the docker file into the bundle directory
 	@mv bundle.Dockerfile $(BUNDLE_DIR)/Dockerfile && \
 		sed -i 's/bundle\///g' $(BUNDLE_DIR)/Dockerfile
@@ -270,5 +272,10 @@ bundle-build: bundle
 	cd bundle && docker build -f Dockerfile -t $(BUNDLE_IMG) .
 
 clean:
-	find . -name "*.gen.*" -delete
-	rm -rf bundle
+	@find . -name "*.gen.*" -delete
+ifneq ($(CSV_PATH), $(DEFAULT_CSV))
+ifneq ("$(wildcard $(CSV_PATH))","")
+	@mv $(CSV_PATH)
+endif
+endif
+	@rm -rf bundle

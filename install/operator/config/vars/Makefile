@@ -8,6 +8,7 @@ DEFAULT_IMAGE := quay.io/syndesis/syndesis-operator
 DEFAULT_TAG := $(DEFAULT_VERSION:.0=)
 DEFAULT_NAMESPACE := syndesis
 DEFAULT_CHANNEL := $(DEFAULT_VERSION:.0=.x)
+DEFAULT_CSV := manifests/bases/syndesis.clusterserviceversion.yaml
 BUNDLE_INFIX := bundle
 
 DB_IMAGE := centos/postgresql-10-centos7
