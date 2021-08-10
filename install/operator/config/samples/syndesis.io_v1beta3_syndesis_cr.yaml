@@ -1,0 +1,15 @@
+apiVersion: syndesis.io/v1beta3
+kind: Syndesis
+metadata:
+  name: app
+spec:
+  addons:
+    jaeger:
+      enabled: true
+    ops:
+      enabled: false
+    publicApi:
+      enabled: false
+    todo:
+      enabled: false
+status: {}
