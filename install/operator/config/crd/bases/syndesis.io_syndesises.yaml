@@ -2209,6 +2209,11 @@ spec:
                       disableSarCheck:
                         description: Enable or disable SAR checks all together
                         type: boolean
+                      environment:
+                        additionalProperties:
+                          type: string
+                        description: Environment variables to be applied to dc/syndesis-oauthproxy
+                        type: object
                       sarNamespace:
                         description: The user needs to have permissions to at least
                           get a list of pods in the given project in order to be granted
