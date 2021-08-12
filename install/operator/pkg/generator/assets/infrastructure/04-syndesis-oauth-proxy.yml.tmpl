@@ -89,6 +89,10 @@
               secretKeyRef:
                 name: syndesis-global-config
                 key: OPENSHIFT_OAUTH_CLIENT_SECRET
+{{- range $var_name, $var_value := .Syndesis.Components.Oauth.Environment}}
+          - name: {{ $var_name }}
+            value: {{ $var_value }}
+{{- end }}
           ports:
           - containerPort: 8443
             name: public
