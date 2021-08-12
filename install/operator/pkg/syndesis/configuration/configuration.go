@@ -106,6 +106,7 @@ type OauthConfiguration struct {
 	CookieSecret    string // Secret to use to encrypt oauth cookies
 	DisableSarCheck bool   // Enable or disable SAR checks all together
 	SarNamespace    string // The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation
+	Environment     map[string]string // Environment variables to be applied to dc/syndesis-oauthproxy
 }
 
 type UIConfiguration struct {

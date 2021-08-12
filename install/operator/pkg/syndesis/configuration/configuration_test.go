@@ -354,6 +354,26 @@ func Test_MavenSettings(t *testing.T) {
 	})
 }
 
+func Test_OAuthEnvironment(t *testing.T) {
+	c := getConfigLiteral()
+	s := &v1beta2.Syndesis{
+		Spec: v1beta2.SyndesisSpec{
+			Components: v1beta2.ComponentsSpec{
+				Oauth: v1beta2.OauthConfiguration{
+					Environment: map[string]string{
+						"my_key1": "my_val1",
+						"MY_KEY2": "MY_VAL2",
+					},
+				},
+			},
+		},
+	}
+
+	c.setSyndesisFromCustomResource(s)
+	assert.Equal(t, c.Syndesis.Components.Oauth.Environment, s.Spec.Components.Oauth.Environment)
+}
+
+
 func Test_generatePasswords(t *testing.T) {
 	tests := []struct {
 		name   string

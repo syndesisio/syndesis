@@ -117,6 +117,9 @@ type OauthConfiguration struct {
 
 	// The name of the secret used to store the TLS certificate for secure HTTPS communication
 	CryptoCommsSecret string `json:"cryptoCommsSecret,omitempty"`
+
+	// Environment variables to be applied to dc/syndesis-oauthproxy
+	Environment map[string]string `json:"environment,omitempty"`
 }
 
 type DatabaseConfiguration struct {
