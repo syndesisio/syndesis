@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.4.1
+    controller-gen.kubebuilder.io/version: v0.3.0
   labels:
     app: syndesis
   name: syndesises.syndesis.io
@@ -3946,6 +3946,11 @@ spec:
                       disableSarCheck:
                         description: Enable or disable SAR checks all together
                         type: boolean
+                      environment:
+                        additionalProperties:
+                          type: string
+                        description: Environment variables to be applied to dc/syndesis-oauthproxy
+                        type: object
                       sarNamespace:
                         description: The user needs to have permissions to at least
                           get a list of pods in the given project in order to be granted
