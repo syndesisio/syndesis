@@ -28,7 +28,7 @@ The *Mapping Details* panel opens.
 . In the upper right, click *Done*.
 
 .Result
+
 The integration is complete and it is ready to be published. 
-On the left, in the integration visualization panel, you might see a
-image:images/tutorials/WarningIcon.png[warning] Data Type Mismatch 
-warning icon. You can ignore it. 
+
+If you see a image:images/tutorials/WarningIcon.png[warning] Data Type Mismatch warning icon, you can ignore it. 

@@ -17,3 +17,5 @@ and identifies any items that were damaged when they were received.
 . In {prodname}, in the integration visualization, click the plus sign.
 . Click *Damage Reporter*.
 . Click *Next* to add the Damage Reporter step to the integration. 
++
+*Note:* If a Data Type Mismatch warning icon image:images/tutorials/WarningIcon.png[warning] appears next to the Damage Reporter step, you can ignore it.     

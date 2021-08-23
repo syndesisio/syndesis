@@ -29,18 +29,11 @@ The data mapper displays a line from the source field to the target field.
 .. In the *Target* panel, click *first_and_last_name* and then click the *Create New Mapping* icon.
 .. In the *Mapping Details* panel, in the *Sources* field, select */FirstName* and then select */LastName*.
 +
-When you are done you should see a line from each of the source fields to
-the target field. 
+When you are done you should see a line from each of the source fields to the target field. 
 
-. Add the following mappings:
+. Map the following Salesforce and database fields:
 +
-[options="header"]
-|=======================
-|Map This Salesforce Field |To This Database Field
-|`LeadSource`    |`lead_source`
-|`Status`    |`lead_status`
-|`Phone`    |`phone`
-|`Rating`    |`rating`
-|=======================
+* Map `Status` to `lead_status`
+* Map `Phone` to `phone`
 
 . In the upper right, click *Done*.
