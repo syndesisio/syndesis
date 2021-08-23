@@ -18,6 +18,8 @@ click the  *PostgresDB* connection.
 This integration finishes by using the credentials
 defined in this database connection to connect to the
 provided sample database.
++
+*Note:* If you do not see the *PostgreDB* connection card, your OpenShift administrator must configure {prodname} to include the sample PostgresDB connection (and the ToDo app).    
 
 . On the *Choose an action* page, select *Invoke stored procedure*,
 which passes data to a stored procedure.

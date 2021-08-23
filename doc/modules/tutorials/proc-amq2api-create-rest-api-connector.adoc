@@ -30,12 +30,12 @@ OpenAPI document:
 .. In the {prodname} navigation panel, click *Home*.
 .. Copy the URL into a text editor.
 .. At the beginning of the URL, insert `*todo-*`.
-.. At the end of the URL, add `*swagger.json*`.
+.. At the end of the URL, add `*openapi.json*`.
 .. Use the `http` scheme instead of `https`.
 
 +
 The result is something like this:
-`\http://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com/swagger.json`
+`\http://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com/openapi.json`
 
 +
 [NOTE]
@@ -60,7 +60,9 @@ a warning, you can ignore it.
 .. If you want to, you can change the values in the *Name* and *Description* fields.
 .. In the *Host* field, accept the name of the service host,
 which is something like this:
-`\http://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com`.
+`\http://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com`
++
+If necessary, change `\https:` to `\http:`
 .. In the *Base URL* field, accept the part of the URL that follows the
 host name in service requests: `/api`.
 
