@@ -8,6 +8,7 @@ export * from './IntegrationEditorChooseAction';
 export * from './IntegrationEditorExtensionTable';
 export * from './IntegrationEditorExtensionTableRows';
 export * from './IntegrationEditorForm';
+export * from './IntegrationEditorLabels';
 export * from './IntegrationEditorLayout';
 export * from './IntegrationEditorNothingToConfigure';
 export * from './IntegrationEditorNothingToConfigureAlert';

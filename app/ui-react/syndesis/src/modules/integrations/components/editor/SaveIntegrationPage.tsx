@@ -12,6 +12,7 @@ import {
 } from '@syndesis/models';
 import {
   IntegrationEditorExtensionTable,
+  IntegrationEditorLabels,
   IntegrationEditorLayout,
   IntegrationSaveForm,
   SyndesisAlert,
@@ -50,6 +51,7 @@ export interface ISaveIntegrationForm {
    * extensions for this integration
    */
   dependencies?: Dependency[];
+  labels?: { [key: string]: string };
 }
 
 export interface ISaveIntegrationPageProps
@@ -135,6 +137,7 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                           name,
                           description,
                           dependencies,
+                          labels,
                         }: ISaveIntegrationForm,
                         actions: any
                       ) => {
@@ -146,6 +149,7 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                             {
                               dependencies: dependencyList.current,
                               description,
+                              labels,
                               name,
                             }
                           );
@@ -238,6 +242,7 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                             initialValue={{
                               dependencies: dependencyList.current,
                               description: state.integration.description,
+                              labels: state.integration.labels,
                               name: state.integration.name,
                             }}
                             validate={validator}
@@ -309,6 +314,11 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                                           />
                                         )}
                                         {fields}
+                                        {state.integration.labels && (
+                                          <IntegrationEditorLabels
+                                            labels={state.integration.labels}
+                                          />
+                                        )}
                                         {extensions.length > 0 && (
                                           <IntegrationEditorExtensionTable
                                             extensionsAvailable={extensions}
