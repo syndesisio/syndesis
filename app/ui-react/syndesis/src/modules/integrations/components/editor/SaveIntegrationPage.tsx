@@ -68,6 +68,29 @@ export interface ISaveIntegrationPageProps
   postPublishHref: (p: IPostPublishRouteParams) => H.LocationDescriptorObject;
 }
 
+const convertLabelObjectToArray = (labels: { [s: string]: string }) => {
+  const initialArray: string[] = [];
+
+  Object.entries(labels).map((l, k) => {
+    initialArray.push(l[0] + '=' + l[1]);
+  });
+
+  return initialArray;
+};
+
+const convertLabelArrayIntoObject = (
+  labels: string[]
+): { [s: string]: string } => {
+  let newObj: { [s: string]: string } = {};
+
+  labels.map((label) => {
+    const splitLabel = label.split('=');
+    const labelKey = splitLabel[0];
+    newObj = { ...newObj, [labelKey]: splitLabel[1] };
+  });
+  return newObj;
+};
+
 /**
  * This page asks for the details of the integration, and saves it.
  *
@@ -86,6 +109,9 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
 
     const [currentSelectedExtensionIds, setSelectedExtensionIds] =
       React.useState<string[]>([]);
+    const [currentSelectLabels, setCurrentSelectLabels] = React.useState<{
+      [key: string]: string;
+    }>({});
     const [error, setError] = React.useState<
       false | ErrorResponse | IntegrationSaveErrorResponse
     >(false);
@@ -94,6 +120,7 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
 
     const extensions: IExtensionProps[] = extensionsData.items as [];
     const dependencyList = React.useRef<Dependency[]>([]);
+    const labelList = React.useRef<{ [key: string]: string }>({});
 
     /**
      * Here we will return an array of extension IDs later
@@ -104,7 +131,7 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
     /**
      * Updates the state based on changes in the UI
      */
-    const onSelect = React.useCallback(
+    const onSelectExtensions = React.useCallback(
       (extensionIds: string[]) => {
         setSelectedExtensionIds(extensionIds);
 
@@ -116,6 +143,15 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
         });
       },
       [dependencyList]
+    );
+
+    const onSelectLabels = React.useCallback(
+      (labels: string[]) => {
+        // parse into key/value pairs
+
+        labelList.current = convertLabelArrayIntoObject(labels);
+      },
+      [labelList]
     );
 
     return (
@@ -149,7 +185,7 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                             {
                               dependencies: dependencyList.current,
                               description,
-                              labels,
+                              labels: currentSelectLabels.current,
                               name,
                             }
                           );
@@ -242,7 +278,9 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                             initialValue={{
                               dependencies: dependencyList.current,
                               description: state.integration.description,
-                              labels: state.integration.labels,
+                              labels: convertLabelObjectToArray(
+                                currentSelectLabels.current
+                              ),
                               name: state.integration.name,
                             }}
                             validate={validator}
@@ -314,11 +352,9 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                                           />
                                         )}
                                         {fields}
-                                        {state.integration.labels && (
-                                          <IntegrationEditorLabels
-                                            labels={state.integration.labels}
-                                          />
-                                        )}
+                                        <IntegrationEditorLabels
+                                          labels={currentSelectLabels.current}
+                                        />
                                         {extensions.length > 0 && (
                                           <IntegrationEditorExtensionTable
                                             extensionsAvailable={extensions}
@@ -337,7 +373,9 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                                             i18nTableName={t(
                                               'integrations:editor:extensions:tableName'
                                             )}
-                                            onSelect={onSelect}
+                                            onSelectExtensions={
+                                              onSelectExtensions
+                                            }
                                             preSelectedExtensionIds={
                                               preSelectedExtensions
                                             }
