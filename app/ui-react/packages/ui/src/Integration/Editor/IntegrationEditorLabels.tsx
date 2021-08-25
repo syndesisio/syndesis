@@ -1,7 +1,12 @@
-import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
+import {
+  FormGroup,
+  Select,
+  SelectOption,
+  SelectVariant,
+} from '@patternfly/react-core';
 import * as React from 'react';
 
-interface IIntegrationEditorLabelsProps {
+export interface IIntegrationEditorLabelsProps {
   initialLabels: string[];
   onSelectLabels: (labels: string[]) => void;
 }
@@ -66,7 +71,11 @@ export const IntegrationEditorLabels: React.FunctionComponent<IIntegrationEditor
     const placeholderText = 'Specify a label in this format: key=value';
 
     return (
-      <>
+      <FormGroup
+        fieldId={'integration-label-select'}
+        label={'Labels'}
+        data-testid={'integration-label-select'}
+      >
         <div>
           <span id={titleId} hidden={true}>
             {placeholderText}
@@ -75,6 +84,8 @@ export const IntegrationEditorLabels: React.FunctionComponent<IIntegrationEditor
             aria-labelledby={titleId}
             isCreatable={true}
             isOpen={isOpen}
+            id={'integration-label-select'}
+            name={'integration-label-select'}
             onClear={clearSelection}
             onCreateOption={onCreateOption}
             onSelect={onSelect}
@@ -87,11 +98,16 @@ export const IntegrationEditorLabels: React.FunctionComponent<IIntegrationEditor
           >
             {initialLabels &&
               initialLabels.map((option, index) => (
-                <SelectOption key={index} value={option} />
+                <SelectOption
+                  key={index}
+                  value={option}
+                  label={option}
+                  data-testid={'label-option-' + option}
+                />
               ))}
           </Select>
           {!isValid && <p>Please use the following format: key=value</p>}
         </div>
-      </>
+      </FormGroup>
     );
   };

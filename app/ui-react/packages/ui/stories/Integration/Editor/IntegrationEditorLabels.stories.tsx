@@ -8,9 +8,16 @@ import { IntegrationEditorLabels } from '../../../src/Integration/Editor/Integra
 
 const labels = ['rachel=pizza', 'lex=hotdogs'];
 
-stories.add('Integration Editor Labels', () => (
+stories.add('Pre-Existing Labels', () => (
   <IntegrationEditorLabels
     initialLabels={labels}
+    onSelectLabels={action('Selected')}
+  />
+));
+
+stories.add('No Labels', () => (
+  <IntegrationEditorLabels
+    initialLabels={[]}
     onSelectLabels={action('Selected')}
   />
 ));
