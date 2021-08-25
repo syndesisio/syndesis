@@ -68,11 +68,13 @@ export interface ISaveIntegrationPageProps
   postPublishHref: (p: IPostPublishRouteParams) => H.LocationDescriptorObject;
 }
 
-const convertLabelObjectToArray = (labels: { [s: string]: string }) => {
+const convertLabelObjectToArray = (labels: {
+  [s: string]: string;
+}): string[] => {
   const initialArray: string[] = [];
 
   Object.entries(labels).map((l, k) => {
-    initialArray.push(l[0] + '=' + l[1]);
+    return initialArray.push(l[0] + '=' + l[1]);
   });
 
   return initialArray;
@@ -86,7 +88,7 @@ const convertLabelArrayIntoObject = (
   labels.map((label) => {
     const splitLabel = label.split('=');
     const labelKey = splitLabel[0];
-    newObj = { ...newObj, [labelKey]: splitLabel[1] };
+    return (newObj = { ...newObj, [labelKey]: splitLabel[1] });
   });
   return newObj;
 };
@@ -109,15 +111,11 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
 
     const [currentSelectedExtensionIds, setSelectedExtensionIds] =
       React.useState<string[]>([]);
-    const [currentSelectLabels, setCurrentSelectLabels] = React.useState<{
-      [key: string]: string;
-    }>({});
     const [error, setError] = React.useState<
       false | ErrorResponse | IntegrationSaveErrorResponse
     >(false);
 
     const { t } = useTranslation('shared');
-
     const extensions: IExtensionProps[] = extensionsData.items as [];
     const dependencyList = React.useRef<Dependency[]>([]);
     const labelList = React.useRef<{ [key: string]: string }>({});
@@ -148,7 +146,6 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
     const onSelectLabels = React.useCallback(
       (labels: string[]) => {
         // parse into key/value pairs
-
         labelList.current = convertLabelArrayIntoObject(labels);
       },
       [labelList]
@@ -185,7 +182,7 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                             {
                               dependencies: dependencyList.current,
                               description,
-                              labels: currentSelectLabels.current,
+                              labels: labelList.current,
                               name,
                             }
                           );
@@ -268,6 +265,10 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                           values
                         );
 
+                      if (state.integration.labels) {
+                        labelList.current = state.integration.labels;
+                      }
+
                       return (
                         <>
                           <AutoForm<ISaveIntegrationForm>
@@ -278,9 +279,7 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                             initialValue={{
                               dependencies: dependencyList.current,
                               description: state.integration.description,
-                              labels: convertLabelObjectToArray(
-                                currentSelectLabels.current
-                              ),
+                              labels: labelList.current,
                               name: state.integration.name,
                             }}
                             validate={validator}
@@ -353,7 +352,10 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                                         )}
                                         {fields}
                                         <IntegrationEditorLabels
-                                          labels={currentSelectLabels.current}
+                                          onSelectLabels={onSelectLabels}
+                                          initialLabels={convertLabelObjectToArray(
+                                            labelList.current
+                                          )}
                                         />
                                         {extensions.length > 0 && (
                                           <IntegrationEditorExtensionTable

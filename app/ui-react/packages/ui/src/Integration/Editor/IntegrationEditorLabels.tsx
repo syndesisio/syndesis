@@ -2,25 +2,42 @@ import { Select, SelectOption, SelectVariant } from '@patternfly/react-core';
 import * as React from 'react';
 
 interface IIntegrationEditorLabelsProps {
-  labels?: { [key: string]: string };
-  onSelect: (something?: any) => void;
+  initialLabels: string[];
+  onSelectLabels: (labels: string[]) => void;
 }
 
+/**
+ * Valid format: alphanumeric=alphanumeric
+ * e.g. Rachel=pizza, lex=hotdogs123
+ * @param input
+ */
+const validateLabel = (input: string): boolean => {
+  const regexIncludeEqual = /(^\w+)(=)(\w+$)/g;
+  return regexIncludeEqual.test(input);
+};
+
 export const IntegrationEditorLabels: React.FunctionComponent<IIntegrationEditorLabelsProps> =
-  ({ labels }) => {
-    const initialArray: string[] = [];
-
-    if (labels) {
-      Object.entries(labels).map((l, k) => {
-        initialArray.push(l[0] + '=' + l[1]);
-      });
-    }
-
-    const [customLabels, setCustomLabels] = React.useState(initialArray);
+  ({ initialLabels, onSelectLabels }) => {
+    const [labels, setLabels] = React.useState(initialLabels);
     const [isOpen, setIsOpen] = React.useState(false);
+    const labelRef = React.useRef(labels);
+    const isValid = React.useRef(true);
+
+    React.useEffect(() => {
+      if (labelRef.current === labels) {
+        return;
+      } else {
+        labelRef.current = labels;
+        onSelectLabels(labelRef.current);
+      }
+    }, [labels]);
 
     const onCreateOption = (newValue: string) => {
-      setCustomLabels([...customLabels, newValue]);
+      // don't create if it's invalid
+      if (!validateLabel(newValue)) {
+        isValid.current = false;
+        return;
+      }
     };
 
     const onToggle = (isOpenNew: boolean) => {
@@ -31,15 +48,17 @@ export const IntegrationEditorLabels: React.FunctionComponent<IIntegrationEditor
       event: React.MouseEvent | React.ChangeEvent,
       value: any
     ) => {
-      if (customLabels.includes(value)) {
-        setCustomLabels(customLabels.filter((item) => item !== value));
-      } else {
-        setCustomLabels([...customLabels, value]);
+      if (labels.includes(value)) {
+        setLabels(labels.filter((item) => item !== value));
+      } else if (validateLabel(value)) {
+        setLabels([...labels, value]);
       }
+
+      setIsOpen(false);
     };
 
     const clearSelection = () => {
-      setCustomLabels([]);
+      setLabels([]);
       setIsOpen(false);
     };
 
@@ -61,14 +80,17 @@ export const IntegrationEditorLabels: React.FunctionComponent<IIntegrationEditor
             onSelect={onSelect}
             onToggle={onToggle}
             placeholderText={placeholderText}
-            selections={customLabels}
+            selections={labels}
             typeAheadAriaLabel={placeholderText}
+            validated={isValid.current ? 'default' : 'error'}
             variant={SelectVariant.typeaheadMulti}
           >
-            {initialArray.map((option, index) => (
-              <SelectOption key={index} value={option} />
-            ))}
+            {initialLabels &&
+              initialLabels.map((option, index) => (
+                <SelectOption key={index} value={option} />
+              ))}
           </Select>
+          {!isValid && <p>Please use the following format: key=value</p>}
         </div>
       </>
     );
