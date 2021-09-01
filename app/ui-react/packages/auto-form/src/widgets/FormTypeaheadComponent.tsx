@@ -77,6 +77,7 @@ export const FormTypeaheadComponent: React.FunctionComponent<IFormControlProps> 
           ) : undefined
         }
         {...props.property.formGroupAttributes}
+        data-testid={`form-group-${id}`}
         fieldId={id}
         isRequired={props.property.required}
         validated={getValidationState(props)}
