@@ -397,7 +397,9 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <configuration>
               <skip>false</skip>
-              <additionalparam>-Xdoclint:none</additionalparam>
+              <doclint>
+                none
+              </doclint>
             </configuration>
             <executions>
               <execution>
@@ -1324,7 +1326,9 @@
                 <goal>jar</goal>
               </goals>
               <configuration>
-                <additionalparam>-Xdoclint:none</additionalparam>
+                <doclint>
+                  none
+                </doclint>
               </configuration>
             </execution>
           </executions>
