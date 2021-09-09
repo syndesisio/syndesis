@@ -26,7 +26,9 @@ call_maven() {
       echo "Modules: $maven_modules"
       args_to_use+=" -Dbuild-selection -P"
       for module in $maven_modules; do
-        args_to_use+="build-${module//:/},"
+        if [ "${module}" != "test" ]; then
+          args_to_use+="build-${module//:/},"
+        fi
       done
       args_to_use=${args_to_use%?}
       _call_maven_internal "$args_to_use" "Building specified modules"
