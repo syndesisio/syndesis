@@ -304,9 +304,9 @@
                   <goal>wget</goal>
                 </goals>
                 <configuration>
-                  <url>${sass-binary-site}/v${node-sass-version}/${os.type}-x64-64_binding.node</url>
+                  <url>${sass-binary-site}/v${node-sass-version}/${os.type}-x64-83_binding.node</url>
                   <outputFileName>binding.node</outputFileName>
-                  <outputDirectory>${project.build.directory}/${os.type}-x64-64</outputDirectory>
+                  <outputDirectory>${project.build.directory}/${os.type}-x64-83</outputDirectory>
                 </configuration>
               </execution>
             </executions>
@@ -332,7 +332,7 @@
                   <goal>yarn</goal>
                 </goals>
                 <configuration>
-                  <arguments>config set sass-binary-path ${project.build.directory}/linux-x64-64/binding.node</arguments>
+                  <arguments>config set sass-binary-path ${project.build.directory}/linux-x64-83/binding.node</arguments>
                 </configuration>
               </execution>
             </executions>

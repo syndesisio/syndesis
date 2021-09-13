@@ -129,7 +129,7 @@
     <maven-download.version>1.3.0</maven-download.version>
 
     <!-- UI dependencies -->
-    <node-sass-version>4.12.0</node-sass-version>
+    <node-sass-version>6.0.1</node-sass-version>
 
     <!-- Common dependencies -->
     <assertj-core.version>3.16.1</assertj-core.version>
