@@ -309,18 +309,6 @@
                   <outputDirectory>${project.build.directory}/${os.type}-x64-64</outputDirectory>
                 </configuration>
               </execution>
-              <execution>
-                <id>download-iltorb</id>
-                <phase>generate-sources</phase>
-                <goals>
-                  <goal>wget</goal>
-                </goals>
-                <configuration>
-                  <url>${iltorb-binary-site}/v${iltorb-version}/iltorb-v${iltorb-version}-node-v64-${os.type}-x64.tar.gz</url>
-                  <outputFileName>2a34dd-iltorb-v${iltorb-version}-node-v64-linux-x64.tar.gz</outputFileName>
-                  <outputDirectory>${user.home}/.npm/_prebuilds/</outputDirectory>
-                </configuration>
-              </execution>
             </executions>
           </plugin>
           <plugin>
