@@ -497,7 +497,7 @@
             </goals>
             <configuration>
               <expression>cxf-version</expression>
-              <artifact>org.apache.camel:camel-parent:2.23.2.fuse-790053</artifact>
+              <artifact>org.apache.camel:camel-parent:${camel.version}</artifact>
               <output>${project.basedir}/src/test/resources/cxf-version.txt</output>
             </configuration>
           </execution>
