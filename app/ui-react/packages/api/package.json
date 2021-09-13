@@ -21,7 +21,7 @@
     "jest": "^25.1.0",
     "jest-cli": "^25.1.0",
     "jest-dom": "^3.1.3",
-    "microbundle": "^0.11.0",
+    "microbundle": "^0.13.3",
     "monaco-editor": "^0.19.3",
     "monaco-editor-webpack-plugin": "^1.8.2",
     "react": "^16.6.0",
@@ -44,8 +44,8 @@
     "test": "jest",
     "test:watch": "yarn run test --watch",
     "prebuild": "rimraf dist",
-    "build": "microbundle --format cjs --no-compress",
-    "dev": "microbundle watch --format cjs --no-compress"
+    "build": "microbundle --format cjs --no-compress --jsx React.createElement",
+    "dev": "microbundle watch --format cjs --no-compress --jsx React.createElement"
   },
   "peerDependencies": {
     "patternfly-react": "^2.29.2",
