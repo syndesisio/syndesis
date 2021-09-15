@@ -68,5 +68,15 @@
     resources:
     - clusterserviceversions
     verbs: [ get, list, watch ]
+  - apiGroups:
+    - config.openshift.io
+    resources:
+    - consoles
+    verbs: [ get, list ]
+  - apiGroups:
+    - operator.openshift.io
+    resources:
+    - consoles
+    verbs: [ get, list ]
 
 {{end}}

@@ -20,6 +20,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"net/url"
@@ -42,12 +43,11 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
-	"k8s.io/apimachinery/pkg/util/yaml"
-
 	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	"k8s.io/apimachinery/pkg/util/yaml"
 )
 
 var random = rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -732,6 +732,7 @@ func getSyndesisEnvVarsFromOpenShiftNamespace(secret *corev1.Secret) (map[string
 	return nil, errors.New("no configuration found")
 }
 
+// adds the syndesis url link to the openshift web console 
 func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, syndesis *synapi.Syndesis, syndesisRouteHost string) error {
 	if syndesisRouteHost == "" {
 		return nil
@@ -746,7 +747,6 @@ func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, 
 	consoleLink := &consolev1.ConsoleLink{}
 	err := client.Get(ctx, types.NamespacedName{Name: consoleLinkName}, consoleLink)
 	if err != nil {
-		log.Info(consoleLink.Name)
 		consoleLink = createNamespaceDashboardLink(consoleLinkName, syndesisRouteHost, syndesis)
 		if err := client.Create(ctx, consoleLink); err != nil {
 			log.Error(err, "error creating console link")
@@ -759,7 +759,7 @@ func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, 
 			}
 		}
 
-		if err := reconcileConsoleLink(ctx, syndesis, syndesisRouteHost, consoleLink, client); err != nil {
+		if err := config.reconcileConsoleLink(ctx, syndesis, syndesisRouteHost, consoleLink, client); err != nil {
 			return err
 		}
 	}
@@ -767,7 +767,7 @@ func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, 
 	return nil
 }
 
-func reconcileConsoleLink(ctx context.Context, syndesis *synapi.Syndesis, routeHost string, link *consolev1.ConsoleLink, client client.Client) error {
+func (config *Config) reconcileConsoleLink(ctx context.Context, syndesis *synapi.Syndesis, routeHost string, link *consolev1.ConsoleLink, client client.Client) error {
 	updateConsoleLink := false
 	url := "https://" + routeHost
 	if link.Spec.Href != url {
@@ -775,7 +775,8 @@ func reconcileConsoleLink(ctx context.Context, syndesis *synapi.Syndesis, routeH
 		updateConsoleLink = true
 	}
 
-	linkText := syndesis.Name
+	linkText := fmt.Sprintf("%s [%s]", config.ProductName, syndesis.Name)
+
 	if link.Spec.Text != linkText {
 		link.Spec.Text = linkText
 		updateConsoleLink = true
@@ -812,3 +813,21 @@ func createNamespaceDashboardLink(name string, routeHost string, syndesis *synap
 		},
 	}
 }
+
+func (config *Config) SetOpenshiftManagementConsoleUrl(ctx context.Context, clientTools *clienttools.ClientTools) {
+	url := ""
+	var err error
+	if config.ApiServer.Openshift4 {
+		client, _ := clientTools.RuntimeClient()
+		url, err = util.GetOpenshift4ManagementConsoleUrl(ctx, client)
+	} else {
+		dynClient, _ := clientTools.DynamicClient()
+		url, err = util.GetOpenshift3ManagementConsoleUrl(ctx, dynClient)
+	}
+	if err != nil {
+		log.Info("Unable to determine Openshift Management Console URL. The user will be unable to watch the integration build log in UI.", "error", err.Error())
+	} else if len(url) > 0 {
+		config.OpenShiftConsoleUrl = url
+	}
+}
+

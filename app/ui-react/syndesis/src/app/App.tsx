@@ -45,17 +45,10 @@ export const App: React.FunctionComponent<IAppBaseProps> = ({
     ) {
       return undefined;
     }
-    const baseUrl = `${config.consoleUrl}/project/${
+    const podLogUrl = `${config.consoleUrl}/k8s/ns/${
       monitoring.namespace
-    }/browse/pods/${monitoring.podName}?tab=`;
-    switch (monitoring.linkType) {
-      case 'LOGS':
-        return baseUrl + 'logs';
-      case 'EVENTS':
-        return baseUrl + 'events';
-      default:
-        return undefined;
-    }
+    }/pods/${monitoring.podName}/logs`;
+    return podLogUrl;
   };
 
   return (

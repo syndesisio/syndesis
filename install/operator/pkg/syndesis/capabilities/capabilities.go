@@ -26,6 +26,7 @@ import (
 
 type ApiServerSpec struct {
 	Version          string // Set to the kubernetes version of the API Server
+	Openshift4       bool   // set to true if running on openshift 4
 	ImageStreams     bool   // Set to true if the API Server supports imagestreams
 	Routes           bool   // Set to true if the API Server supports routes
 	EmbeddedProvider bool   // Set to true if the API Server support an embedded authenticaion provider, eg. openshift
@@ -103,5 +104,10 @@ func ApiCapabilities(clientTools *clienttools.ClientTools) (*ApiServerSpec, erro
 	apiSpec.OlmSupport = contains(resIndex, RequiredApi.packagemanifests)
 	apiSpec.ConsoleLink = contains(resIndex, RequiredApi.consolelinks)
 
+	if apiSpec.ConsoleLink {
+		apiSpec.Openshift4 = true
+	} else {
+		apiSpec.Openshift4 = false
+	}
 	return &apiSpec, nil
 }
