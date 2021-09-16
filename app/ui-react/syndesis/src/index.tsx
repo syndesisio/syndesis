@@ -1,3 +1,4 @@
+import './index.css';
 import {
   ApiContext,
   ServerEventsContext,
@@ -12,7 +13,7 @@ import { I18nextProvider, Translation } from 'react-i18next';
 import { Router } from 'react-router-dom';
 import { App, IAppRoute, IAppRouteWithChildrens, WithConfig } from './app';
 import i18n from './i18n';
-import './index.css';
+
 import { ApiClientConnectorsModule } from './modules/apiClientConnectors';
 import { ConnectionsModule } from './modules/connections';
 import { DashboardModule } from './modules/dashboard';
