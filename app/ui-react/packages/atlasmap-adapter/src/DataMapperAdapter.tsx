@@ -76,7 +76,7 @@ export const DataMapperAdapter: React.FunctionComponent<IDataMapperAdapterProps>
     console.log('Atlasmap document', JSON.stringify(externalDocument));
     return (
       <AtlasmapProvider
-        logLevel={'info'}
+        logLevel={'warn'}
         baseJSONInspectionServiceUrl={baseJSONInspectionServiceUrl}
         baseJavaInspectionServiceUrl={baseJavaInspectionServiceUrl}
         baseMappingServiceUrl={baseMappingServiceUrl}

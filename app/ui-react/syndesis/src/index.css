@@ -1,2 +1,3 @@
 @import url('~@syndesis/ui/dist/index.css');
 @import url('~@syndesis/auto-form/dist/index.css');
+@import url('~@syndesis/atlasmap-adapter/node_modules/@atlasmap/atlasmap/dist/styles.css');
