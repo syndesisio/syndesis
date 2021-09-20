@@ -4,12 +4,24 @@
 [id='creating-kafka-connections_{context}']
 = Creating a connection to a Kafka broker
 
-In an integration, to subscribe for data from a Kafka topic
-or publish data to a Kafka topic,
-create a connection to Kafka and then add that connection to an
-integration.
+In an integration, to subscribe for data from a Kafka topic or publish data to a Kafka topic, create a connection to Kafka and then add that connection to an integration.
 
-.Prerequisite
+.Prerequisites
+
+* For link:https://console.redhat.com/beta/application-services/streams/kafkas[Red Hat Managed Kafka]:
+
+** You have installed the *OpenShift Application Services (RHOAS)* operator on the same cluster as {prodname}. The *RHOAS Operator* manages the communication between your OpenShift Cluster and the Red Hat OpenShift Streams for Apache Kafka instances.
++
+*Note:* The RHOAS Operator is a community operator.
+
+** You have created a Kafka instance, created a service account, and set up a Kafka topic as described in _link:https://access.redhat.com/documentation/en-us/red_hat_openshift_streams_for_apache_kafka/1/guide/f351c4bd-9840-42ef-bcf2-b0c9be4ee30a#_e7458089-1dfe-4d51-bfd0-990014e7226c[Getting started with Red Hat OpenShift Streams for Apache Kafka]_. You know your service account’s Client ID and Client Secret.
+
+** You know the Bootstrap server URI for the Kafka instance. To obtain the Bootstrap server URI:
++
+.. Log into the *Red Hat Managed Services* web console.
+.. In the *Kafka Instances* page of the web console, for the relevant Kafka instance that you want to connect to, select the options icon (three vertical dots) and then click *Connection* to view the Bootstrap server URI.
+
+* For the PLAIN SSL mechanism, you know the username and password
 
 * If you want to use Transport Layer Security (TLS) to encrypt your data, you have the Kafka broker’s PEM certificate text. Typically, you obtain the broker certificate text from your Kafka server administrator.
 
@@ -23,21 +35,27 @@ connectors.
 . In the *Kafka broker URIs* field, select the broker that you want
 this connection to access, or enter a comma separated list
 of Kafka broker URIs. Each URI should be in the form `host:port`.
++
+For Red Hat Managed Kafka, select your Managed Kafka instance’s Bootstrap server URI.
+
 . For the *Security Protocol* field, select one of the following options:
 * If you want to encrypt your data to protect it in transit, select *TLS* (Transport Layer Security).
-* If you want to authenticate with SASL and encrypt your data with SSL, select *SASL_SSL*.
+* If you want to authenticate with SASL and encrypt your data with SSL (for example, with Red Hat Managed Kafka), select *SASL_SSL*.
 * If you do not want to encrypt your data, select *Plain* and then skip to Step 7.
 . If you selected *SASL_SSL* as the *Security Protocol*, then you are required to choose between two options to setup the credentials:
 * If you want to use *PLAIN* as the *SASL Mechanism* you must set the *Username* and *Password* fields.
 * If you want to use *OAUTHBEARER* as the *SASL Mechanism* you must set the following fields:
+
+** *Username* with the OAuth Client Id.
+** *Password* with the OAUth Client Secret.
+** *SASL Login Callback Handler Class* you can use any callback handler class from kafka-clients 2.5 version or kafka-oauth-client from the Strimzi project. To connect to Red Hat Managed Kafka, you can use:
 +
-*Username* with the OAuth Client Id.
-*Password* with the OAUth Client Secret.
-*SASL Login Callback Handler Class* you can use any callback handler class from kafka-clients 2.5 version or kafka-oauth-client from strimzi project. To connect to Red Hat Managed Kafka, you can set as `io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler`.
-*OAuth Token Endpoint URI* with the value provided by your provider.
+`io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler`
+** *OAuth Token Endpoint URI* with `/oauth/token` endpoint URI provided by your provider.
+
 . If you selected *TLS* in Step 5, then in the *Broker certificate* field, paste the Kafka broker’s PEM certificate text.
 
-. Optional. Click *Add* to specify `key:value` pairs to configure Kafka producer and consumer options.
+. Optional. Click *Add a custom property* to specify `key:value` pairs to configure Kafka producer and consumer options.
 +
 For example, if you want a new integration to be able to consume old messages from a topic, change the `auto.offset.reset` value from the default (`latest`) to `earliest` by typing  *auto.offset.reset* for the *Key* field and *earliest* for the *Value* field.
 +
@@ -53,11 +71,11 @@ parameter and try again.
 . If validation is successful, click *Next*.
 . In the *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
-For example, you might type `Kafka West`.
+For example, you might type *Kafka Test*.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection.
 . Click *Save* to see that the connection you
 created is now available. If you
 entered the example name, you would
-see that *Kafka West* appears as a connection that you can
+see that *Kafka Test* appears as a connection that you can
 choose to add to an integration.
