@@ -305,10 +305,6 @@
     </dependency>
     <dependency>
       <groupId>io.atlasmap</groupId>
-      <artifactId>atlas-java-model</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.atlasmap</groupId>
       <artifactId>atlas-java-service</artifactId>
     </dependency>
     <dependency>
