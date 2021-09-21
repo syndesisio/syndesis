@@ -86,3 +86,7 @@ replace (
 )
 
 go 1.14
+
+replace gopkg.in/yaml.v2 => github.com/mikefarah/yaml/v2 v2.4.0
+
+replace github.com/mikefarah/yaml/v2 => gopkg.in/yaml.v2 v2.4.0
