@@ -48,7 +48,7 @@ replace (
 	k8s.io/apimachinery => k8s.io/apimachinery v0.22.0
 	k8s.io/client-go => k8s.io/client-go v0.22.0
 	k8s.io/code-generator => k8s.io/code-generator v0.22.0
-	sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.7.0
+	sigs.k8s.io/controller-runtime => sigs.k8s.io/controller-runtime v0.10.1
 )
 
 require (
