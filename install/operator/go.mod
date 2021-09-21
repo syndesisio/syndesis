@@ -65,7 +65,7 @@ require (
 	github.com/leanovate/gopter v0.2.9
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/operator-framework/api v0.8.0
-	github.com/operator-framework/operator-lifecycle-manager v0.18.2
+	github.com/operator-framework/operator-lifecycle-manager v0.19.0
 	github.com/operator-framework/operator-sdk v0.19.4
 	github.com/prometheus/common v0.20.0 // indirect
 	github.com/rogpeppe/go-internal v1.8.0
