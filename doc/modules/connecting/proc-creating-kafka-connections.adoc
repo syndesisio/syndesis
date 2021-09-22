@@ -10,10 +10,6 @@ In an integration, to subscribe for data from a Kafka topic or publish data to a
 
 * For link:https://console.redhat.com/beta/application-services/streams/kafkas[Red Hat Managed Kafka]:
 
-** You have installed the *OpenShift Application Services (RHOAS)* operator on the same cluster as {prodname}. The *RHOAS Operator* manages the communication between your OpenShift Cluster and the Red Hat OpenShift Streams for Apache Kafka instances.
-+
-*Note:* The RHOAS Operator is a community operator.
-
 ** You have created a Kafka instance, created a service account, and set up a Kafka topic as described in _link:https://access.redhat.com/documentation/en-us/red_hat_openshift_streams_for_apache_kafka/1/guide/f351c4bd-9840-42ef-bcf2-b0c9be4ee30a#_e7458089-1dfe-4d51-bfd0-990014e7226c[Getting started with Red Hat OpenShift Streams for Apache Kafka]_. You know your service account’s Client ID and Client Secret.
 
 ** You know the Bootstrap server URI for the Kafka instance. To obtain the Bootstrap server URI:
@@ -21,7 +17,7 @@ In an integration, to subscribe for data from a Kafka topic or publish data to a
 .. Log into the *Red Hat Managed Services* web console.
 .. In the *Kafka Instances* page of the web console, for the relevant Kafka instance that you want to connect to, select the options icon (three vertical dots) and then click *Connection* to view the Bootstrap server URI.
 
-* For the PLAIN SSL mechanism, you know the username and password
+* For the PLAIN SSL mechanism, you know the username and password.
 
 * If you want to use Transport Layer Security (TLS) to encrypt your data, you have the Kafka broker’s PEM certificate text. Typically, you obtain the broker certificate text from your Kafka server administrator.
 
@@ -32,16 +28,15 @@ display any available connections.
 . Click *Create Connection* to display
 connectors.
 . Click the *Kafka Message Broker* connector.
-. In the *Kafka broker URIs* field, select the broker that you want
-this connection to access, or enter a comma separated list
-of Kafka broker URIs. Each URI should be in the form `host:port`.
+. In the *Kafka broker URIs* field, type or select the broker that you want
+this connection to access, or enter a comma separated list of Kafka broker URIs. Each URI should be in the form `host:port`.
 +
-For Red Hat Managed Kafka, select your Managed Kafka instance’s Bootstrap server URI.
+For Red Hat Managed Kafka, type your Managed Kafka instance’s Bootstrap server URI. Note that if you installed the Strimzi Operator or the AMQ Streams Operator on your OpenShift cluster, the URI is auto-discovered and you can select it.
 
 . For the *Security Protocol* field, select one of the following options:
-* If you want to encrypt your data to protect it in transit, select *TLS* (Transport Layer Security).
+* If you want to encrypt your data to protect it in transit, select *TLS* (Transport Layer Security). Skip to Step 7.
 * If you want to authenticate with SASL and encrypt your data with SSL (for example, with Red Hat Managed Kafka), select *SASL_SSL*.
-* If you do not want to encrypt your data, select *Plain* and then skip to Step 7.
+* If you do not want to encrypt your data, select *Plain* and then skip to Step 8.
 . If you selected *SASL_SSL* as the *Security Protocol*, then you are required to choose between two options to setup the credentials:
 * If you want to use *PLAIN* as the *SASL Mechanism* you must set the *Username* and *Password* fields.
 * If you want to use *OAUTHBEARER* as the *SASL Mechanism* you must set the following fields:
