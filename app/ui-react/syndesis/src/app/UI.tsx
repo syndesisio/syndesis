@@ -1,7 +1,4 @@
 
-import rhiImage from '@rh-uxd/integration-core/styles/assets/Logo-Red_Hat-Managed_Integration-A-Reverse-RGB.png';
-import { WithApiVersion, WithUserHelpers } from '@syndesis/api';
-import { StringMap } from '@syndesis/models';
 import {
   AboutModal,
   AboutModalContent,
@@ -13,6 +10,9 @@ import {
   PfVerticalNavItem,
   toValidHtmlId,
 } from '@syndesis/ui';
+import { IAppRoute, IAppRoutes, IAppRouteWithChildrens } from './App';
+import { WithApiVersion, WithUserHelpers } from '@syndesis/api';
+import { StringMap } from '@syndesis/models';
 import { WithLoader, WithRouter } from '@syndesis/utils';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -31,7 +31,6 @@ import rhAppleTouchIcon from '../shared/images/red-hat-apple-touch-icon.png'; //
 import redHatSafariPinnedTabIcon from '../shared/images/red-hat-safari-pinned-tab.svg';
 import synFavicon from '../shared/images/syn-favicon.ico';
 import synSafariPinnedTabIcon from '../shared/images/syn-safari-pinned-tab.svg';
-import { IAppRoute, IAppRoutes, IAppRouteWithChildrens } from './App';
 import { AppContext } from './AppContext';
 import { UIContext } from './UIContext';
 
@@ -329,15 +328,6 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                         isProductBuild
                                           ? redHatFuseOnlineLogo
                                           : syndesisLogo
-                                      }
-                                      alt={productName}
-                                      className="pf-c-brand"
-                                    />
-                                  }
-                                  rhiPictograph={
-                                    <img
-                                      src={
-                                        rhiImage
                                       }
                                       alt={productName}
                                       className="pf-c-brand"

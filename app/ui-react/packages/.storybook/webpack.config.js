@@ -16,7 +16,6 @@ module.exports = ({ config, mode }) => {
       'react-docgen-typescript-loader',
     ]
   });
-  config.resolve.alias = {'vscode' : require.resolve('monaco-languageclient/lib/vscode-compatibility')}
   config.resolve.extensions = ['.ts', '.tsx', '.js', '.jsx'];
   config.resolve.plugins = [
     new TsconfigPathsPlugin({
