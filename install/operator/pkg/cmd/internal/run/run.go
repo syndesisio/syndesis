@@ -126,8 +126,6 @@ func removeLegacyOperatorDeployment(ctx context.Context, clientTools *clienttool
 		return err
 	}
 
-	fmt.Println("Removing...")
-
 	dcList := oappsv1.DeploymentConfigList{
 		TypeMeta: metav1.TypeMeta{
 			Kind: "DeploymentConfig",

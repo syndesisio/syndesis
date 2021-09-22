@@ -160,6 +160,12 @@ func (a *installAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) 
 
 	resourcesThatShouldExist[syndesisRoute.GetUID()] = true
 
+	// sets the openshift management console URL
+	config.SetOpenshiftManagementConsoleUrl(ctx, a.clientTools)
+
+	// add syndesis url to the openshift management console
+	config.SetConsoleLink(ctx, rtClient, syndesis, config.Syndesis.RouteHostname)
+
 	// Render the remaining syndesis resources...
 	all, err = generator.RenderDir("./infrastructure/", config)
 	if err != nil {

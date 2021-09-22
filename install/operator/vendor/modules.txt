@@ -249,11 +249,13 @@ github.com/opencontainers/runc/libcontainer/user
 github.com/openshift/api/apps/v1
 github.com/openshift/api/authorization/v1
 github.com/openshift/api/build/v1
+github.com/openshift/api/config/v1
 github.com/openshift/api/console/v1
 github.com/openshift/api/image/docker10
 github.com/openshift/api/image/dockerpre012
 github.com/openshift/api/image/v1
 github.com/openshift/api/oauth/v1
+github.com/openshift/api/operator/v1
 github.com/openshift/api/pkg/serialization
 github.com/openshift/api/project/v1
 github.com/openshift/api/route/v1

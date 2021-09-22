@@ -18,15 +18,28 @@ package configuration
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"reflect"
 	"testing"
 
-	"sigs.k8s.io/controller-runtime/pkg/client"
-
+	configv1 "github.com/openshift/api/config/v1"
+	operatorv1 "github.com/openshift/api/operator/v1"
 	"github.com/stretchr/testify/assert"
 	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/version"
+	discoveryfake "k8s.io/client-go/discovery/fake"
+	dynfake "k8s.io/client-go/dynamic/fake"
+	gofake "k8s.io/client-go/kubernetes/fake"
+	"k8s.io/client-go/kubernetes/scheme"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+	clfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
 func Test_GetAddons(t *testing.T) {
@@ -638,6 +651,170 @@ func TestConfig_SetRoute(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestConfig_SetOpenshift4_ConsoleURLEnabled(t *testing.T) {
+	url := "https://console-openshift-4.fuse"
+
+	opConsole := &operatorv1.Console{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "Console",
+			APIVersion: "operator.openshift.io/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "cluster",
+		},
+		Spec: operatorv1.ConsoleSpec{
+			OperatorSpec: operatorv1.OperatorSpec{
+				ManagementState: operatorv1.Managed,
+			},
+		},
+	}
+
+	confConsole := &configv1.Console{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "Console",
+			APIVersion: "config.openshift.io/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "cluster",
+		},
+		Status: configv1.ConsoleStatus{
+			ConsoleURL: url,
+		},
+	}
+
+	operatorv1.AddToScheme(scheme.Scheme)
+
+	apiResource := metav1.APIResourceList{
+		GroupVersion: "console.openshift.io/v1",
+		APIResources: []metav1.APIResource{
+			{Name: "consolelinks"},
+		},
+	}
+
+	api := gofake.NewSimpleClientset()
+	fd := api.Discovery().(*discoveryfake.FakeDiscovery)
+	fd.Resources = []*metav1.APIResourceList{&apiResource}
+	fd.FakedServerVersion = &version.Info{
+		Major: "1",
+		Minor: "16",
+	}
+
+	cl := clfake.NewFakeClientWithScheme(scheme.Scheme, opConsole, confConsole)
+
+	clientTools := &clienttools.ClientTools{}
+	clientTools.SetApiClient(api)
+	clientTools.SetRuntimeClient(cl)
+
+	t.Run("Set Openshift 4 ConsoleURL", func(t *testing.T) {
+		syndesis, _ := synapi.NewSyndesis("syndesis")
+		config, err := GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, syndesis)
+		assert.NoError(t, err)
+		config.SetOpenshiftManagementConsoleUrl(context.TODO(), clientTools)
+		assert.Equal(t, url, config.OpenShiftConsoleUrl)
+	})
+}
+
+func TestConfig_SetOpenshift4_ConsoleURLDisabled(t *testing.T) {
+	url := "https://console-openshift-4.fuse"
+	opConsole := &operatorv1.Console{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "Console",
+			APIVersion: "operator.openshift.io/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "cluster",
+		},
+		Spec: operatorv1.ConsoleSpec{
+			OperatorSpec: operatorv1.OperatorSpec{
+				ManagementState: operatorv1.Removed,
+			},
+		},
+	}
+
+	confConsole := &configv1.Console{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "Console",
+			APIVersion: "config.openshift.io/v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name: "cluster",
+		},
+		Status: configv1.ConsoleStatus{
+			ConsoleURL: url,
+		},
+	}
+
+	api := gofake.NewSimpleClientset()
+	fd := api.Discovery().(*discoveryfake.FakeDiscovery)
+	fd.FakedServerVersion = &version.Info{
+		Major: "1",
+		Minor: "16",
+	}
+
+	cl := clfake.NewFakeClientWithScheme(scheme.Scheme, opConsole, confConsole)
+	clientTools := &clienttools.ClientTools{}
+	clientTools.SetApiClient(api)
+	clientTools.SetRuntimeClient(cl)
+
+	t.Run("Set Openshift 4 ConsoleURL - Disabled", func(t *testing.T) {
+		syndesis, _ := synapi.NewSyndesis("syndesis")
+		config, err := GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, syndesis)
+		assert.NoError(t, err)
+		config.SetOpenshiftManagementConsoleUrl(context.TODO(), clientTools)
+		assert.Empty(t, config.OpenShiftConsoleUrl)
+	})
+}
+
+func TestConfig_SetOpenshift3_ConsoleURL(t *testing.T) {
+	url := "https://console-openshift-3.fuse"
+
+	cm := &corev1.ConfigMap{
+		TypeMeta: metav1.TypeMeta{
+			Kind:       "ConfigMap",
+			APIVersion: "v1",
+		},
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "webconsole-config",
+			Namespace: "openshift-web-console",
+		},
+		Data: map[string]string{
+			"webconsole-config.yaml": fmt.Sprintf(`
+clusterInfo:
+    adminConsolePublicURL: %s
+	consolePublicURL: https://master.foobar.com/console/
+	loggingPublicURL: https://kibana.apps.foobar.com
+	logoutPublicURL: ''
+	masterPublicURL: https://master.foobar.com:443
+	metricsPublicURL: https://hawkular-metrics.apps.foobar.com/hawkular/metrics
+`, url),
+		},
+	}
+
+	configmapUnst, err := util.ToUnstructured(cm)
+	assert.NoError(t, err)
+
+	dynClient := dynfake.NewSimpleDynamicClient(scheme.Scheme, configmapUnst)
+	api := gofake.NewSimpleClientset()
+	fd := api.Discovery().(*discoveryfake.FakeDiscovery)
+	fd.FakedServerVersion = &version.Info{
+		Major: "1",
+		Minor: "11+",
+	}
+
+	clientTools := &clienttools.ClientTools{}
+	clientTools.SetApiClient(api)
+	clientTools.SetRuntimeClient(clfake.NewFakeClientWithScheme(scheme.Scheme))
+	clientTools.SetDynamicClient(dynClient)
+
+	t.Run("Set Openshift 3 ConsoleURL", func(t *testing.T) {
+		syndesis, _ := synapi.NewSyndesis("syndesis")
+		config, err := GetProperties(context.TODO(), "../../../build/conf/config-test.yaml", clientTools, syndesis)
+		assert.NoError(t, err)
+		config.SetOpenshiftManagementConsoleUrl(context.TODO(), clientTools)
+		assert.Equal(t, url, config.OpenShiftConsoleUrl)
+	})
 }
 
 func Test_setIntFromEnv(t *testing.T) {
