@@ -746,8 +746,16 @@ func TestConfig_SetOpenshift4_ConsoleURLDisabled(t *testing.T) {
 		},
 	}
 
+	apiResource := metav1.APIResourceList{
+		GroupVersion: "console.openshift.io/v1",
+		APIResources: []metav1.APIResource{
+			{Name: "consolelinks"},
+		},
+	}
+
 	api := gofake.NewSimpleClientset()
 	fd := api.Discovery().(*discoveryfake.FakeDiscovery)
+	fd.Resources = []*metav1.APIResourceList{&apiResource}
 	fd.FakedServerVersion = &version.Info{
 		Major: "1",
 		Minor: "16",
