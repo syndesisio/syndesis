@@ -285,62 +285,6 @@
       </build>
     </profile>
     <profile>
-      <id>rebuild-saas</id>
-      <activation>
-        <property>
-          <name>sass-binary-site</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>com.googlecode.maven-download-plugin</groupId>
-            <artifactId>download-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>download-node-sass</id>
-                <phase>generate-sources</phase>
-                <goals>
-                  <goal>wget</goal>
-                </goals>
-                <configuration>
-                  <url>${sass-binary-site}/v${node-sass-version}/${os.type}-x64-64_binding.node</url>
-                  <outputFileName>binding.node</outputFileName>
-                  <outputDirectory>${project.build.directory}/${os.type}-x64-64</outputDirectory>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>com.github.eirslett</groupId>
-            <artifactId>frontend-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>yarn unset sass binary url</id>
-                <phase>generate-sources</phase>
-                <goals>
-                  <goal>yarn</goal>
-                </goals>
-                <configuration>
-                  <arguments>config delete sass-binary-site</arguments>
-                </configuration>
-              </execution>
-              <execution>
-                <id>yarn set sass binary dir</id>
-                <phase>generate-sources</phase>
-                <goals>
-                  <goal>yarn</goal>
-                </goals>
-                <configuration>
-                  <arguments>config set sass-binary-path ${project.build.directory}/linux-x64-64/binding.node</arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
       <id>verbose</id>
       <properties>
         <yarn-verbose>--verbose</yarn-verbose>
