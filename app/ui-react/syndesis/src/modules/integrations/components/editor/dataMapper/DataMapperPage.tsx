@@ -133,6 +133,7 @@ export const DataMapperPage: React.FunctionComponent<IDataMapperPageProps> = (
                   })}
                   content={
                     <PageSection
+                      data-testid={'data-mapper-root-element'}
                       style={{
                         overflow: 'hidden',
                       }}
