@@ -18,6 +18,9 @@ is provided with {prodname}.
 . In {prodname}, in the upper right, click *Publish* to give it a name.
 . In the *Name* field, enter a name for the
 integration. For example, `*Salesforce to Database Sample Integration*`.
+. Optionally, in the *Description* field, enter information that might be
+helpful to know about this integration.
+. Optionally, in the *Labels* field, add one or more labels. A label is a key-value pair tag that you can apply to an integration for later filtering and selecting in OpenShift. For example, an OpenShift admin user can filter the list of running pods or deployments by label.
 . Click *Save and publish*.
 
 +

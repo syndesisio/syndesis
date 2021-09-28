@@ -19,8 +19,9 @@ can deploy it and see how it works.
 enter a name of your choice that distinguishes this integration
 from any other integrations. For
 example: `*Twitter to Salesforce Sample Integration*`.
-. In the *Description* field, optionally enter some information
-about the integration.
+. Optionally, in the *Description* field, enter information that might be
+helpful to know about this integration.
+. Optionally, in the *Labels* field, add one or more labels. A label is a key-value pair tag that you can apply to an integration for later filtering and selecting in OpenShift. For example, an OpenShift admin user can filter the list of running pods or deployments by label.
 . Click *Save and publish*.
 
 +
