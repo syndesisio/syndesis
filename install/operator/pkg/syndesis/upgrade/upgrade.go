@@ -18,6 +18,7 @@ package upgrade
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -25,8 +26,10 @@ import (
 	sbackup "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/backup"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	batchv1 "k8s.io/api/batch/v1"
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/client-go/kubernetes"
-	corev1 "k8s.io/client-go/kubernetes/typed/core/v1"
+	cgocorev1 "k8s.io/client-go/kubernetes/typed/core/v1"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
@@ -260,7 +263,7 @@ func (s *step) dynClient() dynamic.Interface {
 	return dynClient
 }
 
-func (s *step) coreV1Client() corev1.CoreV1Interface {
+func (s *step) coreV1Client() cgocorev1.CoreV1Interface {
 	coreV1Client, err := s.clientTools.CoreV1Client()
 	if err != nil {
 		panic(err)
@@ -379,5 +382,19 @@ func (s *step) deleteMigrationJob() {
 // & in cleanup on completion
 //
 func (s *step) deleteDbUpgrade() error {
-	return s.client().DeleteAllOf(s.context, &appsv1.Deployment{}, client.InNamespace(s.namespace), client.MatchingLabels(upgradeLabels))
+	var combined error
+	if err := s.client().DeleteAllOf(s.context, &appsv1.Deployment{}, client.InNamespace(s.namespace), client.MatchingLabels(upgradeLabels)); err != nil {
+		combined = err
+	}
+	if err := s.client().DeleteAllOf(s.context, &corev1.PersistentVolumeClaim{}, client.InNamespace(s.namespace), client.MatchingLabels(upgradeLabels)); err != nil {
+		combined = fmt.Errorf("unable to perform cleanup due to: %v, %v", combined, err)
+	}
+	if err := s.client().DeleteAllOf(s.context, &batchv1.Job{}, client.InNamespace(s.namespace), client.MatchingLabels(upgradeLabels)); err != nil {
+		combined = fmt.Errorf("unable to perform cleanup due to: %v, %v", combined, err)
+	}
+	if err := s.client().DeleteAllOf(s.context, &corev1.Pod{}, client.InNamespace(s.namespace), client.MatchingLabels(upgradeLabels)); err != nil {
+		combined = fmt.Errorf("unable to perform cleanup due to: %v, %v", combined, err)
+	}
+
+	return combined
 }

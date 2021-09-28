@@ -22,6 +22,8 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
+	"strings"
+	"time"
 
 	oappsv1 "github.com/openshift/api/apps/v1"
 	"github.com/spf13/afero"
@@ -30,11 +32,15 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	appsv1 "k8s.io/api/apps/v1"
+	batchv1 "k8s.io/api/batch/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/intstr"
+	"k8s.io/apimachinery/pkg/util/wait"
+	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/remotecommand"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
@@ -75,26 +81,52 @@ func newDatabaseUpgrade(base step, s *synapi.Syndesis) stepRunner {
 	return &u
 }
 
+// Performs the database upgrade by starting the new database in a
+// separate Pod with a separate volume and loading a dump from the
+// existing database into it
 func (u *databaseUpgrade) run() (err error) {
 	u.log.Info("Upgrading database")
 
-	// scales down the database (`syndesis-db`)
-	if err := u.scaleDownDatabase(); err != nil {
-		return err
-	}
-
 	// deploys a new Deployment (`syndesis-db-upgrade`)
-	// with the image of the new (target) version with
-	// the environment variable set to perform the
-	// upgrade by running pg_upgrade
+	// with the image of the new (target) version
 	u.log.V(synpkg.DEBUG_LOGGING_LVL).Info("Deploying the db upgrade")
 	if err := u.deployUpgrade(); err != nil {
 		return err
 	}
 
 	// wait for the `syndesis-db-upgrade` to scale up
-	// this marks the end of the upgrade
 	if err := u.awaitScale(upgradeDeploymentName, newDeploymentTracker()); err != nil {
+		return err
+	}
+
+	// creates the database dump of the current database
+	u.log.V(synpkg.DEBUG_LOGGING_LVL).Info("Creating dump of the current database")
+	if err := u.createDump(); err != nil {
+		return err
+	}
+
+	// loads the database dump created above to the new database
+	u.log.V(synpkg.DEBUG_LOGGING_LVL).Info("Loading database dump into the new database")
+	if err := u.loadDump(); err != nil {
+		return err
+	}
+
+	// scales down the current (old) database (`syndesis-db`)
+	u.log.V(synpkg.DEBUG_LOGGING_LVL).Info("Scaling down the current database")
+	if err := u.scaleDownDatabase(); err != nil {
+		return err
+	}
+
+	// we have the data on the new volume and for transfer to be safe we stop the new database
+	u.log.V(synpkg.DEBUG_LOGGING_LVL).Info("Removing the new database used for upgrade")
+	if err := u.deleteUpgrade(); err != nil {
+		return err
+	}
+
+	// now move the new data over to the existing volume, the deployment will be upgraded
+	// with the new database version
+	u.log.V(synpkg.DEBUG_LOGGING_LVL).Info("Moving migrated data to the database volume")
+	if err := u.moveMigratedData(); err != nil {
 		return err
 	}
 
@@ -172,10 +204,10 @@ func (u *databaseUpgrade) scaleDownDatabase() error {
 	return nil
 }
 
-// Deploys the `syndesis-db-upgrade` Deployment with the same `syndesis-db-data` volume
-// as the current `syndesis-db` DeploymentConfig. Specifying `POSTGRESQL_UPGRADE=copy`
-// instructs the startup scripts within the centos/postgresql image to run pg_upgrade
-// to migrate the data files
+// Deploys the `syndesis-db-upgrade` Deployment with the new version
+// of the database backed by a new volume for the data files and a
+// separate volume that will be used for the database dump of the
+// current database
 func (u *databaseUpgrade) deployUpgrade() error {
 	config, err := configuration.GetProperties(
 		u.context, configuration.TemplateConfig,
@@ -186,20 +218,51 @@ func (u *databaseUpgrade) deployUpgrade() error {
 	}
 
 	one := int32(1)
-	limitMemory, err := resource.ParseQuantity(config.Syndesis.Components.Database.Resources.Limit.Memory)
-	if err != nil {
-		return err
+	limits := make(corev1.ResourceList)
+	if limitMemory, err := resource.ParseQuantity(config.Syndesis.Components.Database.Resources.Limit.Memory); err == nil {
+		limits[corev1.ResourceMemory] = limitMemory
+	}
+	if limitCPU, err := resource.ParseQuantity(config.Syndesis.Components.Database.Resources.Limit.CPU); err == nil {
+		limits[corev1.ResourceCPU] = limitCPU
 	}
 
-	requestMemory, err := resource.ParseQuantity(config.Syndesis.Components.Database.Resources.Request.Memory)
-	if err != nil {
-		return err
+	requests := make(corev1.ResourceList)
+	if requestsMemory, err := resource.ParseQuantity(config.Syndesis.Components.Database.Resources.Request.Memory); err == nil {
+		requests[corev1.ResourceMemory] = requestsMemory
+	}
+	if requestsCPU, err := resource.ParseQuantity(config.Syndesis.Components.Database.Resources.Request.CPU); err == nil {
+		requests[corev1.ResourceCPU] = requestsCPU
 	}
 
 	metadata := upgradeMetadata.DeepCopy()
 	metadata.SetNamespace(u.namespace)
 
-	return u.client().Create(u.context, &appsv1.Deployment{
+	upgradePV := corev1.PersistentVolumeClaim{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      upgradeDeploymentName,
+			Namespace: u.namespace,
+			Labels:    upgradeLabels,
+		},
+		Spec: corev1.PersistentVolumeClaimSpec{
+			AccessModes: []corev1.PersistentVolumeAccessMode{
+				corev1.ReadWriteOnce,
+			},
+			Resources: corev1.ResourceRequirements{
+				Requests: corev1.ResourceList{
+					corev1.ResourceStorage: resource.MustParse(config.Syndesis.Components.Database.Resources.VolumeCapacity),
+				},
+			},
+		},
+	}
+	if len(config.Syndesis.Components.Database.Resources.VolumeStorageClass) > 0 {
+		upgradePV.Spec.StorageClassName = &config.Syndesis.Components.Database.Resources.VolumeStorageClass
+	}
+
+	if _, err = u.apiClient().CoreV1().PersistentVolumeClaims(u.namespace).Create(u.context, &upgradePV, metav1.CreateOptions{}); err != nil {
+		return err
+	}
+
+	dep := appsv1.Deployment{
 		ObjectMeta: *metadata,
 		Spec: appsv1.DeploymentSpec{
 			Replicas: &one,
@@ -212,11 +275,17 @@ func (u *databaseUpgrade) deployUpgrade() error {
 					ServiceAccountName: "syndesis-default",
 					Volumes: []corev1.Volume{
 						{
-							Name: "syndesis-db-data",
+							Name: "syndesis-db-upgrade-data",
 							VolumeSource: corev1.VolumeSource{
 								PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
-									ClaimName: "syndesis-db",
+									ClaimName: "syndesis-db-upgrade",
 								},
+							},
+						},
+						{
+							Name: "syndesis-db-upgrade-dump",
+							VolumeSource: corev1.VolumeSource{
+								EmptyDir: &corev1.EmptyDirVolumeSource{},
 							},
 						},
 					},
@@ -237,30 +306,24 @@ func (u *databaseUpgrade) deployUpgrade() error {
 									Value: config.Syndesis.Components.Database.Name,
 								},
 								{
-									Name:  "POSTGRESQL_UPGRADE",
-									Value: "copy",
-								},
-							},
-							Ports: []corev1.ContainerPort{
-								{
-									ContainerPort: 5432,
-									Protocol:      corev1.ProtocolTCP,
+									Name:  "PGPASSWORD",
+									Value: config.Syndesis.Components.Database.Password,
 								},
 							},
 							ImagePullPolicy: corev1.PullIfNotPresent,
 							Image:           config.Syndesis.Components.Database.Image,
 							Resources: corev1.ResourceRequirements{
-								Limits: corev1.ResourceList{
-									corev1.ResourceMemory: limitMemory,
-								},
-								Requests: corev1.ResourceList{
-									corev1.ResourceMemory: requestMemory,
-								},
+								Limits:   limits,
+								Requests: requests,
 							},
 							VolumeMounts: []corev1.VolumeMount{
 								{
-									Name:      "syndesis-db-data",
+									Name:      "syndesis-db-upgrade-data",
 									MountPath: "/var/lib/pgsql/data",
+								},
+								{
+									Name:      "syndesis-db-upgrade-dump",
+									MountPath: "/dump",
 								},
 							},
 							ReadinessProbe: &corev1.Probe{
@@ -293,7 +356,224 @@ func (u *databaseUpgrade) deployUpgrade() error {
 				},
 			},
 		},
+	}
+
+	_, err = u.apiClient().AppsV1().Deployments(u.namespace).Create(u.context, &dep, metav1.CreateOptions{})
+
+	return err
+}
+
+// Creates the database dump in `/dump/database.dump` of the new database instance
+// by executing pg_dump > /dump/database.dump. We're relying on the new psql client
+// to be able to access the current database. The password is provided via environment
+// variable `PGPASSWORD` above
+func (u *databaseUpgrade) createDump() error {
+	config, err := configuration.GetProperties(
+		u.context, configuration.TemplateConfig,
+		u.clientTools,
+		u.syndesis)
+	if err != nil {
+		return err
+	}
+
+	return u.executeInDbUpgradePod([]string{
+		"pg_dump",
+		"--file=/dump/database.dump",
+		"--dbname=" + config.Syndesis.Components.Database.Name,
+		"--host=syndesis-db",
+		"--port=5432",
+		"--username=" + config.Syndesis.Components.Database.User,
 	})
+}
+
+// Loads the database dump from `/dump/database.dump` into the new database instance
+// by executing psql -f /dump/database.dump and then runs an ANALYZE to update the
+// statistics
+func (u *databaseUpgrade) loadDump() error {
+	config, err := configuration.GetProperties(
+		u.context, configuration.TemplateConfig,
+		u.clientTools,
+		u.syndesis)
+	if err != nil {
+		return err
+	}
+
+	return u.executeInDbUpgradePod([]string{
+		"bash",
+		"-c",
+		fmt.Sprintf(`set -euxo pipefail
+psql --set=ON_ERROR_STOP=on --file /dump/database.dump --dbname=%s
+psql --dbname=%s --command 'ANALYZE'
+`, config.Syndesis.Components.Database.Name, config.Syndesis.Components.Database.Name),
+	})
+}
+
+func (u *databaseUpgrade) deleteUpgrade() error {
+	return u.apiClient().AppsV1().Deployments(u.namespace).Delete(u.context, upgradeDeploymentName, metav1.DeleteOptions{})
+}
+
+// Creates a Job that will transfer the data files from the new database
+// into the volume of the current (old) database
+func (u *databaseUpgrade) moveMigratedData() error {
+	config, err := configuration.GetProperties(
+		u.context, configuration.TemplateConfig,
+		u.clientTools,
+		u.syndesis)
+	if err != nil {
+		return err
+	}
+
+	metadata := upgradeMetadata.DeepCopy()
+	metadata.SetNamespace(u.namespace)
+
+	one := int32(1)
+	four := int32(4)
+	job, err := u.apiClient().BatchV1().Jobs(u.namespace).Create(u.context, &batchv1.Job{
+		ObjectMeta: *metadata,
+		Spec: batchv1.JobSpec{
+			BackoffLimit: &four,
+			Parallelism:  &one,
+			Template: corev1.PodTemplateSpec{
+				ObjectMeta: metav1.ObjectMeta{
+					Name:   "syndesis-db-upgrade",
+					Labels: metadata.Labels,
+				},
+				Spec: corev1.PodSpec{
+					ServiceAccountName: "syndesis-default",
+					RestartPolicy:      corev1.RestartPolicyNever,
+					Volumes: []corev1.Volume{
+						{
+							Name: "syndesis-db-data",
+							VolumeSource: corev1.VolumeSource{
+								PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
+									ClaimName: "syndesis-db",
+								},
+							},
+						},
+						{
+							Name: "syndesis-db-upgrade-data",
+							VolumeSource: corev1.VolumeSource{
+								PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
+									ClaimName: "syndesis-db-upgrade",
+								},
+							},
+						},
+					},
+					Containers: []corev1.Container{
+						{
+							Name: "move-data",
+							Command: []string{
+								"bash",
+								"-c",
+								`TS=$(date +%Y%m%d%H%M%S)
+function cleanup {
+  rm -rf /destination/userdata.${TS}
+}
+trap cleanup EXIT
+set -euxo pipefail
+mv /source/userdata/ /destination/userdata.${TS}
+rm -rf /destination/userdata
+mv /destination/userdata.${TS} /destination/userdata`},
+							ImagePullPolicy: corev1.PullIfNotPresent,
+							Image:           config.Syndesis.Components.Database.LoggerImage, // reuse image
+							VolumeMounts: []corev1.VolumeMount{
+								{
+									Name:      "syndesis-db-upgrade-data",
+									MountPath: "/source",
+								},
+								{
+									Name:      "syndesis-db-data",
+									MountPath: "/destination",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}, metav1.CreateOptions{})
+	if err != nil {
+		return err
+	}
+
+	jobPoller := func() (done bool, err error) {
+		if job, err := u.apiClient().BatchV1().Jobs(u.namespace).Get(u.context, job.Name, metav1.GetOptions{}); err != nil {
+			return false, err
+		} else {
+			if job.Status.Failed != 0 {
+				return false, fmt.Errorf("failed to move migrated database data")
+			} else if job.Status.Succeeded != 0 {
+				return true, nil
+			} else {
+				return false, nil
+			}
+		}
+	}
+
+	return wait.PollImmediate(time.Second, time.Minute, jobPoller)
+}
+
+// we'd like to mock this in tests as the RESTClient is nil and the
+// remotecommand.NewSPDYExecutor doesn't have a fake or can be (easily)
+// mocked not to execute HTTP requests
+var exec func(util.ExecOptions) error = util.Exec
+
+// make it easier to mock
+func defaultRESTConfig(u *databaseUpgrade) *rest.Config {
+	return u.config()
+}
+
+var restConfig func(u *databaseUpgrade) *rest.Config = defaultRESTConfig
+
+func (u *databaseUpgrade) executeInDbUpgradePod(cmd []string) error {
+	dbUpgradePodName, err := u.dbUpgradePodName()
+	if err != nil {
+		return err
+	}
+
+	if err := exec(util.ExecOptions{
+		Config:    restConfig(u),
+		Api:       u.apiClient(),
+		Namespace: u.namespace,
+		Pod:       dbUpgradePodName,
+		Container: "postgresql",
+		Command:   cmd,
+		StreamOptions: remotecommand.StreamOptions{
+			Stdin:  strings.NewReader(""),
+			Stdout: &logWriter{u.log.WithName("stdout").V(synpkg.DEBUG_LOGGING_LVL).Info},
+			Stderr: &logWriter{u.log.WithName("stderr").V(synpkg.DEBUG_LOGGING_LVL).Info},
+		},
+	}); err != nil {
+		return fmt.Errorf("executing: `%v` in the `posgresql` container of the `%v` pod: %v (turn on debug logging to see output)", strings.Join(cmd[:], " "), dbUpgradePodName, err)
+	}
+
+	return nil
+}
+
+func (u *databaseUpgrade) dbUpgradePodName() (string, error) {
+	if pods, err := u.apiClient().CoreV1().Pods(u.namespace).List(u.context, metav1.ListOptions{
+		LabelSelector: "syndesis.io/component=syndesis-db-upgrade",
+	}); err != nil {
+		return "", err
+	} else {
+		if len(pods.Items) == 0 {
+			return "", fmt.Errorf("no Pod with label `syndesis.io/component=syndesis-db-upgrade` found in namespace %s", u.namespace)
+		} else if len(pods.Items) != 1 {
+			return "", fmt.Errorf("more than one Pod with label `syndesis.io/component=syndesis-db-upgrade` found in namespace %s", u.namespace)
+		}
+
+		return pods.Items[0].Name, nil
+	}
+}
+
+type logWriter struct {
+	logfn func(msg string, keysAndValues ...interface{})
+}
+
+func (l *logWriter) Write(p []byte) (int, error) {
+	l.logfn(string(p[:]))
+
+	return len(p), nil
 }
 
 // simple strategy to load the version of the database left in /data/postgresql.txt by the init container
@@ -315,14 +595,14 @@ func (sharedFile *sharedFileTarget) version() (float64, error) {
 			return 0.0, s.Err()
 		}
 
-		return 0.0, errors.New("Unable to parse PostgreSQL version, no data found in /data/postgresql.txt")
+		return 0.0, errors.New("unable to parse PostgreSQL version, no data found in /data/postgresql.txt")
 	}
 
 	line := s.Text()
 
 	extracted := postgresVersionRegex.FindStringSubmatch(line)
 	if len(extracted) < 2 {
-		return 0.0, fmt.Errorf("Unable to parse PostgreSQL version from version string: `%s`", line)
+		return 0.0, fmt.Errorf("unable to parse PostgreSQL version from version string: `%s`", line)
 	}
 
 	return strconv.ParseFloat(extracted[1], 64)
