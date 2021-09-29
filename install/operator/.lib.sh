@@ -95,6 +95,8 @@ build_operator()
 	            printf "$hassdk\n\n"
 	        fi
 
+            updateApiVersionInServerApp
+
 	        openapi_gen
 	        go generate ./pkg/...
     	    go mod tidy
@@ -281,5 +283,20 @@ openapi_gen() {
             -i ./pkg/apis/syndesis/v1beta3 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta3
     else
         echo "skipping go openapi generation"
+    fi
+}
+
+# there is a java class in app/server that reads syndesis custom resource
+# as the syndesis CRD version is driven by the operator code, then this is a good place to verify
+# if the java class is using the correct version and update it accordingly
+updateApiVersionInServerApp() {
+    serverApiJavaFile=$(readlink -f ../../app/server/openshift/src/main/java/io/syndesis/server/openshift/OpenShiftServiceImpl.java)
+    if [ -f "${serverApiJavaFile}" ]; then
+        serverApi=$(grep -Hr 'SYNDESIS_CRD =' ${serverApiJavaFile} -A 1|grep v1beta|cut -d'"' -f 2|cut -d'/' -f 2)
+        apiVersion=$(grep "^  version" config/PROJECT |cut -d' ' -f 4)
+        if [[ "${apiVersion}" !=  "${serverApi}" ]]; then
+            echo "WARN: Outdated ${serverApi} used in ${serverApiJavaFile}, updated it to ${apiVersion}. You should commit this file."
+            sed -i "s/withApiVersion(\"apiextensions.k8s.io\/${serverApi}/withApiVersion(\"apiextensions.k8s.io\/${apiVersion}/;s/withVersion(\"${serverApi}\")/withVersion(\"${apiVersion}\")/" "${serverApiJavaFile}"
+        fi
     fi
 }

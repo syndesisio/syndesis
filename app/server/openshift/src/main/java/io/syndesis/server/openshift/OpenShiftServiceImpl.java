@@ -82,7 +82,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     private static final Map<String, String> INTEGRATION_DEFAULT_LABELS = defaultLabels();
 
     public static final CustomResourceDefinition SYNDESIS_CRD = new CustomResourceDefinitionBuilder()
-        .withApiVersion("apiextensions.k8s.io/v1beta2")
+        .withApiVersion("apiextensions.k8s.io/v1beta3")
         .withKind("CustomResourceDefinition")
         .withNewMetadata()
             .withName("syndesises.syndesis.io")
@@ -90,7 +90,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         .withNewSpec()
             .withGroup("syndesis.io")
             .withScope("Namespaced")
-            .withVersion("v1beta2")
+            .withVersion("v1beta3")
             .withNewNames()
                 .withKind("Syndesis")
                 .withListKind("SyndesisList")
