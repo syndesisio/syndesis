@@ -29,6 +29,9 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.fabric8.kubernetes.api.model.Affinity;
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.Container;
@@ -45,6 +48,7 @@ import io.fabric8.kubernetes.api.model.Toleration;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionBuilder;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionStatusBuilder;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionVersion;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
@@ -68,9 +72,6 @@ import io.syndesis.server.openshift.crd.Syndesis;
 import io.syndesis.server.openshift.crd.SyndesisResourceDoneable;
 import io.syndesis.server.openshift.crd.SyndesisResourceList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention", "PMD.GodClass"})
 public class OpenShiftServiceImpl implements OpenShiftService {
 
@@ -81,28 +82,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     // Labels used for generated objects
     private static final Map<String, String> INTEGRATION_DEFAULT_LABELS = defaultLabels();
 
-    public static final CustomResourceDefinition SYNDESIS_CRD = new CustomResourceDefinitionBuilder()
-        .withApiVersion("apiextensions.k8s.io/v1beta2")
-        .withKind("CustomResourceDefinition")
-        .withNewMetadata()
-            .withName("syndesises.syndesis.io")
-        .endMetadata()
-        .withNewSpec()
-            .withGroup("syndesis.io")
-            .withScope("Namespaced")
-            .withVersion("v1beta2")
-            .withNewNames()
-                .withKind("Syndesis")
-                .withListKind("SyndesisList")
-                .withPlural("syndesises")
-                .withSingular("syndesis")
-            .endNames()
-        .endSpec()
-        .withStatus(new CustomResourceDefinitionStatusBuilder().build())
-        .build();
-
     private final NamespacedOpenShiftClient openShiftClient;
     private final OpenShiftConfigurationProperties config;
+
+    private CustomResourceDefinition syndesisCRD;
 
     public OpenShiftServiceImpl(NamespacedOpenShiftClient openShiftClient, OpenShiftConfigurationProperties config) {
         this.openShiftClient = openShiftClient;
@@ -673,16 +656,67 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         throw SyndesisServerException.launderThrowable(new TimeoutException("Timed out waiting for build completion."));
     }
 
+    private CustomResourceDefinition getSyndesisCRD() throws CrdResourceException {
+        if (syndesisCRD == null) {
+
+            Optional<CustomResourceDefinition> crd = getCRD("syndesises.syndesis.io");
+            if (! crd.isPresent()) {
+                throw new CrdResourceException ("Failed to locate the syndesis CRD");
+            }
+
+            syndesisCRD = crd.get();
+
+            String storageVersion = null;
+            for (CustomResourceDefinitionVersion version : crd.get().getSpec().getVersions()) {
+                if (! version.getStorage()) {
+                    continue;
+                }
+                storageVersion = version.getName();
+            }
+
+            if (storageVersion == null) {
+                throw new CrdResourceException("Failed to locate storage version of syndesis CRD");
+            }
+
+            //
+            // Cannot use the crd fetched from openshift since this api will
+            // default to use the alphav1 version as the first version in the crd
+            //
+            syndesisCRD = new CustomResourceDefinitionBuilder()
+                .withApiVersion("apiextensions.k8s.io/v1")
+                .withKind("CustomResourceDefinition")
+                .withNewMetadata()
+                    .withName("syndesises.syndesis.io")
+                .endMetadata()
+                .withNewSpec()
+                    .withGroup("syndesis.io")
+                    .withScope("Namespaced")
+                    .withVersion(storageVersion)
+                    .withNewNames()
+                        .withKind("Syndesis")
+                        .withListKind("SyndesisList")
+                        .withPlural("syndesises")
+                        .withSingular("syndesis")
+                    .endNames()
+                .endSpec()
+                .withStatus(new CustomResourceDefinitionStatusBuilder().build())
+                .build();
+        }
+
+        return syndesisCRD;
+    }
+
     private IntegrationScheduling loadIntegrationScheduling() {
         IntegrationScheduling integrationScheduling = null;
         try {
-            SyndesisResourceList syndesisList = openShiftClient.customResources(SYNDESIS_CRD, Syndesis.class, SyndesisResourceList.class, SyndesisResourceDoneable.class)
+            syndesisCRD = getSyndesisCRD();
+            SyndesisResourceList syndesisList = openShiftClient.customResources(syndesisCRD, Syndesis.class, SyndesisResourceList.class, SyndesisResourceDoneable.class)
                 .inNamespace(openShiftClient.getNamespace()).list();
             boolean syndesisCRExists = syndesisList != null && syndesisList.getItems() != null && syndesisList.getItems().size() > 0;
             if (syndesisCRExists) {
                 integrationScheduling = syndesisList.getItems().get(0).getSpec().getIntegrationScheduling();
             } else {
-                LOGGER.error("There is no syndesis custom resource, it is required to load the affinity/toleration fields of syndesis CR. Search with the below CRD. You can try using \"oc get syndesis\". {}", SYNDESIS_CRD);
+                LOGGER.error("There is no syndesis custom resource, it is required to load the affinity/toleration fields of syndesis CR. Search with the below CRD. You can try using \"oc get syndesis\". {}", syndesisCRD);
             }
         } catch (Exception e) {
             LOGGER.error("Error loading syndesis CR.", e);
@@ -691,7 +725,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     /**
-     * Checks if Excpetion can be retried and if retries are left.
+     * Checks if Exception can be retried and if retries are left.
      */
     private static void checkRetryPolicy(KubernetesClientException e, int retries) {
         if (retries == 0) {
