@@ -18,20 +18,28 @@ package upgrade
 
 import (
 	"context"
-	"strings"
+	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/go-logr/zapr"
 	oappsv1 "github.com/openshift/api/apps/v1"
 	"github.com/spf13/afero"
+	"github.com/stretchr/testify/assert"
 	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"go.uber.org/zap"
 	appsv1 "k8s.io/api/apps/v1"
+	batchv1 "k8s.io/api/batch/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	cgofake "k8s.io/client-go/kubernetes/fake"
 	"k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/client-go/rest"
+	cgotesting "k8s.io/client-go/testing"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
@@ -155,6 +163,10 @@ func (evt EvtFakeRuntimeClient) Create(ctx context.Context, runtimeObj client.Ob
 		//
 		dep.Status.Replicas = 1
 		dep.Status.ReadyReplicas = 1
+
+		evt.Client.Create(ctx, &corev1.Pod{
+			ObjectMeta: dep.Spec.Template.ObjectMeta,
+		})
 	}
 
 	return evt.Client.Create(ctx, runtimeObj)
@@ -168,7 +180,7 @@ func TestRunDatabaseUpgrade(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	cl := fake.NewFakeClientWithScheme(schemeToUse, &oappsv1.DeploymentConfig{
+	cl := fake.NewClientBuilder().WithObjects(&oappsv1.DeploymentConfig{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: "syndesis-db",
 		},
@@ -176,7 +188,7 @@ func TestRunDatabaseUpgrade(t *testing.T) {
 			Replicas:      1,
 			ReadyReplicas: 1,
 		},
-	})
+	}).Build()
 
 	evtClient := EvtFakeRuntimeClient{cl}
 
@@ -184,6 +196,68 @@ func TestRunDatabaseUpgrade(t *testing.T) {
 	clientTools.SetRuntimeClient(evtClient)
 	apiClient := cgofake.NewSimpleClientset()
 	clientTools.SetApiClient(apiClient)
+
+	expectedCommands := [][]string{
+		{"pg_dump", "--file=/dump/database.dump", "--dbname=syndesis", "--host=syndesis-db", "--port=5432", "--username=syndesis"},
+		{"bash", "-c", `set -euxo pipefail
+psql --set=ON_ERROR_STOP=on --file /dump/database.dump --dbname=syndesis
+psql --dbname=syndesis --command 'ANALYZE'
+`},
+	}
+	cmdIdx := 0
+	exec = func(o util.ExecOptions) error {
+		if assert.Lessf(t, cmdIdx, len(expectedCommands), "invoked util.Exec with command %v", o.Command) == false {
+			return fmt.Errorf("missing expected command for invocation number %d", cmdIdx)
+		}
+		if assert.Equal(t, expectedCommands[cmdIdx], o.Command) == false {
+			return errors.New("assertion failed")
+		}
+
+		cmdIdx = cmdIdx + 1
+
+		return nil
+	}
+
+	restConfig = func(u *databaseUpgrade) *rest.Config {
+		return nil
+	}
+
+	apiClient.PrependReactor("create", "persistentvolumeclaims", func(action cgotesting.Action) (bool, runtime.Object, error) {
+		obj := action.(cgotesting.CreateAction).GetObject().(*corev1.PersistentVolumeClaim)
+		assert.Equal(t, "syndesis-db-upgrade", obj.GetName())
+		return true, obj, nil
+	})
+
+	apiClient.PrependReactor("create", "deployments", func(action cgotesting.Action) (bool, runtime.Object, error) {
+		obj := action.(cgotesting.CreateAction).GetObject().(*appsv1.Deployment)
+		assert.Equal(t, "syndesis-db-upgrade", obj.GetName())
+
+		obj.Status.ReadyReplicas = *obj.Spec.Replicas
+		cl.Create(context.TODO(), obj)
+		apiClient.Tracker().Add(&corev1.Pod{
+			ObjectMeta: obj.Spec.Template.ObjectMeta,
+		})
+
+		return true, obj, nil
+	})
+
+	apiClient.PrependReactor("delete", "deployments", func(action cgotesting.Action) (bool, runtime.Object, error) {
+		return true, nil, nil
+	})
+
+	apiClient.PrependReactor("create", "jobs", func(action cgotesting.Action) (bool, runtime.Object, error) {
+		obj := action.(cgotesting.CreateAction).GetObject().(*batchv1.Job)
+		assert.Equal(t, "syndesis-db-upgrade", obj.GetName())
+		return true, obj, nil
+	})
+
+	apiClient.PrependReactor("get", "jobs", func(action cgotesting.Action) (bool, runtime.Object, error) {
+		return true, &batchv1.Job{
+			Status: batchv1.JobStatus{
+				Succeeded: 1,
+			},
+		}, nil
+	})
 
 	u := databaseUpgrade{
 		step: step{
@@ -206,39 +280,13 @@ func TestRunDatabaseUpgrade(t *testing.T) {
 	if err := u.run(); err != nil {
 		t.Fatal(err)
 	}
-
-	deployments := appsv1.DeploymentList{}
-	if err := cl.List(u.context, &deployments); err != nil {
-		t.Fatal(err)
-	}
-
-	if len(deployments.Items) != 1 {
-		t.Fatalf("Expected the database upgrade Deployment to be created, but there are %v deployments", len(deployments.Items))
-	}
-
-	deployment := deployments.Items[0]
-	if !strings.HasPrefix(deployment.ObjectMeta.Name, "syndesis-db-upgrade") {
-		t.Fatalf("Expected the database upgrade deployment to be created, but there's a deployment named: %v", deployment.ObjectMeta.Name)
-	}
-
-	for _, container := range deployment.Spec.Template.Spec.Containers {
-		if container.Name == "postgresql" {
-			for _, env := range container.Env {
-				if env.Name == "POSTGRESQL_UPGRADE" && env.Value == "copy" {
-					return
-				}
-			}
-		}
-	}
-
-	t.Fatalf("Could not find the `postgresql` container with environment variable `POSTGRESQL_UPGRADE=copy` in deployment: %v", deployment)
 }
 
 func TestShouldDeleteUpgradeDeployment(t *testing.T) {
 	configuration.TemplateConfig = "../../../build/conf/config-test.yaml"
-	cl := fake.NewFakeClient(&appsv1.Deployment{
+	cl := fake.NewClientBuilder().WithObjects(&appsv1.Deployment{
 		ObjectMeta: upgradeMetadata,
-	})
+	}).Build()
 	clientTools := clienttools.ClientTools{}
 	clientTools.SetRuntimeClient(cl)
 	u := databaseUpgrade{
@@ -265,9 +313,9 @@ func TestShouldDeleteUpgradeDeployment(t *testing.T) {
 
 func TestOnRollbackShouldDeleteUpgradeDeployment(t *testing.T) {
 	configuration.TemplateConfig = "../../../build/conf/config-test.yaml"
-	cl := fake.NewFakeClient(&appsv1.Deployment{
+	cl := fake.NewClientBuilder().WithObjects(&appsv1.Deployment{
 		ObjectMeta: upgradeMetadata,
-	})
+	}).Build()
 	clientTools := clienttools.ClientTools{}
 	clientTools.SetRuntimeClient(cl)
 	u := databaseUpgrade{
