@@ -1,61 +1,107 @@
 {
   "APIProvider": "API Provider",
-  "integrationListDescription": "The following integrations are defined in this environment. View an integration to learn about its steps, execution history, log entries, and metrics.",
-  "publishIntegrationModal": "Are you sure you want to start the \"{{name}}\" integration?",
-  "publishIntegrationModalTitle": "Confirm Start?",
-  "unpublishIntegrationModal": "Are you sure you want to stop the \"{{name}}\" integration?",
-  "unpublishIntegrationModalTitle": "Confirm Stop?",
-  "deleteIntegrationModal": "Are you sure you want to delete the \"{{name}}\" integration?",
-  "deleteIntegrationModalTitle": "Confirm Delete?",
-  "ConfigurationRequired": "Configuration Required",
-  "filterByConnectionPlaceholder": "Filter by Connection",
-  "flowCount": "{{flowCount}} Flows",
-  "progressStarting": "Starting...",
-  "progressStopping": "Stopping...",
   "ASSEMBLING": "Assembling",
+  "AddTagDialogDescription": "The following changes will be applied to all integrations.",
+  "AddTagDialogTitle": "Add Tag Name",
   "BUILDING": "Building",
-  "DEPLOYING": "Deploying",
-  "STARTING": "Starting",
-  "ManageCiCd": "Manage CI/CD",
+  "ConfigurationRequired": "Configuration Required",
   "ConfirmRemoveTag": "Are you sure you want to remove the {{name}} tag?",
   "ConfirmRemoveTagDetail": "Removing a tag unassociates it from any integrations that have been marked with it and then deletes the tag. No integrations are deleted.",
-  "AddTagDialogTitle": "Add Tag Name",
-  "AddTagDialogDescription": "The following changes will be applied to all integrations.",
+  "DEPLOYING": "Deploying",
+  "DeletingIntegrationFailedMessage": "Error deleting integration: {{error}}",
+  "DeletingIntegrationMessage": "Deleting integration.  It takes a few moments to delete the integration.",
   "Edit": "Edit",
-  "View": "View",
   "EditIntegration": "Edit Integration",
-  "EditTagDialogTitle": "Edit Tag",
   "EditTagDialogDescription": "The following changes will be applied to all integrations.",
-  "TagName": "Tag Name",
-  "ManageCiCdDescription": "The following CI/CD environment tags are defined. To identify an integration for CI/CD pipelines, mark the integration with one or more of these tags.",
-  "NoEnvironmentsAvailable": "No Environments Available",
-  "PleaseEnterATagName": "Enter a tag name.",
-  "ThatTagNameIsInUse": "That tag name is already in use.",
-  "NoEnvironmentsAvailableInfo": "No environments are available to tag this integration with. Go to the CI/CD management page to create one or more environments.",
-  "MarkIntegrationForCiCd": "Mark Integration for Continuous Integration/Continuous Deployment",
-  "TagThisIntegrationForRelease": "Tag this integration for release in one or more of the environments.",
+  "EditTagDialogTitle": "Edit Tag",
+  "EnvironmentVariablesTitle": "Environment variables",
+  "ErrorsFound": "Errors Found",
   "GoToManageCiCd": "Go To Manage CI/CD",
-  "ImportIntegrationInstructions": "Drag and drop your integration files here, or <strong>click</strong> to select files by using a file chooser dialog.",
-  "ImportIntegrationInvalidFileMessage": "",
-  "ImportIntegrationFailedMessage": "",
+  "ImportHelpMessage": "Note: The imported integration will be in the draft state. If you previously imported and this environment has a draft version of the integration, then that draft is lost.",
   "ImportIntegration": "Import Integration",
   "ImportIntegrationDescription": "Choose one or more zip files that contain exported integrations that you want to import.",
-  "ImportHelpMessage": "Note: The imported integration will be in the draft state. If you previously imported and this environment has a draft version of the integration, then that draft is lost.",
-  "ImportSelectedFileLabel": "Selected file:",
+  "ImportIntegrationFailedMessage": "",
+  "ImportIntegrationInstructions": "Drag and drop your integration files here, or <strong>click</strong> to select files by using a file chooser dialog.",
+  "ImportIntegrationInvalidFileMessage": "",
   "ImportNoFileSelectedMessage": "No file selected.",
+  "ImportSelectedFileLabel": "Selected file:",
   "ImportUploadFailedAlertMessage": "<span>File <strong>'{{fileName}}'</strong> could not be uploaded</span>.",
   "ImportUploadFailedMessage": "Upload failed for {{fileName}}.",
   "ImportUploadSuccessMessage": "Successfully imported {{fileName}}.",
   "IntegrationsListAriaLabel": "Integrations",
-  "PublishingIntegrationMessage": "Starting integration. Your integration will start running in a few moments.",
-  "UnpublishingIntegrationMessage": "Stopping integration. It takes a few moments to stop the integration.",
-  "DeletingIntegrationMessage": "Deleting integration.  It takes a few moments to delete the integration.",
+  "LastRefresh": "Last refreshed at {{at}}",
+  "ManageCiCd": "Manage CI/CD",
+  "ManageCiCdDescription": "The following CI/CD environment tags are defined. To identify an integration for CI/CD pipelines, mark the integration with one or more of these tags.",
+  "MarkIntegrationForCiCd": "Mark Integration for Continuous Integration/Continuous Deployment",
+  "NoEnvironmentsAvailable": "No Environments Available",
+  "NoEnvironmentsAvailableInfo": "No environments are available to tag this integration with. Go to the CI/CD management page to create one or more environments.",
+  "NoErrors": "No errors",
+  "NoSteps": "No steps",
+  "PleaseEnterATagName": "Enter a tag name.",
   "PublishingIntegrationFailedMessage": "Error starting integration: {{error}}",
-  "UnpublishingIntegrationFailedMessage": "Error stopping integration: {{error}}",
-  "DeletingIntegrationFailedMessage": "Error deleting integration: {{error}}",
+  "PublishingIntegrationMessage": "Starting integration. Your integration will start running in a few moments.",
+  "ReplaceDraft": "Replace Draft",
+  "ReplaceDraftFailedMessage": "Failed to replace the current draft: {{error}}",
+  "ReplaceDraftModalMessage": "Are you sure you want to to replace the current draft for the \"{{name}}\" integration?",
+  "ReplaceDraftModalTitle": "Replace Draft?",
+  "ReplacedDraftMessage": "<strong>Updating draft.</strong> Replacing the current draft of the integration. ",
   "Running": "Running",
+  "STARTING": "Starting",
   "Stopped": "Stopped",
+  "TagName": "Tag Name",
+  "TagThisIntegrationForRelease": "Tag this integration for release in one or more of the environments.",
+  "ThatTagNameIsInUse": "That tag name is already in use.",
+  "UnpublishingIntegrationFailedMessage": "Error stopping integration: {{error}}",
+  "UnpublishingIntegrationMessage": "Stopping integration. It takes a few moments to stop the integration.",
   "UsedByNIntegrations": "Used by {{uses}} integrations",
+  "View": "View",
+  "alerts": {
+    "modified": "A connection associated with this integration has been modified. To incorporate the changes, edit the integration.",
+    "obsolete": "The published integration has become obsolete. The recommendation is to republish it."
+  },
+  "apiProvider": {
+    "editSpecification": {
+      "description": "An OpenAPI document that defines the REST API operations is required.",
+      "title": "Provide API Definition"
+    },
+    "reviewActions": {
+      "btnReviewEdit": "Review/Edit",
+      "description": "To examine and optionally update the operations defined in the OpenAPI document, click Review/Edit below.",
+      "descriptionLabel": "Description",
+      "nameLabel": "Name",
+      "operations": "operations",
+      "sectionApiDefinition": "API DEFINITION",
+      "sectionErrors": "ERRORS",
+      "sectionImported": "IMPORTED",
+      "sectionWarnings": "WARNINGS",
+      "title": "Review Actions"
+    },
+    "reviewOperations": {
+      "description": "An API provider integration has a flow for each operation. Select an operation to add to its flow.",
+      "title": "Operations"
+    },
+    "selectMethod": {
+      "description": "Execute this integration when a client invokes an operation defined by this API.",
+      "dndFileExtensions": ".json,.yaml,.yml",
+      "dndHelpMessage": "Accepted file type: .json, .yaml, and .yml",
+      "dndInstructions": "Drag and drop a file here, or <strong>click</strong> to select a file by using a file chooser dialog.",
+      "dndNoFileSelectedLabel": "No file selected",
+      "dndSelectedFileLabel": "Selected file:",
+      "dndUploadFailedMessage": " could not be uploaded",
+      "dndUploadSuccessMessage": "Successfully uploaded ",
+      "methodFromFile": "Upload an OpenAPI file",
+      "methodFromScratch2x": "Create a new OpenAPI 2.x document",
+      "methodFromScratch3x": "Create a new OpenAPI 3.x document",
+      "methodFromUrl": "Use a URL",
+      "title": "Start integration with an API call",
+      "urlNote": "* Note: After uploading this document, updates to it are not automatically obtained."
+    },
+    "setInfo": {
+      "title": "Give this integration a name"
+    }
+  },
+  "deleteIntegrationModal": "Are you sure you want to delete the \"{{name}}\" integration?",
+  "deleteIntegrationModalTitle": "Confirm Delete?",
   "detail": {
     "History": "History",
     "lastPublished": "Last published on ",
@@ -73,21 +119,9 @@
     "noOutput": "No output",
     "success": "Success"
   },
-  "metrics": {
-    "lastProcessed": "Last Processed",
-    "NoDataAvailable": "No Data Available",
-    "since": "Since ",
-    "totalErrors": "Total Errors",
-    "totalMessages": "Total Messages",
-    "uptime": "Uptime"
-  },
-  "alerts": {
-    "modified": "A connection associated with this integration has been modified. To incorporate the changes, edit the integration.",
-    "obsolete": "The published integration has become obsolete. The recommendation is to republish it."
-  },
   "editor": {
-    "BackToOperationList": "Back to Operation List",
     "BackToOperationFlow": "Back to Operation Flow",
+    "BackToOperationList": "Back to Operation List",
     "BackToPrimaryFlow": "Back to Primary Flow",
     "ConditionalFlowStepGroup": "{{group}} Conditional Flow Step",
     "OTHERWISE": "OTHERWISE",
@@ -95,17 +129,36 @@
     "addStep": "Add a step",
     "addStepDescription": "You can continue adding steps and connections to your integration.",
     "addToIntegration": "Add to Integration",
+    "choiceForm": {
+      "addCondition": "Add another condition",
+      "addConditionTitle": "When",
+      "conditionDescription": "Provide a condition that you want to evaluate (for example, ${header.type} == 'note' or ${body.title} contains 'Important').",
+      "conditionName": "Condition",
+      "conditionPlaceholder": "Condition expression",
+      "fieldRequired": "{{field}} is required",
+      "forAllIncomingData": "For all incoming data",
+      "keywordsDescription": "For this value",
+      "keywordsPlaceholder": "Keywords",
+      "operatorDescription": "Property must meet this condition",
+      "otherwise": "When none of the above conditions match the incoming data",
+      "pathDescription": "Choose the property you want to evaluate from available properties on the current data type.",
+      "pathPlaceholder": "Property name",
+      "useDefaultFlowTitle": "Execute default flow"
+    },
+    "configureStep": {
+      "noProperties": "There are no properties to configure for this step."
+    },
     "confirmDeleteStepDialogBody": "Are you sure you want to delete this step from the integration?",
     "confirmDeleteStepDialogTitle": "Confirm Delete",
     "endpoint": {
       "configureAction": {
         "chooseAction": "Choose Action",
-        "noProperties": "There are no properties to configure for this action.",
         "descriptorFetchError": {
-          "title": "Connection Configuration Required",
+          "buttonLabel": "Configure connection",
           "info": "A connection associated with this integration is no longer valid.",
-          "buttonLabel": "Configure connection"
-        }
+          "title": "Connection Configuration Required"
+        },
+        "noProperties": "There are no properties to configure for this action."
       }
     },
     "extensions": {
@@ -115,172 +168,120 @@
       "tableDescription": "Select the library extensions that you want to associate with this integration.",
       "tableName": "Library Extensions"
     },
-    "selectStep": {
-      "title": "Choose a connection",
-      "startDescription": "Click the connection that starts the integration. If the connection you need is not available, click Create Connection.",
-      "finishDescription": "Click the connection that completes the integration. If the connection you need is not available, click Create Connection.",
-      "middleDescription": "A step specifies an operation on the data in the integration. Click one to add it."
-    },
-    "configureStep": {
-      "noProperties": "There are no properties to configure for this step."
-    },
-    "saveOrAddStep": "Save or Add Step",
-    "save": {
-      "title": "Save the integration",
-      "description": "Update details about this integration.",
-      "saveAndPublish": "Save and publish"
-    },
-    "selectChoiceMode": {
-      "basicDescription": "Provides preselected properties and condition operators for simple expressions.",
-      "basicName": "Basic expression builder",
-      "advancedDescription": "User provides condition language expressions for more advanced use cases.",
-      "advancedName": "Advanced expression builder",
-      "ConfigureConditionalFlows": "Configure Conditional",
-      "pageDescription": "Choose how to configure the conditional flows step."
-    },
-    "choiceForm": {
-      "conditionDescription": "Provide a condition that you want to evaluate (for example, ${header.type} == 'note' or ${body.title} contains 'Important').",
-      "conditionName": "Condition",
-      "conditionPlaceholder": "Condition expression",
-      "addCondition": "Add another condition",
-      "addConditionTitle": "When",
-      "forAllIncomingData": "For all incoming data",
-      "otherwise": "When none of the above conditions match the incoming data",
-      "useDefaultFlowTitle": "Execute default flow",
-      "fieldRequired": "{{field}} is required",
-      "operatorDescription": "Property must meet this condition",
-      "pathDescription": "Choose the property you want to evaluate from available properties on the current data type.",
-      "pathPlaceholder": "Property name",
-      "keywordsDescription": "For this value",
-      "keywordsPlaceholder": "Keywords"
-    },
     "ruleForm": {
-      "predicateDescription": "Continue only if incoming data match ",
-      "predicateEnumAll": "ALL of the following",
-      "predicateEnumAny": "ANY of the following",
+      "addRule": "Add another rule",
+      "fieldRequired": "{{field}} is required",
+      "keywordsDescription": "For this value",
+      "keywordsDisplay": "Keywords",
+      "keywordsPlaceholder": "Keywords",
       "operatorDescription": "Must meet this condition",
       "operatorDisplay": "Operator",
       "pathDescription": "The data you want to evaluate",
       "pathDisplay": "Property Name",
       "pathPlaceholder": "Property name",
-      "keywordsDescription": "For this value",
-      "keywordsDisplay": "Keywords",
-      "keywordsPlaceholder": "Keywords",
-      "addRule": "Add another rule",
-      "fieldRequired": "{{field}} is required"
+      "predicateDescription": "Continue only if incoming data match ",
+      "predicateEnumAll": "ALL of the following",
+      "predicateEnumAny": "ANY of the following"
+    },
+    "save": {
+      "description": "Update details about this integration.",
+      "saveAndPublish": "Save and publish",
+      "title": "Save the integration"
+    },
+    "saveOrAddStep": "Save or Add Step",
+    "selectChoiceMode": {
+      "ConfigureConditionalFlows": "Configure Conditional",
+      "advancedDescription": "User provides condition language expressions for more advanced use cases.",
+      "advancedName": "Advanced expression builder",
+      "basicDescription": "Provides preselected properties and condition operators for simple expressions.",
+      "basicName": "Basic expression builder",
+      "pageDescription": "Choose how to configure the conditional flows step."
+    },
+    "selectStep": {
+      "finishDescription": "Click the connection that completes the integration. If the connection you need is not available, click Create Connection.",
+      "middleDescription": "A step specifies an operation on the data in the integration. Click one to add it.",
+      "startDescription": "Click the connection that starts the integration. If the connection you need is not available, click Create Connection.",
+      "title": "Choose a connection"
     }
   },
   "errorKeys": {
-    "ServerError": "Server Error",
     "ConnectorError": "Connector Error",
-    "EntityNotFoundError": "Entity Not Found Error",
     "DataAccessError": "Data Access Error",
-    "NonTransientDataAccessError": "Non Transient Error",
     "DataIntegrityViolationError": " Data Integrity Violation Error",
     "DuplicateKeyError": "Duplicate Key Error",
+    "EntityNotFoundError": "Entity Not Found Error",
+    "NonTransientDataAccessError": "Non Transient Error",
+    "ServerError": "Server Error",
     "TransientDataAccessError": "Retryable Error"
   },
-  "apiProvider": {
-    "editSpecification": {
-      "title": "Provide API Definition",
-      "description": "An OpenAPI document that defines the REST API operations is required."
-    },
-    "reviewActions": {
-      "btnReviewEdit": "Review/Edit",
-      "description": "To examine and optionally update the operations defined in the OpenAPI document, click Review/Edit below.",
-      "descriptionLabel": "Description",
-      "nameLabel": "Name",
-      "operations": "operations",
-      "sectionApiDefinition": "API DEFINITION",
-      "sectionImported": "IMPORTED",
-      "sectionWarnings": "WARNINGS",
-      "sectionErrors": "ERRORS",
-      "title": "Review Actions"
-    },
-    "reviewOperations": {
-      "title": "Operations",
-      "description": "An API provider integration has a flow for each operation. Select an operation to add to its flow."
-    },
-    "selectMethod": {
-      "description": "Execute this integration when a client invokes an operation defined by this API.",
-      "dndUploadFailedMessage": " could not be uploaded",
-      "dndUploadSuccessMessage": "Successfully uploaded ",
-      "dndFileExtensions": ".json,.yaml,.yml",
-      "dndHelpMessage": "Accepted file type: .json, .yaml, and .yml",
-      "dndInstructions": "Drag and drop a file here, or <strong>click</strong> to select a file by using a file chooser dialog.",
-      "dndNoFileSelectedLabel": "No file selected",
-      "dndSelectedFileLabel": "Selected file:",
-      "methodFromFile": "Upload an OpenAPI file",
-      "methodFromScratch2x": "Create a new OpenAPI 2.x document",
-      "methodFromScratch3x": "Create a new OpenAPI 3.x document",
-      "methodFromUrl": "Use a URL",
-      "title": "Start integration with an API call",
-      "urlNote": "* Note: After uploading this document, updates to it are not automatically obtained."
-    },
-    "setInfo": {
-      "title": "Give this integration a name"
-    }
-  },
   "exposeVia": {
-    "enableDiscovery": "Enable discovery",
-    "discoveryDescription": "Toggles whether Red Hat 3scale can discover your API. Toggling discovery republishes the integration at a new endpoint.",
-    "enableDiscoveryConfirm": "Are you sure you would like to enable discovery",
     "disableDiscovery": "Disable discovery",
     "disableDiscoveryConfirm": "Are you sure you would like to disable discovery",
-    "republish": "and republish your integration",
-    "no3scaleConfigured": "The discovery has been enabled, but Red Hat 3scale is no longer available. Disable discovery or contact the administrator to setup 3scale."
+    "discoveryDescription": "Toggles whether Red Hat 3scale can discover your API. Toggling discovery republishes the integration at a new endpoint.",
+    "enableDiscovery": "Enable discovery",
+    "enableDiscoveryConfirm": "Are you sure you would like to enable discovery",
+    "no3scaleConfigured": "The discovery has been enabled, but Red Hat 3scale is no longer available. Disable discovery or contact the administrator to setup 3scale.",
+    "republish": "and republish your integration"
   },
-  "ReplaceDraft": "Replace Draft",
-  "ReplaceDraftModalMessage": "Are you sure you want to to replace the current draft for the \"{{name}}\" integration?",
-  "ReplaceDraftModalTitle": "Replace Draft?",
-  "ReplacedDraftMessage": "<strong>Updating draft.</strong> Replacing the current draft of the integration. ",
-  "publishDeploymentModal": "Are you sure you want to start version \"{{version}}\" of integration \"{{name}}\"?",
-  "publishDeploymentModalTitle": "Start Deployment?",
-  "ReplaceDraftFailedMessage": "Failed to replace the current draft: {{error}}",
-  "NoErrors": "No errors",
-  "NoSteps": "No steps",
-  "ErrorsFound": "Errors Found",
-  "LastRefresh": "Last refreshed at {{at}}",
-  "steps": {
-    "template-specify-type": "Specify template type:",
-    "template-instruct-text1": "Drag and drop a file, paste text, or start typing in the text editor below to add a template. If you already have a template file, ",
-    "template-instruct-text2": "browse to upload",
-    "template-instruct-text3": "the file.",
-    "template-upload-helper-text-size-type": "Max: 1 file (up to 1MB)",
-    "template-editor-placeholder": "Drop a file, paste text, or start typing.",
-    "template-editor-drag-enter": "Drop file here to upload.",
-    "template-validation-errors": "Validation errors",
-    "template-file-upload-dnd": "Drag and drop your template file here.",
-    "template-upload-invalid-file": "'{{0}}' is not a valid file. Only text files can be uploaded.",
-    "template-url-upload": "Use a URL",
-    "template-url-upload-note": "* Note: After uploading this template, {{shared.project.name}} does not automatically obtain any updates to it. You would have to edit the step and re-upload the template to incorporates the updates.",
-    "template-create": "Create",
-    "template-create-editor-title": "Copy and paste a template or enter text that defines a template.",
-    "template-import-review": "{{import}} review:"
-  },
-  "unsavedChangesTitle": "Unsaved Changes",
-  "unsavedChangesMessage": "Are you sure you want to exit editing the integration?",
-  "toolbars": {
-    "filterByOperationNamePlaceholder": "Filter by operation name",
-    "filterByMethodPlaceholder": "Filter by method",
-    "Method": "Method",
-    "OperationImplemented": "Operation implemented",
-    "OperationName": "Operation name"
-  },
-  "linter": {
-    "linter-wrong-symbol-format": "'__0__' does not conform to the format __1__ at line: __2__, column: __3__",
-    "linter-illegal-open-symbol": "Illegal open symbol at line: __0__, column: __1__",
-    "linter-too-many-open-symbols": "Too many open symbols at line: __0__, column: __1__",
-    "linter-illegal-close-symbol": "Illegal close symbol at line: __0__, column: __1__",
-    "linter-too-many-close-symbols": "Too many close symbols at line: __0__, column: __1__",
-    "linter-expected-open-symbol": "Expected open symbol at line: __0__, column: __1__",
-    "linter-expected-close-symbol": "Expected close symbol at line: __0__, column: __1__",
-    "linter-no-symbols": "The editor contains no data-mappable symbols",
-    "linter-no-content": "The editor has no content"
-  },
+  "filterByConnectionPlaceholder": "Filter by Connection",
+  "flowCount": "{{flowCount}} Flows",
+  "integrationListDescription": "The following integrations are defined in this environment. View an integration to learn about its steps, execution history, log entries, and metrics.",
   "integrationsEmptyState": {
     "createTip": "Click to begin creating an integration.",
     "info": "There are currently no integrations. Click the button below to create one.",
     "title": "$t(shared:linkCreateIntegration)"
-  }
+  },
+  "linter": {
+    "linter-expected-close-symbol": "Expected close symbol at line: __0__, column: __1__",
+    "linter-expected-open-symbol": "Expected open symbol at line: __0__, column: __1__",
+    "linter-illegal-close-symbol": "Illegal close symbol at line: __0__, column: __1__",
+    "linter-illegal-open-symbol": "Illegal open symbol at line: __0__, column: __1__",
+    "linter-no-content": "The editor has no content",
+    "linter-no-symbols": "The editor contains no data-mappable symbols",
+    "linter-too-many-close-symbols": "Too many close symbols at line: __0__, column: __1__",
+    "linter-too-many-open-symbols": "Too many open symbols at line: __0__, column: __1__",
+    "linter-wrong-symbol-format": "'__0__' does not conform to the format __1__ at line: __2__, column: __3__"
+  },
+  "metrics": {
+    "NoDataAvailable": "No Data Available",
+    "lastProcessed": "Last Processed",
+    "since": "Since ",
+    "totalErrors": "Total Errors",
+    "totalMessages": "Total Messages",
+    "uptime": "Uptime"
+  },
+  "progressStarting": "Starting...",
+  "progressStopping": "Stopping...",
+  "publishDeploymentModal": "Are you sure you want to start version \"{{version}}\" of integration \"{{name}}\"?",
+  "publishDeploymentModalTitle": "Start Deployment?",
+  "publishIntegrationModal": "Are you sure you want to start the \"{{name}}\" integration?",
+  "publishIntegrationModalTitle": "Confirm Start?",
+  "steps": {
+    "template-create": "Create",
+    "template-create-editor-title": "Copy and paste a template or enter text that defines a template.",
+    "template-editor-drag-enter": "Drop file here to upload.",
+    "template-editor-placeholder": "Drop a file, paste text, or start typing.",
+    "template-file-upload-dnd": "Drag and drop your template file here.",
+    "template-import-review": "{{import}} review:",
+    "template-instruct-text1": "Drag and drop a file, paste text, or start typing in the text editor below to add a template. If you already have a template file, ",
+    "template-instruct-text2": "browse to upload",
+    "template-instruct-text3": "the file.",
+    "template-specify-type": "Specify template type:",
+    "template-upload-helper-text-size-type": "Max: 1 file (up to 1MB)",
+    "template-upload-invalid-file": "'{{0}}' is not a valid file. Only text files can be uploaded.",
+    "template-url-upload": "Use a URL",
+    "template-url-upload-note": "* Note: After uploading this template, {{shared.project.name}} does not automatically obtain any updates to it. You would have to edit the step and re-upload the template to incorporates the updates.",
+    "template-validation-errors": "Validation errors"
+  },
+  "toolbars": {
+    "Method": "Method",
+    "OperationImplemented": "Operation implemented",
+    "OperationName": "Operation name",
+    "filterByMethodPlaceholder": "Filter by method",
+    "filterByOperationNamePlaceholder": "Filter by operation name"
+  },
+  "unpublishIntegrationModal": "Are you sure you want to stop the \"{{name}}\" integration?",
+  "unpublishIntegrationModalTitle": "Confirm Stop?",
+  "unsavedChangesMessage": "Are you sure you want to exit editing the integration?",
+  "unsavedChangesTitle": "Unsaved Changes"
 }

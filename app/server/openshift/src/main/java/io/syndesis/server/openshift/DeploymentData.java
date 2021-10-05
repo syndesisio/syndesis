@@ -16,9 +16,13 @@
 package io.syndesis.server.openshift;
 
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import io.fabric8.kubernetes.api.model.EnvVar;
 
 public final class DeploymentData {
 
@@ -31,6 +35,8 @@ public final class DeploymentData {
     private int version;
 
     private EnumSet<Exposure> exposure = EnumSet.noneOf(Exposure.class);
+
+    private final List<EnvVar> environment = new ArrayList<>();
 
     public Map<String, String> getAnnotations() {
         return annotations;
@@ -118,5 +124,14 @@ public final class DeploymentData {
             that.exposure = exposure;
             return this;
         }
+
+        public DeploymentData.Builder addEnvironmentVariable(final String name, final String value) {
+            that.environment.add(new EnvVar(name, value, null));
+            return this;
+        }
+    }
+
+    public List<EnvVar> getEnvironment() {
+        return environment;
     }
 }

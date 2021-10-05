@@ -17,6 +17,8 @@ package io.syndesis.server.openshift;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -272,12 +274,14 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             Integer replicas = deploymentReplicas != null ? Integer.valueOf(deploymentReplicas) : oldConfig.getSpec().getReplicas();
 
             // environment variables are stored in a list, so remove duplicates manually before patching
-            final EnvVar[] vars = { new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null),
-                    new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null),
-                    new EnvVar("JAEGER_ENDPOINT", jaegerCollectorUri, null),
-                    new EnvVar("JAEGER_TAGS", "integration.version="+deploymentData.getVersion(), null),
-                    new EnvVar("JAEGER_SAMPLER_TYPE", "const", null),
-                    new EnvVar("JAEGER_SAMPLER_PARAM", "1", null) };
+            final List<EnvVar> vars = new ArrayList<>(Arrays.asList(
+                new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null),
+                new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null),
+                new EnvVar("JAEGER_ENDPOINT", jaegerCollectorUri, null),
+                new EnvVar("JAEGER_TAGS", "integration.version="+deploymentData.getVersion(), null),
+                new EnvVar("JAEGER_SAMPLER_TYPE", "const", null),
+                new EnvVar("JAEGER_SAMPLER_PARAM", "1", null)));
+            vars.addAll(deploymentData.getEnvironment());
             final Map<String, EnvVar> envVarMap = new HashMap<>();
             for (EnvVar var : vars) {
                 envVarMap.put(var.getName(), var);
@@ -335,7 +339,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                                     .withImagePullPolicy("Always")
                                     .withName(name)
                                     .withEnv(envVars)
-                                    .withPorts( newPorts)
+                                    .withPorts(newPorts)
                                     .editMatchingVolumeMount(v -> "secret-volume".equals(v.getName()))
                                         .withMountPath("/deployments/config")
                                         .withReadOnly(false)

@@ -52,6 +52,7 @@
     "react-router-dom": "^4.3.1"
   },
   "dependencies": {
+    "@patternfly/react-core": "^4.135.0",
     "@syndesis/auto-form": "*",
     "@syndesis/models": "*",
     "@syndesis/ui": "*",

@@ -43,6 +43,12 @@ interface IExtensionProps {
   selected?: boolean;
 }
 
+type KeyValueArray = Array<{ key: string; value: string }>;
+
+export interface IEnvironment {
+  [s: string]: string;
+}
+
 export interface ISaveIntegrationForm {
   name: string;
   description?: string;
@@ -52,6 +58,7 @@ export interface ISaveIntegrationForm {
    */
   dependencies?: Dependency[];
   labels?: { [key: string]: string };
+  environment?: KeyValueArray;
 }
 
 export interface ISaveIntegrationPageProps
@@ -91,6 +98,27 @@ const convertLabelArrayIntoObject = (
     return (newObj = { ...newObj, [labelKey]: splitLabel[1] });
   });
   return newObj;
+};
+
+const environmentToKeyValueArray = (env: IEnvironment): KeyValueArray => {
+  const val: KeyValueArray = [];
+
+  Object.entries(env).map((kv, _) => {
+    return val.push({
+      key: kv[0],
+      value: kv[1],
+    });
+  });
+
+  return val;
+};
+
+const keyValueArrayToEnvironment = (kva: KeyValueArray): IEnvironment => {
+  const val: IEnvironment = {};
+
+  kva.forEach((kv) => (val[kv.key] = kv.value));
+
+  return val;
 };
 
 /**
@@ -169,8 +197,7 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                         {
                           name,
                           description,
-                          dependencies,
-                          labels,
+                          environment,
                         }: ISaveIntegrationForm,
                         actions: any
                       ) => {
@@ -182,6 +209,9 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                             {
                               dependencies: dependencyList.current,
                               description,
+                              environment: keyValueArrayToEnvironment(
+                                environment || []
+                              ),
                               labels: labelList.current,
                               name,
                             }
@@ -249,6 +279,34 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                           order: 1,
                           type: 'textarea',
                         },
+                        environment: {
+                          arrayDefinition: {
+                            key: {
+                              displayName: t('shared:Name'),
+                              required: true,
+                              type: 'text',
+                            },
+                            value: {
+                              displayName: t('shared:Value'),
+                              required: true,
+                              type: 'text',
+                            },
+                          },
+                          arrayDefinitionOptions: {
+                            displayName: t(
+                              'integrations:EnvironmentVariablesTitle'
+                            ),
+                            i18nAddElementText: t('shared:AddNew'),
+                            minElements: 0,
+                            showSortControls: true,
+                          },
+                          defaultValue: environmentToKeyValueArray(
+                            state.integration.environment || {}
+                          ),
+                          order: 2,
+                          required: true,
+                          type: 'array',
+                        },
                         name: {
                           defaultValue: '',
                           displayName: t('shared:Name'),
@@ -279,6 +337,9 @@ export const SaveIntegrationPage: React.FunctionComponent<ISaveIntegrationPagePr
                             initialValue={{
                               dependencies: dependencyList.current,
                               description: state.integration.description,
+                              environment: environmentToKeyValueArray(
+                                state.integration.environment || {}
+                              ),
                               labels: labelList.current,
                               name: state.integration.name,
                             }}
