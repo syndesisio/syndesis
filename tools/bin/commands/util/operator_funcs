@@ -13,15 +13,6 @@ operatorsdk_is_available() {
         return
     fi
 
-    set -e
-    if [ "$(pwd)" != "$GOPATH/src/${OPERATOR_GO_PACKAGE}" ] ; then
-        echo "
-ERROR: operator-sdk only works on project's directly in the \$GOPATH. If the intention is to simply compile the operator then this can be ignored.
-However, to generate the operator source code then the project must be relocated under the \$GOPATH so that :'$(pwd)'
-is located at '$GOPATH/src/${OPERATOR_GO_PACKAGE}'."
-        return
-    fi
-
     echo "OK"
 }
 
