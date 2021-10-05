@@ -21,6 +21,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
 public class MavenProperties {
     private final Map<String, String> repositories = new ConcurrentSkipListMap<>();
 
+    private String mirror;
+
     public MavenProperties() {
         // allow instantiation, not 100% sure it's needed (or the setter below)
     }
@@ -42,6 +44,14 @@ public class MavenProperties {
     public MavenProperties addRepository(String id, String url) {
         this.repositories.put(id, url);
         return this;
+    }
+
+    public String getMirror() {
+        return mirror;
+    }
+
+    public void setMirror(String mirror) {
+        this.mirror = mirror;
     }
 }
 

@@ -56,6 +56,7 @@ import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.MavenProperties;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.project.generator.ProjectGeneratorConfiguration.Templates.Resource;
 
@@ -700,6 +701,31 @@ public class ProjectGeneratorTest {
         assertThat(errors).isEmpty();
     }
 
+    @ParameterizedTest
+    @EnumSource(Environment.class)
+    public void shouldGenerateSettingsXmlWithMirror(final Environment env, final @TempDir Path testFolder, final TestInfo info) throws Exception {
+        TestResourceManager resourceManager = new TestResourceManager();
+
+        Integration integration = new Integration.Builder()
+            .id("test-integration")
+            .name("Test Integration")
+            .description("This is a test integration!")
+            .build();
+
+        ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
+        configuration.getTemplates().setOverridePath(env.basePath);
+        configuration.getTemplates().getAdditionalResources().addAll(env.additionalResources);
+        configuration.setSecretMaskingEnabled(true);
+
+        final List<Throwable> errors = new ArrayList<>();
+        MavenProperties mavenProperties = new MavenProperties();
+        mavenProperties.setMirror("https://my-mirror");
+        Path runtimeDir = generate(integration, configuration, resourceManager, errors, testFolder, mavenProperties);
+
+        assertFileContents(info, configuration, runtimeDir.resolve("configuration/settings.xml"), "settings.xml");
+        assertThat(errors).isEmpty();
+    }
+
     private static void assertFileContents(TestInfo info, ProjectGeneratorConfiguration generatorConfiguration, Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException {
         URL resource = null;
         String overridePath = generatorConfiguration.getTemplates().getOverridePath();
@@ -753,15 +779,19 @@ public class ProjectGeneratorTest {
     }
 
     private static Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager, List<Throwable> errors, Path testFolder) throws IOException {
+        return generate(integration, generatorConfiguration, resourceManager, errors, testFolder, TestConstants.MAVEN_PROPERTIES);
+    }
+
+    private static Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager, List<Throwable> errors, Path testFolder, MavenProperties mavenProperties) throws IOException {
         Path destination = testFolder.resolve("integration-project");
 
-        generate(destination, integration, generatorConfiguration, resourceManager, errors);
+        generate(destination, integration, generatorConfiguration, resourceManager, errors, mavenProperties);
 
         return destination;
     }
 
-    private static void generate(Path destination, Integration integration, ProjectGeneratorConfiguration configuration, TestResourceManager resourceManager, List<Throwable> errors) throws IOException {
-        final IntegrationProjectGenerator generator = new ProjectGenerator(configuration, resourceManager, TestConstants.MAVEN_PROPERTIES);
+    private static void generate(Path destination, Integration integration, ProjectGeneratorConfiguration configuration, TestResourceManager resourceManager, List<Throwable> errors, MavenProperties mavenProperties) throws IOException {
+        final IntegrationProjectGenerator generator = new ProjectGenerator(configuration, resourceManager, mavenProperties);
 
         try (InputStream is = generator.generate(integration, errors::add)) {
             try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {
