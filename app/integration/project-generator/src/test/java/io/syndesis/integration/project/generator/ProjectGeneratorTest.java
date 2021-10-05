@@ -83,8 +83,7 @@ public class ProjectGeneratorTest {
 
     static enum Environment {
         upstream("", Collections.emptyList()), redhat("redhat", Arrays.asList(
-            new ProjectGeneratorConfiguration.Templates.Resource("deployment.yml", "src/main/fabric8/deployment.yml"),
-            new ProjectGeneratorConfiguration.Templates.Resource("settings.xml", "configuration/settings.xml")));
+            new ProjectGeneratorConfiguration.Templates.Resource("deployment.yml", "src/main/fabric8/deployment.yml")));
 
         private final String basePath;
 
@@ -381,7 +380,6 @@ public class ProjectGeneratorTest {
             .withMessage("Old style of connectors from camel-connector are not supported anymore, please be sure that integration json satisfy connector.getComponentScheme().isPresent() || descriptor.getComponentScheme().isPresent()");
     }
 
-
     @ParameterizedTest
     @EnumSource(Environment.class)
     public void testGenerateApplicationWithOpenApiV2RestDSL(final Environment env, final @TempDir Path testFolder, final TestInfo info) throws Exception {
@@ -457,6 +455,7 @@ public class ProjectGeneratorTest {
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java")).exists();
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java")).exists();
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java")).exists();
+        assertThat(runtimeDir.resolve("configuration/settings.xml")).exists();
 
         assertFileContents(info, configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java"), "RestRoute.java");
         assertFileContents(info, configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java"), "RestRouteConfiguration.java");
@@ -543,14 +542,6 @@ public class ProjectGeneratorTest {
         assertFileContents(info, configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java"), "RestRouteConfiguration.java");
         assertThat(errors).isEmpty();
     }
-
-    // *****************************
-    // Helpers
-    // *****************************
-
-    // ***************************
-    // Tests
-    // ***************************
 
     @Test
     public void testDependencyCollection() throws Exception {
@@ -683,6 +674,29 @@ public class ProjectGeneratorTest {
         Path runtimeDir = generate(integration, configuration, resourceManager, errors, testFolder);
 
         assertFileContents(info, configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
+        assertThat(errors).isEmpty();
+    }
+
+    @ParameterizedTest
+    @EnumSource(Environment.class)
+    public void shouldGenerateSettingsXml(final Environment env, final @TempDir Path testFolder, final TestInfo info) throws Exception {
+        TestResourceManager resourceManager = new TestResourceManager();
+
+        Integration integration = new Integration.Builder()
+            .id("test-integration")
+            .name("Test Integration")
+            .description("This is a test integration!")
+            .build();
+
+        ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
+        configuration.getTemplates().setOverridePath(env.basePath);
+        configuration.getTemplates().getAdditionalResources().addAll(env.additionalResources);
+        configuration.setSecretMaskingEnabled(true);
+
+        final List<Throwable> errors = new ArrayList<>();
+        Path runtimeDir = generate(integration, configuration, resourceManager, errors, testFolder);
+
+        assertFileContents(info, configuration, runtimeDir.resolve("configuration/settings.xml"), "settings.xml");
         assertThat(errors).isEmpty();
     }
 

@@ -90,6 +90,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
     private final Mustache applicationPropertiesMustache;
     private final Mustache restRoutesMustache;
     private final Mustache pomMustache;
+    private final Mustache settingsXmlMustache;
     private final MavenProperties mavenProperties;
 
     public ProjectGenerator(ProjectGeneratorConfiguration configuration, IntegrationResourceManager resourceManager, MavenProperties mavenProperties) throws IOException {
@@ -103,6 +104,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         this.applicationPropertiesMustache = compile(mf, configuration, "application.properties.mustache", "application.properties");
         this.restRoutesMustache = compile(mf, configuration, "RestRouteConfiguration.java.mustache", "RestRouteConfiguration.java");
         this.pomMustache = compile(mf, configuration, "pom.xml.mustache", "pom.xml");
+        settingsXmlMustache = compile(mf, configuration, "settings.xml.mustache", "settings.xml");
     }
 
     @Override
@@ -218,13 +220,17 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
         return ProjectGeneratorHelper.generate(
             new PomContext(
-            	Optional.ofNullable(configuration.getArtifactId()).orElse("project"),
+                Optional.ofNullable(configuration.getArtifactId()).orElse("project"),
                 integration.getName(),
                 integration.getDescription().orElse(null),
                 dependencies,
                 mavenProperties),
             pomMustache
         );
+    }
+
+    public byte[] generateSettingsXml() throws IOException {
+        return ProjectGeneratorHelper.generate(mavenProperties, settingsXmlMustache);
     }
 
     private static void addDecryptedKeyProperty(IntegrationResourceManager resourceManager, Properties properties, int flowIndex, int stepIndex, String propKeyPrefix, String propertyKey, String propertyVal) {
@@ -300,7 +306,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
                 addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
                 addResource(tos, "prometheus-config.yml", "templates/prometheus-config.yml");
-                addResource(tos, "configuration/settings.xml", "templates/settings.xml");
+                addTarEntry(tos, "configuration/settings.xml", generateSettingsXml());
 
                 addAdditionalResources(tos);
 
