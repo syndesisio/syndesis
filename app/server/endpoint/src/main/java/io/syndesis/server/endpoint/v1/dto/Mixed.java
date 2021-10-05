@@ -69,6 +69,7 @@ abstract class Mixed {
             }
         }
 
+        @SuppressWarnings("resource")
         @Override
         public void serialize(final Mixed mixed, final JsonGenerator gen, final SerializerProvider serializers)
             throws IOException, JsonProcessingException {

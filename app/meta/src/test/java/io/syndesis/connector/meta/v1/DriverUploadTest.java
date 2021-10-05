@@ -21,21 +21,12 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
-
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataOutput;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class DriverUploadTest {
@@ -43,8 +34,9 @@ public class DriverUploadTest {
     final private static String FILE_NAME = "syndesis-library-jdbc-1.0.0.jar";
     final private static String FILE_CLASSPATH = "drivers/" + FILE_NAME;
 
+    @SuppressWarnings("resource") // mocks used
     @Test
-    public void upload() throws IOException, URISyntaxException {
+    public void upload() throws IOException {
         URL driverClasspath = DriverUploadTest.class.getClassLoader().getResource(FILE_CLASSPATH);
         assertThat(driverClasspath).isNotNull();
 
@@ -64,31 +56,5 @@ public class DriverUploadTest {
         DriverUploadEndpoint endpoint = new DriverUploadEndpoint();
         Boolean reply = endpoint.upload(multiPart);
         assertThat(reply).isTrue();
-
-        //check equality with the original file
-        //File originalFile = new File(driverClasspath.toURI());
-        //File uploadedFile = new File(tempDir + File.separator + FILE_NAME);
-        //Boolean isEquals = FileUtils.contentEquals(originalFile, uploadedFile);
-        //assertThat(isEquals).isTrue();
-    }
-
-    @Test
-    @Disabled //Easy way to quickly upload an extension when running Application.main()
-    public void upload2Server() throws IOException {
-
-        URL driverClasspath = DriverUploadTest.class.getClassLoader().getResource(FILE_CLASSPATH);
-        assertThat(driverClasspath).isNotNull();
-
-        final WebTarget target = ClientBuilder.newClient()
-                .target(String.format("http://%s/api/v1/drivers",
-                        "localhost:8080"));
-
-        MultipartFormDataOutput multipart = new MultipartFormDataOutput();
-        multipart.addFormData("fileName", "myExtDir", MediaType.TEXT_PLAIN_TYPE);
-        multipart.addFormData("file", driverClasspath.openStream(), MediaType.APPLICATION_OCTET_STREAM_TYPE);
-
-        GenericEntity<MultipartFormDataOutput> entity = new GenericEntity<MultipartFormDataOutput>(multipart) {};
-        target.request().post(Entity.entity(entity, MediaType.MULTIPART_FORM_DATA_TYPE),Boolean.class);
-
     }
 }

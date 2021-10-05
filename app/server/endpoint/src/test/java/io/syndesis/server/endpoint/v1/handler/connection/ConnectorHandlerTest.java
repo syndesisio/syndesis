@@ -15,8 +15,8 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -28,7 +28,6 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
@@ -59,11 +58,6 @@ import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import io.syndesis.server.verifier.Verifier;
-
-import okio.Buffer;
-import okio.BufferedSink;
-import okio.BufferedSource;
-import okio.Okio;
 
 import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
@@ -129,27 +123,23 @@ public class ConnectorHandlerTest {
             when(dataManager.fetch(Connector.class, "connector-id")).thenReturn(connector);
             when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(Collections.emptyList()));
 
-            final Response response = handler.getConnectorIcon("connector-id").get();
+            try (Response response = handler.getConnectorIcon("connector-id").get()) {
+                assertThat(response.getStatusInfo().getStatusCode()).as("Wrong status code").isEqualTo(Response.Status.OK.getStatusCode());
+                assertThat(response.getHeaderString(CONTENT_TYPE)).as("Wrong content type").isEqualTo("image/png");
+                assertThat(response.getHeaderString(CONTENT_LENGTH)).as("Wrong content length").isEqualTo("2018");
 
-            assertThat(response.getStatusInfo().getStatusCode()).as("Wrong status code").isEqualTo(Response.Status.OK.getStatusCode());
-            assertThat(response.getHeaderString(CONTENT_TYPE)).as("Wrong content type").isEqualTo("image/png");
-            assertThat(response.getHeaderString(CONTENT_LENGTH)).as("Wrong content length").isEqualTo("2018");
-
-            final StreamingOutput so = (StreamingOutput) response.getEntity();
-            final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            try (BufferedSink sink = Okio.buffer(Okio.sink(bos)); BufferedSource source = new Buffer();
-                 ImageInputStream iis = ImageIO.createImageInputStream(source.inputStream());) {
-                so.write(sink.outputStream());
-                source.readAll(sink);
-                final Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
-                if (readers.hasNext()) {
-                    final ImageReader reader = readers.next();
-                    try {
-                        reader.setInput(iis);
-                        assertThat(reader.getHeight(0)).as("Wrong image height").isEqualTo(106d);
-                        assertThat(reader.getWidth(0)).as("Wrong image width").isEqualTo(106d);
-                    } finally {
-                        reader.dispose();
+                try (InputStream entity = (InputStream) response.getEntity();
+                    ImageInputStream iis = ImageIO.createImageInputStream(entity)) {
+                    final Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
+                    if (readers.hasNext()) {
+                        final ImageReader reader = readers.next();
+                        try {
+                            reader.setInput(iis);
+                            assertThat(reader.getHeight(0)).as("Wrong image height").isEqualTo(106d);
+                            assertThat(reader.getWidth(0)).as("Wrong image width").isEqualTo(106d);
+                        } finally {
+                            reader.dispose();
+                        }
                     }
                 }
             }

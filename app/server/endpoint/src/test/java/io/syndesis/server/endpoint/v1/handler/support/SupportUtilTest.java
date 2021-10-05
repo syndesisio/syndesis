@@ -17,6 +17,7 @@ package io.syndesis.server.endpoint.v1.handler.support;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,13 +65,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class SupportUtilTest {
 
     @Test
     public void createSupportZipFileTest() throws IOException {
+        @SuppressWarnings("resource") // mock
         final NamespacedOpenShiftClient client = mock(NamespacedOpenShiftClient.class);
 
         final MixedOperation<Pod, PodList, DoneablePod, PodResource<Pod, DoneablePod>> pods = mock(mixedOperationType());
@@ -127,12 +129,14 @@ public class SupportUtilTest {
         try (final ZipFile zip = new ZipFile(output)) {
             final ZipEntry imageStreamTag1 = zip.getEntry("descriptors/ImageStreamTag/ImageStreamTag1.YAML");
             assertThat(imageStreamTag1).isNotNull();
-            AssertionsForClassTypes.assertThat(zip.getInputStream(imageStreamTag1)).hasContent(SupportUtil.YAML.dump(imageStreamTag));
+            try (InputStream entryStream = zip.getInputStream(imageStreamTag1)) {
+                AssertionsForClassTypes.assertThat(entryStream).hasContent(SupportUtil.YAML.dump(imageStreamTag));
+            }
         }
 
         verify(log).info("Created Support file: {}", output);
         // tests that we haven't logged any error messages
-        verifyZeroInteractions(log);
+        verifyNoMoreInteractions(log);
     }
 
     private static <T, L, D, R extends Resource<T, D>> Class<MixedOperation<T, L, D, R>> mixedOperationType() {

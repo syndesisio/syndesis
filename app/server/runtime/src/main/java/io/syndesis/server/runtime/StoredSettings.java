@@ -65,6 +65,7 @@ public class StoredSettings {
         });
     }
 
+    @SuppressWarnings("resource") // begin, commit and rollback return this
     private void withTransaction(Consumer<Handle> cb) {
         try (Handle h = dbi.open()) {
             try {

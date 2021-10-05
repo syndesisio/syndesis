@@ -77,27 +77,32 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
     public void shouldCreateCustomConnectorInfoForUploadedSwagger() throws IOException {
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build();
 
-        final ResponseEntity<Connector> response = post("/api/v1/connectors/custom",
-            multipartBodyForInfo(connectorSettings, getClass().getResourceAsStream("/io/syndesis/server/runtime/test-swagger.json")),
-            Connector.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+        try (InputStream in = CustomSwaggerConnectorITCase.class.getResourceAsStream("/io/syndesis/server/runtime/test-swagger.json")) {
+            final ResponseEntity<Connector> response = post("/api/v1/connectors/custom",
+                multipartBodyForInfo(connectorSettings, in),
+                Connector.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
 
-        final Connector got = response.getBody();
+            final Connector got = response.getBody();
 
-        assertThat(got).isNotNull();
+            assertThat(got).isNotNull();
+        }
     }
 
     @Test
     public void shouldOfferCustomConnectorInfoForUploadedSwagger() throws IOException, JSONException {
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build();
 
-        final ResponseEntity<APISummary> response = post("/api/v1/connectors/custom/info",
-            multipartBodyForInfo(connectorSettings, getClass().getResourceAsStream("/io/syndesis/server/runtime/test-swagger.json")),
-            APISummary.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+        final ResponseEntity<APISummary> response;
+        try (InputStream in = CustomSwaggerConnectorITCase.class.getResourceAsStream("/io/syndesis/server/runtime/test-swagger.json")) {
+            response = post("/api/v1/connectors/custom/info",
+                multipartBodyForInfo(connectorSettings, in),
+                APISummary.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+        }
 
-        final APISummary expected = new APISummary.Builder()// \
-            .name("Todo App API")//
-            .description("unspecified")//
-            .actionsSummary(TestConfiguration.ACTIONS_SUMMARY)//
+        final APISummary expected = new APISummary.Builder()
+            .name("Todo App API")
+            .description("unspecified")
+            .actionsSummary(TestConfiguration.ACTIONS_SUMMARY)
             .addWarning(new Violation.Builder().error("missing-response-schema")
                 .message("Operation DELETE /api/{id} does not provide a response schema for code 204").build())
             .build();
@@ -107,11 +112,14 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
         assertThat(got).isEqualToIgnoringGivenFields(expected, "icon", "configuredProperties");
         assertThat(got.getIcon()).matches(s -> s.isPresent() && s.get().startsWith("data:image"));
         assertThat(got.getConfiguredProperties().keySet()).containsOnly("specification");
-        JSONAssert.assertEquals(got.getConfiguredProperties().get("specification"),
-            IOUtils.toString(getClass().getResourceAsStream("/io/syndesis/server/runtime/test-swagger.json"), StandardCharsets.UTF_8),
-            JSONCompareMode.LENIENT);
+        try (InputStream in = CustomSwaggerConnectorITCase.class.getResourceAsStream("/io/syndesis/server/runtime/test-swagger.json")) {
+            JSONAssert.assertEquals(got.getConfiguredProperties().get("specification"),
+                IOUtils.toString(in, StandardCharsets.UTF_8),
+                JSONCompareMode.LENIENT);
+        }
     }
 
+    @SuppressWarnings("resource")
     private static MultiValueMap<String, Object> multipartBodyForInfo(final ConnectorSettings connectorSettings, final InputStream is)
         throws IOException {
         final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();

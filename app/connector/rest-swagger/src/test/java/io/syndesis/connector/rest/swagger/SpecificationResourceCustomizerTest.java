@@ -16,7 +16,6 @@
 package io.syndesis.connector.rest.swagger;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +36,7 @@ public class SpecificationResourceCustomizerTest {
     private static final ComponentProxyComponent NOT_USED = null;
 
     @Test
-    public void shouldNotUpdateSpecificationOnMissingSecurityDefinitionName() throws IOException {
+    public void shouldNotUpdateSpecificationOnMissingSecurityDefinitionName() {
         final SpecificationResourceCustomizer customizer = new SpecificationResourceCustomizer();
         final String spec = RestSwaggerConnectorIntegrationTest.readSpecification("apikey.json");
 
@@ -53,7 +52,7 @@ public class SpecificationResourceCustomizerTest {
     }
 
     @Test
-    public void shouldNotUpdateSpecificationOnNullSecurityDefinitionName() throws IOException {
+    public void shouldNotUpdateSpecificationOnNullSecurityDefinitionName() {
         final SpecificationResourceCustomizer customizer = new SpecificationResourceCustomizer();
         final String spec = RestSwaggerConnectorIntegrationTest.readSpecification("apikey.json");
 
@@ -68,7 +67,7 @@ public class SpecificationResourceCustomizerTest {
     }
 
     @Test
-    public void shouldRemoveUnwantedSecurity() throws IOException {
+    public void shouldRemoveUnwantedSecurity() {
         final SpecificationResourceCustomizer customizer = new SpecificationResourceCustomizer();
         final String spec = RestSwaggerConnectorIntegrationTest.readSpecification("apikey.json");
         final String specUpdated = RestSwaggerConnectorIntegrationTest.readSpecification("apikey-security-updated.json");

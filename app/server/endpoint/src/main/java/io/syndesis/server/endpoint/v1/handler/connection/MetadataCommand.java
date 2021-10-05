@@ -23,6 +23,8 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status.Family;
+
+import java.io.InputStream;
 import java.util.Map;
 
 import com.netflix.hystrix.HystrixCommand;
@@ -74,7 +76,10 @@ abstract class MetadataCommand<R> extends HystrixCommand<R> {
         return ClientBuilder.newClient().register((ClientResponseFilter) (requestContext, responseContext) -> {
             if (responseContext.getStatusInfo().getFamily() == Family.SERVER_ERROR
                 && MediaType.APPLICATION_JSON.equals(responseContext.getHeaderString(HttpHeaders.CONTENT_TYPE))) {
-                final RestError error = JsonUtils.reader().forType(RestError.class).readValue(responseContext.getEntityStream());
+                final RestError error;
+                try (InputStream entityStream = responseContext.getEntityStream()) {
+                    error = JsonUtils.reader().forType(RestError.class).readValue(entityStream);
+                }
 
                 throw new SyndesisRestException(
                     error.getDeveloperMsg(),

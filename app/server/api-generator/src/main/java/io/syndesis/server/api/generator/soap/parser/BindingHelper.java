@@ -16,7 +16,9 @@
 package io.syndesis.server.api.generator.soap.parser;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -117,15 +119,29 @@ public class BindingHelper {
         SOAP_SCHEMAS = new SchemaCollection();
         final XmlSchemaCollection schemaCollection = SOAP_SCHEMAS.getXmlSchemaCollection();
         // read xml-ns.xsd to avoid opening an http connection
-        schemaCollection.read(new InputSource(BindingHelper.class.getResourceAsStream("/schema/xml-ns.xsd")));
+        try (InputStream in = BindingHelper.class.getResourceAsStream("/schema/xml-ns.xsd")) {
+            schemaCollection.read(new InputSource(in));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
 
-        SOAP_SCHEMA_1_1 = schemaCollection.read(new InputSource(BindingHelper.class.getResourceAsStream("/schema/soap1_1.xsd")));
+        try (InputStream in = BindingHelper.class.getResourceAsStream("/schema/soap1_1.xsd")) {
+            SOAP_SCHEMA_1_1 = schemaCollection.read(new InputSource(in));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+
         FAULT_1_1 = (XmlSchemaComplexType) SOAP_SCHEMA_1_1.getTypeByName("Fault");
         // remove detail element
         XmlSchemaSequence faultSequence = (XmlSchemaSequence) FAULT_1_1.getParticle();
         faultSequence.getItems().removeIf(i -> SOAP1_1_DETAIL.equals(((XmlSchemaElement)i).getName()));
 
-        SOAP_SCHEMA_1_2 = schemaCollection.read(new InputSource(BindingHelper.class.getResourceAsStream("/schema/soap1_2.xsd")));
+        try (InputStream in = BindingHelper.class.getResourceAsStream("/schema/soap1_2.xsd")) {
+            SOAP_SCHEMA_1_2 = schemaCollection.read(new InputSource(in));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+
         FAULT_1_2 = (XmlSchemaComplexType) SOAP_SCHEMA_1_2.getTypeByName("Fault");
         faultSequence = (XmlSchemaSequence) FAULT_1_2.getParticle();
         faultSequence.getItems().removeIf(i -> SOAP1_2_DETAIL.equals(((XmlSchemaElement)i).getName()));

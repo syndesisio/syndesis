@@ -16,7 +16,13 @@
 package io.syndesis.connector.rest.swagger.auth.oauth;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicReference;
+
+import io.syndesis.connector.rest.swagger.Configuration;
+import io.syndesis.connector.support.util.ConnectorOptions;
+import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
@@ -31,12 +37,10 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.syndesis.connector.rest.swagger.Configuration;
-import io.syndesis.connector.support.util.ConnectorOptions;
-import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
 
 /**
  * Refreshes the OAuth token based on the expiry time of the token.
@@ -108,43 +112,45 @@ class OAuthRefreshTokenProcessor implements Processor {
     }
 
     void processRefreshTokenResponse(final HttpEntity entity) throws IOException, JsonProcessingException {
-        final JsonNode body = JSON.readTree(entity.getContent());
+        try (InputStream content = entity.getContent()) {
+            final JsonNode body = JSON.readTree(content);
 
-        if (body == null) {
-            LOG.error("Received empty body while attempting to refresh access token via: {}", authorizationEndpoint);
-            return;
-        }
+            if (body == null) {
+                LOG.error("Received empty body while attempting to refresh access token via: {}", authorizationEndpoint);
+                return;
+            }
 
-        final JsonNode accessToken = body.get("access_token");
-        if (isPresentAndHasValue(accessToken)) {
-            final String accessTokenValue = accessToken.asText();
-            isFirstTime.set(Boolean.FALSE);
-            LOG.info("Successful access token refresh");
+            final JsonNode accessToken = body.get("access_token");
+            if (isPresentAndHasValue(accessToken)) {
+                final String accessTokenValue = accessToken.asText();
+                isFirstTime.set(Boolean.FALSE);
+                LOG.info("Successful access token refresh");
 
-            Long expiresInSeconds = null;
-            if (expiresInOverride != null) {
-                expiresInSeconds = expiresInOverride;
-            } else {
-                final JsonNode expiresIn = body.get("expires_in");
-                if (isPresentAndHasValue(expiresIn)) {
-                    expiresInSeconds = expiresIn.asLong();
+                Long expiresInSeconds = null;
+                if (expiresInOverride != null) {
+                    expiresInSeconds = expiresInOverride;
+                } else {
+                    final JsonNode expiresIn = body.get("expires_in");
+                    if (isPresentAndHasValue(expiresIn)) {
+                        expiresInSeconds = expiresIn.asLong();
+                    }
                 }
+
+                long accessTokenExpiresAt = 0;
+                if (expiresInSeconds != null) {
+                    accessTokenExpiresAt = now() + expiresInSeconds * 1000;
+                }
+
+                final JsonNode refreshToken = body.get("refresh_token");
+                String refreshTokenValue = null;
+                if (isPresentAndHasValue(refreshToken)) {
+                    refreshTokenValue = refreshToken.asText();
+
+                    lastRefreshTokenTried.compareAndSet(refreshTokenValue, null);
+                }
+
+                state.update(accessTokenValue, accessTokenExpiresAt, refreshTokenValue);
             }
-
-            long accessTokenExpiresAt = 0;
-            if (expiresInSeconds != null) {
-                accessTokenExpiresAt = now() + expiresInSeconds * 1000;
-            }
-
-            final JsonNode refreshToken = body.get("refresh_token");
-            String refreshTokenValue = null;
-            if (isPresentAndHasValue(refreshToken)) {
-                refreshTokenValue = refreshToken.asText();
-
-                lastRefreshTokenTried.compareAndSet(refreshTokenValue, null);
-            }
-
-            state.update(accessTokenValue, accessTokenExpiresAt, refreshTokenValue);
         }
     }
 

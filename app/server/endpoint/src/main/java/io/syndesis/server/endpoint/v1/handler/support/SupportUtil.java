@@ -206,7 +206,9 @@ public class SupportUtil {
         File file = null;
         try {
             file = File.createTempFile(integrationName, ".src.zip");
-            export.write(FileUtils.openOutputStream(file));
+            try (FileOutputStream tempStream = FileUtils.openOutputStream(file)) {
+                export.write(tempStream);
+            }
             FileUtils.copyFile(file, os);
             os.closeEntry();
         } finally {
@@ -268,9 +270,9 @@ public class SupportUtil {
         String container = PLATFORM_PODS_CONTAINER.get(componentName);
         if (container != null) {
             return pod.inContainer(container).getLogReader();
-        } else {
-            return pod.getLogReader();
         }
+
+        return pod.getLogReader();
     }
 
 }

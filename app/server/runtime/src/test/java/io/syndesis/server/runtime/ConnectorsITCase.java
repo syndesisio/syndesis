@@ -91,12 +91,15 @@ public class ConnectorsITCase extends BaseITCase {
 
     @Test
     public void testUpdateIcon() throws IOException {
-        final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
-        multipartData.add("icon", new InputStreamResource(getClass().getResourceAsStream("test-image.png")));
+        final ResponseEntity<Connector> updated;
+        try (InputStream iconStream = getClass().getResourceAsStream("test-image.png")) {
+            final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
+            multipartData.add("icon", new InputStreamResource(iconStream));
 
-        final ResponseEntity<Connector> updated = post("/api/v1/connectors/twitter/icon",
-            multipartData, Connector.class, tokenRule.validToken(), HttpStatus.OK,
-            multipartHeaders());
+            updated = post("/api/v1/connectors/twitter/icon",
+                multipartData, Connector.class, tokenRule.validToken(), HttpStatus.OK,
+                multipartHeaders());
+        }
 
         assertThat(updated.getBody().getId()).isPresent();
         assertThat(updated.getBody().getIcon()).isNotBlank().startsWith("db:");
@@ -104,7 +107,8 @@ public class ConnectorsITCase extends BaseITCase {
         final ResponseEntity<ByteArrayResource> got = get("/api/v1/connectors/twitter/icon", ByteArrayResource.class);
         assertThat(got.getHeaders().getFirst("Content-Type")).isEqualTo("image/png");
 
-        try (ImageInputStream iis = ImageIO.createImageInputStream(got.getBody().getInputStream());) {
+        try (InputStream bodyStream = got.getBody().getInputStream();
+            ImageInputStream iis = ImageIO.createImageInputStream(bodyStream)) {
             final Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
             if (readers.hasNext()) {
                 final ImageReader reader = readers.next();
@@ -150,13 +154,15 @@ public class ConnectorsITCase extends BaseITCase {
         final Connector connectorWithNewdescription = new Connector.Builder().createFrom(initialConnector)
             .description("Updated!").build();
 
-        final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
-        multipartData.add("connector", connectorWithNewdescription);
-        multipartData.add("icon", new InputStreamResource(getClass().getResourceAsStream("test-image.png")));
+        try (InputStream iconStream = getClass().getResourceAsStream("test-image.png")) {
+            final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
+            multipartData.add("connector", connectorWithNewdescription);
+            multipartData.add("icon", new InputStreamResource(iconStream));
 
-        put("/api/v1/connectors/twitter",
-            multipartData, Void.class, tokenRule.validToken(), HttpStatus.NO_CONTENT,
-            multipartHeaders());
+            put("/api/v1/connectors/twitter",
+                multipartData, Void.class, tokenRule.validToken(), HttpStatus.NO_CONTENT,
+                multipartHeaders());
+        }
 
         final ResponseEntity<Connector> updatedConnector = get("/api/v1/connectors/twitter", Connector.class);
 
@@ -167,7 +173,8 @@ public class ConnectorsITCase extends BaseITCase {
         final ResponseEntity<ByteArrayResource> got = get("/api/v1/connectors/twitter/icon", ByteArrayResource.class);
         assertThat(got.getHeaders().getFirst("Content-Type")).isEqualTo("image/png");
 
-        try (ImageInputStream iis = ImageIO.createImageInputStream(got.getBody().getInputStream());) {
+        try (InputStream bodyStream = got.getBody().getInputStream();
+            ImageInputStream iis = ImageIO.createImageInputStream(bodyStream)) {
             final Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
             if (readers.hasNext()) {
                 final ImageReader reader = readers.next();
@@ -184,7 +191,7 @@ public class ConnectorsITCase extends BaseITCase {
     }
 
     @Test
-    public void testUpdateConnectorWithoutIconViaMultipart() throws IOException {
+    public void testUpdateConnectorWithoutIconViaMultipart() {
         final Connector initialConnector = dataManager.fetch(Connector.class, "twitter");
 
         final Connector connectorWithNewdescription = new Connector.Builder().createFrom(initialConnector)

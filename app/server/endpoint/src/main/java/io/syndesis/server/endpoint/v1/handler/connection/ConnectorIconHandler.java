@@ -46,7 +46,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
 import okio.BufferedSink;
-import okio.BufferedSource;
 import okio.Okio;
 import okio.Sink;
 import okio.Source;
@@ -152,21 +151,15 @@ public final class ConnectorIconHandler extends BaseHandler {
         }
 
         final OkHttpClient httpClient = new OkHttpClient();
-        try {
-            final okhttp3.Response externalResponse = httpClient.newCall(new Request.Builder().get().url(connectorIcon).build()).execute();
+        try (okhttp3.Response externalResponse = httpClient.newCall(new Request.Builder().get().url(connectorIcon).build()).execute()) {
             final String contentType = externalResponse.header(CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM);
             final String contentLength = externalResponse.header(CONTENT_LENGTH);
 
-            final StreamingOutput streamingOutput = (out) -> {
-                try (Sink iosink = Okio.sink(out);
-                    BufferedSink sink = Okio.buffer(iosink);
-                    ResponseBody body = externalResponse.body();
-                    BufferedSource source = body.source()) {
-                    sink.writeAll(source);
-                }
-            };
+            final ResponseBody body = externalResponse.body();
 
-            final Response.ResponseBuilder actualResponse = Response.ok(streamingOutput, contentType);
+            final InputStream responseStream = body.byteStream();
+
+            final Response.ResponseBuilder actualResponse = Response.ok(responseStream, contentType);
             if (!StringUtils.isEmpty(contentLength)) {
                 actualResponse.header(CONTENT_LENGTH, contentLength);
             }

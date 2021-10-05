@@ -35,13 +35,12 @@ public final class TestHelper {
     }
 
     public static String resource(final String path) throws IOException {
-        final String resource;
-        try (final InputStream in = requireNonNull(TestHelper.class.getResourceAsStream(path), path);
+        try (InputStream tmpIn = TestHelper.class.getResourceAsStream(path);
+            final InputStream in = requireNonNull(tmpIn, path);
             final BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
 
-            resource = reader.lines().collect(Collectors.joining("\n"));
+            return reader.lines().collect(Collectors.joining("\n"));
         }
-        return resource;
     }
 
     static String reformatJson(final String json) throws IOException {
