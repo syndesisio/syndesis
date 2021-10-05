@@ -99,6 +99,9 @@
     {{- range $id, $url := .Syndesis.Components.Server.Features.Maven.Repositories}}
           {{ $id }}: {{ $url }}
     {{- end }}
+    {{- if .Syndesis.Components.Server.Features.Maven.Mirror}}
+        mirror: {{.Syndesis.Components.Server.Features.Maven.Mirror}}
+    {{- end}}
 {{- end}}
       openshift:
         apiBaseUrl: '{{.Syndesis.Components.Server.Features.OpenShiftMaster}}/oapi/v1'

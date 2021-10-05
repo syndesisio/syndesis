@@ -235,6 +235,8 @@ type MavenConfiguration struct {
 	AdditionalArguments string `json:"additionalArguments,omitempty"`
 	// Set repositories for maven
 	Repositories map[string]string `json:"repositories,omitempty"`
+	// Set Maven mirror used solely for dependency download
+	Mirror string `json:"mirror,omitempty"`
 }
 
 type SchedulingSpec struct {
