@@ -37,7 +37,6 @@ import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.dto.Meta;
 import io.syndesis.server.endpoint.v1.dto.MetaData;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
-import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -139,26 +138,26 @@ public class ConnectionActionHandlerTest {
         when(metadataCommand.execute()).thenReturn(fallback);
         when(((HystrixInvokableInfo<?>) metadataCommand).isSuccessfulExecution()).thenReturn(false);
 
-        final Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, Collections.emptyMap());
+        try (Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, Collections.emptyMap())) {
+            assertThat(response.getStatus()).isEqualTo(Status.BAD_REQUEST.getStatusCode());
 
-        assertThat(response.getStatus()).isEqualTo(Status.BAD_REQUEST.getStatusCode());
+            @SuppressWarnings("unchecked")
+            final Meta<ConnectorDescriptor> meta = (Meta<ConnectorDescriptor>) response.getEntity();
 
-        @SuppressWarnings("unchecked")
-        final Meta<ConnectorDescriptor> meta = (Meta<ConnectorDescriptor>) response.getEntity();
-
-        final ConnectorDescriptor descriptor = new ConnectorDescriptor.Builder().createFrom(createOrUpdateSalesforceObjectDescriptor)
-            .inputDataShape(ConnectionActionHandler.ANY_SHAPE)//
-            .outputDataShape(salesforceOutputShape)//
-            .build();
-        assertThat(meta.getValue()).isEqualTo(descriptor);
-        final MetaData metadata = meta.getData();
-        assertThat(metadata).isNotNull();
-        assertThat(metadata.getType()).contains(MetaData.Type.WARNING);
-        assertThat(metadata.getMessage()).contains("The query did not succeed");
+            final ConnectorDescriptor descriptor = new ConnectorDescriptor.Builder().createFrom(createOrUpdateSalesforceObjectDescriptor)
+                .inputDataShape(ConnectionActionHandler.ANY_SHAPE)//
+                .outputDataShape(salesforceOutputShape)//
+                .build();
+            assertThat(meta.getValue()).isEqualTo(descriptor);
+            final MetaData metadata = meta.getData();
+            assertThat(metadata).isNotNull();
+            assertThat(metadata.getType()).contains(MetaData.Type.WARNING);
+            assertThat(metadata.getMessage()).contains("The query did not succeed");
+        }
     }
 
     @Test
-    public void shouldElicitActionPropertySuggestions() throws JSONException {
+    public void shouldElicitActionPropertySuggestions() {
         final DynamicActionMetadata suggestions = new DynamicActionMetadata.Builder()
             .putProperty("sObjectName",
                 Collections.singletonList(DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Contact", "Contact")))
@@ -187,27 +186,29 @@ public class ConnectionActionHandlerTest {
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("sObjectName", "Contact");
 
-        final Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters);
+        try (Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters)) {
 
-        assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
+            assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
 
-        @SuppressWarnings("unchecked")
-        final Meta<ConnectorDescriptor> meta = (Meta<ConnectorDescriptor>) response.getEntity();
+            @SuppressWarnings("unchecked")
+            final Meta<ConnectorDescriptor> meta = (Meta<ConnectorDescriptor>) response.getEntity();
 
-        assertThat(meta.getValue()).isEqualTo(enrichedDefinitioin);
+            assertThat(meta.getValue()).isEqualTo(enrichedDefinitioin);
+        }
     }
 
     @Test
     public void shouldNotContactVerifierForNonDynamicActions() {
         final ConnectorDescriptor defaultDefinition = new ConnectorDescriptor.Builder().build();
-        final Response response = handler.enrichWithMetadata(SALESFORCE_LIMITS, null);
+        try (Response response = handler.enrichWithMetadata(SALESFORCE_LIMITS, null)) {
 
-        assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
+            assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
 
-        @SuppressWarnings("unchecked")
-        final Meta<ConnectorDescriptor> returnValue = (Meta<ConnectorDescriptor>) response.getEntity();
+            @SuppressWarnings("unchecked")
+            final Meta<ConnectorDescriptor> returnValue = (Meta<ConnectorDescriptor>) response.getEntity();
 
-        assertThat(returnValue.getValue()).isEqualTo(defaultDefinition);
+            assertThat(returnValue.getValue()).isEqualTo(defaultDefinition);
+        }
     }
 
     @Test
@@ -223,23 +224,24 @@ public class ConnectionActionHandlerTest {
         when(metadataCommand.execute()).thenReturn(suggestions);
         when(((HystrixInvokableInfo<?>) metadataCommand).isSuccessfulExecution()).thenReturn(true);
 
-        final Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, Collections.emptyMap());
+        try (Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, Collections.emptyMap())) {
 
-        assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
+            assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
 
-        @SuppressWarnings("unchecked")
-        final Meta<ConnectorDescriptor> meta = (Meta<ConnectorDescriptor>) response.getEntity();
+            @SuppressWarnings("unchecked")
+            final Meta<ConnectorDescriptor> meta = (Meta<ConnectorDescriptor>) response.getEntity();
 
-        final ConnectorDescriptor enrichedDefinitioin = new ConnectorDescriptor.Builder()
-            .createFrom(createOrUpdateSalesforceObjectDescriptor)
-            .replaceConfigurationProperty("sObjectName",
-                c -> c.addAllEnum(Arrays.asList(
-                        ConfigurationProperty.PropertyValue.Builder.of("Account", "Account"),
-                        ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact"))))
-            .inputDataShape(ConnectionActionHandler.ANY_SHAPE)//
-            .build();
+            final ConnectorDescriptor enrichedDefinitioin = new ConnectorDescriptor.Builder()
+                .createFrom(createOrUpdateSalesforceObjectDescriptor)
+                .replaceConfigurationProperty("sObjectName",
+                    c -> c.addAllEnum(Arrays.asList(
+                            ConfigurationProperty.PropertyValue.Builder.of("Account", "Account"),
+                            ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact"))))
+                .inputDataShape(ConnectionActionHandler.ANY_SHAPE)//
+                .build();
 
-        assertThat(meta.getValue()).isEqualTo(enrichedDefinitioin);
+            assertThat(meta.getValue()).isEqualTo(enrichedDefinitioin);
+        }
     }
 
     @Test
@@ -253,14 +255,15 @@ public class ConnectionActionHandlerTest {
         when(metadataCommand.execute()).thenReturn(fallback);
         when(((HystrixInvokableInfo<?>) metadataCommand).isSuccessfulExecution()).thenReturn(false);
 
-        final Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, Collections.emptyMap());
+        try (Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, Collections.emptyMap())) {
 
-        @SuppressWarnings("unchecked")
-        final Meta<ConnectorDescriptor> meta = (Meta<ConnectorDescriptor>) response.getEntity();
+            @SuppressWarnings("unchecked")
+            final Meta<ConnectorDescriptor> meta = (Meta<ConnectorDescriptor>) response.getEntity();
 
-        final ConnectorDescriptor descriptor = meta.getValue();
-        assertThat(descriptor.getInputDataShape()).contains(ConnectionActionHandler.ANY_SHAPE);
-        assertThat(descriptor.getOutputDataShape()).contains(salesforceOutputShape);
+            final ConnectorDescriptor descriptor = meta.getValue();
+            assertThat(descriptor.getInputDataShape()).contains(ConnectionActionHandler.ANY_SHAPE);
+            assertThat(descriptor.getOutputDataShape()).contains(salesforceOutputShape);
+        }
     }
 
     @Test
@@ -276,10 +279,10 @@ public class ConnectionActionHandlerTest {
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("sObjectName", Arrays.asList("Contact", "Account"));
 
-        final Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters);
-
-        assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
-        assertThat(metadataCommandParameters).containsEntry("sObjectName", "Contact,Account");
+        try (Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters)) {
+            assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
+            assertThat(metadataCommandParameters).containsEntry("sObjectName", "Contact,Account");
+        }
     }
 
     @Test
@@ -295,10 +298,10 @@ public class ConnectionActionHandlerTest {
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("sObjectName", new String[] { "Contact", "Account" });
 
-        final Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters);
-
-        assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
-        assertThat(metadataCommandParameters).containsEntry("sObjectName", "Contact,Account");
+        try (Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters)) {
+            assertThat(response.getStatus()).isEqualTo(Status.OK.getStatusCode());
+            assertThat(metadataCommandParameters).containsEntry("sObjectName", "Contact,Account");
+        }
     }
 
     @Test
@@ -314,7 +317,9 @@ public class ConnectionActionHandlerTest {
         final Map<String, Object> parameters = new HashMap<>();
         parameters.put("sObjectName", 1);
 
-        handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters);
+        try (Response response = handler.enrichWithMetadata(SALESFORCE_CREATE_OR_UPDATE, parameters)) {
+            assertThat(response).isNotNull();
+        }
         assertThat(metadataCommandParameters).containsEntry("sObjectName", "1");
     }
 }

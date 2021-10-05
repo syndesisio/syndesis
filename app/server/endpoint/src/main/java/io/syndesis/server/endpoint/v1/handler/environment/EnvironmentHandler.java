@@ -65,7 +65,9 @@ public class EnvironmentHandler extends BaseHandler {
 
     @SuppressWarnings("unchecked")
     public List<String> getReleaseEnvironments() {
-        return (List<String>) getReleaseEnvironments(false).getEntity();
+        try (Response response = getReleaseEnvironments(false)) {
+            return (List<String>) response.getEntity();
+        }
     }
 
     /**
@@ -75,28 +77,25 @@ public class EnvironmentHandler extends BaseHandler {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getReleaseEnvironments(@QueryParam("withUses") @Parameter boolean withUses) {
 
-        final Response response;
         final List<Environment> environments = getDataManager().fetchAll(Environment.class).getItems();
 
         if (!withUses) {
-            response = Response.ok(environments.stream()
+            return Response.ok(environments.stream()
                     .map(Environment::getName)
                     .collect(Collectors.toList()))
                     .build();
-        } else {
-            final Map<String, Long> idCountMap = getDataManager().fetchAll(Integration.class).getItems().stream()
-                    .flatMap(i -> i.getContinuousDeliveryState().keySet().stream())
-                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        }
+        final Map<String, Long> idCountMap = getDataManager().fetchAll(Integration.class).getItems().stream()
+                .flatMap(i -> i.getContinuousDeliveryState().keySet().stream())
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-            final List<EnvironmentWithUses> result = new ArrayList<>();
-            for (Environment env : environments) {
-                result.add(new EnvironmentWithUses(env.getName(),
-                        idCountMap.computeIfAbsent(env.getId().get(), k -> 0L )));
-            }
-            response = Response.ok(result).build();
+        final List<EnvironmentWithUses> result = new ArrayList<>();
+        for (Environment env : environments) {
+            result.add(new EnvironmentWithUses(env.getName(),
+                    idCountMap.computeIfAbsent(env.getId().get(), k -> 0L )));
         }
 
-        return response;
+        return Response.ok(result).build();
     }
 
     /**

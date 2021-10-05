@@ -27,6 +27,8 @@ import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.icon.Icon;
 import okio.BufferedSource;
 import okio.Okio;
+import okio.Source;
+
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.springframework.context.ApplicationContext;
 
@@ -83,7 +85,9 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
             connectorSettingsToUse = connectorSettings;
         } else {
             final String specification;
-            try (BufferedSource source = Okio.buffer(Okio.source(customConnectorFormData.getSpecification()))) {
+            try (InputStream in = customConnectorFormData.getSpecification();
+                Source inSource = Okio.source(in);
+                BufferedSource source = Okio.buffer(inSource)) {
                 specification = source.readUtf8();
             }
 
@@ -93,10 +97,11 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
         Connector generatedConnector = withGeneratorAndTemplate(connectorSettingsToUse.getConnectorTemplateId(),
             (generator, template) -> generator.generate(template, connectorSettingsToUse));
 
-        if (customConnectorFormData.getIconInputStream() != null) {
+        final InputStream iconInputStream = customConnectorFormData.getIconInputStream();
+        if (iconInputStream != null) {
             // URLConnection.guessContentTypeFromStream resets the stream after inspecting the media type so
             // can continue to be used, rather than being consumed.
-            try(BufferedInputStream iconStream = new BufferedInputStream(customConnectorFormData.getIconInputStream())) {
+            try (BufferedInputStream iconStream = new BufferedInputStream(iconInputStream)) {
                 String guessedMediaType = URLConnection.guessContentTypeFromStream(iconStream);
                 if (!guessedMediaType.startsWith("image/")) {
                     throw new IllegalArgumentException("Invalid file contents for an image");
@@ -135,7 +140,9 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
     public APISummary info(@MultipartForm final CustomConnectorFormData connectorFormData) {
         try {
             final String specification;
-            try (BufferedSource source = Okio.buffer(Okio.source(connectorFormData.getSpecification()))) {
+            try (InputStream in = connectorFormData.getSpecification();
+                Source inSource = Okio.source(in);
+                BufferedSource source = Okio.buffer(inSource)) {
                 specification = source.readUtf8();
             }
 

@@ -15,6 +15,9 @@
  */
 package io.syndesis.server.api.generator.soap;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.List;
 
 import io.syndesis.common.model.connection.ConnectorTemplate;
@@ -39,12 +42,16 @@ final class SoapConnectorTemplate {
             .mappingProvider(new JacksonMappingProvider(JsonUtils.copyObjectMapperConfiguration()))//
             .build();
 
-        final List<ConnectorTemplate> templates = JsonPath.using(configuration)
-            .parse(SoapConnectorTemplate.class.getResourceAsStream("/io/syndesis/server/dao/deployment.json"))
-            .read("$..[?(@['id'] == 'soap-connector-template')]", new TypeRef<List<ConnectorTemplate>>() {
-                // type token pattern
-            });
+        try (InputStream in = SoapConnectorTemplate.class.getResourceAsStream("/io/syndesis/server/dao/deployment.json")) {
+            final List<ConnectorTemplate> templates = JsonPath.using(configuration)
+                .parse(in)
+                .read("$..[?(@['id'] == 'soap-connector-template')]", new TypeRef<List<ConnectorTemplate>>() {
+                    // type token pattern
+                });
 
-        return templates.get(0);
+            return templates.get(0);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }

@@ -28,6 +28,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,7 +69,9 @@ public class DefaultMigrator implements Migrator {
             for (String resourceLocation : resourcesList) {
                 final Resource resource = resourceLoader.getResource(resourceLocation + "/" + scriptFileName);
                 if (resource.exists()) {
-                    migrationScript = IOStreams.readText(resource.getInputStream());
+                    try (InputStream migrationStream = resource.getInputStream()) {
+                        migrationScript = IOStreams.readText(migrationStream);
+                    }
                     break;
                 }
             }

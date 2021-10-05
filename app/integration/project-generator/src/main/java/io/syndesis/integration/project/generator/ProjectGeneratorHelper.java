@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -56,9 +57,14 @@ public final class ProjectGeneratorHelper {
     }
 
     public static byte[] generate(Object scope, Mustache template) throws IOException {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        template.execute(new OutputStreamWriter(bos, StandardCharsets.UTF_8), scope).flush();
-        return bos.toByteArray();
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            OutputStreamWriter writer = new OutputStreamWriter(bos, StandardCharsets.UTF_8);
+            Writer templateWriter = template.execute(writer, scope)) {
+
+            templateWriter.flush();
+
+            return bos.toByteArray();
+        }
     }
 
     public static boolean filterDefaultDependencies(MavenGav gav) {

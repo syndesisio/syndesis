@@ -17,6 +17,7 @@ package io.syndesis.server.api.generator.soap.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.List;
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -57,20 +58,26 @@ public final class XmlSchemaTestHelper {
     }
 
     private static Validator getSchemaValidator() throws SAXException {
-        if (validator == null) {
-            final InputStream inputStream = XmlSchemaTestHelper.class.getResourceAsStream("/xsd/2001/XMLSchema.xsd");
-            final SchemaFactory schemaFactory = getSchemaFactory();
-            schemaFactory.setResourceResolver((type, namespaceURI, publicId, systemId, baseURI) -> {
+        if (validator != null) {
+            return validator;
+        }
+
+        try (InputStream inputStream = XmlSchemaTestHelper.class.getResourceAsStream("/xsd/2001/XMLSchema.xsd")) {
+            final SchemaFactory factory = getSchemaFactory();
+            factory.setResourceResolver((type, namespaceURI, publicId, systemId, baseURI) -> {
                 final InputStream resourceStream = XmlSchemaTestHelper.class.getResourceAsStream("/xsd/" + systemId);
                 if (resourceStream != null) {
                     return new LSInputImpl(publicId, systemId, resourceStream);
                 }
                 return null;
             });
-            final Schema xsdSchema = schemaFactory.newSchema(new StreamSource(inputStream));
+            final Schema xsdSchema = factory.newSchema(new StreamSource(inputStream));
             validator = xsdSchema.newValidator();
+
+            return validator;
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
         }
-        return validator;
     }
 
     public static void validateSchemaSet(String schemaSet) throws SAXException, IOException {

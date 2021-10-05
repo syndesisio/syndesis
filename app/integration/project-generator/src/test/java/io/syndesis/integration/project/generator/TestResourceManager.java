@@ -68,6 +68,7 @@ final class TestResourceManager implements IntegrationResourceManager {
             .collect(Collectors.toList());
     }
 
+    @SuppressWarnings("resource") // stream is passed on for reading
     @Override
     public Optional<InputStream> loadExtensionBLOB(String id) {
         final InputStream is = IOUtils.toInputStream(id, StandardCharsets.UTF_8);

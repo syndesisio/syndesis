@@ -17,6 +17,7 @@
 package io.syndesis.server.endpoint.v1.handler.meta;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
@@ -584,6 +585,8 @@ public class AggregateMetadataHandlerTest {
     }
 
     private static String getSpecification(String path) throws IOException {
-        return IOUtils.toString(new ClassPathResource(path, AggregateMetadataHandlerTest.class).getInputStream(), StandardCharsets.UTF_8);
+        try (InputStream resource = new ClassPathResource(path, AggregateMetadataHandlerTest.class).getInputStream()) {
+            return IOUtils.toString(resource, StandardCharsets.UTF_8);
+        }
     }
 }

@@ -52,6 +52,7 @@ public class UserHandlerTest {
         when(principal.getName()).thenReturn("testuser");
         when(sec.getUserPrincipal()).thenReturn(principal);
 
+        @SuppressWarnings("resource") // mock
         NamespacedOpenShiftClient client = mock(NamespacedOpenShiftClient.class);
         @SuppressWarnings("unchecked")
         Resource<User,DoneableUser> user = mock(Resource.class);

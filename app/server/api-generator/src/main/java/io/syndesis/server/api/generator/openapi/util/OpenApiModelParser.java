@@ -17,6 +17,7 @@
 package io.syndesis.server.api.generator.openapi.util;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Locale;
@@ -93,13 +94,14 @@ public final class OpenApiModelParser {
         }
 
         final Document parsed = Library.readDocumentFromJSONString(resolvedSpecification);
+        final String specResourceAbbrv = StringUtils.abbreviate(resolvedSpecification, 100);
         if (!(parsed instanceof OasDocument)) {
             LOG.debug("Unable to read OpenAPI document\n{}\n", specification);
             return resultBuilder
                 .addError(new Violation.Builder()
                     .error("error")
                     .property("")
-                    .message("Unable to read OpenAPI document from: '" + StringUtils.abbreviate(resolvedSpecification, 100)).build())
+                    .message("Unable to read OpenAPI document from: '" + specResourceAbbrv).build())
                 .build();
         }
 
@@ -108,11 +110,12 @@ public final class OpenApiModelParser {
             try {
                 validateJsonSchema(convertToJson(resolvedSpecification), resultBuilder, openApiVersion, parsed.getClass());
             } catch (IOException e) {
+                LOG.debug("Unable to read OpenAPI document from: {}", specResourceAbbrv, e);
                 return resultBuilder
                     .addError(new Violation.Builder()
                         .error("error")
                         .property("")
-                        .message("Unable to read OpenAPI document from: '" + StringUtils.abbreviate(resolvedSpecification, 100)).build())
+                        .message("Unable to read OpenAPI document from: '" + specResourceAbbrv).build())
                     .build();
             }
             return applyValidationRules(validationContext, resultBuilder.build(), openApiVersion);
@@ -188,8 +191,10 @@ public final class OpenApiModelParser {
             if (status > 299) {
                 throw new IllegalStateException(String.format("Failed to retrieve Open API specification from %s", url),
                     new IOException(IOStreams.readText(con.getErrorStream())));
-            } else {
-                return IOStreams.readText(con.getInputStream());
+            }
+
+            try (InputStream data = con.getInputStream()) {
+                return IOStreams.readText(data);
             }
         } catch (IOException e) {
             throw new IllegalStateException("Failed to retrieve Swagger Open API specification: " + url.toString(), e);

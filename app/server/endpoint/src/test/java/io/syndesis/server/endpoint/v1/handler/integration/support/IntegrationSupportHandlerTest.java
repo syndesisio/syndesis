@@ -19,8 +19,6 @@ import io.syndesis.common.model.ModelExport;
 import io.syndesis.common.util.json.JsonUtils;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -34,9 +32,9 @@ public class IntegrationSupportHandlerTest {
     @SuppressWarnings({ "PMD.UnusedLocalVariable"})
     @Test
     public void verifyJacksonBehaviorWithSourceStreams() throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-       // disabling feature inline, skipt closing source stream
-        try(InputStream fis = spy(new FileInputStream(new File(classLoader.getResource("model.json").getFile())))){
+        // disabling feature inline, skipt closing source stream
+        try (InputStream in = IntegrationSupportHandlerTest.class.getResourceAsStream("/model.json");
+            InputStream fis = spy(in)) {
             ModelExport models = JsonUtils.reader().forType(ModelExport.class).readValue(fis);
             assertThat(models).isNotNull();
             verify(fis, times(0)).close();

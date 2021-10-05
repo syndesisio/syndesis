@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
@@ -80,8 +81,9 @@ public final class IconGenerator {
 
         data.put("letter", LETTERS.get(Character.toUpperCase(name.charAt(0))));
 
-        try (StringWriter icon = new StringWriter()) {
-            mustache.execute(icon, data).flush();
+        try (StringWriter icon = new StringWriter();
+            Writer templateWriter = mustache.execute(icon, data)) {
+            templateWriter.flush();
 
             final String trimmed = trimXml(icon.toString());
 

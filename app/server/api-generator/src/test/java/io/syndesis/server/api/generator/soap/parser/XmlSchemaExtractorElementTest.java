@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.api.generator.soap.parser;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -31,7 +32,7 @@ import org.junit.jupiter.params.provider.MethodSource;
  */
 public class XmlSchemaExtractorElementTest extends AbstractXmlSchemaExtractorTest {
 
-    static Stream<Arguments> parameters() throws XmlSchemaSerializer.XmlSchemaSerializerException {
+    static Stream<Arguments> parameters() throws XmlSchemaSerializer.XmlSchemaSerializerException, IOException {
         if (sourceSchemas == null) {
             AbstractXmlSchemaExtractorTest.setupClass();
         }

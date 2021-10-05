@@ -62,6 +62,7 @@ public class ApiDocumentationEndpoint {
         return resource("/static/index.html");
     }
 
+    @SuppressWarnings("resource")
     @GET
     @Operation(description = "Get the REST API documentation")
     @Path("/openapi.{type:json|yaml}")

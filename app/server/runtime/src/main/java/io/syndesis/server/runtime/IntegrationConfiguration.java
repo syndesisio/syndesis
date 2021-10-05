@@ -74,9 +74,12 @@ public class IntegrationConfiguration {
                 return Optional.ofNullable(dataManager.fetch(OpenApi.class, id));
             }
 
+            @SuppressWarnings("resource")
             @Override
             public Optional<InputStream> loadExtensionBLOB(String id) {
-                return Optional.ofNullable(extensionDataManager.getExtensionBinaryFile(id));
+                final InputStream extensionBinaryFile = extensionDataManager.getExtensionBinaryFile(id);
+
+                return Optional.ofNullable(extensionBinaryFile);
             }
 
             @Override

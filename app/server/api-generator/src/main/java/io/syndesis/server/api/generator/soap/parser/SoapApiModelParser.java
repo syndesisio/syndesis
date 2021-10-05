@@ -16,6 +16,7 @@
 package io.syndesis.server.api.generator.soap.parser;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
@@ -117,8 +118,9 @@ public final class SoapApiModelParser {
                     throw new IOException(connection.getResponseMessage());
                 }
 
-                resolvedSpecification = IOStreams.readText(connection.getInputStream());
-
+                try (InputStream data = connection.getInputStream()) {
+                    resolvedSpecification = IOStreams.readText(data);
+                }
             } else {
                 resolvedSpecification = specification;
                 resolvedWsdlURL = Optional.ofNullable(wsdlURL);

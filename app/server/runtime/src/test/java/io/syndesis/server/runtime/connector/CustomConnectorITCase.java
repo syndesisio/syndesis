@@ -146,12 +146,15 @@ public class CustomConnectorITCase extends BaseITCase {
 
     @Test
     public void shouldCreateNewCustomConnectorsFromMultipartWithIcon() throws IOException {
-        final ResponseEntity<Connector> response = post("/api/v1/connectors/custom",
-            multipartBody(
-                new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID)
-                    .putConfiguredProperty("specification", "here-be-specification").build(),
-                CustomConnectorITCase.class.getResourceAsStream("/io/syndesis/server/runtime/test-image.png")),
-            Connector.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+        final ResponseEntity<Connector> response;
+        try (InputStream iconStream = CustomConnectorITCase.class.getResourceAsStream("/io/syndesis/server/runtime/test-image.png")) {
+            response = post("/api/v1/connectors/custom",
+                multipartBody(
+                    new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID)
+                        .putConfiguredProperty("specification", "here-be-specification").build(),
+                    iconStream),
+                Connector.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+        }
 
         final Connector created = response.getBody();
         assertThat(created).isNotNull();
@@ -169,11 +172,14 @@ public class CustomConnectorITCase extends BaseITCase {
 
     @Test
     public void shouldCreateNewCustomConnectorsFromMultipartWithSpecificationAndIcon() throws IOException {
-        final ResponseEntity<Connector> response = post("/api/v1/connectors/custom",
-            multipartBody(new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build(),
-                getClass().getResourceAsStream("/io/syndesis/server/runtime/test-image.png"),
-                new ByteArrayInputStream("here-be-specification".getBytes(StandardCharsets.US_ASCII))),
-            Connector.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+        final ResponseEntity<Connector> response;
+        try (InputStream iconStream = CustomConnectorITCase.class.getResourceAsStream("/io/syndesis/server/runtime/test-image.png")) {
+            response = post("/api/v1/connectors/custom",
+                multipartBody(new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build(),
+                    iconStream,
+                    new ByteArrayInputStream("here-be-specification".getBytes(StandardCharsets.US_ASCII))),
+                Connector.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+        }
 
         final Connector created = response.getBody();
         assertThat(created).isNotNull();

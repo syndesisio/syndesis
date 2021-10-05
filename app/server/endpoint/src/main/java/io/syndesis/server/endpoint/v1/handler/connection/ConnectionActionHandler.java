@@ -102,7 +102,7 @@ public class ConnectionActionHandler {
                     String value = StringUtils.join((String[]) entry.getValue(), ConfigurationProperty.MULTIPLE_SEPARATOR);
                     properties.put(entry.getKey(), value);
                 } else if (entry.getValue() instanceof Iterable) {
-                    String value = StringUtils.join((Iterable) entry.getValue(), ConfigurationProperty.MULTIPLE_SEPARATOR);
+                    String value = StringUtils.join((Iterable<?>) entry.getValue(), ConfigurationProperty.MULTIPLE_SEPARATOR);
                     properties.put(entry.getKey(), value);
                 } else {
                     properties.put(entry.getKey(), entry.getValue().toString());

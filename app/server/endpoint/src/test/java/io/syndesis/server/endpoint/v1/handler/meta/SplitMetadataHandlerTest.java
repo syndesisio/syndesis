@@ -17,6 +17,7 @@
 package io.syndesis.server.endpoint.v1.handler.meta;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
@@ -415,6 +416,8 @@ public class SplitMetadataHandlerTest {
     }
 
     private static String getSpecification(String path) throws IOException {
-        return IOUtils.toString(new ClassPathResource(path, SplitMetadataHandlerTest.class).getInputStream(), StandardCharsets.UTF_8);
+        try (InputStream in = new ClassPathResource(path, SplitMetadataHandlerTest.class).getInputStream()) {
+            return IOUtils.toString(in, StandardCharsets.UTF_8);
+        }
     }
 }

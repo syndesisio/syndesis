@@ -312,8 +312,9 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
         Connector connectorToUpdate = connectorFormData.getConnector();
 
-        if (connectorFormData.getIconInputStream() != null) {
-            try (BufferedInputStream iconStream = new BufferedInputStream(connectorFormData.getIconInputStream())) {
+        final InputStream iconInputStream = connectorFormData.getIconInputStream();
+        if (iconInputStream != null) {
+            try (BufferedInputStream iconStream = new BufferedInputStream(iconInputStream)) {
                 // URLConnection.guessContentTypeFromStream resets the stream after inspecting the media type so
                 // can continue to be used, rather than being consumed.
                 String guessedMediaType = URLConnection.guessContentTypeFromStream(iconStream);

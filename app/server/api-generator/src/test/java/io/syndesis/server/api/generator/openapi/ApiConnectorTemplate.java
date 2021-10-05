@@ -15,6 +15,9 @@
  */
 package io.syndesis.server.api.generator.openapi;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.List;
 
 import io.syndesis.common.model.connection.ConnectorTemplate;
@@ -40,12 +43,16 @@ final class ApiConnectorTemplate {
             .mappingProvider(new JacksonMappingProvider(JsonUtils.copyObjectMapperConfiguration()))//
             .build();
 
-        final List<ConnectorTemplate> templates = JsonPath.using(configuration)
-            .parse(ApiConnectorTemplate.class.getResourceAsStream("/io/syndesis/server/dao/deployment.json"))
-            .read("$..[?(@['id'] == 'swagger-connector-template')]", new TypeRef<List<ConnectorTemplate>>() {
-                // type token pattern
-            });
+        try (InputStream deployment = ApiConnectorTemplate.class.getResourceAsStream("/io/syndesis/server/dao/deployment.json")) {
+            final List<ConnectorTemplate> templates = JsonPath.using(configuration)
+                .parse(deployment)
+                .read("$..[?(@['id'] == 'swagger-connector-template')]", new TypeRef<List<ConnectorTemplate>>() {
+                    // type token pattern
+                });
 
-        return templates.get(0);
+            return templates.get(0);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }

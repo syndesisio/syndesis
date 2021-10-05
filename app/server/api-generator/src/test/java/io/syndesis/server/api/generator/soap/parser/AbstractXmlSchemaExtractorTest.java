@@ -16,6 +16,7 @@
 package io.syndesis.server.api.generator.soap.parser;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,25 +53,26 @@ public abstract class AbstractXmlSchemaExtractorTest {
     protected XmlSchemaExtractor xmlSchemaExtractor;
 
     @BeforeAll
-    public static void setupClass() throws XmlSchemaSerializer.XmlSchemaSerializerException {
+    public static void setupClass() throws XmlSchemaSerializer.XmlSchemaSerializerException, IOException {
         if (sourceSchemas == null) {
-            final InputSource inputSource = new InputSource(AbstractXmlSchemaExtractorTest.class
-                .getResourceAsStream(TEST_SCHEMA));
-            final XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
-            schemaCollection.read(inputSource);
-            sourceSchemas = new SchemaCollection(schemaCollection);
+            try (InputStream schemaResource = AbstractXmlSchemaExtractorTest.class.getResourceAsStream(TEST_SCHEMA)) {
+                final InputSource inputSource = new InputSource(schemaResource);
+                final XmlSchemaCollection schemaCollection = new XmlSchemaCollection();
+                schemaCollection.read(inputSource);
+                sourceSchemas = new SchemaCollection(schemaCollection);
 
-            sourceSchemaNodes = new HashMap<>();
-            for (XmlSchema schema : sourceSchemas.getXmlSchemas()) {
-                final NodeList childNodes = schema.getSchemaDocument().getDocumentElement().getChildNodes();
-                List<Element> elements = new ArrayList<>();
-                for (int i = 0; i < childNodes.getLength(); i++) {
-                    final Node node = childNodes.item(i);
-                    if (node instanceof Element) {
-                        elements.add((Element) node);
+                sourceSchemaNodes = new HashMap<>();
+                for (XmlSchema schema : sourceSchemas.getXmlSchemas()) {
+                    final NodeList childNodes = schema.getSchemaDocument().getDocumentElement().getChildNodes();
+                    List<Element> elements = new ArrayList<>();
+                    for (int i = 0; i < childNodes.getLength(); i++) {
+                        final Node node = childNodes.item(i);
+                        if (node instanceof Element) {
+                            elements.add((Element) node);
+                        }
                     }
+                    sourceSchemaNodes.put(schema.getTargetNamespace(), elements);
                 }
-                sourceSchemaNodes.put(schema.getTargetNamespace(), elements);
             }
         }
     }

@@ -38,6 +38,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -127,13 +128,16 @@ public class TestSupportHandler {
 
     private void deleteAllDBEntities() {
         dbi.withHandle(h -> {
-            final DatabaseMetaData databaseMetaData = h.getConnection().getMetaData();
-            if ("PostgreSQL".equalsIgnoreCase(databaseMetaData.getDatabaseProductName())) {
-                h.execute("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='syndesis' AND pid != pg_backend_pid()");
+            try (Connection con = h.getConnection()) {
+                final DatabaseMetaData databaseMetaData = con.getMetaData();
+                if ("PostgreSQL".equalsIgnoreCase(databaseMetaData.getDatabaseProductName())) {
+                    h.execute("SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='syndesis' AND pid != pg_backend_pid()");
+                }
+
+                h.execute("TRUNCATE TABLE jsondb");
+                h.execute("TRUNCATE TABLE filestore");
+                h.execute("TRUNCATE TABLE config");
             }
-            h.execute("TRUNCATE TABLE jsondb");
-            h.execute("TRUNCATE TABLE filestore");
-            h.execute("TRUNCATE TABLE config");
 
             return null;
         });
