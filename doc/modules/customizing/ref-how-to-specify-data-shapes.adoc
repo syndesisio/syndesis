@@ -92,6 +92,19 @@ the data shape's `specification` property. For example:
 }
 ----
 
+* `csv-instance` indicates that the data type is represented by a CSV instance. 
+When `kind` is set to `csv-instance`, specify a CSV instance as the value of
+the data shape's `specification` property. For example:
++
+----
+"inputDataShape": {
+  "description": "Person data",
+  "kind": "csv-instance",
+  "name": "Person",
+  "specification":  "{\"firstName\",\"John\",...}"
+}
+----
+
 * `any` indicates that the data type is not structured. For example, it might
 be a byte array or free format text. The data mapper ignores a data shape when
 its `kind` property is set to `any`. 
@@ -173,6 +186,11 @@ by means of references.
 |`xml-instance`
 |An actual 
 XML instance document. The setting cannot be a reference to a document.
+
+
+|`csv-instance`
+|An actual CSV instance document. The setting cannot be a reference to a document.
+
 
 |`any`
 |The `specification` property is not required. Any setting is ignored.

@@ -44,8 +44,7 @@ data fields in the next connection.
 +
 For a `POST` request, you might
 have specified the output data shape in the request by passing a JSON 
-instance, JSON schema, XML instance, or XML schema. If you did not, then 
-when you add a Webhook connection as the start connection of an integration, 
+instance, JSON schema, XML instance, XML schema, or CSV instance. If you did not, then when you add a Webhook connection as the start connection of an integration, 
 {prodname} prompts you to specify the output data type. If you do not,
 then the default Webhook connection output data type is in JSON format.   
 
