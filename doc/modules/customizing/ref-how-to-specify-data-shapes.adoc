@@ -26,6 +26,28 @@ data mapper behavior:
 The data shape `kind` property is represented by the `DataShapeKinds` enum. 
 The possible values for the `kind` property are: 
 
+* `any` indicates that the data type is not structured. For example, it might
+be a byte array or free format text. The data mapper ignores a data shape when
+its `kind` property is set to `any`. 
+In other words, the data does not appear in the data mapper and therefore 
+you cannot map any fields to or from this data.  
++
+However, for a custom connector, when its `kind` property is set to `any`, 
+{prodname} prompts you to specify input and/or output data types when you 
+configure a connection that you have created from the custom connector. 
+This happens when you add a connection to an integration. 
+You can specify the kind of the data shape’s schema, an appropriate 
+document for the kind of schema that you specify, and a name for the data type. 
+
+* `none` indicates that there is no data type. For an input data shape,
+this indicates that the connection or step does not read data. For an output data shape,
+this indicates that the connection or step does not modify data. For example, when 
+an input message body is being transferred to an output message body,
+setting the `kind` property to `none` indicates that the data is only passing
+through. The data mapper ignores data shapes when `kind` is set to `none`.
+In other words, the data does not appear in the data mapper and therefore 
+you cannot map any fields to or from this data.
+
 * `java` indicates that the data type is represented by a Java class. 
 Follow the `"kind": "java"` declaration by specifying a fully qualified
 class name for the `type` property. For example: 
@@ -92,27 +114,61 @@ the data shape's `specification` property. For example:
 }
 ----
 
-* `any` indicates that the data type is not structured. For example, it might
-be a byte array or free format text. The data mapper ignores a data shape when
-its `kind` property is set to `any`. 
-In other words, the data does not appear in the data mapper and therefore 
-you cannot map any fields to or from this data.  
+* `csv-instance` indicates that the data type is represented by a CSV instance. 
+When `kind` is set to `csv-instance`, specify a CSV instance as the value of
+the data shape's `specification` property. For example:
 +
-However, for a custom connector, when its `kind` property is set to `any`, 
-{prodname} prompts you to specify input and/or output data types when you 
-configure a connection that you have created from the custom connector. 
-This happens when you add a connection to an integration. 
-You can specify the kind of the data shape’s schema, an appropriate 
-document for the kind of schema that you specify, and a name for the data type. 
+----
+"inputDataShape": {
+  "description": "Person data",
+  "kind": "csv-instance",
+  "name": "Person",
+  "specification":  "{\"firstName\",\"John\",...}"
+}
+----
++
+When `kind` is set to `csv-instance`, you can specify the following `boolean` (`true/false`) parameters:
++
+[options="header"]
+[cols="1,1"]
+|===
+|`label`
+|`name`
 
-* `none` indicates that there is no data type. For an input data shape,
-this indicates that the connection or step does not read data. For an output data shape,
-this indicates that the connection or step does not modify data. For example, when 
-an input message body is being transferred to an output message body,
-setting the `kind` property to `none` indicates that the data is only passing
-through. The data mapper ignores data shapes when `kind` is set to `none`.
-In other words, the data does not appear in the data mapper and therefore 
-you cannot map any fields to or from this data. 
+|Allow Duplicate Header Names
+|allowDuplicateHeaderNames
+
+|Allow Missing Column Names
+|allowMissingColumnNames
+
+|Comment Marker
+|commentMarker
+
+|Delimiter
+|delimiter
+
+|Escape
+|escape
+
+|First Record As Header
+|firstRecordAsHeader
+
+|Ignore Empty Lines
+|ignoreEmptyLines
+
+|Ignore Header Case
+|ignoreHeaderCase
+
+|Ignore Surrounding Spaces
+|ignoreSurroundingSpaces
+
+|Null String
+|nullString
+
+|Skip Header Record
+|skipHeaderRecord
+|===
+
 
 .About the `type` property
 When the value of the `kind` property is `java`, the `"kind": "java"` 
@@ -173,6 +229,11 @@ by means of references.
 |`xml-instance`
 |An actual 
 XML instance document. The setting cannot be a reference to a document.
+
+
+|`csv-instance`
+|An actual CSV instance document. The setting cannot be a reference to a document.
+
 
 |`any`
 |The `specification` property is not required. Any setting is ignored.
