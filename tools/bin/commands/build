@@ -200,7 +200,7 @@ do_operator() {
       args+="--image-build skip"
     fi
 
-    if [ $(hasflag -i --image --docker) ]; then
+    if [ $(hasflag --docker) ]; then
         ./build.sh $args --image-build=docker --image-name="${image}" --image-tag="$tag"
     else
         ./build.sh $args --image-build=s2i --image-name="${image}" --image-tag="$tag"

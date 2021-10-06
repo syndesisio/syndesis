@@ -19,7 +19,6 @@ USER root
 # Copy licenses
 RUN mkdir -p /opt/ipaas/licenses
 COPY licenses /opt/ipaas/licenses
-USER default
 
 EXPOSE 8080 8443
 
@@ -27,5 +26,7 @@ COPY ${CONTEXT_DIR}/nginx-syndesis.conf /tmp/src/nginx-default-cfg/
 COPY ${SRC_DIR} /tmp/src/
 
 RUN $STI_SCRIPTS_PATH/assemble
+
+USER default
 
 CMD ["/bin/sh", "-c", "$STI_SCRIPTS_PATH/run"]
