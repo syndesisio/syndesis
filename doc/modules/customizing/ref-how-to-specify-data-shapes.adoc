@@ -123,52 +123,64 @@ the data shape's `specification` property. For example:
   "description": "Person data",
   "kind": "csv-instance",
   "name": "Person",
-  "specification":  "{\"firstName\",\"John\",...}"
+  "specification":  "John,Doe,120 Jefferson Street,Riverside, NJ, 08075"
 }
 ----
 +
 When `kind` is set to `csv-instance`, you can specify the following `boolean` (`true/false`) parameters:
 +
 [options="header"]
-[cols="1,1"]
+[cols="1,1,2"]
 |===
-|`label`
-|`name`
+|Label
+|Name
+|Description
 
 |Allow Duplicate Header Names
-|allowDuplicateHeaderNames
+|`allowDuplicateHeaderNames`
+|Allows duplicate names in the header line of CSV data.
 
 |Allow Missing Column Names
-|allowMissingColumnNames
+|`allowMissingColumnNames`
+|Allows missing column names when parsing the header line of CSV data.
 
 |Comment Marker
-|commentMarker
+|`commentMarker`
+|Specifies the character that indicates the start of a comment line in the CSV data.
 
 |Delimiter
-|delimiter
+|`delimiter`
+|Specifies the character that delimits the values (typically ";", "," or "\t") in the CSV data.
 
 |Escape
-|escape
+|`escape`
+|Specifies the escape character for the CSV data.
 
 |First Record As Header
-|firstRecordAsHeader
+|`firstRecordAsHeader`
+|Uses the first record in the CSV data as the header line.
 
 |Ignore Empty Lines
-|ignoreEmptyLines
+|`ignoreEmptyLines`
+|Ignores any empty lines in the CSV data.
 
 |Ignore Header Case
-|ignoreHeaderCase
+|`ignoreHeaderCase`
+|Ignores the letter case in the header line of the CSV data.
 
 |Ignore Surrounding Spaces
-|ignoreSurroundingSpaces
+|`ignoreSurroundingSpaces`
+|Ignores any space characters surrounding the CSV data.
 
 |Null String
-|nullString
+|`nullString`
+|Specifies the string to use when converting to and from null in the CSV data.
 
 |Skip Header Record
-|skipHeaderRecord
-|===
+|`skipHeaderRecord`
+|Skip the header record in the CSV data.
 
+|===
 
 .About the `type` property
 When the value of the `kind` property is `java`, the `"kind": "java"` 
