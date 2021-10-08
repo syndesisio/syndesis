@@ -102,10 +102,10 @@ type AMQConfiguration struct {
 }
 
 type OauthConfiguration struct {
-	Image           string // Docker image for proxy
-	CookieSecret    string // Secret to use to encrypt oauth cookies
-	DisableSarCheck bool   // Enable or disable SAR checks all together
-	SarNamespace    string // The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation
+	Image           string            // Docker image for proxy
+	CookieSecret    string            // Secret to use to encrypt oauth cookies
+	DisableSarCheck bool              // Enable or disable SAR checks all together
+	SarNamespace    string            // The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation
 	Environment     map[string]string // Environment variables to be applied to dc/syndesis-oauthproxy
 }
 
@@ -230,6 +230,7 @@ type MavenConfiguration struct {
 	Append              bool              // Should we append new repositories
 	AdditionalArguments string            // User can set extra maven options
 	Repositories        map[string]string // Set repositories for maven
+	Mirror              string            // Maven mirror used solely for dependency download
 }
 
 // Addons
@@ -732,7 +733,7 @@ func getSyndesisEnvVarsFromOpenShiftNamespace(secret *corev1.Secret) (map[string
 	return nil, errors.New("no configuration found")
 }
 
-// adds the syndesis url link to the openshift web console 
+// adds the syndesis url link to the openshift web console
 func (config *Config) SetConsoleLink(ctx context.Context, client client.Client, syndesis *synapi.Syndesis, syndesisRouteHost string) error {
 	if syndesisRouteHost == "" {
 		return nil
@@ -830,4 +831,3 @@ func (config *Config) SetOpenshiftManagementConsoleUrl(ctx context.Context, clie
 		config.OpenShiftConsoleUrl = url
 	}
 }
-

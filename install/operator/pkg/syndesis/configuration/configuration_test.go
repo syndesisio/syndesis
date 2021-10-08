@@ -347,6 +347,7 @@ func Test_MavenSettings(t *testing.T) {
 								"rep1": "http://rep1",
 								"rep2": "http://rep2",
 							},
+							Mirror: "https://my-mirror",
 						},
 					},
 				},
@@ -365,6 +366,7 @@ func Test_MavenSettings(t *testing.T) {
 		"rep1": "http://rep1",
 		"rep2": "http://rep2",
 	})
+	assert.Equal(t, c.Syndesis.Components.Server.Features.Maven.Mirror, "https://my-mirror")
 }
 
 func Test_OAuthEnvironment(t *testing.T) {
