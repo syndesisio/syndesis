@@ -40,6 +40,8 @@ import { PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import { WithDescribeDataShapeForm } from '../shape/WithDescribeDataShapeForm';
 import { createChoiceConfiguration } from './utils';
+import { atlasmapCSVParameterOptions } from '@syndesis/atlasmap-adapter';
+import { DataShapeKinds } from '@syndesis/api';
 
 export interface IDescribeChoiceDataShapePageProps
   extends IPageWithEditorBreadcrumb {
@@ -184,6 +186,13 @@ export class DescribeChoiceDataShapePage extends React.Component<IDescribeChoice
                           initialParameters={dataShape.parameters}
                           onUpdatedDataShape={handleUpdatedDataShape}
                           backActionHref={backHref}
+                          parametersFor={(kind: string) => {
+                            if (kind === DataShapeKinds.CSV_INSTANCE) {
+                              return atlasmapCSVParameterOptions();
+                            } else {
+                              return [];
+                            }
+                          }}
                         />
                       }
                       cancelHref={this.props.cancelHref(params, state)}

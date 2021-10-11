@@ -20,6 +20,7 @@ export interface IWithDescribeDataShapeFormProps {
   };
   backActionHref: H.LocationDescriptor;
   onUpdatedDataShape: (dataShape: DataShape) => void;
+  parametersFor: (kind: string) => IParameter[];
 }
 
 export interface IWithDescribeDataShapeFormState {
@@ -38,6 +39,7 @@ export class WithDescribeDataShapeForm extends React.Component<
   IWithDescribeDataShapeFormState
 > {
   private definition: string | undefined;
+  private parametersFor: (kind: string) => IParameter[];
   constructor(props: IWithDescribeDataShapeFormProps) {
     super(props);
     this.state = {
@@ -56,6 +58,7 @@ export class WithDescribeDataShapeForm extends React.Component<
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
     this.handleNext = this.handleNext.bind(this);
     this.handleShowParameters = this.handleShowParameters.bind(this);
+    this.parametersFor = this.props.parametersFor.bind(this);
   }
   public handleKindChange(newKind: string) {
     this.setState({ kind: newKind, parameters: [], initialParameters: [] });
@@ -162,6 +165,7 @@ export class WithDescribeDataShapeForm extends React.Component<
           onDescriptionChange={this.handleDescriptionChange}
           onDefinitionChange={this.handleDefinitionChange}
           onShowParameters={this.handleShowParameters}
+          parametersFor={this.parametersFor}
         />
       </>
     );

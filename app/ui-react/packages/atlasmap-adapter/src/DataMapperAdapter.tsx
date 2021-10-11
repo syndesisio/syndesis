@@ -6,6 +6,7 @@ import {
   IAtlasmapProviderProps,
   ParametersDialog,
 } from '@atlasmap/atlasmap';
+import { getCsvParameterOptions } from '@atlasmap/core';
 
 export enum DocumentType {
   JAVA = 'JAVA',
@@ -128,3 +129,5 @@ export const DataShapeParametersDialog: React.FunctionComponent<{
     />
   );
 };
+
+export const atlasmapCSVParameterOptions = getCsvParameterOptions;
