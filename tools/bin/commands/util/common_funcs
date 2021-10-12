@@ -142,11 +142,15 @@ syndesis_config_dir() {
   echo $dir
 }
 
+github_default_branch() {
+  curl -s https://api.github.com/repos/syndesisio/syndesis |jq -r .default_branch
+}
+
 # ======================================================
 # Git update functions
 git_rebase_upstream() {
   local default_branch
-  default_branch=$(curl -s https://api.github.com/repos/syndesisio/syndesis |jq -r .default_branch)
+  default_branch=$(github_default_branch)
   echo "git fetch upstream ${default_branch}"
   git fetch upstream "${default_branch}"
   echo -n "git rebase upstream/${default_branch}"
