@@ -216,7 +216,7 @@ export class DescribeDataShapePage extends React.Component<IDescribeDataShapePag
                           initialDefinition={dataShape.specification}
                           initialName={dataShape.name}
                           initialDescription={dataShape.description}
-                          initialParameters={dataShape.parameters}
+                          parameters={dataShape.parameters}
                           onUpdatedDataShape={handleUpdatedDataShape}
                           backActionHref={backHref}
                           parametersFor={(kind: string) => {

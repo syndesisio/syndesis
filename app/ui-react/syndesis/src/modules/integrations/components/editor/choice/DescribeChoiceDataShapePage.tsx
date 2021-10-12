@@ -183,7 +183,7 @@ export class DescribeChoiceDataShapePage extends React.Component<IDescribeChoice
                           initialDefinition={dataShape.specification}
                           initialName={dataShape.name}
                           initialDescription={dataShape.description}
-                          initialParameters={dataShape.parameters}
+                          parameters={dataShape.parameters}
                           onUpdatedDataShape={handleUpdatedDataShape}
                           backActionHref={backHref}
                           parametersFor={(kind: string) => {

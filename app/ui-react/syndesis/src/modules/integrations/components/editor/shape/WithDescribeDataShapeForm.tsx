@@ -4,7 +4,8 @@ import * as React from 'react';
 import { DataShapeKinds, toDataShapeKinds } from '@syndesis/api';
 import {
   DataShapeParametersDialog,
-  IParameter,
+  IParameterDefinition,
+  IParameters,
 } from '@syndesis/atlasmap-adapter';
 
 import { DataShape } from '@syndesis/models';
@@ -15,12 +16,12 @@ export interface IWithDescribeDataShapeFormProps {
   initialDefinition?: string;
   initialName?: string;
   initialDescription?: string;
-  initialParameters?: {
+  parameters?: {
     [name: string]: string;
   };
   backActionHref: H.LocationDescriptor;
   onUpdatedDataShape: (dataShape: DataShape) => void;
-  parametersFor: (kind: string) => IParameter[];
+  parametersFor: (kind: string) => IParameterDefinition[];
 }
 
 export interface IWithDescribeDataShapeFormState {
@@ -28,8 +29,7 @@ export interface IWithDescribeDataShapeFormState {
   definition?: string;
   name?: string;
   description?: string;
-  initialParameters: IParameter[];
-  parameters: IParameter[];
+  parameters?: IParameters;
   parametersShown: boolean;
   parametersTitle: string;
 }
@@ -39,15 +39,14 @@ export class WithDescribeDataShapeForm extends React.Component<
   IWithDescribeDataShapeFormState
 > {
   private definition: string | undefined;
-  private parametersFor: (kind: string) => IParameter[];
+  private parametersFor: (kind: string) => IParameterDefinition[];
   constructor(props: IWithDescribeDataShapeFormProps) {
     super(props);
     this.state = {
       description: this.props.initialDescription,
-      initialParameters: [],
       kind: this.props.initialKind,
       name: this.props.initialName,
-      parameters: [],
+      parameters: this.props.parameters,
       parametersShown: false,
       parametersTitle: '',
     };
@@ -61,7 +60,7 @@ export class WithDescribeDataShapeForm extends React.Component<
     this.parametersFor = this.props.parametersFor.bind(this);
   }
   public handleKindChange(newKind: string) {
-    this.setState({ kind: newKind, parameters: [], initialParameters: [] });
+    this.setState({ kind: newKind });
   }
   public handleNameChange(name: string) {
     this.setState({ name });
@@ -85,36 +84,13 @@ export class WithDescribeDataShapeForm extends React.Component<
             kind: this.state.kind as any,
             metadata,
             name: this.state.name!,
-            parameters: this.state.parameters.reduce((params, param) => {
-              params[param.name] = param.value;
-              return params;
-            }, {}),
+            parameters: this.state.parameters,
             specification: this.definition,
           };
     this.props.onUpdatedDataShape(dataShape as DataShape);
   }
 
-  public handleShowParameters(title: string, initial: IParameter[]) {
-    if (this.state.parameters.length === 0) {
-      // state.params is empty initially and when the kind changes,
-      // non-empty when the user chooses some parameters; so we
-      // only set to initial values on the first showing of the
-      // dialog for a specific kind
-      this.setState({ initialParameters: initial });
-    }
-
-    if (this.props.initialParameters) {
-      // we were given some initial parameters now we can set them, unfortunately we can't show them
-      // the ParametersDialog from AtlasMap doesn't allow this at the moment
-      for (const name of Object.keys(this.props.initialParameters!)) {
-        const property = initial.find((p) => p.name === name);
-        if (property) {
-          property!.value = this.props.initialParameters![name];
-        }
-      }
-      this.setState({ initialParameters: initial });
-    }
-
+  public handleShowParameters(title: string) {
     this.setState({ parametersTitle: title, parametersShown: true });
   }
 
@@ -130,8 +106,9 @@ export class WithDescribeDataShapeForm extends React.Component<
             <DataShapeParametersDialog
               title={this.state.parametersTitle}
               shown={this.state.parametersShown}
-              parameters={this.state.initialParameters}
-              onConfirm={(params: IParameter[]) =>
+              parameterDefinition={this.props.parametersFor(this.state.kind)}
+              parameters={this.state.parameters}
+              onConfirm={(params) =>
                 this.setState({ parameters: params, parametersShown: false })
               }
               onCancel={() => this.setState({ parametersShown: false })}
