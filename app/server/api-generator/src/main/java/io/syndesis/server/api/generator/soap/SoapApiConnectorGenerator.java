@@ -165,8 +165,6 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
                 .build();
         }
 
-        final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
-
         // create connector from template and connectorSettings, and add connector properties and parse warnings and errors
         final Connector connector = configuredConnector(connectorTemplate, connectorSettings);
         final APISummary.Builder summaryBuilder = APISummary.Builder.createFrom(connector)
@@ -182,25 +180,23 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
                     toListValue(modelInfo.getServices().stream()
                             .map(QName::toString)
                             .collect(Collectors.toList())));
-            summaryBuilder.putConfiguredProperty(PORTS_PROPERTY, toMapValue(modelInfo.getPorts()));
+            final Map<QName, List<String>> ports = modelInfo.getPorts();
+            summaryBuilder.putConfiguredProperty(PORTS_PROPERTY, toMapValue(ports));
 
             // default or user selected service and port names
-            final QName serviceName = modelInfo.getDefaultService().map(s -> {
-                    summaryBuilder.putConfiguredProperty(SERVICE_NAME_PROPERTY, s.toString());
-                    return s;
-                }).orElse(configuredProperties.containsKey(SERVICE_NAME_PROPERTY) ?
-                    QName.valueOf(configuredProperties.get(SERVICE_NAME_PROPERTY)) : null);
+            modelInfo.getDefaultService().ifPresent(s -> {
+                summaryBuilder.putConfiguredProperty(SERVICE_NAME_PROPERTY, s.toString());
+            });
 
-            final String portName = modelInfo.getDefaultPort().map(p -> {
+            modelInfo.getDefaultPort().ifPresent(p -> {
                     summaryBuilder.putConfiguredProperty(PORT_NAME_PROPERTY, p);
-                    return p;
-                }).orElse(configuredProperties.get(PORT_NAME_PROPERTY));
+            });
 
-            // parse PortType if service and port are provided
-            if (serviceName != null && portName != null) {
-                // get actions from WSDL operations
+            for (QName service : modelInfo.getServices()) {
                 try {
-                    summaryBuilder.actionsSummary(SoapApiModelParser.parseActionsSummary(definition, serviceName, portName));
+                    for (String port : ports.get(service)) {
+                        summaryBuilder.addActionsSummary(SoapApiModelParser.parseActionsSummary(definition, service, port));
+                    }
                 } catch (ParserException e) {
                     summaryBuilder.addError(e.toViolation());
                 }

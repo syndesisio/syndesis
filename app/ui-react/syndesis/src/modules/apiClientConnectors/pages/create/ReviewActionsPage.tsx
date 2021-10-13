@@ -102,9 +102,16 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                         )}
                         apiProviderDescription={apiSummary!.description}
                         apiProviderName={apiSummary!.name}
-                        i18nOperationsHtmlMessage={`<strong>${
-                          apiSummary?.actionsSummary?.totalActions || 0
-                        }</strong> operations`}
+                        i18nOperationsHtmlMessage={`<strong>${apiSummary?.actionsSummary?.reduce(
+                          (sum, summary) => sum + (summary.totalActions || 0),
+                          0
+                        )}</strong> operations${
+                          (apiSummary?.actionsSummary?.length || 0) > 1
+                            ? ' in <strong>' +
+                              apiSummary?.actionsSummary?.length +
+                              '</strong> services'
+                            : ''
+                        }`}
                         i18nWarningsHeading={t(
                           'apiClientConnectors:create:review:sectionWarnings'
                         )}

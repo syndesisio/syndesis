@@ -134,7 +134,7 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
             .build();
 
         return APISummary.Builder.createFrom(connector)
-            .actionsSummary(actionsSummary)
+            .actionsSummary(Collections.singleton(actionsSummary))
             .errors(modelInfo.getErrors())
             .warnings(modelInfo.getWarnings())
             .putAllConfiguredProperties(connectorSettings.getConfiguredProperties())

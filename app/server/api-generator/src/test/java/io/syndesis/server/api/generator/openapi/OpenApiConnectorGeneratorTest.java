@@ -329,7 +329,7 @@ public class OpenApiConnectorGeneratorTest {
 
         final APISummary expected = new APISummary.Builder()//
             .name("Swagger Petstore")//
-            .actionsSummary(actionsSummary)//
+            .addActionsSummary(actionsSummary)//
             .build();
         assertThat(summary).isEqualToIgnoringGivenFields(expected, "icon", "description", "properties", "warnings", "configuredProperties");
         assertThat(summary.getIcon()).matches(s -> s.isPresent() && s.get().startsWith("data:image"));

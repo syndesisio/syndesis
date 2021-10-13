@@ -40,8 +40,8 @@ public interface APISummary extends WithName, WithConfigurationProperties, WithC
         // make ImmutableAPISummary.Builder accessible
 
         public static Builder createFrom(final Connector connector) {
-            final ActionsSummary actionsSummary = new ActionsSummary.Builder()//
-                .totalActions(connector.getActions().size())//
+            final ActionsSummary actionsSummary = new ActionsSummary.Builder()
+                .totalActions(connector.getActions().size())
                 .actionCountByTags(
                     connector.getActions().stream()
                         .flatMap(s -> s.getTags().stream().distinct())
@@ -54,17 +54,24 @@ public interface APISummary extends WithName, WithConfigurationProperties, WithC
                 )
                 .build();
 
-            return new Builder().createFrom((WithConfigurationProperties) connector)//
-                .name(connector.getName())//
-                .description(connector.getDescription())//
+            final Builder builder = new Builder().createFrom((WithConfigurationProperties) connector)
+                .name(connector.getName())
+                .description(connector.getDescription())
                 .icon(Optional.ofNullable(connector.getIcon()))
-                .configuredProperties(Collections.emptyMap())//
-                .actionsSummary(actionsSummary);
+                .configuredProperties(Collections.emptyMap());
+
+            if (actionsSummary.getTotalActions() != 0) {
+                // connector could be created as a skeleton, without any actions
+                // let's not add empty summary then
+                builder.addActionsSummary(actionsSummary);
+            }
+
+            return builder;
         }
 
     }
 
-    ActionsSummary getActionsSummary();
+    List<ActionsSummary> getActionsSummary();
 
     String getDescription();
 

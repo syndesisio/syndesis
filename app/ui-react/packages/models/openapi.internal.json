@@ -12,7 +12,10 @@
       "APISummary": {
         "properties": {
           "actionsSummary": {
-            "$ref": "#/components/schemas/ActionsSummary"
+            "items": {
+              "$ref": "#/components/schemas/ActionsSummary"
+            },
+            "type": "array"
           },
           "configuredProperties": {
             "additionalProperties": {

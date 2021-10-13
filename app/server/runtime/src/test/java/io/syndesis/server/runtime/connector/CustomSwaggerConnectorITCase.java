@@ -18,6 +18,8 @@ package io.syndesis.server.runtime.connector;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
 
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.model.action.ActionsSummary;
@@ -56,9 +58,9 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
 
     @Configuration
     public static class TestConfiguration {
-        private static final ActionsSummary ACTIONS_SUMMARY = new ActionsSummary.Builder().totalActions(5)
+        private static final List<ActionsSummary> ACTIONS_SUMMARY = Collections.singletonList(new ActionsSummary.Builder().totalActions(5)
             .putActionCountByTag("updating", 1).putActionCountByTag("creating", 1).putActionCountByTag("fetching", 2)
-            .putActionCountByTag("destruction", 1).putActionCountByTag("tasks", 5).build();
+            .putActionCountByTag("destruction", 1).putActionCountByTag("tasks", 5).build());
 
         @Bean(TEMPLATE_ID)
         public ConnectorGenerator swaggerConnectorGenerator() {

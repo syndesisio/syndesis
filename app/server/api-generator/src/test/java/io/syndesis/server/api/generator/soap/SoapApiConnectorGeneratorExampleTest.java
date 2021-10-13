@@ -94,10 +94,10 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
         assertThat(services).isNotEmpty();
         assertThat(ports).isNotEmpty();
 
-        final ActionsSummary actionsSummary = apiSummary.getActionsSummary();
-        assertThat(actionsSummary).isNotNull();
-        assertThat(actionsSummary.getTotalActions()).isGreaterThan(0);
-        assertThat(actionsSummary.getActionCountByTags()).isNotEmpty();
+        final List<ActionsSummary> actionsSummary = apiSummary.getActionsSummary();
+        assertThat(actionsSummary).isNotNull().hasSize(1);
+        assertThat(actionsSummary.get(0).getTotalActions()).isGreaterThan(0);
+        assertThat(actionsSummary.get(0).getActionCountByTags()).isNotEmpty();
     }
 
     @ParameterizedTest(name = "{0}")

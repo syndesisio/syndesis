@@ -49,6 +49,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -143,7 +144,21 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
         final APISummary summary = APISummary.Builder.createFrom(connector).build();
 
-        return connector.builder().actionsSummary(summary.getActionsSummary()).build();
+        final ActionsSummary actionsSummary = actionSummary(summary);
+
+        return connector.builder().actionsSummary(actionsSummary).build();
+    }
+
+    private static ActionsSummary actionSummary(final APISummary summary) {
+        final List<ActionsSummary> actionsSummary = summary.getActionsSummary();
+        final int size = actionsSummary.size();
+        if (size == 0) {
+            return ActionsSummary.Builder.empty();
+        } else if (size != 1) {
+            throw new UnsupportedOperationException("APISummary.Builder.createFrom should create not more than one ActionsSummary, got: " + size);
+        }
+
+        return actionsSummary.get(0);
     }
 
     /**
@@ -233,7 +248,9 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
             .map(c -> {
                 final APISummary summary = APISummary.Builder.createFrom(c).build();
 
-                return c.builder().actionsSummary(summary.getActionsSummary()).build();
+                final ActionsSummary actionsSummary = actionSummary(summary);
+
+                return c.builder().actionsSummary(actionsSummary).build();
             })
             .collect(Collectors.toList());
 
@@ -261,7 +278,9 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
             .map(c -> {
                 final APISummary summary = APISummary.Builder.createFrom(c).build();
 
-                return c.builder().actionsSummary(summary.getActionsSummary()).build();
+                final ActionsSummary actionsSummary = actionSummary(summary);
+
+                return c.builder().actionsSummary(actionsSummary).build();
             })
             .collect(Collectors.toList());
 

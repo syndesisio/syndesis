@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.runtime.connector;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -48,8 +49,8 @@ public class ConnectorTemplateITCase extends BaseITCase {
 
     @Configuration
     public static class TestConfiguration {
-        private static final ActionsSummary ACTIONS_SUMMARY = new ActionsSummary.Builder().totalActions(5).putActionCountByTag("foo", 3)
-            .putActionCountByTag("bar", 2).build();
+        private static final List<ActionsSummary> ACTIONS_SUMMARY = Collections.singletonList(new ActionsSummary.Builder().totalActions(5).putActionCountByTag("foo", 3)
+            .putActionCountByTag("bar", 2).build());
 
         private static final ConfigurationProperty PROPERTY_1 = new ConfigurationProperty.Builder().displayName("Property 1").build();
 

@@ -28,6 +28,10 @@ public interface ActionsSummary {
 
     final class Builder extends ImmutableActionsSummary.Builder {
         // make ImmutableActionsSummary.Builder accessible
+
+        public static ActionsSummary empty() {
+            return new Builder().build();
+        }
     }
 
     Map<String, Integer> getActionCountByTags();
