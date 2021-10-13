@@ -35,8 +35,7 @@ export const SecurityPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, ISecurityPageRouteState>();
   const { configured, connectorTemplateId, specification } = state;
   const { properties } = specification;
-  const { portName, serviceName, wsdlURL } =
-    specification.configuredProperties!;
+  const { wsdlURL } = specification.configuredProperties!;
 
   const backHref =
     connectorTemplateId === 'soap-connector-template'
@@ -83,8 +82,7 @@ export const SecurityPage: React.FunctionComponent = () => {
       resolvers.create.save({
         configured: {
           ...values,
-          portName,
-          serviceName,
+          ...configured,
           wsdlURL,
         },
         connectorTemplateId,

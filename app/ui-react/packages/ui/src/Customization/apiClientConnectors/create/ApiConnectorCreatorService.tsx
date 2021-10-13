@@ -8,7 +8,6 @@ import {
   Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
-import { ButtonLink } from '../../../Layout';
 
 export interface IServiceAndPortTypes {
   value?: string;
@@ -16,8 +15,6 @@ export interface IServiceAndPortTypes {
 }
 
 export interface IApiConnectorCreatorServiceProps {
-  handleNext: (service: string, port: string) => void;
-  i18nBtnNext: string;
   i18nPort: string;
   i18nService: string;
   i18nServicePortTitle?: string;
@@ -28,6 +25,8 @@ export interface IApiConnectorCreatorServiceProps {
   portsAvailable: any[];
   serviceName: string;
   servicesAvailable: string[];
+  onServiceNameChange: (serviceName: string) => void;
+  onPortNameChange: (portName: string) => void;
 }
 
 /**
@@ -38,8 +37,6 @@ export interface IApiConnectorCreatorServiceProps {
  */
 export const ApiConnectorCreatorService: React.FunctionComponent<IApiConnectorCreatorServiceProps> =
   ({
-    handleNext,
-    i18nBtnNext,
     i18nPort,
     i18nService,
     i18nServicePortTitle,
@@ -47,6 +44,8 @@ export const ApiConnectorCreatorService: React.FunctionComponent<IApiConnectorCr
     portsAvailable,
     serviceName,
     servicesAvailable,
+    onServiceNameChange,
+    onPortNameChange,
   }) => {
     const [port, setPort] = React.useState(portName);
     const [portsArray, setPortsArray] = React.useState(
@@ -56,15 +55,16 @@ export const ApiConnectorCreatorService: React.FunctionComponent<IApiConnectorCr
 
     const handleChangeSelectedPort = (params: string) => {
       setPort(params);
+      onPortNameChange(params);
     };
 
     const handleChangeSelectedService = (params: string) => {
       setService(params);
       setPortsArray(portsAvailable[params]);
-    };
-
-    const handleClickNext = () => {
-      handleNext(service, port);
+      onServiceNameChange(params);
+      if (portsAvailable[params].length > 0) {
+        onPortNameChange(portsAvailable[params][0]);
+      }
     };
 
     return (
@@ -113,16 +113,6 @@ export const ApiConnectorCreatorService: React.FunctionComponent<IApiConnectorCr
               </FormGroup>
             </>
           </Form>
-        </StackItem>
-        <StackItem>
-          <ButtonLink
-            id={'button-next'}
-            data-testid={'button-next'}
-            as={'primary'}
-            onClick={handleClickNext}
-          >
-            {i18nBtnNext}
-          </ButtonLink>
         </StackItem>
       </Stack>
     );

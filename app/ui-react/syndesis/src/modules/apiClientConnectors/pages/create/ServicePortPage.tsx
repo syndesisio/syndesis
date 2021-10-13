@@ -27,33 +27,15 @@ export interface IServicePortRouteState {
 }
 
 export const ServicePortPage: React.FunctionComponent = () => {
-  const { history } = useRouteData();
   const { state } = useRouteData<null, IServicePortRouteState>();
   const { apiSummary, connectorTemplateId, configured, specification } = state;
 
-  /**
-   * Called on 'Next' from the SOAP service & port selection form
-   */
-  const onServiceConfigured = (service: string, port: string) => {
-    const availablePorts = JSON.parse(apiSummary!.configuredProperties!.ports);
-    const availableServices = JSON.parse(
-      apiSummary!.configuredProperties!.services
-    );
-    const firstSvc = port || availableServices[0];
-    const firstPort = port || availablePorts[firstSvc][0];
-
-    history.push(
-      resolvers.create.review({
-        configured: {
-          portName: port || firstPort,
-          serviceName: service || firstSvc,
-          wsdlURL: apiSummary!.configuredProperties!.wsdlURL,
-        },
-        connectorTemplateId,
-        specification,
-      })
-    );
-  };
+  const [serviceName, setServiceName] = React.useState(
+    configured?.serviceName || apiSummary!.configuredProperties!.serviceName
+  );
+  const [portName, setPortName] = React.useState(
+    configured?.portName || apiSummary!.configuredProperties!.portName
+  );
 
   return (
     <Translation ns={['apiClientConnectors', 'shared']}>
@@ -84,21 +66,21 @@ export const ServicePortPage: React.FunctionComponent = () => {
               <ApiConnectorCreatorLayout
                 content={
                   <ApiConnectorCreatorService
-                    handleNext={onServiceConfigured}
-                    i18nBtnNext={t('shared:Next')}
                     i18nPort={t('apiClientConnectors:create:soap:port')}
                     i18nService={t('apiClientConnectors:create:soap:service')}
                     i18nServicePortTitle={t(
                       'apiClientConnectors:create:soap:servicePortTitle'
                     )}
-                    portName={apiSummary!.configuredProperties!.portName}
+                    portName={portName}
                     portsAvailable={JSON.parse(
                       apiSummary!.configuredProperties!.ports
                     )}
-                    serviceName={apiSummary!.configuredProperties!.serviceName}
+                    serviceName={serviceName}
                     servicesAvailable={JSON.parse(
                       apiSummary!.configuredProperties!.services
                     )}
+                    onServiceNameChange={setServiceName}
+                    onPortNameChange={setPortName}
                   />
                 }
                 footer={
@@ -116,7 +98,11 @@ export const ServicePortPage: React.FunctionComponent = () => {
                     isNextLoading={false}
                     isNextDisabled={!!apiSummary!.errors}
                     nextHref={resolvers.create.security({
-                      configured: state.configured,
+                      configured: {
+                        ...state.configured,
+                        portName,
+                        serviceName,
+                      },
                       connectorTemplateId: state.connectorTemplateId,
                       specification: apiSummary!,
                     })}
