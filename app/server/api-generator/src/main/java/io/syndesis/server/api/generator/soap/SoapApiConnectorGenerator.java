@@ -201,6 +201,8 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
                     summaryBuilder.addError(e.toViolation());
                 }
             }
+
+            summaryBuilder.putConfiguredProperty(SoapConnectorConstants.ADRESSES_PROPERTY, addressesToMapValue(modelInfo.getAddresses()));
         });
 
         return summaryBuilder.build();
@@ -225,6 +227,7 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
         }
         builder.putConfiguredProperty(SPECIFICATION_PROPERTY,
                 modelInfo.getResolvedSpecification().orElse(configuredProperties.get(SPECIFICATION_PROPERTY)));
+
         getService(modelInfo, configuredProperties).ifPresent(s -> {
             builder.putConfiguredProperty(SERVICE_NAME_PROPERTY, s.toString());
 
@@ -242,14 +245,16 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
             });
         });
 
-        // if present, set default address from WSDL
-        modelInfo.getDefaultAddress().ifPresent(a -> {
-            builder.putConfiguredProperty(ADDRESS_PROPERTY, a);
-            builder.putProperty(ADDRESS_PROPERTY,
-                    new ConfigurationProperty.Builder().createFrom(connectorProperties.get(ADDRESS_PROPERTY))
-                    .defaultValue(a)
-                    .build());
-        });
+        if (!connectorSettings.getConfiguredProperties().containsKey(ADDRESS_PROPERTY)) {
+            // if present, set default address from WSDL
+            modelInfo.getDefaultAddress().ifPresent(a -> {
+                builder.putConfiguredProperty(ADDRESS_PROPERTY, a);
+                builder.putProperty(ADDRESS_PROPERTY,
+                        new ConfigurationProperty.Builder().createFrom(connectorProperties.get(ADDRESS_PROPERTY))
+                        .defaultValue(a)
+                        .build());
+            });
+        }
 
         return builder.build();
     }
@@ -287,6 +292,12 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
     private static String toMapValue(Map<QName, List<String>> ports) {
         return ports.entrySet().stream()
             .map(e -> String.format("\"%s\": %s", e.getKey(), toListValue(e.getValue())))
+            .collect(Collectors.joining(",", "{", "}"));
+    }
+
+    private static String addressesToMapValue(Map<String, String> addresses) {
+        return addresses.entrySet().stream()
+            .map(e -> String.format("\"%s\": \"%s\"", e.getKey(), e.getValue()))
             .collect(Collectors.joining(",", "{", "}"));
     }
 

@@ -34,6 +34,17 @@ export const DetailsPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, IDetailsPageRouteState>();
   const createApiConnector = useApiConnectorCreator();
 
+  const [chosenAddress] = React.useState(() => {
+    const addresses = state.specification.configuredProperties?.addresses;
+    const portName = state.configured?.portName;
+    if (addresses && portName) {
+      const addressesMap = JSON.parse(addresses);
+      return addressesMap[portName];
+    }
+
+    return undefined;
+  });
+
   return (
     <WithLeaveConfirmation
       i18nTitle={t('apiClientConnectors:create:unsavedChangesTitle')}
@@ -96,6 +107,7 @@ export const DetailsPage: React.FunctionComponent = () => {
                 state.specification.properties?.host?.defaultValue
               }
               address={
+                chosenAddress ||
                 state.specification.configuredProperties?.address ||
                 state.specification.properties?.address?.defaultValue
               }

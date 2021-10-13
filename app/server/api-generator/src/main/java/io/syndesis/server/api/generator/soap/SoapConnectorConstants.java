@@ -40,6 +40,7 @@ public final class SoapConnectorConstants {
 
     static final String SERVICES_PROPERTY = "services";
     static final String PORTS_PROPERTY = "ports";
+    static final String ADRESSES_PROPERTY = "addresses";
 
     private SoapConnectorConstants() {
         // constants
