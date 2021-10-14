@@ -27,6 +27,8 @@ import { WithRouteData } from '@syndesis/utils';
 import { PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import { WithDescribeDataShapeForm } from '../shape/WithDescribeDataShapeForm';
+import { DataShapeKinds } from '@syndesis/api';
+import { atlasmapCSVParameterOptions } from '@syndesis/atlasmap-adapter';
 
 export interface IDescribeDataShapePageProps extends IPageWithEditorBreadcrumb {
   backHref: (
@@ -214,9 +216,16 @@ export class DescribeDataShapePage extends React.Component<IDescribeDataShapePag
                           initialDefinition={dataShape.specification}
                           initialName={dataShape.name}
                           initialDescription={dataShape.description}
-                          initialParameters={dataShape.parameters}
+                          parameters={dataShape.parameters}
                           onUpdatedDataShape={handleUpdatedDataShape}
                           backActionHref={backHref}
+                          parametersFor={(kind: string) => {
+                            if (kind === DataShapeKinds.CSV_INSTANCE) {
+                              return atlasmapCSVParameterOptions();
+                            } else {
+                              return [];
+                            }
+                          }}
                         />
                       }
                       cancelHref={this.props.cancelHref(params, state)}

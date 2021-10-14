@@ -6,6 +6,7 @@ import {
   IAtlasmapProviderProps,
   ParametersDialog,
 } from '@atlasmap/atlasmap';
+import { getCsvParameterOptions } from '@atlasmap/core';
 
 export enum DocumentType {
   JAVA = 'JAVA',
@@ -101,7 +102,7 @@ export interface IParameterOption {
   value: string;
 }
 
-export interface IParameter {
+export interface IParameterDefinition {
   name: string;
   label: string;
   value: string;
@@ -109,22 +110,87 @@ export interface IParameter {
   options?: IParameterOption[];
   hidden?: boolean;
   required?: boolean;
+  enabled?: boolean;
+}
+
+export interface IParameters {
+  [name: string]: string;
 }
 
 export const DataShapeParametersDialog: React.FunctionComponent<{
   title: string;
   shown: boolean;
-  parameters: IParameter[];
-  onConfirm: (parameters: IParameter[]) => void;
+  parameterDefinition: IParameterDefinition[];
+  parameters?: IParameters;
+  onConfirm: (parameters: IParameters) => void;
   onCancel: () => void;
-}> = ({ title, shown, parameters, onConfirm, onCancel }) => {
+}> = ({
+  title,
+  shown,
+  parameterDefinition,
+  parameters,
+  onConfirm,
+  onCancel,
+}) => {
+  // Clicking Cancel in the AtlasMap parameters dialog results in the reset of the internal
+  // state of the dialog in such a way that the parameters selected by the user are lost,
+  // or at least not shown. For example if the user selects "Skip Header Record" and ticks
+  // it so it's value is set to `true`, by clicking on "Confirm" a single parameter for
+  // "Skip Header Record" is provided on `onConfirm` callback with the side effect of
+  // changing the internal state in `definedParameters`, on "onCancel" callback
+  // resets the internal state in `definedParameters` to initial state loosing all user
+  // entered values.
+  // As a workaround, we're mixing the initial parameters with the selected parameters
+  // so that we can keep the state of `definedParameters` as expected for the dialog
+  // to present all possible values and keep the user selected values.
+  // The trick is in setting the unexported property `enabled` which is consulted in
+  // the `reset` function in handling of cancel.
+  // Ref. https://github.com/atlasmap/atlasmap/issues/2990
+  const computeDialogParameters = (
+    given?: IParameters
+  ): IParameterDefinition[] => {
+    if (given === undefined) {
+      return [];
+    }
+
+    return parameterDefinition.map((defn) => {
+      if (defn.name in given) {
+        defn.value = given[defn.name];
+        // dirty trick to get `reset` within ParametersDialog not to reset the
+        // state of `definedParameters`
+        defn.enabled = true;
+      }
+
+      return defn;
+    });
+  };
+
+  // we wish to maintain the interface between usage of DataShapeParametersDialog
+  // and AtlasMap, and hide any idiosyncrasies, to `onConfirm` we wish to provide
+  // only key-value IParameters choosen by the user, while maintaining the state
+  // of ParametersDialog in AtlasMap, as noted above
+  const handleConfirm = (given: IParameterDefinition[]) => {
+    const newParameters = given.reduce((givenParams, givenParam) => {
+      givenParams[givenParam.name] = givenParam.value;
+      return givenParams;
+    }, {});
+    setParams(computeDialogParameters(newParameters));
+    onConfirm(newParameters);
+  };
+
+  const [params, setParams] = React.useState(
+    computeDialogParameters(parameters)
+  );
+
   return (
     <ParametersDialog
       isOpen={shown}
       title={title}
       onCancel={onCancel}
-      onConfirm={onConfirm}
-      parameters={parameters}
+      onConfirm={handleConfirm}
+      parameters={params.length === 0 ? parameterDefinition : params}
     />
   );
 };
+
+export const atlasmapCSVParameterOptions = getCsvParameterOptions;

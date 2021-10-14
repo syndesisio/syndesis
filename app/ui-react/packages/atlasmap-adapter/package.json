@@ -71,6 +71,7 @@
   },
   "dependencies": {
     "@atlasmap/atlasmap": "^2.3.1",
+    "@atlasmap/core": "^2.3.1",
     "@types/patternfly-react": "*",
     "loglevel": "^1.7.1",
     "react-dnd-html5-backend": "^14.0.0",
