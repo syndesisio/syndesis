@@ -75,7 +75,7 @@ Syndesis:
                 VolumeAccessMode: "ReadWriteOnce"
             BackupImage: "crunchydata/crunchy-pgdump:centos7-12.5-4.5.1"
             RestoreImage: "crunchydata/crunchy-pgrestore:centos7-12.5-4.5.1"
-            LoggerImage: "centos:7"
+            LoggerImage: "quay.io/centos/centos:7"
         Server:
             Image: "docker.io/syndesis/syndesis-server:latest"
             Resources:
