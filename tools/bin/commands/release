@@ -140,6 +140,9 @@ release::run() {
 
     # Pushing to image registry
     push_container_images "$release_version" "$moving_tag"
+    if [ "$(git branch --show-current)" == "$(github_default_branch)" ]; then
+        push_container_images "$release_version" latest
+    fi
 
     # Release staging repo
     release_staging_repo "$topdir" "$maven_opts"
