@@ -15,10 +15,12 @@
  */
 package io.syndesis.common.model.api;
 
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connector;
 
@@ -37,8 +39,11 @@ public class APISummaryTest {
             ).build()
         ).build();
 
-        assertThat(summary.getActionsSummary().getTotalActions()).isEqualTo(4);
-        Map<String, Integer> actionCountByTags = summary.getActionsSummary().getActionCountByTags();
+        final List<ActionsSummary> actionsSummaries = summary.getActionsSummary();
+        assertThat(actionsSummaries).hasSize(1);
+        final ActionsSummary actionsSummary = actionsSummaries.get(0);
+        assertThat(actionsSummary.getTotalActions()).isEqualTo(4);
+        Map<String, Integer> actionCountByTags = actionsSummary.getActionCountByTags();
         assertThat(actionCountByTags).containsEntry("1", 1);
         assertThat(actionCountByTags).containsEntry("2", 3);
         assertThat(actionCountByTags).containsEntry("3", 2);

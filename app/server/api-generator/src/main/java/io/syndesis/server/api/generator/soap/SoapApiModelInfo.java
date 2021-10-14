@@ -69,6 +69,11 @@ public interface SoapApiModelInfo {
     }
 
     @Value.Default
+    default Map<String, String> getAddresses() {
+        return Collections.emptyMap();
+    }
+
+    @Value.Default
     default List<Violation> getWarnings() {
         return Collections.emptyList();
     }

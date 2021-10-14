@@ -29,6 +29,7 @@ interface ICreateApiConnectorProps {
   tokenEndpoint?: string;
   username?: string;
   wsdlURL?: string;
+  address?: string;
 }
 
 export function useApiConnectorCreator() {
@@ -46,6 +47,7 @@ export function useApiConnectorCreator() {
               addTimestamp: connector.addTimestamp,
               addUsernameTokenCreated: connector.addUsernameTokenCreated,
               addUsernameTokenNonce: connector.addUsernameTokenNonce,
+              address: connector.address,
               authenticationType: connector.authenticationType,
               authorizationEndpoint: connector.authorizationEndpoint,
               basePath: connector.basePath,

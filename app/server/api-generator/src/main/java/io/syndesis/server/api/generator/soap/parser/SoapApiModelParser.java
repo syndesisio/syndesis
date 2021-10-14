@@ -142,7 +142,7 @@ public final class SoapApiModelParser {
 
             // set default service, port and address if present
             final SoapApiModelInfo localBuild = builder.build();
-            if (localBuild.getServices().size() == 1) {
+            if (localBuild.getServices().size() >= 1) {
 
                 final QName defaultService = localBuild.getServices().get(0);
                 builder.defaultService(defaultService);
@@ -159,6 +159,18 @@ public final class SoapApiModelParser {
                     }
                 }
             }
+
+            @SuppressWarnings("unchecked")
+            final Map<QName, Service> services = definition.getServices();
+
+            services.forEach((serviceName, service) -> {
+                @SuppressWarnings("unchecked")
+                final Map<String, Port> ports = service.getPorts();
+
+                ports.keySet().forEach(portName -> {
+                    builder.putAddresses(portName, getAddress(definition, serviceName, portName));
+                });
+            });
 
         } catch (IOException e) {
             addError(builder, "Error reading WSDL: " + e.getMessage(), e);

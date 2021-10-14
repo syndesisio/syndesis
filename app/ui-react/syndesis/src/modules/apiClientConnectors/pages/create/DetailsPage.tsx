@@ -1,6 +1,6 @@
-import { useApiConnectorCreator } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { IApiSummarySoap } from '@syndesis/models';
+import * as React from 'react';
+
 import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
@@ -9,13 +9,15 @@ import {
   ApiConnectorCreatorLayout,
   ApiConnectorCreatorToggleList,
 } from '@syndesis/ui';
+import { ApiConnectorInfoForm, IConnectorValues } from '../../components';
+
+import { useApiConnectorCreator } from '@syndesis/api';
+import { IApiSummarySoap } from '@syndesis/models';
 import { useRouteData } from '@syndesis/utils';
-import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import { PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
-import { ApiConnectorInfoForm, IConnectorValues } from '../../components';
 import { ICreateConnectorProps } from '../../models';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
@@ -31,6 +33,17 @@ export const DetailsPage: React.FunctionComponent = () => {
   const { pushNotification } = React.useContext(UIContext);
   const { state, history } = useRouteData<null, IDetailsPageRouteState>();
   const createApiConnector = useApiConnectorCreator();
+
+  const [chosenAddress] = React.useState(() => {
+    const addresses = state.specification.configuredProperties?.addresses;
+    const portName = state.configured?.portName;
+    if (addresses && portName) {
+      const addressesMap = JSON.parse(addresses);
+      return addressesMap[portName];
+    }
+
+    return undefined;
+  });
 
   return (
     <WithLeaveConfirmation
@@ -53,8 +66,8 @@ export const DetailsPage: React.FunctionComponent = () => {
               ...state.configured,
               ...values,
               connectorTemplateId: state.connectorTemplateId,
-              specification: state.specification.configuredProperties!
-                .specification,
+              specification:
+                state.specification.configuredProperties!.specification,
             });
             actions.setSubmitting(false);
             allowNavigation();
@@ -94,6 +107,7 @@ export const DetailsPage: React.FunctionComponent = () => {
                 state.specification.properties?.host?.defaultValue
               }
               address={
+                chosenAddress ||
                 state.specification.configuredProperties?.address ||
                 state.specification.properties?.address?.defaultValue
               }
@@ -135,7 +149,10 @@ export const DetailsPage: React.FunctionComponent = () => {
                   }
                   navigation={
                     <ApiConnectorCreatorBreadSteps
-                      step={4}
+                      step={5}
+                      i18nConfiguration={t(
+                        'apiClientConnectors:create:configuration:title'
+                      )}
                       i18nDetails={t(
                         'apiClientConnectors:create:details:title'
                       )}

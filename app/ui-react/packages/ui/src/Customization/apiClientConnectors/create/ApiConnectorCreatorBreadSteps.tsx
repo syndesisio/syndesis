@@ -1,11 +1,13 @@
-import { WizardNav, WizardNavItem } from '@patternfly/react-core';
 import * as React from 'react';
+
+import { WizardNav, WizardNavItem } from '@patternfly/react-core';
 
 export interface IApiConnectorCreatorBreadStepsProps {
   /**
    * The one-based active step number.
    */
   step: number;
+  i18nConfiguration: string;
   i18nDetails: string;
   i18nReview: string;
   i18nSecurity: string;
@@ -18,7 +20,14 @@ export interface IApiConnectorCreatorBreadStepsProps {
  * @see [step]{@link IApiConnectorCreatorBreadStepsProps#step}
  */
 export const ApiConnectorCreatorBreadSteps: React.FunctionComponent<IApiConnectorCreatorBreadStepsProps> =
-  ({ i18nDetails, i18nReview, i18nSecurity, i18nSelectMethod, step }) => (
+  ({
+    i18nConfiguration,
+    i18nDetails,
+    i18nReview,
+    i18nSecurity,
+    i18nSelectMethod,
+    step,
+  }) => (
     <WizardNav>
       <WizardNavItem
         step={1}
@@ -36,12 +45,18 @@ export const ApiConnectorCreatorBreadSteps: React.FunctionComponent<IApiConnecto
         step={3}
         isCurrent={step === 3}
         isDisabled={step < 3}
-        content={i18nSecurity}
+        content={i18nConfiguration}
       />
       <WizardNavItem
         step={4}
         isCurrent={step === 4}
         isDisabled={step < 4}
+        content={i18nSecurity}
+      />
+      <WizardNavItem
+        step={5}
+        isCurrent={step === 5}
+        isDisabled={step < 5}
         content={i18nDetails}
       />
     </WizardNav>

@@ -1,13 +1,15 @@
-import { boolean } from '@storybook/addon-knobs';
-import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { ApiConnectorCreatorLayout } from '../../../src';
+
 import {
   ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorFooter,
   ApiConnectorCreatorToggleList,
 } from '../../../src/Customization/apiClientConnectors/create';
+
+import { ApiConnectorCreatorLayout } from '../../../src';
 import { OpenApiReviewActions } from '../../../src/Shared';
+import { boolean } from '@storybook/addon-knobs';
+import { storiesOf } from '@storybook/react';
 
 const stories = storiesOf(
   'Customization/ApiClientConnector/CreateApiConnector/2 - Imported Operations',
@@ -75,6 +77,7 @@ stories.add('Review Actions', () => {
       navigation={
         <ApiConnectorCreatorBreadSteps
           step={2}
+          i18nConfiguration={'Additional Configuration'}
           i18nDetails={'Review/Edit Connector Details'}
           i18nReview={'Imported Operations'}
           i18nSecurity={'Specify Security'}

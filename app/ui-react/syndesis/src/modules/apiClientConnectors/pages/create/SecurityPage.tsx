@@ -35,14 +35,21 @@ export const SecurityPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, ISecurityPageRouteState>();
   const { configured, connectorTemplateId, specification } = state;
   const { properties } = specification;
-  const { portName, serviceName, wsdlURL } =
-    specification.configuredProperties!;
+  const { wsdlURL } = specification.configuredProperties!;
 
-  const backHref = resolvers.create.review({
-    configured,
-    connectorTemplateId,
-    specification: specification.configuredProperties!.specification,
-  });
+  const backHref =
+    connectorTemplateId === 'soap-connector-template'
+      ? resolvers.create.servicePort({
+          apiSummary: specification,
+          configured,
+          connectorTemplateId,
+          specification: specification.configuredProperties!.specification,
+        })
+      : resolvers.create.review({
+          configured,
+          connectorTemplateId,
+          specification: specification.configuredProperties!.specification,
+        });
 
   const defaultValues: ICreateConnectorProps = {
     authenticationType:
@@ -75,8 +82,7 @@ export const SecurityPage: React.FunctionComponent = () => {
       resolvers.create.save({
         configured: {
           ...values,
-          portName,
-          serviceName,
+          ...configured,
           wsdlURL,
         },
         connectorTemplateId,
@@ -166,7 +172,10 @@ export const SecurityPage: React.FunctionComponent = () => {
                       }
                       navigation={
                         <ApiConnectorCreatorBreadSteps
-                          step={3}
+                          step={4}
+                          i18nConfiguration={t(
+                            'apiClientConnectors:create:configuration:title'
+                          )}
                           i18nDetails={t(
                             'apiClientConnectors:create:details:title'
                           )}

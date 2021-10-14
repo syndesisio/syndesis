@@ -133,7 +133,7 @@ public class OpenApiGenerator implements APIGenerator {
         return new APISummary.Builder()//
             .name(title)//
             .description(description)//
-            .actionsSummary(actionsSummary)//
+            .addActionsSummary(actionsSummary)//
             .errors(modelInfo.getErrors())//
             .warnings(modelInfo.getWarnings())//
             // needed if the user wants to change it
