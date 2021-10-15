@@ -55,7 +55,7 @@
     <node.version>v14.17.3</node.version>
     <yarn.version>v1.22.5</yarn.version>
 
-    <hibernate.validator.version>6.0.20.Final</hibernate.validator.version>
+    <hibernate.validator.version>6.0.22.Final</hibernate.validator.version>
 
     <jackson.version>2.11.2</jackson.version>
     <json-patch.version>1.13</json-patch.version>
@@ -95,7 +95,7 @@
     <!-- Global camel version used everywhere -->
     <camel.version>2.23.2.fuse-790053</camel.version>
 
-    <undertow.version>2.2.9.Final</undertow.version>
+    <undertow.version>2.2.12.Final</undertow.version>
     <org.jboss.xnio.version>3.8.4.Final</org.jboss.xnio.version>
 
     <!-- CXF version, to be kept in sync with the one referenced by camel version above -->
