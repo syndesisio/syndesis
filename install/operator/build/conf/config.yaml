@@ -6,7 +6,6 @@ Scheduled: true
 ProductName: syndesis
 SupportedOpenShiftVersions: "v4.5,v4.6"
 Syndesis:
-    DemoData: false
     Addons:
         Jaeger:
             Enabled: false

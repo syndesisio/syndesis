@@ -34,9 +34,6 @@ type SyndesisSpec struct {
 	// The external hostname to access Syndesis
 	RouteHostname string `json:"routeHostname,omitempty"`
 
-	// Enable SampleDB and demo data for Syndesis
-	DemoData bool `json:"demoData,omitempty"`
-
 	// Components is used to configure all the core components of Syndesis
 	Components ComponentsSpec `json:"components,omitempty"`
 

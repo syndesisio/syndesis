@@ -76,7 +76,6 @@ type Config struct {
 }
 
 type SyndesisConfig struct {
-	DemoData      bool           // Enables starting up with demo data
 	SHA           bool           // Whether we use SHA reference for docker images. If false, tag are used instead
 	RouteHostname string         // The external hostname to access Syndesis
 	Components    ComponentsSpec // Server, Meta, Ui, Name specifications and configurations
