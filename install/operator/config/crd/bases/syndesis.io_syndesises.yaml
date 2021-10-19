@@ -4092,9 +4092,6 @@ spec:
                         type: object
                     type: object
                 type: object
-              demoData:
-                description: Enable SampleDB and demo data for Syndesis
-                type: boolean
               forceMigration:
                 description: Force migration of CR to new version
                 type: boolean

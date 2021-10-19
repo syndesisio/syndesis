@@ -85,7 +85,6 @@ const (
 	EnvClientStateAuthenticationKey  SyndesisEnvVar = "CLIENT_STATE_AUTHENTICATION_KEY"
 	EnvClientStateEncryptionKey      SyndesisEnvVar = "CLIENT_STATE_ENCRYPTION_KEY"
 	EnvSyndesisRegistry              SyndesisEnvVar = "SYNDESIS_REGISTRY"
-	EnvDemoDataEnabled               SyndesisEnvVar = "DEMO_DATA_ENABLED"
 	EnvMaxIntegrationsPerUser        SyndesisEnvVar = "MAX_INTEGRATIONS_PER_USER"
 	EnvIntegrationStateCheckInterval SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
 	EnvSarNamespace                  SyndesisEnvVar = "SAR_PROJECT"
@@ -93,7 +92,7 @@ const (
 	EnvUpgradeVolumeCapacity  SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
 	EnvManagementUrlFor3scale SyndesisEnvVar = "OPENSHIFT_MANAGEMENT_URL_FOR3SCALE"
 
-	EnvImageStreamNamespace          SyndesisEnvVar = "IMAGE_STREAM_NAMESPACE"
+	EnvImageStreamNamespace SyndesisEnvVar = "IMAGE_STREAM_NAMESPACE"
 
 	EnvFuseS2iImage        SyndesisEnvVar = "FUSE_S2I_IMAGE"
 	EnvFuseMetaImage       SyndesisEnvVar = "FUSE_META_IMAGE"
@@ -134,7 +133,6 @@ var allTemplateParams = map[SyndesisEnvVar]ConfigSpec{
 	EnvClientStateAuthenticationKey:  {Generate: "expression", FromLen: 32, Required: true, Description: "Key used to perform authentication of client side stored state"},
 	EnvClientStateEncryptionKey:      {Generate: "expression", FromLen: 32, Required: true, Description: "Key used to perform encryption of client side stored state"},
 	EnvSyndesisRegistry:              {Value: "docker-registry.default.svc:5000", Description: "Registry from where to fetch Syndesis images"},
-	EnvDemoDataEnabled:               {Value: "false", Required: true, Description: "Enables starting up with demo data"},
 	EnvMaxIntegrationsPerUser:        {Value: "1", Required: true, Description: "Maximum number of integrations single user can create"},
 	EnvIntegrationStateCheckInterval: {Value: "60", Required: true, Description: "Interval for checking the state of the integrations"},
 	EnvSarNamespace:                  {Required: true, Description: "The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation"},
@@ -356,8 +354,6 @@ func convertToParam(name string) string {
 
 func fixHardcodedExceptions(key string, value interface{}) interface{} {
 	switch key {
-	case "load-demo-data":
-		return convertToParam(string(EnvDemoDataEnabled))
 	case "integrationStateCheckInterval":
 		return convertToParam(string(EnvIntegrationStateCheckInterval))
 	case "maxDeploymentsPerUser":

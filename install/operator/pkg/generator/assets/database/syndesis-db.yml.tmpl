@@ -124,13 +124,6 @@
       EOF
 
       echo "***** sampledb created"
-    postStart.sh: |
-      #!/bin/bash
-      {{- if .Syndesis.DemoData }}    
-      /var/lib/pgsql/sampledb/add-sample-db.sh &>  /proc/1/fd/1
-      {{- else }}
-      /var/lib/pgsql/sampledb/delete-sample-db.sh &>  /proc/1/fd/1
-      {{- end }}
 
 - apiVersion: v1
   kind: ConfigMap
@@ -255,7 +248,7 @@
                 command:
                 - /bin/sh
                 - -c
-                - /var/lib/pgsql/sampledb/postStart.sh
+                - {{if .Syndesis.Addons.Todo.Enabled}}/var/lib/pgsql/sampledb/add-sample-db.sh{{else}}/var/lib/pgsql/sampledb/delete-sample-db.sh{{end}}
             preStop:
               exec:
                 command:

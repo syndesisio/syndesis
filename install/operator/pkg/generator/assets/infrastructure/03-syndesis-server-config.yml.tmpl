@@ -12,7 +12,7 @@
   data:
     application.yml: |-
       deployment:
-        load-demo-data: '{{.Syndesis.DemoData}}'
+        load-demo-data: '{{.Syndesis.Addons.Todo.Enabled}}'
       cors:
 {{- if (not .AllowLocalHost)}}
         allowedOrigins: https://{{.Syndesis.RouteHostname}}
