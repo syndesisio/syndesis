@@ -24,27 +24,21 @@ spec:
         - mountPath: /pgdata
           name: tmp-pgdata
         env:
-        - name: PGDUMP_HOST
+        - name: PGHOST
           value: {{.Host}}
-        - name: PGDUMP_PORT
+        - name: PGPORT
           value: "{{.Port}}"
-        - name: PGDUMP_USER
+        - name: PGUSER
           value: {{.User}}
-        - name: PGDUMP_PASS
+        - name: PGPASSWORD
           value: {{.Password}}
-        - name: PGDUMP_DB
+        - name: PGDATABASE
           value: {{.Name}}
-        - name: PGDUMP_FILENAME
-          value: {{.FileName}}
-        - name: PGDUMP_ALL
-          value: "false"
-        - name: PGDUMP_CUSTOM_OPTS
-          value: "--format=custom"
         command:
         - /bin/bash
         args:
         - "-c"
-        - "/opt/cpm/bin/start.sh && sleep 5 && touch /pgdata/pg-dump-complete"
+        - "mkdir -p {{ .FileDir}} && pg_dump --file='{{ .FileDir}}/{{.FileName}}' --format=custom && sleep 5 && touch /pgdata/pg-dump-complete"
       - name: backup-db-logger
         image: {{.LoggerImage}}
         volumeMounts:

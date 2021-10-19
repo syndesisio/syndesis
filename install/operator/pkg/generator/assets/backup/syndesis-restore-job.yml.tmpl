@@ -23,24 +23,18 @@ spec:
         - mountPath: /pgdata
           name: tmp-pgdata
         env:
-        - name: PGRESTORE_HOST
+        - name: PGHOST
           value: {{.Host}}
-        - name: PGRESTORE_PORT
+        - name: PGPORT
           value: "{{.Port}}"
-        - name: PGRESTORE_USER
+        - name: PGUSER
           value: "{{.User}}"
-        - name: PGRESTORE_PASS
+        - name: PGPASSWORD
           value: "{{.Password}}"
-        - name: PGRESTORE_DB
-          value: "{{.Name}}"
-        - name: PGRESTORE_BACKUP_TIMESTAMP
-          value: "{{.Timestamp}}"
-        - name: PGRESTORE_CUSTOM_OPTS
-          value: "{{.CustomOptions}}"
         command:
         - /bin/bash
         args:
         - "-c"
         - |
           (while true;  do if [[ -f "/pgdata/pg-upload-complete" ]]; then sleep 5; break; fi; sleep 3; done)
-          /opt/cpm/bin/start.sh
+          pg_restore {{.CustomOptions}} --dbname={{.Name}} {{.FileDir}}/{{.FileName}}

@@ -127,8 +127,6 @@ type DatabaseConfiguration struct {
 	Exporter         ExporterConfiguration         // The exporter exports metrics in prometheus format
 	Password         string                        // Password for the PostgreSQL connection user
 	SampledbPassword string                        // Password for the PostgreSQL sampledb user
-	BackupImage      string                        // Docker image responsible for backing the database
-	RestoreImage     string                        // Docker image responsible for restoring the database
 	LoggerImage      string                        // Docker image responsible for monitoring and logging when the database backup has completed
 }
 

@@ -62,7 +62,7 @@ const (
 
 	dumpFilename = "syndesis-db.dump"
 
-	resDefaultCustomOptions = "--no-password --clean --if-exists --create --verbose"
+	resDefaultCustomOptions = "--no-password --clean --if-exists --create --verbose --exit-on-error"
 )
 
 type Backup struct {
@@ -74,7 +74,7 @@ type Backup struct {
 	localOnly       bool                     // If true, backup to local location. Otherwise, upload to remote lodation
 	context         context.Context          // Context for backup
 	clientTools     *clienttools.ClientTools // Syndesis client toolkit
-	syndesis        *synapi.Syndesis        // Syndesis runtime instance
+	syndesis        *synapi.Syndesis         // Syndesis runtime instance
 	customOptions   string                   // Custom options required for restoring
 	backupDesign    backupDesign             // The credentials for the backup/restore operation
 	payloadComplete bool                     // Is uploading of the restore payload complete
@@ -527,14 +527,14 @@ func (b *Backup) backupDatabase() error {
 
 	b.backupDesign = backupDesign{
 		Job:         "db-backup-" + suffix,
-		Image:       sc.Syndesis.Components.Database.BackupImage,
+		Image:       sc.Syndesis.Components.Database.Image,
 		LoggerImage: sc.Syndesis.Components.Database.LoggerImage,
 		Name:        sc.Syndesis.Components.Database.Name,
 		User:        sc.Syndesis.Components.Database.User,
 		Password:    sc.Syndesis.Components.Database.Password,
 		Host:        dbURL.Hostname(),
 		Port:        dbURL.Port(),
-		FileDir:     "/pgdata/" + dbURL.Hostname() + "-backups/*",
+		FileDir:     "/pgdata/" + dbURL.Hostname() + "-backups",
 		FileName:    dumpFilename,
 	}
 
@@ -614,7 +614,7 @@ func (b *Backup) RestoreDb() (err error) {
 
 	b.backupDesign = backupDesign{
 		Job:           "db-restore-" + suffix,
-		Image:         sc.Syndesis.Components.Database.RestoreImage,
+		Image:         sc.Syndesis.Components.Database.Image,
 		Name:          sc.Syndesis.Components.Database.Name,
 		User:          sc.Syndesis.Components.Database.User,
 		Password:      sc.Syndesis.Components.Database.Password,
@@ -788,6 +788,9 @@ func (b *Backup) backupTask(bkpPod *corev1.Pod) (bool, error) {
 		// The compilerContainer container has terminated; extract the log from the loggerContainer
 
 		backupfile, err := os.Create(filepath.Join(b.backupDir, b.backupPath, b.backupDesign.FileName))
+		if err != nil {
+			return false, err
+		}
 		defer backupfile.Close()
 
 		//
