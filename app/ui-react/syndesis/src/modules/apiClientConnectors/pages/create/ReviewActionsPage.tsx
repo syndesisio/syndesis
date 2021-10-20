@@ -154,12 +154,25 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                                 apiSummary: apiSummary!,
                                 configured: state.configured,
                                 connectorTemplateId: state.connectorTemplateId,
-                                specification: state.specification,
+                                // if the specification is stored in configuredProperties we do not need to pass it, and save
+                                // a bit of memory in session storage used for `state`
+                                // if it's not then we need to pass it along so we can POST it on save
+                                specification: apiSummary?.configuredProperties
+                                  ?.specification
+                                  ? undefined
+                                  : state.specification,
                               })
                             : resolvers.create.security({
+                                apiSummary: apiSummary!,
                                 configured: state.configured,
                                 connectorTemplateId: state.connectorTemplateId,
-                                specification: apiSummary!,
+                                // if the specification is stored in configuredProperties we do not need to pass it, and save
+                                // a bit of memory in session storage used for `state`
+                                // if it's not then we need to pass it along so we can POST it on save
+                                specification: apiSummary?.configuredProperties
+                                  ?.specification
+                                  ? undefined
+                                  : state.specification,
                               })
                         }
                         reviewEditHref={

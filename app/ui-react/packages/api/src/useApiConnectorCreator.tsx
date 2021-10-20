@@ -32,7 +32,7 @@ interface ICreateApiConnectorProps {
   address?: string;
 }
 
-export function useApiConnectorCreator() {
+export function useApiConnectorCreator(specification?: string) {
   const apiContext = React.useContext(ApiContext);
 
   const createConnector = async (connector: ICreateApiConnectorProps) => {
@@ -72,6 +72,9 @@ export function useApiConnectorCreator() {
         { type: 'application/json' }
       )
     );
+    if (specification && !connector.specification) {
+      body.append('specification', specification);
+    }
 
     const response = await callFetch({
       body,

@@ -25,17 +25,18 @@ import routes from '../../routes';
 export interface IDetailsPageRouteState {
   configured?: ICreateConnectorProps;
   connectorTemplateId?: string;
-  specification: IApiSummarySoap;
+  apiSummary: IApiSummarySoap;
+  specification?: string;
 }
 
 export const DetailsPage: React.FunctionComponent = () => {
   const { t } = useTranslation(['apiClientConnectors', 'shared']);
   const { pushNotification } = React.useContext(UIContext);
   const { state, history } = useRouteData<null, IDetailsPageRouteState>();
-  const createApiConnector = useApiConnectorCreator();
+  const createApiConnector = useApiConnectorCreator(state.specification);
 
   const [chosenAddress] = React.useState(() => {
-    const addresses = state.specification.configuredProperties?.addresses;
+    const addresses = state.apiSummary.configuredProperties?.addresses;
     const portName = state.configured?.portName;
     if (addresses && portName) {
       const addressesMap = JSON.parse(addresses);
@@ -67,7 +68,7 @@ export const DetailsPage: React.FunctionComponent = () => {
               ...values,
               connectorTemplateId: state.connectorTemplateId,
               specification:
-                state.specification.configuredProperties!.specification,
+                state.apiSummary.configuredProperties!.specification,
             });
             actions.setSubmitting(false);
             allowNavigation();
@@ -95,21 +96,21 @@ export const DetailsPage: React.FunctionComponent = () => {
               i18nCreateConnection={t('apiClientConnectors:CreateApiConnector')}
             />
             <ApiConnectorInfoForm
-              name={state.specification.name}
-              description={state.specification.description}
+              name={state.apiSummary.name}
+              description={state.apiSummary.description}
               connectorTemplateId={state.connectorTemplateId}
               basePath={
-                state.specification.configuredProperties?.basePath ||
-                state.specification.properties?.basePath?.defaultValue
+                state.apiSummary.configuredProperties?.basePath ||
+                state.apiSummary.properties?.basePath?.defaultValue
               }
               host={
-                state.specification.configuredProperties?.host ||
-                state.specification.properties?.host?.defaultValue
+                state.apiSummary.configuredProperties?.host ||
+                state.apiSummary.properties?.host?.defaultValue
               }
               address={
                 chosenAddress ||
-                state.specification.configuredProperties?.address ||
-                state.specification.properties?.address?.defaultValue
+                state.apiSummary.configuredProperties?.address ||
+                state.apiSummary.properties?.address?.defaultValue
               }
               handleSubmit={onSubmit}
             >
