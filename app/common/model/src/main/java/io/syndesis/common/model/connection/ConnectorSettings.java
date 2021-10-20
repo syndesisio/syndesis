@@ -15,12 +15,18 @@
  */
 package io.syndesis.common.model.connection;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.WithProperties;
 
 import org.immutables.value.Value;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorSettings.Builder.class)
@@ -29,6 +35,10 @@ public interface ConnectorSettings extends WithName, WithProperties {
 
     class Builder extends ImmutableConnectorSettings.Builder {
         // make ImmutableConnectorSettings accessible
+
+        public final ConnectorSettings.Builder specification(InputStream specification) {
+            return specification(Optional.ofNullable(specification));
+        }
     }
 
     String getConnectorTemplateId();
@@ -36,5 +46,17 @@ public interface ConnectorSettings extends WithName, WithProperties {
     String getDescription();
 
     String getIcon();
+
+    @JsonIgnore
+    @Value.Default
+    default Optional<InputStream> getSpecification() {
+        final String configuredSpecification = getConfiguredProperties().get("specification");
+
+        if (configuredSpecification != null) {
+            return Optional.of(new ByteArrayInputStream(configuredSpecification.getBytes(StandardCharsets.UTF_8)));
+        }
+
+        return Optional.empty();
+    }
 
 }

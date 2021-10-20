@@ -64,6 +64,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.file.IconDao;
+import io.syndesis.server.dao.file.SpecificationResourceDao;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.util.PaginationFilter;
@@ -93,11 +94,13 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     private final ClientSideState state;
     private final Verifier verifier;
     private final MetadataConfigurationProperties config;
+    private final SpecificationResourceDao specificationResourceDao;
 
     @SuppressWarnings("PMD.ExcessiveParameterList")
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials, final Inspectors inspectors,
                             final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext,
-                            final IconDao iconDao, final FileDataManager extensionDataManager, final MetadataConfigurationProperties config) {
+                            final IconDao iconDao, final FileDataManager extensionDataManager, final MetadataConfigurationProperties config,
+                            final SpecificationResourceDao specificationResourceDao) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;
@@ -108,6 +111,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         this.iconDao = iconDao;
         this.extensionDataManager = extensionDataManager;
         this.config = config;
+        this.specificationResourceDao = specificationResourceDao;
     }
 
     @Path("/{id}/credentials")
@@ -117,7 +121,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
     @Path("/custom")
     public CustomConnectorHandler customConnectorHandler() {
-        return new CustomConnectorHandler(getDataManager(), applicationContext, iconDao);
+        return new CustomConnectorHandler(getDataManager(), applicationContext, iconDao, specificationResourceDao);
     }
 
     @Override
@@ -126,6 +130,10 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
         getDataManager().fetchIdsByPropertyValue(Connection.class, "connectorId", id)
             .forEach(connectionId -> getDataManager().delete(Connection.class, connectionId));
+
+        // if there was a specification resource associated with this connector
+        // we need to delete it as well
+        specificationResourceDao.delete(id);
     }
 
     @Override

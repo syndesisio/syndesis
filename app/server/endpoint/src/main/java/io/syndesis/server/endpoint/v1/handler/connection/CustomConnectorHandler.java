@@ -19,12 +19,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.syndesis.common.model.api.APISummary;
+import io.syndesis.common.util.IOStreams;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.dao.file.IconDao;
+import io.syndesis.server.dao.file.SpecificationResourceDao;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.icon.Icon;
+
 import okio.BufferedSource;
 import okio.Okio;
 import okio.Source;
@@ -42,6 +45,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.util.Map;
+import java.util.Optional;
 
 @Tag(name = "custom-connector")
 @Tag(name = "connector-template")
@@ -49,9 +54,12 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
 
     private final IconDao iconDao;
 
-    CustomConnectorHandler(final DataManager dataManager, final ApplicationContext applicationContext, final IconDao iconDao) {
+    private final SpecificationResourceDao specificationResourceDao;
+
+    CustomConnectorHandler(final DataManager dataManager, final ApplicationContext applicationContext, final IconDao iconDao, final SpecificationResourceDao specificationResourceDao) {
         super(dataManager, applicationContext);
         this.iconDao = iconDao;
+        this.specificationResourceDao = specificationResourceDao;
     }
 
     @POST
@@ -70,14 +78,16 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
         if (connectorSettings.getConfiguredProperties().containsKey("specification")) {
             connectorSettingsToUse = connectorSettings;
         } else {
-            final String specification;
-            try (InputStream in = customConnectorFormData.getSpecification();
-                Source inSource = Okio.source(in);
-                BufferedSource source = Okio.buffer(inSource)) {
-                specification = source.readUtf8();
-            }
+            try (InputStream specificationStream = customConnectorFormData.getSpecification()) {
+                if (specificationStream == null) {
+                    connectorSettingsToUse = connectorSettings;
+                } else {
+                    @SuppressWarnings("resource")
+                    final InputStream buffered = IOStreams.fullyBuffer(specificationStream);
 
-            connectorSettingsToUse = new ConnectorSettings.Builder().createFrom(connectorSettings).putConfiguredProperty("specification", specification).build();
+                    connectorSettingsToUse = new ConnectorSettings.Builder().createFrom(connectorSettings).specification(buffered).build();
+                }
+            }
         }
 
         Connector generatedConnector = withGeneratorAndTemplate(connectorSettingsToUse.getConnectorTemplateId(),
@@ -102,6 +112,31 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
                 generatedConnector = new Connector.Builder().createFrom(generatedConnector).icon("db:" + icon.getId().get()).build();
             } catch (IOException e) {
                 throw new IllegalArgumentException("Error while reading multipart request", e);
+            }
+        }
+
+        final Map<String, String> configuredProperties = generatedConnector.getConfiguredProperties();
+        if (!configuredProperties.containsKey("specification")) {
+            // connector generator has opted not to store the specification within
+            // the connector, we need to store the specification as a blob and point
+            // to it
+            final Optional<InputStream> maybeSpecificationStream = connectorSettingsToUse.getSpecification();
+            // but there was a specification provided in settings, which indicates
+            // that we should persist it
+            if (maybeSpecificationStream.isPresent()) {
+                // here we can close the stream
+                try (InputStream specificationStream = maybeSpecificationStream.get()) {
+                    // by this time we have read the stream provided in connector settings we need to reset it to beginning
+                    specificationStream.reset();
+
+                    final String id = generatedConnector.getId().get();
+                    specificationResourceDao.write(id, specificationStream);
+
+                    // now we need to point to the specification from the connector
+                    generatedConnector = new Connector.Builder().createFrom(generatedConnector)
+                        .putConfiguredProperty("specification", "db:" + id)
+                        .build();
+                }
             }
         }
 

@@ -15,7 +15,26 @@
  */
 package io.syndesis.server.api.generator.openapi;
 
-import static java.util.Optional.ofNullable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.math.BigInteger;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.core.models.Extension;
 import io.apicurio.datamodels.core.models.common.Info;
@@ -34,6 +53,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
+import io.syndesis.common.util.IOStreams;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
@@ -48,23 +68,7 @@ import io.syndesis.server.api.generator.openapi.v3.Oas30ParameterGenerator;
 import io.syndesis.server.api.generator.openapi.v3.Oas30PropertyGenerators;
 import io.syndesis.server.api.generator.util.ActionComparator;
 
-import java.math.BigInteger;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import static java.util.Optional.ofNullable;
 
 public class OpenApiConnectorGenerator extends ConnectorGenerator {
 
@@ -349,12 +353,24 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
         final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
 
         final String specification = configuredProperties.get("specification");
+        final Optional<InputStream> specificationStream = connectorSettings.getSpecification();
 
-        if (specification == null) {
+        if (specification == null && !specificationStream.isPresent()) {
             throw new IllegalArgumentException(
                 "Configured properties of the given connector template does not include `specification` property");
         }
-        return specification;
+
+        if (specification != null) {
+            return specification;
+        }
+
+        // closing a fully buffered stream is a noop
+        try (InputStream in = connectorSettings.getSpecification().get()) {
+            in.reset(); // the stream should be fully buffered and we might read several times
+            return IOStreams.readText(in);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     private static String randomUUID() {
