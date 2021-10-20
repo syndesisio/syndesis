@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.endpoint.v1.handler.resource;
 
+import java.io.InputStream;
 import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
@@ -23,11 +24,12 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.integration.api.IntegrationResourceManager;
+import io.syndesis.server.dao.file.SpecificationResourceDao;
 
 import org.springframework.stereotype.Component;
 
@@ -38,22 +40,34 @@ public class ResourceHandler {
 
     private static final Response NOT_FOUND = Response.status(Response.Status.NOT_FOUND).build();
     private final IntegrationResourceManager resourceManager;
+    private final SpecificationResourceDao specificationResourceDao;
 
-    public ResourceHandler(IntegrationResourceManager resourceManager) {
+    public ResourceHandler(final IntegrationResourceManager resourceManager, final SpecificationResourceDao specificationResourceDao) {
         this.resourceManager = resourceManager;
+        this.specificationResourceDao = specificationResourceDao;
     }
 
     @GET
     @Path(value = "/{kind}/{id}")
     public Response get(@NotNull @PathParam("kind") @Parameter(required = true) Kind kind, @NotNull @PathParam("id") @Parameter(required = true) String id) {
-        if (kind == Kind.OpenApi) {
+        switch (kind) {
+        case OpenApi:
             Optional<OpenApi> maybeOpenApi = resourceManager.loadOpenApiDefinition(id);
 
             return maybeOpenApi.map(r -> Response.ok(r.getDocument(), "application/vnd.oai.openapi+json").build())
                 .orElse(NOT_FOUND);
-        }
+        case Specification:
+            final InputStream stream = specificationResourceDao.read(id);
+            if (stream == null) {
+                return NOT_FOUND;
+            }
 
-        return NOT_FOUND;
+            // best serve this with some mime-type, we don't store which one
+            // though...
+            return Response.ok(stream, "text/plain").build();
+        default:
+            return NOT_FOUND;
+        }
     }
 
 }

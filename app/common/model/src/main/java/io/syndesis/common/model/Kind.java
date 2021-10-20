@@ -61,14 +61,24 @@ public enum Kind {
     ConnectionBulletinBoard(io.syndesis.common.model.bulletin.ConnectionBulletinBoard.class),
     IntegrationBulletinBoard(io.syndesis.common.model.bulletin.IntegrationBulletinBoard.class),
 
-    OpenApi(io.syndesis.common.model.openapi.OpenApi.class)
-    ;
+    OpenApi(io.syndesis.common.model.openapi.OpenApi.class),
+
+    // we need the enum value for API calls, we don't need the model object
+    Specification("specification", ModelPlaceholder.class);
 
     public final String modelName;
     public final Class<? extends WithKind> modelClass;
 
     private static final Map<String, Kind> NAME_MAP;
     private static final Map<Class<?>, Kind> MODEL_MAP;
+
+    abstract static class ModelPlaceholder implements WithKind {
+        // placeholder for kinds without model
+        private ModelPlaceholder() {
+            // we don't need to instantiate this
+        }
+    }
+
     static {
         final Map<String, Kind> kindByName = new HashMap<>();
         final Map<Class<?>, Kind> kindByType = new HashMap<>();
