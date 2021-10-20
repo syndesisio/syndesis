@@ -267,6 +267,12 @@
       <plugin>
         <!-- This makes sure that we can use the JSON sort plugin in the prettier execution below -->
         <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <usedDependencies>
+            <dependency>org.bouncycastle:bcprov-jdk15on</dependency>
+            <dependency>org.bouncycastle:bcpkix-jdk15on</dependency>
+          </usedDependencies>
+        </configuration>
         <executions>
           <execution>
             <id>prepare-prettier-dependencies</id>
@@ -511,6 +517,16 @@
       <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-kubernetes-dependencies</artifactId>
+        <exclusions>
+          <exclusion>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk15on</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -781,6 +797,14 @@
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-kubernetes-config</artifactId>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcpkix-jdk15on</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15on</artifactId>
     </dependency>
 
     <dependency>
