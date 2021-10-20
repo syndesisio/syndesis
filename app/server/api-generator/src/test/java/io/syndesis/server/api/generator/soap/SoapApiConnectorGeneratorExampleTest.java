@@ -16,17 +16,14 @@
 package io.syndesis.server.api.generator.soap;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
-import io.atlasmap.xml.inspect.XmlInspectionException;
 import io.atlasmap.xml.inspect.XmlInspectionService;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
@@ -53,22 +50,21 @@ import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.PORT_
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SERVICES_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SERVICE_NAME_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SOAP_VERSION_PROPERTY;
-import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SPECIFICATION_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.USERNAME_PROPERTY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SoapApiConnectorGeneratorExampleTest.class);
-
     static final XmlInspectionService XML_INSPECTION_SVC = new XmlInspectionService();
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("parameters")
-    public void shouldProvideInfo(final String path, final String specification) throws IOException {
-
-        final APISummary apiSummary = connectorGenerator.info(SoapConnectorTemplate.SOAP_TEMPLATE,
-            getConnectorSettings(specification));
+    public void shouldProvideInfo(final String path, final InputStream specification) throws IOException {
+        final APISummary apiSummary;
+        try (InputStream in = specification) {
+            apiSummary = connectorGenerator.info(SoapConnectorTemplate.SOAP_TEMPLATE,
+                getConnectorSettings(in, path));
+        }
 
         assertThat(apiSummary).isNotNull();
         assertThat(apiSummary.getWarnings()).isEmpty();
@@ -79,7 +75,6 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
 
         final Map<String, String> configuredProperties = apiSummary.getConfiguredProperties();
         assertThat(configuredProperties).isNotEmpty();
-        assertThat(configuredProperties).containsKey(SPECIFICATION_PROPERTY);
         assertThat(configuredProperties).containsKey(SERVICE_NAME_PROPERTY);
         assertThat(configuredProperties).containsKey(PORT_NAME_PROPERTY);
 
@@ -102,9 +97,11 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
 
     @ParameterizedTest(name = "{0}")
     @MethodSource("parameters")
-    public void shouldGenerateConnector(final String path, final String specification) throws IOException, SAXException, XmlInspectionException {
-
-        final Connector connector = connectorGenerator.generate(SoapConnectorTemplate.SOAP_TEMPLATE, getConnectorSettings(specification));
+    public void shouldGenerateConnector(final String path, final InputStream specification) throws IOException {
+        final Connector connector;
+        try (InputStream in = specification) {
+            connector = connectorGenerator.generate(SoapConnectorTemplate.SOAP_TEMPLATE, getConnectorSettings(in, path));
+        }
 
         assertThat(connector).isNotNull();
         assertThat(connector.getName()).isNotEmpty();
@@ -130,7 +127,6 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
         assertThat(configuredProperties).isNotEmpty();
         assertThat(configuredProperties).containsKey(SERVICE_NAME_PROPERTY);
         assertThat(configuredProperties).containsKey(PORT_NAME_PROPERTY);
-        assertThat(configuredProperties).containsKey(SPECIFICATION_PROPERTY);
         assertThat(configuredProperties).containsKey(ADDRESS_PROPERTY);
         assertThat(configuredProperties).containsKey(SOAP_VERSION_PROPERTY);
         assertThat(configuredProperties).containsKey(SOAP_VERSION_PROPERTY);
@@ -139,7 +135,7 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
         // assert actions
         assertThat(connector.getActions()).isNotEmpty();
         for (ConnectorAction a : connector.getActions()) {
-            assertThat(a.getActionType()).isEqualTo(ConnectorAction.TYPE_CONNECTOR);
+            assertThat(a.getActionType()).isEqualTo(Action.TYPE_CONNECTOR);
             assertThat(a.getName()).isNotEmpty();
             assertThat(a.getDescription()).isNotEmpty();
             assertThat(a.getPattern()).contains(Action.Pattern.To);

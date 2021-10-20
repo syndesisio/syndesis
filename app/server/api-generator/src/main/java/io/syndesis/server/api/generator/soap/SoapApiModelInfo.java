@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.api.generator.soap;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +42,8 @@ public interface SoapApiModelInfo {
     // URL for remotely hosted WSDLs that might use imported schemas
     Optional<String> getWsdlURL();
 
-    // resolved and condensed WSDL
-    Optional<String> getResolvedSpecification();
+    // condensed WSDL stream
+    InputStream getSpecification();
 
     // WSDL model if parsing succeeded
     Optional<Definition> getModel();

@@ -15,12 +15,11 @@
  */
 package io.syndesis.server.api.generator.soap.parser;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,11 +27,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Definition;
 import javax.wsdl.Port;
@@ -49,6 +47,15 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.Violation;
+import io.syndesis.common.model.action.Action;
+import io.syndesis.common.model.action.ActionsSummary;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.server.api.generator.soap.SoapApiModelInfo;
 
 import org.apache.cxf.BusException;
 import org.apache.cxf.BusFactory;
@@ -72,16 +79,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
-import io.syndesis.common.model.DataShape;
-import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.model.Violation;
-import io.syndesis.common.model.action.Action;
-import io.syndesis.common.model.action.ActionsSummary;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
-import io.syndesis.common.util.IOStreams;
-import io.syndesis.server.api.generator.soap.SoapApiModelInfo;
-
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.DATA_FORMAT_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.DEFAULT_OPERATION_NAMESPACE_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.DEFAULT_OPERATION_NAME_PROPERTY;
@@ -99,43 +96,22 @@ public final class SoapApiModelParser {
         // utility
     }
 
-    public static SoapApiModelInfo parseSoapAPI(final String specification, final String wsdlURL) {
+    public static SoapApiModelInfo parseSoapAPI(final InputStream specification, final String wsdlURL) {
         SoapApiModelInfo.Builder builder = new SoapApiModelInfo.Builder();
 
         try {
-            // check if WSDL specification is a URL
-            final String resolvedSpecification;
-            final Optional<String> resolvedWsdlURL;
-            final boolean isHttpUrl = specification.toLowerCase(Locale.US).startsWith("http");
-            if (isHttpUrl) {
-
-                final URL httpURL = new URL(specification);
-                resolvedWsdlURL = Optional.of(httpURL.toString());
-                final HttpURLConnection connection = (HttpURLConnection) httpURL.openConnection();
-                connection.setRequestMethod("GET");
-
-                if (connection.getResponseCode() > 299) {
-                    throw new IOException(connection.getResponseMessage());
-                }
-
-                try (InputStream data = connection.getInputStream()) {
-                    resolvedSpecification = IOStreams.readText(data);
-                }
-            } else {
-                resolvedSpecification = specification;
-                resolvedWsdlURL = Optional.ofNullable(wsdlURL);
+            if (wsdlURL != null) {
+                builder.wsdlURL(wsdlURL);
             }
 
-            // set WSDL URL, either resolved from specification or provided by caller
-            builder.wsdlURL(resolvedWsdlURL);
-
             // get concise WSDL representation without extra spaces
-            final String condensedSpecification = condenseWSDL(resolvedSpecification);
-            builder.resolvedSpecification(condensedSpecification);
+            @SuppressWarnings("resource") // we're passing it on to the builder, we don't want to close it here
+            final InputStream condensedSpecification = condenseWSDL(specification);
+            builder.specification(condensedSpecification);
 
             // parse WSDL to get model Definition
-            final InputSource inputSource = new InputSource(new StringReader(condensedSpecification));
-            final Definition definition = getWsdlReader().readWSDL(resolvedWsdlURL.orElse(null), inputSource);
+            final InputSource inputSource = new InputSource(condensedSpecification);
+            final Definition definition = getWsdlReader().readWSDL(wsdlURL, inputSource);
 
             builder.model(definition);
             validateModel(definition, builder);
@@ -174,13 +150,22 @@ public final class SoapApiModelParser {
 
         } catch (IOException e) {
             addError(builder, "Error reading WSDL: " + e.getMessage(), e);
+            return builderWithEmptyStream(builder);
         } catch (WSDLException | BusException e) {
             addError(builder, "Error parsing WSDL: " + e.getMessage(), e);
+            return builderWithEmptyStream(builder);
         } catch (TransformerException e) {
             addError(builder, "Error parsing WSDL: " + messageFrom(e), e);
+            return builderWithEmptyStream(builder);
         }
 
         return builder.build();
+    }
+
+    private static SoapApiModelInfo builderWithEmptyStream(SoapApiModelInfo.Builder builder) {
+        final ByteArrayInputStream emptyStream = new ByteArrayInputStream(new byte[0]);
+
+        return builder.specification(emptyStream).build();
     }
 
     private static String messageFrom(final TransformerException e) {
@@ -380,25 +365,28 @@ public final class SoapApiModelParser {
     }
 
     // Removes extra spaces from WSDL to reduce the amount of text stored in DB and remove unwanted spaces in documentation elements.
-    private static String condenseWSDL(final String resolvedSpecification) throws TransformerException {
-        final StreamSource originalSource = new StreamSource(new StringReader(resolvedSpecification));
-        Transformer wsdlCondenser = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                    "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">" +
-                        "<xsl:strip-space elements=\"*\" />" +
-                        "<xsl:template match=\"node()|@*\" name=\"identity\">" +
-                            "<xsl:copy>" +
-                                "<xsl:apply-templates select=\"node()|@*\"/>" +
-                            "</xsl:copy>" +
-                        "</xsl:template>" +
-                        "<xsl:template match=\"comment()\"/>" +
-                        "<xsl:template match=\"text()\">" +
-                            "<xsl:value-of select=\"normalize-space()\"/>" +
-                        "</xsl:template>" +
-                    "</xsl:stylesheet>")));
-        final StringWriter stringWriter = new StringWriter();
-        wsdlCondenser.transform(originalSource, new StreamResult(stringWriter));
-        return stringWriter.toString();
+    private static InputStream condenseWSDL(final InputStream specification) throws TransformerException, IOException {
+        try (InputStream in = specification; ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            final StreamSource originalSource = new StreamSource(in);
+            Transformer wsdlCondenser = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(
+                    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                        "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">" +
+                            "<xsl:strip-space elements=\"*\" />" +
+                            "<xsl:template match=\"node()|@*\" name=\"identity\">" +
+                                "<xsl:copy>" +
+                                    "<xsl:apply-templates select=\"node()|@*\"/>" +
+                                "</xsl:copy>" +
+                            "</xsl:template>" +
+                            "<xsl:template match=\"comment()\"/>" +
+                            "<xsl:template match=\"text()\">" +
+                                "<xsl:value-of select=\"normalize-space()\"/>" +
+                            "</xsl:template>" +
+                        "</xsl:stylesheet>")));
+
+            wsdlCondenser.transform(originalSource, new StreamResult(out));
+
+            return new ByteArrayInputStream(out.toByteArray());
+        }
     }
 
     @SuppressWarnings("unchecked")

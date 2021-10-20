@@ -15,6 +15,9 @@
  */
 package io.syndesis.server.api.generator.soap;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,7 +48,6 @@ import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.PORT_
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SERVICES_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SERVICE_NAME_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SOAP_VERSION_PROPERTY;
-import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SPECIFICATION_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.WSDL_URL_PROPERTY;
 
 /**
@@ -70,7 +72,6 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private Connector createConnector(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings,
                                       SoapApiModelInfo modelInfo) {
 
@@ -158,7 +159,7 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
     private APISummary getApiSummary(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings,
                                      SoapApiModelInfo modelInfo) {
 
-        if (!modelInfo.getResolvedSpecification().isPresent()) {
+        if (!modelInfo.getModel().isPresent()) {
             return new APISummary.Builder()
                 .errors(modelInfo.getErrors())
                 .warnings(modelInfo.getWarnings())
@@ -225,8 +226,6 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
         if (wsdlURL != null) {
             builder.putConfiguredProperty(WSDL_URL_PROPERTY, wsdlURL);
         }
-        builder.putConfiguredProperty(SPECIFICATION_PROPERTY,
-                modelInfo.getResolvedSpecification().orElse(configuredProperties.get(SPECIFICATION_PROPERTY)));
 
         getService(modelInfo, configuredProperties).ifPresent(s -> {
             builder.putConfiguredProperty(SERVICE_NAME_PROPERTY, s.toString());
@@ -273,12 +272,18 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
     private static SoapApiModelInfo getModelInfo(ConnectorSettings connectorSettings) {
         // check TLS first
         if (LOCAL_MODEL_INFO.get() == null) {
-            final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
-            final String specification = configuredProperties.get(SPECIFICATION_PROPERTY);
-            if (specification == null) {
-                throw new IllegalArgumentException("Missing configured property 'specification'");
+            Optional<InputStream> maybeSpecificationStream = connectorSettings.getSpecification();
+            if (!maybeSpecificationStream.isPresent()) {
+                throw new IllegalArgumentException("Missing specification");
             }
-            LOCAL_MODEL_INFO.set(SoapApiModelParser.parseSoapAPI(specification, configuredProperties.get(WSDL_URL_PROPERTY)));
+            final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
+            final String wsdlUrl = configuredProperties.get(WSDL_URL_PROPERTY);
+
+            try (InputStream specification = maybeSpecificationStream.get()) {
+                LOCAL_MODEL_INFO.set(SoapApiModelParser.parseSoapAPI(specification, wsdlUrl));
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
         }
         return LOCAL_MODEL_INFO.get();
     }
