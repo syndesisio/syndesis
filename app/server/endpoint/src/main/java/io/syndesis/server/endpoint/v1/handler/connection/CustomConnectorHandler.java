@@ -57,20 +57,6 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
     @POST
     @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Creates a new Connector based on the ConnectorTemplate identified by the provided `id`  and the data given in `connectorSettings`")
-    @ApiResponse(responseCode = "200", description = "Newly created Connector")
-    public Connector create(final ConnectorSettings connectorSettings) {
-
-        final Connector connector = withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(),
-            (generator, template) -> generator.generate(template, connectorSettings));
-
-        return getDataManager().create(connector);
-    }
-
-    @POST
-    @Path("/")
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Operation(description = "Creates a new Connector based on the ConnectorTemplate identified by the provided `id` and the data given in `connectorSettings` multipart part, plus optional `icon` file")
     @ApiResponse(responseCode = "200", description = "Newly created Connector")

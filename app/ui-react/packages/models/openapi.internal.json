@@ -3082,7 +3082,7 @@
     "/connectors/custom": {
       "post": {
         "description": "Creates a new Connector based on the ConnectorTemplate identified by the provided `id` and the data given in `connectorSettings` multipart part, plus optional `icon` file",
-        "operationId": "create_3",
+        "operationId": "create_2",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -3507,7 +3507,7 @@
       },
       "post": {
         "description": "Updates the connector icon for the specified connector and returns the updated connector",
-        "operationId": "create_2",
+        "operationId": "create_3",
         "parameters": [
           {
             "in": "path",

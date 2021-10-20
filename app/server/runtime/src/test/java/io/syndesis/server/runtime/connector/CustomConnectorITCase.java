@@ -135,18 +135,6 @@ public class CustomConnectorITCase extends BaseITCase {
     }
 
     @Test
-    public void shouldCreateNewCustomConnectors() {
-        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build();
-
-        final ResponseEntity<Connector> response = post("/api/v1/connectors/custom", connectorSettings, Connector.class);
-
-        final Connector created = response.getBody();
-        assertThat(created).isNotNull();
-        assertThat(created.getDescription()).isEqualTo("test-description");
-        assertThat(dataManager.fetch(Connector.class, response.getBody().getId().get())).isNotNull();
-    }
-
-    @Test
     public void shouldCreateNewCustomConnectorsFromMultipartWithIcon() throws IOException {
         final ResponseEntity<Connector> response;
         try (InputStream iconStream = CustomConnectorITCase.class.getResourceAsStream("/io/syndesis/server/runtime/test-image.png")) {
