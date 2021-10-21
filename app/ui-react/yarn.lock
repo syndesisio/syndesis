@@ -246,17 +246,22 @@
   dependencies:
     tslib "^2.0.0"
 
-"@atlasmap/atlasmap@^2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap/-/atlasmap-2.3.1.tgz#c92abbbd974a26500cbf7db47b55b815c7661c21"
-  integrity sha512-emRzrRpOoki0hkZa0/9RMYJogsMBBHwRkKPslRvocAwkbZF/Mu5+1G9fuRy5WfZ0LMTkSLd+dvNpcKjogAGtlQ==
+"@atlasmap/atlasmap@^2.3.2":
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap/-/atlasmap-2.3.2.tgz#5dc666f2c9d72fee6a3f549efcc5b80c69db19e5"
+  integrity sha512-zcirSOhYvdxVxGP4kMDH/5cXI0sQJBpPDj5f7hj07yXy4FokF6gQgR0A3RKNJ0N8fJCQD8DP2eZyaXpwMyLxuQ==
   dependencies:
-    "@atlasmap/core" "^2.3.1"
+    "@atlasmap/core" "^2.3.2"
 
 "@atlasmap/core@^2.3.1":
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/@atlasmap/core/-/core-2.3.1.tgz#b6420e787c85535c82565ba3c1ab19432d6f695c"
   integrity sha512-dcaR+I4ioTl/voPTU1aEynaw5hMC3r9FAuRenz8q1xIb95+zMZ7zMoR1kWdPzLCCkcHkt8E3SQKM21FuHh1BfQ==
+
+"@atlasmap/core@^2.3.2":
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@atlasmap/core/-/core-2.3.2.tgz#5e2f0559c10706ab2d58ac7e283c3b46c2f8c290"
+  integrity sha512-Qw49nbwu7Ql6M12XlVI9ov8BFUs7p6T/CNbtendNRS0XTDRrjge08wpGlGtzMHhNrsh0Mxza4HyFjxMdet/cpw==
 
 "@babel/code-frame@7.5.5":
   version "7.5.5"
