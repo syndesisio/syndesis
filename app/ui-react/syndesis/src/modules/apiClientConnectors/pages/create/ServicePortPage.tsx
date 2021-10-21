@@ -24,6 +24,7 @@ export interface IServicePortRouteState {
   connectorTemplateId?: string;
   configured?: ICreateConnectorProps;
   specification?: string;
+  url?: string;
 }
 
 export const ServicePortPage: React.FunctionComponent = () => {

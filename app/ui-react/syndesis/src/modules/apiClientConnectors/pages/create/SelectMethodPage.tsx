@@ -19,10 +19,14 @@ import resolvers from '../../resolvers';
 export const SelectMethodPage: React.FunctionComponent = () => {
   const { history } = useRouteData();
   const [connectorTemplateId, setConnectorTemplateId] = React.useState('');
-  const [spec, setSpec] = React.useState('');
+  const [specification, setSpecification] = React.useState<string | undefined>(
+    undefined
+  );
+  const [url, setUrl] = React.useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = React.useState(false);
   const { error, loading, setError } = useApiConnectorSummary(
-    spec,
+    specification,
+    url,
     connectorTemplateId
   );
   const uiContext = React.useContext(UIContext);
@@ -32,21 +36,32 @@ export const SelectMethodPage: React.FunctionComponent = () => {
       uiContext.pushNotification((error as Error).message, 'error');
       setError(false);
       setIsLoading(false);
-      setSpec('');
+      setSpecification(undefined);
+      setUrl(undefined);
       setConnectorTemplateId('');
     }
   }, [error, uiContext, history, setError]);
 
-  const onNext = (specification: string, connectorTemplate?: string) => {
+  const onNext = (
+    givenSpecification?: string,
+    givenUrl?: string,
+    connectorTemplate?: string
+  ) => {
     setIsLoading(loading);
     if (connectorTemplate) {
       setConnectorTemplateId(connectorTemplate);
     }
-    setSpec(specification);
+    if (givenSpecification) {
+      setSpecification(givenSpecification);
+    }
+    if (givenUrl) {
+      setUrl(givenUrl);
+    }
     history.push(
       resolvers.create.review({
         connectorTemplateId: connectorTemplate,
-        specification,
+        specification: givenSpecification,
+        url: givenUrl,
       })
     );
   };

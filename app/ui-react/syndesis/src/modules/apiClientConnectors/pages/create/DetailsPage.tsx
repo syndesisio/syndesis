@@ -27,13 +27,19 @@ export interface IDetailsPageRouteState {
   connectorTemplateId?: string;
   apiSummary: IApiSummarySoap;
   specification?: string;
+  url?: string;
 }
 
 export const DetailsPage: React.FunctionComponent = () => {
   const { t } = useTranslation(['apiClientConnectors', 'shared']);
   const { pushNotification } = React.useContext(UIContext);
   const { state, history } = useRouteData<null, IDetailsPageRouteState>();
-  const createApiConnector = useApiConnectorCreator(state.specification);
+  // if there is a specification configured, that means that it was provided by the server in the `.../info` response
+  // which means that the server prefers receiving the specification via configuredProperties, not as a separate mime part
+  // and passing a defined value for specification to useApiConnectorCreator results in a separate mime part
+  const createApiConnector = useApiConnectorCreator(
+    state.configured?.specification ? undefined : state.specification
+  );
 
   const [chosenAddress] = React.useState(() => {
     const addresses = state.apiSummary.configuredProperties?.addresses;

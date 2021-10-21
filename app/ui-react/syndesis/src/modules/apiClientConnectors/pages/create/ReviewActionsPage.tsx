@@ -28,7 +28,8 @@ export interface IReviewActionsRouteState {
    * this is a SOAP or REST style web service
    */
   connectorTemplateId?: string;
-  specification: string;
+  specification?: string;
+  url?: string;
 }
 
 export const ReviewActionsPage: React.FunctionComponent = () => {
@@ -37,6 +38,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
 
   const { apiSummary, loading, error } = useApiConnectorSummary(
     state.specification,
+    state.url,
     state.connectorTemplateId,
     state.configured
   );
@@ -151,32 +153,38 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                           state.connectorTemplateId ===
                           'soap-connector-template'
                             ? resolvers.create.servicePort({
+                                ...state,
                                 apiSummary: apiSummary!,
-                                configured: state.configured,
-                                connectorTemplateId: state.connectorTemplateId,
-                                // if the specification is stored in configuredProperties we do not need to pass it, and save
-                                // a bit of memory in session storage used for `state`
-                                // if it's not then we need to pass it along so we can POST it on save
-                                specification: apiSummary?.configuredProperties
-                                  ?.specification
-                                  ? undefined
-                                  : state.specification,
+                                configured: {
+                                  ...state.configured,
+                                  specification:
+                                    apiSummary?.configuredProperties
+                                      ?.specification,
+                                },
+                                specification:
+                                  apiSummary?.configuredProperties
+                                    ?.specification || state.specification, // if the server returned a different specification use that
                               })
                             : resolvers.create.security({
+                                ...state,
                                 apiSummary: apiSummary!,
-                                configured: state.configured,
-                                connectorTemplateId: state.connectorTemplateId,
-                                // if the specification is stored in configuredProperties we do not need to pass it, and save
-                                // a bit of memory in session storage used for `state`
-                                // if it's not then we need to pass it along so we can POST it on save
-                                specification: apiSummary?.configuredProperties
-                                  ?.specification
-                                  ? undefined
-                                  : state.specification,
+                                configured: {
+                                  ...state.configured,
+                                  specification:
+                                    apiSummary?.configuredProperties
+                                      ?.specification,
+                                },
+                                connectorTemplateId:
+                                  'swagger-connector-template',
+                                specification:
+                                  apiSummary?.configuredProperties
+                                    ?.specification || state.specification, // if the server returned a different specification use that
                               })
                         }
                         reviewEditHref={
-                          !state.connectorTemplateId &&
+                          (!state.connectorTemplateId ||
+                            state.connectorTemplateId ===
+                              'swagger-connector-template') &&
                           apiSummary?.configuredProperties
                             ? resolvers.create.specification({
                                 specification:

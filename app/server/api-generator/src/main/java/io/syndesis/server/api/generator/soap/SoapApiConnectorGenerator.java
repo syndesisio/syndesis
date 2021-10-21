@@ -215,6 +215,12 @@ public class SoapApiConnectorGenerator extends ConnectorAndActionGenerator {
                 .warnings(modelInfo.getWarnings())
                 .errors(modelInfo.getErrors());
 
+        // if it's defined it should be a URL to the WSDL, so we'll keep it
+        final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
+        if (configuredProperties.containsKey("specification")) {
+            summaryBuilder.putConfiguredProperty("specification", configuredProperties.get("specification"));
+        }
+
         modelInfo.getModel().ifPresent(definition -> {
 
             // add list of services and ports
@@ -311,7 +317,7 @@ public class SoapApiConnectorGenerator extends ConnectorAndActionGenerator {
     }
 
     // get cached TLS model info, or create one the first time
-    private static SoapApiModelInfo getModelInfo(ConnectorSettings connectorSettings) {
+    private static SoapApiModelInfo getModelInfo(final ConnectorSettings connectorSettings) {
         // check TLS first
         if (LOCAL_MODEL_INFO.get() == null) {
             Optional<InputStream> maybeSpecificationStream = connectorSettings.getSpecification();
@@ -319,7 +325,8 @@ public class SoapApiConnectorGenerator extends ConnectorAndActionGenerator {
                 throw new IllegalArgumentException("Missing specification");
             }
             final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
-            final String wsdlUrl = configuredProperties.get(WSDL_URL_PROPERTY);
+            // if there is one it should contain the URL
+            final String wsdlUrl = configuredProperties.get("specification");
 
             try (InputStream specification = maybeSpecificationStream.get()) {
                 LOCAL_MODEL_INFO.set(SoapApiModelParser.parseSoapAPI(specification, wsdlUrl));

@@ -12,7 +12,8 @@ interface IApiConnectorSummaryOptions {
 }
 
 export function useApiConnectorSummary(
-  specification: string,
+  specification?: string,
+  url?: string,
   connectorTemplateId?: string,
   /**
    * `configured` = an object that contains
@@ -30,7 +31,7 @@ export function useApiConnectorSummary(
   >(undefined);
 
   React.useEffect(() => {
-    if (!specification) {
+    if (!specification && !url) {
       return;
     }
     const fetchSummary = async () => {
@@ -45,6 +46,9 @@ export function useApiConnectorSummary(
           ? connectorTemplateId
           : 'swagger-connector-template',
       };
+      if (url) {
+        connectorSettings.configuredProperties.specification = url;
+      }
 
       body.append(
         'connectorSettings',

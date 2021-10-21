@@ -350,20 +350,6 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
     }
 
     private static String requiredSpecification(final ConnectorSettings connectorSettings) {
-        final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
-
-        final String specification = configuredProperties.get("specification");
-        final Optional<InputStream> specificationStream = connectorSettings.getSpecification();
-
-        if (specification == null && !specificationStream.isPresent()) {
-            throw new IllegalArgumentException(
-                "Configured properties of the given connector template does not include `specification` property");
-        }
-
-        if (specification != null) {
-            return specification;
-        }
-
         // closing a fully buffered stream is a noop
         try (InputStream in = connectorSettings.getSpecification().get()) {
             in.reset(); // the stream should be fully buffered and we might read several times

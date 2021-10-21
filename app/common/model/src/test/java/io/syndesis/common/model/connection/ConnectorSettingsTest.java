@@ -56,7 +56,7 @@ public class ConnectorSettingsTest {
     public void shouldNotDeserializeFromJson() throws IOException {
         final ConnectorSettings settings = JsonUtils.reader().readValue("{\"specification\": \"not expected\"}", ConnectorSettings.class);
 
-        assertThat(settings.getSpecification()).isEmpty();
+        assertThat(settings.getSpecification()).isNotPresent();
     }
 
     @Test
@@ -71,7 +71,8 @@ public class ConnectorSettingsTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenNoSpecificationGivenAndRequested() {
-        assertThat(new ConnectorSettings.Builder().build().getSpecification()).isEmpty();
+    public void shouldThrowExceptionWhenNoSpecificationGivenAndRequested() throws IOException {
+        ConnectorSettings connectorSettings = new ConnectorSettings.Builder().build();
+        assertThat(connectorSettings.getSpecification()).isNotPresent();
     }
 }

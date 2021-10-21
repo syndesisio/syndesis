@@ -30,6 +30,7 @@ export interface ISecurityPageRouteState {
   connectorTemplateId?: string;
   apiSummary: IApiSummarySoap;
   specification?: string;
+  url?: string;
 }
 
 export const SecurityPage: React.FunctionComponent = () => {
