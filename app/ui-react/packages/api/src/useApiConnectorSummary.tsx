@@ -8,6 +8,7 @@ interface IApiConnectorSummaryOptions {
   portName?: string;
   serviceName?: string;
   wsdlUrl?: string;
+  specification?: string;
 }
 
 export function useApiConnectorSummary(
@@ -35,20 +36,32 @@ export function useApiConnectorSummary(
     const fetchSummary = async () => {
       setLoading(true);
 
+      const body = new FormData();
+      const connectorSettings = {
+        configuredProperties: {
+          ...configured,
+        } as IApiConnectorSummaryOptions,
+        connectorTemplateId: connectorTemplateId
+          ? connectorTemplateId
+          : 'swagger-connector-template',
+      };
+
+      body.append(
+        'connectorSettings',
+        new Blob([JSON.stringify(connectorSettings)], {
+          type: 'application/json',
+        })
+      );
+      if (specification) {
+        body.append('specification', specification);
+      }
+
       try {
         const response = await callFetch({
-          body: {
-            configuredProperties: {
-              ...configured,
-              specification,
-            },
-            connectorTemplateId: connectorTemplateId
-              ? connectorTemplateId
-              : 'swagger-connector-template',
-          },
+          body,
           headers: apiContext.headers,
           includeAccept: true,
-          includeContentType: true,
+          includeContentType: false,
           method: 'POST',
           url: `${apiContext.apiUri}/connectors/custom/info`,
         });

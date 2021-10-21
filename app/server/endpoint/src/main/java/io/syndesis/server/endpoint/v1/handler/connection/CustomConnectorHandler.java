@@ -28,10 +28,6 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.icon.Icon;
 
-import okio.BufferedSource;
-import okio.Okio;
-import okio.Source;
-
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.springframework.context.ApplicationContext;
 
@@ -146,31 +142,29 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
     @POST
     @Path("/info")
     @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
-    public APISummary info(final ConnectorSettings connectorSettings) {
-        return withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(),
-            (generator, template) -> generator.info(template, connectorSettings));
-    }
-
-    @POST
-    @Path("/info")
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Operation(description = "Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
     public APISummary info(@MultipartForm final CustomConnectorFormData connectorFormData) {
         try {
-            final String specification;
-            try (InputStream in = connectorFormData.getSpecification();
-                Source inSource = Okio.source(in);
-                BufferedSource source = Okio.buffer(inSource)) {
-                specification = source.readUtf8();
-            }
+            final ConnectorSettings givenConnectorSettings = connectorFormData.getConnectorSettings();
 
-            final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
-                .createFrom(connectorFormData.getConnectorSettings())
-                .putConfiguredProperty("specification", specification)
-                .build();
+            final ConnectorSettings connectorSettings;
+            if (givenConnectorSettings.getConfiguredProperties().containsKey("specification")) {
+                connectorSettings = givenConnectorSettings;
+            } else {
+                try (InputStream specificationStream = connectorFormData.getSpecification()) {
+                    if (specificationStream == null) {
+                        connectorSettings = givenConnectorSettings;
+                    } else {
+                        @SuppressWarnings("resource")
+                        final InputStream buffered = IOStreams.fullyBuffer(specificationStream);
+
+                        connectorSettings = new ConnectorSettings.Builder().createFrom(givenConnectorSettings)
+                            .specification(buffered)
+                            .build();
+                    }
+                }
+            }
 
             return withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(),
                 (generator, template) -> generator.info(template, connectorSettings));

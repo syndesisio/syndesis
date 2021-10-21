@@ -3106,7 +3106,7 @@
     "/connectors/custom/info": {
       "post": {
         "description": "Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`",
-        "operationId": "info_1",
+        "operationId": "info",
         "requestBody": {
           "content": {
             "multipart/form-data": {

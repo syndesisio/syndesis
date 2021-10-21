@@ -15,31 +15,32 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import io.syndesis.common.model.api.APISummary;
-import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.dao.file.IconDao;
-import io.syndesis.server.dao.file.SpecificationResourceDao;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.connection.ConnectorGroup;
-import io.syndesis.common.model.connection.ConnectorSettings;
-import io.syndesis.common.model.connection.ConnectorTemplate;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.context.ApplicationContext;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.EntityNotFoundException;
 
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.api.APISummary;
+import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.connection.ConnectorGroup;
+import io.syndesis.common.model.connection.ConnectorSettings;
+import io.syndesis.common.model.connection.ConnectorTemplate;
+import io.syndesis.server.api.generator.ConnectorGenerator;
+import io.syndesis.server.dao.file.IconDao;
+import io.syndesis.server.dao.file.SpecificationResourceDao;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.endpoint.v1.handler.connection.CustomConnectorHandler.CustomConnectorFormData;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.same;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -131,7 +132,10 @@ public class CustomConnectorHandlerTest {
         when(applicationContext.getBean("connector-template")).thenReturn(connectorGenerator);
         when(connectorGenerator.info(same(template), same(connectorSettings))).thenReturn(preparedSummary);
 
-        final APISummary info = handler.info(connectorSettings);
+        final CustomConnectorFormData formData = new CustomConnectorFormData();
+        formData.setConnectorSettings(connectorSettings);
+
+        final APISummary info = handler.info(formData);
 
         assertThat(info).isSameAs(preparedSummary);
     }
