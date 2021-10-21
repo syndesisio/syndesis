@@ -67,14 +67,25 @@ export const DetailsPage: React.FunctionComponent = () => {
       {({ allowNavigation }) => {
         const onSubmit = async (values: IConnectorValues, actions: any) => {
           actions.setSubmitting(true);
+          const { name, description, icon, ...configured } = values;
+          if (state.configured) {
+            Object.entries(state.configured).forEach(([k, v]) => {
+              if (v) {
+                configured[k] = v as string;
+              }
+            });
+          }
 
           try {
             await createApiConnector({
-              ...state.configured,
-              ...values,
-              connectorTemplateId: state.connectorTemplateId,
-              specification:
-                state.apiSummary.configuredProperties!.specification,
+              configuredProperties: {
+                ...state.apiSummary.configuredProperties, // the defaults
+                ...configured, // customizations
+              },
+              connectorTemplateId: state.connectorTemplateId!,
+              description,
+              icon,
+              name,
             });
             actions.setSubmitting(false);
             allowNavigation();

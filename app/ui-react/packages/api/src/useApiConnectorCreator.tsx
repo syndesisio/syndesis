@@ -6,30 +6,13 @@ import { callFetch } from './callFetch';
  * Customizable properties in API Client Connector wizard
  */
 interface ICreateApiConnectorProps {
-  addTimestamp?: boolean;
-  addUsernameTokenCreated?: boolean;
-  addUsernameTokenNonce?: boolean;
-  authenticationType?: string;
-  authorizationEndpoint?: string;
-  basePath?: string;
-  connectorTemplateId?: string;
-  description?: string;
-  host?: string;
+  connectorTemplateId: string;
+  description: string;
   icon?: string;
-  name?: string;
-  password?: string;
-  passwordType?: string;
-  /**
-   * portName & serviceName
-   * are used for SOAP documents
-   */
-  portName?: string;
-  serviceName?: string;
-  specification?: string;
-  tokenEndpoint?: string;
-  username?: string;
-  wsdlURL?: string;
-  address?: string;
+  name: string;
+  configuredProperties: {
+    [name: string]: string;
+  };
 }
 
 export function useApiConnectorCreator(specification?: string) {
@@ -40,39 +23,9 @@ export function useApiConnectorCreator(specification?: string) {
 
     body.append(
       'connectorSettings',
-      new Blob(
-        [
-          JSON.stringify({
-            configuredProperties: {
-              addTimestamp: connector.addTimestamp,
-              addUsernameTokenCreated: connector.addUsernameTokenCreated,
-              addUsernameTokenNonce: connector.addUsernameTokenNonce,
-              address: connector.address,
-              authenticationType: connector.authenticationType,
-              authorizationEndpoint: connector.authorizationEndpoint,
-              basePath: connector.basePath,
-              host: connector.host,
-              password: connector.password,
-              passwordType: connector.passwordType,
-              portName: connector.portName,
-              serviceName: connector.serviceName,
-              specification: connector.specification,
-              tokenEndpoint: connector.tokenEndpoint,
-              username: connector.username,
-              wsdlURL: connector.wsdlURL,
-            },
-            connectorTemplateId: connector.connectorTemplateId
-              ? connector.connectorTemplateId
-              : 'swagger-connector-template',
-            description: connector.description,
-            icon: connector.icon,
-            name: connector.name,
-          }),
-        ],
-        { type: 'application/json' }
-      )
+      new Blob([JSON.stringify(connector)], { type: 'application/json' })
     );
-    if (specification && !connector.specification) {
+    if (specification) {
       body.append('specification', specification);
     }
 

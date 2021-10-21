@@ -35,23 +35,13 @@ export interface ISecurityPageRouteState {
 
 export const SecurityPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, ISecurityPageRouteState>();
-  const { configured, connectorTemplateId, apiSummary, specification } = state;
+  const { configured, connectorTemplateId, apiSummary } = state;
   const { properties } = apiSummary;
-  const { wsdlURL } = apiSummary.configuredProperties!;
 
   const backHref =
     connectorTemplateId === 'soap-connector-template'
-      ? resolvers.create.servicePort({
-          apiSummary,
-          configured,
-          connectorTemplateId,
-          specification: apiSummary.configuredProperties!.specification,
-        })
-      : resolvers.create.review({
-          configured,
-          connectorTemplateId,
-          specification: apiSummary.configuredProperties!.specification,
-        });
+      ? resolvers.create.servicePort(state)
+      : resolvers.create.review(state);
 
   const defaultValues: ICreateConnectorProps = {
     authenticationType:
@@ -82,14 +72,11 @@ export const SecurityPage: React.FunctionComponent = () => {
 
     history.push(
       resolvers.create.save({
-        apiSummary,
+        ...state,
         configured: {
+          ...state.configured,
           ...values,
-          ...configured,
-          wsdlURL,
         },
-        connectorTemplateId,
-        specification,
       })
     );
   };
