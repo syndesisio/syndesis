@@ -39,6 +39,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
+import io.syndesis.common.util.Strings;
 import io.syndesis.server.api.generator.ConnectorAndActionGenerator;
 import io.syndesis.server.api.generator.soap.parser.ParserException;
 import io.syndesis.server.api.generator.soap.parser.SoapApiModelParser;
@@ -281,27 +282,21 @@ public class SoapApiConnectorGenerator extends ConnectorAndActionGenerator {
             getPortName(modelInfo, configuredProperties).ifPresent(p -> {
                 builder.putConfiguredProperty(PORT_NAME_PROPERTY, p);
 
-                // set address from selected port
-                final String address = SoapApiModelParser.getAddress(modelInfo.getModel().get(), s, p);
-                builder.putConfiguredProperty(ADDRESS_PROPERTY,
-                    address);
+                final String configuredAddress = connectorSettings.getConfiguredProperties().get(ADDRESS_PROPERTY);
+                final String defaultAddress = SoapApiModelParser.getAddress(modelInfo.getModel().get(), s, p);
+                if (Strings.isEmptyOrBlank(configuredAddress)) {
+                    // set address from selected port
+                    builder.putConfiguredProperty(ADDRESS_PROPERTY, defaultAddress);
+                } else {
+                    builder.putConfiguredProperty(ADDRESS_PROPERTY, configuredAddress);
+                }
+
                 builder.putProperty(ADDRESS_PROPERTY,
                     new ConfigurationProperty.Builder().createFrom(connectorProperties.get(ADDRESS_PROPERTY))
-                        .defaultValue(address)
+                        .defaultValue(defaultAddress)
                         .build());
             });
         });
-
-        if (!connectorSettings.getConfiguredProperties().containsKey(ADDRESS_PROPERTY)) {
-            // if present, set default address from WSDL
-            modelInfo.getDefaultAddress().ifPresent(a -> {
-                builder.putConfiguredProperty(ADDRESS_PROPERTY, a);
-                builder.putProperty(ADDRESS_PROPERTY,
-                        new ConfigurationProperty.Builder().createFrom(connectorProperties.get(ADDRESS_PROPERTY))
-                        .defaultValue(a)
-                        .build());
-            });
-        }
 
         return builder.build();
     }
