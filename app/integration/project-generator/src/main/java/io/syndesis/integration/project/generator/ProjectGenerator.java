@@ -251,7 +251,9 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         String key = String.format("flow-%d.%s-%d.%s", flowIndex, propKeyPrefix, stepIndex, propertyKey);
         String val = mandatoryDecrypt(resourceManager, propertyKey, propertyVal);
 
-        properties.put(key, val);
+        if (val != null) {
+            properties.put(key, val);
+        }
     }
 
     private void addAdditionalResources(TarArchiveOutputStream tos) throws IOException {

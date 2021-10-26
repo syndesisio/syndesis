@@ -126,7 +126,7 @@ public final class ProjectGeneratorHelper {
     }
 
     public static String mandatoryDecrypt(IntegrationResourceManager manager, String propertyKey, String propertyVal) {
-        String answer = propertyKey;
+        String answer = propertyVal;
 
         if (propertyVal != null) {
             answer = manager.decrypt(propertyVal);
