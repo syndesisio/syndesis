@@ -54,7 +54,7 @@ public class SoapConnectorBasicAuth_IT extends SyndesisIntegrationTestSupport {
 
     private static final int SOAP_SERVER_PORT = SocketUtils.findAvailableTcpPort();
     private static final String USERNAME = "registered";
-    private static final String PASSWORD = "passw0rd";
+    private static final String PASSWORD = "secret";
     private static final  List<User> USERS = new ArrayList<User>();
     private static final String[] ROLES = new String[]{USERNAME};
     private static final User USER = new User();

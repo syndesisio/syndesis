@@ -87,8 +87,13 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         LOGGER.info("Resolving component: {} {} {} {}", componentId, scheme, connector, descriptor);
         final ComponentProxyComponent component = resolveComponent(componentId, scheme, context, connector, descriptor);
         LOGGER.info("Got component: {}, {}, {}", component, component.getComponentId(), component.getComponentScheme());
-        final Map<String, String> properties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
-        final Map<String, ConfigurationProperty> configurationProperties = CollectionsUtils.aggregate(connector.getProperties(), action.getProperties());
+        final Map<String, String> properties = CollectionsUtils.aggregate(
+            descriptor.getConfiguredProperties(), // 1. action
+            step.getConfiguredProperties(), // 2. step
+            connection.getConfiguredProperties(), // 3. connection
+            connector.getConfiguredProperties() // 4. connector
+        );
+        final Map<String, ConfigurationProperty> configurationProperties = CollectionsUtils.aggregate(action.getProperties(), connector.getProperties());
 
         // Add ConfigurationProperty's default value to the available
         // properties.
@@ -111,10 +116,6 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
             .stream()
             .filter(Predicates.or(connector::isRaw, action::isRaw))
             .forEach(e -> e.setValue(String.format("RAW(%s)", e.getValue())));
-
-        // Connector/Action properties have the precedence
-        connector.getConfiguredProperties().forEach(properties::put);
-        descriptor.getConfiguredProperties().forEach(properties::put);
 
         final Map<String, Object> proxyProperties = new HashMap<>(properties);
 
