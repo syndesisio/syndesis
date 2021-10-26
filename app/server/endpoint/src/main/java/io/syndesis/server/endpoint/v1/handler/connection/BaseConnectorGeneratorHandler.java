@@ -19,6 +19,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.common.util.SyndesisServerException;
@@ -47,6 +48,14 @@ abstract class BaseConnectorGeneratorHandler extends BaseHandler {
         final ConnectorGenerator connectorGenerator = determineConnectorGenerator(templateId);
 
         return callback.apply(connectorGenerator, connectorTemplate);
+    }
+
+    final <C extends ConnectorGenerator, T> T withGenerator(final String templateId, final Function<C, T> callback) {
+
+        @SuppressWarnings("unchecked")
+        final C connectorGenerator = (C) determineConnectorGenerator(templateId);
+
+        return callback.apply(connectorGenerator);
     }
 
     private ConnectorGenerator determineConnectorGenerator(final String templateId) {

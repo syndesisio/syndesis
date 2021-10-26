@@ -27,6 +27,7 @@ import javax.wsdl.Definition;
 import javax.wsdl.Port;
 import javax.wsdl.Service;
 import javax.wsdl.extensions.soap12.SOAP12Binding;
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
@@ -38,7 +39,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
-import io.syndesis.server.api.generator.ConnectorGenerator;
+import io.syndesis.server.api.generator.ConnectorAndActionGenerator;
 import io.syndesis.server.api.generator.soap.parser.ParserException;
 import io.syndesis.server.api.generator.soap.parser.SoapApiModelParser;
 
@@ -53,7 +54,7 @@ import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.WSDL_
 /**
  * Generates SOAP API Connector.
  */
-public class SoapApiConnectorGenerator extends ConnectorGenerator {
+public class SoapApiConnectorGenerator extends ConnectorAndActionGenerator {
 
     // thread local API model to avoid re-parsing the WSDL.
     private static final ThreadLocal<SoapApiModelInfo> LOCAL_MODEL_INFO = new ThreadLocal<>();
@@ -128,6 +129,47 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
         } finally {
             releaseModelInfo();
         }
+    }
+
+    @Override
+    public ConnectorAction generateAction(final Connector connector, final ConnectorAction action, final Map<String, String> parameters, final InputStream specificationStream) {
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
+            .specification(specificationStream)
+            .build();
+
+        try {
+            final SoapApiModelInfo modelInfo = getModelInfo(connectorSettings);
+
+            // we already parsed this so this must be safe
+            final Definition definition = modelInfo.getModel().get();
+
+            final Map<String, String> configuredProperties = connector.getConfiguredProperties();
+
+            final String serviceNameString = configuredProperties.get(SERVICE_NAME_PROPERTY);
+            final QName serviceName = parseQNameFrom(serviceNameString);
+
+            final String portNameString = configuredProperties.get(PORT_NAME_PROPERTY);
+            final QName portName = parseQNameFrom(portNameString);
+
+            return SoapApiModelParser.generateDataShapesFor(action, definition, serviceName, portName);
+        } finally {
+            releaseModelInfo();
+        }
+    }
+
+    private static QName parseQNameFrom(final String stringRepresentation) {
+        final String namespace;
+        final String localPart;
+        if (stringRepresentation.charAt(0) != '{') {
+            namespace = XMLConstants.NULL_NS_URI;
+            localPart = stringRepresentation;
+        } else {
+            final int idx = stringRepresentation.indexOf('}');
+            namespace = stringRepresentation.substring(1, idx);
+            localPart = stringRepresentation.substring(idx + 1);
+        }
+
+        return new QName(namespace, localPart);
     }
 
     @Override

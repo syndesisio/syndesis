@@ -57,4 +57,13 @@ public class SoapApiModelParserTest extends AbstractSoapExampleTest {
         }
     }
 
+    @Test
+    public void shouldGenerateUniqueActionIds() {
+        Map<String, Integer> idMap = new HashMap<>();
+
+        assertThat(SoapApiModelParser.getActionId("connectorId", "name", idMap)).isEqualTo("connectorId:name");
+        assertThat(SoapApiModelParser.getActionId("connectorId", "name", idMap)).isEqualTo("connectorId:name_1");
+        assertThat(SoapApiModelParser.getActionId("connectorId", "name", idMap)).isEqualTo("connectorId:name_2");
+        assertThat(SoapApiModelParser.getActionId("connectorId", "another", idMap)).isEqualTo("connectorId:another");
+    }
 }

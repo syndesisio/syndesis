@@ -124,4 +124,12 @@ public final class KeyGenerator {
             throw new IllegalArgumentException(String.format("Can not parse key %s as identified, prefix and/or suffix is missing", key));
         }
     }
+
+    public static boolean resemblesAKey(final String given) {
+        if (given == null) {
+            return false;
+        }
+
+        return given.startsWith("i-") && given.endsWith("z");
+    }
 }

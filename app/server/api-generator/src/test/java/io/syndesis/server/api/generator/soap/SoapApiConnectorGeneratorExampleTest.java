@@ -26,7 +26,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import io.atlasmap.xml.inspect.XmlInspectionService;
 import io.syndesis.common.model.DataShape;
-import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -35,7 +34,6 @@ import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.server.api.generator.soap.parser.XmlSchemaTestHelper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectReader;
 
@@ -154,28 +152,9 @@ public class SoapApiConnectorGeneratorExampleTest extends AbstractSoapExampleTes
 
             // assert input and output data shapes
             final Optional<DataShape> inputDataShape = descriptor.getInputDataShape();
-            assertThat(inputDataShape).isPresent();
-            validateDataShape(inputDataShape.get());
+            assertThat(inputDataShape).isEmpty();
             final Optional<DataShape> outputDataShape = descriptor.getOutputDataShape();
-            assertThat(outputDataShape).isPresent();
-            validateDataShape(outputDataShape.get());
-        }
-    }
-
-    private static void validateDataShape(DataShape inputDataShape) throws SAXException, IOException, XmlInspectionException {
-        // check whether the shape is not none
-        if (inputDataShape.getKind() != DataShapeKinds.NONE) {
-            assertThat(inputDataShape.getName()).isNotEmpty();
-            assertThat(inputDataShape.getDescription()).isNotEmpty();
-            assertThat(inputDataShape.getKind()).isEqualTo(DataShapeKinds.XML_SCHEMA);
-            final String specification = inputDataShape.getSpecification();
-            assertThat(specification).isNotEmpty();
-            LOG.info(specification);
-
-            // validate schemaset
-            XmlSchemaTestHelper.validateSchemaSet(specification);
-
-            XML_INSPECTION_SVC.inspectSchema(specification);
+            assertThat(outputDataShape).isEmpty();
         }
     }
 

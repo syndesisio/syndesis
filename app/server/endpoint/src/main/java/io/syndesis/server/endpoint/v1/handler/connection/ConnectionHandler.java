@@ -47,6 +47,7 @@ import io.syndesis.common.model.connection.ConnectionOverview;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.credential.CredentialFlowState;
 import io.syndesis.server.credential.Credentials;
+import io.syndesis.server.dao.file.SpecificationResourceDao;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
@@ -59,6 +60,8 @@ import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import io.syndesis.server.endpoint.v1.util.DataManagerSupport;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
+
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Path("/connections")
@@ -82,14 +85,21 @@ public class ConnectionHandler
     private final MetadataConfigurationProperties config;
     private final EncryptionComponent encryptionComponent;
 
+    private final SpecificationResourceDao specificationResourceDao;
+
+    private final ApplicationContext context;
+
     public ConnectionHandler(final DataManager dataMgr, final Validator validator, final Credentials credentials,
-                             final ClientSideState state, final MetadataConfigurationProperties config, final EncryptionComponent encryptionComponent) {
+                             final ClientSideState state, final MetadataConfigurationProperties config, final EncryptionComponent encryptionComponent,
+                             final ApplicationContext context, final SpecificationResourceDao specificationResourceDao) {
         super(dataMgr);
         this.validator = validator;
         this.credentials = credentials;
         this.state = state;
         this.config = config;
         this.encryptionComponent = encryptionComponent;
+        this.context = context;
+        this.specificationResourceDao = specificationResourceDao;
     }
 
     @Override
@@ -223,7 +233,7 @@ public class ConnectionHandler
 
     @Path("/{id}/actions")
     public ConnectionActionHandler metadata(@NotNull @PathParam("id") @Parameter(required = true, example = "my-connection") final String connectionId) {
-        return new ConnectionActionHandler(get(connectionId), config, encryptionComponent);
+        return new ConnectionActionHandler(get(connectionId), config, encryptionComponent, context, getDataManager(), specificationResourceDao);
     }
 
     @GET
