@@ -77,6 +77,17 @@
           </exclusion>
         </exclusions>
       </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-soap</artifactId>
+        <version>${syndesis.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>*</groupId>
+            <artifactId>*</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -106,6 +117,11 @@
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-rest-swagger</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-soap</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -1,0 +1,139 @@
+{
+  "AtlasMapping": {
+    "constants": {
+      "constant": [
+        {
+          "fieldType": "STRING",
+          "name": "CMIS_NAME",
+          "value": "cmis:name"
+        },
+        {
+          "fieldType": "STRING",
+          "name": "name",
+          "value": "my-folder"
+        },
+        {
+          "fieldType": "STRING",
+          "name": "repositoryId",
+          "value": "my-repisitory-id"
+        }
+      ]
+    },
+    "dataSource": [
+      {
+        "dataSourceType": "TARGET",
+        "description": "Data input for operation createFolder",
+        "id": "a",
+        "jsonType": "io.atlasmap.xml.v2.XmlDataSource",
+        "uri": "atlas:xml:a",
+        "xmlNamespaces": {
+          "xmlNamespace": [
+            {
+              "alias": "xml",
+              "uri": "http://www.w3.org/XML/1998/namespace"
+            },
+            {
+              "alias": "tns",
+              "uri": "http://schemas.xmlsoap.org/soap/envelope/"
+            },
+            {
+              "alias": "ns2",
+              "uri": "http://docs.oasis-open.org/ns/cmis/core/200908/"
+            },
+            {
+              "alias": "ns1",
+              "uri": "http://docs.oasis-open.org/ns/cmis/messaging/200908/"
+            }
+          ]
+        }
+      }
+    ],
+    "jsonType": "io.atlasmap.v2.AtlasMapping",
+    "lookupTables": {
+      "lookupTable": []
+    },
+    "mappings": {
+      "mapping": [
+        {
+          "id": "mapping.1",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.1",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "name": "repositoryId",
+              "path": "/repositoryId",
+              "value": "my-repisitory-id"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "attribute": false,
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.xml.v2.XmlField",
+              "name": "repositoryId",
+              "path": "/tns:Envelope/tns:Body/ns1:createFolder/ns1:repositoryId",
+              "userCreated": false
+            }
+          ]
+        },
+        {
+          "id": "mapping.2",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.2",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "name": "name",
+              "path": "/name",
+              "value": "my-folder"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "attribute": false,
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.xml.v2.XmlField",
+              "name": "value",
+              "path": "/tns:Envelope/tns:Body/ns1:createFolder/ns1:properties/ns2:propertyString/ns2:value",
+              "userCreated": false
+            }
+          ]
+        },
+        {
+          "id": "mapping.3",
+          "inputField": [
+            {
+              "docId": "DOC.Constants.3",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.v2.ConstantField",
+              "name": "CMIS_NAME",
+              "path": "/CMIS_NAME",
+              "value": "cmis:name"
+            }
+          ],
+          "jsonType": "io.atlasmap.v2.Mapping",
+          "outputField": [
+            {
+              "attribute": false,
+              "docId": "a",
+              "fieldType": "STRING",
+              "jsonType": "io.atlasmap.xml.v2.XmlField",
+              "name": "value",
+              "path": "/tns:Envelope/tns:Body/ns1:createFolder/ns1:properties/ns2:propertyId/ns2:value",
+              "userCreated": false
+            }
+          ]
+        }
+      ]
+    },
+    "name": "UI.0",
+    "properties": {
+      "property": []
+    }
+  }
+}

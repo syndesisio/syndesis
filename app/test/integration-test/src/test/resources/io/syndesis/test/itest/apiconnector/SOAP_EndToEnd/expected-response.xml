@@ -1,0 +1,3 @@
+<ns1:createFolderResponse xmlns:ns1="http://docs.oasis-open.org/ns/cmis/messaging/200908/">
+  <ns1:objectId>new-folder-object-id</ns1:objectId>
+</ns1:createFolderResponse>
