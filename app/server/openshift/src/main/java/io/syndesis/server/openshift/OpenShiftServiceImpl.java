@@ -112,7 +112,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     @Override
     public boolean isDeploymentReady(String name) {
         String sName = openshiftName(name);
-        return openShiftClient.deploymentConfigs().withName(sName).isReady();
+        final DeployableScalableResource<DeploymentConfig, DoneableDeploymentConfig> dc = openShiftClient.deploymentConfigs().withName(sName);
+        return dc.get() != null && dc.isReady();
     }
 
     @Override

@@ -21,13 +21,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionBuilder;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionStatusBuilder;
+import io.fabric8.kubernetes.api.model.apiextensions.v1beta1.CustomResourceDefinition;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientException;
+import io.fabric8.kubernetes.client.V1ApiextensionAPIGroupDSL;
+import io.fabric8.kubernetes.client.V1beta1ApiextensionAPIGroupDSL;
+import io.fabric8.kubernetes.client.dsl.ApiextensionsAPIGroupDSL;
+import io.fabric8.kubernetes.client.dsl.base.CustomResourceDefinitionContext;
 import io.syndesis.connector.kafka.model.crd.Address;
 import io.syndesis.connector.kafka.model.crd.Kafka;
 import io.syndesis.connector.kafka.model.crd.KafkaResourceDoneable;
@@ -37,6 +41,7 @@ import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadataProperties;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.slf4j.Logger;
@@ -44,75 +49,54 @@ import org.slf4j.LoggerFactory;
 
 public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
 
+    // sort versions, newest first
+    static final CustomResourceDefinitionContext[] KAFKA_CRDS = Stream.of("v1beta2", "v1beta1")
+        .map(v -> new CustomResourceDefinitionContext.Builder()
+            .withGroup("kafka.strimzi.io")
+            .withVersion(v)
+            .withScope("Namespaced")
+            .withName("kafkas.kafka.strimzi.io")
+            .withPlural("kafkas")
+            .withKind("Kafka")
+            .build())
+        .toArray(CustomResourceDefinitionContext[]::new);
+
     private static final Logger LOG = LoggerFactory.getLogger(KafkaMetaDataRetrieval.class);
 
-    static final CustomResourceDefinition KAFKA_CRD = new CustomResourceDefinitionBuilder()
-        .withApiVersion("apiextensions.k8s.io/v1")
-        .withKind("CustomResourceDefinition")
-        .withNewMetadata()
-            .withName("kafkas.kafka.strimzi.io")
-        .endMetadata()
-        .withNewSpec()
-            .withGroup("kafka.strimzi.io")
-            .withScope("Namespaced")
-            .withVersion("v1beta2")
-            .withNewNames()
-                .withKind("Kafka")
-                .withListKind("KafkaList")
-                .withPlural("kafkas")
-                .withSingular("kafka")
-            .endNames()
-        .endSpec()
-        .withStatus(new CustomResourceDefinitionStatusBuilder().build())
-        .build();
-
     /**
-     * TODO: use local extension, remove when switching to camel 2.22.x
+     * Query the strimzi brokers available on this kubernetes environment to
+     * suggest auto discovered urls.
      */
     @Override
-    protected MetaDataExtension resolveMetaDataExtension(CamelContext context,
-                                                         Class<? extends MetaDataExtension> metaDataExtensionClass,
-                                                         String componentId, String actionId) {
-        return new KafkaMetaDataExtension(context);
-    }
+    public SyndesisMetadataProperties fetchProperties(final CamelContext context, final String componentId, final Map<String, Object> properties) {
+        final List<PropertyPair> brokers = new ArrayList<>();
 
-    @SuppressWarnings("unchecked")
-    @Override
-    protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId,
-                                     Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
-        Set<String> topicsNames = (Set<String>) metadata.getPayload();
+        try (KubernetesClient client = createKubernetesClient();
+            ApiextensionsAPIGroupDSL apiextensions = client.apiextensions();
+            V1beta1ApiextensionAPIGroupDSL v1beta1 = apiextensions.v1beta1();
+            V1ApiextensionAPIGroupDSL v1 = apiextensions.v1()) {
 
-        List<PropertyPair> topicsResult = new ArrayList<>();
-        topicsNames.forEach(
-            t -> topicsResult.add(new PropertyPair(t, t))
-        );
+            final CustomResourceDefinition v1beta1CRD = v1beta1.customResourceDefinitions().withName("kafkas.kafka.strimzi.io").get();
+            final io.fabric8.kubernetes.api.model.apiextensions.v1.CustomResourceDefinition v1CRD = v1.customResourceDefinitions()
+                .withName("kafkas.kafka.strimzi.io").get();
 
-        return SyndesisMetadata.of(
-            Collections.singletonMap("topic", topicsResult)
-        );
-    }
-
-    /**
-     * Query the strimzi brokers available on this kubernetes environment
-     * to suggest auto discovered urls.
-     */
-    @Override
-    public SyndesisMetadataProperties fetchProperties(CamelContext context, String componentId,
-                                                      Map<String, Object> properties) {
-        List<PropertyPair> brokers = new ArrayList<>();
-        try (KubernetesClient client = createKubernetesClient()) {
-
-            CustomResourceDefinition crd = client.customResourceDefinitions().withName("kafkas.kafka.strimzi.io").get();
-            // verify if strimzi CRD is installed
-            if (crd != null) {
-                KafkaResourceList kafkaList = client.customResources(KAFKA_CRD, Kafka.class, KafkaResourceList.class, KafkaResourceDoneable.class)
-                    .inAnyNamespace().list();
-                kafkaList.getItems().forEach(kafka -> processKafkaResource(brokers, kafka));
+            if (v1beta1CRD != null || v1CRD != null) {
+                for (final CustomResourceDefinitionContext crd : KAFKA_CRDS) {
+                    try {
+                        final KafkaResourceList kafkaList = client.customResources(crd, Kafka.class, KafkaResourceList.class, KafkaResourceDoneable.class)
+                            .inAnyNamespace().list();
+                        kafkaList.getItems().forEach(kafka -> processKafkaResource(brokers, kafka));
+                    } catch (KubernetesClientException e) {
+                        LOG.debug("Could not list: " + crd.getGroup() + "/" + crd.getName(), e);
+                    }
+                }
             }
-        } catch (Exception t) {
+
+        } catch (final Exception t) {
             LOG.warn("Couldn't auto discover any kafka broker.", t);
         }
-        Map<String, List<PropertyPair>> dynamicProperties = new HashMap<>();
+
+        final Map<String, List<PropertyPair>> dynamicProperties = new HashMap<>();
         dynamicProperties.put("brokers", brokers);
         return new SyndesisMetadataProperties(dynamicProperties);
     }
@@ -121,35 +105,45 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
         return new DefaultKubernetesClient();
     }
 
-    /**
-     * For each Kafka resource found on Kubernetes, extract the listeners and
-     * add them to the brokers list.
-     */
-    private static void processKafkaResource(List<PropertyPair> brokers, Kafka item) {
-        //Extract an identifier of this broker
-        final ObjectMeta metadata = item.getMetadata();
-        List<Listener> listeners = item.getStatus().getListeners();
-        listeners.stream().filter(KafkaMetaDataRetrieval::typesAllowed).forEach(
-            listener -> getAddress(
-                                    listener,
-                                    brokers,
-                                    String.format("%s::%s (%s)", metadata.getNamespace(), metadata.getName(), listener.getType()))
-        );
+    @SuppressWarnings("unchecked")
+    @Override
+    protected SyndesisMetadata adapt(final CamelContext context, final String componentId, final String actionId,
+        final Map<String, Object> properties, final MetaDataExtension.MetaData metadata) {
+        final Set<String> topicsNames = (Set<String>) metadata.getPayload();
+
+        final List<PropertyPair> topicsResult = new ArrayList<>();
+        topicsNames.forEach(
+            t -> topicsResult.add(new PropertyPair(t, t)));
+
+        return SyndesisMetadata.of(
+            Collections.singletonMap("topic", topicsResult));
     }
 
     /**
-     * Get the list of addresses for this connection and add it to the brokers list.
+     * TODO: use local extension, remove when switching to camel 2.22.x
+     */
+    @Override
+    protected MetaDataExtension resolveMetaDataExtension(final CamelContext context,
+        final Class<? extends MetaDataExtension> metaDataExtensionClass,
+        final String componentId, final String actionId) {
+        return new KafkaMetaDataExtension(context);
+    }
+
+    /**
+     * Get the list of addresses for this connection and add it to the brokers
+     * list.
+     *
      * @param listener metadata for this broker
-     * @param brokers  list where all brokers are going to be added
-     * @param name     identifier of this broker
+     * @param brokers list where all brokers are going to be added
+     * @param name identifier of this broker
      */
     private static void getAddress(final Listener listener,
-                                   final List<PropertyPair> brokers,
-                                   final String name) {
-        StringBuilder add = new StringBuilder();
+        final List<PropertyPair> brokers,
+        final String name) {
+        final StringBuilder add = new StringBuilder();
 
-        List<Address> addresses = listener.getAddresses();
-        for (Address a : addresses) {
+        final List<Address> addresses = listener.getAddresses();
+        for (final Address a : addresses) {
             if (add.length() > 0) {
                 add.append(',');
             }
@@ -162,7 +156,23 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
     }
 
     /**
-     * Used to filter which types of connections are we interested in. Right now, only plain connections.
+     * For each Kafka resource found on Kubernetes, extract the listeners and
+     * add them to the brokers list.
+     */
+    private static void processKafkaResource(final List<PropertyPair> brokers, final Kafka item) {
+        // Extract an identifier of this broker
+        final ObjectMeta metadata = item.getMetadata();
+        final List<Listener> listeners = item.getStatus().getListeners();
+        listeners.stream().filter(KafkaMetaDataRetrieval::typesAllowed).forEach(
+            listener -> getAddress(
+                listener,
+                brokers,
+                String.format("%s::%s (%s)", metadata.getNamespace(), metadata.getName(), listener.getType())));
+    }
+
+    /**
+     * Used to filter which types of connections are we interested in. Right
+     * now, only plain connections.
      */
     private static boolean typesAllowed(final Listener listener) {
         return "plain".equalsIgnoreCase(listener.getType()) ||

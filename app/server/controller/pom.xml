@@ -84,7 +84,12 @@
 
     <dependency>
       <groupId>io.fabric8</groupId>
-      <artifactId>kubernetes-model</artifactId>
+      <artifactId>kubernetes-model-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>openshift-model</artifactId>
     </dependency>
 
     <dependency>
