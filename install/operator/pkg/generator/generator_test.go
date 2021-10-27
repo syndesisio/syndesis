@@ -16,6 +16,8 @@ import (
 	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	v1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/util/yaml"
 
@@ -731,6 +733,18 @@ func TestGeneratorProperty(t *testing.T) {
 	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(synapi.MavenConfiguration{}), map[string]gopter.Gen{
 		"Repositories": gen.MapOf(gen.Identifier(), gen.Identifier()), // we can't have Maven repositories with illegal characters
 	}))
+	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(v1.NodeSelectorRequirement{}), map[string]gopter.Gen{
+		"Key":    gen.Identifier(),
+		"Values": gen.SliceOf(gen.Identifier()),
+	}))
+	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(metav1.LabelSelectorRequirement{}), map[string]gopter.Gen{
+		"Key":    gen.Identifier(),
+		"Values": gen.SliceOf(gen.Identifier()),
+	}))
+	arbitraries.RegisterGen(gen.Struct(reflect.TypeOf(v1.Toleration{}), map[string]gopter.Gen{
+		"Key":    gen.Identifier(),
+		"Values": gen.SliceOf(gen.Identifier()),
+	}))
 
 	properties := gopter.NewProperties(parameters)
 
@@ -746,7 +760,7 @@ func TestGeneratorProperty(t *testing.T) {
 				panic(err)
 			}
 
-			rendered, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure/", configuration)
+			rendered, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure", configuration)
 
 			if err != nil {
 				// see above

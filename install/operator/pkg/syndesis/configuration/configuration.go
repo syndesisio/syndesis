@@ -76,10 +76,11 @@ type Config struct {
 }
 
 type SyndesisConfig struct {
-	SHA           bool           // Whether we use SHA reference for docker images. If false, tag are used instead
-	RouteHostname string         // The external hostname to access Syndesis
-	Components    ComponentsSpec // Server, Meta, Ui, Name specifications and configurations
-	Addons        AddonsSpec     // Addons specifications and configurations
+	SHA                   bool                  // Whether we use SHA reference for docker images. If false, tag are used instead
+	RouteHostname         string                // The external hostname to access Syndesis
+	Components            ComponentsSpec        // Server, Meta, Ui, Name specifications and configurations
+	Addons                AddonsSpec            // Addons specifications and configurations
+	IntegrationScheduling synapi.SchedulingSpec `json:"integrationScheduling,omitempty"`
 }
 
 // Components

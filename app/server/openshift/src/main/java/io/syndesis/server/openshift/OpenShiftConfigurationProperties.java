@@ -15,11 +15,14 @@
  */
 package io.syndesis.server.openshift;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
+import io.fabric8.kubernetes.api.model.Affinity;
+import io.fabric8.kubernetes.api.model.Toleration;
 import io.fabric8.openshift.client.OpenShiftConfig;
 import io.fabric8.openshift.client.OpenShiftConfigBuilder;
 
@@ -58,6 +61,30 @@ public class OpenShiftConfigurationProperties {
     private int integrationLivenessProbeInitialDelaySeconds;
 
     private String managementUrlFor3scale;
+
+    private SchedulingConfiguration scheduling;
+
+    public static class SchedulingConfiguration {
+        private Affinity affinity;
+
+        private List<Toleration> tolerations;
+
+        public Affinity getAffinity() {
+            return affinity;
+        }
+
+        public void setAffinity(Affinity affinity) {
+            this.affinity = affinity;
+        }
+
+        public List<Toleration> getTolerations() {
+            return tolerations;
+        }
+
+        public void setTolerations(List<Toleration> tolerations) {
+            this.tolerations = tolerations;
+        }
+    }
 
     public void setDebug(final boolean debug) {
         this.debug = debug;
@@ -201,5 +228,13 @@ public class OpenShiftConfigurationProperties {
 
     public void setManagementUrlFor3scale(String managementUrlFor3scale) {
         this.managementUrlFor3scale = managementUrlFor3scale;
+    }
+
+    public SchedulingConfiguration getScheduling() {
+        return scheduling;
+    }
+
+    public void setScheduling(SchedulingConfiguration scheduling) {
+        this.scheduling = scheduling;
     }
 }
