@@ -420,6 +420,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                                             new EnvVar("JAEGER_TAGS", "integration.version="+deploymentData.getVersion(), null),
                                             new EnvVar("JAEGER_SAMPLER_TYPE", "const", null),
                                             new EnvVar("JAEGER_SAMPLER_PARAM", "1", null))
+                                    .addAllToEnv(deploymentData.getEnvironment())
                                     .addNewPort()
                                         .withName("jolokia")
                                         .withContainerPort(8778)
