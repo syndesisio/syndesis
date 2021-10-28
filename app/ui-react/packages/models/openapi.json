@@ -1071,6 +1071,12 @@
           "description": {
             "type": "string"
           },
+          "environment": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
           "exposure": {
             "type": "string"
           },
@@ -1380,6 +1386,12 @@
           },
           "draft": {
             "type": "boolean"
+          },
+          "environment": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
           },
           "exposure": {
             "type": "string"

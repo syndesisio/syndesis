@@ -39,15 +39,16 @@ export interface IAutoFormActions<T> extends FormikActions<T> {
 }
 
 export interface IFormArrayDefinitionOptions {
-  fieldAttributes?: IFormFieldAttributes;
-  formGroupAttributes?: IFormFieldAttributes;
   arrayControlAttributes?: IFormFieldAttributes;
   arrayRowTitleAttributes?: IFormFieldAttributes;
   controlLabelAttributes?: IFormFieldAttributes;
-  minElements?: number;
-  showSortControls?: boolean;
-  rowTitle?: string;
+  displayName?: string;
+  fieldAttributes?: IFormFieldAttributes;
+  formGroupAttributes?: IFormFieldAttributes;
   i18nAddElementText: string;
+  minElements?: number;
+  rowTitle?: string;
+  showSortControls?: boolean;
 }
 
 /**
