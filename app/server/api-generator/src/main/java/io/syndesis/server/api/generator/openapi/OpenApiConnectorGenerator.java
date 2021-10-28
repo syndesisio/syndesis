@@ -47,7 +47,12 @@ import io.syndesis.server.api.generator.openapi.v3.Oas30DescriptorGenerator;
 import io.syndesis.server.api.generator.openapi.v3.Oas30ParameterGenerator;
 import io.syndesis.server.api.generator.openapi.v3.Oas30PropertyGenerators;
 import io.syndesis.server.api.generator.util.ActionComparator;
+
+import java.math.BigInteger;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -321,7 +326,18 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
     }
 
     private static String createActionId(final String connectorId, final OasOperation operation) {
-        return connectorId + ":" + operation.operationId;
+        final MessageDigest digest;
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e);
+        }
+
+        final byte[] operationIdBytes = operation.operationId.getBytes(StandardCharsets.UTF_8);
+        final byte[] operationIdDigest = digest.digest(operationIdBytes);
+        final String operationIdDigestHexString = new BigInteger(operationIdDigest).abs().toString(16);
+
+        return connectorId + ":" + operationIdDigestHexString;
     }
 
     static OpenApiModelInfo parseSpecification(final ConnectorSettings connectorSettings, final APIValidationContext validationContext) {
