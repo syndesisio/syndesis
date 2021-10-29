@@ -38,7 +38,7 @@ export const DetailsPage: React.FunctionComponent = () => {
   // which means that the server prefers receiving the specification via configuredProperties, not as a separate mime part
   // and passing a defined value for specification to useApiConnectorCreator results in a separate mime part
   const createApiConnector = useApiConnectorCreator(
-    state.configured?.specification ? undefined : state.specification
+    state.configured?.specification ?? state.specification
   );
 
   const [chosenAddress] = React.useState(() => {
@@ -71,7 +71,7 @@ export const DetailsPage: React.FunctionComponent = () => {
           if (state.configured) {
             Object.entries(state.configured).forEach(([k, v]) => {
               if (v) {
-                configured[k] = v as string;
+                configured[k] = v.toString();
               }
             });
           }

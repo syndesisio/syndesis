@@ -32,8 +32,12 @@ export function useApiConnectorSummary(
 
   React.useEffect(() => {
     if (!specification && !url) {
+      // if there is no specification to send, either given by the
+      // specification (raw upload) or pointed to by the url, we
+      // don't invoke the server API to gather the summary
       return;
     }
+
     const fetchSummary = async () => {
       setLoading(true);
 
@@ -42,9 +46,8 @@ export function useApiConnectorSummary(
         configuredProperties: {
           ...configured,
         } as IApiConnectorSummaryOptions,
-        connectorTemplateId: connectorTemplateId
-          ? connectorTemplateId
-          : 'swagger-connector-template',
+        connectorTemplateId:
+          connectorTemplateId ?? 'swagger-connector-template',
       };
       if (url) {
         connectorSettings.configuredProperties.specification = url;
