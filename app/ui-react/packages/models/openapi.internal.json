@@ -1280,6 +1280,13 @@
             },
             "type": "object"
           },
+          "removedEnvironment": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
+          },
           "resources": {
             "items": {
               "$ref": "#/components/schemas/ResourceIdentifier"
@@ -1648,6 +1655,13 @@
               "$ref": "#/components/schemas/ConfigurationProperty"
             },
             "type": "object"
+          },
+          "removedEnvironment": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "uniqueItems": true
           },
           "resources": {
             "items": {

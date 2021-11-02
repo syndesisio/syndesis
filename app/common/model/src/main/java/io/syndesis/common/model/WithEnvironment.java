@@ -17,12 +17,19 @@ package io.syndesis.common.model;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import org.immutables.value.Value;
 
 public interface WithEnvironment {
+
     @Value.Default
     default Map<String, String> getEnvironment() {
         return Collections.emptyMap();
+    }
+
+    @Value.Default
+    default Set<String> getRemovedEnvironment() {
+        return Collections.emptySet();
     }
 }
