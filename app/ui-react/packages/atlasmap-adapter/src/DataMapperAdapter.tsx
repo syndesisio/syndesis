@@ -132,6 +132,11 @@ export const DataShapeParametersDialog: React.FunctionComponent<{
   onConfirm,
   onCancel,
 }) => {
+  // Keep a copy of the defaults around as parameterDefinition is mutated in AtlasMap
+  // we're doing a 1-node deep clone, assuming that the only property that's 2-levels
+  // deep (options is IParameterOption[]) will not be mutated
+  const defaultParameterDefinition = parameterDefinition.map((v) => ({ ...v }));
+
   // Clicking Cancel in the AtlasMap parameters dialog results in the reset of the internal
   // state of the dialog in such a way that the parameters selected by the user are lost,
   // or at least not shown. For example if the user selects "Skip Header Record" and ticks
@@ -159,6 +164,12 @@ export const DataShapeParametersDialog: React.FunctionComponent<{
         // dirty trick to get `reset` within ParametersDialog not to reset the
         // state of `definedParameters`
         defn.enabled = true;
+      } else {
+        const defaultOption = defaultParameterDefinition.find(
+          (p) => p.name === defn.name
+        );
+        Object.assign(defn, defaultOption);
+        defn.enabled = undefined;
       }
 
       return defn;
