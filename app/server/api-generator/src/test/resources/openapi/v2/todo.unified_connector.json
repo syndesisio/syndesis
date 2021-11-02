@@ -21,7 +21,7 @@
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"items\":{\"properties\":{\"completed\":{\"description\":\"0 - ongoing, 1 - completed\",\"maximum\":1,\"minimum\":0,\"title\":\"Task completition status\",\"type\":\"integer\"},\"id\":{\"description\":\"Unique task identifier\",\"title\":\"Task ID\",\"type\":\"integer\"},\"task\":{\"description\":\"Task line\",\"title\":\"The task\",\"type\":\"string\"}},\"type\":\"object\"},\"type\":\"array\"}},\"type\":\"object\"}"
         }
       },
-      "id": "_id_:operation-0",
+      "id": "_id_:5f64f8a84be5ff4f7f35526f8ba12ad4e012bb6767e4c1865d686b6a17781fb9",
       "name": "List all tasks",
       "pattern": "To",
       "tags": [
@@ -56,7 +56,7 @@
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
         }
       },
-      "id": "_id_:operation-1",
+      "id": "_id_:187f0349dd12b6dc73d76d86f421cd454facccc36ef9a2ba6956b37abbb31102",
       "name": "Create new task",
       "pattern": "To",
       "tags": [
@@ -91,7 +91,7 @@
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
         }
       },
-      "id": "_id_:operation-2",
+      "id": "_id_:4ae56bcb5e80ff8d4545d5ffb83500819a9ed51dd7ddb23cbc79cadf08df876b",
       "name": "Fetch task",
       "pattern": "To",
       "tags": [
@@ -126,7 +126,7 @@
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
         }
       },
-      "id": "_id_:operation-3",
+      "id": "_id_:38ba77a7f8282e82c5926deecd77ca05a6e338726c013853dface4bd1663fe40",
       "name": "Update task",
       "pattern": "To",
       "tags": [
@@ -155,7 +155,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-4",
+      "id": "_id_:6cf735b8d570112935efcd4be6fe76e56080d0104633ef5791ebecc4fcd922ce",
       "name": "Delete task",
       "pattern": "To",
       "tags": [

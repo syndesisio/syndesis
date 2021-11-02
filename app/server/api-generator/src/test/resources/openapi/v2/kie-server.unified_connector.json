@@ -27,7 +27,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"instances\":{\"items\":{\"properties\":{\"case-completed-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-completion-msg\":{\"type\":\"string\"},\"case-definition-id\":{\"type\":\"string\"},\"case-description\":{\"type\":\"string\"},\"case-file\":{\"properties\":{\"case-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"case-data-restrictions\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\"},\"case-group-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"},\"case-user-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-file\"}},\"case-id\":{\"type\":\"string\"},\"case-milestones\":{\"items\":{\"properties\":{\"milestone-achieved\":{\"type\":\"boolean\"},\"milestone-achieved-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"milestone-id\":{\"type\":\"string\"},\"milestone-name\":{\"type\":\"string\"},\"milestone-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone\"}},\"type\":\"array\"},\"case-owner\":{\"type\":\"string\"},\"case-roles\":{\"items\":{\"properties\":{\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-role-assignment\"}},\"type\":\"array\"},\"case-stages\":{\"items\":{\"properties\":{\"active-nodes\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"},\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"},\"stage-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage\"}},\"type\":\"array\"},\"case-started-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-status\":{\"type\":\"integer\"},\"container-id\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstances",
+      "id": "_id_:58891577e921678213558cdfc67f8d249b15d40a72695caf18bf3fccd38ab4a4",
       "name": "Retrieves case instances without authntication checks and applies pagination",
       "pattern": "To",
       "tags": [
@@ -55,7 +55,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:cancelRequest",
+      "id": "_id_:2952dd5fe7d2a286b86ed52e0a5c5bd68ed2f44451db1d027b37372bdb96dd9f",
       "name": "Cancels active asynchronous job identified by given jobId",
       "pattern": "To",
       "tags": [
@@ -83,7 +83,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:requeueRequest",
+      "id": "_id_:d04b8b0761ab8835a2acacde5ffc17fc1742d9a469752bfb24854f15ba05221",
       "name": "Requeues failed asynchronous job identified by given jobId",
       "pattern": "To",
       "tags": [
@@ -117,7 +117,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"request-business-key\":{\"type\":\"string\"},\"request-command\":{\"type\":\"string\"},\"request-container-id\":{\"type\":\"string\"},\"request-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"request-errors\":{\"properties\":{\"error-info-instance\":{\"items\":{\"properties\":{\"error-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"error-instance-id\":{\"type\":\"integer\"},\"error-message\":{\"type\":\"string\"},\"error-stacktrace\":{\"type\":\"string\"},\"request-instance-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"error-info-instance\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"error-info-instance-list\"}},\"request-executions\":{\"type\":\"integer\"},\"request-instance-id\":{\"type\":\"integer\"},\"request-message\":{\"type\":\"string\"},\"request-retries\":{\"type\":\"integer\"},\"request-scheduled-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"request-status\":{\"type\":\"string\"},\"response-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"}},\"xml\":{\"name\":\"request-info-instance\"}}}}"
         }
       },
-      "id": "_id_:getRequestById",
+      "id": "_id_:335babbcb826dd35e7ead31517efaa8724076b64ed9648b042a32b245f1532f",
       "name": "Retrieves asynchronous job by given jobId",
       "pattern": "To",
       "tags": [
@@ -151,7 +151,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"request-info-instance\":{\"items\":{\"properties\":{\"request-business-key\":{\"type\":\"string\"},\"request-command\":{\"type\":\"string\"},\"request-container-id\":{\"type\":\"string\"},\"request-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"request-errors\":{\"properties\":{\"error-info-instance\":{\"items\":{\"properties\":{\"error-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"error-instance-id\":{\"type\":\"integer\"},\"error-message\":{\"type\":\"string\"},\"error-stacktrace\":{\"type\":\"string\"},\"request-instance-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"error-info-instance\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"error-info-instance-list\"}},\"request-executions\":{\"type\":\"integer\"},\"request-instance-id\":{\"type\":\"integer\"},\"request-message\":{\"type\":\"string\"},\"request-retries\":{\"type\":\"integer\"},\"request-scheduled-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"request-status\":{\"type\":\"string\"},\"response-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"request-info-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"request-info-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getRequestsByBusinessKey",
+      "id": "_id_:41d69f96a3e57bc5706182b2bed4aa3727f3234f47588b9f9a25c5f5b8d3c7f5",
       "name": "Retrieves asynchronous jobs by business key",
       "pattern": "To",
       "tags": [
@@ -185,7 +185,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"request-info-instance\":{\"items\":{\"properties\":{\"request-business-key\":{\"type\":\"string\"},\"request-command\":{\"type\":\"string\"},\"request-container-id\":{\"type\":\"string\"},\"request-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"request-errors\":{\"properties\":{\"error-info-instance\":{\"items\":{\"properties\":{\"error-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"error-instance-id\":{\"type\":\"integer\"},\"error-message\":{\"type\":\"string\"},\"error-stacktrace\":{\"type\":\"string\"},\"request-instance-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"error-info-instance\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"error-info-instance-list\"}},\"request-executions\":{\"type\":\"integer\"},\"request-instance-id\":{\"type\":\"integer\"},\"request-message\":{\"type\":\"string\"},\"request-retries\":{\"type\":\"integer\"},\"request-scheduled-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"request-status\":{\"type\":\"string\"},\"response-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"request-info-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"request-info-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getRequestsByCommand",
+      "id": "_id_:4020dd13caa675fa9527b91d7951e905ac84e1ea14583c02c7e3bd15c20620df",
       "name": "Retrieves asynchronous jobs by command",
       "pattern": "To",
       "tags": [
@@ -219,7 +219,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"request-info-instance\":{\"items\":{\"properties\":{\"request-business-key\":{\"type\":\"string\"},\"request-command\":{\"type\":\"string\"},\"request-container-id\":{\"type\":\"string\"},\"request-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"request-errors\":{\"properties\":{\"error-info-instance\":{\"items\":{\"properties\":{\"error-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"error-instance-id\":{\"type\":\"integer\"},\"error-message\":{\"type\":\"string\"},\"error-stacktrace\":{\"type\":\"string\"},\"request-instance-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"error-info-instance\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"error-info-instance-list\"}},\"request-executions\":{\"type\":\"integer\"},\"request-instance-id\":{\"type\":\"integer\"},\"request-message\":{\"type\":\"string\"},\"request-retries\":{\"type\":\"integer\"},\"request-scheduled-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"request-status\":{\"type\":\"string\"},\"response-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"request-info-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"request-info-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getRequestsByContainer",
+      "id": "_id_:13130fd62484b8b70ddbbb47e8998a2531b9a23595e54710f86c3a9fc521b8f9",
       "name": "Retrieves asynchronous jobs by container",
       "pattern": "To",
       "tags": [
@@ -253,7 +253,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"request-info-instance\":{\"items\":{\"properties\":{\"request-business-key\":{\"type\":\"string\"},\"request-command\":{\"type\":\"string\"},\"request-container-id\":{\"type\":\"string\"},\"request-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"request-errors\":{\"properties\":{\"error-info-instance\":{\"items\":{\"properties\":{\"error-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"error-instance-id\":{\"type\":\"integer\"},\"error-message\":{\"type\":\"string\"},\"error-stacktrace\":{\"type\":\"string\"},\"request-instance-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"error-info-instance\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"error-info-instance-list\"}},\"request-executions\":{\"type\":\"integer\"},\"request-instance-id\":{\"type\":\"integer\"},\"request-message\":{\"type\":\"string\"},\"request-retries\":{\"type\":\"integer\"},\"request-scheduled-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"request-status\":{\"type\":\"string\"},\"response-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"request-info-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"request-info-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getRequestsByProcessInstance",
+      "id": "_id_:43ea7557a20b54164e59db36c2268034b881c39b982932078f9323b8716d9ebd",
       "name": "Retrieves asynchronous jobs by process instance id",
       "pattern": "To",
       "tags": [
@@ -287,7 +287,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"request-info-instance\":{\"items\":{\"properties\":{\"request-business-key\":{\"type\":\"string\"},\"request-command\":{\"type\":\"string\"},\"request-container-id\":{\"type\":\"string\"},\"request-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"request-errors\":{\"properties\":{\"error-info-instance\":{\"items\":{\"properties\":{\"error-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"error-instance-id\":{\"type\":\"integer\"},\"error-message\":{\"type\":\"string\"},\"error-stacktrace\":{\"type\":\"string\"},\"request-instance-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"error-info-instance\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"error-info-instance-list\"}},\"request-executions\":{\"type\":\"integer\"},\"request-instance-id\":{\"type\":\"integer\"},\"request-message\":{\"type\":\"string\"},\"request-retries\":{\"type\":\"integer\"},\"request-scheduled-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"request-status\":{\"type\":\"string\"},\"response-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"request-info-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"request-info-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getRequestsByStatus",
+      "id": "_id_:28d467fc74027cf2ecc7ee9e13ae8ff53be3de12ae68b14991e1ff152b196ab6",
       "name": "Retrieves asynchronous jobs filtered by status",
       "pattern": "To",
       "tags": [
@@ -321,7 +321,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"integer\"}}}"
         }
       },
-      "id": "_id_:scheduleRequest",
+      "id": "_id_:102e616bcc04cce54b0ddcd1cf44ea0cd05d1eef655485e01af654c2972f9224",
       "name": "Schedules new asynchronous job based on given body",
       "pattern": "To",
       "tags": [
@@ -349,7 +349,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:updateRequestData",
+      "id": "_id_:54aad24bbb9e4c6cf6c672bb97b3ce327d7fd2730da2c21d0249c72bf240abc2",
       "name": "Updates active asynchronous job's data (identified by given jobId)",
       "pattern": "To",
       "tags": [
@@ -377,7 +377,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:addDynamicProcessToCase",
+      "id": "_id_:29e6700161cdb29dd98921d66c51fda489138a9b4a2b0da249bc63524b91eecd",
       "name": "Adds dynamic subprocess identified by process id to case instance",
       "pattern": "To",
       "tags": [
@@ -405,7 +405,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:addDynamicProcessToCase1",
+      "id": "_id_:3a222e6669ee3fa00e029d0e20603bcb74220c759b5ce1d686f086d0c569ad1a",
       "name": "Adds dynamic subprocess identified by process id to stage within case instance",
       "pattern": "To",
       "tags": [
@@ -433,7 +433,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:addDynamicTaskToCase1",
+      "id": "_id_:4228277264408c0cf16a5b3c5c07ff4210f898cbb2dbc6e52f31131d7eca534e",
       "name": "Adds dynamic task (user or service depending on the payload) to case instance",
       "pattern": "To",
       "tags": [
@@ -461,7 +461,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:addDynamicTaskToCase",
+      "id": "_id_:3b407523e484e4567e5bb876bb234a49dbce6ff88901df5e3b7647a4cf0fba33",
       "name": "Adds dynamic task (user or service depending on the payload) to given stage within case instance",
       "pattern": "To",
       "tags": [
@@ -489,7 +489,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:addComment",
+      "id": "_id_:22a0dd4eeff7a342d41f1e47997d2005653be9238d8699d720aa21528501bc29",
       "name": "Adds new comment to given case instance",
       "pattern": "To",
       "tags": [
@@ -517,7 +517,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:addRoleAssignment",
+      "id": "_id_:6b9cdfece041db7f5b3193c8d083dbb9f49dafb560948a74801e688a38eb3093",
       "name": "Adds new role assignment for given case, it can be either user or group based assignment",
       "pattern": "To",
       "tags": [
@@ -545,7 +545,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:cancelCaseInstance",
+      "id": "_id_:55df768c9d061de1598b5d07e50d5106e64f52e41c80e58ae9ce1ea89f655885",
       "name": "Cancels case instance with given identifier (case id) it can also when intructed permanently destroy the case instance",
       "pattern": "To",
       "tags": [
@@ -573,7 +573,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:closeCaseInstance",
+      "id": "_id_:3c14a218a4e78e1246e04cc15ac47e2167e6feaa84d915b724088bf4bc34e949",
       "name": "Closes case instance with given identifier (case id) optionally with comment",
       "pattern": "To",
       "tags": [
@@ -601,7 +601,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:putCaseInstanceData",
+      "id": "_id_:3a4ad5669cc36d0f5d61e713b1dfc0b7b53e90c87a178db6224977ef82f0f130",
       "name": "Puts new data (map of variables) into case instance's case file",
       "pattern": "To",
       "tags": [
@@ -629,7 +629,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:putCaseInstanceDataByName",
+      "id": "_id_:2fd6659d08647cb276b93858788111a9845ecbfa9153499cc0fe0bd2e1848c36",
       "name": "Puts new data (single data identified by name) into case instance's case file",
       "pattern": "To",
       "tags": [
@@ -657,7 +657,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:deleteCaseInstanceData",
+      "id": "_id_:1e0e35c34d171b192667161b49596e5eedf35d92d2014180ae7c569d963cd928",
       "name": "Removes data items identified by name(s) from case instance's case file",
       "pattern": "To",
       "tags": [
@@ -685,7 +685,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:removeComment",
+      "id": "_id_:1d8b792a0d909aee514b8dac37c029d95b0b8a8a2f54ef7df138cd7a777c411",
       "name": "Removes given comment from case instance",
       "pattern": "To",
       "tags": [
@@ -713,7 +713,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:removeRoleAssignment",
+      "id": "_id_:d64a0159ee11b4cb504e6ff0ac0f68df388a61c7a230728a51b32aa17fdf464",
       "name": "Removes role assignment from user or group for given case instance",
       "pattern": "To",
       "tags": [
@@ -741,7 +741,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:reopenCase",
+      "id": "_id_:68a2d67570f247dc6cfe081180ca8c80177e13c4e093afb1b22e9ce842d3b12f",
       "name": "Reopens case instance with given identifier (case id) by initiating given case definition",
       "pattern": "To",
       "tags": [
@@ -775,7 +775,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"case-completed-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-completion-msg\":{\"type\":\"string\"},\"case-definition-id\":{\"type\":\"string\"},\"case-description\":{\"type\":\"string\"},\"case-file\":{\"properties\":{\"case-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"case-data-restrictions\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\"},\"case-group-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"},\"case-user-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-file\"}},\"case-id\":{\"type\":\"string\"},\"case-milestones\":{\"items\":{\"properties\":{\"milestone-achieved\":{\"type\":\"boolean\"},\"milestone-achieved-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"milestone-id\":{\"type\":\"string\"},\"milestone-name\":{\"type\":\"string\"},\"milestone-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone\"}},\"type\":\"array\"},\"case-owner\":{\"type\":\"string\"},\"case-roles\":{\"items\":{\"properties\":{\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-role-assignment\"}},\"type\":\"array\"},\"case-stages\":{\"items\":{\"properties\":{\"active-nodes\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"},\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"},\"stage-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage\"}},\"type\":\"array\"},\"case-started-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-status\":{\"type\":\"integer\"},\"container-id\":{\"type\":\"string\"}},\"xml\":{\"name\":\"case-instance\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstance",
+      "id": "_id_:5f930d11396603548b55b35e7dd7cdf3836bcddd53fff14973d4318940312366",
       "name": "Retrieves active case instance by given identifier (case id) with optionally loading data, roles, milestones and stages",
       "pattern": "To",
       "tags": [
@@ -809,7 +809,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-adhoc-fragment-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstanceAdHocFragments",
+      "id": "_id_:17b37fcc25c279f233d6b1721627f8a3cd517dd83a7a62e39f1f2ef8df9b7971",
       "name": "Retrieves adhoc fragments from case instance",
       "pattern": "To",
       "tags": [
@@ -843,7 +843,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"case-id-prefix\":{\"type\":\"string\"},\"container-id\":{\"type\":\"string\"},\"id\":{\"type\":\"string\"},\"milestones\":{\"items\":{\"properties\":{\"milestone-id\":{\"type\":\"string\"},\"milestone-mandatory\":{\"type\":\"boolean\"},\"milestone-name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone-def\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"roles\":{\"additionalProperties\":{\"type\":\"integer\"},\"type\":\"object\"},\"stages\":{\"items\":{\"properties\":{\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage-def\"}},\"type\":\"array\"},\"version\":{\"type\":\"string\"}},\"xml\":{\"name\":\"case-definition\"}}}}"
         }
       },
-      "id": "_id_:getCaseDefinitionsByDefinition",
+      "id": "_id_:3d3dcd0fa68c0305ef9b2b4ecb06e102d808b940afb44cbaa17a5594ef869080",
       "name": "Retrieves case definition for given container and case definition id",
       "pattern": "To",
       "tags": [
@@ -877,7 +877,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"definitions\":{\"items\":{\"properties\":{\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"case-id-prefix\":{\"type\":\"string\"},\"container-id\":{\"type\":\"string\"},\"id\":{\"type\":\"string\"},\"milestones\":{\"items\":{\"properties\":{\"milestone-id\":{\"type\":\"string\"},\"milestone-mandatory\":{\"type\":\"boolean\"},\"milestone-name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone-def\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"roles\":{\"additionalProperties\":{\"type\":\"integer\"},\"type\":\"object\"},\"stages\":{\"items\":{\"properties\":{\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage-def\"}},\"type\":\"array\"},\"version\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-definition\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-definition-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseDefinitionsByContainer",
+      "id": "_id_:40ea41b113c1380b4f8e1faf1a380ab2c665d81ca67d9fb7fd9c98d574a0eb83",
       "name": "Retrieves case definition for given container only, applies pagination",
       "pattern": "To",
       "tags": [
@@ -911,7 +911,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"additionalProperties\":{\"type\":\"object\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstanceData",
+      "id": "_id_:4bc1504c54c62ed534557f1a0fb0fdde0f59aa0082f0c96929097e01fc2f6e05",
       "name": "Retrieves case instance data as map where key is the name of data item and value is actual instance of the data item from case file",
       "pattern": "To",
       "tags": [
@@ -945,7 +945,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\"}}}"
         }
       },
-      "id": "_id_:getCaseInstanceDataByName",
+      "id": "_id_:36b92ce5f254101bee603bbdd4e7d7a686b5c22eeaa070c7b86fb9fade9e0030",
       "name": "Retrieves case instance data by data item name",
       "pattern": "To",
       "tags": [
@@ -979,7 +979,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"instances\":{\"items\":{\"properties\":{\"case-completed-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-completion-msg\":{\"type\":\"string\"},\"case-definition-id\":{\"type\":\"string\"},\"case-description\":{\"type\":\"string\"},\"case-file\":{\"properties\":{\"case-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"case-data-restrictions\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\"},\"case-group-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"},\"case-user-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-file\"}},\"case-id\":{\"type\":\"string\"},\"case-milestones\":{\"items\":{\"properties\":{\"milestone-achieved\":{\"type\":\"boolean\"},\"milestone-achieved-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"milestone-id\":{\"type\":\"string\"},\"milestone-name\":{\"type\":\"string\"},\"milestone-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone\"}},\"type\":\"array\"},\"case-owner\":{\"type\":\"string\"},\"case-roles\":{\"items\":{\"properties\":{\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-role-assignment\"}},\"type\":\"array\"},\"case-stages\":{\"items\":{\"properties\":{\"active-nodes\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"},\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"},\"stage-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage\"}},\"type\":\"array\"},\"case-started-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-status\":{\"type\":\"integer\"},\"container-id\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstancesByDefinition",
+      "id": "_id_:3240cc085e7bf2bbaf92167c152866f8004faee5e251f96f67effa1183cd97b5",
       "name": "Retrieves case instances for given case definition only, allows to filter by case instance status and applies pagination",
       "pattern": "To",
       "tags": [
@@ -1013,7 +1013,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"instances\":{\"items\":{\"properties\":{\"case-completed-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-completion-msg\":{\"type\":\"string\"},\"case-definition-id\":{\"type\":\"string\"},\"case-description\":{\"type\":\"string\"},\"case-file\":{\"properties\":{\"case-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"case-data-restrictions\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\"},\"case-group-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"},\"case-user-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-file\"}},\"case-id\":{\"type\":\"string\"},\"case-milestones\":{\"items\":{\"properties\":{\"milestone-achieved\":{\"type\":\"boolean\"},\"milestone-achieved-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"milestone-id\":{\"type\":\"string\"},\"milestone-name\":{\"type\":\"string\"},\"milestone-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone\"}},\"type\":\"array\"},\"case-owner\":{\"type\":\"string\"},\"case-roles\":{\"items\":{\"properties\":{\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-role-assignment\"}},\"type\":\"array\"},\"case-stages\":{\"items\":{\"properties\":{\"active-nodes\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"},\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"},\"stage-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage\"}},\"type\":\"array\"},\"case-started-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-status\":{\"type\":\"integer\"},\"container-id\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstancesByContainer",
+      "id": "_id_:2dc81def3569da216e8f7bc37981792407e3f9d4d3a27730922f2f6071f3c69c",
       "name": "Retrieves case instances for given container only, allows to filter by case instance status and applies pagination",
       "pattern": "To",
       "tags": [
@@ -1047,7 +1047,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"comments\":{\"items\":{\"properties\":{\"added-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"author\":{\"type\":\"string\"},\"id\":{\"type\":\"string\"},\"restricted-to\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"restricted-to\"}},\"type\":\"array\"},\"text\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-comment\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-comment-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstanceComments",
+      "id": "_id_:26ad990a64acccf317e0a02494e7eadb069a11ab0726f7133b8bf661947eb9f7",
       "name": "Retrieves comments from case instance",
       "pattern": "To",
       "tags": [
@@ -1081,7 +1081,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"milestones\":{\"items\":{\"properties\":{\"milestone-achieved\":{\"type\":\"boolean\"},\"milestone-achieved-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"milestone-id\":{\"type\":\"string\"},\"milestone-name\":{\"type\":\"string\"},\"milestone-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-milestone-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstanceMilestones",
+      "id": "_id_:50737b5215c79f43da448a994a0672df563e09c63349dd6e6521823d06d2cb40",
       "name": "Retrieves milestones from case instance",
       "pattern": "To",
       "tags": [
@@ -1115,7 +1115,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"node-instance\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"node-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstanceActiveNodes",
+      "id": "_id_:7301b7879a861633e2409d31335669956c6434ba74cf74912df2c7374631854b",
       "name": "Retrieves node instances from case instance",
       "pattern": "To",
       "tags": [
@@ -1149,7 +1149,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"process-instance\":{\"items\":{\"properties\":{\"active-user-tasks\":{\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary-list\"}},\"container-id\":{\"type\":\"string\"},\"correlation-key\":{\"type\":\"string\"},\"initiator\":{\"type\":\"string\"},\"parent-instance-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-desc\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"process-instance-state\":{\"type\":\"integer\"},\"process-instance-variables\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"process-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"process-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstanceProcessInstance",
+      "id": "_id_:4527d3ac613da3d32dd69b01334537680d23498e628e3f24fc3a894df7a6c90f",
       "name": "Retrieves process isntances that compose complete case instance",
       "pattern": "To",
       "tags": [
@@ -1183,7 +1183,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"role-assignments\":{\"items\":{\"properties\":{\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-role-assignment\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-role-assignment-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstanceRoleAssignments",
+      "id": "_id_:489a834d9c1a7fbb3350abece3b41ddfb8820728fd41663fcf8380c4bfb42383",
       "name": "Retrieves role assignments from case instance",
       "pattern": "To",
       "tags": [
@@ -1217,7 +1217,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"stages\":{\"items\":{\"properties\":{\"active-nodes\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"},\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"},\"stage-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-stage-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstanceStages",
+      "id": "_id_:1549410bf20f7a04081d365476a1baef8760d0c6ae6d21b51ce1013b52e6f7a8",
       "name": "Retrieves stages from case instance",
       "pattern": "To",
       "tags": [
@@ -1251,7 +1251,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"string\"}}}"
         }
       },
-      "id": "_id_:startCase",
+      "id": "_id_:3243939995d0200a9ae61d5b3880799c6d78dd6d59387ead0fe85295047e991d",
       "name": "Starts new case instance of given case definition within given container with optional initial CaseFile (that provides variables and case role assignment)",
       "pattern": "To",
       "tags": [
@@ -1279,7 +1279,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:triggerAdHocNode",
+      "id": "_id_:30c7aba0153fd909cb6bf616031ac31f220bd5f221e9db373d0f9b01563ecd47",
       "name": "Triggers ad hoc fragment in case instance with optional data",
       "pattern": "To",
       "tags": [
@@ -1307,7 +1307,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:triggerAdHocNodeInStage",
+      "id": "_id_:55f1785dc6704b5791c55f1f6068a1aa536b90acbaf233ab38c89e4b9308a5ee",
       "name": "Triggers ad hoc fragment in stage within case instance with optional data",
       "pattern": "To",
       "tags": [
@@ -1335,7 +1335,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:updateComment",
+      "id": "_id_:2ea6fe2b9df09def971f26951369f152f5322f072c2d1d8781c7fcb53b2c0a2f",
       "name": "Updates comment within case instance",
       "pattern": "To",
       "tags": [
@@ -1363,7 +1363,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:dropQueryDefinition",
+      "id": "_id_:c944d4a024181da4f06ed555c9990480573a920b5441eaca773654294adac59",
       "name": "Deletes existing query definition from the system with given queryName",
       "pattern": "To",
       "tags": [
@@ -1397,7 +1397,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"array\",\"items\":{\"type\":\"object\"}}}}"
         }
       },
-      "id": "_id_:runQuery",
+      "id": "_id_:18926a6ec0487a4f546ff2d9af1b96aad8b41c525f29178aec905ba5f1c53247",
       "name": "Queries using query definition identified by queryName. Maps the result to concrete objects based on provided mapper.",
       "pattern": "To",
       "tags": [
@@ -1431,7 +1431,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\"}}}"
         }
       },
-      "id": "_id_:runQueryFiltered",
+      "id": "_id_:35a1b1552dce308b69d65db653507266a12a9018061142e4986e4c945b0af568",
       "name": "Queries using query definition identified by queryName. Maps the result to concrete objects based on provided mapper. Query is additional altered by the filter spec and/or builder",
       "pattern": "To",
       "tags": [
@@ -1459,7 +1459,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:createQueryDefinition",
+      "id": "_id_:6a1754d2e6d2c18e0ad86734ef366a123dc59a4abda6ebb95b9917df83b63e0a",
       "name": "Registers new query definition in the system with given queryName",
       "pattern": "To",
       "tags": [
@@ -1487,7 +1487,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:replaceQueryDefinition",
+      "id": "_id_:5c06fc2feda2e163fb2aea8318578ab93f4a084c2d22a73b9bf454c3bc49c77a",
       "name": "Replaces existing query definition or registers new if not exists in the system with given queryName",
       "pattern": "To",
       "tags": [
@@ -1521,7 +1521,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"query-expression\":{\"type\":\"string\"},\"query-name\":{\"type\":\"string\"},\"query-source\":{\"type\":\"string\"},\"query-target\":{\"type\":\"string\"}},\"xml\":{\"name\":\"query-definition\"}}}}"
         }
       },
-      "id": "_id_:getQuery",
+      "id": "_id_:5cbe71bba292350195b1a545aa4c148b5914cbaa34862d812a125bbba1aec231",
       "name": "Retrieves existing query definition from the system with given queryName",
       "pattern": "To",
       "tags": [
@@ -1555,7 +1555,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"queries\":{\"items\":{\"properties\":{\"query-expression\":{\"type\":\"string\"},\"query-name\":{\"type\":\"string\"},\"query-source\":{\"type\":\"string\"},\"query-target\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"query-definition\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"query-definitions\"}}}}"
         }
       },
-      "id": "_id_:getQueries",
+      "id": "_id_:4738cdf0c21a79823f6598a9004f9320ae864998d170c7e75e459ee82beee4ad",
       "name": "Retruns all custom queries defined in the system",
       "pattern": "To",
       "tags": [
@@ -1589,7 +1589,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"xml\":{\"name\":\"response\"}}}}"
         }
       },
-      "id": "_id_:evaluateDecisions",
+      "id": "_id_:288afa5b826fe71243073aa8eaeb903309614126531825df22f324ed28286438",
       "name": "Evaluates decisions for given imput",
       "pattern": "To",
       "tags": [
@@ -1623,7 +1623,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"xml\":{\"name\":\"response\"}}}}"
         }
       },
-      "id": "_id_:getModels",
+      "id": "_id_:4115163f0373b34bd61ab9b54f184041c03a6c336996134dbbcd2b371b04aa69",
       "name": "Retrieves DMN model for given container",
       "pattern": "To",
       "tags": [
@@ -1657,7 +1657,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"string\"}}}"
         }
       },
-      "id": "_id_:createDocument",
+      "id": "_id_:5bafc26e4aca6af2c3c35077dee86c5ef17590f790155bcb7f6b3cc38262d284",
       "name": "Creates new document based on given content (body)",
       "pattern": "To",
       "tags": [
@@ -1685,7 +1685,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:deleteDocument",
+      "id": "_id_:31b743c29f566f8954568a29a2419ce6351b22b3b6aa62feda1ccc9a1e1a207a",
       "name": "Deletes document identified by given document id",
       "pattern": "To",
       "tags": [
@@ -1719,7 +1719,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"document-content\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"document-content\"}},\"type\":\"array\"},\"document-id\":{\"type\":\"string\"},\"document-last-mod\":{\"format\":\"date-time\",\"type\":\"string\"},\"document-link\":{\"type\":\"string\"},\"document-name\":{\"type\":\"string\"},\"document-size\":{\"type\":\"integer\"}},\"xml\":{\"name\":\"document-instance\"}}}}"
         }
       },
-      "id": "_id_:getDocument",
+      "id": "_id_:726c5a82278baa8e881e9d37539923456398407918d2889fb18abd72a7dd4f26",
       "name": "Retrieves document identified by given documentId",
       "pattern": "To",
       "tags": [
@@ -1753,7 +1753,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}}}"
         }
       },
-      "id": "_id_:getDocumentContent",
+      "id": "_id_:2c6db18add9091c01d964568212c72b983fb47d60ddf87d8e189949f7caa6c87",
       "name": "Retrieves document's content identified by given documentId",
       "pattern": "To",
       "tags": [
@@ -1787,7 +1787,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"document-instances\":{\"items\":{\"properties\":{\"document-content\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"document-content\"}},\"type\":\"array\"},\"document-id\":{\"type\":\"string\"},\"document-last-mod\":{\"format\":\"date-time\",\"type\":\"string\"},\"document-link\":{\"type\":\"string\"},\"document-name\":{\"type\":\"string\"},\"document-size\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"document-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"document-instance-list\"}}}}"
         }
       },
-      "id": "_id_:listDocuments",
+      "id": "_id_:19f74d46da232a4ccecc54f7c47fb7ef12effed6bab0553f15790e848ba39093",
       "name": "Retrieves documents that are stored in the system, with pagination",
       "pattern": "To",
       "tags": [
@@ -1815,7 +1815,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:updateDocument",
+      "id": "_id_:781b805bbb5198d80cb26f326ee5e7ed3acfce8b642a670805317000003f1048",
       "name": "Updates document identified by given document id based on given content (body)",
       "pattern": "To",
       "tags": [
@@ -1849,7 +1849,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"xml\":{\"name\":\"response\"}}}}"
         }
       },
-      "id": "_id_:createContainer",
+      "id": "_id_:7dc6edb5be7fe1f783968f7a2a0291b97aee10a73439a6f5e688b0fac7eddf7b",
       "name": "Creates (deploys) new KIE container to this server",
       "pattern": "To",
       "tags": [
@@ -1883,7 +1883,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"xml\":{\"name\":\"response\"}}}}"
         }
       },
-      "id": "_id_:disposeContainer",
+      "id": "_id_:406de6c31ef215cf32d8da3a749aa245c8efa5c418626780d37e971539fefade",
       "name": "Disposes (undeploys) container with given id",
       "pattern": "To",
       "tags": [
@@ -1911,7 +1911,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"xml\":{\"name\":\"response\"}}}}"
         }
       },
-      "id": "_id_:getInfo",
+      "id": "_id_:37e66c940218c76cca5db997e20ee30851b5e366eb4be406afdb9a94d985bee1",
       "name": "Retrieves KIE Server information - id, name, location, capabilities, messages",
       "pattern": "To",
       "tags": [
@@ -1945,7 +1945,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"xml\":{\"name\":\"response\"}}}}"
         }
       },
-      "id": "_id_:getContainerInfo",
+      "id": "_id_:3a2fcdb56ae4e9f927ae987a235fce0596fd57a7c7a1b357908500e68243ff93",
       "name": "Retrieves container with given id",
       "pattern": "To",
       "tags": [
@@ -1979,7 +1979,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"xml\":{\"name\":\"response\"}}}}"
         }
       },
-      "id": "_id_:listContainers",
+      "id": "_id_:70607d7214341e7918459e636c29cf77f58a220151cf55e1e5f91be5f940177a",
       "name": "Retrieves containers deployed to this server, optionally filtered by group, artifact, version or status",
       "pattern": "To",
       "tags": [
@@ -2013,7 +2013,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"xml\":{\"name\":\"response\"}}}}"
         }
       },
-      "id": "_id_:getReleaseId",
+      "id": "_id_:3c2e337de07a476abb3f519455fe4812dc7236e56262c97d51a3187fcbdc91d6",
       "name": "Retrieves release id of the KIE container with given id",
       "pattern": "To",
       "tags": [
@@ -2041,7 +2041,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"xml\":{\"name\":\"response\"}}}}"
         }
       },
-      "id": "_id_:getServerState",
+      "id": "_id_:326f22d3843bce66b13a0f181d2b481322231cdddf30c325a5338da53f655054",
       "name": "Retrieves server state - configuration that the server is currently running with",
       "pattern": "To",
       "tags": [
@@ -2075,7 +2075,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"xml\":{\"name\":\"response\"}}}}"
         }
       },
-      "id": "_id_:getScannerInfo",
+      "id": "_id_:337676b5ff122580bd78125ac02be27b76e96f785ceb9fb8bae6e269e0e499c2",
       "name": "Retrieves stanner information for given container",
       "pattern": "To",
       "tags": [
@@ -2109,7 +2109,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"xml\":{\"name\":\"response\"}}}}"
         }
       },
-      "id": "_id_:updateReleaseId",
+      "id": "_id_:a2c129dba1d423d63bffe10dadb742cadafd3b6bdcb714cff9c232654c8a159",
       "name": "Updates release id of the KIE container with given id to provided release id",
       "pattern": "To",
       "tags": [
@@ -2143,7 +2143,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"xml\":{\"name\":\"response\"}}}}"
         }
       },
-      "id": "_id_:updateScanner",
+      "id": "_id_:1064ecf38610557329176967ebd3cdb9057e42db5c4808e032b8e39ab62b6b58",
       "name": "Updates scanner for given container",
       "pattern": "To",
       "tags": [
@@ -2177,7 +2177,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"response\":{\"items\":{\"type\":\"object\",\"xml\":{\"name\":\"response\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"responses\"}}}}"
         }
       },
-      "id": "_id_:executeCommands",
+      "id": "_id_:6c8b29a68d5db368ee294f91ccba186630a8d9c6f8e489a4fb47ce5487f84c5",
       "name": "Executes command script on execution server, usually used as a batch to configure KIE Server",
       "pattern": "To",
       "tags": [
@@ -2205,7 +2205,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:addProblemFactChanges",
+      "id": "_id_:5c29f2d9f04f1870a3e7a12c1c21262f3beb972884a7dc39c8ab61c71ad4f012",
       "name": "Adds problem fact changes to given solver",
       "pattern": "To",
       "tags": [
@@ -2239,7 +2239,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"best-solution\":{\"type\":\"object\"},\"container-id\":{\"type\":\"string\"},\"score\":{\"properties\":{\"value\":{\"type\":\"string\"}},\"type\":\"object\"},\"solver-config-file\":{\"type\":\"string\"},\"solver-id\":{\"type\":\"string\"},\"status\":{\"enum\":[\"NOT_SOLVING\",\"TERMINATING_EARLY\",\"SOLVING\"],\"type\":\"string\"}},\"xml\":{\"name\":\"solver-instance\"}}}}"
         }
       },
-      "id": "_id_:createSolver",
+      "id": "_id_:5a7b79da4a3314cc430e1e1f9522d1de65f783418bf1888f13df88d64e0f0023",
       "name": "Creates solver within given container",
       "pattern": "To",
       "tags": [
@@ -2267,7 +2267,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:disposeSolver",
+      "id": "_id_:7e1fbe6aeaa39e090d089227fdb0e5651ca04cc124418d914c56cb2374d332c5",
       "name": "Disposes given solver",
       "pattern": "To",
       "tags": [
@@ -2301,7 +2301,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"best-solution\":{\"type\":\"object\"},\"container-id\":{\"type\":\"string\"},\"score\":{\"properties\":{\"value\":{\"type\":\"string\"}},\"type\":\"object\"},\"solver-config-file\":{\"type\":\"string\"},\"solver-id\":{\"type\":\"string\"},\"status\":{\"enum\":[\"NOT_SOLVING\",\"TERMINATING_EARLY\",\"SOLVING\"],\"type\":\"string\"}},\"xml\":{\"name\":\"solver-instance\"}}}}"
         }
       },
-      "id": "_id_:getSolverWithBestSolution",
+      "id": "_id_:62c88b6cdd8e9c7757bb0e5311f44b4b6898af81bfe25d927ca51d2f262cfacf",
       "name": "Retrieves best solution from solver within container",
       "pattern": "To",
       "tags": [
@@ -2335,7 +2335,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"best-solution\":{\"type\":\"object\"},\"container-id\":{\"type\":\"string\"},\"score\":{\"properties\":{\"value\":{\"type\":\"string\"}},\"type\":\"object\"},\"solver-config-file\":{\"type\":\"string\"},\"solver-id\":{\"type\":\"string\"},\"status\":{\"enum\":[\"NOT_SOLVING\",\"TERMINATING_EARLY\",\"SOLVING\"],\"type\":\"string\"}},\"xml\":{\"name\":\"solver-instance\"}}}}"
         }
       },
-      "id": "_id_:getSolver",
+      "id": "_id_:4d8a81bbe69e80900a4927092ade28b50935285de6b83dfa237d0500e3056725",
       "name": "Retrieves solver by its identifier from given container",
       "pattern": "To",
       "tags": [
@@ -2369,7 +2369,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"solver\":{\"items\":{\"properties\":{\"best-solution\":{\"type\":\"object\"},\"container-id\":{\"type\":\"string\"},\"score\":{\"properties\":{\"value\":{\"type\":\"string\"}},\"type\":\"object\"},\"solver-config-file\":{\"type\":\"string\"},\"solver-id\":{\"type\":\"string\"},\"status\":{\"enum\":[\"NOT_SOLVING\",\"TERMINATING_EARLY\",\"SOLVING\"],\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"solver-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"solvers\"}}}}"
         }
       },
-      "id": "_id_:getSolvers",
+      "id": "_id_:5471f2fe117fbc63894c40e3907f68ee113293381583cba5929ca48775347d79",
       "name": "Retrieves solvers from given container",
       "pattern": "To",
       "tags": [
@@ -2403,7 +2403,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"boolean\"}}}"
         }
       },
-      "id": "_id_:isEveryProblemFactChangeProcessed",
+      "id": "_id_:1e7e180b44791eceb67034473d2f2c55de17ba8567cffa0a83ff0caa0ecf6635",
       "name": "Retrieves status if problem fact changes have been processed in given solver",
       "pattern": "To",
       "tags": [
@@ -2431,7 +2431,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:solvePlanningProblem",
+      "id": "_id_:8fabcb01cd58b84fa71b6cac5c9f73cba90859498c0577913d12ed037ee856f",
       "name": "Solves given planning problem with given solver",
       "pattern": "To",
       "tags": [
@@ -2459,7 +2459,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:terminateSolverEarly",
+      "id": "_id_:2b8adb8ea1ab44e75f3c45c5d302897e5475ee8c91c319a71c63d23c3904d907",
       "name": "Terminates early running solver with given id within container",
       "pattern": "To",
       "tags": [
@@ -2493,7 +2493,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"associatedEntities\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\",\"xml\":{\"name\":\"associated-entities\",\"wrapped\":true}}},\"xml\":{\"name\":\"process-associated-entities\"}}}}"
         }
       },
-      "id": "_id_:getAssociatedEntities",
+      "id": "_id_:63c1fe524c2c068fcf6802d800b9b05e52d11d12db1d87df1ef44278cc8a7426",
       "name": "Retrieves actors and groups that are involved in given process and container",
       "pattern": "To",
       "tags": [
@@ -2527,7 +2527,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"taskInputs\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"inputs\",\"wrapped\":true}}},\"xml\":{\"name\":\"process-task-inputs\"}}}}"
         }
       },
-      "id": "_id_:getTaskInputMappings",
+      "id": "_id_:6243ea8e8e4e4561e47ea2f09678342406bf54b85bec6b6b87dd5ab19eaef15e",
       "name": "Retrieves input variables defined on a given user task",
       "pattern": "To",
       "tags": [
@@ -2561,7 +2561,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"taskOutputs\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"outputs\",\"wrapped\":true}}},\"xml\":{\"name\":\"process-task-outputs\"}}}}"
         }
       },
-      "id": "_id_:getTaskOutputMappings",
+      "id": "_id_:1cf255dd88f6071739294a4b525b534c6bc27109512c523e57e18f1f0173d544",
       "name": "Retrieves output variables defined on a given user task",
       "pattern": "To",
       "tags": [
@@ -2595,7 +2595,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"associatedEntities\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\",\"xml\":{\"name\":\"associated-entities\",\"wrapped\":true}},\"container-id\":{\"type\":\"string\"},\"dynamic\":{\"type\":\"boolean\"},\"package\":{\"type\":\"string\"},\"process-id\":{\"type\":\"string\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"processVariables\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"process-variables\",\"wrapped\":true}},\"reusableSubProcesses\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"process-subprocesses\",\"wrapped\":true}},\"serviceTasks\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"service-tasks\",\"wrapped\":true}}},\"xml\":{\"name\":\"process-definition\"}}}}"
         }
       },
-      "id": "_id_:getProcessDefinition",
+      "id": "_id_:41c50514aec59ebde01458a8cae5a6a0f90e408f3c4c38c0b604a40096c26899",
       "name": "Retrieves process definition identified by given process id within given container",
       "pattern": "To",
       "tags": [
@@ -2629,7 +2629,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"variables\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"wrapped\":true}}},\"xml\":{\"name\":\"process-variables\"}}}}"
         }
       },
-      "id": "_id_:getProcessVariables",
+      "id": "_id_:a206be5e6017a045f96ee4a7a0b2c6dc8e544b659549edfbc72ab4abd55fb53",
       "name": "Retrieves process variables definitions that are present in given process and container",
       "pattern": "To",
       "tags": [
@@ -2663,7 +2663,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"serviceTasks\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"tasks\",\"wrapped\":true}}},\"xml\":{\"name\":\"process-service-tasks\"}}}}"
         }
       },
-      "id": "_id_:getServiceTasks",
+      "id": "_id_:1aaa2309e2fc03842cde1204fe15d2e47f77c2a3434d120241d2975bcb5bcf2e",
       "name": "Retrieves service tasks definitions that are present in given process and container",
       "pattern": "To",
       "tags": [
@@ -2697,7 +2697,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"subProcesses\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"subprocesses\",\"wrapped\":true}}},\"xml\":{\"name\":\"process-subprocesses\"}}}}"
         }
       },
-      "id": "_id_:getReusableSubProcesses",
+      "id": "_id_:4b0c4163b133282ab2141e089c3a0b0c436f47c0da4d8c5750e1beb9c6625f5e",
       "name": "Retrieves sub process definitions that are defined in given process within given container",
       "pattern": "To",
       "tags": [
@@ -2731,7 +2731,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task\":{\"items\":{\"properties\":{\"associatedEntities\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"associated-entities\",\"wrapped\":true}},\"task-comment\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-form-name\":{\"type\":\"string\"},\"task-id\":{\"type\":\"string\"},\"task-name\":{\"type\":\"string\"},\"task-priority\":{\"type\":\"integer\"},\"task-skippable\":{\"type\":\"boolean\"},\"taskInputMappings\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"task-inputs\",\"wrapped\":true}},\"taskOutputMappings\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"task-outputs\",\"wrapped\":true}}},\"type\":\"object\",\"xml\":{\"name\":\"user-task-definition\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"user-task-definitions\"}}}}"
         }
       },
-      "id": "_id_:getTasksDefinitions",
+      "id": "_id_:307f00588f51f2780a2e1e7a7b4631384f6fecce14c22aafbeda3a81df65d3fe",
       "name": "Retrieves user tasks definitions that are present in given process and container",
       "pattern": "To",
       "tags": [
@@ -2765,7 +2765,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"string\"}}}"
         }
       },
-      "id": "_id_:getProcessForm",
+      "id": "_id_:d1ae82065b2c3aa6d4fff762ef59a92a93831b24bdcdaa2977f7140b169c182",
       "name": "Retrieves form for process definition within a container",
       "pattern": "To",
       "tags": [
@@ -2799,7 +2799,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"string\"}}}"
         }
       },
-      "id": "_id_:getTaskForm",
+      "id": "_id_:5a7ef5a4ddf65e5a1d8301a4010d8531aa576c44c41879b6cf866fe5bd08506c",
       "name": "Retrieves form for task instance within a container",
       "pattern": "To",
       "tags": [
@@ -2833,7 +2833,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"string\"}}}"
         }
       },
-      "id": "_id_:getProcessImage",
+      "id": "_id_:5d878931dcb881890229eb592b9e0ed32fa7918f3c16d40777475043a671589f",
       "name": "Retrieves process definition image",
       "pattern": "To",
       "tags": [
@@ -2867,7 +2867,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"string\"}}}"
         }
       },
-      "id": "_id_:getProcessInstanceImage",
+      "id": "_id_:59e8ecbeb5d4cb4b3e853a998d1c6320b057f93da340d7ebd29bac67f2fccefc",
       "name": "Retrieves process instance image",
       "pattern": "To",
       "tags": [
@@ -2895,7 +2895,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:abortProcessInstance",
+      "id": "_id_:98c052e608be57006c0769ba0e039ef775a355894b1dec759495557b8aeca3b",
       "name": "Aborts active process instance identified by given id",
       "pattern": "To",
       "tags": [
@@ -2923,7 +2923,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:abortProcessInstances",
+      "id": "_id_:2f9982c61b8a7f444b158ad9c87fb29425e75de6f7f87daa6900de13917d3930",
       "name": "Aborts active process instances identified by given list of identifiers",
       "pattern": "To",
       "tags": [
@@ -2951,7 +2951,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:abortWorkItem",
+      "id": "_id_:1b2acf77d214934662c34226ddc80da3b01cf2f8acaaa398874b12d7f76ca304",
       "name": "Aborts work item identified by workItemId within process instance and container",
       "pattern": "To",
       "tags": [
@@ -2979,7 +2979,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:completeWorkItem",
+      "id": "_id_:7f9d29cb2acb10c324ac46d9501c51e5f37bb23a3cd278e58c38f75b8b305f91",
       "name": "Completes work item identified by workItemId within process instance and container. Optionally completion can provide outcome data - as map",
       "pattern": "To",
       "tags": [
@@ -3013,7 +3013,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}}}"
         }
       },
-      "id": "_id_:getAvailableSignals",
+      "id": "_id_:79639ed43af086a796fb248c0b5edc6f895770ab836a08d3a201a76fd96d4246",
       "name": "Retrieves active process instance's (identified by given id) active signals",
       "pattern": "To",
       "tags": [
@@ -3047,7 +3047,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\"}}}"
         }
       },
-      "id": "_id_:getProcessInstanceVariable",
+      "id": "_id_:126b5c1bdb4dbd8ea3b4daa1328eec12448b826e5986ac4d37c4b877bd86825f",
       "name": "Retrieves active process instance's (identified by given id) variable given as variable name",
       "pattern": "To",
       "tags": [
@@ -3081,7 +3081,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"additionalProperties\":{\"type\":\"object\"}}}}"
         }
       },
-      "id": "_id_:getProcessInstanceVariables",
+      "id": "_id_:b8e2859e781efdd04c813c220ff1175cfe39f8822a6ff5d4226e20b63293cc7",
       "name": "Retrieves active process instance's (identified by given id) variables, variables are returned as map where key is the variable name (string) and value is variable value (any type)",
       "pattern": "To",
       "tags": [
@@ -3115,7 +3115,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"node-instance\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"node-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getProcessInstanceHistory",
+      "id": "_id_:273caba8f315bef0c2536874428d421aa5ccffb2962c269b2167c08c7f228125",
       "name": "Retrieves node instances for given process instance. Depending on provided query parameters (activeOnly or completedOnly) will return active and/or completes nodes",
       "pattern": "To",
       "tags": [
@@ -3149,7 +3149,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"processes\":{\"items\":{\"properties\":{\"associatedEntities\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\",\"xml\":{\"name\":\"associated-entities\",\"wrapped\":true}},\"container-id\":{\"type\":\"string\"},\"dynamic\":{\"type\":\"boolean\"},\"package\":{\"type\":\"string\"},\"process-id\":{\"type\":\"string\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"processVariables\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"process-variables\",\"wrapped\":true}},\"reusableSubProcesses\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"process-subprocesses\",\"wrapped\":true}},\"serviceTasks\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"service-tasks\",\"wrapped\":true}}},\"type\":\"object\",\"xml\":{\"name\":\"process-definition\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"process-definitions\"}}}}"
         }
       },
-      "id": "_id_:getProcessesByDeploymentId",
+      "id": "_id_:4940f1b103b0df9858862dc43f7517382d188f09898011ba1a36b36b74f6e7b8",
       "name": "Retrieves process definitions that belong to given container",
       "pattern": "To",
       "tags": [
@@ -3183,7 +3183,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"active-user-tasks\":{\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary-list\"}},\"container-id\":{\"type\":\"string\"},\"correlation-key\":{\"type\":\"string\"},\"initiator\":{\"type\":\"string\"},\"parent-instance-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-desc\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"process-instance-state\":{\"type\":\"integer\"},\"process-instance-variables\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"}},\"xml\":{\"name\":\"process-instance\"}}}}"
         }
       },
-      "id": "_id_:getProcessInstance",
+      "id": "_id_:3ffb09998c72a6be14cccf03dfd25ce5d5eb2d0e1d6ab89ce25a1f9e557cedcf",
       "name": "Retrieves process instance identified by given id optionally with variables (variables will be loaded only for active process instance)",
       "pattern": "To",
       "tags": [
@@ -3217,7 +3217,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"process-instance\":{\"items\":{\"properties\":{\"active-user-tasks\":{\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary-list\"}},\"container-id\":{\"type\":\"string\"},\"correlation-key\":{\"type\":\"string\"},\"initiator\":{\"type\":\"string\"},\"parent-instance-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-desc\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"process-instance-state\":{\"type\":\"integer\"},\"process-instance-variables\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"process-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"process-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getProcessInstancesByDeploymentId",
+      "id": "_id_:50909842e0c8f22618723da964c2c3ec17ae54f375b775d01b28adb1e077424",
       "name": "Retrieves process instances that belong to given container",
       "pattern": "To",
       "tags": [
@@ -3251,7 +3251,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"process-instance\":{\"items\":{\"properties\":{\"active-user-tasks\":{\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary-list\"}},\"container-id\":{\"type\":\"string\"},\"correlation-key\":{\"type\":\"string\"},\"initiator\":{\"type\":\"string\"},\"parent-instance-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-desc\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"process-instance-state\":{\"type\":\"integer\"},\"process-instance-variables\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"process-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"process-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getProcessInstances",
+      "id": "_id_:17629e383a9b8a6e1771cc5392a13e7b7a70051f216252c1162138ca78870d3e",
       "name": "Retrieves process instances that belong to given container and have given parent process instance, optionally allow to filter by process instance state.",
       "pattern": "To",
       "tags": [
@@ -3285,7 +3285,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"variable-instance\":{\"items\":{\"properties\":{\"modification-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"old-value\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"value\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"variable-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"variable-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getVariableHistory",
+      "id": "_id_:47d1981cc46469a869e09c1dbb25cd81302e6a0145d658723819647a6e8b0195",
       "name": "Retrieves variable history (from audit logs) for given variable name that belongs to process instance",
       "pattern": "To",
       "tags": [
@@ -3319,7 +3319,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"variable-instance\":{\"items\":{\"properties\":{\"modification-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"old-value\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"value\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"variable-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"variable-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getVariablesCurrentState",
+      "id": "_id_:e15a80d18cf1a29ce8793ff60357856592ae67846aef04d1b70e98953b23579",
       "name": "Retrieves variables last value (from audit logs) for given process instance",
       "pattern": "To",
       "tags": [
@@ -3353,7 +3353,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-id\":{\"type\":\"integer\"},\"node-instance-id\":{\"type\":\"integer\"},\"process-instance-id\":{\"type\":\"integer\"},\"work-item-id\":{\"type\":\"integer\"},\"work-item-name\":{\"type\":\"string\"},\"work-item-params\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"work-item-state\":{\"type\":\"integer\"}},\"xml\":{\"name\":\"work-item-instance\"}}}}"
         }
       },
-      "id": "_id_:getWorkItem",
+      "id": "_id_:a90a7dc6a16ee6d417895c58566d3e1e5ef2cc8edad9ca9febeb941b729155f",
       "name": "Retrieves work item identified by workItemId within process instance and container",
       "pattern": "To",
       "tags": [
@@ -3387,7 +3387,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"work-item-instance\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-id\":{\"type\":\"integer\"},\"node-instance-id\":{\"type\":\"integer\"},\"process-instance-id\":{\"type\":\"integer\"},\"work-item-id\":{\"type\":\"integer\"},\"work-item-name\":{\"type\":\"string\"},\"work-item-params\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"work-item-state\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"work-item-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"work-item-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getWorkItemByProcessInstance",
+      "id": "_id_:47bbec7ca40f819bf08577c6d9e7a8276326468d9bb5a1bd0ea1026e6c6625d1",
       "name": "Retrieves work items within process instance and container",
       "pattern": "To",
       "tags": [
@@ -3415,7 +3415,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:signalProcessInstance",
+      "id": "_id_:4a80e37fea05f5e44d23046d153a985143d646be3da2fd5f7e730c1e0e28eabe",
       "name": "Signals active process instance identified by given id with singal name and optional event data",
       "pattern": "To",
       "tags": [
@@ -3443,7 +3443,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:signalProcessInstances",
+      "id": "_id_:9ecdd4b90aad78b517569fb7392a2ef2571879481fbf3aa54bec5ea8d753aec",
       "name": "Signals active process instances identified by given ids with singal name and optional event data",
       "pattern": "To",
       "tags": [
@@ -3477,7 +3477,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"integer\"}}}"
         }
       },
-      "id": "_id_:startProcess",
+      "id": "_id_:453966a95ccb5ffbbf6e49788cd6770fbb6f8719ccd309d47cc9af8ea980b2f4",
       "name": "Starts new process instance of given process definition within given container with optional variables",
       "pattern": "To",
       "tags": [
@@ -3511,7 +3511,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"integer\"}}}"
         }
       },
-      "id": "_id_:startProcessWithCorrelation",
+      "id": "_id_:23f1043fecb2caef06536b6902dee4a06a6867787887bf0a6ff5dd48be38031d",
       "name": "Starts new process instance with correlation key of given process definition within given container with optional variables",
       "pattern": "To",
       "tags": [
@@ -3539,7 +3539,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:setProcessVariable",
+      "id": "_id_:39fa09a8d526017300f580480da85c0b21959c95e8191e2150720b8a8452527f",
       "name": "Updates active process instance's (identified by given id) variable with given name",
       "pattern": "To",
       "tags": [
@@ -3567,7 +3567,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:setProcessVariables",
+      "id": "_id_:2e50f89e22587fc4e18c151d54c3516e2ca91a1dd90509b79c4fdc50c6fdcc5d",
       "name": "Updates active process instance's (identified by given id) variables given as map in the body",
       "pattern": "To",
       "tags": [
@@ -3595,7 +3595,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:acknowledgeError",
+      "id": "_id_:5034da36d9c18e6c172e203c62313b2e68e9f485ea0581fd353af8ff3752d568",
       "name": "Acknowledge execution error by given id",
       "pattern": "To",
       "tags": [
@@ -3623,7 +3623,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:acknowledgeErrors",
+      "id": "_id_:3e19b77cc68ec09a8e0bb454861298da61e23c7bfa52e95a31494967d3ea5d62",
       "name": "Acknowledges given execution errors",
       "pattern": "To",
       "tags": [
@@ -3651,7 +3651,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:cancelNodeInstance",
+      "id": "_id_:15bfc38e36989377622d78138e6c4fcab5f94da8eebe1a6902db5ceaf9b8a81a",
       "name": "Cancels given node instance within process instance and container",
       "pattern": "To",
       "tags": [
@@ -3685,7 +3685,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"migration-end\":{\"format\":\"date-time\",\"type\":\"string\"},\"migration-logs\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"migration-logs\"}},\"type\":\"array\"},\"migration-start\":{\"format\":\"date-time\",\"type\":\"string\"},\"migration-successful\":{\"type\":\"boolean\"}},\"xml\":{\"name\":\"migration-report-instance\"}}}}"
         }
       },
-      "id": "_id_:migrateProcessInstance",
+      "id": "_id_:6db5da80ee11361b86a0f0b3e8271aa628777e9154e7ac00801acfcbd21f4a88",
       "name": "Migrates process instance to new container and process definition with optional node mapping",
       "pattern": "To",
       "tags": [
@@ -3719,7 +3719,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"migration-report-instance\":{\"items\":{\"properties\":{\"migration-end\":{\"format\":\"date-time\",\"type\":\"string\"},\"migration-logs\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"migration-logs\"}},\"type\":\"array\"},\"migration-start\":{\"format\":\"date-time\",\"type\":\"string\"},\"migration-successful\":{\"type\":\"boolean\"}},\"type\":\"object\",\"xml\":{\"name\":\"migration-report-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"migration-report-instance-list\"}}}}"
         }
       },
-      "id": "_id_:migrateProcessInstances",
+      "id": "_id_:59e16776afadefb8311cb24cc9459e757344fab0cdd2037c8bb340059e29eef1",
       "name": "Migrates process instances to new container and process definition with optional node mapping",
       "pattern": "To",
       "tags": [
@@ -3753,7 +3753,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"acknowledged\":{\"type\":\"boolean\"},\"acknowledged-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"acknowledged-by\":{\"type\":\"string\"},\"activity-id\":{\"type\":\"integer\"},\"activity-name\":{\"type\":\"string\"},\"container-id\":{\"type\":\"string\"},\"error\":{\"type\":\"string\"},\"error-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"error-msg\":{\"type\":\"string\"},\"id\":{\"type\":\"string\"},\"job-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"type\":{\"type\":\"string\"}},\"xml\":{\"name\":\"execution-error\"}}}}"
         }
       },
-      "id": "_id_:getExecutionErrorById",
+      "id": "_id_:4fde647277f50e15ddfd17549b5ea0089185fcefeb26fa3abdb2261a4595955",
       "name": "Retrieve execution error by its identifier",
       "pattern": "To",
       "tags": [
@@ -3787,7 +3787,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"node-instance\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"node-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getActiveNodeInstances",
+      "id": "_id_:45af1b2b1238f75d961e7851d127a6b3cc109b8470776b08e42a27e376e3e104",
       "name": "Retrieves all active node instances from process instance and container",
       "pattern": "To",
       "tags": [
@@ -3821,7 +3821,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"timer-instance\":{\"items\":{\"properties\":{\"activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"delay\":{\"type\":\"integer\"},\"id\":{\"type\":\"integer\"},\"last-fire-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"next-fire-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"period\":{\"type\":\"integer\"},\"process-instance-id\":{\"type\":\"integer\"},\"repeat-limit\":{\"type\":\"integer\"},\"session-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"timer-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"timer-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getTimerInstances",
+      "id": "_id_:1e88223b03719564f36b309e4804e7d30ff83a176d0e88a7022d1a5f752ec8c6",
       "name": "Retrieves all active timer instance from process instance and container",
       "pattern": "To",
       "tags": [
@@ -3855,7 +3855,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"process-node\":{\"items\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"},\"process-id\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"process-node\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"process-node-list\"}}}}"
         }
       },
-      "id": "_id_:getNodes",
+      "id": "_id_:17d152e004ce5330316648c3e4656ab6a9695e8ec4045aedead43950439c0abc",
       "name": "Retrieves all nodes from process instance and container",
       "pattern": "To",
       "tags": [
@@ -3889,7 +3889,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"node-instance\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"node-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getExecutionErrors",
+      "id": "_id_:6d27a78375f17d83d57f26647ed50a98ac3c23d579754ae51b042c1c18776c8e",
       "name": "Retrieves execution errors for container, applies pagination",
       "pattern": "To",
       "tags": [
@@ -3923,7 +3923,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"error-instance\":{\"items\":{\"properties\":{\"acknowledged\":{\"type\":\"boolean\"},\"acknowledged-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"acknowledged-by\":{\"type\":\"string\"},\"activity-id\":{\"type\":\"integer\"},\"activity-name\":{\"type\":\"string\"},\"container-id\":{\"type\":\"string\"},\"error\":{\"type\":\"string\"},\"error-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"error-msg\":{\"type\":\"string\"},\"id\":{\"type\":\"string\"},\"job-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"execution-error\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"execution-error-list\"}}}}"
         }
       },
-      "id": "_id_:getExecutionErrorsByProcessInstance",
+      "id": "_id_:59a0a866b408bf7d793347e451b6d70f377e1a4c04263f831eab67b829428f31",
       "name": "Retrieves execution errors for process instance and container, applies pagination",
       "pattern": "To",
       "tags": [
@@ -3951,7 +3951,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:retriggerNodeInstance",
+      "id": "_id_:7b664830a36d3f61d422aae2657b9b75cbe224fe12308dc7737a9aedf49ac934",
       "name": "Retriggers given node instance within process instance and container",
       "pattern": "To",
       "tags": [
@@ -3979,7 +3979,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:triggerNode",
+      "id": "_id_:235055c8d25933eefe5635d22e4b4bc32ba8adbbc4efafb63fca250cfdb313ae",
       "name": "Triggers node within process instance and container",
       "pattern": "To",
       "tags": [
@@ -4007,7 +4007,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:updateTimer",
+      "id": "_id_:24d2d8303ffad74dde7ca983794c293da59394d4c4778232e4d954ef62e0a8b9",
       "name": "Updates timer instance within process instance and container",
       "pattern": "To",
       "tags": [
@@ -4041,7 +4041,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"instances\":{\"items\":{\"properties\":{\"case-completed-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-completion-msg\":{\"type\":\"string\"},\"case-definition-id\":{\"type\":\"string\"},\"case-description\":{\"type\":\"string\"},\"case-file\":{\"properties\":{\"case-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"case-data-restrictions\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\"},\"case-group-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"},\"case-user-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-file\"}},\"case-id\":{\"type\":\"string\"},\"case-milestones\":{\"items\":{\"properties\":{\"milestone-achieved\":{\"type\":\"boolean\"},\"milestone-achieved-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"milestone-id\":{\"type\":\"string\"},\"milestone-name\":{\"type\":\"string\"},\"milestone-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone\"}},\"type\":\"array\"},\"case-owner\":{\"type\":\"string\"},\"case-roles\":{\"items\":{\"properties\":{\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-role-assignment\"}},\"type\":\"array\"},\"case-stages\":{\"items\":{\"properties\":{\"active-nodes\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"},\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"},\"stage-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage\"}},\"type\":\"array\"},\"case-started-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-status\":{\"type\":\"integer\"},\"container-id\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseDefinitions",
+      "id": "_id_:3aedab10b0a0781f61c0cc4908caaeff6e14333a4922cecb5ea2efa2d9fa3e68",
       "name": "Retrieves case definitions with filtering by name or id of the case definition and applies pagination",
       "pattern": "To",
       "tags": [
@@ -4075,7 +4075,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"instances\":{\"items\":{\"properties\":{\"case-completed-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-completion-msg\":{\"type\":\"string\"},\"case-definition-id\":{\"type\":\"string\"},\"case-description\":{\"type\":\"string\"},\"case-file\":{\"properties\":{\"case-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"case-data-restrictions\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\"},\"case-group-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"},\"case-user-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-file\"}},\"case-id\":{\"type\":\"string\"},\"case-milestones\":{\"items\":{\"properties\":{\"milestone-achieved\":{\"type\":\"boolean\"},\"milestone-achieved-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"milestone-id\":{\"type\":\"string\"},\"milestone-name\":{\"type\":\"string\"},\"milestone-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone\"}},\"type\":\"array\"},\"case-owner\":{\"type\":\"string\"},\"case-roles\":{\"items\":{\"properties\":{\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-role-assignment\"}},\"type\":\"array\"},\"case-stages\":{\"items\":{\"properties\":{\"active-nodes\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"},\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"},\"stage-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage\"}},\"type\":\"array\"},\"case-started-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-status\":{\"type\":\"integer\"},\"container-id\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstanceDataItems",
+      "id": "_id_:733ef19976fca461ca9b365992c9a35d3eac5bb364a81b17288d96a9b053be43",
       "name": "Retrieves case instance data items, allows to filter by name or type of data and applies pagination",
       "pattern": "To",
       "tags": [
@@ -4109,7 +4109,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"instances\":{\"items\":{\"properties\":{\"case-completed-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-completion-msg\":{\"type\":\"string\"},\"case-definition-id\":{\"type\":\"string\"},\"case-description\":{\"type\":\"string\"},\"case-file\":{\"properties\":{\"case-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"case-data-restrictions\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\"},\"case-group-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"},\"case-user-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-file\"}},\"case-id\":{\"type\":\"string\"},\"case-milestones\":{\"items\":{\"properties\":{\"milestone-achieved\":{\"type\":\"boolean\"},\"milestone-achieved-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"milestone-id\":{\"type\":\"string\"},\"milestone-name\":{\"type\":\"string\"},\"milestone-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone\"}},\"type\":\"array\"},\"case-owner\":{\"type\":\"string\"},\"case-roles\":{\"items\":{\"properties\":{\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-role-assignment\"}},\"type\":\"array\"},\"case-stages\":{\"items\":{\"properties\":{\"active-nodes\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"},\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"},\"stage-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage\"}},\"type\":\"array\"},\"case-started-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-status\":{\"type\":\"integer\"},\"container-id\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstanceTasksAsAdmin",
+      "id": "_id_:46a8780e73f28daaeeb294e3b184417a26e62c5d909d8d45143d4d811c1609b0",
       "name": "Retrieves case instance tasks assigned as business admin, allows to filter by task status and applies pagination",
       "pattern": "To",
       "tags": [
@@ -4143,7 +4143,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"instances\":{\"items\":{\"properties\":{\"case-completed-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-completion-msg\":{\"type\":\"string\"},\"case-definition-id\":{\"type\":\"string\"},\"case-description\":{\"type\":\"string\"},\"case-file\":{\"properties\":{\"case-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"case-data-restrictions\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\"},\"case-group-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"},\"case-user-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-file\"}},\"case-id\":{\"type\":\"string\"},\"case-milestones\":{\"items\":{\"properties\":{\"milestone-achieved\":{\"type\":\"boolean\"},\"milestone-achieved-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"milestone-id\":{\"type\":\"string\"},\"milestone-name\":{\"type\":\"string\"},\"milestone-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone\"}},\"type\":\"array\"},\"case-owner\":{\"type\":\"string\"},\"case-roles\":{\"items\":{\"properties\":{\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-role-assignment\"}},\"type\":\"array\"},\"case-stages\":{\"items\":{\"properties\":{\"active-nodes\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"},\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"},\"stage-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage\"}},\"type\":\"array\"},\"case-started-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-status\":{\"type\":\"integer\"},\"container-id\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstanceTasksAsPotentialOwner",
+      "id": "_id_:4472deeb782f4433e2a4aab0c435c6763d633780c20ae273206f7701ed59e4e2",
       "name": "Retrieves case instance tasks assigned as potential owner, allows to filter by task status and applies pagination",
       "pattern": "To",
       "tags": [
@@ -4177,7 +4177,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"instances\":{\"items\":{\"properties\":{\"case-completed-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-completion-msg\":{\"type\":\"string\"},\"case-definition-id\":{\"type\":\"string\"},\"case-description\":{\"type\":\"string\"},\"case-file\":{\"properties\":{\"case-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"case-data-restrictions\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\"},\"case-group-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"},\"case-user-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-file\"}},\"case-id\":{\"type\":\"string\"},\"case-milestones\":{\"items\":{\"properties\":{\"milestone-achieved\":{\"type\":\"boolean\"},\"milestone-achieved-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"milestone-id\":{\"type\":\"string\"},\"milestone-name\":{\"type\":\"string\"},\"milestone-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone\"}},\"type\":\"array\"},\"case-owner\":{\"type\":\"string\"},\"case-roles\":{\"items\":{\"properties\":{\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-role-assignment\"}},\"type\":\"array\"},\"case-stages\":{\"items\":{\"properties\":{\"active-nodes\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"},\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"},\"stage-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage\"}},\"type\":\"array\"},\"case-started-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-status\":{\"type\":\"integer\"},\"container-id\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstanceTasksAsStakeholder",
+      "id": "_id_:7724fc23d30452a28a45a572ee008ea95cbe4fa72bea5b41cf6fd4df322d3070",
       "name": "Retrieves case instance tasks assigned as stakeholder, allows to filter by task status and applies pagination",
       "pattern": "To",
       "tags": [
@@ -4211,7 +4211,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"instances\":{\"items\":{\"properties\":{\"case-completed-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-completion-msg\":{\"type\":\"string\"},\"case-definition-id\":{\"type\":\"string\"},\"case-description\":{\"type\":\"string\"},\"case-file\":{\"properties\":{\"case-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"case-data-restrictions\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\"},\"case-group-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"},\"case-user-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-file\"}},\"case-id\":{\"type\":\"string\"},\"case-milestones\":{\"items\":{\"properties\":{\"milestone-achieved\":{\"type\":\"boolean\"},\"milestone-achieved-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"milestone-id\":{\"type\":\"string\"},\"milestone-name\":{\"type\":\"string\"},\"milestone-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone\"}},\"type\":\"array\"},\"case-owner\":{\"type\":\"string\"},\"case-roles\":{\"items\":{\"properties\":{\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-role-assignment\"}},\"type\":\"array\"},\"case-stages\":{\"items\":{\"properties\":{\"active-nodes\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"},\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"},\"stage-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage\"}},\"type\":\"array\"},\"case-started-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-status\":{\"type\":\"integer\"},\"container-id\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstancesByRole",
+      "id": "_id_:aa966a4816fd7b3f85e252c7fdd40896f8a34b3e1a4a6a3013d71a7e3ec5d41",
       "name": "Retrieves case instances where given user is involed in given role and applies pagination, allows to filter by case instance status",
       "pattern": "To",
       "tags": [
@@ -4245,7 +4245,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"instances\":{\"items\":{\"properties\":{\"case-completed-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-completion-msg\":{\"type\":\"string\"},\"case-definition-id\":{\"type\":\"string\"},\"case-description\":{\"type\":\"string\"},\"case-file\":{\"properties\":{\"case-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"case-data-restrictions\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\"},\"case-group-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"},\"case-user-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-file\"}},\"case-id\":{\"type\":\"string\"},\"case-milestones\":{\"items\":{\"properties\":{\"milestone-achieved\":{\"type\":\"boolean\"},\"milestone-achieved-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"milestone-id\":{\"type\":\"string\"},\"milestone-name\":{\"type\":\"string\"},\"milestone-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone\"}},\"type\":\"array\"},\"case-owner\":{\"type\":\"string\"},\"case-roles\":{\"items\":{\"properties\":{\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-role-assignment\"}},\"type\":\"array\"},\"case-stages\":{\"items\":{\"properties\":{\"active-nodes\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"},\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"},\"stage-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage\"}},\"type\":\"array\"},\"case-started-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-status\":{\"type\":\"integer\"},\"container-id\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getCaseInstances1",
+      "id": "_id_:615fc00f9992a9620c661893227c0e7229af08e6063ee2ed23b2ba21a85c74a7",
       "name": "Retrieves case instances with authntication checks and applies pagination, allows to filter by data (case file) name and value, owner and case instance status",
       "pattern": "To",
       "tags": [
@@ -4279,7 +4279,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"instances\":{\"items\":{\"properties\":{\"case-completed-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-completion-msg\":{\"type\":\"string\"},\"case-definition-id\":{\"type\":\"string\"},\"case-description\":{\"type\":\"string\"},\"case-file\":{\"properties\":{\"case-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"case-data-restrictions\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\"},\"case-group-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"},\"case-user-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-file\"}},\"case-id\":{\"type\":\"string\"},\"case-milestones\":{\"items\":{\"properties\":{\"milestone-achieved\":{\"type\":\"boolean\"},\"milestone-achieved-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"milestone-id\":{\"type\":\"string\"},\"milestone-name\":{\"type\":\"string\"},\"milestone-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone\"}},\"type\":\"array\"},\"case-owner\":{\"type\":\"string\"},\"case-roles\":{\"items\":{\"properties\":{\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-role-assignment\"}},\"type\":\"array\"},\"case-stages\":{\"items\":{\"properties\":{\"active-nodes\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"},\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"},\"stage-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage\"}},\"type\":\"array\"},\"case-started-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-status\":{\"type\":\"integer\"},\"container-id\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getProcessDefinitionsByContainer",
+      "id": "_id_:74aeea7b92d259c8ac53746e4440d772d2fe1eabe7861193ea38d8a4815ed92b",
       "name": "Retrieves process definitions that belong to given container and applies pagination",
       "pattern": "To",
       "tags": [
@@ -4313,7 +4313,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"instances\":{\"items\":{\"properties\":{\"case-completed-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-completion-msg\":{\"type\":\"string\"},\"case-definition-id\":{\"type\":\"string\"},\"case-description\":{\"type\":\"string\"},\"case-file\":{\"properties\":{\"case-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"case-data-restrictions\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\"},\"case-group-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"},\"case-user-assignments\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-file\"}},\"case-id\":{\"type\":\"string\"},\"case-milestones\":{\"items\":{\"properties\":{\"milestone-achieved\":{\"type\":\"boolean\"},\"milestone-achieved-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"milestone-id\":{\"type\":\"string\"},\"milestone-name\":{\"type\":\"string\"},\"milestone-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-milestone\"}},\"type\":\"array\"},\"case-owner\":{\"type\":\"string\"},\"case-roles\":{\"items\":{\"properties\":{\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"name\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-role-assignment\"}},\"type\":\"array\"},\"case-stages\":{\"items\":{\"properties\":{\"active-nodes\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"},\"adhoc-fragments\":{\"items\":{\"properties\":{\"name\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-adhoc-fragment\"}},\"type\":\"array\"},\"stage-id\":{\"type\":\"string\"},\"stage-name\":{\"type\":\"string\"},\"stage-status\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-stage\"}},\"type\":\"array\"},\"case-started-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"case-status\":{\"type\":\"integer\"},\"container-id\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"case-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"case-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getProcessDefinitions",
+      "id": "_id_:394cb73013c835fd6e1ce422941a934c95e8a65b6578d6e2d4beb1e552d52bf3",
       "name": "Retrieves process definitions with filtering by name or id of the process definition and applies pagination",
       "pattern": "To",
       "tags": [
@@ -4347,7 +4347,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"xml\":{\"name\":\"node-instance\"}}}}"
         }
       },
-      "id": "_id_:getNodeInstanceForWorkItem",
+      "id": "_id_:26171fe22b4a11c6653f803ea9ef5b9aeeb3a47253ddcf10650648bf5b7b5cf3",
       "name": "Retrieves node instance for given process instance id and work item id",
       "pattern": "To",
       "tags": [
@@ -4381,7 +4381,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"node-instance\":{\"items\":{\"properties\":{\"container-id\":{\"type\":\"string\"},\"node-completed\":{\"type\":\"boolean\"},\"node-connection\":{\"type\":\"string\"},\"node-id\":{\"type\":\"string\"},\"node-instance-id\":{\"type\":\"integer\"},\"node-name\":{\"type\":\"string\"},\"node-type\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"reference-id\":{\"type\":\"integer\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"node-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"node-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getProcessInstanceHistory1",
+      "id": "_id_:160483eaa474db069f4c290a5e44b96e720670779cf8de367c9275f6ab4344e7",
       "name": "Retrieves node instances for given process instance. Depending on provided query parameters (activeOnly or completedOnly) will return active and/or completes nodes",
       "pattern": "To",
       "tags": [
@@ -4415,7 +4415,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"associatedEntities\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\",\"xml\":{\"name\":\"associated-entities\",\"wrapped\":true}},\"container-id\":{\"type\":\"string\"},\"dynamic\":{\"type\":\"boolean\"},\"package\":{\"type\":\"string\"},\"process-id\":{\"type\":\"string\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"processVariables\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"process-variables\",\"wrapped\":true}},\"reusableSubProcesses\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"process-subprocesses\",\"wrapped\":true}},\"serviceTasks\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"service-tasks\",\"wrapped\":true}}},\"xml\":{\"name\":\"process-definition\"}}}}"
         }
       },
-      "id": "_id_:getProcessesByDeploymentIdProcessId",
+      "id": "_id_:39598c9614cc55a2ef2aab2abcd1878f5280782c1f5fa6e3f62617248d871d94",
       "name": "Retrieves process definition that belong to given container and has matching process id",
       "pattern": "To",
       "tags": [
@@ -4449,7 +4449,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"processes\":{\"items\":{\"properties\":{\"associatedEntities\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\",\"xml\":{\"name\":\"associated-entities\",\"wrapped\":true}},\"container-id\":{\"type\":\"string\"},\"dynamic\":{\"type\":\"boolean\"},\"package\":{\"type\":\"string\"},\"process-id\":{\"type\":\"string\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"processVariables\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"process-variables\",\"wrapped\":true}},\"reusableSubProcesses\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"process-subprocesses\",\"wrapped\":true}},\"serviceTasks\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"service-tasks\",\"wrapped\":true}}},\"type\":\"object\",\"xml\":{\"name\":\"process-definition\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"process-definitions\"}}}}"
         }
       },
-      "id": "_id_:getProcessesById",
+      "id": "_id_:4e0612c4d477acaaba80a715666b4230ce377974ed5b8160b9e43a0f92cf51b9",
       "name": "Retrieves process definitions filtered by process id",
       "pattern": "To",
       "tags": [
@@ -4483,7 +4483,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"processes\":{\"items\":{\"properties\":{\"associatedEntities\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\",\"xml\":{\"name\":\"associated-entities\",\"wrapped\":true}},\"container-id\":{\"type\":\"string\"},\"dynamic\":{\"type\":\"boolean\"},\"package\":{\"type\":\"string\"},\"process-id\":{\"type\":\"string\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"processVariables\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"process-variables\",\"wrapped\":true}},\"reusableSubProcesses\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"process-subprocesses\",\"wrapped\":true}},\"serviceTasks\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"service-tasks\",\"wrapped\":true}}},\"type\":\"object\",\"xml\":{\"name\":\"process-definition\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"process-definitions\"}}}}"
         }
       },
-      "id": "_id_:getProcessesByFilter",
+      "id": "_id_:51eb60e7ef3d43f54d2f4ac01b9baa6c6c1226e420ba4ed34e058e3deb8ac513",
       "name": "Retrieves process definitions filtered by process id or name",
       "pattern": "To",
       "tags": [
@@ -4517,7 +4517,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"processes\":{\"items\":{\"properties\":{\"associatedEntities\":{\"additionalProperties\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"},\"type\":\"object\",\"xml\":{\"name\":\"associated-entities\",\"wrapped\":true}},\"container-id\":{\"type\":\"string\"},\"dynamic\":{\"type\":\"boolean\"},\"package\":{\"type\":\"string\"},\"process-id\":{\"type\":\"string\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"processVariables\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"process-variables\",\"wrapped\":true}},\"reusableSubProcesses\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"process-subprocesses\",\"wrapped\":true}},\"serviceTasks\":{\"additionalProperties\":{\"type\":\"string\"},\"type\":\"object\",\"xml\":{\"name\":\"service-tasks\",\"wrapped\":true}}},\"type\":\"object\",\"xml\":{\"name\":\"process-definition\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"process-definitions\"}}}}"
         }
       },
-      "id": "_id_:getProcessesByDeploymentId1",
+      "id": "_id_:f5cdcf0a016b21ec4bba5dbdf2f9ac2421539dd19f6b0d5c93cad7c34300d5f",
       "name": "Retrieves process definitions that belong to given container",
       "pattern": "To",
       "tags": [
@@ -4551,7 +4551,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"active-user-tasks\":{\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary-list\"}},\"container-id\":{\"type\":\"string\"},\"correlation-key\":{\"type\":\"string\"},\"initiator\":{\"type\":\"string\"},\"parent-instance-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-desc\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"process-instance-state\":{\"type\":\"integer\"},\"process-instance-variables\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"}},\"xml\":{\"name\":\"process-instance\"}}}}"
         }
       },
-      "id": "_id_:getProcessInstanceByCorrelationKey",
+      "id": "_id_:34562fd3f90f3947222807713e1cac1d1a3e0fdd5314258406d62497ba658c36",
       "name": "Retrieves process instance by exactly matched correlation key",
       "pattern": "To",
       "tags": [
@@ -4585,7 +4585,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"active-user-tasks\":{\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary-list\"}},\"container-id\":{\"type\":\"string\"},\"correlation-key\":{\"type\":\"string\"},\"initiator\":{\"type\":\"string\"},\"parent-instance-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-desc\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"process-instance-state\":{\"type\":\"integer\"},\"process-instance-variables\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"}},\"xml\":{\"name\":\"process-instance\"}}}}"
         }
       },
-      "id": "_id_:getProcessInstanceById",
+      "id": "_id_:35f22676a67ec2f0823cbaa492f05ceedfbeb3bebe985999d33371f69c4e0426",
       "name": "Retrieves process instance for given process instance id and optionally loads its variables",
       "pattern": "To",
       "tags": [
@@ -4619,7 +4619,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"process-instance\":{\"items\":{\"properties\":{\"active-user-tasks\":{\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary-list\"}},\"container-id\":{\"type\":\"string\"},\"correlation-key\":{\"type\":\"string\"},\"initiator\":{\"type\":\"string\"},\"parent-instance-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-desc\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"process-instance-state\":{\"type\":\"integer\"},\"process-instance-variables\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"process-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"process-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getProcessInstanceByVariables",
+      "id": "_id_:49c3343d970045b0c1d43b01a479dace1e2820ae779380df62b2a6c167ec3dd7",
       "name": "Retrieves process instances filtered by by variable or by variable and its value. Applies pagination by default and allows to specify sorting",
       "pattern": "To",
       "tags": [
@@ -4653,7 +4653,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"process-instance\":{\"items\":{\"properties\":{\"active-user-tasks\":{\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary-list\"}},\"container-id\":{\"type\":\"string\"},\"correlation-key\":{\"type\":\"string\"},\"initiator\":{\"type\":\"string\"},\"parent-instance-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-desc\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"process-instance-state\":{\"type\":\"integer\"},\"process-instance-variables\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"process-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"process-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getProcessInstancesByDeploymentId1",
+      "id": "_id_:57d369d548e0f500a5bf1b3ef0f1ff3c192cdbbe717992d5bfce0109b11bdaf0",
       "name": "Retrieves process instances filtered by container. Applies pagination by default and allows to specify sorting",
       "pattern": "To",
       "tags": [
@@ -4687,7 +4687,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"process-instance\":{\"items\":{\"properties\":{\"active-user-tasks\":{\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary-list\"}},\"container-id\":{\"type\":\"string\"},\"correlation-key\":{\"type\":\"string\"},\"initiator\":{\"type\":\"string\"},\"parent-instance-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-desc\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"process-instance-state\":{\"type\":\"integer\"},\"process-instance-variables\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"process-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"process-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getProcessInstancesByCorrelationKey",
+      "id": "_id_:789a9b931f51e4ce99525851c5d557faa43a013caaa552fe82a72a541e13a825",
       "name": "Retrieves process instances filtered by correlation key, retrieves all process instances that match correlationkey*. Applies pagination by default and allows to specify sorting",
       "pattern": "To",
       "tags": [
@@ -4721,7 +4721,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"process-instance\":{\"items\":{\"properties\":{\"active-user-tasks\":{\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary-list\"}},\"container-id\":{\"type\":\"string\"},\"correlation-key\":{\"type\":\"string\"},\"initiator\":{\"type\":\"string\"},\"parent-instance-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-desc\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"process-instance-state\":{\"type\":\"integer\"},\"process-instance-variables\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"process-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"process-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getProcessInstancesByProcessId",
+      "id": "_id_:6b2a77756871750e6658d9557c3513fdf4117aa466fadef84c51c4c813ca5642",
       "name": "Retrieves process instances filtered by process id. Applies pagination by default and allows to specify sorting",
       "pattern": "To",
       "tags": [
@@ -4755,7 +4755,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"process-instance\":{\"items\":{\"properties\":{\"active-user-tasks\":{\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary-list\"}},\"container-id\":{\"type\":\"string\"},\"correlation-key\":{\"type\":\"string\"},\"initiator\":{\"type\":\"string\"},\"parent-instance-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-desc\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"process-instance-state\":{\"type\":\"integer\"},\"process-instance-variables\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"process-name\":{\"type\":\"string\"},\"process-version\":{\"type\":\"string\"},\"start-date\":{\"format\":\"date-time\",\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"process-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"process-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getProcessInstances1",
+      "id": "_id_:12f62791913bcf4d99b48bbe1c1d7024c422f01ea9182bf4b91d0bfd589b6d5c",
       "name": "Retrieves process instances filtered by status, initiator, processName - depending what query parameters are given. Applies pagination by default and allows to specify sorting",
       "pattern": "To",
       "tags": [
@@ -4789,7 +4789,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-business-admins\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"task-business-admins\"}},\"type\":\"array\",\"xml\":{\"name\":\"business-admins\",\"wrapped\":true}},\"task-container-id\":{\"type\":\"string\"},\"task-correlation-key\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-excl-owners\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"task-excl-owners\"}},\"type\":\"array\",\"xml\":{\"name\":\"excluded-owners\",\"wrapped\":true}},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-form\":{\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-input-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"task-last-modificaiton-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-last-modification-user\":{\"type\":\"string\"},\"task-name\":{\"type\":\"string\"},\"task-output-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-pot-owners\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"task-pot-owners\"}},\"type\":\"array\",\"xml\":{\"name\":\"potential-owners\",\"wrapped\":true}},\"task-priority\":{\"type\":\"integer\"},\"task-process-id\":{\"type\":\"string\"},\"task-process-instance-id\":{\"type\":\"integer\"},\"task-skippable\":{\"type\":\"boolean\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"},\"task-type\":{\"type\":\"string\"},\"task-workitem-id\":{\"type\":\"integer\"}},\"xml\":{\"name\":\"task-instance\"}}}}"
         }
       },
-      "id": "_id_:getTaskByWorkItemId",
+      "id": "_id_:3a3e407eba71296a43e5bed09670991dfa8e1f298da6423d62ea906da0129d06",
       "name": "Retrieves task by associated work item id",
       "pattern": "To",
       "tags": [
@@ -4823,7 +4823,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-business-admins\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"task-business-admins\"}},\"type\":\"array\",\"xml\":{\"name\":\"business-admins\",\"wrapped\":true}},\"task-container-id\":{\"type\":\"string\"},\"task-correlation-key\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-excl-owners\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"task-excl-owners\"}},\"type\":\"array\",\"xml\":{\"name\":\"excluded-owners\",\"wrapped\":true}},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-form\":{\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-input-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"task-last-modificaiton-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-last-modification-user\":{\"type\":\"string\"},\"task-name\":{\"type\":\"string\"},\"task-output-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-pot-owners\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"task-pot-owners\"}},\"type\":\"array\",\"xml\":{\"name\":\"potential-owners\",\"wrapped\":true}},\"task-priority\":{\"type\":\"integer\"},\"task-process-id\":{\"type\":\"string\"},\"task-process-instance-id\":{\"type\":\"integer\"},\"task-skippable\":{\"type\":\"boolean\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"},\"task-type\":{\"type\":\"string\"},\"task-workitem-id\":{\"type\":\"integer\"}},\"xml\":{\"name\":\"task-instance\"}}}}"
         }
       },
-      "id": "_id_:getTaskById",
+      "id": "_id_:2cc6307cadc749b0bdd13af2f1705bcbbc6663e20916c26331ac4899adca3721",
       "name": "Retrieves task by task id",
       "pattern": "To",
       "tags": [
@@ -4857,7 +4857,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-event-instance\":{\"items\":{\"properties\":{\"task-event-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-event-id\":{\"type\":\"integer\"},\"task-event-message\":{\"type\":\"string\"},\"task-event-type\":{\"type\":\"string\"},\"task-event-user\":{\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-process-instance-id\":{\"type\":\"integer\"},\"task-work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-event-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"task-event-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getTaskEvents1",
+      "id": "_id_:b467adfe6fdd38091856190d977200dc220c0d88d04b0f951c540b98e3cd3d1",
       "name": "Retrieves task events for given task id and applies pagination",
       "pattern": "To",
       "tags": [
@@ -4891,7 +4891,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"task-summary-list\"}}}}"
         }
       },
-      "id": "_id_:getTasksAssignedAsBusinessAdministratorByStatus",
+      "id": "_id_:586ead38a4fba7715ad0d2086b2053ba6b53f485b2f18bbd6aaab7fa9d11bb62",
       "name": "Retrieves tasks assigned as business administrator, optionally filters by status and applies pagination",
       "pattern": "To",
       "tags": [
@@ -4925,7 +4925,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"task-summary-list\"}}}}"
         }
       },
-      "id": "_id_:getTasksAssignedAsPotentialOwner",
+      "id": "_id_:5568aab7ed2ae617989d3309fae4ea2b79fd8027129440db9b4a6690161159d8",
       "name": "Retrieves tasks assigned as potential owner, optionally filters by status and given groups and applies pagination",
       "pattern": "To",
       "tags": [
@@ -4959,7 +4959,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"task-summary-list\"}}}}"
         }
       },
-      "id": "_id_:getTasksByStatusByProcessInstanceId",
+      "id": "_id_:2fe2cf7cb9e2a10bbfe36cfbc4ed074959ba8082464ede12b1d7236cda277e3b",
       "name": "Retrieves tasks associated with given process instance, optionally filters by status and applies pagination",
       "pattern": "To",
       "tags": [
@@ -4993,7 +4993,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"task-summary-list\"}}}}"
         }
       },
-      "id": "_id_:getTasksByVariables",
+      "id": "_id_:5c09c9a95a39a37ccf210641af3a1baa4790ce3abf97f799bbcc6f9fcbe488bc",
       "name": "Retrieves tasks by variable name and optionally by variable value, optionally filters by status and applies pagination",
       "pattern": "To",
       "tags": [
@@ -5027,7 +5027,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"task-summary-list\"}}}}"
         }
       },
-      "id": "_id_:getTasksOwnedByStatus",
+      "id": "_id_:7e52516ff3bc83bd8877435f37ea04ea6091f16be25c2180b9d68918edbe214c",
       "name": "Retrieves tasks owned, optionally filters by status and applies pagination",
       "pattern": "To",
       "tags": [
@@ -5061,7 +5061,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-summary\":{\"items\":{\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-container-id\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-is-skipable\":{\"type\":\"boolean\"},\"task-name\":{\"type\":\"string\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-priority\":{\"type\":\"integer\"},\"task-proc-def-id\":{\"type\":\"string\"},\"task-proc-inst-id\":{\"type\":\"integer\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-summary\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"task-summary-list\"}}}}"
         }
       },
-      "id": "_id_:getAllAuditTask",
+      "id": "_id_:1b64c141350a045a4181381b9ea680317b2ea4c36f06b09fef205972bcc7a5a9",
       "name": "Retrieves tasks, optionally filters by status and applies pagination",
       "pattern": "To",
       "tags": [
@@ -5095,7 +5095,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"variable-instance\":{\"items\":{\"properties\":{\"modification-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"old-value\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"value\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"variable-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"variable-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getVariableHistory1",
+      "id": "_id_:137a6fc3c26bb6249ef021de29b1bd2e30699f698fc883afc11f4cddf3d0900f",
       "name": "Retrieves variable history (from audit logs) for given variable name that belongs to process instance",
       "pattern": "To",
       "tags": [
@@ -5129,7 +5129,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"variable-instance\":{\"items\":{\"properties\":{\"modification-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"old-value\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"value\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"variable-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"variable-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getVariablesCurrentState1",
+      "id": "_id_:2b9cd2574bb9a8cb0fcf49f250b4082b8bf21f52a751f28414ae94c8105ac630",
       "name": "Retrieves variables last value (from audit logs) for given process instance",
       "pattern": "To",
       "tags": [
@@ -5163,7 +5163,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"xml\":{\"name\":\"response\"}}}}"
         }
       },
-      "id": "_id_:manageContainer",
+      "id": "_id_:55759b64aefa10be06fc047f1f181da5bbe1ae5811b744f9b9b17172ac8b8a08",
       "name": "Evaluates rules by executing commands on the rule session",
       "pattern": "To",
       "tags": [
@@ -5191,7 +5191,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:activate",
+      "id": "_id_:200c7e6220036fd90a72b70cf30651c9a4733f1b9afbd878c7f2f692a3ceded1",
       "name": "Activates task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5225,7 +5225,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"integer\"}}}"
         }
       },
-      "id": "_id_:addAttachment",
+      "id": "_id_:158916c120cb4c43ae1c70ca9bc85fb68a791aca51db996a883fc7d11b045350",
       "name": "Adds attachment to task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5259,7 +5259,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"integer\"}}}"
         }
       },
-      "id": "_id_:addComment1",
+      "id": "_id_:25f643d6eb2ec9185f08332df9a80fd80460709178073c53bbeb84feb0d1d020",
       "name": "Adds comment to task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5287,7 +5287,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:claim",
+      "id": "_id_:22e4c3ced30827e9ecfcabbad169d631c6caa4f3acbed622d95f73265bafd122",
       "name": "Claims task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5315,7 +5315,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:complete",
+      "id": "_id_:114409ba81b95809c53206468c6f086f45bbc29f305bb49f82581a3bf55e33e3",
       "name": "Completes task with given id that belongs to given container, optionally it can claim and start task when auto-progress is used",
       "pattern": "To",
       "tags": [
@@ -5343,7 +5343,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:delegate",
+      "id": "_id_:6f216e33c5cf9add9d70e7cd8c28e3dafe27e7723ea93918b27c60f118532154",
       "name": "Delegates task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5371,7 +5371,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:deleteAttachment",
+      "id": "_id_:6e82dbc339176b6acdd8d50136b6f6da3084bf3f5a9c6a9db03c49bc425b44a6",
       "name": "Deletes attachment from task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5399,7 +5399,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:deleteComment",
+      "id": "_id_:4988ecab3b6f21267dce7295b1f6b16f726735e8de27e720cd5f263614157938",
       "name": "Deletes comment from task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5427,7 +5427,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:deleteContent",
+      "id": "_id_:7844413f6ac42e317b0f6b685d021109d66fcdf58d98bdcb78ced4d7ee320085",
       "name": "Deletes content from task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5455,7 +5455,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:exit",
+      "id": "_id_:1a697660eeb4ae9dbfdcda204ce025586d054128e79d7cc93385ca5db0c71557",
       "name": "Exists task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5483,7 +5483,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:fail",
+      "id": "_id_:51280dabfbc880cdc5f92cc2f4f22c8032de5aba401c3268250a11eeb2df1f73",
       "name": "Fails task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5511,7 +5511,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:forward",
+      "id": "_id_:623f71bfcc7d836c0b73543d09e1c067e84ae580e4305aec58ac82343a2e9d19",
       "name": "Forwards task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5539,7 +5539,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:nominate",
+      "id": "_id_:1139859357aeb528b3f9a64bdce706adec18ff6c48f5c1f7e0bbac80f2ef4f54",
       "name": "Nominates task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5567,7 +5567,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:release",
+      "id": "_id_:5b2bae13dcb9c8d908d3bc29b38ef6970949fd329ac4b2175211e4aa9dbf57d7",
       "name": "Releases task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5595,7 +5595,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:resume",
+      "id": "_id_:57c5cecdf26de47775b705a122f4b4a5d667b219169408475382d645f93509ea",
       "name": "Resumes task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5629,7 +5629,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"attachment-added-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"attachment-added-by\":{\"type\":\"string\"},\"attachment-content-id\":{\"type\":\"integer\"},\"attachment-id\":{\"type\":\"integer\"},\"attachment-name\":{\"type\":\"string\"},\"attachment-size\":{\"type\":\"integer\"},\"attachment-type\":{\"type\":\"string\"}},\"xml\":{\"name\":\"task-attachment\"}}}}"
         }
       },
-      "id": "_id_:getAttachmentById",
+      "id": "_id_:5fc457c7dd0d3777af3de65eba73e70ae28c3e6798f408391ef5c9c470ef8ea",
       "name": "Retrieves attachment with given id from task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5663,7 +5663,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\"}}}"
         }
       },
-      "id": "_id_:getAttachmentContentById",
+      "id": "_id_:637853726a1c0682b77c13f36e72881efa52e45f2637530ceabb0a2d10b2b0cb",
       "name": "Retrieves attachment's content with given id from task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5697,7 +5697,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-attachment\":{\"items\":{\"properties\":{\"attachment-added-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"attachment-added-by\":{\"type\":\"string\"},\"attachment-content-id\":{\"type\":\"integer\"},\"attachment-id\":{\"type\":\"integer\"},\"attachment-name\":{\"type\":\"string\"},\"attachment-size\":{\"type\":\"integer\"},\"attachment-type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-attachment\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"task-attachment-list\"}}}}"
         }
       },
-      "id": "_id_:getAttachmentsByTaskId",
+      "id": "_id_:6c8fd8a6037d2da46af08e45cfcb6661e021b50047f6b5c4407408c2243b0961",
       "name": "Retrieves attachments from task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5731,7 +5731,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"comment\":{\"type\":\"string\"},\"comment-added-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"comment-added-by\":{\"type\":\"string\"},\"comment-id\":{\"type\":\"integer\"}},\"xml\":{\"name\":\"task-comment\"}}}}"
         }
       },
-      "id": "_id_:getCommentById",
+      "id": "_id_:2effc5f65caa62be3612478e685db77ac01f09f3f38a9585177ef279e7e1b17d",
       "name": "Retrieves comment with given id from task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5765,7 +5765,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-comment\":{\"items\":{\"properties\":{\"comment\":{\"type\":\"string\"},\"comment-added-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"comment-added-by\":{\"type\":\"string\"},\"comment-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-comment\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"task-comment-list\"}}}}"
         }
       },
-      "id": "_id_:getCommentsByTaskId",
+      "id": "_id_:264528fce9bc6f18ca10f9f6b2d69a341fba2a8ebbcbcdaad73431e77772ccdf",
       "name": "Retrieves comments from task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5799,7 +5799,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"additionalProperties\":{\"type\":\"object\"}}}}"
         }
       },
-      "id": "_id_:getTaskInputContentByTaskId",
+      "id": "_id_:40b051def42eafc473917d61f777aa6d6df1196da0bb214c135a0148e0f3b38d",
       "name": "Retrieves input date from task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5833,7 +5833,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"additionalProperties\":{\"type\":\"object\"}}}}"
         }
       },
-      "id": "_id_:getTaskOutputContentByTaskId",
+      "id": "_id_:6d321f3e3e82976c212438d5cade2abc7b33be27074b9657776503524bb4611c",
       "name": "Retrieves output date from task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5867,7 +5867,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-event-instance\":{\"items\":{\"properties\":{\"task-event-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-event-id\":{\"type\":\"integer\"},\"task-event-message\":{\"type\":\"string\"},\"task-event-type\":{\"type\":\"string\"},\"task-event-user\":{\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-process-instance-id\":{\"type\":\"integer\"},\"task-work-item-id\":{\"type\":\"integer\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-event-instance\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"task-event-instance-list\"}}}}"
         }
       },
-      "id": "_id_:getTaskEvents",
+      "id": "_id_:50b4d4f0a8fb4b5f296e2e101fc19356003bbe03450550f05698e77c8287db54",
       "name": "Retrieves task events for given task id and applies pagination",
       "pattern": "To",
       "tags": [
@@ -5901,7 +5901,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-activation-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-actual-owner\":{\"type\":\"string\"},\"task-business-admins\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"task-business-admins\"}},\"type\":\"array\",\"xml\":{\"name\":\"business-admins\",\"wrapped\":true}},\"task-container-id\":{\"type\":\"string\"},\"task-correlation-key\":{\"type\":\"string\"},\"task-created-by\":{\"type\":\"string\"},\"task-created-on\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-description\":{\"type\":\"string\"},\"task-excl-owners\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"task-excl-owners\"}},\"type\":\"array\",\"xml\":{\"name\":\"excluded-owners\",\"wrapped\":true}},\"task-expiration-time\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-form\":{\"type\":\"string\"},\"task-id\":{\"type\":\"integer\"},\"task-input-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"task-last-modificaiton-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"task-last-modification-user\":{\"type\":\"string\"},\"task-name\":{\"type\":\"string\"},\"task-output-data\":{\"additionalProperties\":{\"type\":\"object\"},\"type\":\"object\"},\"task-parent-id\":{\"type\":\"integer\"},\"task-pot-owners\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"task-pot-owners\"}},\"type\":\"array\",\"xml\":{\"name\":\"potential-owners\",\"wrapped\":true}},\"task-priority\":{\"type\":\"integer\"},\"task-process-id\":{\"type\":\"string\"},\"task-process-instance-id\":{\"type\":\"integer\"},\"task-skippable\":{\"type\":\"boolean\"},\"task-status\":{\"type\":\"string\"},\"task-subject\":{\"type\":\"string\"},\"task-type\":{\"type\":\"string\"},\"task-workitem-id\":{\"type\":\"integer\"}},\"xml\":{\"name\":\"task-instance\"}}}}"
         }
       },
-      "id": "_id_:getTask",
+      "id": "_id_:31f6b317ab0f526a09b7ccd9e9c9dbd701cd3f57f7c676376646e9545fb50f29",
       "name": "Retrieves task with given id that belongs to given container, optionally loads its input, output data and assignments",
       "pattern": "To",
       "tags": [
@@ -5929,7 +5929,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:saveContent",
+      "id": "_id_:6d2e0c014ca35d6c50220030fc903ce69bfc5ac9c196cd003a2bd1f01fc29d34",
       "name": "Saves content on task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5957,7 +5957,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:setDescription",
+      "id": "_id_:79200c2faba803d3f7046824dfba9bbf52058247c70cb916aee5bd246cabf68f",
       "name": "Sets description on task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -5985,7 +5985,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:setExpirationDate",
+      "id": "_id_:6c48984239074063d75b0b2706da6871d79005dc784aab6cb2c8b13f779c3ac5",
       "name": "Sets expiration date on task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -6013,7 +6013,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:setName",
+      "id": "_id_:3e1a767c794af01a9ee9af99ccfbd3fb2fe2487c8c6d11ba370da02b50dfb88d",
       "name": "Sets name on task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -6041,7 +6041,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:setPriority",
+      "id": "_id_:44a6ee6e584e4288ea5bcad6476f12d877da23b0145610e549be85b2536b6ec4",
       "name": "Sets priority on task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -6069,7 +6069,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:setSkipable",
+      "id": "_id_:439ae0cd9b70e175a737c45672b4acfccdad2156712e04f4aae770f4aca93ba7",
       "name": "Sets skipable flag on task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -6097,7 +6097,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:skip",
+      "id": "_id_:42e93b9bb77d8a73e8412111b8f3d6befab66bf48fdcdefa80bb111819aa0cb1",
       "name": "Skips task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -6125,7 +6125,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:start",
+      "id": "_id_:3312d73923c0663dc695a15528cd4094d7ebdcca76d4e32f19509324ac0a3306",
       "name": "Starts task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -6153,7 +6153,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:stop",
+      "id": "_id_:6c45cb72a36e63d522aa54ed8adbd7a29a989474f2f77e0458af8800564ef3cb",
       "name": "Stops task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -6181,7 +6181,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:suspend",
+      "id": "_id_:ae9193d9b6cf6c9b8b7ad8b5ba02b5b7a5fb9cd4176db3d896077a11a706258",
       "name": "Suspends task with given id that belongs to given container",
       "pattern": "To",
       "tags": [
@@ -6209,7 +6209,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:update",
+      "id": "_id_:2937013f2181810606b2a799b05bda2849f3e369a20982a4138f0e0a55984ce4",
       "name": "Updates task with given id that belongs to given container with given task instance details in body, updates name, description, priority, expiration date, form name, input and output variables",
       "pattern": "To",
       "tags": [
@@ -6237,7 +6237,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:acknowledgeError1",
+      "id": "_id_:28c20a6f7878452e6fa9f58844b40a188d22afc8f0a7ac5798fdfb93afcb7eab",
       "name": "Acknowledges given execution error",
       "pattern": "To",
       "tags": [
@@ -6265,7 +6265,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:acknowledgeErrors1",
+      "id": "_id_:26a5133ab7b5b1d4c1623bbe35fac73dff05e4e852caaab3b1e3571eac32481a",
       "name": "Acknowledges given execution errors",
       "pattern": "To",
       "tags": [
@@ -6293,7 +6293,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:addAdmins",
+      "id": "_id_:43c76f7c20298025b18a178855785bb40c6222fa9b50cb9926c71853115ca9dc",
       "name": "Adds business admins to given task instance, optionally removing existing ones",
       "pattern": "To",
       "tags": [
@@ -6321,7 +6321,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:addExcludedOwners",
+      "id": "_id_:3e2e9cd0f8cf4c8e8a266a7b9e9b509d6372f12f475d966c600730b5febf871b",
       "name": "Adds excluded owners to given task instance, optionally removing existing ones",
       "pattern": "To",
       "tags": [
@@ -6349,7 +6349,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:addPotentialOwners",
+      "id": "_id_:356e1492568900ad6248bb9ba65376968778d7867897ce83cff9c153ff365cc4",
       "name": "Adds potential owners to given task instance, optionally removing existing ones",
       "pattern": "To",
       "tags": [
@@ -6377,7 +6377,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:addTaskInputs",
+      "id": "_id_:6089a951d085bca7a209cc90135f85a395e621c3719d88762148c5bd344fc411",
       "name": "Adds task inputs to given task instance",
       "pattern": "To",
       "tags": [
@@ -6405,7 +6405,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:cancelNotification",
+      "id": "_id_:42172afc3b01391871711912dc5a12d9597c68fe00567b4d33c34d6226443f7f",
       "name": "Cancels notification for given task instance",
       "pattern": "To",
       "tags": [
@@ -6433,7 +6433,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:cancelReassignment",
+      "id": "_id_:62005a1f2a67ec1d9bf6a6cc414fd066931d1f362d91654e9d5a2c2232b011f7",
       "name": "Cancels reassignment for given task instance",
       "pattern": "To",
       "tags": [
@@ -6461,7 +6461,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:removeAdminsGroups",
+      "id": "_id_:315ca1aad88aa621f71827af714282f37b851a33c590dd99aacade893b7b4231",
       "name": "Removes business admin groups from given task instance",
       "pattern": "To",
       "tags": [
@@ -6489,7 +6489,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:removeAdminsUsers",
+      "id": "_id_:3012e28795aac8802723875daee26f18d28cc72d4868640dda6f29d703c1e55b",
       "name": "Removes business admins from given task instance",
       "pattern": "To",
       "tags": [
@@ -6517,7 +6517,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:removeExcludedOwnersUsers",
+      "id": "_id_:2fd56d04d287a0682f8e0bda289a22be1da1f0749624fd4b6b77ca9aaf7e35ce",
       "name": "Removes excluded owners from given task instance",
       "pattern": "To",
       "tags": [
@@ -6545,7 +6545,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:removeExcludedOwnersGroups",
+      "id": "_id_:1b5bbdc56838700d567b60578276fbc49960752b4073582b0c3651cd44e74346",
       "name": "Removes excluded owners groups from given task instance",
       "pattern": "To",
       "tags": [
@@ -6573,7 +6573,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:removePotentialOwnersGroups",
+      "id": "_id_:40ef2abd8330890595162d7cce31794f02607f6610e1eb7dbf0eebe965df2e19",
       "name": "Removes potential owner groups from given task instance",
       "pattern": "To",
       "tags": [
@@ -6601,7 +6601,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:removePotentialOwnersUsers",
+      "id": "_id_:2bc2fe9fd30e246b30e3e5d579df280593b3e18fc3cd0c62dc633c9cbfcd8946",
       "name": "Removes potential owners from given task instance",
       "pattern": "To",
       "tags": [
@@ -6629,7 +6629,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:removeTaskInputs",
+      "id": "_id_:b68488e487067e0a5c6c355422c961aa9e9ec30d47e6917f084b73eaeac1c54",
       "name": "Removes task inputs referenced by names from given task instance",
       "pattern": "To",
       "tags": [
@@ -6657,7 +6657,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:removeTaskOutputs",
+      "id": "_id_:838c247a42cf381712b74b8f4b0234bdbc1db5f46036a3ff8fe9d2ad8c967bf",
       "name": "Removes task outputs referenced by names from given task instance",
       "pattern": "To",
       "tags": [
@@ -6691,7 +6691,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"acknowledged\":{\"type\":\"boolean\"},\"acknowledged-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"acknowledged-by\":{\"type\":\"string\"},\"activity-id\":{\"type\":\"integer\"},\"activity-name\":{\"type\":\"string\"},\"container-id\":{\"type\":\"string\"},\"error\":{\"type\":\"string\"},\"error-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"error-msg\":{\"type\":\"string\"},\"id\":{\"type\":\"string\"},\"job-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"type\":{\"type\":\"string\"}},\"xml\":{\"name\":\"execution-error\"}}}}"
         }
       },
-      "id": "_id_:getExecutionErrorById1",
+      "id": "_id_:66ff247ab501aba10e1b7a56a3d6c04de0ed3b1a426ea3981a4acb5b44bc568c",
       "name": "Retrieve execution error by its identifier",
       "pattern": "To",
       "tags": [
@@ -6725,7 +6725,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"error-instance\":{\"items\":{\"properties\":{\"acknowledged\":{\"type\":\"boolean\"},\"acknowledged-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"acknowledged-by\":{\"type\":\"string\"},\"activity-id\":{\"type\":\"integer\"},\"activity-name\":{\"type\":\"string\"},\"container-id\":{\"type\":\"string\"},\"error\":{\"type\":\"string\"},\"error-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"error-msg\":{\"type\":\"string\"},\"id\":{\"type\":\"string\"},\"job-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"execution-error\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"execution-error-list\"}}}}"
         }
       },
-      "id": "_id_:getExecutionErrors1",
+      "id": "_id_:65c6f178d6d2214cc0cf28620c011f85ad96632e38b8f98fbf0904f8f8514d94",
       "name": "Retrieves execution errors for container, allows to filter by task name and/or process id, applies pagination",
       "pattern": "To",
       "tags": [
@@ -6759,7 +6759,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"error-instance\":{\"items\":{\"properties\":{\"acknowledged\":{\"type\":\"boolean\"},\"acknowledged-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"acknowledged-by\":{\"type\":\"string\"},\"activity-id\":{\"type\":\"integer\"},\"activity-name\":{\"type\":\"string\"},\"container-id\":{\"type\":\"string\"},\"error\":{\"type\":\"string\"},\"error-date\":{\"format\":\"date-time\",\"type\":\"string\"},\"error-msg\":{\"type\":\"string\"},\"id\":{\"type\":\"string\"},\"job-id\":{\"type\":\"integer\"},\"process-id\":{\"type\":\"string\"},\"process-instance-id\":{\"type\":\"integer\"},\"type\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"execution-error\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"execution-error-list\"}}}}"
         }
       },
-      "id": "_id_:getExecutionErrorsByTask",
+      "id": "_id_:298443710a3fe52f60189625cf9ac5c8e93e51b1f1d7e31ede83b4c24f769fd1",
       "name": "Retrieves execution errors for task instance and container, applies pagination",
       "pattern": "To",
       "tags": [
@@ -6793,7 +6793,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-notification\":{\"items\":{\"properties\":{\"active\":{\"type\":\"boolean\"},\"content\":{\"type\":\"string\"},\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"},\"notify-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"subject\":{\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-notification\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"task-notification-list\"}}}}"
         }
       },
-      "id": "_id_:getTaskNotifications",
+      "id": "_id_:c1e8747fc11ca16b9e1120d523dcd99f223a785602cdef1027253a1d25667b6",
       "name": "Retrieves notifications for given task",
       "pattern": "To",
       "tags": [
@@ -6827,7 +6827,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"task-reassignment\":{\"items\":{\"properties\":{\"active\":{\"type\":\"boolean\"},\"groups\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"groups\"}},\"type\":\"array\"},\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"},\"reassign-at\":{\"format\":\"date-time\",\"type\":\"string\"},\"users\":{\"items\":{\"type\":\"string\",\"xml\":{\"name\":\"users\"}},\"type\":\"array\"}},\"type\":\"object\",\"xml\":{\"name\":\"task-reassignment\"}},\"type\":\"array\"}},\"xml\":{\"name\":\"task-reassignment-list\"}}}}"
         }
       },
-      "id": "_id_:getTaskReassignments",
+      "id": "_id_:39903bc86f8d14a39503b801d50208fdb18b0d1e5c58421cb17f5b87be3ec16f",
       "name": "Retrieves reassignments for given task",
       "pattern": "To",
       "tags": [
@@ -6861,7 +6861,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"integer\"}}}"
         }
       },
-      "id": "_id_:notify",
+      "id": "_id_:6cd6f41455d78245f1295895838dd1ec14449565a9a8c1c8ea43cb35b592e3ab",
       "name": "Schedules new notification for given task instance",
       "pattern": "To",
       "tags": [
@@ -6895,7 +6895,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"integer\"}}}"
         }
       },
-      "id": "_id_:reassign",
+      "id": "_id_:3099df996d0b65e4beb87d3174f3292fadc380ef5d1d88c5ce64d140c270c427",
       "name": "Schedules new reassign of given task instance",
       "pattern": "To",
       "tags": [

@@ -21,7 +21,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:addPet",
+      "id": "_id_:6c2fec0d5c466f3ac044495a744931f4f1dc099bbc96218654ceccc7891dd331",
       "name": "Add a new pet to the store",
       "pattern": "To",
       "tags": [
@@ -49,7 +49,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:deletePet",
+      "id": "_id_:dac7bedea20e5fc9472ac76899348583d85cad6652c7bdc56fbf1d055c536a0",
       "name": "Deletes a pet",
       "pattern": "To",
       "tags": [
@@ -83,7 +83,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}},\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"xml\":{\"name\":\"Pet\"}}}}"
         }
       },
-      "id": "_id_:getPetById",
+      "id": "_id_:5cd9642cac0a57aa591b57318a66287d071ebfd0cdc340bb721afa955e0b32d6",
       "name": "Find pet by ID",
       "pattern": "To",
       "tags": [
@@ -117,7 +117,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}},\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"xml\":{\"name\":\"Pet\"}}}}}"
         }
       },
-      "id": "_id_:findPetsByStatus",
+      "id": "_id_:3ed35dd08095197d885ed31f9a4066709f82f23412c8bc6249669cf2372c58e2",
       "name": "Finds Pets by status",
       "pattern": "To",
       "tags": [
@@ -151,7 +151,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"items\":{\"type\":\"string\"},\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}},\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"xml\":{\"name\":\"Pet\"}}}}}"
         }
       },
-      "id": "_id_:findPetsByTags",
+      "id": "_id_:301368b7edf09ad732944c754d2e152c78fadec38040a54409e8a4826b3cc801",
       "name": "Finds Pets by tags",
       "pattern": "To",
       "tags": [
@@ -179,7 +179,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:updatePet",
+      "id": "_id_:76487f35630aba2d5cbeab844ccc1f92ed2a794e8fab8af85b3ac63e519fd2cd",
       "name": "Update an existing pet",
       "pattern": "To",
       "tags": [
@@ -207,7 +207,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:updatePetWithForm",
+      "id": "_id_:6a07d243328c2af486b2f3becbcb67f5c5ad127d25302d230d803943b1d1f50b",
       "name": "Updates a pet in the store with form data",
       "pattern": "To",
       "tags": [
@@ -241,7 +241,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"message\":{\"type\":\"string\"},\"type\":{\"type\":\"string\"}}}}}"
         }
       },
-      "id": "_id_:uploadFile",
+      "id": "_id_:57943608ddfef6eff76dead148019efb4a9bcf76edeb41190bb0f56a2e7be3be",
       "name": "uploads an image",
       "pattern": "To",
       "tags": [
@@ -269,7 +269,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:deleteOrder",
+      "id": "_id_:da541a6cff0cca00054236b249a6c38f3a79df82b19c3cc81863edcde92d372",
       "name": "Delete purchase order by ID",
       "pattern": "To",
       "tags": [
@@ -303,7 +303,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"complete\":{\"default\":false,\"type\":\"boolean\"},\"id\":{\"type\":\"integer\"},\"petId\":{\"type\":\"integer\"},\"quantity\":{\"type\":\"integer\"},\"shipDate\":{\"format\":\"date-time\",\"type\":\"string\"},\"status\":{\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"],\"type\":\"string\"}},\"xml\":{\"name\":\"Order\"}}}}"
         }
       },
-      "id": "_id_:getOrderById",
+      "id": "_id_:f1c3475d8255d2876a8e2f871217bb5bfa9b152192bd26d2eee6c953209e9a5",
       "name": "Find purchase order by ID",
       "pattern": "To",
       "tags": [
@@ -337,7 +337,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"complete\":{\"default\":false,\"type\":\"boolean\"},\"id\":{\"type\":\"integer\"},\"petId\":{\"type\":\"integer\"},\"quantity\":{\"type\":\"integer\"},\"shipDate\":{\"format\":\"date-time\",\"type\":\"string\"},\"status\":{\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"],\"type\":\"string\"}},\"xml\":{\"name\":\"Order\"}}}}"
         }
       },
-      "id": "_id_:placeOrder",
+      "id": "_id_:13ea344ebe361df83fa5a9cae679cd6e3b4196e93b18b879cfc5d3dbd346df28",
       "name": "Place an order for a pet",
       "pattern": "To",
       "tags": [
@@ -365,7 +365,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"additionalProperties\":{\"type\":\"integer\"}}}}"
         }
       },
-      "id": "_id_:getInventory",
+      "id": "_id_:3604ea43ac3e1f6fac337bf169d282bc8469e004468745578fefee41da34f10e",
       "name": "Returns pet inventories by status",
       "pattern": "To",
       "tags": [
@@ -393,7 +393,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:createUser",
+      "id": "_id_:16f9eba46f2358ea89bd7371254ee07520bf0ad865c0ca6892c296ff0691dc7d",
       "name": "Create user",
       "pattern": "To",
       "tags": [
@@ -421,7 +421,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:createUsersWithArrayInput",
+      "id": "_id_:22b98a1e2954de46063ad07bd725309bb438b22bbb0c96c3f22c29de72836a72",
       "name": "Creates list of users with given input array",
       "pattern": "To",
       "tags": [
@@ -449,7 +449,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:createUsersWithListInput",
+      "id": "_id_:44a77c3fe31039a05f22925060c4ff9d127b68790e7435d08c28bed5c2d1afd",
       "name": "Creates list of users with given input array",
       "pattern": "To",
       "tags": [
@@ -477,7 +477,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:deleteUser",
+      "id": "_id_:55cfbd1fd7428ed0f49899509dccff70072a5c5400e0c38a0eeb816ecd59e5c3",
       "name": "Delete user",
       "pattern": "To",
       "tags": [
@@ -511,7 +511,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"xml\":{\"name\":\"User\"}}}}"
         }
       },
-      "id": "_id_:getUserByName",
+      "id": "_id_:542e6d57e44388454c0f2af4022fda8fc25e633445aeda843cbddeabf6e4bad4",
       "name": "Get user by user name",
       "pattern": "To",
       "tags": [
@@ -533,7 +533,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:logoutUser",
+      "id": "_id_:7faf9a45cff7ac6da500aaf69f7a0ab80cda2e961bab7a6e055e347f9d31dc56",
       "name": "Logs out current logged in user session",
       "pattern": "To",
       "tags": [
@@ -567,7 +567,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"string\"}}}"
         }
       },
-      "id": "_id_:loginUser",
+      "id": "_id_:6fbfd8a4aca9fbde58933890019dfb46ce7fbb4cebdb1f11b75e24c1dfcbfe96",
       "name": "Logs user into the system",
       "pattern": "To",
       "tags": [
@@ -595,7 +595,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:updateUser",
+      "id": "_id_:52d0577bee93a2421fd85729f37b8131c2ff13dd66693a1d6cce234cb8bfd740",
       "name": "Updated user",
       "pattern": "To",
       "tags": [

@@ -27,7 +27,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"description\":\"The representation of a damage event.\",\"required\":[\"damage\",\"machineId\"],\"properties\":{\"damage\":{\"type\":\"integer\"},\"machineId\":{\"type\":\"number\"}}}}}"
         }
       },
-      "id": "_id_:operation-1",
+      "id": "_id_:187f0349dd12b6dc73d76d86f421cd454facccc36ef9a2ba6956b37abbb31102",
       "name": "Converts a gesture event to a damage event.",
       "pattern": "To"
     },
@@ -52,7 +52,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-0",
+      "id": "_id_:5f64f8a84be5ff4f7f35526f8ba12ad4e012bb6767e4c1865d686b6a17781fb9",
       "name": "Updates a machines health with the damage event.",
       "pattern": "To"
     }

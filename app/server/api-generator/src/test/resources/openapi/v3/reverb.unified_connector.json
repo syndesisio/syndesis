@@ -21,7 +21,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-61",
+      "id": "_id_:4ff17757ca98b3c7cac3c9a16acd9d6f76648bc6648edbe341225cd8d455388",
       "name": "GET /articles",
       "pattern": "To",
       "tags": [
@@ -49,7 +49,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-7",
+      "id": "_id_:d818d93121221abe45708759ec4f89e4fd219e488a40f2bf31ec426dc238fb7",
       "name": "Full taxonomy tree of categories including middle categories",
       "pattern": "To",
       "tags": [
@@ -77,7 +77,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-5",
+      "id": "_id_:43a91d55e5cbc9619a607e2824a38a79cc58cb2371b1b8dbe9ac68705f3938b2",
       "name": "GET /categories/flat",
       "pattern": "To",
       "tags": [
@@ -105,7 +105,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-6",
+      "id": "_id_:62ac590b510fb0b787868dccaa5e0a31800d7e2ae644e941c9cb572e305a9922",
       "name": "Get category details",
       "pattern": "To",
       "tags": [
@@ -133,7 +133,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-8",
+      "id": "_id_:98539664631d018b6673e264945f24c7f53d07701835ac9feedf3e7f5dc62a7",
       "name": "Get subcategory details",
       "pattern": "To",
       "tags": [
@@ -161,7 +161,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-4",
+      "id": "_id_:6cf735b8d570112935efcd4be6fe76e56080d0104633ef5791ebecc4fcd922ce",
       "name": "List of supported product categories",
       "pattern": "To",
       "tags": [
@@ -189,7 +189,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-68",
+      "id": "_id_:4eaf8b30d9a063c0e9bf9d5af9a563b4a307ef5e1506d8c5906739c1da06c51e",
       "name": "GET /comparison_shopping_pages/{id}",
       "pattern": "To",
       "tags": [
@@ -217,7 +217,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-69",
+      "id": "_id_:3d07d8d9569010bd2e90a26fabb4b266bd29ec4a5d86f7fe405e334040692af2",
       "name": "Return new or used listings for a comparison shopping page",
       "pattern": "To",
       "tags": [
@@ -245,7 +245,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-66",
+      "id": "_id_:43af4f668b30f02fbd62c405e1fb45bc2a5c3873c681aa69569a09487de3c9c4",
       "name": "Returns a set of comparison shopping pages based on the current params",
       "pattern": "To",
       "tags": [
@@ -273,7 +273,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-67",
+      "id": "_id_:47298e6d8640e30cd41fc2fa697d038c750ecd886ca0dc1344f51cf207a25a4",
       "name": "Show comparison shopping page",
       "pattern": "To",
       "tags": [
@@ -301,7 +301,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-70",
+      "id": "_id_:4eab7eb0c139abd0e18d377694e5f0b8877f2c817e3e415caa8bddb78e914f20",
       "name": "View reviews of a comparison shopping page",
       "pattern": "To",
       "tags": [
@@ -329,7 +329,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-39",
+      "id": "_id_:3a32c1cb454f595667f0dde2361684a7cf4cb90040fc9c46552e330a809daade",
       "name": "Make an offer to the other participant in the conversation",
       "pattern": "To",
       "tags": [
@@ -357,7 +357,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-151",
+      "id": "_id_:7cb57b960be8380843b9cde37b1f304a651b602df1d341905b81dca9340a4169",
       "name": "Retrieve a list of country codes with corresponding subregions",
       "pattern": "To",
       "tags": [
@@ -385,7 +385,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-38",
+      "id": "_id_:6b754ca1316605203b6b1f69b7ddaa4200d69acd1d016a8d3cf15f650239a0a0",
       "name": "GET /curated_sets/{slug}",
       "pattern": "To",
       "tags": [
@@ -413,7 +413,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-72",
+      "id": "_id_:13fbdebee0b76f38d11d8a2a977e98988b26405b786a61812c96312b1d524f9e",
       "name": "List of supported display currencies for browsing listings",
       "pattern": "To",
       "tags": [
@@ -441,7 +441,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-71",
+      "id": "_id_:6273bf749dc6b14f35d931ef3c5b08f8259a314257e5d2b7af2d14cd44b27dd1",
       "name": "List of supported listing currencies for shops",
       "pattern": "To",
       "tags": [
@@ -469,7 +469,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-46",
+      "id": "_id_:59ee78b169b85a4eafe72f74ed889598c47405268ebf565172930261267e4114",
       "name": "Feedback details",
       "pattern": "To",
       "tags": [
@@ -497,7 +497,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-9",
+      "id": "_id_:3738ea95b55fc86a8e97bde4f1a43511156a1bd641559398e58e1c02d0ffe4bb",
       "name": "Get results from a handpicked collection",
       "pattern": "To",
       "tags": [
@@ -525,7 +525,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-65",
+      "id": "_id_:fc341f2c020b686eef77b94059e25aaa5e2ddcbba1a8e7433e34902246d7397",
       "name": "List of supported product conditions",
       "pattern": "To",
       "tags": [
@@ -553,7 +553,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-19",
+      "id": "_id_:5da07a7a10c871239dee23b0cc79017baea7ca16cc06569aeff13cd20faf077f",
       "name": "All listings including used, handmade, and brand new",
       "pattern": "To",
       "tags": [
@@ -581,7 +581,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-18",
+      "id": "_id_:1dfdfcf2e3a171b11d5b5bd91598ccda94484f4c3f5e10654e98803d590178f8",
       "name": "Bump a listing",
       "pattern": "To",
       "tags": [
@@ -609,7 +609,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-11",
+      "id": "_id_:4812e064cf021c6db6371f7353e6235384dd05e6d1733d898864aa5f371c3683",
       "name": "Create a listing",
       "pattern": "To",
       "tags": [
@@ -637,7 +637,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-24",
+      "id": "_id_:15f0da6cd316da2656289ca66f37582e5e2b349b010e6a7f103665a610083c0d",
       "name": "Create a review for a listing",
       "pattern": "To",
       "tags": [
@@ -665,7 +665,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-10",
+      "id": "_id_:5eaafc764a167f61b08ead0aa31d74f65090dca55bbc2dff8b635fcb9cbc744b",
       "name": "Default search of listings includes only used & handmade. Add a filter to view all listings or use the /listings/all endpoint.",
       "pattern": "To",
       "tags": [
@@ -693,7 +693,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-22",
+      "id": "_id_:1c560a05e34b773f89d41352c4883203503852b8f70b1380c578587d60d9c185",
       "name": "Delete a draft listing. Cannot be used on non-drafts.",
       "pattern": "To",
       "tags": [
@@ -721,7 +721,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-15",
+      "id": "_id_:289f674da5003095d43742564cf25c9ef9786b1596d38f9247bea962b12c2146",
       "name": "Delete an image from a listing",
       "pattern": "To",
       "tags": [
@@ -749,7 +749,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-26",
+      "id": "_id_:6bbbcccf942401c78c0ca68bf47dd7bb5a8894ba6baf5cabf87c6e152074535d",
       "name": "Edit listing.",
       "pattern": "To",
       "tags": [
@@ -777,7 +777,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-16",
+      "id": "_id_:81226d76c76ff1e9a5c3b02aed634ddf674452fe75a959f7638e72118ba449c",
       "name": "Find a product bundle attached to a listing",
       "pattern": "To",
       "tags": [
@@ -805,7 +805,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-25",
+      "id": "_id_:5ada18d5f10eabe865cf33fccb0c1d6d404d907e68744252b91c9ba8b6bb2a9e",
       "name": "Flag a listing for inappropriate content or fraud",
       "pattern": "To",
       "tags": [
@@ -833,7 +833,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-28",
+      "id": "_id_:1b699499d4d0bf46e9782c830228b249380a028cadcd722a9b9a52654f5cfcce",
       "name": "Individual facets",
       "pattern": "To",
       "tags": [
@@ -861,7 +861,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-20",
+      "id": "_id_:3b990fdb2e37f83f7a3292667b9cf2bc0a25d81d6ef21315af65139879b9f2c3",
       "name": "Listing details",
       "pattern": "To",
       "tags": [
@@ -889,7 +889,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-27",
+      "id": "_id_:104b8446083bf9a90389f58403bad7d798bb007b0c6537becd7ebf07a8aa8c63",
       "name": "Listing details",
       "pattern": "To",
       "tags": [
@@ -917,7 +917,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-29",
+      "id": "_id_:132db0a013686bf686559f078b987a002664cce665a4e5324e35133d5cebfe9a",
       "name": "Make an offer to the seller of a listing",
       "pattern": "To",
       "tags": [
@@ -945,7 +945,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-30",
+      "id": "_id_:1fbe0f70f40f6e7c431b9f78c93181c204660ec05741135febaa074c64043cea",
       "name": "Returns the latest negotiation for the requesting user given a listing id",
       "pattern": "To",
       "tags": [
@@ -973,7 +973,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-13",
+      "id": "_id_:25860c562ec5447a00e3d464f9815b1a4c3604f8ef1afacf5e86ad201b782c49",
       "name": "See all sales that include a listing.",
       "pattern": "To",
       "tags": [
@@ -1001,7 +1001,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-12",
+      "id": "_id_:2c2982030f531fa71788416a040d16665f824500cafd6a06163df16e81b13339",
       "name": "Start a conversation with a seller",
       "pattern": "To",
       "tags": [
@@ -1029,7 +1029,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-21",
+      "id": "_id_:503697f50d59278e473393e9f1954c7ef43f73a721e2289798cb53a55c9e241e",
       "name": "Update a listing",
       "pattern": "To",
       "tags": [
@@ -1057,7 +1057,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-17",
+      "id": "_id_:5881a0524b01ee5514b61c09a3700166e7a4c26e01dd8cadf897ed88f27ce865",
       "name": "View available bump tiers and stats for a listing",
       "pattern": "To",
       "tags": [
@@ -1085,7 +1085,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-23",
+      "id": "_id_:653f64e87fbc477c1d026a84ea3d5de87d6d229078ce389fdda1f1cbab95f984",
       "name": "View reviews of a listing",
       "pattern": "To",
       "tags": [
@@ -1113,7 +1113,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-14",
+      "id": "_id_:18b52fa2bec2067d395859e66142f42a6571dc440a776d7fd0fafe4942a2516c",
       "name": "View the images associated with a particular listing",
       "pattern": "To",
       "tags": [
@@ -1141,7 +1141,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-104",
+      "id": "_id_:6cf579ab6fd08916f5d5a76fe9648c689e969f1231615a20ad1eb9096a21075f",
       "name": "Accept an offer",
       "pattern": "To",
       "tags": [
@@ -1169,7 +1169,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-109",
+      "id": "_id_:2e665837f8edd31764198227fe2740271e8f54bd953fdcf5ba249045a984b19c",
       "name": "Add a listing to your wishlist",
       "pattern": "To",
       "tags": [
@@ -1197,7 +1197,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-106",
+      "id": "_id_:4bfce9286fde96233be9d8252f50d7f09a615d20a136cee24a2efa2dd2603b44",
       "name": "Counter an offer",
       "pattern": "To",
       "tags": [
@@ -1225,7 +1225,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-144",
+      "id": "_id_:507a286b8030518954be1c28da0f2300938c86e308fe60c31d4a45a4bec8ceaf",
       "name": "Create a new address in your address book",
       "pattern": "To",
       "tags": [
@@ -1253,7 +1253,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-95",
+      "id": "_id_:1af9a2196f8cecf8f96b2007ee02f3c839834cdde4efefb9983447eafb69f331",
       "name": "DELETE /my/curated_set/product/{product_id}",
       "pattern": "To",
       "tags": [
@@ -1281,7 +1281,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-126",
+      "id": "_id_:4f6d83d0301ae13cf4e4a40a9edb8c948a718c3fbbf475a59a323d9fa105a20e",
       "name": "DELETE /my/follows/{follow_id}/alert",
       "pattern": "To",
       "tags": [
@@ -1309,7 +1309,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-107",
+      "id": "_id_:7a1955af1ce95d697391d0fde8497c327476aba9993e1962a2ecfbe3e1733aae",
       "name": "Decline an offer",
       "pattern": "To",
       "tags": [
@@ -1337,7 +1337,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-127",
+      "id": "_id_:2e17e3b0274c25e6ea43c377a8740471772fd3bff3a221436e005871388dff1c",
       "name": "Delete a follow",
       "pattern": "To",
       "tags": [
@@ -1365,7 +1365,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-146",
+      "id": "_id_:4a6cca221b7ae9b0a65078b68b50e5dcbbae49ae6a7d06d4d73b80effdfa3665",
       "name": "Delete an existing address in your address book",
       "pattern": "To",
       "tags": [
@@ -1393,7 +1393,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-99",
+      "id": "_id_:23ea3017e6e5158e596893a4c325611906bda447a4380117297507238a403ff4",
       "name": "Display conversation details with messages in natural time order (oldest to newest)",
       "pattern": "To",
       "tags": [
@@ -1421,7 +1421,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-89",
+      "id": "_id_:9b0d50e96cbe3841c1dcd877acec08fab8d3d0a97135f0473838104edbe1d29",
       "name": "End a listing",
       "pattern": "To",
       "tags": [
@@ -1449,7 +1449,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-136",
+      "id": "_id_:58b8d21216f11b506f4faea1464c785e7b7356b9855a1c063a24da2a356cc269",
       "name": "Follow a brand",
       "pattern": "To",
       "tags": [
@@ -1477,7 +1477,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-114",
+      "id": "_id_:2413916af17d389492ff04ec20834ce2999b9de58962acf9533ba0d69fafa1ab",
       "name": "Follow a category",
       "pattern": "To",
       "tags": [
@@ -1505,7 +1505,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-133",
+      "id": "_id_:2c7f8e28ac17a88cf8d2faa1be876940e273f91fc3032e94d1845982ddaaa179",
       "name": "Follow a collection",
       "pattern": "To",
       "tags": [
@@ -1533,7 +1533,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-120",
+      "id": "_id_:2619b5aa70796c0ba065f5624cb38ccefa6f0957315550c6979878e0702235f5",
       "name": "Follow a handpicked collection",
       "pattern": "To",
       "tags": [
@@ -1561,7 +1561,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-129",
+      "id": "_id_:b5437b65cbfc57ad8197aad35883a6b19fd2ddf1032ab701de2e87f4041448",
       "name": "Follow a search",
       "pattern": "To",
       "tags": [
@@ -1589,7 +1589,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-123",
+      "id": "_id_:7ed3a222be2d00dd5d7c6b3d91d2c607aadf185d8a136c27ea04ac9ce6381e8b",
       "name": "Follow a shop",
       "pattern": "To",
       "tags": [
@@ -1617,7 +1617,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-117",
+      "id": "_id_:331113a0a856139c01c306c2191945a6cd6f670bcf5756d47e3e5ec89c5301c4",
       "name": "Follow a subcategory",
       "pattern": "To",
       "tags": [
@@ -1645,7 +1645,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-135",
+      "id": "_id_:162718dcf405c3dafb9083340cc90a31356e92a21b17ecd21d68f0640fe19c80",
       "name": "Follow status for a brand",
       "pattern": "To",
       "tags": [
@@ -1673,7 +1673,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-113",
+      "id": "_id_:7236c5e2365d29d85bf62c16dd06145fd62671769641e72b6d71b100f475dbfb",
       "name": "Follow status for a category",
       "pattern": "To",
       "tags": [
@@ -1701,7 +1701,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-132",
+      "id": "_id_:3c8dba9f052d93fef764b3af07f39e154a9c435517113fd52f5b203ffeb419f6",
       "name": "Follow status for a collection",
       "pattern": "To",
       "tags": [
@@ -1729,7 +1729,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-119",
+      "id": "_id_:62038e8a6680d767e7de59d903d41101c5c00002a02d5dde781a59d612f5861e",
       "name": "Follow status for a handpicked collection",
       "pattern": "To",
       "tags": [
@@ -1757,7 +1757,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-128",
+      "id": "_id_:6ab7e888f043930b838d50d189ba06ef2e4496841004247803ab1d6ca96bb47f",
       "name": "Follow status for a search",
       "pattern": "To",
       "tags": [
@@ -1785,7 +1785,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-122",
+      "id": "_id_:35956210d055e4eb758cefb7152243b52e638e4001e819c6336ec3a730ab2bc7",
       "name": "Follow status for a shop",
       "pattern": "To",
       "tags": [
@@ -1813,7 +1813,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-116",
+      "id": "_id_:bfb99dec840b11feafe05eb785e3463d309f1c99e75a8127e2eeea9f1dde2f1",
       "name": "Follow status for a subcategory",
       "pattern": "To",
       "tags": [
@@ -1841,7 +1841,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-103",
+      "id": "_id_:5fb49a0b1d8c3a12e16aa138224b3d6d7b648814213b7d77b841242d39fce1d6",
       "name": "Get a list of active negotiations as a buyer",
       "pattern": "To",
       "tags": [
@@ -1869,7 +1869,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-88",
+      "id": "_id_:32f44fd581d7d3e8ec3ef28c5a6febad61175796c39528b903fc99a296d32c49",
       "name": "Get a list of active negotiations as a seller",
       "pattern": "To",
       "tags": [
@@ -1897,7 +1897,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-147",
+      "id": "_id_:465149f68492fed5484d324e1f5eb17053b130f448bbba3946cf1aa2a0e9254a",
       "name": "Get a list of payouts",
       "pattern": "To",
       "tags": [
@@ -1925,7 +1925,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-92",
+      "id": "_id_:71b34c52a5d9247630d20e4eefd279c5cf0912f3343707f480ea2364cda4c5ba",
       "name": "Get a list of refund requests as a seller",
       "pattern": "To",
       "tags": [
@@ -1953,7 +1953,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-108",
+      "id": "_id_:79f3044b48562fc30bd20975f7f156dd02bf309b413ddc49299305ea03803319",
       "name": "Get a list of wishlisted items",
       "pattern": "To",
       "tags": [
@@ -1981,7 +1981,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-96",
+      "id": "_id_:6410d73d2195562ecd23dd70fac6beaeca1bc2607490b9dc5b00e387b6da4ac4",
       "name": "Get a list of your conversations",
       "pattern": "To",
       "tags": [
@@ -2009,7 +2009,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-111",
+      "id": "_id_:51d4d2c67345f61d24f480f24149137f3772b5a3a62412064591bdafe5321a53",
       "name": "Get a list of your lists (wishlist, watch list, etc)",
       "pattern": "To",
       "tags": [
@@ -2037,7 +2037,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-141",
+      "id": "_id_:45f7a0e0d0c52e6e560043fc1a93848baa271ef1b17001a38e208fe5894da625",
       "name": "Get a list of your recently viewed listings.",
       "pattern": "To",
       "tags": [
@@ -2065,7 +2065,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-149",
+      "id": "_id_:43f66b9eb83581cd77b31695a9a8247d5a09da5eaf0a0f4eb0d021cfa4765fb6",
       "name": "Get account details",
       "pattern": "To",
       "tags": [
@@ -2093,7 +2093,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-74",
+      "id": "_id_:7eba7575724ecb4459530dc8f758f34222cb21bce69ecfc411bd3681e3ec6fa2",
       "name": "Get all seller orders, newest first.",
       "pattern": "To",
       "tags": [
@@ -2121,7 +2121,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-138",
+      "id": "_id_:5d01cca48a14ffc570e9ff0dc89c7ebe10bbeff52b62d211fda3fd4fe353d939",
       "name": "Get listings from your feed",
       "pattern": "To",
       "tags": [
@@ -2149,7 +2149,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-105",
+      "id": "_id_:264c05e915771be37bf77639d38ea68c39ee42ee5cb1e76d99d88e5360450756",
       "name": "Get offer details",
       "pattern": "To",
       "tags": [
@@ -2177,7 +2177,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-91",
+      "id": "_id_:7e3f6355298eb109bce65bc0ee9f510deb99b5b028f8700e444af83f363a7938",
       "name": "Get payment",
       "pattern": "To",
       "tags": [
@@ -2205,7 +2205,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-90",
+      "id": "_id_:6703c16c0d19d6756139a6825abfb1ab49bd2556473f4b08b493d00e95326945",
       "name": "Get payments",
       "pattern": "To",
       "tags": [
@@ -2233,7 +2233,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-77",
+      "id": "_id_:1cb2ce11653f0d4d13cd012876fb915aa7437149e18e87b61ae436184a72edea",
       "name": "Get seller orders awaiting shipment, newest first.",
       "pattern": "To",
       "tags": [
@@ -2261,7 +2261,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-76",
+      "id": "_id_:5c0610279cce91e627dcac0db8bc2a861e1112e42f91c04e872457718ec8551d",
       "name": "Get unpaid seller orders, newest first.",
       "pattern": "To",
       "tags": [
@@ -2289,7 +2289,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-142",
+      "id": "_id_:1d7839b0b1dbd63f9b3003acafd0927dd3b910ea589e569c25c5ba24e848afbd",
       "name": "Get your actionable status counts",
       "pattern": "To",
       "tags": [
@@ -2317,7 +2317,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-75",
+      "id": "_id_:286f8f690073d26befe95d4251f7b724a02b1e9b9c73b0c153a2c1f78aa47aca",
       "name": "Initiate a refund for a sold order",
       "pattern": "To",
       "tags": [
@@ -2345,7 +2345,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-73",
+      "id": "_id_:66d35b446d92104b8cc6dcc673e5efb4c2274fa000fbd5f12879cf1778c0a5d5",
       "name": "List of orders that need feedback",
       "pattern": "To",
       "tags": [
@@ -2373,7 +2373,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-102",
+      "id": "_id_:3c90ed1974e8599c3070d89057238be40870f684f4a5ec6db3c48074111a1664",
       "name": "List of received feedback",
       "pattern": "To",
       "tags": [
@@ -2401,7 +2401,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-101",
+      "id": "_id_:7434b8e7b01237503569726619052b7747a26de463bb8e9005bdde9fc1551748",
       "name": "List of sent feedback",
       "pattern": "To",
       "tags": [
@@ -2429,7 +2429,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-100",
+      "id": "_id_:4ac7e3d235b4a10d08067227483bb4ef914c9daf86d319435f7066b040465c13",
       "name": "Mark a conversation read/unread",
       "pattern": "To",
       "tags": [
@@ -2457,7 +2457,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-80",
+      "id": "_id_:71ac627e9f53e4f23b85dc2deb2e8517fb59b89523a9feea09ed59e6e646960",
       "name": "Marks an order as picked up",
       "pattern": "To",
       "tags": [
@@ -2485,7 +2485,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-85",
+      "id": "_id_:6a8cf4fd2de310d063ceaad396be5cb33a0c8e43b2b0b44a48447c2789a4197",
       "name": "Marks an order as received by the buyer",
       "pattern": "To",
       "tags": [
@@ -2513,7 +2513,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-79",
+      "id": "_id_:665c351c2deacd5a2ffd898c128bfc494df4ea39107b669a3f7026e792b01936",
       "name": "Marks an order as shipped",
       "pattern": "To",
       "tags": [
@@ -2541,7 +2541,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-94",
+      "id": "_id_:4a4dbbb3d619ca92846a4d6640213703a8060bcdaf5aa926f6aadb528c462706",
       "name": "POST /my/curated_set/product/{product_id}",
       "pattern": "To",
       "tags": [
@@ -2569,7 +2569,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-125",
+      "id": "_id_:122e1e88dcf25635763fcbf1a1380f30e238e6ab7e9ed3fb2ad0bee2c0f82db9",
       "name": "POST /my/follows/{follow_id}/alert",
       "pattern": "To",
       "tags": [
@@ -2597,7 +2597,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-148",
+      "id": "_id_:2b69f704f0ee3371eccc47e10a2fa4d55368066385b0c23be6a92f0d92863dea",
       "name": "Read the line items of a payout",
       "pattern": "To",
       "tags": [
@@ -2625,7 +2625,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-110",
+      "id": "_id_:3ae0cb681c18a68adf5e7b856f960d60f242c50dcd2a0e152d8584ad7e7fc384",
       "name": "Remove a listing from your wishlist",
       "pattern": "To",
       "tags": [
@@ -2653,7 +2653,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-86",
+      "id": "_id_:6ec358027e2bc3dc4435acfc54655824b620aaeb7fdfa5eb6078d6d9e57bdec5",
       "name": "Retrieve a list of live listings for the seller. To search all listings specify state=all",
       "pattern": "To",
       "tags": [
@@ -2681,7 +2681,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-87",
+      "id": "_id_:143372ce75684d10f46249933525c75e403af583bdb371ecea89e5a275c8033c",
       "name": "Retrieve a list your draft listings",
       "pattern": "To",
       "tags": [
@@ -2709,7 +2709,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-130",
+      "id": "_id_:523739ea652c578f51c71c69b517c87a182d3d78e5f2144c16f9a4628d27c4db",
       "name": "Returns a user's ArticleCategoryFollows",
       "pattern": "To",
       "tags": [
@@ -2737,7 +2737,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-82",
+      "id": "_id_:60febb3e40f3de12d1a4b95af69d69be4cd427be7490b6decabcdf4b2dfa4042",
       "name": "Returns all orders, newest first.",
       "pattern": "To",
       "tags": [
@@ -2765,7 +2765,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-84",
+      "id": "_id_:349cea03f0a8ef78502ee6b4bb3aaa8d4e0ea45929a6a0fb1e893cc8696e4c09",
       "name": "Returns order details for a buyer",
       "pattern": "To",
       "tags": [
@@ -2793,7 +2793,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-78",
+      "id": "_id_:40e91c50d3b7e377cabef70d87c803ad55d35b6fdbcfbbf8381d190cc096c384",
       "name": "Returns order details for a seller",
       "pattern": "To",
       "tags": [
@@ -2821,7 +2821,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-83",
+      "id": "_id_:35117cf62301c3394adf78ccea8f81a3e02e34f12df224633f3e7fad1d70e642",
       "name": "Returns unpaid orders, newest first.",
       "pattern": "To",
       "tags": [
@@ -2849,7 +2849,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-143",
+      "id": "_id_:4ff9b8a0332ef831dfb91891345fd669e8b994a276bd847ecec05446c279b3ac",
       "name": "See all addresses in your address book",
       "pattern": "To",
       "tags": [
@@ -2877,7 +2877,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-81",
+      "id": "_id_:268a844af95f6df07dd37f348393649c6ccfcd165a281ab51c2eda71374ff5cf",
       "name": "See previous orders from buyer",
       "pattern": "To",
       "tags": [
@@ -2905,7 +2905,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-112",
+      "id": "_id_:154888ad4eeeacff810c57ed153da1125fb17da975b6c83f9cb11da6c014ac42",
       "name": "See what the user is following",
       "pattern": "To",
       "tags": [
@@ -2933,7 +2933,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-98",
+      "id": "_id_:6ddb5bc48775b4eecf518b07179466312d8f872a0f94d286cce36bc91ff00f52",
       "name": "Send a message",
       "pattern": "To",
       "tags": [
@@ -2961,7 +2961,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-131",
+      "id": "_id_:4087645e8431cc6204e4a3ad64d1a3dbd05d618c80d698466c7f308bcd8df178",
       "name": "Set a user's ArticleCategoryFollows",
       "pattern": "To",
       "tags": [
@@ -2989,7 +2989,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-97",
+      "id": "_id_:13348582172363824f461bcc71af3aafc8d08678de130613024c1a70479f3916",
       "name": "Start a conversation",
       "pattern": "To",
       "tags": [
@@ -3017,7 +3017,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-137",
+      "id": "_id_:7e3da8fce8d46e2237c3b1c8de08b2d22006c8416293716f35ca080544eb0c53",
       "name": "Unfollow a brand",
       "pattern": "To",
       "tags": [
@@ -3045,7 +3045,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-115",
+      "id": "_id_:4fc457b88e434d847815427149ad476403e565484c2f65c153b1eabaa3b9531f",
       "name": "Unfollow a category",
       "pattern": "To",
       "tags": [
@@ -3073,7 +3073,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-134",
+      "id": "_id_:4117c101b7426a64ac464cb9dd76aa41e2bcc393bb3f9929334e0061435da8a",
       "name": "Unfollow a collection",
       "pattern": "To",
       "tags": [
@@ -3101,7 +3101,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-121",
+      "id": "_id_:4857106de61841a4271a32503d62f664d41f2ed804dfbb91b2addefce9f55b5b",
       "name": "Unfollow a handpicked collection",
       "pattern": "To",
       "tags": [
@@ -3129,7 +3129,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-124",
+      "id": "_id_:10ea82d0087f1c15decbd2866437639b521b808cc8ed20347d9d562319e88a99",
       "name": "Unfollow a shop",
       "pattern": "To",
       "tags": [
@@ -3157,7 +3157,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-118",
+      "id": "_id_:152266b7afb1788cb30bb0dd6d4936d95bb8319c8961a07eff2025c7f9d62166",
       "name": "Unfollow a subcategory",
       "pattern": "To",
       "tags": [
@@ -3185,7 +3185,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-93",
+      "id": "_id_:77ffd869b1865fcd1bd4657f3bd2bf72cacce41aa319b02cd154054a78ead556",
       "name": "Update a refund request for a sold order",
       "pattern": "To",
       "tags": [
@@ -3213,7 +3213,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-150",
+      "id": "_id_:77cd58c99f3c5b05fc08f2b10afb26f63c60f7e5b7b7e60fd0bf0e2e1a553149",
       "name": "Update account details",
       "pattern": "To",
       "tags": [
@@ -3241,7 +3241,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-145",
+      "id": "_id_:6253229668182063696d79a2bf6491171ea51632772447bd3a8d086e5f885392",
       "name": "Update an existing address in your address book",
       "pattern": "To",
       "tags": [
@@ -3269,7 +3269,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-139",
+      "id": "_id_:604d561b570bea176056aa39a30960e36ff31060e0c42140c4269878916036dd",
       "name": "get your feed",
       "pattern": "To",
       "tags": [
@@ -3297,7 +3297,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-140",
+      "id": "_id_:55574036d789d892f66501609986ee933de8c899b70f5e19add109b318ec63f",
       "name": "get your feed customization options",
       "pattern": "To",
       "tags": [
@@ -3325,7 +3325,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-3",
+      "id": "_id_:38ba77a7f8282e82c5926deecd77ca05a6e338726c013853dface4bd1663fe40",
       "name": "Add feedback about an order's buyer",
       "pattern": "To",
       "tags": [
@@ -3353,7 +3353,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-1",
+      "id": "_id_:187f0349dd12b6dc73d76d86f421cd454facccc36ef9a2ba6956b37abbb31102",
       "name": "Add feedback about an order's seller",
       "pattern": "To",
       "tags": [
@@ -3381,7 +3381,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-2",
+      "id": "_id_:4ae56bcb5e80ff8d4545d5ffb83500819a9ed51dd7ddb23cbc79cadf08df876b",
       "name": "Feedback details for an order's buyer",
       "pattern": "To",
       "tags": [
@@ -3409,7 +3409,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-0",
+      "id": "_id_:5f64f8a84be5ff4f7f35526f8ba12ad4e012bb6767e4c1865d686b6a17781fb9",
       "name": "Feedback details for an order's seller",
       "pattern": "To",
       "tags": [
@@ -3437,7 +3437,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-64",
+      "id": "_id_:6180f022d284a2678f18a4925c8c14cd623889d52354d2e3b553176fbae412a9",
       "name": "Get list of payment methods",
       "pattern": "To",
       "tags": [
@@ -3465,7 +3465,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-41",
+      "id": "_id_:4e8f6b8218badb49869d82c3ffbfc8a80190090261edc352ee1c02677d37b1e8",
       "name": "Get a list of paginated transactions for a price guide.",
       "pattern": "To",
       "tags": [
@@ -3493,7 +3493,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-42",
+      "id": "_id_:d417ab65af28733ebe5cf89cdd594c9384e21d4b69b2c95c84c6878c75baa6a",
       "name": "Get a summary of transactions for a given price guide",
       "pattern": "To",
       "tags": [
@@ -3521,7 +3521,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-40",
+      "id": "_id_:5bb5c676dc6efe54b63b5b3b124952b318da96015393c5217d056a5c1babec55",
       "name": "Retrieve a Price Guide",
       "pattern": "To",
       "tags": [
@@ -3549,7 +3549,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-55",
+      "id": "_id_:23625ac3eda8c676d3fbce103f37093d5efac1038d22d4a9dadba0e7bc4f85a",
       "name": "Create a review for a product",
       "pattern": "To",
       "tags": [
@@ -3577,7 +3577,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-53",
+      "id": "_id_:64d11a758bda0f90eb45c42e955077cdab51a9e25a3ddd73a63fad4124df7ad4",
       "name": "Update a review",
       "pattern": "To",
       "tags": [
@@ -3605,7 +3605,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-52",
+      "id": "_id_:42938b896eb046277630a5871db185f3164f62ddea1b0134d9b2a84c443850d7",
       "name": "View a review",
       "pattern": "To",
       "tags": [
@@ -3633,7 +3633,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-54",
+      "id": "_id_:554ab824a83920e30c4264af4f7251b0bdd78bbd1482fb822503b9da7e204320",
       "name": "View reviews of a comparison shopping page",
       "pattern": "To",
       "tags": [
@@ -3661,7 +3661,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-59",
+      "id": "_id_:4180791973c28c126ad5bdd17be7e6bc13be993f144a62b9d79236bcfe28bdd9",
       "name": "Add listings to a sale",
       "pattern": "To",
       "tags": [
@@ -3689,7 +3689,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-57",
+      "id": "_id_:775ef3aec31a249ca13497e8937e2da60b2c020d2da4a974a8e199ba3ddeaf86",
       "name": "GET /sales/{slug}",
       "pattern": "To",
       "tags": [
@@ -3717,7 +3717,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-60",
+      "id": "_id_:16661ff4a3d1985f61db40da42b2f90e7aa779538e6a821de2d5b0e28408eacc",
       "name": "Remove a listing from a sale",
       "pattern": "To",
       "tags": [
@@ -3745,7 +3745,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-56",
+      "id": "_id_:7cac4342db70bbdfa991fbde661a0eee39b1d8d1a6e0d7dd95b36c6e5630bfd8",
       "name": "View upcoming and live Reverb official sales.",
       "pattern": "To",
       "tags": [
@@ -3773,7 +3773,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-58",
+      "id": "_id_:3bb6a366047ae07f77062eabf169e06b49679b6bb8007e4025182f47b8d0d67a",
       "name": "View your created sales.",
       "pattern": "To",
       "tags": [
@@ -3801,7 +3801,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-62",
+      "id": "_id_:45c74f2d9616e8102d6ea37ea3e190068c0d9775ca25532c7484651862e1cc54",
       "name": "GET /shipping/regions",
       "pattern": "To",
       "tags": [
@@ -3829,7 +3829,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-63",
+      "id": "_id_:3f4237c6b0424dd4820fa0b4f134e6b24379fd98d9e26d889b1decddd1898345",
       "name": "List of supported shipping providers",
       "pattern": "To",
       "tags": [
@@ -3857,7 +3857,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-37",
+      "id": "_id_:365faa2f5342c8231459dbd2f6c90b072bdc8520d74281f7b579771717122567",
       "name": "Disable vacation mode. All listings will be re-enabled.",
       "pattern": "To",
       "tags": [
@@ -3885,7 +3885,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-36",
+      "id": "_id_:5555650465ac5b87000c85327d230717bcb0db7670ace4e6fd044070445da73e",
       "name": "Enable vacation mode. All listings will be unavailable until vacation mode is turned off.",
       "pattern": "To",
       "tags": [
@@ -3913,7 +3913,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-33",
+      "id": "_id_:329e013eac99737b7f7423bbd10aa87b74733c701ee750549ca8b87b6533951c",
       "name": "Get accepted payment methods",
       "pattern": "To",
       "tags": [
@@ -3941,7 +3941,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-31",
+      "id": "_id_:1fbe5cf400b937ba008a5084b082f0d6668da11a847d7e9b8bd7209181ed0ca1",
       "name": "Get your own shop details",
       "pattern": "To",
       "tags": [
@@ -3969,7 +3969,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-34",
+      "id": "_id_:47d688650cabbc26d212e215d58d60681bb5e81af88564c4bbb718afa2bd829a",
       "name": "List of supported product conditions",
       "pattern": "To",
       "tags": [
@@ -3997,7 +3997,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-35",
+      "id": "_id_:417214e120d57cf9c92ac7b7fb366ae95d3565fc671671c01a2b39af1eb64237",
       "name": "Returns shop vacation status",
       "pattern": "To",
       "tags": [
@@ -4025,7 +4025,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-32",
+      "id": "_id_:5986dd99655041ffc67947fb0470a53de5fce00fa247ab486ef42ed6fb532a95",
       "name": "Update your shop profile",
       "pattern": "To",
       "tags": [
@@ -4053,7 +4053,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-47",
+      "id": "_id_:3e2b49407fc27f26674f96f9d56dabc89f11d2158ef3d43b6d0e99f5a684cd97",
       "name": "Get details on a shop.",
       "pattern": "To",
       "tags": [
@@ -4081,7 +4081,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-48",
+      "id": "_id_:6c1eb96a17f8b3701f4a536d0e21f30710db67640ca1f70528b933c63bd8b576",
       "name": "Get seller's feedback",
       "pattern": "To",
       "tags": [
@@ -4109,7 +4109,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-50",
+      "id": "_id_:723e5d82249cf02906222a6085844ba9caa6a50c818ff6592df53cb5a368cd9b",
       "name": "Get seller's feedback as a buyer",
       "pattern": "To",
       "tags": [
@@ -4137,7 +4137,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-49",
+      "id": "_id_:49200ac78cf99d89291ba932e21f06db21a5d2026262a9f5ce2ed7e805e0307b",
       "name": "Get seller's feedback as a seller",
       "pattern": "To",
       "tags": [
@@ -4165,7 +4165,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-51",
+      "id": "_id_:2962e6d72d5bc9b6c647091337ab906a91bf329ef0c250b187cd17bacb6c0080",
       "name": "List of shipping profiles for your shop",
       "pattern": "To",
       "tags": [
@@ -4193,7 +4193,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-43",
+      "id": "_id_:262953ce5a1d4fca1e5ebc0aae6aa27db66d8295f5105268a692f83680447ea8",
       "name": "A list of wanted items by the user",
       "pattern": "To",
       "tags": [
@@ -4221,7 +4221,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-44",
+      "id": "_id_:215083c031c6903d376efbde0386a7c8913c3f44b62198cc47e72bee37ef48ac",
       "name": "Mark an item wanted. Returns 200 on success or 422 on failure.",
       "pattern": "To",
       "tags": [
@@ -4249,7 +4249,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-45",
+      "id": "_id_:397ed31abe8e1e7376665b9de0b48085291cc8d1f64594e88cfbdfa558770dc9",
       "name": "Unmark an item wanted.",
       "pattern": "To",
       "tags": [
@@ -4277,7 +4277,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-154",
+      "id": "_id_:3b845917638f85b548c1007be2abc49831b1d592717284dc75657e1fa132a27b",
       "name": "Get details of a webhook registration",
       "pattern": "To",
       "tags": [
@@ -4305,7 +4305,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-152",
+      "id": "_id_:19e13c020da828e855e7332c2b442254d825f7cc9bb386ed57cdbc99e75af415",
       "name": "Get webhook registrations",
       "pattern": "To",
       "tags": [
@@ -4333,7 +4333,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-153",
+      "id": "_id_:2f0b3652e39f4530b68d33557cccb7bd64fdc6231862ceb1258bf0ceafc1d968",
       "name": "Register a webhook",
       "pattern": "To",
       "tags": [
@@ -4361,7 +4361,7 @@
           "kind": "none"
         }
       },
-      "id": "_id_:operation-155",
+      "id": "_id_:6641e65e01cf62c05b86fa23f35b7abbd3b47a742fd7c34c59298df9e5169a7e",
       "name": "Remove a webhook",
       "pattern": "To",
       "tags": [

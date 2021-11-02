@@ -27,7 +27,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"ids\":{\"type\":\"string\"},\"start\":{\"type\":\"number\"},\"searchmodifiers\":{\"type\":\"string\"}}}}}"
         }
       },
-      "id": "_id_:test endpoint",
+      "id": "_id_:50d5eef7d9311f16891521aa8bddf3af172623d3d7f33dd05a39e2b365fccc51",
       "name": "test endpoint post",
       "pattern": "To",
       "tags": [

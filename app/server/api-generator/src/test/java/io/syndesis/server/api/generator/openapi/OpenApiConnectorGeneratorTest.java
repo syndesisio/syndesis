@@ -238,10 +238,9 @@ public class OpenApiConnectorGeneratorTest {
             new Connector.Builder().id("connector1").build(),
             createSettingsFrom(openApiDoc));
         final List<ConnectorAction> actions = generated.getActions();
-        assertThat(actions).hasSize(3);
-        assertThat(actions.get(0).getId()).hasValueSatisfying(id -> assertThat(id).endsWith("foo"));
-        assertThat(actions.get(1).getId()).hasValueSatisfying(id -> assertThat(id).endsWith("foo1"));
-        assertThat(actions.get(2).getId()).hasValueSatisfying(id -> assertThat(id).endsWith("bar"));
+        assertThat(actions)
+            .hasSize(3)
+            .extracting(a -> a.getId().get()).doesNotHaveDuplicates();
     }
 
     @Test
