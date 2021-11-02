@@ -20,17 +20,31 @@ jobs:
         with:
           ref: ${{ matrix.branch }}
           persist-credentials: false
+          fetch-depth: 0
+      - name: Check for changes
+        id: should
+        env:
+          BRANCH: ${{ matrix.branch }}
+        run: |
+          RELEASE_TAGS=$(git tag --contains $(git rev-parse HEAD) | grep "^${BRANCH/.x/}") || true
+          if [ -n "${RELEASE_TAGS}" ]; then
+            echo The latest change was already included in a release, skipping release
+            echo ::set-output name=skip::true
+          fi
       - name: Set up JDK ${{ matrix.java }}
+        if: steps.should.outputs.skip != 'true'
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.java }}
       - name: Cache Maven Repository
+        if: steps.should.outputs.skip != 'true'
         uses: actions/cache@v1
         with:
           path: ~/.m2
           key: release-${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: release-${{ runner.os }}-m2
       - name: Daily release of ${{ matrix.branch }}
+        if: steps.should.outputs.skip != 'true'
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
