@@ -25,17 +25,24 @@ import routes from '../../routes';
 export interface IDetailsPageRouteState {
   configured?: ICreateConnectorProps;
   connectorTemplateId?: string;
-  specification: IApiSummarySoap;
+  apiSummary: IApiSummarySoap;
+  specification?: string;
+  url?: string;
 }
 
 export const DetailsPage: React.FunctionComponent = () => {
   const { t } = useTranslation(['apiClientConnectors', 'shared']);
   const { pushNotification } = React.useContext(UIContext);
   const { state, history } = useRouteData<null, IDetailsPageRouteState>();
-  const createApiConnector = useApiConnectorCreator();
+  // if there is a specification configured, that means that it was provided by the server in the `.../info` response
+  // which means that the server prefers receiving the specification via configuredProperties, not as a separate mime part
+  // and passing a defined value for specification to useApiConnectorCreator results in a separate mime part
+  const createApiConnector = useApiConnectorCreator(
+    state.configured?.specification ?? state.specification
+  );
 
   const [chosenAddress] = React.useState(() => {
-    const addresses = state.specification.configuredProperties?.addresses;
+    const addresses = state.apiSummary.configuredProperties?.addresses;
     const portName = state.configured?.portName;
     if (addresses && portName) {
       const addressesMap = JSON.parse(addresses);
@@ -60,14 +67,25 @@ export const DetailsPage: React.FunctionComponent = () => {
       {({ allowNavigation }) => {
         const onSubmit = async (values: IConnectorValues, actions: any) => {
           actions.setSubmitting(true);
+          const { name, description, icon, ...configured } = values;
+          if (state.configured) {
+            Object.entries(state.configured).forEach(([k, v]) => {
+              if (v) {
+                configured[k] = v.toString();
+              }
+            });
+          }
 
           try {
             await createApiConnector({
-              ...state.configured,
-              ...values,
-              connectorTemplateId: state.connectorTemplateId,
-              specification:
-                state.specification.configuredProperties!.specification,
+              configuredProperties: {
+                ...state.apiSummary.configuredProperties, // the defaults
+                ...configured, // customizations
+              },
+              connectorTemplateId: state.connectorTemplateId!,
+              description,
+              icon,
+              name,
             });
             actions.setSubmitting(false);
             allowNavigation();
@@ -95,21 +113,21 @@ export const DetailsPage: React.FunctionComponent = () => {
               i18nCreateConnection={t('apiClientConnectors:CreateApiConnector')}
             />
             <ApiConnectorInfoForm
-              name={state.specification.name}
-              description={state.specification.description}
+              name={state.apiSummary.name}
+              description={state.apiSummary.description}
               connectorTemplateId={state.connectorTemplateId}
               basePath={
-                state.specification.configuredProperties?.basePath ||
-                state.specification.properties?.basePath?.defaultValue
+                state.apiSummary.configuredProperties?.basePath ||
+                state.apiSummary.properties?.basePath?.defaultValue
               }
               host={
-                state.specification.configuredProperties?.host ||
-                state.specification.properties?.host?.defaultValue
+                state.apiSummary.configuredProperties?.host ||
+                state.apiSummary.properties?.host?.defaultValue
               }
               address={
                 chosenAddress ||
-                state.specification.configuredProperties?.address ||
-                state.specification.properties?.address?.defaultValue
+                state.apiSummary.configuredProperties?.address ||
+                state.apiSummary.properties?.address?.defaultValue
               }
               handleSubmit={onSubmit}
             >

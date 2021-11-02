@@ -15,6 +15,9 @@
  */
 package io.syndesis.server.api.generator.soap;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,6 +27,7 @@ import javax.wsdl.Definition;
 import javax.wsdl.Port;
 import javax.wsdl.Service;
 import javax.wsdl.extensions.soap12.SOAP12Binding;
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 import org.w3c.dom.Element;
@@ -35,7 +39,8 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
-import io.syndesis.server.api.generator.ConnectorGenerator;
+import io.syndesis.common.util.Strings;
+import io.syndesis.server.api.generator.ConnectorAndActionGenerator;
 import io.syndesis.server.api.generator.soap.parser.ParserException;
 import io.syndesis.server.api.generator.soap.parser.SoapApiModelParser;
 
@@ -45,13 +50,12 @@ import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.PORT_
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SERVICES_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SERVICE_NAME_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SOAP_VERSION_PROPERTY;
-import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SPECIFICATION_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.WSDL_URL_PROPERTY;
 
 /**
  * Generates SOAP API Connector.
  */
-public class SoapApiConnectorGenerator extends ConnectorGenerator {
+public class SoapApiConnectorGenerator extends ConnectorAndActionGenerator {
 
     // thread local API model to avoid re-parsing the WSDL.
     private static final ThreadLocal<SoapApiModelInfo> LOCAL_MODEL_INFO = new ThreadLocal<>();
@@ -70,7 +74,6 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private Connector createConnector(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings,
                                       SoapApiModelInfo modelInfo) {
 
@@ -130,6 +133,47 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
     }
 
     @Override
+    public ConnectorAction generateAction(final Connector connector, final ConnectorAction action, final Map<String, String> parameters, final InputStream specificationStream) {
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
+            .specification(specificationStream)
+            .build();
+
+        try {
+            final SoapApiModelInfo modelInfo = getModelInfo(connectorSettings);
+
+            // we already parsed this so this must be safe
+            final Definition definition = modelInfo.getModel().get();
+
+            final Map<String, String> configuredProperties = connector.getConfiguredProperties();
+
+            final String serviceNameString = configuredProperties.get(SERVICE_NAME_PROPERTY);
+            final QName serviceName = parseQNameFrom(serviceNameString);
+
+            final String portNameString = configuredProperties.get(PORT_NAME_PROPERTY);
+            final QName portName = parseQNameFrom(portNameString);
+
+            return SoapApiModelParser.generateDataShapesFor(action, definition, serviceName, portName);
+        } finally {
+            releaseModelInfo();
+        }
+    }
+
+    private static QName parseQNameFrom(final String stringRepresentation) {
+        final String namespace;
+        final String localPart;
+        if (stringRepresentation.charAt(0) != '{') {
+            namespace = XMLConstants.NULL_NS_URI;
+            localPart = stringRepresentation;
+        } else {
+            final int idx = stringRepresentation.indexOf('}');
+            namespace = stringRepresentation.substring(1, idx);
+            localPart = stringRepresentation.substring(idx + 1);
+        }
+
+        return new QName(namespace, localPart);
+    }
+
+    @Override
     protected String determineConnectorDescription(ConnectorTemplate connectorTemplate,
                                                    ConnectorSettings connectorSettings) {
 
@@ -158,7 +202,7 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
     private APISummary getApiSummary(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings,
                                      SoapApiModelInfo modelInfo) {
 
-        if (!modelInfo.getResolvedSpecification().isPresent()) {
+        if (!modelInfo.getModel().isPresent()) {
             return new APISummary.Builder()
                 .errors(modelInfo.getErrors())
                 .warnings(modelInfo.getWarnings())
@@ -171,6 +215,12 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
                 .putAllConfiguredProperties(connector.getConfiguredProperties())
                 .warnings(modelInfo.getWarnings())
                 .errors(modelInfo.getErrors());
+
+        // if it's defined it should be a URL to the WSDL, so we'll keep it
+        final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
+        if (configuredProperties.containsKey("specification")) {
+            summaryBuilder.putConfiguredProperty("specification", configuredProperties.get("specification"));
+        }
 
         modelInfo.getModel().ifPresent(definition -> {
 
@@ -225,8 +275,6 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
         if (wsdlURL != null) {
             builder.putConfiguredProperty(WSDL_URL_PROPERTY, wsdlURL);
         }
-        builder.putConfiguredProperty(SPECIFICATION_PROPERTY,
-                modelInfo.getResolvedSpecification().orElse(configuredProperties.get(SPECIFICATION_PROPERTY)));
 
         getService(modelInfo, configuredProperties).ifPresent(s -> {
             builder.putConfiguredProperty(SERVICE_NAME_PROPERTY, s.toString());
@@ -234,27 +282,21 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
             getPortName(modelInfo, configuredProperties).ifPresent(p -> {
                 builder.putConfiguredProperty(PORT_NAME_PROPERTY, p);
 
-                // set address from selected port
-                final String address = SoapApiModelParser.getAddress(modelInfo.getModel().get(), s, p);
-                builder.putConfiguredProperty(ADDRESS_PROPERTY,
-                    address);
+                final String configuredAddress = connectorSettings.getConfiguredProperties().get(ADDRESS_PROPERTY);
+                final String defaultAddress = SoapApiModelParser.getAddress(modelInfo.getModel().get(), s, p);
+                if (Strings.isEmptyOrBlank(configuredAddress)) {
+                    // set address from selected port
+                    builder.putConfiguredProperty(ADDRESS_PROPERTY, defaultAddress);
+                } else {
+                    builder.putConfiguredProperty(ADDRESS_PROPERTY, configuredAddress);
+                }
+
                 builder.putProperty(ADDRESS_PROPERTY,
                     new ConfigurationProperty.Builder().createFrom(connectorProperties.get(ADDRESS_PROPERTY))
-                        .defaultValue(address)
+                        .defaultValue(defaultAddress)
                         .build());
             });
         });
-
-        if (!connectorSettings.getConfiguredProperties().containsKey(ADDRESS_PROPERTY)) {
-            // if present, set default address from WSDL
-            modelInfo.getDefaultAddress().ifPresent(a -> {
-                builder.putConfiguredProperty(ADDRESS_PROPERTY, a);
-                builder.putProperty(ADDRESS_PROPERTY,
-                        new ConfigurationProperty.Builder().createFrom(connectorProperties.get(ADDRESS_PROPERTY))
-                        .defaultValue(a)
-                        .build());
-            });
-        }
 
         return builder.build();
     }
@@ -270,15 +312,22 @@ public class SoapApiConnectorGenerator extends ConnectorGenerator {
     }
 
     // get cached TLS model info, or create one the first time
-    private static SoapApiModelInfo getModelInfo(ConnectorSettings connectorSettings) {
+    private static SoapApiModelInfo getModelInfo(final ConnectorSettings connectorSettings) {
         // check TLS first
         if (LOCAL_MODEL_INFO.get() == null) {
-            final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
-            final String specification = configuredProperties.get(SPECIFICATION_PROPERTY);
-            if (specification == null) {
-                throw new IllegalArgumentException("Missing configured property 'specification'");
+            Optional<InputStream> maybeSpecificationStream = connectorSettings.getSpecification();
+            if (!maybeSpecificationStream.isPresent()) {
+                throw new IllegalArgumentException("Missing specification");
             }
-            LOCAL_MODEL_INFO.set(SoapApiModelParser.parseSoapAPI(specification, configuredProperties.get(WSDL_URL_PROPERTY)));
+            final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
+            // if there is one it should contain the URL
+            final String wsdlUrl = configuredProperties.get("specification");
+
+            try (InputStream specification = maybeSpecificationStream.get()) {
+                LOCAL_MODEL_INFO.set(SoapApiModelParser.parseSoapAPI(specification, wsdlUrl));
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
         }
         return LOCAL_MODEL_INFO.get();
     }

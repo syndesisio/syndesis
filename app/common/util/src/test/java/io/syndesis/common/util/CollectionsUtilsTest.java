@@ -18,6 +18,8 @@ package io.syndesis.common.util;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.entry;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -37,6 +39,19 @@ class CollectionsUtilsTest {
         Map<Integer, String> map3 = CollectionsUtils.aggregate(map1, map2);
         Assertions.assertThat(map3).containsAllEntriesOf(map1);
         Assertions.assertThat(map3).containsAllEntriesOf(map2);
+    }
+
+    @Test
+    void testAggregateDuplicateKeys() {
+        Map<Integer, String> map1 = new HashMap<>();
+        Map<Integer, String> map2 = new HashMap<>();
+
+        map1.put(1, "one-1");
+        map2.put(1, "one-2");
+        map1.put(3, "three");
+
+        Map<Integer, String> map3 = CollectionsUtils.aggregate(map1, map2);
+        Assertions.assertThat(map3).containsExactly(entry(1, "one-1"), entry(3, "three"));
     }
 
     @Test

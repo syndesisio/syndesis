@@ -17,14 +17,15 @@ package io.syndesis.server.runtime;
 
 import java.io.InputStream;
 
+import io.syndesis.server.dao.file.FileDAO;
+import io.syndesis.server.dao.file.IconDao;
+import io.syndesis.server.dao.file.SpecificationResourceDao;
+import io.syndesis.server.filestore.impl.SqlFileStore;
+
 import org.skife.jdbi.v2.DBI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import io.syndesis.server.dao.file.FileDAO;
-import io.syndesis.server.dao.file.IconDao;
-import io.syndesis.server.filestore.impl.SqlFileStore;
 
 /**
  * Creates and configures the file store
@@ -33,6 +34,8 @@ import io.syndesis.server.filestore.impl.SqlFileStore;
 public class FileStoreConfiguration {
 
     public static final String ICON_FILE_STORE_PATH = "/icon/";
+
+    public static final String SPECIFICATION_FILE_STORE_PATH = "/specification/";
 
     @Bean(initMethod = "init")
     @Autowired
@@ -90,6 +93,27 @@ public class FileStoreConfiguration {
             @Override
             public boolean delete(String id) {
                 return fileStore.delete(ICON_FILE_STORE_PATH + id);
+            }
+        };
+    }
+
+    @Bean
+    public SpecificationResourceDao specificationResourceFileStore(final SqlFileStore fileStore) {
+        return new SpecificationResourceDao() {
+
+            @Override
+            public void write(String id, InputStream specification) {
+                fileStore.write(SPECIFICATION_FILE_STORE_PATH + id, specification);
+            }
+
+            @Override
+            public InputStream read(String id) {
+                return fileStore.read(SPECIFICATION_FILE_STORE_PATH + id);
+            }
+
+            @Override
+            public boolean delete(String id) {
+                return fileStore.delete(SPECIFICATION_FILE_STORE_PATH + id);
             }
         };
     }

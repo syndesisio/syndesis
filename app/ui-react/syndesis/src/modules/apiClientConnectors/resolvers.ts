@@ -42,11 +42,12 @@ export default {
       IReviewActionsRouteState
     >(
       routes.create.review,
-      ({ specification, connectorTemplateId, configured }) => ({
+      ({ specification, url, connectorTemplateId, configured }) => ({
         state: {
           configured,
           connectorTemplateId,
           specification,
+          url,
         },
       })
     ),
@@ -65,12 +66,19 @@ export default {
       IServicePortRouteState
     >(
       routes.create.servicePort,
-      ({ apiSummary, connectorTemplateId, configured, specification }) => ({
+      ({
+        apiSummary,
+        connectorTemplateId,
+        configured,
+        specification,
+        url,
+      }) => ({
         state: {
           apiSummary,
           configured,
           connectorTemplateId,
           specification,
+          url,
         },
       })
     ),
@@ -80,21 +88,37 @@ export default {
       ISecurityPageRouteState
     >(
       routes.create.security,
-      ({ configured, connectorTemplateId, specification }) => ({
+      ({
+        configured,
+        connectorTemplateId,
+        apiSummary,
+        specification,
+        url,
+      }) => ({
         state: {
           configured,
           connectorTemplateId,
+          apiSummary,
           specification,
+          url,
         },
       })
     ),
     save: makeResolver<IDetailsPageRouteState, null, IDetailsPageRouteState>(
       routes.create.save,
-      ({ configured, connectorTemplateId, specification }) => ({
+      ({
+        configured,
+        connectorTemplateId,
+        apiSummary,
+        specification,
+        url,
+      }) => ({
         state: {
           configured,
           connectorTemplateId,
+          apiSummary,
           specification,
+          url,
         },
       })
     ),

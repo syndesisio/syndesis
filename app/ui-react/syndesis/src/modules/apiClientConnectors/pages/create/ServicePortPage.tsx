@@ -23,12 +23,13 @@ export interface IServicePortRouteState {
   apiSummary: IApiSummarySoap;
   connectorTemplateId?: string;
   configured?: ICreateConnectorProps;
-  specification: string;
+  specification?: string;
+  url?: string;
 }
 
 export const ServicePortPage: React.FunctionComponent = () => {
   const { state } = useRouteData<null, IServicePortRouteState>();
-  const { apiSummary, connectorTemplateId, configured, specification } = state;
+  const { apiSummary, configured } = state;
 
   const [serviceName, setServiceName] = React.useState(
     configured?.serviceName || apiSummary!.configuredProperties!.serviceName
@@ -85,11 +86,7 @@ export const ServicePortPage: React.FunctionComponent = () => {
                 }
                 footer={
                   <ApiConnectorCreatorFooter
-                    backHref={resolvers.create.review({
-                      configured,
-                      connectorTemplateId,
-                      specification,
-                    })}
+                    backHref={resolvers.create.review(state)}
                     i18nBack={t('shared:Back')}
                     i18nNext={t('shared:Next')}
                     i18nReviewEdit={t(
@@ -98,13 +95,12 @@ export const ServicePortPage: React.FunctionComponent = () => {
                     isNextLoading={false}
                     isNextDisabled={!!apiSummary!.errors}
                     nextHref={resolvers.create.security({
+                      ...state,
                       configured: {
                         ...state.configured,
                         portName,
                         serviceName,
                       },
-                      connectorTemplateId: state.connectorTemplateId,
-                      specification: apiSummary!,
                     })}
                     reviewEditHref={
                       !state.connectorTemplateId &&

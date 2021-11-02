@@ -52,6 +52,7 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.file.IconDao;
+import io.syndesis.server.dao.file.SpecificationResourceDao;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
@@ -93,10 +94,12 @@ public class ConnectorHandlerTest {
 
     private static final MetadataConfigurationProperties NO_METADATA_CONFIGURATION_PROPERTIES = null;
 
+    private final SpecificationResourceDao specificationResourceDao = mock(SpecificationResourceDao.class);
+
     private final ConnectorHandler handler =
         new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
             NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
-            NO_METADATA_CONFIGURATION_PROPERTIES);
+            NO_METADATA_CONFIGURATION_PROPERTIES, specificationResourceDao);
 
     @Test
     public void connectorIconShouldHaveCorrectContentType() throws IOException {
@@ -222,7 +225,7 @@ public class ConnectorHandlerTest {
 
         final ConnectorHandler connectorHandler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
             NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
-            NO_METADATA_CONFIGURATION_PROPERTIES) {
+            NO_METADATA_CONFIGURATION_PROPERTIES, specificationResourceDao) {
             @Override
             public ConnectorPropertiesHandler properties(@NotNull String connectorId) {
                 return connectorPropertiesHandler;
@@ -251,7 +254,7 @@ public class ConnectorHandlerTest {
 
         final ConnectorHandler connectorHandler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
             NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
-            NO_METADATA_CONFIGURATION_PROPERTIES) {
+            NO_METADATA_CONFIGURATION_PROPERTIES, specificationResourceDao) {
             @Override
             public ConnectorPropertiesHandler properties(@NotNull String connectorId) {
                 return connectorPropertiesHandler;
@@ -288,7 +291,7 @@ public class ConnectorHandlerTest {
 
         final ConnectorHandler connectorHandler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
             NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
-            NO_METADATA_CONFIGURATION_PROPERTIES) {
+            NO_METADATA_CONFIGURATION_PROPERTIES, specificationResourceDao) {
             @Override
             public ConnectorPropertiesHandler properties(@NotNull String connectorId) {
                 return connectorPropertiesHandler;
@@ -327,7 +330,7 @@ public class ConnectorHandlerTest {
 
         final ConnectorHandler connectorHandler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
             NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
-            NO_METADATA_CONFIGURATION_PROPERTIES) {
+            NO_METADATA_CONFIGURATION_PROPERTIES, specificationResourceDao) {
             @Override
             public ConnectorPropertiesHandler properties(@NotNull String connectorId) {
                 return connectorPropertiesHandler;

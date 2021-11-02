@@ -32,10 +32,16 @@ import io.syndesis.common.model.connection.ConnectionBase;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.common.model.connection.WithDynamicProperties;
+import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.RandomValueGenerator;
+import io.syndesis.server.api.generator.ConnectorAndActionGenerator;
+import io.syndesis.server.dao.file.SpecificationResourceDao;
+import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.dto.Meta;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
+
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,9 +56,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationContext;
 
 @Tag(name = "actions")
-public class ConnectionActionHandler {
+public class ConnectionActionHandler extends BaseConnectorGeneratorHandler {
     public static final DataShape ANY_SHAPE = new DataShape.Builder().kind(DataShapeKinds.ANY).build();
 
     public static final DataShape NO_SHAPE = new DataShape.Builder().kind(DataShapeKinds.NONE).build();
@@ -67,14 +74,21 @@ public class ConnectionActionHandler {
 
     private final EncryptionComponent encryptionComponent;
 
+    private final Connector connector;
+
+    private final SpecificationResourceDao specificationResourceDao;
+
     public ConnectionActionHandler(final ConnectionBase connection, final MetadataConfigurationProperties config,
-                                   final EncryptionComponent encryptionComponent) {
+                                   final EncryptionComponent encryptionComponent, final ApplicationContext context,
+                                   final DataManager dataManager, final SpecificationResourceDao specificationResourceDao) {
+        super(dataManager, context);
         this.connection = connection;
         this.config = config;
         this.encryptionComponent = encryptionComponent;
+        this.specificationResourceDao = specificationResourceDao;
 
         final Optional<Connector> maybeConnector = connection.getConnector();
-        final Connector connector = maybeConnector.orElseThrow(
+        connector = maybeConnector.orElseThrow(
             () -> new EntityNotFoundException("Connection with id `" + connection.getId() + "` does not have a Connector defined"));
 
         connectorId = connector.getId().get();
@@ -157,6 +171,30 @@ public class ConnectionActionHandler {
 
     protected HystrixExecutable<DynamicActionMetadata> createMetadataCommandAction(final ConnectorAction action,
                                                                                    final Map<String, String> parameters) {
+        // if the connector's ID resembles a generated key by the key generator that means it's generated
+        // in that case there will be no metadata endpoint for it, so we must use the local metadata logic
+        if (KeyGenerator.resemblesAKey(connectorId)) {
+            // we can't lookup a connection action generator by ID, instead we use the group ID instead,
+            // which needs to be defined
+            final String connectorGroupId = connector.getConnectorGroupId().get();
+
+            return this.<ConnectorAndActionGenerator, LocalMetadataCommandAction>withGenerator(connectorGroupId, generator -> {
+                // in case the connector's specification has been stored separately in the database, we load
+                // it now so we can provide it to the generator
+                final Map<String, String> configuredProperties = connector.getConfiguredProperties();
+                final String specification = configuredProperties.get("specification");
+                final InputStream specificationStream;
+                if (specification != null && specification.startsWith("db:")) {
+                    // strip the "db:" prefix and read the stream
+                    specificationStream = specificationResourceDao.read(specification.substring(3));
+                } else {
+                    specificationStream = null;
+                }
+
+                return new LocalMetadataCommandAction(generator, connector, action, parameters, specificationStream);
+            });
+        }
+
         return new MetadataCommandAction(config, connectorId, action, parameters);
     }
 
@@ -224,14 +262,12 @@ public class ConnectionActionHandler {
         }
 
         final DataShape input = dynamicMetadata.inputShape();
-        if (descriptor.getInputDataShape().isPresent() &&
-                shouldEnrichDataShape(descriptor.getInputDataShape().get(), input)) {
+        if (shouldEnrichDataShape(descriptor.getInputDataShape(), input)) {
             enriched.inputDataShape(input);
         }
 
         final DataShape output = dynamicMetadata.outputShape();
-        if (descriptor.getOutputDataShape().isPresent() &&
-                shouldEnrichDataShape(descriptor.getOutputDataShape().get(), output)) {
+        if (shouldEnrichDataShape(descriptor.getOutputDataShape(), output)) {
             enriched.outputDataShape(output);
         }
 
@@ -242,7 +278,11 @@ public class ConnectionActionHandler {
         return kind != DataShapeKinds.JAVA;
     }
 
-    private static boolean shouldEnrichDataShape(final DataShape existing, final DataShape received) {
-        return isMalleable(existing.getKind()) && received != null && received.getKind() != null;
+    private static boolean shouldEnrichDataShape(Optional<DataShape> existing, final DataShape received) {
+        final boolean existingIsPresent = existing.isPresent();
+        final boolean canSwapOutExisting = !existingIsPresent || (existingIsPresent && isMalleable(existing.get().getKind()));
+        final boolean receivedIsValid = received != null;
+
+        return canSwapOutExisting && receivedIsValid;
     }
 }

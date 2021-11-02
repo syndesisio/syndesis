@@ -18,14 +18,18 @@ package io.syndesis.server.endpoint.v1.handler.connection;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import java.util.HashSet;
 import java.util.Set;
 import javax.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.ApplicationContext;
+
 import io.syndesis.common.model.bulletin.ConnectionBulletinBoard;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.server.credential.Credentials;
+import io.syndesis.server.dao.file.SpecificationResourceDao;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
@@ -44,7 +48,9 @@ public class ConnectionHandlerTest {
         ClientSideState state = mock(ClientSideState.class);
         MetadataConfigurationProperties config = mock(MetadataConfigurationProperties.class);
         EncryptionComponent encryptionSupport = mock(EncryptionComponent.class);
-        handler = new ConnectionHandler(dataManager, validator, credentials, state, config, encryptionSupport);
+        SpecificationResourceDao specificationResourceDao = mock(SpecificationResourceDao.class);
+        ApplicationContext context = mock(ApplicationContext.class);
+        handler = new ConnectionHandler(dataManager, validator, credentials, state, config, encryptionSupport, context, specificationResourceDao);
     }
 
     @Test

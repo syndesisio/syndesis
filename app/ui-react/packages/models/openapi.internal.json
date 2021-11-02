@@ -1975,7 +1975,8 @@
               "user",
               "connection-bulletin-board",
               "integration-bulletin-board",
-              "open-api"
+              "open-api",
+              "specification"
             ],
             "type": "string"
           }
@@ -2018,7 +2019,8 @@
               "user",
               "connection-bulletin-board",
               "integration-bulletin-board",
-              "open-api"
+              "open-api",
+              "specification"
             ],
             "type": "string"
           }
@@ -2207,7 +2209,8 @@
               "user",
               "connection-bulletin-board",
               "integration-bulletin-board",
-              "open-api"
+              "open-api",
+              "specification"
             ],
             "type": "string"
           },
@@ -3082,7 +3085,7 @@
     "/connectors/custom": {
       "post": {
         "description": "Creates a new Connector based on the ConnectorTemplate identified by the provided `id` and the data given in `connectorSettings` multipart part, plus optional `icon` file",
-        "operationId": "create_3",
+        "operationId": "create_2",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -3103,7 +3106,7 @@
     "/connectors/custom/info": {
       "post": {
         "description": "Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`",
-        "operationId": "info_1",
+        "operationId": "info",
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -3507,7 +3510,7 @@
       },
       "post": {
         "description": "Updates the connector icon for the specified connector and returns the updated connector",
-        "operationId": "create_2",
+        "operationId": "create_3",
         "parameters": [
           {
             "in": "path",
@@ -5090,7 +5093,8 @@
                 "user",
                 "connection-bulletin-board",
                 "integration-bulletin-board",
-                "open-api"
+                "open-api",
+                "specification"
               ],
               "type": "string"
             }

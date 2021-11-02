@@ -28,7 +28,6 @@ public final class SoapConnectorConstants {
     public static final String PAYLOAD_FORMAT = "PAYLOAD";
 
     static final String WSDL_URL_PROPERTY = "wsdlURL";
-    static final String SPECIFICATION_PROPERTY = "specification";
     static final String SERVICE_NAME_PROPERTY = "serviceName";
     static final String PORT_NAME_PROPERTY = "portName";
     static final String ADDRESS_PROPERTY = "address";

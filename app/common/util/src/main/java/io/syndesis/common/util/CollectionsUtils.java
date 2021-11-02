@@ -35,7 +35,7 @@ public final class CollectionsUtils {
         return Stream.of(maps)
             .flatMap(map -> map.entrySet().stream())
             .filter(entry -> entry.getValue() != null)
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -> v1)); // first value given wins
     }
 
     @SafeVarargs

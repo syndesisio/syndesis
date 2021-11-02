@@ -15,6 +15,7 @@
  */
 package io.syndesis.common.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +47,16 @@ public final class IOStreams {
 
     public static String readText(InputStream is) throws IOException {
         return utf8(readBytes(is));
+    }
+
+    /**
+     * Reads the whole stream into memory and makes it available for re-reading.
+     *
+     * @param in stream to buffer
+     * @return fully buffered stream
+     */
+    public static InputStream fullyBuffer(final InputStream in) throws IOException {
+        return new ByteArrayInputStream(readBytes(in));
     }
 
 }

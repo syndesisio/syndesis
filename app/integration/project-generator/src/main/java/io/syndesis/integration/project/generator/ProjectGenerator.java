@@ -175,6 +175,12 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 final String componentScheme = maybeComponentScheme.get();
                 final Map<String, ConfigurationProperty> configurationProperties = CollectionsUtils.aggregate(connector.getProperties(),
                     action.getProperties());
+                final Map<String, String> configuredProperties = CollectionsUtils.aggregate(
+                    actionDescriptor.getConfiguredProperties(), // 1. action
+                    step.getConfiguredProperties(), // 2. step
+                    connection.getConfiguredProperties(), // 3. connection
+                    connector.getConfiguredProperties() // 4. connector
+                );
 
                 // Workaround for
                 // https://github.com/syndesisio/syndesis/issues/1713
@@ -182,11 +188,19 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                     final String propertyName = entry.getKey();
                     final ConfigurationProperty configurationProperty = entry.getValue();
 
-                    final String defaultValue = Objects.toString(configurationProperty.getDefaultValue(), null);
                     boolean isSecret = connector.isSecret(propertyName) || action.isSecret(propertyName);
 
-                    if (Strings.isEmptyOrBlank(defaultValue) && isSecret) {
+                    if (!isSecret) {
+                        continue;
+                    }
+
+                    final String defaultValue = Objects.toString(configurationProperty.getDefaultValue(), null);
+                    final String configuredValue = configuredProperties.get(propertyName);
+
+                    if (Strings.isEmptyOrBlank(configuredValue)) {
                         addDecryptedKeyProperty(resourceManager, properties, flowIndex, stepIndex, componentScheme, propertyName, defaultValue);
+                    } else {
+                        addDecryptedKeyProperty(resourceManager, properties, flowIndex, stepIndex, componentScheme, propertyName, configuredValue);
                     }
                 }
 
@@ -237,7 +251,9 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         String key = String.format("flow-%d.%s-%d.%s", flowIndex, propKeyPrefix, stepIndex, propertyKey);
         String val = mandatoryDecrypt(resourceManager, propertyKey, propertyVal);
 
-        properties.put(key, val);
+        if (val != null) {
+            properties.put(key, val);
+        }
     }
 
     private void addAdditionalResources(TarArchiveOutputStream tos) throws IOException {

@@ -1,0 +1,11 @@
+<ns1:createFolder xmlns:ns1="http://docs.oasis-open.org/ns/cmis/messaging/200908/">
+  <ns1:repositoryId>my-repisitory-id</ns1:repositoryId>
+  <ns1:properties>
+    <ns2:propertyString xmlns:ns2="http://docs.oasis-open.org/ns/cmis/core/200908/">
+      <ns2:value>my-folder</ns2:value>
+    </ns2:propertyString>
+    <ns2:propertyId xmlns:ns2="http://docs.oasis-open.org/ns/cmis/core/200908/">
+      <ns2:value>cmis:name</ns2:value>
+    </ns2:propertyId>
+  </ns1:properties>
+</ns1:createFolder>

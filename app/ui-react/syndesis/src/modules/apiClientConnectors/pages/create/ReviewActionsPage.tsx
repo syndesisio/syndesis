@@ -28,7 +28,8 @@ export interface IReviewActionsRouteState {
    * this is a SOAP or REST style web service
    */
   connectorTemplateId?: string;
-  specification: string;
+  specification?: string;
+  url?: string;
 }
 
 export const ReviewActionsPage: React.FunctionComponent = () => {
@@ -37,6 +38,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
 
   const { apiSummary, loading, error } = useApiConnectorSummary(
     state.specification,
+    state.url,
     state.connectorTemplateId,
     state.configured
   );
@@ -151,19 +153,38 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                           state.connectorTemplateId ===
                           'soap-connector-template'
                             ? resolvers.create.servicePort({
+                                ...state,
                                 apiSummary: apiSummary!,
-                                configured: state.configured,
-                                connectorTemplateId: state.connectorTemplateId,
-                                specification: state.specification,
+                                configured: {
+                                  ...state.configured,
+                                  specification:
+                                    apiSummary?.configuredProperties
+                                      ?.specification,
+                                },
+                                specification:
+                                  apiSummary?.configuredProperties
+                                    ?.specification || state.specification, // if the server returned a different specification use that
                               })
                             : resolvers.create.security({
-                                configured: state.configured,
-                                connectorTemplateId: state.connectorTemplateId,
-                                specification: apiSummary!,
+                                ...state,
+                                apiSummary: apiSummary!,
+                                configured: {
+                                  ...state.configured,
+                                  specification:
+                                    apiSummary?.configuredProperties
+                                      ?.specification,
+                                },
+                                connectorTemplateId:
+                                  'swagger-connector-template',
+                                specification:
+                                  apiSummary?.configuredProperties
+                                    ?.specification || state.specification, // if the server returned a different specification use that
                               })
                         }
                         reviewEditHref={
-                          !state.connectorTemplateId &&
+                          (!state.connectorTemplateId ||
+                            state.connectorTemplateId ===
+                              'swagger-connector-template') &&
                           apiSummary?.configuredProperties
                             ? resolvers.create.specification({
                                 specification:

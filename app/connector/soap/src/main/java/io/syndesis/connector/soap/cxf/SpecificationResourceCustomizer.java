@@ -42,6 +42,10 @@ public final class SpecificationResourceCustomizer implements ComponentProxyCust
             consumeOption(options, ComponentProperties.SPECIFICATION, specificationObject -> {
                 final String specification = (String) specificationObject;
 
+                if (specification.startsWith("db:")) {
+                    return;
+                }
+
                 try {
                     final File tempSpecification = File.createTempFile("soap", ".wsdl");
                     tempSpecification.deleteOnExit();

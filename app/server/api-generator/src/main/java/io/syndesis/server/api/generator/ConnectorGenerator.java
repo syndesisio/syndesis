@@ -85,13 +85,18 @@ public abstract class ConnectorGenerator {
             icon = IconGenerator.generate(connectorTemplate.getId().get(), name);
         }
 
+        final Map<String, String> withoutSpecification = configuredProperties.entrySet()
+            .parallelStream()
+            .filter(e -> !"specification".equals(e.getKey()))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
         return new Connector.Builder()
             .createFrom(baseConnector)
             .id(KeyGenerator.createKey())
             .name(name)
             .description(description)
             .icon(icon)
-            .configuredProperties(configuredProperties)
+            .configuredProperties(withoutSpecification)
             .connectorGroup(connectorGroup)
             .connectorGroupId(connectorGroup.map(ConnectorGroup::getId).orElse(Optional.empty()))
             .build();

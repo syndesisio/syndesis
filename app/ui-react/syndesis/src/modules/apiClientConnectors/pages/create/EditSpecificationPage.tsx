@@ -17,7 +17,8 @@ export interface IEditSpecificationRouteState {
 export const EditSpecificationPage: React.FunctionComponent = () => {
   const { state } = useRouteData<null, IEditSpecificationRouteState>();
 
-  const [updatedSpecification, setUpdatedSpecification] = React.useState<string>(state.specification);
+  const [updatedSpecification, setUpdatedSpecification] =
+    React.useState<string>(state.specification);
 
   const onSpecification = (newSpec: any) => {
     setUpdatedSpecification(JSON.stringify(newSpec.spec));
@@ -25,7 +26,7 @@ export const EditSpecificationPage: React.FunctionComponent = () => {
 
   return (
     <Translation ns={['apiClientConnectors', 'shared']}>
-      {t => (
+      {(t) => (
         <WithLeaveConfirmation
           i18nTitle={t('apiClientConnectors:create:unsavedChangesTitle')}
           i18nConfirmationMessage={t(
@@ -60,6 +61,7 @@ export const EditSpecificationPage: React.FunctionComponent = () => {
                         'api-connector-creator-specification-save-button'
                       }
                       href={resolvers.create.review({
+                        ...state,
                         specification: updatedSpecification,
                       })}
                       as={'primary'}

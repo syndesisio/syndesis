@@ -21,14 +21,11 @@ import java.util.stream.Stream;
 
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
-import io.syndesis.common.util.IOStreams;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.api.generator.soap.parser.SoapApiModelParserTest;
 
 import org.junit.jupiter.params.provider.Arguments;
-
-import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.SPECIFICATION_PROPERTY;
 
 /**
  * Base class for example WSDL driven tests.
@@ -49,13 +46,14 @@ public abstract class AbstractSoapExampleTest {
         }
     }
 
-    protected static ConnectorSettings getConnectorSettings(final String specification) {
+    protected static ConnectorSettings getConnectorSettings(final InputStream specification, String path) {
         return new ConnectorSettings.Builder()
-            .putConfiguredProperty(SPECIFICATION_PROPERTY, specification)
+            .putConfiguredProperty(SoapConnectorConstants.WSDL_URL_PROPERTY, path)
+            .specification(specification)
             .build();
     }
 
-    static Stream<Arguments> parameters() throws IOException {
+    static Stream<Arguments> parameters() {
         return Stream.of(
             load("/soap/HelloWorld.wsdl"),
             load("/soap/StockQuote.wsdl"),
@@ -74,9 +72,10 @@ public abstract class AbstractSoapExampleTest {
         );
     }
 
-    static Arguments load(String path) throws IOException {
-        try (InputStream is = SoapApiModelParserTest.class.getResourceAsStream(path)) {
-            return Arguments.of(path, IOStreams.readText(is));
-        }
+    @SuppressWarnings("resource")
+    static Arguments load(String path) {
+        final InputStream is = SoapApiModelParserTest.class.getResourceAsStream(path);
+
+        return Arguments.of(path, is);
     }
 }

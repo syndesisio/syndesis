@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Configuration;
 
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.api.generator.APIGenerator;
+import io.syndesis.server.api.generator.ConnectorAndActionGenerator;
 import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.api.generator.openapi.OpenApiConnectorGenerator;
 import io.syndesis.server.api.generator.openapi.OpenApiGenerator;
@@ -47,7 +48,7 @@ public class APIGeneratorConfiguration {
     }
 
     @Bean("soap-connector-template")
-    public Future<ConnectorGenerator> soapConnectorGenerator() {
+    public Future<ConnectorAndActionGenerator> soapConnectorGenerator() {
         return migrations.migrationsDone().thenApply(v -> {
             final Connector soapConnector = Objects.requireNonNull(dataManager.fetch(Connector.class, "soap"),
                 "No Connector with ID `soap` in the database");

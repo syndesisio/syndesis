@@ -8,10 +8,12 @@ interface IApiConnectorSummaryOptions {
   portName?: string;
   serviceName?: string;
   wsdlUrl?: string;
+  specification?: string;
 }
 
 export function useApiConnectorSummary(
-  specification: string,
+  specification?: string,
+  url?: string,
   connectorTemplateId?: string,
   /**
    * `configured` = an object that contains
@@ -29,26 +31,44 @@ export function useApiConnectorSummary(
   >(undefined);
 
   React.useEffect(() => {
-    if (!specification) {
+    if (!specification && !url) {
+      // if there is no specification to send, either given by the
+      // specification (raw upload) or pointed to by the url, we
+      // don't invoke the server API to gather the summary
       return;
     }
+
     const fetchSummary = async () => {
       setLoading(true);
 
+      const body = new FormData();
+      const connectorSettings = {
+        configuredProperties: {
+          ...configured,
+        } as IApiConnectorSummaryOptions,
+        connectorTemplateId:
+          connectorTemplateId ?? 'swagger-connector-template',
+      };
+      if (url) {
+        connectorSettings.configuredProperties.specification = url;
+      }
+
+      body.append(
+        'connectorSettings',
+        new Blob([JSON.stringify(connectorSettings)], {
+          type: 'application/json',
+        })
+      );
+      if (specification) {
+        body.append('specification', specification);
+      }
+
       try {
         const response = await callFetch({
-          body: {
-            configuredProperties: {
-              ...configured,
-              specification,
-            },
-            connectorTemplateId: connectorTemplateId
-              ? connectorTemplateId
-              : 'swagger-connector-template',
-          },
+          body,
           headers: apiContext.headers,
           includeAccept: true,
-          includeContentType: true,
+          includeContentType: false,
           method: 'POST',
           url: `${apiContext.apiUri}/connectors/custom/info`,
         });

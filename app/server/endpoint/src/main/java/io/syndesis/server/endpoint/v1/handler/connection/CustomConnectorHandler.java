@@ -19,15 +19,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.syndesis.common.model.api.APISummary;
+import io.syndesis.common.util.IOStreams;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.dao.file.IconDao;
+import io.syndesis.server.dao.file.SpecificationResourceDao;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.icon.Icon;
-import okio.BufferedSource;
-import okio.Okio;
-import okio.Source;
 
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.springframework.context.ApplicationContext;
@@ -42,6 +41,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.util.Map;
+import java.util.Optional;
 
 @Tag(name = "custom-connector")
 @Tag(name = "connector-template")
@@ -49,23 +50,12 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
 
     private final IconDao iconDao;
 
-    CustomConnectorHandler(final DataManager dataManager, final ApplicationContext applicationContext, final IconDao iconDao) {
+    private final SpecificationResourceDao specificationResourceDao;
+
+    CustomConnectorHandler(final DataManager dataManager, final ApplicationContext applicationContext, final IconDao iconDao, final SpecificationResourceDao specificationResourceDao) {
         super(dataManager, applicationContext);
         this.iconDao = iconDao;
-    }
-
-    @POST
-    @Path("/")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Creates a new Connector based on the ConnectorTemplate identified by the provided `id`  and the data given in `connectorSettings`")
-    @ApiResponse(responseCode = "200", description = "Newly created Connector")
-    public Connector create(final ConnectorSettings connectorSettings) {
-
-        final Connector connector = withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(),
-            (generator, template) -> generator.generate(template, connectorSettings));
-
-        return getDataManager().create(connector);
+        this.specificationResourceDao = specificationResourceDao;
     }
 
     @POST
@@ -84,14 +74,16 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
         if (connectorSettings.getConfiguredProperties().containsKey("specification")) {
             connectorSettingsToUse = connectorSettings;
         } else {
-            final String specification;
-            try (InputStream in = customConnectorFormData.getSpecification();
-                Source inSource = Okio.source(in);
-                BufferedSource source = Okio.buffer(inSource)) {
-                specification = source.readUtf8();
-            }
+            try (InputStream specificationStream = customConnectorFormData.getSpecification()) {
+                if (specificationStream == null) {
+                    connectorSettingsToUse = connectorSettings;
+                } else {
+                    @SuppressWarnings("resource")
+                    final InputStream buffered = IOStreams.fullyBuffer(specificationStream);
 
-            connectorSettingsToUse = new ConnectorSettings.Builder().createFrom(connectorSettings).putConfiguredProperty("specification", specification).build();
+                    connectorSettingsToUse = new ConnectorSettings.Builder().createFrom(connectorSettings).specification(buffered).build();
+                }
+            }
         }
 
         Connector generatedConnector = withGeneratorAndTemplate(connectorSettingsToUse.getConnectorTemplateId(),
@@ -119,17 +111,32 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
             }
         }
 
-        return getDataManager().create(generatedConnector);
-    }
+        final Map<String, String> configuredProperties = generatedConnector.getConfiguredProperties();
+        if (!configuredProperties.containsKey("specification")) {
+            // connector generator has opted not to store the specification within
+            // the connector, we need to store the specification as a blob and point
+            // to it
+            final Optional<InputStream> maybeSpecificationStream = connectorSettingsToUse.getSpecification();
+            // but there was a specification provided in settings, which indicates
+            // that we should persist it
+            if (maybeSpecificationStream.isPresent()) {
+                // here we can close the stream
+                try (InputStream specificationStream = maybeSpecificationStream.get()) {
+                    // by this time we have read the stream provided in connector settings we need to reset it to beginning
+                    specificationStream.reset();
 
-    @POST
-    @Path("/info")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
-    public APISummary info(final ConnectorSettings connectorSettings) {
-        return withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(),
-            (generator, template) -> generator.info(template, connectorSettings));
+                    final String id = generatedConnector.getId().get();
+                    specificationResourceDao.write(id, specificationStream);
+
+                    // now we need to point to the specification from the connector
+                    generatedConnector = new Connector.Builder().createFrom(generatedConnector)
+                        .putConfiguredProperty("specification", "db:" + id)
+                        .build();
+                }
+            }
+        }
+
+        return getDataManager().create(generatedConnector);
     }
 
     @POST
@@ -139,17 +146,25 @@ public final class CustomConnectorHandler extends BaseConnectorGeneratorHandler 
     @Operation(description = "Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`")
     public APISummary info(@MultipartForm final CustomConnectorFormData connectorFormData) {
         try {
-            final String specification;
-            try (InputStream in = connectorFormData.getSpecification();
-                Source inSource = Okio.source(in);
-                BufferedSource source = Okio.buffer(inSource)) {
-                specification = source.readUtf8();
-            }
+            final ConnectorSettings givenConnectorSettings = connectorFormData.getConnectorSettings();
 
-            final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
-                .createFrom(connectorFormData.getConnectorSettings())
-                .putConfiguredProperty("specification", specification)
-                .build();
+            final ConnectorSettings connectorSettings;
+            if (givenConnectorSettings.getConfiguredProperties().containsKey("specification")) {
+                connectorSettings = givenConnectorSettings;
+            } else {
+                try (InputStream specificationStream = connectorFormData.getSpecification()) {
+                    if (specificationStream == null) {
+                        connectorSettings = givenConnectorSettings;
+                    } else {
+                        @SuppressWarnings("resource")
+                        final InputStream buffered = IOStreams.fullyBuffer(specificationStream);
+
+                        connectorSettings = new ConnectorSettings.Builder().createFrom(givenConnectorSettings)
+                            .specification(buffered)
+                            .build();
+                    }
+                }
+            }
 
             return withGeneratorAndTemplate(connectorSettings.getConnectorTemplateId(),
                 (generator, template) -> generator.info(template, connectorSettings));

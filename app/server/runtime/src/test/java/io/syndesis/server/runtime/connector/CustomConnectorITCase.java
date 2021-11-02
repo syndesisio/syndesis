@@ -135,18 +135,6 @@ public class CustomConnectorITCase extends BaseITCase {
     }
 
     @Test
-    public void shouldCreateNewCustomConnectors() {
-        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build();
-
-        final ResponseEntity<Connector> response = post("/api/v1/connectors/custom", connectorSettings, Connector.class);
-
-        final Connector created = response.getBody();
-        assertThat(created).isNotNull();
-        assertThat(created.getDescription()).isEqualTo("test-description");
-        assertThat(dataManager.fetch(Connector.class, response.getBody().getId().get())).isNotNull();
-    }
-
-    @Test
     public void shouldCreateNewCustomConnectorsFromMultipartWithIcon() throws IOException {
         final ResponseEntity<Connector> response;
         try (InputStream iconStream = CustomConnectorITCase.class.getResourceAsStream("/io/syndesis/server/runtime/test-image.png")) {
@@ -199,18 +187,22 @@ public class CustomConnectorITCase extends BaseITCase {
 
     @Test
     public void shouldOfferCustomConnectorInfo() {
-        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).icon("test-icon")
+        final ResponseEntity<APISummary> response = post("/api/v1/connectors/custom/info",
+                multipartBody(
+                    new ConnectorSettings.Builder()
+                    .connectorTemplateId(TEMPLATE_ID)
+                    .icon("test-icon")
+                    .build()),
+                APISummary.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+
+        final APISummary expected = new APISummary.Builder()
+            .name("test-name")
+            .description("test-description")
+            .icon("test-icon")
+            .putProperty("property1", TestConfiguration.PROPERTY_1)
+            .actionsSummary(TestConfiguration.ACTIONS_SUMMARY)
             .build();
 
-        final ResponseEntity<APISummary> response = post("/api/v1/connectors/custom/info", connectorSettings, APISummary.class);
-
-        final APISummary expected = new APISummary.Builder()// \
-            .name("test-name")//
-            .description("test-description")//
-            .icon("test-icon")//
-            .putProperty("property1", TestConfiguration.PROPERTY_1)//
-            .actionsSummary(TestConfiguration.ACTIONS_SUMMARY)//
-            .build();
         assertThat(response.getBody()).isEqualTo(expected);
     }
 
@@ -232,10 +224,18 @@ public class CustomConnectorITCase extends BaseITCase {
             .build();
     }
 
+    private static MultiValueMap<String, Object> multipartBody(final ConnectorSettings connectorSettings) {
+        return multipartBody(connectorSettings, null);
+    }
+
     private static MultiValueMap<String, Object> multipartBody(final ConnectorSettings connectorSettings, final InputStream icon) {
         final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
         multipartData.add("connectorSettings", connectorSettings);
-        multipartData.add("icon", new InputStreamResource(icon));
+
+        if (icon != null) {
+            multipartData.add("icon", new InputStreamResource(icon));
+        }
+
         return multipartData;
     }
 

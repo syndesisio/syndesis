@@ -1654,7 +1654,8 @@
               "user",
               "connection-bulletin-board",
               "integration-bulletin-board",
-              "open-api"
+              "open-api",
+              "specification"
             ],
             "type": "string"
           },

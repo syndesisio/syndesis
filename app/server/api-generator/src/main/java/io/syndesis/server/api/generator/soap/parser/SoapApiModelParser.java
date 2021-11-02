@@ -15,12 +15,11 @@
  */
 package io.syndesis.server.api.generator.soap.parser;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,11 +27,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 import javax.wsdl.BindingOperation;
 import javax.wsdl.Definition;
 import javax.wsdl.Port;
@@ -49,6 +47,15 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.Violation;
+import io.syndesis.common.model.action.Action;
+import io.syndesis.common.model.action.ActionsSummary;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.server.api.generator.soap.SoapApiModelInfo;
 
 import org.apache.cxf.BusException;
 import org.apache.cxf.BusFactory;
@@ -72,16 +79,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
 
-import io.syndesis.common.model.DataShape;
-import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.model.Violation;
-import io.syndesis.common.model.action.Action;
-import io.syndesis.common.model.action.ActionsSummary;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
-import io.syndesis.common.util.IOStreams;
-import io.syndesis.server.api.generator.soap.SoapApiModelInfo;
-
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.DATA_FORMAT_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.DEFAULT_OPERATION_NAMESPACE_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.DEFAULT_OPERATION_NAME_PROPERTY;
@@ -99,43 +96,22 @@ public final class SoapApiModelParser {
         // utility
     }
 
-    public static SoapApiModelInfo parseSoapAPI(final String specification, final String wsdlURL) {
+    public static SoapApiModelInfo parseSoapAPI(final InputStream specification, final String wsdlURL) {
         SoapApiModelInfo.Builder builder = new SoapApiModelInfo.Builder();
 
         try {
-            // check if WSDL specification is a URL
-            final String resolvedSpecification;
-            final Optional<String> resolvedWsdlURL;
-            final boolean isHttpUrl = specification.toLowerCase(Locale.US).startsWith("http");
-            if (isHttpUrl) {
-
-                final URL httpURL = new URL(specification);
-                resolvedWsdlURL = Optional.of(httpURL.toString());
-                final HttpURLConnection connection = (HttpURLConnection) httpURL.openConnection();
-                connection.setRequestMethod("GET");
-
-                if (connection.getResponseCode() > 299) {
-                    throw new IOException(connection.getResponseMessage());
-                }
-
-                try (InputStream data = connection.getInputStream()) {
-                    resolvedSpecification = IOStreams.readText(data);
-                }
-            } else {
-                resolvedSpecification = specification;
-                resolvedWsdlURL = Optional.ofNullable(wsdlURL);
+            if (wsdlURL != null) {
+                builder.wsdlURL(wsdlURL);
             }
 
-            // set WSDL URL, either resolved from specification or provided by caller
-            builder.wsdlURL(resolvedWsdlURL);
-
             // get concise WSDL representation without extra spaces
-            final String condensedSpecification = condenseWSDL(resolvedSpecification);
-            builder.resolvedSpecification(condensedSpecification);
+            @SuppressWarnings("resource") // we're passing it on to the builder, we don't want to close it here
+            final InputStream condensedSpecification = condenseWSDL(specification);
+            builder.specification(condensedSpecification);
 
             // parse WSDL to get model Definition
-            final InputSource inputSource = new InputSource(new StringReader(condensedSpecification));
-            final Definition definition = getWsdlReader().readWSDL(resolvedWsdlURL.orElse(null), inputSource);
+            final InputSource inputSource = new InputSource(condensedSpecification);
+            final Definition definition = getWsdlReader().readWSDL(wsdlURL, inputSource);
 
             builder.model(definition);
             validateModel(definition, builder);
@@ -174,13 +150,22 @@ public final class SoapApiModelParser {
 
         } catch (IOException e) {
             addError(builder, "Error reading WSDL: " + e.getMessage(), e);
+            return builderWithEmptyStream(builder);
         } catch (WSDLException | BusException e) {
             addError(builder, "Error parsing WSDL: " + e.getMessage(), e);
+            return builderWithEmptyStream(builder);
         } catch (TransformerException e) {
             addError(builder, "Error parsing WSDL: " + messageFrom(e), e);
+            return builderWithEmptyStream(builder);
         }
 
         return builder.build();
+    }
+
+    private static SoapApiModelInfo builderWithEmptyStream(SoapApiModelInfo.Builder builder) {
+        final ByteArrayInputStream emptyStream = new ByteArrayInputStream(new byte[0]);
+
+        return builder.specification(emptyStream).build();
     }
 
     private static String messageFrom(final TransformerException e) {
@@ -229,6 +214,50 @@ public final class SoapApiModelParser {
 
     public static List<ConnectorAction> parseActions(Definition definition, QName serviceName, QName portName,
                                                      String connectorId) throws ParserException {
+        final Collection<BindingOperationInfo> bindingOperations = parseBindingOperations(definition, serviceName, portName);
+
+        // operation id map for overloaded names
+        final Map<String, Integer> idMap = new HashMap<>();
+
+        return bindingOperations.stream().map(o -> parseConnectorAction(o, idMap, connectorId)).collect(Collectors.toList());
+    }
+
+    public static ConnectorAction generateDataShapesFor(final ConnectorAction action, final Definition definition, final QName serviceName, final QName portName) {
+        final String actionId = action.getId().get();
+        final BindingOperationInfo[] matchingBindingOperations = parseBindingOperations(definition, serviceName, portName).stream()
+            .filter(op -> {
+                final QName name = op.getName();
+                final String operationName = ":" + name.getLocalPart();
+
+                return actionId.endsWith(operationName) || actionId.replaceAll("_[0-9]+$", "").endsWith(operationName);
+            }).toArray(BindingOperationInfo[]::new);
+
+        // we're assuming that the order of services within the definition will be consistent
+        // this might not be the case but we don't have much to else to work with, and the
+        // hypothesis is that operation name collisions are very rare
+        final BindingOperationInfo bindingOperationInfo;
+        if (matchingBindingOperations.length == 0) {
+            throw new IllegalStateException("Unable to find binding operation info matching action with ID: " + actionId);
+        } else if (matchingBindingOperations.length > 1) {
+            int idx = Integer.parseInt(actionId.replaceAll(".*_([0-9]+)$", "$1")) - 1; // they're 1-based
+
+            bindingOperationInfo = matchingBindingOperations[idx]; // let it explode with ArrayIndexOutOfBounds if it must
+        } else {
+            bindingOperationInfo = matchingBindingOperations[0];
+        }
+
+        final DataShape input = generateDataShape(bindingOperationInfo, bindingOperationInfo.getInput(), Collections.emptyList(), MessageInfo.Type.INPUT);
+        final DataShape output = generateDataShape(bindingOperationInfo, bindingOperationInfo.getOutput(), bindingOperationInfo.getFaults(), MessageInfo.Type.OUTPUT);
+
+        return new ConnectorAction.Builder().createFrom(action)
+            .descriptor(new ConnectorDescriptor.Builder().createFrom(action.getDescriptor())
+                .inputDataShape(input)
+                .outputDataShape(output)
+                .build())
+            .build();
+    }
+
+    private static Collection<BindingOperationInfo> parseBindingOperations(Definition definition, QName serviceName, QName portName) {
         // use CXF helper classes to parse actions
         final WSDLServiceBuilder serviceBuilder = new WSDLServiceBuilder(BusFactory.getDefaultBus());
         final ServiceInfo serviceInfo;
@@ -236,35 +265,16 @@ public final class SoapApiModelParser {
             final List<ServiceInfo> serviceInfos = serviceBuilder.buildServices(definition, serviceName, portName);
             serviceInfo = serviceInfos.get(0);
         } catch (WSDLRuntimeException e) {
-            throw new ParserException(String.format("Error parsing actions for %s: %s", serviceName, e.getMessage()), e);
+            throw new IllegalArgumentException(String.format("Error parsing actions for %s: %s", serviceName, e.getMessage()), e);
         }
 
-        final EndpointInfo endpoint = serviceInfo.getEndpoint(portName);
+        final EndpointInfo endpoint = serviceInfo.getEndpoints().stream()
+            .filter(e -> e.getName().equals(portName) || e.getName().getLocalPart().equals(portName.getLocalPart()))
+            .findFirst()
+            .get();
         final BindingInfo binding = endpoint.getBinding();
 
-        final Collection<BindingOperationInfo> bindingOperations = binding.getOperations();
-
-        // operation id map for overloaded names
-        final Map<String, Integer> idMap = new HashMap<>();
-        final AtomicReference<ParserException> error = new AtomicReference<>();
-        @SuppressWarnings("PMD.PrematureDeclaration")
-        final List<ConnectorAction> actions = bindingOperations.stream().map(o -> {
-            try {
-                return parseConnectorAction(o, idMap, connectorId);
-            } catch (ParserException e) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Error parsing action " + o.getName(), e);
-                }
-                error.set(e);
-                return null;
-            }
-        }).collect(Collectors.toList());
-
-        if (error.get() != null) {
-            throw error.get();
-        }
-
-        return actions;
+        return binding.getOperations();
     }
 
     private static WSDLReader getWsdlReader() throws BusException {
@@ -280,7 +290,7 @@ public final class SoapApiModelParser {
     }
 
     private static ConnectorAction parseConnectorAction(final BindingOperationInfo bindingOperationInfo, final Map<String, Integer> idMap,
-                                                        final String connectorId) throws ParserException {
+                                                        final String connectorId) {
         final OperationInfo operationInfo = bindingOperationInfo.getOperationInfo();
         final String description = getDescription(operationInfo,
                 o -> "Invokes the operation " + getOperationName(bindingOperationInfo));
@@ -290,13 +300,12 @@ public final class SoapApiModelParser {
                 .name(name.getLocalPart())
                 .description(description)
                 .id(getActionId(connectorId, name.getLocalPart(), idMap))
+                .addTag("dynamic")
                 .descriptor(new ConnectorDescriptor.Builder()
                     .connectorId(connectorId)
                     .putConfiguredProperty(DEFAULT_OPERATION_NAME_PROPERTY, name.getLocalPart())
                     .putConfiguredProperty(DEFAULT_OPERATION_NAMESPACE_PROPERTY, name.getNamespaceURI())
                     .putConfiguredProperty(DATA_FORMAT_PROPERTY, PAYLOAD_FORMAT)
-                    .inputDataShape(getDataShape(bindingOperationInfo, bindingOperationInfo.getInput(), Collections.emptyList(), MessageInfo.Type.INPUT))
-                    .outputDataShape(getDataShape(bindingOperationInfo, bindingOperationInfo.getOutput(), bindingOperationInfo.getFaults(), MessageInfo.Type.OUTPUT))
                     .build())
                 .pattern(Action.Pattern.To);
         return builder.build();
@@ -306,30 +315,35 @@ public final class SoapApiModelParser {
         return described.getDocumentation() != null ? described.getDocumentation() : defaultDescription.apply(described);
     }
 
-    private static DataShape getDataShape(BindingOperationInfo bindingOperationInfo, BindingMessageInfo messageInfo,
-                                          Collection<BindingFaultInfo> faults, MessageInfo.Type type) throws ParserException {
+    private static DataShape generateDataShape(final BindingOperationInfo bindingOperationInfo, final BindingMessageInfo messageInfo,
+        final Collection<BindingFaultInfo> faults, final MessageInfo.Type type) {
 
-        // message is missing or doesn't have any headers, body parts, and faults
+        // message is missing or doesn't have any headers, body parts, and
+        // faults
         if (faults.isEmpty() && (messageInfo == null ||
             (messageInfo.getExtensor(SoapBodyInfo.class) == null && messageInfo.getExtensor(SoapHeaderInfo.class) == null))) {
             return new DataShape.Builder().kind(DataShapeKinds.NONE).build();
         }
 
-        final BindingHelper bindingHelper;
+        final String specification;
         try {
-            bindingHelper = new BindingHelper(bindingOperationInfo, messageInfo, faults, type, false);
-        } catch (ParserConfigurationException e) {
-            throw new ParserException("Error creating XML Document parser: " + e.getMessage(), e);
+            final BindingHelper bindingHelper = new BindingHelper(bindingOperationInfo, messageInfo, faults, type, false);
+            specification = bindingHelper.getSpecification();
+        } catch (ParserConfigurationException | ParserException e) {
+            throw new IllegalStateException("Error creating XML Document parser: " + e.getMessage(), e);
         }
 
+        final String name = messageInfo != null ? messageInfo.getMessageInfo().getName().getLocalPart() : getOperationName(bindingOperationInfo) + "Response";
+
+        final String description = messageInfo != null ? getMessageDescription(messageInfo)
+            : String.format("Data output for operation %s", getOperationName(bindingOperationInfo));
+
         return new DataShape.Builder()
-                .kind(DataShapeKinds.XML_SCHEMA)
-                .name(messageInfo != null ? messageInfo.getMessageInfo().getName().getLocalPart() :
-                    getOperationName(bindingOperationInfo) + "Response")
-                .description(messageInfo != null ?
-                    getMessageDescription(messageInfo) : String.format("Data output for operation %s", getOperationName(bindingOperationInfo)))
-                .specification(bindingHelper.getSpecification())
-                .build();
+            .kind(DataShapeKinds.XML_SCHEMA)
+            .name(name)
+            .description(description)
+            .specification(specification)
+            .build();
     }
 
     private static String getMessageDescription(BindingMessageInfo bindingMessageInfo) {
@@ -343,7 +357,7 @@ public final class SoapApiModelParser {
         return bindingOperationInfo.getOperationInfo().getName().getLocalPart();
     }
 
-    private static String getActionId(String connectorId, String name, Map<String, Integer> idMap) {
+    static String getActionId(String connectorId, String name, Map<String, Integer> idMap) {
         final String operationId;
         final int id = idMap.merge(name, 1, Integer::sum) - 1;
         if (id > 0) {
@@ -380,25 +394,28 @@ public final class SoapApiModelParser {
     }
 
     // Removes extra spaces from WSDL to reduce the amount of text stored in DB and remove unwanted spaces in documentation elements.
-    private static String condenseWSDL(final String resolvedSpecification) throws TransformerException {
-        final StreamSource originalSource = new StreamSource(new StringReader(resolvedSpecification));
-        Transformer wsdlCondenser = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                    "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">" +
-                        "<xsl:strip-space elements=\"*\" />" +
-                        "<xsl:template match=\"node()|@*\" name=\"identity\">" +
-                            "<xsl:copy>" +
-                                "<xsl:apply-templates select=\"node()|@*\"/>" +
-                            "</xsl:copy>" +
-                        "</xsl:template>" +
-                        "<xsl:template match=\"comment()\"/>" +
-                        "<xsl:template match=\"text()\">" +
-                            "<xsl:value-of select=\"normalize-space()\"/>" +
-                        "</xsl:template>" +
-                    "</xsl:stylesheet>")));
-        final StringWriter stringWriter = new StringWriter();
-        wsdlCondenser.transform(originalSource, new StreamResult(stringWriter));
-        return stringWriter.toString();
+    private static InputStream condenseWSDL(final InputStream specification) throws TransformerException, IOException {
+        try (InputStream in = specification; ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            final StreamSource originalSource = new StreamSource(in);
+            Transformer wsdlCondenser = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(
+                    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                        "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">" +
+                            "<xsl:strip-space elements=\"*\" />" +
+                            "<xsl:template match=\"node()|@*\" name=\"identity\">" +
+                                "<xsl:copy>" +
+                                    "<xsl:apply-templates select=\"node()|@*\"/>" +
+                                "</xsl:copy>" +
+                            "</xsl:template>" +
+                            "<xsl:template match=\"comment()\"/>" +
+                            "<xsl:template match=\"text()\">" +
+                                "<xsl:value-of select=\"normalize-space()\"/>" +
+                            "</xsl:template>" +
+                        "</xsl:stylesheet>")));
+
+            wsdlCondenser.transform(originalSource, new StreamResult(out));
+
+            return new ByteArrayInputStream(out.toByteArray());
+        }
     }
 
     @SuppressWarnings("unchecked")

@@ -15,11 +15,17 @@
  */
 package io.syndesis.server.api.generator.soap.parser;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.syndesis.server.api.generator.soap.AbstractSoapExampleTest;
 import io.syndesis.server.api.generator.soap.SoapApiModelInfo;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,21 +36,34 @@ public class SoapApiModelParserTest extends AbstractSoapExampleTest {
 
     @ParameterizedTest(name = "{1}")
     @MethodSource("parameters")
-    public void parseSoapAPI(final String path, final String specification) {
-        final SoapApiModelInfo soapApiModelInfo = SoapApiModelParser.parseSoapAPI(specification, specification);
+    public void parseSoapAPI(final String path, final InputStream specification) throws IOException {
+        try (InputStream in = specification) {
+            final SoapApiModelInfo soapApiModelInfo = SoapApiModelParser.parseSoapAPI(in, path);
 
-        assertThat(soapApiModelInfo).isNotNull();
+            assertThat(soapApiModelInfo).isNotNull();
 
-        assertThat(soapApiModelInfo.getErrors()).isEmpty();
-        assertThat(soapApiModelInfo.getWarnings()).isEmpty();
+            assertThat(soapApiModelInfo.getErrors()).isEmpty();
+            assertThat(soapApiModelInfo.getWarnings()).isEmpty();
 
-        assertThat(soapApiModelInfo.getResolvedSpecification()).isNotNull();
-        assertThat(soapApiModelInfo.getModel()).isNotNull();
-        assertThat(soapApiModelInfo.getServices()).isNotNull();
-        assertThat(soapApiModelInfo.getPorts()).isNotNull();
-        assertThat(soapApiModelInfo.getDefaultService()).isNotNull();
-        assertThat(soapApiModelInfo.getDefaultPort()).isNotNull();
-        assertThat(soapApiModelInfo.getDefaultAddress()).isNotNull();
+            try (InputStream condensed = soapApiModelInfo.getSpecification()) {
+                assertThat(condensed).isNotNull();
+            }
+            assertThat(soapApiModelInfo.getModel()).isNotNull();
+            assertThat(soapApiModelInfo.getServices()).isNotNull();
+            assertThat(soapApiModelInfo.getPorts()).isNotNull();
+            assertThat(soapApiModelInfo.getDefaultService()).isNotNull();
+            assertThat(soapApiModelInfo.getDefaultPort()).isNotNull();
+            assertThat(soapApiModelInfo.getDefaultAddress()).isNotNull();
+        }
     }
 
+    @Test
+    public void shouldGenerateUniqueActionIds() {
+        Map<String, Integer> idMap = new HashMap<>();
+
+        assertThat(SoapApiModelParser.getActionId("connectorId", "name", idMap)).isEqualTo("connectorId:name");
+        assertThat(SoapApiModelParser.getActionId("connectorId", "name", idMap)).isEqualTo("connectorId:name_1");
+        assertThat(SoapApiModelParser.getActionId("connectorId", "name", idMap)).isEqualTo("connectorId:name_2");
+        assertThat(SoapApiModelParser.getActionId("connectorId", "another", idMap)).isEqualTo("connectorId:another");
+    }
 }
