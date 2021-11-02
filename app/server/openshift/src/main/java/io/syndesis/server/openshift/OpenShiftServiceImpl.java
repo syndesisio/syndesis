@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -38,24 +37,15 @@ import io.fabric8.kubernetes.api.model.Affinity;
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.ContainerPort;
-import io.fabric8.kubernetes.api.model.Doneable;
+import io.fabric8.kubernetes.api.model.DeletionPropagation;
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesResourceList;
 import io.fabric8.kubernetes.api.model.PodTemplateSpec;
 import io.fabric8.kubernetes.api.model.ProbeBuilder;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.Toleration;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionBuilder;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionStatusBuilder;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionVersion;
 import io.fabric8.kubernetes.client.KubernetesClientException;
-import io.fabric8.kubernetes.client.Watch;
-import io.fabric8.kubernetes.client.Watcher;
-import io.fabric8.kubernetes.client.dsl.MixedOperation;
-import io.fabric8.kubernetes.client.dsl.Resource;
 import io.fabric8.openshift.api.model.Build;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
@@ -67,12 +57,10 @@ import io.fabric8.openshift.api.model.RouteSpec;
 import io.fabric8.openshift.api.model.User;
 import io.fabric8.openshift.api.model.UserBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
+import io.fabric8.openshift.client.dsl.DeployableScalableResource;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
-import io.syndesis.server.openshift.crd.IntegrationScheduling;
-import io.syndesis.server.openshift.crd.Syndesis;
-import io.syndesis.server.openshift.crd.SyndesisResourceDoneable;
-import io.syndesis.server.openshift.crd.SyndesisResourceList;
+import io.syndesis.server.openshift.OpenShiftConfigurationProperties.SchedulingConfiguration;
 
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention", "PMD.GodClass"})
 public class OpenShiftServiceImpl implements OpenShiftService {
@@ -86,8 +74,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
     private final NamespacedOpenShiftClient openShiftClient;
     private final OpenShiftConfigurationProperties config;
-
-    private CustomResourceDefinition syndesisCRD;
 
     public OpenShiftServiceImpl(NamespacedOpenShiftClient openShiftClient, OpenShiftConfigurationProperties config) {
         this.openShiftClient = openShiftClient;
@@ -126,7 +112,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     @Override
     public boolean isDeploymentReady(String name) {
         String sName = openshiftName(name);
-        return openShiftClient.deploymentConfigs().withName(sName).isReady();
+        final DeployableScalableResource<DeploymentConfig, DoneableDeploymentConfig> dc = openShiftClient.deploymentConfigs().withName(sName);
+        return dc.get() != null && dc.isReady();
     }
 
     @Override
@@ -259,12 +246,12 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         if (jaegerCollectorUri == null) {
             jaegerCollectorUri = "http://syndesis-jaeger-collector:14268/api/traces";
         }
-        IntegrationScheduling integrationScheduling = loadIntegrationScheduling();
         Affinity affinity = null;
         List<Toleration> tolerations = null;
-        if (integrationScheduling != null) {
-            affinity = integrationScheduling.getAffinity();
-            tolerations = integrationScheduling.getTolerations();
+        final SchedulingConfiguration scheduling = config.getScheduling();
+        if (scheduling != null) {
+            affinity = scheduling.getAffinity();
+            tolerations = scheduling.getTolerations();
         }
         if (oldConfig != null) {
             // make sure replicas is set to at least 1 or restore the previous replica count if present
@@ -523,7 +510,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     private boolean removeBuildConfig(String projectName) {
-        return openShiftClient.buildConfigs().withName(projectName).withPropagationPolicy("Foreground").delete();
+        return openShiftClient.buildConfigs().withName(projectName).withPropagationPolicy(DeletionPropagation.FOREGROUND).delete();
     }
 
     private void ensureSecret(String name, DeploymentData deploymentData) {
@@ -661,74 +648,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         throw SyndesisServerException.launderThrowable(new TimeoutException("Timed out waiting for build completion."));
     }
 
-    private CustomResourceDefinition getSyndesisCRD() throws CrdResourceException {
-        if (syndesisCRD == null) {
-
-            Optional<CustomResourceDefinition> crd = getCRD("syndesises.syndesis.io");
-            if (! crd.isPresent()) {
-                throw new CrdResourceException ("Failed to locate the syndesis CRD");
-            }
-
-            syndesisCRD = crd.get();
-
-            String storageVersion = null;
-            for (CustomResourceDefinitionVersion version : crd.get().getSpec().getVersions()) {
-                if (! version.getStorage()) {
-                    continue;
-                }
-                storageVersion = version.getName();
-            }
-
-            if (storageVersion == null) {
-                throw new CrdResourceException("Failed to locate storage version of syndesis CRD");
-            }
-
-            //
-            // Cannot use the crd fetched from openshift since this api will
-            // default to use the alphav1 version as the first version in the crd
-            //
-            syndesisCRD = new CustomResourceDefinitionBuilder()
-                .withApiVersion("apiextensions.k8s.io/v1")
-                .withKind("CustomResourceDefinition")
-                .withNewMetadata()
-                    .withName("syndesises.syndesis.io")
-                .endMetadata()
-                .withNewSpec()
-                    .withGroup("syndesis.io")
-                    .withScope("Namespaced")
-                    .withVersion(storageVersion)
-                    .withNewNames()
-                        .withKind("Syndesis")
-                        .withListKind("SyndesisList")
-                        .withPlural("syndesises")
-                        .withSingular("syndesis")
-                    .endNames()
-                .endSpec()
-                .withStatus(new CustomResourceDefinitionStatusBuilder().build())
-                .build();
-        }
-
-        return syndesisCRD;
-    }
-
-    private IntegrationScheduling loadIntegrationScheduling() {
-        IntegrationScheduling integrationScheduling = null;
-        try {
-            syndesisCRD = getSyndesisCRD();
-            SyndesisResourceList syndesisList = openShiftClient.customResources(syndesisCRD, Syndesis.class, SyndesisResourceList.class, SyndesisResourceDoneable.class)
-                .inNamespace(openShiftClient.getNamespace()).list();
-            boolean syndesisCRExists = syndesisList != null && syndesisList.getItems() != null && syndesisList.getItems().size() > 0;
-            if (syndesisCRExists) {
-                integrationScheduling = syndesisList.getItems().get(0).getSpec().getIntegrationScheduling();
-            } else {
-                LOGGER.error("There is no syndesis custom resource, it is required to load the affinity/toleration fields of syndesis CR. Search with the below CRD. You can try using \"oc get syndesis\". {}", syndesisCRD);
-            }
-        } catch (Exception e) {
-            LOGGER.error("Error loading syndesis CR.", e);
-        }
-        return integrationScheduling;
-    }
-
     /**
      * Checks if Exception can be retried and if retries are left.
      */
@@ -767,66 +686,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     @Override
     public List<HasMetadata> createOrReplaceCRD(InputStream crdYamlStream){
        return openShiftClient.load(crdYamlStream).createOrReplace();
-    }
-
-    @Override
-    public CustomResourceDefinition createOrReplaceCRD(CustomResourceDefinition crd){
-        return openShiftClient.customResourceDefinitions().createOrReplace(crd);
-    }
-
-    @Override
-    public Optional<CustomResourceDefinition> getCRD(String crdName){
-        CustomResourceDefinition result = openShiftClient.customResourceDefinitions().withName(crdName).get();
-        return result != null ? Optional.of(result) : Optional.empty();
-    }
-
-    @Override
-    @SuppressWarnings({"unchecked"})
-    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> boolean deleteCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, String customResourceName){
-        return deleteCR(crd, resourceType, resourceListType, doneableResourceType, customResourceName, false);
-    }
-
-    @Override
-    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> Watch watchCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, BiConsumer<Watcher.Action,T> watcher){
-        return getCRDClient(crd, resourceType, resourceListType, doneableResourceType).inNamespace(config.getNamespace()).watch(new Watcher<T>() {
-            @Override
-            public void eventReceived(Action action, T t) {
-                watcher.accept(action, t);
-            }
-
-            @Override
-            public void onClose(KubernetesClientException e) {
-                LOGGER.info("Closing watcher "+this+" on crd "+crd.getMetadata().getName(), e);
-            }
-        });
-    }
-
-    @Override
-    @SuppressWarnings({"unchecked"})
-    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> boolean deleteCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, String customResourceName, boolean cascading){
-        return getCRDClient(crd, resourceType, resourceListType, doneableResourceType).inNamespace(config.getNamespace()).withName(customResourceName)
-            .cascading(cascading)
-            .delete();
-    }
-
-    @Override
-    @SuppressWarnings({"unchecked"})
-    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> T createOrReplaceCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, T customResource){
-        return getCRDClient(crd, resourceType, resourceListType, doneableResourceType).inNamespace(config.getNamespace()).createOrReplace(customResource);
-    }
-
-    @Override
-    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> T getCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, String customResourceName){
-        return getCRDClient(crd, resourceType, resourceListType, doneableResourceType).inNamespace(config.getNamespace()).withName(customResourceName).get();
-    }
-
-    private <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> MixedOperation<T, L, D, Resource<T, D>> getCRDClient(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType) {
-        return openShiftClient.customResources(crd, resourceType, resourceListType, doneableResourceType);
-    }
-
-    @Override
-    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> List<T> getCRBylabel(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, Map<String, String> labels){
-        return getCRDClient(crd, resourceType, resourceListType, doneableResourceType).inNamespace(config.getNamespace()).withLabels(labels).list().getItems();
     }
 
     @Override

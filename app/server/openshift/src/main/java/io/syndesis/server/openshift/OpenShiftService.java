@@ -20,16 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
 
 import io.fabric8.kubernetes.api.model.ConfigMap;
-import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesResourceList;
 import io.fabric8.kubernetes.api.model.Secret;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
-import io.fabric8.kubernetes.client.Watch;
-import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.User;
 
@@ -148,105 +142,6 @@ public interface OpenShiftService {
      * @return a List of {@link HasMetadata} as the operation result
      */
     List<HasMetadata> createOrReplaceCRD(InputStream cdrYamlStream);
-
-    /**
-     * Create a Custom Resource Definition.
-     * @param crd the {@link CustomResourceDefinition} to create
-     * @return the {@link CustomResourceDefinition} created
-     */
-    CustomResourceDefinition createOrReplaceCRD(CustomResourceDefinition crd);
-
-    /**
-     * Get a Custom Resource Definition (CRD) given the Name
-     * @param crdName the CRD name
-     * @return an Optional containing the {@link CustomResourceDefinition}
-     */
-    Optional<CustomResourceDefinition> getCRD(String crdName);
-
-    /**
-     * Delete the given CR.
-     * @param <T>   The Kubernetes resource type.
-     * @param <L>   The list variant of the Kubernetes resource type.
-     * @param <D>   The doneable variant of the Kubernetes resource type.
-     * @param crd the {@link CustomResourceDefinition}
-     * @param resourceType the type of T
-     * @param resourceListType the type of L
-     * @param doneableResourceType the type of D
-     * @param customResourceName the {@link io.fabric8.kubernetes.client.CustomResource} name
-     * @param cascading whether or not to cascade delete the resources linked to the CR
-     * @return whether or not the delete succeeded
-     */
-    <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> boolean deleteCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, String customResourceName, boolean cascading);
-
-    /**
-     * Delete the given CR.
-     * @param <T>   The Kubernetes resource type.
-     * @param <L>   The list variant of the Kubernetes resource type.
-     * @param <D>   The doneable variant of the Kubernetes resource type.
-     * @param crd the {@link CustomResourceDefinition}
-     * @param resourceType the type of T
-     * @param resourceListType the type of L
-     * @param doneableResourceType the type of D
-     * @param customResourceName the {@link io.fabric8.kubernetes.client.CustomResource} name
-     * @return whether or not the delete succeeded
-     */
-    <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> boolean deleteCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, String customResourceName);
-
-        /**
-         * The entry point to client operations.
-         * @param <T>   The Kubernetes resource type.
-         * @param <L>   The list variant of the Kubernetes resource type.
-         * @param <D>   The doneable variant of the Kubernetes resource type.
-         * @param crd the {@link CustomResourceDefinition}
-         * @param resourceType the type of T
-         * @param resourceListType the type of L
-         * @param doneableResourceType the type of D
-         * @param customResource the {@link io.fabric8.kubernetes.client.CustomResource} myst be of type T
-         * @return the persisted resource
-         */
-    <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> T createOrReplaceCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, T customResource);
-
-    /**
-     * The entry point to client operations.
-     * @param <T>   The Kubernetes resource type.
-     * @param <L>   The list variant of the Kubernetes resource type.
-     * @param <D>   The doneable variant of the Kubernetes resource type.
-     * @param crd the {@link CustomResourceDefinition}
-     * @param resourceType the type of T
-     * @param resourceListType the type of L
-     * @param doneableResourceType the type of D
-     * @param customResourceName the {@link io.fabric8.kubernetes.client.CustomResource} name
-     * @return the resource with the given name
-     */
-    <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> T getCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, String customResourceName);
-
-    /**
-     * The entry point to client operations.
-     * @param <T>   The Kubernetes resource type.
-     * @param <L>   The list variant of the Kubernetes resource type.
-     * @param <D>   The doneable variant of the Kubernetes resource type.
-     * @param crd the {@link CustomResourceDefinition}
-     * @param resourceType the type of T
-     * @param resourceListType the type of L
-     * @param doneableResourceType the type of D
-     * @param labels you are using to search
-     * @return list of resources with the given labels
-     */
-    <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> List<T> getCRBylabel(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, Map<String, String> labels);
-
-    /**
-     * The entry point to client operations.
-     * @param <T>   The Kubernetes resource type.
-     * @param <L>   The list variant of the Kubernetes resource type.
-     * @param <D>   The doneable variant of the Kubernetes resource type.
-     * @param crd the {@link CustomResourceDefinition}
-     * @param resourceType the type of T
-     * @param resourceListType the type of L
-     * @param doneableResourceType the type of D
-     * @param watcher a {@code BiConsumer<Watcher.Action,T>} function to be executed for each received Action on T
-     * @return the Watch
-     */
-    <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> Watch watchCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, BiConsumer<Watcher.Action,T> watcher);
 
     void createOrReplaceSecret(Secret secret);
 

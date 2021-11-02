@@ -15,19 +15,6 @@
  */
 package io.syndesis.server.logging.jsondb.controller;
 
-import io.fabric8.kubernetes.api.model.Container;
-import io.fabric8.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.client.dsl.internal.PodOperationsImpl;
-import io.fabric8.kubernetes.client.utils.HttpClientUtils;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Dispatcher;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
@@ -39,6 +26,21 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
+
+import io.fabric8.kubernetes.api.model.Container;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.dsl.internal.core.v1.PodOperationsImpl;
+import io.fabric8.kubernetes.client.utils.HttpClientUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Dispatcher;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Provides some enriched operations against a KubernetesClient.

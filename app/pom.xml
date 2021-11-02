@@ -59,7 +59,7 @@
 
     <jackson.version>2.11.2</jackson.version>
     <json-patch.version>1.13</json-patch.version>
-    <kubernetes.client.version>4.9.0</kubernetes.client.version>
+    <kubernetes.client.version>4.13.3</kubernetes.client.version>
 
     <spring.version>5.2.15.RELEASE</spring.version>
     <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
@@ -1071,6 +1071,10 @@
               <ignoredResourcePattern>resource-handler-services.vm</ignoredResourcePattern>
               <ignoredResourcePattern>resource-handler.vm</ignoredResourcePattern>
               <ignoredResourcePattern>resource-operation.vm</ignoredResourcePattern>
+              <ignoredResourcePattern>manifest.vm</ignoredResourcePattern>
+              <ignoredResourcePattern>schema/kube-validation-schema.json</ignoredResourcePattern>
+              <ignoredResourcePattern>schema/kube-schema.json</ignoredResourcePattern>
+              <ignoredResourcePattern>schema/validation-schema.json</ignoredResourcePattern>
             </ignoredResourcePatterns>
             <ignoredClassPatterns>
               <ignoredClassPattern>META-INF.versions.9.module-info</ignoredClassPattern>

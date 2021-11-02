@@ -17,6 +17,12 @@
 package v1beta3
 
 import (
+	"encoding/json"
+	"regexp"
+	"strings"
+
+	json2yaml "github.com/ghodss/yaml"
+
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -345,4 +351,25 @@ type SyndesisList struct {
 
 func init() {
 	SchemeBuilder.Register(&Syndesis{}, &SyndesisList{})
+}
+
+func (s *SchedulingSpec) Marshall(indent int) string {
+	// the v1.Affinity and it's field hierarchy don't have the yaml tags so we marshall to JSON first and then convert from JSON to YAML
+	json, err := json.Marshal(s)
+	if err != nil {
+		panic(err)
+	}
+
+	if string(json) == "{}" {
+		return ""
+	}
+
+	yaml, err := json2yaml.JSONToYAML(json)
+	if err != nil {
+		panic(err)
+	}
+
+	pad := regexp.MustCompile("(?m)^")
+
+	return pad.ReplaceAllString(strings.TrimRight(string(yaml), "\n"), strings.Repeat(" ", indent))
 }

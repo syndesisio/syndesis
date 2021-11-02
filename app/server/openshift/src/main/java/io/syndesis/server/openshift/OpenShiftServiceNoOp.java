@@ -16,13 +16,8 @@
 package io.syndesis.server.openshift;
 
 import io.fabric8.kubernetes.api.model.ConfigMap;
-import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.KubernetesResourceList;
 import io.fabric8.kubernetes.api.model.Secret;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
-import io.fabric8.kubernetes.client.Watch;
-import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.User;
 import io.fabric8.openshift.api.model.UserBuilder;
@@ -33,56 +28,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
 
 public class OpenShiftServiceNoOp implements OpenShiftService {
 
     @Override
     public List<HasMetadata> createOrReplaceCRD(InputStream cdrYamlStream) {
         return Collections.emptyList();
-    }
-
-    @Override
-    public CustomResourceDefinition createOrReplaceCRD(CustomResourceDefinition crd) {
-        // Empty no-op just for testing
-        return null;
-    }
-
-    @Override
-    public Optional<CustomResourceDefinition> getCRD(String crdName) {
-        return Optional.empty();
-    }
-
-    @Override
-    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> T createOrReplaceCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, T customResource) {
-        // Empty no-op just for testing
-        return null;
-    }
-
-    @Override
-    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> T getCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, String customResourceName) {
-        // Empty no-op just for testing
-        return null;
-    }
-
-    @Override
-    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> List<T> getCRBylabel(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, Map<String, String> labels) {
-        return null;
-    }
-
-    @Override
-    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> Watch watchCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, BiConsumer<Watcher.Action, T> watcher) {
-        return null;
-    }
-
-    @Override
-    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> boolean deleteCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, String customResourceName, boolean cascading) {
-        return false;
-    }
-
-    @Override
-    public <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> boolean deleteCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, String customResourceName) {
-        return false;
     }
 
     @Override
