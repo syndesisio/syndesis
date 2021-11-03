@@ -23,10 +23,13 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Function;
 
 import io.syndesis.connector.sql.db.Db;
 
@@ -37,6 +40,11 @@ public final class DbMetaDataHelper {
     Db db;
     DatabaseMetaData meta;
     Connection connection;
+
+    private static final List<Function<String, String>> VARIANTS = Arrays.asList(
+        DbMetaDataHelper::lower,
+        DbMetaDataHelper::upper
+    );
 
     public DbMetaDataHelper(final Connection connection) throws SQLException {
         this.db = new DbAdapter(connection).getDb();
@@ -138,10 +146,13 @@ public final class DbMetaDataHelper {
                 adapt(tableName),
                 adapt(columnName));) {
             List<ColumnMetaData> columnList = convert(columns);
-            if (columnList.isEmpty()) {
-                //Postgresql does lowercase instead, so let's try that if we don't have a match
-                String table = tableName.toLowerCase(Locale.US);
-                String column = columnName == null ? null : columnName.toLowerCase(Locale.US);
+            Iterator<Function<String, String>> v = VARIANTS.iterator();
+            while (columnList.isEmpty() && v.hasNext()) {
+                // PostgreSQL uses lower case and Oracle requires upper case
+                // so let's try that if we don't have a match
+                final Function<String, String> variant = v.next();
+                final String table = variant.apply(tableName);
+                final String column = variant.apply(columnName);
                 try (ResultSet columnMeta = meta.getColumns(catalog, schema, table, column)) {
                     columnList = convert(columnMeta);
                 }
@@ -214,4 +225,19 @@ public final class DbMetaDataHelper {
         return list;
     }
 
+    private static String lower(final String given) {
+        if (given == null) {
+            return null;
+        }
+
+        return given.toLowerCase(Locale.getDefault());
+    }
+
+    private static String upper(final String given) {
+        if (given == null) {
+            return null;
+        }
+
+        return given.toUpperCase(Locale.getDefault());
+    }
 }
