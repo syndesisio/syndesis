@@ -1833,7 +1833,7 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "title": "Syndesis Supported API",
-    "version": "v1-1.13-SNAPSHOT"
+    "version": "v1-1.14-SNAPSHOT"
   },
   "openapi": "3.0.1",
   "paths": {

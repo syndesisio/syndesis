@@ -1509,6 +1509,35 @@
         },
         "type": "object"
       },
+      "IntegrationDeploymentStateDetails": {
+        "properties": {
+          "deploymentVersion": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "detailedState": {
+            "enum": ["ASSEMBLING", "BUILDING", "DEPLOYING", "STARTING"],
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "integrationId": {
+            "type": "string"
+          },
+          "linkType": {
+            "enum": ["EVENTS", "LOGS"],
+            "type": "string"
+          },
+          "namespace": {
+            "type": "string"
+          },
+          "podName": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
       "IntegrationMetricsSummary": {
         "properties": {
           "errors": {
@@ -2457,7 +2486,7 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "title": "Syndesis Internal API",
-    "version": "v1-1.13-SNAPSHOT"
+    "version": "v1-1.14-SNAPSHOT"
   },
   "openapi": "3.0.1",
   "paths": {
@@ -4873,6 +4902,56 @@
         "tags": ["integration-metrics"]
       }
     },
+    "/monitoring/integrations": {
+      "get": {
+        "description": "Retrieves monitoring state details for all integrations",
+        "operationId": "get_13",
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/IntegrationDeploymentStateDetails"
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "description": "default response"
+          }
+        },
+        "tags": ["integration-monitoring"]
+      }
+    },
+    "/monitoring/integrations/{integrationId}": {
+      "get": {
+        "operationId": "get_14",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "integrationId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationDeploymentStateDetails"
+                }
+              }
+            },
+            "description": "default response"
+          }
+        },
+        "tags": ["integration-monitoring"]
+      }
+    },
     "/organizations": {
       "get": {
         "operationId": "list_5",
@@ -5031,7 +5110,7 @@
     },
     "/permissions/{id}": {
       "get": {
-        "operationId": "get_15",
+        "operationId": "get_17",
         "parameters": [
           {
             "in": "path",
@@ -5059,7 +5138,7 @@
     },
     "/resources/{kind}/{id}": {
       "get": {
-        "operationId": "get_13",
+        "operationId": "get_15",
         "parameters": [
           {
             "in": "path",
@@ -5186,7 +5265,7 @@
     },
     "/roles/{id}": {
       "get": {
-        "operationId": "get_16",
+        "operationId": "get_18",
         "parameters": [
           {
             "in": "path",
@@ -5301,7 +5380,7 @@
         "tags": ["oauth-apps"]
       },
       "get": {
-        "operationId": "get_14",
+        "operationId": "get_16",
         "parameters": [
           {
             "in": "path",
@@ -5515,7 +5594,7 @@
     },
     "/users/{id}": {
       "get": {
-        "operationId": "get_17",
+        "operationId": "get_19",
         "parameters": [
           {
             "in": "path",
