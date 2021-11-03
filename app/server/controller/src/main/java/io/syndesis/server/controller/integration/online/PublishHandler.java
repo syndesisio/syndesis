@@ -151,6 +151,7 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
         integration.getConfiguredProperties().forEach(deploymentDataBuilder::addProperty);
         integration.getLabels().forEach((k, v) -> deploymentDataBuilder.addLabel(k, v));
         integration.getEnvironment().forEach((k, v) -> deploymentDataBuilder.addEnvironmentVariable(k, v));
+        integration.getRemovedEnvironment().forEach(deploymentDataBuilder::removeEnvironmentVariable);
 
         DeploymentData data = deploymentDataBuilder.build();
 

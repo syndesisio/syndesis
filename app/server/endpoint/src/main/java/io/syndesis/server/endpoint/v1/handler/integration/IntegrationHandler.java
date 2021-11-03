@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -95,7 +96,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         final Integration encryptedIntegration = encryptionSupport.encrypt(integration);
 
         final Integration updatedIntegration = new Integration.Builder().createFrom(encryptedIntegration)
-            .createdAt(System.currentTimeMillis()).build();
+            .createdAt(now()).build();
 
         // Create the the integration.
         return getDataManager().create(updatedIntegration);
@@ -201,12 +202,23 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     public void update(final String id, final Integration integration) {
         final Integration existing = getIntegration(id);
 
-        Integration updatedIntegration = new Integration.Builder().createFrom(encryptionSupport.encrypt(integration))
-            .version(existing.getVersion() + 1).updatedAt(System.currentTimeMillis()).build();
+        final Set<String> removedEnvironment = new HashSet<>(existing.getEnvironment().keySet());
+        removedEnvironment.removeAll(integration.getEnvironment().keySet());
 
-        updatedIntegration = apiGenerator.updateFlowExcerpts(updatedIntegration);
+        final Integration updatedIntegration = new Integration.Builder()
+            .createFrom(encryptionSupport.encrypt(integration))
+            .version(existing.getVersion() + 1)
+            .removedEnvironment(removedEnvironment)
+            .updatedAt(now())
+            .build();
 
-        getDataManager().update(updatedIntegration);
+        final Integration processed = apiGenerator.updateFlowExcerpts(updatedIntegration);
+
+        getDataManager().update(processed);
+    }
+
+    protected long now() {
+        return System.currentTimeMillis();
     }
 
 }

@@ -279,6 +279,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                     .collect(Collectors.toList());
             // add missing vars
             envVars.addAll(envVarMap.values());
+            envVars.removeIf(e -> deploymentData.getRemovedEnvironment().contains(e.getName()));
 
             // edit ports to avoid duplicate or missing ports
             final ContainerPort[] ports = {

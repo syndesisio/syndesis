@@ -86,7 +86,12 @@ public class IntegrationHandlerTest {
         when(apiGenerator.updateFlowExcerpts(any(Integration.class))).then(ctx -> ctx.getArguments()[0]);
         encryptionSupport = mock(EncryptionComponent.class);
         handler = new IntegrationHandler(dataManager, openShiftService, validator, inspectors, encryptionSupport,
-                apiGenerator, mock(IntegrationOverviewHelper.class));
+                apiGenerator, mock(IntegrationOverviewHelper.class)) {
+            @Override
+            protected long now() {
+                return 1507562580000L;
+            }
+        };
     }
 
     @Test
@@ -162,6 +167,32 @@ public class IntegrationHandlerTest {
         }
         verify(openShiftService).delete("first to delete");
         verify(openShiftService).delete("second to delete");
+    }
+
+    @Test
+    public void shouldKeepTrackOfRemovedEnvironmentVariablesOnUpdate() {
+        final Integration existing = new Integration.Builder()
+            .id("i")
+            .putEnvironment("A", "1")
+            .putEnvironment("B", "2")
+            .build();
+        when(dataManager.fetch(Integration.class, "i")).thenReturn(existing);
+
+        final Integration updated = new Integration.Builder()
+            .putEnvironment("A", "1")
+            .putEnvironment("C", "3")
+            .build();
+
+        when(encryptionSupport.encrypt(updated)).thenReturn(updated);
+
+        handler.update("i", updated);
+
+        verify(dataManager).update(new Integration.Builder()
+            .createFrom(updated)
+            .version(2)
+            .updatedAt(1507562580000L)
+            .addRemovedEnvironment("B")
+            .build());
     }
 
     private static DataShape dataShape(DataShapeKinds kind) {
