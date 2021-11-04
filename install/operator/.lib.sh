@@ -268,16 +268,16 @@ build_image()
 
 openapi_gen() {
     if hash openapi-gen 2>/dev/null; then
-        openapi-gen --logtostderr=true -o "" \
+        openapi-gen --logtostderr=true -o "" --go-header-file config/boilerplate.go.txt \
             -i ./pkg/apis/syndesis/v1alpha1 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1alpha1
 
-        openapi-gen --logtostderr=true -o "" \
+        openapi-gen --logtostderr=true -o "" --go-header-file config/boilerplate.go.txt \
             -i ./pkg/apis/syndesis/v1beta1 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta1
 
-        openapi-gen --logtostderr=true -o "" \
+        openapi-gen --logtostderr=true -o "" --go-header-file config/boilerplate.go.txt \
             -i ./pkg/apis/syndesis/v1beta2 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta2
 
-        openapi-gen --logtostderr=true -o "" \
+        openapi-gen --logtostderr=true -o "" --go-header-file config/boilerplate.go.txt \
             -i ./pkg/apis/syndesis/v1beta3 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta3
     else
         echo "skipping go openapi generation"
