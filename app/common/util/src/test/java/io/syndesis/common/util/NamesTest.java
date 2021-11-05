@@ -15,6 +15,12 @@
  */
 package io.syndesis.common.util;
 
+import net.jqwik.api.Arbitraries;
+import net.jqwik.api.Arbitrary;
+import net.jqwik.api.ForAll;
+import net.jqwik.api.Property;
+import net.jqwik.api.Provide;
+
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -38,11 +44,24 @@ public class NamesTest {
         "01234567890123456789012345678901234567890123456789012345678901x, 01234567890123456789012345678901234567890123456789012345678901X",
         "0123456789012345678901234567890123456789012345678901234567890x, 0123456789012345678901234567890123456789012345678901234567890X",
         "012345678901234567890123456789012345678901234567890123456789012, 012345678901234567890123456789012345678901234567890123456789012.",
-        "012345678901234567890123456789012345678901234567890123456789010, 01234567890123456789012345678901234567890123456789012345678901."
+        "012345678901234567890123456789012345678901234567890123456789010, 01234567890123456789012345678901234567890123456789012345678901.",
+        "default, \"'",
+        "this-is-a-test-integration-name-that-wants-to-exceed-sixtyfour0, This is a test integration name that wants to exceed sixtyfour character lenghts... not even sure where it will be truncated at, but it will somewhere...",
+        "test-integration, test-integration"
     })
     public void testGetSanitizedName(final String projectName, final String integrationName) throws Exception {
         final String sanitized = Names.sanitize(integrationName);
         assertEquals(projectName, sanitized);
         assertTrue(Names.isValid(sanitized), "Sanitized name: `" + sanitized + "` is not valid");
+    }
+
+    @Property
+    boolean shouldGenerateValidSanitizedNames(@ForAll("stringsWithAtLeastOneCharacter") final String name) {
+        return Names.isValid(Names.sanitize(name));
+    }
+
+    @Provide
+    Arbitrary<String> stringsWithAtLeastOneCharacter() {
+        return Arbitraries.strings().ofMinLength(1);
     }
 }

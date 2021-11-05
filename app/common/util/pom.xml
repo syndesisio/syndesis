@@ -125,6 +125,16 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>net.jqwik</groupId>
+      <artifactId>jqwik-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>net.jqwik</groupId>
+      <artifactId>jqwik</artifactId>
+    </dependency>
+
   </dependencies>
 
 </project>
