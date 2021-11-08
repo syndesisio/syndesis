@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
@@ -93,9 +94,9 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
         final Integration integration = integrationOf(integrationDeployment);
         try {
             setVersion(integrationDeployment);
-            deactivatePreviousDeployments(integrationDeployment);
+            final List<IntegrationDeployment> previousDeployments = deactivatePreviousDeployments(integrationDeployment);
 
-            DeploymentData deploymentData = createDeploymentData(integration, integrationDeployment);
+            DeploymentData deploymentData = createDeploymentData(integration, integrationDeployment, previousDeployments);
             String buildLabel = "buildv" + deploymentData.getVersion();
             stepOncePerformer.perform(buildLabel, this::build, deploymentData);
 
@@ -131,13 +132,14 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
         return new StateUpdate(IntegrationDeploymentState.Pending, stepOncePerformer.getStepsPerformed());
     }
 
-    private DeploymentData createDeploymentData(Integration integration, IntegrationDeployment integrationDeployment) {
+    DeploymentData createDeploymentData(Integration integration, IntegrationDeployment integrationDeployment, List<IntegrationDeployment> previousDeployments) {
         Properties applicationProperties = projectGenerator.generateApplicationProperties(integration);
 
         String username = integrationDeployment.getUserId().orElseThrow(() -> new IllegalStateException("Couldn't find the user of the integration"));
 
         String integrationId = integrationDeployment.getIntegrationId().orElseThrow(() -> new IllegalStateException("IntegrationDeployment should have an integrationId"));
         String version = Integer.toString(integrationDeployment.getVersion());
+
         final DeploymentData.Builder deploymentDataBuilder = DeploymentData.builder()
             .withVersion(integrationDeployment.getVersion())
             .addLabel(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationId))
@@ -148,10 +150,19 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
             .addAnnotation(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version)
             .addSecretEntry("application.properties", propsToString(applicationProperties));
 
+        // remove any environment variables that are present on previous deployments but are not
+        // on the current integration
+        previousDeployments.stream()
+            .map(IntegrationDeployment::getSpec)
+            .map(Integration::getEnvironment)
+            .map(Map::keySet)
+            .flatMap(Set::stream)
+            .filter(((Predicate<String>) integration.getEnvironment()::containsKey).negate())
+            .forEach(deploymentDataBuilder::removeEnvironmentVariable);
+
         integration.getConfiguredProperties().forEach(deploymentDataBuilder::addProperty);
         integration.getLabels().forEach((k, v) -> deploymentDataBuilder.addLabel(k, v));
         integration.getEnvironment().forEach((k, v) -> deploymentDataBuilder.addEnvironmentVariable(k, v));
-        integration.getRemovedEnvironment().forEach(deploymentDataBuilder::removeEnvironmentVariable);
 
         DeploymentData data = deploymentDataBuilder.build();
 

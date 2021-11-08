@@ -15,7 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -202,13 +201,9 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     public void update(final String id, final Integration integration) {
         final Integration existing = getIntegration(id);
 
-        final Set<String> removedEnvironment = new HashSet<>(existing.getEnvironment().keySet());
-        removedEnvironment.removeAll(integration.getEnvironment().keySet());
-
         final Integration updatedIntegration = new Integration.Builder()
             .createFrom(encryptionSupport.encrypt(integration))
             .version(existing.getVersion() + 1)
-            .removedEnvironment(removedEnvironment)
             .updatedAt(now())
             .build();
 

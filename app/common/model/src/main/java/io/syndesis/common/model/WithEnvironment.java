@@ -17,7 +17,6 @@ package io.syndesis.common.model;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 
 import org.immutables.value.Value;
 
@@ -28,8 +27,4 @@ public interface WithEnvironment {
         return Collections.emptyMap();
     }
 
-    @Value.Default
-    default Set<String> getRemovedEnvironment() {
-        return Collections.emptySet();
-    }
 }

@@ -25,7 +25,9 @@ import io.syndesis.server.openshift.OpenShiftService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("PMD.LoggerIsNotStaticFinal")
 public class BaseHandler {
@@ -110,16 +112,24 @@ public class BaseHandler {
         getIntegrationDeploymentDao().update(d.withCurrentState(state));
     }
 
-    protected void deactivatePreviousDeployments(IntegrationDeployment integrationDeployment) {
-        String id = integrationDeployment.getId().orElseThrow(() -> new IllegalArgumentException("internal: No id given"));
-        IntegrationDeploymentDao dao = getIntegrationDeploymentDao();
-        Set<String> ids = dao.fetchIdsByPropertyValue("integrationId", id);
-        ids.retainAll(dao.fetchIdsByPropertyValue("targetState", IntegrationDeploymentState.Published.name()));
+    protected List<IntegrationDeployment> deactivatePreviousDeployments(IntegrationDeployment integrationDeployment) {
+        final String id = integrationDeployment.getSpec().getId().get();
+        final Set<String> ids = integrationDeploymentDao.fetchIdsByPropertyValue("integrationId", id);
 
-        ids.stream()
-            .map(dao::fetch)
-            .filter(r -> r.getVersion() != integrationDeployment.getVersion())
-            .map(IntegrationDeployment::unpublishing)
-            .forEach(dao::update);
+        final List<IntegrationDeployment> previousDeployments = ids.stream()
+            .map(integrationDeploymentDao::fetch)
+            .collect(Collectors.toList());
+
+        for (IntegrationDeployment deployment : previousDeployments) {
+            final IntegrationDeployment unpublished = deployment.unpublishing();
+            if (!unpublished.equals(deployment)) {
+                // if deployment was changed by IntegrationDeployment::unpublishing it is on longer
+                // equal to the IntegrationDeployment it originated from, so we need to update in
+                // JSONDB
+                integrationDeploymentDao.update(deployment);
+            }
+        }
+
+        return previousDeployments;
     }
 }
