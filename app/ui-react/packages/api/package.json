@@ -54,7 +54,7 @@
     "@syndesis/utils": "*",
     "deepmerge": "^4.2.2",
     "file-saver": "^2.0.1",
-    "immer": "^8.0.1",
+    "immer": "^9.0.6",
     "react-fast-compare": "^2.0.2",
     "vscode-ws-jsonrpc": "^0.1.1"
   },
