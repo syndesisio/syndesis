@@ -169,32 +169,6 @@ public class IntegrationHandlerTest {
         verify(openShiftService).delete("second to delete");
     }
 
-    @Test
-    public void shouldKeepTrackOfRemovedEnvironmentVariablesOnUpdate() {
-        final Integration existing = new Integration.Builder()
-            .id("i")
-            .putEnvironment("A", "1")
-            .putEnvironment("B", "2")
-            .build();
-        when(dataManager.fetch(Integration.class, "i")).thenReturn(existing);
-
-        final Integration updated = new Integration.Builder()
-            .putEnvironment("A", "1")
-            .putEnvironment("C", "3")
-            .build();
-
-        when(encryptionSupport.encrypt(updated)).thenReturn(updated);
-
-        handler.update("i", updated);
-
-        verify(dataManager).update(new Integration.Builder()
-            .createFrom(updated)
-            .version(2)
-            .updatedAt(1507562580000L)
-            .addRemovedEnvironment("B")
-            .build());
-    }
-
     private static DataShape dataShape(DataShapeKinds kind) {
         return dataShape(kind, null);
     }
