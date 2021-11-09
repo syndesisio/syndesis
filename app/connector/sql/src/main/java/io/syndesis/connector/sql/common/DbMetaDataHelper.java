@@ -158,9 +158,20 @@ public final class DbMetaDataHelper {
                 }
             }
             if (expectedSize >= 0 && columnList.size() < expectedSize) {
-                String msg = String.format("Invalid SQL, the number of columns (%s) should match the number of number of input parameters (%s)",
-                        columnList.size(), expectedSize);
-                throw new SQLException(msg);
+                final StringBuilder msg = new StringBuilder("Unable to determine column metadata for column named `")
+                    .append(columnName)
+                    .append("` in table named `")
+                    .append(tableName);
+                if (schema != null) {
+                    msg.append("` in schema named `")
+                        .append(schema);
+                }
+                if (catalog != null) {
+                    msg.append("` in catalog named `")
+                        .append(catalog);
+                }
+                msg.append('`');
+                throw new SQLException(msg.toString());
             }
             return columnList;
         }
