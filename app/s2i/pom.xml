@@ -531,30 +531,28 @@
 
   <profiles>
     <profile>
-      <id>image</id>
+      <!-- this profile must be kept in sync with image:openshift profile -->
+      <id>image:kubernetes</id>
       <activation>
         <property>
-          <name>::image</name>
+          <name>build.mode</name>
+          <value>kubernetes</value>
         </property>
       </activation>
       <build>
         <plugins>
-
           <plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>fabric8-maven-plugin</artifactId>
+            <groupId>org.eclipse.jkube</groupId>
+            <artifactId>kubernetes-maven-plugin</artifactId>
             <executions>
               <execution>
-                <!--
-                  Builds the S2I image.
-                -->
-                <id>create-s2i-image</id>
+                <id>default-cli</id>
                 <phase>package</phase>
                 <goals>
                   <goal>build</goal>
                 </goals>
                 <configuration>
-                  <!-- Important here, otherwise fmp silently ignores the build config -->
+                  <!-- Important here, otherwise OMP silently ignores the build config -->
                   <skipBuildPom>false</skipBuildPom>
                   <!-- Create a plain Docker image -->
                   <buildStrategy>docker</buildStrategy>
@@ -571,10 +569,51 @@
               </execution>
             </executions>
           </plugin>
-
         </plugins>
       </build>
+    </profile>
 
+    <profile>
+      <!-- this profile must be kept in sync with image:kubernetes profile -->
+      <id>image:openshift</id>
+      <activation>
+        <property>
+          <name>build.mode</name>
+          <value>openshift</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.jkube</groupId>
+            <artifactId>openshift-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-cli</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+                <configuration>
+                  <!-- Important here, otherwise OMP silently ignores the build config -->
+                  <skipBuildPom>false</skipBuildPom>
+                  <!-- Create a plain Docker image -->
+                  <buildStrategy>docker</buildStrategy>
+                  <images>
+                    <image>
+                      <name>${image.s2i}</name>
+                      <build>
+                        <dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
+                        <contextDir>${image.build.directory}</contextDir>
+                      </build>
+                    </image>
+                  </images>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
 
     <profile>

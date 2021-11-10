@@ -1057,27 +1057,6 @@
 
   <profiles>
     <profile>
-      <id>fabric8</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>fabric8-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>fmp</id>
-                <goals>
-                  <goal>resource</goal>
-                  <goal>helm</goal>
-                  <goal>build</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
       <id>debug</id>
       <build>
         <plugins>
@@ -1093,23 +1072,56 @@
     </profile>
 
     <profile>
-      <id>image</id>
+      <!-- this profile must be kept in sync with image:openshift profile -->
+      <id>image:kubernetes</id>
       <activation>
         <property>
-          <name>::image</name>
+          <name>build.mode</name>
+          <value>kubernetes</value>
         </property>
       </activation>
       <properties>
-        <fabric8.generator.name>${image.server}</fabric8.generator.name>
+        <jkube.generator.name>${image.server}</jkube.generator.name>
       </properties>
       <build>
         <plugins>
           <plugin>
-            <groupId>io.fabric8</groupId>
-            <artifactId>fabric8-maven-plugin</artifactId>
+            <groupId>org.eclipse.jkube</groupId>
+            <artifactId>kubernetes-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>build</id>
+                <id>default-cli</id>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+                <phase>package</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <!-- this profile must be kept in sync with image:kubernetes profile -->
+      <id>image:openshift</id>
+      <activation>
+        <property>
+          <name>build.mode</name>
+          <value>openshift</value>
+        </property>
+      </activation>
+      <properties>
+        <jkube.generator.name>${image.server}</jkube.generator.name>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.eclipse.jkube</groupId>
+            <artifactId>openshift-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-cli</id>
                 <goals>
                   <goal>build</goal>
                 </goals>
