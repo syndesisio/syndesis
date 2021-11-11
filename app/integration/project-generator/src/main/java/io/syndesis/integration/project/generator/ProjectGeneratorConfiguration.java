@@ -17,9 +17,6 @@ package io.syndesis.integration.project.generator;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @ConfigurationProperties("generator")
 public class ProjectGeneratorConfiguration {
 
@@ -36,15 +33,15 @@ public class ProjectGeneratorConfiguration {
      */
     private final Templates templates = new Templates();
 
-	private String artifactId;
+    private String artifactId;
 
     public void setArtifactId(String artifactId) {
-		this.artifactId = artifactId;
-	}
+      this.artifactId = artifactId;
+    }
 
-	public String getArtifactId() {
-		return artifactId;
-	}
+    public String getArtifactId() {
+      return artifactId;
+    }
 
     public Boolean isSecretMaskingEnabled() {
         return secretMaskingEnabled;
@@ -78,30 +75,10 @@ public class ProjectGeneratorConfiguration {
         this.activityTracing = activityTracing;
     }
 
-    public static class Templates {
-        /**
-         * The location of override templates relative to the templates dir.
-         */
-        private String overridePath;
+    @SuppressWarnings("PrivateConstructorForUtilityClass") // used as configuration, seems to be IOCed by Spring
+    public static final class Templates {
 
-        /**
-         * Additional resources to be included, copied as is.
-         */
-        private final List<Resource> additionalResources = new ArrayList<>();
-
-        public String getOverridePath() {
-            return overridePath;
-        }
-
-        public void setOverridePath(String overridePath) {
-            this.overridePath = overridePath;
-        }
-
-        public List<Resource> getAdditionalResources() {
-            return additionalResources;
-        }
-
-        public static class Resource {
+        public static final class Resource {
             /**
              * The resource source location.
              */

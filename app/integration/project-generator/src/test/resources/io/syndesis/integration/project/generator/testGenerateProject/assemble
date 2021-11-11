@@ -24,7 +24,7 @@ if [ $rc -eq 0 ]; then
     # Load global S2I variable setup
     source /usr/local/s2i/s2i-setup
 
-    # Make PropertiesLoader sirectory structure
+    # Make PropertiesLoader directory structure
     mkdir -p $JAVA_DATA_DIR/syndesis/loader
 
     if [ -d $S2I_SOURCE_DIR/extensions ]; then

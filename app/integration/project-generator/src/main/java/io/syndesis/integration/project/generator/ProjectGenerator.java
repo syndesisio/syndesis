@@ -20,11 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -72,7 +68,6 @@ import io.syndesis.integration.project.generator.mvn.PomContext;
 import org.apache.camel.generator.openapi.RestDslGenerator;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -256,34 +251,6 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         }
     }
 
-    private void addAdditionalResources(TarArchiveOutputStream tos) throws IOException {
-        for (ProjectGeneratorConfiguration.Templates.Resource additionalResource : configuration.getTemplates().getAdditionalResources()) {
-            String overridePath = configuration.getTemplates().getOverridePath();
-            URL resource = null;
-
-            if (!StringUtils.isEmpty(overridePath)) {
-                resource = getClass().getResource("templates/" + overridePath + "/" + additionalResource.getSource());
-            }
-            if (resource == null) {
-                resource = getClass().getResource("templates/" + additionalResource.getSource());
-            }
-            if (resource == null) {
-                throw new IllegalArgumentException(
-                    String.format("Unable to find the required additional resource (overridePath=%s, source=%s)"
-                        , overridePath
-                        , additionalResource.getSource()
-                    )
-                );
-            }
-
-            try {
-                addTarEntry(tos, additionalResource.getDestination(), Files.readAllBytes(Paths.get(resource.toURI())));
-            } catch (URISyntaxException e) {
-                throw new IOException(e);
-            }
-        }
-    }
-
     public static class Scope {
         public ProjectGeneratorConfiguration configuration;
         public Integration integration;
@@ -323,8 +290,6 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
                 addResource(tos, "prometheus-config.yml", "templates/prometheus-config.yml");
                 addTarEntry(tos, "configuration/settings.xml", generateSettingsXml());
-
-                addAdditionalResources(tos);
 
                 LOGGER.info("Integration [{}]: Project files written to output stream", Names.sanitize(integration.getName()));
             } catch (Exception e) {
