@@ -75,6 +75,7 @@
   "dependencies": {},
   "resolutions": {
     "lodash": "4.17.21",
-    "node-forge": "0.10.0"
+    "node-forge": "0.10.0",
+    "**/apicurio-assembly/patternfly/bootstrap-select": "1.13.6"
   }
 }
