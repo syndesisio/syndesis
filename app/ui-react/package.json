@@ -72,5 +72,8 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "resolutions": {
+    "lodash": "4.17.21"
+  }
 }
