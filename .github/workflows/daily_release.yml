@@ -4,9 +4,10 @@ on:
   schedule:
     - cron:  '0 5 * * *'
   workflow_dispatch:
-    flags:
-      description: 'Additional command line flags'
-      required: false
+    inputs:
+      flags:
+        description: 'Additional command line flags'
+        required: false
 
 jobs:
   release:
