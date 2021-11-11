@@ -76,6 +76,8 @@
   "resolutions": {
     "lodash": "4.17.21",
     "node-forge": "0.10.0",
-    "**/apicurio-assembly/patternfly/bootstrap-select": "1.13.6"
+    "**/apicurio-assembly/patternfly/bootstrap-select": "1.13.6",
+    "**/apicurio-assembly/patternfly/datatables.net": "1.11.3",
+    "**/apicurio-assembly/patternfly/**/datatables.net": "1.11.3"
   }
 }
