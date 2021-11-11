@@ -585,6 +585,10 @@ extract_maven_opts() {
         maven_opts+=" -Dgpg.keyname=${gpg_keyname} -Dgpg.passphrase=${gpg_passphrase}"
     fi
 
+    if [ "$(hasflag --verbose)" ]; then
+        maven_opts="$maven_opts -X"
+    fi
+
     echo "${maven_opts}"
 }
 
