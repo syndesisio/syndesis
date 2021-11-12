@@ -18,7 +18,9 @@ import resolvers from '../../resolvers';
 
 export const SelectMethodPage: React.FunctionComponent = () => {
   const { history } = useRouteData();
-  const [connectorTemplateId, setConnectorTemplateId] = React.useState('');
+  const [connectorTemplateId, setConnectorTemplateId] = React.useState<
+    string | undefined
+  >(undefined);
   const [specification, setSpecification] = React.useState<string | undefined>(
     undefined
   );
@@ -38,7 +40,7 @@ export const SelectMethodPage: React.FunctionComponent = () => {
       setIsLoading(false);
       setSpecification(undefined);
       setUrl(undefined);
-      setConnectorTemplateId('');
+      setConnectorTemplateId(undefined);
     }
   }, [error, uiContext, history, setError]);
 
