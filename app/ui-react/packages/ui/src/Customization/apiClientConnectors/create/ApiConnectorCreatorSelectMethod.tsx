@@ -62,7 +62,9 @@ export const ApiConnectorCreatorSelectMethod: React.FunctionComponent<IApiConnec
     i18nUrlNote,
     onNext,
   }) => {
-    const [connectorTemplateId, setConnectorTemplateId] = React.useState('');
+    const [connectorTemplateId, setConnectorTemplateId] = React.useState<
+      string | undefined
+    >(undefined);
     const [method, setMethod] = React.useState(FILE);
     const [specification, setSpecification] = React.useState('');
     const [url, setUrl] = React.useState('');
