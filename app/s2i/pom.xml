@@ -415,6 +415,28 @@
               <skipInvocation>false</skipInvocation>
             </configuration>
           </execution>
+          <execution>
+            <!--
+              Generates dependency tree report to make it easier
+              to trace back a dependency to it's root cause for
+              inclusion.
+            -->
+            <id>create-dependencies-txt</id>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <goals>
+                <goal>--batch-mode -T3.0C dependency:tree -Doutput=${image.build.directory}/dependencies.txt -DappendOutput=true</goal>
+              </goals>
+              <mergeUserSettings>true</mergeUserSettings>
+              <projectsDirectory>${project.build.directory}/generated</projectsDirectory>
+              <localRepositoryPath>${image.build.directory}/repository</localRepositoryPath>
+              <settingsFile>${project.build.directory}/settings_local.xml</settingsFile>
+              <skipInvocation>false</skipInvocation>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
