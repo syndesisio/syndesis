@@ -94,13 +94,13 @@
     <opentracing.spring.web.starter.version>3.0.0</opentracing.spring.web.starter.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.23.2.fuse-790053</camel.version>
+    <camel.version>2.23.2.fuse-790054-redhat-00001</camel.version>
 
     <undertow.version>2.2.12.Final</undertow.version>
     <org.jboss.xnio.version>3.8.4.Final</org.jboss.xnio.version>
 
     <!-- CXF version, to be kept in sync with the one referenced by camel version above -->
-    <cxf.version>3.3.6.fuse-790048</cxf.version>
+    <cxf.version>3.3.6.fuse-790049-redhat-00001</cxf.version>
     <wss4j.version>2.2.2</wss4j.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
