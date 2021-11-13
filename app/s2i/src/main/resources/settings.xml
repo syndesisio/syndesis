@@ -56,18 +56,6 @@
           </releases>
         </repository>
         <repository>
-          <id>jboss-ea</id>
-          <name>JBoss Community Early Access Release Repository</name>
-          <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </releases>
-        </repository>
-        <repository>
           <id>atlassian-public</id>
           <name>Atlassian Repository</name>
           <url>https://packages.atlassian.com/maven-external</url>
@@ -107,18 +95,6 @@
           <id>redhat-ga</id>
           <name>Red Hat General Availability Repository</name>
           <url>https://maven.repository.redhat.com/ga/</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </releases>
-        </pluginRepository>
-        <pluginRepository>
-          <id>jboss-ea</id>
-          <name>JBoss Community Early Access Release Repository</name>
-          <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>

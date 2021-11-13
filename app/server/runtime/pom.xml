@@ -59,11 +59,6 @@
       <url>https://repo.maven.apache.org/maven2/</url>
     </pluginRepository>
     <pluginRepository>
-      <id>jboss-ea</id>
-      <name>JBoss Early Access</name>
-      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-    </pluginRepository>
-    <pluginRepository>
       <id>redhat-ga</id>
       <name>Red Hat General Availability Repository</name>
       <url>https://maven.repository.redhat.com/ga/</url>

@@ -42,7 +42,6 @@ final class TestConstants {
         MAVEN_PROPERTIES = new MavenProperties();
         MAVEN_PROPERTIES.addRepository("central", "https://repo.maven.apache.org/maven2/");
         MAVEN_PROPERTIES.addRepository("redhat-ga", "https://maven.repository.redhat.com/ga/");
-        MAVEN_PROPERTIES.addRepository("jboss-ea", "https://repository.jboss.org/nexus/content/groups/ea/");
 
         SYNDESIS_VERSION = ResourceBundle.getBundle("test").getString("syndesis.version");
         CAMEL_VERSION = ResourceBundle.getBundle("test").getString("camel.version");
