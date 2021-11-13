@@ -196,7 +196,29 @@ public class Application implements ApplicationRunner {
         final GatheredDependencies deps = collectAllSteps();
 
         StringBuilder parentPom = new StringBuilder(5000);
-        parentPom.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?><project xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://maven.apache.org/POM/4.0.0\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"><modelVersion>4.0.0</modelVersion> <groupId>io.syndesis.integrations</groupId><artifactId>project</artifactId><version>0.1-SNAPSHOT</version><packaging>pom</packaging><modules>\n");
+        parentPom.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?><project xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://maven.apache.org/POM/4.0.0\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\"><modelVersion>4.0.0</modelVersion> <groupId>io.syndesis.integrations</groupId><artifactId>project</artifactId><version>0.1-SNAPSHOT</version><packaging>pom</packaging>\n");
+        final Map<String, String> repositories = mavenProperties.getRepositories();
+        // make sure we have these if they're not specified, the generated projects should
+        // have them, but the go-offline-maven-plugin needs them in the parent POM
+        repositories.put("central", "https://repo.maven.apache.org/maven2/");
+        repositories.put("redhat-ga", "https://maven.repository.redhat.com/ga/");
+        repositories.put("atlassian-public", "https://packages.atlassian.com/maven-external");
+        if (!repositories.isEmpty()) {
+            parentPom.append("<repositories>\n");
+            for (Map.Entry<String, String> repository : repositories.entrySet()) {
+                parentPom.append("<repository>\n<id>")
+                    .append(repository.getKey())
+                    .append("</id>\n")
+                    .append("<url>")
+                    .append(repository.getValue())
+                    .append("</url>\n")
+                    .append("<releases>\n<enabled>true</enabled>\n<updatePolicy>never</updatePolicy>\n</releases>\n<snapshots>\n<enabled>true</enabled>\n<updatePolicy>never</updatePolicy>\n</snapshots>\n</repository>");
+            }
+            parentPom.append("</repositories>\n");
+        }
+
+        parentPom.append("<modules>");
+
         int i = 0;
         for (final Step step : deps.steps) {
           final Integration integration = new Integration.Builder()
