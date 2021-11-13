@@ -33,11 +33,6 @@
       <url>https://repo.maven.apache.org/maven2/</url>
     </repository>
     <repository>
-      <id>jboss-ea</id>
-      <name>jboss-ea</name>
-      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-    </repository>
-    <repository>
       <id>redhat-ga</id>
       <name>redhat-ga</name>
       <url>https://maven.repository.redhat.com/ga/</url>
@@ -49,11 +44,6 @@
       <id>central</id>
       <name>central</name>
       <url>https://repo.maven.apache.org/maven2/</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>jboss-ea</id>
-      <name>jboss-ea</name>
-      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
     </pluginRepository>
     <pluginRepository>
       <id>redhat-ga</id>

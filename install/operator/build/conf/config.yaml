@@ -92,6 +92,5 @@ Syndesis:
                     Repositories:
                         central: "https://repo.maven.apache.org/maven2/"
                         repo-02-redhat-ga: "https://maven.repository.redhat.com/ga/"
-                        repo-03-jboss-ea: "https://repository.jboss.org/nexus/content/groups/ea/"
         AMQ:
             Image: "registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.4"

@@ -16,7 +16,7 @@ check_oc_version()
     set_gnugrep
 
     local test=$(oc version | $gnugrep -Eiv 'kubernetes|server' | $gnugrep -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\?')
-    
+
     if [ -z "$test" ]; then
       echo "ERROR: 'Version of oc could not be found'"
       return
@@ -183,20 +183,7 @@ install_maven_mirror() {
 
     nexus_host=$(oc get routes nexus -o=jsonpath='{.spec.host}')
 
-    echo "Setting up jboss-ea and redhat-ga proxies..."
-
-    curl -X POST \
-        http://${nexus_host}/nexus/service/local/repositories \
-        -H 'authorization: Basic YWRtaW46YWRtaW4xMjM=' \
-        -H 'cache-control: no-cache' \
-        -H 'content-type: application/json' \
-        -d '{"data":{"repoType":"proxy","id":"jboss-ea","name":"JBoss Early Access","browseable":true,"indexable":true,
-        "notFoundCacheTTL":1440,"artifactMaxAge":-1,"metadataMaxAge":1440,"itemMaxAge":1440,"repoPolicy":"RELEASE",
-        "provider":"maven2","providerRole":"org.sonatype.nexus.proxy.repository.Repository","downloadRemoteIndexes":true,
-        "autoBlockActive":true,"fileTypeValidation":true,"exposed":true,"checksumPolicy":"WARN",
-        "remoteStorage":{"remoteStorageUrl":"https://repository.jboss.org/nexus/content/groups/ea/","authentication":null,
-        "connectionSettings":null}}}' \
-        >/dev/null 2>&1
+    echo "Setting up redhat-ga and atlassian proxy..."
 
     curl -X POST \
         http://${nexus_host}/nexus/service/local/repositories \
@@ -231,7 +218,7 @@ install_maven_mirror() {
         -H 'content-type: application/json' \
         -H 'postman-token: eaa6b07c-87ac-53c5-1ab6-aa585ae9ee3c' \
         -d '{"data":{"id":"public","name":"Public Repositories","format":"maven2","exposed":true,"provider":"maven2",
-        "repositories":[{"id":"releases"},{"id":"snapshots"},{"id":"thirdparty"},{"id":"central"},{"id":"jboss-ea"},
+        "repositories":[{"id":"releases"},{"id":"snapshots"},{"id":"thirdparty"},{"id":"central"},
         {"id":"redhat-ga"},{"id":"atlassian-public"}]}}' \
         >/dev/null 2>&1
 
