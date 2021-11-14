@@ -45,6 +45,7 @@
       <includes>
         <include>settings.xml</include>
         <include>licenses.xml</include>
+        <include>dependencies.txt</include>
       </includes>
     </fileSet>
   </fileSets>

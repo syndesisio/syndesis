@@ -135,6 +135,7 @@ jobs:
       - name: Run integration tests
         run: tools/bin/syndesis integration-test --s2i --logging
       - name: Archive logs and test results
+        if: always()
         uses: actions/upload-artifact@v2
         with:
           name: checks-integration-tests
@@ -142,3 +143,5 @@ jobs:
             app/test/integration-test/target/*.log
             app/test/integration-test/target/citrus-reports/**/*
             app/test/integration-test/target/failsafe-reports/*
+            app/s2i/target/invoker-reports/*
+            app/s2i/target/it/project/build.log
