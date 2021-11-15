@@ -175,6 +175,19 @@
         <scope>import</scope>
       </dependency>
 
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-swagger-java</artifactId>
+        <version>${camel.version}</version>
+        <exclusions>
+          <exclusion>
+            <!-- brought in via io.swagger:swagger-core and io.swagger:swagger-models and we do not want it as it conflicts with jakarta validation API -->
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
       <!-- Extension dependencies -->
       <dependency>
         <groupId>io.syndesis.extension</groupId>
@@ -212,6 +225,12 @@
         <groupId>io.atlasmap</groupId>
         <artifactId>camel-atlasmap</artifactId>
         <version>${atlasmap.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!--
