@@ -39,17 +39,17 @@
     <dependency>
       <groupId>io.jaegertracing</groupId>
       <artifactId>jaeger-thrift</artifactId>
-      <version>${jaeger.thrift.version}</version>
+      <version>${jaeger.core.version}</version>
     </dependency>
     <dependency>
       <groupId>io.opentracing</groupId>
       <artifactId>opentracing-noop</artifactId>
-      <version>${opentracing.noop.version}</version>
+      <version>${opentracing.version}</version>
     </dependency>
     <dependency>
       <groupId>io.opentracing</groupId>
       <artifactId>opentracing-api</artifactId>
-      <version>${opentracing.api.version}</version>
+      <version>${opentracing.version}</version>
     </dependency>
 
     <dependency>

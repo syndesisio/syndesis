@@ -106,7 +106,7 @@
     <dependency>
       <groupId>io.opentracing</groupId>
       <artifactId>opentracing-api</artifactId>
-      <version>${opentracing.api.version}</version>
+      <version>${opentracing.version}</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
