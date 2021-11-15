@@ -87,11 +87,9 @@
     <commons.compress.version>1.21</commons.compress.version>
 
     <!-- opentracing dependencies -->
-    <jaeger.core.version>1.0.0</jaeger.core.version>
-    <jaeger.thrift.version>1.0.0</jaeger.thrift.version>
-    <opentracing.noop.version>0.33.0</opentracing.noop.version>
-    <opentracing.api.version>0.33.0</opentracing.api.version>
-    <opentracing.spring.web.starter.version>3.0.0</opentracing.spring.web.starter.version>
+    <jaeger.core.version>1.6.0</jaeger.core.version>
+    <opentracing.version>0.33.0</opentracing.version>
+    <opentracing.spring.web.starter.version>4.1.0</opentracing.spring.web.starter.version>
 
     <!-- Global camel version used everywhere -->
     <camel.version>2.23.2.fuse-790054-redhat-00001</camel.version>
@@ -3757,6 +3755,19 @@
         <artifactId>json-smart</artifactId>
         <version>${json-smart.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.apache.thrift</groupId>
+        <artifactId>libthrift</artifactId>
+        <version>0.14.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
