@@ -2317,10 +2317,6 @@
             <artifactId>javax.mail</artifactId>
           </exclusion>
           <exclusion>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-          </exclusion>
-          <exclusion>
             <groupId>org.jboss.spec.javax.annotation</groupId>
             <artifactId>jboss-annotations-api_1.3_spec</artifactId>
           </exclusion>
@@ -2343,10 +2339,6 @@
           <exclusion>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
           </exclusion>
           <exclusion>
             <groupId>org.jboss.spec.javax.annotation</groupId>
@@ -2383,10 +2375,6 @@
           <exclusion>
             <groupId>org.jboss.spec.javax.xml.bind</groupId>
             <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
           </exclusion>
           <exclusion>
             <groupId>com.sun.activation</groupId>
@@ -2428,10 +2416,6 @@
         <artifactId>resteasy-client</artifactId>
         <version>${resteasy.version}</version>
         <exclusions>
-          <exclusion>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
-          </exclusion>
           <exclusion>
             <groupId>org.jboss.spec.javax.xml.bind</groupId>
             <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
@@ -2755,6 +2739,12 @@
         <groupId>com.fasterxml.jackson.module</groupId>
         <artifactId>jackson-module-jsonSchema</artifactId>
         <version>${jackson.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -2774,6 +2764,12 @@
         <groupId>org.hibernate.validator</groupId>
         <artifactId>hibernate-validator</artifactId>
         <version>${hibernate.validator.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -2783,9 +2779,9 @@
       </dependency>
 
       <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
-        <version>2.0.1.Final</version>
+        <groupId>jakarta.validation</groupId>
+        <artifactId>jakarta.validation-api</artifactId>
+        <version>2.0.2</version>
       </dependency>
 
       <dependency>
@@ -2993,8 +2989,8 @@
         <version>${swagger.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>jakarta.validation</groupId>
-            <artifactId>jakarta.validation-api</artifactId>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
           </exclusion>
           <exclusion>
             <groupId>javax.xml.bind</groupId>
@@ -3370,6 +3366,12 @@
         <groupId>io.atlasmap</groupId>
         <artifactId>atlas-model</artifactId>
         <version>${atlasmap.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
