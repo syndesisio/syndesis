@@ -97,6 +97,11 @@
             <artifactId>value</artifactId>
             <classifier>annotations</classifier>
         </dependency>
+        <dependency>
+          <groupId>org.jsoup</groupId>
+          <artifactId>jsoup</artifactId>
+          <scope>runtime</scope>
+        </dependency>
 
         <!-- test -->
         <dependency>
