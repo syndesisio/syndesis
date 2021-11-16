@@ -32,7 +32,8 @@
     <camel.version>2.23.2.fuse-7_10_0-00020-redhat-00001</camel.version>
     <atlasmap.version>2.3.2</atlasmap.version>
     <jackson.version>2.11.2</jackson.version>
-    <mongodb.version>3.9.0</mongodb.version>
+    <!-- any change to mongodb driver version, should be updated to parent pom.xml -->
+    <mongodb.version>3.12.7</mongodb.version>
     <jetty.version>9.4.43.v20210629</jetty.version>
     <netty.version>4.1.68.Final</netty.version>
     <kubernetes.client.version>4.13.3</kubernetes.client.version>
