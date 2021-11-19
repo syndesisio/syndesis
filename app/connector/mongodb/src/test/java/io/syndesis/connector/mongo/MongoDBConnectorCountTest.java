@@ -16,55 +16,84 @@
 package io.syndesis.connector.mongo;
 
 import java.util.List;
+import java.util.Map;
 
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.connector.mongo.embedded.EmbeddedMongoExtension.Mongo;
+import io.syndesis.connector.mongo.embedded.EmbeddedMongoExtension.MongoConfiguration;
+
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;
 
-public class MongoDBConnectorCountTest extends MongoDBConnectorProducerTestSupport {
+import com.mongodb.MongoClient;
 
-    private final static String COLLECTION = "countCollection";
+public final class MongoDBConnectorCountTest {
 
-    @Override
-    public String getCollectionName() {
-        return COLLECTION;
+    private MongoDBConnectorCountTest() {
     }
 
-    @Override
-    protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-count", DATABASE, COLLECTION, null,
-            "{\"test\":\":#someText\"}");
+    @Mongo
+    static class CountMulti extends MongoDBConnectorTestSupport {
+
+        public CountMulti(@MongoConfiguration final Map<String, String> configuration) {
+            super(configuration);
+        }
+
+        @Test
+        public void mongoCountMultiTest(final MongoClient given) {
+            try (MongoClient client = given; ClosableMongoCollection<Document> collection = createCollection(client, "MongoDBConnectorCountTest-CountMulti")) {
+                // When
+                final String json = String.format("{\"test\":\"unit\",\"batchNo\":%d}", 33);
+                final String json2 = String.format("{\"test\":\"unit\",\"batchNo\":%d}", 35);
+                final String json3 = String.format("{\"test\":\"unit3\",\"batchNo\":%d}", 44);
+                collection.insertOne(Document.parse(json));
+                collection.insertOne(Document.parse(json2));
+                collection.insertOne(Document.parse(json3));
+                // Given
+                final String countArguments = "{\"someText\": \"unit\"}";
+                final Long result = template().requestBody("direct:start", countArguments, Long.class);
+                // Then
+                Assertions.assertThat(result).isEqualTo(2L);
+            }
+        }
+
+        @Override
+        protected List<Step> createSteps() {
+            return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-count", "test", "MongoDBConnectorCountTest-CountMulti", null,
+                "{\"test\":\":#someText\"}");
+        }
+
     }
 
-    @Test
-    public void mongoCountSingleTest() {
-        // When
-        String json = String.format("{\"test\":\"single\",\"_id\":%s}", "11");
-        String json2 = String.format("{\"test\":\"single2\",\"_id\":%s}", "22");
-        collection.insertOne(Document.parse(json));
-        collection.insertOne(Document.parse(json2));
-        // Given
-        String countArguments = "{\"someText\":\"single\"}";
-        Long result = template().requestBody("direct:start", countArguments, Long.class);
-        // Then
-        Assertions.assertThat(result).isEqualTo(1L);
-    }
+    @Mongo
+    static class CountSingle extends MongoDBConnectorTestSupport {
 
-    @Test
-    public void mongoCountMultiTest() {
-        // When
-        String json = String.format("{\"test\":\"unit\",\"batchNo\":%d}", 33);
-        String json2 = String.format("{\"test\":\"unit\",\"batchNo\":%d}", 35);
-        String json3 = String.format("{\"test\":\"unit3\",\"batchNo\":%d}", 44);
-        collection.insertOne(Document.parse(json));
-        collection.insertOne(Document.parse(json2));
-        collection.insertOne(Document.parse(json3));
-        // Given
-        String countArguments = "{\"someText\": \"unit\"}";
-        Long result = template().requestBody("direct:start", countArguments, Long.class);
-        // Then
-        Assertions.assertThat(result).isEqualTo(2L);
+        public CountSingle(@MongoConfiguration final Map<String, String> configuration) {
+            super(configuration);
+        }
+
+        @Test
+        public void mongoCountSingleTest(final MongoClient given) {
+            try (MongoClient client = given; ClosableMongoCollection<Document> collection = createCollection(client, "MongoDBConnectorCountTest-CountSingle")) {
+                // When
+                final String json = String.format("{\"test\":\"single\",\"_id\":%s}", "11");
+                final String json2 = String.format("{\"test\":\"single2\",\"_id\":%s}", "22");
+                collection.insertOne(Document.parse(json));
+                collection.insertOne(Document.parse(json2));
+                // Given
+                final String countArguments = "{\"someText\":\"single\"}";
+                final Long result = template().requestBody("direct:start", countArguments, Long.class);
+                // Then
+                Assertions.assertThat(result).isEqualTo(1L);
+            }
+        }
+
+        @Override
+        protected List<Step> createSteps() {
+            return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-count", "test", "MongoDBConnectorCountTest-CountSingle", null,
+                "{\"test\":\":#someText\"}");
+        }
     }
 
 }

@@ -16,25 +16,10 @@
 package io.syndesis.connector.mongo;
 
 import com.mongodb.client.MongoCollection;
-import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
-import org.bson.Document;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 
-public abstract class MongoDBConnectorProducerTestSupport extends MongoDBConnectorTestSupport{
+public interface ClosableMongoCollection<TDocument> extends MongoCollection<TDocument>, AutoCloseable {
 
-    protected MongoCollection<Document> collection;
-
-    public abstract String getCollectionName();
-
-    @BeforeEach
-    public void before(){
-        collection = EmbedMongoConfiguration.DATABASE.getCollection(getCollectionName());
-    }
-
-    @AfterEach
-    public void after(){
-        collection.drop();
-    }
+    @Override
+    void close();
 
 }

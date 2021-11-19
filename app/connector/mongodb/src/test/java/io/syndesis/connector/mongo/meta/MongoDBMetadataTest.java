@@ -15,50 +15,56 @@
  */
 package io.syndesis.connector.mongo.meta;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mongodb.client.model.CreateCollectionOptions;
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.ValidationOptions;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.mongo.MongoDBConnectorTestSupport;
-import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
+import io.syndesis.connector.mongo.embedded.EmbeddedMongoExtension.Mongo;
+import io.syndesis.connector.mongo.embedded.EmbeddedMongoExtension.MongoConfiguration;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
+
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.MongoClient;
+import com.mongodb.client.model.CreateCollectionOptions;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ValidationOptions;
+
+@Mongo
 public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
 
-    private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private final static String CONNECTOR_ID = "io.syndesis.connector:connector-mongodb-find";
-    private final static String SCHEME = "mongodb3";
     private final static String COLLECTION = "metadataCollection";
 
-    @Override
-    protected List<Step> createSteps() {
-        return fromDirectToMongo("start", CONNECTOR_ID, DATABASE, COLLECTION);
+    private final static String CONNECTOR_ID = "io.syndesis.connector:connector-mongodb-find";
+
+    private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private final static String SCHEME = "mongodb3";
+    private final Map<String, String> configuration;
+
+    public MongoDBMetadataTest(@MongoConfiguration final Map<String, String> configuration) {
+        super(configuration);
+        this.configuration = configuration;
     }
 
     @Test
-    public void verifyMetadataJsonSchemaExpected() throws IOException {
+    public void verifyMetadataJsonSchemaExpected(final MongoClient given) throws JsonMappingException, JsonProcessingException {
         // Given
-        String collection = "validSchema";
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("database", DATABASE);
+        final String collection = "validSchema";
+        final Map<String, Object> properties = new HashMap<>();
+        properties.put("database", "test");
         properties.put("collection", collection);
-        properties.put("host", String.format("%s:%s", EmbedMongoConfiguration.HOST, EmbedMongoConfiguration.PORT));
-        properties.put("user", EmbedMongoConfiguration.USER);
-        properties.put("password", EmbedMongoConfiguration.PASSWORD);
-        properties.put("adminDB", EmbedMongoConfiguration.ADMIN_DB);
+        properties.putAll(configuration);
         // When
-        Document jsonSchema = Document.parse("{ \n"
+        final Document jsonSchema = Document.parse("{ \n"
             + "      bsonType: \"object\", \n"
             + "      required: [ \"name\", \"surname\", \"email\" ], \n"
             + "      properties: { \n"
@@ -81,19 +87,20 @@ public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
             + "            enum: [ \"M\", \"F\" ], \n"
             + "            description: \"can be only M or F\" } \n"
             + "      }}");
-        ValidationOptions collOptions = new ValidationOptions().validator(Filters.eq("$jsonSchema",jsonSchema));
-        EmbedMongoConfiguration.CLIENT.getDatabase(DATABASE).createCollection(collection,
-            new CreateCollectionOptions().validationOptions(collOptions));
+        final ValidationOptions collOptions = new ValidationOptions().validator(Filters.eq("$jsonSchema", jsonSchema));
+        try (MongoClient client = given) {
+            client.getDatabase("test").createCollection(collection,
+                new CreateCollectionOptions().validationOptions(collOptions));
+        }
         // Then
-        MongoDBMetadataRetrieval metaBridge = new MongoDBMetadataRetrieval();
-        SyndesisMetadata metadata = metaBridge.fetch(
+        final MongoDBMetadataRetrieval metaBridge = new MongoDBMetadataRetrieval();
+        final SyndesisMetadata metadata = metaBridge.fetch(
             context(),
             SCHEME,
             CONNECTOR_ID,
-            properties
-        );
+            properties);
         // format as json the datashape
-        JsonNode json = OBJECT_MAPPER.readTree(metadata.outputShape.getSpecification());
+        final JsonNode json = OBJECT_MAPPER.readTree(metadata.outputShape.getSpecification());
         Assertions.assertThat(json.get("$schema").asText()).isEqualTo("http://json-schema.org/schema#");
         Assertions.assertThat(json.get("required").isArray()).isTrue();
         Assertions.assertThat(json.get("properties").isObject()).isTrue();
@@ -105,27 +112,30 @@ public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
     }
 
     @Test
-    public void verifyMetadataJsonSchemaMissing() {
+    public void verifyMetadataJsonSchemaMissing(final MongoClient given) {
         // Given
-        String collection = "noSchema";
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("database", DATABASE);
+        final String collection = "noSchema";
+        final Map<String, Object> properties = new HashMap<>();
+        properties.put("database", "test");
         properties.put("collection", collection);
-        properties.put("host", String.format("%s:%s", EmbedMongoConfiguration.HOST, EmbedMongoConfiguration.PORT));
-        properties.put("user", EmbedMongoConfiguration.USER);
-        properties.put("password", EmbedMongoConfiguration.PASSWORD);
-        properties.put("adminDB", EmbedMongoConfiguration.ADMIN_DB);
+        properties.putAll(configuration);
         // When
-        EmbedMongoConfiguration.CLIENT.getDatabase(DATABASE).createCollection(collection);
+        try (MongoClient client = given) {
+            client.getDatabase("test").createCollection(collection);
+        }
         // Then
-        MongoDBMetadataRetrieval metaBridge = new MongoDBMetadataRetrieval();
-        SyndesisMetadata metadata = metaBridge.fetch(
+        final MongoDBMetadataRetrieval metaBridge = new MongoDBMetadataRetrieval();
+        final SyndesisMetadata metadata = metaBridge.fetch(
             context(),
             SCHEME,
             CONNECTOR_ID,
-            properties
-        );
+            properties);
         Assertions.assertThat(metadata.outputShape.getKind()).isEqualTo(DataShapeKinds.ANY);
+    }
+
+    @Override
+    protected List<Step> createSteps() {
+        return fromDirectToMongo("start", CONNECTOR_ID, "test", COLLECTION);
     }
 
 }
