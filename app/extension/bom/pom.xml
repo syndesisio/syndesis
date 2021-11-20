@@ -20,7 +20,7 @@
 
   <groupId>io.syndesis.extension</groupId>
   <artifactId>extension-bom</artifactId>
-  <version>1.13-SNAPSHOT</version>
+  <version>1.13.0-20211120</version>
   <name>Extension :: Bill of Materials (BOM)</name>
   <description>Syndesis :: ${project.name}</description>
 
