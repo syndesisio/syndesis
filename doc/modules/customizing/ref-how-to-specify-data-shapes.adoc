@@ -115,6 +115,11 @@ the data shape's `specification` property. For example:
 ----
 
 * `csv-instance` indicates that the data type is represented by a CSV instance. 
+ifeval::["{location}" == "downstream"]
++
+*Note* _Data Mapper support for CSV data is a Technology Preview feature only._
+endif::[]
++
 When `kind` is set to `csv-instance`, specify a CSV instance as the value of
 the data shape's `specification` property. For example:
 +

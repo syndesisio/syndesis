@@ -46,7 +46,11 @@ For a `POST` request, you might
 have specified the output data shape in the request by passing a JSON 
 instance, JSON schema, XML instance, XML schema, or CSV instance. If you did not, then when you add a Webhook connection as the start connection of an integration, 
 {prodname} prompts you to specify the output data type. If you do not,
-then the default Webhook connection output data type is in JSON format.   
+then the default Webhook connection output data type is in JSON format.  
+ifeval::["{location}" == "downstream"]
++
+*Note* _Data Mapper support for CSV data is a Technology Preview feature only._
+endif::[] 
 
 .. Add any other steps that the integration needs.
 . Publish the integration and wait for it to be *Running*. 
