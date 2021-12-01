@@ -95,6 +95,8 @@ indicate what this integration does.
 
 . Optionally, in the *Labels* field, add one or more labels to an integration. A label is a key-value pair tag that you can apply to an integration (or other OpenShift resource) for later filtering and selecting in OpenShift. For example, an OpenShift admin user can filter the list of running pods or deployments by label.
 
+. Optionally, add one or more custom environment variables for an integration. You can use these environment variables to set Spring Boot configuration options, such as `SERVER_MAX_HTTP_HEADER_SIZE`. Note that setting these environment variables in Fuse Online when you save an integration does not change or impact any other environment settings set manually, for example, through the OpenShift web console interface. 
+
 .  Optionally, from the list of library extensions that you have imported, you can select one or more library extensions to associate with the integration. Note that you must have already imported a library `.jar` file as a {prodname} extension if you want it to appear in this list so that you can select it.
 + 
 For more information about library extensions, see link:{LinkSyndesisIntegrationGuide}#develop-library-extensions_extensions[How to develop library extensions].
