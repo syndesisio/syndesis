@@ -31,7 +31,7 @@ that receives data from the start connection and that completes the
 integration.
 . Map data fields from the start connection to data fields in the
 finish connection.
-. Give the integration a name and, optionally, a description and label.
+. Give the integration a name and, optionally, a description, a label, and custom environment variables.
 . Click *Publish* to start running the integration.
 
 Another kind of integration is an API provider integration.

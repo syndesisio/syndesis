@@ -59,5 +59,5 @@ that helps you distinguish this data type.
 . Add any other needed connections.
 . Add any other needed steps.
 . Immediately after the start connection, add a data mapper step. 
-. Click *Publish*, give the integration a name and, optionally, a description and one or more labels. 
+. Click *Publish*, give the integration a name and, optionally, a description, custom environment variables, and one or more labels. 
 . Click *Save and publish*. 
