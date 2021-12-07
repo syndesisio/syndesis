@@ -10,8 +10,8 @@ You can use the same Slack connection in any number of integrations.
 
 .Prerequisites
 
-* https://api.slack.com/apps[Create and installe a Slack app] for connecting {prodname} to Slack:
-** Use the 'Bot User OAuth Access Token' as the token for the consumer endpoint.
+* https://api.slack.com/apps[Create and install a Slack app] for connecting {prodname} to Slack:
+** Use the *Bot User OAuth Access Token* as the token for the consumer endpoint.
 ** Add the relevant user token scope to your app to grant it permission to view messages:
 +
 history (`channels:history`, `groups:history`, `mpim:history`, or `im:history`)
