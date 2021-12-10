@@ -18,17 +18,17 @@ package configuration
 
 import (
 	"context"
+	"crypto/rand"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"math/rand"
+	"math/big"
 	"net/url"
 	"os"
 	"regexp"
 	"strconv"
 	"strings"
-	"time"
 
 	consolev1 "github.com/openshift/api/console/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -49,8 +49,6 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/util/yaml"
 )
-
-var random = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 // Location from where the template configuration is located
 var TemplateConfig string
@@ -694,8 +692,13 @@ func generatePassword(size int) string {
 	}
 
 	result := make([]rune, size)
+	max := big.NewInt(int64(len(alphabet)))
 	for i := 0; i < size; i++ {
-		result[i] = alphabet[random.Intn(len(alphabet))]
+		if pos, err := rand.Int(rand.Reader, max); err == nil {
+			result[i] = alphabet[pos.Int64()]
+		} else {
+			panic(err)
+		}
 	}
 	s := string(result)
 	return s
