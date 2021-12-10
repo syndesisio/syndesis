@@ -39,6 +39,7 @@
     <aws-java-sdk.version>1.11.438</aws-java-sdk.version>
     <undertow.version>2.2.12.Final</undertow.version>
     <dep.plugin.deploy.version>2.8.2</dep.plugin.deploy.version>
+    <org.apache.log4j.version>2.15.0</org.apache.log4j.version>
   </properties>
 
   <!-- Metadata need to publish to central -->
@@ -163,6 +164,14 @@
         <groupId>com.fasterxml.jackson</groupId>
         <artifactId>jackson-bom</artifactId>
         <version>${jackson.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-bom</artifactId>
+        <version>${org.apache.log4j.version}</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
