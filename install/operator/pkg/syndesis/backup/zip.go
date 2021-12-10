@@ -18,6 +18,7 @@ package backup
 
 import (
 	"archive/zip"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
@@ -58,6 +59,11 @@ func (b *Backup) unzip(src string, dest string) (err error) {
 	}
 	defer r.Close()
 
+	dest, err = filepath.Abs(dest)
+	if err != nil {
+		return err
+	}
+
 	for _, f := range r.File {
 		rc, err := f.Open()
 		if err != nil {
@@ -65,7 +71,15 @@ func (b *Backup) unzip(src string, dest string) (err error) {
 		}
 		defer rc.Close()
 
-		fpath := filepath.Join(dest, f.Name)
+		fpath, err := filepath.Abs(filepath.Join(dest, f.Name))
+		if err != nil {
+			return err
+		}
+
+		if !strings.HasPrefix(fpath, dest) {
+			return fmt.Errorf("Trying to extract outside of the destination `%v` with `%v`", dest, f.Name)
+		}
+
 		if f.FileInfo().IsDir() {
 			os.MkdirAll(fpath, 0755)
 		} else {
