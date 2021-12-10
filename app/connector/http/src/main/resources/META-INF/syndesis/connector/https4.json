@@ -2,7 +2,7 @@
   "actions": [
     {
       "actionType": "connector",
-      "description": "Invoke an http endpoint URL",
+      "description": "Invoke an https endpoint URL",
       "descriptor": {
         "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Https4",
         "inputDataShape": {
@@ -83,7 +83,7 @@
     },
     {
       "actionType": "connector",
-      "description": "Periodically invoke an http endpoint URL",
+      "description": "Periodically invoke an https endpoint URL",
       "descriptor": {
         "connectorCustomizers": [
           "io.syndesis.connector.http.HttpConnectorCustomizer"
@@ -200,7 +200,7 @@
       "group": "common",
       "javaType": "java.lang.String",
       "kind": "parameter",
-      "labelHint": "Base Http Endpoint URL",
+      "labelHint": "Base Https Endpoint URL",
       "placeholder": "eg 'www.redhat.com'",
       "required": true,
       "secret": false,
