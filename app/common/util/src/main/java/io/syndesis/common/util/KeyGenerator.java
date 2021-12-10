@@ -20,6 +20,9 @@ import net.iharder.Base64;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.LongSupplier;
 
@@ -41,6 +44,11 @@ public final class KeyGenerator {
     private static final AtomicLong LAST_TIMESTAMP = new AtomicLong(clock.getAsLong());
     static byte randomnessByte;
     private static final AtomicLong RANDOMNESS_LONG;
+
+    @SuppressWarnings("boxing")
+    private static final Set<Character> BASE64_ORDERED_CHARS = new TreeSet<>(Arrays.asList('-', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+        'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'));
 
     static {
         final SecureRandom random = new SecureRandom();
@@ -130,6 +138,16 @@ public final class KeyGenerator {
             return false;
         }
 
-        return given.startsWith("i-") && given.endsWith("z");
+        return given.startsWith("i") && given.endsWith("z") && areBase64Chars(given.substring(1, given.length() - 1));
+    }
+
+    private static boolean areBase64Chars(final String given) {
+        for (char c : given.toCharArray()) {
+            if (!BASE64_ORDERED_CHARS.contains(c)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

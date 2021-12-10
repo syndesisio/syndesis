@@ -83,6 +83,7 @@ public class KeyGeneratorTest {
 
         Assertions.assertEquals(count, keys.size(), "If " + count + " key generations are performed in parallel, it should yield " + count
             + " of distinct keys");
+        assertThat(keys).allSatisfy(KeyGenerator::resemblesAKey);
     }
 
 
