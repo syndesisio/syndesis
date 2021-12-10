@@ -33,6 +33,7 @@ import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.metrics.IntegrationDeploymentMetrics;
 import io.syndesis.common.model.metrics.IntegrationMetricsSummary;
 import io.syndesis.common.util.CollectionsUtils;
+import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.server.endpoint.metrics.MetricsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,6 +105,9 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
 
     @Override
     public IntegrationMetricsSummary getIntegrationMetricsSummary(String integrationId) {
+        if (!KeyGenerator.resemblesAKey(integrationId)) {
+            throw new IllegalArgumentException("Did not privide an valid integration ID: " + integrationId);
+        }
 
         // aggregate values across versions
         final Map<String, Long> totalMessagesMap = getMetricValues(integrationId, METRIC_TOTAL, deploymentVersionLabel, Long.class, PrometheusMetricsProviderImpl::sum);
