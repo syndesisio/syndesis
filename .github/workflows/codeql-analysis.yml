@@ -1,0 +1,43 @@
+name: "CodeQL"
+
+on:
+  schedule:
+    - cron: '30 4 * * 1'
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'go', 'java', 'javascript' ]
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Set up JDK 8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 8
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v1
+      with:
+        config-file: ./.github/codeql/codeql-config.yml
+        languages: ${{ matrix.language }}
+    - name: Cache local Maven repository
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.m2/repository
+          !~/.m2/repository/io/syndesis
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-maven-
+    - name: Build
+      run: tools/bin/syndesis build --batch-mode --flash --backend -m operator
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v1
