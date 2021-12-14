@@ -44,6 +44,12 @@ jobs:
       - setup
     if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 8
@@ -58,6 +64,11 @@ jobs:
             !~/.m2/repository/io/syndesis
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven-
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          config-file: ./.github/codeql/codeql-config.yml
+          languages: java
       - name: Build and test
         run: tools/bin/syndesis build --batch-mode --backend
       - name: Archive logs and test results
@@ -68,6 +79,8 @@ jobs:
             app/**/target/*.log
             app/**/target/surefire-reports/*
             app/**/target/failsafe-reports/*
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
       - name: Set up JDK 11
         if: needs.setup.outputs.is_default_branch == 'true'
         uses: actions/setup-java@v1
@@ -86,14 +99,33 @@ jobs:
     needs: changes
     if: needs.changes.outputs.operator == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
     steps:
       - uses: actions/checkout@v2
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          config-file: ./.github/codeql/codeql-config.yml
+          languages: go
       - name: Build and test
         run: tools/bin/syndesis build --batch-mode -m operator --local
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
   ui:
     needs: changes
     if: needs.changes.outputs.ui == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 8
@@ -108,8 +140,15 @@ jobs:
             !~/.m2/repository/io/syndesis
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven-
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          config-file: ./.github/codeql/codeql-config.yml
+          languages: javascript
       - name: Build and test
         run: tools/bin/syndesis build --batch-mode -m ui-react
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
   integration-tests:
     needs: changes
     if: needs.changes.outputs.backend == 'true'

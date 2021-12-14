@@ -11,9 +11,7 @@ export interface IProgressWithLinkProps {
   i18nLogUrlText: string;
 }
 
-export class ProgressWithLink extends React.PureComponent<
-  IProgressWithLinkProps
-> {
+export class ProgressWithLink extends React.PureComponent<IProgressWithLinkProps> {
   public render() {
     return (
       <div className="progress-link">
@@ -31,6 +29,7 @@ export class ProgressWithLink extends React.PureComponent<
                 data-testid={'progress-with-link-log-url'}
                 target="_blank"
                 href={this.props.logUrl}
+                rel="noopener noreferrer"
               >
                 {this.props.i18nLogUrlText}{' '}
                 <ExternalLinkAltIcon className="progress-link__link-icon" />

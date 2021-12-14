@@ -195,6 +195,7 @@ public class ConnectionHandler
                 final Cookie removal = new Cookie(s.persistenceKey(), "");
                 removal.setPath("/");
                 removal.setMaxAge(0);
+                removal.setSecure(true);
 
                 response.addCookie(removal);
 

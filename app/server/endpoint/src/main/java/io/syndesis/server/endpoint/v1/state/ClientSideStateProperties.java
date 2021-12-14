@@ -26,7 +26,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("client.state")
 public class ClientSideStateProperties {
 
-    public static final String DEFAULT_AUTHENTICATION_ALGORITHM = "HmacSHA1";
+    public static final String DEFAULT_AUTHENTICATION_ALGORITHM = "HmacSHA256";
 
     public static final String DEFAULT_ENCRYPTION_ALGORITHM = "AES/CBC/PKCS5Padding";
 

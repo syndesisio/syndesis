@@ -48,7 +48,7 @@ public class DriverUploadEndpoint {
     public Boolean upload(MultipartFormDataInput input) {
 
         String fileName = getFileName(input);
-        storeFile(String.format("%s/%s.jar", EXT_DIR, fileName), input);
+        storeFile(extensionJarPath(fileName), input);
 
         LOGGER.info("Driver {} succefully uploaded", fileName);
         return Boolean.TRUE;
@@ -61,7 +61,7 @@ public class DriverUploadEndpoint {
     public Boolean delete(@PathParam("id") String safeExtensionId) {
 
         Boolean isDeleted = Boolean.FALSE;
-        File extensionFile = new File(String.format("%s/%s.jar", EXT_DIR, safeExtensionId));
+        File extensionFile = extensionJarPath(safeExtensionId);
 
         if (extensionFile.exists()) {
             isDeleted = extensionFile.delete();
@@ -78,13 +78,16 @@ public class DriverUploadEndpoint {
         return isDeleted;
     }
 
-    private static void storeFile(String location, MultipartFormDataInput dataInput) {
+    private static File extensionJarPath(final String given) {
+        final String name = new File(given + ".jar").getName();
+
+        return new File(EXT_DIR, name);
+    }
+
+    private static void storeFile(File file, MultipartFormDataInput dataInput) {
         // Store the artifact into /deployments/ext
         try (InputStream is = getBinaryArtifact(dataInput)) {
-            final File file = new File(location);
-
             Files.copy(is, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
         } catch (IOException ex) {
             throw SyndesisServerException.launderThrowable("Unable to store the driver file into " + EXT_DIR, ex);
         }

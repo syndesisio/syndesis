@@ -42,9 +42,11 @@ import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -78,6 +80,9 @@ import org.apache.cxf.wsdl11.WSDLServiceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.DATA_FORMAT_PROPERTY;
 import static io.syndesis.server.api.generator.soap.SoapConnectorConstants.DEFAULT_OPERATION_NAMESPACE_PROPERTY;
@@ -396,8 +401,19 @@ public final class SoapApiModelParser {
     // Removes extra spaces from WSDL to reduce the amount of text stored in DB and remove unwanted spaces in documentation elements.
     private static InputStream condenseWSDL(final InputStream specification) throws TransformerException, IOException {
         try (InputStream in = specification; ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            final StreamSource originalSource = new StreamSource(in);
-            Transformer wsdlCondenser = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(
+            final XMLReader reader;
+            try {
+                reader = XMLReaderFactory.createXMLReader();
+                reader.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            } catch (SAXException e) {
+                throw new TransformerException(e);
+            }
+
+            final InputSource inputSource = new InputSource(in);
+            final Source source = new SAXSource(reader, inputSource);
+
+            final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            final Transformer wsdlCondenser = transformerFactory.newTransformer(new StreamSource(new StringReader(
                     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                         "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\">" +
                             "<xsl:strip-space elements=\"*\" />" +
@@ -412,7 +428,7 @@ public final class SoapApiModelParser {
                             "</xsl:template>" +
                         "</xsl:stylesheet>")));
 
-            wsdlCondenser.transform(originalSource, new StreamResult(out));
+            wsdlCondenser.transform(source, new StreamResult(out));
 
             return new ByteArrayInputStream(out.toByteArray());
         }

@@ -1,0 +1,5 @@
+paths-ignore:
+  - 'app/ui-react/syndesis/build/**/*'
+  - 'app/ui-react/syndesis/public/**/*'
+  - 'app/ui-react/node/**/*'
+  - 'app/ui-react/packages/*/dist/**/*'
