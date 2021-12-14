@@ -161,7 +161,7 @@ build_operator()
         done
 
         cat > "${BUILDER_IMAGE_NAME}.tmp" <<EODockerfile
-FROM golang:1.13.7
+FROM golang:1.16
 WORKDIR /go/src/${OPERATOR_GO_PACKAGE}
 ENV GO111MODULE=on
 COPY . .
