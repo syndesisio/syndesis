@@ -152,7 +152,7 @@
 
     <jdbi.version>2.78</jdbi.version>
     <postgresql.version>42.2.16</postgresql.version>
-    <logback.version>1.2.3</logback.version>
+    <logback.version>1.2.8</logback.version>
     <micrometer.version>1.5.3</micrometer.version>
     <teiid.version>13.0.2</teiid.version>
     <aws-java-sdk.version>1.11.438</aws-java-sdk.version>
