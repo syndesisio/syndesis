@@ -161,7 +161,7 @@ dev::run() {
         fi
         appdir=$(appdir)
         # test if the new camel version is available on maven repo
-        artifact_url=https://repository.jboss.org/nexus/content/groups/ea/org/apache/camel/camel-core/${camel_version}/camel-core-${camel_version}.pom
+        artifact_url=https://maven.repository.redhat.com/ga/org/apache/camel/camel-core/${camel_version}/camel-core-${camel_version}.pom
         artifact_ok=$(curl -k -X GET -I ${artifact_url} 2>/dev/null | head -n 1 | cut -d$' ' -f2)
         if [ ${artifact_ok} != 200 ]; then
           echo "Camel ${camel_version} is not available in ${artifact_url}"
