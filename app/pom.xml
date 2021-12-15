@@ -93,7 +93,7 @@
     <opentracing.spring.web.starter.version>4.1.0</opentracing.spring.web.starter.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.23.2.fuse-790054-redhat-00001</camel.version>
+    <camel.version>2.23.2.fuse-7_10_0-00020-redhat-00001</camel.version>
 
     <undertow.version>2.2.12.Final</undertow.version>
     <org.jboss.xnio.version>3.8.4.Final</org.jboss.xnio.version>
