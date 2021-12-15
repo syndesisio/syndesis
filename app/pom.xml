@@ -68,7 +68,7 @@
     <!-- When updating spring-cloud version, you should update spring-cloud-starter-zipkin dependency below -->
     <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
     <spring-security.version>5.3.9.RELEASE</spring-security.version>
-    <org.apache.log4j.version>2.15.0</org.apache.log4j.version>
+    <org.apache.log4j.version>2.16.0</org.apache.log4j.version>
 
     <okhttp3.version>3.12.1</okhttp3.version>
     <tomcat.version>9.0.36</tomcat.version>
