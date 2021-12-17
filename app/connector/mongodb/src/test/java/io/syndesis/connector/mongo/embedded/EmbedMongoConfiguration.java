@@ -20,13 +20,10 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.bson.Document;
-import org.slf4j.LoggerFactory;
-
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-
 import de.flapdoodle.embed.mongo.Command;
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodStarter;
@@ -44,10 +41,11 @@ import de.flapdoodle.embed.process.io.Processors;
 import de.flapdoodle.embed.process.io.Slf4jLevel;
 import de.flapdoodle.embed.process.io.Slf4jStreamProcessor;
 import de.flapdoodle.embed.process.io.directories.FixedPath;
-
-import static org.springframework.util.SocketUtils.findAvailableTcpPort;
+import org.bson.Document;
+import org.slf4j.LoggerFactory;
 import static de.flapdoodle.embed.mongo.distribution.Version.Main.V3_6;
 import static de.flapdoodle.embed.process.runtime.Network.localhostIsIPv6;
+import static org.springframework.util.SocketUtils.findAvailableTcpPort;
 
 public class EmbedMongoConfiguration {
 
@@ -66,10 +64,18 @@ public class EmbedMongoConfiguration {
     static {
         startEmbeddedMongo();
         // init replica set
-        CLIENT = new MongoClient(HOST, PORT);
-        CLIENT.getDatabase("admin").runCommand(new Document("replSetInitiate", new Document()));
-        createAuthorizationUser();
-        DATABASE = CLIENT.getDatabase("test");
+        try {
+            String connSpec = String.format("mongodb://%s:%s", HOST, PORT);
+            CLIENT = MongoClients.create(connSpec);
+            CLIENT.getDatabase("admin").runCommand(new Document("replSetInitiate", new Document()));
+            // we should wait some time before replica is ready
+            wait(3);
+            createAuthorizationUser();
+            DATABASE = CLIENT.getDatabase("test");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     private static void startEmbeddedMongo() {
@@ -138,5 +144,14 @@ public class EmbedMongoConfiguration {
             + "        }\n"
             + "    ]\n"
             + "}"));
+    }
+
+    private static void wait(int n) {
+        try {
+            Thread.sleep(n * 1000);
+        } catch (InterruptedException e) {
+            System.err.println("error: " + e);
+            e.printStackTrace();
+        }
     }
 }

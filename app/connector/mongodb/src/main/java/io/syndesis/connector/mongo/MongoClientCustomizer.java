@@ -17,8 +17,9 @@ package io.syndesis.connector.mongo;
 
 import java.util.Map;
 
-import com.mongodb.MongoClient;
+import com.mongodb.client.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoClients;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
@@ -26,7 +27,6 @@ import org.apache.camel.CamelContextAware;
 import org.apache.camel.component.mongodb3.conf.ConnectionParamsConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import static org.apache.camel.util.CastUtils.cast;
 
 public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelContextAware {
@@ -55,7 +55,7 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
                 consumeOption(camelContext, options, "password", String.class, mongoConf::setPassword);
                 LOGGER.debug("Creating and registering a client connection to {}", mongoConf);
                 MongoClientURI mongoClientURI = new MongoClientURI(mongoConf.getMongoClientURI());
-                MongoClient mongoClient = new MongoClient(mongoClientURI);
+                MongoClient mongoClient = MongoClients.create(mongoClientURI.toString());
                 options.put("mongoConnection", mongoClient);
                 if (!options.containsKey("connectionBean")) {
                     //We safely put a default name instead of leaving null

@@ -29,7 +29,7 @@
   <properties>
     <!-- we must ensure to have this version aligned with extension-bom and integration-bom -->
     <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
-    <camel.version>2.23.2.fuse-790054-redhat-00001</camel.version>
+    <camel.version>2.23.2.fuse-7_10_0-00020-redhat-00001</camel.version>
     <atlasmap.version>2.3.2</atlasmap.version>
     <jackson.version>2.11.2</jackson.version>
     <mongodb.version>3.9.0</mongodb.version>
