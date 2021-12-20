@@ -85,6 +85,7 @@ public class TestSupportHandler {
         // https://owasp.org/www-community/attacks/Log_Injection
         final String user = context.getRemoteUser().replaceAll(WHITESPACE, "_");
         LOG.warn("user {} is resetting DB", user);
+        LOG.warn("test");
         // Deployments must be also deleted because we it is not possible to reach them after deleting DB.
         deleteDeployments();
         stopControllers();

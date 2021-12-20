@@ -30,7 +30,7 @@
   <packaging>pom</packaging>
 
   <name>Syndesis</name>
-  <description>Syndesis :: ${project.name}</description>
+  <description>(test)Syndesis :: ${project.name}</description>
 
   <properties>
     <!-- Global Syndesis version -->
