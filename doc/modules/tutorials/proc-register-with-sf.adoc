@@ -66,9 +66,9 @@ https://help.salesforce.com/articleView?id=connected_app_create.htm[Create a Con
 For example:
 `\https://app-proj912876.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
 .. For *OAuth Scopes*, add:
-** *Access and manage your data (api)*
-** *Allow access to your unique identifier (openid)*
-** *Perform requests on your behalf at any time (refresh_token, offline_accesss)*
+** *Manage user data via APIs (api)*
+** *Access unique user identifiers (openid)*
+** *Perform requests at any time (refresh_token, offline_accesss)*
 .. Select *Configure ID token* and then *Include Standard Claims*.
 .. Scroll down and click *Save*.
 .. Scroll up to see that Salesforce indicates a short wait:

@@ -43,8 +43,9 @@ need to, and then do the following:
 .. In the *Application description* field, enter a tip such as 
 *For leveraging tweets*. 
 .. Scroll down to *Set up Your App* and then click *App settings*.
-.. Next to *Authentication Settings*, click *Edit*.
-.. Switch on the *Enable 3-legged OAuth* option.
+.. Under *User authentication settings*, click *Set up*.
+.. Switch on the *OAuth 1.0a* option.
+.. For *App permissions*, select *Read and write and Direct message*.
 .. In the *Callback URLs* field, paste the URL that you copied at the beginning
 of this procedure. It should be something like this: 
 `\https://app-proj912876.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`
