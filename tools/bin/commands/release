@@ -144,9 +144,6 @@ release::run() {
         push_container_images "$release_version" latest
     fi
 
-    # Release staging repo
-    release_staging_repo "$topdir" "$maven_opts"
-
     # Prepare binaries for release
     prepare_binaries "${topdir}/install/operator/dist" "${topdir}/install/operator/releases"
 
@@ -165,6 +162,16 @@ release::run() {
     # if check_for_command gren; then
     #    gren release --data-source=commits --tags=$release_version --override
     # fi
+
+    # Release staging repo
+    set +e
+    local tries=1
+    while ! release_staging_repo "$topdir" "$maven_opts"; do
+      if (( ((tries++)) == 10)); then
+        echo "ERROR: Exausted 10 tries of trying to release the staging repository"
+        exit 1
+      fi
+    done
 }
 
 create_moving_tag_release() {
