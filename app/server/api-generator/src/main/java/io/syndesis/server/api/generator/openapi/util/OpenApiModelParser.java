@@ -40,6 +40,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
 
 import static java.util.Optional.ofNullable;
 
@@ -47,7 +48,7 @@ public final class OpenApiModelParser {
 
     private static final Logger LOG = LoggerFactory.getLogger(OpenApiModelParser.class);
 
-    private static final Yaml YAML_PARSER = new Yaml();
+    private static final Yaml YAML_PARSER = new Yaml(new SafeConstructor());
 
     private OpenApiModelParser() {
         // utility class

@@ -61,6 +61,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.SafeConstructor;
+import org.yaml.snakeyaml.representer.Representer;
 
 
 @Service
@@ -81,7 +83,7 @@ public class SupportUtil {
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         options.setPrettyFlow(true);
-        YAML = new Yaml(options);
+        YAML = new Yaml(new SafeConstructor(), new Representer(options), options);
         PLATFORM_PODS_CONTAINER.put("syndesis-db", "postgresql");
     }
 
