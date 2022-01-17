@@ -93,4 +93,4 @@ Syndesis:
                         central: "https://repo.maven.apache.org/maven2/"
                         repo-02-redhat-ga: "https://maven.repository.redhat.com/ga/"
         AMQ:
-            Image: "registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.4"
+            Image: "quay.io/artemiscloud/activemq-artemis-broker:0.1.6"
