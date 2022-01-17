@@ -15,20 +15,33 @@
  */
 package io.syndesis.connector.mongo;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.integration.Step;
-import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
+
+import org.bson.Document;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.MongoClient;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 
 public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
 
     protected static final ObjectMapper MAPPER = new ObjectMapper();
-    protected final static String DATABASE = "test";
-    protected final static String COLLECTION = "test";
+
+    private final Map<String, String> configuration;
+
+    public MongoDBConnectorTestSupport(Map<String, String> configuration) {
+        this.configuration = configuration;
+    }
 
     protected List<Step> fromDirectToMongo(String directStart, String connector, String db, String collection) {
         return fromDirectToMongo(directStart, connector, db, collection, null, null);
@@ -43,10 +56,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
         return Arrays.asList(
             newSimpleEndpointStep("direct", builder -> builder.putConfiguredProperty("name", directStart)),
             newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
-                builder.putConfiguredProperty("host", String.format("%s:%s", EmbedMongoConfiguration.HOST, EmbedMongoConfiguration.PORT));
-                builder.putConfiguredProperty("user", EmbedMongoConfiguration.USER);
-                builder.putConfiguredProperty("password", EmbedMongoConfiguration.PASSWORD);
-                builder.putConfiguredProperty("adminDB", EmbedMongoConfiguration.ADMIN_DB);
+                builder.putAllConfiguredProperties(configuration);
                 builder.putConfiguredProperty("database", db);
                 builder.putConfiguredProperty("collection", collection);
                 if (filter != null) {
@@ -70,10 +80,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
                                              String tailTrackIncreasingField, Boolean persistentTailTracking, String persistentId,
                                              String tailTrackDb, String tailTrackCollection, String tailTrackField) {
         return Arrays.asList(newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
-            builder.putConfiguredProperty("host", String.format("%s:%s", EmbedMongoConfiguration.HOST, EmbedMongoConfiguration.PORT));
-            builder.putConfiguredProperty("user", EmbedMongoConfiguration.USER);
-            builder.putConfiguredProperty("password", EmbedMongoConfiguration.PASSWORD);
-            builder.putConfiguredProperty("adminDB", EmbedMongoConfiguration.ADMIN_DB);
+            builder.putAllConfiguredProperties(configuration);
             builder.putConfiguredProperty("database", db);
             builder.putConfiguredProperty("collection", collection);
             builder.putConfiguredProperty("tailTrackIncreasingField", tailTrackIncreasingField);
@@ -97,12 +104,31 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
 
     protected List<Step> fromMongoChangeStreamToMock(String mock, String connector, String db, String collection) {
         return Arrays.asList(newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
-            builder.putConfiguredProperty("host", String.format("%s:%s", EmbedMongoConfiguration.HOST, EmbedMongoConfiguration.PORT));
-            builder.putConfiguredProperty("user", EmbedMongoConfiguration.USER);
-            builder.putConfiguredProperty("password", EmbedMongoConfiguration.PASSWORD);
-            builder.putConfiguredProperty("adminDB", EmbedMongoConfiguration.ADMIN_DB);
+            builder.putAllConfiguredProperties(configuration);
             builder.putConfiguredProperty("database", db);
             builder.putConfiguredProperty("collection", collection);
         }), newSimpleEndpointStep("mock", builder -> builder.putConfiguredProperty("name", mock)));
+    }
+
+    protected static ClosableMongoCollection<Document> createCollection(final MongoClient client, final String collectionName) {
+        final MongoDatabase database = client.getDatabase("test");
+        database.createCollection(collectionName);
+
+        final MongoCollection<Document> collection = database.getCollection(collectionName);
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        final ClosableMongoCollection<Document> thing = (ClosableMongoCollection<Document>) Proxy.newProxyInstance(ClosableMongoCollection.class.getClassLoader(), new Class[] { ClosableMongoCollection.class }, new InvocationHandler() {
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                if ("close".equals(method.getName())) {
+                    collection.drop();
+                    return null;
+                }
+
+                return method.invoke(collection, args);
+            }
+        });
+
+        return thing;
     }
 }

@@ -17,94 +17,118 @@ package io.syndesis.connector.mongo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.connector.mongo.embedded.EmbeddedMongoExtension.Mongo;
+import io.syndesis.connector.mongo.embedded.EmbeddedMongoExtension.MongoConfiguration;
 
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;
 
+import com.mongodb.MongoClient;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.UpdateResult;
 
-public abstract class MongoDBConnectorSaveTest extends MongoDBConnectorProducerTestSupport {
+public abstract class MongoDBConnectorSaveTest extends MongoDBConnectorTestSupport {
 
+    public MongoDBConnectorSaveTest(Map<String, String> configuration) {
+        super(configuration);
+    }
+
+    @Mongo
     static class Existing extends MongoDBConnectorSaveTest {
 
+        public Existing(@MongoConfiguration final Map<String, String> configuration) {
+            super(configuration);
+        }
+
         @Test
-        public void mongoSaveExistingTest() {
-            // When
-            final String saveArguments = "{\"_id\":32,\"test\":\"new\"}";
-            collection.insertOne(Document.parse(saveArguments));
-            // Given
-            final String saveArguments2 = "{\"id\":32,\"someText\":\"save\",\"isNew\":true}";
-            final UpdateResult result = template().requestBody("direct:start", saveArguments2, UpdateResult.class);
-            // Then
-            Assertions.assertThat(result.getModifiedCount()).isEqualTo(1L);
-            final List<Document> docsFound = collection.find(Filters.eq("_id", 32)).into(new ArrayList<>());
-            Assertions.assertThat(docsFound).hasSize(1);
-            Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("save");
-            Assertions.assertThat(docsFound.get(0).getBoolean("newField")).isEqualTo(true);
+        public void mongoSaveExistingTest(final MongoClient given) {
+            try (MongoClient client = given; ClosableMongoCollection<Document> collection = createCollection(client, "MongoDBConnectorSaveTest-Existing")) {
+                // When
+                final String saveArguments = "{\"_id\":32,\"test\":\"new\"}";
+                collection.insertOne(Document.parse(saveArguments));
+                // Given
+                final String saveArguments2 = "{\"id\":32,\"someText\":\"save\",\"isNew\":true}";
+                final UpdateResult result = template().requestBody("direct:start", saveArguments2, UpdateResult.class);
+                // Then
+                Assertions.assertThat(result.getModifiedCount()).isEqualTo(1L);
+                final List<Document> docsFound = collection.find(Filters.eq("_id", 32)).into(new ArrayList<>());
+                Assertions.assertThat(docsFound).hasSize(1);
+                Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("save");
+                Assertions.assertThat(docsFound.get(0).getBoolean("newField")).isEqualTo(true);
+            }
         }
 
         @Override
         protected List<Step> createSteps() {
             final String filter = "{\"_id\": :#id,\"test\":\":#someText\", \"newField\": :#isNew}";
-            return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-upsert", DATABASE, COLLECTION, null,
+            return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-upsert", "test", "MongoDBConnectorSaveTest-Existing", null,
                 filter);
         }
     }
 
+    @Mongo
     static class New extends MongoDBConnectorSaveTest {
 
+        public New(@MongoConfiguration final Map<String, String> configuration) {
+            super(configuration);
+        }
+
         @Test
-        public void mongoSaveNewTest() {
-            // When
-            // Given
-            final String saveArguments = "{\"id\":11,\"someText\":\"new\"}";
-            final UpdateResult result = template().requestBody("direct:start", saveArguments, UpdateResult.class);
-            // Then
-            Assertions.assertThat(result.getUpsertedId().asNumber().longValue()).isEqualTo(11L);
-            final List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<>());
-            Assertions.assertThat(docsFound).hasSize(1);
-            Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("new");
+        public void mongoSaveNewTest(final MongoClient given) {
+            try (MongoClient client = given; ClosableMongoCollection<Document> collection = createCollection(client, "MongoDBConnectorSaveTest-New")) {
+                // When
+                // Given
+                final String saveArguments = "{\"id\":11,\"someText\":\"new\"}";
+                final UpdateResult result = template().requestBody("direct:start", saveArguments, UpdateResult.class);
+                // Then
+                Assertions.assertThat(result.getUpsertedId().asNumber().longValue()).isEqualTo(11L);
+                final List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<>());
+                Assertions.assertThat(docsFound).hasSize(1);
+                Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("new");
+            }
         }
 
         @Override
         protected List<Step> createSteps() {
             final String filter = "{\"_id\": :#id,\"test\":\":#someText\"}";
-            return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-upsert", DATABASE, COLLECTION, null,
+            return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-upsert", "test", "MongoDBConnectorSaveTest-New", null,
                 filter);
         }
     }
 
+    @Mongo
     static class NewAutogeneratedId extends MongoDBConnectorSaveTest {
 
+        public NewAutogeneratedId(@MongoConfiguration final Map<String, String> configuration) {
+            super(configuration);
+        }
+
         @Test
-        public void mongoSaveNewAutogeneratedIDTest() {
-            // When
-            // Given
-            final String saveArguments = "{\"someText\":\"new\"}";
-            final UpdateResult result = template().requestBody("direct:start", saveArguments, UpdateResult.class);
-            // Then
-            final List<Document> docsFound = collection.find(Filters.eq("_id",
-                result.getUpsertedId().asObjectId())).into(new ArrayList<>());
-            Assertions.assertThat(docsFound).hasSize(1);
-            Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("new");
-            Assertions.assertThat(result.getUpsertedId().asObjectId().getValue()).isEqualTo(docsFound.get(0).getObjectId("_id"));
+        public void mongoSaveNewAutogeneratedIDTest(final MongoClient given) {
+            try (MongoClient client = given; ClosableMongoCollection<Document> collection = createCollection(client, "MongoDBConnectorSaveTest-NewAutogeneratedId")) {
+                // When
+                // Given
+                final String saveArguments = "{\"someText\":\"new\"}";
+                final UpdateResult result = template().requestBody("direct:start", saveArguments, UpdateResult.class);
+                // Then
+                final List<Document> docsFound = collection.find(Filters.eq("_id",
+                    result.getUpsertedId().asObjectId())).into(new ArrayList<>());
+                Assertions.assertThat(docsFound).hasSize(1);
+                Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("new");
+                Assertions.assertThat(result.getUpsertedId().asObjectId().getValue()).isEqualTo(docsFound.get(0).getObjectId("_id"));
+            }
         }
 
         @Override
         protected List<Step> createSteps() {
             final String filter = "{\"test\": \":#someText\"}";
-            return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-upsert", DATABASE, COLLECTION, null,
+            return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-upsert", "test", "MongoDBConnectorSaveTest-NewAutogeneratedId", null,
                 filter);
         }
-    }
-
-    @Override
-    public String getCollectionName() {
-        return COLLECTION;
     }
 
 }
