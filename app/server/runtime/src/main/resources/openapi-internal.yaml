@@ -25,6 +25,7 @@ resourcePackages:
 - io.syndesis.server.endpoint.v1.handler.integration.support
 - io.syndesis.server.endpoint.v1.handler.logs
 - io.syndesis.server.endpoint.v1.handler.metrics
+- io.syndesis.server.endpoint.v1.handler.monitoring
 - io.syndesis.server.endpoint.v1.handler.setup
 - io.syndesis.server.endpoint.v1.handler.tags
 - io.syndesis.server.endpoint.v1.handler.tests
