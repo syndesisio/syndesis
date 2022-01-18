@@ -18,8 +18,10 @@ upgrade_app() {
     echo -n "Upgrading app directory poms ... "
     pushd "${SRC_ROOT}/app" > /dev/null
     for pom in pom.xml integration/bom/pom.xml integration/bom/pom.xml extension/bom/pom.xml; do
-      ./mvnw -N versions:set -DgenerateBackupPoms=false -DnewVersion=$version-SNAPSHOT -f ${pom} &> /dev/null
+      oout=$(./mvnw -N versions:set -DgenerateBackupPoms=false -DnewVersion=$version-SNAPSHOT -f ${pom})
       if [ $? != 0 ]; then
+        echo "Error: Please see maven output below:"
+        echo ${oout}
         exit 1
       fi
     done
@@ -31,6 +33,7 @@ upgrade_app() {
       echo -n "Upgrading ${syndesis_test_env} ... "
       sed -i 's/\".*-SNAPSHOT/\"'${version}'-SNAPSHOT/g' ${syndesis_test_env}
       if [ $? != 0 ]; then
+        echo "Failed"
         exit 1
       else
         echo "done"
