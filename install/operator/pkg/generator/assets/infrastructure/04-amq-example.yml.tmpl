@@ -1,4 +1,4 @@
-{{- if .Productized}}
+{{- if .Syndesis.Addons.Todo.Enabled }}
 - apiVersion: v1
   kind: Service
   metadata:
@@ -47,14 +47,12 @@
             value: amq
           - name: AMQ_PASSWORD
             value: topSecret
-          - name: AMQ_TRANSPORTS
-            value: openwire,stomp
           image: '{{ .Syndesis.Components.AMQ.Image }}'
           imagePullPolicy: Always
           name: broker-amq
           ports:
-          - containerPort: 8778
-            name: jolokia
+          - containerPort: 8161
+            name: console
             protocol: TCP
           - containerPort: 61616
             name: tcp
@@ -65,9 +63,13 @@
           readinessProbe:
             exec:
               command:
-              - /bin/bash
-              - -c
-              - /opt/amq/bin/readinessProbe.sh
+              - /home/jboss/broker/bin/artemis
+              - check
+              - node
+            timeoutSeconds: 5
+            periodSeconds: 20
+            successThreshold: 1
+            failureThreshold: 3
         terminationGracePeriodSeconds: 60
     triggers:
     - type: ConfigChange
