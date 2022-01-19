@@ -15,7 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.Arrays;
@@ -38,7 +37,6 @@ import io.syndesis.server.endpoint.v1.dto.Meta;
 import io.syndesis.server.endpoint.v1.dto.MetaData;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -129,10 +127,6 @@ public class ConnectionActionHandlerTest {
 
     @Test
     public void shouldAddMetaAndSetStatusToBadRequestIfMetaCallFails() {
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        final Class<Entity<Map<String, Object>>> entityType = (Class) Entity.class;
-        ArgumentCaptor.forClass(entityType);
-
         // simulates fallback return
         final DynamicActionMetadata fallback = new DynamicActionMetadata.Builder().build();
         when(metadataCommand.execute()).thenReturn(fallback);
@@ -213,10 +207,6 @@ public class ConnectionActionHandlerTest {
 
     @Test
     public void shouldProvideActionDefinition() {
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        final Class<Entity<Map<String, Object>>> entityType = (Class) Entity.class;
-        ArgumentCaptor.forClass(entityType);
-
         final DynamicActionMetadata suggestions = new DynamicActionMetadata.Builder()
             .putProperty("sObjectName", Arrays.asList(DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Account", "Account"),
                 DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Contact", "Contact")))
@@ -246,10 +236,6 @@ public class ConnectionActionHandlerTest {
 
     @Test
     public void shouldSetInoutOutputShapesToAnyIfMetadataCallFails() {
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        final Class<Entity<Map<String, Object>>> entityType = (Class) Entity.class;
-        ArgumentCaptor.forClass(entityType);
-
         // simulates fallback return
         final DynamicActionMetadata fallback = new DynamicActionMetadata.Builder().build();
         when(metadataCommand.execute()).thenReturn(fallback);
