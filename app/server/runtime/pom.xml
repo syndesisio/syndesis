@@ -128,35 +128,6 @@
       </plugin>
 
       <plugin>
-        <groupId>io.syndesis.server</groupId>
-        <artifactId>server-builder-maven-plugin</artifactId>
-        <version>${project.version}</version>
-        <executions>
-          <execution>
-            <id>generate-mapper-inspections</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>generate-mapper-inspections</goal>
-            </goals>
-          </execution>
-        </executions>
-        <dependencies>
-          <!-- ==== REST Swagger ==== -->
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-rest-swagger</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-          <!-- ==== SOAP CXF ==== -->
-          <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-soap</artifactId>
-            <version>${project.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-
-      <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <executions>
