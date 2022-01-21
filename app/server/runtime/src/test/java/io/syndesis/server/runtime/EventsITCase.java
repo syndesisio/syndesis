@@ -188,8 +188,10 @@ public class EventsITCase extends BaseITCase {
         post("/api/v1/integrations", integration, Integration.class);
 
         assertThat(countDownLatch.await(1000, TimeUnit.SECONDS)).isTrue();
-        assertThat(invocations.get(0).getMethod().getName()).isEqualTo("onMessage");
-        assertThat(invocations.get(0).getArgs()[1]).isEqualTo(EventMessage.of("change-event", ChangeEvent.of("created", "integration", "1002").toJson()).toJson());
+        assertThat(invocations).anySatisfy(i -> {
+            assertThat(i.getMethod().getName()).isEqualTo("onMessage");
+            assertThat(i.getArgs()).contains(EventMessage.of("change-event", ChangeEvent.of("created", "integration", "1002").toJson()).toJson());
+        });
 
         ws.close(1000, "closing");
     }
