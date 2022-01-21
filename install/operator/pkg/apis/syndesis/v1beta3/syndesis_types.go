@@ -44,6 +44,9 @@ type SyndesisSpec struct {
 	Components ComponentsSpec `json:"components,omitempty"`
 
 	// Optional add on features that can be enabled.
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	// +operator-sdk:csv:customresourcedefinitions:type=spec,displayName="Addons"
 	Addons AddonsSpec `json:"addons,omitempty"`
 
 	// Force migration of CR to new version
@@ -63,15 +66,45 @@ type SyndesisSpec struct {
 // SyndesisStatus defines the observed state of Syndesis
 // +k8s:openapi-gen=true
 type SyndesisStatus struct {
-	Phase              SyndesisPhase        `json:"phase,omitempty"`
-	UpgradeAttempts    int                  `json:"upgradeAttempts,omitempty"`
-	LastUpgradeFailure *metav1.Time         `json:"lastUpgradeFailure,omitempty"`
-	ForceUpgrade       bool                 `json:"forceUpgrade,omitempty"`
-	Reason             SyndesisStatusReason `json:"reason,omitempty"`
-	Description        string               `json:"description,omitempty"`
-	Version            string               `json:"version,omitempty"`
-	TargetVersion      string               `json:"targetVersion,omitempty"`
-	Backup             BackupStatus         `json:"backup,omitempty"`
+	// The phase the operator has reached, eg. INSTALLED, STARTING
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=status
+	// +operator-sdk:csv:customresourcedefinitions:type=status,displayName="Phase"
+	// +operator-sdk:csv:customresourcedefinitions:type=status,xDescriptors="urn:alm:descriptor:io.kubernetes.phase"
+	Phase SyndesisPhase `json:"phase,omitempty"`
+	// A record of the number of times and upgrade has been attempted
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=status
+	// +operator-sdk:csv:customresourcedefinitions:type=status,displayName="Upgrade Attempts"
+	// +operator-sdk:csv:customresourcedefinitions:type=status,xDescriptors="urn:alm:descriptor:text"
+	UpgradeAttempts int `json:"upgradeAttempts,omitempty"`
+	// A record of the time of the last upgrade failure
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=status
+	// +operator-sdk:csv:customresourcedefinitions:type=status,displayName="Upgrade Failure Time"
+	// +operator-sdk:csv:customresourcedefinitions:type=status,xDescriptors="urn:alm:descriptor:text"
+	LastUpgradeFailure *metav1.Time `json:"lastUpgradeFailure,omitempty"`
+	ForceUpgrade       bool         `json:"forceUpgrade,omitempty"`
+	// Reason if the installation or upgrade failed
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=status
+	// +operator-sdk:csv:customresourcedefinitions:type=status,displayName="Reason"
+	// +operator-sdk:csv:customresourcedefinitions:type=status,xDescriptors="urn:alm:descriptor:io.kubernetes.phase:reason"
+	Reason SyndesisStatusReason `json:"reason,omitempty"`
+	// Current description of where the installation or upgrade has reached
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=status
+	// +operator-sdk:csv:customresourcedefinitions:type=status,displayName="Description"
+	// +operator-sdk:csv:customresourcedefinitions:type=status,xDescriptors="urn:alm:descriptor:io.kubernetes.phase:reason"
+	Description string `json:"description,omitempty"`
+	// The currently installed version of Syndesis
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=status
+	// +operator-sdk:csv:customresourcedefinitions:type=status,displayName="Version"
+	// +operator-sdk:csv:customresourcedefinitions:type=status,xDescriptors="urn:alm:descriptor:text"
+	Version       string       `json:"version,omitempty"`
+	TargetVersion string       `json:"targetVersion,omitempty"`
+	Backup        BackupStatus `json:"backup,omitempty"`
 
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
@@ -247,11 +280,17 @@ type SchedulingSpec struct {
 	Tolerations []v1.Toleration `json:"tolerations,omitempty"`
 }
 
+// Parameters for enabling additional optional features
 type AddonsSpec struct {
-	Jaeger    JaegerConfiguration    `json:"jaeger,omitempty"`
-	Ops       AddonSpec              `json:"ops,omitempty"`
-	Todo      AddonSpec              `json:"todo,omitempty"`
-	Knative   AddonSpec              `json:"knative,omitempty"`
+	// Should a jaeger implementation be installed for metric monitoring
+	Jaeger JaegerConfiguration `json:"jaeger,omitempty"`
+	// Should the Ops capability be installed
+	Ops AddonSpec `json:"ops,omitempty"`
+	// Should the example TODO integration be installed
+	Todo AddonSpec `json:"todo,omitempty"`
+	// Should the knative capability be installed
+	Knative AddonSpec `json:"knative,omitempty"`
+	// Should the Public API capability be installed
 	PublicApi PublicApiConfiguration `json:"publicApi,omitempty"`
 }
 
