@@ -52,7 +52,6 @@
     <module>openshift</module>
     <module>endpoint</module>
     <module>runtime</module>
-    <module>builder/maven-plugin</module>
     <module>builder/image-generator</module>
     <module>verifier</module>
     <module>monitoring</module>
