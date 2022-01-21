@@ -14,14 +14,14 @@ Syndesis:
                 Channel: "stable"
             SamplerType: "const"
             SamplerParam: "0"
-            ImageAgent: "jaegertracing/jaeger-agent:1.13"
-            ImageAllInOne: "jaegertracing/all-in-one:1.13"
-            ImageOperator: "jaegertracing/jaeger-operator:1.13"
+            ImageAgent: "quay.io/jaegertracing/jaeger-agent:1.27"
+            ImageAllInOne: "quay.io/jaegertracing/all-in-one:1.27"
+            ImageOperator: "quay.io/jaegertracing/jaeger-operator:1.27"
         Ops:
             Enabled: false
         Todo:
             Enabled: false
-            Image: "docker.io/centos/php-71-centos7"
+            Image: "quay.io/centos7/php-73-centos7:7.3"
         Knative:
             Enabled: false
         PublicApi:
@@ -29,14 +29,14 @@ Syndesis:
             RouteHostname: "mypublichost.com"
     Components:
         Oauth:
-            Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0"
+            Image: "quay.io/openshift/origin-oauth-proxy:4.9"
         UI:
-            Image: "docker.io/syndesis/syndesis-ui:latest"
+            Image: "quay.io/syndesis/syndesis-ui:latest"
         S2I:
-            Image: "docker.io/syndesis/syndesis-s2i:latest"
+            Image: "quay.io/syndesis/syndesis-s2i:latest"
         Prometheus:
             Rules: ""
-            Image: "docker.io/prom/prometheus:v2.1.0"
+            Image: "quay.io/prometheus/prometheus:v2.30.3"
             Resources:
                 Limit:
                     Memory: "512Mi"
@@ -45,11 +45,11 @@ Syndesis:
                 VolumeCapacity: "1Gi"
                 VolumeAccessMode: "ReadWriteOnce"
         Upgrade:
-            Image: "docker.io/syndesis/syndesis-upgrade:latest"
+            Image: "quay.io/syndesis/syndesis-upgrade:latest"
             Resources:
                 VolumeCapacity: "1Gi"
         Meta:
-            Image: "docker.io/syndesis/syndesis-meta:latest"
+            Image: "quay.io/syndesis/syndesis-meta:latest"
             Resources:
                 Limit:
                     Memory: "512Mi"
@@ -61,9 +61,9 @@ Syndesis:
             Name: "syndesis"
             User: "syndesis"
             URL: "postgresql://syndesis-db:5432/syndesis?sslmode=disable"
-            Image: "postgresql:9.6"
+            Image: "quay.io/centos7/postgresql-12-centos7:latest"
             Exporter:
-                Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"
+                Image: "quay.io/testing-farm/postgres_exporter:v0.8.0"
             Resources:
                 Limit:
                     Memory: "255Mi"
@@ -72,7 +72,7 @@ Syndesis:
                 VolumeCapacity: "1Gi"
                 VolumeAccessMode: "ReadWriteOnce"
         Server:
-            Image: "docker.io/syndesis/syndesis-server:latest"
+            Image: "quay.io/syndesis/syndesis-server:latest"
             Resources:
                 Limit:
                     Memory: "800Mi"

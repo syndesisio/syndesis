@@ -271,9 +271,9 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 							Enabled:       true,
 							SamplerType:   "const",
 							SamplerParam:  "0",
-							ImageAgent:    "jaegertracing/jaeger-agent:1.13",
-							ImageAllInOne: "jaegertracing/all-in-one:1.13",
-							ImageOperator: "jaegertracing/jaeger-operator:1.13",
+							ImageAgent:    "quay.io/jaegertracing/jaeger-agent:1.27",
+							ImageAllInOne: "quay.io/jaegertracing/all-in-one:1.27",
+							ImageOperator: "quay.io/jaegertracing/all-in-one:1.27",
 						},
 						Todo: synapi.AddonSpec{Enabled: true},
 						PublicApi: synapi.PublicApiConfiguration{
@@ -294,16 +294,16 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 							},
 							SamplerType:   "const",
 							SamplerParam:  "0",
-							ImageAgent:    "jaegertracing/jaeger-agent:1.13",
-							ImageAllInOne: "jaegertracing/all-in-one:1.13",
-							ImageOperator: "jaegertracing/jaeger-operator:1.13",
+							ImageAgent:    "quay.io/jaegertracing/jaeger-agent:1.27",
+							ImageAllInOne: "quay.io/jaegertracing/all-in-one:1.27",
+							ImageOperator: "quay.io/jaegertracing/all-in-one:1.27",
 						},
 						Ops: OpsConfiguration{
 							AddonConfiguration: AddonConfiguration{Enabled: false},
 						},
 						Todo: TodoConfiguration{
 							AddonConfiguration: AddonConfiguration{Enabled: true},
-							Image:              "docker.io/centos/php-71-centos7",
+							Image:              "quay.io/centos7/php-73-centos7:7.3",
 						},
 						Knative: KnativeConfiguration{
 							AddonConfiguration: AddonConfiguration{Enabled: false},
@@ -462,16 +462,16 @@ func getConfigLiteral() *Config {
 					},
 					SamplerType:   "const",
 					SamplerParam:  "0",
-					ImageAgent:    "jaegertracing/jaeger-agent:1.13",
-					ImageAllInOne: "jaegertracing/all-in-one:1.13",
-					ImageOperator: "jaegertracing/jaeger-operator:1.13",
+					ImageAgent:    "quay.io/jaegertracing/jaeger-agent:1.27",
+					ImageAllInOne: "quay.io/jaegertracing/all-in-one:1.27",
+					ImageOperator: "quay.io/jaegertracing/jaeger-operator:1.27",
 				},
 				Ops: OpsConfiguration{
 					AddonConfiguration: AddonConfiguration{Enabled: false},
 				},
 				Todo: TodoConfiguration{
 					AddonConfiguration: AddonConfiguration{Enabled: false},
-					Image:              "docker.io/centos/php-71-centos7",
+					Image:              "quay.io/centos7/php-73-centos7:7.3",
 				},
 				Knative: KnativeConfiguration{
 					AddonConfiguration: AddonConfiguration{Enabled: false},
@@ -483,16 +483,16 @@ func getConfigLiteral() *Config {
 			},
 			Components: ComponentsSpec{
 				Oauth: OauthConfiguration{
-					Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0",
+					Image: "quay.io/openshift/origin-oauth-proxy:4.9",
 				},
 				UI: UIConfiguration{
-					Image: "docker.io/syndesis/syndesis-ui:latest",
+					Image: "quay.io/syndesis/syndesis-ui:latest",
 				},
 				S2I: S2IConfiguration{
-					Image: "docker.io/syndesis/syndesis-s2i:latest",
+					Image: "quay.io/syndesis/syndesis-s2i:latest",
 				},
 				Server: ServerConfiguration{
-					Image: "docker.io/syndesis/syndesis-server:latest",
+					Image: "quay.io/syndesis/syndesis-server:latest",
 					Resources: Resources{
 						Limit: ResourceParams{
 							Memory: "800Mi",
@@ -520,7 +520,7 @@ func getConfigLiteral() *Config {
 					},
 				},
 				Meta: MetaConfiguration{
-					Image: "docker.io/syndesis/syndesis-meta:latest",
+					Image: "quay.io/syndesis/syndesis-meta:latest",
 					Resources: ResourcesWithPersistentVolume{
 						Limit: ResourceParams{
 							Memory: "512Mi",
@@ -533,12 +533,12 @@ func getConfigLiteral() *Config {
 					},
 				},
 				Database: DatabaseConfiguration{
-					Image: "postgresql:9.6",
+					Image: "quay.io/centos7/postgresql-12-centos7:latest",
 					User:  "syndesis",
 					Name:  "syndesis",
 					URL:   "postgresql://syndesis-db:5432/syndesis?sslmode=disable",
 					Exporter: ExporterConfiguration{
-						Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7",
+						Image: "quay.io/testing-farm/postgres_exporter:v0.8.0",
 					},
 					Resources: ResourcesWithPersistentVolume{
 						Limit: ResourceParams{
@@ -552,7 +552,7 @@ func getConfigLiteral() *Config {
 					},
 				},
 				Prometheus: PrometheusConfiguration{
-					Image: "docker.io/prom/prometheus:v2.1.0",
+					Image: "quay.io/prometheus/prometheus:v2.30.3",
 					Resources: ResourcesWithPersistentVolume{
 						Limit: ResourceParams{
 							Memory: "512Mi",
@@ -565,7 +565,7 @@ func getConfigLiteral() *Config {
 					},
 				},
 				Upgrade: UpgradeConfiguration{
-					Image:     "docker.io/syndesis/syndesis-upgrade:latest",
+					Image:     "quay.io/syndesis/syndesis-upgrade:latest",
 					Resources: VolumeOnlyResources{VolumeCapacity: "1Gi"},
 				},
 				AMQ: AMQConfiguration{

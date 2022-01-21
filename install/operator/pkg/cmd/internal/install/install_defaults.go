@@ -1,3 +1,3 @@
 package install
 
-const defaultDatabaseImage = "centos/postgresql-12-centos7"
+const defaultDatabaseImage = "quay.io/centos7/postgresql-12-centos7:latest"
