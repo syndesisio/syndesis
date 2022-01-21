@@ -5443,6 +5443,7 @@ spec:
                 format: date-time
                 type: string
               phase:
+                description: The phase the operator has reached, eg. INSTALLED, STARTING
                 type: string
               reason:
                 type: string
