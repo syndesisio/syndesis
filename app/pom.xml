@@ -126,7 +126,7 @@
     <maven-resolver-api.version>1.4.1</maven-resolver-api.version>
 
     <maven-common-artifact-filters.version>1.4</maven-common-artifact-filters.version>
-    <maven-shared-utils.version>3.1.0</maven-shared-utils.version>
+    <maven-shared-utils.version>3.3.4</maven-shared-utils.version>
     <maven-download.version>1.3.0</maven-download.version>
 
     <!-- Common dependencies -->
