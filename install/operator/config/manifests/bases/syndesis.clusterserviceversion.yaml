@@ -40,6 +40,42 @@ spec:
       - kind: Subscription
         name: ""
         version: operators.coreos.com/v1alpha1
+      specDescriptors:
+      - description: Optional add on features that can be enabled.
+        displayName: Addons
+        path: addons
+      statusDescriptors:
+      - description: Current description of where the installation or upgrade has
+          reached
+        displayName: Description
+        path: description
+        x-descriptors:
+        - urn:alm:descriptor:io.kubernetes.phase:reason
+      - description: A record of the time of the last upgrade failure
+        displayName: Upgrade Failure Time
+        path: lastUpgradeFailure
+        x-descriptors:
+        - urn:alm:descriptor:text
+      - description: The phase the operator has reached, eg. INSTALLED, STARTING
+        displayName: Phase
+        path: phase
+        x-descriptors:
+        - urn:alm:descriptor:io.kubernetes.phase
+      - description: Reason if the installation or upgrade failed
+        displayName: Reason
+        path: reason
+        x-descriptors:
+        - urn:alm:descriptor:io.kubernetes.phase:reason
+      - description: A record of the number of times and upgrade has been attempted
+        displayName: Upgrade Attempts
+        path: upgradeAttempts
+        x-descriptors:
+        - urn:alm:descriptor:text
+      - description: The currently installed version of Syndesis
+        displayName: Version
+        path: version
+        x-descriptors:
+        - urn:alm:descriptor:text
       version: v1beta3
   description: |
     ### Syndesis operator

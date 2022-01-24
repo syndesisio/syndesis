@@ -7,7 +7,8 @@ DEFAULT_PREVIOUS_VERSION := 1.13.0
 DEFAULT_IMAGE := quay.io/syndesis/syndesis-operator
 DEFAULT_TAG := $(DEFAULT_VERSION:.0=)
 DEFAULT_NAMESPACE := syndesis
-DEFAULT_CHANNEL := $(DEFAULT_VERSION:.0=.x)
+DEFAULT_CHANNEL := latest
+DEFAULT_CHANNELS := $(DEFAULT_CHANNEL),candidate,stable,$(DEFAULT_VERSION:.0=.x)
 DEFAULT_CSV := manifests/bases/syndesis.clusterserviceversion.yaml
 BUNDLE_INFIX := bundle
 
@@ -29,7 +30,7 @@ NAMESPACE ?= $(DEFAULT_NAMESPACE)
 KUBE_USER ?= developer
 LEGACY ?= false
 
-CHANNELS ?= $(DEFAULT_CHANNEL)
+CHANNELS ?= $(DEFAULT_CHANNELS)
 # Default bundle image tag
 BUNDLE_IMG ?= $(IMAGE)-$(BUNDLE_INFIX):$(VERSION)
 # Options for 'bundle-build'
