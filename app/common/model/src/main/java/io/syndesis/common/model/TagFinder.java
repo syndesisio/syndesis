@@ -38,7 +38,7 @@ public class TagFinder {
     }
 
     public ListResult<String> getResult() {
-        return ListResult.of(tags);
+        return ListResult.complete(tags);
     }
 
 }

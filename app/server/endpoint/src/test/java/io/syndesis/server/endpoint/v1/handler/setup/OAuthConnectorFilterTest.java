@@ -35,7 +35,7 @@ public class OAuthConnectorFilterTest {
         final Connector connector3 = new Connector.Builder()
             .putProperty("clientId", new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_ID_TAG).build()).build();
 
-        final ListResult<Connector> result = ListResult.of(connector1, connector2, connector3);
+        final ListResult<Connector> result = ListResult.complete(connector1, connector2, connector3);
 
         assertThat(OAuthConnectorFilter.INSTANCE.apply(result)).containsOnly(connector2, connector3);
     }

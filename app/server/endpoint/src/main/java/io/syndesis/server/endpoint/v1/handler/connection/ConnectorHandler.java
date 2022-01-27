@@ -252,7 +252,9 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
     @Override
     public ListResult<Connector> list(final UriInfo uriInfo) {
-        final List<Connector> connectors = Lister.super.list(uriInfo).getItems().stream()
+        final ListResult<Connector> list = Lister.super.list(uriInfo);
+
+        final List<Connector> connectors = list.getItems().stream()
             .map(c -> {
                 final APISummary summary = APISummary.Builder.createFrom(c).build();
 
@@ -262,7 +264,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
             })
             .collect(Collectors.toList());
 
-        return ListResult.of(augmentedWithUsage(connectors));
+        return ListResult.partial(list.getTotalCount(), augmentedWithUsage(connectors));
     }
 
     @GET
@@ -276,13 +278,14 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         @Parameter(required = false, description = "Number of records per page")
         @QueryParam("per_page") @DefaultValue("20") int perPage) {
 
-        List<Connector> connectors = getDataManager().fetchAll(
-                Connector.class,
-                new PredicateFilter<>(connector -> connector.getConnectorGroupId().isPresent()
-                        && connectorGroupIdList.contains(connector.getConnectorGroupId().get())
-                ),
-                new PaginationFilter<>(new PaginationOptionsFromQueryParams(page, perPage)))
-            .getItems().stream()
+        final ListResult<Connector> all = getDataManager().fetchAll(
+                    Connector.class,
+                    new PredicateFilter<>(connector -> connector.getConnectorGroupId().isPresent()
+                            && connectorGroupIdList.contains(connector.getConnectorGroupId().get())
+                    ),
+                    new PaginationFilter<>(new PaginationOptionsFromQueryParams(page, perPage)));
+
+        final List<Connector> connectors = all.getItems().stream()
             .map(c -> {
                 final APISummary summary = APISummary.Builder.createFrom(c).build();
 
@@ -292,7 +295,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
             })
             .collect(Collectors.toList());
 
-        return ListResult.of(augmentedWithUsage(connectors));
+        return ListResult.partial(all.getTotalCount(), augmentedWithUsage(connectors));
     }
 
     @Override

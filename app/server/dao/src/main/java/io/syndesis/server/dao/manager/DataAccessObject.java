@@ -68,10 +68,13 @@ public interface DataAccessObject<T extends WithId<T>> {
         if (operators == null) {
             return result;
         }
+
+        final int totalCount = result.getTotalCount();
         for (Function<ListResult<T>, ListResult<T>> operator : operators) {
             result = operator.apply(result);
         }
-        return result;
+
+        return ListResult.partial(totalCount, result.getItems());
     }
 
     /**

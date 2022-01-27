@@ -39,11 +39,11 @@ public final class ReverseFilter<T extends WithResourceId> implements Function<L
     public ListResult<T> apply(ListResult<T> result) {
         List<T> list = new ArrayList<>(result.getItems());
         Collections.reverse(list);
-        return ListResult.of(list);
+        return ListResult.partial(result.getTotalCount(), list);
     }
 
     @SuppressWarnings({"unchecked"})
     public static <T extends WithResourceId> ReverseFilter<T>getInstance() {
-        return (ReverseFilter<T>)INSTANCE;
+        return INSTANCE;
     }
 }

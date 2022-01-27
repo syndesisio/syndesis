@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -236,24 +237,25 @@ public class DataManager implements DataAccessObjectRegistry {
     @SafeVarargs
     @SuppressWarnings({"unchecked", "varargs"})
     public final <T extends WithId<T>> ListResult<T> fetchAll(Class<T> model, Function<ListResult<T>, ListResult<T>>... operators) {
-
-        ListResult<T> result;
         if (getDataAccessObject(model) != null) {
             return doWithDataAccessObject(model, d -> d.fetchAll(operators));
-        } else {
-            Kind kind = Kind.from(model);
-            Cache<String, T> cache = caches.getCache(kind.getModelName(), false);
-            result = ListResult.of(cache.values());
+        }
 
-            if (operators == null) {
-                return result;
-            }
+        Kind kind = Kind.from(model);
+        Cache<String, T> cache = caches.getCache(kind.getModelName(), false);
+        final Collection<T> values = cache.values();
+        ListResult<T> result = ListResult.complete(values);
 
-            for (Function<ListResult<T>, ListResult<T>> operator : operators) {
-                result = operator.apply(result);
-            }
+        if (operators == null) {
             return result;
         }
+
+        final int totalCount = result.getTotalCount();
+        for (Function<ListResult<T>, ListResult<T>> operator : operators) {
+            result = operator.apply(result);
+        }
+
+        return ListResult.partial(totalCount, result.getItems());
     }
 
     public <K extends WithId<K>> Stream<K> fetchAllByPropertyValue(Class<K> type, String property, String value) {

@@ -188,8 +188,9 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             new ReflectiveSorter<>(Integration.class, new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo)));
 
-        return ListResult.of(integrations.getItems().stream().map(integrationOverviewHelper::toCurrentIntegrationOverview)
-            .collect(Collectors.toList()));
+        final List<IntegrationOverview> items = integrations.getItems().stream().map(integrationOverviewHelper::toCurrentIntegrationOverview)
+            .collect(Collectors.toList());
+        return ListResult.partial(integrations.getTotalCount(), items);
     }
 
     @Override

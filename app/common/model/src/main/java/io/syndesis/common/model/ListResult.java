@@ -35,7 +35,6 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = ListResult.Builder.class)
 @SuppressWarnings({"rawtypes", "varargs"})
 public interface ListResult<T> extends Iterable<T> {
-
     /**
      * Total.
      * @return The total count of entities available.
@@ -68,13 +67,27 @@ public interface ListResult<T> extends Iterable<T> {
         // accessible
     }
 
-    static <T> ListResult<T> of(Collection<T> items) {
+    static <T> ListResult<T> partial(final int totalCount, final Collection<T> items) {
+        return new Builder<T>().items(items).totalCount(totalCount).build();
+    }
+
+    @SafeVarargs
+    static <T> ListResult<T> partial(final int totalCount, T... items) {
+        return new Builder<T>().addItems(items).totalCount(totalCount).build();
+    }
+
+    static <T> ListResult<T> complete(final Collection<T> items) {
         return new Builder<T>().items(items).totalCount(items.size()).build();
     }
 
     @SafeVarargs
-    static <T> ListResult<T> of(T... items) {
+    static <T> ListResult<T> complete(T... items) {
         return new Builder<T>().addItems(items).totalCount(items.length).build();
+    }
+
+    @SuppressWarnings("unchecked")
+    static <T> ListResult<T> empty() {
+        return Holder.EMPTY;
     }
 
     static <T> Collector<T, Builder<T>, Builder<T>> collector() {
@@ -84,4 +97,18 @@ public interface ListResult<T> extends Iterable<T> {
             b -> b.totalCount(b.build().getItems().size()));
     }
 
+}
+
+/**
+ * Required as initialization of ImmutableListResult from ListResult leads to
+ * cyclic dependency and the ImmutableListResult.validator uninitialized as the
+ * outcome.
+ */
+final class Holder {
+    @SuppressWarnings("rawtypes")
+    static final ListResult EMPTY = new ListResult.Builder<>().build();
+
+    private Holder() {
+        // prevent instantiation
+    }
 }

@@ -128,7 +128,7 @@ public class ConnectionHandler
             overviews.add(builder.build());
         }
 
-        return ListResult.of(overviews);
+        return ListResult.partial(connectionResults.getTotalCount(), overviews);
     }
 
     @Override

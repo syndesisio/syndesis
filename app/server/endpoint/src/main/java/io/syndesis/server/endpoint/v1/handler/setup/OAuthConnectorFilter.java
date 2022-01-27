@@ -35,7 +35,7 @@ final class OAuthConnectorFilter implements Function<ListResult<Connector>, List
         final List<Connector> oauthConnectors = result.getItems().stream()
             .filter(c -> c.propertyEntryTaggedWith(Credentials.CLIENT_ID_TAG).isPresent()).collect(Collectors.toList());
 
-        return ListResult.of(oauthConnectors);
+        return ListResult.partial(result.getTotalCount(), oauthConnectors);
     }
 
 }
