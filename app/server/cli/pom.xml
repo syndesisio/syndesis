@@ -60,6 +60,37 @@
         <artifactId>tomcat-jdbc</artifactId>
         <version>${tomcat.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>com.kakawait</groupId>
+        <artifactId>picocli-spring-boot-starter</artifactId>
+        <version>0.2.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>com.kakawait</groupId>
+        <artifactId>picocli-spring-boot-autoconfigure</artifactId>
+        <version>0.2.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>info.picocli</groupId>
+        <artifactId>picocli</artifactId>
+        <version>4.0.4</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -129,13 +160,11 @@
     <dependency>
       <groupId>info.picocli</groupId>
       <artifactId>picocli</artifactId>
-      <version>4.0.4</version>
     </dependency>
 
     <dependency>
       <groupId>com.kakawait</groupId>
       <artifactId>picocli-spring-boot-autoconfigure</artifactId>
-      <version>0.2.0</version>
     </dependency>
 
     <dependency>
@@ -169,7 +198,6 @@
     <dependency>
       <groupId>com.kakawait</groupId>
       <artifactId>picocli-spring-boot-starter</artifactId>
-      <version>0.2.0</version>
       <scope>runtime</scope>
     </dependency>
 

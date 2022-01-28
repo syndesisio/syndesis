@@ -28,42 +28,18 @@
   <name>Connector :: OData V2</name>
   <packaging>jar</packaging>
 
-  <properties>
-    <olingoVersion>2.0.11</olingoVersion>
-    <!-- To be removed once CAMEL-13006 has been integrated into fuse release of camel-olingo2 component -->
-    <schemeName>olingo2</schemeName>
-    <componentName>Olingo2</componentName>
-    <componentPackage>org.apache.camel.component.olingo2</componentPackage>
-    <maven.exe.file.extension />
-    <camel.osgi.export.pkg>${componentPackage}</camel.osgi.export.pkg>
-    <componentPackage>org.apache.camel.component.olingo2</componentPackage>
-    <outPackage>org.apache.camel.component.olingo2.internal</outPackage>
-    <camel.osgi.private.pkg>${outPackage}</camel.osgi.private.pkg>
-  </properties>
-
   <dependencyManagement>
     <dependencies>
       <!-- Apache Olingo Library dependencies -->
       <dependency>
         <groupId>org.apache.olingo</groupId>
         <artifactId>olingo-odata2-api</artifactId>
-        <version>${olingoVersion}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.olingo</groupId>
-        <artifactId>olingo-odata2-core</artifactId>
-        <version>${olingoVersion}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-          </exclusion>
-        </exclusions>
+        <version>${olingo2.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.olingo</groupId>
         <artifactId>olingo-odata2-client-api</artifactId>
-        <version>${olingoVersion}</version>
+        <version>${olingo2.version}</version>
         <exclusions>
           <exclusion>
             <groupId>junit</groupId>
@@ -74,7 +50,7 @@
       <dependency>
         <groupId>org.apache.olingo</groupId>
         <artifactId>olingo-odata2-client-core</artifactId>
-        <version>${olingoVersion}</version>
+        <version>${olingo2.version}</version>
         <exclusions>
           <exclusion>
             <groupId>junit</groupId>
@@ -92,7 +68,7 @@
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
-        <version>4.5.10</version>
+        <version>4.5.13</version>
         <classifier>tests</classifier>
         <exclusions>
           <exclusion>
@@ -125,19 +101,19 @@
         <artifactId>olingo-odata2-api-annotation</artifactId>
         <groupId>org.apache.olingo</groupId>
         <type>jar</type>
-        <version>${olingoVersion}</version>
+        <version>${olingo2.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.olingo</groupId>
         <artifactId>olingo-odata2-annotation-processor-api</artifactId>
-        <version>${olingoVersion}</version>
+        <version>${olingo2.version}</version>
         <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.olingo</groupId>
         <artifactId>olingo-odata2-annotation-processor-core</artifactId>
-        <version>${olingoVersion}</version>
+        <version>${olingo2.version}</version>
         <scope>test</scope>
       </dependency>
     </dependencies>
