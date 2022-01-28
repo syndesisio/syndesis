@@ -1,10 +1,8 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - '*.*.*'
-      - '!*.*.*-*'
+  release:
+    types: [released]
 
 jobs:
   release:
@@ -14,9 +12,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           persist-credentials: false
-      - name: Set version
-        id: setup
-        run: echo ::set-output name=version::${GITHUB_REF#refs/*/}
       - name: Set up JDK 8
         uses: actions/setup-java@v1
         with:
@@ -44,4 +39,4 @@ jobs:
           git config --global 'http.https://github.com/.extraheader' "Authorization: basic $(echo -n x-access-token:${SYNDESISCI_TOKEN}|base64 --wrap=0)"
           gpg --batch --import <(echo "${GPG_KEY}")
           export GPG_TTY=$(tty)
-          tools/bin/syndesis release --settings .mvn/settings.release.xml --release-version ${{ steps.setup.outputs.version }} --git-remote origin --docker-user "${DOCKER_USER}" --docker-password "${DOCKER_PASSWORD}" --github-user syndesisci --github-token "${SYNDESISCI_TOKEN}" --quayio-user "${QUAYIO_USER}" --quayio-password "${QUAYIO_PASSWORD}" --gpg-keyname "${GPG_KEYNAME}" --gpg-passphrase "${GPG_PASSPHRASE}"
+          tools/bin/syndesis release --settings .mvn/settings.release.xml --release-version ${{ github.event.release.tag_name }} --git-remote origin --docker-user "${DOCKER_USER}" --docker-password "${DOCKER_PASSWORD}" --github-user syndesisci --github-token "${SYNDESISCI_TOKEN}" --quayio-user "${QUAYIO_USER}" --quayio-password "${QUAYIO_PASSWORD}" --gpg-keyname "${GPG_KEYNAME}" --gpg-passphrase "${GPG_PASSPHRASE}"
