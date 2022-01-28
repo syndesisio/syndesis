@@ -87,7 +87,7 @@ public class IntegrationDeploymentHandlerTest {
         final ArgumentCaptor<Function<ListResult<IntegrationDeployment>, ListResult<IntegrationDeployment>>> args = ArgumentCaptor
             .forClass(Function.class);
         when(dataManager.fetchAll(eq(IntegrationDeployment.class), args.capture()))
-            .thenReturn(ListResult.of(deployment1, deployment2, deployment3));
+            .thenReturn(ListResult.complete(deployment1, deployment2, deployment3));
 
         final UriInfo uriInfo = mock(UriInfo.class);
         when(uriInfo.getQueryParameters()).thenReturn(new MultivaluedHashMap<>());

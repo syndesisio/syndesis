@@ -124,7 +124,7 @@ public class ConnectorHandlerTest {
                 .icon("http://localhost:" + wiremock.port() + "/u/23079786")
                 .build();
             when(dataManager.fetch(Connector.class, "connector-id")).thenReturn(connector);
-            when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(Collections.emptyList()));
+            when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.empty());
 
             try (Response response = handler.getConnectorIcon("connector-id").get()) {
                 assertThat(response.getStatusInfo().getStatusCode()).as("Wrong status code").isEqualTo(Response.Status.OK.getStatusCode());
@@ -187,7 +187,7 @@ public class ConnectorHandlerTest {
         // verify predicates in listApiConnectors()
         when(dataManager.fetchAll(eq(Connector.class), any()))
             .then(a -> {
-                ListResult<Connector> result = ListResult.of(connectors);
+                ListResult<Connector> result = ListResult.complete(connectors);
                 final Object[] operators = a.getArguments();
                 for (int i = 1; i < operators.length; i++) {
                     @SuppressWarnings("unchecked")
@@ -200,7 +200,7 @@ public class ConnectorHandlerTest {
 
         // no integrations, 0 usage for all connectors
         when(dataManager.fetchAll(Integration.class))
-            .thenReturn(ListResult.of(Collections.emptyList()));
+            .thenReturn(ListResult.empty());
 
         final ListResult<Connector> result = handler.listApiConnectors(Arrays.asList("1", "2"), 1, 50);
 

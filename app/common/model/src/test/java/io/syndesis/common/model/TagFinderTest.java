@@ -33,8 +33,8 @@ public class TagFinderTest {
             .addTag("tag3")
             .build();
         ListResult<String> allTags = new TagFinder()
-            .add(ListResult.of(integration))
-            .add(ListResult.of(connection))
+            .add(ListResult.complete(integration))
+            .add(ListResult.complete(connection))
             .getResult();
 
         Assertions.assertEquals( 3, allTags.getTotalCount());

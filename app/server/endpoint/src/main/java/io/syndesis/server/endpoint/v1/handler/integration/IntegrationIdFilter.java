@@ -41,6 +41,6 @@ final class IntegrationIdFilter
         final List<IntegrationDeployment> filtered = list.getItems().stream()
             .filter(i -> i.getSpec().idEquals(integrationId)).collect(Collectors.toList());
 
-        return ListResult.of(filtered);
+        return ListResult.partial(list.getTotalCount(), filtered);
     }
 }

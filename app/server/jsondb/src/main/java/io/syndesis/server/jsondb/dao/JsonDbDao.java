@@ -111,9 +111,9 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
                 MapType mapType = typeFactory.constructMapType(LinkedHashMap.class, String.class, getType());
                 LinkedHashMap<String, T> map = reader.forType(mapType).readValue(json);
 
-                result = ListResult.of(map.values());
+                result = ListResult.complete(map.values());
             } else {
-                result = ListResult.of(Collections.<T>emptyList());
+                result = ListResult.empty();
             }
 
             if (operators == null) {

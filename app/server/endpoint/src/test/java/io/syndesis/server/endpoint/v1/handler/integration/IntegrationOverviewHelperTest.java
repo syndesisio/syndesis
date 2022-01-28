@@ -58,7 +58,7 @@ public class IntegrationOverviewHelperTest {
             .currentState(IntegrationDeploymentState.Published).id(INTEGRATION_DEPLOYMENT_ID).build();
 
         when(dataManager.fetchAll(eq(IntegrationDeployment.class),
-            any(), any())).thenReturn(ListResult.of(deployment));
+            any(), any())).thenReturn(ListResult.complete(deployment));
 
         when(exposueHelper.getManagementUrl(any())).thenReturn(null);
 
@@ -74,7 +74,7 @@ public class IntegrationOverviewHelperTest {
             .currentState(IntegrationDeploymentState.Published).id(INTEGRATION_DEPLOYMENT_ID).build();
 
         when(dataManager.fetchAll(eq(IntegrationDeployment.class),
-            any(), any())).thenReturn(ListResult.of(deployment));
+            any(), any())).thenReturn(ListResult.complete(deployment));
 
         when(exposueHelper.getManagementUrl(any())).thenReturn("https://3scale");
 
@@ -91,7 +91,7 @@ public class IntegrationOverviewHelperTest {
         Set<String> exposureMeans = Sets.newHashSet("ROUTE");
 
         when(dataManager.fetchAll(eq(IntegrationDeployment.class),
-            any(), any())).thenReturn(ListResult.of());
+            any(), any())).thenReturn(ListResult.empty());
 
         when(exposueHelper.getExposureMeans()).thenReturn(exposureMeans);
 
@@ -108,7 +108,7 @@ public class IntegrationOverviewHelperTest {
         Set<String> exposureMeans = Sets.newHashSet("ROUTE");
 
         when(dataManager.fetchAll(eq(IntegrationDeployment.class),
-            any(), any())).thenReturn(ListResult.of());
+            any(), any())).thenReturn(ListResult.empty());
 
         when(exposueHelper.getExposureMeans()).thenReturn(exposureMeans);
 

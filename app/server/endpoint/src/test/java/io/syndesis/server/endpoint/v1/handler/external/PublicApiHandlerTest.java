@@ -100,7 +100,7 @@ public class PublicApiHandlerTest {
         final ArgumentCaptor<Function<ListResult<Integration>, ListResult<Integration>>[]> filter = ArgumentCaptor.forClass(filterVarArgsType);
 
         when(dataManager.fetchByPropertyValue(Environment.class, "name", "env")).thenReturn(Optional.of(env));
-        when(dataManager.fetchAll(eq(Integration.class), filter.capture())).thenReturn(ListResult.of(integration1, integration2));
+        when(dataManager.fetchAll(eq(Integration.class), filter.capture())).thenReturn(ListResult.complete(integration1, integration2));
 
         final StreamingOutput someStream = mock(StreamingOutput.class);
 
@@ -130,7 +130,7 @@ public class PublicApiHandlerTest {
         final Function<ListResult<Integration>, ListResult<Integration>> filterFunction = (Function<ListResult<Integration>, ListResult<Integration>>) (Object) filters
             .get(0);
 
-        assertThat(filterFunction.apply(ListResult.of(integration1, integration2, integration3))).isEqualTo(ListResult.of(integration1, integration2));
+        assertThat(filterFunction.apply(ListResult.complete(integration1, integration2, integration3))).isEqualTo(ListResult.partial(2, integration1, integration2));
 
         try (Response response = handler.exportResources("env", false, true)) {
             assertThat(response).isNotNull();
@@ -253,7 +253,7 @@ public class PublicApiHandlerTest {
             .putContinuousDeliveryState("different-env", new ContinuousDeliveryEnvironment.Builder().build())
             .build();
 
-        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(integration1, integration2, integration3));
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.complete(integration1, integration2, integration3));
 
         final EnvironmentHandler environmentHandler = new EnvironmentHandler(dataManager);
         // null's are not used
@@ -361,7 +361,7 @@ public class PublicApiHandlerTest {
     @Test
     public void testGetReleaseEnvironments() {
         final DataManager dataManager = mock(DataManager.class);
-        when(dataManager.fetchAll(Environment.class)).thenReturn(ListResult.of(newEnvironment("env1"), newEnvironment("env2")));
+        when(dataManager.fetchAll(Environment.class)).thenReturn(ListResult.complete(newEnvironment("env1"), newEnvironment("env2")));
 
         final EnvironmentHandler environmentHandler = new EnvironmentHandler(dataManager);
         // null's are not used

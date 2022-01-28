@@ -21,8 +21,6 @@ import io.syndesis.common.model.integration.IntegrationDeployment;
 
 import org.junit.jupiter.api.Test;
 
-import static java.util.Collections.emptyList;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegrationIdFilterTest {
@@ -39,22 +37,22 @@ public class IntegrationIdFilterTest {
 
     @Test
     public void shouldFilterEmptyResults() {
-        assertThat(filter.apply(ListResult.of(emptyList()))).isEmpty();
+        assertThat(filter.apply(ListResult.empty())).isEmpty();
     }
 
     @Test
     public void shouldFilterOutTrivialWantedDeployments() {
-        assertThat(filter.apply(ListResult.of(wanted))).containsOnly(wanted);
+        assertThat(filter.apply(ListResult.complete(wanted))).containsOnly(wanted);
     }
 
     @Test
     public void shouldFilterOutWantedDeployments() {
-        assertThat(filter.apply(ListResult.of(unwanted, wanted, unwanted))).containsOnly(wanted);
+        assertThat(filter.apply(ListResult.complete(unwanted, wanted, unwanted))).containsOnly(wanted);
     }
 
     @Test
     public void shouldFilterOutWantedDeploymentsNotFinding() {
-        assertThat(filter.apply(ListResult.of(unwanted, unwanted, unwanted))).isEmpty();
+        assertThat(filter.apply(ListResult.complete(unwanted, unwanted, unwanted))).isEmpty();
     }
 
 }

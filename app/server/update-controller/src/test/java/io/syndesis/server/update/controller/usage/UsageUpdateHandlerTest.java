@@ -15,7 +15,6 @@
  */
 package io.syndesis.server.update.controller.usage;
 
-import static java.util.Collections.emptyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -100,7 +99,7 @@ public class UsageUpdateHandlerTest {
         final Integration usesC1andC2 = testIntegration().withFlowConnections(c1, c2).build();
         final Integration usesC2andC3 = testIntegration().withFlowConnections(c2, c3).build();
         final Integration usesC1andC2andC3 = testIntegration().withFlowConnections(c1, c2, c3).build();
-        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(usesC1, usesC1andC2, usesC2andC3, usesC1andC2andC3));
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.complete(usesC1, usesC1andC2, usesC2andC3, usesC1andC2andC3));
 
         handler.processInternal(NOT_USED);
 
@@ -119,7 +118,7 @@ public class UsageUpdateHandlerTest {
         final Integration usesC1andC2 = testIntegration().withFlowStepsUsingConnections(c1, c2).build();
         final Integration usesC2andC3 = testIntegration().withFlowStepsUsingConnections(c2, c3).build();
         final Integration usesC1andC2andC3 = testIntegration().withFlowStepsUsingConnections(c1, c2, c3).build();
-        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(usesC1, usesC1andC2, usesC2andC3, usesC1andC2andC3));
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.complete(usesC1, usesC1andC2, usesC2andC3, usesC1andC2andC3));
 
         handler.processInternal(NOT_USED);
 
@@ -138,7 +137,7 @@ public class UsageUpdateHandlerTest {
         final Integration usesC1andC2 = testIntegration().withFlowConnections(c1).withFlowStepsUsingConnections(c2).build();
         final Integration usesC2andC3 = testIntegration().withFlowStepsUsingConnections(c2, c3).build();
         final Integration usesC1andC2andC3 = testIntegration().withFlowConnections(c1, c2).withFlowStepsUsingConnections(c3).build();
-        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(usesC1, usesC1andC2, usesC2andC3, usesC1andC2andC3));
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.complete(usesC1, usesC1andC2, usesC2andC3, usesC1andC2andC3));
 
         handler.processInternal(NOT_USED);
 
@@ -153,13 +152,13 @@ public class UsageUpdateHandlerTest {
 
     @BeforeEach
     public void setupMocks() {
-        when(dataManager.fetchAll(Connection.class)).thenReturn(ListResult.of(c1, c2, c3));
-        when(dataManager.fetchAll(Extension.class)).thenReturn(ListResult.of(extension));
+        when(dataManager.fetchAll(Connection.class)).thenReturn(ListResult.complete(c1, c2, c3));
+        when(dataManager.fetchAll(Extension.class)).thenReturn(ListResult.complete(extension));
     }
 
     @Test
     public void shouldCountUsedExtensions() {
-        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(integrationWithExtension));
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.complete(integrationWithExtension));
 
         handler.processInternal(NOT_USED);
 
@@ -172,7 +171,7 @@ public class UsageUpdateHandlerTest {
 
     @Test
     public void shouldCountUsedIntegrationDependencyLibrariesExtensions() {
-        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(integrationWithDependencyLibraryExtension));
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.complete(integrationWithDependencyLibraryExtension));
 
         handler.processInternal(NOT_USED);
 
@@ -185,7 +184,7 @@ public class UsageUpdateHandlerTest {
 
     @Test
     public void shouldCountUsedFlowsDependencyLibrariesExtensions() {
-        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(integrationWithFlowsDependencyLibraryExtension));
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.complete(integrationWithFlowsDependencyLibraryExtension));
 
         handler.processInternal(NOT_USED);
 
@@ -201,7 +200,7 @@ public class UsageUpdateHandlerTest {
         final Step stepWithoutConnection = new Step.Builder().build();
         final Integration integration = testIntegration().withFlowConnections(c1, c2).withFlowStepsUsingConnections(c1, c3)
             .addFlow(new Flow.Builder().addStep(stepWithoutConnection).build()).build();
-        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(integration));
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.complete(integration));
 
         handler.processInternal(NOT_USED);
 
@@ -217,7 +216,7 @@ public class UsageUpdateHandlerTest {
     @Test
     public void unusedConnectionsShouldHaveUseOfZero() {
         final Integration emptyIntegration = new Integration.Builder().build();
-        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(emptyIntegration, emptyIntegration));
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.complete(emptyIntegration, emptyIntegration));
 
         handler.processInternal(NOT_USED);
 
@@ -229,7 +228,7 @@ public class UsageUpdateHandlerTest {
 
     @Test
     public void withNoIntegrationsConnectionUsageShouldBeZero() {
-        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(emptyList()));
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.empty());
 
         handler.processInternal(NOT_USED);
 

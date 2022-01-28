@@ -96,15 +96,17 @@ public class OAuthAppHandler {
     @Parameter(name = "per_page", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "20"), description = "Number of records per page")
     @Parameter(name = "query", in = ParameterIn.QUERY, schema = @Schema(type = "string"), description = "The search query to filter results on")
     public ListResult<OAuthApp> list(@Context final UriInfo uriInfo) {
-        final List<Connector> oauthConnectors = dataMgr.fetchAll(Connector.class, //
+        final ListResult<Connector> all = dataMgr.fetchAll(Connector.class, //
             OAuthConnectorFilter.INSTANCE,
             new ReflectiveFilterer<>(Connector.class, new FilterOptionsFromQueryParams(uriInfo).getFilters()),
             new ReflectiveSorter<>(Connector.class, new SortOptionsFromQueryParams(uriInfo)),
-            new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))).getItems();
+            new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo)));
+
+        final List<Connector> oauthConnectors = all.getItems();
 
         final List<OAuthApp> apps = oauthConnectors.stream().map(OAuthApp::fromConnector).collect(Collectors.toList());
 
-        return ListResult.of(apps);
+        return ListResult.partial(all.getTotalCount(), apps);
     }
 
     @PUT
