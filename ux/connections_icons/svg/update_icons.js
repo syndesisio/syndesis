@@ -3,7 +3,7 @@ const path = require('path');
 const jsonfile = require('jsonfile');
 const jq = require('node-jq')
 const readDir = require('readdir');
-const SVGO = require('svgo');
+const { optimize } = require('svgo');
 
 const DEPLOYMENT_JSON = '../../../app/server/dao/src/main/resources/io/syndesis/server/dao/deployment.json';
 const CONNECTORS_PATH = '../../../app/connector';
@@ -13,13 +13,9 @@ const CONNECTOR_ICON_ASSET_PATH = ['../../../app/ui-react/syndesis/public/icons'
 
 const MAPPINGS = jsonfile.readFileSync('mapping.json');
 
-const svgo = new SVGO({
-  quiet: true
-});
-
-function optimize(file) {
+function optimize_svg(file) {
   const data = fs.readFileSync(file);
-  return svgo.optimize(data).then(optimized => {
+  return optimize(data).then(optimized => {
     const mapping = MAPPINGS.find(c => c.icon == file);
     const id = mapping.connectorId || mapping.stepId;
     return {
@@ -49,7 +45,7 @@ if (missingMappings.length != 0) {
 }
 
 Promise.all(MAPPINGS.filter(c => !c.ignore).map(c => {
-  return optimize(c.icon);
+  return optimize_svg(c.icon);
 })).then(optimized => {
   jsonfile.readFile(DEPLOYMENT_JSON)
     .then(deployment => {
