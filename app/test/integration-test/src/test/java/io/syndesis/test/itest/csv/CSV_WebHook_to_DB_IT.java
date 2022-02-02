@@ -28,6 +28,7 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
 
@@ -228,7 +229,8 @@ public class CSV_WebHook_to_DB_IT extends SyndesisIntegrationTestSupport {
                 .build())
             .build())
         .build()
-        .withNetwork(getSyndesisDb().getNetwork());
+        .withNetwork(getSyndesisDb().getNetwork())
+        .withExposedPorts(SyndesisTestEnvironment.getServerPort());
 
     private final HttpClient webHookClient = CitrusEndpoints.http().client()
         .requestUrl(String.format("http://localhost:%s/webhook/import", INTEGRATION_CONTAINER.getServerPort()))
