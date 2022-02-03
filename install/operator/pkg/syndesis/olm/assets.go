@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-//
-//go:generate go run assets/assets_generate.go
 package olm
 
 import (
+	"embed"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"sort"
 	"time"
@@ -28,8 +26,11 @@ import (
 	"github.com/pkg/errors"
 )
 
+//go:embed assets/*
+var assets embed.FS
+
 func AssetAsBytes(path string) ([]byte, error) {
-	file, err := GetAssetsFS().Open(path)
+	file, err := assets.Open(path)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +43,7 @@ func AssetAsBytes(path string) ([]byte, error) {
 }
 
 func isDirectory(path string) bool {
-	f, err := GetAssetsFS().Open(path)
+	f, err := assets.Open(path)
 	if err != nil {
 		return false
 	}
@@ -57,17 +58,7 @@ func isDirectory(path string) bool {
 }
 
 func ReadDir(directory string) ([]string, error) {
-	return ReadFSDir(GetAssetsFS(), directory)
-}
-
-func ReadFSDir(assets http.FileSystem, directory string) ([]string, error) {
-	f, err := assets.Open(directory)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-
-	files, err := f.Readdir(-1)
+	files, err := assets.ReadDir(directory)
 	if err != nil {
 		return nil, err
 	}

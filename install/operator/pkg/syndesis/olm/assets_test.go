@@ -18,12 +18,12 @@ func TestAssetsReadFSDir(t *testing.T) {
 	}{
 		{
 			"community",
-			"/community",
+			"assets/community",
 			1,
 		},
 		{
 			"productized",
-			"/productized",
+			"assets/productized",
 			1,
 		},
 	}
@@ -47,37 +47,37 @@ func TestAssetsRead(t *testing.T) {
 	}{
 		{
 			"community",
-			"/community",
+			"assets/community",
 			true, "",
 		},
 		{
 			"productized",
-			"/productized",
+			"assets/productized",
 			true, "",
 		},
 		{
 			"community-description",
-			"/community/description",
+			"assets/community/description",
 			false,
 			"### Syndesis operator",
 		},
 		{
 			"productized-description",
-			"/productized/description",
+			"assets/productized/description",
 			false,
 			"Fuse Online is a flexible",
 		},
 		{
 			"alm-examples",
-			"/alm-examples",
+			"assets/alm-examples",
 			false,
 			"[{",
 		},
 		{
 			"icon",
-			"/icon",
+			"assets/icon",
 			false,
-			"PHN2ZyB4b",
+			"PHN2ZyBpZ",
 		},
 	}
 

@@ -121,22 +121,22 @@ func Test_csv_loadRolesFromTemplate(t *testing.T) {
 	}{
 		{
 			"operator-role",
-			"./install/role.yml.tmpl",
+			"assets/install/role.yml.tmpl",
 			47,
 		},
 		{
 			"olm-roles",
-			"./install/cluster_role_olm.yml.tmpl",
+			"assets/install/cluster_role_olm.yml.tmpl",
 			8,
 		},
 		{
 			"kafka-roles",
-			"./install/cluster_role_kafka.yml.tmpl",
+			"assets/install/cluster_role_kafka.yml.tmpl",
 			2,
 		},
 		{
 			"public-api-roles",
-			"./install/cluster_role_public_api.yml.tmpl",
+			"assets/install/cluster_role_public_api.yml.tmpl",
 			2,
 		},
 	}

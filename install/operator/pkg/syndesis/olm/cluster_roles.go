@@ -27,12 +27,12 @@ type croles struct {
 
 // Build the content of the cluster roles file
 func (c *croles) build() (err error) {
-	objects, err := generator.Render("./install/cluster_role_kafka.yml.tmpl", nil)
+	objects, err := generator.Render("assets/install/cluster_role_kafka.yml.tmpl", nil)
 	if err != nil {
 		return err
 	}
 
-	pubapi, err := generator.Render("./install/cluster_role_public_api.yml.tmpl", nil)
+	pubapi, err := generator.Render("assets/install/cluster_role_public_api.yml.tmpl", nil)
 	if err != nil {
 		return err
 	}

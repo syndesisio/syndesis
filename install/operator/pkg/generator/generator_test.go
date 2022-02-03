@@ -111,7 +111,7 @@ func TestGenerator(t *testing.T) {
 	configuration, err := configuration.GetProperties(context.TODO(), "../../build/conf/config.yaml", clientTools, syndesis)
 	require.NoError(t, err)
 
-	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure/", configuration)
+	resources, err := generator.RenderFSDir("assets/infrastructure", configuration)
 	require.NoError(t, err)
 	assert.True(t, len(resources) > 0)
 
@@ -136,7 +136,7 @@ func TestGenerator(t *testing.T) {
 	assert.True(t, checks >= 6)
 
 	for _, addon := range []string{"todo", "jaeger", "ops", "publicApi"} {
-		resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./addons/"+addon+"/", configuration)
+		resources, err = generator.RenderFSDir("assets/addons/"+addon, configuration)
 		require.NoError(t, err)
 		assert.True(t, len(resources) > 0)
 	}
@@ -146,7 +146,7 @@ func TestGenerator(t *testing.T) {
 // Run test related with Ops addon
 func TestOpsAddon(t *testing.T) {
 	syndesis := &synapi.Syndesis{}
-	baseDir := "./addons/ops/"
+	baseDir := "assets/addons/ops/"
 
 	clientTools := syntesting.FakeClientTools()
 	conf, err := configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", clientTools, syndesis)
@@ -160,9 +160,8 @@ func TestOpsAddon(t *testing.T) {
 
 	syndesis.Spec.Components.Database.ExternalDbURL = "1234"
 	conf, err = configuration.GetProperties(context.TODO(), "../../build/conf/config-test.yaml", clientTools, syndesis)
-	if err != nil {
+	require.NoError(t, err)
 
-	}
 	for _, file := range []string{"addon-ops-db-alerting-rules.yml", "addon-ops-db-dashboard.yml"} {
 		resources, err := generator.Render(filepath.Join(baseDir, file), conf)
 		require.NoError(t, err)
@@ -321,7 +320,7 @@ func TestGeneratorComponentPVAccessMode(t *testing.T) {
 	}{
 		{
 			name:               "syndesis-db-default",
-			path:               "./database/",
+			path:               "assets/database",
 			expectedAccessMode: string(synapi.ReadWriteOnce),
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
@@ -340,7 +339,7 @@ func TestGeneratorComponentPVAccessMode(t *testing.T) {
 		},
 		{
 			name:               "syndesis-db",
-			path:               "./database/",
+			path:               "assets/database",
 			expectedAccessMode: string(synapi.ReadOnlyMany),
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
@@ -354,7 +353,7 @@ func TestGeneratorComponentPVAccessMode(t *testing.T) {
 		},
 		{
 			name:               "syndesis-meta",
-			path:               "./infrastructure/04-syndesis-meta.yml.tmpl",
+			path:               "assets/infrastructure/04-syndesis-meta.yml.tmpl",
 			expectedAccessMode: string(synapi.ReadOnlyMany),
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
@@ -368,7 +367,7 @@ func TestGeneratorComponentPVAccessMode(t *testing.T) {
 		},
 		{
 			name:               "syndesis-prometheus",
-			path:               "./infrastructure/06-syndesis-prometheus.yml.tmpl",
+			path:               "assets/infrastructure/06-syndesis-prometheus.yml.tmpl",
 			expectedAccessMode: string(synapi.ReadOnlyMany),
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
@@ -409,7 +408,7 @@ func TestGeneratorComponentPVNoExtraProps(t *testing.T) {
 	}{
 		{
 			name: "syndesis-db",
-			path: "./database/",
+			path: "assets/database",
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
 					Components: synapi.ComponentsSpec{
@@ -422,7 +421,7 @@ func TestGeneratorComponentPVNoExtraProps(t *testing.T) {
 		},
 		{
 			name: "syndesis-meta",
-			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
+			path: "assets/infrastructure/04-syndesis-meta.yml.tmpl",
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
 					Components: synapi.ComponentsSpec{
@@ -435,7 +434,7 @@ func TestGeneratorComponentPVNoExtraProps(t *testing.T) {
 		},
 		{
 			name: "syndesis-prometheus",
-			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
+			path: "assets/infrastructure/06-syndesis-prometheus.yml.tmpl",
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
 					Components: synapi.ComponentsSpec{
@@ -482,7 +481,7 @@ func TestGeneratorComponentPVVolumeName(t *testing.T) {
 	}{
 		{
 			name: "syndesis-db",
-			path: "./database/",
+			path: "assets/database",
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
 					Components: synapi.ComponentsSpec{
@@ -495,7 +494,7 @@ func TestGeneratorComponentPVVolumeName(t *testing.T) {
 		},
 		{
 			name: "syndesis-meta",
-			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
+			path: "assets/infrastructure/04-syndesis-meta.yml.tmpl",
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
 					Components: synapi.ComponentsSpec{
@@ -508,7 +507,7 @@ func TestGeneratorComponentPVVolumeName(t *testing.T) {
 		},
 		{
 			name: "syndesis-prometheus",
-			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
+			path: "assets/infrastructure/06-syndesis-prometheus.yml.tmpl",
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
 					Components: synapi.ComponentsSpec{
@@ -548,7 +547,7 @@ func TestGeneratorDBVolumeStorageClass(t *testing.T) {
 	}{
 		{
 			name: "syndesis-db",
-			path: "./database/",
+			path: "assets/database",
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
 					Components: synapi.ComponentsSpec{
@@ -561,7 +560,7 @@ func TestGeneratorDBVolumeStorageClass(t *testing.T) {
 		},
 		{
 			name: "syndesis-meta",
-			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
+			path: "assets/infrastructure/04-syndesis-meta.yml.tmpl",
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
 					Components: synapi.ComponentsSpec{
@@ -574,7 +573,7 @@ func TestGeneratorDBVolumeStorageClass(t *testing.T) {
 		},
 		{
 			name: "syndesis-prometheus",
-			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
+			path: "assets/infrastructure/06-syndesis-prometheus.yml.tmpl",
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
 					Components: synapi.ComponentsSpec{
@@ -617,7 +616,7 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 	}{
 		{
 			name: "syndesis-db",
-			path: "./database/",
+			path: "assets/database",
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
 					Components: synapi.ComponentsSpec{
@@ -630,7 +629,7 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 		},
 		{
 			name: "syndesis-meta",
-			path: "./infrastructure/04-syndesis-meta.yml.tmpl",
+			path: "assets/infrastructure/04-syndesis-meta.yml.tmpl",
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
 					Components: synapi.ComponentsSpec{
@@ -643,7 +642,7 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 		},
 		{
 			name: "syndesis-prometheus",
-			path: "./infrastructure/06-syndesis-prometheus.yml.tmpl",
+			path: "assets/infrastructure/06-syndesis-prometheus.yml.tmpl",
 			syndesis: &synapi.Syndesis{
 				Spec: synapi.SyndesisSpec{
 					Components: synapi.ComponentsSpec{
@@ -685,7 +684,7 @@ func TestAuditingFeatureToggle(t *testing.T) {
 			},
 		}
 
-		resource := renderResource(t, &syndesis, "./infrastructure/03-syndesis-server-config.yml.tmpl")
+		resource := renderResource(t, &syndesis, "assets/infrastructure/03-syndesis-server-config.yml.tmpl")
 
 		assert.True(t, len(resource) == 1, "Expected server config map to be rendered")
 
@@ -760,7 +759,7 @@ func TestGeneratorProperty(t *testing.T) {
 				panic(err)
 			}
 
-			rendered, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure", configuration)
+			rendered, err := generator.RenderFSDir("assets/infrastructure", configuration)
 
 			if err != nil {
 				// see above

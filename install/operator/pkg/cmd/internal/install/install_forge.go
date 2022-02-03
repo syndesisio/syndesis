@@ -208,21 +208,21 @@ func (o *Install) installForge() error {
 	//
 	resources := make([]unstructured.Unstructured, 0)
 
-	route, err := generator.RenderDir("./route/", configuration)
+	route, err := generator.RenderDir("assets/route", configuration)
 	if err != nil {
 		return err
 	}
 
 	resources = append(resources, route...)
 
-	db, err := generator.RenderDir("./database/", configuration)
+	db, err := generator.RenderDir("assets/database", configuration)
 	if err != nil {
 		return err
 	}
 	resources = append(resources, db...)
 
 	// Render the remaining syndesis resources...
-	infra, err := generator.RenderDir("./infrastructure/", configuration)
+	infra, err := generator.RenderDir("assets/infrastructure", configuration)
 	if err != nil {
 		return err
 	}
@@ -237,14 +237,9 @@ func (o *Install) installForge() error {
 		reqAddons = strings.Split(o.addons, ",")
 	}
 
-	addonsPath := "./addons"
-	addonsDir, err := generator.GetAssetsFS().Open(addonsPath)
-	if err != nil {
-		return err
-	}
-	defer addonsDir.Close()
+	addonsPath := "assets/addons"
 
-	addons, err := addonsDir.Readdir(0)
+	addons, err := generator.Assets.ReadDir(addonsPath)
 	if err != nil {
 		return err
 	}
@@ -271,7 +266,7 @@ func (o *Install) installForge() error {
 			}
 
 			addonDir := filepath.Join(addonsPath, reqAddon)
-			f, err := generator.GetAssetsFS().Open(addonDir)
+			f, err := generator.Assets.Open(addonDir)
 			if err != nil {
 				return err
 			}

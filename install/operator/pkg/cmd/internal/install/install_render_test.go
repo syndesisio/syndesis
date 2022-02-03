@@ -28,12 +28,7 @@ import (
 )
 
 func TestInstallResourcesRender(t *testing.T) {
-
-	f, err := generator.GetAssetsFS().Open("./install")
-	require.NoError(t, err)
-	defer f.Close()
-
-	files, err := f.Readdir(-1)
+	files, err := generator.Assets.ReadDir("assets/install")
 	require.NoError(t, err)
 
 	for _, f := range files {
@@ -60,7 +55,7 @@ func TestInstallResourcesRender(t *testing.T) {
 			apiServer:  apiServer,
 		}
 
-		resources, err := o.render("./install/" + f.Name())
+		resources, err := o.render("assets/install/" + f.Name())
 		require.NoError(t, err)
 		assert.NotEqual(t, 0, len(resources), "Failed to render "+f.Name())
 

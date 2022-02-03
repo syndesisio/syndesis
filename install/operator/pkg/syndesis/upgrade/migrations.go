@@ -109,7 +109,7 @@ func (m *migration) dbMigration() (err error) {
 	}
 
 	// Get migration resources, this should be the db migration job
-	resources, err := generator.Render("./upgrade", config)
+	resources, err := generator.Render("assets/upgrade", config)
 	if err != nil {
 		return err
 	}
