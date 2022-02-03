@@ -3751,6 +3751,8 @@ spec:
                 description: Optional add on features that can be enabled.
                 properties:
                   jaeger:
+                    description: Should a jaeger implementation be installed for metric
+                      monitoring
                     properties:
                       clientOnly:
                         type: boolean
@@ -3774,16 +3776,19 @@ spec:
                         type: string
                     type: object
                   knative:
+                    description: Should the knative capability be installed
                     properties:
                       enabled:
                         type: boolean
                     type: object
                   ops:
+                    description: Should the Ops capability be installed
                     properties:
                       enabled:
                         type: boolean
                     type: object
                   publicApi:
+                    description: Should the Public API capability be installed
                     properties:
                       disable-sar-check:
                         description: if set to true, then any authenticated user can
@@ -3798,6 +3803,7 @@ spec:
                         type: string
                     type: object
                   todo:
+                    description: Should the example TODO integration be installed
                     properties:
                       enabled:
                         type: boolean
@@ -5436,22 +5442,29 @@ spec:
                     type: string
                 type: object
               description:
+                description: Current description of where the installation or upgrade
+                  has reached
                 type: string
               forceUpgrade:
                 type: boolean
               lastUpgradeFailure:
+                description: A record of the time of the last upgrade failure
                 format: date-time
                 type: string
               phase:
                 description: The phase the operator has reached, eg. INSTALLED, STARTING
                 type: string
               reason:
+                description: Reason if the installation or upgrade failed
                 type: string
               targetVersion:
                 type: string
               upgradeAttempts:
+                description: A record of the number of times and upgrade has been
+                  attempted
                 type: integer
               version:
+                description: The currently installed version of Syndesis
                 type: string
             type: object
         type: object
