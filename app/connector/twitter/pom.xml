@@ -28,7 +28,7 @@
     <name>Connector :: Twitter</name>
 
     <properties>
-        <twitter4j-version>4.0.7</twitter4j-version>
+        <twitter4j-version>4.0.7.redhat-00002</twitter4j-version>
     </properties>
 
     <dependencyManagement>
