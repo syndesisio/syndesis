@@ -51,7 +51,7 @@
     "replay": "npm-run-all -p replay:dev-server \"mock-server -- {1}\" --",
     "start": "BROWSER=false HOST=0.0.0.0 craco start",
     "build": "NODE_OPTIONS=--max-old-space-size=2304 craco build",
-    "test": "craco test",
+    "test": "CI=true craco test",
     "e2e": "cypress open --config ignoreTestFiles=**/*.setup.spec.js",
     "e2e:setup": "cypress open --config testFiles=**/*.setup.spec.js; BACKEND_COOKIE=`./scripts/get-login-cookie.js $BACKEND`",
     "e2e:terminal": "cypress run --config ignoreTestFiles=**/*.setup.spec.js",
