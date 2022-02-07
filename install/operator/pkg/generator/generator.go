@@ -171,7 +171,7 @@ func Render(filePath string, context interface{}) ([]unstructured.Unstructured, 
 		// It's ok if a template chooses not to generate any resources..
 
 	default:
-		return nil, fmt.Errorf("unexptected yaml unmarshal type: %v", obj)
+		return nil, fmt.Errorf("unexpected yaml unmarshal type: %v", obj)
 	}
 
 	return response, nil
