@@ -7,18 +7,18 @@ import (
 )
 
 func (o *Install) installOperatorResources() error {
-	resources, err := o.render("./install/role.yml.tmpl")
+	resources, err := o.render("assets/install/role.yml.tmpl")
 	if err != nil {
 		return err
 	}
 
-	oinstall, err := o.render("./install/operator_install.yml.tmpl")
+	oinstall, err := o.render("assets/install/operator_install.yml.tmpl")
 	if err != nil {
 		return err
 	}
 	resources = append(resources, oinstall...)
 
-	deployment, err := o.render("./install/operator_deployment.yml.tmpl")
+	deployment, err := o.render("assets/install/operator_deployment.yml.tmpl")
 	if err != nil {
 		return err
 	}

@@ -74,25 +74,25 @@ func (o *Grant) grant() error {
 		o.Kind = "Role"
 	}
 
-	resources, err := generator.Render("./install/role.yml.tmpl", o)
+	resources, err := generator.Render("assets/install/role.yml.tmpl", o)
 	if err != nil {
 		return err
 	}
 
-	gr, err := generator.Render("./install/grant/grant_role.yml.tmpl", o)
+	gr, err := generator.Render("assets/install/grant/grant_role.yml.tmpl", o)
 	if err != nil {
 		return err
 	}
 	resources = append(resources, gr...)
 
 	// Allow syndesis-server user to lookup kafka customresources at cluster level
-	kafka, err := generator.Render("./install/cluster_role_kafka.yml.tmpl", o)
+	kafka, err := generator.Render("assets/install/cluster_role_kafka.yml.tmpl", o)
 	if err != nil {
 		return err
 	}
 	resources = append(resources, kafka...)
 
-	grkafka, err := generator.Render("./install/grant/grant_cluster_role_kafka.yml.tmpl", o)
+	grkafka, err := generator.Render("assets/install/grant/grant_cluster_role_kafka.yml.tmpl", o)
 	if err != nil {
 		return err
 	}
@@ -103,13 +103,13 @@ func (o *Grant) grant() error {
 	// operation-lifecycle-manager artifacts if they are available
 	// If not available then resources will be empty
 	//
-	olm, err := generator.Render("./install/cluster_role_olm.yml.tmpl", o)
+	olm, err := generator.Render("assets/install/cluster_role_olm.yml.tmpl", o)
 	if err != nil {
 		return err
 	}
 	resources = append(resources, olm...)
 
-	grolm, err := generator.Render("./install/grant/grant_cluster_role_olm.yml.tmpl", o)
+	grolm, err := generator.Render("assets/install/grant/grant_cluster_role_olm.yml.tmpl", o)
 	if err != nil {
 		return err
 	}
@@ -118,25 +118,25 @@ func (o *Grant) grant() error {
 	//
 	// Will only render anything if there is NOT olm support
 	//
-	jaeger, err := generator.Render("./install/cluster_role_jaeger.yml.tmpl", o)
+	jaeger, err := generator.Render("assets/install/cluster_role_jaeger.yml.tmpl", o)
 	if err != nil {
 		return err
 	}
 	resources = append(resources, jaeger...)
 
-	grjaeger, err := generator.Render("./install/grant/grant_cluster_role_jaeger.yml.tmpl", o)
+	grjaeger, err := generator.Render("assets/install/grant/grant_cluster_role_jaeger.yml.tmpl", o)
 	if err != nil {
 		return err
 	}
 	resources = append(resources, grjaeger...)
 
-	pubapi, err := generator.Render("./install/cluster_role_public_api.yml.tmpl", o)
+	pubapi, err := generator.Render("assets/install/cluster_role_public_api.yml.tmpl", o)
 	if err != nil {
 		return err
 	}
 	resources = append(resources, pubapi...)
 
-	grpubapi, err := generator.Render("./install/grant/grant_cluster_role_public_api.yml.tmpl", o)
+	grpubapi, err := generator.Render("assets/install/grant/grant_cluster_role_public_api.yml.tmpl", o)
 	if err != nil {
 		return err
 	}

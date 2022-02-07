@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-//
-//go:generate go run assets/assets_generate.go
 package generator
 
 import (
 	"bytes"
+	"embed"
 	"fmt"
-	"io/ioutil"
-	"net/http"
 	"path/filepath"
 	"reflect"
 	"sort"
@@ -36,21 +33,15 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
-func AssetAsBytes(path string) ([]byte, error) {
-	file, err := GetAssetsFS().Open(path)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-	prometheusRules, err := ioutil.ReadAll(file)
-	if err != nil {
-		return nil, err
-	}
-	return prometheusRules, nil
+//go:embed assets/*
+var Assets embed.FS
+
+func assetAsBytes(path string) ([]byte, error) {
+	return Assets.ReadFile(path)
 }
 
 func isDirectory(path string) bool {
-	f, err := GetAssetsFS().Open(path)
+	f, err := Assets.Open(path)
 	if err != nil {
 		return false
 	}
@@ -65,7 +56,7 @@ func isDirectory(path string) bool {
 }
 
 func RenderDir(directory string, context interface{}) ([]unstructured.Unstructured, error) {
-	return RenderFSDir(GetAssetsFS(), directory, context)
+	return RenderFSDir(directory, context)
 }
 
 var templateFunctions = template.FuncMap{
@@ -88,14 +79,8 @@ var templateFunctions = template.FuncMap{
 	},
 }
 
-func RenderFSDir(assets http.FileSystem, directory string, context interface{}) ([]unstructured.Unstructured, error) {
-	f, err := assets.Open(directory)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-
-	files, err := f.Readdir(-1)
+func RenderFSDir(directory string, context interface{}) ([]unstructured.Unstructured, error) {
+	files, err := Assets.ReadDir(directory)
 	if err != nil {
 		return nil, err
 	}
@@ -130,7 +115,7 @@ func Render(filePath string, context interface{}) ([]unstructured.Unstructured, 
 	// We can load plain yml files..
 	if strings.HasSuffix(filePath, ".yml") || strings.HasSuffix(filePath, ".yaml") {
 		if !skipFile(filePath, context) {
-			fileData, err := AssetAsBytes(filePath)
+			fileData, err := assetAsBytes(filePath)
 			if err != nil {
 				return nil, err
 			}
@@ -144,7 +129,7 @@ func Render(filePath string, context interface{}) ([]unstructured.Unstructured, 
 
 	// We can process go lang templates.
 	if strings.HasSuffix(filePath, ".yml.tmpl") || strings.HasSuffix(filePath, ".yaml.tmpl") {
-		fileData, err := AssetAsBytes(filePath)
+		fileData, err := assetAsBytes(filePath)
 		if err != nil {
 			return nil, err
 		}
@@ -186,7 +171,7 @@ func Render(filePath string, context interface{}) ([]unstructured.Unstructured, 
 		// It's ok if a template chooses not to generate any resources..
 
 	default:
-		return nil, fmt.Errorf("Unexptected yaml unmarshal type: %v", obj)
+		return nil, fmt.Errorf("unexpected yaml unmarshal type: %v", obj)
 	}
 
 	return response, nil

@@ -40,6 +40,10 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: ${{ matrix.java }}
+      - name: Setup Go 1.16
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.16'
       - name: Cache Maven Repository
         if: steps.should.outputs.skip != 'true'
         uses: actions/cache@v1

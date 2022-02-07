@@ -41,7 +41,7 @@ func TestPreProcessForAffinityTolerationsNotDeploymentConfig(t *testing.T) {
 	require.NoError(t, err)
 
 	ctx := context.TODO()
-	resources := renderResource(t, ctx, clientTools, syndesis, "./infrastructure/02-syndesis-secrets.yml.tmpl")
+	resources := renderResource(t, ctx, clientTools, syndesis, "assets/infrastructure/02-syndesis-secrets.yml.tmpl")
 
 	copy := (&resources[0]).DeepCopy()
 	err = action.PreProcessForAffinityTolerations(ctx, rtClient, syndesis, &resources[0])
@@ -59,7 +59,7 @@ func TestPreProcessForAffinityTolerationsNoInfraScheduling(t *testing.T) {
 	require.NoError(t, err)
 
 	ctx := context.TODO()
-	resources := renderResource(t, ctx, clientTools, syndesis, "./infrastructure/04-syndesis-server.yml.tmpl")
+	resources := renderResource(t, ctx, clientTools, syndesis, "assets/infrastructure/04-syndesis-server.yml.tmpl")
 
 	copy := (&resources[1]).DeepCopy()
 	err = action.PreProcessForAffinityTolerations(ctx, rtClient, syndesis, &resources[1])
@@ -115,17 +115,19 @@ func TestPreProcessForAffinityTolerations(t *testing.T) {
 	require.NoError(t, err)
 
 	ctx := context.TODO()
-	resources := renderResource(t, ctx, clientTools, syndesis, "./infrastructure/04-syndesis-server.yml.tmpl")
+	resources := renderResource(t, ctx, clientTools, syndesis, "assets/infrastructure/04-syndesis-server.yml.tmpl")
 	copy := (&resources[1]).DeepCopy()
 	err = action.PreProcessForAffinityTolerations(ctx, rtClient, syndesis, &resources[1])
 	require.NoError(t, err)
 	assert.NotEqual(t, *copy, resources[1])
 
 	affinity, found, err := unstructured.NestedFieldNoCopy(resources[1].UnstructuredContent(), "spec", "template", "spec", "affinity")
+	require.NoError(t, err)
 	assert.True(t, found)
 	assert.NotNil(t, affinity)
 
 	toleration, found, err := unstructured.NestedFieldNoCopy(resources[1].UnstructuredContent(), "spec", "template", "spec", "tolerations")
+	require.NoError(t, err)
 	assert.True(t, found)
 	assert.NotNil(t, toleration)
 }
@@ -178,7 +180,7 @@ func TestPreProcessJaegerCR(t *testing.T) {
 	require.NoError(t, err)
 
 	ctx := context.TODO()
-	resources := renderResource(t, ctx, clientTools, syndesis, "./addons/jaeger/syndesis-jaeger.yml.tmpl")
+	resources := renderResource(t, ctx, clientTools, syndesis, "assets/addons/jaeger/syndesis-jaeger.yml.tmpl")
 	copy := (&resources[0]).DeepCopy()
 
 	err = action.PreProcessForAffinityTolerations(ctx, rtClient, syndesis, &resources[0])
@@ -186,10 +188,12 @@ func TestPreProcessJaegerCR(t *testing.T) {
 	assert.NotEqual(t, *copy, resources[0])
 
 	affinity, found, err := unstructured.NestedFieldNoCopy(resources[0].UnstructuredContent(), "spec", "affinity")
+	require.NoError(t, err)
 	assert.True(t, found)
 	assert.NotNil(t, affinity)
 
 	toleration, found, err := unstructured.NestedFieldNoCopy(resources[0].UnstructuredContent(), "spec", "tolerations")
+	require.NoError(t, err)
 	assert.True(t, found)
 	assert.NotNil(t, toleration)
 }

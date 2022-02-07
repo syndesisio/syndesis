@@ -539,7 +539,7 @@ func (b *Backup) backupDatabase() error {
 	}
 
 	// Get migration resources, this should be the db migration job
-	resources, err := generator.Render("./backup/syndesis-backup-job.yml.tmpl", b.backupDesign)
+	resources, err := generator.Render("assets/backup/syndesis-backup-job.yml.tmpl", b.backupDesign)
 	if err != nil {
 		return err
 	}
@@ -627,7 +627,7 @@ func (b *Backup) RestoreDb() (err error) {
 	}
 
 	// Get migration resources, this should be the db migration job
-	resources, err := generator.Render("./backup/syndesis-restore-job.yml.tmpl", b.backupDesign)
+	resources, err := generator.Render("assets/backup/syndesis-restore-job.yml.tmpl", b.backupDesign)
 	if err != nil {
 		return err
 	}

@@ -207,15 +207,15 @@ func (c *csv) build() (err error) {
 	}
 	c.setVariables()
 
-	alm, err := Read("/alm-examples")
+	alm, err := Read("assets/alm-examples")
 	if err != nil {
 		return err
 	}
-	descriptionLong, err := Read(filepath.Join("/", target, "description"))
+	descriptionLong, err := Read(filepath.Join("assets/", target, "description"))
 	if err != nil {
 		return err
 	}
-	icon, err := Read("icon")
+	icon, err := Read("assets/icon")
 	if err != nil {
 		return err
 	}
@@ -226,7 +226,7 @@ func (c *csv) build() (err error) {
 	//
 	// syndesis-operator service account
 	//
-	if synOpPerm, err := c.installPerm("syndesis-operator", "./install/role.yml.tmpl"); err == nil {
+	if synOpPerm, err := c.installPerm("syndesis-operator", "assets/install/role.yml.tmpl"); err == nil {
 		ruleSpecs = append(ruleSpecs, synOpPerm)
 	} else {
 		return err
@@ -238,9 +238,9 @@ func (c *csv) build() (err error) {
 	//
 	if synOpPerm, err := c.installPerm(
 		"syndesis-operator",
-		"./install/cluster_role_olm.yml.tmpl",
-		"./install/cluster_role_kafka.yml.tmpl",
-		"./install/cluster_role_public_api.yml.tmpl"); err == nil {
+		"assets/install/cluster_role_olm.yml.tmpl",
+		"assets/install/cluster_role_kafka.yml.tmpl",
+		"assets/install/cluster_role_public_api.yml.tmpl"); err == nil {
 		clusterRuleSpecs = append(clusterRuleSpecs, synOpPerm)
 	} else {
 		return err
@@ -442,7 +442,7 @@ func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 		LogLevel:        0,     // Never to be more in CSV generation - here for template compatibility
 	}
 
-	g, err := generator.Render("./install/operator_deployment.yml.tmpl", context)
+	g, err := generator.Render("assets/install/operator_deployment.yml.tmpl", context)
 	if err != nil {
 		return nil, err
 	}

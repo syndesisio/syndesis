@@ -16,7 +16,7 @@ func (o *Install) installApplication() error {
 
 	resources := make([]unstructured.Unstructured, 0)
 	if o.customResource == "" {
-		appResources, err := o.render("./install/app.yml.tmpl")
+		appResources, err := o.render("assets/install/app.yml.tmpl")
 		if err != nil {
 			return err
 		}

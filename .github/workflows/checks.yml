@@ -116,6 +116,10 @@ jobs:
         with:
           config-file: ./.github/codeql/codeql-config.yml
           languages: go
+      - name: Setup Go 1.16
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.16'
       - name: Build and test
         run: tools/bin/syndesis build --batch-mode -m operator --local
       - name: Perform CodeQL Analysis

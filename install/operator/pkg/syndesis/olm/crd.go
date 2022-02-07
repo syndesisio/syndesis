@@ -27,7 +27,7 @@ type crd struct {
 
 // Build the content of the crd file
 func (c *crd) build() (err error) {
-	g, err := generator.Render("./install/cluster/syndesis.yml", nil)
+	g, err := generator.Render("assets/install/cluster/syndesis.yml", nil)
 	if err != nil {
 		return err
 	}

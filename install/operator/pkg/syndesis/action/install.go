@@ -142,7 +142,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) 
 	config.OpenShiftOauthClientSecret = token
 
 	// Render the route resource...
-	all, err := generator.RenderDir("./route/", config)
+	all, err := generator.RenderDir("assets/route", config)
 	if err != nil {
 		return err
 	}
@@ -167,7 +167,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) 
 	config.SetConsoleLink(ctx, rtClient, syndesis, config.Syndesis.RouteHostname)
 
 	// Render the remaining syndesis resources...
-	all, err = generator.RenderDir("./infrastructure/", config)
+	all, err = generator.RenderDir("assets/infrastructure", config)
 	if err != nil {
 		return err
 	}
@@ -177,7 +177,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) 
 
 	// Render the database resource if needed...
 	if syndesis.Spec.Components.Database.ExternalDbURL == "" {
-		dbResources, err := generator.RenderDir("./database/", config)
+		dbResources, err := generator.RenderDir("assets/database", config)
 		if err != nil {
 			return err
 		}
@@ -233,8 +233,8 @@ func (a *installAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) 
 			}
 		}
 
-		addonDir := "./addons/" + addonInfo.Name() + "/"
-		f, err := generator.GetAssetsFS().Open(addonDir)
+		addonDir := "assets/addons/" + addonInfo.Name() + "/"
+		f, err := generator.Assets.Open(addonDir)
 		if err != nil {
 			a.log.Error(err, "Unsupported addon configured", "addon", addonInfo.Name())
 			continue

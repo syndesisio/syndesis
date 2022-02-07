@@ -18,7 +18,7 @@ import (
 
 func (o *Install) installClusterResources() error {
 
-	resources, err := o.render("./install/cluster")
+	resources, err := o.render("assets/install/cluster")
 	if err != nil {
 		return err
 	}

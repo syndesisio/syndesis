@@ -86,7 +86,7 @@ func TestDowngradeExtensionsApi(t *testing.T) {
 	configuration, err := configuration.GetProperties(context.TODO(), "../../../../build/conf/config-test.yaml", i.ClientTools(), syndesis)
 	assert.NoError(t, err)
 
-	resources, err := generator.RenderDir("./install/cluster", configuration)
+	resources, err := generator.RenderDir("assets/install/cluster", configuration)
 	assert.NoError(t, err)
 	assert.True(t, len(resources) > 0)
 

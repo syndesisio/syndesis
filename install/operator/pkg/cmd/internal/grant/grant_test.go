@@ -46,7 +46,7 @@ func TestRender(t *testing.T) {
 		User:    "MyUser",
 	}
 
-	resources, err := generator.Render("./install/grant", g)
+	resources, err := generator.Render("assets/install/grant", g)
 	require.NoError(t, err)
 	assert.NotEqual(t, 0, len(resources), "Failed to render")
 }
