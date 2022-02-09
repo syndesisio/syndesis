@@ -232,8 +232,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) 
 				continue
 			}
 		}
-
-		addonDir := "assets/addons/" + addonInfo.Name() + "/"
+		addonDir := "assets/addons/" + addonInfo.Name()
 		f, err := generator.Assets.Open(addonDir)
 		if err != nil {
 			a.log.Error(err, "Unsupported addon configured", "addon", addonInfo.Name())
