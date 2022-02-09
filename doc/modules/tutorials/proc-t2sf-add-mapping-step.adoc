@@ -57,7 +57,7 @@ from the Twitter *screenName* field to the Salesforce *Title* field.
 .. In the *Target* search field, enter `*description*`.
 .. Click the
 Salesforce *Description* field to create the mapping.
-. In the upper right, click
+. In the upper left, click
 the grid icon image:images/tutorials/grid.png[title="Grid"] to
 display the list of mappings, which should look like this:
 image:images/tutorials/t2sf-mappings.png[Data Mappings]
