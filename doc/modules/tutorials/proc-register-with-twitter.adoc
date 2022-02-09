@@ -38,24 +38,22 @@ to display the *Consumer API Key* and *Consumer API Secret Key* fields.
 https://developer.twitter.com/apps[Twitter developer account], sign in if you
 need to, and then do the following: 
 .. Click *Projects & Apps*.
-.. On the *Overview* page, scroll down to click *Create an app*. 
+.. On the *Overview* page, scroll down to *STandalone Apps* and then click *Create App*. 
 .. In the *App name* field, enter a name such as *My {prodname} Client*. 
-.. In the *Application description* field, enter a tip such as 
-*For leveraging tweets*. 
-.. Scroll down to *Set up Your App* and then click *App settings*.
-.. Under *User authentication settings*, click *Set up*.
+.. Scroll down to *Setup Your App* and then click *App settings*.
+.. Scroll down to *User authentication settings*, click *Set up*.
 .. Switch on the *OAuth 1.0a* option.
 .. For *App permissions*, select *Read and write and Direct message*.
 .. In the *Callback URLs* field, paste the URL that you copied at the beginning
 of this procedure. It should be something like this: 
 `\https://app-proj912876.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`
-.. In the *Website URL* field, paste the URL again and remove `api/v1/credentials/callback` from the end of the URL.
+.. In the *Website URL* field, paste the URL again and remove `/api/v1/credentials/callback` from the end of the URL.
 +
 You can skip the next few fields.
 .. Click *Save*.
 .. At the top of the page for the app that you just created, click 
 the *Keys and tokens* tab. 
-.. Under *Consumer Keys*, click *View keys*.
+.. Under *Consumer Keys*, click *Regenerate* and then verify that you want to regenerate them.
 .. Copy the API key. 
 . Return to your {prodname} *Settings* page and paste the Twitter
 consumer API key into the {prodname} Twitter *Consumer API Key* field.
