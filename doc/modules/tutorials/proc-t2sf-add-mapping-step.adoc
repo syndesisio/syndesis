@@ -26,22 +26,21 @@ and the *Target* panel on the right displays the Salesforce fields.
 glass image:images/tutorials/magnifying-glass.png[title="Magnifying Glass"]
 to display the search field and enter `*name*`.
 .. Under the `user` folder, click the `name` field and then click the *Create New Mapping* icon.
-.. In the *Mapping Details* panel, in the *Targets* field, type *FirstName* to filter the list of target fields and then select */FirstName*. The data mapper displays a line from the source *name* field to the target *FirstName* field.    
-.. In the *Mapping Details* panel, in the *Targets* field, type *LastName* to filter the list of target fields and then select */LastName*.
+.. In the *Mapping Details* panel, in the *Targets* field, type *LastName* to filter the list of target fields and then select `*/LastName*`. The data mapper displays a line from the source `*name*` field to the target `*LastName*` field.    
+.. In the *Mapping Details* panel, in the *Targets* field, type *FirstName* to filter the list of target fields and then select `*/FirstName*`.
 +                 
 The data mapper displays another line from the Twitter
-*name* field, but this time it goes to the Salesforce *LastName* field.
+`*name*` field, but this time it goes to the Salesforce `*FirstName*` field.
 The blue lines indicate the current focus.
 +
 [NOTE]
 ====
 If you accidentally map the wrong fields then delete the incorrect mapping by clicking the trash can icon in the data mapper’s *Mapping Details* panel.     
 ====
+.. In the *Mapping Details* panel, under *Targets*, make sure that `*LastName*` is assigned index `*#1*` and `*FirstName*` is assigned index `*#2*`. 
 
-. Map the Twitter `screenName` field to the Salesforce
-`Title` field:
-.. In the *Sources* panel, click
-the *screenName* field.
+. Map the Twitter `screenName` field to the Salesforce `Title` field:
+.. In the *Sources* panel, click the *screenName* field.
 .. On the right, at the top of the *Target* panel,
 click the magnifying
 glass image:images/tutorials/magnifying-glass.png[title="Magnifying Glass"]
