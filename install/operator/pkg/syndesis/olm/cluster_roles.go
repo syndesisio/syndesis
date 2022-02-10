@@ -32,10 +32,16 @@ func (c *croles) build() (err error) {
 		return err
 	}
 
+	oauthproxy, err := generator.Render("assets/install/cluster_role_oauthproxy.yml.tmpl", nil)
+	if err != nil {
+		return err
+	}
+
 	pubapi, err := generator.Render("assets/install/cluster_role_public_api.yml.tmpl", nil)
 	if err != nil {
 		return err
 	}
+	objects = append(objects, oauthproxy...)
 	objects = append(objects, pubapi...)
 
 	resources := make([]interface{}, 0)

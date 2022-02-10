@@ -9,6 +9,7 @@ GRANT_USER := ./grant.gen
 GRANT_JAEGER := ./grant-jaeger.gen
 GRANT_KAFKA := ./grant-kafka.gen
 GRANT_OLM := ./grant-olm.gen
+GRANT_OAUTHPROXY := ./grant-oauthproxy.gen
 GRANT_PUBLIC_API := ./grant-public-api.gen
 
 # User customisable variables
@@ -39,6 +40,8 @@ sync:
 	cp $(ASSETS)/install/grant/grant_cluster_role_kafka.yml.tmpl $(GRANT_KAFKA).$(TMPL)
 	sed -i 's/{{ .User }}\|{{.User}}/$(USER_VAR)/' $(GRANT_KAFKA).$(TMPL)
 	sed -i 's/{{ .Namespace }}\|{{.Namespace}}/$(NAMESPACE_VAR)/' $(GRANT_KAFKA).$(TMPL)
+	cp $(ASSETS)/install/grant/grant_cluster_role_oauthproxy.yml.tmpl $(GRANT_OAUTHPROXY).$(TMPL)
+	sed -i 's/{{ .Namespace }}\|{{.Namespace}}/$(NAMESPACE_VAR)/' $(GRANT_OAUTHPROXY).$(TMPL)
 	cp $(ASSETS)/install/grant/grant_cluster_role_olm.yml.tmpl $(GRANT_OLM).$(TMPL)
 	sed -i 's/{{ .Role }}\|{{.Role}}/$(ROLENAME)/' $(GRANT_OLM).$(TMPL)
 	sed -i 's/{{ .User }}\|{{.User}}/$(USER_VAR)/' $(GRANT_OLM).$(TMPL)
@@ -52,7 +55,7 @@ sync:
 # end-sync
 
 init: sync
-	for resource in $(GRANT_USER) $(GRANT_JAEGER) $(GRANT_KAFKA) $(GRANT_OLM) $(GRANT_PUBLIC_API); do \
+	for resource in $(GRANT_USER) $(GRANT_JAEGER) $(GRANT_KAFKA) $(GRANT_OAUTHPROXY) $(GRANT_OLM) $(GRANT_PUBLIC_API); do \
 		cp $${resource}.$(TMPL) $${resource}.$(YAML); \
 		sed -i 's/$(NAMESPACE_VAR)/$(NAMESPACE)/' $${resource}.$(YAML); \
 		sed -i 's/$(USER_VAR)/$(KUBE_USER)/' $${resource}.$(YAML); \

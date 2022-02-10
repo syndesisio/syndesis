@@ -26,9 +26,11 @@ commonLabels:
 resources:
 - ../rbac-role/role.gen.yaml
 - ../rbac-role/cluster-role-kafka.gen.yaml
+- ../rbac-role/cluster-role-oauthproxy.gen.yaml
 - ../rbac-role/cluster-role-olm.gen.yaml
 - ../rbac-role/cluster-role-public-api.gen.yaml
 - ../rbac-grant/grant-kafka.gen.yaml
+- ../rbac-grant/grant-oauthproxy.gen.yaml
 - ../rbac-grant/grant-olm.gen.yaml
 - ../rbac-grant/grant-public-api.gen.yaml
 - ../manager

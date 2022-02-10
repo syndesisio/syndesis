@@ -110,7 +110,7 @@ endif
 #   rather than a downloaded docker image
 #
 dev-operator: kubectl
-	$(MAKE) $(MK_OPTIONS) -C $(MANGER) init
+	$(MAKE) $(MK_OPTIONS) -C $(MANAGER) init
 	$(MAKE) $(MK_OPTIONS) -C dev/operator init
 	#@ Used for development purposes only - allows for a locally compiled operator
 	#@ Must be invoked by <user> previously granted permissions using `KUBE_USER=<user> make setup`

@@ -1,0 +1,10 @@
+# origin-oauth-proxy:4.9 requires permission to read openshift-config-managed namespace
+# https://github.com/syndesisio/syndesis/issues/9898
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: syndesis-read-configmaps
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get","list", "watch"]
