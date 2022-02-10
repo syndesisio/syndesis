@@ -85,6 +85,19 @@ func (o *Grant) grant() error {
 	}
 	resources = append(resources, gr...)
 
+	// Allow syndesis-oauthproxy to read configmaps from openshift-config-managed namespace
+	oauthproxy, err := generator.Render("assets/install/cluster_role_oauthproxy.yml.tmpl", o)
+	if err != nil {
+		return err
+	}
+	resources = append(resources, oauthproxy...)
+
+	groauthproxy, err := generator.Render("assets/install/grant/grant_cluster_role_oauthproxy.yml.tmpl", o)
+	if err != nil {
+		return err
+	}
+	resources = append(resources, groauthproxy...)
+
 	// Allow syndesis-server user to lookup kafka customresources at cluster level
 	kafka, err := generator.Render("assets/install/cluster_role_kafka.yml.tmpl", o)
 	if err != nil {
@@ -144,7 +157,9 @@ func (o *Grant) grant() error {
 
 	client, _ := o.ClientTools().RuntimeClient()
 	for _, res := range resources {
-		res.SetNamespace(o.Namespace)
+		if len(res.GetNamespace()) == 0 {
+			res.SetNamespace(o.Namespace)
+		}
 
 		_, _, err := util.CreateOrUpdate(o.Context, client, &res)
 		if err != nil {

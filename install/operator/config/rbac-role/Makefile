@@ -8,6 +8,7 @@ ROLENAME := syndesis-operator
 ROLE := ./role.gen
 ROLE_JAEGER := ./cluster-role-jaeger.gen
 ROLE_KAFKA := ./cluster-role-kafka.gen
+ROLE_OAUTHPROXY := ./cluster-role-oauthproxy.gen
 ROLE_PUBLIC_API := ./cluster-role-public-api.gen
 ROLE_OLM := ./cluster-role-olm.gen
 
@@ -29,6 +30,7 @@ sync:
 	cp $(ASSETS)/install/cluster_role_jaeger.yml.tmpl $(ROLE_JAEGER).$(TMPL)
 	sed -i '/^{{\|^#\|^$$/d' $(ROLE_JAEGER).$(TMPL)
 	cp $(ASSETS)/install/cluster_role_kafka.yml.tmpl $(ROLE_KAFKA).$(TMPL)
+	cp $(ASSETS)/install/cluster_role_oauthproxy.yml.tmpl $(ROLE_OAUTHPROXY).$(TMPL)
 	cp $(ASSETS)/install/cluster_role_olm.yml.tmpl $(ROLE_OLM).$(TMPL)
 	sed -i '/^{{\|^$$/d' $(ROLE_OLM).$(TMPL)
 	sed -i 's/^- /\n---\n/' $(ROLE_OLM).$(TMPL)
@@ -38,6 +40,6 @@ sync:
 # end-sync
 
 init: sync
-	for resource in $(ROLE) $(ROLE_JAEGER) $(ROLE_KAFKA) $(ROLE_OLM) $(ROLE_PUBLIC_API); do \
+	for resource in $(ROLE) $(ROLE_JAEGER) $(ROLE_KAFKA) $(ROLE_OAUTHPROXY) $(ROLE_OLM) $(ROLE_PUBLIC_API); do \
 		cp $${resource}.$(TMPL) $${resource}.$(YAML); \
 	done

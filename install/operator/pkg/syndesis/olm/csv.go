@@ -234,12 +234,13 @@ func (c *csv) build() (err error) {
 
 	//
 	// Gives syndesis-operator necessary cluster-level privileges,
-	// inc. createing the clusterrolebindings for the operand service accounts
+	// inc. creating the clusterrolebindings for the operand service accounts
 	//
 	if synOpPerm, err := c.installPerm(
 		"syndesis-operator",
 		"assets/install/cluster_role_olm.yml.tmpl",
 		"assets/install/cluster_role_kafka.yml.tmpl",
+		"assets/install/cluster_role_oauthproxy.yml.tmpl",
 		"assets/install/cluster_role_public_api.yml.tmpl"); err == nil {
 		clusterRuleSpecs = append(clusterRuleSpecs, synOpPerm)
 	} else {
