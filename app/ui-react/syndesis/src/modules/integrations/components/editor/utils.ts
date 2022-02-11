@@ -210,7 +210,7 @@ export function toUIIntegrationStepCollection(
           if (DataShapeKinds.ANY === toDataShapeKinds(prevOutDataShape.kind!)) {
             previousStepShouldDefineDataShape = true;
             previousStepShouldDefineDataShapePosition = steps.findIndex(
-              s => s.id === prev.id
+              (s) => s.id === prev.id
             );
           } else if (!isSameDataShape(inputDataShape, prevOutDataShape)) {
             shouldAddDataMapper = true;
@@ -314,7 +314,7 @@ export function mergeConnectionsSources(
   steps: StepKind[]
 ): IUIStep[] {
   return [
-    ...connections.map(connection =>
+    ...connections.map((connection) =>
       toUIStep({
         connection,
         // we copy over the name and description from the connection to be sure to show these instead of the connector's
@@ -324,7 +324,7 @@ export function mergeConnectionsSources(
       } as StepKind)
     ),
     ...extensions.reduce((extentionsByAction, extension) => {
-      (extension.actions || []).forEach(a => {
+      (extension.actions || []).forEach((a) => {
         let properties = {};
         if (
           a.descriptor &&
@@ -356,9 +356,9 @@ export function mergeConnectionsSources(
       });
       return extentionsByAction;
     }, [] as IUIStep[]),
-    ...steps.map(s => toUIStep(s)),
+    ...steps.map((s) => toUIStep(s)),
   ]
-    .filter(s => !!s.uiStepKind) // this should never happen
+    .filter((s) => !!s.uiStepKind) // this should never happen
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
@@ -379,7 +379,7 @@ export function filterStepsByPosition(
     // safety net
     return steps;
   }
-  return steps.filter(step => {
+  return steps.filter((step) => {
     // Hide steps that are marked as such, and specifically the log connection
     if (
       (typeof step.connection !== 'undefined' &&
@@ -473,16 +473,16 @@ export function visibleStepsByPosition(
     position,
     previousSteps.length === 0,
     subsequentSteps.length === 0
-  ).filter(s => {
+  ).filter((s) => {
     if (Array.isArray(s.visible) && s.visible.length > 0) {
-      const matches = s.visible.map(visible =>
+      const matches = s.visible.map((visible) =>
         visible(
           position,
           previousSteps as StepKind[],
           subsequentSteps as StepKind[]
         )
       );
-      return matches.find(m => !m) === undefined;
+      return matches.find((m) => !m) === undefined;
     }
     return true;
   });
@@ -493,7 +493,7 @@ const errorKeysWithDuplicates = (collectedErrors: any[]) => {
 };
 
 const uniqueErrorArray = (arrayParam: any[]) => {
-  return Array.from(new Set(arrayParam.map(err => err.name)));
+  return Array.from(new Set(arrayParam.map((err) => err.name)));
 };
 
 /**
@@ -505,29 +505,29 @@ export function actionsFromFlow(flowSteps: Step[], position: number) {
   // We want all previous steps and this step
   const previousSteps = getPreviousSteps(flowSteps, position + 1);
   return previousSteps
-    .filter(s => typeof s.action !== 'undefined')
-    .filter(s => s.action!.descriptor !== 'undefined')
+    .filter((s) => typeof s.action !== 'undefined')
+    .filter((s) => s.action!.descriptor !== 'undefined')
     .filter(
-      s =>
+      (s) =>
         typeof (s.action!.descriptor! as ExtendedActionDescriptor)
           .standardizedErrors !== 'undefined'
     )
-    .map(s => s.action!);
+    .map((s) => s.action!);
 }
 
 export function collectErrorKeysFromActions(actions: Action[]) {
   const collectedErrors = actions.map(
-    a => (a.descriptor! as ExtendedActionDescriptor).standardizedErrors!
+    (a) => (a.descriptor! as ExtendedActionDescriptor).standardizedErrors!
   );
 
   const standardizedErrors = errorKeysWithDuplicates(collectedErrors);
   const uniqueErrors = uniqueErrorArray(standardizedErrors);
 
   return uniqueErrors
-    .map(uniqueError =>
-      standardizedErrors.find(err => err.name === uniqueError!)
+    .map((uniqueError) =>
+      standardizedErrors.find((err) => err.name === uniqueError!)
     )
-    .map(err => localizeErrorKey(err!));
+    .map((err) => localizeErrorKey(err!));
 }
 
 /**

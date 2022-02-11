@@ -73,11 +73,8 @@ function getStepChildren(
   }
 }
 
-function getWarningTitle(
-  step: IUIIntegrationStep,
-) {
-  if (step.previousStepShouldDefineDataShape
-    || step.shouldAddDataMapper) {
+function getWarningTitle(step: IUIIntegrationStep) {
+  if (step.previousStepShouldDefineDataShape || step.shouldAddDataMapper) {
     return 'Data Type Mismatch';
   }
 
@@ -91,15 +88,13 @@ function getWarningTitle(
 function getWarningMessage(
   step: IUIIntegrationStep,
   idx: number,
-  props: IIntegrationEditorStepAdderProps,
+  props: IIntegrationEditorStepAdderProps
 ) {
   if (step.previousStepShouldDefineDataShape) {
     return (
       <>
         <Link
-          data-testid={
-            'integration-editor-step-adder-define-data-type-link'
-          }
+          data-testid={'integration-editor-step-adder-define-data-type-link'}
           to={props.gotoDescribeDataHref(
             step.previousStepShouldDefineDataShapePosition!
           )}
@@ -131,13 +126,8 @@ function getWarningMessage(
     return (
       <>
         <Link
-          data-testid={
-            'integration-editor-step-adder-add-default-flow-link'
-          }
-          to={props.configureStepHref(
-            idx,
-            props.steps[idx]
-          )}
+          data-testid={'integration-editor-step-adder-add-default-flow-link'}
+          to={props.configureStepHref(idx, props.steps[idx])}
         >
           Default flow required
         </Link>{' '}
@@ -158,13 +148,11 @@ function getWarningMessage(
  * @see [configureStepHref]{@link IIntegrationEditorStepAdderProps#configureStepHref}
  *
  */
-export class IntegrationEditorStepAdder extends React.Component<
-  IIntegrationEditorStepAdderProps
-> {
+export class IntegrationEditorStepAdder extends React.Component<IIntegrationEditorStepAdderProps> {
   public render() {
     return (
       <Translation ns={['integrations', 'shared']}>
-        {t => (
+        {(t) => (
           <PageSection>
             <IntegrationEditorStepsList>
               {toUIIntegrationStepCollection(
@@ -175,7 +163,9 @@ export class IntegrationEditorStepAdder extends React.Component<
                   <React.Fragment key={idx}>
                     <IntegrationEditorStepsListItem
                       children={children}
-                      stepName={`${idx + 1}. ${(s.action && s.action.name) || s.name!}`}
+                      stepName={`${idx + 1}. ${
+                        (s.action && s.action.name) || s.name!
+                      }`}
                       stepDescription={
                         (s.action! && s.action!.description) || ''
                       }
@@ -195,11 +185,7 @@ export class IntegrationEditorStepAdder extends React.Component<
                         s.previousStepShouldDefineDataShape
                       }
                       i18nWarningTitle={getWarningTitle(s)}
-                      i18nWarningMessage={getWarningMessage(
-                        s,
-                        idx,
-                        this.props
-                      )}
+                      i18nWarningMessage={getWarningMessage(s, idx, this.props)}
                       actions={
                         <>
                           {!s.restrictedDelete && (

@@ -85,7 +85,7 @@ export function toDataShapeKinds(
  *
  */
 export function getEmptyIntegration(): Integration {
-  return produce(NEW_INTEGRATION, draft => {
+  return produce(NEW_INTEGRATION, (draft) => {
     draft.flows = [
       {
         id: generateKey(),
@@ -100,8 +100,8 @@ export function setIntegrationProperties(
   integration: Integration,
   properties: StringMap<any>
 ): Integration {
-  return produce(integration, nextIntegration => {
-    Object.keys(properties).forEach(k => {
+  return produce(integration, (nextIntegration) => {
+    Object.keys(properties).forEach((k) => {
       nextIntegration[k] = properties[k];
     });
   });
@@ -191,7 +191,7 @@ function validateFlowSteps(flow: Flow) {
     ...{
       steps: (flow.steps || [])
         .map(setStepId)
-        .filter(s => typeof s.stepKind !== 'undefined'),
+        .filter((s) => typeof s.stepKind !== 'undefined'),
     },
   };
 }
@@ -211,13 +211,13 @@ function validateFlows(flows: Flow[] = []) {
  */
 function buildTags(flows: Flow[] = [], tags: string[] = []) {
   const connectorIds = ([] as string[]).concat(
-    ...flows.map(f =>
+    ...flows.map((f) =>
       f
         .steps!.filter(
-          step =>
+          (step) =>
             step.stepKind === ENDPOINT && typeof step.connection !== 'undefined'
         )
-        .map(step => step.connection!.connectorId!)
+        .map((step) => step.connection!.connectorId!)
     )
   );
   return Array.from(new Set([...tags, ...connectorIds]));
@@ -646,8 +646,8 @@ export async function sanitizeFlow(
     new Set([
       ...(flow.tags || []),
       ...flow.steps
-        .filter(s => s.connection && s.connection.id)
-        .map(s => s.connection!.id),
+        .filter((s) => s.connection && s.connection.id)
+        .map((s) => s.connection!.id),
     ])
   ) as string[];
   // Ensure the type is set properly on the flow, if it's not set we assume it's a primary flow
@@ -688,7 +688,7 @@ export function getFlow(integration: Integration, flowId: string) {
   if (!integration || !integration.flows || !flowId) {
     return undefined;
   }
-  return integration.flows.find(flow => flow.id === flowId);
+  return integration.flows.find((flow) => flow.id === flowId);
 }
 
 /**
@@ -706,7 +706,7 @@ export async function setFlow(
   if (getFlow(integration, flow.id!)) {
     const updatedIntegration = {
       ...integration,
-      flows: integration.flows!.map(f => {
+      flows: integration.flows!.map((f) => {
         if (f.id === flow.id) {
           return flow;
         }
@@ -737,7 +737,7 @@ export function reconcileIntegration(
   let reconciledIntegration = { ...integration };
 
   const conditionalFlowsSteps = updatedFlow.steps!.filter(
-    step => step.stepKind === CHOICE
+    (step) => step.stepKind === CHOICE
   );
   for (const cfStep of conditionalFlowsSteps) {
     reconciledIntegration = reconcileConditionalFlows(
@@ -773,7 +773,7 @@ export function reconcileConditionalFlows(
     integration.flows!,
     stepId
   );
-  const updatedFlows = alternateFlows.map(flow => {
+  const updatedFlows = alternateFlows.map((flow) => {
     const startFlowStep = setDataShapeOnStep(
       { ...flow.steps![0] },
       flowStartDataShape,
@@ -801,7 +801,7 @@ export function reconcileConditionalFlows(
  */
 export function getFlowsWithoutLinkedStepId(flows: Flow[], stepId: string) {
   return flows.filter(
-    flow =>
+    (flow) =>
       flow.type === FlowType.PRIMARY ||
       flow.type === FlowType.API_PROVIDER ||
       getMetadataValue(STEP_ID_METADATA_KEY, flow.metadata) !== stepId
@@ -816,7 +816,7 @@ export function getFlowsWithoutLinkedStepId(flows: Flow[], stepId: string) {
  */
 export function getFlowsWithLinkedStepId(flows: Flow[], stepId: string) {
   return flows.filter(
-    flow =>
+    (flow) =>
       flow.type === FlowType.ALTERNATE &&
       getMetadataValue(STEP_ID_METADATA_KEY, flow.metadata) === stepId
   );
@@ -953,7 +953,7 @@ export function getChoiceConfigMode(step: StepKind) {
     step.configuredProperties!.flows.length > 0
   ) {
     const flows = JSON.parse(step.configuredProperties!.flows) as any[];
-    if (flows.find(flow => flow.condition!.length > 0)) {
+    if (flows.find((flow) => flow.condition!.length > 0)) {
       return 'advanced';
     } else {
       return 'basic';
@@ -1217,7 +1217,7 @@ export function getSubsequentConnections(
 ) {
   const steps = getIntegrationSubsequentSteps(integration, flowId, position);
   if (steps) {
-    return steps.filter(s => s.stepKind === ENDPOINT);
+    return steps.filter((s) => s.stepKind === ENDPOINT);
   }
   // TODO this seems like an odd thing to do, but preserving semantics for now
   return null;
@@ -1236,7 +1236,7 @@ export function getPreviousConnections(
 ) {
   const steps = getPreviousIntegrationSteps(integration, flowId, position);
   if (steps) {
-    return steps.filter(s => s.stepKind === ENDPOINT);
+    return steps.filter((s) => s.stepKind === ENDPOINT);
   }
   // TODO this seems like an odd thing to do, but preserving semantics for now
   return null;
@@ -1288,7 +1288,7 @@ export function getSubsequentIntegrationStepsWithDataShape(
       .map((step, index) => {
         return { step, index: position + index };
       })
-      .filter(indexedStep => hasDataShape(indexedStep.step, true));
+      .filter((indexedStep) => hasDataShape(indexedStep.step, true));
   }
   // TODO preserving semantics for now
   return [];
@@ -1352,7 +1352,7 @@ export function getPreviousStepsWithDataShape(
       .map((step, index) => {
         return { step, index };
       })
-      .filter(indexedStep => hasDataShape(indexedStep.step, false));
+      .filter((indexedStep) => hasDataShape(indexedStep.step, false));
   }
   // TODO preserving semantics for now
   return [];
@@ -1508,7 +1508,7 @@ export function getNextAggregateStep(
 ): Step | undefined {
   const subsequentSteps = getSubsequentSteps(steps, position);
   if (subsequentSteps && subsequentSteps.length) {
-    return subsequentSteps.filter(s => s.stepKind === AGGREGATE)[0];
+    return subsequentSteps.filter((s) => s.stepKind === AGGREGATE)[0];
   }
   return undefined;
 }
@@ -1619,7 +1619,7 @@ export function createConditionalFlowEnd(connection: Connection): StepKind {
  */
 function getConnectorAction(id: string, connection: Connection): Action {
   return connection!.connector!.actions!.find(
-    action => action.id === id
+    (action) => action.id === id
   ) as Action;
 }
 
@@ -1751,9 +1751,9 @@ export function getConditionalFlowGroups(integration: IntegrationOverview) {
   ];
   // potentially we have many flows that belong to different steps, so group flows by step id
   const flowGroups: Array<{ id: string; flows: Flow[] }> = [];
-  conditionalFlows.forEach(flow => {
+  conditionalFlows.forEach((flow) => {
     const stepId = getMetadataValue<string>('stepId', flow.metadata);
-    const flowGroup = flowGroups.find(group => group.id === stepId);
+    const flowGroup = flowGroups.find((group) => group.id === stepId);
     if (flowGroup) {
       flowGroup.flows.push(flow);
     } else {
@@ -1769,7 +1769,7 @@ export function getConditionalFlowGroupsFor(
 ) {
   const flowGroups = getConditionalFlowGroups(integration);
   return flowGroups.filter(
-    group => getPrimaryFlowId(integration, group.flows[0]) === primaryId
+    (group) => getPrimaryFlowId(integration, group.flows[0]) === primaryId
   );
 }
 
