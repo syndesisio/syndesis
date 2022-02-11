@@ -8,6 +8,9 @@ import {
 import produce, { isDraft } from 'immer';
 import { DataShapeKinds } from '../../constants';
 import {
+  _parametersDiffer,
+  _shapesDiffer,
+  applyUpdatedStep,
   getFlow,
   getSteps,
   hasDataShape,
@@ -204,5 +207,79 @@ describe('integration functions', () => {
     expect(customIntegration.flows![0].steps).toHaveLength(2);
     expect(newInt.flows![0].steps).toHaveLength(2);
     expect(isDraft(newInt)).toBeFalsy();
+  });
+
+  test.each`
+    current           | updated           | expected
+    ${undefined}      | ${undefined}      | ${false}
+    ${undefined}      | ${{ a: 1 }}       | ${true}
+    ${{ a: 1 }}       | ${undefined}      | ${true}
+    ${{ a: 1 }}       | ${{ a: 1 }}       | ${false}
+    ${{ a: 1 }}       | ${{ a: 2 }}       | ${true}
+    ${{ a: 1 }}       | ${{ b: 1 }}       | ${true}
+    ${{ a: 1, b: 2 }} | ${{ b: 2, a: 1 }} | ${false}
+  `(
+    '$current vs $updated data shape parameter difference should be asserted as $expected',
+    ({ current, updated, expected }) => {
+      expect(_parametersDiffer(current, updated)).toBe(expected);
+    }
+  );
+
+  test.each`
+    current                                          | updated                                          | expected
+    ${undefined}                                     | ${undefined}                                     | ${false}
+    ${undefined}                                     | ${{ kind: 'json-instance' }}                     | ${true}
+    ${{ kind: 'json-instance' }}                     | ${undefined}                                     | ${true}
+    ${{ kind: 'json-instance' }}                     | ${{ kind: 'json-instance' }}                     | ${false}
+    ${{ kind: 'json-instance' }}                     | ${{ kind: 'json-schema' }}                       | ${true}
+    ${{ kind: 'json-instance', specification: 'x' }} | ${{ kind: 'json-schema' }}                       | ${true}
+    ${{ kind: 'json-instance', specification: 'x' }} | ${{ kind: 'json-instance', specification: 'y' }} | ${true}
+    ${{ kind: 'json-instance' }}                     | ${{ kind: 'json-instance', specification: 'y' }} | ${true}
+    ${{ kind: 'json-instance', specification: 'x' }} | ${{ kind: 'json-instance', specification: 'x' }} | ${false}
+  `(
+    '$current vs $updated data shape difference should be asserted as $expected',
+    ({ current, updated, expected }) => {
+      expect(_shapesDiffer(current, updated)).toBe(expected);
+    }
+  );
+
+  it('should set outputUpdatedAt if the output datashape changed', () => {
+    const flow: Flow = {
+      name: 'flow1',
+      steps: [
+        {
+          action: {
+            descriptor: {
+              outputDataShape: {
+                kind: 'json-schema',
+                name: 'output',
+                specification: 'a',
+              },
+            },
+            name: 'action',
+          },
+          metadata: {
+            outputUpdatedAt: '123',
+          },
+        },
+      ],
+    };
+    const step: Step = {
+      action: {
+        descriptor: {
+          outputDataShape: {
+            kind: 'json-schema',
+            name: 'output',
+            specification: 'b',
+          },
+        },
+        name: 'action',
+      },
+    };
+    const updated = applyUpdatedStep(flow, step, 0);
+    expect(
+      updated.steps![0].metadata!.outputUpdatedAt >
+        flow.steps![0].metadata!.outputUpdatedAt
+    ).toBeTruthy();
   });
 });

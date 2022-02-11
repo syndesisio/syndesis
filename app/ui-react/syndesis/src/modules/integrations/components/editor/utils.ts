@@ -168,6 +168,7 @@ export function toUIIntegrationStepCollection(
     let previousStepShouldDefineDataShapePosition: number | undefined;
     let shouldAddDataMapper = false;
     let shouldAddDefaultFlow = false;
+    let shouldEditDataMapper = false;
     let restrictedDelete = false;
     if (
       step.connection &&
@@ -230,6 +231,28 @@ export function toUIIntegrationStepCollection(
       }
     }
 
+    if (step.stepKind === 'mapper') {
+      shouldEditDataMapper =
+        // if prevous's steps output differ
+        steps
+          .slice(0, position)
+          .find(
+            (s) =>
+              (typeof step.metadata.updatedAt === 'undefined' &&
+                typeof s.metadata.outputUpdatedAt !== 'undefined') ||
+              s.metadata.outputUpdatedAt > step.metadata.updatedAt
+          ) !== undefined ||
+        // if subsequent's steps input differ
+        steps
+          .slice(position)
+          .find(
+            (s) =>
+              (typeof step.metadata.updatedAt === 'undefined' &&
+                typeof s.metadata.inputUpdatedAt !== 'undefined') ||
+              s.metadata.inputUpdatedAt > step.metadata.updatedAt
+          ) !== undefined;
+    }
+
     return {
       ...step,
       isUnclosedSplit,
@@ -240,6 +263,7 @@ export function toUIIntegrationStepCollection(
       shape,
       shouldAddDataMapper,
       shouldAddDefaultFlow,
+      shouldEditDataMapper,
     };
   });
 }

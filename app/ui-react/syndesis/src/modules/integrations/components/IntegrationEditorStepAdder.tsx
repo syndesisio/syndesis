@@ -74,7 +74,11 @@ function getStepChildren(
 }
 
 function getWarningTitle(step: IUIIntegrationStep) {
-  if (step.previousStepShouldDefineDataShape || step.shouldAddDataMapper) {
+  if (
+    step.previousStepShouldDefineDataShape ||
+    step.shouldAddDataMapper ||
+    step.shouldEditDataMapper
+  ) {
     return 'Data Type Mismatch';
   }
 
@@ -136,6 +140,20 @@ function getWarningMessage(
     );
   }
 
+  if (step.shouldEditDataMapper) {
+    return (
+      <>
+        <Link
+          data-testid={'integration-editor-step-adder-edit-mapping'}
+          to={props.configureStepHref(idx, props.steps[idx])}
+        >
+          Edit mapping step
+        </Link>{' '}
+        to update the mapping with the data shape changes.
+      </>
+    );
+  }
+
   return <></>;
 }
 
@@ -182,7 +200,8 @@ export class IntegrationEditorStepAdder extends React.Component<IIntegrationEdit
                       showWarning={
                         s.shouldAddDataMapper ||
                         s.shouldAddDefaultFlow ||
-                        s.previousStepShouldDefineDataShape
+                        s.previousStepShouldDefineDataShape ||
+                        s.shouldEditDataMapper
                       }
                       i18nWarningTitle={getWarningTitle(s)}
                       i18nWarningMessage={getWarningMessage(s, idx, this.props)}

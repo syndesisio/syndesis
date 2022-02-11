@@ -885,6 +885,54 @@ export function setStepInFlow(
   );
 }
 
+export function _parametersDiffer(
+  current?: { [name: string]: string },
+  updated?: { [name: string]: string }
+): boolean {
+  if (typeof current === 'undefined') {
+    if (typeof updated === 'undefined') {
+      return false;
+    }
+    return true;
+  } else if (typeof updated === 'undefined') {
+    return true;
+  }
+
+  const currentKeys = Object.keys(current);
+  const updatedKeys = Object.keys(updated!);
+  if (currentKeys.length !== updatedKeys.length) {
+    return true;
+  }
+
+  for (const k of currentKeys) {
+    if (current[k] !== updated![k]) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+export function _shapesDiffer(
+  current?: DataShape,
+  updated?: DataShape
+): boolean {
+  if (typeof current === 'undefined') {
+    if (typeof updated === 'undefined') {
+      return false;
+    }
+    return true;
+  } else if (typeof updated === 'undefined') {
+    return true;
+  }
+
+  return (
+    current.kind !== updated?.kind ||
+    current.specification !== updated?.specification ||
+    _parametersDiffer(current.parameters, updated?.parameters)
+  );
+}
+
 /**
  * Returns a new flow object with the supplied step set at the given position
  * @param flow
@@ -896,7 +944,49 @@ export function applyUpdatedStep(flow: Flow, step: Step, position: number) {
   if (typeof step.id === 'undefined') {
     step.id = generateKey();
   }
-  steps[position] = { ...step };
+
+  // if the previous input data shape differs from the updated data shape
+  // update the inputUpdatedAt, don't do this for the mapping step it has
+  // updatedAt metadata property
+  let inputUpdatedAt = steps[position].metadata?.inputUpdatedAt as string;
+  const currentInputDataShape =
+    steps[position].action?.descriptor?.inputDataShape;
+  const updatedInputDataShape = step.action?.descriptor?.inputDataShape;
+  if (
+    step.stepKind !== 'mapper' &&
+    _shapesDiffer(currentInputDataShape, updatedInputDataShape)
+  ) {
+    inputUpdatedAt = new Date().getTime().toString(10);
+  }
+
+  // if the previous output data shape differs from the updated data shape
+  // update the outputUpdatedAt, don't do this for the mapping step it has
+  // updatedAt metadata property
+  let outputUpdatedAt = steps[position].metadata?.outputUpdatedAt as string;
+  const currentOutputDataShape =
+    steps[position].action?.descriptor?.outputDataShape;
+  const updatedOutputDataShape = step.action?.descriptor?.outputDataShape;
+  if (
+    step.stepKind !== 'mapper' &&
+    _shapesDiffer(currentOutputDataShape, updatedOutputDataShape)
+  ) {
+    outputUpdatedAt = new Date().getTime().toString(10);
+  }
+
+  // for mapping step update the updatedAt metadata property
+  const metadata: { [name: string]: string } = {
+    ...step.metadata,
+    inputUpdatedAt,
+    outputUpdatedAt,
+  };
+  if (step.stepKind === 'mapper') {
+    metadata.updatedAt = new Date().getTime().toString(10);
+  }
+
+  steps[position] = {
+    ...step,
+    metadata,
+  };
   return { ...flow!, steps };
 }
 
