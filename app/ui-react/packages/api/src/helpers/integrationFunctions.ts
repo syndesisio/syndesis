@@ -35,6 +35,10 @@ import {
   STEP_ID_METADATA_KEY,
 } from '../constants';
 
+function timestampStr(): string {
+  return new Date().getTime().toString(10);
+}
+
 export function toDataShapeKindType(kind?: DataShapeKinds): DataShapeKindType {
   return kind!.toLowerCase() as DataShapeKindType;
 }
@@ -929,7 +933,7 @@ export function applyUpdatedStep(flow: Flow, step: Step, position: number) {
     step.stepKind !== 'mapper' &&
     _shapesDiffer(currentInputDataShape, updatedInputDataShape)
   ) {
-    inputUpdatedAt = new Date().getTime().toString(10);
+    inputUpdatedAt = timestampStr();
   }
 
   // if the previous output data shape differs from the updated data shape
@@ -943,7 +947,7 @@ export function applyUpdatedStep(flow: Flow, step: Step, position: number) {
     step.stepKind !== 'mapper' &&
     _shapesDiffer(currentOutputDataShape, updatedOutputDataShape)
   ) {
-    outputUpdatedAt = new Date().getTime().toString(10);
+    outputUpdatedAt = timestampStr();
   }
 
   // for mapping step update the updatedAt metadata property
@@ -953,7 +957,7 @@ export function applyUpdatedStep(flow: Flow, step: Step, position: number) {
     outputUpdatedAt,
   };
   if (step.stepKind === 'mapper') {
-    metadata.updatedAt = new Date().getTime().toString(10);
+    metadata.updatedAt = timestampStr();
   }
 
   steps[position] = {
