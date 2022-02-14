@@ -1,4 +1,4 @@
-FROM fabric8/s2i-java:3.0-java8
+FROM ${java.base.image}
 
 ENV AB_JOLOKIA_HTTPS="true"
 

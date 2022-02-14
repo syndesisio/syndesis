@@ -47,6 +47,7 @@
     <image.server>syndesis/syndesis-server:%l</image.server>
     <image.meta>syndesis/syndesis-meta:%l</image.meta>
     <image.ui>syndesis/syndesis-ui:%l</image.ui>
+    <java.base.image>registry.access.redhat.com/ubi8/openjdk-8</java.base.image>
 
     <jkube.maven.plugin.version>1.6.0</jkube.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>

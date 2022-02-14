@@ -1095,6 +1095,15 @@
                   <goal>build</goal>
                 </goals>
                 <phase>package</phase>
+                <configuration>
+                  <generator>
+                    <config>
+                      <spring-boot>
+                        <from>${java.base.image}</from>
+                      </spring-boot>
+                    </config>
+                  </generator>
+                </configuration>
               </execution>
             </executions>
           </plugin>
@@ -1126,6 +1135,15 @@
                   <goal>build</goal>
                 </goals>
                 <phase>package</phase>
+                <configuration>
+                  <generator>
+                    <config>
+                      <spring-boot>
+                        <from>${java.base.image}</from>
+                      </spring-boot>
+                    </config>
+                  </generator>
+                </configuration>
               </execution>
             </executions>
           </plugin>
