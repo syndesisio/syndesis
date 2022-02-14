@@ -8,6 +8,8 @@ import (
 
 	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/olm"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
@@ -39,7 +41,7 @@ func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *synapi.Syndes
 		// Everything fine
 		return nil
 	} else {
-		return a.setPhaseToUpgrading(ctx, syndesis)
+		return a.setPhaseToUpgrading(ctx, syndesis, operatorNamespace)
 	}
 }
 
@@ -48,7 +50,19 @@ func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *synapi.Syndes
  * needed to avoid race conditions where k8s wasn't able to update or
  * kubernetes didn't change the object yet
  */
-func (a checkUpdatesAction) setPhaseToUpgrading(ctx context.Context, syndesis *synapi.Syndesis) (err error) {
+func (a checkUpdatesAction) setPhaseToUpgrading(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) (err error) {
+
+	// Declare an upgradeable Condition as false if applicable
+	state := olm.ConditionState{
+		Status:  metav1.ConditionFalse,
+		Reason:  "Upgrading",
+		Message: "Operator is upgrading the components",
+	}
+	err = olm.SetUpgradeCondition(ctx, a.clientTools, operatorNamespace, state)
+	if err != nil {
+		a.log.Error(err, "Failed to set the upgrade condition on the operator")
+	}
+
 	target := syndesis.DeepCopy()
 	target.Status.Phase = synapi.SyndesisPhaseUpgrading
 	target.Status.TargetVersion = a.operatorVersion

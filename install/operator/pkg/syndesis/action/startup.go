@@ -8,6 +8,7 @@ import (
 	synpkg "github.com/syndesisio/syndesis/install/operator/pkg"
 	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/olm"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -71,6 +72,17 @@ func (a *startupAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, 
 	}
 
 	if ready {
+		// Declare the operator upgradeable, if applicable
+		state := olm.ConditionState{
+			Status:  metav1.ConditionTrue,
+			Reason:  "Started",
+			Message: "Operator and components have been successfully started",
+		}
+		err = olm.SetUpgradeCondition(ctx, a.clientTools, operatorNamespace, state)
+		if err != nil {
+			a.log.Error(err, "Failed to set the upgrade condition on the operator")
+		}
+
 		target := syndesis.DeepCopy()
 		target.Status.Phase = synapi.SyndesisPhaseInstalled
 		target.Status.Reason = synapi.SyndesisStatusReasonMissing

@@ -22,6 +22,7 @@ import (
 	olmapiv1 "github.com/operator-framework/api/pkg/operators/v1"
 	olmapiv1alpha1 "github.com/operator-framework/api/pkg/operators/v1alpha1"
 	olmapiv1alpha2 "github.com/operator-framework/api/pkg/operators/v1alpha2"
+	olmapiv2 "github.com/operator-framework/api/pkg/operators/v2"
 	olmcli "github.com/operator-framework/operator-lifecycle-manager/pkg/api/client/clientset/versioned"
 	olmpkgsvr "github.com/operator-framework/operator-lifecycle-manager/pkg/package-server/apis/operators/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -74,6 +75,7 @@ func (ck *ClientTools) GetScheme() *runtime.Scheme {
 		olmapiv1alpha2.SchemeBuilder.AddToScheme(ck.scheme)
 		olmapiv1alpha1.SchemeBuilder.AddToScheme(ck.scheme)
 		olmapiv1.SchemeBuilder.AddToScheme(ck.scheme)
+		olmapiv2.AddToScheme(ck.scheme)
 		olmpkgsvr.SchemeBuilder.AddToScheme(ck.scheme)
 		projectv1.AddToScheme(ck.scheme)
 	}

@@ -24,6 +24,9 @@ import (
 	"time"
 
 	osappsv1 "github.com/openshift/api/apps/v1"
+	olmapiv1 "github.com/operator-framework/api/pkg/operators/v1"
+	olmapiv1alpha1 "github.com/operator-framework/api/pkg/operators/v1alpha1"
+	olmapiv2 "github.com/operator-framework/api/pkg/operators/v2"
 	olmcli "github.com/operator-framework/operator-lifecycle-manager/pkg/api/client/clientset/versioned"
 	olmfake "github.com/operator-framework/operator-lifecycle-manager/pkg/api/client/clientset/versioned/fake"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
@@ -40,6 +43,15 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	rtfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
+
+func CreateScheme() *runtime.Scheme {
+	scheme := scheme.Scheme
+	osappsv1.AddToScheme(scheme)
+	olmapiv1.AddToScheme(scheme)
+	olmapiv2.AddToScheme(scheme)
+	olmapiv1alpha1.AddToScheme(scheme)
+	return scheme
+}
 
 //
 // A fake API client that supports all required api
