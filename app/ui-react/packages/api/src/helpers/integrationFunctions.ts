@@ -1047,9 +1047,13 @@ export function insertStepAfter(steps: Step[], step: Step, position: number) {
  * @param position
  */
 export function insertStepBefore(steps: Step[], step: Step, position: number) {
+  const stepToInsert = { ...step };
+  if (step.stepKind === 'mapper') {
+    stepToInsert.metadata = { ...step.metadata, updatedAt: timestampStr() };
+  }
   return ([] as Step[]).concat(
     ...steps.slice(0, position),
-    step,
+    stepToInsert,
     ...steps.slice(position)
   );
 }
