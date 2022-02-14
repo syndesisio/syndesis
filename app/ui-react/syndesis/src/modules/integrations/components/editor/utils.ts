@@ -229,7 +229,16 @@ export function toUIIntegrationStepCollection(
             previousStepShouldDefineDataShapePosition = steps.findIndex(
               (s) => s.id === prev.id
             );
-          } else if (!isSameDataShape(inputDataShape, prevOutDataShape)) {
+          } else if (
+            !isSameDataShape(inputDataShape, prevOutDataShape) &&
+            !(
+              prev.stepKind === 'mapper' &&
+              isMappingOutdated(
+                prev.metadata?.updatedAt,
+                step.metadata?.inputUpdatedAt
+              )
+            )
+          ) {
             shouldAddDataMapper = true;
           }
         }
