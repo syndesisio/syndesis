@@ -267,19 +267,44 @@ build_image()
 }
 
 openapi_gen() {
-    if hash openapi-gen 2>/dev/null; then
-        openapi-gen --logtostderr=true -o "" \
-            -i ./pkg/apis/syndesis/v1alpha1 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1alpha1
-
-        openapi-gen --logtostderr=true -o "" \
-            -i ./pkg/apis/syndesis/v1beta1 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta1
-
-        openapi-gen --logtostderr=true -o "" \
-            -i ./pkg/apis/syndesis/v1beta2 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta2
-
-        openapi-gen --logtostderr=true -o "" \
-            -i ./pkg/apis/syndesis/v1beta3 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta3
+    if ! command -v openapi-gen &> /dev/null
+    then
+        echo "Downloading and installing openapi-gen ..."
+        go install k8s.io/kube-openapi/cmd/openapi-gen@release-1.22
+        if [ $? != 0 ]; then
+            echo "Error: Failed to install openapi-gen"
+            exit 1
+        fi
     else
-        echo "skipping go openapi generation"
+        echo "Warning: openapi-gen already installed but cannot guarantee if its version is compatible."
+        echo "         To ensure compatibility, please set aside the current version."
+    fi
+
+    openapi-gen --logtostderr=true -o "" \
+        -i ./pkg/apis/syndesis/v1alpha1 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1alpha1
+    if [ $? != 0 ]; then
+        echo "Error: openapi-gen failed to generate the API"
+        exit 1
+    fi
+
+    openapi-gen --logtostderr=true -o "" \
+        -i ./pkg/apis/syndesis/v1beta1 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta1
+    if [ $? != 0 ]; then
+        echo "Error: openapi-gen failed to generate the API"
+        exit 1
+    fi
+
+    openapi-gen --logtostderr=true -o "" \
+        -i ./pkg/apis/syndesis/v1beta2 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta2
+    if [ $? != 0 ]; then
+        echo "Error: openapi-gen failed to generate the API"
+        exit 1
+    fi
+
+    openapi-gen --logtostderr=true -o "" \
+        -i ./pkg/apis/syndesis/v1beta3 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta3
+    if [ $? != 0 ]; then
+        echo "Error: openapi-gen failed to generate the API"
+        exit 1
     fi
 }

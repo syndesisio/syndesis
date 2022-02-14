@@ -23,8 +23,8 @@ limitations under the License.
 package v1beta3
 
 import (
-	spec "github.com/go-openapi/spec"
 	common "k8s.io/kube-openapi/pkg/common"
+	spec "k8s.io/kube-openapi/pkg/validation/spec"
 )
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
@@ -44,37 +44,44 @@ func schema_pkg_apis_syndesis_v1beta3_ComponentsSpec(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"oauth": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.OauthConfiguration"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.OauthConfiguration"),
 						},
 					},
 					"server": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.ServerConfiguration"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.ServerConfiguration"),
 						},
 					},
 					"meta": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.MetaConfiguration"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.MetaConfiguration"),
 						},
 					},
 					"database": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.DatabaseConfiguration"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.DatabaseConfiguration"),
 						},
 					},
 					"prometheus": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.PrometheusConfiguration"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.PrometheusConfiguration"),
 						},
 					},
 					"grafana": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.GrafanaConfiguration"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.GrafanaConfiguration"),
 						},
 					},
 					"upgrade": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.UpgradeConfiguration"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.UpgradeConfiguration"),
 						},
 					},
 				},
@@ -108,17 +115,20 @@ func schema_pkg_apis_syndesis_v1beta3_Syndesis(ref common.ReferenceCallback) com
 					},
 					"metadata": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
 						},
 					},
 					"spec": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.SyndesisSpec"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.SyndesisSpec"),
 						},
 					},
 					"status": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.SyndesisStatus"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.SyndesisStatus"),
 						},
 					},
 				},
@@ -139,6 +149,7 @@ func schema_pkg_apis_syndesis_v1beta3_SyndesisSpec(ref common.ReferenceCallback)
 					"backup": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Schedule backup",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.BackupConfig"),
 						},
 					},
@@ -149,22 +160,17 @@ func schema_pkg_apis_syndesis_v1beta3_SyndesisSpec(ref common.ReferenceCallback)
 							Format:      "",
 						},
 					},
-					"demoData": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Enable SampleDB and demo data for Syndesis",
-							Type:        []string{"boolean"},
-							Format:      "",
-						},
-					},
 					"components": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Components is used to configure all the core components of Syndesis",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.ComponentsSpec"),
 						},
 					},
 					"addons": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Optional add on features that can be enabled.",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.AddonsSpec"),
 						},
 					},
@@ -178,12 +184,14 @@ func schema_pkg_apis_syndesis_v1beta3_SyndesisSpec(ref common.ReferenceCallback)
 					"infraScheduling": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Configuration of Affinity and Toleration for infrastructure component pods",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.SchedulingSpec"),
 						},
 					},
 					"integrationScheduling": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Configuration of Affinity and Toleration for integrations pods",
+							Default:     map[string]interface{}{},
 							Ref:         ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.SchedulingSpec"),
 						},
 					},
@@ -204,19 +212,22 @@ func schema_pkg_apis_syndesis_v1beta3_SyndesisStatus(ref common.ReferenceCallbac
 				Properties: map[string]spec.Schema{
 					"phase": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "The phase the operator has reached, eg. INSTALLED, STARTING",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"upgradeAttempts": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"integer"},
-							Format: "int32",
+							Description: "A record of the number of times and upgrade has been attempted",
+							Type:        []string{"integer"},
+							Format:      "int32",
 						},
 					},
 					"lastUpgradeFailure": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+							Description: "A record of the time of the last upgrade failure",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
 						},
 					},
 					"forceUpgrade": {
@@ -227,20 +238,23 @@ func schema_pkg_apis_syndesis_v1beta3_SyndesisStatus(ref common.ReferenceCallbac
 					},
 					"reason": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Reason if the installation or upgrade failed",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"description": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Current description of where the installation or upgrade has reached",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"version": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "The currently installed version of Syndesis",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"targetVersion": {
@@ -251,7 +265,8 @@ func schema_pkg_apis_syndesis_v1beta3_SyndesisStatus(ref common.ReferenceCallbac
 					},
 					"backup": {
 						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.BackupStatus"),
+							Default: map[string]interface{}{},
+							Ref:     ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3.BackupStatus"),
 						},
 					},
 				},
