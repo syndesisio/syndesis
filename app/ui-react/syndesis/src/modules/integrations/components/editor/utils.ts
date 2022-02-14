@@ -162,6 +162,20 @@ export function isSameDataShape(one: DataShape, other: DataShape): boolean {
   );
 }
 
+function isMappingOutdated(
+  mappingUpdatedAtStr: string | undefined,
+  stepUpdatedAtStr: string | undefined
+): boolean {
+  const mappingUpdatedAt = parseInt(mappingUpdatedAtStr || '', 10);
+  const stepUpdatedAt = parseInt(stepUpdatedAtStr || '', 10);
+  if (isNaN(mappingUpdatedAt) && !isNaN(stepUpdatedAt)) {
+    // a step's shape was updated and mapping step was not touched
+    return true;
+  }
+
+  return stepUpdatedAt > mappingUpdatedAt;
+}
+
 export function toUIIntegrationStepCollection(
   steps: IUIStep[]
 ): IUIIntegrationStep[] {
@@ -235,24 +249,21 @@ export function toUIIntegrationStepCollection(
 
     if (step.stepKind === 'mapper') {
       shouldEditDataMapper =
-        // if prevous's steps output differ
+        // if any of the prevous steps's output differ, any could be used in the mapping step
         steps
           .slice(0, position)
-          .find(
-            (s) =>
-              (typeof step.metadata.updatedAt === 'undefined' &&
-                typeof s.metadata.outputUpdatedAt !== 'undefined') ||
-              s.metadata.outputUpdatedAt > step.metadata.updatedAt
+          .find((s) =>
+            isMappingOutdated(
+              step.metadata?.updatedAt,
+              s.metadata?.outputUpdatedAt
+            )
           ) !== undefined ||
-        // if subsequent's steps input differ
-        steps
-          .slice(position)
-          .find(
-            (s) =>
-              (typeof step.metadata.updatedAt === 'undefined' &&
-                typeof s.metadata.inputUpdatedAt !== 'undefined') ||
-              s.metadata.inputUpdatedAt > step.metadata.updatedAt
-          ) !== undefined;
+        // if subsequent steps input differ, only the next step's input is used in the mapping step
+        (steps.length > position &&
+          isMappingOutdated(
+            step.metadata?.updatedAt,
+            steps[position + 1].metadata?.inputUpdatedAt
+          ));
     }
 
     return {
