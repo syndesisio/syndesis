@@ -289,9 +289,10 @@ export function hasDataShape(step: Step, isInput = false) {
   }
 
   const kind = toDataShapeKinds(dataShape.kind);
-  if (kind === DataShapeKinds.NONE && !isInput) {
-    // input datashape of NONE is considered preset as mapper can insert constants, i.e. it can operatate without any input data
-    return true;
+  if (kind === DataShapeKinds.NONE && isInput) {
+    // output datashape of NONE is considered preset as mapper can insert constants, i.e. it can operatate without any input data
+    // input datashape of NONE is considered not present
+    return false;
   }
 
   return true;
@@ -922,20 +923,6 @@ export function applyUpdatedStep(flow: Flow, step: Step, position: number) {
     step.id = generateKey();
   }
 
-  // if the previous input data shape differs from the updated data shape
-  // update the inputUpdatedAt, don't do this for the mapping step it has
-  // updatedAt metadata property
-  let inputUpdatedAt = steps[position].metadata?.inputUpdatedAt as string;
-  const currentInputDataShape =
-    steps[position].action?.descriptor?.inputDataShape;
-  const updatedInputDataShape = step.action?.descriptor?.inputDataShape;
-  if (
-    step.stepKind !== 'mapper' &&
-    _shapesDiffer(currentInputDataShape, updatedInputDataShape)
-  ) {
-    inputUpdatedAt = timestampStr();
-  }
-
   // if the previous output data shape differs from the updated data shape
   // update the outputUpdatedAt, don't do this for the mapping step it has
   // updatedAt metadata property
@@ -953,7 +940,6 @@ export function applyUpdatedStep(flow: Flow, step: Step, position: number) {
   // for mapping step update the updatedAt metadata property
   const metadata: { [name: string]: string } = {
     ...step.metadata,
-    inputUpdatedAt,
     outputUpdatedAt,
   };
   if (step.stepKind === 'mapper') {
@@ -1348,7 +1334,7 @@ export function getSubsequentConnection(
  * @param flowId
  * @param position
  */
-export function getSubsequentIntegrationStepsWithDataShape(
+export function getSubsequentIntegrationStepsWithInputDataShape(
   integration: Integration,
   flowId: string,
   position: number
@@ -1371,13 +1357,13 @@ export function getSubsequentIntegrationStepsWithDataShape(
  * @param flowId
  * @param position
  */
-export function getPreviousIntegrationStepsWithDataShape(
+export function getPreviousIntegrationStepsWithOutputDataShape(
   integration: Integration,
   flowId: string,
   position: number
 ): IndexedStep[] {
   const steps = getSteps(integration, flowId);
-  return getPreviousStepsWithDataShape(steps || [], position);
+  return getPreviousStepsWithOutputDataShape(steps || [], position);
 }
 
 /**
@@ -1394,7 +1380,7 @@ export function getOutputDataShapeFromPreviousStep(
 ): DataShape {
   let dataShape = {} as DataShape;
   try {
-    const prevStep = getPreviousIntegrationStepWithDataShape(
+    const prevStep = getPreviousIntegrationStepWithOutputDataShape(
       integration,
       flowId,
       position
@@ -1413,7 +1399,7 @@ export function getOutputDataShapeFromPreviousStep(
  * @param steps
  * @param position
  */
-export function getPreviousStepsWithDataShape(
+export function getPreviousStepsWithOutputDataShape(
   steps: Step[],
   position: number
 ): Array<{ step: Step; index: number }> {
@@ -1435,12 +1421,12 @@ export function getPreviousStepsWithDataShape(
  * @param flowId
  * @param position
  */
-export function getPreviousIntegrationStepIndexWithDataShape(
+export function getPreviousIntegrationStepIndexWithOutputDataShape(
   integration: Integration,
   flowId: string,
   position: number
 ) {
-  const steps = getPreviousIntegrationStepsWithDataShape(
+  const steps = getPreviousIntegrationStepsWithOutputDataShape(
     integration,
     flowId,
     position
@@ -1457,13 +1443,13 @@ export function getPreviousIntegrationStepIndexWithDataShape(
  * @param flowId
  * @param position
  */
-export function getPreviousIntegrationStepWithDataShape(
+export function getPreviousIntegrationStepWithOutputDataShape(
   integration: Integration,
   flowId: string,
   position: number
 ) {
   const steps = getSteps(integration, flowId);
-  return getPreviousStepWithDataShape(steps || [], position);
+  return getPreviousStepWithOutputDataShape(steps || [], position);
 }
 
 /**
@@ -1471,8 +1457,11 @@ export function getPreviousIntegrationStepWithDataShape(
  * @param steps
  * @param position
  */
-export function getPreviousStepWithDataShape(steps: Step[], position: number) {
-  const previousSteps = getPreviousStepsWithDataShape(steps, position);
+export function getPreviousStepWithOutputDataShape(
+  steps: Step[],
+  position: number
+) {
+  const previousSteps = getPreviousStepsWithOutputDataShape(steps, position);
   if (previousSteps && previousSteps.length) {
     return previousSteps[previousSteps.length - 1].step;
   }
@@ -1485,12 +1474,12 @@ export function getPreviousStepWithDataShape(steps: Step[], position: number) {
  * @param flowId
  * @param position
  */
-export function getSubsequentIntegrationStepWithDataShape(
+export function getSubsequentIntegrationStepWithInputDataShape(
   integration: Integration,
   flowId: string,
   position: number
 ) {
-  const steps = getSubsequentIntegrationStepsWithDataShape(
+  const steps = getSubsequentIntegrationStepsWithInputDataShape(
     integration,
     flowId,
     position

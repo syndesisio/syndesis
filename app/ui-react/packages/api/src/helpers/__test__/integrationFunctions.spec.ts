@@ -23,8 +23,8 @@ describe('integration functions', () => {
     kind                   | place       | expected
     ${undefined}           | ${'input'}  | ${'not present'}
     ${undefined}           | ${'output'} | ${'not present'}
-    ${DataShapeKinds.NONE} | ${'input'}  | ${'present'}
-    ${DataShapeKinds.NONE} | ${'output'} | ${'not present'}
+    ${DataShapeKinds.NONE} | ${'input'}  | ${'not present'}
+    ${DataShapeKinds.NONE} | ${'output'} | ${'present'}
     ${DataShapeKinds.ANY}  | ${'input'}  | ${'present'}
     ${DataShapeKinds.ANY}  | ${'output'} | ${'present'}
   `(

@@ -13,8 +13,8 @@ import {
   FLOW_END_ACTION_ID,
   FLOW_START_ACTION_ID,
   getNextAggregateStep,
+  getPreviousStepWithOutputDataShape,
   getPreviousSteps,
-  getPreviousStepWithDataShape,
   getSubsequentSteps,
   HIDE_FROM_STEP_SELECT,
   isActionOutputShapeless,
@@ -176,6 +176,14 @@ function isMappingOutdated(
   return stepUpdatedAt > mappingUpdatedAt;
 }
 
+function isCompatibleDataShape(one: DataShape, other: DataShape): boolean {
+  if (other.kind === 'any') {
+    return true;
+  }
+
+  return isSameDataShape(one, other);
+}
+
 export function toUIIntegrationStepCollection(
   steps: IUIStep[]
 ): IUIIntegrationStep[] {
@@ -214,7 +222,7 @@ export function toUIIntegrationStepCollection(
           toDataShapeKinds(inputDataShape.kind!)
         )
       ) {
-        const prev = getPreviousStepWithDataShape(steps, position);
+        const prev = getPreviousStepWithOutputDataShape(steps, position);
         if (
           prev &&
           prev.stepKind !== CHOICE && // TODO: suppress this until we can also use the describe data page for a step syndesisio/syndesis#5456
@@ -230,14 +238,11 @@ export function toUIIntegrationStepCollection(
               (s) => s.id === prev.id
             );
           } else if (
-            !isSameDataShape(inputDataShape, prevOutDataShape) &&
-            !(
-              prev.stepKind === 'mapper' &&
-              isMappingOutdated(
-                prev.metadata?.updatedAt,
-                step.metadata?.inputUpdatedAt
-              )
-            )
+            prev.stepKind !== 'mapper' &&
+            (!isSameDataShape(inputDataShape, prevOutDataShape) ||
+              (prevOutDataShape.kind === 'none' &&
+                inputDataShape.kind !== 'none' &&
+                inputDataShape.kind !== 'any'))
           ) {
             shouldAddDataMapper = true;
           }
@@ -256,21 +261,61 @@ export function toUIIntegrationStepCollection(
       }
     }
 
-    if (step.stepKind === 'mapper') {
+    // A mapping step needs special handling; it can also be configured without any mappings at all
+    if (step.stepKind === 'mapper' && step.configuredProperties?.atlasmapping) {
+      const atlasmapping: {
+        AtlasMapping: { dataSource: [{ id: string; dataSourceType: string }] };
+      } = JSON.parse(step.configuredProperties!.atlasmapping!);
+
+      // we need the used source step IDs to see if the mapping is using any steps that are no longer present
+      const usedSourceStepIds = new Set(
+        atlasmapping.AtlasMapping.dataSource
+          .filter((ds) => ds.dataSourceType === 'SOURCE')
+          .map((ds) => ds.id)
+      );
+      // same goes for the target step ID, it might have been removed
+      const targetStepId = atlasmapping.AtlasMapping.dataSource.find(
+        (ds) => ds.dataSourceType === 'TARGET'
+      )?.id;
+
+      // if any of the prevous steps's output differ, any could be used in the mapping step
+      // also take account of present step IDs, so we can tell if there are removed source
+      // steps below
+      const sourceStepOutputChanged =
+        getPreviousSteps(steps, position).find(
+          (s) =>
+            usedSourceStepIds.delete(s.id!) &&
+            isMappingOutdated(
+              step.metadata?.updatedAt,
+              s.metadata?.outputUpdatedAt
+            )
+        ) !== undefined;
+
+      // if subsequent steps input differ, only the next step's input is used as the target
+      // in the mapping step
+      const targetStep = getSubsequentSteps(steps, position).find(
+        (s) => s.id === targetStepId
+      );
+
+      const nextInputIncompatible =
+        targetStep?.action?.descriptor?.inputDataShape &&
+        !isCompatibleDataShape(
+          step.action!.descriptor!.outputDataShape!, // this is the mapping step, so all these are set
+          targetStep.action.descriptor.inputDataShape
+        );
+
+      const sourceStepMissing = usedSourceStepIds.size > 0;
+
+      const targetStepMissing =
+        typeof targetStep?.action?.descriptor?.inputDataShape === 'undefined';
+
+      // we looked at all used steps and deleted them from usedStepIds if there are any left over that means
+      // that a step was removed from the flow that we /could have/ been used in the mapping
       shouldEditDataMapper =
-        // if any of the prevous steps's output differ, any could be used in the mapping step
-        getPreviousSteps(steps, position).find((s) =>
-          isMappingOutdated(
-            step.metadata?.updatedAt,
-            s.metadata?.outputUpdatedAt
-          )
-        ) !== undefined ||
-        // if subsequent steps input differ, only the next step's input is used in the mapping step
-        (steps.length > position &&
-          isMappingOutdated(
-            step.metadata?.updatedAt,
-            steps[position + 1].metadata?.inputUpdatedAt
-          ));
+        sourceStepOutputChanged ||
+        nextInputIncompatible ||
+        sourceStepMissing ||
+        targetStepMissing;
     }
 
     return {
