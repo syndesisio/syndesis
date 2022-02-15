@@ -495,7 +495,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                     .withEnv(
                         new EnvVar("MAVEN_OPTS", config.getMavenOptions(), null),
                         new EnvVar("MAVEN_ARGS_APPEND", config.getAdditionalMavenArguments(), null),
-                        new EnvVar("BUILD_LOGLEVEL", config.isDebug() ? "5" : "1", null)
+                        new EnvVar("BUILD_LOGLEVEL", config.isDebug() ? "5" : "1", null),
+                        new EnvVar("SCRIPT_DEBUG", config.isDebug() ? "true" : "false", null)
                     )
                   .endSourceStrategy()
                 .endStrategy()
