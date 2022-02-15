@@ -291,7 +291,7 @@ export function hasDataShape(step: Step, isInput = false) {
   const kind = toDataShapeKinds(dataShape.kind);
   if (kind === DataShapeKinds.NONE && !isInput) {
     // input datashape of NONE is considered preset as mapper can insert constants, i.e. it can operatate without any input data
-    return false;
+    return true;
   }
 
   return true;
