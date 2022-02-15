@@ -44,6 +44,7 @@ import {
   IUIIntegrationStep,
   IUIStep,
 } from './interfaces';
+import isEqual from 'lodash.isequal';
 
 type StepKindHrefCallback = (
   step: StepKind,
@@ -156,7 +157,8 @@ export function isSameDataShape(one: DataShape, other: DataShape): boolean {
   return (
     one.kind === other.kind &&
     one.type === other.type &&
-    one.specification === other.specification
+    one.specification === other.specification &&
+    isEqual(one.parameters, other.parameters)
   );
 }
 

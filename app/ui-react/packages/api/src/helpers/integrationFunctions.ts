@@ -15,6 +15,7 @@ import {
 } from '@syndesis/models';
 import { key as generateKey } from '@syndesis/utils';
 import produce from 'immer';
+import isEqual from 'lodash.isequal';
 import {
   AGGREGATE,
   API_PROVIDER,
@@ -885,34 +886,6 @@ export function setStepInFlow(
   );
 }
 
-export function _parametersDiffer(
-  current?: { [name: string]: string },
-  updated?: { [name: string]: string }
-): boolean {
-  if (typeof current === 'undefined') {
-    if (typeof updated === 'undefined') {
-      return false;
-    }
-    return true;
-  } else if (typeof updated === 'undefined') {
-    return true;
-  }
-
-  const currentKeys = Object.keys(current);
-  const updatedKeys = Object.keys(updated!);
-  if (currentKeys.length !== updatedKeys.length) {
-    return true;
-  }
-
-  for (const k of currentKeys) {
-    if (current[k] !== updated![k]) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
 export function _shapesDiffer(
   current?: DataShape,
   updated?: DataShape
@@ -929,7 +902,7 @@ export function _shapesDiffer(
   return (
     current.kind !== updated?.kind ||
     current.specification !== updated?.specification ||
-    _parametersDiffer(current.parameters, updated?.parameters)
+    !isEqual(current.parameters, updated?.parameters)
   );
 }
 

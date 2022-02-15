@@ -8,7 +8,6 @@ import {
 import produce, { isDraft } from 'immer';
 import { DataShapeKinds } from '../../constants';
 import {
-  _parametersDiffer,
   _shapesDiffer,
   applyUpdatedStep,
   getFlow,
@@ -210,22 +209,6 @@ describe('integration functions', () => {
   });
 
   test.each`
-    current           | updated           | expected
-    ${undefined}      | ${undefined}      | ${false}
-    ${undefined}      | ${{ a: 1 }}       | ${true}
-    ${{ a: 1 }}       | ${undefined}      | ${true}
-    ${{ a: 1 }}       | ${{ a: 1 }}       | ${false}
-    ${{ a: 1 }}       | ${{ a: 2 }}       | ${true}
-    ${{ a: 1 }}       | ${{ b: 1 }}       | ${true}
-    ${{ a: 1, b: 2 }} | ${{ b: 2, a: 1 }} | ${false}
-  `(
-    '$current vs $updated data shape parameter difference should be asserted as $expected',
-    ({ current, updated, expected }) => {
-      expect(_parametersDiffer(current, updated)).toBe(expected);
-    }
-  );
-
-  test.each`
     current                                          | updated                                          | expected
     ${undefined}                                     | ${undefined}                                     | ${false}
     ${undefined}                                     | ${{ kind: 'json-instance' }}                     | ${true}
@@ -236,6 +219,13 @@ describe('integration functions', () => {
     ${{ kind: 'json-instance', specification: 'x' }} | ${{ kind: 'json-instance', specification: 'y' }} | ${true}
     ${{ kind: 'json-instance' }}                     | ${{ kind: 'json-instance', specification: 'y' }} | ${true}
     ${{ kind: 'json-instance', specification: 'x' }} | ${{ kind: 'json-instance', specification: 'x' }} | ${false}
+    ${{ parameters: undefined }}                     | ${{ parameters: undefined }}                     | ${false}
+    ${{ parameters: undefined }}                     | ${{ parameters: { a: 1 } }}                      | ${true}
+    ${{ parameters: { a: 1 } }}                      | ${{ parameters: undefined }}                     | ${true}
+    ${{ parameters: { a: 1 } }}                      | ${{ parameters: { a: 1 } }}                      | ${false}
+    ${{ parameters: { a: 1 } }}                      | ${{ parameters: { a: 2 } }}                      | ${true}
+    ${{ parameters: { a: 1 } }}                      | ${{ parameters: { b: 1 } }}                      | ${true}
+    ${{ parameters: { a: 1, b: 2 } }}                | ${{ parameters: { b: 2, a: 1 } }}                | ${false}
   `(
     '$current vs $updated data shape difference should be asserted as $expected',
     ({ current, updated, expected }) => {
