@@ -259,14 +259,12 @@ export function toUIIntegrationStepCollection(
     if (step.stepKind === 'mapper') {
       shouldEditDataMapper =
         // if any of the prevous steps's output differ, any could be used in the mapping step
-        steps
-          .slice(0, position)
-          .find((s) =>
-            isMappingOutdated(
-              step.metadata?.updatedAt,
-              s.metadata?.outputUpdatedAt
-            )
-          ) !== undefined ||
+        getPreviousSteps(steps, position).find((s) =>
+          isMappingOutdated(
+            step.metadata?.updatedAt,
+            s.metadata?.outputUpdatedAt
+          )
+        ) !== undefined ||
         // if subsequent steps input differ, only the next step's input is used in the mapping step
         (steps.length > position &&
           isMappingOutdated(
