@@ -176,12 +176,11 @@ public class ProjectGeneratorTest {
         assertFileContentsJson(info, runtimeDir.resolve("src/main/resources/syndesis/integration/integration.json"), "integration.json");
         assertFileContents(info, runtimeDir.resolve("src/main/resources/application.properties"), "application.properties");
         assertFileContents(info, runtimeDir.resolve("src/main/resources/loader.properties"), "loader.properties");
-        assertFileContents(info, runtimeDir.resolve(".s2i/bin/assemble"), "assemble");
         assertFileContents(info, runtimeDir.resolve("prometheus-config.yml"), "prometheus-config.yml");
 
-        assertThat(runtimeDir.resolve("extensions/my-extension-1.jar")).exists();
-        assertThat(runtimeDir.resolve("extensions/my-extension-2.jar")).exists();
-        assertThat(runtimeDir.resolve("extensions/my-extension-3.jar")).exists();
+        assertThat(runtimeDir.resolve("data/syndesis/loader/extensions/my-extension-1.jar")).exists();
+        assertThat(runtimeDir.resolve("data/syndesis/loader/extensions/my-extension-2.jar")).exists();
+        assertThat(runtimeDir.resolve("data/syndesis/loader/extensions/my-extension-3.jar")).exists();
         assertThat(runtimeDir.resolve("src/main/resources/mapping-flow-0-step-1.json")).exists();
 
         // lets validate configuration when activity tracing is enabled.

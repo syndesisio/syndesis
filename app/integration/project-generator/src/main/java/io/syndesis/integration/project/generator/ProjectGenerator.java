@@ -287,7 +287,6 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 addMappingRules(tos, integration);
                 addRestDefinition(tos, integration);
 
-                addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
                 addResource(tos, "prometheus-config.yml", "templates/prometheus-config.yml");
                 addTarEntry(tos, "configuration/settings.xml", generateSettingsXml());
 
@@ -316,7 +315,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 )) {
                     addTarEntry(
                         tos,
-                        "extensions/" + Names.sanitize(extensionId) + ".jar",
+                        "data/syndesis/loader/extensions/" + Names.sanitize(extensionId) + ".jar",
                         IOUtils.toByteArray(extension)
                     );
                 }
