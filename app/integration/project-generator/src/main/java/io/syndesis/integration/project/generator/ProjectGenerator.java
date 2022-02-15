@@ -66,6 +66,7 @@ import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.mvn.MavenGav;
 import io.syndesis.integration.project.generator.mvn.PomContext;
 import org.apache.camel.generator.openapi.RestDslGenerator;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -283,6 +284,9 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 addTarEntry(tos, "src/main/resources/syndesis/integration/integration.json", writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(integration));
                 addTarEntry(tos, "pom.xml", generatePom(integration));
 
+                // we need to make sure that `/deployments/data/syndesis/loader` directory gets created
+                // this puts an empty source directory that S2I will copy over to /deployments
+                tos.putArchiveEntry(new TarArchiveEntry("data/syndesis/loader/extensions/"));
                 addExtensions(tos, integration);
                 addMappingRules(tos, integration);
                 addRestDefinition(tos, integration);
