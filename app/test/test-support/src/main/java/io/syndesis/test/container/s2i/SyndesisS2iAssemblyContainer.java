@@ -50,7 +50,7 @@ public class SyndesisS2iAssemblyContainer extends GenericContainer<SyndesisS2iAs
                 .build()));
 
         final WaitStrategy onLogDone = new LogMessageWaitStrategy()
-            .withRegEx(".*\\.\\.\\. done.*\\s")
+            .withRegEx(".*S2I assembly finished.*")
             .withStartupTimeout(SyndesisTestEnvironment.getContainerStartupTimeout());
 
         setWaitStrategy(onLogDone);

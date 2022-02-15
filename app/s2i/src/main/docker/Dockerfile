@@ -11,8 +11,7 @@ ADD maven/settings.xml /tmp/settings.xml
 # so you cannot change the location of the local repo!
 ADD maven/repository /tmp/artifacts/m2
 
-RUN chgrp -R 0 /tmp/artifacts/m2 \
- && chmod -R g=u /tmp/artifacts/m2
+RUN chown -R 1000 /tmp/artifacts
 
 # Copy licenses
 RUN mkdir -p /opt/ipaas/
