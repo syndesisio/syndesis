@@ -1,10 +1,14 @@
-import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
+import { AutoForm, IFormDefinition, IFormErrors } from '@syndesis/auto-form';
 import { IAutoFormActions } from '@syndesis/auto-form/src';
 import { FilterOptions } from '@syndesis/models';
 import { validateRequiredProperties } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { IChoiceFormConfiguration } from './interfaces';
+
+// validates that the left hand side of the of the advanced expression
+// is a variable expression, i.e. "${var}..."
+const validAdvancedExpression = /^\s*\$\{[^]+\}.*/;
 
 export interface IWithChoiceConfigurationFormChildrenProps {
   fields: JSX.Element;
@@ -153,12 +157,32 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<IWithChoiceCon
     };
 
     const validator = (values: IChoiceFormConfiguration) => {
-      return validateRequiredProperties(
-        definition,
-        (field: string) =>
-          t('integrations:editor:choiceForm:fieldRequired', { field }),
-        values
-      );
+      const validateAdvancedSyntax =
+        (): IFormErrors<IChoiceFormConfiguration> => {
+          const errors = {};
+          values.flowConditions.forEach((value, idx) => {
+            if (
+              value.condition &&
+              !validAdvancedExpression.test(value.condition)
+            ) {
+              errors[`flowConditions[${idx}].condition`] = t(
+                'integrations:editor:choiceForm:leftHandSideMustBeVariableExpression'
+              );
+            }
+          });
+
+          return errors;
+        };
+
+      return {
+        ...validateRequiredProperties(
+          definition,
+          (field: string) =>
+            t('integrations:editor:choiceForm:fieldRequired', { field }),
+          values
+        ),
+        ...validateAdvancedSyntax(),
+      };
     };
 
     return (
