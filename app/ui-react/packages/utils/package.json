@@ -39,7 +39,7 @@
   },
   "scripts": {
     "lint": "tslint -c ../../tslint.json --project .",
-    "test": "jest",
+    "test": "jest --coverage --color --runInBand",
     "test:watch": "yarn run test --watch",
     "prebuild": "rimraf dist",
     "build": "microbundle --format cjs --no-compress --jsx React.createElement",
