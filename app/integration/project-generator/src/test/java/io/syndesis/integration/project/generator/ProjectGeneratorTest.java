@@ -176,7 +176,7 @@ public class ProjectGeneratorTest {
         assertFileContentsJson(info, runtimeDir.resolve("src/main/resources/syndesis/integration/integration.json"), "integration.json");
         assertFileContents(info, runtimeDir.resolve("src/main/resources/application.properties"), "application.properties");
         assertFileContents(info, runtimeDir.resolve("src/main/resources/loader.properties"), "loader.properties");
-        assertFileContents(info, runtimeDir.resolve("prometheus-config.yml"), "prometheus-config.yml");
+        assertFileContents(info, runtimeDir.resolve("data/prometheus-config.yml"), "prometheus-config.yml");
 
         assertThat(runtimeDir.resolve("data/syndesis/loader/extensions/my-extension-1.jar")).exists();
         assertThat(runtimeDir.resolve("data/syndesis/loader/extensions/my-extension-2.jar")).exists();

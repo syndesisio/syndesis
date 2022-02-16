@@ -291,7 +291,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 addMappingRules(tos, integration);
                 addRestDefinition(tos, integration);
 
-                addResource(tos, "prometheus-config.yml", "templates/prometheus-config.yml");
+                addResource(tos, "data/prometheus-config.yml", "templates/prometheus-config.yml");
                 addTarEntry(tos, "configuration/settings.xml", generateSettingsXml());
 
                 LOGGER.info("Integration [{}]: Project files written to output stream", Names.sanitize(integration.getName()));

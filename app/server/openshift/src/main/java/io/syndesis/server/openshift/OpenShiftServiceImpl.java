@@ -263,7 +263,9 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             // environment variables are stored in a list, so remove duplicates manually before patching
             final List<EnvVar> vars = new ArrayList<>(Arrays.asList(
                 new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null),
-                new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null),
+                new EnvVar("AB_PROMETHEUS_ENABLE", "true", null),
+                new EnvVar("AB_PROMETHEUS_JMX_EXPORTER_PORT", "9779", null),
+                new EnvVar("AB_PROMETHEUS_JMX_EXPORTER_CONFIG", "/deployments/data/prometheus-config.yml", null),
                 new EnvVar("JAEGER_ENDPOINT", jaegerCollectorUri, null),
                 new EnvVar("JAEGER_TAGS", "integration.version="+deploymentData.getVersion(), null),
                 new EnvVar("JAEGER_SAMPLER_TYPE", "const", null),
@@ -403,7 +405,9 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                                     // don't chain withEnv as every invocation overrides the previous one, use var-args instead
                                     .withEnv(
                                             new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null),
-                                            new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null),
+                                            new EnvVar("AB_PROMETHEUS_ENABLE", "true", null),
+                                            new EnvVar("AB_PROMETHEUS_JMX_EXPORTER_PORT", "9779", null),
+                                            new EnvVar("AB_PROMETHEUS_JMX_EXPORTER_CONFIG", "/deployments/data/prometheus-config.yml", null),
                                             new EnvVar("JAEGER_ENDPOINT", jaegerCollectorUri, null),
                                             new EnvVar("JAEGER_TAGS", "integration.version="+deploymentData.getVersion(), null),
                                             new EnvVar("JAEGER_SAMPLER_TYPE", "const", null),
