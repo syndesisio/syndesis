@@ -20,11 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -70,9 +66,9 @@ import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.mvn.MavenGav;
 import io.syndesis.integration.project.generator.mvn.PomContext;
 import org.apache.camel.generator.openapi.RestDslGenerator;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -256,34 +252,6 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         }
     }
 
-    private void addAdditionalResources(TarArchiveOutputStream tos) throws IOException {
-        for (ProjectGeneratorConfiguration.Templates.Resource additionalResource : configuration.getTemplates().getAdditionalResources()) {
-            String overridePath = configuration.getTemplates().getOverridePath();
-            URL resource = null;
-
-            if (!StringUtils.isEmpty(overridePath)) {
-                resource = getClass().getResource("templates/" + overridePath + "/" + additionalResource.getSource());
-            }
-            if (resource == null) {
-                resource = getClass().getResource("templates/" + additionalResource.getSource());
-            }
-            if (resource == null) {
-                throw new IllegalArgumentException(
-                    String.format("Unable to find the required additional resource (overridePath=%s, source=%s)"
-                        , overridePath
-                        , additionalResource.getSource()
-                    )
-                );
-            }
-
-            try {
-                addTarEntry(tos, additionalResource.getDestination(), Files.readAllBytes(Paths.get(resource.toURI())));
-            } catch (URISyntaxException e) {
-                throw new IOException(e);
-            }
-        }
-    }
-
     public static class Scope {
         public ProjectGeneratorConfiguration configuration;
         public Integration integration;
@@ -316,15 +284,15 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 addTarEntry(tos, "src/main/resources/syndesis/integration/integration.json", writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(integration));
                 addTarEntry(tos, "pom.xml", generatePom(integration));
 
+                // we need to make sure that `/deployments/data/syndesis/loader` directory gets created
+                // this puts an empty source directory that S2I will copy over to /deployments
+                tos.putArchiveEntry(new TarArchiveEntry("data/syndesis/loader/extensions/"));
                 addExtensions(tos, integration);
                 addMappingRules(tos, integration);
                 addRestDefinition(tos, integration);
 
-                addResource(tos, ".s2i/bin/assemble", "s2i/assemble");
-                addResource(tos, "prometheus-config.yml", "templates/prometheus-config.yml");
+                addResource(tos, "data/prometheus-config.yml", "templates/prometheus-config.yml");
                 addTarEntry(tos, "configuration/settings.xml", generateSettingsXml());
-
-                addAdditionalResources(tos);
 
                 LOGGER.info("Integration [{}]: Project files written to output stream", Names.sanitize(integration.getName()));
             } catch (Exception e) {
@@ -351,7 +319,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 )) {
                     addTarEntry(
                         tos,
-                        "extensions/" + Names.sanitize(extensionId) + ".jar",
+                        "data/syndesis/loader/extensions/" + Names.sanitize(extensionId) + ".jar",
                         IOUtils.toByteArray(extension)
                     );
                 }

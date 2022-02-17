@@ -31,7 +31,6 @@ import io.syndesis.integration.project.generator.mvn.MavenGav;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,23 +101,7 @@ public final class ProjectGeneratorHelper {
     }
 
     public static Mustache compile(MustacheFactory mustacheFactory, ProjectGeneratorConfiguration generatorProperties, String template, String name) throws IOException {
-        String overridePath = generatorProperties.getTemplates().getOverridePath();
-        URL resource = null;
-
-        if (!StringUtils.isEmpty(overridePath)) {
-            resource = ProjectGeneratorHelper.class.getResource("templates/" + overridePath + "/" + template);
-        }
-        if (resource == null) {
-            resource = ProjectGeneratorHelper.class.getResource("templates/" + template);
-        }
-        if (resource == null) {
-            throw new IllegalArgumentException(
-                String.format("Unable to find te required template (overridePath=%s, template=%s)"
-                    , overridePath
-                    , template
-                )
-            );
-        }
+        URL resource = ProjectGeneratorHelper.class.getResource("templates/" + template);
 
         try (InputStream stream = resource.openStream()) {
             return mustacheFactory.compile(new InputStreamReader(stream, StandardCharsets.UTF_8), name);

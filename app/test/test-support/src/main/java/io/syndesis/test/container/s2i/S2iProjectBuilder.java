@@ -45,7 +45,7 @@ public class S2iProjectBuilder implements ProjectBuilder {
                 .orElse("s2i-assembly");
 
         final SyndesisS2iAssemblyContainer s2i = new SyndesisS2iAssemblyContainer(integrationName, projectDir, imageTag);
-        s2i.setCommand("sh", "-c", SyndesisS2iAssemblyContainer.S2I_ASSEMBLE_SCRIPT + " && sleep infinity");
+        s2i.setCommand("sh", "-c", SyndesisS2iAssemblyContainer.S2I_ASSEMBLE_SCRIPT + " && echo 'S2I assembly finished' && sleep infinity");
         s2i.start();
 
         // The S2I assembly container result need to be copied to the local host
@@ -55,7 +55,7 @@ public class S2iProjectBuilder implements ProjectBuilder {
         try {
             Files.createDirectories(target);
             s2i.copyFileFromContainer(
-                "/tmp/src/target/project-0.1-SNAPSHOT.jar",
+                "/deployments/project-0.1-SNAPSHOT.jar",
                 fatJar.toAbsolutePath().toString()
             );
         } catch (IOException e) {

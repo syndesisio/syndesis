@@ -428,10 +428,10 @@ create_syndesis_container_images() {
     echo "==== Creating Docker images"
     cd $topdir/app
     for module in $JAVA_IMAGE_MODULES; do
-        # -Pimage binds to fabric8:build
-        ./mvnw ${maven_opts} -Prelease,image,flash -Dfabric8.mode=kubernetes -f $module package
+        # -Pimage binds to k8s:build
+        ./mvnw ${maven_opts} -Prelease,image,flash -Dbuild.mode=kubernetes -f $module package
     done
-    ./mvnw ${maven_opts} -Prelease,image,flash -Dfabric8.mode=kubernetes -pl ${UI_IMAGE_MODULES// /,} fabric8:build
+    ./mvnw ${maven_opts} -Prelease,image,flash -Dbuild.mode=kubernetes -pl ${UI_IMAGE_MODULES// /,} k8s:build
 }
 
 create_upgrade_container_image() {

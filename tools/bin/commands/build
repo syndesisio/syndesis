@@ -119,11 +119,10 @@ maven_args() {
 
     if [ $(hasflag --image -i --all-images --app-images --infra-images --docker) ]; then
         #Build images
-        args="$args -Pimage"
         if [ $(hasflag --docker) ]; then
-            args="$args -Dfabric8.mode=kubernetes"
+            args="$args -Dbuild.mode=kubernetes"
         else
-            args="$args -Dfabric8.mode=openshift"
+            args="$args -Dbuild.mode=openshift"
         fi
     fi
 
