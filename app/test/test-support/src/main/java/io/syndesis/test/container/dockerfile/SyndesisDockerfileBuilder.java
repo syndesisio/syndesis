@@ -29,9 +29,6 @@ import org.testcontainers.images.builder.ImageFromDockerfile;
  */
 public class SyndesisDockerfileBuilder extends ImageFromDockerfile {
 
-    private static final String ROOT = "0";
-    private static final String JBOSS = "jboss";
-
     private String from;
     private String runCommand;
     private String projectSrc;
@@ -49,22 +46,10 @@ public class SyndesisDockerfileBuilder extends ImageFromDockerfile {
                 withFileFromPath(projectSrc, projectPath)
                 .withDockerfileFromBuilder(builder -> builder.from(from)
                     .env(envProperties)
-                    .user(ROOT)
                     .copy(projectSrc, projectDest)
-                    .run(fixGroupsCommand())
-                    .run(fixPermissionsCommand())
-                    .user(JBOSS)
                     .expose(SyndesisTestEnvironment.getDebugPort())
                     .cmd(runCommand)
                 .build());
-    }
-
-    private String[] fixGroupsCommand() {
-        return  new String [] { "chgrp", "-R", "0", projectDest };
-    }
-
-    private String[] fixPermissionsCommand() {
-        return new String [] { "chmod", "-R", "g=u", projectDest };
     }
 
     public SyndesisDockerfileBuilder from(String image, String tag) {
