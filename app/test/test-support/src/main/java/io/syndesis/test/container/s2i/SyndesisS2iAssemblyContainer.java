@@ -42,10 +42,7 @@ public class SyndesisS2iAssemblyContainer extends GenericContainer<SyndesisS2iAs
         super(new ImageFromDockerfile(integrationName + "-s2i", true)
             .withFileFromPath(SRC_DIR, projectDir)
             .withDockerfileFromBuilder(builder -> builder.from(String.format("syndesis/syndesis-s2i:%s", imageTag))
-                .withStatement(new MultiArgsStatement("ADD", SRC_DIR, SRC_DIR))
-                .user("0")
-                .run("chown", "-R", "1000", SRC_DIR)
-                .user("1000")
+                .withStatement(new MultiArgsStatement("ADD --chown=jboss:jboss", SRC_DIR, SRC_DIR))
                 .cmd(S2I_ASSEMBLE_SCRIPT)
                 .build()));
 
