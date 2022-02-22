@@ -37,7 +37,7 @@ public class OpenShiftConfigurationProperties {
 
     private OpenShiftConfig openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(masterUrlHost).build();
 
-    private String builderImageStreamTag = "s2i-java:2.0";
+    private String builderImageStreamTag = "syndesis-s2i:latest";
 
     private String deploymentMemoryRequestMi = "280";
     private String deploymentMemoryLimitMi = "512";
