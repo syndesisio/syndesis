@@ -110,7 +110,7 @@ public class OpenShiftConfigurationProperties {
     public void setOpenShiftHost(String openShiftHost) {
 
         if (!masterUrlHost.equals(openShiftHost)) {
-            openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(masterUrlHost).build();
+            openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(openShiftHost).build();
             this.masterUrlHost = openShiftHost;
         }
     }
