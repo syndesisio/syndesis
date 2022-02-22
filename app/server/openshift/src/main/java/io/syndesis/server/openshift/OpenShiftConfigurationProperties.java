@@ -17,6 +17,7 @@ package io.syndesis.server.openshift;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
@@ -62,7 +63,7 @@ public class OpenShiftConfigurationProperties {
 
     private String managementUrlFor3scale;
 
-    private SchedulingConfiguration scheduling;
+    private SchedulingConfiguration scheduling = new SchedulingConfiguration();
 
     public static class SchedulingConfiguration {
         private Affinity affinity;
@@ -235,6 +236,6 @@ public class OpenShiftConfigurationProperties {
     }
 
     public void setScheduling(SchedulingConfiguration scheduling) {
-        this.scheduling = scheduling;
+        this.scheduling = Objects.requireNonNull(scheduling, "scheduling");
     }
 }
