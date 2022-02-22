@@ -144,25 +144,25 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     @Override
-    public void scale(String name, Map<String, String> labels, int desiredReplicas, long amount, TimeUnit timeUnit) throws InterruptedException {
-        String sName = openshiftName(name);
-        getDeploymentsByLabel(labels)
-            .stream()
-            .filter(d -> d.getMetadata().getName().equals(sName))
-            .map(d -> new DeploymentConfigBuilder(d)
-                    // record the previous, possibly user defined custom number of replicas
-                    .editSpec()
-                        .withReplicas(desiredReplicas)
-                        .editTemplate()
-                            .editMetadata()
-                                .addToAnnotations(OpenShiftService.DEPLOYMENT_REPLICAS_ANNOTATION, d.getSpec().getReplicas().toString())
-                            .endMetadata()
-                        .endTemplate()
-                    .endSpec()
-                    .build())
-            .findAny().ifPresent(d -> openShiftClient.deploymentConfigs().createOrReplace(d));
-    }
+    public boolean stop(final String name) {
+        final DeployableScalableResource<DeploymentConfig, DoneableDeploymentConfig> dc = openShiftClient.deploymentConfigs().withName(openshiftName(name));
+        final DeploymentConfig existing = dc.get();
+        if (existing == null) {
+            return false;
+        }
+        
+        final Integer currentReplicas = existing.getSpec().getReplicas();
 
+        final DeploymentConfig scaled = dc.scale(0, true);
+
+        dc.edit()
+            .editMetadata()
+                .addToAnnotations(OpenShiftService.DEPLOYMENT_REPLICAS_ANNOTATION, String.valueOf(currentReplicas))
+            .endMetadata()
+         .done();
+
+        return scaled.getStatus().getReplicas() == 0;
+    }
 
     @Override
     public boolean isScaled(String name, int desiredMinimumReplicas, Map<String, String> labels) {
