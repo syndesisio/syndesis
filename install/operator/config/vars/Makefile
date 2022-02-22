@@ -1,6 +1,8 @@
 CONTROLLER_GEN_VERSION := v0.4.1
 OPERATOR_SDK_VERSION := v1.14.0
 KUSTOMIZE_VERSION := v4.1.2
+OPM_VERSION := v1.19.5
+OPM_PKG := github.com/operator-framework/operator-registry
 
 DEFAULT_VERSION := 1.14.0
 DEFAULT_PREVIOUS_VERSION := 1.13.0
@@ -46,6 +48,7 @@ endif
 BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL) $(BUNDLE_PACKAGE)
 
 BUNDLE_DIR := bundle
+CATALOG := catalog
 PKG := ../pkg
 CRD := crd/bases
 MANAGER := manager
@@ -54,6 +57,9 @@ GRANT := rbac-grant
 ROLE := rbac-role
 TIMESTAMP=$(shell date -u '+%F %T %Z')
 
+CSV_NAME := $(PACKAGE).v$(VERSION)
 CSV_REPLACES := $(PACKAGE).v$(PREVIOUS_VERSION)
 CSV_FILENAME := $(PACKAGE).clusterserviceversion.yaml
 CSV_PATH := $(MANIFESTS)/bases/$(CSV_FILENAME)
+
+SRC_CATALOG := quay.io/openshift-community-operators/catalog_tmp:v4.11
