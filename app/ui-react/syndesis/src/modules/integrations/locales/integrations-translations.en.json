@@ -139,6 +139,7 @@
       "forAllIncomingData": "For all incoming data",
       "keywordsDescription": "For this value",
       "keywordsPlaceholder": "Keywords",
+      "leftHandSideMustBeVariableExpression": "Left hand side of the expression must be a variable expression, e.g. ${body.property}",
       "operatorDescription": "Property must meet this condition",
       "otherwise": "When none of the above conditions match the incoming data",
       "pathDescription": "Choose the property you want to evaluate from available properties on the current data type.",
