@@ -15,13 +15,20 @@
  */
 package io.syndesis.server.openshift;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 
+import io.fabric8.kubernetes.api.model.ContainerBuilder;
+import io.fabric8.kubernetes.api.model.DeleteOptionsBuilder;
+import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.fabric8.kubernetes.api.model.IntOrString;
 import io.fabric8.kubernetes.api.model.ProbeBuilder;
@@ -32,8 +39,16 @@ import io.fabric8.kubernetes.api.model.SecretBuilder;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServiceBuilder;
 import io.fabric8.kubernetes.api.model.StatusBuilder;
+import io.fabric8.mockwebserver.Context;
+import io.fabric8.mockwebserver.ServerRequest;
+import io.fabric8.mockwebserver.ServerResponse;
+import io.fabric8.mockwebserver.internal.MockDispatcher;
+import io.fabric8.openshift.api.model.BuildBuilder;
+import io.fabric8.openshift.api.model.BuildConfigBuilder;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
+import io.fabric8.openshift.api.model.ImageStreamBuilder;
+import io.fabric8.openshift.api.model.ImageStreamTagBuilder;
 import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.api.model.RouteBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
@@ -49,7 +64,10 @@ import static io.syndesis.server.openshift.OpenShiftServiceImpl.openshiftName;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
+import okhttp3.mockwebserver.SocketPolicy;
 
 public class OpenShiftServiceImplTest {
 
@@ -119,10 +137,17 @@ public class OpenShiftServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        server = new OpenShiftMockServer();
+        final HashMap<ServerRequest, Queue<ServerResponse>> responses = new HashMap<ServerRequest, Queue<ServerResponse>>();
+        server = new OpenShiftMockServer(new Context(), new MockWebServer(), responses, new MockDispatcher(responses) {
+            @Override
+            public MockResponse peek() {
+                return new MockResponse().setSocketPolicy(SocketPolicy.EXPECT_CONTINUE);
+            }
+        }, true);
         client = server.createOpenShiftClient();
 
         config = new OpenShiftConfigurationProperties();
+        config.setPollingInterval(10);
         service = new OpenShiftServiceImpl(client, config);
     }
 
@@ -333,13 +358,25 @@ public class OpenShiftServiceImplTest {
 
     @Test
     public void shouldRemoveExposureViaRouteIfChangedTo3scale() {
-        shouldExposeDeploymentsViaServicesAndRoutes();
+        final String name = "switching-from-service-and-route-to-service-only";
+
+        final DeploymentData existingDeploymentData = new DeploymentData.Builder()
+            .withExposure(EnumSet.of(Exposure.SERVICE, Exposure.ROUTE))
+            .build();
+
+        final DeploymentConfig existingDeploymentConfig = baseDeploymentFor(name, existingDeploymentData)
+            .build();
+
+        server.expect()
+            .get()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-via-service-and-route")
+            .andReturn(200, existingDeploymentConfig)
+            .once();
 
         final DeploymentData deploymentData = new DeploymentData.Builder()
             .withExposure(EnumSet.of(Exposure.SERVICE, Exposure._3SCALE))
             .build();
 
-        final String name = "via-service-and-route";
 
         final DeploymentConfig expectedDeploymentConfig = baseDeploymentFor(name, deploymentData)
             .build();
@@ -348,20 +385,20 @@ public class OpenShiftServiceImplTest {
 
         final Service expectedService = new ServiceBuilder()
             .withNewMetadata()
-            .withName(openshiftName(name))
-            .addToLabels("discovery.3scale.net", "true")
-            .addToAnnotations("discovery.3scale.net/scheme", "http")
-            .addToAnnotations("discovery.3scale.net/port", "8080")
-            .addToAnnotations("discovery.3scale.net/description-path", "/openapi.json")
+                .withName(openshiftName(name))
+                .addToLabels("discovery.3scale.net", "true")
+                .addToAnnotations("discovery.3scale.net/scheme", "http")
+                .addToAnnotations("discovery.3scale.net/port", "8080")
+                .addToAnnotations("discovery.3scale.net/description-path", "/openapi.json")
             .endMetadata()
             .withNewSpec()
-            .addNewPort()
-            .withName("http")
-            .withPort(8080)
-            .withProtocol("TCP")
-            .withTargetPort(new IntOrString(8080))
-            .endPort()
-            .addToSelector("syndesis.io/integration", openshiftName(name))
+                .addNewPort()
+                    .withName("http")
+                    .withPort(8080)
+                    .withProtocol("TCP")
+                    .withTargetPort(new IntOrString(8080))
+                .endPort()
+                .addToSelector("syndesis.io/integration", openshiftName(name))
             .endSpec()
             .build();
 
@@ -376,12 +413,10 @@ public class OpenShiftServiceImplTest {
             .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-via-service-and-route")
             .andReturn(200, expectedDeploymentConfig)
             .always();
-
+        
         service.deploy(name, deploymentData);
         final List<Request> issuedRequests = gatherRequests();
-        assertThat(issuedRequests).contains(Request.with("PATCH", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-via-service-and-route", Collections.EMPTY_LIST));
-        assertThat(issuedRequests).contains(Request.with("POST", "/api/v1/namespaces/test/services", expectedService));
-        assertThat(issuedRequests).contains(Request.with("DELETE", "/apis/route.openshift.io/v1/namespaces/test/routes/i-via-service-and-route"));
+        assertThat(issuedRequests).contains(Request.with("DELETE", "/apis/route.openshift.io/v1/namespaces/test/routes/i-switching-from-service-and-route-to-service-only", new DeleteOptionsBuilder().withPropagationPolicy("Background").build()));
     }
 
     @Test
@@ -462,16 +497,531 @@ public class OpenShiftServiceImplTest {
         assertThat(issuedRequests).contains(Request.with("DELETE", "/apis/build.openshift.io/v1/namespaces/test/buildconfigs/i-integration"));
     }
 
+    @Test
+    public void buildShouldCreateImageStreamAndBuildConfig() throws InterruptedException {
+        final DeploymentData deploymentData = new DeploymentData.Builder()
+            .build();
+
+        server.expect()
+            .post()
+            .withPath("/apis/image.openshift.io/v1/namespaces/test/imagestreams")
+            .andReturn(201, new ImageStreamBuilder()
+                .build())
+            .once();
+
+        server.expect()
+            .post()
+            .withPath("/apis/build.openshift.io/v1/namespaces/test/buildconfigs")
+            .andReturn(201, new BuildConfigBuilder()
+                .build())
+            .once();
+
+        server.expect()
+            .post()
+            .withPath("/apis/build.openshift.io/v1/namespaces/test/buildconfigs/i-integration/instantiatebinary?name=i-integration&namespace=test")
+            .andReturn(200, new BuildBuilder()
+                .withNewMetadata()
+                .withNamespace("test")
+                .withName("i-integration-1")
+                .endMetadata()
+                .build())
+            .once();
+        
+        server.expect()
+            .get()
+            .withPath("/apis/build.openshift.io/v1/namespaces/test/builds/i-integration-1")
+            .andReturn(200, new BuildBuilder()
+                .withNewMetadata()
+                    .withNamespace("test")
+                    .withName("i-integration-1")
+                .endMetadata()
+                .withNewStatus()
+                    .withPhase("Complete")
+                    .withOutputDockerImageReference("registry/test/i-integration:1")
+                .endStatus()
+                .build())
+            .once();
+
+        server.expect()
+            .get()
+            .withPath("/apis/image.openshift.io/v1/namespaces/test/imagestreamtags/i-integration:1")
+            .andReturn(200, new ImageStreamTagBuilder()
+                .withNewImage()
+                    .withDockerImageReference("registry/test/i-integration@sha256:hash")
+                .endImage()
+                .build())
+            .once();
+        
+        final String reference = service.build("integration", deploymentData, new ByteArrayInputStream(new byte[0]));
+        
+        assertThat(reference).isEqualTo("registry/test/i-integration@sha256:hash");
+
+        final List<Request> requests = gatherRequests();
+        assertThat(requests).contains(Request.with("POST", "/apis/image.openshift.io/v1/namespaces/test/imagestreams", new ImageStreamBuilder()
+            .withNewMetadata()
+                .withName("i-integration")
+                .addToLabels(OpenShiftServiceImpl.defaultLabels())
+            .endMetadata()
+            .build()));
+        assertThat(requests).contains(Request.with("POST", "/apis/build.openshift.io/v1/namespaces/test/buildconfigs", new BuildConfigBuilder()
+            .withNewMetadata()
+                .withName("i-integration")
+                .withAnnotations(Collections.emptyMap())
+                .addToLabels(OpenShiftServiceImpl.defaultLabels())
+            .endMetadata()
+            .withNewSpec()
+                .withNewOutput()
+                    .withNewTo()
+                        .withKind("ImageStreamTag")
+                        .withName("i-integration:0")
+                    .endTo()
+                .endOutput()
+                .withNewRunPolicy("SerialLatestOnly")
+                .withNewSource()
+                    .withType("Binary")
+                .endSource()
+                .withNewStrategy()
+                    .withType("Source")
+                    .withNewSourceStrategy()
+                        .addToEnv(new EnvVar("MAVEN_OPTS", "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx300m", null))
+                        .addToEnv(new EnvVar("MAVEN_ARGS_APPEND", "--strict-checksums", null))
+                        .addToEnv(new EnvVar("BUILD_LOGLEVEL", "1", null))
+                        .addToEnv(new EnvVar("SCRIPT_DEBUG", "false", null))
+                        .withNewFrom()
+                            .withKind("ImageStreamTag")
+                            .withName("syndesis-s2i:latest")
+                        .endFrom()
+                        .withIncremental(false)
+                    .endSourceStrategy()
+                .endStrategy()
+            .endSpec()
+            .build()));
+    }
+
+    @Test
+    public void stopShouldScaleDownAndRememberReplicas() {
+        server.expect()
+            .get()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .withNewMetadata()
+                    .withNewResourceVersion("123")
+                .endMetadata()
+                .withNewSpec()
+                    .withReplicas(3)
+                .endSpec()
+                .build())
+            .times(3);
+
+        server.expect()
+            .patch()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .build())
+            .always();
+
+        server.expect()
+            .get()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .withNewMetadata()
+                    .withGeneration(1L)
+                .endMetadata()
+                .withNewSpec()
+                    .withReplicas(0)
+                .endSpec()
+                .withNewStatus()
+                    .withReplicas(0)
+                    .withObservedGeneration(1L)
+                .endStatus()
+                .build())
+            .always();
+
+        final boolean stopped = service.stop("integration");
+        assertThat(stopped).isTrue();
+
+        final List<Request> requests = gatherRequests();
+        final Map<String, Object> scaleDownPatch = new HashMap<>();
+        scaleDownPatch.put("op", "replace");
+        scaleDownPatch.put("path", "/spec/replicas");
+        scaleDownPatch.put("value", 0);
+        assertThat(requests).contains(Request.with("PATCH", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration", Collections.singletonList(scaleDownPatch)));
+
+        final Map<String, Object> setAnnotationPatch = new HashMap<>();
+        setAnnotationPatch.put("op", "add");
+        setAnnotationPatch.put("path", "/metadata/annotations");
+        setAnnotationPatch.put("value", Collections.singletonMap("syndesis.io/deploy-replicas", "3"));
+        assertThat(requests).contains(Request.with("PATCH", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration", Collections.singletonList(setAnnotationPatch)));
+    }
+
+    @Test
+    public void redeployingPreservesCustomEnvironment() {
+        final DeploymentData deploymentData = new DeploymentData.Builder()
+            .addEnvironmentVariable("ADDED", "value")
+            .build();
+
+        final DeploymentConfig expectedDeploymentConfig = baseDeploymentFor("integration", deploymentData)
+            .editSpec()
+                .editTemplate()
+                    .editSpec()
+                        .editContainer(0)
+                            .addToEnv(new EnvVar("ADDED", "value", null))
+                            .addToEnv(new EnvVar("EXISTING", "something", null))
+                        .endContainer()
+                    .endSpec()
+                .endTemplate()
+            .endSpec()
+            .build();
+
+        server.expect()
+            .get()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .withNewMetadata()
+                    .withAnnotations(Collections.emptyMap())
+                .endMetadata()
+                .withNewSpec()
+                    .withReplicas(1)
+                    .withNewTemplate()
+                        .withNewSpec()
+                            .withContainers(new ContainerBuilder()
+                                .withName("i-integration")
+                                .withEnv(new EnvVar("EXISTING", "something", null))
+                                .build())
+                        .endSpec()
+                    .endTemplate()
+                .endSpec()
+                .build())
+            .times(1);
+
+        server.expect()
+            .post()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs")
+            .andReturn(200, expectedDeploymentConfig)
+            .always();
+
+        server.expect()
+            .patch()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .build())
+            .always();
+
+        server.expect()
+            .get()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .withNewMetadata()
+                    .withGeneration(1L)
+                .endMetadata()
+                .withNewSpec()
+                    .withReplicas(0)
+                .endSpec()
+                .withNewStatus()
+                    .withReplicas(0)
+                    .withObservedGeneration(1L)
+                .endStatus()
+                .build())
+            .always();
+
+        service.deploy("integration", deploymentData);
+
+        final List<Request> requests = gatherRequests();
+        assertThat(requests).contains(Request.with("POST", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
+    }
+
+    @Test
+    public void deployShouldApplyEnvironmentChanges() {
+        final DeploymentData deploymentData = new DeploymentData.Builder()
+            .addEnvironmentVariable("CHANGED", "new value")
+            .removeEnvironmentVariable("REMOVED")
+            .removeEnvironmentVariable("EXISTING_REMOVED")
+            .build();
+
+        final DeploymentConfig expectedDeploymentConfig = baseDeploymentFor("integration", deploymentData)
+            .editSpec()
+                .editTemplate()
+                    .editSpec()
+                        .editContainer(0)
+                            .addToEnv(new EnvVar("CHANGED", "new value", null))
+                            .addToEnv(new EnvVar("EXISTING", "something1", null))
+                        .endContainer()
+                    .endSpec()
+                .endTemplate()
+            .endSpec()
+            .build();
+
+        server.expect()
+            .get()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .withNewMetadata()
+                    .withAnnotations(Collections.emptyMap())
+                .endMetadata()
+                .withNewSpec()
+                    .withReplicas(1)
+                    .withNewTemplate()
+                        .withNewSpec()
+                            .withContainers(new ContainerBuilder()
+                                .withName("i-integration")
+                                .addToEnv(new EnvVar("CHANGED", "old value", null))
+                                .addToEnv(new EnvVar("REMOVED", "value", null))
+                                .addToEnv(new EnvVar("EXISTING", "something1", null))
+                                .addToEnv(new EnvVar("EXISTING_REMOVED", "something2", null))
+                                .build())
+                        .endSpec()
+                    .endTemplate()
+                .endSpec()
+                .build())
+            .times(1);
+
+        server.expect()
+            .post()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs")
+            .andReturn(200, expectedDeploymentConfig)
+            .always();
+
+        server.expect()
+            .patch()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .build())
+            .always();
+
+        server.expect()
+            .get()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .withNewMetadata()
+                    .withGeneration(1L)
+                .endMetadata()
+                .withNewSpec()
+                    .withReplicas(0)
+                .endSpec()
+                .withNewStatus()
+                    .withReplicas(0)
+                    .withObservedGeneration(1L)
+                .endStatus()
+                .build())
+            .always();
+
+        service.deploy("integration", deploymentData);
+
+        final List<Request> requests = gatherRequests();
+        assertThat(requests).contains(Request.with("POST", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
+    }
+
+    @Test
+    public void redeployingPreservesCustomReplicas() {
+        final DeploymentData deploymentData = new DeploymentData.Builder()
+            .build();
+
+        final DeploymentConfig expectedDeploymentConfig = baseDeploymentFor("integration", deploymentData)
+            .editMetadata()
+                .addToAnnotations(OpenShiftService.DEPLOYMENT_REPLICAS_ANNOTATION, "3")
+            .endMetadata()
+            .build();
+
+        server.expect()
+            .get()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .withNewMetadata()
+                    .addToAnnotations(OpenShiftService.DEPLOYMENT_REPLICAS_ANNOTATION, "3")
+                .endMetadata()
+                .withNewSpec()
+                    .withReplicas(3)
+                    .withNewTemplate()
+                        .withNewSpec()
+                            .withContainers(new ContainerBuilder()
+                                .withName("i-integration")
+                                .build())
+                        .endSpec()
+                    .endTemplate()
+                .endSpec()
+                .build())
+            .times(1);
+
+        server.expect()
+            .post()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs")
+            .andReturn(200, expectedDeploymentConfig)
+            .always();
+
+        server.expect()
+            .patch()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .build())
+            .always();
+
+        server.expect()
+            .get()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .withNewMetadata()
+                    .withGeneration(1L)
+                .endMetadata()
+                .withNewSpec()
+                    .withReplicas(0)
+                .endSpec()
+                .withNewStatus()
+                    .withReplicas(0)
+                    .withObservedGeneration(1L)
+                .endStatus()
+                .build())
+            .always();
+
+        service.deploy("integration", deploymentData);
+
+        final List<Request> requests = gatherRequests();
+        assertThat(requests).contains(Request.with("POST", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
+    }
+
+    @Test
+    public void redeployingPreservesCustomStrategy() {
+        final DeploymentData deploymentData = new DeploymentData.Builder()
+            .build();
+
+        final DeploymentConfig expectedDeploymentConfig = baseDeploymentFor("integration", deploymentData)
+            .editSpec()
+                .withNewStrategy()
+                    .withType("Rolling")
+                    .withNewRollingParams()
+                        .withUpdatePeriodSeconds(1L)
+                        .withIntervalSeconds(1L)
+                        .withTimeoutSeconds(120L)
+                        .withNewMaxSurge("20%")
+                        .withNewMaxUnavailable("10%")
+                    .endRollingParams()
+                    .withNewResources()
+                       .addToLimits("memory", new Quantity("2Gi"))
+                       .addToRequests("memory", new Quantity("2Gi"))
+                    .endResources()
+                .endStrategy()
+            .endSpec()
+            .build();
+
+        server.expect()
+            .get()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, expectedDeploymentConfig)
+            .times(1);
+
+        server.expect()
+            .post()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs")
+            .andReturn(200, expectedDeploymentConfig)
+            .always();
+
+        server.expect()
+            .patch()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .build())
+            .always();
+
+        server.expect()
+            .get()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .withNewMetadata()
+                    .withGeneration(1L)
+                .endMetadata()
+                .withNewSpec()
+                    .withReplicas(0)
+                .endSpec()
+                .withNewStatus()
+                    .withReplicas(0)
+                    .withObservedGeneration(1L)
+                .endStatus()
+                .build())
+            .always();
+
+        service.deploy("integration", deploymentData);
+
+        final List<Request> requests = gatherRequests();
+        assertThat(requests).contains(Request.with("POST", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
+    }
+
+    @Test
+    public void redeployingPreservesCustomVolumes() {
+        final DeploymentData deploymentData = new DeploymentData.Builder()
+            .build();
+
+        final DeploymentConfig expectedDeploymentConfig = baseDeploymentFor("integration", deploymentData)
+            .editSpec()
+                .editTemplate()
+                    .editSpec()
+                        .editContainer(0)
+                            .addNewVolumeMount()
+                                .withMountPath("/custom")
+                                .withName("custom-config")
+                            .endVolumeMount()
+                        .endContainer()
+                        .addNewVolume()
+                            .withNewConfigMap()
+                                .withName("custom-config")
+                            .endConfigMap()
+                        .endVolume()
+                    .endSpec()
+                .endTemplate()
+            .endSpec()
+            .build();
+
+        server.expect()
+            .get()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, expectedDeploymentConfig)
+            .times(1);
+
+        server.expect()
+            .post()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs")
+            .andReturn(200, expectedDeploymentConfig)
+            .always();
+
+        server.expect()
+            .patch()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .build())
+            .always();
+
+        server.expect()
+            .get()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, new DeploymentConfigBuilder()
+                .withNewMetadata()
+                    .withGeneration(1L)
+                .endMetadata()
+                .withNewSpec()
+                    .withReplicas(0)
+                .endSpec()
+                .withNewStatus()
+                    .withReplicas(0)
+                    .withObservedGeneration(1L)
+                .endStatus()
+                .build())
+            .always();
+
+        service.deploy("integration", deploymentData);
+
+        final List<Request> requests = gatherRequests();
+        assertThat(requests).contains(Request.with("POST", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
+    }
+
     DeploymentConfigBuilder baseDeploymentFor(final String name, final DeploymentData deploymentData) {
         return new DeploymentConfigBuilder()
             .withNewMetadata()
                 .withName(openshiftName(name))
                 .addToAnnotations(deploymentData.getAnnotations())
+                .addToAnnotations(OpenShiftService.DEPLOYMENT_REPLICAS_ANNOTATION, "1")
                 .addToLabels(deploymentData.getLabels())
                 .addToLabels(OpenShiftServiceImpl.defaultLabels())
             .endMetadata()
             .withNewSpec()
-                .withReplicas(1)
+                .withReplicas(0)
                 .addToSelector("syndesis.io/integration", openshiftName(name))
                 .withNewStrategy()
                     .withType("Recreate")
@@ -557,8 +1107,17 @@ public class OpenShiftServiceImplTest {
 
     void expectDeploymentOf(final String name, final DeploymentConfig expectedDeploymentConfig) {
         final DeploymentConfig deployed = new DeploymentConfigBuilder(expectedDeploymentConfig)
+            .withNewMetadata()
+                .withGeneration(1L)
+            .endMetadata()
+            .withNewSpec()
+                .withReplicas(1)
+            .endSpec()
             .withNewStatus()
                 .withLatestVersion(1L)
+                .withReplicas(1)
+                .withReadyReplicas(1)
+                .withObservedGeneration(1L)
             .endStatus()
             .build();
         server.expect()

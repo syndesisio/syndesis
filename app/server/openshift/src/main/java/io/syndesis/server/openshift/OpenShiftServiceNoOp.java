@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 public class OpenShiftServiceNoOp implements OpenShiftService {
 
@@ -64,8 +63,8 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
     }
 
     @Override
-    public void scale(String name, Map<String, String> lables, int desiredReplicas, long amount, TimeUnit timeUnit)  {
-        // Empty no-op just for testing
+    public boolean stop(String name)  {
+        return true;
     }
 
     @Override

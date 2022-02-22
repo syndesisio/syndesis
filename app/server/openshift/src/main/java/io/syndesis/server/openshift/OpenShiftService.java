@@ -19,7 +19,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.HasMetadata;
@@ -91,14 +90,11 @@ public interface OpenShiftService {
     boolean exists(String name);
 
     /**
-     * Scale the deployment (Deployment and Build configurations, Image Streams etc)
+     * Stop the deployment (DeploymentConfig)
      * @param name of the deployment to delete
-     * @param labels a set of labels that need to be match.
-     * @param desiredReplicas how many replicas to scale to
-     * @param amount of time to wait for scaling
-     * @param timeUnit of the time
+     * @return true if deployment was stopped
      */
-    void scale(String name, Map<String, String> labels, int desiredReplicas, long amount, TimeUnit timeUnit) throws InterruptedException;
+    boolean stop(String name);
 
 
     /**

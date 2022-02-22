@@ -17,6 +17,7 @@ package io.syndesis.server.openshift;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
@@ -37,7 +38,7 @@ public class OpenShiftConfigurationProperties {
 
     private OpenShiftConfig openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(masterUrlHost).build();
 
-    private String builderImageStreamTag = "s2i-java:2.0";
+    private String builderImageStreamTag = "syndesis-s2i:latest";
 
     private String deploymentMemoryRequestMi = "280";
     private String deploymentMemoryLimitMi = "512";
@@ -62,7 +63,7 @@ public class OpenShiftConfigurationProperties {
 
     private String managementUrlFor3scale;
 
-    private SchedulingConfiguration scheduling;
+    private SchedulingConfiguration scheduling = new SchedulingConfiguration();
 
     public static class SchedulingConfiguration {
         private Affinity affinity;
@@ -109,7 +110,7 @@ public class OpenShiftConfigurationProperties {
     public void setOpenShiftHost(String openShiftHost) {
 
         if (!masterUrlHost.equals(openShiftHost)) {
-            openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(masterUrlHost).build();
+            openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(openShiftHost).build();
             this.masterUrlHost = openShiftHost;
         }
     }
@@ -235,6 +236,6 @@ public class OpenShiftConfigurationProperties {
     }
 
     public void setScheduling(SchedulingConfiguration scheduling) {
-        this.scheduling = scheduling;
+        this.scheduling = Objects.requireNonNull(scheduling, "scheduling");
     }
 }
