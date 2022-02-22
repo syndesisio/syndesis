@@ -1,22 +1,6 @@
-FROM centos:7
-
-ARG version=latest
-ARG openjdk_rpm=java-1.8.0-openjdk-headless
-
-WORKDIR /opt
+FROM registry.access.redhat.com/ubi8/openjdk-8
 
 LABEL maintainer="dev@syndesis.io"
-
-# Install jq & oc
-# Enable EPEL for "uniguruma" package (required by jq)
-RUN yum clean all \
- && yum update -y \
- && yum install -y "epel-release" \
- && sed -i -e 's/#baseurl/baseurl/g' -e 's/metalink/#metalink/g' /etc/yum.repos.d/epel.repo \
- && yum install -y \
-        "$openjdk_rpm" \
- && chgrp -R 0 /opt \
- && chmod -R g=u /opt
 
 # Copy licenses
 RUN mkdir -p /opt/ipaas/licenses
