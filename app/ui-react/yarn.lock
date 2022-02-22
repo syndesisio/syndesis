@@ -246,22 +246,17 @@
   dependencies:
     tslib "^2.0.0"
 
-"@atlasmap/atlasmap@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap/-/atlasmap-2.3.2.tgz#5dc666f2c9d72fee6a3f549efcc5b80c69db19e5"
-  integrity sha512-zcirSOhYvdxVxGP4kMDH/5cXI0sQJBpPDj5f7hj07yXy4FokF6gQgR0A3RKNJ0N8fJCQD8DP2eZyaXpwMyLxuQ==
+"@atlasmap/atlasmap@^2.3.13":
+  version "2.3.13"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap/-/atlasmap-2.3.13.tgz#9f1934a679f5bb0a1aebcd83aa5312f841274ca9"
+  integrity sha512-E9txFJ85iQVhqHxEFVF6Bjjcdns+9smOwnugp+vymr/4T1S974sTIR1QRhJDv59SPWEq9xGNcpDoTK2IOuLScQ==
   dependencies:
-    "@atlasmap/core" "^2.3.2"
+    "@atlasmap/core" "^2.3.13"
 
-"@atlasmap/core@^2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@atlasmap/core/-/core-2.3.1.tgz#b6420e787c85535c82565ba3c1ab19432d6f695c"
-  integrity sha512-dcaR+I4ioTl/voPTU1aEynaw5hMC3r9FAuRenz8q1xIb95+zMZ7zMoR1kWdPzLCCkcHkt8E3SQKM21FuHh1BfQ==
-
-"@atlasmap/core@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@atlasmap/core/-/core-2.3.2.tgz#5e2f0559c10706ab2d58ac7e283c3b46c2f8c290"
-  integrity sha512-Qw49nbwu7Ql6M12XlVI9ov8BFUs7p6T/CNbtendNRS0XTDRrjge08wpGlGtzMHhNrsh0Mxza4HyFjxMdet/cpw==
+"@atlasmap/core@^2.3.13":
+  version "2.3.13"
+  resolved "https://registry.yarnpkg.com/@atlasmap/core/-/core-2.3.13.tgz#bcdb4f16c53724479cca9f6332a9c324d9b02663"
+  integrity sha512-kui51A9hTSLV0EiuNIZ6ItZYtGWQG69tvd5w4LUtAsFKkScfNzoqP3wS4z36JA/LKzy5u7mTjRye9V2CNyOH9A==
 
 "@azure/abort-controller@^1.0.0":
   version "1.0.4"
@@ -4745,6 +4740,18 @@
   version "0.0.29"
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
+
+"@types/lodash.isequal@^4.5.5":
+  version "4.5.5"
+  resolved "https://registry.yarnpkg.com/@types/lodash.isequal/-/lodash.isequal-4.5.5.tgz#4fed1b1b00bef79e305de0352d797e9bb816c8ff"
+  integrity sha512-4IKbinG7MGP131wRfceK6W4E/Qt3qssEFLF30LnJbjYiSfHGGRU/Io8YxXrZX109ir+iDETC8hw8QsDijukUVg==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.178"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.178.tgz#341f6d2247db528d4a13ddbb374bcdc80406f4f8"
+  integrity sha512-0d5Wd09ItQWH1qFbEyQ7oTQ3GZrMfth5JkbN3EvTKLXcHLRDSXeLnlvlOn0wvxVIwK5o2M8JzP/OWz7T3NRsbw==
 
 "@types/marked@0.7.0":
   version "0.7.0"

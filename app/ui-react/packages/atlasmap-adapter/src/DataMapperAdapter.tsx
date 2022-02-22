@@ -50,6 +50,16 @@ export interface IDataMapperAdapterProps {
   onMappings(mappings: string): void;
 }
 
+export interface IParameter {
+  name: string;
+  label: string;
+  value: string;
+  boolean?: boolean;
+  options?: IParameterOption[];
+  enabled?: boolean;
+  required?: boolean;
+}
+
 export const DataMapperAdapter: React.FunctionComponent<IDataMapperAdapterProps> =
   ({
     documentId,
@@ -73,8 +83,6 @@ export const DataMapperAdapter: React.FunctionComponent<IDataMapperAdapterProps>
         } as IAtlasmapProviderProps['externalDocument']),
       [initialMappings, documentId, inputDocuments, outputDocument]
     );
-    // tslint:disable-next-line: no-console
-    console.log('Atlasmap document', JSON.stringify(externalDocument));
     return (
       <AtlasmapProvider
         logLevel={'warn'}
@@ -132,66 +140,38 @@ export const DataShapeParametersDialog: React.FunctionComponent<{
   onConfirm,
   onCancel,
 }) => {
-  // Keep a copy of the defaults around as parameterDefinition is mutated in AtlasMap
-  // we're doing a 1-node deep clone, assuming that the only property that's 2-levels
-  // deep (options is IParameterOption[]) will not be mutated
-  const defaultParameterDefinition = parameterDefinition.map((v) => ({ ...v }));
-
-  // Clicking Cancel in the AtlasMap parameters dialog results in the reset of the internal
-  // state of the dialog in such a way that the parameters selected by the user are lost,
-  // or at least not shown. For example if the user selects "Skip Header Record" and ticks
-  // it so it's value is set to `true`, by clicking on "Confirm" a single parameter for
-  // "Skip Header Record" is provided on `onConfirm` callback with the side effect of
-  // changing the internal state in `definedParameters`, on "onCancel" callback
-  // resets the internal state in `definedParameters` to initial state loosing all user
-  // entered values.
-  // As a workaround, we're mixing the initial parameters with the selected parameters
-  // so that we can keep the state of `definedParameters` as expected for the dialog
-  // to present all possible values and keep the user selected values.
-  // The trick is in setting the unexported property `enabled` which is consulted in
-  // the `reset` function in handling of cancel.
-  // Ref. https://github.com/atlasmap/atlasmap/issues/2990
-  const computeDialogParameters = (
-    given?: IParameters
-  ): IParameterDefinition[] => {
+  const parametersToParameterArray = (given?: IParameters): IParameter[] => {
     if (given === undefined) {
       return [];
     }
 
-    return parameterDefinition.map((defn) => {
+    return parameterDefinition.reduce((acc, defn) => {
       if (defn.name in given) {
-        defn.value = given[defn.name];
-        // dirty trick to get `reset` within ParametersDialog not to reset the
-        // state of `definedParameters`
-        defn.enabled = true;
-      } else {
-        const defaultOption = defaultParameterDefinition.find(
-          (p) => p.name === defn.name
-        );
-        Object.assign(defn, defaultOption);
-        defn.enabled = undefined;
+        acc.push({ ...defn, value: given[defn.name] });
       }
 
-      return defn;
-    });
+      return acc;
+    }, [] as IParameter[]);
+  };
+
+  const parameterArrayToParams = (given: IParameter[]): IParameters => {
+    return given.reduce((acc, param) => {
+      acc[param.name] = param.value;
+
+      return acc;
+    }, {});
   };
 
   // we wish to maintain the interface between usage of DataShapeParametersDialog
   // and AtlasMap, and hide any idiosyncrasies, to `onConfirm` we wish to provide
   // only key-value IParameters choosen by the user, while maintaining the state
   // of ParametersDialog in AtlasMap, as noted above
-  const handleConfirm = (given: IParameterDefinition[]) => {
-    const newParameters = given.reduce((givenParams, givenParam) => {
-      givenParams[givenParam.name] = givenParam.value;
-      return givenParams;
-    }, {});
-    setParams(computeDialogParameters(newParameters));
-    onConfirm(newParameters);
+  const handleConfirm = (given: IParameter[]) => {
+    setParams(parameterArrayToParams(given));
+    onConfirm(parameterArrayToParams(given));
   };
 
-  const [params, setParams] = React.useState(
-    computeDialogParameters(parameters)
-  );
+  const [params, setParams] = React.useState(parameters);
 
   return (
     <ParametersDialog
@@ -199,7 +179,8 @@ export const DataShapeParametersDialog: React.FunctionComponent<{
       title={title}
       onCancel={onCancel}
       onConfirm={handleConfirm}
-      parameters={params.length === 0 ? parameterDefinition : params}
+      initialParameters={parametersToParameterArray(params)}
+      parameters={parameterDefinition}
     />
   );
 };

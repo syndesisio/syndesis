@@ -45,6 +45,7 @@ export interface IUIIntegrationStep extends IUIStep {
   previousStepShouldDefineDataShapePosition?: number;
   shouldAddDataMapper: boolean;
   shouldAddDefaultFlow: boolean;
+  shouldEditDataMapper: boolean;
   isUnclosedSplit: boolean;
   restrictedDelete: boolean;
   notConfigurable: boolean;
@@ -175,7 +176,7 @@ export interface IApiProviderEditorRouteState
  * @param mode - valid choice configuration modes.
  */
 export interface IChoiceStepRouteParams extends IConfigureStepRouteParams {
-  configMode: 'basic' | 'advanced'
+  configMode: 'basic' | 'advanced';
 }
 export interface IChoiceStepRouteState extends IConfigureStepRouteState {}
 
@@ -185,7 +186,8 @@ export interface IDataMapperRouteParams extends IConfigureStepRouteParams {}
 export interface IDataMapperRouteState extends IConfigureStepRouteState {}
 export interface IRuleFilterStepRouteParams extends IConfigureStepRouteParams {}
 export interface IRuleFilterStepRouteState extends IConfigureStepRouteState {}
-export interface ISelectConfigModeRouteParams extends IConfigureStepRouteParams {}
+export interface ISelectConfigModeRouteParams
+  extends IConfigureStepRouteParams {}
 export interface ISelectConfigModeRouteState extends IConfigureStepRouteState {}
 export interface ISelectConnectionRouteState extends IBaseRouteState {}
 export interface IPostPublishRouteParams extends IBaseRouteParams {}

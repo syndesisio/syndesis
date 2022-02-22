@@ -1,8 +1,8 @@
 import {
   AGGREGATE,
   DataShapeKinds,
-  getPreviousIntegrationStepsWithDataShape,
-  getSubsequentIntegrationStepsWithDataShape,
+  getPreviousIntegrationStepsWithOutputDataShape,
+  getSubsequentIntegrationStepsWithInputDataShape,
   SPLIT,
   toDataShapeKinds,
 } from '@syndesis/api';
@@ -142,7 +142,7 @@ export function getInputDocuments(
   flowId: string,
   position: number
 ) {
-  const allPreviousSteps = getPreviousIntegrationStepsWithDataShape(
+  const allPreviousSteps = getPreviousIntegrationStepsWithOutputDataShape(
     integration,
     flowId,
     position
@@ -173,7 +173,7 @@ export function getOutputDocument(
   stepId: string,
   isAddingStep: boolean
 ) {
-  const subsequentSteps = getSubsequentIntegrationStepsWithDataShape(
+  const subsequentSteps = getSubsequentIntegrationStepsWithInputDataShape(
     integration,
     flowId,
     isAddingStep ? position - 1 : position

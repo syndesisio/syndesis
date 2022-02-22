@@ -15,6 +15,7 @@ import {
 } from '@syndesis/models';
 import { key as generateKey } from '@syndesis/utils';
 import produce from 'immer';
+import isEqual from 'lodash.isequal';
 import {
   AGGREGATE,
   API_PROVIDER,
@@ -33,6 +34,10 @@ import {
   PRIMARY_FLOW_ID_METADATA_KEY,
   STEP_ID_METADATA_KEY,
 } from '../constants';
+
+function timestampStr(): string {
+  return new Date().getTime().toString(10);
+}
 
 export function toDataShapeKindType(kind?: DataShapeKinds): DataShapeKindType {
   return kind!.toLowerCase() as DataShapeKindType;
@@ -85,7 +90,7 @@ export function toDataShapeKinds(
  *
  */
 export function getEmptyIntegration(): Integration {
-  return produce(NEW_INTEGRATION, draft => {
+  return produce(NEW_INTEGRATION, (draft) => {
     draft.flows = [
       {
         id: generateKey(),
@@ -100,8 +105,8 @@ export function setIntegrationProperties(
   integration: Integration,
   properties: StringMap<any>
 ): Integration {
-  return produce(integration, nextIntegration => {
-    Object.keys(properties).forEach(k => {
+  return produce(integration, (nextIntegration) => {
+    Object.keys(properties).forEach((k) => {
       nextIntegration[k] = properties[k];
     });
   });
@@ -191,7 +196,7 @@ function validateFlowSteps(flow: Flow) {
     ...{
       steps: (flow.steps || [])
         .map(setStepId)
-        .filter(s => typeof s.stepKind !== 'undefined'),
+        .filter((s) => typeof s.stepKind !== 'undefined'),
     },
   };
 }
@@ -211,13 +216,13 @@ function validateFlows(flows: Flow[] = []) {
  */
 function buildTags(flows: Flow[] = [], tags: string[] = []) {
   const connectorIds = ([] as string[]).concat(
-    ...flows.map(f =>
+    ...flows.map((f) =>
       f
         .steps!.filter(
-          step =>
+          (step) =>
             step.stepKind === ENDPOINT && typeof step.connection !== 'undefined'
         )
-        .map(step => step.connection!.connectorId!)
+        .map((step) => step.connection!.connectorId!)
     )
   );
   return Array.from(new Set([...tags, ...connectorIds]));
@@ -284,8 +289,9 @@ export function hasDataShape(step: Step, isInput = false) {
   }
 
   const kind = toDataShapeKinds(dataShape.kind);
-  if (kind === DataShapeKinds.NONE && !isInput) {
-    // input datashape of NONE is considered preset as mapper can insert constants, i.e. it can operatate without any input data
+  if (kind === DataShapeKinds.NONE && isInput) {
+    // output datashape of NONE is considered preset as mapper can insert constants, i.e. it can operatate without any input data
+    // input datashape of NONE is considered not present
     return false;
   }
 
@@ -646,8 +652,8 @@ export async function sanitizeFlow(
     new Set([
       ...(flow.tags || []),
       ...flow.steps
-        .filter(s => s.connection && s.connection.id)
-        .map(s => s.connection!.id),
+        .filter((s) => s.connection && s.connection.id)
+        .map((s) => s.connection!.id),
     ])
   ) as string[];
   // Ensure the type is set properly on the flow, if it's not set we assume it's a primary flow
@@ -688,7 +694,7 @@ export function getFlow(integration: Integration, flowId: string) {
   if (!integration || !integration.flows || !flowId) {
     return undefined;
   }
-  return integration.flows.find(flow => flow.id === flowId);
+  return integration.flows.find((flow) => flow.id === flowId);
 }
 
 /**
@@ -706,7 +712,7 @@ export async function setFlow(
   if (getFlow(integration, flow.id!)) {
     const updatedIntegration = {
       ...integration,
-      flows: integration.flows!.map(f => {
+      flows: integration.flows!.map((f) => {
         if (f.id === flow.id) {
           return flow;
         }
@@ -737,7 +743,7 @@ export function reconcileIntegration(
   let reconciledIntegration = { ...integration };
 
   const conditionalFlowsSteps = updatedFlow.steps!.filter(
-    step => step.stepKind === CHOICE
+    (step) => step.stepKind === CHOICE
   );
   for (const cfStep of conditionalFlowsSteps) {
     reconciledIntegration = reconcileConditionalFlows(
@@ -773,7 +779,7 @@ export function reconcileConditionalFlows(
     integration.flows!,
     stepId
   );
-  const updatedFlows = alternateFlows.map(flow => {
+  const updatedFlows = alternateFlows.map((flow) => {
     const startFlowStep = setDataShapeOnStep(
       { ...flow.steps![0] },
       flowStartDataShape,
@@ -801,7 +807,7 @@ export function reconcileConditionalFlows(
  */
 export function getFlowsWithoutLinkedStepId(flows: Flow[], stepId: string) {
   return flows.filter(
-    flow =>
+    (flow) =>
       flow.type === FlowType.PRIMARY ||
       flow.type === FlowType.API_PROVIDER ||
       getMetadataValue(STEP_ID_METADATA_KEY, flow.metadata) !== stepId
@@ -816,7 +822,7 @@ export function getFlowsWithoutLinkedStepId(flows: Flow[], stepId: string) {
  */
 export function getFlowsWithLinkedStepId(flows: Flow[], stepId: string) {
   return flows.filter(
-    flow =>
+    (flow) =>
       flow.type === FlowType.ALTERNATE &&
       getMetadataValue(STEP_ID_METADATA_KEY, flow.metadata) === stepId
   );
@@ -885,6 +891,26 @@ export function setStepInFlow(
   );
 }
 
+export function _shapesDiffer(
+  current?: DataShape,
+  updated?: DataShape
+): boolean {
+  if (typeof current === 'undefined') {
+    if (typeof updated === 'undefined') {
+      return false;
+    }
+    return true;
+  } else if (typeof updated === 'undefined') {
+    return true;
+  }
+
+  return (
+    current.kind !== updated?.kind ||
+    current.specification !== updated?.specification ||
+    !isEqual(current.parameters, updated?.parameters)
+  );
+}
+
 /**
  * Returns a new flow object with the supplied step set at the given position
  * @param flow
@@ -896,7 +922,34 @@ export function applyUpdatedStep(flow: Flow, step: Step, position: number) {
   if (typeof step.id === 'undefined') {
     step.id = generateKey();
   }
-  steps[position] = { ...step };
+
+  // if the previous output data shape differs from the updated data shape
+  // update the outputUpdatedAt, don't do this for the mapping step it has
+  // updatedAt metadata property
+  let outputUpdatedAt = steps[position].metadata?.outputUpdatedAt as string;
+  const currentOutputDataShape =
+    steps[position].action?.descriptor?.outputDataShape;
+  const updatedOutputDataShape = step.action?.descriptor?.outputDataShape;
+  if (
+    step.stepKind !== 'mapper' &&
+    _shapesDiffer(currentOutputDataShape, updatedOutputDataShape)
+  ) {
+    outputUpdatedAt = timestampStr();
+  }
+
+  // for mapping step update the updatedAt metadata property
+  const metadata: { [name: string]: string } = {
+    ...step.metadata,
+    outputUpdatedAt,
+  };
+  if (step.stepKind === 'mapper') {
+    metadata.updatedAt = timestampStr();
+  }
+
+  steps[position] = {
+    ...step,
+    metadata,
+  };
   return { ...flow!, steps };
 }
 
@@ -953,7 +1006,7 @@ export function getChoiceConfigMode(step: StepKind) {
     step.configuredProperties!.flows.length > 0
   ) {
     const flows = JSON.parse(step.configuredProperties!.flows) as any[];
-    if (flows.find(flow => flow.condition!.length > 0)) {
+    if (flows.find((flow) => flow.condition!.length > 0)) {
       return 'advanced';
     } else {
       return 'basic';
@@ -980,9 +1033,13 @@ export function insertStepAfter(steps: Step[], step: Step, position: number) {
  * @param position
  */
 export function insertStepBefore(steps: Step[], step: Step, position: number) {
+  const stepToInsert = { ...step };
+  if (step.stepKind === 'mapper') {
+    stepToInsert.metadata = { ...step.metadata, updatedAt: timestampStr() };
+  }
   return ([] as Step[]).concat(
     ...steps.slice(0, position),
-    step,
+    stepToInsert,
     ...steps.slice(position)
   );
 }
@@ -1217,7 +1274,7 @@ export function getSubsequentConnections(
 ) {
   const steps = getIntegrationSubsequentSteps(integration, flowId, position);
   if (steps) {
-    return steps.filter(s => s.stepKind === ENDPOINT);
+    return steps.filter((s) => s.stepKind === ENDPOINT);
   }
   // TODO this seems like an odd thing to do, but preserving semantics for now
   return null;
@@ -1236,7 +1293,7 @@ export function getPreviousConnections(
 ) {
   const steps = getPreviousIntegrationSteps(integration, flowId, position);
   if (steps) {
-    return steps.filter(s => s.stepKind === ENDPOINT);
+    return steps.filter((s) => s.stepKind === ENDPOINT);
   }
   // TODO this seems like an odd thing to do, but preserving semantics for now
   return null;
@@ -1277,7 +1334,7 @@ export function getSubsequentConnection(
  * @param flowId
  * @param position
  */
-export function getSubsequentIntegrationStepsWithDataShape(
+export function getSubsequentIntegrationStepsWithInputDataShape(
   integration: Integration,
   flowId: string,
   position: number
@@ -1288,7 +1345,7 @@ export function getSubsequentIntegrationStepsWithDataShape(
       .map((step, index) => {
         return { step, index: position + index };
       })
-      .filter(indexedStep => hasDataShape(indexedStep.step, true));
+      .filter((indexedStep) => hasDataShape(indexedStep.step, true));
   }
   // TODO preserving semantics for now
   return [];
@@ -1300,13 +1357,13 @@ export function getSubsequentIntegrationStepsWithDataShape(
  * @param flowId
  * @param position
  */
-export function getPreviousIntegrationStepsWithDataShape(
+export function getPreviousIntegrationStepsWithOutputDataShape(
   integration: Integration,
   flowId: string,
   position: number
 ): IndexedStep[] {
   const steps = getSteps(integration, flowId);
-  return getPreviousStepsWithDataShape(steps || [], position);
+  return getPreviousStepsWithOutputDataShape(steps || [], position);
 }
 
 /**
@@ -1323,7 +1380,7 @@ export function getOutputDataShapeFromPreviousStep(
 ): DataShape {
   let dataShape = {} as DataShape;
   try {
-    const prevStep = getPreviousIntegrationStepWithDataShape(
+    const prevStep = getPreviousIntegrationStepWithOutputDataShape(
       integration,
       flowId,
       position
@@ -1342,7 +1399,7 @@ export function getOutputDataShapeFromPreviousStep(
  * @param steps
  * @param position
  */
-export function getPreviousStepsWithDataShape(
+export function getPreviousStepsWithOutputDataShape(
   steps: Step[],
   position: number
 ): Array<{ step: Step; index: number }> {
@@ -1352,7 +1409,7 @@ export function getPreviousStepsWithDataShape(
       .map((step, index) => {
         return { step, index };
       })
-      .filter(indexedStep => hasDataShape(indexedStep.step, false));
+      .filter((indexedStep) => hasDataShape(indexedStep.step, false));
   }
   // TODO preserving semantics for now
   return [];
@@ -1364,12 +1421,12 @@ export function getPreviousStepsWithDataShape(
  * @param flowId
  * @param position
  */
-export function getPreviousIntegrationStepIndexWithDataShape(
+export function getPreviousIntegrationStepIndexWithOutputDataShape(
   integration: Integration,
   flowId: string,
   position: number
 ) {
-  const steps = getPreviousIntegrationStepsWithDataShape(
+  const steps = getPreviousIntegrationStepsWithOutputDataShape(
     integration,
     flowId,
     position
@@ -1386,13 +1443,13 @@ export function getPreviousIntegrationStepIndexWithDataShape(
  * @param flowId
  * @param position
  */
-export function getPreviousIntegrationStepWithDataShape(
+export function getPreviousIntegrationStepWithOutputDataShape(
   integration: Integration,
   flowId: string,
   position: number
 ) {
   const steps = getSteps(integration, flowId);
-  return getPreviousStepWithDataShape(steps || [], position);
+  return getPreviousStepWithOutputDataShape(steps || [], position);
 }
 
 /**
@@ -1400,8 +1457,11 @@ export function getPreviousIntegrationStepWithDataShape(
  * @param steps
  * @param position
  */
-export function getPreviousStepWithDataShape(steps: Step[], position: number) {
-  const previousSteps = getPreviousStepsWithDataShape(steps, position);
+export function getPreviousStepWithOutputDataShape(
+  steps: Step[],
+  position: number
+) {
+  const previousSteps = getPreviousStepsWithOutputDataShape(steps, position);
   if (previousSteps && previousSteps.length) {
     return previousSteps[previousSteps.length - 1].step;
   }
@@ -1414,12 +1474,12 @@ export function getPreviousStepWithDataShape(steps: Step[], position: number) {
  * @param flowId
  * @param position
  */
-export function getSubsequentIntegrationStepWithDataShape(
+export function getSubsequentIntegrationStepWithInputDataShape(
   integration: Integration,
   flowId: string,
   position: number
 ) {
-  const steps = getSubsequentIntegrationStepsWithDataShape(
+  const steps = getSubsequentIntegrationStepsWithInputDataShape(
     integration,
     flowId,
     position
@@ -1508,7 +1568,7 @@ export function getNextAggregateStep(
 ): Step | undefined {
   const subsequentSteps = getSubsequentSteps(steps, position);
   if (subsequentSteps && subsequentSteps.length) {
-    return subsequentSteps.filter(s => s.stepKind === AGGREGATE)[0];
+    return subsequentSteps.filter((s) => s.stepKind === AGGREGATE)[0];
   }
   return undefined;
 }
@@ -1619,7 +1679,7 @@ export function createConditionalFlowEnd(connection: Connection): StepKind {
  */
 function getConnectorAction(id: string, connection: Connection): Action {
   return connection!.connector!.actions!.find(
-    action => action.id === id
+    (action) => action.id === id
   ) as Action;
 }
 
@@ -1751,9 +1811,9 @@ export function getConditionalFlowGroups(integration: IntegrationOverview) {
   ];
   // potentially we have many flows that belong to different steps, so group flows by step id
   const flowGroups: Array<{ id: string; flows: Flow[] }> = [];
-  conditionalFlows.forEach(flow => {
+  conditionalFlows.forEach((flow) => {
     const stepId = getMetadataValue<string>('stepId', flow.metadata);
-    const flowGroup = flowGroups.find(group => group.id === stepId);
+    const flowGroup = flowGroups.find((group) => group.id === stepId);
     if (flowGroup) {
       flowGroup.flows.push(flow);
     } else {
@@ -1769,7 +1829,7 @@ export function getConditionalFlowGroupsFor(
 ) {
   const flowGroups = getConditionalFlowGroups(integration);
   return flowGroups.filter(
-    group => getPrimaryFlowId(integration, group.flows[0]) === primaryId
+    (group) => getPrimaryFlowId(integration, group.flows[0]) === primaryId
   );
 }
 

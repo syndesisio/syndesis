@@ -13,8 +13,8 @@ import {
   FLOW_END_ACTION_ID,
   FLOW_START_ACTION_ID,
   getNextAggregateStep,
+  getPreviousStepWithOutputDataShape,
   getPreviousSteps,
-  getPreviousStepWithDataShape,
   getSubsequentSteps,
   HIDE_FROM_STEP_SELECT,
   isActionOutputShapeless,
@@ -44,6 +44,7 @@ import {
   IUIIntegrationStep,
   IUIStep,
 } from './interfaces';
+import isEqual from 'lodash.isequal';
 
 type StepKindHrefCallback = (
   step: StepKind,
@@ -156,8 +157,31 @@ export function isSameDataShape(one: DataShape, other: DataShape): boolean {
   return (
     one.kind === other.kind &&
     one.type === other.type &&
-    one.specification === other.specification
+    one.specification === other.specification &&
+    isEqual(one.parameters, other.parameters)
   );
+}
+
+function isMappingOutdated(
+  mappingUpdatedAtStr: string | undefined,
+  stepUpdatedAtStr: string | undefined
+): boolean {
+  const mappingUpdatedAt = parseInt(mappingUpdatedAtStr || '', 10);
+  const stepUpdatedAt = parseInt(stepUpdatedAtStr || '', 10);
+  if (isNaN(mappingUpdatedAt) && !isNaN(stepUpdatedAt)) {
+    // a step's shape was updated and mapping step was not touched
+    return true;
+  }
+
+  return stepUpdatedAt > mappingUpdatedAt;
+}
+
+function isCompatibleDataShape(one: DataShape, other: DataShape): boolean {
+  if (other.kind === 'any') {
+    return true;
+  }
+
+  return isSameDataShape(one, other);
 }
 
 export function toUIIntegrationStepCollection(
@@ -168,6 +192,7 @@ export function toUIIntegrationStepCollection(
     let previousStepShouldDefineDataShapePosition: number | undefined;
     let shouldAddDataMapper = false;
     let shouldAddDefaultFlow = false;
+    let shouldEditDataMapper = false;
     let restrictedDelete = false;
     if (
       step.connection &&
@@ -197,7 +222,7 @@ export function toUIIntegrationStepCollection(
           toDataShapeKinds(inputDataShape.kind!)
         )
       ) {
-        const prev = getPreviousStepWithDataShape(steps, position);
+        const prev = getPreviousStepWithOutputDataShape(steps, position);
         if (
           prev &&
           prev.stepKind !== CHOICE && // TODO: suppress this until we can also use the describe data page for a step syndesisio/syndesis#5456
@@ -210,9 +235,15 @@ export function toUIIntegrationStepCollection(
           if (DataShapeKinds.ANY === toDataShapeKinds(prevOutDataShape.kind!)) {
             previousStepShouldDefineDataShape = true;
             previousStepShouldDefineDataShapePosition = steps.findIndex(
-              s => s.id === prev.id
+              (s) => s.id === prev.id
             );
-          } else if (!isSameDataShape(inputDataShape, prevOutDataShape)) {
+          } else if (
+            prev.stepKind !== 'mapper' &&
+            (!isSameDataShape(inputDataShape, prevOutDataShape) ||
+              (prevOutDataShape.kind === 'none' &&
+                inputDataShape.kind !== 'none' &&
+                inputDataShape.kind !== 'any'))
+          ) {
             shouldAddDataMapper = true;
           }
         }
@@ -230,6 +261,63 @@ export function toUIIntegrationStepCollection(
       }
     }
 
+    // A mapping step needs special handling; it can also be configured without any mappings at all
+    if (step.stepKind === 'mapper' && step.configuredProperties?.atlasmapping) {
+      const atlasmapping: {
+        AtlasMapping: { dataSource: [{ id: string; dataSourceType: string }] };
+      } = JSON.parse(step.configuredProperties!.atlasmapping!);
+
+      // we need the used source step IDs to see if the mapping is using any steps that are no longer present
+      const usedSourceStepIds = new Set(
+        atlasmapping.AtlasMapping.dataSource
+          .filter((ds) => ds.dataSourceType === 'SOURCE')
+          .map((ds) => ds.id)
+      );
+      // same goes for the target step ID, it might have been removed
+      const targetStepId = atlasmapping.AtlasMapping.dataSource.find(
+        (ds) => ds.dataSourceType === 'TARGET'
+      )?.id;
+
+      // if any of the prevous steps's output differ, any could be used in the mapping step
+      // also take account of present step IDs, so we can tell if there are removed source
+      // steps below
+      const sourceStepOutputChanged =
+        getPreviousSteps(steps, position).find(
+          (s) =>
+            usedSourceStepIds.delete(s.id!) &&
+            isMappingOutdated(
+              step.metadata?.updatedAt,
+              s.metadata?.outputUpdatedAt
+            )
+        ) !== undefined;
+
+      // if subsequent steps input differ, only the next step's input is used as the target
+      // in the mapping step
+      const targetStep = getSubsequentSteps(steps, position).find(
+        (s) => s.id === targetStepId
+      );
+
+      const nextInputIncompatible =
+        targetStep?.action?.descriptor?.inputDataShape &&
+        !isCompatibleDataShape(
+          step.action!.descriptor!.outputDataShape!, // this is the mapping step, so all these are set
+          targetStep.action.descriptor.inputDataShape
+        );
+
+      const sourceStepMissing = usedSourceStepIds.size > 0;
+
+      const targetStepMissing =
+        typeof targetStep?.action?.descriptor?.inputDataShape === 'undefined';
+
+      // we looked at all used steps and deleted them from usedStepIds if there are any left over that means
+      // that a step was removed from the flow that we /could have/ been used in the mapping
+      shouldEditDataMapper =
+        sourceStepOutputChanged ||
+        nextInputIncompatible ||
+        sourceStepMissing ||
+        targetStepMissing;
+    }
+
     return {
       ...step,
       isUnclosedSplit,
@@ -240,6 +328,7 @@ export function toUIIntegrationStepCollection(
       shape,
       shouldAddDataMapper,
       shouldAddDefaultFlow,
+      shouldEditDataMapper,
     };
   });
 }
@@ -314,7 +403,7 @@ export function mergeConnectionsSources(
   steps: StepKind[]
 ): IUIStep[] {
   return [
-    ...connections.map(connection =>
+    ...connections.map((connection) =>
       toUIStep({
         connection,
         // we copy over the name and description from the connection to be sure to show these instead of the connector's
@@ -324,7 +413,7 @@ export function mergeConnectionsSources(
       } as StepKind)
     ),
     ...extensions.reduce((extentionsByAction, extension) => {
-      (extension.actions || []).forEach(a => {
+      (extension.actions || []).forEach((a) => {
         let properties = {};
         if (
           a.descriptor &&
@@ -356,9 +445,9 @@ export function mergeConnectionsSources(
       });
       return extentionsByAction;
     }, [] as IUIStep[]),
-    ...steps.map(s => toUIStep(s)),
+    ...steps.map((s) => toUIStep(s)),
   ]
-    .filter(s => !!s.uiStepKind) // this should never happen
+    .filter((s) => !!s.uiStepKind) // this should never happen
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
@@ -379,7 +468,7 @@ export function filterStepsByPosition(
     // safety net
     return steps;
   }
-  return steps.filter(step => {
+  return steps.filter((step) => {
     // Hide steps that are marked as such, and specifically the log connection
     if (
       (typeof step.connection !== 'undefined' &&
@@ -473,16 +562,16 @@ export function visibleStepsByPosition(
     position,
     previousSteps.length === 0,
     subsequentSteps.length === 0
-  ).filter(s => {
+  ).filter((s) => {
     if (Array.isArray(s.visible) && s.visible.length > 0) {
-      const matches = s.visible.map(visible =>
+      const matches = s.visible.map((visible) =>
         visible(
           position,
           previousSteps as StepKind[],
           subsequentSteps as StepKind[]
         )
       );
-      return matches.find(m => !m) === undefined;
+      return matches.find((m) => !m) === undefined;
     }
     return true;
   });
@@ -493,7 +582,7 @@ const errorKeysWithDuplicates = (collectedErrors: any[]) => {
 };
 
 const uniqueErrorArray = (arrayParam: any[]) => {
-  return Array.from(new Set(arrayParam.map(err => err.name)));
+  return Array.from(new Set(arrayParam.map((err) => err.name)));
 };
 
 /**
@@ -505,29 +594,29 @@ export function actionsFromFlow(flowSteps: Step[], position: number) {
   // We want all previous steps and this step
   const previousSteps = getPreviousSteps(flowSteps, position + 1);
   return previousSteps
-    .filter(s => typeof s.action !== 'undefined')
-    .filter(s => s.action!.descriptor !== 'undefined')
+    .filter((s) => typeof s.action !== 'undefined')
+    .filter((s) => s.action!.descriptor !== 'undefined')
     .filter(
-      s =>
+      (s) =>
         typeof (s.action!.descriptor! as ExtendedActionDescriptor)
           .standardizedErrors !== 'undefined'
     )
-    .map(s => s.action!);
+    .map((s) => s.action!);
 }
 
 export function collectErrorKeysFromActions(actions: Action[]) {
   const collectedErrors = actions.map(
-    a => (a.descriptor! as ExtendedActionDescriptor).standardizedErrors!
+    (a) => (a.descriptor! as ExtendedActionDescriptor).standardizedErrors!
   );
 
   const standardizedErrors = errorKeysWithDuplicates(collectedErrors);
   const uniqueErrors = uniqueErrorArray(standardizedErrors);
 
   return uniqueErrors
-    .map(uniqueError =>
-      standardizedErrors.find(err => err.name === uniqueError!)
+    .map((uniqueError) =>
+      standardizedErrors.find((err) => err.name === uniqueError!)
     )
-    .map(err => localizeErrorKey(err!));
+    .map((err) => localizeErrorKey(err!));
 }
 
 /**

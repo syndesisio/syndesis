@@ -16,9 +16,7 @@ export interface IWithDescribeDataShapeFormProps {
   initialDefinition?: string;
   initialName?: string;
   initialDescription?: string;
-  parameters?: {
-    [name: string]: string;
-  };
+  parameters?: IParameters;
   backActionHref: H.LocationDescriptor;
   onUpdatedDataShape: (dataShape: DataShape) => void;
   parametersFor: (kind: string) => IParameterDefinition[];
