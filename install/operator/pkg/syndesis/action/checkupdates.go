@@ -30,7 +30,7 @@ func (a checkUpdatesAction) CanExecute(syndesis *synapi.Syndesis) bool {
 		synapi.SyndesisPhaseStartupFailed)
 }
 
-func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) error {
+func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) error {
 	if a.operatorVersion == "" {
 		a.operatorVersion = pkg.DefaultOperatorTag
 	}

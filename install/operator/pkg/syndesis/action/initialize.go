@@ -28,7 +28,7 @@ func (a *initializeAction) CanExecute(syndesis *synapi.Syndesis) bool {
 		synapi.SyndesisPhaseNotInstalled)
 }
 
-func (a *initializeAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) error {
+func (a *initializeAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) error {
 	list := synapi.SyndesisList{}
 	rtClient, _ := a.clientTools.RuntimeClient()
 	err := rtClient.List(ctx, &list, &client.ListOptions{Namespace: syndesis.Namespace})

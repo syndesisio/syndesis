@@ -36,7 +36,7 @@ var actionLog = logf.Log.WithName("action")
 
 type SyndesisOperatorAction interface {
 	CanExecute(syndesis *synapi.Syndesis) bool
-	Execute(ctx context.Context, syndesis *synapi.Syndesis) error
+	Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) error
 }
 
 // NewOperatorActions gives the default set of actions operator will perform

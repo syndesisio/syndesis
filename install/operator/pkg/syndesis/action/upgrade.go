@@ -41,7 +41,7 @@ func (a *upgradeAction) CanExecute(syndesis *synapi.Syndesis) bool {
 	)
 }
 
-func (a *upgradeAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) error {
+func (a *upgradeAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) error {
 	targetVersion := pkg.DefaultOperatorTag
 
 	if syndesis.Status.Phase == synapi.SyndesisPhaseUpgrading {

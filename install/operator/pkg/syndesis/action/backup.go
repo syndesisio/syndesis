@@ -49,7 +49,7 @@ func (a *backupAction) CanExecute(syndesis *synapi.Syndesis) bool {
 }
 
 // Schedule a cronjob for systematic backups
-func (a *backupAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) error {
+func (a *backupAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) error {
 	entries := c.Entries()
 
 	if s := syndesis.Spec.Backup.Schedule; s != "" {
@@ -74,7 +74,7 @@ func (a *backupAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) e
 			client, _ := a.clientTools.RuntimeClient()
 			return client.Status().Update(ctx, syndesis)
 		} else {
-			return fmt.Errorf("unsopported number of entries for cron instance, cron %v", c)
+			return fmt.Errorf("unsupported number of entries for cron instance, cron %v", c)
 		}
 	} else {
 		if len(entries) == 1 {
@@ -84,7 +84,7 @@ func (a *backupAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) e
 			c.Remove(e.ID)
 			c.Stop()
 		} else if len(entries) > 1 {
-			return fmt.Errorf("unsopported number of entries for cron instance, cron %v", c)
+			return fmt.Errorf("unsupported number of entries for cron instance, cron %v", c)
 		}
 	}
 

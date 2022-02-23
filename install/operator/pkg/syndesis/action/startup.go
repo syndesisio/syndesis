@@ -32,7 +32,7 @@ func (a *startupAction) CanExecute(syndesis *synapi.Syndesis) bool {
 		synapi.SyndesisPhaseStartupFailed)
 }
 
-func (a *startupAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) error {
+func (a *startupAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) error {
 
 	list := v1.DeploymentConfigList{
 		TypeMeta: metav1.TypeMeta{
