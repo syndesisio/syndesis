@@ -57,6 +57,9 @@ GRANT := rbac-grant
 ROLE := rbac-role
 TIMESTAMP=$(shell date -u '+%F %T %Z')
 
+CLUSTER_ROLE_KAFKA := cluster-role-kafka
+CLUSTER_ROLE_PUBLIC_API := cluster-role-public-api
+
 CSV_NAME := $(PACKAGE).v$(VERSION)
 CSV_REPLACES := $(PACKAGE).v$(PREVIOUS_VERSION)
 CSV_FILENAME := $(PACKAGE).clusterserviceversion.yaml

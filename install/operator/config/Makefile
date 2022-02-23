@@ -279,6 +279,11 @@ bundle: generate-crds operator-sdk kustomize pre-bundle
 	@rm -f $(BUNDLE_DIR)/$(MANIFESTS)/*clusterrolebinding.yaml
 # Workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1934080
 	@rm -f $(BUNDLE_DIR)/$(MANIFESTS)/*serviceaccount.yaml
+# Workaround for extra cluster roles required to be present
+# The operator looks to install ClusterRoleBindings to these cluster roles
+# Without them, the operator installation does not finish
+	@cp -rf $(ROLE)/$(CLUSTER_ROLE_KAFKA).gen.yaml $(BUNDLE_DIR)/$(MANIFESTS)/$(CLUSTER_ROLE_KAFKA).yaml
+	@cp -rf $(ROLE)/$(CLUSTER_ROLE_PUBLIC_API).gen.yaml $(BUNDLE_DIR)/$(MANIFESTS)/$(CLUSTER_ROLE_PUBLIC_API).yaml
 # Moves the docker file into the bundle directory
 	@mv bundle.Dockerfile $(BUNDLE_DIR)/Dockerfile && \
 		sed -i 's/bundle\///g' $(BUNDLE_DIR)/Dockerfile
