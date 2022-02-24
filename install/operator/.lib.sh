@@ -280,31 +280,17 @@ openapi_gen() {
         echo "         To ensure compatibility, please set aside the current version."
     fi
 
-    openapi-gen --logtostderr=true -o "" \
-        -i ./pkg/apis/syndesis/v1alpha1 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1alpha1
-    if [ $? != 0 ]; then
-        echo "Error: openapi-gen failed to generate the API"
-        exit 1
-    fi
+    echo "Starting openapi generation ..."
 
-    openapi-gen --logtostderr=true -o "" \
-        -i ./pkg/apis/syndesis/v1beta1 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta1
-    if [ $? != 0 ]; then
-        echo "Error: openapi-gen failed to generate the API"
-        exit 1
-    fi
-
-    openapi-gen --logtostderr=true -o "" \
-        -i ./pkg/apis/syndesis/v1beta2 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta2
-    if [ $? != 0 ]; then
-        echo "Error: openapi-gen failed to generate the API"
-        exit 1
-    fi
-
-    openapi-gen --logtostderr=true -o "" \
-        -i ./pkg/apis/syndesis/v1beta3 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta3
-    if [ $? != 0 ]; then
-        echo "Error: openapi-gen failed to generate the API"
-        exit 1
-    fi
+    for version in v1alpha1 v1beta1 v1beta2 v1beta3
+    do
+        echo "Generating api for ${version} ..."
+        openapi-gen --logtostderr=true -o "" \
+            --go-header-file ./boilerplate/boilerplate.go.txt \
+            -i ./pkg/apis/syndesis/${version} -O zz_generated.openapi -p ./pkg/apis/syndesis/${version}
+        if [ $? != 0 ]; then
+            echo "Error: openapi-gen failed to generate the API"
+            exit 1
+        fi
+    done
 }

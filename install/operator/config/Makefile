@@ -20,8 +20,8 @@ include vars/Makefile
 .PHONY: kubectl setup setup-jaeger operator app dev-operator dev-app
 
 kubectl:
-ifeq (, $(shell which kubectl))
-$(error "No kubectl found in PATH. Please install and re-run")
+ifeq (, $(shell command -v kubectl 2> /dev/null))
+	$(error "No kubectl found in PATH. Please install and re-run")
 endif
 
 #
@@ -154,7 +154,7 @@ endif
 # find or download controller-gen
 # download controller-gen if necessary
 controller-gen:
-ifeq (, $(shell which controller-gen))
+ifeq (, $(shell command -v controller-gen 2> /dev/null))
 	@{ \
 	set -e ;\
 	CONTROLLER_GEN_TMP_DIR=$$(mktemp -d) ;\
@@ -165,11 +165,11 @@ ifeq (, $(shell which controller-gen))
 	}
 CONTROLLER_GEN=$(GOBIN)/controller-gen
 else
-CONTROLLER_GEN=$(shell which controller-gen)
+CONTROLLER_GEN=$(shell command -v controller-gen 2> /dev/null)
 endif
 
 kustomize:
-ifeq (, $(shell which kustomize))
+ifeq (, $(shell command -v kustomize 2> /dev/null))
 	@{ \
 	set -e ;\
 	KUSTOMIZE_GEN_TMP_DIR=$$(mktemp -d) ;\
@@ -180,11 +180,11 @@ ifeq (, $(shell which kustomize))
 	}
 KUSTOMIZE=$(GOBIN)/kustomize
 else
-KUSTOMIZE=$(shell which kustomize)
+KUSTOMIZE=$(shell command -v kustomize 2> /dev/null)
 endif
 
 opm:
-ifeq (, $(shell which opm))
+ifeq (, $(shell command -v opm 2> /dev/null))
 	@{ \
 	set -e ;\
 	OPM_GEN_TMP_DIR=$$(mktemp -d) ;\
@@ -198,11 +198,11 @@ ifeq (, $(shell which opm))
 	}
 OPM=$(GOBIN)/opm
 else
-OPM=$(shell which opm)
+OPM=$(shell command -v opm 2> /dev/null)
 endif
 
 operator-sdk:
-ifeq (, $(shell which operator-sdk))
+ifeq (, $(shell command -v operator-sdk 2> /dev/null))
 	@{ \
 	set -e ;\
 	curl \
@@ -213,7 +213,7 @@ ifeq (, $(shell which operator-sdk))
 	}
 OPERATOR_SDK=$(GOBIN)/operator-sdk
 else
-OPERATOR_SDK=$(shell which operator-sdk)
+OPERATOR_SDK=$(shell command -v operator-sdk 2> /dev/null)
 endif
 
 .PHONY: kustomize opm operator-sdk bundle manifests generate generate-deepcopy generate-crds
