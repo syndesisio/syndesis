@@ -11,3 +11,5 @@ before_launch.sh
 **/*.gen.yaml
 **/release/*-installer*
 **/bundle
+**/catalog
+**/catalog.Dockerfile

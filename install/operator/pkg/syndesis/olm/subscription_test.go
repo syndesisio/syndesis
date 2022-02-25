@@ -23,7 +23,6 @@ import (
 	"time"
 
 	semver "github.com/blang/semver/v4"
-	osappsv1 "github.com/openshift/api/apps/v1"
 	"github.com/operator-framework/api/pkg/lib/version"
 	olmapiv1 "github.com/operator-framework/api/pkg/operators/v1"
 	olmapiv1alpha1 "github.com/operator-framework/api/pkg/operators/v1alpha1"
@@ -38,19 +37,10 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apimachinery/pkg/runtime"
 	dynfake "k8s.io/client-go/dynamic/fake"
-	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	rtfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
-
-func createScheme() *runtime.Scheme {
-	scheme := scheme.Scheme
-	osappsv1.AddToScheme(scheme)
-	olmapiv1.AddToScheme(scheme)
-	return scheme
-}
 
 func packageManifest(installModes []olmapiv1alpha1.InstallMode) (*olmpkgsvr.PackageManifest, *olmpkgsvr.PackageChannel) {
 	channel := olmpkgsvr.PackageChannel{
@@ -261,7 +251,7 @@ func Test_FindOperatorGroups(t *testing.T) {
 		},
 	}
 
-	scheme := createScheme()
+	scheme := syntesting.CreateScheme()
 
 	clientTools := &clienttools.ClientTools{}
 	clientTools.SetApiClient(syntesting.AllApiClient())
@@ -376,7 +366,7 @@ func Test_WaitForSubscription(t *testing.T) {
 	pollTimeout = 10 * time.Second
 	pollInterval = 1 * time.Second
 
-	scheme := createScheme()
+	scheme := syntesting.CreateScheme()
 	ip, err := util.ToUnstructured(installPlan)
 	assert.NoError(t, err)
 	s, err := util.ToUnstructured(subscription)

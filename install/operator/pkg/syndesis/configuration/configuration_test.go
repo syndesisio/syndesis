@@ -105,6 +105,26 @@ func Test_loadFromFile(t *testing.T) {
 	}
 }
 
+func Test_getProductName(t *testing.T) {
+	configFile := "../../../build/conf/config-test.yaml"
+	name, err := GetProductName(configFile)
+	assert.NoError(t, err)
+
+	andOrName := func() bool {
+		return name == "syndesis" || name == "fuse-online"
+	}
+
+	assert.Condition(t, andOrName)
+}
+
+func Test_getVersion(t *testing.T) {
+	configFile := "../../../build/conf/config-test.yaml"
+	version, err := GetVersion(configFile)
+	assert.NoError(t, err)
+
+	assert.Equal(t, "7.7.0", version)
+}
+
 func Test_setConfigFromEnv(t *testing.T) {
 	tests := []struct {
 		name    string

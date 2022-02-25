@@ -20,8 +20,8 @@ include vars/Makefile
 .PHONY: kubectl setup setup-jaeger operator app dev-operator dev-app
 
 kubectl:
-ifeq (, $(shell which kubectl))
-$(error "No kubectl found in PATH. Please install and re-run")
+ifeq (, $(shell command -v kubectl 2> /dev/null))
+	$(error "No kubectl found in PATH. Please install and re-run")
 endif
 
 #
@@ -154,7 +154,7 @@ endif
 # find or download controller-gen
 # download controller-gen if necessary
 controller-gen:
-ifeq (, $(shell which controller-gen))
+ifeq (, $(shell command -v controller-gen 2> /dev/null))
 	@{ \
 	set -e ;\
 	CONTROLLER_GEN_TMP_DIR=$$(mktemp -d) ;\
@@ -165,11 +165,11 @@ ifeq (, $(shell which controller-gen))
 	}
 CONTROLLER_GEN=$(GOBIN)/controller-gen
 else
-CONTROLLER_GEN=$(shell which controller-gen)
+CONTROLLER_GEN=$(shell command -v controller-gen 2> /dev/null)
 endif
 
 kustomize:
-ifeq (, $(shell which kustomize))
+ifeq (, $(shell command -v kustomize 2> /dev/null))
 	@{ \
 	set -e ;\
 	KUSTOMIZE_GEN_TMP_DIR=$$(mktemp -d) ;\
@@ -180,11 +180,29 @@ ifeq (, $(shell which kustomize))
 	}
 KUSTOMIZE=$(GOBIN)/kustomize
 else
-KUSTOMIZE=$(shell which kustomize)
+KUSTOMIZE=$(shell command -v kustomize 2> /dev/null)
+endif
+
+opm:
+ifeq (, $(shell command -v opm 2> /dev/null))
+	@{ \
+	set -e ;\
+	OPM_GEN_TMP_DIR=$$(mktemp -d) ;\
+	cd $$OPM_GEN_TMP_DIR ;\
+	go mod init tmp ;\
+	go get \
+		-ldflags '-w -extldflags "-static"' -tags "json1" \
+		-ldflags "-X '$(OPM_PKG)/cmd/opm/version.opmVersion=$(OPM_VERSION)' -X '$(OPM_PKG)/cmd/opm/version.buildDate=$(BUILD_TIME)'" \
+		$(OPM_PKG)/cmd/opm@$(OPM_VERSION) ;\
+	rm -rf $$OPM_GEN_TMP_DIR ;\
+	}
+OPM=$(GOBIN)/opm
+else
+OPM=$(shell command -v opm 2> /dev/null)
 endif
 
 operator-sdk:
-ifeq (, $(shell which operator-sdk))
+ifeq (, $(shell command -v operator-sdk 2> /dev/null))
 	@{ \
 	set -e ;\
 	curl \
@@ -195,10 +213,10 @@ ifeq (, $(shell which operator-sdk))
 	}
 OPERATOR_SDK=$(GOBIN)/operator-sdk
 else
-OPERATOR_SDK=$(shell which operator-sdk)
+OPERATOR_SDK=$(shell command -v operator-sdk 2> /dev/null)
 endif
 
-.PHONY: kustomize operator-sdk bundle manifests generate generate-deepcopy generate-crds
+.PHONY: kustomize opm operator-sdk bundle manifests generate generate-deepcopy generate-crds
 
 generate-deepcopy: controller-gen
 	@$(CONTROLLER_GEN) paths="$(PKG)/..." object
@@ -258,9 +276,14 @@ bundle: generate-crds operator-sdk kustomize pre-bundle
 # Add a timestamp to the new bundle manifest
 	@sed -i '/^    containerImage: .*/ a \ \ \ \ createdAt: $(TIMESTAMP)' $(BUNDLE_DIR)/$(MANIFESTS)/$(CSV_FILENAME)
 # Removes any clusterrolebindings necessary for clusterroles to be added but not required for the manifests
-	@rm -f $(BUNDLE_DIR)/manifests/*clusterrolebinding.yaml
+	@rm -f $(BUNDLE_DIR)/$(MANIFESTS)/*clusterrolebinding.yaml
 # Workaround for https://bugzilla.redhat.com/show_bug.cgi?id=1934080
-	@rm -f $(BUNDLE_DIR)/manifests/*serviceaccount.yaml
+	@rm -f $(BUNDLE_DIR)/$(MANIFESTS)/*serviceaccount.yaml
+# Workaround for extra cluster roles required to be present
+# The operator looks to install ClusterRoleBindings to these cluster roles
+# Without them, the operator installation does not finish
+	@cp -rf $(ROLE)/$(CLUSTER_ROLE_KAFKA).gen.yaml $(BUNDLE_DIR)/$(MANIFESTS)/$(CLUSTER_ROLE_KAFKA).yaml
+	@cp -rf $(ROLE)/$(CLUSTER_ROLE_PUBLIC_API).gen.yaml $(BUNDLE_DIR)/$(MANIFESTS)/$(CLUSTER_ROLE_PUBLIC_API).yaml
 # Moves the docker file into the bundle directory
 	@mv bundle.Dockerfile $(BUNDLE_DIR)/Dockerfile && \
 		sed -i 's/bundle\///g' $(BUNDLE_DIR)/Dockerfile
@@ -270,6 +293,16 @@ bundle: generate-crds operator-sdk kustomize pre-bundle
 .PHONY: bundle-build
 bundle-build: bundle
 	cd bundle && docker build -f Dockerfile -t $(BUNDLE_IMG) .
+
+.PHONY: bundle-push
+bundle-push: bundle-build
+	docker push $(BUNDLE_IMG)
+
+.PHONY: test-catalog
+test-catalog: opm bundle-push
+	SRC_CATALOG=$(SRC_CATALOG) CATALOG_DIR=$(CATALOG) PACKAGE=$(PACKAGE) \
+	OPM=$(OPM) BUNDLE_IMAGE=$(BUNDLE_IMG) CSV_NAME=$(CSV_NAME) \
+	CSV_REPLACES=$(CSV_REPLACES) CHANNEL=$(DEFAULT_CHANNEL)-$(VERSION) ./script/build-catalog.sh
 
 clean:
 	@find . -name "*.gen.*" -delete

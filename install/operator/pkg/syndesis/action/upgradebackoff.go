@@ -33,7 +33,7 @@ func (a *upgradeBackoffAction) CanExecute(syndesis *synapi.Syndesis) bool {
 	return syndesisPhaseIs(syndesis, synapi.SyndesisPhaseUpgradeFailureBackoff)
 }
 
-func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *synapi.Syndesis) error {
+func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) error {
 	rtClient, _ := a.clientTools.RuntimeClient()
 
 	// Check number of attempts to fail fast

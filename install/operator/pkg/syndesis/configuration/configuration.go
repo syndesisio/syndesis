@@ -420,6 +420,26 @@ func GetProperties(ctx context.Context, file string, clientTools *clienttools.Cl
 	return configuration, nil
 }
 
+// Load the configuration and return the name of this product
+func GetProductName(file string) (string, error) {
+	configuration := &Config{}
+	if err := configuration.loadFromFile(file); err != nil {
+		return "", err
+	}
+
+	return configuration.ProductName, nil
+}
+
+// Load the configuration and return the name of this product
+func GetVersion(file string) (string, error) {
+	configuration := &Config{}
+	if err := configuration.loadFromFile(file); err != nil {
+		return "", err
+	}
+
+	return configuration.Version, nil
+}
+
 // Load configuration from config file. Config file is expected to be a yaml
 // The returned configuration is parsed to JSON and returned as a Config object
 func (config *Config) loadFromFile(file string) error {

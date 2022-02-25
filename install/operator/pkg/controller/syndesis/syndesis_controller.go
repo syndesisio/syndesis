@@ -120,7 +120,7 @@ func (r *ReconcileSyndesis) Reconcile(ctx context.Context, request reconcile.Req
 
 		if a.CanExecute(syndesis) {
 			log.V(synpkg.DEBUG_LOGGING_LVL).Info("Running action", "action", reflect.TypeOf(a))
-			if err := a.Execute(ctx, syndesis); err != nil {
+			if err := a.Execute(ctx, syndesis, request.Namespace); err != nil {
 				log.Error(err, "Error reconciling", "action", reflect.TypeOf(a), "phase", syndesis.Status.Phase)
 				return reconcile.Result{
 					Requeue:      true,
