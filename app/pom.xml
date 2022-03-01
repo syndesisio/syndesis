@@ -95,13 +95,13 @@
     <opentracing.spring.web.starter.version>4.1.0</opentracing.spring.web.starter.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.23.2.fuse-7_10_0-00020-redhat-00001</camel.version>
+    <camel.version>2.23.2.fuse-7_11_0-00010</camel.version>
 
     <undertow.version>2.2.12.Final</undertow.version>
     <org.jboss.xnio.version>3.8.4.Final</org.jboss.xnio.version>
 
     <!-- CXF version, to be kept in sync with the one referenced by camel version above -->
-    <cxf.version>3.3.6.fuse-7_10_0-00022-redhat-00001</cxf.version>
+    <cxf.version>3.3.6.fuse-7_11_0-00010</cxf.version>
     <wss4j.version>2.4.0</wss4j.version>
 
     <olingo2.version>2.0.11</olingo2.version>

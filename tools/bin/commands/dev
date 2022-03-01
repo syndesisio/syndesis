@@ -161,7 +161,7 @@ dev::run() {
         fi
         appdir=$(appdir)
         # test if the new camel version is available on maven repo
-        artifact_url=https://maven.repository.redhat.com/ga/org/apache/camel/camel-core/${camel_version}/camel-core-${camel_version}.pom
+        artifact_url=https://repository.jboss.org/nexus/content/groups/ea/org/apache/camel/camel-core/${camel_version}/camel-core-${camel_version}.pom
         artifact_ok=$(curl -X GET -I ${artifact_url} 2>/dev/null | head -n 1 | cut -d$' ' -f2)
         if [ ${artifact_ok} != 200 ]; then
           echo "Camel ${camel_version} is not available in ${artifact_url}"
@@ -174,7 +174,7 @@ dev::run() {
             ${appdir}/pom.xml \
             ${appdir}/extension/bom/pom.xml \
             ${appdir}/integration/bom/pom.xml
-        next_cxf_version=$(curl -s "https://maven.repository.redhat.com/ga/org/apache/camel/camel-parent/${camel_version}/camel-parent-${camel_version}.pom" | sed -n 's/^.*<cxf-version>\(.*\)<\/cxf-version>/\1/p')
+        next_cxf_version=$(curl -s "https://repository.jboss.org/nexus/content/groups/ea/org/apache/camel/camel-parent/${camel_version}/camel-parent-${camel_version}.pom" | sed -n 's/^.*<cxf-version>\(.*\)<\/cxf-version>/\1/p')
         current_cxf_version=$(sed -n 's/^.*<cxf\.version>\(.*\)<\/cxf\.version>/\1/p' "${appdir}/pom.xml")
         if [ "$current_cxf_version" != "$next_cxf_version" ]; then
           echo "Changing CXF version from \"$current_cxf_version\" to \"$next_cxf_version\""
