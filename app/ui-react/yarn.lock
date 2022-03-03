@@ -246,17 +246,17 @@
   dependencies:
     tslib "^2.0.0"
 
-"@atlasmap/atlasmap@^2.3.13":
-  version "2.3.13"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap/-/atlasmap-2.3.13.tgz#9f1934a679f5bb0a1aebcd83aa5312f841274ca9"
-  integrity sha512-E9txFJ85iQVhqHxEFVF6Bjjcdns+9smOwnugp+vymr/4T1S974sTIR1QRhJDv59SPWEq9xGNcpDoTK2IOuLScQ==
+"@atlasmap/atlasmap@^2.3.14":
+  version "2.3.14"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap/-/atlasmap-2.3.14.tgz#1915b02caef707904dc8a2092ac0d1cb65f89f61"
+  integrity sha512-Y7YODKVvTTQpehxWTa2HUflcCMzpSvU0A6eoKGW5auVmFVe5L3bcZiDJN0Yy1PwvRXApTKkjFVYcQsinB4LPhQ==
   dependencies:
-    "@atlasmap/core" "^2.3.13"
+    "@atlasmap/core" "^2.3.14"
 
-"@atlasmap/core@^2.3.13":
-  version "2.3.13"
-  resolved "https://registry.yarnpkg.com/@atlasmap/core/-/core-2.3.13.tgz#bcdb4f16c53724479cca9f6332a9c324d9b02663"
-  integrity sha512-kui51A9hTSLV0EiuNIZ6ItZYtGWQG69tvd5w4LUtAsFKkScfNzoqP3wS4z36JA/LKzy5u7mTjRye9V2CNyOH9A==
+"@atlasmap/core@^2.3.14":
+  version "2.3.14"
+  resolved "https://registry.yarnpkg.com/@atlasmap/core/-/core-2.3.14.tgz#d51c57c2f36383cdd22017c9ded7afa94a3f2c77"
+  integrity sha512-7YDdPHs0ILU3moqCmm5L4K76fm2GnBH+C5JnCYrJGNnVguFHnkf9wEPrf5DZbwb4JVa49CHMrOhppbqCxs+cRw==
 
 "@azure/abort-controller@^1.0.0":
   version "1.0.4"

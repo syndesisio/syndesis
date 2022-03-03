@@ -70,8 +70,8 @@
     "rxjs": "^6.2.2"
   },
   "dependencies": {
-    "@atlasmap/atlasmap": "^2.3.13",
-    "@atlasmap/core": "^2.3.13",
+    "@atlasmap/atlasmap": "^2.3.14",
+    "@atlasmap/core": "^2.3.14",
     "@types/patternfly-react": "*",
     "loglevel": "^1.7.1",
     "react-dnd-html5-backend": "^14.0.0",
