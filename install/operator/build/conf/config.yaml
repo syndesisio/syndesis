@@ -29,7 +29,7 @@ Syndesis:
             DisableSarCheck: false
     Components:
         Oauth:
-            Image: "quay.io/openshift/origin-oauth-proxy:4.9"
+            Image: "quay.io/openshift/origin-oauth-proxy:4.7"
             DisableSarCheck: false
         UI:
             Image: "quay.io/syndesis/syndesis-ui:latest"
