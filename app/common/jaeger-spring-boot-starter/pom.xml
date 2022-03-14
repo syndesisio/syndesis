@@ -77,6 +77,20 @@
       <groupId>io.opentracing.contrib</groupId>
       <artifactId>opentracing-spring-web-starter</artifactId>
       <version>${opentracing.spring.web.starter.version}</version>
+      <exclusions>
+          <exclusion>
+            <groupId>io.opentracing</groupId>
+            <artifactId>opentracing-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>io.opentracing</groupId>
+            <artifactId>opentracing-noop</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>io.opentracing</groupId>
+            <artifactId>opentracing-util</artifactId>
+          </exclusion>
+        </exclusions>
     </dependency>
 
     <dependency>
