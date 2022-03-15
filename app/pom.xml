@@ -2863,6 +2863,18 @@
       </dependency>
 
       <dependency>
+        <groupId>com.github.java-json-tools</groupId>
+        <artifactId>jackson-coreutils</artifactId>
+        <version>2.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.java-json-tools</groupId>
+        <artifactId>msg-simple</artifactId>
+        <version>1.2</version>
+      </dependency>
+
+      <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
         <version>2.8.9</version>
