@@ -483,6 +483,7 @@
       <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-kubernetes-dependencies</artifactId>
+        <version>2.0.5</version>
         <exclusions>
           <exclusion>
             <groupId>org.bouncycastle</groupId>
@@ -762,6 +763,7 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-kubernetes-config</artifactId>
+      <version>1.1.10.RELEASE</version>
       <scope>runtime</scope>
     </dependency>
     <dependency>
@@ -776,6 +778,7 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-security</artifactId>
+      <version>2.2.5.RELEASE</version>
       <scope>runtime</scope>
     </dependency>
 
