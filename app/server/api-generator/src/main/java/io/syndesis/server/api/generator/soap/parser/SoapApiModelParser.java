@@ -116,7 +116,7 @@ public final class SoapApiModelParser {
 
             // parse WSDL to get model Definition
             final InputSource inputSource = new InputSource(condensedSpecification);
-            final Definition definition = getWsdlReader().readWSDL(wsdlURL, inputSource);
+            final Definition definition = getWsdlReader().readWSDL(new Locator(wsdlURL, inputSource));
 
             builder.model(definition);
             validateModel(definition, builder);
