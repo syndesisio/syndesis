@@ -178,6 +178,14 @@
         <type>pom</type>
       </dependency>
 
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-framework-bom</artifactId>
+        <version>${spring.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
       <!-- Camel BOM for Spring-boot -->
       <dependency>
         <groupId>org.apache.camel</groupId>
