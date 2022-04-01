@@ -30,7 +30,6 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.artifact.filter.collection.ArtifactFilterException;
 import org.apache.maven.shared.artifact.filter.collection.ArtifactsFilter;
 import org.apache.maven.shared.artifact.filter.collection.FilterArtifacts;
-import org.springframework.boot.maven.RepackageMojo;
 
 /**
  * Base Mojo Support class to provide helper methods from the specialized Mojos
