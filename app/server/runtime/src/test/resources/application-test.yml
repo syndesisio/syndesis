@@ -14,6 +14,8 @@
 # limitations under the License.
 #
 
+debug: true
+
 encrypt:
   key: da39a3ee5e6b4b0d3255bfef95601890afd80709
 
@@ -39,6 +41,10 @@ github:
 management:
   server:
     port: -1
+  metrics:
+    export:
+      prometheus:
+        enabled: true
   health:
     db:
       enabled: false
