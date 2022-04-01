@@ -28,6 +28,7 @@
 
   <properties>
     <!-- we must ensure to have this version aligned with extension-bom and integration-bom -->
+    <spring.version>5.3.18</spring.version>
     <spring-boot.version>2.5.12.RELEASE</spring-boot.version>
     <camel.version>2.23.2.fuse-7_10_0-00020-redhat-00001</camel.version>
     <atlasmap.version>2.3.14</atlasmap.version>
@@ -170,6 +171,14 @@
         <version>${org.apache.log4j.version}</version>
         <scope>import</scope>
         <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-framework-bom</artifactId>
+        <version>${spring.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
       <!-- Camel BOM for Spring-boot -->
