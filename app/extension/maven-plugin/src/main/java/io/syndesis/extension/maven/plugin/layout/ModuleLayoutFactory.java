@@ -47,7 +47,7 @@ public class ModuleLayoutFactory implements LayoutFactory {
             }
 
             @Override
-            public String getLibraryDestination(String libraryName, LibraryScope scope) {
+            public String getLibraryLocation(String libraryName, LibraryScope scope) {
                 if (!filterDestinationScopes || LIB_DESTINATION_SCOPES.contains(scope)) {
                     return "lib/";
                 }
