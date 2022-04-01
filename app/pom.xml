@@ -61,7 +61,7 @@
     <json-patch.version>1.13</json-patch.version>
     <kubernetes.client.version>4.13.3</kubernetes.client.version>
 
-    <spring.version>5.2.15.RELEASE</spring.version>
+    <spring.version>5.2.20.RELEASE</spring.version>
     <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
     <spring-social.version>1.1.6.RELEASE</spring-social.version>
     <spring-social-twitter.version>1.1.2.RELEASE</spring-social-twitter.version>
