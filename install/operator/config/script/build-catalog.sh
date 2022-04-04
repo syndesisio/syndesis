@@ -7,7 +7,10 @@ check_env_var() {
   fi
 }
 
-check_env_var "PACKAGE" ${PACKAGE}
+version_to_number() {
+  echo $(echo "${1}" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }')
+}
+
 check_env_var "SRC_CATALOG" ${SRC_CATALOG}
 check_env_var "CATALOG_DIR" ${CATALOG_DIR}
 check_env_var "OPM" ${OPM}
@@ -15,6 +18,7 @@ check_env_var "BUNDLE_IMAGE" ${BUNDLE_IMAGE}
 check_env_var "CSV_NAME" ${CSV_NAME}
 check_env_var "CSV_REPLACES" ${CSV_REPLACES}
 check_env_var "CHANNEL" ${CHANNEL}
+check_env_var "PACKAGE" ${PACKAGE}
 
 if ! command -v ${OPM} &> /dev/null
 then
@@ -28,6 +32,15 @@ fi
 
 if [ -f "${CATALOG_DIR}.Dockerfile" ]; then
   rm -f "${CATALOG_DIR}.Dockerfile"
+fi
+
+#
+# Check version of opm
+#
+version=$(${OPM} version | sed -n 's/.*OpmVersion\:"v\([0-9.]\+\)", .*/\1/p')
+if [ $(version_to_number ${version}) -lt $(version_to_number "1.21.0") ]; then
+  echo "Error: opm version is ${version}. Should be 1.21.0+"
+  exit 1
 fi
 
 mkdir "${CATALOG_DIR}"
@@ -66,10 +79,14 @@ else
 fi
 
 echo -n "Generating catalog dockerfile ... "
-STATUS=$(${OPM} alpha generate dockerfile ${CATALOG_DIR} 2>&1)
+STATUS=$(${OPM} generate dockerfile ${CATALOG_DIR} 2>&1)
 if [ $? != 0 ]; then
   echo "Failed"
   echo "Error: ${STATUS}"
+  exit 1
+elif [ ! -f ${CATALOG_DIR}.Dockerfile ]; then
+  echo "Failed"
+  echo "Error: Dockerfile failed to be created"
   exit 1
 else
   echo "OK"
