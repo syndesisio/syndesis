@@ -272,6 +272,8 @@ bundle: generate-crds operator-sdk kustomize pre-bundle
 # Workaround for extra cluster roles required to be present
 # The operator looks to install ClusterRoleBindings to these cluster roles
 # Without them, the operator installation does not finish
+# Not included, by default, since their bindings include the operator SA so their
+# permissions get added to the CSV but operator security still references them
 	@cp -rf $(ROLE)/$(CLUSTER_ROLE_KAFKA).gen.yaml $(BUNDLE_DIR)/$(MANIFESTS)/$(CLUSTER_ROLE_KAFKA).yaml
 	@cp -rf $(ROLE)/$(CLUSTER_ROLE_PUBLIC_API).gen.yaml $(BUNDLE_DIR)/$(MANIFESTS)/$(CLUSTER_ROLE_PUBLIC_API).yaml
 # Moves the docker file into the bundle directory

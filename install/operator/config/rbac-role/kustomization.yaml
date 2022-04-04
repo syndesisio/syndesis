@@ -2,5 +2,6 @@ resources:
 - role.gen.yaml
 - cluster-role-jaeger.gen.yaml
 - cluster-role-kafka.gen.yaml
+- cluster-role-oauthproxy.gen.yaml
 - cluster-role-olm.gen.yaml
 - cluster-role-public-api.gen.yaml
