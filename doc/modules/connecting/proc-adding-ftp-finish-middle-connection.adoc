@@ -86,10 +86,6 @@ The document's file extension is `.xsd`.
 * *XML instance* is a document that contains XML data. The
 document's file extension is `.xml`. 
 * *CSV instance* is a document that contains comma-separated value (CSV) data. The document's file extension is `.csv`. 
-ifeval::["{location}" == "downstream"]
-+
-*Note* _Data Mapper support for CSV data is a Technology Preview feature only._
-endif::[]
 
 . In the *Definition* input box, paste a definition that conforms to the
 schema type you selected. 
