@@ -29,6 +29,9 @@ management:
         request:
           autotime:
             enabled: false
+    export:
+      prometheus:
+        enabled: true
   endpoints:
     web:
       base-path: /
