@@ -35,18 +35,6 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.apache.httpcomponents</groupId>
-        <artifactId>httpclient</artifactId>
-        <version>4.5.13</version>
-        <classifier>tests</classifier>
-        <exclusions>
-          <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
         <groupId>org.apache.olingo</groupId>
         <artifactId>odata-commons-api</artifactId>
         <version>${olingo.version}</version>

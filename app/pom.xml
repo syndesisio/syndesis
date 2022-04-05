@@ -73,6 +73,7 @@
     <org.apache.log4j.version>2.17.1</org.apache.log4j.version>
 
     <okhttp3.version>3.12.1</okhttp3.version>
+    <org.apache.httpclient.version>4.5.13</org.apache.httpclient.version>
     <tomcat.version>9.0.36</tomcat.version>
 
     <swagger.version>2.1.9</swagger.version>
@@ -2862,9 +2863,27 @@
       </dependency>
 
       <dependency>
+        <groupId>com.github.java-json-tools</groupId>
+        <artifactId>jackson-coreutils</artifactId>
+        <version>2.0</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.java-json-tools</groupId>
+        <artifactId>msg-simple</artifactId>
+        <version>1.2</version>
+      </dependency>
+
+      <dependency>
         <groupId>com.google.code.gson</groupId>
         <artifactId>gson</artifactId>
         <version>2.8.9</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.j2objc</groupId>
+        <artifactId>j2objc-annotations</artifactId>
+        <version>1.3</version>
       </dependency>
 
       <dependency>
@@ -3271,6 +3290,31 @@
         <groupId>com.squareup.okhttp3</groupId>
         <artifactId>okhttp</artifactId>
         <version>${okhttp3.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>${org.apache.httpclient.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <classifier>tests</classifier>
+        <version>${org.apache.httpclient.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
