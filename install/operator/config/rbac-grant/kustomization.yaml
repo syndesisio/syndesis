@@ -2,5 +2,6 @@ resources:
 - grant.gen.yaml
 - grant-jaeger.gen.yaml
 - grant-kafka.gen.yaml
+- grant-oauthproxy.gen.yaml
 - grant-olm.gen.yaml
 - grant-public-api.gen.yaml
