@@ -42,6 +42,9 @@ management:
     db:
       enabled: false
   metrics:
+    export:
+      prometheus:
+        enabled: true
     web:
       server:
         request:

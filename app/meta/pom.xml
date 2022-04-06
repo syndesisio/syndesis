@@ -127,6 +127,11 @@
 
     <dependency>
       <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
     </dependency>
 
@@ -154,6 +159,11 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
       <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
     </dependency>
 
     <dependency>
@@ -481,6 +491,18 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
@@ -528,6 +550,26 @@
             <ignoredResourcePattern>org/jboss/resteasy/client/jaxrs/i18n/Messages.i18n_xx.properties</ignoredResourcePattern>
           </ignoredResourcePatterns>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+            <configuration>
+              <additionalClasspathElements>
+                <!-- workaround suggested in https://github.com/spring-projects/spring-boot/issues/6254 -->
+                <additionalClasspathElement>${project.build.outputDirectory}</additionalClasspathElement>
+              </additionalClasspathElements>
+              <reuseForks>true</reuseForks>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
     </plugins>

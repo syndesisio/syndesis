@@ -29,6 +29,9 @@ management:
         request:
           autotime:
             enabled: false
+    export:
+      prometheus:
+        enabled: true
   endpoints:
     web:
       base-path: /
@@ -52,6 +55,15 @@ spring:
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
       - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
       - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+      - org.springframework.boot.actuate.autoconfigure.metrics.mongo.MongoMetricsAutoConfiguration
+      - org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration
+      - org.springframework.boot.autoconfigure.transaction.jta.JtaAutoConfiguration
+      - org.springframework.boot.autoconfigure.netty.NettyAutoConfiguration
+      - org.springframework.boot.autoconfigure.sql.init.SqlInitializationAutoConfiguration
+      - org.springframework.boot.autoconfigure.transaction.TransactionAutoConfiguration
+      - org.springframework.boot.autoconfigure.websocket.servlet.WebSocketServletAutoConfiguration
+      - org.springframework.boot.autoconfigure.task.TaskSchedulingAutoConfiguration
+
 io:
   syndesis:
     connector:

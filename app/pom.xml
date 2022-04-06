@@ -63,12 +63,12 @@
     <json-patch.version>1.13</json-patch.version>
     <kubernetes.client.version>4.13.3</kubernetes.client.version>
 
-    <spring.version>5.3.15</spring.version>
-    <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
+    <spring.version>5.3.18</spring.version>
+    <spring-boot.version>2.5.12</spring-boot.version>
     <spring-social.version>1.1.6.RELEASE</spring-social.version>
     <spring-social-twitter.version>1.1.2.RELEASE</spring-social-twitter.version>
     <!-- When updating spring-cloud version, you should update spring-cloud-starter-zipkin dependency below -->
-    <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
+    <spring-cloud.version>2020.0.4</spring-cloud.version>
     <spring-security.version>5.3.9.RELEASE</spring-security.version>
     <org.apache.log4j.version>2.17.1</org.apache.log4j.version>
 
@@ -1578,6 +1578,14 @@
         <version>${org.apache.log4j.version}</version>
         <scope>import</scope>
         <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-framework-bom</artifactId>
+        <version>${spring.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
 
       <dependency>
@@ -3397,6 +3405,18 @@
         <groupId>org.apache.kafka</groupId>
         <artifactId>kafka-clients</artifactId>
         <version>${kafka-clients.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.netflix.hystrix</groupId>
+        <artifactId>hystrix-core</artifactId>
+        <version>1.5.18</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!-- ========================================== -->
