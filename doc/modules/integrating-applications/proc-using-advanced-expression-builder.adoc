@@ -29,17 +29,27 @@ click image:images/integrating-applications/PlusSignToAddStepOrConnection.png[ti
 . Click *Conditional Flows*.
 . Click *Select* in the *Advanced expression builder* entry. 
 . In the *Configure Conditional Flows* page, define one or more conditions: 
-.. In the initial *When* field, enter a Camel Simple Language conditional expression. For example, 
+.. In the initial *When* field, enter a Camel Simple Language conditional expression. The left side of the expression must be a variable expression enclosed in ${...}. For example, 
 the following expression evaluates to true when the body of the message
 contains a `pto` field that is greater than `160`:
 +
 ----
 ${body.pto} > 160
---
-//this is what I will update
+----
 
 When this expression evaluates to true, the integration executes the 
-conditional flow that you create and associate with this condition. 
+conditional flow that you create and associate with this condition.
+
+* Following are the examples of valid expressions. 
+
+    ${header.type} == 'note'
+
+   ${body.title} == 'Important'
+   
+* Following is an example of an invalid expression. 
+
+   160 > ${body.pto}
+   
 +
 [NOTE]
 ====
