@@ -57,7 +57,7 @@ ${body.pto} > 160
 When this expression evaluates to true, the integration executes the 
 conditional flow that you create and associate with this condition.
 
-
++
 [NOTE]
 ====
 In an expression, an additional property specification is required when 
@@ -81,6 +81,7 @@ ${body.body.pto} > 160
 ----
 ====
 
++
 .. Optional. Click *Add another condition*, and repeat the previous 
 step. Do this for each additional condition that you want to define.
 
