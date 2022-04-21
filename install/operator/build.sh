@@ -45,7 +45,8 @@ fi
 BUILD_TIME=$(date +%Y-%m-%dT%H:%M:%S%z)
 
 if [ $OPERATOR_BUILD_MODE != "skip" ] ; then
-	LD_FLAGS=$(echo "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=${OPERATOR_IMAGE_NAME}" \
+	LD_FLAGS=$(echo "-s -w " \
+	  "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=${OPERATOR_IMAGE_NAME}" \
 		"-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorTag=${OPERATOR_IMAGE_TAG}" \
 		"-X github.com/syndesisio/syndesis/install/operator/pkg.BuildDateTime=${BUILD_TIME}")
 	echo "LD_FLAGS: ${LD_FLAGS}"
