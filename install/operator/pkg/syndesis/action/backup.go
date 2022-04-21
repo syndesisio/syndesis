@@ -49,7 +49,7 @@ func (a *backupAction) CanExecute(syndesis *synapi.Syndesis) bool {
 }
 
 // Schedule a cronjob for systematic backups
-func (a *backupAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) error {
+func (a *backupAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string, productName string) error {
 	entries := c.Entries()
 
 	if s := syndesis.Spec.Backup.Schedule; s != "" {

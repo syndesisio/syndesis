@@ -32,7 +32,7 @@ func (a checkUpdatesAction) CanExecute(syndesis *synapi.Syndesis) bool {
 		synapi.SyndesisPhaseStartupFailed)
 }
 
-func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) error {
+func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string, productName string) error {
 	if a.operatorVersion == "" {
 		a.operatorVersion = pkg.DefaultOperatorTag
 	}
@@ -41,7 +41,7 @@ func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *synapi.Syndes
 		// Everything fine
 		return nil
 	} else {
-		return a.setPhaseToUpgrading(ctx, syndesis, operatorNamespace)
+		return a.setPhaseToUpgrading(ctx, syndesis, operatorNamespace, productName)
 	}
 }
 
@@ -50,7 +50,7 @@ func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *synapi.Syndes
  * needed to avoid race conditions where k8s wasn't able to update or
  * kubernetes didn't change the object yet
  */
-func (a checkUpdatesAction) setPhaseToUpgrading(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) (err error) {
+func (a checkUpdatesAction) setPhaseToUpgrading(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string, productName string) (err error) {
 
 	// Declare an upgradeable Condition as false if applicable
 	state := olm.ConditionState{
@@ -58,7 +58,7 @@ func (a checkUpdatesAction) setPhaseToUpgrading(ctx context.Context, syndesis *s
 		Reason:  "Upgrading",
 		Message: "Operator is upgrading the components",
 	}
-	err = olm.SetUpgradeCondition(ctx, a.clientTools, operatorNamespace, state)
+	err = olm.SetUpgradeCondition(ctx, a.clientTools, operatorNamespace, productName, state)
 	if err != nil {
 		a.log.Error(err, "Failed to set the upgrade condition on the operator")
 	}

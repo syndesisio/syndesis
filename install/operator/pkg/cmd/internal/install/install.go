@@ -46,6 +46,7 @@ type Install struct {
 	eject          string
 	image          string
 	tag            string
+	version        string
 	addons         string
 	customResource string
 	devSupport     bool
@@ -53,6 +54,7 @@ type Install struct {
 	apiServer      capabilities.ApiServerSpec
 	databaseImage  string
 	templateName   string
+	productName    string
 
 	// processing state
 	ejectedResources []unstructured.Unstructured
@@ -165,6 +167,8 @@ func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 	config, err := configuration.GetProperties(o.Context, configuration.TemplateConfig, o.ClientTools(), &synapi.Syndesis{})
 	if err == nil {
 		o.databaseImage = config.Syndesis.Components.Database.Image
+		o.version = config.Version
+		o.productName = config.ProductName
 	}
 
 	return nil
@@ -210,7 +214,9 @@ type RenderScope struct {
 	Role          string
 	Kind          string
 	EnabledAddons []string
+	Version       string
 	DatabaseImage string
+	ProductName   string
 }
 
 func (o *Install) install(action string, resources []unstructured.Unstructured) error {
@@ -270,6 +276,8 @@ func (o *Install) render(fromFile string) ([]unstructured.Unstructured, error) {
 		Kind:          "Role",
 		EnabledAddons: addons,
 		DatabaseImage: o.databaseImage,
+		Version:       o.version,
+		ProductName:   o.productName,
 	})
 	return resources, err
 }

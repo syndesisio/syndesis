@@ -43,7 +43,7 @@ func (a *podSchedulingAction) CanExecute(syndesis *synapi.Syndesis) bool {
 	return canExecute
 }
 
-func (a *podSchedulingAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) error {
+func (a *podSchedulingAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string, productName string) error {
 	if a.updateIntegrationScheduling {
 		a.executeIntegrationScheduling(ctx, syndesis)
 	}

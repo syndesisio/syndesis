@@ -178,6 +178,7 @@ func (c *csv) setVariables() {
 	c.config.ApiServer.EmbeddedProvider = true
 	c.config.ApiServer.OlmSupport = true
 	c.config.ApiServer.ConsoleLink = true
+	c.config.ProductName = "fuse-online"
 
 	// Dependant on whether it is community or productized
 	c.name = "fuse-online-operator"
@@ -189,6 +190,7 @@ func (c *csv) setVariables() {
 	c.provider = "Red Hat"
 
 	if !c.config.Productized {
+		c.config.ProductName = "syndesis"
 		c.name = "syndesis-operator"
 		c.displayName = "Syndesis"
 		c.support = "Syndesis"
@@ -425,6 +427,8 @@ func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 		ExporterImage   string
 		DevSupport      bool
 		LogLevel        int
+		Version         string
+		ProductName     string
 	}{
 		Image:           c.image,
 		Tag:             c.tag,
@@ -441,6 +445,8 @@ func (c *csv) loadDeploymentFromTemplate() (r interface{}, err error) {
 		ExporterImage:   c.config.Syndesis.Components.Database.Exporter.Image,
 		DevSupport:      false, // Never be true in CSV generation - here for template compatibility
 		LogLevel:        0,     // Never to be more in CSV generation - here for template compatibility
+		Version:         c.version,
+		ProductName:     c.config.ProductName,
 	}
 
 	g, err := generator.Render("assets/install/operator_deployment.yml.tmpl", context)

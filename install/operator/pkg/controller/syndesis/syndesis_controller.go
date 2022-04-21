@@ -19,6 +19,9 @@ import (
 	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/olm"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var log = logf.Log.WithName("controller")
@@ -88,23 +91,74 @@ func (r *ReconcileSyndesis) Reconcile(ctx context.Context, request reconcile.Req
 
 	// Fetch the Syndesis syndesis
 	syndesis := &synapi.Syndesis{}
-
 	client, _ := r.clientTools.RuntimeClient()
+	productName, err := configuration.GetProductName(configuration.TemplateConfig)
+	if err != nil {
+		log.Error(err, "Failed to determine product name")
+	}
 
-	err := client.Get(ctx, request.NamespacedName, syndesis)
+	err = client.Get(ctx, request.NamespacedName, syndesis)
 	if err != nil {
 		if errors.IsNotFound(err) {
+
+			//
+			// Allow the operator to be upgradeable if no syndesis resource is installed
+			//
+			state := olm.ConditionState{
+				Status:  metav1.ConditionTrue,
+				Reason:  "Ready",
+				Message: "No Syndesis Resource installed so operator can be upgraded",
+			}
+			if upgErr := olm.SetUpgradeCondition(ctx, r.clientTools, request.Namespace, productName, state); upgErr != nil {
+				log.Error(upgErr, "Failed to set the upgrade condition on the operator")
+			}
+
 			// Request object not found, could have been deleted after reconcile request.
 			// Owned objects are automatically garbage collected. For additional cleanup logic use finalizers.
 			// Return and don't requeue
 			return reconcile.Result{}, nil
 		}
+
 		// Error reading the object - requeue the request.
 		log.Error(err, "Cannot read object", request.NamespacedName)
+
+		//
+		// Stop the operator being upgradeable until a state can be read
+		//
+		state := olm.ConditionState{
+			Status:  metav1.ConditionFalse,
+			Reason:  "NotReady",
+			Message: "Read error detecting syndesis resource",
+		}
+		if upgErr := olm.SetUpgradeCondition(ctx, r.clientTools, request.Namespace, productName, state); upgErr != nil {
+			log.Error(upgErr, "Failed to set the upgrade condition on the operator")
+		}
+
 		return reconcile.Result{
 			Requeue:      true,
 			RequeueAfter: 10 * time.Second,
 		}, err
+	}
+
+	//
+	// Check the syndesis resource allows for upgrades. Otherwise disable
+	//
+	stateMsg := ""
+	if syndesis.Status.Version != synpkg.DefaultOperatorTag {
+		stateMsg = "Not upgradeable due to version mismatch of operator and Syndesis Resource"
+	} else if syndesis.Status.Phase != synapi.SyndesisPhaseInstalled {
+		stateMsg = "Not upgradeable due to Syndesis Resource phase not reaching 'Installed'"
+	}
+
+	if len(stateMsg) > 0 {
+		state := olm.ConditionState{
+			Status:  metav1.ConditionFalse,
+			Reason:  "NotReady",
+			Message: stateMsg,
+		}
+		if upgErr := olm.SetUpgradeCondition(ctx, r.clientTools, request.Namespace, productName, state); upgErr != nil {
+			log.Error(upgErr, "Failed to set the upgrade condition on the operator")
+		}
 	}
 
 	for _, a := range actions {
@@ -120,7 +174,7 @@ func (r *ReconcileSyndesis) Reconcile(ctx context.Context, request reconcile.Req
 
 		if a.CanExecute(syndesis) {
 			log.V(synpkg.DEBUG_LOGGING_LVL).Info("Running action", "action", reflect.TypeOf(a))
-			if err := a.Execute(ctx, syndesis, request.Namespace); err != nil {
+			if err := a.Execute(ctx, syndesis, request.Namespace, productName); err != nil {
 				log.Error(err, "Error reconciling", "action", reflect.TypeOf(a), "phase", syndesis.Status.Phase)
 				return reconcile.Result{
 					Requeue:      true,
