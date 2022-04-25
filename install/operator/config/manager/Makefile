@@ -6,6 +6,8 @@ USER_VAR := {KUBE_USER}
 TAG_VAR := {TAG}
 IMAGE_VAR := {IMAGE}
 DB_IMAGE_VAR := {DB_IMAGE}
+VERSION_VAR := {VERSION}
+PRODUCT_NAME_VAR := {PRODUCT_NAME}
 
 ROLENAME := syndesis-operator
 MANAGER_RESOURCE := ./manager.gen
@@ -42,6 +44,8 @@ sync:
 	sed -i 's/{{.Tag}}/$(TAG_VAR)/' $(MANAGER_RESOURCE).$(TMPL)
 	sed -i 's/{{.Image}}/$(IMAGE_VAR)/' $(MANAGER_RESOURCE).$(TMPL)
 	sed -i 's/{{.DatabaseImage}}/$(DB_IMAGE_VAR)/' $(MANAGER_RESOURCE).$(TMPL)
+	sed -i 's/{{.Version}}/$(VERSION_VAR)/' $(MANAGER_RESOURCE).$(TMPL)
+	sed -i 's/{{.ProductName}}/$(PRODUCT_NAME_VAR)/' $(MANAGER_RESOURCE).$(TMPL)
 	sed -i '/{{- \|{{else}}\|{{end}}\|^$$/d' $(MANAGER_RESOURCE).$(TMPL)
 # end-sync
 
@@ -52,4 +56,6 @@ init: sync
 		sed -i 's/$(TAG_VAR)/$(TAG)/' $${resource}.$(YAML); \
 		sed -i 's~$(IMAGE_VAR)~$(IMAGE)~' $${resource}.$(YAML); \
 		sed -i 's~$(DB_IMAGE_VAR)~$(DB_IMAGE)~' $${resource}.$(YAML); \
+		sed -i 's~$(VERSION_VAR)~$(VERSION:.0=)~' $${resource}.$(YAML); \
+		sed -i 's~$(PRODUCT_NAME_VAR)~$(PACKAGE:.0=)~' $${resource}.$(YAML); \
 	done

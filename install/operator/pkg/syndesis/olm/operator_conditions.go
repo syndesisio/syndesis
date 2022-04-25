@@ -26,7 +26,6 @@ import (
 	synpkg "github.com/syndesisio/syndesis/install/operator/pkg"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/capabilities"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -47,7 +46,7 @@ type ConditionState struct {
 	Message string
 }
 
-func GetConditionName(ctx context.Context, clientTools *clienttools.ClientTools, namespace string) (string, error) {
+func GetConditionName(ctx context.Context, clientTools *clienttools.ClientTools, namespace string, productName string) (string, error) {
 	opCondLog.V(synpkg.DEBUG_LOGGING_LVL).Info("Finding OLM Operator Condition")
 
 	apiSpec, err := capabilities.ApiCapabilities(clientTools)
@@ -73,11 +72,7 @@ func GetConditionName(ctx context.Context, clientTools *clienttools.ClientTools,
 	//
 	// deployment -> owned by CSV -> operator condition has the same name
 	//
-	configName, err := configuration.GetProductName(configuration.TemplateConfig)
-	if err != nil {
-		return "", errs.Wrap(err, "Failed to determine product name")
-	}
-	deploymentName := configName + "-operator"
+	deploymentName := productName + "-operator"
 
 	opCondLog.V(synpkg.DEBUG_LOGGING_LVL).Info("Finding Operator Deployment", "name", deploymentName)
 	deployment := &appsv1.Deployment{}
@@ -104,9 +99,9 @@ func GetConditionName(ctx context.Context, clientTools *clienttools.ClientTools,
 //
 // Creates the condition if it does not already exist
 //
-func SetUpgradeCondition(ctx context.Context, clientTools *clienttools.ClientTools, namespace string, state ConditionState) error {
+func SetUpgradeCondition(ctx context.Context, clientTools *clienttools.ClientTools, namespace string, productName string, state ConditionState) error {
 
-	conditionName, err := GetConditionName(ctx, clientTools, namespace)
+	conditionName, err := GetConditionName(ctx, clientTools, namespace, productName)
 	if err != nil {
 		return err
 	} else if conditionName == "" {

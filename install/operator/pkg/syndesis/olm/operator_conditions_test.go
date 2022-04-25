@@ -110,7 +110,7 @@ func TestConditions_GetOperationConditionName(t *testing.T) {
 	nsi := coreClient.Namespaces()
 	nsi.Create(context.TODO(), opsNS, metav1.CreateOptions{})
 
-	name, err := GetConditionName(context.TODO(), clientTools, testNS)
+	name, err := GetConditionName(context.TODO(), clientTools, testNS, confName)
 	assert.NoError(t, err)
 
 	assert.Equal(t, csvName, name)
@@ -165,8 +165,6 @@ func TestConditions_SetOperationCondition(t *testing.T) {
 		Reason:  "testing the turn off",
 	}
 
-	err = SetUpgradeCondition(context.TODO(), clientTools, testNS, status)
+	err = SetUpgradeCondition(context.TODO(), clientTools, testNS, confName, status)
 	assert.NoError(t, err)
-
-	// assert.Equal(t,
 }

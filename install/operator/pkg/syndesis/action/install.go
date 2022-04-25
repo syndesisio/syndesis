@@ -96,7 +96,7 @@ func (a *installAction) CanExecute(syndesis *synapi.Syndesis) bool {
 
 var kindsReportedNotAvailable = map[schema.GroupVersionKind]time.Time{}
 
-func (a *installAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) error {
+func (a *installAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string, productName string) error {
 	if syndesisPhaseIs(syndesis, synapi.SyndesisPhaseInstalling) {
 		a.log.Info("installing Syndesis resource", "name", syndesis.Name)
 	} else if syndesisPhaseIs(syndesis, synapi.SyndesisPhasePostUpgradeRun) {

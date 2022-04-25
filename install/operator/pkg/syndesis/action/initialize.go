@@ -31,7 +31,7 @@ func (a *initializeAction) CanExecute(syndesis *synapi.Syndesis) bool {
 		synapi.SyndesisPhaseNotInstalled)
 }
 
-func (a *initializeAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) error {
+func (a *initializeAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string, productName string) error {
 	list := synapi.SyndesisList{}
 	rtClient, _ := a.clientTools.RuntimeClient()
 	err := rtClient.List(ctx, &list, &client.ListOptions{Namespace: syndesis.Namespace})
@@ -54,7 +54,7 @@ func (a *initializeAction) Execute(ctx context.Context, syndesis *synapi.Syndesi
 			Reason:  "Initializing",
 			Message: "Operator is installing",
 		}
-		err = olm.SetUpgradeCondition(ctx, a.clientTools, operatorNamespace, state)
+		err = olm.SetUpgradeCondition(ctx, a.clientTools, operatorNamespace, productName, state)
 		if err != nil {
 			a.log.Error(err, "Failed to set the upgrade condition on the operator")
 		}

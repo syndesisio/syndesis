@@ -136,6 +136,11 @@ build_operator()
             go build -o ./dist/${GOOS}-${GOARCH}/platform-detect \
                 -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor \
                 ./cmd/detect
+
+            echo building ./dist/${GOOS}-${GOARCH}/operator-init executable
+            go build -o ./dist/${GOOS}-${GOARCH}/operator-init \
+                -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -ldflags "-s -w" -mod=vendor \
+                ./cmd/operator-init
           done
         done
         mkdir -p ./build/_output/bin
@@ -168,8 +173,11 @@ COPY . .
 RUN go generate ./pkg/...
 RUN go test -test.short -mod=vendor ./cmd/... ./pkg/...
 RUN GOOS=linux   GOARCH=amd64 go build $OPTS -o /dist/linux-amd64/syndesis-operator    -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
+RUN GOOS=linux   GOARCH=amd64 go build $OPTS -o /dist/linux-amd64/operator-init        -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/operator-init
 RUN GOOS=darwin  GOARCH=amd64 go build $OPTS -o /dist/darwin-amd64/syndesis-operator   -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
+RUN GOOS=darwin  GOARCH=amd64 go build $OPTS -o /dist/darwin-amd64/operator-init       -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/operator-init
 RUN GOOS=windows GOARCH=amd64 go build $OPTS -o /dist/windows-amd64/syndesis-operator  -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
+RUN GOOS=windows GOARCH=amd64 go build $OPTS -o /dist/windows-amd64/operator-init      -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/operator-init
 EODockerfile
 
         docker build -t "${BUILDER_IMAGE_NAME}" . -f "${BUILDER_IMAGE_NAME}.tmp"
@@ -179,14 +187,17 @@ EODockerfile
 
         for GOARCH in amd64 ; do
           for GOOS in linux darwin windows ; do
-            echo extracting executable to ./dist/${GOOS}-${GOARCH}/syndesis-operator
+            echo extracting executables to ./dist/${GOOS}-${GOARCH}
             mkdir -p ./dist/${GOOS}-${GOARCH}
             docker run "${BUILDER_IMAGE_NAME}" cat /dist/${GOOS}-${GOARCH}/syndesis-operator > ./dist/${GOOS}-${GOARCH}/syndesis-operator
+            docker run "${BUILDER_IMAGE_NAME}" cat /dist/${GOOS}-${GOARCH}/operator-init > ./dist/${GOOS}-${GOARCH}/operator-init
           done
         done
         chmod a+x ./dist/*/syndesis-operator
+        chmod a+x ./dist/*/operator-init
         mkdir -p ./build/_output/bin
         cp ./dist/linux-amd64/syndesis-operator ./build/_output/bin/syndesis-operator
+        cp ./dist/linux-amd64/operator-init ./build/_output/bin/operator-init
     ;;
     *)
         echo invalid build strategy: $strategy
