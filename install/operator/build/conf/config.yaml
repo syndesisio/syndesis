@@ -32,9 +32,9 @@ Syndesis:
             Image: "quay.io/openshift/origin-oauth-proxy:4.7"
             DisableSarCheck: false
         UI:
-            Image: "quay.io/syndesis/syndesis-ui:latest"
+            Image: "quay.io/syndesis/syndesis-ui:1.14.0-20220426"
         S2I:
-            Image: "quay.io/syndesis/syndesis-s2i:latest"
+            Image: "quay.io/syndesis/syndesis-s2i:1.14.0-20220426"
         Prometheus:
             Rules: ""
             Image: "quay.io/prometheus/prometheus:v2.30.3"
@@ -46,11 +46,11 @@ Syndesis:
                 VolumeCapacity: "1Gi"
                 VolumeAccessMode: "ReadWriteOnce"
         Upgrade:
-            Image: "quay.io/syndesis/syndesis-upgrade:latest"
+            Image: "quay.io/syndesis/syndesis-upgrade:1.14.0-20220426"
             Resources:
                 VolumeCapacity: "1Gi"
         Meta:
-            Image: "quay.io/syndesis/syndesis-meta:latest"
+            Image: "quay.io/syndesis/syndesis-meta:1.14.0-20220426"
             Resources:
                 Limit:
                     Memory: "512Mi"
@@ -74,7 +74,7 @@ Syndesis:
                 VolumeAccessMode: "ReadWriteOnce"
             LoggerImage: "quay.io/centos/centos:7"
         Server:
-            Image: "quay.io/syndesis/syndesis-server:latest"
+            Image: "quay.io/syndesis/syndesis-server:1.14.0-20220426"
             Resources:
                 Limit:
                     Memory: "800Mi"
