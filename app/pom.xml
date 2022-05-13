@@ -147,7 +147,7 @@
     <docker-java.version>3.2.12</docker-java.version>
     <citrus.version>2.8.0</citrus.version>
     <mockito.version>4.0.0</mockito.version>
-    <mongodb.version>3.12.7</mongodb.version>
+    <mongodb.version>4.2.3</mongodb.version>
     <libthrift.version>0.14.1</libthrift.version>
 
     <resteasy.version>4.6.0.Final</resteasy.version>
