@@ -53,21 +53,13 @@ func main() {
 		fmt.Println("Info: Using POD_NAMESPACE: ", nm)
 	}
 
-	prodName, found := os.LookupEnv("PRODUCT_NAME")
-	if !found {
-		fmt.Println("Error: No PRODUCT_NAME has been set")
-		os.Exit(1)
-	} else {
-		fmt.Println("Info: Using PRODUCT_NAME: ", prodName)
-	}
-
-	if err := setUpgradeCondition(ctx, clientTools, nm, prodName); err != nil {
+	if err := setUpgradeCondition(ctx, clientTools, nm); err != nil {
 		fmt.Println(err, "Error occurred")
 		os.Exit(1)
 	}
 }
 
-func setUpgradeCondition(ctx context.Context, clientTools *clienttools.ClientTools, nm string, prodName string) error {
+func setUpgradeCondition(ctx context.Context, clientTools *clienttools.ClientTools, nm string) error {
 	found, err := hasSyndesis(ctx, clientTools, nm)
 	if err != nil {
 		return gerrors.Wrap(err, "Failed to get Syndesis resource")
@@ -84,7 +76,7 @@ func setUpgradeCondition(ctx context.Context, clientTools *clienttools.ClientToo
 		Reason:  "NotReady",
 		Message: "Disable any operator upgrade until reconciliation allows it",
 	}
-	if upgErr := olm.SetUpgradeCondition(ctx, clientTools, nm, prodName, state); upgErr != nil {
+	if upgErr := olm.SetUpgradeCondition(ctx, clientTools, nm, state); upgErr != nil {
 		return gerrors.Wrap(upgErr, "Failed to set the upgrade condition on the operator")
 	}
 

@@ -19,7 +19,6 @@ import (
 	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/olm"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -92,12 +91,8 @@ func (r *ReconcileSyndesis) Reconcile(ctx context.Context, request reconcile.Req
 	// Fetch the Syndesis syndesis
 	syndesis := &synapi.Syndesis{}
 	client, _ := r.clientTools.RuntimeClient()
-	productName, err := configuration.GetProductName(configuration.TemplateConfig)
-	if err != nil {
-		log.Error(err, "Failed to determine product name")
-	}
 
-	err = client.Get(ctx, request.NamespacedName, syndesis)
+	err := client.Get(ctx, request.NamespacedName, syndesis)
 	if err != nil {
 		if errors.IsNotFound(err) {
 
@@ -109,7 +104,7 @@ func (r *ReconcileSyndesis) Reconcile(ctx context.Context, request reconcile.Req
 				Reason:  "Ready",
 				Message: "No Syndesis Resource installed so operator can be upgraded",
 			}
-			if upgErr := olm.SetUpgradeCondition(ctx, r.clientTools, request.Namespace, productName, state); upgErr != nil {
+			if upgErr := olm.SetUpgradeCondition(ctx, r.clientTools, request.Namespace, state); upgErr != nil {
 				log.Error(upgErr, "Failed to set the upgrade condition on the operator")
 			}
 
@@ -130,7 +125,7 @@ func (r *ReconcileSyndesis) Reconcile(ctx context.Context, request reconcile.Req
 			Reason:  "NotReady",
 			Message: "Read error detecting syndesis resource",
 		}
-		if upgErr := olm.SetUpgradeCondition(ctx, r.clientTools, request.Namespace, productName, state); upgErr != nil {
+		if upgErr := olm.SetUpgradeCondition(ctx, r.clientTools, request.Namespace, state); upgErr != nil {
 			log.Error(upgErr, "Failed to set the upgrade condition on the operator")
 		}
 
@@ -156,7 +151,7 @@ func (r *ReconcileSyndesis) Reconcile(ctx context.Context, request reconcile.Req
 			Reason:  "NotReady",
 			Message: stateMsg,
 		}
-		if upgErr := olm.SetUpgradeCondition(ctx, r.clientTools, request.Namespace, productName, state); upgErr != nil {
+		if upgErr := olm.SetUpgradeCondition(ctx, r.clientTools, request.Namespace, state); upgErr != nil {
 			log.Error(upgErr, "Failed to set the upgrade condition on the operator")
 		}
 	}
@@ -174,7 +169,7 @@ func (r *ReconcileSyndesis) Reconcile(ctx context.Context, request reconcile.Req
 
 		if a.CanExecute(syndesis) {
 			log.V(synpkg.DEBUG_LOGGING_LVL).Info("Running action", "action", reflect.TypeOf(a))
-			if err := a.Execute(ctx, syndesis, request.Namespace, productName); err != nil {
+			if err := a.Execute(ctx, syndesis, request.Namespace); err != nil {
 				log.Error(err, "Error reconciling", "action", reflect.TypeOf(a), "phase", syndesis.Status.Phase)
 				return reconcile.Result{
 					Requeue:      true,

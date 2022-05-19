@@ -39,6 +39,7 @@ func deployment(name string, owner client.Object, namespace string) *appsv1.Depl
 		ObjectMeta: metav1.ObjectMeta{
 			Namespace: namespace,
 			Name:      name,
+			Labels:    map[string]string{"syndesis.io/app": "syndesis", "syndesis.io/type": "operator"},
 			OwnerReferences: []metav1.OwnerReference{
 				{
 					Name: owner.GetName(),
@@ -110,7 +111,7 @@ func TestConditions_GetOperationConditionName(t *testing.T) {
 	nsi := coreClient.Namespaces()
 	nsi.Create(context.TODO(), opsNS, metav1.CreateOptions{})
 
-	name, err := GetConditionName(context.TODO(), clientTools, testNS, confName)
+	name, err := GetConditionName(context.TODO(), clientTools, testNS)
 	assert.NoError(t, err)
 
 	assert.Equal(t, csvName, name)
@@ -165,6 +166,6 @@ func TestConditions_SetOperationCondition(t *testing.T) {
 		Reason:  "testing the turn off",
 	}
 
-	err = SetUpgradeCondition(context.TODO(), clientTools, testNS, confName, status)
+	err = SetUpgradeCondition(context.TODO(), clientTools, testNS, status)
 	assert.NoError(t, err)
 }

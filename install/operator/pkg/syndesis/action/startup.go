@@ -33,7 +33,7 @@ func (a *startupAction) CanExecute(syndesis *synapi.Syndesis) bool {
 		synapi.SyndesisPhaseStartupFailed)
 }
 
-func (a *startupAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string, productName string) error {
+func (a *startupAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) error {
 
 	list := v1.DeploymentConfigList{
 		TypeMeta: metav1.TypeMeta{
@@ -78,7 +78,7 @@ func (a *startupAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, 
 			Reason:  "Started",
 			Message: "Operator and components have been successfully started",
 		}
-		err = olm.SetUpgradeCondition(ctx, a.clientTools, operatorNamespace, productName, state)
+		err = olm.SetUpgradeCondition(ctx, a.clientTools, operatorNamespace, state)
 		if err != nil {
 			a.log.Error(err, "Failed to set the upgrade condition on the operator")
 		}
