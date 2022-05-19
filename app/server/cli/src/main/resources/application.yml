@@ -32,6 +32,7 @@ spring:
     - org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientAutoConfiguration
     - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
     - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+    - org.springframework.boot.actuate.autoconfigure.metrics.mongo.MongoMetricsAutoConfiguration
   cache:
     type: none
 logging:

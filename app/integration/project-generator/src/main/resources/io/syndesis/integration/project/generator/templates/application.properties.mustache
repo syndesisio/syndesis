@@ -31,6 +31,7 @@ camel.component.servlet.headerFilterStrategy-class-name=io.syndesis.connector.su
 spring.autoconfigure.exclude[0] = org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 spring.autoconfigure.exclude[1] = org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 spring.autoconfigure.exclude[2] = org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+spring.autoconfigure.exclude[3] = org.springframework.boot.actuate.autoconfigure.metrics.mongo.MongoMetricsAutoConfiguration
 
 {{#configuration.isActivityTracing}}
 # Jaeger/Opentracing
