@@ -26,6 +26,7 @@ import (
 	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/olm"
+	appsv1 "k8s.io/api/apps/v1"
 	kerrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -53,15 +54,40 @@ func main() {
 		fmt.Println("Info: Using POD_NAMESPACE: ", nm)
 	}
 
-	prodName, found := os.LookupEnv("PRODUCT_NAME")
-	if !found {
-		fmt.Println("Error: No PRODUCT_NAME has been set")
-		os.Exit(1)
-	} else {
-		fmt.Println("Info: Using PRODUCT_NAME: ", prodName)
+	op := appsv1.Deployment{
+		Spec: appsv1.DeploymentSpec{
+			Selector: &metav1.LabelSelector{
+				MatchLabels: map[string]string{"syndesis.io/app": "syndesis", "syndesis.io/type": "operator"},
+			},
+		},
 	}
 
-	if err := setUpgradeCondition(ctx, clientTools, nm, prodName); err != nil {
+	selector, err := metav1.LabelSelectorAsSelector(op.Spec.Selector)
+	if err != nil {
+		fmt.Println(err, "Error occurred")
+		os.Exit(1)
+	}
+
+	options := client.ListOptions{
+		Namespace:     nm,
+		LabelSelector: selector,
+	}
+
+	rtClient, _ := clientTools.RuntimeClient()
+	deployments := appsv1.DeploymentList{}
+	if err := rtClient.List(ctx, &deployments, &options); err != nil {
+		fmt.Println(err, "Error listing Deployments", "selector", selector)
+		os.Exit(1)
+	}
+
+	if len(deployments.Items) < 1 {
+		fmt.Println("Cannot find any labelled operator deployments")
+		os.Exit(1)
+	}
+
+	fmt.Println("Info: Using Deployment Name: ", deployments.Items[0].Name)
+
+	if err := setUpgradeCondition(ctx, clientTools, nm, deployments.Items[0].Name); err != nil {
 		fmt.Println(err, "Error occurred")
 		os.Exit(1)
 	}
