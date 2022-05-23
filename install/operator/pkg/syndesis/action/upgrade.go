@@ -42,7 +42,7 @@ func (a *upgradeAction) CanExecute(syndesis *synapi.Syndesis) bool {
 	)
 }
 
-func (a *upgradeAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string, productName string) error {
+func (a *upgradeAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, operatorNamespace string) error {
 	targetVersion := pkg.DefaultOperatorTag
 
 	if syndesis.Status.Phase == synapi.SyndesisPhaseUpgrading {
@@ -76,7 +76,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, 
 	} else if syndesis.Status.Phase == synapi.SyndesisPhasePostUpgradeRunSucceed {
 		// We land here only if the install phase after upgrading finished correctly
 		a.log.Info("syndesis resource post upgrade ran successfully", "name", syndesis.Name, "previous version", syndesis.Status.Version, "target version", targetVersion)
-		return a.completeUpgrade(ctx, syndesis, targetVersion, operatorNamespace, productName)
+		return a.completeUpgrade(ctx, syndesis, targetVersion, operatorNamespace)
 	} else if syndesis.Status.Phase == synapi.SyndesisPhasePostUpgradeRun {
 		// If the first run of the install action failed, we land here. We need to retry
 		// this few times to consider the cases where install action return error due to
@@ -104,14 +104,14 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, 
  * needed to avoid race conditions where k8s wasn't yet able to update or
  * kubernetes didn't change the object yet
  */
-func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *synapi.Syndesis, newVersion string, operatorNamespace string, productName string) (err error) {
+func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *synapi.Syndesis, newVersion string, operatorNamespace string) (err error) {
 	// Declare the operator upgradeable, if applicable
 	state := olm.ConditionState{
 		Status:  metav1.ConditionTrue,
 		Reason:  "CompletedUpgrade",
 		Message: "Operator component state has been upgraded",
 	}
-	err = olm.SetUpgradeCondition(ctx, a.clientTools, operatorNamespace, productName, state)
+	err = olm.SetUpgradeCondition(ctx, a.clientTools, operatorNamespace, state)
 	if err != nil {
 		a.log.Error(err, "Failed to set the upgrade condition on the operator")
 	}

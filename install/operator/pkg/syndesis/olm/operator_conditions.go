@@ -28,7 +28,7 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	appsv1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/types"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
@@ -46,7 +46,43 @@ type ConditionState struct {
 	Message string
 }
 
-func GetConditionName(ctx context.Context, clientTools *clienttools.ClientTools, namespace string, productName string) (string, error) {
+func getOperatorDeployment(ctx context.Context, clientTools *clienttools.ClientTools, namespace string) (*appsv1.Deployment, error) {
+	labelSelector := &metav1.LabelSelector{
+		MatchLabels: map[string]string{
+			"syndesis.io/app":  "syndesis",
+			"syndesis.io/type": "operator",
+		},
+	}
+
+	selector, err := metav1.LabelSelectorAsSelector(labelSelector)
+	if err != nil {
+		return nil, err
+	}
+
+	options := client.ListOptions{
+		Namespace:     namespace,
+		LabelSelector: selector,
+	}
+
+	rtClient, err := clientTools.RuntimeClient()
+	if err != nil {
+		return nil, err
+	}
+
+	deployments := appsv1.DeploymentList{}
+	if err = rtClient.List(ctx, &deployments, &options); err != nil {
+		return nil, errs.Wrap(err, "Error listing Deployments using selector")
+	}
+
+	if len(deployments.Items) < 1 {
+		return nil, errs.New("Cannot find any labelled operator deployments")
+	}
+
+	opCondLog.V(synpkg.DEBUG_LOGGING_LVL).Info("Using Deployment: ", deployments.Items[0].Name)
+	return &deployments.Items[0], nil
+}
+
+func GetConditionName(ctx context.Context, clientTools *clienttools.ClientTools, namespace string) (string, error) {
 	opCondLog.V(synpkg.DEBUG_LOGGING_LVL).Info("Finding OLM Operator Condition")
 
 	apiSpec, err := capabilities.ApiCapabilities(clientTools)
@@ -62,25 +98,15 @@ func GetConditionName(ctx context.Context, clientTools *clienttools.ClientTools,
 		return "", nil
 	}
 
-	rtClient, err := clientTools.RuntimeClient()
+	//
+	// Find the deployment associated with the operator
+	//
+	deployment, err := getOperatorDeployment(ctx, clientTools, namespace)
 	if err != nil {
-		return "", errs.Wrap(err, "Failed to initialise runtime client")
+		return "", err
 	}
 
-	//
-	// Find the operator condition associated with this operator
-	//
-	// deployment -> owned by CSV -> operator condition has the same name
-	//
-	deploymentName := productName + "-operator"
-
-	opCondLog.V(synpkg.DEBUG_LOGGING_LVL).Info("Finding Operator Deployment", "name", deploymentName)
-	deployment := &appsv1.Deployment{}
-	if err = rtClient.Get(ctx, types.NamespacedName{Namespace: namespace, Name: deploymentName}, deployment); err != nil {
-		return "", err // Should find the deployment of this operator
-	}
-
-	opCondLog.V(synpkg.DEBUG_LOGGING_LVL).Info("Operator Deployment found", "name", deploymentName)
+	opCondLog.V(synpkg.DEBUG_LOGGING_LVL).Info("Operator Deployment for condition", "name", deployment.Name)
 	ownerRefs := deployment.GetOwnerReferences()
 	if len(ownerRefs) > 1 || len(ownerRefs) == 0 {
 		// No operator condition as this is not owned by a CSV
@@ -92,16 +118,16 @@ func GetConditionName(ctx context.Context, clientTools *clienttools.ClientTools,
 		return "", nil
 	}
 
-	opCondLog.V(synpkg.DEBUG_LOGGING_LVL).Info("CSV Owned Deployment", "name", deploymentName, "owner", ownerRefs[0].Name)
+	opCondLog.V(synpkg.DEBUG_LOGGING_LVL).Info("CSV Owned Deployment", "name", deployment.Name, "owner", ownerRefs[0].Name)
 	return ownerRefs[0].Name, nil
 }
 
 //
 // Creates the condition if it does not already exist
 //
-func SetUpgradeCondition(ctx context.Context, clientTools *clienttools.ClientTools, namespace string, productName string, state ConditionState) error {
+func SetUpgradeCondition(ctx context.Context, clientTools *clienttools.ClientTools, namespace string, state ConditionState) error {
 
-	conditionName, err := GetConditionName(ctx, clientTools, namespace, productName)
+	conditionName, err := GetConditionName(ctx, clientTools, namespace)
 	if err != nil {
 		return err
 	} else if conditionName == "" {
