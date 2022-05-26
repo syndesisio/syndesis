@@ -20,13 +20,13 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-parent</artifactId>
-    <version>1.14-SNAPSHOT</version>
+    <version>1.14.0-20220526</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>io.syndesis.ui</groupId>
   <artifactId>ui-react</artifactId>
-  <version>1.14-SNAPSHOT</version>
+  <version>1.14.0-20220526</version>
   <packaging>pom</packaging>
 
   <name>UI React</name>
