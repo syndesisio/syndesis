@@ -34,7 +34,7 @@
     <atlasmap.version>2.3.14</atlasmap.version>
     <jackson.version>2.11.2</jackson.version>
     <!-- any change to mongodb driver version, should be updated to parent pom.xml -->
-    <mongodb.version>3.12.7</mongodb.version>
+    <mongodb.version>3.12.8</mongodb.version>
     <jetty.version>9.4.43.v20210629</jetty.version>
     <netty.version>4.1.68.Final</netty.version>
     <kubernetes.client.version>4.13.3</kubernetes.client.version>
