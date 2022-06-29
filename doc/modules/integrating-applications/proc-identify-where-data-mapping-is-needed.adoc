@@ -19,5 +19,19 @@ image:images/tutorials/WarningIcon.png[Warning] icons.
 . Click the icon to see the *Data Type Mismatch* notification. 
 
 . In the message, click *Add a data mapping step*, which displays
-the data mapper. 
+the data mapper.
+. After adding the required data mapper steps, look for any other
+image:images/tutorials/WarningIcon.png[Warning] icon. This warning indicates that the data mapper step added above must be edited.
++
+This warning is received due to the following reasons.
++
+* One of the source steps has changed it’s output
+
+* The target step’s input is not compatible with the mapper’s output
+
+* One of the source steps is missing
+
+* The target step is missing
+
+ 
  
