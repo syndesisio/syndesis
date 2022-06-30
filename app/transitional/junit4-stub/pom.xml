@@ -20,7 +20,7 @@
   <parent>
     <groupId>io.syndesis.transitional</groupId>
     <artifactId>transitional-parent</artifactId>
-    <version>1.14-SNAPSHOT</version>
+    <version>1.14.0-20220630</version>
   </parent>
   <artifactId>junit4-stub</artifactId>
   <name>Transitional :: JUnit 4 stub</name>
