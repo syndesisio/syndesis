@@ -83,15 +83,14 @@ image:images/tutorials/WarningIcon.png[Warning] icons. These
 warnings indicate that a data mapper step is needed before 
 this connection. Add the required data mapper steps. 
 
-. After adding the required data mapper steps, look for any
-image:images/tutorials/WarningIcon.png[Warning] icons. This warning indicates that the data mapper step added in step 7 (above), must be edited. 
-+
-This warning is received due to the following reasons.
+. After adding the required data mapper steps, the image:images/tutorials/WarningIcon.png[Warning] icon can be still displayed (can display anytime during the editing process) due to the following reasons. 
 +
 * One of the source steps has changed it's output
 * The target step's input is not compatible with the mapper's output
 * One of the source steps is missing
 * The target step is missing
++
+In this scenario, this warning indicates that the data mapper step added in step 7, must be edited.
 
 . When the integration contains all needed steps,
 click *Save* or *Publish* according to whether you want

@@ -20,10 +20,7 @@ image:images/tutorials/WarningIcon.png[Warning] icons.
 
 . In the message, click *Add a data mapping step*, which displays
 the data mapper.
-. After adding the required data mapper steps, look for any other
-image:images/tutorials/WarningIcon.png[Warning] icon. This warning indicates that the data mapper step added above must be edited.
-+
-This warning is received due to the following reasons.
+. After adding the required data mapper steps, the image:images/tutorials/WarningIcon.png[Warning] icon can be still displayed (can display anytime during the editing process) due to the following reasons. 
 +
 * One of the source steps has changed it’s output
 
@@ -32,6 +29,8 @@ This warning is received due to the following reasons.
 * One of the source steps is missing
 
 * The target step is missing
++
+In this scenario, this warning indicates that the data mapper step added above must be edited.
 
  
  
