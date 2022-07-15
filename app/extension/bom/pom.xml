@@ -38,7 +38,7 @@
     <netty.version>4.1.68.Final</netty.version>
     <kubernetes.client.version>4.13.3</kubernetes.client.version>
     <aws-java-sdk.version>1.11.438</aws-java-sdk.version>
-    <undertow.version>2.2.12.Final</undertow.version>
+    <undertow.version>2.2.15.Final</undertow.version>
     <dep.plugin.deploy.version>2.8.2</dep.plugin.deploy.version>
     <org.apache.log4j.version>2.17.1</org.apache.log4j.version>
   </properties>
