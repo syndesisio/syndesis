@@ -30,12 +30,17 @@ export interface IServicePortRouteState {
 export const ServicePortPage: React.FunctionComponent = () => {
   const { state } = useRouteData<null, IServicePortRouteState>();
   const { apiSummary, configured } = state;
-
-  const [serviceName, setServiceName] = React.useState(
-    configured?.serviceName || apiSummary!.configuredProperties!.serviceName
+  const availablePorts = JSON.parse(apiSummary!.configuredProperties!.ports);
+  const availableServices = JSON.parse(
+    apiSummary!.configuredProperties!.services
   );
+  const defaultService = availableServices[0];
+  const [serviceName, setServiceName] = React.useState(
+    configured?.serviceName || apiSummary!.configuredProperties!.serviceName || defaultService
+  );
+  const defaultPort = availablePorts[serviceName][0];
   const [portName, setPortName] = React.useState(
-    configured?.portName || apiSummary!.configuredProperties!.portName
+    configured?.portName || apiSummary!.configuredProperties!.portName || defaultPort
   );
 
   return (
@@ -73,13 +78,9 @@ export const ServicePortPage: React.FunctionComponent = () => {
                       'apiClientConnectors:create:soap:servicePortTitle'
                     )}
                     portName={portName}
-                    portsAvailable={JSON.parse(
-                      apiSummary!.configuredProperties!.ports
-                    )}
+                    portsAvailable={availablePorts}
                     serviceName={serviceName}
-                    servicesAvailable={JSON.parse(
-                      apiSummary!.configuredProperties!.services
-                    )}
+                    servicesAvailable={availableServices}
                     onServiceNameChange={setServiceName}
                     onPortNameChange={setPortName}
                   />
