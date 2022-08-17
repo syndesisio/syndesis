@@ -56,7 +56,7 @@
     "@syndesis/auto-form": "*",
     "@syndesis/models": "*",
     "@syndesis/ui": "*",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "named-urls": "^2.0.0",
     "react-fast-compare": "^2.0.2",
     "use-react-router": "^1.0.7"
