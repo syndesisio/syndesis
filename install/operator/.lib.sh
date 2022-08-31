@@ -145,6 +145,7 @@ build_operator()
         done
         mkdir -p ./build/_output/bin
         cp ./dist/linux-amd64/syndesis-operator ./build/_output/bin/syndesis-operator
+        cp ./dist/linux-amd64/operator-init ./build/_output/bin/operator-init
 
     ;;
     "docker")

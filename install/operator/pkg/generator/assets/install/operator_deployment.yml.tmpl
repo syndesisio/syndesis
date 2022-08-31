@@ -8,7 +8,7 @@ metadata:
     # the template.spec.image property and point to
     # the syndesis-operator image stream.
     #
-    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"syndesis-operator:{{.Tag}}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"syndesis-operator\")].image"}]'
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"syndesis-operator:{{.Tag}}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"syndesis-operator\")].image"},{"from":{"kind":"ImageStreamTag","name":"syndesis-operator:{{.Tag}}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"operator-init\")].image"}]'
   {{end}}
   name: syndesis-operator
   labels:

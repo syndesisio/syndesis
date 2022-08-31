@@ -3,6 +3,7 @@ package action
 import (
 	"context"
 	"errors"
+	"strconv"
 	"time"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg"
@@ -24,6 +25,7 @@ import (
 
 	v1 "github.com/openshift/api/route/v1"
 
+	"github.com/go-logr/logr"
 	synapi "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta3"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
@@ -133,6 +135,12 @@ func (a *installAction) Execute(ctx context.Context, syndesis *synapi.Syndesis, 
 		return err
 	}
 	resourcesThatShouldExist[serviceAccount.GetUID()] = true
+
+	// In kubernetes 1.24+ the ServiceAccount doesn't create the secret with the token
+	// See https://issues.redhat.com/browse/ENTESB-19343 for more information
+	if err = linkSecretsToServiceAccounts(config.ApiServer.Version, ctx, rtClient, a.log, syndesis.Namespace); err != nil {
+		a.log.Error(err, "Error linking the ServiceAccount to the secret token")
+	}
 
 	token, err := serviceaccount.GetServiceAccountToken(ctx, rtClient, serviceAccount.Name, syndesis.Namespace)
 	if err != nil {
@@ -603,5 +611,60 @@ func PreProcessForAffinityTolerations(ctx context.Context, cl client.Client, syn
 		}
 	}
 
+	return nil
+}
+
+func linkSecretsToServiceAccounts(kVersion string, ctx context.Context, apiClient client.Client, log logr.Logger, ns string) error {
+	kVer, _ := strconv.ParseFloat(kVersion, 32)
+	// only proceeds when kubernetes is 1.24+
+	if kVer >= 1.24 {
+		log.Info("As kubernetes is 1.24+ we should link the ServiceAccount to the secret (token)")
+
+		options := client.ListOptions{
+			Namespace:     ns,
+		}
+
+		usecrets := unstructured.UnstructuredList{}
+		usecrets.SetKind("SecretList")
+		usecrets.SetAPIVersion("v1")
+		// list all secrets in the ns
+		if err := apiClient.List(ctx, &usecrets, &options); err != nil {
+			return err
+		} else {
+			for _, usecret := range usecrets.Items {
+				secret := corev1.Secret{}
+				if err = runtime.DefaultUnstructuredConverter.FromUnstructured(usecret.UnstructuredContent(), &secret); err != nil {
+					return err
+				}
+				// verify if the secret is type=token and has the service-account annotation and actually has a token value
+				isToken := len(secret.Annotations[corev1.ServiceAccountNameKey]) > 0 && 
+					secret.Type == corev1.SecretTypeServiceAccountToken && 
+					len(secret.Data[corev1.ServiceAccountTokenKey]) > 0 
+				if isToken {
+					// get the SA and verify if the secret should be linked to the it
+					saName := secret.Annotations[corev1.ServiceAccountNameKey]
+					sa := corev1.ServiceAccount{}
+					if err := apiClient.Get(ctx, util.NewObjectKey(saName, ns), &sa); err != nil {
+						return err
+					}
+					shouldLinkSecret := true
+					// list the secrets linked to the SA
+					for _, refSecret := range sa.Secrets {
+						if refSecret.Name == secret.Name {
+							shouldLinkSecret = false
+							break
+						}
+					}
+					if shouldLinkSecret {
+						sa.Secrets = append(sa.Secrets, corev1.ObjectReference{Namespace: sa.Namespace, Name: secret.Name})
+						err = apiClient.Update(ctx, &sa)
+						if err != nil {
+							return err
+						}
+					}
+				}
+			}
+		}
+	}
 	return nil
 }
