@@ -78,7 +78,7 @@ func getOperatorDeployment(ctx context.Context, clientTools *clienttools.ClientT
 		return nil, errs.New("Cannot find any labelled operator deployments")
 	}
 
-	opCondLog.V(synpkg.DEBUG_LOGGING_LVL).Info("Using Deployment: ", deployments.Items[0].Name)
+	opCondLog.V(synpkg.DEBUG_LOGGING_LVL).Info("Using Deployment: ", "name", deployments.Items[0].Name)
 	return &deployments.Items[0], nil
 }
 
