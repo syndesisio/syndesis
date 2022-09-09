@@ -31,7 +31,7 @@
     <spring.version>5.3.18</spring.version>
     <spring-boot.version>2.5.12</spring-boot.version>
     <camel.version>2.23.2.fuse-7_10_0-00020-redhat-00001</camel.version>
-    <atlasmap.version>2.3.14</atlasmap.version>
+    <atlasmap.version>2.3.19</atlasmap.version>
     <jackson.version>2.11.2</jackson.version>
     <mongodb.version>3.9.0</mongodb.version>
     <jetty.version>9.4.43.v20210629</jetty.version>
