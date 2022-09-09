@@ -26,8 +26,9 @@
     "expect": "^24.1.0",
     "jest": "^25.1.0",
     "jest-cli": "^25.1.0",
+    "jest-esm-transformer": "^1.0.0",
     "jest-fetch-mock": "^3.0.3",
-    "ky": "^0.17.0",
+    "ky": "^0.31.3",
     "microbundle": "^0.13.3",
     "react": "^16.6.0",
     "react-docgen-typescript-loader": "^3.1.0",
@@ -60,7 +61,7 @@
     "@patternfly/react-topology": "^4.9.6",
     "d3-scale": "^3.2.0",
     "d3-shape": "^1.3.5",
-    "ky": "^0.17.0",
+    "ky": "^0.31.3",
     "lodash.clamp": "^4.0.3",
     "react": "^16.6.0",
     "react-dnd": "^10.0.2",
@@ -70,8 +71,8 @@
     "rxjs": "^6.2.2"
   },
   "dependencies": {
-    "@atlasmap/atlasmap": "^2.3.14",
-    "@atlasmap/core": "^2.3.14",
+    "@atlasmap/atlasmap": "^2.3.19",
+    "@atlasmap/core": "^2.3.19",
     "@types/patternfly-react": "*",
     "loglevel": "^1.7.1",
     "react-dnd-html5-backend": "^14.0.0",
@@ -89,13 +90,19 @@
     "moduleNameMapper": {
       "\\atlasmap/.*.js$": "<rootDir>/../.jest/fileMock.js",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/../.jest/fileMock.js",
-      "\\.(css|less)$": "<rootDir>/../.jest/styleMock.js",
-      "ky": "ky/umd"
+      "\\.(css|less)$": "<rootDir>/../.jest/styleMock.js"
     },
     "globals": {
       "ts-jest": {
         "tsConfig": "tsconfig.test.json"
       }
-    }
+    },
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest",
+      "ky": "jest-esm-transformer"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!ky/.*)/"
+    ]
   }
 }
