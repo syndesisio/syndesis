@@ -19,7 +19,7 @@
     "i18next": "^19.4.4",
     "i18next-browser-languagedetector": "^6.1.2",
     "immer": "^9.0.6",
-    "ky": "^0.17.0",
+    "ky": "^0.31.3",
     "lodash.clamp": "^4.0.3",
     "lodash.isequal": "^4.5.0",
     "named-urls": "^2.0.0",
