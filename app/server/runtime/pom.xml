@@ -235,8 +235,8 @@
         <artifactId>maven-dependency-plugin</artifactId>
         <configuration>
           <usedDependencies>
-            <dependency>org.bouncycastle:bcprov-jdk15on</dependency>
-            <dependency>org.bouncycastle:bcpkix-jdk15on</dependency>
+            <dependency>org.bouncycastle:bcprov-jdk18on</dependency>
+            <dependency>org.bouncycastle:bcpkix-jdk18on</dependency>
           </usedDependencies>
         </configuration>
         <executions>
@@ -765,14 +765,24 @@
       <artifactId>spring-cloud-starter-kubernetes-config</artifactId>
       <version>1.1.10.RELEASE</version>
       <scope>runtime</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bcpkix-jdk15on</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bcprov-jdk15on</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.bouncycastle</groupId>
-      <artifactId>bcpkix-jdk15on</artifactId>
+      <artifactId>bcpkix-jdk18on</artifactId>
     </dependency>
     <dependency>
       <groupId>org.bouncycastle</groupId>
-      <artifactId>bcprov-jdk15on</artifactId>
+      <artifactId>bcprov-jdk18on</artifactId>
     </dependency>
 
     <dependency>
