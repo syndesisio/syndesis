@@ -171,7 +171,7 @@
     <net.jqwik.version>1.6.0</net.jqwik.version>
     <io.github.zregvart.junit-github-reporter.version>0.4.0</io.github.zregvart.junit-github-reporter.version>
     <io.strimzi.kafka.oauth.version>0.7.2</io.strimzi.kafka.oauth.version>
-    <bouncycastle.version>1.69</bouncycastle.version>
+    <bouncycastle.version>1.72</bouncycastle.version>
     <json-smart.version>2.4.1</json-smart.version>
 
     <!-- Sonar configuration -->
@@ -1916,11 +1916,11 @@
           </exclusion>
           <exclusion>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15on</artifactId>
+            <artifactId>bcpkix-jdk18on</artifactId>
           </exclusion>
           <exclusion>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
+            <artifactId>bcprov-jdk18on</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -3966,12 +3966,12 @@
 
       <dependency>
           <groupId>org.bouncycastle</groupId>
-          <artifactId>bcpkix-jdk15on</artifactId>
+          <artifactId>bcpkix-jdk18on</artifactId>
           <version>${bouncycastle.version}</version>
       </dependency>
       <dependency>
           <groupId>org.bouncycastle</groupId>
-          <artifactId>bcprov-jdk15on</artifactId>
+          <artifactId>bcprov-jdk18on</artifactId>
           <version>${bouncycastle.version}</version>
       </dependency>
 
