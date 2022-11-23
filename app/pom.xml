@@ -156,7 +156,7 @@
     <immutables.version>2.8.8</immutables.version>
 
     <jdbi.version>2.78</jdbi.version>
-    <postgresql.version>42.3.3</postgresql.version>
+    <postgresql.version>42.3.8</postgresql.version>
     <logback.version>1.2.10</logback.version>
     <micrometer.version>1.5.3</micrometer.version>
     <teiid.version>13.0.2</teiid.version>
