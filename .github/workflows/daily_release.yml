@@ -16,7 +16,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - branch: 1.14.x
+          - branch: 1.15.x
             java: 8
     steps:
       - name: Git checkout

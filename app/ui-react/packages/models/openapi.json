@@ -879,12 +879,6 @@
       },
       "Flow": {
         "properties": {
-          "connections": {
-            "items": {
-              "$ref": "#/components/schemas/Connection"
-            },
-            "type": "array"
-          },
           "dependencies": {
             "items": {
               "$ref": "#/components/schemas/Dependency"
@@ -1004,11 +998,6 @@
                 "type": "string"
               },
               "type": "array"
-            },
-            "properties": {
-              "empty": {
-                "type": "boolean"
-              }
             },
             "type": "object"
           },
@@ -1833,7 +1822,7 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "title": "Syndesis Supported API",
-    "version": "v1-1.14-SNAPSHOT"
+    "version": "v1-1.15-SNAPSHOT"
   },
   "openapi": "3.0.1",
   "paths": {

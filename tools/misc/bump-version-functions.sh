@@ -15,9 +15,9 @@ upgrade_app() {
   local appdir="${SRC_ROOT}/app"
   if [ -d "${appdir}" ]; then
     echo "------"
-    echo -n "Upgrading app directory poms ... "
+    echo -n "Upgrading app directory poms, it may take a while for maven to download the dependencies... "
     pushd "${SRC_ROOT}/app" > /dev/null
-    for pom in pom.xml integration/bom/pom.xml integration/bom/pom.xml extension/bom/pom.xml; do
+    for pom in pom.xml integration/bom/pom.xml extension/bom/pom.xml; do
       oout=$(./mvnw -N versions:set -DgenerateBackupPoms=false -DnewVersion=$version-SNAPSHOT -f ${pom})
       if [ $? != 0 ]; then
         echo "Error: Please see maven output below:"

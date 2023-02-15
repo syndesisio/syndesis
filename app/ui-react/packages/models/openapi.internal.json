@@ -1181,11 +1181,6 @@
               },
               "type": "array"
             },
-            "properties": {
-              "empty": {
-                "type": "boolean"
-              }
-            },
             "type": "object"
           },
           "mediaType": {
@@ -2486,7 +2481,7 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "title": "Syndesis Internal API",
-    "version": "v1-1.14-SNAPSHOT"
+    "version": "v1-1.15-SNAPSHOT"
   },
   "openapi": "3.0.1",
   "paths": {
