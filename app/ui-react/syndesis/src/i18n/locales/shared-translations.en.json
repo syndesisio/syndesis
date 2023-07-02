@@ -124,7 +124,7 @@
       "nameFilterPlaceholder": "Filter by Name...",
       "project": {
         "name": "Syndesis",
-        "version": "7.11"
+        "version": "7.12"
       },
       "requiredFieldMessage": "* Required field",
       "resultsCount": "{{count}} Results",
