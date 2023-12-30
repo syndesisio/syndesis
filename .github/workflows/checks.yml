@@ -19,8 +19,8 @@ jobs:
           DEFAULT_BRANCH=$(curl -s https://api.github.com/repos/syndesisio/syndesis |jq -r .default_branch)
           IS_DEFAULT_BRANCH=$(test "refs/heads/${DEFAULT_BRANCH}" == "${GITHUB_REF}" && echo true || echo false)
           IS_RELEASE_BRANCH=$(echo "${GITHUB_REF}" | grep -q -e '^refs/heads/[0-9]\+\.[0-9]\+\.x' && echo true || echo false)
-          echo "::set-output name=is-default-branch::${IS_DEFAULT_BRANCH}"
-          echo "::set-output name=is-release-branch::${IS_RELEASE_BRANCH}"
+          echo "is-default-branch=${IS_DEFAULT_BRANCH}" >> $GITHUB_OUTPUT
+          echo "is-release-branch=${IS_RELEASE_BRANCH}" >> $GITHUB_OUTPUT
   changes:
     needs: setup
     runs-on: ubuntu-latest
