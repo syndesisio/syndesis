@@ -20,7 +20,7 @@
   <parent>
     <groupId>io.syndesis.server</groupId>
     <artifactId>server-parent</artifactId>
-    <version>1.15-SNAPSHOT</version>
+    <version>1.15.0-20240109</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
