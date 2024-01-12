@@ -33,7 +33,7 @@ jobs:
           RELEASE_TAGS=$(git tag --contains $(git rev-parse HEAD) | grep "^${BRANCH/.x/}") || true
           if [ -n "${RELEASE_TAGS}" ]; then
             echo The latest change was already included in a release, skipping release
-            echo ::set-output name=skip::true
+            echo "skip=true" >> $GITHUB_OUTPUT
           fi
       - name: Set up JDK ${{ matrix.java }}
         if: steps.should.outputs.skip != 'true'
