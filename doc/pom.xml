@@ -22,13 +22,13 @@
     <parent>
       <groupId>io.syndesis</groupId>
       <artifactId>syndesis-parent</artifactId>
-      <version>1.15-SNAPSHOT</version>
+      <version>1.15.0-20240113</version>
       <relativePath>../app/pom.xml</relativePath>
     </parent>
 
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-docs</artifactId>
-    <version>1.15-SNAPSHOT</version>
+    <version>1.15.0-20240113</version>
 
     <packaging>pom</packaging>
 
