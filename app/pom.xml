@@ -150,7 +150,7 @@
     <mongodb.version>3.12.7</mongodb.version>
     <libthrift.version>0.14.1</libthrift.version>
 
-    <resteasy.version>4.6.0.Final</resteasy.version>
+    <resteasy.version>4.6.1.Final</resteasy.version>
     <resteasy-spring-boot-starter.version>4.8.0.Final</resteasy-spring-boot-starter.version>
 
     <immutables.version>2.8.8</immutables.version>
